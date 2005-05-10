@@ -1,8 +1,8 @@
 /**
-	\file "null_construct.h"
+	\file "util/null_construct.h"
 	Uses traits to initializes a type with a default value.
 	Might consider making this a struct for better specializability.  
-	$Id: null_construct.h,v 1.2 2005/02/27 22:54:25 fang Exp $
+	$Id: null_construct.h,v 1.3 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_NULL_CONSTRUCT_H__
@@ -12,8 +12,8 @@
 #define	NULL			0
 #endif
 
-// #include "STL/construct_fwd.h"
-#include "memory/pointer_traits.h"
+// #include "util/STL/construct_fwd.h"
+#include "util/memory/pointer_traits.h"
 
 namespace util {
 USING_UTIL_MEMORY_POINTER_TRAITS

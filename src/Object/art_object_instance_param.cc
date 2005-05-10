@@ -1,31 +1,31 @@
 /**
-	\file "art_object_instance_param.cc"
+	\file "Object/art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.11 2005/03/06 22:45:51 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.12 2005/05/10 04:51:18 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
-#define	__ART_OBJECT_INSTANCE_PARAM_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
-#include "art_object_definition_base.h"
-#include "art_object_namespace.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr_base.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_expr_base.h"
 
-#include "indent.h"
-#include "stacktrace.h"
+#include "util/indent.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
@@ -220,5 +220,5 @@ param_instance_collection::make_member_instance_reference(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_PARAM_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
 

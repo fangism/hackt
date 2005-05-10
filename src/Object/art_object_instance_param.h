@@ -1,19 +1,19 @@
 /**
-	\file "art_object_instance_param.h"
+	\file "Object/art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.17 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_instance_param.h,v 1.18 2005/05/10 04:51:18 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_PARAM_H__
-#define	__ART_OBJECT_INSTANCE_PARAM_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
 
-#include "boolean_types.h"
-#include "art_object_instance_base.h"
-#include "art_object_expr_param_ref.h"	// for typedef init_arg_type
-#include "memory/count_ptr.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_expr_param_ref.h"	// for typedef init_arg_type
+#include "util/memory/count_ptr.h"
 
-#include "multikey_fwd.h"
-#include "multikey_qmap_fwd.h"
+#include "util/multikey_fwd.h"
+#include "util/multikey_qmap_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -267,5 +267,5 @@ typedef	value_array<pint_tag,4>	pint_array_4D;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_PARAM_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
 

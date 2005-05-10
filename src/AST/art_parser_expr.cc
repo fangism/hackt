@@ -1,30 +1,30 @@
 /**
-	\file "art_parser_expr.cc"
+	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.19 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef	__ART_PARSER_EXPR_CC__
-#define	__ART_PARSER_EXPR_CC__
+#ifndef	__AST_ART_PARSER_EXPR_CC__
+#define	__AST_ART_PARSER_EXPR_CC__
 
 #include <exception>
 #include <iostream>
 
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_expr.h"
-#include "art_parser_expr_list.h"
-#include "art_parser_range_list.h"
-#include "art_parser_node_list.tcc"
-#include "sublist.tcc"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_expr.h"
+#include "AST/art_parser_expr_list.h"
+#include "AST/art_parser_range_list.h"
+#include "AST/art_parser_node_list.tcc"
+#include "util/sublist.tcc"
 
 // will need these come time for type-checking
-#include "art_object_instance_base.h"
-#include "art_object_definition_base.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_expr.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_expr.h"
 
-#include "what.h"
+#include "util/what.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -59,7 +59,7 @@ namespace ART {
 using namespace entity;
 
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class expr method definitions
@@ -1252,5 +1252,5 @@ template class node_list<const range,comma>;			// range_list
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_EXPR_CC__
+#endif	// __AST_ART_PARSER_EXPR_CC__
 

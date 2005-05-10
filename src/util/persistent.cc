@@ -1,19 +1,19 @@
 /**
-	\file "persistent.cc"
+	\file "util/persistent.cc"
 	Method definitions for persistent class interface.  
-	$Id: persistent.cc,v 1.6 2005/02/27 22:54:26 fang Exp $
+	$Id: persistent.cc,v 1.7 2005/05/10 04:51:28 fang Exp $
  */
 
-#include "macros.h"
+#include "util/macros.h"
 #include <cstdlib>
 #include <iostream>
 #include <algorithm>
 
-#include "persistent.h"
+#include "util/persistent.h"
 
 namespace util {
 //=============================================================================
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::fill;
 
 //=============================================================================

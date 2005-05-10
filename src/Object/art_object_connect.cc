@@ -1,11 +1,11 @@
 /**
-	\file "art_object_connect.cc"
+	\file "Object/art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.21 2005/03/04 07:00:05 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.22 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CONNECT_CC__
-#define	__ART_OBJECT_CONNECT_CC__
+#ifndef	__OBJECT_ART_OBJECT_CONNECT_CC__
+#define	__OBJECT_ART_OBJECT_CONNECT_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -15,25 +15,25 @@
 #include <iostream>
 #include <vector>
 
-#include "art_object_connect.h"
-#include "art_object_connect.tcc"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_ref_data.h"
-#include "art_object_instance_int.h"
-#include "art_object_instance_bool.h"
-#include "art_object_instance_enum.h"
-#include "art_object_instance_struct.h"
-#include "art_object_instance.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_connect.tcc"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_instance_int.h"
+#include "Object/art_object_instance_bool.h"
+#include "Object/art_object_instance_enum.h"
+#include "Object/art_object_instance_struct.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_type_hash.h"
 
-#include "what.tcc"
-#include "STL/list.tcc"
-#include "persistent_object_manager.tcc"
-#include "art_object_type_hash.h"
-#include "packed_array.tcc"
-#include "stacktrace.h"
-#include "binders.h"
-#include "compose.h"
-#include "dereference.h"
+#include "util/what.tcc"
+#include "util/STL/list.tcc"
+#include "util/persistent_object_manager.tcc"
+#include "util/packed_array.tcc"
+#include "util/stacktrace.h"
+#include "util/binders.h"
+#include "util/compose.h"
+#include "util/dereference.h"
 
 // conditional defines, after including "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -92,7 +92,7 @@ namespace entity {
 USING_IO_UTILS
 using std::vector;
 using util::persistent_traits;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::mem_fun_ref;
 using util::dereference;
 USING_UTIL_COMPOSE
@@ -260,5 +260,5 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CONNECT_CC__
+#endif	// __OBJECT_ART_OBJECT_CONNECT_CC__
 

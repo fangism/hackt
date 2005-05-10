@@ -1,19 +1,19 @@
 /**
-	\file "art_object_instance_collection.h"
+	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.7 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.8 2005/05/10 04:51:17 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_COLLECTION_H__
-#define	__ART_OBJECT_INSTANCE_COLLECTION_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
 
 #include <iosfwd>
 #include <set>
 
-#include "memory/pointer_classes.h"
-#include "persistent.h"
-#include "multikey_set.h"
-#include "boolean_types.h"
+#include "util/memory/pointer_classes.h"
+#include "util/persistent.h"
+#include "util/multikey_set.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -444,5 +444,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_COLLECTION_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
 

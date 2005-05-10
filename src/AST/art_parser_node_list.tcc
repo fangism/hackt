@@ -1,25 +1,25 @@
 /**
-	\file "art_parser_node_list.tcc"
+	\file "AST/art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.6 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.7 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef	__ART_PARSER_NODE_LIST_TCC__
-#define	__ART_PARSER_NODE_LIST_TCC__
+#ifndef	__AST_ART_PARSER_NODE_LIST_TCC__
+#define	__AST_ART_PARSER_NODE_LIST_TCC__
 
 #include <ostream>
 
-#include "STL/list.tcc"
+#include "util/STL/list.tcc"
 
-#include "art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
-#include "art_parser_node_position.h"
-#include "art_context.h"
+#include "AST/art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
+#include "AST/art_parser_node_position.h"
+#include "Object/art_context.h"
 	// for class context, uses auto_indent()
 
-#include "what.tcc"
-#include "stacktrace.h"
-#include "type_traits.h"
+#include "util/what.tcc"
+#include "util/stacktrace.h"
+#include "util/type_traits.h"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!
@@ -341,5 +341,5 @@ node_list<T,D>::release_append(node_list<T,D>& dest) {
 }	// end namespace ART
 
 
-#endif	// __ART_PARSER_NODE_LIST_TCC__
+#endif	// __AST_ART_PARSER_NODE_LIST_TCC__
 

@@ -1,25 +1,25 @@
 /**
-	\file "multikey.tcc"
+	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.6 2005/02/27 22:54:23 fang Exp $
+	$Id: multikey.tcc,v 1.7 2005/05/10 04:51:26 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
 #define	__UTIL_MULTIKEY_TCC__
 
-#include "multikey.h"
+#include "util/multikey.h"
 
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
 
-#include "IO_utils.tcc"
+#include "util/IO_utils.tcc"
 
 
 namespace util {
 using util::write_value;
 using util::read_value;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::copy;
 using std::fill;
 using std::transform;
@@ -488,20 +488,6 @@ multikey_generator<D,K>::initialize(void) {
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 typename multikey_generator<D,K>::corner_type&
 multikey_generator<D,K>::operator ++ (int) {
-#if 0
-	iterator inc = &this->indices[D-1];
-	const const_iterator msp = &this->indices[-1];
-	const_iterator min = &lower_corner.indices[D-1];
-	const_iterator max = &upper_corner.indices[D-1];
-	for ( ; inc != msp; inc--, min--, max--) {
-		if (*inc >= *max)
-			*inc = *min;
-		else {
-			(*inc)++;
-			break;
-		}
-	}
-#else
 	reverse_iterator inc = this->rbegin();
 	const const_reverse_iterator msp = this->rend();
 	const_reverse_iterator min = lower_corner.rbegin();
@@ -514,7 +500,6 @@ multikey_generator<D,K>::operator ++ (int) {
 			break;
 		}
 	}
-#endif
 	return *this;
 }
 
@@ -622,7 +607,6 @@ value_reader<multikey_generic<K> >::operator () (value_type& v) {
 
 //=============================================================================
 }	// end namespace util
-
 
 #endif	// __UTIL_MULTIKEY_TCC__
 

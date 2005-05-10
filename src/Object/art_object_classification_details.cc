@@ -1,13 +1,13 @@
 /**
-	\file "art_object_classification_details.cc"
+	\file "Object/art_object_classification_details.cc"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.cc,v 1.3 2005/03/11 08:47:24 fang Exp $
+	$Id: art_object_classification_details.cc,v 1.4 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_CC__
-#define	__ART_OBJECT_CLASSIFICATION_DETAILS_CC__
+#ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_CC__
+#define	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_CC__
 
-#include "art_object_classification_details.h"
+#include "Object/art_object_classification_details.h"
 
 namespace ART {
 namespace entity {
@@ -54,5 +54,5 @@ class_traits<pfloat_tag>::value_type_name[] = "floating-point";
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CLASSIFICATION_DETAILS_CC__
+#endif	// __OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_CC__
 

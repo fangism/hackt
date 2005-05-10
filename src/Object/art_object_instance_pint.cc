@@ -1,11 +1,11 @@
 /**
-	\file "art_object_instance_pint.cc"
+	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.19 2005/05/08 20:50:44 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.20 2005/05/10 04:51:18 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_PINT_CC__
-#define	__ART_OBJECT_INSTANCE_PINT_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
@@ -15,22 +15,22 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_type_ref.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_hash.h"
 
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "art_object_value_reference.h"
-#include "art_object_value_collection.tcc"
-#include "art_object_classification_details.h"
+#include "Object/art_object_value_reference.h"
+#include "Object/art_object_value_collection.tcc"
+#include "Object/art_object_classification_details.h"
 
-#include "static_trace.h"
+#include "util/static_trace.h"
 
 //=============================================================================
 // start of static initializations
@@ -114,5 +114,5 @@ template class value_array<pint_tag,4>;
 
 STATIC_TRACE_END("instance_pint")
 
-#endif	// __ART_OBJECT_INSTANCE_PINT_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
 

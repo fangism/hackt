@@ -1,22 +1,22 @@
 /**
-	\file "art_object_template_formals_manager.h"
+	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.2 2005/05/04 17:54:13 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.3 2005/05/10 04:51:20 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
-#define	__ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
+#ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
+#define	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
 
 #include <iosfwd>
 #include <vector>
 
-#include "macros.h"
-#include "art_object_fwd.h"
+#include "util/macros.h"
+#include "Object/art_object_fwd.h"
 
-#include "boolean_types.h"
-#include "persistent.h"		// for persistent object interface
-#include "hash_qmap.h"		// need complete definition
-#include "memory/pointer_classes.h"
+#include "util/boolean_types.h"
+#include "util/persistent.h"	// for persistent object interface
+#include "util/hash_qmap.h"	// need complete definition
+#include "util/memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
 
 namespace ART {
@@ -179,5 +179,5 @@ vector<ART::entity::template_formals_manager::template_formals_value_type>;
 }	// end namespace std
 #endif
 
-#endif	// __ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
+#endif	// __OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
 

@@ -1,14 +1,14 @@
 /**
-	\file "art_parser_definition_item.h"
+	\file "AST/art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.5 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.6 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef __ART_PARSER_DEFINITION_ITEM_H__
-#define __ART_PARSER_DEFINITION_ITEM_H__
+#ifndef __AST_ART_PARSER_DEFINITION_ITEM_H__
+#define __AST_ART_PARSER_DEFINITION_ITEM_H__
 
-#include "art_parser_base.h"
-#include "art_parser_node_list.h"
+#include "AST/art_parser_base.h"
+#include "AST/art_parser_node_list.h"
 
 namespace ART {
 namespace parser {
@@ -88,5 +88,5 @@ virtual	line_position
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_DEFINITION_ITEM_H__
+#endif	// __AST_ART_PARSER_DEFINITION_ITEM_H__
 

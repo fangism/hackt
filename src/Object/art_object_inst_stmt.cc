@@ -1,11 +1,11 @@
 /**
-	\file "art_object_inst_stmt.cc"
+	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.17 2005/03/11 08:47:27 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.18 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_CC__
-#define	__ART_OBJECT_INST_STMT_CC__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
+#define	__OBJECT_ART_OBJECT_INST_STMT_CC__
 
 // for debugging only, before inclusion of any header files
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -17,27 +17,27 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_type_ref.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_expr_base.h"
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
-#include "art_object_unroll_context.h"
-#include "art_object_classification_details.h"
-#include "art_object_instance_collection.h"
-#include "art_object_value_collection.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_expr_base.h"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_hash.h"
+#include "Object/art_object_unroll_context.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_instance_collection.h"
+#include "Object/art_object_value_collection.h"
 
-#include "art_object_inst_stmt_param.h"
-#include "art_object_inst_stmt_data.h"
-#include "art_object_inst_stmt_chan.h"
-#include "art_object_inst_stmt_proc.h"
+#include "Object/art_object_inst_stmt_param.h"
+#include "Object/art_object_inst_stmt_data.h"
+#include "Object/art_object_inst_stmt_chan.h"
+#include "Object/art_object_inst_stmt_proc.h"
 
-#include "persistent_object_manager.tcc"
-#include "stacktrace.h"
-#include "static_trace.h"
+#include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
+#include "util/static_trace.h"
 
 // conditional defines, after inclusion of "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -52,7 +52,7 @@
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 
-#include "art_object_inst_stmt.tcc"
+#include "Object/art_object_inst_stmt.tcc"
 
 //=============================================================================
 // local specializations
@@ -278,5 +278,5 @@ STATIC_TRACE_END("inst_stmt")
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
 
-#endif	// __ART_OBJECT_INST_STMT_CC__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_CC__
 

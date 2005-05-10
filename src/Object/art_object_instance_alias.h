@@ -1,17 +1,17 @@
 /**
-	\file "art_object_instance_alias.h"
+	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.3 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.4 2005/05/10 04:51:16 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_ALIAS_H__
-#define	__ART_OBJECT_INSTANCE_ALIAS_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
 
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool_fwd.h"
-#include "multikey_set.h"
-#include "ring_node.h"
+#include "util/memory/pointer_classes.h"
+#include "util/memory/list_vector_pool_fwd.h"
+#include "util/multikey_set.h"
+#include "util/ring_node.h"
 
 
 namespace ART {
@@ -318,5 +318,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_ALIAS_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
 

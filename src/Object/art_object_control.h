@@ -1,17 +1,17 @@
 /**
-	\file "art_object_control.h"
+	\file "Object/art_object_control.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: art_object_control.h,v 1.7 2005/01/13 05:28:28 fang Exp $
+	$Id: art_object_control.h,v 1.8 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CONTROL_H__
-#define	__ART_OBJECT_CONTROL_H__
+#ifndef	__OBJECT_ART_OBJECT_CONTROL_H__
+#define	__OBJECT_ART_OBJECT_CONTROL_H__
 
-#include "string_fwd.h"
-#include "art_object_fwd.h"
-#include "art_object_instance_management_base.h"
-#include "memory/pointer_classes.h"
+#include "util/string_fwd.h"
+#include "Object/art_object_fwd.h"
+#include "Object/art_object_instance_management_base.h"
+#include "util/memory/pointer_classes.h"
 
 namespace ART {
 namespace entity {
@@ -82,5 +82,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	//	__ART_OBJECT_CONTROL_H__
+#endif	//	__OBJECT_ART_OBJECT_CONTROL_H__
 

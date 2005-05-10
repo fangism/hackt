@@ -1,7 +1,7 @@
 /**
-	\file "numeric/nibble_tables.h"
+	\file "util/numeric/nibble_tables.h"
 	Includable small tables, useful for bit operations.  
-	$Id: nibble_tables.h,v 1.2 2005/03/06 04:36:49 fang Exp $
+	$Id: nibble_tables.h,v 1.3 2005/05/10 04:51:34 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_NIBBLE_TABLES_H__

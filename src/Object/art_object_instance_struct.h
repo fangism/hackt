@@ -1,17 +1,17 @@
 /**
-	\file "art_object_instance_struct.h"
+	\file "Object/art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.11 2005/05/06 02:51:23 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.12 2005/05/10 04:51:19 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_STRUCT_H__
-#define	__ART_OBJECT_INSTANCE_STRUCT_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_H__
 
-#include "art_object_instance.h"
-#include "art_object_classification_details.h"
-#include "art_object_instance_collection.h"
-#include "art_object_instance_alias.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_instance_collection.h"
+#include "Object/art_object_instance_alias.h"
 
 namespace ART {
 namespace entity {
@@ -45,5 +45,5 @@ typedef	instance_array<datastruct_tag, 4>	struct_array_4D;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_STRUCT_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_STRUCT_H__
 

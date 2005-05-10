@@ -1,32 +1,32 @@
 /**
-	\file "art_object_instance_struct.cc"
+	\file "Object/art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.13 2005/03/04 07:00:08 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.14 2005/05/10 04:51:19 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_STRUCT_CC__
-#define	__ART_OBJECT_INSTANCE_STRUCT_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_instance_struct.h"
-#include "art_object_inst_ref_data.h"
-#include "art_object_member_inst_ref.h"
-#include "art_object_expr_const.h"
-#include "art_object_connect.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_instance_struct.h"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_member_inst_ref.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_type_hash.h"
 
-#include "art_object_classification_details.h"
+#include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "art_object_instance_collection.tcc"
+#include "Object/art_object_instance_collection.tcc"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_instance_collection,
@@ -178,5 +178,5 @@ template class instance_array<datastruct_tag, 4>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_STRUCT_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
 

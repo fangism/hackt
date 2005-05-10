@@ -1,5 +1,5 @@
 /**
-	\file "memory/excl_ptr.h"
+	\file "util/memory/excl_ptr.h"
 	Library of pointers for explicit memory management.  
 	The pointer classes contained herein are all non-counted.  
 	For reference-counted classes, see "count_ptr.h". 
@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.4 2005/03/05 02:49:59 fang Exp $
+	$Id: excl_ptr.h,v 1.5 2005/05/10 04:51:33 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -29,10 +29,10 @@
 #ifndef	__UTIL_MEMORY_EXCL_PTR_H__
 #define	__UTIL_MEMORY_EXCL_PTR_H__
 
-#include "macros.h"
-#include "memory/pointer_classes_fwd.h"
-#include "memory/pointer_manipulator.h"
-#include "STL/construct_fwd.h"
+#include "util/macros.h"
+#include "util/memory/pointer_classes_fwd.h"
+#include "util/memory/pointer_manipulator.h"
+#include "util/STL/construct_fwd.h"
 
 //=============================================================================
 // debugging stuff

@@ -1,5 +1,5 @@
 /**
- *	\file "art_object_type_hash.h"
+ *	\file "Object/art_object_type_hash.h"
  *	This contains hash_key codes for all serializable, 
  *	persistent classes in the ART language.  
  *	This file needs to be kept consistent with the Cyclone implementation
@@ -18,11 +18,11 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.5 2005/02/27 22:54:18 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.6 2005/05/10 04:51:20 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_HASH_H__
-#define	__ART_OBJECT_TYPE_HASH_H__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
+#define	__OBJECT_ART_OBJECT_TYPE_HASH_H__
 //=============================================================================
 
 // macro name							hash string
@@ -157,5 +157,5 @@
 	// more class constants here...
 
 //=============================================================================
-#endif	// __ART_OBJECT_TYPE_HASH_H__
+#endif	// __OBJECT_ART_OBJECT_TYPE_HASH_H__
 

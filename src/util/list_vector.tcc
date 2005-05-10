@@ -1,8 +1,8 @@
 /**
-	file "list_vector.tcc"
+	file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.7 2005/03/05 02:49:58 fang Exp $
+	$Id: list_vector.tcc,v 1.8 2005/05/10 04:51:25 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -10,64 +10,19 @@
 
 #include <iostream>
 #include <numeric>
-#include "STL/list.tcc"
-#include "list_vector.h"
+#include "util/STL/list.tcc"
+#include "util/list_vector.h"
 
 // should we include this automatically?
-#include "qmap.tcc"
+#include "util/qmap.tcc"
 
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::inner_product;
 using std::ptr_fun;
 
 //=============================================================================
 // class list_vector method definitions
-
-
-#if 0
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_TEMPLATE_SIGNATURE
-list_vector<T,ValAlloc,VecAlloc>::iterator
-list_vector<T,ValAlloc,VecAlloc>::insert(iterator pos, const value_type& v) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_TEMPLATE_SIGNATURE
-void
-list_vector<T,ValAlloc,VecAlloc>::insert(iterator pos, const size_type n, 
-		const value_type& v) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_TEMPLATE_SIGNATURE
-template <class InIter>
-void
-list_vector<T,ValAlloc,VecAlloc>::insert(iterator pos, InIter first, InIter last) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_TEMPLATE_SIGNATURE
-list_vector<T,ValAlloc,VecAlloc>::iterator
-list_vector<T,ValAlloc,VecAlloc>::erase(iterator first, iterator last) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_TEMPLATE_SIGNATURE
-list_vector<T,ValAlloc,VecAlloc>::iterator
-list_vector<T,ValAlloc,VecAlloc>::erase(iterator pos) {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-LIST_VECTOR_TEMPLATE_SIGNATURE
-inline
-list_vector<T,ValAlloc,VecAlloc>::list_map_checker::list_map_checker(
-		const size_type l, const size_type m) :
-		list_size(l), map_size(m) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -87,7 +42,7 @@ operator << (ostream& o,
  */
 LIST_VECTOR_TEMPLATE_SIGNATURE
 void
-list_vector<T,ValAlloc,VecAlloc>::check_invariants(void) const {
+LIST_VECTOR_CLASS::check_invariants(void) const {
 	const size_type this_size = this->size();
 	assert(vec_list.size() >= 2);
 	const size_type vdiff = vec_list.size() -vec_map.size() -2;
@@ -162,7 +117,7 @@ list_vector<T,ValAlloc,VecAlloc>::check_invariants(void) const {
  */
 LIST_VECTOR_TEMPLATE_SIGNATURE
 ostream&
-list_vector<T,ValAlloc,VecAlloc>::dump_details(ostream& o) const {
+LIST_VECTOR_CLASS::dump_details(ostream& o) const {
 	o << "In list_vector<T,ValAlloc> at " << this << ": {" << endl;
 //	o << "\tlist<vector<T> >, map<size_t,vector<T*>: {" << endl;
 	o << "\tvec_list_front at " << &*vec_list_front() << 

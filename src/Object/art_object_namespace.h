@@ -1,23 +1,23 @@
 /**
-	\file "art_object_namespace.h"
+	\file "Object/art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.14 2005/04/19 02:26:41 fang Exp $
+	$Id: art_object_namespace.h,v 1.15 2005/05/10 04:51:20 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_NAMESPACE_H__
-#define	__ART_OBJECT_NAMESPACE_H__
+#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
+#define	__OBJECT_ART_OBJECT_NAMESPACE_H__
 
-#include "STL/list.h"
+#include "util/STL/list.h"
 
-#include "art_object_base.h"
-#include "persistent.h"		// for persistent object interface
+#include "Object/art_object_base.h"
+#include "util/persistent.h"		// for persistent object interface
 	// includes <iosfwd> <string>
 
-#include "boolean_types.h"
-#include "qmap.h"		// need complete definition
-#include "hash_qmap.h"		// need complete definition
-#include "memory/excl_ptr.h"	// need complete definition (never_ptr members)
-#include "memory/list_vector_pool_fwd.h"
+#include "util/boolean_types.h"
+#include "util/qmap.h"		// need complete definition
+#include "util/hash_qmap.h"		// need complete definition
+#include "util/memory/excl_ptr.h"	// need complete definition (never_ptr members)
+#include "util/memory/list_vector_pool_fwd.h"
 
 // #include "what.h"
 // including declarations of partial specializations prevents
@@ -487,5 +487,5 @@ namespace util {
 #endif
 
 //=============================================================================
-#endif	// __ART_OBJECT_NAMESPACE_H__
+#endif	// __OBJECT_ART_OBJECT_NAMESPACE_H__
 

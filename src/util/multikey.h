@@ -1,20 +1,20 @@
 /**
-	\file "multikey.h"
+	\file "util/multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.20 2005/02/27 22:54:23 fang Exp $
+	$Id: multikey.h,v 1.21 2005/05/10 04:51:26 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
 #define	__UTIL_MULTIKEY_H__
 
-#include "macros.h"
-#include "multikey_fwd.h"
+#include "util/macros.h"
+#include "util/multikey_fwd.h"
 
-#include "STL/reverse_iterator.h"
+#include "util/STL/reverse_iterator.h"
 #include <valarray>
 #include <iosfwd>
-#include "IO_utils_fwd.h"
+#include "util/IO_utils_fwd.h"
 
 #define	MULTIKEY_TEMPLATE_SIGNATURE					\
 template <size_t D, class K>

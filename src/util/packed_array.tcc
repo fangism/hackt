@@ -1,6 +1,6 @@
 /**
-	\file "packed_array.tcc"
-	$Id: packed_array.tcc,v 1.10 2005/02/27 22:54:26 fang Exp $
+	\file "util/packed_array.tcc"
+	$Id: packed_array.tcc,v 1.11 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -9,12 +9,12 @@
 #include <iostream>
 #include <numeric>
 #include <iterator>
-#include "macros.h"
-#include "packed_array.h"
-#include "multikey.tcc"
+#include "util/macros.h"
+#include "util/packed_array.h"
+#include "util/multikey.tcc"
 
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::accumulate;
 using std::ostream_iterator;
 using util::multikey_generator;

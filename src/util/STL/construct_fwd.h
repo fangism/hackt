@@ -1,7 +1,7 @@
 /**
-	\file "STL/construct_fwd.h"
+	\file "util/STL/construct_fwd.h"
 	Forward declaration of std::_Construct, and std::_Destroy.
-	$Id: construct_fwd.h,v 1.3 2005/02/27 22:12:00 fang Exp $
+	$Id: construct_fwd.h,v 1.4 2005/05/10 04:51:31 fang Exp $
  */
 
 #ifndef	__UTIL_STL_CONSTRUCT_FWD_H__

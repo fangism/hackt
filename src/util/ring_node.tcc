@@ -1,57 +1,33 @@
 /**
-	\file "ring_node.tcc"
+	\file "util/ring_node.tcc"
 	Implementation of ring_node class.
-	$Id: ring_node.tcc,v 1.2 2005/02/27 22:54:27 fang Exp $
+	$Id: ring_node.tcc,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_TCC__
 #define	__UTIL_RING_NODE_TCC__
 
-#include "ring_node.h"
-
-#if 0
-#if defined(ENABLE_STACKTRACE) && ENABLE_STACKTRACE
-	#include "stacktrace.h"
-#else
-	#define	STACKTRACE(x)
-#endif
-#endif
+#include "util/ring_node.h"
 
 namespace util {
 //=============================================================================
 
 #if !FORCE_INLINE_RING_NODE
 inline
-ring_node_base::ring_node_base() : next(this) {
-//	STACKTRACE("ring_node_base()");
-#if 0
-	std::cerr << "starting: " << this << " -> " << next << endl;
-#endif
-}
+ring_node_base::ring_node_base() : next(this) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 ring_node_base::ring_node_base(ring_node_base* r) : next(r) {
-//	STACKTRACE("ring_node_base(*)");
 	NEVER_NULL(next);
-#if 0
-	std::cerr << "starting: " << this << " -> " << next << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 ring_node_base::~ring_node_base() {
-//	STACKTRACE("~ring_node_base()");
-#if 0
-	std::cerr << "end: " << this << " -> " << next << endl;
-#endif
 	if (next != this) {
 		ring_node_base* walk = next;
 		while (walk->next != this) {
-#if 0
-			std::cerr << "walking: " << walk << endl;
-#endif
 			walk = walk->next;
 		}
 		// found the node that points to this, update it
@@ -65,7 +41,6 @@ ring_node_base::~ring_node_base() {
 inline
 void
 ring_node_base::unsafe_merge(ring_node_base& r) {
-//	STACKTRACE("ring_node_base::unsafe_merge()");
 	std::swap(next, r.next);
 }
 

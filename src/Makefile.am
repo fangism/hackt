@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.55 2005/05/04 17:54:09 fang Exp $
+#	$Id: Makefile.am,v 1.56 2005/05/10 04:51:05 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -410,7 +410,7 @@ GET_START_TOKEN_ENUM = \
 
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
-		-v include="art_parser.h art++-parse-prefix.h" \
+		-v include="AST/art_parser.h parser/art++-parse-prefix.h" \
 		-v namespace=ART::parser \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
@@ -425,9 +425,9 @@ parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-par
 		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
 
 
-AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
-	-I$(srcdir)/lexer -I$(srcdir)/AST -I$(srcdir)/Object \
-	-Iparser
+# AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
+#	-I$(srcdir)/lexer -I$(srcdir)/Object -Iparser
+AM_CPPFLAGS = -I$(srcdir)
 # will need _build directories for "make distcheck" with auto-generated headers
 # the last -Iparser is for the relative path in the build directory
 

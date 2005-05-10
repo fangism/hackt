@@ -1,16 +1,16 @@
 /**
-	\file "IO_utils.h"
+	\file "util/IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.5 2005/02/27 22:54:19 fang Exp $
+	$Id: IO_utils.h,v 1.6 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_H__
 #define __UTIL_IO_UTILS_H__
 
-#include "IO_utils_fwd.h"
-#include "string_fwd.h"
-#include "STL/pair_fwd.h"
-#include "STL/valarray_fwd.h"
+#include "util/IO_utils_fwd.h"
+#include "util/string_fwd.h"
+#include "util/STL/pair_fwd.h"
+#include "util/STL/valarray_fwd.h"
 
 #define	USING_IO_UTILS							\
 using util::value_writer;						\

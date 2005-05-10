@@ -1,5 +1,5 @@
 /**
-	\file "valarray_fwd.h"
+	\file "util/STL/valarray_fwd.h"
  */
 
 #ifndef	__UTIL_STL_VALARRAY_FWD_H__

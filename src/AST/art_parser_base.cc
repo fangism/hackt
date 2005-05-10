@@ -1,11 +1,11 @@
 /**
-	\file "art_parser_base.cc"
+	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.19 2005/05/04 17:54:09 fang Exp $
+	$Id: art_parser_base.cc,v 1.20 2005/05/10 04:51:06 fang Exp $
  */
 
-#ifndef	__ART_PARSER_BASE_CC__
-#define	__ART_PARSER_BASE_CC__
+#ifndef	__AST_ART_PARSER_BASE_CC__
+#define	__AST_ART_PARSER_BASE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -18,25 +18,25 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_expr_base.h"
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_root_item.h"
-#include "art_parser_type.h"
-#include "art_parser_identifier.h"
-#include "art_parser_statement.h"
-#include "art_parser_definition_item.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_expr_base.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_root_item.h"
+#include "AST/art_parser_type.h"
+#include "AST/art_parser_identifier.h"
+#include "AST/art_parser_statement.h"
+#include "AST/art_parser_definition_item.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "art_context.h"
-#include "art_object_definition_base.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_expr.h"		// for dynamic_param_expr_list
-#include "art_object_namespace.h"
+#include "Object/art_context.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_expr.h"		// for dynamic_param_expr_list
+#include "Object/art_object_namespace.h"
 
-#include "indent.h"
-#include "what.h"
-#include "stacktrace.h"
+#include "util/indent.h"
+#include "util/what.h"
+#include "util/stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -61,7 +61,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::concrete_type_ref, "(type-ref)")
 //=============================================================================
 namespace ART {
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
@@ -762,5 +762,5 @@ template class node_list<const root_item>;
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_BASE_CC__
+#endif	// __AST_ART_PARSER_BASE_CC__
 

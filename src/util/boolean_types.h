@@ -1,9 +1,9 @@
 /**
-	\file "boolean_types.h"
+	\file "util/boolean_types.h"
 	Boolean-like classes with different semantics.  
 	The purpose of these classes is to provide self-documenting
 	boolean values, which prevent user errors.  
-	$Id: boolean_types.h,v 1.2 2005/03/01 04:51:00 fang Exp $
+	$Id: boolean_types.h,v 1.3 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef	__UTIL_BOOLEAN_TYPES_H__

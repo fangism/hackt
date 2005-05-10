@@ -1,14 +1,14 @@
 /**
-	\file "art_object_inst_stmt_base.h"
+	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.7 2005/03/11 08:47:28 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.8 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_BASE_H__
-#define	__ART_OBJECT_INST_STMT_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
+#define	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 
-#include "art_object_instance_management_base.h"
-#include "memory/pointer_classes.h"
+#include "Object/art_object_instance_management_base.h"
+#include "util/memory/pointer_classes.h"
 
 namespace ART {
 namespace entity {
@@ -97,5 +97,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_STMT_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 

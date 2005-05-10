@@ -1,9 +1,9 @@
 /**
-	\file "type_traits.h"
+	\file "util/type_traits.h"
 	Snippets of type_traits from TR1 / Boost.  
 	Don't want to rely on new compiler (gcc4) or Boost Libraries.  
 	Really should make this configuration dependent.  
-	$Id: type_traits.h,v 1.2 2005/05/04 17:54:15 fang Exp $
+	$Id: type_traits.h,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_TYPE_TRAITS_H__

@@ -1,14 +1,14 @@
 /**
-	\file "maplikeset.h"
+	\file "util/maplikeset.h"
 	Converts a set of special elements into a map-like interface.  
-	$Id: maplikeset.h,v 1.2 2005/02/27 22:54:22 fang Exp $
+	$Id: maplikeset.h,v 1.3 2005/05/10 04:51:25 fang Exp $
  */
 
 #ifndef	__UTIL_MAPLIKESET_H__
 #define	__UTIL_MAPLIKESET_H__
 
 #include <utility>		// for std::pair
-#include "STL/functional_fwd.h"
+#include "util/STL/functional_fwd.h"
 
 namespace util {
 //=============================================================================

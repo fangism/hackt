@@ -1,13 +1,13 @@
 /**
-	\file "list.h"
+	\file "util/STL/list.h"
 	Class declaration for std::list wrapper.
-	$Id: list.h,v 1.1 2004/12/05 05:07:57 fang Exp $
+	$Id: list.h,v 1.2 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_LIST_H__
 #define	__UTIL_STL_LIST_H__
 
-#include "STL/list_fwd.h"
+#include "util/STL/list_fwd.h"
 
 #if !USE_STD_LIST
 #include <list>

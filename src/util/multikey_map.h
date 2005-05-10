@@ -1,21 +1,21 @@
 /**
-	\file "multikey_map.h"
+	\file "util/multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.15 2005/02/27 22:54:24 fang Exp $
+	$Id: multikey_map.h,v 1.16 2005/05/10 04:51:27 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
 #define	__UTIL_MULTIKEY_MAP_H__
 
-#include "macros.h"
-#include "STL/list_fwd.h"
-#include "STL/pair_fwd.h"
+#include "util/macros.h"
+#include "util/STL/list_fwd.h"
+#include "util/STL/pair_fwd.h"
 
-#include "multikey_fwd.h"
-#include "multikey_map_fwd.h"
-#include "array_traits.h"
-#include "multikey_assoc.h"
+#include "util/multikey_fwd.h"
+#include "util/multikey_map_fwd.h"
+#include "util/array_traits.h"
+#include "util/multikey_assoc.h"
 
 namespace util {
 using std::ostream;
@@ -87,53 +87,6 @@ public:
 	using map_type::empty;
 	using map_type::size;
 	using map_type::clear;
-#if 0
-	/**
-		Whether or not this map contains any elements.
-		Need final overrider here to resolve ambiguity.  
-	 */
-	bool
-	empty(void) const {
-		return map_type::empty();
-	}
-#endif
-
-#if 0
-	/**
-		Number of dimensions.
-	 */
-	size_t
-	dimensions(void) const { return D; }
-#endif
-
-#if 0
-	size_t
-	size(void) const { return this->population(); }
-#endif
-
-#if 0
-	/**
-		\return The number of elements (leaves) in map.  
-	 */
-	size_t
-	population(void) const { return mt::size(); }
-#endif
-
-#if 0
-	/**
-		Removes all elements.
-	 */
-	void
-	clear(void);
-#endif
-
-#if 0
-	/**
-		General method for removing default values.  
-	 */
-	void
-	clean(void);
-#endif
 
 	using map_type::begin;
 	using map_type::end;

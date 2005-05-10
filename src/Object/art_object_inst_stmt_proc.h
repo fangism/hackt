@@ -1,15 +1,15 @@
 /**
-	\file "art_object_inst_stmt_proc.h"
+	\file "Object/art_object_inst_stmt_proc.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_proc.h,v 1.2 2005/03/11 08:47:29 fang Exp $
+	$Id: art_object_inst_stmt_proc.h,v 1.3 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_PROC_H__
-#define	__ART_OBJECT_INST_STMT_PROC_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_PROC_H__
+#define	__OBJECT_ART_OBJECT_INST_STMT_PROC_H__
 
-#include "art_object_classification_details.h"
-#include "art_object_type_ref_base.h"
-#include "persistent_object_manager.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_type_ref_base.h"
+#include "util/persistent_object_manager.h"
 
 namespace ART {
 namespace entity {
@@ -62,5 +62,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_STMT_PROC_H__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_PROC_H__
 

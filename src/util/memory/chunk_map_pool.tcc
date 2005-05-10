@@ -1,25 +1,25 @@
 /**
-	\file "memory/chunk_map_pool.tcc"
+	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.4 2005/04/14 19:46:36 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.5 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 #define	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 
 #include <iostream>
-#include "macros.h"
-#include "memory/chunk_map_pool.h"
-#include "numeric/nibble_tables.h"
-#include "numeric/integer_traits.h"
-#include "memory/destruction_policy.tcc"
-#include "what.tcc"
+#include "util/macros.h"
+#include "util/memory/chunk_map_pool.h"
+#include "util/numeric/nibble_tables.h"
+#include "util/numeric/integer_traits.h"
+#include "util/memory/destruction_policy.tcc"
+#include "util/what.tcc"
 
 #define	FORMAT_HEX_POINTER(x)	reinterpret_cast<void*>(size_t(x))
 
 namespace util {
 namespace memory {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using numeric::MSB_position;
 using numeric::divide_by_constant;
 

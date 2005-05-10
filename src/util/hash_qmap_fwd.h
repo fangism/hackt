@@ -1,13 +1,13 @@
 /**
-	\file "hash_qmap_fwd.h"
+	\file "util/hash_qmap_fwd.h"
 	Forward declarations for queryable hash_map, defined in "hash_qmap.h"
-	$Id: hash_qmap_fwd.h,v 1.7 2005/02/27 22:54:22 fang Exp $
+	$Id: hash_qmap_fwd.h,v 1.8 2005/05/10 04:51:23 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_QMAP_FWD_H__
 #define	__UTIL_HASH_QMAP_FWD_H__
 
-#include "STL/hash_map_fwd.h"
+#include "util/STL/hash_map_fwd.h"
 // needed for reference to default hash function
 
 // these class parameters are explained below

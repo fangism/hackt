@@ -1,13 +1,13 @@
 /**
-	\file "nullary_function.h"
+	\file "util/nullary_function.h"
 	Generic generator functor base.
-	$Id: nullary_function.h,v 1.2 2005/03/04 03:17:40 fang Exp $
+	$Id: nullary_function.h,v 1.3 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_NULLARY_FUNCTION_H__
 #define	__UTIL_NULLARY_FUNCTION_H__
 
-#include "nullary_function_fwd.h"
+#include "util/nullary_function_fwd.h"
 
 namespace util {
 //=============================================================================

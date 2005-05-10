@@ -1,13 +1,13 @@
 /**
-	\file "what.tcc"
+	\file "util/what.tcc"
 	Default implementation for user-defined type-names.
-	$Id: what.tcc,v 1.5 2005/03/01 21:26:47 fang Exp $
+	$Id: what.tcc,v 1.6 2005/05/10 04:51:31 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_TCC__
 #define	__UTIL_WHAT_TCC__
 
-#include "what.h"
+#include "util/what.h"
 #include <string>
 #include <typeinfo>
 

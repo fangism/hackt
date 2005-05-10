@@ -1,13 +1,13 @@
 /**
-	\file "art_object_type_ref.h"
+	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.22 2005/05/08 20:50:44 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.23 2005/05/10 04:51:20 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_REF_H__
-#define	__ART_OBJECT_TYPE_REF_H__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
+#define	__OBJECT_ART_OBJECT_TYPE_REF_H__
 
-#include "art_object_type_ref_base.h"
+#include "Object/art_object_type_ref_base.h"
 
 namespace ART {
 namespace parser {
@@ -235,5 +235,5 @@ private:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_TYPE_REF_H__
+#endif	// __OBJECT_ART_OBJECT_TYPE_REF_H__
 

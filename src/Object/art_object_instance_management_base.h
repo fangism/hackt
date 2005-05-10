@@ -1,16 +1,16 @@
 /**
-	\file "art_object_instance_management_base.h"
+	\file "Object/art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.7 2005/02/27 22:54:16 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.8 2005/05/10 04:51:18 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
-#define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
 
 #include <iosfwd>
-#include "STL/list.h"
-#include "persistent.h"
-#include "memory/excl_ptr.h"
+#include "util/STL/list.h"
+#include "util/persistent.h"
+#include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace parser {
@@ -143,5 +143,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
 

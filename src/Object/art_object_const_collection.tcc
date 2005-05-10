@@ -1,11 +1,11 @@
 /**
-	\file "art_object_const_collection.cc"
+	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.3 2005/05/09 18:49:54 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.4 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CONST_COLLECTION_TCC__
-#define	__ART_OBJECT_CONST_COLLECTION_TCC__
+#ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
+#define	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 
@@ -33,12 +33,12 @@
 #include <exception>
 #include <algorithm>
 
-#include "art_object_const_collection.h"
-#include "art_object_classification_details.h"
+#include "Object/art_object_const_collection.h"
+#include "Object/art_object_classification_details.h"
 
-#include "persistent_object_manager.h"
-#include "stacktrace.h"
-#include "what.tcc"
+#include "util/persistent_object_manager.h"
+#include "util/stacktrace.h"
+#include "util/what.tcc"
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -105,7 +105,7 @@ persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
 namespace ART {
 namespace entity {
 //=============================================================================
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using namespace util::memory;
 USING_STACKTRACE
 using util::persistent_traits;
@@ -375,5 +375,5 @@ CONST_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 }	// end namepace entity
 }	// end namepace ART
 
-#endif	// __ART_OBJECT_CONST_COLLECTION_TCC__
+#endif	// __OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
 

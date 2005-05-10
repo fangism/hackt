@@ -1,7 +1,7 @@
 /**
-	\file "functional_fwd.h"
+	\file "util/STL/functional_fwd.h"
 	Forward declarations of the <functional> header.
-	$Id: functional_fwd.h,v 1.2 2005/02/27 22:54:28 fang Exp $
+	$Id: functional_fwd.h,v 1.3 2005/05/10 04:51:31 fang Exp $
  */
 
 #ifndef	__UTIL_STL_FUNCTIONAL_FWD_H__

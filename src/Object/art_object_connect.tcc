@@ -1,11 +1,11 @@
 /**
-	\file "art_object_connect.tcc"
+	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.5 2005/03/04 07:00:05 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.6 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CONNECT_TCC__
-#define	__ART_OBJECT_CONNECT_TCC__
+#ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
+#define	__OBJECT_ART_OBJECT_CONNECT_TCC__
 
 // compilation switches for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -19,16 +19,16 @@
 #include <functional>
 #include <algorithm>
 
-#include "art_object_connect.h"
-// #include "art_object_instance_alias.h"
+#include "Object/art_object_connect.h"
+// #include "Object/art_object_instance_alias.h"
 
-#include "persistent_object_manager.h"
-#include "STL/list.h"
-#include "stacktrace.h"
-#include "what.h"
-#include "binders.h"
-#include "compose.h"
-#include "dereference.h"
+#include "util/persistent_object_manager.h"
+#include "util/STL/list.h"
+#include "util/stacktrace.h"
+#include "util/what.h"
+#include "util/binders.h"
+#include "util/compose.h"
+#include "util/dereference.h"
 
 // conditional defines, after including "stactrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -50,7 +50,7 @@ namespace entity {
 USING_IO_UTILS
 using std::vector;
 using util::persistent_traits;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::mem_fun_ref;
 using std::transform;
 using util::dereference;
@@ -303,5 +303,5 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CONNECT_TCC__
+#endif	// __OBJECT_ART_OBJECT_CONNECT_TCC__
 

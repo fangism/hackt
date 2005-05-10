@@ -1,7 +1,7 @@
 /**
-	\file "const_traits.h"
+	\file "util/const_traits.h"
 	Constification and de-constification traits template.  
-	$Id: const_traits.h,v 1.2 2005/02/27 22:54:21 fang Exp $
+	$Id: const_traits.h,v 1.3 2005/05/10 04:51:23 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_TRAITS_H__

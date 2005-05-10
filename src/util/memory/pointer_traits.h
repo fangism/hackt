@@ -1,8 +1,8 @@
 /**
-	\file "pointer_traits.h"
+	\file "util/memory/pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.6 2005/03/05 02:49:59 fang Exp $
+	$Id: pointer_traits.h,v 1.7 2005/05/10 04:51:34 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__

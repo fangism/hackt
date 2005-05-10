@@ -1,13 +1,13 @@
 /**
-	\file "art_parser_chp_fwd.h"
+	\file "AST/art_parser_chp_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: art_parser_chp_fwd.h,v 1.2 2005/04/14 19:46:33 fang Exp $
+	$Id: art_parser_chp_fwd.h,v 1.3 2005/05/10 04:51:06 fang Exp $
  */
 
-#ifndef	__ART_PARSER_CHP_FWD_H__
-#define	__ART_PARSER_CHP_FWD_H__
+#ifndef	__AST_ART_PARSER_CHP_FWD_H__
+#define	__AST_ART_PARSER_CHP_FWD_H__
 
-#include "art_parser_fwd.h"
+#include "AST/art_parser_fwd.h"
 
 namespace ART {
 namespace parser {
@@ -38,5 +38,5 @@ class incdec_stmt;
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_CHP_FWD_H__
+#endif	// __AST_ART_PARSER_CHP_FWD_H__
 

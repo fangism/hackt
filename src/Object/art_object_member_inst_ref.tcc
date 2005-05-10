@@ -1,21 +1,21 @@
 /**
-	\file "art_object_member_inst_ref.tcc"
+	\file "Object/art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.5 2005/03/04 07:00:08 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.6 2005/05/10 04:51:19 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_MEMBER_INST_REF_TCC__
-#define	__ART_OBJECT_MEMBER_INST_REF_TCC__
+#ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
+#define	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
 
 #include <iostream>
-#include "what.h"
-#include "persistent_object_manager.h"
-#include "art_object_member_inst_ref.h"
+#include "util/what.h"
+#include "util/persistent_object_manager.h"
+#include "Object/art_object_member_inst_ref.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
@@ -123,5 +123,5 @@ MEMBER_INSTANCE_REFERENCE_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_MEMBER_INST_REF_TCC__
+#endif	// __OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
 

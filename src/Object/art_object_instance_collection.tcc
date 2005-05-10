@@ -1,12 +1,12 @@
 /**
-	\file "art_object_instance_collection.tcc"
+	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.7 2005/04/29 01:07:45 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.8 2005/05/10 04:51:17 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
-#define	__ART_OBJECT_INSTANCE_COLLECTION_TCC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overridable debug switches
@@ -33,26 +33,26 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_instance_alias.h"
-#include "art_object_instance_collection.h"
+#include "Object/art_object_instance_alias.h"
+#include "Object/art_object_instance_collection.h"
 
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "multikey_set.tcc"
-#include "ring_node.tcc"
-#include "packed_array.tcc"
+#include "util/multikey_set.tcc"
+#include "util/ring_node.tcc"
+#include "util/packed_array.tcc"
 
-// #include "memory/list_vector_pool.tcc"
-#include "persistent_object_manager.tcc"
-#include "indent.h"
-#include "what.h"
-#include "stacktrace.h"
-#include "static_trace.h"
-#include "ptrs_functional.h"
-#include "compose.h"
-#include "binders.h"
-#include "dereference.h"
+// #include "util/memory/list_vector_pool.tcc"
+#include "util/persistent_object_manager.tcc"
+#include "util/indent.h"
+#include "util/what.h"
+#include "util/stacktrace.h"
+#include "util/static_trace.h"
+#include "util/ptrs_functional.h"
+#include "util/compose.h"
+#include "util/binders.h"
+#include "util/dereference.h"
 
 // conditional defines, after including "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -94,7 +94,7 @@ namespace ART {
 namespace entity {
 using std::string;
 using std::_Select1st;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
@@ -1152,5 +1152,5 @@ INSTANCE_SCALAR_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_COLLECTION_TCC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
 

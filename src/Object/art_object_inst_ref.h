@@ -1,16 +1,16 @@
 /**
-	\file "art_object_inst_ref.h"
+	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.19 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.20 2005/05/10 04:51:14 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_H__
-#define	__ART_OBJECT_INST_REF_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
+#define	__OBJECT_ART_OBJECT_INST_REF_H__
 
-#include "art_object_inst_ref_base.h"
-#include "art_object_instance_base.h"
-#include "memory/pointer_classes.h"
-#include "packed_array_fwd.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_instance_base.h"
+#include "util/memory/pointer_classes.h"
+#include "util/packed_array_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -148,5 +148,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_H__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_H__
 

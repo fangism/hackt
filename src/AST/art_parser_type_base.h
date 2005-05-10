@@ -1,13 +1,13 @@
 /**
-	\file "art_parser_type.h"
+	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type_base.h,v 1.2 2005/05/04 17:54:12 fang Exp $
+	$Id: art_parser_type_base.h,v 1.3 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef __ART_PARSER_TYPE_BASE_H__
-#define __ART_PARSER_TYPE_BASE_H__
+#ifndef __AST_ART_PARSER_TYPE_BASE_H__
+#define __AST_ART_PARSER_TYPE_BASE_H__
 
-#include "art_parser_base.h"
+#include "AST/art_parser_base.h"
 
 namespace ART {
 namespace parser {
@@ -44,5 +44,5 @@ virtual	never_ptr<const object>
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_TYPE_BASE_H__
+#endif	// __AST_ART_PARSER_TYPE_BASE_H__
 

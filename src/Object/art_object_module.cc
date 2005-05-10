@@ -1,11 +1,11 @@
 /**
-	\file "art_object_module.cc"
+	\file "Object/art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.18 2005/03/05 02:49:57 fang Exp $
+ 	$Id: art_object_module.cc,v 1.19 2005/05/10 04:51:19 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_MODULE_CC__
-#define	__ART_OBJECT_MODULE_CC__
+#ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
+#define	__OBJECT_ART_OBJECT_MODULE_CC__
 
 // code debugging switches
 #define	ENABLE_STACKTRACE		0
@@ -13,12 +13,12 @@
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <iostream>
-#include "art_object_module.h"
-#include "art_object_namespace.h"
-#include "art_object_unroll_context.h"
-#include "persistent_object_manager.tcc"
-#include "art_object_type_hash.h"
-#include "stacktrace.h"
+#include "Object/art_object_module.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_unroll_context.h"
+#include "util/persistent_object_manager.tcc"
+#include "Object/art_object_type_hash.h"
+#include "util/stacktrace.h"
 
 // conditional defines, after including "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -40,7 +40,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::istream;
 using util::write_value;
 using util::read_value;
@@ -170,5 +170,5 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
 
-#endif	// __ART_OBJECT_MODULE_CC__
+#endif	// __OBJECT_ART_OBJECT_MODULE_CC__
 

@@ -1,15 +1,15 @@
 /**
-	\file "memory/pointer_manipulator.h"
+	\file "util/memory/pointer_manipulator.h"
 	Library of pointers for explicit memory management.  
 	The pointer classes contained herein are all non-counted.  
 
-	$Id: pointer_manipulator.h,v 1.4 2005/03/01 04:51:00 fang Exp $
+	$Id: pointer_manipulator.h,v 1.5 2005/05/10 04:51:34 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_MANIPULATOR_H__
 #define	__UTIL_MEMORY_POINTER_MANIPULATOR_H__
 
-#include "memory/pointer_traits.h"
+#include "util/memory/pointer_traits.h"
 
 
 namespace util {

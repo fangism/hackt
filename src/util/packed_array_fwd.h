@@ -1,7 +1,7 @@
 /**
-	\file "packed_array_fwd.h"
+	\file "util/packed_array_fwd.h"
 	Forward declarations for packed array template class.
-	$Id: packed_array_fwd.h,v 1.3 2005/02/27 22:54:26 fang Exp $
+	$Id: packed_array_fwd.h,v 1.4 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_FWD_H__

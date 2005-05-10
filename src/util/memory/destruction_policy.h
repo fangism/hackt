@@ -1,8 +1,8 @@
 /**
-	\file "memory/destruction_policy.h"
+	\file "util/memory/destruction_policy.h"
 	Allocator destruction policies.  
 
-	$Id: destruction_policy.h,v 1.3 2005/03/06 04:36:49 fang Exp $
+	$Id: destruction_policy.h,v 1.4 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DESTRUCTION_POLICY_H__

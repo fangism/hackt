@@ -1,16 +1,19 @@
 /**
-	\file "sstream.h"
+	\file "util/sstream.h"
 	Header-wrapper for gcc-version-specific placement of <sstream>
 
 	IMPORTANT NOTE:
 	The deprecated <strstream> in older versions of some compilers is 
 	known to suck, because of error-prone memory non-management.  
-	$Id: sstream.h,v 1.3 2004/11/02 07:52:19 fang Exp $
+	$Id: sstream.h,v 1.4 2005/05/10 04:51:30 fang Exp $
  */
 
 
-#ifndef	__SSTREAM_H__
-#define	__SSTREAM_H__
+#ifndef	__UTIL_SSTREAM_H__
+#define	__UTIL_SSTREAM_H__
+
+// should really be configured...
+// #include "config.h"
 
 // compiler-version dependent location of sstream
 #ifdef  __GNUC__
@@ -25,5 +28,5 @@
 DIE DIE DIE			// your guess is as good as mine
 #endif	// __GNUC__
 
-#endif	// __SSTREAM_H__
+#endif	// __UTIL_SSTREAM_H__
 

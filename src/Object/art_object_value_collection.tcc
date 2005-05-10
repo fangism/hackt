@@ -1,11 +1,11 @@
 /**
-	\file "art_object_instance_pint.cc"
+	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.2 2005/03/11 08:47:32 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.3 2005/05/10 04:51:21 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_VALUE_COLLECTION_TCC__
-#define	__ART_OBJECT_VALUE_COLLECTION_TCC__
+#ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
+#define	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
 
 #ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -23,36 +23,26 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_value_collection.h"
-
-#if 0
-#include "art_object_type_ref.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
-#include "art_built_ins.h"
-#endif
-
+#include "Object/art_object_value_collection.h"
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "memory/list_vector_pool.tcc"
-#include "what.h"
-#include "STL/list.tcc"
-#include "multikey_qmap.tcc"		// include "qmap.tcc"
-#include "persistent_object_manager.tcc"
-#include "compose.h"
-#include "binders.h"
-#include "ptrs_functional.h"
-#include "dereference.h"
-#include "indent.h"
-#include "stacktrace.h"
+#include "util/memory/list_vector_pool.tcc"
+#include "util/what.h"
+#include "util/STL/list.tcc"
+#include "util/multikey_qmap.tcc"		// include "qmap.tcc"
+#include "util/persistent_object_manager.tcc"
+#include "util/compose.h"
+#include "util/binders.h"
+#include "util/ptrs_functional.h"
+#include "util/dereference.h"
+#include "util/indent.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
@@ -802,5 +792,5 @@ VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) 
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_VALUE_COLLECTION_TCC__
+#endif	// __OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
 

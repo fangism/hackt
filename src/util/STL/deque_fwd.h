@@ -1,14 +1,14 @@
 /**
-	\file "STL/deque_fwd.h"
+	\file "util/STL/deque_fwd.h"
 	Forward declaration of std::deque.
 	No wrapping.  
-	$Id: deque_fwd.h,v 1.2 2005/01/28 19:58:50 fang Exp $
+	$Id: deque_fwd.h,v 1.3 2005/05/10 04:51:31 fang Exp $
  */
 
 #ifndef	__UTIL_STL_DEQUE_FWD_H__
 #define	__UTIL_STL_DEQUE_FWD_H__
 
-#include "STL/allocator_fwd.h"
+#include "util/STL/allocator_fwd.h"
 
 namespace std {
 

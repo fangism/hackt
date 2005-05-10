@@ -2,7 +2,7 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.10 2005/02/27 22:54:07 fang Exp $
+	$Id: artobjunroll.cc,v 1.11 2005/05/10 04:51:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,9 +11,9 @@
 #include <fstream>
 #include "art++.h"			// has everything you need
 
-#include "stacktrace.h"
+#include "util/stacktrace.h"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 
 int

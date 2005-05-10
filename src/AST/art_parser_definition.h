@@ -1,15 +1,15 @@
 /**
-	\file "art_parser_definition.h"
+	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.11 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_definition.h,v 1.12 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef __ART_PARSER_DEFINITION_H__
-#define __ART_PARSER_DEFINITION_H__
+#ifndef __AST_ART_PARSER_DEFINITION_H__
+#define __AST_ART_PARSER_DEFINITION_H__
 
-#include "art_parser_root_item.h"
-#include "art_parser_type.h"
-#include "art_parser_definition_item.h"
+#include "AST/art_parser_root_item.h"
+#include "AST/art_parser_type.h"
+#include "AST/art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -457,5 +457,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_DEFINITION_H__
+#endif	// __AST_ART_PARSER_DEFINITION_H__
 

@@ -2,6 +2,19 @@
 
 2005-05-09	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-35 (main trunk):
+	  Major organization for sake of code maintainability:
+	  Eliminate CPPFLAGS -Iblah.  Include files relative to 
+	  root path of source tree, i.e. with Object/ or util/ or AST/...
+	  Motivation: reduces code obfuscation, by letting the casual
+	  reader know where to find dependent files, rather than counting
+	  on knowing which subdirectory each included file belongs in.  
+	  Also cleaned up some obsolete code in util/ directory, 
+		reducing almost 2000 LOC.  
+
+
+2005-05-09	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-34 (main trunk):
 	  Cleaned up old hash_string code (useless).  
 	  Improved some expr/inst_ref dump code to be more verbose, 

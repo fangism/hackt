@@ -1,12 +1,12 @@
 /**
 	\file "art_parser_node_position.cc"
-	$Id: art_parser_node_position.cc,v 1.3 2005/04/14 19:46:34 fang Exp $
+	$Id: art_parser_node_position.cc,v 1.4 2005/05/10 04:51:08 fang Exp $
  */
 
 #include <iostream>
-#include "art_parser_node_position.h"
-#include "memory/chunk_map_pool.tcc"
-#include "what.h"
+#include "AST/art_parser_node_position.h"
+#include "util/memory/chunk_map_pool.tcc"
+#include "util/what.h"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::parser::node_position, "node_position")

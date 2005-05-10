@@ -1,11 +1,11 @@
 /**
-	\file "art_object_assign.cc"
+	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.2 2005/03/11 21:12:41 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.3 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_ASSIGN_TCC__
-#define	__ART_OBJECT_ASSIGN_TCC__
+#ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
+#define	__OBJECT_ART_OBJECT_ASSIGN_TCC__
 
 #ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL		0
@@ -14,17 +14,17 @@
 #include <iostream>
 #include <numeric>
 
-#include "art_object_assign.h"
+#include "Object/art_object_assign.h"
 
-#include "STL/list.tcc"
-#include "persistent_object_manager.tcc"
-#include "memory/list_vector_pool.tcc"
+#include "util/STL/list.tcc"
+#include "util/persistent_object_manager.tcc"
+#include "util/memory/list_vector_pool.tcc"
 
-#include "what.h"
-#include "binders.h"
-#include "compose.h"
-#include "dereference.h"
-#include "ptrs_functional.h"
+#include "util/what.h"
+#include "util/binders.h"
+#include "util/compose.h"
+#include "util/dereference.h"
+#include "util/ptrs_functional.h"
 
 //=============================================================================
 namespace ART {
@@ -257,5 +257,5 @@ EXPRESSION_ASSIGNMENT_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_ASSIGN_TCC__
+#endif	// __OBJECT_ART_OBJECT_ASSIGN_TCC__
 

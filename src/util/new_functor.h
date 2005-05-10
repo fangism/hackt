@@ -1,30 +1,16 @@
 /**
-	\file "new_functor.h"
+	\file "util/new_functor.h"
 	Turns new operator for constructing an object into a functor.  
-	$Id: new_functor.h,v 1.2 2005/03/04 03:17:40 fang Exp $
+	$Id: new_functor.h,v 1.3 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_NEW_FUNCTOR_H__
 #define	__UTIL_NEW_FUNCTOR_H__
 
-#include "new_functor_fwd.h"
-#include "nullary_function.h"
+#include "util/new_functor_fwd.h"
+#include "util/nullary_function.h"
 
 namespace util {
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	Pure virtual constructor functor.  
- */
-template <class R>
-struct new_functor_base : public nullary_function<R> {
-virtual ~new_functor_base() { }
-
-virtual	R
-	operator () (void) const = 0;
-};	// end struct new_functor_base
-#endif
 
 //-----------------------------------------------------------------------------
 /**

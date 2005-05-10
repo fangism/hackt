@@ -1,31 +1,31 @@
 /**
-	\file "art_parser_token.cc"
+	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.23 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_token.cc,v 1.24 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef	__ART_PARSER_TOKEN_CC__
-#define	__ART_PARSER_TOKEN_CC__
+#ifndef	__AST_ART_PARSER_TOKEN_CC__
+#define	__AST_ART_PARSER_TOKEN_CC__
 
 #include <ostream>
 #include <cstdio>		// for sprintf
 #include <cstring>		// for a few C-string functions
 #include <exception>
 
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_token_string.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_token_string.h"
 
-#include "art_context.h"
-#include "art_object_definition.h"
-#include "art_object_instance_base.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_expr_const.h"
-#include "art_built_ins.h"
+#include "Object/art_context.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_built_ins.h"
 
-#include "what.h"
-#include "stacktrace.h"
-#include "memory/chunk_map_pool.tcc"
+#include "util/what.h"
+#include "util/stacktrace.h"
+#include "util/memory/chunk_map_pool.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -61,7 +61,7 @@ namespace memory {
 
 namespace ART {
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 
 //=============================================================================
@@ -640,5 +640,5 @@ token_pint_type::check_build(context& c) const {
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_TOKEN_CC__
+#endif	// __AST_ART_PARSER_TOKEN_CC__
 

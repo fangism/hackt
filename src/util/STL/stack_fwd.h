@@ -1,14 +1,14 @@
 /**
-	\file "STL/stack_fwd.h"
+	\file "util/STL/stack_fwd.h"
 	Forward declaration of std::stack.
 	No wrapping.  
-	$Id: stack_fwd.h,v 1.2 2005/01/28 19:58:51 fang Exp $
+	$Id: stack_fwd.h,v 1.3 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_STACK_FWD_H__
 #define	__UTIL_STL_STACK_FWD_H__
 
-#include "STL/deque_fwd.h"
+#include "util/STL/deque_fwd.h"
 
 namespace std {
 

@@ -1,15 +1,15 @@
 /**
-	\file "art_object_inst_stmt.h"
+	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.14 2005/05/08 20:50:43 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.15 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_H__
-#define	__ART_OBJECT_INST_STMT_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
+#define	__OBJECT_ART_OBJECT_INST_STMT_H__
 
-#include "art_object_inst_stmt_base.h"
-#include "memory/count_ptr.h"
-#include "memory/list_vector_pool_fwd.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "util/memory/count_ptr.h"
+#include "util/memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -118,5 +118,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_STMT_H__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_H__
 

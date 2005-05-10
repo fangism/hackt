@@ -1,20 +1,20 @@
 /**
-	\file "packed_array.h"
+	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.9 2005/02/27 22:54:26 fang Exp $
+	$Id: packed_array.h,v 1.10 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
 #define	__UTIL_PACKED_ARRAY_H__
 
-#include "packed_array_fwd.h"
+#include "util/packed_array_fwd.h"
 
 #include <valarray>
 #include <vector>
 #include <iosfwd>
-#include "macros.h"
-#include "multikey.h"
+#include "util/macros.h"
+#include "util/multikey.h"
 
 #define	PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE				\
 template <size_t D, class K>

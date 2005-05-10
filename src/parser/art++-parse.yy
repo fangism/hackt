@@ -1,5 +1,5 @@
 /**
-	\file "art++-parse.yy"
+	\file "parser/art++-parse.yy"
 	Yacc-generated parser source for the ART++ language.  
 
 	note: this is not the same language as that found in lib/art.cy
@@ -7,15 +7,15 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.17 2005/05/04 17:54:13 fang Exp $
+	$Id: art++-parse.yy,v 1.18 2005/05/10 04:51:21 fang Exp $
  */
 
 %{
 #include <iostream>
 
-#include "art_parser.h"			// should be first
-#include "art++-parse.output.h"		// auto-generated state strings! :)
-#include "using_ostream.h"
+#include "AST/art_parser.h"			// should be first
+#include "parser/art++-parse.output.h"		// auto-generated state strings! :)
+#include "util/using_ostream.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
 #if defined (__GNUC__) && (3 <= __GNUC__)
@@ -26,7 +26,7 @@ using namespace ART::lexer;
 using namespace ART::parser;
 
 #if YYBISON
-#include "memory/excl_ptr.h"
+#include "util/memory/excl_ptr.h"
 /**
 	Work-around for bison.
 	Bison doesn't give public access to yyval, so we are forced to

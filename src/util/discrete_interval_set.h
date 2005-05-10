@@ -1,9 +1,9 @@
 /**
-	\file "discrete_interval_set.h"
+	\file "util/discrete_interval_set.h"
 	Class for a set of intervals over the set of integers
 	or discrete, integer-like values.  
 	This class is used to build the "multidimensional_sparse_set" class.  
-	$Id: discrete_interval_set.h,v 1.7 2005/02/27 22:54:21 fang Exp $
+	$Id: discrete_interval_set.h,v 1.8 2005/05/10 04:51:23 fang Exp $
  */
 
 // by David Fang, Cornell University, 2004
@@ -11,7 +11,7 @@
 #ifndef	__UTIL_DISCRETE_INTERVAL_SET_H__
 #define	__UTIL_DISCRETE_INTERVAL_SET_H__
 
-#include "discrete_interval_set_fwd.h"
+#include "util/discrete_interval_set_fwd.h"
 
 #include <map>
 #include <iosfwd>

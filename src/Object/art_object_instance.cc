@@ -1,11 +1,11 @@
 /**
-	\file "art_object_instance.cc"
+	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.41 2005/03/01 04:50:57 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.42 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_CC__
-#define	__ART_OBJECT_INSTANCE_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -15,24 +15,24 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr_const.h"
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_hash.h"
 
-#include "STL/list.tcc"
-#include "persistent_object_manager.tcc"
-#include "compose.h"
-#include "binders.h"
-#include "ptrs_functional.h"
-#include "dereference.h"
-#include "indent.h"
-#include "stacktrace.h"
+#include "util/STL/list.tcc"
+#include "util/persistent_object_manager.tcc"
+#include "util/compose.h"
+#include "util/binders.h"
+#include "util/ptrs_functional.h"
+#include "util/dereference.h"
+#include "util/indent.h"
+#include "util/stacktrace.h"
 
 // conditional defines, after including "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -53,7 +53,7 @@ namespace ART {
 namespace entity {
 using namespace ADS;		// for composition functors
 using util::dereference;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 USING_STACKTRACE
@@ -663,5 +663,5 @@ datatype_instance_collection::get_actual_param_list(void) const {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_CC__
 

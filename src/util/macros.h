@@ -1,16 +1,16 @@
 /**
-	\file "macros.h"
+	\file "util/macros.h"
 	Macros for general use.  
 
 	Some predefinable macros can be used to control compilations:
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.5 2005/01/16 02:44:22 fang Exp $
+	$Id: macros.h,v 1.6 2005/05/10 04:51:25 fang Exp $
  */
 
-#ifndef	__MACROS_H__
-#define	__MACROS_H__
+#ifndef	__UTIL_MACROS_H__
+#define	__UTIL_MACROS_H__
 
 #ifndef	NULL
 #define	NULL			0
@@ -114,5 +114,5 @@
 //=============================================================================
 // error reporting...
 
-#endif	// __MACROS_H__
+#endif	// __UTIL_MACROS_H__
 

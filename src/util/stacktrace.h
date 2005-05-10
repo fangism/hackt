@@ -1,7 +1,7 @@
 /**
-	\file "stacktrace.h"
+	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.6 2005/01/28 19:58:47 fang Exp $
+	$Id: stacktrace.h,v 1.7 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -68,16 +68,16 @@
 #if ENABLE_STACKTRACE
 
 #include <iosfwd>
-#include "macros.h"
-#include "string_fwd.h"
+#include "util/macros.h"
+#include "util/string_fwd.h"
 
-#include "STL/list_fwd.h"
-#include "STL/stack_fwd.h"
+#include "util/STL/list_fwd.h"
+#include "util/STL/stack_fwd.h"
 #include <stack>
 
 // need count pointer to be able to guarantee proper initialization
 // across modules during static construction debugging
-#include "memory/count_ptr.h"
+#include "util/memory/count_ptr.h"
 
 
 namespace util {

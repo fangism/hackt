@@ -1,25 +1,25 @@
 /**
-	\file "art_object_definition_base.h"
+	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.17 2005/05/08 20:50:42 fang Exp $
+	$Id: art_object_definition_base.h,v 1.18 2005/05/10 04:51:12 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_DEFINITION_BASE_H__
-#define	__ART_OBJECT_DEFINITION_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
+#define	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
 
 #include <vector>
 #include <string>		// needed by gcc-3.2 :S
 
-#include "macros.h"
-#include "art_object_base.h"
+#include "util/macros.h"
+#include "Object/art_object_base.h"
 
-#include "boolean_types.h"
-#include "persistent.h"		// for persistent object interface
-#include "hash_qmap.h"		// need complete definition
-#include "memory/pointer_classes.h"
+#include "util/boolean_types.h"
+#include "util/persistent.h"		// for persistent object interface
+#include "util/hash_qmap.h"		// need complete definition
+#include "util/memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
 
-#include "art_object_template_formals_manager.h"
+#include "Object/art_object_template_formals_manager.h"
 
 namespace ART {
 // forward declarations from outside namespaces
@@ -33,7 +33,6 @@ using parser::token_identifier;
 
 //=============================================================================
 namespace entity {
-// USING_LIST
 using std::string;
 using std::istream;
 using util::bad_bool;
@@ -242,5 +241,5 @@ typedef	definition_base::template_actuals_map_type
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_DEFINITION_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_BASE_H__
 

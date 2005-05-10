@@ -1,15 +1,15 @@
 /**
-	\file "art_object_inst_stmt_param.h"
+	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.2 2005/03/11 08:47:29 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.3 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_PARAM_H__
-#define	__ART_OBJECT_INST_STMT_PARAM_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
+#define	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
 
-#include "art_object_classification_details.h"
-#include "art_object_type_ref_base.h"
-#include "art_built_ins.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_built_ins.h"
 
 namespace ART {
 namespace entity {
@@ -88,5 +88,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_STMT_PARAM_H__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
 

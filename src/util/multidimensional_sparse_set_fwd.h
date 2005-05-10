@@ -1,15 +1,15 @@
 /**
-	\file "multidimensional_sparse_set_fwd.h"
+	\file "util/multidimensional_sparse_set_fwd.h"
 	Forward declarations for a fixed depth/dimension tree-set.
-	$Id: multidimensional_sparse_set_fwd.h,v 1.7 2005/02/27 22:54:23 fang Exp $
+	$Id: multidimensional_sparse_set_fwd.h,v 1.8 2005/05/10 04:51:26 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_FWD_H__
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_FWD_H__
 
-#include "STL/pair_fwd.h"
-#include "STL/list_fwd.h"
+#include "util/STL/pair_fwd.h"
+#include "util/STL/list_fwd.h"
 
 
 #define MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE			\

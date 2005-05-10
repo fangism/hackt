@@ -1,14 +1,14 @@
 /**
-	\file "memory/thread_lock.h"
+	\file "util/memory/thread_lock.h"
 	Thread locking.  
 
-	$Id: thread_lock.h,v 1.2 2005/01/28 19:58:53 fang Exp $
+	$Id: thread_lock.h,v 1.3 2005/05/10 04:51:34 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_THREAD_LOCK_H__
 #define	__UTIL_MEMORY_THREAD_LOCK_H__
 
-#include "macros.h"
+#include "util/macros.h"
 #include <pthread.h>
 
 // because FreeBSD's <pthreads.h> defines initializer as NULL

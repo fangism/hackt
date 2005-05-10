@@ -1,13 +1,13 @@
 /**
-	\file "art_parser_fwd.h"
+	\file "AST/art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.5 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_fwd.h,v 1.6 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef	__ART_PARSER_FWD_H__
-#define	__ART_PARSER_FWD_H__
+#ifndef	__AST_ART_PARSER_FWD_H__
+#define	__AST_ART_PARSER_FWD_H__
 
-#include "art_parser_delim.h"
+#include "AST/art_parser_delim.h"
 
 namespace ART {
 namespace parser {
@@ -159,5 +159,5 @@ class context;
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_FWD_H__
+#endif	// __AST_ART_PARSER_FWD_H__
 

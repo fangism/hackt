@@ -5,7 +5,7 @@
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 
-	$Id: art_main.cc,v 1.13 2005/05/04 17:54:09 fang Exp $
+	$Id: art_main.cc,v 1.14 2005/05/10 04:51:06 fang Exp $
  */
 
 #include <iostream>
@@ -14,7 +14,7 @@
 
 #define ENABLE_STACKTRACE		0
 
-#include "stacktrace.h"
+#include "util/stacktrace.h"
 USING_STACKTRACE
 
 int

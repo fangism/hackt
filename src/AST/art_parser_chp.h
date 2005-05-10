@@ -1,16 +1,16 @@
 /**
-	\file "art_parser_chp.h"
+	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.9 2005/05/04 17:54:09 fang Exp $
+	$Id: art_parser_chp.h,v 1.10 2005/05/10 04:51:06 fang Exp $
  */
 
-#ifndef	__ART_PARSER_CHP_H__
-#define	__ART_PARSER_CHP_H__
+#ifndef	__AST_ART_PARSER_CHP_H__
+#define	__AST_ART_PARSER_CHP_H__
 
-#include "art_parser_chp_fwd.h"
-#include "art_parser_token_string.h"
-#include "art_parser_statement.h"
-#include "art_parser_definition_item.h"
+#include "AST/art_parser_chp_fwd.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_statement.h"
+#include "AST/art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -507,4 +507,4 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	//	__ART_PARSER_CHP_H__
+#endif	//	__AST_ART_PARSER_CHP_H__

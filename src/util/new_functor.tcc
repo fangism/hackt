@@ -1,13 +1,13 @@
 /**
-	\file "new_functor.tcc"
+	\file "util/new_functor.tcc"
 	Default implementation of new functor.  
-	$Id: new_functor.tcc,v 1.2 2005/03/04 03:17:40 fang Exp $
+	$Id: new_functor.tcc,v 1.3 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_NEW_FUNCTOR_TCC__
 #define	__UTIL_NEW_FUNCTOR_TCC__
 
-#include "new_functor.h"
+#include "util/new_functor.h"
 
 namespace util {
 //=============================================================================

@@ -1,16 +1,16 @@
 /**
-	\file "art_parser_hse.h"
+	\file "AST/art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.10 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_hse.h,v 1.11 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef	__ART_PARSER_HSE_H__
-#define	__ART_PARSER_HSE_H__
+#ifndef	__AST_ART_PARSER_HSE_H__
+#define	__AST_ART_PARSER_HSE_H__
 
-#include "art_parser_hse_fwd.h"
-#include "art_parser_definition_item.h"
-#include "art_parser_token_string.h"
-#include "art_parser_statement.h"
+#include "AST/art_parser_hse_fwd.h"
+#include "AST/art_parser_definition_item.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_statement.h"
 
 namespace ART {
 namespace parser {
@@ -358,5 +358,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_HSE_H__
+#endif	// __AST_ART_PARSER_HSE_H__
 

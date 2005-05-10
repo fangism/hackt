@@ -1,16 +1,16 @@
 /**
-	\file "STL/hash_map_fwd.h"
+	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.2 2005/02/27 22:54:28 fang Exp $
+	$Id: hash_map_fwd.h,v 1.3 2005/05/10 04:51:31 fang Exp $
  */
 
-#ifndef	__STL_HASH_MAP_FWD_H__
-#define	__STL_HASH_MAP_FWD_H__
+#ifndef	__UTIL_STL_HASH_MAP_FWD_H__
+#define	__UTIL_STL_HASH_MAP_FWD_H__
 
 // #include "config.h"
 
-#include "STL/allocator_fwd.h"
+#include "util/STL/allocator_fwd.h"
 
 #if defined(HASH_MAP_NAMESPACE)
 #error	"HASH_MAP_NAMESPACE is already defined, but I need to set it."
@@ -62,5 +62,5 @@ class hash_map;
 #define	DEFAULT_HASH_MAP(K,T)						\
 	hash_map<K, T, hash<K>, std::equal_to<K>, std::allocator<T> >
 
-#endif	// __STL_HASH_MAP_FWD_H__
+#endif	// __UTIL_STL_HASH_MAP_FWD_H__
 

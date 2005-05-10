@@ -1,14 +1,14 @@
 /**
-	\file "art_parser_formal.h"
+	\file "AST/art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.11 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_formal.h,v 1.12 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef __ART_PARSER_FORMAL_H__
-#define __ART_PARSER_FORMAL_H__
+#ifndef __AST_ART_PARSER_FORMAL_H__
+#define __AST_ART_PARSER_FORMAL_H__
 
-#include "art_parser_base.h"
-#include "art_parser_node_list.h"
+#include "AST/art_parser_base.h"
+#include "AST/art_parser_node_list.h"
 
 namespace ART {
 namespace parser {
@@ -320,5 +320,5 @@ struct template_formal_decl_list_pair {
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_FORMAL_H__
+#endif	// __AST_ART_PARSER_FORMAL_H__
 

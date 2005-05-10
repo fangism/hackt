@@ -1,11 +1,11 @@
 /**
-	\file "art_object_expr.cc"
+	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.4 2005/05/09 18:49:56 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.5 2005/05/10 04:51:21 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_VALUE_REFERENCE_TCC__
-#define	__ART_OBJECT_VALUE_REFERENCE_TCC__
+#ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
+#define	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #ifndef	DEBUG_LIST_VECTOR_POOL
@@ -35,13 +35,13 @@
 // #define NO_OBJECT_SANITY	1
 // this will override the definition in "art_object_base.h"
 
-#include "art_object_value_reference.h"
-#include "art_object_classification_details.h"
+#include "Object/art_object_value_reference.h"
+#include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic instantiation of template code
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "persistent.h"
+#include "util/persistent.h"
 
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
@@ -65,9 +65,8 @@
 namespace ART {
 namespace entity {
 //=============================================================================
-// #include "using_ostream.h"
 using namespace util::memory;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 using util::persistent_traits;
 
@@ -681,5 +680,5 @@ VALUE_REFERENCE_CLASS::assigner::operator() (const bad_bool b,
 }	// end namepace entity
 }	// end namepace ART
 
-#endif	// __ART_OBJECT_VALUE_REFERENCE_TCC__
+#endif	// __OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
 

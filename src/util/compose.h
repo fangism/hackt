@@ -1,5 +1,5 @@
 /**
-	\file "compose.h"
+	\file "util/compose.h"
 	Unary and binary functor compositors.  
 	This file is taken from Sean Mauch's Algorithms and 
 	Data Structures class.  
@@ -7,7 +7,7 @@
 	We've kept the original namespace to attribute credit to its source.  
 	The original source can be found at:
 	http://www.acm.caltech.edu/~seanm/projects/ads/html/compose_8h-source.html
-	$Id: compose.h,v 1.6 2005/02/27 22:54:20 fang Exp $
+	$Id: compose.h,v 1.7 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef	__UTIL_COMPOSE_H__

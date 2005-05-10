@@ -1,13 +1,13 @@
 /**
-	\file "multikey_assoc.tcc"
+	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.2 2005/02/27 22:54:23 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.3 2005/05/10 04:51:26 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
 #define	__UTIL_MULTIKEY_ASSOC_TCC__
 
-#include "multikey_assoc.h"
+#include "util/multikey_assoc.h"
 
 #include <limits>
 #include <functional>
@@ -18,7 +18,7 @@
 #define	DEBUG_SLICE		0
 
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::pair;
 using std::_Select1st;
 using std::_Select2nd;
@@ -297,21 +297,9 @@ multikey_assoc<D,C>::is_compact_slice(const key_list_type& l) const {
 	if (l_size == D) {
 		// if value is default, consider it empty
 		// should use find() instead of [] operator
-#if 0
-		return ((*this)[key_type(l)] == mapped_type()) ?
-			return_type() :
-			return_type(l,l);
-#else
 		const_iterator i = find(key_type(l));
-#if 1
 		return (i != this->end() && *i != value_type()) ?
 			return_type(l,l) : return_type();
-#else
-		return (i != this->end() &&
-			_Select2nd<value_type>()(*i) != mapped_type()) ?
-			return_type(l,l) : return_type();
-#endif
-#endif
 	}
 
 	// else is under-specified
@@ -337,19 +325,12 @@ multikey_assoc<D,C>::is_compact_slice(const key_list_type& l) const {
 	if (lower_iter == last_iter) {
 		// then sub-range has one element, therefore is dense
 		return_type ret;
-#if 0
-		copy(lower_iter->first.begin(), lower_iter->first.end(),
-			back_inserter(ret.first));
-		copy(lower_iter->first.begin(), lower_iter->first.end(),
-			back_inserter(ret.second));
-#else
 		copy(_Select1st<value_type>()(*lower_iter).begin(), 
 			_Select1st<value_type>()(*lower_iter).end(),
 			back_inserter(ret.first));
 		copy(_Select1st<value_type>()(*lower_iter).begin(),
 			_Select1st<value_type>()(*lower_iter).end(),
 			back_inserter(ret.second));
-#endif
 		return ret;
 	}
 #if DEBUG_SLICE && 0
@@ -364,15 +345,10 @@ multikey_assoc<D,C>::is_compact_slice(const key_list_type& l) const {
 #endif
 
 	// get range of next dimension to check
-#if 0
-	const index_type start_index = lower_iter->first[l_size];
-	const index_type end_index = last_iter->first[l_size];
-#else
 	const index_type
 		start_index =_Select1st<value_type>()(*lower_iter)[l_size];
 	const index_type
 		end_index = _Select1st<value_type>()(*last_iter)[l_size];
-#endif
 	key_list_type upper(lower);
 	lower.push_back(start_index);
 	upper.push_back(end_index);
@@ -404,24 +380,8 @@ multikey_assoc<D,C>::is_compact(void) const {
 		return return_type();
 	const_iterator first = this->begin();
 	const_iterator last = --(this->end());
-#if 0
-	// this seems WRONG
-	key_list_type start, end;
-#if 0
-	start.push_back(first->first.front());
-	end.push_back(last->first.front());
-#else
-	// _Select1st is specialized for multikey_set_element_derived
-	// and maplikeset_element_derived.
-	start.push_back(_Select1st<value_type>()(*first).front());
-	end.push_back(_Select1st<value_type>()(*last).front());
-#endif
-	return is_compact_slice(start, end);
-#else
-	// this seems better...
 	const key_list_pair_type ext(this->index_extremities());
 	return is_compact_slice(ext.first, ext.second);
-#endif
 }
 
 
@@ -434,13 +394,9 @@ multikey_assoc<D,C>::index_extremities(void) const {
 		return return_type();
 	const const_iterator iter = this->begin();
 	const const_iterator end = this->end();
-#if 0
-	key_pair_type ext(iter->first, iter->first);
-#else
 	const key_type&
 		start = _Select1st<value_type>()(*iter);
 	key_pair_type ext(start, start);
-#endif
 	ext = accumulate(iter, end, ext,
 		typename key_type::accumulate_extremities());
 	return_type ret;
@@ -499,23 +455,8 @@ multikey_assoc<1,C>::is_compact(void) const {
 	const const_iterator end = this->end();
 	const_iterator last = end;
 	last--;
-#if 0
-	// requires "compose.h"
-	const size_t vcount =
-	count_if(this->begin(), this->end(), 
-		unary_compose(
-			bind2nd(not_equal<T>, T()), 
-			_Select2nd()
-		)
-	);
-#else
-#if 0
-	index_type k = first->first;
-	const index_type k_end = last->first;
-#else
 	index_type k = _Select1st<value_type>()(*first);
 	const index_type k_end = _Select1st<value_type>()(*last);
-#endif
 	for ( ; k <= k_end; k++) {
 		const const_iterator i = find(k);
 		if (i == this->end() ||
@@ -527,16 +468,9 @@ multikey_assoc<1,C>::is_compact(void) const {
 		}
 	}
 	return_type ret;
-#if 0
-	ret.first.push_back(first->first);
-	ret.first.push_back(last->first);
-#else
 	ret.first.push_back(_Select1st<value_type>()(*first));
-//	ret.first.push_back(_Select1st<value_type>()(*last));	// WRONG!?!?
 	ret.second.push_back(_Select1st<value_type>()(*last));
-#endif
 	return ret;
-#endif
 }
 
 

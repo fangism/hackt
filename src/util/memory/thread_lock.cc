@@ -1,8 +1,8 @@
 /**
-	\file "memory/thread_lock.cc"
+	\file "util/memory/thread_lock.cc"
 	Thread lock implementation for allocators.  
 
-	$Id: thread_lock.cc,v 1.3 2005/03/01 21:26:47 fang Exp $
+	$Id: thread_lock.cc,v 1.4 2005/05/10 04:51:34 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_THREAD_LOCK_CC__
@@ -13,12 +13,12 @@
 #if VERBOSE_LOCK
 #include <iostream>
 #endif
-#include "memory/thread_lock.h"
+#include "util/memory/thread_lock.h"
 
 namespace util {
 namespace memory {
 #if VERBOSE_LOCK
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 #endif
 
 //-----------------------------------------------------------------------------

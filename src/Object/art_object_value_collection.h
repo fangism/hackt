@@ -1,18 +1,18 @@
 /**
-	\file "art_object_value_collection.h"
+	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.3 2005/05/08 20:50:44 fang Exp $
+	$Id: art_object_value_collection.h,v 1.4 2005/05/10 04:51:21 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_VALUE_COLLECTION_H__
-#define	__ART_OBJECT_VALUE_COLLECTION_H__
+#ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
+#define	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
 
-#include "boolean_types.h"
-#include "art_object_fwd.h"
-#include "memory/count_ptr.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_fwd.h"
+#include "util/memory/count_ptr.h"
 
-#include "multikey_fwd.h"
-#include "multikey_qmap_fwd.h"
+#include "util/multikey_fwd.h"
+#include "util/multikey_qmap_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -311,5 +311,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_VALUE_COLLECTION_H__
+#endif	// __OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
 

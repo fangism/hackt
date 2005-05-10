@@ -1,11 +1,11 @@
 /**
-	\file "art_object_inst_stmt.tcc"
+	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.2 2005/03/11 08:47:28 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.3 2005/05/10 04:51:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_TCC__
-#define	__ART_OBJECT_INST_STMT_TCC__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
+#define	__OBJECT_ART_OBJECT_INST_STMT_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overrideable debug switches
@@ -31,12 +31,12 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_inst_stmt.h"
+#include "Object/art_object_inst_stmt.h"
 
-#include "what.tcc"
-#include "memory/list_vector_pool.tcc"
-#include "persistent_object_manager.h"
-#include "stacktrace.h"
+#include "util/what.tcc"
+#include "util/memory/list_vector_pool.tcc"
+#include "util/persistent_object_manager.h"
+#include "util/stacktrace.h"
 
 // conditional defines, after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -228,5 +228,5 @@ INSTANTIATION_STATEMENT_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_STMT_TCC__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_TCC__
 

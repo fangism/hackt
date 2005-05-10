@@ -1,7 +1,7 @@
 /**
-	\file "multidimensional_qmap.h"
+	\file "util/multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.10 2005/02/27 22:54:22 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.11 2005/05/10 04:51:25 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -10,13 +10,15 @@
 
 #include <iosfwd>
 
-#include "macros.h"
+#include "util/macros.h"
 
 // forward declarations
-#include "multidimensional_qmap_fwd.h"
+#include "util/multidimensional_qmap_fwd.h"
 	// includes <list>
-#include "array_traits.h"
-#include "qmap.h"
+#include "util/array_traits.h"
+#include "util/qmap.h"
+
+#define MULTIDIMENSIONAL_QMAP_CLASS	multidimensional_qmap<D,K,T,L>
 
 /*
 	Decision: Sub-trees of the map will be kept as count_ptr's
@@ -37,7 +39,7 @@ using std::pair;
 using std::string;
 using util::qmap;
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //=============================================================================
 // utility functions

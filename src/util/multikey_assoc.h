@@ -1,19 +1,18 @@
 /**
-	\file "multikey_assoc.h"
+	\file "util/multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.2 2005/02/27 22:54:23 fang Exp $
+	$Id: multikey_assoc.h,v 1.3 2005/05/10 04:51:26 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
 #define	__UTIL_MULTIKEY_ASSOC_H__
 
-#include "macros.h"
-#include "multikey_assoc_fwd.h"
-#include "STL/list_fwd.h"
-#include "STL/pair_fwd.h"
-
-#include "array_traits.h"
+#include "util/macros.h"
+#include "util/multikey_assoc_fwd.h"
+#include "util/STL/list_fwd.h"
+#include "util/STL/pair_fwd.h"
+#include "util/array_traits.h"
 
 namespace util {
 using std::pair;
@@ -40,9 +39,6 @@ protected:
 	typedef	C					assoc_type;
 public:
 	typedef	typename assoc_type::value_type		value_type;
-#if 0
-	typedef	typename assoc_type::key_type		key_type;
-#else
 	/**
 		Using the "simple_type" of the multikey, automatically
 		specializes associative structures for the case where
@@ -52,7 +48,6 @@ public:
 	 */
 	typedef	typename assoc_type::key_type::simple_type
 							key_type;
-#endif
 	typedef	typename assoc_type::mapped_type	mapped_type;
 	typedef	typename assoc_type::key_compare	key_compare;
 	typedef	typename assoc_type::allocator_type	allocator_type;

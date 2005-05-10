@@ -1,31 +1,31 @@
 /**
-	\file "art_built_ins.cc"
+	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.17 2005/03/11 08:47:24 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.18 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef	__ART_BUILT_INS_CC__
-#define	__ART_BUILT_INS_CC__
+#ifndef	__OBJECT_ART_BUILT_INS_CC__
+#define	__OBJECT_ART_BUILT_INS_CC__
 
 #define	DEBUG_ART_BUILT_INS			0
 
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool.h"
-#include "art_built_ins.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance_param.h"
-#include "art_object_expr_const.h"
-#include "static_trace.h"
-#include "art_object_value_collection.h"
-#include "art_object_classification_details.h"
+#include "util/memory/pointer_classes.h"
+#include "util/memory/list_vector_pool.h"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_expr_const.h"
+#include "util/static_trace.h"
+#include "Object/art_object_value_collection.h"
+#include "Object/art_object_classification_details.h"
 
 STATIC_TRACE_BEGIN("built-ins");
 
 #if DEBUG_ART_BUILT_INS
 	#define	ENABLE_STACKTRACE			1
-	#include "stacktrace.h"
+	#include "util/stacktrace.h"
 
 USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -163,5 +163,5 @@ bool_type = data_type_reference(
 
 STATIC_TRACE_END("built-ins");
 
-#endif	// __ART_BUILT_INS_CC__
+#endif	// __OBJECT_ART_BUILT_INS_CC__
 

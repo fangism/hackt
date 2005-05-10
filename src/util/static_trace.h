@@ -1,8 +1,8 @@
 /**
-	\file "static_trace.h"
+	\file "util/static_trace.h"
 	Utility class for identifiying global static initialization
 	and destruction of modules, and debugging ordering...
-	$Id: static_trace.h,v 1.2 2005/01/28 19:58:48 fang Exp $
+	$Id: static_trace.h,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_STATIC_TRACE_H__

@@ -1,13 +1,13 @@
 /**
-	\file "STL/set_fwd.h"
+	\file "util/STL/set_fwd.h"
 	Forward declarations of std::set.
-	$Id: set_fwd.h,v 1.2 2005/02/27 22:54:29 fang Exp $
+	$Id: set_fwd.h,v 1.3 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_SET_FWD_H__
 #define	__UTIL_STL_SET_FWD_H__
 
-#include "STL/allocator_fwd.h"
+#include "util/STL/allocator_fwd.h"
 
 namespace std {
 

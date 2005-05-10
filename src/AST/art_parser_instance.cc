@@ -1,11 +1,11 @@
 /**
-	\file "art_parser_instance.cc"
+	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.22 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_instance.cc,v 1.23 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef	__ART_PARSER_INSTANCE_CC__
-#define	__ART_PARSER_INSTANCE_CC__
+#ifndef	__AST_ART_PARSER_INSTANCE_CC__
+#define	__AST_ART_PARSER_INSTANCE_CC__
 
 // rule-of-thumb for inline directives:
 // only inline constructors if you KNOW that they will not be be needed
@@ -16,25 +16,25 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_instance.h"
-#include "art_parser_expr.h"		// for index_expr
-#include "art_parser_expr_list.h"
-#include "art_parser_range_list.h"
-#include "art_parser_token_string.h"
-#include "art_parser_type.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_instance.h"
+#include "AST/art_parser_expr.h"		// for index_expr
+#include "AST/art_parser_expr_list.h"
+#include "AST/art_parser_range_list.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_type.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "art_context.h"
-#include "art_object_namespace.h"
-#include "art_object_instance.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_inst_ref.h"
-#include "art_object_expr_base.h"
-#include "art_object_assign.h"
-#include "art_object_connect.h"
+#include "Object/art_context.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_expr_base.h"
+#include "Object/art_object_assign.h"
+#include "Object/art_object_connect.h"
 
-#include "what.h"
-#include "stacktrace.h"
+#include "util/what.h"
+#include "util/stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -73,7 +73,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::type_completion_connection_statement,
 //=============================================================================
 namespace ART {
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 
 //=============================================================================
@@ -877,5 +877,5 @@ template class node_list<const guarded_definition_body>;
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_INSTANCE_CC__
+#endif	// __AST_ART_PARSER_INSTANCE_CC__
 

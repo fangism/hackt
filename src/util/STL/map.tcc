@@ -1,13 +1,13 @@
 /**
-	\file "map.tcc"
+	\file "util/map.tcc"
 	Class method definitions for std::map clone wrapper class.  
-	$Id: map.tcc,v 1.1 2004/12/05 05:07:57 fang Exp $
+	$Id: map.tcc,v 1.2 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_MAP_TCC__
 #define	__UTIL_STL_MAP_TCC__
 
-#include "STL/map.h"
+#include "util/STL/map.h"
 
 #if !USE_STD_MAP
 

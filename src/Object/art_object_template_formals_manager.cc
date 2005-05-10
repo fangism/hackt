@@ -1,27 +1,27 @@
 /**
-	\file "art_object_template_formals_manager.cc"
+	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.2 2005/05/04 17:54:13 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.3 2005/05/10 04:51:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "hash_specializations.h"	// include as early as possible
+#include "util/hash_specializations.h"	// include as early as possible
 
-#include "art_object_template_formals_manager.h"
-#include "art_object_instance_param.h"
-#include "art_object_expr.h"
+#include "Object/art_object_template_formals_manager.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_expr.h"
 
-#include "hash_qmap.tcc"
-#include "persistent_object_manager.tcc"
-#include "IO_utils.tcc"
-#include "indent.h"
-#include "stacktrace.h"
+#include "util/hash_qmap.tcc"
+#include "util/persistent_object_manager.tcc"
+#include "util/IO_utils.tcc"
+#include "util/indent.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE

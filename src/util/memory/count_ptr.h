@@ -1,9 +1,9 @@
 /**
-	\file "memory/count_ptr.h"
+	\file "util/memory/count_ptr.h"
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.3 2005/02/27 22:54:29 fang Exp $
+	$Id: count_ptr.h,v 1.4 2005/05/10 04:51:33 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -13,9 +13,9 @@
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
 #define	__UTIL_MEMORY_COUNT_PTR_H__
 
-#include "macros.h"
-#include "memory/pointer_classes_fwd.h"
-#include "memory/pointer_manipulator.h"
+#include "util/macros.h"
+#include "util/memory/pointer_classes_fwd.h"
+#include "util/memory/pointer_manipulator.h"
 
 //=============================================================================
 // debugging stuff

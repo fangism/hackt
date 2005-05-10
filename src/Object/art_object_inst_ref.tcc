@@ -1,24 +1,24 @@
 /**
-	\file "art_object_inst_ref.cc"
+	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.5 2005/03/04 07:00:06 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.6 2005/05/10 04:51:14 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_TCC__
-#define	__ART_OBJECT_INST_REF_TCC__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
+#define	__OBJECT_ART_OBJECT_INST_REF_TCC__
 
 #include <iostream>
 
-#include "art_object_inst_ref.h"
-#include "art_object_expr_const.h"	// for const_index_list
-#include "what.h"
-#include "packed_array.tcc"		// for packed_array_generic<>::resize()
-#include "persistent_object_manager.tcc"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_expr_const.h"	// for const_index_list
+#include "util/what.h"
+#include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
+#include "util/persistent_object_manager.tcc"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
@@ -226,5 +226,5 @@ INSTANCE_REFERENCE_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_TCC__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_TCC__
 

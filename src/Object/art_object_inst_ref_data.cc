@@ -1,24 +1,24 @@
 /**
-	\file "art_object_inst_ref_data.cc"
+	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.7 2005/03/04 07:00:06 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8 2005/05/10 04:51:14 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_DATA_CC__
-#define	__ART_OBJECT_INST_REF_DATA_CC__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
+#define	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
 
-#include "art_object_inst_ref_data.h"
-#include "art_object_instance_bool.h"
-#include "art_object_instance_int.h"
-#include "art_object_instance_enum.h"
-#include "art_object_instance_struct.h"
-#include "art_object_connect.h"
-#include "art_object_inst_ref.tcc"
-#include "art_object_member_inst_ref.tcc"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_instance_bool.h"
+#include "Object/art_object_instance_int.h"
+#include "Object/art_object_instance_enum.h"
+#include "Object/art_object_instance_struct.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_inst_ref.tcc"
+#include "Object/art_object_member_inst_ref.tcc"
 
-#include "art_object_type_hash.h"
-#include "persistent_object_manager.tcc"
-#include "art_object_classification_details.h"
+#include "Object/art_object_type_hash.h"
+#include "util/persistent_object_manager.tcc"
+#include "Object/art_object_classification_details.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(
@@ -93,5 +93,5 @@ template class member_instance_reference<datastruct_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_DATA_CC__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_DATA_CC__
 

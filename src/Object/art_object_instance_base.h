@@ -1,23 +1,23 @@
 /**
-	\file "art_object_instance_base.h"
+	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.13 2005/03/01 04:50:57 fang Exp $
+	$Id: art_object_instance_base.h,v 1.14 2005/05/10 04:51:16 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_BASE_H__
-#define	__ART_OBJECT_INSTANCE_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
 
 #include <string>
 #include <deque>
-#include "STL/list.h"
+#include "util/STL/list.h"
 
-#include "macros.h"
-#include "boolean_types.h"
-#include "art_object_base.h"
-#include "persistent.h"		// for persistent object interface
+#include "util/macros.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_base.h"
+#include "util/persistent.h"		// for persistent object interface
 	// includes <iosfwd>
 
-#include "memory/pointer_classes.h"
+#include "util/memory/pointer_classes.h"
 	// need complete definition (never_ptr members)
 
 namespace ART {
@@ -259,5 +259,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_BASE_H__
 

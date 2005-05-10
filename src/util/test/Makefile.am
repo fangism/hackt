@@ -146,7 +146,7 @@ multikey_set_derived_test.stderr: multikey_set_test.stderr
 AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
 # the util/ source directory
-AM_CPPFLAGS = -I$(srcdir)/..
+AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 # some of these flags are deadly...
 GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror

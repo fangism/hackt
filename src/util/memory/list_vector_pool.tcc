@@ -1,17 +1,17 @@
 /**
-	\file "list_vector_pool.tcc"
+	\file "util/list_vector_pool.tcc"
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.4 2005/03/06 04:36:49 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.5 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 
 #include <iostream>
-#include "memory/list_vector_pool.h"
-#include "memory/destruction_policy.tcc"
+#include "util/memory/list_vector_pool.h"
+#include "util/memory/destruction_policy.tcc"
 
 
 // turn invariant assertions on or off
@@ -40,11 +40,11 @@
 
 // problem: preprocessor definition value not being evaluated correctly?
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
-	#include "what.tcc"
+	#include "util/what.tcc"
 #endif
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
-	#include "stacktrace.h"
+	#include "util/stacktrace.h"
 	#define	LIST_VECTOR_POOL_STACKTRACE(arg)	STACKTRACE(arg)
 #else
 	#define	LIST_VECTOR_POOL_STACKTRACE(arg)
@@ -54,7 +54,7 @@ namespace util {
 namespace memory {
 using std::_Construct;
 using std::_Destroy;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 #if DEBUG_LIST_VECTOR_POOL_USING_WHAT
 using util::what;
 #endif

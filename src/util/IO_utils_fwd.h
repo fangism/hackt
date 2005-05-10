@@ -1,7 +1,7 @@
 /**
-	\file "IO_utils_fwd.h"
+	\file "util/IO_utils_fwd.h"
 	General-purpose handy utilities for binary I/O.
-	$Id: IO_utils_fwd.h,v 1.2 2005/02/27 22:54:19 fang Exp $
+	$Id: IO_utils_fwd.h,v 1.3 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_FWD_H__

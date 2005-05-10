@@ -1,13 +1,13 @@
 /**
- *	\file "ptrs_functional.h"
+ *	\file "util/ptrs_functional.h"
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
- *	$Id: ptrs_functional.h,v 1.6 2005/02/27 22:54:26 fang Exp $
+ *	$Id: ptrs_functional.h,v 1.7 2005/05/10 04:51:29 fang Exp $
  */
 
-#ifndef	__PTRS_FUNCTIONAL_H__
-#define	__PTRS_FUNCTIONAL_H__
+#ifndef	__UTIL_PTRS_FUNCTIONAL_H__
+#define	__UTIL_PTRS_FUNCTIONAL_H__
 
 #include <functional>
 
@@ -195,5 +195,5 @@ mem_fun(R (T::*f)(A) const, const P<T>& null) {
 //=============================================================================
 }	// end namespace std
 
-#endif	//	__PTRS_FUNCTIONAL_H__
+#endif	// __UTIL_PTRS_FUNCTIONAL_H__
 

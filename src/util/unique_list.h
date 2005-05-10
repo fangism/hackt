@@ -1,16 +1,16 @@
 /**
-	\file "unique_list"
+	\file "util/unique_list.h"
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.2 2004/12/05 05:07:25 fang Exp $
+	$Id: unique_list.h,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
-#ifndef __UNIQUE_LIST__
-#define __UNIQUE_LIST__
+#ifndef __UTIL_UNIQUE_LIST__
+#define __UTIL_UNIQUE_LIST__
 
-#include <assert.h>
-#include "STL/list.h"
+#include <cassert>
+#include "util/STL/list.h"
 #include <set>
 #include <algorithm>		// for find
 
@@ -124,5 +124,5 @@ public:
 
 }	// end namespace util
 
-#endif	// __UNIQUE_LIST__
+#endif	// __UTIL_UNIQUE_LIST__
 

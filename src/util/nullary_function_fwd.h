@@ -1,7 +1,7 @@
 /**
-	\file "nullary_function_fwd.h"
+	\file "util/nullary_function_fwd.h"
 	Generic generator functor base.
-	$Id: nullary_function_fwd.h,v 1.2 2005/03/04 06:19:59 fang Exp $
+	$Id: nullary_function_fwd.h,v 1.3 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef	__UTIL_NULLARY_FUNCTION_FWD_H__

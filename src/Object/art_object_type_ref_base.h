@@ -1,17 +1,17 @@
 /**
-	\file "art_object_type_ref_base.h"
+	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.9 2005/05/09 18:49:56 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.10 2005/05/10 04:51:20 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
-#define	__ART_OBJECT_TYPE_REF_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
+#define	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
 
-#include "macros.h"
-#include "memory/pointer_classes.h"
-#include "persistent.h"		// for persistent object interface
+#include "util/macros.h"
+#include "util/memory/pointer_classes.h"
+#include "util/persistent.h"		// for persistent object interface
 
-#include "art_object_definition_base.h"
+#include "Object/art_object_definition_base.h"
 
 namespace ART {
 namespace entity {
@@ -157,5 +157,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_TYPE_REF_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
 

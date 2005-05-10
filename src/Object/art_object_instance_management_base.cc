@@ -1,11 +1,11 @@
 /**
-	\file "art_object_instance_management_base.cc"
+	\file "Object/art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.10 2005/03/05 02:49:56 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.11 2005/05/10 04:51:18 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
-#define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -15,15 +15,15 @@
 #include <iostream>
 #include <algorithm>
 
-#include "ptrs_functional.h"
-#include "dereference.h"
-#include "compose.h"
-#include "binders.h"
+#include "util/ptrs_functional.h"
+#include "util/dereference.h"
+#include "util/compose.h"
+#include "util/binders.h"
 
-#include "STL/list.tcc"
-#include "art_object_instance_management_base.h"
-#include "persistent_object_manager.tcc"
-#include "stacktrace.h"
+#include "util/STL/list.tcc"
+#include "Object/art_object_instance_management_base.h"
+#include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
 
 // conditional defines, after including "stactrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -44,7 +44,7 @@ namespace entity {
 using std::mem_fun_ref;
 using util::dereference;
 using std::istream;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_UTIL_COMPOSE
 USING_STACKTRACE
 
@@ -230,5 +230,5 @@ instance_management_base::dumper::operator () (
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
 
-#endif	// __ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 

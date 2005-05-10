@@ -1,7 +1,7 @@
 /**
-	\file "pair_fwd.h"
+	\file "util/STL/pair_fwd.h"
 	Forward declaration of std::pair.
-	$Id: pair_fwd.h,v 1.1 2004/12/05 05:07:57 fang Exp $
+	$Id: pair_fwd.h,v 1.2 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_PAIR_FWD_H__

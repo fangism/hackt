@@ -1,15 +1,15 @@
 /**
-	\file "art_object_expr_base.h"
+	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.10 2005/05/09 18:49:55 fang Exp $
+	$Id: art_object_expr_base.h,v 1.11 2005/05/10 04:51:13 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_BASE_H__
-#define __ART_OBJECT_EXPR_BASE_H__
+#ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
+#define __OBJECT_ART_OBJECT_EXPR_BASE_H__
 
-#include "art_object_base.h"
-#include "persistent.h"
-#include "boolean_types.h"
+#include "Object/art_object_base.h"
+#include "util/persistent.h"
+#include "util/boolean_types.h"
 
 //=============================================================================
 namespace ART {
@@ -547,5 +547,5 @@ virtual	bool
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_EXPR_BASE_H__
 

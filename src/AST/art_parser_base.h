@@ -1,16 +1,16 @@
 /**
-	\file "art_parser_base.h"
+	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.22 2005/05/04 17:54:09 fang Exp $
+	$Id: art_parser_base.h,v 1.23 2005/05/10 04:51:06 fang Exp $
  */
 
-#ifndef __ART_PARSER_BASE_H__
-#define __ART_PARSER_BASE_H__
+#ifndef __AST_ART_PARSER_BASE_H__
+#define __AST_ART_PARSER_BASE_H__
 
 #include <iosfwd>
-#include "macros.h"
-#include "art_lex.h"		// for token_position, line_position, ...
-#include "memory/excl_ptr.h"	// experimental pointer classes
+#include "util/macros.h"
+#include "lexer/art_lex.h"	// for token_position, line_position, ...
+#include "util/memory/excl_ptr.h"	// experimental pointer classes
 
 /**
 	Macro for convenient definition of the node::what member function.  
@@ -84,5 +84,5 @@ where(const T& t) {
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_BASE_H__
+#endif	// __AST_ART_PARSER_BASE_H__
 

@@ -1,13 +1,13 @@
 /**
-	\file "IO_utils.cc"
+	\file "util/IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.3 2005/03/01 04:50:59 fang Exp $
+	$Id: IO_utils.cc,v 1.4 2005/05/10 04:51:22 fang Exp $
  */
 
 #include <cassert>
 #include <iostream>
 #include <string>
-#include "IO_utils.tcc"		// need to explicitly instantiate for char
+#include "util/IO_utils.tcc"	// need to explicitly instantiate for char
 
 
 //=============================================================================
@@ -16,7 +16,7 @@
 
 //=============================================================================
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //-----------------------------------------------------------------------------
 /**

@@ -1,20 +1,20 @@
 /**
-	\file "art_context.h"
+	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.14 2005/05/04 17:54:12 fang Exp $
+	$Id: art_context.h,v 1.15 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef __ART_CONTEXT_H__
-#define __ART_CONTEXT_H__
+#ifndef __OBJECT_ART_CONTEXT_H__
+#define __OBJECT_ART_CONTEXT_H__
 
 #include <string>
 #include <stack>
 
-#include "STL/list.h"
-#include "memory/pointer_classes.h"
-#include "art_object_fwd.h"
-#include "boolean_types.h"
+#include "util/STL/list.h"
+#include "util/memory/pointer_classes.h"
+#include "Object/art_object_fwd.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 
@@ -394,5 +394,5 @@ private:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_CONTEXT_H__
+#endif	// __OBJECT_ART_CONTEXT_H__
 

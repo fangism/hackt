@@ -1,14 +1,14 @@
 /**
-	\file "art_parser_base.h"
+	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.4 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_identifier.h,v 1.5 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef __ART_PARSER_IDENTIFIER_H__
-#define __ART_PARSER_IDENTIFIER_H__
+#ifndef __AST_ART_PARSER_IDENTIFIER_H__
+#define __AST_ART_PARSER_IDENTIFIER_H__
 
-#include "art_parser_node_list.h"
-#include "sublist.h"
+#include "AST/art_parser_node_list.h"
+#include "util/sublist.h"
 
 namespace ART {
 using util::sublist;
@@ -213,5 +213,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_IDENTIFIER_H__
+#endif	// __AST_ART_PARSER_IDENTIFIER_H__
 

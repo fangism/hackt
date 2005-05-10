@@ -1,13 +1,13 @@
 /**
-	\file "art_parser_statement.h"
+	\file "AST/art_parser_statement.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_statement.h,v 1.3 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_statement.h,v 1.4 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef __ART_PARSER_STATEMENT_H__
-#define __ART_PARSER_STATEMENT_H__
+#ifndef __AST_ART_PARSER_STATEMENT_H__
+#define __AST_ART_PARSER_STATEMENT_H__
 
-#include "art_parser_base.h"
+#include "AST/art_parser_base.h"
 
 namespace ART {
 namespace parser {
@@ -132,5 +132,5 @@ virtual	line_position
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_STATEMENT_H__
+#endif	// __AST_ART_PARSER_STATEMENT_H__
 

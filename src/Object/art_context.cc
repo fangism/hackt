@@ -1,12 +1,12 @@
 /**
-	\file "art_context.cc"
+	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.29 2005/05/08 20:50:41 fang Exp $
+ 	$Id: art_context.cc,v 1.30 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef	__ART_CONTEXT_CC__
-#define	__ART_CONTEXT_CC__
+#ifndef	__OBJECT_ART_CONTEXT_CC__
+#define	__OBJECT_ART_CONTEXT_CC__
 
 #define ENABLE_STACKTRACE		0
 
@@ -14,27 +14,27 @@
 #include <exception>
 #include <iostream>
 
-#include "art_context.h"
-#include "art_parser_token_string.h"
-#include "art_parser_identifier.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_assign.h"
-#include "art_object_connect.h"
-#include "art_object_instance.h"	// for instantiation_statement_base
-#include "art_object_instance_param.h"	// for param_instantiation_statement
-#include "art_object_module.h"
+#include "Object/art_context.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_identifier.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_assign.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_instance.h"	// for instantiation_statement_base
+#include "Object/art_object_instance_param.h"	// for param_instantiation_statement
+#include "Object/art_object_module.h"
 
-#include "stacktrace.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 namespace ART {
 using namespace entity;
 
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 
 //=============================================================================
@@ -983,5 +983,5 @@ context::auto_indent(void) const {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_CONTEXT_CC__
+#endif	// __OBJECT_ART_CONTEXT_CC__
 

@@ -1,7 +1,7 @@
 /**
-	\file "IO_utils.tcc"
+	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.8 2005/03/11 08:47:33 fang Exp $
+	$Id: IO_utils.tcc,v 1.9 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -14,9 +14,9 @@
 #include <utility>		// for std::pair
 
 // only needed for functional for_each where call_traits are needed.  
-// #include "binders.h"
+// #include "util/binders.h"
 
-#include "IO_utils.h"
+#include "util/IO_utils.h"
 
 namespace util {
 using std::ostream;

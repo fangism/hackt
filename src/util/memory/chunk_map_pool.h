@@ -1,7 +1,7 @@
 /**
-	\file "memory/chunk_map_pool.h"
+	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.3 2005/03/06 04:36:48 fang Exp $
+	$Id: chunk_map_pool.h,v 1.4 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -11,7 +11,7 @@
 #include <set>
 #include <list>
 #include <map>
-#include "memory/chunk_map_pool_fwd.h"
+#include "util/memory/chunk_map_pool_fwd.h"
 
 #define	CHUNK_MAP_POOL_CHUNK_CLASS					\
 chunk_map_pool_chunk<T,C>

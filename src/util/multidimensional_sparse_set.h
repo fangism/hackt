@@ -1,7 +1,7 @@
 /**
-	\file "multidimensional_sparse_set.h"
+	\file "util/multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.7 2005/02/27 22:54:23 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.8 2005/05/10 04:51:26 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -9,15 +9,15 @@
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_H__
 
 #include <iosfwd>
-#include "macros.h"
+#include "util/macros.h"
 
-#include "array_traits.h"
-#include "multidimensional_sparse_set_fwd.h"		// forward declarations
-#include "discrete_interval_set.h"
+#include "util/array_traits.h"
+#include "util/multidimensional_sparse_set_fwd.h"	// forward declarations
+#include "util/discrete_interval_set.h"
 // includes <map> and <iostream>
 
-#include "qmap.h"		// queryable maps
-#include "memory/count_ptr.h"
+#include "util/qmap.h"		// queryable maps
+#include "util/memory/count_ptr.h"
 
 /**
 	Namespace containing multidimensional-sparse-set classes.  

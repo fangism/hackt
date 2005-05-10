@@ -1,32 +1,32 @@
 /**
-	\file "art_object_inst_ref.cc"
+	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.27 2005/05/09 18:49:55 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.28 2005/05/10 04:51:14 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_CC__
-#define	__ART_OBJECT_INST_REF_CC__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
+#define	__OBJECT_ART_OBJECT_INST_REF_CC__
 
 #include <iostream>
 
-#include "STL/list.tcc"
-#include "multidimensional_sparse_set.tcc"
+#include "util/STL/list.tcc"
+#include "util/multidimensional_sparse_set.tcc"
 
-#include "art_object_type_ref_base.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_namespace.h"
-#include "art_object_inst_ref.tcc"
-#include "art_object_member_inst_ref.tcc"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr.h"		// for dynamic_range_list
-#include "art_object_control.h"
-#include "art_object_connect.h"		// for aliases_connection_base
-#include "persistent_object_manager.tcc"
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
-#include "art_object_classification_details.h"
-#include "art_object_instance_collection.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_inst_ref.tcc"
+#include "Object/art_object_member_inst_ref.tcc"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_expr.h"		// for dynamic_range_list
+#include "Object/art_object_control.h"
+#include "Object/art_object_connect.h"		// for aliases_connection_base
+#include "util/persistent_object_manager.tcc"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_hash.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_instance_collection.h"
 
 //=============================================================================
 // specializations
@@ -58,7 +58,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::multidimensional_sparse_set_traits;
 using util::multidimensional_sparse_set;
 using util::write_value;
@@ -1191,5 +1191,5 @@ template class member_instance_reference<process_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_CC__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_CC__
 

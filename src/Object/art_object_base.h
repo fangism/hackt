@@ -1,19 +1,19 @@
 /**
-	\file "art_object_base.h"
+	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.26 2005/02/27 22:54:08 fang Exp $
+	$Id: art_object_base.h,v 1.27 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_BASE_H__
-#define	__ART_OBJECT_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_BASE_H__
+#define	__OBJECT_ART_OBJECT_BASE_H__
 
 #include <iosfwd>
-#include "STL/list.h"
+#include "util/STL/list.h"
 
-#include "art_object_fwd.h"
-#include "macros.h"
+#include "Object/art_object_fwd.h"
+#include "util/macros.h"
 
-#include "memory/pointer_classes.h"
+#include "util/memory/pointer_classes.h"
 	// need complete definition (never_ptr members)
 
 //=============================================================================
@@ -193,5 +193,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_BASE_H__
 

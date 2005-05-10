@@ -1,17 +1,17 @@
 /**
-	\file "art_object_IO.cc"
+	\file "Object/art_object_IO.cc"
 	Template method instantiations for 
 	persistent object management, specific to ART.  
- 	$Id: art_object_IO.cc,v 1.15 2005/02/27 22:54:07 fang Exp $
+ 	$Id: art_object_IO.cc,v 1.16 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_IO_CC__
-#define	__ART_OBJECT_IO_CC__
+#ifndef	__OBJECT_ART_OBJECT_IO_CC__
+#define	__OBJECT_ART_OBJECT_IO_CC__
 
 #define	ENABLE_STACKTRACE		0
 
-#include "art_object_module.h"
-#include "persistent_object_manager.tcc"
+#include "Object/art_object_module.h"
+#include "util/persistent_object_manager.tcc"
 
 namespace util {
 using namespace util::memory;
@@ -21,5 +21,5 @@ using ART::entity::module;
 
 }	// end namespace util
 
-#endif	// __ART_OBJECT_IO_CC__
+#endif	// __OBJECT_ART_OBJECT_IO_CC__
 

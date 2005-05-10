@@ -1,7 +1,7 @@
 /**
-	\file "operators.h'
+	\file "util/operators.h'
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.4 2005/04/14 20:49:18 fang Exp $
+	$Id: operators.h,v 1.5 2005/05/10 04:51:28 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__

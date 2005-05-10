@@ -1,14 +1,14 @@
 /**
-	\file "art_object_value_reference.h"
+	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.4 2005/05/09 18:49:56 fang Exp $
+	$Id: art_object_value_reference.h,v 1.5 2005/05/10 04:51:21 fang Exp $
  */
 
-#ifndef __ART_OBJECT_VALUE_REFERENCE_H__
-#define __ART_OBJECT_VALUE_REFERENCE_H__
+#ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
+#define __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 
-#include "boolean_types.h"
-#include "art_object_fwd.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -191,5 +191,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_VALUE_REFERENCE_H__
+#endif	// __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 

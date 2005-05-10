@@ -1,15 +1,15 @@
 /**
-	\file "map.h"
+	\file "util/STL/map.h"
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
-	$Id: map.h,v 1.1 2004/12/05 05:07:57 fang Exp $
+	$Id: map.h,v 1.2 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_MAP_H__
 #define	__UTIL_STL_MAP_H__
 
-#include "STL/map_fwd.h"
+#include "util/STL/map_fwd.h"
 
 #if !USE_STD_MAP
 #include <map>

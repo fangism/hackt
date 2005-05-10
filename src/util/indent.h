@@ -1,12 +1,12 @@
 /**
-	\file "indent.h"
+	\file "util/indent.h"
 	Utility for semi-automatically indenting output.  
 
-	$Id: indent.h,v 1.2 2004/12/02 01:40:35 fang Exp $
+	$Id: indent.h,v 1.3 2005/05/10 04:51:24 fang Exp $
  */
 
-#ifndef	__INDENT_H__
-#define	__INDENT_H__
+#ifndef	__UTIL_INDENT_H__
+#define	__UTIL_INDENT_H__
 
 #include <iosfwd>
 #include <string>
@@ -85,5 +85,5 @@ register_indent(const ostream& o, const string& s);
 //=============================================================================
 }	// end namespace util
 
-#endif	// __INDENT_H__
+#endif	// __UTIL_INDENT_H__
 

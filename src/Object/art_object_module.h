@@ -1,16 +1,16 @@
 /**
-	\file "art_object_module.h"
+	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.13 2005/03/04 06:19:58 fang Exp $
+	$Id: art_object_module.h,v 1.14 2005/05/10 04:51:19 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_MODULE_H__
-#define	__ART_OBJECT_MODULE_H__
+#ifndef	__OBJECT_ART_OBJECT_MODULE_H__
+#define	__OBJECT_ART_OBJECT_MODULE_H__
 
 #include <string>
-#include "art_object_base.h"
-#include "art_object_instance_management_base.h"
-#include "persistent.h"
+#include "Object/art_object_base.h"
+#include "Object/art_object_instance_management_base.h"
+#include "util/persistent.h"
 
 namespace ART {
 namespace entity {
@@ -115,5 +115,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	//	__ART_OBJECT_MODULE_H__
+#endif	//	__OBJECT_ART_OBJECT_MODULE_H__
 

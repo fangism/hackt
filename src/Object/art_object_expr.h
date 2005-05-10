@@ -1,15 +1,15 @@
 /**
-	\file "art_object_expr.h"
+	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.25 2005/05/09 18:49:55 fang Exp $
+	$Id: art_object_expr.h,v 1.26 2005/05/10 04:51:13 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_H__
-#define __ART_OBJECT_EXPR_H__
+#ifndef __OBJECT_ART_OBJECT_EXPR_H__
+#define __OBJECT_ART_OBJECT_EXPR_H__
 
-#include "art_object_expr_const.h"	// include "art_object_expr_base.h"
-#include "qmap.h"
-#include "operators.h"
+#include "Object/art_object_expr_const.h"	// include "art_object_expr_base.h"
+#include "util/qmap.h"
+#include "util/operators.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -776,5 +776,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_H__
+#endif	// __OBJECT_ART_OBJECT_EXPR_H__
 

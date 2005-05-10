@@ -1,32 +1,32 @@
 /**
-	\file "art_object_instance_pbool.cc"
+	\file "Object/art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.18 2005/03/11 08:47:30 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.19 2005/05/10 04:51:18 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_PBOOL_CC__
-#define	__ART_OBJECT_INSTANCE_PBOOL_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_type_ref.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_hash.h"
 
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "art_object_value_reference.h"
-#include "art_object_classification_details.h"
-#include "art_object_value_collection.tcc"
+#include "Object/art_object_value_reference.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_value_collection.tcc"
 
-#include "static_trace.h"
+#include "util/static_trace.h"
 
 //=============================================================================
 // stat of static initializations
@@ -107,7 +107,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
@@ -155,5 +155,5 @@ template class value_array<pbool_tag,4>;
 
 STATIC_TRACE_END("instance_pbool")
 
-#endif	// __ART_OBJECT_INSTANCE_PBOOL_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
 

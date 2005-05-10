@@ -1,12 +1,12 @@
 /**
-	\file "art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.2 2005/01/28 19:58:45 fang Exp $
+	\file "Object/art_object_unroll_context.cc"
+	$Id: art_object_unroll_context.cc,v 1.3 2005/05/10 04:51:21 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_UNROLL_CONTEXT_CC__
-#define	__ART_OBJECT_UNROLL_CONTEXT_CC__
+#ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
+#define	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
 
-#include "art_object_unroll_context.h"
+#include "Object/art_object_unroll_context.h"
 
 namespace ART {
 namespace entity {
@@ -14,5 +14,5 @@ namespace entity {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_UNROLL_CONTEXT_CC__
+#endif	// __OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
 

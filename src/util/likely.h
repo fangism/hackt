@@ -1,12 +1,12 @@
 /**
-	\file "likely.h"
+	\file "util/likely.h"
 	Macros for static branch prediction.  
 	Idea from linux kernal code.  
 
-	$Id: likely.h,v 1.1 2004/11/26 23:24:16 fang Exp $
+	$Id: likely.h,v 1.2 2005/05/10 04:51:25 fang Exp $
  */
-#ifndef	__LIKELY_H__
-#define	__LIKELY_H__
+#ifndef	__UTIL_LIKELY_H__
+#define	__UTIL_LIKELY_H__
 
 
 /***
@@ -20,5 +20,5 @@
 	#define UNLIKELY(x)	(x)
 #endif
 
-#endif	// __LIKELY_H__
+#endif	// __UTIL_LIKELY_H__
 

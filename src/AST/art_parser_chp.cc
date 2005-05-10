@@ -1,21 +1,21 @@
 /**
-	\file "art_parser_chp.cc"
+	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.11 2005/05/04 17:54:09 fang Exp $
+	$Id: art_parser_chp.cc,v 1.12 2005/05/10 04:51:06 fang Exp $
  */
 
-#ifndef	__ART_PARSER_CHP_CC__
-#define	__ART_PARSER_CHP_CC__
+#ifndef	__AST_ART_PARSER_CHP_CC__
+#define	__AST_ART_PARSER_CHP_CC__
 
 #include <iostream>
 
-#include "art_parser_chp.h"
-#include "art_parser_expr_list.h"
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_chp.h"
+#include "AST/art_parser_expr_list.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "what.h"
+#include "util/what.h"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
@@ -43,7 +43,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::CHP::log, "(chp-log)")
 namespace ART {
 namespace parser {
 namespace CHP {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class statement method definitions
@@ -573,5 +573,5 @@ template class node_list<const communication,comma>;	// CHP::comm_list_base
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_CHP_CC__
+#endif	// __AST_ART_PARSER_CHP_CC__
 

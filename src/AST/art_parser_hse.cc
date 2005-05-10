@@ -1,20 +1,20 @@
 /**
-	\file "art_parser_hse.cc"
+	\file "AST/art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.11 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_hse.cc,v 1.12 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef	__ART_PARSER_HSE_CC__
-#define	__ART_PARSER_HSE_CC__
+#ifndef	__AST_ART_PARSER_HSE_CC__
+#define	__AST_ART_PARSER_HSE_CC__
 
 #include <iostream>
 
-#include "art_parser_hse.h"
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_hse.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "what.h"
+#include "util/what.h"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
@@ -40,7 +40,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::HSE::do_until, "(hse-do-until)")
 namespace ART {
 namespace parser {
 namespace HSE {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class statement method definitions
@@ -391,5 +391,5 @@ template class node_list<const guarded_command,colon>;	// HSE::nondet_sel_base
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_HSE_CC__
+#endif	// __AST_ART_PARSER_HSE_CC__
 

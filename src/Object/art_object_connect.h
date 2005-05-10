@@ -1,16 +1,16 @@
 /**
-	\file "art_object_connect.h"
+	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.17 2005/03/04 06:19:54 fang Exp $
+	$Id: art_object_connect.h,v 1.18 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CONNECT_H__
-#define	__ART_OBJECT_CONNECT_H__
+#ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
+#define	__OBJECT_ART_OBJECT_CONNECT_H__
 
-#include "art_object_fwd.h"
-#include "art_object_instance_management_base.h"
-#include "memory/pointer_classes.h"
-#include "multikey_fwd.h"
+#include "Object/art_object_fwd.h"
+#include "Object/art_object_instance_management_base.h"
+#include "util/memory/pointer_classes.h"
+#include "util/multikey_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -225,5 +225,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CONNECT_H__
+#endif	// __OBJECT_ART_OBJECT_CONNECT_H__
 

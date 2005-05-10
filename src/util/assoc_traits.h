@@ -1,20 +1,20 @@
 /**
-	\file "assoc_traits.h"
+	\file "util/assoc_traits.h"
 	A traits-class for selecting key or value from associative
 	container values such as set, map, hash_map.  
 
 	Incidentally, this is used by "const_assoc_query.h".
-	$Id: assoc_traits.h,v 1.2 2005/02/27 22:54:19 fang Exp $
+	$Id: assoc_traits.h,v 1.3 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef	__UTIL_ASSOC_TRAITS_H__
 #define	__UTIL_ASSOC_TRAITS_H__
 
-#include "assoc_traits_fwd.h"
-#include "const_traits.h"
-#include "STL/map_fwd.h"
-#include "STL/hash_map_fwd.h"
-#include "STL/set_fwd.h"
+#include "util/assoc_traits_fwd.h"
+#include "util/const_traits.h"
+#include "util/STL/map_fwd.h"
+#include "util/STL/hash_map_fwd.h"
+#include "util/STL/set_fwd.h"
 // SGI's hash_set?
 
 //=============================================================================

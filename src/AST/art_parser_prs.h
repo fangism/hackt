@@ -1,15 +1,15 @@
 /**
-	\file "art_parser_prs.h"
+	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.10 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_prs.h,v 1.11 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef	__ART_PARSER_PRS_H__
-#define	__ART_PARSER_PRS_H__
+#ifndef	__AST_ART_PARSER_PRS_H__
+#define	__AST_ART_PARSER_PRS_H__
 
-#include "art_parser_prs_fwd.h"
-#include "art_parser_expr_base.h"
-#include "art_parser_definition_item.h"
+#include "AST/art_parser_prs_fwd.h"
+#include "AST/art_parser_expr_base.h"
+#include "AST/art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -186,5 +186,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	//	__ART_PARSER_PRS_H__
+#endif	//	__AST_ART_PARSER_PRS_H__
 

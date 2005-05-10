@@ -1,12 +1,12 @@
 /**
-	\file "getopt_portable.h"
+	\file "util/getopt_portable.h"
 	Configuration-dependent locations for getopt prototypes.  
 	(Not actually used yet.)
-	$Id: getopt_portable.h,v 1.2 2004/11/02 07:52:14 fang Exp $
+	$Id: getopt_portable.h,v 1.3 2005/05/10 04:51:23 fang Exp $
  */
 
-#ifndef __GETOPT_PORTABLE_H__
-#define __GETOPT_PORTABLE_H__
+#ifndef __UTIL_GETOPT_PORTABLE_H__
+#define __UTIL_GETOPT_PORTABLE_H__
  
 /*
 	FreeBSD, Apple (OS X) and Sun systems declare getopt in unistd.h,
@@ -17,8 +17,8 @@
 	(defined (__SVR4) && defined (__sun))
 #include <unistd.h>
 #else
-#include "getopt.h"
+#include "util/getopt.h"
 #endif
  
-#endif	// __GETOPT_PORTABLE_H__
+#endif	// __UTIL_GETOPT_PORTABLE_H__
 

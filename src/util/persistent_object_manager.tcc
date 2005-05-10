@@ -1,7 +1,7 @@
 /**
-	\file "persistent_object_manager.tcc"
+	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.15 2005/03/05 02:49:59 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.16 2005/05/10 04:51:29 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -12,17 +12,17 @@
 
 #include <fstream>
 
-#include "persistent_object_manager.h"
+#include "util/persistent_object_manager.h"
 // already includes <iostream>
 
-#include "macros.h"
-#include "new_functor.tcc"
-#include "stacktrace.h"
-#include "IO_utils.tcc"
+#include "util/macros.h"
+#include "util/new_functor.tcc"
+#include "util/stacktrace.h"
+#include "util/IO_utils.tcc"
 
-#include "what.tcc"
+#include "util/what.tcc"
 #if ENABLE_STACKTRACE
-#include "sstream.h"
+#include "util/sstream.h"
 #endif
 
 
@@ -32,7 +32,7 @@
 
 namespace util {
 //=============================================================================
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 using namespace util::memory;
 using util::what;

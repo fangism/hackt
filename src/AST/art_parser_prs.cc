@@ -1,23 +1,23 @@
 /**
-	\file "art_parser_prs.cc"
+	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.12 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_prs.cc,v 1.13 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef	__ART_PARSER_PRS_CC__
-#define	__ART_PARSER_PRS_CC__
+#ifndef	__AST_ART_PARSER_PRS_CC__
+#define	__AST_ART_PARSER_PRS_CC__
 
 #include <iostream>
 
-#include "art_parser_prs.h"
-#include "art_parser_expr.h"		// for id_expr
-#include "art_parser_range.h"
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_token_string.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_prs.h"
+#include "AST/art_parser_expr.h"		// for id_expr
+#include "AST/art_parser_range.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "what.h"
+#include "util/what.h"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
@@ -33,7 +33,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "op-loop")
 namespace ART {
 namespace parser {
 namespace PRS {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class body_item method definitions
@@ -203,5 +203,5 @@ template class node_list<const body_item>;		// PRS::rule_list
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_PRS_CC__
+#endif	// __AST_ART_PARSER_PRS_CC__
 

@@ -1,13 +1,13 @@
 /**
-	\file "vector_fwd.h"
+	\file "util/STL/vector_fwd.h"
 	Forward declaration for std::vector.
-	$Id: vector_fwd.h,v 1.2 2005/01/28 19:04:00 fang Exp $
+	$Id: vector_fwd.h,v 1.3 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_VECTOR_FWD_H__
 #define	__UTIL_STL_VECTOR_FWD_H__
 
-#include "STL/allocator_fwd.h"
+#include "util/STL/allocator_fwd.h"
 
 namespace std {
 

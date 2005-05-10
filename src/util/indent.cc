@@ -1,8 +1,8 @@
 /**
-	\file "indent.cc"
+	\file "util/indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.5 2005/02/27 22:54:22 fang Exp $
+	$Id: indent.cc,v 1.6 2005/05/10 04:51:24 fang Exp $
  */
 
 #include <iostream>
@@ -10,9 +10,9 @@
 #include <algorithm>
 #include <stack>
 
-#include "STL/hash_map.h"
-#include "hash_specializations.h"
-#include "indent.h"
+#include "util/STL/hash_map.h"
+#include "util/hash_specializations.h"
+#include "util/indent.h"
 
 namespace util {
 using HASH_MAP_NAMESPACE::hash_map;

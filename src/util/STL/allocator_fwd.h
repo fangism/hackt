@@ -1,7 +1,7 @@
 /**
-	\file "allocator_fwd.h"
+	\file "util/STL/allocator_fwd.h"
 	Forward declaration of std::allocator.
-	$Id: allocator_fwd.h,v 1.1 2004/12/05 05:07:56 fang Exp $
+	$Id: allocator_fwd.h,v 1.2 2005/05/10 04:51:31 fang Exp $
  */
 
 #ifndef	__UTIL_STL_ALLOCATOR_FWD_H__

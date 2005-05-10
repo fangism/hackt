@@ -1,14 +1,14 @@
 /**
-	\file "art_object_control.cc"
+	\file "Object/art_object_control.cc"
 	Control-flow related class method definitions.  
- 	$Id: art_object_control.cc,v 1.7 2005/01/13 05:28:28 fang Exp $
+ 	$Id: art_object_control.cc,v 1.8 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CONTROL_CC__
-#define	__ART_OBJECT_CONTROL_CC__
+#ifndef	__OBJECT_ART_OBJECT_CONTROL_CC__
+#define	__OBJECT_ART_OBJECT_CONTROL_CC__
 
-#include "art_object_control.h"
-#include "persistent_object_manager.tcc"
+#include "Object/art_object_control.h"
+#include "util/persistent_object_manager.tcc"
 
 namespace ART {
 namespace entity {
@@ -31,5 +31,5 @@ loop_scope::~loop_scope() {
 } 	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CONTROL_CC__
+#endif	// __OBJECT_ART_OBJECT_CONTROL_CC__
 

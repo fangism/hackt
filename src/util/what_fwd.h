@@ -1,8 +1,8 @@
 /**
-	\file "what_fwd.h"
+	\file "util/what_fwd.h"
 	Forward declaration for user-defined type-names utility.
 	This files provides mostly macros for specialization.  
-	$Id: what_fwd.h,v 1.4 2005/03/01 21:26:47 fang Exp $
+	$Id: what_fwd.h,v 1.5 2005/05/10 04:51:31 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_FWD_H__

@@ -1,11 +1,11 @@
 /**
-	\file "art_object_definition.cc"
+	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.42 2005/05/08 20:50:42 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.43 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_DEFINITION_CC__
-#define	__ART_OBJECT_DEFINITION_CC__
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
+#define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
 
@@ -13,29 +13,29 @@
 #include <iostream>
 #include <functional>
 
-#include "art_parser_delim.h"
-#include "art_parser_token_string.h"
+#include "AST/art_parser_delim.h"
+#include "AST/art_parser_token_string.h"
 
-#include "STL/list.tcc"
-#include "hash_qmap.tcc"
-#include "hash_specializations.h"		// substitute for the following
+#include "util/STL/list.tcc"
+#include "util/hash_qmap.tcc"
+#include "util/hash_specializations.h"		// substitute for the following
 
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr.h"			// for dynamic_param_expr_list
-#include "art_object_expr_param_ref.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_expr.h"		// for dynamic_param_expr_list
+#include "Object/art_object_expr_param_ref.h"
+#include "Object/art_object_type_hash.h"
 
-#include "indent.h"
-#include "binders.h"
-#include "compose.h"
-#include "stacktrace.h"
-#include "static_trace.h"
-#include "persistent_object_manager.tcc"
+#include "util/indent.h"
+#include "util/binders.h"
+#include "util/compose.h"
+#include "util/stacktrace.h"
+#include "util/static_trace.h"
+#include "util/persistent_object_manager.tcc"
 
 //=============================================================================
 STATIC_TRACE_BEGIN("object-definition")
@@ -61,7 +61,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 using std::_Select2nd;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using parser::scope;
 using util::indent;
 using util::auto_indent;
@@ -2324,5 +2324,5 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 STATIC_TRACE_END("object-definition")
 
-#endif	// __ART_OBJECT_DEFINITION_CC__
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_CC__
 

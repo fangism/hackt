@@ -1,19 +1,19 @@
 /**
-	\file "art_object_expr_const.h"
+	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.14 2005/05/09 18:49:55 fang Exp $
+	$Id: art_object_expr_const.h,v 1.15 2005/05/10 04:51:13 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_CONST_H__
-#define __ART_OBJECT_EXPR_CONST_H__
+#ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
+#define __OBJECT_ART_OBJECT_EXPR_CONST_H__
 
-#include "STL/pair_fwd.h"
-#include "art_object_expr_base.h"
-#include "art_object_index.h"
-#include "multikey_fwd.h"
-#include "packed_array.h"
-#include "persistent.h"
-#include "memory/list_vector_pool_fwd.h"
+#include "util/STL/pair_fwd.h"
+#include "Object/art_object_expr_base.h"
+#include "Object/art_object_index.h"
+#include "util/multikey_fwd.h"
+#include "util/packed_array.h"
+#include "util/persistent.h"
+#include "util/memory/list_vector_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -710,5 +710,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_CONST_H__
+#endif	// __OBJECT_ART_OBJECT_EXPR_CONST_H__
 

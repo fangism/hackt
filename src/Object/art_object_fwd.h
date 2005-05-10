@@ -1,17 +1,17 @@
 /**
-	\file "art_object_fwd.h"
+	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.10 2005/03/11 21:12:41 fang Exp $
+	$Id: art_object_fwd.h,v 1.11 2005/05/10 04:51:13 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_FWD_H__
-#define	__ART_OBJECT_FWD_H__
+#ifndef	__OBJECT_ART_OBJECT_FWD_H__
+#define	__OBJECT_ART_OBJECT_FWD_H__
 
 #include <cstddef>			// for size_t
 
-#include "memory/pointer_classes_fwd.h"
-#include "STL/deque_fwd.h"
-#include "art_object_classification_tags.h"
+#include "util/memory/pointer_classes_fwd.h"
+#include "util/STL/deque_fwd.h"
+#include "Object/art_object_classification_tags.h"
 
 namespace ART {
 namespace entity {
@@ -258,5 +258,5 @@ namespace entity {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_FWD_H__
+#endif	// __OBJECT_ART_OBJECT_FWD_H__
 

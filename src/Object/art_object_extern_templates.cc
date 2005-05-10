@@ -1,22 +1,22 @@
 /**
-	\file "art_object_extern_templates.cc"
+	\file "Object/art_object_extern_templates.cc"
 	Repository of explici template instantiations needed 
 	by the object-related library.  
-	$Id: art_object_extern_templates.cc,v 1.4 2005/03/11 08:47:27 fang Exp $
+	$Id: art_object_extern_templates.cc,v 1.5 2005/05/10 04:51:13 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_EXTERN_TEMPLATES_CC__
-#define	__ART_OBJECT_EXTERN_TEMPLATES_CC__
+#ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
+#define	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
 
 #if 0
 // don't include own header if using specialization to suppress templates
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 #else
-#include "art_object_fwd.h"
+#include "Object/art_object_fwd.h"
 #endif
 
-#include "multikey.tcc"
-#include "packed_array.tcc"
+#include "util/multikey.tcc"
+#include "util/packed_array.tcc"
 
 // since namespace doesn't affect instantiation, this is convenient
 namespace util {
@@ -35,5 +35,5 @@ template class multikey_generator_generic<pint_value_type>;
 
 }	// end namespace util
 
-#endif	// __ART_OBJECT_EXTERN_TEMPLATES_CC__
+#endif	// __OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
 

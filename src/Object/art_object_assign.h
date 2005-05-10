@@ -1,18 +1,18 @@
 /**
-	\file "art_object_assign.h"
+	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.16 2005/03/11 21:12:41 fang Exp $
+	$Id: art_object_assign.h,v 1.17 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_ASSIGN_H__
-#define	__ART_OBJECT_ASSIGN_H__
+#ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
+#define	__OBJECT_ART_OBJECT_ASSIGN_H__
 
-#include "boolean_types.h"
-#include "art_object_instance_management_base.h"
-#include "art_object_expr_base.h"
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool_fwd.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_instance_management_base.h"
+#include "Object/art_object_expr_base.h"
+#include "util/memory/pointer_classes.h"
+#include "util/memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -172,5 +172,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_ASSIGN_H__
+#endif	// __OBJECT_ART_OBJECT_ASSIGN_H__
 

@@ -1,13 +1,13 @@
 /**
-	\file "list.tcc"
+	\file "util/STL/list.tcc"
 	Class method definitions for std::list wrapper class.
-	$Id: list.tcc,v 1.1 2004/12/05 05:07:57 fang Exp $
+	$Id: list.tcc,v 1.2 2005/05/10 04:51:32 fang Exp $
  */
 
 #ifndef	__UTIL_STL_LIST_TCC__
 #define	__UTIL_STL_LIST_TCC__
 
-#include "STL/list.h"
+#include "util/STL/list.h"
 
 #if !USE_STD_LIST
 

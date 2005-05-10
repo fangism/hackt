@@ -1,11 +1,11 @@
 /**
-	\file "art_object_namespace.cc"
+	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.22 2005/04/19 02:26:41 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.23 2005/05/10 04:51:19 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_NAMESPACE_CC__
-#define	__ART_OBJECT_NAMESPACE_CC__
+#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
+#define	__OBJECT_ART_OBJECT_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -18,10 +18,10 @@
 #include <numeric>
 #include <string>
 
-#include "ptrs_functional.h"
-#include "compose.h"
-#include "binders.h"
-#include "conditional.h"
+#include "util/ptrs_functional.h"
+#include "util/compose.h"
+#include "util/binders.h"
+#include "util/conditional.h"
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -29,28 +29,27 @@
 // hash<string>.  
 
 // include this as early as possible
-#include "hash_specializations.h"		// substitute for the following
-#include "hash_qmap.tcc"
-#include "qmap.tcc"
-#include "STL/list.tcc"
+#include "util/hash_specializations.h"		// substitute for the following
+#include "util/hash_qmap.tcc"
+#include "util/qmap.tcc"
+#include "util/STL/list.tcc"
 
-// #include "art_parser_debug.h"
-#include "art_parser_token_string.h"
-#include "art_parser_identifier.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_identifier.h"
 
-#include "art_object_namespace.h"
-#include "art_object_definition.h"		// for typedef
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr_const.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_definition.h"	// for typedef
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_type_hash.h"
 
-#include "memory/list_vector_pool.tcc"
-#include "indent.h"
-#include "stacktrace.h"
-#include "persistent_object_manager.tcc"
+#include "util/memory/list_vector_pool.tcc"
+#include "util/indent.h"
+#include "util/stacktrace.h"
+#include "util/persistent_object_manager.tcc"
 
 //=============================================================================
 // conditional defines, after including "stacktrace.h"
@@ -64,49 +63,6 @@
 	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
 #else
 	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
-//=============================================================================
-#if 0
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
-// these are pretty much OBSOLETE, remove them some time
-
-#define		DEBUG_NAMESPACE			1 && DEBUG_CHECK_BUILD
-#define		TRACE_QUERY			0	// bool, ok to change
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if		DEBUG_NAMESPACE
-// ok to change these values, but should be > TRACE_CHECK_BUILD (5)
-  #define	TRACE_NAMESPACE_NEW		8
-  #define	TRACE_NAMESPACE_USING		8
-  #define	TRACE_NAMESPACE_ALIAS		8
-  #if		TRACE_QUERY
-    #define	TRACE_NAMESPACE_QUERY		10
-    #define	TRACE_NAMESPACE_SEARCH		TRACE_NAMESPACE_QUERY+5
-  #else
-    #define	TRACE_NAMESPACE_QUERY		MASTER_DEBUG_LEVEL
-    #define	TRACE_NAMESPACE_SEARCH		MASTER_DEBUG_LEVEL
-  #endif
-#else
-// defining as >= MASTER_DEBUG_LEVEL will turn it off
-  #define	TRACE_NAMESPACE_QUERY		MASTER_DEBUG_LEVEL
-  #define	TRACE_NAMESPACE_SEARCH		MASTER_DEBUG_LEVEL
-  #define	TRACE_NAMESPACE_USING		MASTER_DEBUG_LEVEL
-  #define	TRACE_NAMESPACE_ALIAS		MASTER_DEBUG_LEVEL
-#endif
-
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if		DEBUG_DATATYPE && TRACE_QUERY
-// ok to change these values
-  #define	TRACE_DATATYPE_QUERY		10
-  #define	TRACE_DATATYPE_SEARCH		TRACE_DATATYPE_QUERY+5
-#else
-// defining as >= MASTER_DEBUG_LEVEL will turn it off
-  #define	TRACE_DATATYPE_QUERY		MASTER_DEBUG_LEVEL
-  #define	TRACE_DATATYPE_SEARCH		MASTER_DEBUG_LEVEL
-#endif
-
 #endif
 
 //=============================================================================
@@ -127,7 +83,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::hash_map;
 using util::qmap;
 using parser::scope;
@@ -1600,5 +1556,5 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_NAMESPACE_CC__
+#endif	// __OBJECT_ART_OBJECT_NAMESPACE_CC__
 

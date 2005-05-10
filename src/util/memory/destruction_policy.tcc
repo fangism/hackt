@@ -1,14 +1,14 @@
 /**
-	\file "memory/destruction_policy.tcc"
+	\file "util/memory/destruction_policy.tcc"
 	Implementation of policy-specific explicit destructor invokers.  
-	$Id: destruction_policy.tcc,v 1.3 2005/03/06 04:36:49 fang Exp $
+	$Id: destruction_policy.tcc,v 1.4 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 #define	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 
-#include "STL/construct_fwd.h"
-#include "memory/destruction_policy.h"
+#include "util/STL/construct_fwd.h"
+#include "util/memory/destruction_policy.h"
 
 namespace util {
 namespace memory {

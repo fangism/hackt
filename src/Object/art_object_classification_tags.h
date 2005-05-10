@@ -1,13 +1,13 @@
 /**
-	\file "art_object_classification_tags.h"
+	\file "Object/art_object_classification_tags.h"
 	Classification of types in ART.
 	These type tags may be used for specialization of many
 	features of the language.  
-	$Id: art_object_classification_tags.h,v 1.2 2005/02/27 22:54:09 fang Exp $
+	$Id: art_object_classification_tags.h,v 1.3 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CLASSIFICATION_TAGS_H__
-#define	__ART_OBJECT_CLASSIFICATION_TAGS_H__
+#ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_TAGS_H__
+#define	__OBJECT_ART_OBJECT_CLASSIFICATION_TAGS_H__
 
 namespace ART {
 namespace entity {
@@ -84,5 +84,5 @@ struct datastruct_tag : public datatype_tag { };
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CLASSIFICATION_TAGS_H__
+#endif	// __OBJECT_ART_OBJECT_CLASSIFICATION_TAGS_H__
 

@@ -1,7 +1,7 @@
 /**
-	\file "ring_node.h"
+	\file "util/ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.2 2005/02/27 22:54:27 fang Exp $
+	$Id: ring_node.h,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -14,8 +14,8 @@
 
 // #include <iostream>
 #include <iterator>
-#include "macros.h"
-#include "ring_node_fwd.h"
+#include "util/macros.h"
+#include "util/ring_node_fwd.h"
 
 namespace util {
 //=============================================================================
@@ -32,31 +32,8 @@ class ring_node_iterator;
 template <class>
 class ring_node_derived;
 
-#if 0
-template <class>
-struct ring_node_derived_traits;
-
-/**
-	This may be specialized...
- */
-template <class T>
-struct ring_node_derived_traits {
-	typedef	ring_node_derived<T, 
-		typename ring_node_derived_traits<T>::next_type>
-						next_type;
-};
-
-#define	RING_NODE_DERIVED_TEMPLATE_SIGNATURE				\
-template <class T, class N>
-
-template <class T, class N = typename ring_node_derived_traits<T>::next_type>
-class ring_node_derived;
-#else
-
 #define	RING_NODE_DERIVED_TEMPLATE_SIGNATURE				\
 template <class T>
-
-#endif
 
 
 //=============================================================================

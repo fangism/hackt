@@ -1,13 +1,13 @@
 /**
-	\file "art_parser_prs_fwd.h"
+	\file "AST/art_parser_prs_fwd.h"
 	Forward declarations for the PRS namespace.  
-	$Id: art_parser_prs_fwd.h,v 1.1 2005/03/06 22:45:50 fang Exp $
+	$Id: art_parser_prs_fwd.h,v 1.2 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef	__ART_PARSER_PRS_FWD_H__
-#define	__ART_PARSER_PRS_FWD_H__
+#ifndef	__AST_ART_PARSER_PRS_FWD_H__
+#define	__AST_ART_PARSER_PRS_FWD_H__
 
-#include "art_parser_fwd.h"
+#include "AST/art_parser_fwd.h"
 
 namespace ART {
 namespace parser {
@@ -24,5 +24,5 @@ class loop;
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_PRS_FWD_H__
+#endif	// __AST_ART_PARSER_PRS_FWD_H__
 

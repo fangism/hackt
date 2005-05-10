@@ -1,15 +1,15 @@
 /**
-	\file "art_object_const_collection.h"
+	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.4 2005/05/09 18:49:53 fang Exp $
+	$Id: art_object_const_collection.h,v 1.5 2005/05/10 04:51:11 fang Exp $
  */
 
-#ifndef __ART_OBJECT_CONST_COLLECTION_H__
-#define __ART_OBJECT_CONST_COLLECTION_H__
+#ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
+#define __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 
-#include "art_object_fwd.h"
-#include "packed_array.h"
-// #include "memory/chunk_map_pool_fwd.h"
+#include "Object/art_object_fwd.h"
+#include "util/packed_array.h"
+// #include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -152,5 +152,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_CONST_COLLECTION_H__
+#endif	// __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 

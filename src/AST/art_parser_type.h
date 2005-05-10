@@ -1,15 +1,15 @@
 /**
-	\file "art_parser_type.h"
+	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.4 2005/05/04 17:54:12 fang Exp $
+	$Id: art_parser_type.h,v 1.5 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef __ART_PARSER_TYPE_H__
-#define __ART_PARSER_TYPE_H__
+#ifndef __AST_ART_PARSER_TYPE_H__
+#define __AST_ART_PARSER_TYPE_H__
 
-#include "art_parser_type_base.h"
-#include "art_parser_expr_list.h"
-#include "memory/count_ptr.h"
+#include "AST/art_parser_type_base.h"
+#include "AST/art_parser_expr_list.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace parser {
@@ -135,5 +135,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_TYPE_H__
+#endif	// __AST_ART_PARSER_TYPE_H__
 

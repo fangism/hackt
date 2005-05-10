@@ -1,15 +1,19 @@
 /**
-	\file "sublist.h"
+	\file "util/sublist.h"
 	Wrapper class interface for list slices, that behave like lists.  
-	$Id: sublist.h,v 1.6 2005/04/14 19:46:36 fang Exp $
+	$Id: sublist.h,v 1.7 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_SUBLIST_H__
 #define	__UTIL_SUBLIST_H__
 
-#include "STL/list.h"
+#include "util/STL/list.h"
 
 #define SUBLIST_TEMPLATE_SIGNATURE		template <class T>
+
+/**
+	Whether or not one wants reverse iterators in the sublist.  
+ */
 #define	SUBLIST_INCLUDE_REVERSE_ITERATORS	0
 
 //=============================================================================
@@ -34,27 +38,12 @@ public:
 							const_reverse_iterator;
 #endif
 protected:
-#if 0
-	const list_type&	the_list;	// actual referenced list
-		// do we actually use the_list?
-#endif
 	// set of semi-redundant iterators
 	const_iterator		head;
 	const_iterator		tail;
 #if SUBLIST_INCLUDE_REVERSE_ITERATORS
 	const_reverse_iterator	rhead;
 	const_reverse_iterator	rtail;
-#endif
-
-#if 0
-static const list<T>		bogus_empty_list;
-public:
-	// default empty constructor?
-	sublist() : the_list(bogus_empty_list),
-		head(bogus_empty_list.begin()),
-		tail(bogus_empty_list.end()), 
-		rhead(bogus_empty_list.rbegin()),
-		rtail(bogus_empty_list.rend()) { }
 #endif
 
 public:

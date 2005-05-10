@@ -1,14 +1,14 @@
 /**
- *	\file "dereference.h"
+ *	\file "util/dereference.h"
  *	This file contains definition of deference functor.  
- *	$Id: dereference.h,v 1.2 2005/02/27 22:54:21 fang Exp $
+ *	$Id: dereference.h,v 1.3 2005/05/10 04:51:23 fang Exp $
  */
 
 #ifndef	__UTIL_DEREFERENCE_H__
 #define	__UTIL_DEREFERENCE_H__
 
 #include <functional>
-#include "memory/pointer_traits.h"
+#include "util/memory/pointer_traits.h"
 
 namespace util {
 USING_UTIL_MEMORY_POINTER_TRAITS
@@ -57,5 +57,5 @@ const_dereference () {
 //=============================================================================
 }	// end namespace util
 
-#endif	//	__UTIL_DEREFERENCE_H__
+#endif	// __UTIL_DEREFERENCE_H__
 

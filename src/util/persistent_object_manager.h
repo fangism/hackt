@@ -1,19 +1,19 @@
 /**
-	\file "persistent_object_manager.h"
+	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.16 2005/03/05 02:49:59 fang Exp $
+	$Id: persistent_object_manager.h,v 1.17 2005/05/10 04:51:29 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
 
 #include <iosfwd>			// include stringstream
-#include "list_vector.h"
-#include "persistent.h"
+#include "util/list_vector.h"
+#include "util/persistent.h"
 
-#include "hash_qmap.h"
-#include "memory/pointer_classes.h"
-#include "IO_utils.h"			// for read and write to streams
+#include "util/hash_qmap.h"
+#include "util/memory/pointer_classes.h"
+#include "util/IO_utils.h"		// for read and write to streams
 
 //=============================================================================
 namespace util {

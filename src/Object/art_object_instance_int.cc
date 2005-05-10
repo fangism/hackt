@@ -1,12 +1,12 @@
 /**
-	\file "art_object_instance_int.cc"
+	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.17 2005/03/11 08:47:30 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.18 2005/05/10 04:51:17 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_INT_CC__
-#define	__ART_OBJECT_INSTANCE_INT_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -16,20 +16,20 @@
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_instance_int.h"
-#include "art_object_inst_ref_data.h"
-#include "art_object_member_inst_ref.h"
-#include "art_object_expr_const.h"
-#include "art_object_connect.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_type_hash.h"
-#include "art_built_ins.h"
+#include "Object/art_object_instance_int.h"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_member_inst_ref.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_type_hash.h"
+#include "Object/art_built_ins.h"
 
-#include "art_object_instance_collection.tcc"
+#include "Object/art_object_instance_collection.tcc"
 
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
 
 //=============================================================================
@@ -212,5 +212,5 @@ template class instance_array<int_tag, 4>;
 
 STATIC_TRACE_END("instance-int")
 
-#endif	// __ART_OBJECT_INSTANCE_INT_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_INT_CC__
 

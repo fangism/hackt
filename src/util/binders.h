@@ -1,12 +1,12 @@
 /**
- *	\file "binders.h"
+ *	\file "util/binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
- *	$Id: binders.h,v 1.5 2004/11/05 02:38:46 fang Exp $
+ *	$Id: binders.h,v 1.6 2005/05/10 04:51:22 fang Exp $
  */
 
-#ifndef	__BINDERS_H__
-#define	__BINDERS_H__
+#ifndef	__UTIL_BINDERS_H__
+#define	__UTIL_BINDERS_H__
 
 #include <functional>
 
@@ -192,5 +192,5 @@ bind2nd_argval_void(const B& op, T& v) {
 //=============================================================================
 }	// end namespace std
 
-#endif	//	__BINDERS_H__
+#endif	// __UTIL_BINDERS_H__
 

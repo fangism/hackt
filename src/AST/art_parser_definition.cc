@@ -1,12 +1,12 @@
 /**
-	\file "art_parser_definition.cc"
+	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.19 2005/05/04 17:54:09 fang Exp $
+	$Id: art_parser_definition.cc,v 1.20 2005/05/10 04:51:06 fang Exp $
  */
 
-#ifndef	__ART_PARSER_DEFINITION_CC__
-#define	__ART_PARSER_DEFINITION_CC__
+#ifndef	__AST_ART_PARSER_DEFINITION_CC__
+#define	__AST_ART_PARSER_DEFINITION_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -21,20 +21,20 @@
 
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	0	// 1: DEATH
 
-#include "art_parser_expr_base.h"
-#include "art_parser_definition.h"
-#include "art_parser_formal.h"
-#include "art_parser_token_char.h"
-#include "art_parser_token_string.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_expr_base.h"
+#include "AST/art_parser_definition.h"
+#include "AST/art_parser_formal.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "art_context.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_definition.h"
-#include "art_object_expr_base.h"
+#include "Object/art_context.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_expr_base.h"
 
-#include "what.h"		// already included in "art_parser.tcc"
-#include "stacktrace.h"
+#include "util/what.h"		// already included in "art_parser.tcc"
+#include "util/stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -68,7 +68,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::typedef_alias,
 //=============================================================================
 namespace ART {
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 
 //=============================================================================
@@ -789,5 +789,5 @@ template class node_list<const def_body_item>;
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_DEFINITION_CC__
+#endif	// __AST_ART_PARSER_DEFINITION_CC__
 

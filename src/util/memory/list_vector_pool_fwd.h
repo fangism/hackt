@@ -1,15 +1,15 @@
 /**
-	\file "list_vector_pool_fwd.h"
+	\file "util/memory/list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.5 2005/03/06 04:36:49 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.6 2005/05/10 04:51:33 fang Exp $
  */
 
-#ifndef	__LIST_VECTOR_POOL_FWD_H__
-#define	__LIST_VECTOR_POOL_FWD_H__
+#ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
+#define	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
 
-#include "STL/construct_fwd.h"
-// #include "memory/count_ptr.h"
+#include "util/STL/construct_fwd.h"
+// #include "util/memory/count_ptr.h"
 
 /**
 	These are the enw and delete operators required when
@@ -129,5 +129,5 @@ operator != (const list_vector_pool<T>&, const list_vector_pool<T>&) {
 }	// end namespace memory
 }	// end namespace util
 
-#endif	//	__LIST_VECTOR_POOL_FWD_H__
+#endif	//	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
 

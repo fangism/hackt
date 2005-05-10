@@ -1,7 +1,7 @@
 /**
-	\file "array_traits.h"
+	\file "util/array_traits.h"
 	Compile-time traits for multidimensional structures.  
-	$Id: array_traits.h,v 1.2 2005/02/27 22:54:19 fang Exp $
+	$Id: array_traits.h,v 1.3 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef	__UTIL_ARRAY_TRAITS_H__

@@ -1,16 +1,16 @@
 /**
-	\file "art_object_inst_ref_base.h"
+	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.9 2005/05/09 18:49:55 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.10 2005/05/10 04:51:14 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_BASE_H__
-#define	__ART_OBJECT_INST_REF_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
+#define	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
 
-#include "art_object_base.h"
-#include "persistent.h"
-#include "art_object_instance_base.h"
-#include "memory/pointer_classes.h"
+#include "Object/art_object_base.h"
+#include "util/persistent.h"
+#include "Object/art_object_instance_base.h"
+#include "util/memory/pointer_classes.h"
 
 namespace ART {
 namespace entity {
@@ -348,5 +348,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_BASE_H__
 

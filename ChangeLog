@@ -2,6 +2,15 @@
 
 2005-05-04	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-35:
+	  From now on, #include files should refer to full relative path, 
+	  never relying on -Ipath in CPPFLAGS.  Hopefully, this makes code
+	  easier to follow when tracing through includes across different
+	  directories.  
+
+
+2005-05-04	David Fang	<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-30:
 	  Re-synchronized test expected outputs between bison- and yacc-
 	  generated parsers.  (This has not been checked for a long time.)

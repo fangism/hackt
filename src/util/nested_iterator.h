@@ -1,22 +1,22 @@
 /**
-	\file "nested_iterator.h"
+	\file "util/nested_iterator.h"
 	Iterator for container of containers that gives the 
 	abstraction of an iterator of the inner container.  
 
 	\todo Specify all pre-conditions, post-conditions, and semantics.  
 
-	$Id: nested_iterator.h,v 1.4 2004/12/05 05:07:25 fang Exp $
+	$Id: nested_iterator.h,v 1.5 2005/05/10 04:51:28 fang Exp $
  */
 
-#ifndef	__NESTED_ITERATOR_H__
-#define	__NESTED_ITERATOR_H__
+#ifndef	__UTIL_NESTED_ITERATOR_H__
+#define	__UTIL_NESTED_ITERATOR_H__
 
 #include <utility>
 #include <iterator>
 #include <numeric>
 
 // for branch prediction
-#include "likely.h"
+#include "util/likely.h"
 
 #define	DEBUG_NESTED_ITERATOR	0
 
@@ -31,7 +31,7 @@ using std::accumulate;
 using std::pair;
 
 #if DEBUG_NESTED_ITERATOR
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 #endif
 
 //=============================================================================
@@ -1057,5 +1057,5 @@ operator + (const typename nested_reverse_iterator<OuterIter, InnerIter>::differ
 //=============================================================================
 }	// end namespace util
 
-#endif	// __NESTED_ITERATOR_H__
+#endif	// __UTIL_NESTED_ITERATOR_H__
 

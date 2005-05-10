@@ -1,17 +1,17 @@
 /**
-	\file "static_trace.cc"
+	\file "util/static_trace.cc"
 	Implementation (simple) of static initialization tracing utility
 	class. 
-	$Id: static_trace.cc,v 1.2 2005/01/28 19:58:47 fang Exp $
+	$Id: static_trace.cc,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 // force proper preprocessing of its own header file
 #define	ENABLE_STATIC_TRACE		1
 
 #include <iostream>
-#include "static_trace.h"
-#include "using_ostream.h"
-#include "macros.h"
+#include "util/static_trace.h"
+#include "util/using_ostream.h"
+#include "util/macros.h"
 
 namespace util {
 

@@ -1,10 +1,10 @@
 /**
-	\file "assoc_traits_fwd.h"
+	\file "util/assoc_traits_fwd.h"
 	Forward declarations for traits-class for 
 	selecting key or value from associative
 	container values such as set, map, hash_map.  
 
-	$Id: assoc_traits_fwd.h,v 1.2 2005/02/27 22:54:20 fang Exp $
+	$Id: assoc_traits_fwd.h,v 1.3 2005/05/10 04:51:22 fang Exp $
  */
 
 #ifndef	__UTIL_ASSOC_TRAITS_FWD_H__

@@ -1,17 +1,17 @@
 /**
-	\file "multikey_set.h"
+	\file "util/multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.2 2005/02/27 22:54:25 fang Exp $
+	$Id: multikey_set.h,v 1.3 2005/05/10 04:51:27 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
 #define	__UTIL_MULTIKEY_SET_H__
 
 #include <iosfwd>
-#include "multikey_set_fwd.h"
-#include "maplikeset.h"
-#include "multikey_assoc.h"
-#include "multikey.h"
+#include "util/multikey_set_fwd.h"
+#include "util/maplikeset.h"
+#include "util/multikey_assoc.h"
+#include "util/multikey.h"
 
 namespace util {
 //=============================================================================

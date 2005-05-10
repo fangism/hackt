@@ -1,14 +1,14 @@
 /**
-	\file "memory/chunk_map_pool_fwd.h"
+	\file "util/memory/chunk_map_pool_fwd.h"
 	Forward declarations for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool_fwd.h,v 1.3 2005/03/06 04:36:48 fang Exp $
+	$Id: chunk_map_pool_fwd.h,v 1.4 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
 #define	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
 
-#include "STL/construct_fwd.h"
-// #include "memory/count_ptr.h"
+#include "util/STL/construct_fwd.h"
+// #include "util/memory/count_ptr.h"
 
 /**
 	Declare this in a class to overload its new and delete operators.  

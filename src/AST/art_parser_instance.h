@@ -1,15 +1,15 @@
 /**
-	\file "art_parser_instance.h"
+	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.11 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_instance.h,v 1.12 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef __ART_PARSER_INSTANCE_H__
-#define __ART_PARSER_INSTANCE_H__
+#ifndef __AST_ART_PARSER_INSTANCE_H__
+#define __AST_ART_PARSER_INSTANCE_H__
 
-#include "art_parser_expr_list.h"
-#include "art_parser_root.h"
-#include "art_parser_definition_item.h"
+#include "AST/art_parser_expr_list.h"
+#include "AST/art_parser_root.h"
+#include "AST/art_parser_definition_item.h"
 
 namespace ART {
 namespace parser {
@@ -474,5 +474,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_INSTANCE_H__
+#endif	// __AST_ART_PARSER_INSTANCE_H__
 

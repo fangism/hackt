@@ -1,15 +1,15 @@
 /**
-	\file "art_object_expr_param_ref.h"
+	\file "Object/art_object_expr_param_ref.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_expr_param_ref.h,v 1.9 2005/03/11 08:47:27 fang Exp $
+	$Id: art_object_expr_param_ref.h,v 1.10 2005/05/10 04:51:13 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_PARAM_REF_H__
-#define __ART_OBJECT_EXPR_PARAM_REF_H__
+#ifndef __OBJECT_ART_OBJECT_EXPR_PARAM_REF_H__
+#define __OBJECT_ART_OBJECT_EXPR_PARAM_REF_H__
 
-#include "boolean_types.h"
-#include "art_object_expr_const.h"	// for const_index_list
-#include "art_object_inst_ref_base.h"	// includes "art_object_base.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_expr_const.h"	// for const_index_list
+#include "Object/art_object_inst_ref_base.h"	// includes "art_object_base.h"
 
 //=============================================================================
 namespace ART {
@@ -48,5 +48,5 @@ virtual	const_range_list static_constant_dimensions(void) const = 0;
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_PARAM_REF_H__
+#endif	// __OBJECT_ART_OBJECT_EXPR_PARAM_REF_H__
 

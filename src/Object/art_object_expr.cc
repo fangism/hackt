@@ -1,11 +1,11 @@
 /**
-	\file "art_object_expr.cc"
+	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.43 2005/05/09 18:49:54 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.44 2005/05/10 04:51:12 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_EXPR_CC__
-#define	__ART_OBJECT_EXPR_CC__
+#ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
+#define	__OBJECT_ART_OBJECT_EXPR_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -15,47 +15,46 @@
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 
 #include <exception>
-// #include <iostream>
 #include <algorithm>
 
 // consider: (for reducing expression storage overhead)
 // #define NO_OBJECT_SANITY	1
 // this will override the definition in "art_object_base.h"
 
-#include "art_object_index.h"
-#include "art_object_expr.h"		// includes "art_object_expr_const.h"
-// #include "art_object_expr_param_ref.h"
-#include "art_object_instance_param.h"
-#include "art_object_classification_details.h"
-#include "art_object_value_collection.h"
-#include "art_object_const_collection.tcc"
-#include "art_object_value_reference.tcc"
-#include "art_object_assign.h"
-#include "art_object_connect.h"		// for ~aliases_connection_base
-#include "art_object_type_hash.h"
+#include "Object/art_object_index.h"
+#include "Object/art_object_expr.h"	// includes "art_object_expr_const.h"
+// #include "Object/art_object_expr_param_ref.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_value_collection.h"
+#include "Object/art_object_const_collection.tcc"
+#include "Object/art_object_value_reference.tcc"
+#include "Object/art_object_assign.h"
+#include "Object/art_object_connect.h"	// for ~aliases_connection_base
+#include "Object/art_object_type_hash.h"
 
 #if 0
-#include "multikey.h"			// extern template instantiations
-#include "packed_array.h"		// extern template instantiations
+#include "util/multikey.h"		// extern template instantiations
+#include "util/packed_array.h"		// extern template instantiations
 #else
 // experimental: suppressing automatic instantiation of template code
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 #endif
 
-#include "what.tcc"
-#include "STL/list.tcc"
-#include "qmap.tcc"
-#include "stacktrace.h"
-#include "static_trace.h"
-#include "memory/list_vector_pool.tcc"
-#include "persistent_object_manager.tcc"
-// #include "memory/pointer_classes.h"
-#include "sstream.h"			// for ostringstring, used by dump
-#include "discrete_interval_set.tcc"
-#include "compose.h"
-#include "conditional.h"		// for compare_if
-#include "ptrs_functional.h"
-#include "dereference.h"
+#include "util/what.tcc"
+#include "util/STL/list.tcc"
+#include "util/qmap.tcc"
+#include "util/stacktrace.h"
+#include "util/static_trace.h"
+#include "util/memory/list_vector_pool.tcc"
+#include "util/persistent_object_manager.tcc"
+// #include "util/memory/pointer_classes.h"
+#include "util/sstream.h"		// for ostringstring, used by dump
+#include "util/discrete_interval_set.tcc"
+#include "util/compose.h"
+#include "util/conditional.h"		// for compare_if
+#include "util/ptrs_functional.h"
+#include "util/dereference.h"
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -185,7 +184,7 @@ namespace memory {
 namespace ART {
 namespace entity {
 //=============================================================================
-// #include "using_ostream.h"
+// #include "util/using_ostream.h"
 using namespace util::memory;
 USING_UTIL_COMPOSE
 USING_UTIL_OPERATIONS
@@ -4126,5 +4125,5 @@ STATIC_TRACE_END("object-expr")
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
 
-#endif	// __ART_OBJECT_EXPR_CC__
+#endif	// __OBJECT_ART_OBJECT_EXPR_CC__
 

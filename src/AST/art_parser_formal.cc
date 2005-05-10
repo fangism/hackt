@@ -1,11 +1,11 @@
 /**
-	\file "art_parser_formal.cc"
+	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.17 2005/05/04 17:54:10 fang Exp $
+	$Id: art_parser_formal.cc,v 1.18 2005/05/10 04:51:07 fang Exp $
  */
 
-#ifndef	__ART_PARSER_FORMAL_CC__
-#define	__ART_PARSER_FORMAL_CC__
+#ifndef	__AST_ART_PARSER_FORMAL_CC__
+#define	__AST_ART_PARSER_FORMAL_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -18,22 +18,22 @@
 #include <exception>
 #include <iostream>
 
-#include "art_parser_formal.h"
-#include "art_parser_expr_base.h"
-#include "art_parser_range_list.h"
-#include "art_parser_token.h"
-#include "art_parser_token_char.h"
-#include "art_parser_type.h"
-#include "art_parser_node_list.tcc"
+#include "AST/art_parser_formal.h"
+#include "AST/art_parser_expr_base.h"
+#include "AST/art_parser_range_list.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_type.h"
+#include "AST/art_parser_node_list.tcc"
 
-#include "art_context.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_instance_base.h"
-#include "art_object_definition.h"
-#include "art_object_expr_base.h"
+#include "Object/art_context.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_expr_base.h"
 
-#include "what.h"
-#include "stacktrace.h"
+#include "util/what.h"
+#include "util/stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -55,7 +55,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl_list_pair, "(template-for
 //=============================================================================
 namespace ART {
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 
 //=============================================================================
@@ -526,5 +526,5 @@ template class node_list<const template_formal_decl>;
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_FORMAL_CC__
+#endif	// __AST_ART_PARSER_FORMAL_CC__
 

@@ -1,15 +1,15 @@
 /**
-	\file "art_object_definition.h"
+	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.29 2005/05/08 20:50:42 fang Exp $
+	$Id: art_object_definition.h,v 1.30 2005/05/10 04:51:12 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_DEFINITION_H__
-#define	__ART_OBJECT_DEFINITION_H__
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
+#define	__OBJECT_ART_OBJECT_DEFINITION_H__
 
-#include "art_object_definition_base.h"
-#include "art_object_namespace.h"
-#include "art_object_instance_management_base.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_instance_management_base.h"
 
 /*********** note on use of data structures ***************
 Lists are needed for sets that need to maintain sequence, such as
@@ -786,5 +786,5 @@ private:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_DEFINITION_H__
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_H__
 

@@ -1,8 +1,8 @@
 /**
-	\file "list_vector_fwd.h"
+	\file "util/list_vector_fwd.h"
 	Forward declaration of list_vector class.
 
-	$Id: list_vector_fwd.h,v 1.2 2005/03/05 02:49:58 fang Exp $
+	$Id: list_vector_fwd.h,v 1.3 2005/05/10 04:51:25 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_FWD_H__

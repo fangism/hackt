@@ -1,7 +1,7 @@
 /**
-	\file "multikey_map.tcc"
+	\file "util/multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.5 2005/02/27 22:54:24 fang Exp $
+	$Id: multikey_map.tcc,v 1.6 2005/05/10 04:51:27 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -12,13 +12,13 @@
 #include <algorithm>
 #include <iterator>
 
-#include "multikey_map.h"
-#include "multikey.tcc"
-#include "multikey_assoc.tcc"
-#include "IO_utils.tcc"
+#include "util/multikey_map.h"
+#include "util/multikey.tcc"
+#include "util/multikey_assoc.tcc"
+#include "util/IO_utils.tcc"
 
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::istream;
 using std::pair;
 using std::numeric_limits;

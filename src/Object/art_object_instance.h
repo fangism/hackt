@@ -1,15 +1,15 @@
 /**
-	\file "art_object_instance.h"
+	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.37 2005/03/11 08:47:29 fang Exp $
+	$Id: art_object_instance.h,v 1.38 2005/05/10 04:51:16 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_H__
-#define	__ART_OBJECT_INSTANCE_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_H__
 
-#include "art_object_instance_base.h"
-#include "art_object_index.h"
-#include "memory/pointer_classes.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_index.h"
+#include "util/memory/pointer_classes.h"
 
 
 namespace ART {
@@ -130,5 +130,5 @@ protected:	// propagate to children
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_H__
 

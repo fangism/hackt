@@ -1,9 +1,9 @@
 /**
-	\file "list_vector.h"
+	\file "util/list_vector.h"
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.7 2005/03/05 02:49:57 fang Exp $
+	$Id: list_vector.h,v 1.8 2005/05/10 04:51:25 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -13,13 +13,14 @@
 #include <iosfwd>
 #include <algorithm>
 
-#include "macros.h"
-#include "list_vector_fwd.h"
+#include "util/macros.h"
+#include "util/list_vector_fwd.h"
 
-#include "STL/list.h"
-#include "qmap.h"
-#include "nested_iterator.h"
+#include "util/STL/list.h"
+#include "util/qmap.h"
+#include "util/nested_iterator.h"
 
+#define	LIST_VECTOR_CLASS	list_vector<T,ValAlloc,VecAlloc>
 
 namespace util {
 USING_LIST

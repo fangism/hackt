@@ -1,13 +1,13 @@
 /**
-	\file "art_parser_range.h"
+	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.3 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_range.h,v 1.4 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef __ART_PARSER_RANGE_H__
-#define __ART_PARSER_RANGE_H__
+#ifndef __AST_ART_PARSER_RANGE_H__
+#define __AST_ART_PARSER_RANGE_H__
 
-#include "art_parser_expr_base.h"
+#include "AST/art_parser_expr_base.h"
 
 namespace ART {
 namespace parser {
@@ -52,5 +52,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_RANGE_H__
+#endif	// __AST_ART_PARSER_RANGE_H__
 

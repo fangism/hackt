@@ -2,26 +2,25 @@
 	\file "art++.h"
 	The only header file needed to write top-level applications for ART.
 
-	$Id: art++.h,v 1.9 2005/03/06 22:45:48 fang Exp $
+	$Id: art++.h,v 1.10 2005/05/10 04:51:06 fang Exp $
  */
 
 #ifndef	__ARTXX_H__
 #define	__ARTXX_H__
 
-#include "getopt_portable.h"		// for getopt()
+#include "util/getopt_portable.h"	// for getopt()
 
-#include "memory/pointer_classes.h"
-// #include "art_debug.h"
-// #include "art_parser.h"			// everything needed for "y.tab.h"
-#include "art_parser_fwd.h"		// everything needed for "y.tab.h"
-#include "art_parser_chp_fwd.h"		// everything needed for "y.tab.h"
-#include "art_parser_hse_fwd.h"		// everything needed for "y.tab.h"
-#include "art_parser_prs_fwd.h"		// everything needed for "y.tab.h"
-#include "art_parser_root_item.h"	// everything needed for "y.tab.h"
-#include "art_object_base.h"
-#include "art_object_module.h"
-#include "art_context.h"
-#include "persistent_object_manager.h"
+#include "util/memory/pointer_classes.h"
+// #include "AST/art_parser.h"		// everything needed for "y.tab.h"
+#include "AST/art_parser_fwd.h"		// everything needed for "y.tab.h"
+#include "AST/art_parser_chp_fwd.h"	// everything needed for "y.tab.h"
+#include "AST/art_parser_hse_fwd.h"	// everything needed for "y.tab.h"
+#include "AST/art_parser_prs_fwd.h"	// everything needed for "y.tab.h"
+#include "AST/art_parser_root_item.h"	// everything needed for "y.tab.h"
+#include "Object/art_object_base.h"
+#include "Object/art_object_module.h"
+#include "Object/art_context.h"
+#include "util/persistent_object_manager.h"
 
 using namespace ART;
 using namespace ART::entity;
@@ -29,9 +28,8 @@ using namespace ART::parser;
 using namespace util::memory;
 using util::persistent_object_manager;
 
-// #include "art_switches.h"
-#include "yacc_or_bison.h"
-#include "art++-parse-prefix.h"
+#include "parser/yacc_or_bison.h"
+#include "parser/art++-parse-prefix.h"
 
 #if	USING_YACC
 extern  YYSTYPE artxx_val;		// root token (was yyval)
@@ -46,7 +44,7 @@ extern	FILE* artxx_in;
 int	artxx_parse(void);		// in "art++-parse-prefix.cc"
 // }
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::ifstream;
 using std::ofstream;
 using std::ios_base;

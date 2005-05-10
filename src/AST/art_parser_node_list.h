@@ -1,16 +1,16 @@
 /**
-	\file "art_parser_node_list.h"
+	\file "AST/art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.7 2005/05/04 17:54:11 fang Exp $
+	$Id: art_parser_node_list.h,v 1.8 2005/05/10 04:51:08 fang Exp $
  */
 
-#ifndef __ART_PARSER_NODE_LIST_H__
-#define __ART_PARSER_NODE_LIST_H__
+#ifndef __AST_ART_PARSER_NODE_LIST_H__
+#define __AST_ART_PARSER_NODE_LIST_H__
 
-#include "STL/list.h"
-#include "art_parser_fwd.h"
-#include "art_parser_base.h"
-#include "memory/count_ptr.h"
+#include "util/STL/list.h"
+#include "AST/art_parser_fwd.h"
+#include "AST/art_parser_base.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace parser {
@@ -147,5 +147,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_NODE_LIST_H__
+#endif	// __AST_ART_PARSER_NODE_LIST_H__
 

@@ -1,18 +1,18 @@
 /**
-	\file "list_vector_pool.h"
+	\file "util/memory/list_vector_pool.h"
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.11 2005/03/06 04:36:49 fang Exp $
+	$Id: list_vector_pool.h,v 1.12 2005/05/10 04:51:33 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
 
-#include "memory/list_vector_pool_fwd.h"
-#include "memory/thread_lock.h"
-#include "memory/destruction_policy.h"
-#include "macros.h"
+#include "util/memory/list_vector_pool_fwd.h"
+#include "util/memory/thread_lock.h"
+#include "util/memory/destruction_policy.h"
+#include "util/macros.h"
 
 #include <queue>
 #include <list>

@@ -1,19 +1,19 @@
 /**
-	\file "art_object_instance_bool.h"
+	\file "Object/art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.10 2005/02/27 22:54:14 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.11 2005/05/10 04:51:16 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_BOOL_H__
-#define	__ART_OBJECT_INSTANCE_BOOL_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_BOOL_H__
 
-#include "art_object_instance.h"
-#include "memory/list_vector_pool_fwd.h"
-#include "art_object_classification_details.h"
+#include "Object/art_object_instance.h"
+#include "util/memory/list_vector_pool_fwd.h"
+#include "Object/art_object_classification_details.h"
 
-#include "art_object_instance_alias.h"
-#include "art_object_instance_collection.h"
+#include "Object/art_object_instance_alias.h"
+#include "Object/art_object_instance_collection.h"
 
 namespace ART {
 namespace entity {
@@ -63,5 +63,5 @@ typedef	instance_array<bool_tag, 4>	bool_array_4D;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_BOOL_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_BOOL_H__
 

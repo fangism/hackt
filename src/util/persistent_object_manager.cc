@@ -1,7 +1,7 @@
 /**
-	\file "persistent_object_manager.cc"
+	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.18 2005/03/05 02:49:58 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.19 2005/05/10 04:51:29 fang Exp $
  */
 
 // flags and switches
@@ -10,18 +10,18 @@
 
 #include <fstream>
 
-#include "hash_specializations.h"	// include this first
+#include "util/hash_specializations.h"	// include this first
 	// for hash specialization to take effect
-#include "hash_qmap.tcc"
-#include "new_functor.tcc"
-#include "list_vector.tcc"
-#include "persistent_object_manager.tcc"	// for read_pointer
-	// includes "count_ptr.h"
-#include "macros.h"
-#include "IO_utils.tcc"
+#include "util/hash_qmap.tcc"
+#include "util/new_functor.tcc"
+#include "util/list_vector.tcc"
+#include "util/persistent_object_manager.tcc"	// for read_pointer
+	// includes "util/count_ptr.h"
+#include "util/macros.h"
+#include "util/IO_utils.tcc"
 	// includes <iostream>
-#include "sstream.h"
-#include "stacktrace.h"
+#include "util/sstream.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 // macros for use in write_object and load_object
@@ -112,7 +112,7 @@
 //=============================================================================
 
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::ios_base;
 using std::stringstream;
 using std::stringbuf;

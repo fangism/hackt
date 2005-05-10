@@ -1,15 +1,15 @@
 /**
-	\file "hash_specializations.h"
+	\file "util/hash_specializations.h"
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.6 2005/02/27 22:54:22 fang Exp $
+	$Id: hash_specializations.h,v 1.7 2005/05/10 04:51:23 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
 #define	__UTIL_HASH_SPECIALIZATIONS_H__
 
-#include "STL/hash_map.h"		// wrapper for <hash_map>
+#include "util/STL/hash_map.h"		// wrapper for <hash_map>
 
 #include <string>
 

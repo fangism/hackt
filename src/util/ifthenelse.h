@@ -1,8 +1,8 @@
 /**
-	\file "ifthenelse_type.h"
+	\file "util/ifthenelse.h"
 	Compile-time selection between two types.  
 	Inspired by "traits/ifthenelse.hpp".
-	$Id: ifthenelse.h,v 1.2 2005/01/28 19:03:59 fang Exp $
+	$Id: ifthenelse.h,v 1.3 2005/05/10 04:51:23 fang Exp $
  */
 
 #ifndef	__UTIL_IFTHENELSE_H__

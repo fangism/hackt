@@ -1,15 +1,15 @@
 /**
-	\file "art_parser_token.h"
+	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.11 2005/04/14 19:46:35 fang Exp $
+	$Id: art_parser_token.h,v 1.12 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef __ART_PARSER_TOKEN_H__
-#define __ART_PARSER_TOKEN_H__
+#ifndef __AST_ART_PARSER_TOKEN_H__
+#define __AST_ART_PARSER_TOKEN_H__
 
-#include "art_parser_token_string.h"
-#include "art_parser_type_base.h"
-#include "memory/chunk_map_pool_fwd.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_type_base.h"
+#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
 namespace parser {
@@ -297,5 +297,5 @@ public:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_PARSER_TOKEN_H__
+#endif	// __AST_ART_PARSER_TOKEN_H__
 

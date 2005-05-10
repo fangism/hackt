@@ -1,16 +1,16 @@
 /**
-	\file "sublist.tcc"
+	\file "util/sublist.tcc"
 	Template method definitions for sublist.
-	$Id: sublist.tcc,v 1.2 2005/04/14 19:46:36 fang Exp $
+	$Id: sublist.tcc,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_SUBLIST_TCC__
 #define	__UTIL_SUBLIST_TCC__
 
-// #include "list.tcc"
+// #include "util/STL/list.tcc"
 // not needed because we only need the list iterator
 
-#include "sublist.h"
+#include "util/sublist.h"
 
 namespace util {
 //=============================================================================
@@ -38,35 +38,6 @@ sublist<T>::sublist(const list_type& l) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SUBLIST_TEMPLATE_SIGNATURE
 sublist<T>::~sublist() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// inlined
-SUBLIST_TEMPLATE_SIGNATURE
-sublist<T>&
-sublist<T>::behead(void) {
-	if (head != tail) {
-		head++;
-#if SUBLIST_INCLUDE_REVERSE_ITERATORS
-		rtail--;
-#endif
-	}
-	return *this;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SUBLIST_TEMPLATE_SIGNATURE
-sublist<T>&
-sublist<T>::betail(void) {
-	if (head != tail) {
-		tail--;
-#if SUBLIST_INCLUDE_REVERSE_ITERATORS
-		rhead++;
-#endif
-	}
-	return *this;
-}
-#endif
 
 //=============================================================================
 }	// end namespace util

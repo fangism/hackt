@@ -1,21 +1,21 @@
 /**
-	\file "multidimensional_sparse_set.tcc"
+	\file "util/multidimensional_sparse_set.tcc"
 	Template method definitions for multidimensional_sparse_set.
-	$Id: multidimensional_sparse_set.tcc,v 1.3 2005/02/27 22:54:23 fang Exp $
+	$Id: multidimensional_sparse_set.tcc,v 1.4 2005/05/10 04:51:26 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 
 #include <iostream>
-#include "sstream.h"		// used by the dumo method
-#include "multidimensional_sparse_set.h"
-#include "qmap.tcc"
-#include "discrete_interval_set.tcc"
+#include "util/sstream.h"		// used by the dumo method
+#include "util/multidimensional_sparse_set.h"
+#include "util/qmap.tcc"
+#include "util/discrete_interval_set.tcc"
 
 namespace util {
 using std::ostringstream;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class base_multidimensional_sparse_set method definitions

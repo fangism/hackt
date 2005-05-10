@@ -1,16 +1,16 @@
 /**
-	\file "art_built_ins.h"
+	\file "Object/art_built_ins.h"
 	Header for built-in features of the art language, 
 	including primitive definitions and types.  
-	$Id: art_built_ins.h,v 1.8 2005/01/13 05:28:27 fang Exp $
+	$Id: art_built_ins.h,v 1.9 2005/05/10 04:51:09 fang Exp $
  */
 
-#ifndef	__ART_BUILT_INS_H__
-#define	__ART_BUILT_INS_H__
+#ifndef	__OBJECT_ART_BUILT_INS_H__
+#define	__OBJECT_ART_BUILT_INS_H__
 
 // don't need all forward declarations, just a few
-// #include "art_object_fwd.h"
-#include "memory/pointer_classes_fwd.h"
+// #include "Object/art_object_fwd.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 /***
 	NOTE:
@@ -61,5 +61,5 @@ extern	const data_type_reference	bool_type;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	//	__ART_BUILT_INS_H__
+#endif	//	__OBJECT_ART_BUILT_INS_H__
 

@@ -1,11 +1,11 @@
 /**
-	\file "conditional.h"
+	\file "util/conditional.h"
 	Functor compositions for conditional or predicated execution.  
-	$Id: conditional.h,v 1.6 2004/11/02 07:52:13 fang Exp $
+	$Id: conditional.h,v 1.7 2005/05/10 04:51:22 fang Exp $
  */
 
-#ifndef	__CONDITIONAL_H__
-#define	__CONDITIONAL_H__
+#ifndef	__UTIL_CONDITIONAL_H__
+#define	__UTIL_CONDITIONAL_H__
 
 namespace std {
 
@@ -105,5 +105,5 @@ compare_if(In1 l_first, In1 l_last, In2 r_first, In2 r_last,
 //=============================================================================
 }	// end namespace std
 
-#endif	//	__CONDITIONAL_H__
+#endif	// __UTIL_CONDITIONAL_H__
 

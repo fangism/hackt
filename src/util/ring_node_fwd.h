@@ -1,7 +1,7 @@
 /**
-	\file "ring_node_fwd.h"
+	\file "util/ring_node_fwd.h"
 	Forward declaration for ring_node struct.  
-	$Id: ring_node_fwd.h,v 1.2 2005/02/27 22:54:27 fang Exp $
+	$Id: ring_node_fwd.h,v 1.3 2005/05/10 04:51:30 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_FWD_H__

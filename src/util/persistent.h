@@ -1,18 +1,18 @@
 /**
-	\file "persistent.h"
+	\file "util/persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.11 2005/03/04 07:00:09 fang Exp $
+	$Id: persistent.h,v 1.12 2005/05/10 04:51:29 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_H__
 #define	__UTIL_PERSISTENT_H__
 
 #include <iosfwd>
-#include "string_fwd.h"
+#include "util/string_fwd.h"
 
-#include "STL/hash_map_fwd.h"
-#include "nullary_function_fwd.h"
-#include "new_functor_fwd.h"
+#include "util/STL/hash_map_fwd.h"
+#include "util/nullary_function_fwd.h"
+#include "util/new_functor_fwd.h"
 
 //=============================================================================
 // macros

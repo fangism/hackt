@@ -1,23 +1,23 @@
 /**
-	\file "art_object_assign.cc"
+	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.21 2005/03/11 21:12:41 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.22 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_ASSIGN_CC__
-#define	__ART_OBJECT_ASSIGN_CC__
+#ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
+#define	__OBJECT_ART_OBJECT_ASSIGN_CC__
 
 #define	DEBUG_LIST_VECTOR_POOL		0
 
 #include <iostream>
 #include <numeric>
 
-#include "art_object_assign.h"
-#include "art_object_expr_param_ref.h"
-#include "art_object_value_reference.h"
-#include "art_object_classification_details.h"
-#include "art_object_type_hash.h"
-#include "art_object_assign.tcc"
+#include "Object/art_object_assign.h"
+#include "Object/art_object_expr_param_ref.h"
+#include "Object/art_object_value_reference.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_type_hash.h"
+#include "Object/art_object_assign.tcc"
 
 //=============================================================================
 namespace util {
@@ -37,13 +37,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace ART {
 namespace entity {
-#if 0
-USING_UTIL_COMPOSE
-using std::mem_fun_ref;
-using util::dereference;
-using std::bind2nd_argval;
-using util::persistent_traits;
-#endif
 
 //=============================================================================
 // class param_expression_assignment method definitions
@@ -124,5 +117,5 @@ template class expression_assignment<pint_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_ASSIGN_CC__
+#endif	// __OBJECT_ART_OBJECT_ASSIGN_CC__
 

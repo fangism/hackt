@@ -1,39 +1,39 @@
 /**
-	\file "art_object_type_ref.cc"
+	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.31 2005/05/09 18:49:55 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.32 2005/05/10 04:51:20 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_REF_CC__
-#define	__ART_OBJECT_TYPE_REF_CC__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
+#define	__OBJECT_ART_OBJECT_TYPE_REF_CC__
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
-#include "art_parser_token_string.h"	// so token_identifier : string
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance_bool.h"
-#include "art_object_instance_int.h"
-#include "art_object_instance_enum.h"
-#include "art_object_instance_struct.h"
-#include "art_object_instance_param.h"
-#include "art_object_value_collection.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr_base.h"
-#include "art_object_type_hash.h"
-#include "persistent_object_manager.tcc"
-#include "art_built_ins.h"
-#include "art_object_classification_details.h"
+#include "AST/art_parser_token_string.h"	// so token_identifier : string
+#include "Object/art_object_definition.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance_bool.h"
+#include "Object/art_object_instance_int.h"
+#include "Object/art_object_instance_enum.h"
+#include "Object/art_object_instance_struct.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_value_collection.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_expr_base.h"
+#include "Object/art_object_type_hash.h"
+#include "util/persistent_object_manager.tcc"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_classification_details.h"
 
-#include "art_object_inst_stmt_param.h"
-#include "art_object_inst_stmt_data.h"
-#include "art_object_inst_stmt_chan.h"
-#include "art_object_inst_stmt_proc.h"
+#include "Object/art_object_inst_stmt_param.h"
+#include "Object/art_object_inst_stmt_data.h"
+#include "Object/art_object_inst_stmt_chan.h"
+#include "Object/art_object_inst_stmt_proc.h"
 
-#include "sstream.h"
-#include "stacktrace.h"
+#include "util/sstream.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 // specializations
@@ -50,7 +50,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 using std::ostringstream;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
 using util::persistent_traits;
 
@@ -873,5 +873,5 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_TYPE_REF_CC__
+#endif	// __OBJECT_ART_OBJECT_TYPE_REF_CC__
 

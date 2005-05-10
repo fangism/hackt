@@ -1,17 +1,17 @@
 /**
-	\file "art_object_classification_details.h"
+	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.5 2005/05/08 20:50:42 fang Exp $
+	$Id: art_object_classification_details.h,v 1.6 2005/05/10 04:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
-#define	__ART_OBJECT_CLASSIFICATION_DETAILS_H__
+#ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
+#define	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
 
 #include <iosfwd>
-#include "art_object_fwd.h"
-#include "packed_array_fwd.h"
-#include "ring_node_fwd.h"
+#include "Object/art_object_fwd.h"
+#include "util/packed_array_fwd.h"
+#include "util/ring_node_fwd.h"
 
 namespace util {
 	class persistent_object_manager;
@@ -563,5 +563,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_CLASSIFICATION_DETAILS_H__
+#endif	// __OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
 

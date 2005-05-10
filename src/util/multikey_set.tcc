@@ -1,21 +1,21 @@
 /**
-	\file "multikey_set.tcc"
+	\file "util/multikey_set.tcc"
 	Method definitions for multidimensional set, based on
 	multikey_assoc wrapper interface. 
-	$Id: multikey_set.tcc,v 1.2 2005/02/27 22:54:25 fang Exp $
+	$Id: multikey_set.tcc,v 1.3 2005/05/10 04:51:27 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_TCC__
 #define	__UTIL_MULTIKEY_SET_TCC__
 
 #include <iostream>
-#include "multikey_set.h"
-#include "multikey.tcc"
-#include "multikey_assoc.tcc"
-#include "null_construct.h"
+#include "util/multikey_set.h"
+#include "util/multikey.tcc"
+#include "util/multikey_assoc.tcc"
+#include "util/null_construct.h"
 
 namespace util {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 //=============================================================================
 // class multikey_set method definition
 
