@@ -1,20 +1,19 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.23.2.1 2005/05/12 04:45:29 fang Exp $
+	$Id: art_parser_instance.cc,v 1.23.2.2 2005/05/12 23:30:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
 #define	__AST_ART_PARSER_INSTANCE_CC__
 
-// rule-of-thumb for inline directives:
-// only inline constructors if you KNOW that they will not be be needed
-// outside of this module, because we don't have a means to export
-// inline methods other than defining in the header or using
-// -fkeep-inline-functions
+#define	ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>
+#include <utility>
+#include <functional>
+#include <numeric>
 
 #include "AST/art_parser_instance.h"
 #include "AST/art_parser_expr.h"		// for index_expr
@@ -35,6 +34,9 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/dereference.h"
+#include "util/compose.h"
+#include "util/binders.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -75,6 +77,14 @@ namespace ART {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using util::dereference;
+using std::transform;
+using std::mem_fun_ref;
+using ADS::unary_compose;
+using std::bind2nd_argval;
+using std::accumulate;
+using std::_Select1st;
+using std::_Select2nd;
 
 //=============================================================================
 // class instance_management method definitions
@@ -117,6 +127,126 @@ alias_list::rightmost(void) const {
 	return alias_list_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just collects the result of type-checking of items in list.  
+	\param temp the result list.
+	\param c the context.
+ */
+void
+alias_list::postorder_check(check_type& temp, context& c) const {
+	STACKTRACE("alias_list::postorder_check()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+#if 0
+	std::transform(i, e, back_inserter(temp), 
+	unary_compose(
+		bind2nd_argval(mem_fun_ref(&expr::check_generic), c),
+		dereference<value_type>()
+	)
+	);
+#else
+	// in plain English, the above is equivalent to:
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_generic(c));
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Code from here is ripped from the old
+	object_list::make_param_assignment().
+	\param temp result of postorder_check of items in list, 
+		which may contain errors, but they are caught here.  
+	\return newly allocated expression assignment object if
+		successfully type-checked, else NULL.  
+ */
+excl_ptr<const entity::param_expression_assignment>
+alias_list::make_param_assignment(const checked_exprs_type& temp) {
+	typedef	excl_ptr<const entity::param_expression_assignment>
+							const_return_type;
+	typedef	excl_ptr<entity::param_expression_assignment>
+							return_type;
+	typedef	checked_exprs_type::value_type		checked_expr_ptr_type;
+	// then expect subsequent items to be the same
+	// or already param_expr in the case of some constants.
+	// However, only the last item may be a constant.  
+
+	bad_bool err(false);
+	// right-hand-side source expression
+	const checked_expr_ptr_type& last_obj = temp.back();
+	const count_ptr<const param_expr>
+		rhse = last_obj.is_a<const param_expr>();
+	INVARIANT(rhse);
+
+	return_type ret;
+	// later, fold these error messages into static constructor?
+	if (!last_obj) {
+		cerr << "ERROR: rhs of expression assignment "
+			"is malformed (null)" << endl;
+		return const_return_type(NULL);
+	} else if (rhse) {
+		// last term must be initialized or be dependent on formals
+		// if collective, conservative: may-be-initialized
+		ret = param_expr::make_param_expression_assignment(rhse);
+		INVARIANT(ret);
+	} else {
+		// never reached... caught by INVARIANT check above
+		last_obj->what(
+			cerr << "ERROR: rhs is unexpected object: ") << endl;
+		return const_return_type(NULL);
+	}
+
+	entity::param_expression_assignment::instance_reference_appender
+		append_it(*ret);
+	const checked_exprs_type::const_iterator dest_end = --temp.end();
+	checked_exprs_type::const_iterator dest_iter = temp.begin();
+	err = accumulate(dest_iter, dest_end, err, append_it);
+
+	// if there are any errors, discard everything?
+	// later: track errors in partially constructed objects
+	if (err.bad) {
+		return const_return_type(NULL);
+	} else	return const_return_type(ret);             // is ok
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+excl_ptr<const entity::aliases_connection_base>
+alias_list::make_alias_connection(const checked_refs_type& temp) {
+	typedef excl_ptr<const aliases_connection_base> const_return_type;
+	typedef excl_ptr<aliases_connection_base> 	return_type;
+	checked_refs_type::const_iterator i = temp.begin();
+	INVARIANT(temp.size() > 1);          // else what are you connecting?
+	const count_ptr<const instance_reference_base> fir(*i);
+//		fir(i->is_a<const instance_reference_base>());
+	NEVER_NULL(fir);
+	return_type ret = 
+		entity::instance_reference_base::make_aliases_connection(fir);
+	// keep this around for type-checking comparisons
+	ret->append_instance_reference(fir);
+	// starting with second instance reference, type-check and alias
+	int j = 2;
+	for (i++; i!=temp.end(); i++, j++) {
+		const count_ptr<const instance_reference_base> ir(*i);
+		INVARIANT(ir);
+		if (!fir->may_be_type_equivalent(*ir)) {
+			cerr << "ERROR: type/size of instance reference "
+				<< j << " of alias list doesn't match the "
+				"type/size of the first instance reference!  "
+				<< endl;
+			return const_return_type(NULL);
+		} else {
+			ret->append_instance_reference(ir);
+		}
+	}
+	// transfers ownership
+	return const_return_type(ret);        // const-ify
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	COMPLETELY REDO THIS, since param_literal has been ELIMINATED
 		so that param_instance_reference are now subclasses
@@ -140,10 +270,9 @@ if (size() > 0) {		// non-empty
 	const never_ptr<const object> ret(NULL);
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
-#if 1
+#if 0
 	// TRYING TO PHASE THIS OUT
 	alias_list_base::check_build(c);
-#endif
 	// errors in individual items will result in NULL on stack.
 
 	// After list items have been built, check types.  
@@ -178,8 +307,8 @@ if (size() > 0) {		// non-empty
 		// or already param_expr in the case of some constants.
 		// However, only the last item may be a constant.  
 
-		excl_ptr<param_expression_assignment> exass = 
-			connect.make_param_assignment();
+		excl_ptr<param_expression_assignment>
+			exass = connect.make_param_assignment();
 
 		// if all is well, then add this new list to the context's
 		// current scope.  
@@ -224,6 +353,72 @@ if (size() > 0) {		// non-empty
 	}
 
 	return ret;
+#else
+	check_type temp;
+	postorder_check(temp, c);
+	const check_type::const_iterator first_obj = temp.begin();
+	const check_type::const_iterator end_obj = temp.end();
+	if (!first_obj->first && !first_obj->second) {
+		cerr << endl << "ERROR in the first item in alias-list."
+			<< endl;
+		THROW_EXIT;
+	} else if (first_obj->first) {
+		checked_exprs_type checked_exprs;
+		transform(first_obj, end_obj, back_inserter(checked_exprs), 
+			_Select1st<check_type::value_type>()
+		);
+		
+		// then expect subsequent items to be the same
+		// or already param_expr in the case of some constants.
+		// However, only the last item may be a constant.  
+
+		excl_ptr<const param_expression_assignment>
+			exass = make_param_assignment(checked_exprs);
+
+		// if all is well, then add this new list to the context's
+		// current scope.  
+		// idea for error checking:
+		// instead of returning NULL, return partially created
+		// list with error-markers, maintained in the object
+		// and query the error status.  
+		// forbid object writing if there are any errors.  
+		if (!exass) {
+			cerr << "HALT: at least one error in the "
+				"assignment list.  " << where(*this) << endl;
+			THROW_EXIT;
+		} else {
+			c.add_assignment(exass);
+			// and transfer ownership
+			INVARIANT(!exass.owned());
+		}
+	} else if (first_obj->second) {
+		checked_refs_type checked_refs;
+		transform(first_obj, end_obj, back_inserter(checked_refs), 
+			_Select2nd<check_type::value_type>()
+		);
+		excl_ptr<const aliases_connection_base>
+			connection = make_alias_connection(checked_refs);
+		// also type-checks connections
+		if (!connection) {
+			cerr << "HALT: at least one error in connection list.  "
+				<< where(*this) << endl;
+			THROW_EXIT;
+		} else {
+			excl_ptr<const instance_reference_connection>
+				ircp = connection.as_a_xfer<const instance_reference_connection>();
+			c.add_connection(ircp);
+			INVARIANT(!ircp);
+			INVARIANT(!connection.owned());
+		}
+	} else {
+		// ERROR
+		cerr << "WTF? first element of alias_list is not "
+			"an instance reference!"
+			<< endl;
+		THROW_EXIT;
+	}
+	return never_ptr<const object>(NULL);
+#endif
 } else {
 	// will this ever be empty?  will be caught as error for now.
 	DIE;

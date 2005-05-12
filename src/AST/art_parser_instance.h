@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.12.2.1 2005/05/12 04:45:29 fang Exp $
+	$Id: art_parser_instance.h,v 1.12.2.2 2005/05/12 23:30:26 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -10,9 +10,16 @@
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_root.h"
 #include "AST/art_parser_definition_item.h"
+#include "util/STL/vector_fwd.h"
+// #include "util/boolean_types.h"
 
 namespace ART {
+namespace entity {
+	class param_expression_assignment;
+	class aliases_connection_base;
+}
 namespace parser {
+// using util::good_bool;
 //=============================================================================
 /**
 	An expression list specialized for port connection arguments.
@@ -88,11 +95,22 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
-#if 0
 private:
-	good_bool
-	postorder_check(context&) const;
-#endif
+	typedef	DEFAULT_VECTOR(expr::generic_return_type)	check_type;
+	typedef	DEFAULT_VECTOR(expr::return_type)	checked_exprs_type;
+	typedef	DEFAULT_VECTOR(inst_ref_return_type)
+							checked_refs_type;
+
+	void
+	postorder_check(check_type&, context&) const;
+
+	static
+	excl_ptr<const entity::param_expression_assignment>
+	make_param_assignment(const checked_exprs_type&);
+
+	static
+	excl_ptr<const entity::aliases_connection_base>
+	make_alias_connection(const checked_refs_type&);
 };	// end class alias_list
 
 //=============================================================================

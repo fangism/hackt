@@ -2,6 +2,24 @@
 
 2005-05-12	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-35-exprcheck-04:
+	  Added expr::check_generic (virtual) to present the result of
+	  check_expr or check_reference dynmiacally cast to the other type, 
+	  solely for the purposes of working with alias_list's checking
+	  procedure.  (read: kludge, but less than it was before)
+	  id_expr and member_expr primary check method is now check_reference.  
+	  Added placeholder check_generic routines to array_concatenation, 
+	  loop_concatenation, and array_construction.  
+	  (Will need to add check_reference routines once we start 
+	  implementing them.)
+	  Updated alias_list::check_build to use check_generic, 
+		and moved object_list make_param_expr_assignment
+		and make_alias_connection methods into private methods.  
+	  Updated token_identifier to use check_reference.  
+
+
+2005-05-12	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-35-exprcheck-03:
 	  Checked implementation of check_expr, check_reference, 
 		check_indices, check_ranges and fixed minor bug 

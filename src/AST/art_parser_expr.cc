@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.20.2.3 2005/05/12 04:45:29 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20.2.4 2005/05/12 23:30:25 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -9,6 +9,8 @@
 
 #include <exception>
 #include <iostream>
+
+#define	ENABLE_STACKTRACE		0
 
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_token_char.h"
@@ -25,6 +27,7 @@
 #include "Object/art_object_expr.h"
 
 #include "util/what.h"
+#include "util/stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -72,6 +75,63 @@ expr::expr() : node() { }
 DESTRUCTOR_INLINE
 expr::~expr() { }
 #endif
+
+/**
+	All non-inst-ref expressions will dynamically cast
+	the result of check_expr to an instance reference.  
+	This is overridden by inst_ref_expr::check_generic.
+	\return pair of typed pointers.  
+ */
+expr::generic_return_type
+expr::check_generic(context& c) const {
+	STACKTRACE("expr::check_generic()");
+//	what(cerr) << endl;
+	expr::return_type ret(check_expr(c));
+	return generic_return_type(ret,
+		ret.is_a<inst_ref_return_type::element_type>());
+}
+
+//=============================================================================
+// class inst_ref_expr method definitions
+
+/**
+	All inst-ref expressions will dynamically cast
+	the result of check_reference to an parameter expression.  
+	\return pair of typed pointers.  
+ */
+expr::generic_return_type
+inst_ref_expr::check_generic(context& c) const {
+	STACKTRACE("inst_ref_expr::check_generic()");
+	return_type ret(check_reference(c));
+	return generic_return_type(
+		ret.is_a<expr::return_type::element_type>(), ret);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should really not be called...
+ */
+expr::return_type
+inst_ref_expr::check_expr(context& c) const {
+	STACKTRACE("inst_ref_expr::check_expr() (should not be called)");
+#if 0
+	return check_reference(c).is_a<expr::return_type::element_type>();
+#else
+	const inst_ref_expr::return_type inst_ref(check_reference(c));
+	const expr::return_type
+		param_ref(inst_ref.is_a<expr::return_type::element_type>());
+	if (param_ref) {
+		// accepted
+		return param_ref;
+	} else {
+		cerr << "object \"" // << *qid <<
+			"\" does not refer to a parameter, ERROR!  "
+			<< where(*this) << endl;
+		THROW_EXIT;
+		return expr::return_type(NULL);
+	}
+#endif
+}
 
 //=============================================================================
 // class expr_list method definitions
@@ -137,6 +197,7 @@ qualified_id::qualified_id(const qualified_id& i) :
 DESTRUCTOR_INLINE
 qualified_id::~qualified_id() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Call this function in the parser to mark an un/qualified identifier
 	as absolute, as oppposed to relative.  
@@ -163,6 +224,7 @@ qualified_id::rightmost(void) const {
 	return qualified_id_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 	Future: instead of copying, give an iterator range.
 	These might be obsoleted by the sublist slice interface.  
@@ -175,6 +237,7 @@ qualified_id::copy_namespace_portion(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 qualified_id
 qualified_id::copy_beheaded(void) const {
 	qualified_id ret(*this);		// copy, not-owned
@@ -183,6 +246,7 @@ qualified_id::copy_beheaded(void) const {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Finds an object referenced by the name, be it type or instance.  
 	Remember to check the return type in the caller, even virtual
@@ -224,6 +288,7 @@ operator << (ostream& o, const qualified_id& id) {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // friend operator
 ostream&
 operator << (ostream& o, const qualified_id_slice& id) {
@@ -300,6 +365,7 @@ id_expr::is_absolute(void) const {
 	return qid->is_absolute();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	UPDATE DOCUMENTATION.
 	The qualified_id member's check build can return a definition 
@@ -345,14 +411,17 @@ id_expr::check_build(context& c) const {
 // also accomplishes same thing?
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inst_ref_expr::return_type
 id_expr::check_reference(context& c) const {
+	STACKTRACE("id_expr::check_reference()");
 	const never_ptr<const object>
 		o(qid->check_build(c));		// will lookup_object
 	if (o) {
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());
 		if (inst) {
+			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
 			return inst->make_instance_reference();
@@ -371,6 +440,8 @@ id_expr::check_reference(context& c) const {
 	return inst_ref_expr::return_type(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 expr::return_type
 id_expr::check_expr(context& c) const {
 	inst_ref_expr::return_type inst_ref(check_reference(c));
@@ -388,6 +459,7 @@ id_expr::check_expr(context& c) const {
 		return expr::return_type(NULL);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
@@ -435,6 +507,7 @@ prefix_expr::rightmost(void) const {
 	return e->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does basic checking on expression.  
 	Grabs last expression off top of stack and replaces it.  
@@ -528,6 +601,7 @@ prefix_expr::check_build(context& c) const {
 	return return_type(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 prefix_expr::check_expr(context& c) const {
 	typedef	expr::return_type		return_type;
@@ -627,6 +701,7 @@ member_expr::rightmost(void) const {
 	return member->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Type-check of member reference.  
 	Current restriction: left expression must be scalar 0-dimensional.
@@ -699,13 +774,14 @@ member_expr::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Really, should never be able to refer to param_expr
 	member of an instance.
  */
-expr::return_type
-member_expr::check_expr(context& c) const {
-	typedef	expr::return_type	return_type;
+inst_ref_expr::return_type
+member_expr::check_reference(context& c) const {
+	typedef	inst_ref_expr::return_type	return_type;
 	const inst_ref_expr::return_type o(owner->check_reference(c));
 	// useless return value
 	// expect: simple_instance_reference on object stack
@@ -757,7 +833,7 @@ member_expr::check_expr(context& c) const {
 
 	const count_ptr<instance_reference_base>
 	ret_inst_ref(member_inst->make_member_instance_reference(inst_ref));
-	const return_type ret(ret_inst_ref.is_a<param_expr>());
+//	const return_type ret(ret_inst_ref.is_a<param_expr>());
 
 	// reset definition reference in context
 	c.pop_current_definition_reference();
@@ -771,17 +847,20 @@ member_expr::check_expr(context& c) const {
 	// rather the *type* returned.  
 	// after all this is type-checking, not range checking.  
 
-	return ret;
+	return ret_inst_ref;
 }
 
-inst_ref_expr::return_type
-member_expr::check_reference(context& c) const {
-	expr::return_type ex(check_expr(c));
-	inst_ref_expr::return_type
-		ret(ex.is_a<inst_ref_expr::return_type::element_type>());
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+expr::return_type
+member_expr::check_expr(context& c) const {
+	inst_ref_expr::return_type ex(check_reference(c));
+	expr::return_type
+		ret(ex.is_a<expr::return_type::element_type>());
 	if (ex)	INVARIANT(ret);
 	return ret;
 }
+#endif
 
 //=============================================================================
 // class index_expr method definitions
@@ -808,6 +887,7 @@ index_expr::rightmost(void) const {
 	return ranges->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO DO: FINISH ME
 	Check index expression first, must be an integer type.  
@@ -874,6 +954,7 @@ index_expr::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For convenience, intercept type-checked indices first, exit on error.
  */
@@ -890,6 +971,7 @@ index_expr::intercept_indices_error(context& c) const {
 	return checked_indices;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For convenience, exit upon error.  
  */
@@ -906,6 +988,8 @@ index_expr::intercept_base_ref_error(context& c) const {
 	return base_expr;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Ensures that what's returned is a valid parameter expression.  
  */
@@ -917,7 +1001,9 @@ index_expr::check_expr(context& c) const {
 	if (ref) INVARIANT(ret);
 	return ret;
 }
+#endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return pointer to instance_reference_base.  
  */
@@ -984,6 +1070,7 @@ arith_expr::~arith_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 arith_expr::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
@@ -1053,6 +1140,7 @@ arith_expr::check_build(context& c) const {
 	return return_type(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 arith_expr::check_expr(context& c) const {
 	typedef	expr::return_type	return_type;
@@ -1129,6 +1217,7 @@ relational_expr::~relational_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 relational_expr::check_build(context& c) const {
 	// temporary
@@ -1136,6 +1225,7 @@ relational_expr::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 relational_expr::check_expr(context& c) const {
 	// same idea as arith expr
@@ -1157,12 +1247,14 @@ logical_expr::~logical_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 logical_expr::check_build(context& c) const {
 	cerr << "Fang, finish relational_expr::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 logical_expr::check_expr(context& c) const {
 	// same idea as arith expr
@@ -1192,6 +1284,7 @@ array_concatenation::rightmost(void) const {
 	return parent::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	If list contains only a single element, don't bother 
 	constructing an aggregate object on the stack, 
@@ -1209,6 +1302,7 @@ array_concatenation::check_build(context& c) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 array_concatenation::check_expr(context& c) const {
 	if (size() == 1) {
@@ -1218,6 +1312,20 @@ array_concatenation::check_expr(context& c) const {
 		cerr << "Fang, finish array_concatenation::check_expr()!" <<
 			endl;
 		return expr::return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_return_type
+array_concatenation::check_generic(context& c) const {
+	STACKTRACE("array_concatenation::check_generic()");
+	if (size() == 1) {
+		const const_iterator only = begin();
+		return (*only)->check_generic(c);
+	} else {
+		cerr << "Fang, finish array_concatenation::check_generic()!" <<
+			endl;
+		return expr::generic_return_type();
 	}
 }
 
@@ -1257,16 +1365,25 @@ loop_concatenation::rightmost(void) const {
 	else 		return ex->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 loop_concatenation::check_build(context& c) const {
 	cerr << "Fang, finish loop_concatenation::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 loop_concatenation::check_expr(context& c) const {
 	cerr << "Fang, finish loop_concatenation::check_expr()!" << endl;
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_return_type
+loop_concatenation::check_generic(context& c) const {
+	cerr << "Fang, finish loop_concatenation::check_generic()!" << endl;
+	return expr::generic_return_type();
 }
 
 //=============================================================================
@@ -1295,16 +1412,25 @@ array_construction::rightmost(void) const {
 	else		return ex->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 array_construction::check_build(context& c) const {
 	cerr << "Fang, finish array_construction::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 array_construction::check_expr(context& c) const {
 	cerr << "Fang, finish array_construction::check_expr()!" << endl;
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_return_type
+array_construction::check_generic(context& c) const {
+	cerr << "Fang, finish array_construction::check_generic()!" << endl;
+	return expr::generic_return_type();
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.12.2.2 2005/05/12 00:43:47 fang Exp $
+	$Id: art_parser_expr.h,v 1.12.2.3 2005/05/12 23:30:26 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -11,36 +11,9 @@
 #include "AST/art_parser_identifier.h"
 
 namespace ART {
-namespace entity {
-	class instance_reference_base;
-}
 namespace parser {
 //=============================================================================
 // class expr defined in "art_parser_expr_base.h"
-
-//=============================================================================
-/**
-	Expressions that may refer to instance or value references.  
- */
-class inst_ref_expr : public expr {
-protected:
-	typedef	expr					parent_type;
-public:
-	/**
-		Type of the result returned by parse-checker.
-	 */
-	typedef	count_ptr<entity::instance_reference_base>	return_type;
-
-	inst_ref_expr() : parent_type() { }
-virtual	~inst_ref_expr() { }
-
-#define	CHECK_REFERENCE_PROTO						\
-	inst_ref_expr::return_type					\
-	check_reference(context&) const
-
-virtual	CHECK_REFERENCE_PROTO = 0;
-
-};	// end class inst_ref_expr
 
 //=============================================================================
 /**
@@ -85,7 +58,9 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
+#if 0
 	CHECK_EXPR_PROTO;
+#endif
 
 	CHECK_REFERENCE_PROTO;
 
@@ -195,7 +170,9 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
+#if 0
 	CHECK_EXPR_PROTO;
+#endif
 
 	CHECK_REFERENCE_PROTO;
 };	// end class member_expr
@@ -225,7 +202,9 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
+#if 0
 	CHECK_EXPR_PROTO;
+#endif
 
 	CHECK_REFERENCE_PROTO;
 private:
@@ -326,8 +305,16 @@ typedef	node_list<const expr>			array_concatenation_base;
 
 /**
 	Concatenation of arrays to make bigger arrays.  
+
+	(2005-05-12)
+	This is always used to wrap around even simple instance references, 
+		according to the semantic actions in the grammar.  
+	Q: is this restricted to instance references, 
+		or can this include values as well?
+	A: should handle both cases, but be resolved at check-time
  */
-class array_concatenation : public expr, public array_concatenation_base {
+class array_concatenation :
+		public expr, public array_concatenation_base {
 protected:
 	typedef	array_concatenation_base		parent;
 public:
@@ -349,6 +336,9 @@ public:
 	check_build(context& c) const;
 
 	CHECK_EXPR_PROTO;
+
+	// have to do something different
+	CHECK_GENERIC_PROTO;
 };	// end class array_concatenation
 
 //-----------------------------------------------------------------------------
@@ -392,6 +382,9 @@ public:
 	check_build(context& c) const;
 
 	CHECK_EXPR_PROTO;
+
+	// have to do something different (see array_concatenation explanation)
+	CHECK_GENERIC_PROTO;
 };	// end class loop_concatenation
 
 //-----------------------------------------------------------------------------
@@ -424,6 +417,9 @@ public:
 	check_build(context& c) const;
 
 	CHECK_EXPR_PROTO;
+
+	// have to do something different (see array_concatenation explanation)
+	CHECK_GENERIC_PROTO;
 };	// end class array_construction
 
 //=============================================================================

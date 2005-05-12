@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.24.2.1 2005/05/12 00:43:49 fang Exp $
+	$Id: art_parser_token.cc,v 1.24.2.2 2005/05/12 23:30:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -302,11 +302,12 @@ token_string::rightmost(void) const {
 
 #if 0
 CONSTRUCTOR_INLINE
-token_identifier::token_identifier(const char* s) : token_string(s), expr() { }
+token_identifier::token_identifier(const char* s) :
+		token_string(s), inst_ref_expr() { }
 
 /** default copy constructor */
 token_identifier::token_identifier(const token_identifier& i) :
-		node(), token_string(i), expr() {
+		token_string(i), inst_ref_expr() {
 }
 
 DESTRUCTOR_INLINE
@@ -330,6 +331,7 @@ token_identifier::rightmost(void) const {
 	return token_string::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	MESS ALERT:
 	Type-checking for expression literals and instance references, 
@@ -369,13 +371,14 @@ token_identifier::check_build(context& c) const {
 	return inst;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is used specifically to return param_expr.  
 	Another version will return instance_references.  
  */
-expr::return_type
-token_identifier::check_expr(context& c) const {
-	typedef	expr::return_type		return_type;
+inst_ref_expr::return_type
+token_identifier::check_reference(context& c) const {
+	typedef	inst_ref_expr::return_type		return_type;
 	STACKTRACE("token_identifier::check_expr()");
 
 	// don't look up, instantiate (checked) in the context's current scope!
@@ -383,6 +386,7 @@ token_identifier::check_expr(context& c) const {
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
+#if 0
 		// we will then make an instance_reference
 		// what about indexed instance references?
 		count_ptr<instance_reference_base>
@@ -397,6 +401,9 @@ token_identifier::check_expr(context& c) const {
 			THROW_EXIT;		// temporary termination
 			return return_type(NULL);
 		}
+#else
+		return inst->make_instance_reference();
+#endif
 	} else {
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.32.2.1 2005/05/12 04:45:30 fang Exp $
+ 	$Id: art_object_base.cc,v 1.32.2.2 2005/05/12 23:30:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_CC__
@@ -522,6 +522,7 @@ object_list::make_index_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Converts a list into a param_expression_assignment object.  
 	This is non-const because assignment requires that we 
@@ -571,6 +572,7 @@ object_list::make_param_assignment(void) {
 		return return_type(NULL);
 	else	return ret;		// is ok
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -597,6 +599,7 @@ object_list::make_param_expr_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Creates an alias connection object, given a list of instance
 	references.  Performs type-checking.  
@@ -638,6 +641,7 @@ object_list::make_alias_connection(void) const {
 	// transfers ownership
 	return return_type(ret);	// const-ify
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
