@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.12 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_token.h,v 1.12.2.1 2005/05/12 00:43:49 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_H__
@@ -50,6 +50,8 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
+	CHECK_EXPR_PROTO;
+
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_int
 
@@ -82,6 +84,8 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
+	CHECK_EXPR_PROTO;
+
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(16);
 };	// end class token_float
 
@@ -106,6 +110,8 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	CHECK_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_bool
@@ -132,6 +138,8 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 
+	CHECK_EXPR_PROTO;
+
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(8);
 };	// end class token_else
 
@@ -156,6 +164,9 @@ public:
 // not until we have built-in type for string
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	CHECK_EXPR_PROTO;
+
 };	// end class token_quoted_string
 
 //=============================================================================

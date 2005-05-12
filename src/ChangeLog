@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-05-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-02:
+	  Implemented expr::check_expr (pure virt.) by mostly trivially
+		copying over the old check_build's.  
+		Intend to phase out expr-related check_build calls in
+		favor of check_expr.  
+		check_index, check_ranges, etc. are analogous.  
+	  Minor: split off range and range expr into own AST source file.  
+	  Minor: permanently erased paren_expr class.  
+	  Minor: inst_ref_expr class to sub-type expressions that
+		represent instance or value references, adds a virtual
+		function check_reference, which will leverage the work
+		done by check_expr (or vice versa).  
+	  Minor: removed class postfix_expr (was useless).
+	  Minor: continued to strip out useless tokens in the AST, 
+		also cleaning grammar.  
+
+
 2005-05-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35-exprcheck-01:

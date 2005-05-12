@@ -2,7 +2,7 @@
 	\file "AST/art_parser_token_string.h"
 	Base set of classes for the ART parser.  
 	These classes are implemented in "art_parser_token.cc"
-	$Id: art_parser_token_string.h,v 1.4 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_token_string.h,v 1.4.2.1 2005/05/12 00:43:49 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_STRING_H__
@@ -77,6 +77,8 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	CHECK_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };      // end class token_identifier

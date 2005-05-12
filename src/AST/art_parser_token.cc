@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.24 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_token.cc,v 1.24.2.1 2005/05/12 00:43:49 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -205,6 +205,11 @@ token_int::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+expr::return_type
+token_int::check_expr(context& c) const {
+	return return_type(new pint_const(val));
+}
+
 //=============================================================================
 // class token_float method definitions
 
@@ -253,6 +258,15 @@ never_ptr<const object>
 token_float::check_build(context& c) const {
 	cerr << "token_float::check_build(): not quite done yet!" << endl;
 	return never_ptr<const object>(NULL);
+}
+
+/**
+	Need built-in float type first.  
+ */
+expr::return_type
+token_float::check_expr(context& c) const {
+	cerr << "token_float::check_expr(): not quite done yet!" << endl;
+	return expr::return_type(NULL);
 }
 
 //=============================================================================
@@ -355,6 +369,42 @@ token_identifier::check_build(context& c) const {
 	return inst;
 }
 
+/**
+	This is used specifically to return param_expr.  
+	Another version will return instance_references.  
+ */
+expr::return_type
+token_identifier::check_expr(context& c) const {
+	typedef	expr::return_type		return_type;
+	STACKTRACE("token_identifier::check_expr()");
+
+	// don't look up, instantiate (checked) in the context's current scope!
+	const never_ptr<const instance_collection_base>
+		inst(c.lookup_instance(*this));
+	// problem: stack is count_ptr, incompatible with never_ptr
+	if (inst) {
+		// we will then make an instance_reference
+		// what about indexed instance references?
+		count_ptr<instance_reference_base>
+			inst_ref(inst->make_instance_reference());
+		return_type param_ref(inst_ref.is_a<param_expr>());
+		if (param_ref) {
+			// then is valid expression
+			return param_ref;
+		} else {
+			what(cerr << "ERROR: ") <<
+				" does not refer to a parameter value." << endl;
+			THROW_EXIT;		// temporary termination
+			return return_type(NULL);
+		}
+	} else {
+		// better error handling later...
+		what(cerr << "failed to find ") << endl;
+		THROW_EXIT;		// temporary termination
+		return return_type(NULL);
+	}
+}
+
 //=============================================================================
 // class token_keyword method definitions
 
@@ -412,6 +462,10 @@ token_bool::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+expr::return_type
+token_bool::check_expr(context& c) const {
+	return expr::return_type(new pbool_const(strcmp(c_str(),"true") == 0));
+}
 
 //=============================================================================
 // class token_else method definitions
@@ -421,8 +475,7 @@ token_bool::check_build(context& c) const {
 	\param e is either "true" or "false"
  */
 CONSTRUCTOR_INLINE
-token_else::
-token_else(const char* e) : token_keyword(e), expr() {
+token_else::token_else(const char* e) : token_keyword(e), expr() {
 	INVARIANT(!strcmp(e,"else"));
 } 
 
@@ -452,6 +505,12 @@ token_else::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+expr::return_type
+token_else::check_expr(context& c) const {
+	cerr << "token_else::check_build(): Don't call me!";
+	return expr::return_type(NULL);
+}
+
 //=============================================================================
 // class token_quoted_string method definitions
 
@@ -465,8 +524,7 @@ token_quoted_string::~token_quoted_string() { }
 ostream&
 token_quoted_string::what(ostream& o) const {
 	// punt: handle special characters later...
-	return ((const token_string*) this)->what(o << "string: \"")
-		<< "\"";
+	return ((const token_string*) this)->what(o << "string: \"") << "\"";
 }
 
 line_position
@@ -486,6 +544,12 @@ never_ptr<const object>
 token_quoted_string::check_build(context& c) const {
 	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
 	return never_ptr<const object>(NULL);
+}
+
+expr::return_type
+token_quoted_string::check_expr(context& c) const {
+	cerr << "token_quoted_string::check_expr(): FINISH ME!" << endl;
+	return expr::return_type(NULL);
 }
 
 //=============================================================================

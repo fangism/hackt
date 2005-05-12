@@ -1,15 +1,19 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.4 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_range.h,v 1.4.2.1 2005/05/12 00:43:48 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_H__
 #define __AST_ART_PARSER_RANGE_H__
 
+// #include "AST/art_parser_fwd.h"	// for node_position
 #include "AST/art_parser_expr_base.h"
 
 namespace ART {
+namespace entity {
+	class index_expr;
+}	// end namespace entity
 namespace parser {
 //=============================================================================
 /**
@@ -20,9 +24,11 @@ namespace parser {
 	Class is final, no subclasses.  
  */
 class range {
+public:
+	typedef	count_ptr<entity::index_expr>	return_type;
 protected:
 	const excl_ptr<const expr>	lower;	///< inclusive lower bound
-	const excl_ptr<const string_punctuation_type>	op;	///< range operator token ".."
+//	const excl_ptr<const string_punctuation_type>	op;	///< range operator token ".."
 	const excl_ptr<const expr>	upper;	///< inclusive upper bound
 public:
 /// simple constructor for when range is just one integer expression
@@ -31,7 +37,9 @@ public:
 /**
 	Full range constructor with min and max.  
  */
-	range(const expr* l, const string_punctuation_type* o, const expr* u);
+	range(const expr* l, 
+//		const string_punctuation_type* o, 
+		const expr* u);
 
 	~range();
 
@@ -46,6 +54,9 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	range::return_type
+	check_index(context& c) const;
 };	// end class range
 
 //=============================================================================

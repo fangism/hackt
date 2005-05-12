@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.18 2005/05/10 04:51:21 fang Exp $
+	$Id: art++-parse.yy,v 1.18.2.1 2005/05/12 00:43:49 fang Exp $
  */
 
 %{
@@ -258,6 +258,7 @@ extern const char* const yyrule[];
 	alias_list*		_alias_list;
 
 	expr*			_expr;
+	inst_ref_expr*		_inst_ref_expr;
 /*	paren_expr*		_paren_expr;	*/
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
@@ -397,7 +398,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* change these to _node_position (was _token_char) */
 %type	<_node_position>	'{' '}' '[' ']' '(' ')'
 %type	<_token_char>		'<' '>'
-%type	<_node_position>	',' '.' ';' ':' '=' '#'
+/* glue tokens: should never need their positions, consider no return type */
+%type	<_node_position>	',' '.' ';'
+%type	<_node_position>	':' '=' '#'
 	/* used as template list wrappers and as comparators */
 %type	<_token_char>		'+' '-' '*' '/' '%'
 %type	<_token_char>		'!' '?' '~' '&' '|' '^'
@@ -412,7 +415,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_int>		INT
 %token	<_token_quoted_string>	STRING
 
-%token	<_node_position>	THICKBAR SCOPE RANGE
+/* range and scope separators should never need position information... */
+%token	<_node_position>	SCOPE RANGE
+%token	<_node_position>	THICKBAR
 %token	<_node_position>	BEGINLOOP BEGINPROB ENDPROB
 %token	<_node_position>	DEFINEOP
 
@@ -562,11 +567,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
-%type	<_expr_list>	member_index_expr_list
+%type	<_expr_list>	member_index_expr_list member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
-%type	<_expr>	optional_member_index_expr
+%type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_expr> simple_expr
-%type	<_expr>	member_index_expr unary_expr
+%type	<_expr>	unary_expr
 %type	<_member_expr>	member_expr
 %type	<_index_expr>	index_expr
 %type	<_expr>	multiplicative_expr additive_expr
@@ -579,8 +584,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_incdec_stmt>	unary_assignment
 /* %type	<n>	conditional_expr optional_expr_in_braces */
 %type	<_expr_list>	optional_template_arguments_in_angles
-/* %type	<_expr_list>	member_index_expr_list_in_angles */
-%type	<_expr_list>	member_index_expr_list_in_parens
 %type	<_expr_list>	expr_list_in_parens expr_list
 /* %type	<_range_list>	optional_range_list_in_brackets */
 /* %type	<_range_list>	range_list_in_brackets */
@@ -1556,13 +1559,15 @@ prs_or
 /* non-short-circuit AND */
 prs_and_loop
 	: '(' '&' ':' ID ':' range ':' prs_expr ')'
-		{ $$ = new PRS::op_loop($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new PRS::op_loop($1, $2, $4, $6, $8, $9);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); DELETE_TOKEN($7); }
 	;
 
 /* non-short-circuit OR */
 prs_or_loop
 	: '(' '|' ':' ID ':' range ':' prs_expr ')'
-		{ $$ = new PRS::op_loop($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new PRS::op_loop($1, $2, $4, $6, $8, $9);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); DELETE_TOKEN($7); }
 	;
 
 /* end of PRS language */
@@ -1658,11 +1663,11 @@ index_expr
 
 member_expr
 	: index_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	| member_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	| id_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	;
 
 /* single term */
@@ -1871,7 +1876,7 @@ expr_list
 
 range
 	: expr RANGE expr 
-		{ $$ = new range($1, $2, $3); }
+		{ $$ = new range($1, $3); DELETE_TOKEN($2); }
 	| expr { $$ = new range($1); }
 	;
 
@@ -1949,8 +1954,10 @@ array_construction
 **/
 loop_concatenation
 	: '(' '#' ':' ID ':' range ':' complex_expr_term ')'
-		{ $$ = new loop_concatenation(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new loop_concatenation($1, $4, $6, $8, $9);
+		  DELETE_TOKEN($2); DELETE_TOKEN($3);
+		  DELETE_TOKEN($5); DELETE_TOKEN($7);
+		}
 	;
 
 optional_complex_aggregate_reference
