@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.12 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_instance.h,v 1.12.2.1 2005/05/12 04:45:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -57,10 +57,12 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
-typedef	node_list<const expr>			alias_list_base;
+typedef	node_list<const expr>		alias_list_base;
 
 /**
 	A list of lvalue expressions aliased/connected together.  
+	NOTE: this doubles as a connection and assignment!
+	They are syntactically indistinguishable without context.  
  */
 class alias_list : public instance_management, public alias_list_base {
 private:
@@ -85,6 +87,12 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+#if 0
+private:
+	good_bool
+	postorder_check(context&) const;
+#endif
 };	// end class alias_list
 
 //=============================================================================

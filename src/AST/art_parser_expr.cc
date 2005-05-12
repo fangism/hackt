@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.20.2.2 2005/05/12 00:43:47 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20.2.3 2005/05/12 04:45:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -818,6 +818,7 @@ index_expr::rightmost(void) const {
  */
 never_ptr<const object>
 index_expr::check_build(context& c) const {
+#if 1
 	ranges->check_build(c);		// useless return value
 	// should result in a ART::entity::index_list on the stack
 	const count_ptr<object>
@@ -861,15 +862,24 @@ index_expr::check_build(context& c) const {
 	}
 	// push indexed instance reference back onto stack
 	c.push_object_stack(base_inst);
+#else
+	// PROBLEM: if called by alias_list, then need either
+	// param_expr or instance_reference, 
+	// but cannot know apriori, requires context!
+	c.push_object_stack(check_expr(c));
+	OR
+	c.push_object_stack(check_reference(c));
+	// ???
+#endif
 	return never_ptr<const object>(NULL);
 }
 
 /**
 	For convenience, intercept type-checked indices first, exit on error.
  */
-range_list::return_type
+range_list::checked_indices_type
 index_expr::intercept_indices_error(context& c) const {
-	const range_list::return_type
+	const range_list::checked_indices_type
 		checked_indices(ranges->check_indices(c));
 	// should result in a ART::entity::index_list
 	// what happened to object_list::make_index_list() ?
@@ -908,11 +918,14 @@ index_expr::check_expr(context& c) const {
 	return ret;
 }
 
+/**
+	\return pointer to instance_reference_base.  
+ */
 inst_ref_expr::return_type
 index_expr::check_reference(context& c) const {
-	range_list::return_type
+	range_list::checked_indices_type
 		checked_indices(intercept_indices_error(c));
-	inst_ref_expr::return_type
+	const inst_ref_expr::return_type
 		base_expr(intercept_base_ref_error(c));
 
 	// later this may be a member_instance_reference...
@@ -922,7 +935,7 @@ index_expr::check_reference(context& c) const {
 		base_inst(base_expr.is_a<simple_instance_reference>());
 	NEVER_NULL(base_inst);
 
-	excl_ptr<range_list::return_type::element_type>
+	excl_ptr<range_list::checked_indices_type::element_type>
 		passing_indices(checked_indices.exclusive_release());
 	const bad_bool ai(base_inst->attach_indices(passing_indices));
 	if (ai.bad) {

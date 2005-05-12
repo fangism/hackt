@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.18 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_formal.cc,v 1.18.2.1 2005/05/12 04:45:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -185,6 +185,7 @@ port_formal_id::check_build(context& c) const {
 		// should be anything but param_instantiation
 
 	if (dim) {
+#if 0
 		dim->check_build(c);	// useless return value
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
@@ -196,6 +197,15 @@ port_formal_id::check_build(context& c) const {
 			d(o.is_a<const range_expr_list>());
 		NEVER_NULL(d);
 		// attach array dimensions to current instantiation
+#else
+		const dense_range_list::return_type
+			d(dim->check_formal_dense_ranges(c));
+		if (!d) {
+			cerr << "ERROR in array dimensions " <<
+				where(*dim) << endl;
+			THROW_EXIT;
+		}
+#endif
 		t = c.add_port_formal(*name, d);
 	} else {
 		t = c.add_port_formal(*name);
@@ -358,6 +368,7 @@ template_formal_id::check_build(context& c) const {
 	}
 	if (dim) {
 		// attach array dimensions to current instantiation
+#if 0
 		dim->check_build(c);	// useless return value, check stack
 		// should already construct an range_expr_list
 		const count_ptr<object> o(c.pop_top_object_stack());
@@ -369,6 +380,15 @@ template_formal_id::check_build(context& c) const {
 		const count_ptr<const range_expr_list>
 			d(o.is_a<const range_expr_list>());
 		NEVER_NULL(d);
+#else
+		const dense_range_list::return_type
+			d(dim->check_formal_dense_ranges(c));
+		if (!d) {
+			cerr << "ERROR in array dimensions " <<
+				where(*dim) << endl;
+			THROW_EXIT;
+		}
+#endif
 		t = c.add_template_formal(*name, d, default_val);
 	} else {
 		t = c.add_template_formal(*name, default_val);

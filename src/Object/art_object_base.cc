@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.32 2005/05/10 04:51:10 fang Exp $
+ 	$Id: art_object_base.cc,v 1.32.2.1 2005/05/12 04:45:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_CC__
@@ -96,6 +96,7 @@ object_list::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Creates an instance_collection_item.  
 	The restriction with this version is that each item must
@@ -356,6 +357,7 @@ object_list::make_sparse_range_list(void) const {
 		return return_type(NULL);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

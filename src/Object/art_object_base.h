@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.27 2005/05/10 04:51:10 fang Exp $
+	$Id: art_object_base.h,v 1.27.2.1 2005/05/12 04:45:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_H__
@@ -165,11 +165,13 @@ public:
 // using parent's list interface
 
 	// could use excl_ptr, but then would need to release to count_ptr...
+#if 0
 	count_ptr<range_expr_list>
 	make_formal_dense_range_list(void) const;
 
 	count_ptr<range_expr_list>
 	make_sparse_range_list(void) const;
+#endif
 
 	excl_ptr<index_list>
 	make_index_list(void) const;

@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-03:
+	  Checked implementation of check_expr, check_reference, 
+		check_indices, check_ranges and fixed minor bug 
+		since last revision.  
+	  Replaced calls to [dense_]range_list::check_build()
+		with check_ranges and check_indices where appropriate:
+		formal_id's, instance_array.  
+	  One problem: check_expr returns param_expr, whereas
+		check_reference returns instance_reference_base, 
+		both of which are 'objects'.  alias_list is a list of
+		expr, but wants generic objects to determine at type-check
+		time whether it is forming an expression assignment
+		or alias connection sequential instance management item.  
+		Thus, we cannot eliminate the object stack (nor calls to
+		expr::check_build) until this is resolved.  
+
+
 2005-05-11	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35-exprcheck-02:

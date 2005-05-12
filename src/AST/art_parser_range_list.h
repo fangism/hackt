@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range_list.h,v 1.4.2.1 2005/05/12 00:43:48 fang Exp $
+	$Id: art_parser_range_list.h,v 1.4.2.2 2005/05/12 04:45:30 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_LIST_H__
@@ -33,7 +33,8 @@ typedef node_list<const range>		range_list_base;
  */
 class range_list : public range_list_base {
 public:
-	typedef	range_list_return_type			return_type;
+	typedef	range_list_return_type			checked_indices_type;
+	typedef	count_ptr<entity::range_expr_list>	checked_ranges_type;
 protected:
 	typedef	range_list_base				parent_type;
 	// no additional members
@@ -43,11 +44,25 @@ public:
 
 	~range_list();
 
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
-	range_list::return_type
+	range_list::checked_indices_type
 	check_indices(context& c) const;
+
+	range_list::checked_ranges_type
+	check_ranges(context& c) const;
+
+private:
+	typedef	DEFAULT_VECTOR(range::return_type)	check_type;
+
+	/**
+		Intermediate check.  
+	 */
+	good_bool
+	postorder_check(check_type&, context&) const;
 };	// end class range_list
 
 //-----------------------------------------------------------------------------
@@ -71,18 +86,20 @@ public:
 
 	~dense_range_list();
 
+#if 0
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
 	dense_range_list::return_type
 	check_formal_dense_ranges(context& c) const;
 
 private:
+	typedef	DEFAULT_VECTOR(expr::return_type)	check_type;
+	
 	/**
 		Intermediate check.  
 	 */
-	typedef	DEFAULT_VECTOR(expr::return_type)	check_type;
-	
 	good_bool
 	postorder_check(check_type&, context&) const;
 };	// end class range_list

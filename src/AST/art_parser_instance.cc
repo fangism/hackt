@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.23 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_instance.cc,v 1.23.2.1 2005/05/12 04:45:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -140,7 +140,10 @@ if (size() > 0) {		// non-empty
 	const never_ptr<const object> ret(NULL);
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
+#if 1
+	// TRYING TO PHASE THIS OUT
 	alias_list_base::check_build(c);
+#endif
 	// errors in individual items will result in NULL on stack.
 
 	// After list items have been built, check types.  
@@ -383,6 +386,7 @@ never_ptr<const object>
 instance_array::check_build(context& c) const {
 	STACKTRACE("instance_array::check_build()");
 	if (ranges) {
+#if 0
 		ranges->check_build(c);
 		// expecting ranges and singe integer expressions
 		const count_ptr<object> o(c.pop_top_object_stack());
@@ -398,9 +402,13 @@ instance_array::check_build(context& c) const {
 		// would rather have excl_ptr...
 		const count_ptr<range_expr_list>
 			d(ol->make_sparse_range_list());
+#else
+		const range_list::checked_ranges_type
+			d(ranges->check_ranges(c));
+#endif
 		if (!d) {
-			cerr << "ERROR in building sparse range list!  "
-				<< where(*ranges) << endl;
+			cerr << "ERROR in building sparse range list!  " <<
+				where(*ranges) << endl;
 			THROW_EXIT;
 		}
 		const never_ptr<const instance_collection_base>

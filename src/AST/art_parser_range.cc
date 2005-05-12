@@ -2,11 +2,13 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.1.2.1 2005/05/12 00:43:48 fang Exp $
+	$Id: art_parser_range.cc,v 1.1.2.2 2005/05/12 04:45:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
 #define	__AST_ART_PARSER_RANGE_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>
@@ -20,6 +22,7 @@
 #include "Object/art_object_expr.h"
 
 #include "util/what.h"
+#include "util/stacktrace.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -238,6 +241,7 @@ range_list::range_list(const range* r) : parent_type(r) {
 
 range_list::~range_list() { }
 
+#if 1
 /**
 	Note: limited to 4 dimensions.  
 
@@ -300,14 +304,10 @@ range_list::check_build(context& c) const {
 	}
 	return never_ptr<const object>(NULL);
 }
+#endif
 
-range_list::return_type
-range_list::check_indices(context& c) const {
-//	const return_type ret(new return_type::element_type);
-//	NEVER_NULL(ret);
-	typedef	std::vector<range::return_type> temp_type;
-	temp_type temp;
-	{
+good_bool
+range_list::postorder_check(check_type& temp, context& c) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 1;
@@ -318,7 +318,7 @@ range_list::check_indices(context& c) const {
 				" of sparse_range_list between "
 				<< where(*this) << endl;
 			THROW_EXIT;		// terminate?
-			return return_type(NULL);
+			return good_bool(false);
 		}
 #if 0
 		else if (!o.is_a<entity::index_expr>()) {
@@ -330,46 +330,218 @@ range_list::check_indices(context& c) const {
 //			o->what(cerr << "object is a ") << endl;
 //			o->dump(cerr << "object dump: ") << endl;
 			THROW_EXIT;
-			return return_type(NULL);
+			return good_bool(false);
 		}
 #endif
 		// else o is an index_expr
 		// collect first, store temporary, check for constness
 		temp.push_back(o);
 	}
-	}
-
 	if (size() > 4) {		// define constant somewhere
 		cerr << "ERROR!  Exceeded dimension limit of 4.  "
 			<< where(*this) << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+/**
+	\return index_expr_list.
+ */
+range_list::checked_indices_type
+range_list::check_indices(context& c) const {
+	typedef	checked_indices_type	return_type;
+	check_type temp;
+	if (!postorder_check(temp, c).good) {
+		// THROW_EXIT;
 		return return_type(NULL);
+	}
+
+	count_ptr<dynamic_index_list>
+		dyn_ret(new dynamic_index_list);
+	NEVER_NULL(dyn_ret);
+	bool is_const = true;
+	check_type::const_iterator i = temp.begin();
+	const check_type::const_iterator e = temp.end();
+	for ( ; is_const && i!=e; i++) {
+		dyn_ret->push_back(*i);
+		if (!i->is_a<entity::const_index>()) {
+			is_const = false;
+		}
+	}
+	if (is_const) {
+		count_ptr<const_index_list>
+			const_ret(new const_index_list);
+		NEVER_NULL(const_ret);
+		// const_ret->reserve(size());
+		for (i = temp.begin(); i!=e; i++) {
+			const_ret->push_back(i->is_a<entity::const_index>());
+		}
+		return const_ret;
+	}
+	// don't necessarily want to interpret as sparse_range
+	// may want it as an index!
+	else return dyn_ret;
+}
+
+/**
+	\return range_expr_list.
+ */
+range_list::checked_ranges_type
+range_list::check_ranges(context& c) const {
+	typedef	checked_ranges_type	return_type;
+	check_type temp;
+	if (!postorder_check(temp, c).good) {
+		// THROW_EXIT;
+		return return_type(NULL);
+	}
+
+	// copy from object_list::make_sparse_range_list()
+	// initialize some bools to true
+	// and set them false approriately in iterations
+	bad_bool err(false);
+	bool is_valid_range = true;
+	bool is_static_constant = true;
+	bool is_initialized = true;
+	check_type::const_iterator i = temp.begin();
+	int k = 1;
+	for ( ; i!=temp.end(); i++, k++) {
+		if (!*i) {
+			cerr << "Error in dimension " << k <<
+				" of array indices.  " << endl;
+			continue;
+		}
+		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
+		// may be pint_const or pint_literal
+		const count_ptr<range_expr> r(i->is_a<range_expr>());
+		// may be const_range or pint_range
+		if (p) {
+			// later modularize to some method function...
+			if (p->dimensions() != 0) {
+				cerr << "int expression must be 0-dimensional, "
+					"but is actually " <<
+					p->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err.bad = true;
+			}
+			if (p->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (p->may_be_initialized()) {  // definite
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.
+				cerr << "int expression is definitely "
+					"not initialized.  ERROR!  "
+					<< endl;        // where?
+				err.bad = true;
+			}
+			// can it be initialized, but non-const?
+			// yes, if a dimension depends on another formal param
+			// can be loop-independent, do we need to track?
+			// can be conditional, do we need to track?
+		} else if (r) {
+			// same thing... copy
+			if (r->dimensions() != 0) {
+				cerr << "range expression must be 0-dimensional, "
+					"but is actually " <<
+					r->dimensions() << "-dimensional.  "
+					"ERROR!  " << endl;
+				err.bad = true;
+			}
+			if (r->is_static_constant()) {
+				continue;
+			} else {
+				is_static_constant = false;
+			}
+			if (r->may_be_initialized()) {  // definite
+				continue;
+			} else {
+				is_initialized = false;
+				// not initialized! error.
+				cerr << "range expression is definitely "
+					"not initialized.  ERROR!  "
+					<< endl;        // where?
+				err.bad = true;
+			}
+		} else {
+			// is neither pint_expr nor range_expr
+			INVARIANT(!i->is_a<pint_const>());
+			INVARIANT(!i->is_a<const_range>());
+			is_valid_range = false;
+			(*i)->what(cerr << "Expected integer or range "
+				"expression but got a ") <<
+				" in dimension " << k << " of array ranges.  "
+				"ERROR!  " << endl;     // where?
+			err.bad = true;
+		}
+	}
+	if (err.bad || !is_valid_range) {
+		cerr << "Failed to construct a sparse range list!  " << endl;
+		return return_type(NULL);
+	} else if (is_static_constant) {
+		check_type::const_iterator j = temp.begin();
+		const count_ptr<const_range_list>
+			ret(new const_range_list);
+		for ( ; j!=temp.end(); j++) {
+			// should be safe to do this, since we checked above
+			const count_ptr<pint_expr> p(j->is_a<pint_expr>());
+			const count_ptr<range_expr> r(j->is_a<range_expr>());
+			// don't forget to range check
+			if (p) {
+				const int n = p->static_constant_value();
+				if (n <= 0) {
+					cerr << "Integer size for a dense array "
+						"must be positive, but got: "
+						<< n << ".  ERROR!  " << endl;
+					// where? let caller figure out
+					return return_type(NULL);
+				}
+				ret->push_back(const_range(n));
+			} else {
+				NEVER_NULL(r);
+				if (!r->is_sane()) {
+					cerr << "Range is not valid. ERROR!  "
+						<< endl;
+					return return_type(NULL);
+				}
+				const count_ptr<const_range>
+					cr(r.is_a<const_range>());
+				if (cr) {
+					// need deep copy, b/c not pointer list
+					ret->push_back(const_range(*cr));
+				} else {
+					const count_ptr<pint_range>
+						pr(r.is_a<pint_range>());
+					NEVER_NULL(pr);
+					INVARIANT(pr->is_static_constant());
+					ret->push_back(
+						pr->static_constant_range());
+				}
+			}
+		}
+		return ret;
+	} else if (is_initialized) {
+		check_type::const_iterator j = temp.begin();
+		const count_ptr<dynamic_range_list>
+			ret(new dynamic_range_list);
+		for ( ; j!=temp.end(); j++) {
+			if (j->is_a<pint_expr>()) {
+				// convert N to 0..N-1
+				ret->push_back(count_ptr<pint_range>(
+					new pint_range(j->is_a<pint_expr>())));
+			} else {
+				INVARIANT(j->is_a<pint_range>());
+				ret->push_back(j->is_a<pint_range>());
+			}
+		}
+		return ret;
 	} else {
-		count_ptr<dynamic_index_list>
-			dyn_ret(new dynamic_index_list);
-		NEVER_NULL(dyn_ret);
-		bool is_const = true;
-		temp_type::const_iterator i = temp.begin();
-		const temp_type::const_iterator e = temp.end();
-		for ( ; is_const && i!=e; i++) {
-			dyn_ret->push_back(*i);
-			if (!i->is_a<entity::const_index>()) {
-				is_const = false;
-			}
-		}
-		if (is_const) {
-			count_ptr<const_index_list>
-				const_ret(new const_index_list);
-			NEVER_NULL(const_ret);
-			// const_ret->reserve(size());
-			for (i = temp.begin(); i!=e; i++) {
-				const_ret->push_back(
-					i->is_a<entity::const_index>());
-			}
-			return const_ret;
-		}
-		// don't necessarily want to interpret as sparse_range
-		// may want it as an index!
-		else return dyn_ret;
+		cerr << "Failed to construct a sparse range list!  "
+			<< endl;
+		return return_type(NULL);
 	}
 }
 
@@ -382,6 +554,7 @@ dense_range_list::dense_range_list(const expr* r) : parent_type(r) {
 dense_range_list::~dense_range_list() {
 }
 
+#if 0
 /**
 	Dense range lists are reserved for formal parameters and ports, 
 	which must be dense arrays, cannot be sparse.  
@@ -417,6 +590,7 @@ dense_range_list::check_build(context& c) const {
 	}
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 /**
 	Does basic checking of leaf nodes first.  
@@ -430,7 +604,7 @@ dense_range_list::postorder_check(check_type& temp, context& c) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 1;
-	for ( ; i!=e; j++) {
+	for ( ; i!=e; i++, j++) {
 		const expr::return_type o((*i)->check_expr(c));
 		// accumulate multiple errors?
 		if (!o) {
@@ -461,6 +635,7 @@ dense_range_list::postorder_check(check_type& temp, context& c) const {
 
 dense_range_list::return_type
 dense_range_list::check_formal_dense_ranges(context& c) const {
+	STACKTRACE("dense_range_list::check_formal_dense_ranges()");
 	check_type temp;
 	if (!postorder_check(temp, c).good)
 		return return_type(NULL);
@@ -474,6 +649,7 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 	check_type::const_iterator i = temp.begin();
 	const check_type::const_iterator e = temp.end();
 	for ( ; i!=e; i++) {
+		STACKTRACE("for-loop");
 		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		if (!p) {
 			is_pint_expr = false;
@@ -514,11 +690,13 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 			<< endl;
 		return return_type(NULL);
 	} else if (is_static_constant) {
-		const_iterator j = begin();
+		STACKTRACE("is-constant");
+		check_type::const_iterator j = temp.begin();
 		const count_ptr<const_range_list>
 			ret(new const_range_list);
-		for ( ; j!=end(); j++) {
+		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
+			INVARIANT(j->is_a<const pint_expr>());
 			const int n = j->is_a<const pint_expr>()
 				->static_constant_value();
 			if (n <= 0) {
@@ -532,10 +710,11 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 		}
 		return ret;
 	} else if (is_initialized) {
-		const_iterator j = begin();
+		STACKTRACE("is-initialized");
+		check_type::const_iterator j = temp.begin();
 		const count_ptr<dynamic_range_list>
 			ret(new dynamic_range_list);
-		for ( ; j!=end(); j++) {
+		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
 			ret->push_back(count_ptr<pint_range>(
 				new pint_range(j->is_a<const pint_expr>())));
