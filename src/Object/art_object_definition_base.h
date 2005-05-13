@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.18 2005/05/10 04:51:12 fang Exp $
+	$Id: art_object_definition_base.h,v 1.19 2005/05/13 21:24:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -18,6 +18,7 @@
 #include "util/hash_qmap.h"		// need complete definition
 #include "util/memory/pointer_classes.h"
 				// need complete definition (never_ptr members)
+#include "util/STL/vector_fwd.h"
 
 #include "Object/art_object_template_formals_manager.h"
 
@@ -35,6 +36,7 @@ using parser::token_identifier;
 namespace entity {
 using std::string;
 using std::istream;
+using std::vector;
 using util::bad_bool;
 using util::good_bool;
 using util::hash_qmap;
@@ -63,6 +65,13 @@ public:
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
+protected:
+	/**
+		Should be synchronized with
+		parser::expr_list::checked_refs_type.
+	 */
+	typedef	DEFAULT_VECTOR(count_ptr<instance_reference_base>)
+					checked_refs_type;
 
 protected:
 	template_formals_manager	template_formals;
@@ -146,7 +155,7 @@ public:
 
 	/** by default returns false */
 virtual	good_bool
-	certify_port_actuals(const object_list& ol) const;
+	certify_port_actuals(const checked_refs_type&) const;
 
 public:
 // proposing to replace set_context_fundamental_type with the following:

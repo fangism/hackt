@@ -1,20 +1,19 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.23 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_instance.cc,v 1.24 2005/05/13 21:24:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
 #define	__AST_ART_PARSER_INSTANCE_CC__
 
-// rule-of-thumb for inline directives:
-// only inline constructors if you KNOW that they will not be be needed
-// outside of this module, because we don't have a means to export
-// inline methods other than defining in the header or using
-// -fkeep-inline-functions
+#define	ENABLE_STACKTRACE		0
 
 #include <exception>
 #include <iostream>
+#include <utility>
+#include <functional>
+#include <numeric>
 
 #include "AST/art_parser_instance.h"
 #include "AST/art_parser_expr.h"		// for index_expr
@@ -35,6 +34,9 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/dereference.h"
+#include "util/compose.h"
+#include "util/binders.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -44,8 +46,6 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::connection_argument_list, 
-	"(connection-arg-list)")
 SPECIALIZE_UTIL_WHAT(ART::parser::instance_base, 
 	"(declaration-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::instance_array, 
@@ -75,6 +75,16 @@ namespace ART {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using util::dereference;
+using std::transform;
+using std::mem_fun_ref;
+using ADS::unary_compose;
+using std::bind2nd_argval;
+using std::accumulate;
+using std::_Select1st;
+using std::_Select2nd;
+using std::find;
+using entity::instance_reference_connection;
 
 //=============================================================================
 // class instance_management method definitions
@@ -117,6 +127,111 @@ alias_list::rightmost(void) const {
 	return alias_list_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Converts a list into a param_expression_assignment object.
+	This is non-const because assignment requires that we 
+	initialize parameter instance references, which requires 
+	modification.
+
+	Code from here is ripped from the old
+	object_list::make_param_assignment().
+	\param temp result of postorder_check of items in list, 
+		which may contain errors, but they are caught here.  
+	\return newly allocated expression assignment object if
+		successfully type-checked, else NULL.  
+ */
+excl_ptr<const entity::param_expression_assignment>
+alias_list::make_param_assignment(const checked_exprs_type& temp) {
+	typedef	excl_ptr<const entity::param_expression_assignment>
+							const_return_type;
+	typedef	excl_ptr<entity::param_expression_assignment>
+							return_type;
+	typedef	checked_exprs_type::value_type		checked_expr_ptr_type;
+	// then expect subsequent items to be the same
+	// or already param_expr in the case of some constants.
+	// However, only the last item may be a constant.  
+
+	bad_bool err(false);
+	// right-hand-side source expression
+	const checked_expr_ptr_type& last_obj = temp.back();
+	const count_ptr<const param_expr>
+		rhse = last_obj.is_a<const param_expr>();
+	INVARIANT(rhse);
+
+	return_type ret;
+	// later, fold these error messages into static constructor?
+	if (!last_obj) {
+		cerr << "ERROR: rhs of expression assignment "
+			"is malformed (null)" << endl;
+		return const_return_type(NULL);
+	} else if (rhse) {
+		// last term must be initialized or be dependent on formals
+		// if collective, conservative: may-be-initialized
+		ret = param_expr::make_param_expression_assignment(rhse);
+		INVARIANT(ret);
+	} else {
+		// never reached... caught by INVARIANT check above
+		last_obj->what(
+			cerr << "ERROR: rhs is unexpected object: ") << endl;
+		return const_return_type(NULL);
+	}
+
+	entity::param_expression_assignment::instance_reference_appender
+		append_it(*ret);
+	const checked_exprs_type::const_iterator dest_end = --temp.end();
+	checked_exprs_type::const_iterator dest_iter = temp.begin();
+	err = accumulate(dest_iter, dest_end, err, append_it);
+
+	// if there are any errors, discard everything?
+	// later: track errors in partially constructed objects
+	if (err.bad) {
+		return const_return_type(NULL);
+	} else	return const_return_type(ret);             // is ok
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates an alias connection object, given a list of instance
+	references.  Performs type-checking.
+
+	TODO: once we separate objects and stacks into different types,
+	then we can eliminate this generic object list altogether.
+	(SOON...)
+ */
+excl_ptr<const entity::aliases_connection_base>
+alias_list::make_alias_connection(const checked_refs_type& temp) {
+	typedef excl_ptr<const aliases_connection_base> const_return_type;
+	typedef excl_ptr<aliases_connection_base> 	return_type;
+	checked_refs_type::const_iterator i = temp.begin();
+	INVARIANT(temp.size() > 1);          // else what are you connecting?
+	const count_ptr<const instance_reference_base> fir(*i);
+//		fir(i->is_a<const instance_reference_base>());
+	NEVER_NULL(fir);
+	return_type ret = 
+		entity::instance_reference_base::make_aliases_connection(fir);
+	// keep this around for type-checking comparisons
+	ret->append_instance_reference(fir);
+	// starting with second instance reference, type-check and alias
+	int j = 2;
+	for (i++; i!=temp.end(); i++, j++) {
+		const count_ptr<const instance_reference_base> ir(*i);
+		INVARIANT(ir);
+		if (!fir->may_be_type_equivalent(*ir)) {
+			cerr << "ERROR: type/size of instance reference "
+				<< j << " of alias list doesn't match the "
+				"type/size of the first instance reference!  "
+				<< endl;
+			return const_return_type(NULL);
+		} else {
+			ret->append_instance_reference(ir);
+		}
+	}
+	// transfers ownership
+	return const_return_type(ret);        // const-ify
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	COMPLETELY REDO THIS, since param_literal has been ELIMINATED
 		so that param_instance_reference are now subclasses
@@ -140,43 +255,24 @@ if (size() > 0) {		// non-empty
 	const never_ptr<const object> ret(NULL);
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
-	alias_list_base::check_build(c);
-	// errors in individual items will result in NULL on stack.
-
-	// After list items have been built, check types.  
-	// Types connected MUST match,
-	// and sizes must match if statically known, 
-	// else punt until unroll-time.  
-
-	// pop stack items to a local list
-	object_list connect;
-	{
-		int j = size() -1;
-		for ( ; j>=0; j--) {
-			connect.push_front(c.pop_top_object_stack());
-		}
-	}
-
-	// case: left-hand-side is a param_instance_reference
-	//	then we have expression assignment.  
-	// case: left-hand-side is some-other-instance-reference (physical)
-	//	then rhs can be arbitrary chain of 
-	//	same type instance references.
-	// TO DO: in general this needs much work to complete
-
-	const object_list::const_iterator first_obj = connect.begin();
-
-	if (!*first_obj) {
+	checked_generic_type temp;
+	postorder_check_generic(temp, c);
+	const checked_generic_type::const_iterator first_obj = temp.begin();
+	const checked_generic_type::const_iterator end_obj = temp.end();
+	if (!first_obj->first && !first_obj->second) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
 		THROW_EXIT;
-	} else if (first_obj->is_a<const param_instance_reference>()) {
+	} else if (first_obj->first) {
+		checked_exprs_type checked_exprs;
+		expr_list::select_checked_exprs(temp, checked_exprs);
+		
 		// then expect subsequent items to be the same
 		// or already param_expr in the case of some constants.
 		// However, only the last item may be a constant.  
 
-		excl_ptr<param_expression_assignment> exass = 
-			connect.make_param_assignment();
+		excl_ptr<const param_expression_assignment>
+			exass = make_param_assignment(checked_exprs);
 
 		// if all is well, then add this new list to the context's
 		// current scope.  
@@ -190,16 +286,16 @@ if (size() > 0) {		// non-empty
 				"assignment list.  " << where(*this) << endl;
 			THROW_EXIT;
 		} else {
-			excl_ptr<const param_expression_assignment>
-				exass_c(exass);
-			c.add_assignment(exass_c);
+			c.add_assignment(exass);
 			// and transfer ownership
-			INVARIANT(!exass_c);
 			INVARIANT(!exass.owned());
 		}
-	} else if (first_obj->is_a<const instance_reference_base>()) {
+	} else if (first_obj->second) {
+		checked_refs_type checked_refs;
+		expr_list::select_checked_refs(temp, checked_refs);
+
 		excl_ptr<const aliases_connection_base>
-			connection = connect.make_alias_connection();
+			connection = make_alias_connection(checked_refs);
 		// also type-checks connections
 		if (!connection) {
 			cerr << "HALT: at least one error in connection list.  "
@@ -210,7 +306,7 @@ if (size() > 0) {		// non-empty
 				ircp = connection.as_a_xfer<const instance_reference_connection>();
 			c.add_connection(ircp);
 			INVARIANT(!ircp);
-			assert(!connection.owned());
+			INVARIANT(!connection.owned());
 		}
 	} else {
 		// ERROR
@@ -219,45 +315,12 @@ if (size() > 0) {		// non-empty
 			<< endl;
 		THROW_EXIT;
 	}
-
-	return ret;
 } else {
 	// will this ever be empty?  will be caught as error for now.
 	DIE;
+}
+	// useless return value
 	return never_ptr<const object>(NULL);
-}
-}
-
-//=============================================================================
-// class connection_argument_list method definition
-
-CONSTRUCTOR_INLINE
-connection_argument_list::connection_argument_list(expr_list* e) :
-		expr_list() {
-	e->release_append(*this);
-	excl_ptr<expr_list> delete_me(e);
-}
-
-DESTRUCTOR_INLINE
-connection_argument_list::~connection_argument_list() {
-}
-
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(connection_argument_list)
-
-/**
-	Type checks a expression list in the connection argument context.
-	TO DO: manipulate context using definition_base.    
-	\param c the context object.      
-	\return
- */
-never_ptr<const object>
-connection_argument_list::check_build(context& c) const {
-	STACKTRACE("connection_argument_list::check_build()");
-	// enter the connection argument context
-	const never_ptr<const object>
-		o(expr_list::check_build(c));
-	// leave the connection argument context
-	return o;
 }
 
 //=============================================================================
@@ -265,7 +328,8 @@ connection_argument_list::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 actuals_base::actuals_base(const expr_list* a) : 
-		instance_management(), actuals(a) {
+//		instance_management(), 
+		actuals(a) {
 	NEVER_NULL(actuals);
 }
 
@@ -283,13 +347,33 @@ actuals_base::rightmost(void) const {
 	return actuals->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just a wrapped call to expr_list::check_build.
+	Remember: result type is allowed to be NULL, 
+		if no expression was passed in its position.  
  */
-never_ptr<const object>
-actuals_base::check_build(context& c) const {
-	STACKTRACE("actuals_base::check_build()");
-	return actuals->check_build(c);
+good_bool
+actuals_base::check_actuals(expr_list::checked_refs_type& ret,
+		context& c) const {
+	STACKTRACE("actuals_base::check_actuals()");
+	expr_list::checked_generic_type temp;
+	actuals->postorder_check_generic(temp, c);
+	expr_list::select_checked_refs(temp, ret);
+	expr_list::checked_generic_type::const_iterator
+		c_iter = temp.begin();
+	expr_list::const_iterator e_iter = actuals->begin();
+	const expr_list::const_iterator e_end = actuals->end();
+	for ( ; e_iter != e_end; e_iter++, c_iter++) {
+		if (*e_iter) {
+			if (!c_iter->first && !c_iter->second)
+				return good_bool(false);
+			// both results are NULL => check falied
+		}
+		// else expression is null; skip it
+	}
+	// all relevant checks passed
+	return good_bool(true);
 }
 
 //=============================================================================
@@ -307,11 +391,7 @@ instance_base::~instance_base() {
 
 ostream&
 instance_base::what(ostream& o) const {
-#if 0
-	return id->what(o << "(declaration-id): ");
-#else
 	return id->what(o << util::what<instance_base>::name() << ": ");
-#endif
 }
 
 line_position
@@ -360,12 +440,8 @@ instance_array::~instance_array() {
 
 ostream&
 instance_array::what(ostream& o) const {
-#if 0
-	return ranges->what(id->what(o << "(declaration-array): "));
-#else
 	return ranges->what(
 		id->what(o << util::what<instance_array>::name() << ": "));
-#endif
 }
 
 line_position
@@ -383,24 +459,11 @@ never_ptr<const object>
 instance_array::check_build(context& c) const {
 	STACKTRACE("instance_array::check_build()");
 	if (ranges) {
-		ranges->check_build(c);
-		// expecting ranges and singe integer expressions
-		const count_ptr<object> o(c.pop_top_object_stack());
-		// expect constructed (sparse) range_list on object stack
-		if (!o) {
-			cerr << "ERROR in dimensions!  " << 
-				where(*ranges) << endl;
-			THROW_EXIT;
-		}
-		const count_ptr<object_list>
-			ol(o.is_a<object_list>());
-		NEVER_NULL(ol);
-		// would rather have excl_ptr...
-		const count_ptr<range_expr_list>
-			d(ol->make_sparse_range_list());
+		const range_list::checked_ranges_type
+			d(ranges->check_ranges(c));
 		if (!d) {
-			cerr << "ERROR in building sparse range list!  "
-				<< where(*ranges) << endl;
+			cerr << "ERROR in building sparse range list!  " <<
+				where(*ranges) << endl;
 			THROW_EXIT;
 		}
 		const never_ptr<const instance_collection_base>
@@ -479,8 +542,8 @@ instance_declaration::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 instance_connection::instance_connection(const token_identifier* i, 
-		const expr_list* a, const char_punctuation_type* s) :
-		instance_base(i), actuals_base(a), semi(s) {
+		const expr_list* a) :
+		instance_base(i), actuals_base(a) {
 }
 
 DESTRUCTOR_INLINE
@@ -498,10 +561,10 @@ instance_connection::leftmost(void) const {
 
 line_position
 instance_connection::rightmost(void) const {
-	if (semi) return semi->rightmost();
-	else return actuals->rightmost();
+	return actuals->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 instance_connection::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
@@ -515,28 +578,19 @@ instance_connection::check_build(context& c) const {
 		return return_type(NULL);
 	}
 
-	// lookup the instantiation we just created
-	id->check_build(c);
-	// expect instance_reference on object_stack
-	count_ptr<const object> obj(c.pop_top_object_stack());
+	inst_ref_expr::return_type obj(id->check_reference(c));
+
 	NEVER_NULL(obj);		// we just created it!
 	const count_ptr<const simple_instance_reference>
 		inst_ref(obj.is_a<const simple_instance_reference>());
 	NEVER_NULL(inst_ref);
 
-	actuals_base::check_build(c);
-	obj = c.pop_top_object_stack();
-	if (!obj) {
-		cerr << "ERROR in object_list produced at "
-			<< where(*actuals) << endl;
-		THROW_EXIT;
-	}
-	const count_ptr<const object_list>
-		obj_list(obj.is_a<const object_list>());
-	NEVER_NULL(obj_list);
+	expr_list::checked_refs_type temp;
+	if (actuals_base::check_actuals(temp, c).good) {
 
 	excl_ptr<const port_connection>
-		port_con = obj_list->make_port_connection(inst_ref);
+		port_con = connection_statement::make_port_connection(
+			temp, inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where(*this) << endl;
@@ -548,6 +602,11 @@ instance_connection::check_build(context& c) const {
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
 	}
+	} else {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		THROW_EXIT;
+	}
 	return return_type(NULL);
 }
 
@@ -555,7 +614,8 @@ instance_connection::check_build(context& c) const {
 // class connection_statement method definitions
 
 CONSTRUCTOR_INLINE
-connection_statement::connection_statement(const expr* l, const expr_list* a) :
+connection_statement::connection_statement(
+		const inst_ref_expr* l, const expr_list* a) :
 		actuals_base(a), lvalue(l) {
 	NEVER_NULL(lvalue);
 }
@@ -576,38 +636,70 @@ connection_statement::rightmost(void) const {
 	return actuals->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a port connection object, given an invoking instance
+	reference and a list of port actuals (instance references).
+	Copied and ripped from the old object_list::make_port_connection().  
+
+	\param temp the list of checked references.
+	\param ir the invoking instance to which port should connect.
+ */
+excl_ptr<const entity::port_connection>
+connection_statement::make_port_connection(
+		const expr_list::checked_refs_type& temp,
+		const count_ptr<const entity::simple_instance_reference>& ir) {
+	typedef	excl_ptr<const port_connection>		return_type;
+	typedef	expr_list::checked_refs_type		ref_list_type;
+	excl_ptr<port_connection>
+		ret(new entity::port_connection(ir));
+	never_ptr<const definition_base>
+		base_def(ir->get_base_def());
+
+	const size_t ir_dim = ir->dimensions();
+	if (ir_dim) {
+		cerr << "Instance reference port connection must be scalar, "
+			"but got a " << ir_dim << "-dim reference!" << endl;
+		return return_type(NULL);
+	} else if (base_def->certify_port_actuals(temp).good) {
+		ref_list_type::const_iterator i = temp.begin();
+		const ref_list_type::const_iterator e = temp.end();
+		for ( ; i!=e; i++) {
+			count_ptr<const instance_reference_base>
+				ir(i->is_a<const instance_reference_base>());
+			ret->append_instance_reference(ir);
+		}
+		// transfers ownership
+		return return_type(ret);
+	} else {
+		cerr << "At least one error in port connection.  " << endl;
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return NULL always, rather useless.  
  */
 never_ptr<const object>
 connection_statement::check_build(context& c) const {
 	STACKTRACE("connection_statement::check_build()");
-	lvalue->check_build(c);
-	// useless return value, expect instance_reference_base on object_stack
-	count_ptr<const object> o(c.pop_top_object_stack());
+	const inst_ref_expr::return_type o(lvalue->check_reference(c));
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
 			"connection_statement at " << where(*lvalue) << endl;
 		THROW_EXIT;
 	}
+	// is not a complex aggregate instance reference
 	const count_ptr<const simple_instance_reference>
 		inst_ref(o.is_a<const simple_instance_reference>());
 	NEVER_NULL(inst_ref);
 
-	actuals_base::check_build(c);
+	expr_list::checked_refs_type temp;
+	if (actuals_base::check_actuals(temp, c).good) {
 	// useless return value, expect an object_list on object_stack
-	o = c.pop_top_object_stack();
-	if (!o) {
-		cerr << "ERROR in object_list produced at "
-			<< where(*actuals) << endl;
-		THROW_EXIT;
-	}
-	const count_ptr<const object_list>
-		obj_list(o.is_a<const object_list>());
-	NEVER_NULL(obj_list);
-
 	excl_ptr<const port_connection>
-		port_con = obj_list->make_port_connection(inst_ref);
+		port_con = make_port_connection(temp, inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where(*this) << endl;
@@ -618,6 +710,11 @@ connection_statement::check_build(context& c) const {
 		c.add_connection(ircp);
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
+	}
+	} else {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		THROW_EXIT;
 	}
 	return never_ptr<const object>(NULL);
 }
@@ -635,8 +732,7 @@ connection_statement::check_build(context& c) const {
 	\param s optional semicolon.  
  */
 // CONSTRUCTOR_INLINE
-instance_alias::instance_alias(const token_identifier* i, alias_list* a, 
-		const char_punctuation_type* s) :
+instance_alias::instance_alias(const token_identifier* i, alias_list* a) :
 		instance_base(i),
 		aliases(
 			(NEVER_NULL(a),
@@ -648,8 +744,7 @@ instance_alias::instance_alias(const token_identifier* i, alias_list* a,
 			// assertion will be broken, but who cares?
 			a)
 			// the value of this compound expression is a
-		),
-		semi(s) {
+		) {
 	NEVER_NULL(aliases);
 }
 
@@ -666,8 +761,7 @@ instance_alias::leftmost(void) const {
 
 line_position
 instance_alias::rightmost(void) const {
-	if (semi) return semi->rightmost();
-	else if (aliases) return aliases->rightmost();
+	if (aliases) return aliases->rightmost();
 	else return instance_base::rightmost();
 }
 

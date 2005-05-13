@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.27 2005/05/10 04:51:10 fang Exp $
+	$Id: art_object_base.h,v 1.28 2005/05/13 21:24:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_H__
@@ -132,62 +132,6 @@ public:
 };	// end class object_handle
 
 // after note: if we need object_handle (non-const) implement later...
-
-//=============================================================================
-/**
-	List of objects.
-	Will potentially want to make the following sub-typed lists:
-	(some cases will have special implicit conversions)
-	list<pint_range> for array declarations/instantiations,
-	list<index_expr> for array indexing and dimension collapsing, 
-	list<param_expr> for param_expression_assignments, 
-	list<instance_reference_base> for alias_connections.  
-
-	Should all list methods be available?
- */
-class object_list : public object, public list<count_ptr<object> > {
-public:
-	typedef	count_ptr<object>			value_type;
-protected:
-	typedef	list<value_type>			parent_type;
-public:
-	typedef	parent_type::iterator			iterator;
-	typedef	parent_type::const_iterator		const_iterator;
-public:
-	object_list();
-	~object_list();
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-// using parent's list interface
-
-	// could use excl_ptr, but then would need to release to count_ptr...
-	count_ptr<range_expr_list>
-	make_formal_dense_range_list(void) const;
-
-	count_ptr<range_expr_list>
-	make_sparse_range_list(void) const;
-
-	excl_ptr<index_list>
-	make_index_list(void) const;
-
-	excl_ptr<dynamic_param_expr_list>
-	make_param_expr_list(void) const;
-
-	// not const because may modify self
-	excl_ptr<param_expression_assignment>
-	make_param_assignment(void);
-
-	excl_ptr<const aliases_connection_base>
-	make_alias_connection(void) const;
-
-	excl_ptr<const port_connection>
-	make_port_connection(
-		const count_ptr<const simple_instance_reference>& ir) const;
-};	// end class object_list
 
 //=============================================================================
 }	// end namespace entity

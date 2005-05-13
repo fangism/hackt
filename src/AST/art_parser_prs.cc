@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.13 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14 2005/05/13 21:24:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -16,6 +16,8 @@
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_node_list.tcc"
+
+#include "Object/art_object_expr_base.h"
 
 #include "util/what.h"
 
@@ -51,7 +53,8 @@ rule::rule(const expr* g, const terminal* a,
 		body_item(), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
-	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
+	INVARIANT(r.is_a<const id_expr>() || r.is_a<const index_expr>());
+//	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
 //	INVARIANT(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 
@@ -148,13 +151,11 @@ body::check_build(context& c) const {
 // class op_loop method definitions
 
 op_loop::op_loop(const char_punctuation_type* l, const token_char* o,
-		const char_punctuation_type* c1,
-		const token_identifier* id, const char_punctuation_type* c2, 
-		const range* b, const char_punctuation_type* c3, 
+		const token_identifier* id, 
+		const range* b, 
 		const expr* e, const char_punctuation_type* r) :
 		expr(), 
-		lp(l), op(o), col1(c1), index(id), col2(c2), bounds(b), 
-		col3(c3), ex(e), rp(r) {
+		lp(l), op(o), index(id), bounds(b), ex(e), rp(r) {
 	NEVER_NULL(op); NEVER_NULL(index); NEVER_NULL(bounds); NEVER_NULL(ex);
 }
 
@@ -163,11 +164,7 @@ op_loop::~op_loop() {
 
 ostream&
 op_loop::what(ostream& o) const {
-#if 0
-	o << "(op-loop ";
-#else
 	o << '(' << util::what<op_loop>::name() << ' ';
-#endif
 	return op->what(o) << ")";
 }
 
@@ -188,6 +185,13 @@ never_ptr<const object>
 op_loop::check_build(context& c) const {
 	cerr << "Fang, finish op_loop::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
+}
+
+/** temporary: FINISH ME */
+expr::return_type
+op_loop::check_expr(context& c) const {
+	cerr << "Fang, finish op_loop::check_expr()!" << endl;
+	return expr::return_type(NULL);
 }
 
 //=============================================================================

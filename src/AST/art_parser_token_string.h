@@ -2,7 +2,7 @@
 	\file "AST/art_parser_token_string.h"
 	Base set of classes for the ART parser.  
 	These classes are implemented in "art_parser_token.cc"
-	$Id: art_parser_token_string.h,v 1.4 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_token_string.h,v 1.5 2005/05/13 21:24:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_STRING_H__
@@ -55,14 +55,14 @@ virtual line_position
 	Class for single plain identifiers, used in declarations.
 	Final, no sub-classes.
  */
-class token_identifier : public token_string, public expr {
+class token_identifier : public token_string, public inst_ref_expr {
 	typedef	token_identifier	this_type;
 public:
 	explicit
-	token_identifier(const char* s) : token_string(s), expr() { }
+	token_identifier(const char* s) : token_string(s), inst_ref_expr() { }
 
 	token_identifier(const token_identifier& i) :
-		token_string(i), expr() { }
+		token_string(i), inst_ref_expr() { }
 
 	~token_identifier() { }
 
@@ -75,8 +75,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	CHECK_REFERENCE_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };      // end class token_identifier

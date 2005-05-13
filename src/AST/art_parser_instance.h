@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.12 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_instance.h,v 1.13 2005/05/13 21:24:28 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -10,30 +10,18 @@
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_root.h"
 #include "AST/art_parser_definition_item.h"
+#include "util/STL/vector_fwd.h"
+#include "util/boolean_types.h"
 
 namespace ART {
+namespace entity {
+	class param_expression_assignment;
+	class aliases_connection_base;
+	class port_connection;
+	class simple_instance_reference;
+}
 namespace parser {
-//=============================================================================
-/**
-	An expression list specialized for port connection arguments.
- */
-class connection_argument_list : public expr_list {
-public:
-	explicit
-	connection_argument_list(expr_list* e);
-
-	~connection_argument_list();
-
-	ostream&
-	what(ostream& o) const;
-
-using	expr_list::leftmost;
-using	expr_list::rightmost;
-
-	never_ptr<const object>
-	check_build(context& c) const;
-};	// end class connection_argument_list
-
+using util::good_bool;
 //=============================================================================
 /**
 	Base class for instance-related items, including declarations, 
@@ -57,10 +45,12 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
-typedef	node_list<const expr>			alias_list_base;
+typedef	expr_list			alias_list_base;
 
 /**
 	A list of lvalue expressions aliased/connected together.  
+	NOTE: this doubles as a connection and assignment!
+	They are syntactically indistinguishable without context.  
  */
 class alias_list : public instance_management, public alias_list_base {
 private:
@@ -85,6 +75,19 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+private:
+	typedef	parent_type::checked_generic_type	checked_generic_type;
+	typedef	parent_type::checked_exprs_type		checked_exprs_type;
+	typedef	parent_type::checked_refs_type		checked_refs_type;
+
+	static
+	excl_ptr<const entity::param_expression_assignment>
+	make_param_assignment(const checked_exprs_type&);
+
+	static
+	excl_ptr<const entity::aliases_connection_base>
+	make_alias_connection(const checked_refs_type&);
 };	// end class alias_list
 
 //=============================================================================
@@ -92,7 +95,7 @@ public:
 	Abstract base class for connection statements of instantiations.  
 	Contains actuals list of arguments, just wrapped around expr_list.  
  */
-class actuals_base : virtual public instance_management {
+class actuals_base {
 protected:
 	const excl_ptr<const expr_list>		actuals;
 public:
@@ -109,8 +112,8 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+	good_bool
+	check_actuals(expr_list::checked_refs_type&, context& c) const;
 };	// end class actuals_base
 
 //=============================================================================
@@ -194,7 +197,6 @@ protected:
 		List of instance_base.  
 	 */
 	const excl_ptr<const instance_id_list>		ids;
-//	const excl_ptr<const char_punctuation_type>	semi;
 public:
 	instance_declaration(const concrete_type_ref* t, 
 		const instance_id_list* i);
@@ -223,10 +225,8 @@ class instance_connection : public instance_base, public actuals_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;		// inherited
 //	const excl_ptr<const expr_list>		actuals;	// inherited
-	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon (optional)
 public:
-	instance_connection(const token_identifier* i, const expr_list* a, 
-		const char_punctuation_type* s = NULL);
+	instance_connection(const token_identifier* i, const expr_list* a);
 
 	~instance_connection();
 
@@ -251,17 +251,16 @@ public:
 	Unlike instance_connection, this doesn't create any new 
 	instantiations.  
  */
-class connection_statement : public actuals_base {
+class connection_statement : public instance_management, public actuals_base {
 protected:
 //	const excl_ptr<const expr_list>		actuals;	// inherited
 	/**
 		Instance reference to connect, may be indexed,
 		but must be scalar.  
 	 */
-	const excl_ptr<const expr>		lvalue;
-//	const excl_ptr<const char_punctuation_type>		semi;
+	const excl_ptr<const inst_ref_expr>		lvalue;
 public:
-	connection_statement(const expr* l, const expr_list* a);
+	connection_statement(const inst_ref_expr* l, const expr_list* a);
 
 	~connection_statement();
 
@@ -276,6 +275,12 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	static
+	excl_ptr<const entity::port_connection>
+	make_port_connection(const expr_list::checked_refs_type&, 
+                const count_ptr<const entity::simple_instance_reference>& ir);
+
 };	// end class connection_statement
 
 //-----------------------------------------------------------------------------
@@ -290,10 +295,8 @@ class instance_alias : public instance_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;	// inherited
 	const excl_ptr<const alias_list>	aliases;
-	const excl_ptr<const char_punctuation_type>		semi;	///< semicolon
 public:
-	instance_alias(const token_identifier* i, alias_list* al, 
-		const char_punctuation_type* s = NULL);
+	instance_alias(const token_identifier* i, alias_list* al);
 
 	~instance_alias();
 
@@ -315,11 +318,8 @@ public:
 class loop_instantiation : public instance_management {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
-//	const excl_ptr<const char_punctuation_type>	delim;
 	const excl_ptr<const token_identifier>		index;
-//	const excl_ptr<const char_punctuation_type>	colon1;
 	const excl_ptr<const range>			rng;
-//	const excl_ptr<const char_punctuation_type>	colon2;
 	const excl_ptr<const definition_body>		body;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:

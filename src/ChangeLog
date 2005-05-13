@@ -1,5 +1,124 @@
 "ChangeLog"
 
+2005-05-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-07:
+	  All cleaned up, and ready to merge back to main trunk!
+	  All obsolete code involving expr::check_build... GONE.  
+	  No trace of object_list remains, nor any of the 
+		evil associated therewith.  
+
+
+2005-05-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-06:
+	  Pretty much done amputating:
+	  entity::object_list is practically eliminated, Gott sei dank!
+	  parser::context's object stack is gone.  
+	  parser::expr::check_build (and friends) has been phased out.  
+		(All conditionally commented out HAVE_EXPR_CHECK_BUILD.)
+	  No longer instantiating node_list<const expr>.
+	  Eliminated unused class parser::connection_argument_list.
+	  Updated calls to check_build to use check_expr and check_reference,
+		mostly affecting "AST/art_parser_instance.cc".
+	  Upgraded parser::connection_statement's lvalue to inst_ref-expr*.  
+	  It's all coming together... now just have to clean up
+		the mess of comments and obsolete code.  
+
+
+2005-05-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-05:
+	  Continued gradual elimination of expr::check_build (and friends).  
+	  Removed inst_ref_expr::check_build().
+	  Moved alias_list::postorder_check to expr_list, along with a few
+		other useful static functions.  
+	  New method for actuals_base::check_actuals, replacing check_build.
+	  Added replacement methods for instnace_connection, and 
+		connection_statement, calling new check_actuals.  
+	  entity::definition has new prototype for certify_port_actuals, 
+		process_definition::... has updated definition.  
+	  Ported object_list::make_port_connection to 
+		connection_statement::make_port_connection (static).
+	  parser::actuals_base no longer derived from instance_management.  
+	  parser::connection_statement now derived from instance_management.  
+	  Partially cleaned up some obsolete code, but there'll be more
+		deletions in the next revisions, I promise.  
+
+
+2005-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-04:
+	  Added expr::check_generic (virtual) to present the result of
+	  check_expr or check_reference dynmiacally cast to the other type, 
+	  solely for the purposes of working with alias_list's checking
+	  procedure.  (read: kludge, but less than it was before)
+	  id_expr and member_expr primary check method is now check_reference.  
+	  Added placeholder check_generic routines to array_concatenation, 
+	  loop_concatenation, and array_construction.  
+	  (Will need to add check_reference routines once we start 
+	  implementing them.)
+	  Updated alias_list::check_build to use check_generic, 
+		and moved object_list make_param_expr_assignment
+		and make_alias_connection methods into private methods.  
+	  Updated token_identifier to use check_reference.  
+
+
+2005-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-03:
+	  Checked implementation of check_expr, check_reference, 
+		check_indices, check_ranges and fixed minor bug 
+		since last revision.  
+	  Replaced calls to [dense_]range_list::check_build()
+		with check_ranges and check_indices where appropriate:
+		formal_id's, instance_array.  
+	  One problem: check_expr returns param_expr, whereas
+		check_reference returns instance_reference_base, 
+		both of which are 'objects'.  alias_list is a list of
+		expr, but wants generic objects to determine at type-check
+		time whether it is forming an expression assignment
+		or alias connection sequential instance management item.  
+		Thus, we cannot eliminate the object stack (nor calls to
+		expr::check_build) until this is resolved.  
+
+
+2005-05-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-02:
+	  Implemented expr::check_expr (pure virt.) by mostly trivially
+		copying over the old check_build's.  
+		Intend to phase out expr-related check_build calls in
+		favor of check_expr.  
+		check_index, check_ranges, etc. are analogous.  
+	  Minor: split off range and range expr into own AST source file.  
+	  Minor: permanently erased paren_expr class.  
+	  Minor: inst_ref_expr class to sub-type expressions that
+		represent instance or value references, adds a virtual
+		function check_reference, which will leverage the work
+		done by check_expr (or vice versa).  
+	  Minor: removed class postfix_expr (was useless).
+	  Minor: continued to strip out useless tokens in the AST, 
+		also cleaning grammar.  
+
+
+2005-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-01:
+	  This branch is intended to rework the way expression checking
+	  is done by the parser, replacing the archaic check_build
+	  in an orderly manner with object-specific interfaces and routines.
+	  In particular, this branch deals with expression checking.  
+	  The main goal is to delete the old context::object_stack mechanism
+	  used to construct hierarchical expression objects.  
+	  This first revision deleted the useless parser::postfix_expr class.  
+	  As a result, parser::index_expr is directly derived
+	  from parser::expr.
+	  After this branch is complete, we can work on fixing
+	  type-references (w.r.t. strict and relaxed templates) in
+	  a cleaner fashion.  
+
+
 2005-05-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35 (main trunk):

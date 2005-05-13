@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-13	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-merged-exprcheck-07:
+	  Merged revisions from -main-00-35-exprcheck branch to trunk.  
+	  Summary: replaced parser::expr::check_build() (and friends)
+		with more appropriate routines and interfaces.  
+		Eliminated entity::object_list, and context's object_stacks.  
+	  See src/ChangeLog for details.  
+
+
 2005-05-04	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.6 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_fwd.h,v 1.7 2005/05/13 21:24:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FWD_H__
@@ -72,13 +72,14 @@ class typedef_alias;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_expr.h"
+class inst_ref_expr;
 class id_expr;
 class range;
 class range_list;
 class dense_range_list;
 class unary_expr;
 class prefix_expr;
-class postfix_expr;
+// class postfix_expr;
 class member_expr;
 class index_expr;
 class binary_expr;
@@ -107,7 +108,6 @@ struct template_formal_decl_list_pair;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_instance.h"
-class connection_argument_list;
 class data_type_ref_list;
 class instance_management;
 class alias_list;

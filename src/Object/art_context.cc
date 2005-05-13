@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.30 2005/05/10 04:51:09 fang Exp $
+ 	$Id: art_context.cc,v 1.31 2005/05/13 21:24:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -56,7 +56,6 @@ context::context(module& m) :
 		definition_stack(), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
-		object_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		master_instance_list(m.instance_management_list), 
 		strict_template_mode(true)
@@ -67,7 +66,6 @@ context::context(module& m) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
-	object_stack.push(count_ptr<object>(NULL));
 	definition_stack.push(never_ptr<const definition_base>(NULL));
 	// initializing stacks else top() will seg-fault
 
@@ -917,51 +915,6 @@ context::add_port_formal(const token_identifier& id,
 never_ptr<const instance_collection_base>
 context::add_port_formal(const token_identifier& id) {
 	return add_port_formal(id, index_collection_item_ptr_type(NULL));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Created objects are passed around on the context's object stack.  
-	For now we restrict the type to param_expr and instance_reference.  
-	We permit NULL objects on the stack, as error placeholders.  
- */
-void
-context::push_object_stack(const count_ptr<object>& o)
-// context::push_object_stack(excl_ptr<object> o)
-{
-	if (o) {
-		// UGLY... rework later
-		const object* oself = &o->self();
-		// can we go back to not using maked pointer for check?
-		if (!(IS_A(const param_expr*, oself) ||
-			IS_A(const ART::entity::index_expr*, oself) ||
-			IS_A(const object_list*, oself) ||
-//			IS_A(const pint_const*, oself) ||
-				// eliminate object_list after making others
-			IS_A(const range_expr_list*, oself) ||
-			IS_A(const index_list*, oself) ||
-			IS_A(const instance_reference_base*, oself))) {
-			oself->what(cerr << "Unexpectedly got a ") <<
-				" on the context's object stack." << endl;
-		}
-		INVARIANT(IS_A(const param_expr*, oself) ||
-			IS_A(const ART::entity::index_expr*, oself) ||
-			IS_A(const object_list*, oself) ||
-//			IS_A(const pint_const*, oself) ||
-				// eliminate object_list after making others
-			IS_A(const range_expr_list*, oself) ||
-			IS_A(const index_list*, oself) ||
-			IS_A(const instance_reference_base*, oself));
-	}
-	object_stack.push(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<object>
-context::pop_top_object_stack(void) {
-	count_ptr<object> ret = object_stack.top();
-	object_stack.pop();
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

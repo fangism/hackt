@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.24 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_token.cc,v 1.25 2005/05/13 21:24:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -192,17 +192,13 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Pushes a parameter expression (constant int) onto the 
-	context's expression stack.  
-	\return NULL, useless.  
+	\return newly created constant integer value.  
  */
-never_ptr<const object>
-token_int::check_build(context& c) const {
-	const count_ptr<pint_const> pe(new pint_const(val));
-	NEVER_NULL(pe);
-	c.push_object_stack(pe);
-	return never_ptr<const object>(NULL);
+expr::return_type
+token_int::check_expr(context& c) const {
+	return return_type(new pint_const(val));
 }
 
 //=============================================================================
@@ -249,10 +245,10 @@ token_float::rightmost(void) const {
 /**
 	Need built-in float type first.  
  */
-never_ptr<const object>
-token_float::check_build(context& c) const {
-	cerr << "token_float::check_build(): not quite done yet!" << endl;
-	return never_ptr<const object>(NULL);
+expr::return_type
+token_float::check_expr(context& c) const {
+	cerr << "token_float::check_expr(): not quite done yet!" << endl;
+	return expr::return_type(NULL);
 }
 
 //=============================================================================
@@ -288,11 +284,12 @@ token_string::rightmost(void) const {
 
 #if 0
 CONSTRUCTOR_INLINE
-token_identifier::token_identifier(const char* s) : token_string(s), expr() { }
+token_identifier::token_identifier(const char* s) :
+		token_string(s), inst_ref_expr() { }
 
 /** default copy constructor */
 token_identifier::token_identifier(const token_identifier& i) :
-		node(), token_string(i), expr() {
+		token_string(i), inst_ref_expr() {
 }
 
 DESTRUCTOR_INLINE
@@ -316,43 +313,30 @@ token_identifier::rightmost(void) const {
 	return token_string::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	MESS ALERT:
-	Type-checking for expression literals and instance references, 
-	not to be called from declarations.  
-
-	(Later use "new_identifier" for declarations and definitions.)
-	The identifier must have been instantiated or declared formally
-	to pass type-check.  
-	Not intended for use of user-defined type identifiers... yet.
-	SOLUTION: reserve token_identifier for ONLY instantiations
-		and definitions, whereas
-		relative and absolute (qualified) identifiers
-		should be used in the grammar for all *references*
-		to instances.  
+	This is used specifically to return param_expr.  
+	Another version will return instance_references.  
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
-never_ptr<const object>
-token_identifier::check_build(context& c) const {
-	STACKTRACE("token_identifier::check_build()");
+inst_ref_expr::return_type
+token_identifier::check_reference(context& c) const {
+	typedef	inst_ref_expr::return_type		return_type;
+	STACKTRACE("token_identifier::check_expr()");
 
 	// don't look up, instantiate (checked) in the context's current scope!
 	const never_ptr<const instance_collection_base>
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
-		// we will then make an instance_reference
-		// what about indexed instance references?
-		c.push_object_stack(inst->make_instance_reference());
+		return inst->make_instance_reference();
 	} else {
-		// push a NULL placeholder
-		c.push_object_stack(count_ptr<object>(NULL));
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;
 		THROW_EXIT;		// temporary termination
+		return return_type(NULL);
 	}
-	return inst;
 }
 
 //=============================================================================
@@ -404,14 +388,10 @@ token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
 
-never_ptr<const object>
-token_bool::check_build(context& c) const {
-	const count_ptr<param_expr>
-		pe(new pbool_const(strcmp(c_str(),"true") == 0));
-	c.push_object_stack(pe);
-	return never_ptr<const object>(NULL);
+expr::return_type
+token_bool::check_expr(context& c) const {
+	return expr::return_type(new pbool_const(strcmp(c_str(),"true") == 0));
 }
-
 
 //=============================================================================
 // class token_else method definitions
@@ -421,8 +401,7 @@ token_bool::check_build(context& c) const {
 	\param e is either "true" or "false"
  */
 CONSTRUCTOR_INLINE
-token_else::
-token_else(const char* e) : token_keyword(e), expr() {
+token_else::token_else(const char* e) : token_keyword(e), expr() {
 	INVARIANT(!strcmp(e,"else"));
 } 
 
@@ -452,6 +431,12 @@ token_else::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+expr::return_type
+token_else::check_expr(context& c) const {
+	cerr << "token_else::check_build(): Don't call me!";
+	return expr::return_type(NULL);
+}
+
 //=============================================================================
 // class token_quoted_string method definitions
 
@@ -465,8 +450,7 @@ token_quoted_string::~token_quoted_string() { }
 ostream&
 token_quoted_string::what(ostream& o) const {
 	// punt: handle special characters later...
-	return ((const token_string*) this)->what(o << "string: \"")
-		<< "\"";
+	return ((const token_string*) this)->what(o << "string: \"") << "\"";
 }
 
 line_position
@@ -486,6 +470,12 @@ never_ptr<const object>
 token_quoted_string::check_build(context& c) const {
 	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
 	return never_ptr<const object>(NULL);
+}
+
+expr::return_type
+token_quoted_string::check_expr(context& c) const {
+	cerr << "token_quoted_string::check_expr(): FINISH ME!" << endl;
+	return expr::return_type(NULL);
 }
 
 //=============================================================================
@@ -541,13 +531,6 @@ ostream&
 token_paramtype::what(ostream& o) const {
 	return o << "paramtype: " << AS_A(const string&, *this);
 }
-
-#if 0
-never_ptr<const object>
-token_paramtype::check_build(context& c) const {
-	return c.set_param_def(*this);
-}
-#endif
 
 //=============================================================================
 // class token_bool_type method definitions
