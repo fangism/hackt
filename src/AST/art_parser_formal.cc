@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.18.2.2 2005/05/13 20:04:12 fang Exp $
+	$Id: art_parser_formal.cc,v 1.18.2.3 2005/05/13 21:16:37 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -152,11 +152,7 @@ port_formal_id::~port_formal_id() {
 
 ostream&
 port_formal_id::what(ostream& o) const {
-#if 0
-	name->what(o << "(port-formal-id): ");
-#else
 	name->what(o << util::what<port_formal_id>::name() << ": ");
-#endif
 	if (dim) dim->what(o);
 	return o;
 }
@@ -185,19 +181,6 @@ port_formal_id::check_build(context& c) const {
 		// should be anything but param_instantiation
 
 	if (dim) {
-#if 0
-		dim->check_build(c);	// useless return value
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "ERROR in array dimensions " <<
-				where(*dim) << endl;
-			THROW_EXIT;
-		}
-		const count_ptr<const range_expr_list>
-			d(o.is_a<const range_expr_list>());
-		NEVER_NULL(d);
-		// attach array dimensions to current instantiation
-#else
 		const dense_range_list::return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
@@ -205,7 +188,6 @@ port_formal_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
-#endif
 		t = c.add_port_formal(*name, d);
 	} else {
 		t = c.add_port_formal(*name);
@@ -318,11 +300,7 @@ template_formal_id::~template_formal_id() {
 
 ostream&
 template_formal_id::what(ostream& o) const {
-#if 0
-	name->what(o << "(template-formal-id): ");
-#else
 	name->what(o << util::what<template_formal_id>::name() << ": ");
-#endif
 	if (dim) dim->what(o << " with ");
 	return o;
 }
@@ -354,42 +332,16 @@ template_formal_id::check_build(context& c) const {
 	// type should already be set in the context
 	count_ptr<const param_expr> default_val;
 	if (dflt) {
-#if 0
-		dflt->check_build(c);
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "ERROR in default value expression " <<
-				where(*dflt) << endl;
-			THROW_EXIT;
-		}
-		const count_ptr<const param_expr>
-			p(o.is_a<const param_expr>());
-		NEVER_NULL(p);
-#else
 		count_ptr<const param_expr> p(dflt->check_expr(c));
 		if (!p) {
 			cerr << "ERROR in default value expression " <<
 				where(*dflt) << endl;
 			THROW_EXIT;
 		}
-#endif
 		default_val = p;
 	}
 	if (dim) {
 		// attach array dimensions to current instantiation
-#if 0
-		dim->check_build(c);	// useless return value, check stack
-		// should already construct an range_expr_list
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "ERROR in array dimensions " <<
-				where(*dim) << endl;
-			THROW_EXIT;
-		}
-		const count_ptr<const range_expr_list>
-			d(o.is_a<const range_expr_list>());
-		NEVER_NULL(d);
-#else
 		const dense_range_list::return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
@@ -397,7 +349,6 @@ template_formal_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
-#endif
 		t = c.add_template_formal(*name, d, default_val);
 	} else {
 		t = c.add_template_formal(*name, default_val);

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.12.2.2 2005/05/13 20:04:13 fang Exp $
+	$Id: art_parser_token.h,v 1.12.2.3 2005/05/13 21:16:39 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_H__
@@ -47,11 +47,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	CHECK_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
@@ -83,11 +78,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	CHECK_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(16);
@@ -111,11 +101,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
 
 	CHECK_EXPR_PROTO;
 

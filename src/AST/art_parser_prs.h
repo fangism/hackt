@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.11.2.1 2005/05/12 00:43:48 fang Exp $
+	$Id: art_parser_prs.h,v 1.11.2.2 2005/05/13 21:16:38 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
@@ -87,11 +87,8 @@ public:
 class loop : public body_item {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
-//	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>	index;
-//	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>		bounds;
-//	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const rule_list>		rules;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:
@@ -151,21 +148,15 @@ class op_loop : public expr {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
 	const excl_ptr<const token_char>	op;
-//	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>	index;
-//	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>		bounds;
-//	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const expr>		ex;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:
 	op_loop(const char_punctuation_type* l,
 		const token_char* o,
-//		const char_punctuation_type* c1,
 		const token_identifier* id, 
-//		const char_punctuation_type* c2, 
 		const range* b, 
-//		const char_punctuation_type* c3, 
 		const expr* e, const char_punctuation_type* r);
 
 	~op_loop();

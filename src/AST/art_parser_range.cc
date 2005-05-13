@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.1.2.4 2005/05/13 20:04:12 fang Exp $
+	$Id: art_parser_range.cc,v 1.1.2.5 2005/05/13 21:16:38 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -55,10 +55,7 @@ range::range(const expr* l) : lower(l), upper(NULL) {
 }
 
 CONSTRUCTOR_INLINE
-range::range(const expr* l, 
-//		const string_punctuation_type* o, 
-		const expr* u) : 
-		lower(l), upper(u) {
+range::range(const expr* l, const expr* u) : lower(l), upper(u) {
 	NEVER_NULL(lower); NEVER_NULL(upper);
 }
 
@@ -79,98 +76,14 @@ range::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
 /**
 	Both expressions of the range should be of type pint.  
 	No collective expressions, only single pints.  
 	Do we check for constant cases?
-	TO DO: finish me
 	How do we interpret x[i]?
 	\param c the context where to start resolving identifiers.  
-	\return I don't know.
+	\return pointer to checked entity::index_expr.
  */
-never_ptr<const object>
-range::check_build(context& c) const {
-	never_ptr<const object>
-		o(lower->check_build(c));	// useless return value
-	// puts param_expr on stack
-	const count_ptr<object> l(c.pop_top_object_stack());
-	const count_ptr<pint_expr> lp(l.is_a<pint_expr>());
-	if (l) {
-		if (!lp) {
-			cerr << "Expression is not a pint-type, ERROR!  " <<
-				where(*lower) << endl;
-			THROW_EXIT;
-		}
-		// check if expression is initialized
-	} else {
-		cerr << endl;
-		cerr << "Error resolving expression " << where(*lower)
-			<< endl;
-		THROW_EXIT;
-	}
-
-	if (upper) {
-		o = upper->check_build(c);
-		// puts param_expr on stack
-		// grab the last two expressions, 
-		// check that they are both pints, 
-		// and make a range object
-		const count_ptr<object> u(c.pop_top_object_stack());
-		const count_ptr<pint_expr> up(u.is_a<pint_expr>());
-		if (u) {
-			if (!up) {
-				cerr << "Expression is not a pint-type, "
-					"ERROR!  " << where(*upper) << endl;
-				THROW_EXIT;
-			}
-			// check if expression is initialized
-		} else {
-			cerr << "Error resolving expression " << where(*upper)
-				<< endl;
-			THROW_EXIT;
-		}
-		// at this point, is ok
-
-		// later: resolve constant if possible...
-		// modularize this into a method in art_object_expr
-		if (lp->is_static_constant() && up->is_static_constant()) {
-			const int lb = lp->static_constant_value();
-			const int ub = up->static_constant_value();
-			if (lb > ub) {
-				// error!  can't construct invalid const_range
-				cerr << "Lower bound of range " <<
-					where(*lower) << " is greater than "
-					"upper bound " << where(*upper) <<
-					".  ERROR!" << endl;
-				c.push_object_stack(
-					count_ptr<const_range>(NULL));
-				// THROW_EXIT;
-				// or let error get caught elsewhere?
-			} else {
-				// make valid constant range
-				c.push_object_stack(count_ptr<const_range>(
-					new const_range(lb, ub)));
-			}
-		} else {
-			// can't determine validity of bounds statically
-			c.push_object_stack(count_ptr<pint_range>(
-				new pint_range(lp, up)));
-		}
-	} else {
-		// but check that it is of type pint
-		// and push it back onto stack
-		// the caller will interpret it
-		c.push_object_stack(l);
-		// passing lp: ART::entity::object ambiguous base class
-		//	of pint_expr :S
-	}
-	// not done yet
-	return o;
-}
-#endif	// HAVE_EXPR_CHECK_BUILD
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 range::return_type
 range::check_index(context& c) const {
 	const expr::return_type l(lower->check_expr(c));
@@ -246,72 +159,16 @@ range_list::range_list(const range* r) : parent_type(r) {
 range_list::~range_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
 /**
 	Note: limited to 4 dimensions.  
 
-	Parent's check_build will result in each index dimension
-	being pushed onto the context's object stack.  
-	Grab them off the stack to form an object list.  
-
-	Or just convert directly to a range list?
-	No range list has two different semantics
-	(depending on instantiation vs. reference),
-	so just leave as object_list.  
-
 	Should we take this opportunity to const-ify as much as possible?
 
-	IMPORTANT:
-	Only puts an object_list onto object_stack.  
-	It is up to caller to interpret either as a sparse_range list
-	in the case of an array declaration or as an index_list in the
-	case of an indexed instance reference.  
-
 	This is called by instance_array::check_build and 
-	index_expr::check_build.  
+	index_expr::check_reference.  
 
-	\return NULL, useless.
+	\return success of type-check of all elements.  
  */
-never_ptr<const object>
-range_list::check_build(context& c) const {
-	parent_type::check_build(c);
-	const count_ptr<object_list> ol(new object_list);
-	size_t i = 0;
-	for ( ; i<size(); i++) {
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "Problem with dimension " << i+1 <<
-				" of sparse_range_list between "
-				<< where(*this) << endl;
-			THROW_EXIT;		// terminate?
-		} else if (!o.is_a<ART::entity::index_expr>()) {
-			// pint_const *should* => index_expr ...
-			// make sure each item is a range expression
-			cerr << "Expression in dimension " << i+1 <<
-				" of sparse_range_list is not valid!  "
-				<< where(*this) << endl;
-//			o->what(cerr << "object is a ") << endl;
-//			o->dump(cerr << "object dump: ") << endl;
-			THROW_EXIT;
-		}
-		// else o is an index_expr
-		ol->push_front(o);
-	}
-	if (size() > 4) {		// define constant somewhere
-		cerr << "ERROR!  Exceeded dimension limit of 4.  "
-			<< where(*this) << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
-	} else {
-//		c.push_object_stack(ol->make_sparse_range_list());
-		// don't necessarily want to interpret as sparse_range
-		// may want it as an index!
-		c.push_object_stack(ol);
-	}
-	return never_ptr<const object>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 range_list::postorder_check(check_type& temp, context& c) const {
 	const_iterator i = begin();
@@ -326,20 +183,6 @@ range_list::postorder_check(check_type& temp, context& c) const {
 			THROW_EXIT;		// terminate?
 			return good_bool(false);
 		}
-#if 0
-		else if (!o.is_a<entity::index_expr>()) {
-			// pint_const *should* => index_expr ...
-			// make sure each item is a range expression
-			cerr << "Expression in dimension " << j <<
-				" of sparse_range_list is not valid!  "
-				<< where(*this) << endl;
-//			o->what(cerr << "object is a ") << endl;
-//			o->dump(cerr << "object dump: ") << endl;
-			THROW_EXIT;
-			return good_bool(false);
-		}
-#endif
-		// else o is an index_expr
 		// collect first, store temporary, check for constness
 		temp.push_back(o);
 	}
@@ -725,8 +568,8 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 // template class node_list<const range>;			// range_list
 
 //=============================================================================
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

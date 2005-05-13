@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.18.2.1 2005/05/13 06:44:39 fang Exp $
+	$Id: art_object_definition_base.h,v 1.18.2.2 2005/05/13 21:16:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -21,10 +21,6 @@
 #include "util/STL/vector_fwd.h"
 
 #include "Object/art_object_template_formals_manager.h"
-
-// should be synchronized with USE_NEW_CHECK_ACTUALS,
-// defined in "AST/art_parser_instance.h"
-#define	USE_NEW_CERTIFY_PORTS		1
 
 namespace ART {
 // forward declarations from outside namespaces
@@ -158,13 +154,8 @@ public:
 	make_default_template_arguments(void) const;
 
 	/** by default returns false */
-#if USE_NEW_CERTIFY_PORTS
 virtual	good_bool
 	certify_port_actuals(const checked_refs_type&) const;
-#else
-virtual	good_bool
-	certify_port_actuals(const object_list& ol) const;
-#endif
 
 public:
 // proposing to replace set_context_fundamental_type with the following:

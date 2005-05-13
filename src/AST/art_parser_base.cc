@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.20.2.1 2005/05/13 20:04:11 fang Exp $
+	$Id: art_parser_base.cc,v 1.20.2.2 2005/05/13 21:16:36 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -86,7 +86,7 @@ const char pound[] = "#";	///< delimiter for node_list template argument
 #if 0
 /// Empty constructor
 CONSTRUCTOR_INLINE
-root_item::root_item() : node() { }
+root_item::root_item() { }
 
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
@@ -105,7 +105,7 @@ root_body::~root_body() { }
 
 #if 0
 CONSTRUCTOR_INLINE
-type_base::type_base() : node() { }
+type_base::type_base() { }
 
 DESTRUCTOR_INLINE
 type_base::~type_base() { }
@@ -222,7 +222,7 @@ chan_type::check_build(context& c) const {
 
 #if 0
 CONSTRUCTOR_INLINE
-statement::statement() : node() { }
+statement::statement() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
@@ -374,7 +374,7 @@ assign_stmt::rightmost(void) const {
 
 #if 0
 CONSTRUCTOR_INLINE
-def_body_item::def_body_item() : node() { }
+def_body_item::def_body_item() { }
 
 DESTRUCTOR_INLINE
 def_body_item::~def_body_item() { }
@@ -446,12 +446,8 @@ namespace_body::~namespace_body() {
 /// what eeeez it, man?
 ostream&
 namespace_body::what(ostream& o) const {
-#if 0
-	return o << "(namespace-body: " << *name << ")";
-#else
 	return o << '(' << util::what<namespace_body>::name() <<
 		": " << *name << ')';
-#endif
 }
 
 line_position
@@ -462,10 +458,7 @@ namespace_body::leftmost(void) const {
 
 line_position
 namespace_body::rightmost(void) const {
-//	if (semi)	return semi->rightmost();
-//	else if (rb)	return rb->rightmost();
 	if (body)	return body->rightmost();
-//	else if (lb)	return lb->rightmost();
 	else		return name->rightmost();
 }
 
@@ -501,11 +494,7 @@ namespace_id::~namespace_id() {
 
 ostream&
 namespace_id::what(ostream& o) const {
-#if 0
-	return o << "(namespace-id): " << *qid;
-#else
 	return o << util::what<namespace_id>::name() << ": " << *qid;
-#endif
 }
 
 line_position
@@ -670,12 +659,9 @@ concrete_type_ref::check_build(context& c) const {
 		return return_type(NULL);
 	}
 
-#define	USE_NEW_MAKE_ARGS		1
-
 	// check template arguments, if given
 	if (temp_spec) {
 		STACKTRACE("checking template arguments (temp_spec)");
-#if USE_NEW_MAKE_ARGS
 		// FUTURE: need to extend to handle generic template
 		// type-argument placeholders.  
 		expr_list::checked_exprs_type temp;
@@ -685,39 +671,6 @@ concrete_type_ref::check_build(context& c) const {
 			tpl(new dynamic_param_expr_list);
 		expr_list::checked_exprs_type::const_iterator i = temp.begin();
 		copy(temp.begin(), temp.end(), back_inserter(*tpl));
-#else
-		// FINISH ME!!!!!!!!!!
-		// using current_definition_reference
-		temp_spec->check_build(c);
-		// useless return value, grab object_list off the stack
-		count_ptr<object> o(c.pop_top_object_stack());
-
-		// remember to check the list of template formals
-		// which aren't yet tied to a definition!
-		// each iteration should add one more formal to the
-		// current_template_formals list.  
-
-		// should return pointer to template arguments, 
-		// which is not an object yet...
-		if (!o)	{
-			cerr << "concrete_type_ref: "
-				"bad template args!  ERROR " 
-				<< where(*temp_spec) << endl;
-			THROW_EXIT;		// temporary
-			return return_type(NULL);
-		} 
-		const count_ptr<object_list>
-			ol(o.is_a<object_list>());
-		NEVER_NULL(ol);
-		excl_ptr<dynamic_param_expr_list>
-			tpl = ol->make_param_expr_list();
-		if (!tpl) {
-			cerr << "ERROR building template parameter "
-				"expression list.  " << where(*temp_spec)
-				<< endl;
-			THROW_EXIT;		// temporary
-		}
-#endif
 		const count_ptr<const fundamental_type_reference>
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.12.2.4 2005/05/13 20:04:12 fang Exp $
+	$Id: art_parser_instance.h,v 1.12.2.5 2005/05/13 21:16:38 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -22,29 +22,6 @@ namespace entity {
 }
 namespace parser {
 using util::good_bool;
-//=============================================================================
-#if 0
-/**
-	An expression list specialized for port connection arguments.
- */
-class connection_argument_list : public expr_list {
-public:
-	explicit
-	connection_argument_list(expr_list* e);
-
-	~connection_argument_list();
-
-	ostream&
-	what(ostream& o) const;
-
-using	expr_list::leftmost;
-using	expr_list::rightmost;
-
-	never_ptr<const object>
-	check_build(context& c) const;
-};	// end class connection_argument_list
-#endif
-
 //=============================================================================
 /**
 	Base class for instance-related items, including declarations, 
@@ -68,11 +45,7 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
-#if 0
-typedef	node_list<const expr>		alias_list_base;
-#else
 typedef	expr_list			alias_list_base;
-#endif
 
 /**
 	A list of lvalue expressions aliased/connected together.  
@@ -118,16 +91,11 @@ private:
 };	// end class alias_list
 
 //=============================================================================
-#define	USE_NEW_CHECK_ACTUALS		1
 /**
 	Abstract base class for connection statements of instantiations.  
 	Contains actuals list of arguments, just wrapped around expr_list.  
  */
-class actuals_base
-#if 0
-	: virtual public instance_management
-#endif
-	{
+class actuals_base {
 protected:
 	const excl_ptr<const expr_list>		actuals;
 public:
@@ -144,13 +112,8 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-#if USE_NEW_CHECK_ACTUALS
 	good_bool
 	check_actuals(expr_list::checked_refs_type&, context& c) const;
-#else
-	never_ptr<const object>
-	check_actuals(context& c) const;
-#endif
 };	// end class actuals_base
 
 //=============================================================================
@@ -234,7 +197,6 @@ protected:
 		List of instance_base.  
 	 */
 	const excl_ptr<const instance_id_list>		ids;
-//	const excl_ptr<const char_punctuation_type>	semi;
 public:
 	instance_declaration(const concrete_type_ref* t, 
 		const instance_id_list* i);
@@ -263,10 +225,8 @@ class instance_connection : public instance_base, public actuals_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;		// inherited
 //	const excl_ptr<const expr_list>		actuals;	// inherited
-	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon (optional)
 public:
-	instance_connection(const token_identifier* i, const expr_list* a, 
-		const char_punctuation_type* s = NULL);
+	instance_connection(const token_identifier* i, const expr_list* a);
 
 	~instance_connection();
 
@@ -291,12 +251,7 @@ public:
 	Unlike instance_connection, this doesn't create any new 
 	instantiations.  
  */
-class connection_statement :
-#if 1
-		public instance_management, 
-#endif
-		public actuals_base
-{
+class connection_statement : public instance_management, public actuals_base {
 protected:
 //	const excl_ptr<const expr_list>		actuals;	// inherited
 	/**
@@ -304,7 +259,6 @@ protected:
 		but must be scalar.  
 	 */
 	const excl_ptr<const inst_ref_expr>		lvalue;
-//	const excl_ptr<const char_punctuation_type>		semi;
 public:
 	connection_statement(const inst_ref_expr* l, const expr_list* a);
 
@@ -341,10 +295,8 @@ class instance_alias : public instance_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;	// inherited
 	const excl_ptr<const alias_list>	aliases;
-	const excl_ptr<const char_punctuation_type>		semi;	///< semicolon
 public:
-	instance_alias(const token_identifier* i, alias_list* al, 
-		const char_punctuation_type* s = NULL);
+	instance_alias(const token_identifier* i, alias_list* al);
 
 	~instance_alias();
 
@@ -366,11 +318,8 @@ public:
 class loop_instantiation : public instance_management {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
-//	const excl_ptr<const char_punctuation_type>	delim;
 	const excl_ptr<const token_identifier>		index;
-//	const excl_ptr<const char_punctuation_type>	colon1;
 	const excl_ptr<const range>			rng;
-//	const excl_ptr<const char_punctuation_type>	colon2;
 	const excl_ptr<const definition_body>		body;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:

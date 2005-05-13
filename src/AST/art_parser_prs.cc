@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.13.2.2 2005/05/12 00:43:48 fang Exp $
+	$Id: art_parser_prs.cc,v 1.13.2.3 2005/05/13 21:16:38 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -151,11 +151,8 @@ body::check_build(context& c) const {
 // class op_loop method definitions
 
 op_loop::op_loop(const char_punctuation_type* l, const token_char* o,
-//		const char_punctuation_type* c1,
 		const token_identifier* id, 
-//		const char_punctuation_type* c2, 
 		const range* b, 
-//		const char_punctuation_type* c3, 
 		const expr* e, const char_punctuation_type* r) :
 		expr(), 
 		lp(l), op(o), index(id), bounds(b), ex(e), rp(r) {
@@ -167,11 +164,7 @@ op_loop::~op_loop() {
 
 ostream&
 op_loop::what(ostream& o) const {
-#if 0
-	o << "(op-loop ";
-#else
 	o << '(' << util::what<op_loop>::name() << ' ';
-#endif
 	return op->what(o) << ")";
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.17 2005/05/10 04:51:10 fang Exp $
+	$Id: art_object_assign.h,v 1.17.2.1 2005/05/13 21:16:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -69,6 +69,8 @@ virtual	bad_bool
 		Used by object_list::make_param_expression_assignment.
 	 */
 	class instance_reference_appender {
+		// used to be object_list::value_type
+		typedef	count_ptr<param_expr>	arg_type;
 	protected:
 		size_t				index;
 		param_expression_assignment&	ex_ass;
@@ -78,8 +80,7 @@ virtual	bad_bool
 			index(0), ex_ass(p) { }
 
 		bad_bool
-		operator () (const bad_bool b,
-			const object_list::value_type& i);
+		operator () (const bad_bool b, const arg_type& i);
 	};	// end class instance_reference_appender
 
 protected:

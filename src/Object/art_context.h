@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.15.2.1 2005/05/13 20:04:14 fang Exp $
+	$Id: art_context.h,v 1.15.2.2 2005/05/13 21:16:39 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -15,8 +15,6 @@
 #include "util/memory/pointer_classes.h"
 #include "Object/art_object_fwd.h"
 #include "util/boolean_types.h"
-
-#define	USE_OBJECT_STACK		0
 
 namespace ART {
 
@@ -132,26 +130,6 @@ protected:
 	 */
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
 #define	current_sequential_scope		sequential_scope_stack.top()
-
-#if 0
-// NOT YET
-	/**
-		Expressions need to be reference counted.  
-	 */
-	stack<count_ptr<param_expr> >		expr_stack;
-#endif
-
-#if USE_OBJECT_STACK
-	/**
-		UPDATE ME.
-		A unified stack intended for instance references and
-		parameter expressions.  
-		Items need to be modifiable.  
-		e.g. when we are initializing reference 
-			expressions on the stack.
-	 */
-	stack<count_ptr<object> >		object_stack;
-#endif
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -371,14 +349,6 @@ public:
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);
-
-#if USE_OBJECT_STACK
-	void
-	push_object_stack(const count_ptr<object>& i);
-
-	count_ptr<object>
-	pop_top_object_stack(void);
-#endif
 
 // repeat for processes and channels...
 

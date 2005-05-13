@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.24.2.3 2005/05/13 20:04:13 fang Exp $
+	$Id: art_parser_token.cc,v 1.24.2.4 2005/05/13 21:16:38 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -192,21 +192,10 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
-#if HAVE_EXPR_CHECK_BUILD
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Pushes a parameter expression (constant int) onto the 
-	context's expression stack.  
-	\return NULL, useless.  
+	\return newly created constant integer value.  
  */
-never_ptr<const object>
-token_int::check_build(context& c) const {
-	const count_ptr<pint_const> pe(new pint_const(val));
-	NEVER_NULL(pe);
-	c.push_object_stack(pe);
-	return never_ptr<const object>(NULL);
-}
-#endif
-
 expr::return_type
 token_int::check_expr(context& c) const {
 	return return_type(new pint_const(val));
@@ -252,17 +241,6 @@ line_position
 token_float::rightmost(void) const {
 	return terminal::rightmost();
 }
-
-#if HAVE_EXPR_CHECK_BUILD
-/**
-	Need built-in float type first.  
- */
-never_ptr<const object>
-token_float::check_build(context& c) const {
-	cerr << "token_float::check_build(): not quite done yet!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#endif
 
 /**
 	Need built-in float type first.  
@@ -337,50 +315,10 @@ token_identifier::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	MESS ALERT:
-	Type-checking for expression literals and instance references, 
-	not to be called from declarations.  
-
-	(Later use "new_identifier" for declarations and definitions.)
-	The identifier must have been instantiated or declared formally
-	to pass type-check.  
-	Not intended for use of user-defined type identifiers... yet.
-	SOLUTION: reserve token_identifier for ONLY instantiations
-		and definitions, whereas
-		relative and absolute (qualified) identifiers
-		should be used in the grammar for all *references*
-		to instances.  
-	\param c the context of the current position in the syntax tree.  
-	\return pointer to the instance named if found, else NULL.  
- */
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-token_identifier::check_build(context& c) const {
-	STACKTRACE("token_identifier::check_build()");
-
-	// don't look up, instantiate (checked) in the context's current scope!
-	const never_ptr<const instance_collection_base>
-		inst(c.lookup_instance(*this));
-	// problem: stack is count_ptr, incompatible with never_ptr
-	if (inst) {
-		// we will then make an instance_reference
-		// what about indexed instance references?
-		c.push_object_stack(inst->make_instance_reference());
-	} else {
-		// push a NULL placeholder
-		c.push_object_stack(count_ptr<object>(NULL));
-		// better error handling later...
-		what(cerr << "failed to find ") << endl;
-		THROW_EXIT;		// temporary termination
-	}
-	return inst;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	This is used specifically to return param_expr.  
 	Another version will return instance_references.  
+	\param c the context of the current position in the syntax tree.  
+	\return pointer to the instance named if found, else NULL.  
  */
 inst_ref_expr::return_type
 token_identifier::check_reference(context& c) const {
@@ -392,24 +330,7 @@ token_identifier::check_reference(context& c) const {
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
-#if 0
-		// we will then make an instance_reference
-		// what about indexed instance references?
-		count_ptr<instance_reference_base>
-			inst_ref(inst->make_instance_reference());
-		return_type param_ref(inst_ref.is_a<param_expr>());
-		if (param_ref) {
-			// then is valid expression
-			return param_ref;
-		} else {
-			what(cerr << "ERROR: ") <<
-				" does not refer to a parameter value." << endl;
-			THROW_EXIT;		// temporary termination
-			return return_type(NULL);
-		}
-#else
 		return inst->make_instance_reference();
-#endif
 	} else {
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;
@@ -466,16 +387,6 @@ line_position
 token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
-
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-token_bool::check_build(context& c) const {
-	const count_ptr<param_expr>
-		pe(new pbool_const(strcmp(c_str(),"true") == 0));
-	c.push_object_stack(pe);
-	return never_ptr<const object>(NULL);
-}
-#endif
 
 expr::return_type
 token_bool::check_expr(context& c) const {
@@ -620,13 +531,6 @@ ostream&
 token_paramtype::what(ostream& o) const {
 	return o << "paramtype: " << AS_A(const string&, *this);
 }
-
-#if 0
-never_ptr<const object>
-token_paramtype::check_build(context& c) const {
-	return c.set_param_def(*this);
-}
-#endif
 
 //=============================================================================
 // class token_bool_type method definitions

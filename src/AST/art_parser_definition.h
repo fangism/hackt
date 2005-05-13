@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.12.2.1 2005/05/13 06:44:35 fang Exp $
+	$Id: art_parser_definition.h,v 1.12.2.2 2005/05/13 21:16:36 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -101,8 +101,6 @@ virtual	never_ptr<const object>
 //-----------------------------------------------------------------------------
 /// process prototype declaration
 class process_prototype : public prototype, public process_signature {
-protected:
-//	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon token
 public:
 	process_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* d, const token_identifier* i, 
@@ -179,8 +177,6 @@ virtual	never_ptr<const object>
 /// user-defined data type prototype declaration
 class user_data_type_prototype : public prototype, 
 		public user_data_type_signature {
-protected:
-//	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon
 public:
 	user_data_type_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
@@ -235,9 +231,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	using user_data_type_signature::check_build;
-#else
+#if 1
 	never_ptr<const object>
 	check_build(context& ) const;
 #endif
@@ -267,9 +261,6 @@ virtual	never_ptr<const object>
 	Not really a prototype, but classified as such for convenience.  
  */
 class enum_prototype : public prototype, public enum_signature {
-protected:
-	/** semicolon token (optional) */
-//	const excl_ptr<const char_punctuation_type>	semi;
 public:
 	enum_prototype(const generic_keyword_type* e,
 		const token_identifier* i);
@@ -361,8 +352,6 @@ virtual	never_ptr<const object>
 /// user-defined channel type prototype
 class user_chan_type_prototype : public prototype, 
 		public user_chan_type_signature {
-protected:
-//	const excl_ptr<const char_punctuation_type>	semi;	///< semicolon
 public:
 	user_chan_type_prototype(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
@@ -433,7 +422,6 @@ protected:
 	const excl_ptr<const generic_keyword_type>		td;
 	const excl_ptr<const concrete_type_ref>		base;
 	const excl_ptr<const token_identifier>		id;
-//	const excl_ptr<const char_punctuation_type>		semi;
 public:
 	typedef_alias(const template_formal_decl_list_pair* t, 
 		const generic_keyword_type* k, const concrete_type_ref* b, 

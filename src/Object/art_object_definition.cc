@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.43.2.1 2005/05/13 06:44:38 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.43.2.2 2005/05/13 21:16:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -278,21 +278,12 @@ definition_base::certify_template_arguments(
 	Default: return false (if unimplemented)
 	Temporarily prints an error message.  
  */
-#if USE_NEW_CERTIFY_PORTS
 good_bool
 definition_base::certify_port_actuals(const checked_refs_type&) const {
 	cerr << "Default definition_base::certify_port_actuals() = false."
 		<< endl;
 	return good_bool(false);
 }
-#else
-good_bool
-definition_base::certify_port_actuals(const object_list&) const {
-	cerr << "Default definition_base::certify_port_actuals() = false."
-		<< endl;
-	return good_bool(false);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1899,22 +1890,8 @@ process_definition::lookup_port_formal(const string& id) const {
 	\return true if type checks (is conservative).
  */
 good_bool
-process_definition::certify_port_actuals(
-#if USE_NEW_CERTIFY_PORTS
-		const checked_refs_type& ol
-#else
-		const object_list& ol
-#endif
-		) const {
-#if USE_NEW_CERTIFY_PORTS
+process_definition::certify_port_actuals(const checked_refs_type& ol) const {
 	typedef	checked_refs_type	refs_list_type;
-#else
-	typedef	object_list		refs_list_type;
-#endif
-#if 0
-	cerr << "process_definition::certify_port_actuals(): FINISH ME!"
-		<< endl;
-#endif
 	const size_t num_formals = port_formals_list.size();
 	const size_t num_actuals = ol.size();
 	if (port_formals_list.size() != ol.size()) {
@@ -1931,18 +1908,8 @@ process_definition::certify_port_actuals(
 		f_end = port_formals_list.end();
 	size_t i = 1;
 	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
-#if USE_NEW_CERTIFY_PORTS
 		const count_ptr<const instance_reference_base> a_iref(*a_iter);
-		if (a_iref)
-#else
-		const count_ptr<const object> a_obj(*a_iter);
-		if (a_obj)
-#endif
-		{
-#if !USE_NEW_CERTIFY_PORTS
-			const count_ptr<const instance_reference_base>
-				a_iref(a_obj.is_a<const instance_reference_base>());
-#endif
+		if (a_iref) {
 			const never_ptr<const instance_collection_base>
 				f_inst(*f_iter);
 			// FINISH ME

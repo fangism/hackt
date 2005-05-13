@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.22 2005/05/10 04:51:10 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.22.2.1 2005/05/13 21:16:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
@@ -50,12 +50,13 @@ param_expression_assignment::~param_expression_assignment() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param o is already a pointer to instance_reference_base.  
 	\return TRUE if there is an error condition in this iteration
 		or earlier.
  */
 bad_bool
 param_expression_assignment::instance_reference_appender::operator () (
-		const bad_bool b, const object_list::value_type& o) {
+		const bad_bool b, const arg_type& o) {
 	index++;
 	if (!o) {
 		cerr << "ERROR: in creating item " << index <<

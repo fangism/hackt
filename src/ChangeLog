@@ -2,6 +2,15 @@
 
 2005-05-13	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-35-exprcheck-07:
+	  All cleaned up, and ready to merge back to main trunk!
+	  All obsolete code involving expr::check_build... GONE.  
+	  No trace of object_list remains, nor any of the 
+		evil associated therewith.  
+
+
+2005-05-13	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-35-exprcheck-06:
 	  Pretty much done amputating:
 	  entity::object_list is practically eliminated, Gott sei dank!

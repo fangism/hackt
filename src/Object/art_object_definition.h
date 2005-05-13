@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.30.2.1 2005/05/13 06:44:38 fang Exp $
+	$Id: art_object_definition.h,v 1.30.2.2 2005/05/13 21:16:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -204,13 +204,8 @@ public:
 	add_port_formal(const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
-#if USE_NEW_CERTIFY_PORTS
 	good_bool
 	certify_port_actuals(const checked_refs_type& ol) const;
-#else
-	good_bool
-	certify_port_actuals(const object_list& ol) const;
-#endif
 
 	bool
 	equivalent_port_formals(

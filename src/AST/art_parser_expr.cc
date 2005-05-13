@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.20.2.6 2005/05/13 20:04:11 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20.2.7 2005/05/13 21:16:36 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -89,7 +89,6 @@ expr::~expr() { }
 expr::generic_return_type
 expr::check_generic(context& c) const {
 	STACKTRACE("expr::check_generic()");
-//	what(cerr) << endl;
 	expr::return_type ret(check_expr(c));
 	return generic_return_type(ret,
 		ret.is_a<inst_ref_return_type::element_type>());
@@ -97,15 +96,6 @@ expr::check_generic(context& c) const {
 
 //=============================================================================
 // class inst_ref_expr method definitions
-
-#if 0
-never_ptr<const object>
-inst_ref_expr::check_build(context& c) const {
-	cerr << "NEVER supposed to call inst_ref_expr::check_build()!" << endl;
-	DIE;
-	return never_ptr<const object>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -157,42 +147,6 @@ expr_list::expr_list(const expr* e) : parent_type(e) { }
 expr_list::~expr_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(expr_list)
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	PHASE OUT.
-	Type-checker checks each individual expression and 
-	returns a collection of built object expressions.  
-	NULL members will be represented with NULL object 
-	expression place-holders.  
-	Caller just has to grab the object_list off the stack
-	and go from there.  
- */
-never_ptr<const object>
-expr_list::check_build(context& c) const {
-	const count_ptr<object_list> o(new object_list);
-	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
-		if (*i) {
-			(*i)->check_build(c);
-			// ignore useless return values (should be always NULL)
-			o->push_back(c.pop_top_object_stack());
-			// do error checking on list elsewhere
-		} else {
-			// add NULL placeholder
-			o->push_back(count_ptr<object>(NULL));
-		}
-	}
-	c.push_object_stack(o);
-	return never_ptr<const object>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just collects the result of type-checking of items in list.
 	\param temp the type-checked result list.
@@ -205,22 +159,11 @@ expr_list::postorder_check_generic(checked_generic_type& temp,
 	INVARIANT(temp.empty());
 	const_iterator i = begin();
 	const const_iterator e = end();
-#if 0
-	std::transform(i, e, back_inserter(temp),
-	unary_compose(
-		bind2nd_argval(mem_fun_ref(&expr::check_generic), c),
-		dereference<value_type>()
-	)
-	);
-#else
-	// in plain English, the above is equivalent to
-	// (without the ?: conditional):
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_generic(c) :
 			checked_generic_type::value_type());
 		// else pushes a pair of NULL pointers
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -236,21 +179,10 @@ expr_list::postorder_check_exprs(checked_exprs_type& temp,
 	INVARIANT(temp.empty());
 	const_iterator i = begin();
 	const const_iterator e = end();
-#if 0
-	std::transform(i, e, back_inserter(temp),
-	unary_compose(
-		bind2nd_argval(mem_fun_ref(&expr::check_expr), c),
-		dereference<value_type>()
-	)
-	);
-#else
-	// in plain English, the above is equivalent to:
-	// (without the ?: conditional):
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_expr(c) :
 			checked_exprs_type::value_type(NULL));
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -469,53 +401,13 @@ id_expr::is_absolute(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	UPDATE DOCUMENTATION.
 	The qualified_id member's check build can return a definition 
-	or instance pointer.  (Only instance pointer now.)
+	or instance pointer.  
+	A different method will be used to lookup definition/type identifiers.
 	\param c the context where to begin searching for named object.  
 	\return pointer to the found instantiation base instance if found,
 		else NULL.
-	FIX ME: should return instance_reference!, not instance!
-	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-id_expr::check_build(context& c) const {
-	const never_ptr<const object>
-		o(qid->check_build(c));		// will lookup_object
-	if (o) {
-		const never_ptr<const instance_collection_base>
-			inst(o.is_a<const instance_collection_base>());
-		if (inst) {
-			// we found an instance which may be single
-			// or collective... info is in inst.
-			c.push_object_stack(inst->make_instance_reference());
-			// pushes the created reference onto
-			// context's instance_reference_stack.
-			// if indexed, check in the caller, and modify
-			//	in index_expr...
-
-			// doesn't have to be a parameter, does it?
-		} else {
-			// push NULL or error object to continue?
-			cerr << "object \"" << *qid <<
-				"\" is not an instance, ERROR!  "
-				<< where(*qid) << endl;
-			THROW_EXIT;
-		}
-	} else {
-		// push NULL or error object to continue?
-		cerr << "object \"" << *qid << "\" not found, ERROR!  "
-			<< where(*qid) << endl;
-		THROW_EXIT;
-	}
-	return never_ptr<const object>(NULL);
-//	return c.lookup_instance(*qid);
-// also accomplishes same thing?
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inst_ref_expr::return_type
 id_expr::check_reference(context& c) const {
 	STACKTRACE("id_expr::check_reference()");
@@ -543,27 +435,6 @@ id_expr::check_reference(context& c) const {
 	}
 	return inst_ref_expr::return_type(NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-expr::return_type
-id_expr::check_expr(context& c) const {
-	inst_ref_expr::return_type inst_ref(check_reference(c));
-	NEVER_NULL(inst_ref);	// else would've exited
-	const expr::return_type
-		param_ref(inst_ref.is_a<expr::return_type::element_type>());
-	if (param_ref) {
-		// accepted
-		return param_ref;
-	} else {
-		cerr << "object \"" << *qid <<
-			"\" does not refer to a parameter, ERROR!  "
-			<< where(*qid) << endl;
-		THROW_EXIT;
-		return expr::return_type(NULL);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
@@ -612,102 +483,10 @@ prefix_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
 /**
-	Does basic checking on expression.  
-	Grabs last expression off top of stack and replaces it.  
-	Always returns NULL, rather useless.  
+	\param c parse context.
+	\return pointer to type-checked expression if successfull, else null.  
  */
-never_ptr<const object>
-prefix_expr::check_build(context& c) const {
-	typedef	never_ptr<const object>		return_type;
-	e->check_build(c);	// useless return value
-	const count_ptr<object> o(c.pop_top_object_stack());
-	if (!o) {
-		// error propagates up the stack
-		cerr << "ERROR building expression at " << where(*e) << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
-		return return_type(NULL);
-	}
-	const count_ptr<param_expr> pe(o.is_a<param_expr>());
-	NEVER_NULL(pe);	// must be a param expression!
-	const count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
-	const count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
-
-	const int ch = op.is_a<const token_char>()->get_char();
-	switch(ch) {
-		case '-':
-			// integer negation
-			if (!ie) {
-				cerr << "Unary \'-\' operator requires a "
-					"pint argument, but got a ";
-				pe->what(cerr) << ".  ERROR!  "
-					<< where(*e) << endl;
-				c.push_object_stack(count_ptr<object>(NULL));
-				break;
-			}
-			if (ie->is_static_constant()) {
-				// constant simplification
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(- ie->static_constant_value())));
-			} else {
-				c.push_object_stack(count_ptr<pint_unary_expr>(
-					new pint_unary_expr(ch, ie)));
-			}
-			break;
-		case '!':
-			// integer logical negation
-			if (!ie) {
-				cerr << "Unary \'!\' operator requires a "
-					"pint argument, but got a ";
-				pe->what(cerr) << ".  ERROR!  "
-					<< where(*e) << endl;
-				c.push_object_stack(count_ptr<object>(NULL));
-				break;
-			}
-			if (ie->is_static_constant()) {
-				// constant simplification
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(! ie->static_constant_value())));
-			} else {
-				c.push_object_stack(count_ptr<pint_unary_expr>(
-					new pint_unary_expr(ch, ie)));
-			}
-			break;
-		case '~':
-			// context-dependent? in PRS or not?
-			// is bit-wise negation for ints, 
-			// logical negation for bools?
-			// for now, restrict to bools only...
-			if (!be) {
-				cerr << "Unary \'~\' operator requires a "
-					"pint argument, but got a ";
-				pe->what(cerr) << ".  ERROR!  "
-					<< where(*e) << endl;
-				c.push_object_stack(count_ptr<object>(NULL));
-				break;
-			}
-			if (be->is_static_constant()) {
-				// constant simplification
-				c.push_object_stack(count_ptr<pbool_const>(
-					new pbool_const(
-						!be->static_constant_value())));
-			} else {
-				c.push_object_stack(
-					count_ptr<pbool_unary_expr>(
-						new pbool_unary_expr(be, ch)));
-			}
-			break;
-		default:
-			cerr << "Bad operator char \'" << ch << "\' in "
-				"prefix_expr::check_build()!" << endl;
-			DIE;
-	}
-	return return_type(NULL);
-}
-#endif	// HAVE_EXPR_CHECK_BUILD
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 prefix_expr::check_expr(context& c) const {
 	typedef	expr::return_type		return_type;
@@ -786,7 +565,6 @@ prefix_expr::check_expr(context& c) const {
 
 CONSTRUCTOR_INLINE
 member_expr::member_expr(const inst_ref_expr* l,
-//		const char_punctuation_type* o, 
 		const token_identifier* m) :
 		parent_type(), owner(l), member(m) {
 	NEVER_NULL(owner);
@@ -808,82 +586,10 @@ member_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
 /**
 	Type-check of member reference.  
 	Current restriction: left expression must be scalar 0-dimensional.
-	\return NULL, but places an instance_reference object on the
-		context's object stack.  
- */
-never_ptr<const object>
-member_expr::check_build(context& c) const {
-	owner->check_build(c);
-	// useless return value
-	// expect: simple_instance_reference on object stack
-	const count_ptr<const object> o(c.pop_top_object_stack());
-	if (!o) {
-		cerr << "ERROR in base instance reference of member expr at "
-			<< where(*owner) << endl;
-		THROW_EXIT;
-	}
-	const count_ptr<const simple_instance_reference>
-		inst_ref(o.is_a<const simple_instance_reference>());
-	assert(inst_ref);
-	if (inst_ref->dimensions()) {
-		cerr << "ERROR: cannot take the member of a " <<
-			inst_ref->dimensions() << "-dimension array, "
-			"must be scalar!  (for now...)  " <<
-			where(*owner) << endl;
-		THROW_EXIT;
-	}
-
-	const never_ptr<const definition_base>
-		base_def(inst_ref->get_base_def());
-	NEVER_NULL(base_def);
-	c.push_current_definition_reference(*base_def);
-	// this should return a reference to an instance
-	// of some type that has members, such as data, channel, process.  
-	// should resolve to a *single* instance of something, 
-	// cannot be an array.  
-
-	// use that instance_reference, get its referenced definition_base, 
-	// and make sure it has a member m, lookup ports only in the 
-	// current_definition_reference, don't lookup anywhere else!
-
-	// don't use context's general lookup
-	const never_ptr<const instance_collection_base>
-		member_inst(base_def->lookup_port_formal(*member));
-	// LATER: check and make sure definition is signed, 
-	//	after we introduce forward template declarations
-	if (!member_inst) {
-		base_def->what(cerr << "ERROR: ") << " " <<
-			base_def->get_qualified_name() << 
-			" has no public member named \"" << *member <<
-			"\" at " << where(*member) << endl;
-		THROW_EXIT;
-	}
-	c.push_object_stack(
-		member_inst->make_member_instance_reference(inst_ref));
-	// useless return value: NULL
-	// will result in member_instance_reference on object_stack
-
-	// reset definition reference in context
-	c.pop_current_definition_reference();
-
-	// what should this return?  the same thing it expects:
-	// a reference to an instance of some type.  
-	// Problem: instances aren't concrete until they are unrolled.
-	// What is available in type-check phase?
-	// Maybe we don't care about the instances themselves, 
-	// rather the *type* returned.  
-	// after all this is type-checking, not range checking.  
-
-	return never_ptr<const object>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
+	\return type-checked instance_reference or null.  
 	Really, should never be able to refer to param_expr
 	member of an instance.
  */
@@ -941,7 +647,6 @@ member_expr::check_reference(context& c) const {
 
 	const count_ptr<instance_reference_base>
 	ret_inst_ref(member_inst->make_member_instance_reference(inst_ref));
-//	const return_type ret(ret_inst_ref.is_a<param_expr>());
 
 	// reset definition reference in context
 	c.pop_current_definition_reference();
@@ -957,18 +662,6 @@ member_expr::check_reference(context& c) const {
 
 	return ret_inst_ref;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-expr::return_type
-member_expr::check_expr(context& c) const {
-	inst_ref_expr::return_type ex(check_reference(c));
-	expr::return_type
-		ret(ex.is_a<expr::return_type::element_type>());
-	if (ex)	INVARIANT(ret);
-	return ret;
-}
-#endif
 
 //=============================================================================
 // class index_expr method definitions
@@ -994,75 +687,6 @@ line_position
 index_expr::rightmost(void) const {
 	return ranges->rightmost();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
-/**
-	TO DO: FINISH ME
-	Check index expression first, must be an integer type.  
-	Checking identifier should place an instance_reference 
-	on the context's object stack.  
-	For an indexed instance reference, we need to take it off the 
-	stack, modify it, and replace it back onto the stack.  
- */
-never_ptr<const object>
-index_expr::check_build(context& c) const {
-#if 1
-	ranges->check_build(c);		// useless return value
-	// should result in a ART::entity::index_list on the stack
-	const count_ptr<object>
-		index_obj(c.pop_top_object_stack());
-	// see range_list::check_build()
-	if (!index_obj) {
-		cerr << "ERROR in indices!  " << where(*ranges) << endl;
-		THROW_EXIT;
-	}
-	const count_ptr<object_list>
-		ol(index_obj.is_a<object_list>());
-	NEVER_NULL(ol);
-	// would rather have excl_ptr...
-	excl_ptr<index_list> index_list_obj = ol->make_index_list();
-	if (!index_list_obj) {
-		cerr << "ERROR in index list!  " << where(*ranges) << endl;
-		THROW_EXIT;
-	}
-	NEVER_NULL(index_list_obj);
-
-	base->check_build(c);
-	// should result in an instance_reference on the stack.  
-	const count_ptr<object> base_obj(c.pop_top_object_stack());
-	if (!base_obj) {
-		cerr << "ERROR in base instance_reference!  "
-			<< where(*base) << endl;
-		THROW_EXIT;
-	}
-
-	// later this may be a member_instance_reference...
-	// should cast to instance_reference_base instead, 
-	// abstract attach_indices
-	const count_ptr<simple_instance_reference>
-		base_inst(base_obj.is_a<simple_instance_reference>());
-	NEVER_NULL(base_inst);
-
-	const bad_bool ai(base_inst->attach_indices(index_list_obj));
-	if (ai.bad) {
-		cerr << where(*ranges) << endl;
-		THROW_EXIT;
-	}
-	// push indexed instance reference back onto stack
-	c.push_object_stack(base_inst);
-#else
-	// PROBLEM: if called by alias_list, then need either
-	// param_expr or instance_reference, 
-	// but cannot know apriori, requires context!
-	c.push_object_stack(check_expr(c));
-	OR
-	c.push_object_stack(check_reference(c));
-	// ???
-#endif
-	return never_ptr<const object>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1099,22 +723,9 @@ index_expr::intercept_base_ref_error(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
-	Ensures that what's returned is a valid parameter expression.  
- */
-expr::return_type
-index_expr::check_expr(context& c) const {
-	inst_ref_expr::return_type ref(check_reference(c));
-	const expr::return_type
-		ret(ref.is_a<expr::return_type::element_type>());
-	if (ref) INVARIANT(ret);
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
+	Build's an indexed reference from base and index.  
+	Check index expression first, must be an integer type.  
 	\return pointer to instance_reference_base.  
  */
 inst_ref_expr::return_type
@@ -1179,78 +790,6 @@ DESTRUCTOR_INLINE
 arith_expr::~arith_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-arith_expr::check_build(context& c) const {
-	typedef	never_ptr<const object>		return_type;
-	l->check_build(c);	// useless return value
-	r->check_build(c);	// useless return value
-	const count_ptr<object> ro(c.pop_top_object_stack());
-	const count_ptr<object> lo(c.pop_top_object_stack());
-	if (!ro || !lo) {
-		if (!lo)
-			cerr << "ERROR building expression at " << 
-				where(*l) << endl;
-		if (!ro)
-			cerr << "ERROR building expression at " << 
-				where(*r) << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
-		return return_type(NULL);
-	}
-	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
-	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
-	if (!li || !ri) {
-		if (!li) {
-			cerr << "ERROR arith_expr expected a pint, but got a ";
-			lo->what(cerr) << " at " << where(*l) << endl;;
-		}
-		if (!ri) {
-			cerr << "ERROR arith_expr expected a pint, but got a ";
-			ro->what(cerr) << " at " << where(*r) << endl;;
-		}
-		c.push_object_stack(count_ptr<object>(NULL));
-		return return_type(NULL);
-	}
-	// else is safe to make arith_expr object
-	const char ch = op.is_a<const token_char>()->get_char();
-	if (li->is_static_constant() && ri->is_static_constant()) {
-		const int lc = li->static_constant_value();
-		const int rc = ri->static_constant_value();
-		switch(ch) {
-			case '+':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc +rc)));
-				break;
-			case '-':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc -rc)));
-				break;
-			case '*':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc *rc)));
-				break;
-			case '/':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc /rc)));
-				break;
-			case '%':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc %rc)));
-				break;
-			default:
-				cerr << "Bad operator char \'" << ch << "\' in "
-					"arith_expr::check_build()!" << endl;
-				DIE;
-		}
-	} else {
-		c.push_object_stack(count_ptr<entity::arith_expr>(
-			new entity::arith_expr(li, ch, ri)));
-	}
-	return return_type(NULL);
-}
-#endif	// HAVE_EXPR_CHECK_BUILD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1330,16 +869,6 @@ relational_expr::~relational_expr() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-relational_expr::check_build(context& c) const {
-	// temporary
-	cerr << "Fang, finish relational_expr::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 relational_expr::check_expr(context& c) const {
 	// same idea as arith expr
@@ -1360,15 +889,6 @@ DESTRUCTOR_INLINE
 logical_expr::~logical_expr() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-logical_expr::check_build(context& c) const {
-	cerr << "Fang, finish relational_expr::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1401,26 +921,11 @@ array_concatenation::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
 /**
 	If list contains only a single element, don't bother 
 	constructing an aggregate object on the stack, 
 	just do the check_build of the lone object.  
  */
-never_ptr<const object>
-array_concatenation::check_build(context& c) const {
-	if (size() == 1) {
-		const const_iterator only = begin();
-		return (*only)->check_build(c);
-	} else {
-		cerr << "Fang, finish array_concatenation::check_build()!" <<
-			endl;
-		return never_ptr<const object>(NULL);
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 array_concatenation::check_expr(context& c) const {
 	if (size() == 1) {
@@ -1452,18 +957,12 @@ array_concatenation::check_generic(context& c) const {
 
 loop_concatenation::loop_concatenation(
 		const char_punctuation_type* l, 
-//		const char_punctuation_type* h,
-//		const char_punctuation_type* c1, 
 		const token_identifier* i,   
-//		const char_punctuation_type* c2, 
 		const range* rng,
-//		const char_punctuation_type* c3, 
 		const expr* e,
 		const char_punctuation_type* r) :
 		lp(l), id(i), bounds(rng), ex(e), rp(r) {
-//	NEVER_NULL(lp);
 	NEVER_NULL(id); NEVER_NULL(bounds); NEVER_NULL(ex);
-//	NEVER_NULL(rp);
 }
 		
 loop_concatenation::~loop_concatenation() {
@@ -1482,15 +981,6 @@ loop_concatenation::rightmost(void) const {
 	if (rp)		return rp->rightmost();
 	else 		return ex->rightmost();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-loop_concatenation::check_build(context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1533,15 +1023,6 @@ array_construction::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if HAVE_EXPR_CHECK_BUILD
-never_ptr<const object>
-array_construction::check_build(context& c) const {
-	cerr << "Fang, finish array_construction::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 array_construction::check_expr(context& c) const {
 	cerr << "Fang, finish array_construction::check_expr()!" << endl;
@@ -1556,17 +1037,15 @@ array_construction::check_generic(context& c) const {
 }
 
 //=============================================================================
-// EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
-							// also known as...
-// template class node_list<const expr>;		// expr_list_base
-// template class node_list<const token_identifier>;	// qualified_id_base
+// EXPLICIT TEMPLATE INSTANTIATIONS
+
 template
 ostream&
 node_list<const token_identifier>::what(ostream&) const;
 
 //=============================================================================
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE

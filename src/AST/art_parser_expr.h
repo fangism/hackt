@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.12.2.5 2005/05/13 20:04:11 fang Exp $
+	$Id: art_parser_expr.h,v 1.12.2.6 2005/05/13 21:16:37 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -53,17 +53,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-// should return a type object, with which one may pointer compare
-//	with typedefs, follow to canonical
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
-#if 0
-	CHECK_EXPR_PROTO;
-#endif
-
 	CHECK_REFERENCE_PROTO;
 
 	never_ptr<const qualified_id>
@@ -108,11 +97,6 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
-
-#if HAVE_EXPR_CHECK_BUILD
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
-#endif
 };	// end class unary_expr
 
 //-----------------------------------------------------------------------------
@@ -134,11 +118,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	CHECK_EXPR_PROTO;
 
 };	// end class prefix_expr
@@ -152,13 +131,10 @@ protected:
 	typedef	inst_ref_expr		parent_type;
 protected:
 	const excl_ptr<const inst_ref_expr>	owner;	///< the argument expr
-//	const excl_ptr<const char_punctuation_type>	op;	///< the operator, may be null
 	/// the member name
 	const excl_ptr<const token_identifier>	member;
 public:
-	member_expr(const inst_ref_expr* l,
-//		const char_punctuation_type* o, 
-		const token_identifier* m);
+	member_expr(const inst_ref_expr* l, const token_identifier* m);
 
 	// non-default copy-constructor?
 
@@ -172,15 +148,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
-#if 0
-	CHECK_EXPR_PROTO;
-#endif
 
 	CHECK_REFERENCE_PROTO;
 };	// end class member_expr
@@ -207,16 +174,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
-#if 0
-	CHECK_EXPR_PROTO;
-#endif
-
 	CHECK_REFERENCE_PROTO;
+
 private:
 	range_list_return_type
 	intercept_indices_error(context& c) const;
@@ -246,10 +205,6 @@ virtual	ostream&
 	line_position
 	rightmost(void) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
-#endif
 };	// end class binary_expr
 
 //-----------------------------------------------------------------------------
@@ -266,10 +221,6 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
 	CHECK_EXPR_PROTO;
 };	// end class arith_expr
 
@@ -287,11 +238,6 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	CHECK_EXPR_PROTO;
 };	// end class relational_expr
 
@@ -308,11 +254,6 @@ public:
 
 	ostream&
 	what(ostream& o) const;
-
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
 
 	CHECK_EXPR_PROTO;
 };	// end class logical_expr
@@ -348,11 +289,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
 
 	CHECK_EXPR_PROTO;
 
@@ -397,11 +333,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	CHECK_EXPR_PROTO;
 
 	// have to do something different (see array_concatenation explanation)
@@ -433,11 +364,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
 
 	CHECK_EXPR_PROTO;
 

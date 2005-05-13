@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range_list.h,v 1.4.2.3 2005/05/13 20:04:13 fang Exp $
+	$Id: art_parser_range_list.h,v 1.4.2.4 2005/05/13 21:16:38 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_LIST_H__
@@ -44,11 +44,6 @@ public:
 
 	~range_list();
 
-#if HAVE_EXPR_CHECK_BUILD
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	range_list::checked_indices_type
 	check_indices(context& c) const;
 
@@ -85,11 +80,6 @@ public:
 	dense_range_list(const expr* r);
 
 	~dense_range_list();
-
-#if 0
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
 
 	dense_range_list::return_type
 	check_formal_dense_ranges(context& c) const;
