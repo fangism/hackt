@@ -1,7 +1,7 @@
 # "DevelopmentPlan.dot"
 
 digraph G {
-size="9,10";
+size="7,10";
 
 ARTXX_00_01_04		[shape=box, style=filled, label="ART++ 0.1.4"];
 ARTXX_00_01_04_b	[shape=box, style=filled, fillcolor=green, 
