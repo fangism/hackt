@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.20.2.5 2005/05/13 06:44:35 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20.2.6 2005/05/13 20:04:11 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -162,7 +162,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(expr_list)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
+#if 0
 /**
 	PHASE OUT.
 	Type-checker checks each individual expression and 
@@ -245,8 +245,10 @@ expr_list::postorder_check_exprs(checked_exprs_type& temp,
 	);
 #else
 	// in plain English, the above is equivalent to:
+	// (without the ?: conditional):
 	for ( ; i!=e; i++) {
-		temp.push_back((*i)->check_expr(c));
+		temp.push_back((*i) ? (*i)->check_expr(c) :
+			checked_exprs_type::value_type(NULL));
 	}
 #endif
 }
@@ -476,7 +478,7 @@ id_expr::is_absolute(void) const {
 	FIX ME: should return instance_reference!, not instance!
 	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
-#if 1
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 id_expr::check_build(context& c) const {
 	const never_ptr<const object>
@@ -610,6 +612,7 @@ prefix_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	Does basic checking on expression.  
 	Grabs last expression off top of stack and replaces it.  
@@ -702,6 +705,7 @@ prefix_expr::check_build(context& c) const {
 	}
 	return return_type(NULL);
 }
+#endif	// HAVE_EXPR_CHECK_BUILD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -804,7 +808,7 @@ member_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	Type-check of member reference.  
 	Current restriction: left expression must be scalar 0-dimensional.
@@ -992,7 +996,7 @@ index_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	TO DO: FINISH ME
 	Check index expression first, must be an integer type.  
@@ -1177,6 +1181,7 @@ arith_expr::~arith_expr() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 arith_expr::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
@@ -1245,6 +1250,7 @@ arith_expr::check_build(context& c) const {
 	}
 	return return_type(NULL);
 }
+#endif	// HAVE_EXPR_CHECK_BUILD
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1324,12 +1330,14 @@ relational_expr::~relational_expr() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 relational_expr::check_build(context& c) const {
 	// temporary
 	cerr << "Fang, finish relational_expr::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1354,11 +1362,13 @@ logical_expr::~logical_expr() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 logical_expr::check_build(context& c) const {
 	cerr << "Fang, finish relational_expr::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1391,6 +1401,7 @@ array_concatenation::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	If list contains only a single element, don't bother 
 	constructing an aggregate object on the stack, 
@@ -1407,6 +1418,7 @@ array_concatenation::check_build(context& c) const {
 		return never_ptr<const object>(NULL);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1472,11 +1484,13 @@ loop_concatenation::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 loop_concatenation::check_build(context& c) const {
 	cerr << "Fang, finish loop_concatenation::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1519,11 +1533,13 @@ array_construction::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 array_construction::check_build(context& c) const {
 	cerr << "Fang, finish array_construction::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
@@ -1542,8 +1558,11 @@ array_construction::check_generic(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
-template class node_list<const expr>;			// expr_list
-template class node_list<const token_identifier>;	// qualified_id_base
+// template class node_list<const expr>;		// expr_list_base
+// template class node_list<const token_identifier>;	// qualified_id_base
+template
+ostream&
+node_list<const token_identifier>::what(ostream&) const;
 
 //=============================================================================
 };	// end namespace parser

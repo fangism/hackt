@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.27.2.3 2005/05/13 06:44:38 fang Exp $
+	$Id: art_object_base.h,v 1.27.2.4 2005/05/13 20:04:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_H__
@@ -134,6 +134,7 @@ public:
 // after note: if we need object_handle (non-const) implement later...
 
 //=============================================================================
+#if 1
 /**
 	List of objects.
 	DEPRECATED: THIS WILL BE PHASED OUT (2005-05-12)
@@ -166,6 +167,7 @@ public:
 	dump(ostream& o) const;
 // using parent's list interface
 
+#if 0
 	excl_ptr<index_list>
 	make_index_list(void) const;
 
@@ -175,7 +177,9 @@ public:
 	excl_ptr<const port_connection>
 	make_port_connection(
 		const count_ptr<const simple_instance_reference>& ir) const;
+#endif
 };	// end class object_list
+#endif
 
 //=============================================================================
 }	// end namespace entity

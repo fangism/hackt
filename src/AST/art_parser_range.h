@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.4.2.1 2005/05/12 00:43:48 fang Exp $
+	$Id: art_parser_range.h,v 1.4.2.2 2005/05/13 20:04:13 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_H__
@@ -52,8 +52,10 @@ public:
 	line_position
 	rightmost(void) const;
 
+#if HAVE_EXPR_CHECK_BUILD
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
 	range::return_type
 	check_index(context& c) const;

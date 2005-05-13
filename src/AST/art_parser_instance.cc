@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.23.2.3 2005/05/13 06:44:36 fang Exp $
+	$Id: art_parser_instance.cc,v 1.23.2.4 2005/05/13 20:04:12 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -46,8 +46,6 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::connection_argument_list, 
-	"(connection-arg-list)")
 SPECIALIZE_UTIL_WHAT(ART::parser::instance_base, 
 	"(declaration-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::instance_array, 
@@ -423,6 +421,7 @@ if (size() > 0) {		// non-empty
 }
 
 //=============================================================================
+#if 0
 // class connection_argument_list method definition
 
 CONSTRUCTOR_INLINE
@@ -453,6 +452,7 @@ connection_argument_list::check_build(context& c) const {
 	// leave the connection argument context
 	return o;
 }
+#endif
 
 //=============================================================================
 // class actuals_base method definitions
@@ -750,10 +750,15 @@ instance_connection::check_build(context& c) const {
 		return return_type(NULL);
 	}
 
+#if 0
 	// lookup the instantiation we just created
 	id->check_build(c);
 	// expect instance_reference on object_stack
 	count_ptr<const object> obj(c.pop_top_object_stack());
+#else
+	inst_ref_expr::return_type obj(id->check_reference(c));
+#endif
+
 	NEVER_NULL(obj);		// we just created it!
 	const count_ptr<const simple_instance_reference>
 		inst_ref(obj.is_a<const simple_instance_reference>());
@@ -815,7 +820,8 @@ instance_connection::check_build(context& c) const {
 // class connection_statement method definitions
 
 CONSTRUCTOR_INLINE
-connection_statement::connection_statement(const expr* l, const expr_list* a) :
+connection_statement::connection_statement(
+		const inst_ref_expr* l, const expr_list* a) :
 		actuals_base(a), lvalue(l) {
 	NEVER_NULL(lvalue);
 }
@@ -886,14 +892,19 @@ connection_statement::make_port_connection(
 never_ptr<const object>
 connection_statement::check_build(context& c) const {
 	STACKTRACE("connection_statement::check_build()");
+#if 0
 	lvalue->check_build(c);
 	// useless return value, expect instance_reference_base on object_stack
 	count_ptr<const object> o(c.pop_top_object_stack());
+#else
+	const inst_ref_expr::return_type o(lvalue->check_reference(c));
+#endif
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
 			"connection_statement at " << where(*lvalue) << endl;
 		THROW_EXIT;
 	}
+	// is not a complex aggregate instance reference
 	const count_ptr<const simple_instance_reference>
 		inst_ref(o.is_a<const simple_instance_reference>());
 	NEVER_NULL(inst_ref);

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.20 2005/05/10 04:51:06 fang Exp $
+	$Id: art_parser_base.cc,v 1.20.2.1 2005/05/13 20:04:11 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -641,6 +641,7 @@ concrete_type_ref::get_temp_spec(void) const {
 	return temp_spec;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Type-check a type reference, a definition with optional template
 	arguments.  The type reference is used for creating instantiations.  
@@ -669,9 +670,22 @@ concrete_type_ref::check_build(context& c) const {
 		return return_type(NULL);
 	}
 
+#define	USE_NEW_MAKE_ARGS		1
+
 	// check template arguments, if given
 	if (temp_spec) {
 		STACKTRACE("checking template arguments (temp_spec)");
+#if USE_NEW_MAKE_ARGS
+		// FUTURE: need to extend to handle generic template
+		// type-argument placeholders.  
+		expr_list::checked_exprs_type temp;
+		temp_spec->postorder_check_exprs(temp, c);
+		// copied from object_list::make_param_expr_list()
+		excl_ptr<dynamic_param_expr_list>
+			tpl(new dynamic_param_expr_list);
+		expr_list::checked_exprs_type::const_iterator i = temp.begin();
+		copy(temp.begin(), temp.end(), back_inserter(*tpl));
+#else
 		// FINISH ME!!!!!!!!!!
 		// using current_definition_reference
 		temp_spec->check_build(c);
@@ -703,6 +717,7 @@ concrete_type_ref::check_build(context& c) const {
 				<< endl;
 			THROW_EXIT;		// temporary
 		}
+#endif
 		const count_ptr<const fundamental_type_reference>
 			type_ref(d->make_fundamental_type_reference(tpl));
 		if (!type_ref) {

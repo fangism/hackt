@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.18.2.1 2005/05/12 04:45:29 fang Exp $
+	$Id: art_parser_formal.cc,v 1.18.2.2 2005/05/13 20:04:12 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -354,6 +354,7 @@ template_formal_id::check_build(context& c) const {
 	// type should already be set in the context
 	count_ptr<const param_expr> default_val;
 	if (dflt) {
+#if 0
 		dflt->check_build(c);
 		const count_ptr<object> o(c.pop_top_object_stack());
 		if (!o) {
@@ -364,6 +365,14 @@ template_formal_id::check_build(context& c) const {
 		const count_ptr<const param_expr>
 			p(o.is_a<const param_expr>());
 		NEVER_NULL(p);
+#else
+		count_ptr<const param_expr> p(dflt->check_expr(c));
+		if (!p) {
+			cerr << "ERROR in default value expression " <<
+				where(*dflt) << endl;
+			THROW_EXIT;
+		}
+#endif
 		default_val = p;
 	}
 	if (dim) {

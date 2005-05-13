@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.32.2.3 2005/05/13 06:44:37 fang Exp $
+ 	$Id: art_object_base.cc,v 1.32.2.4 2005/05/13 20:04:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_CC__
@@ -72,6 +72,7 @@ object_handle::dump(ostream& o) const {
 }
 
 //=============================================================================
+#if 1
 // class object_list method definitions
 
 object_list::object_list() : object(), parent_type() { }
@@ -96,6 +97,7 @@ object_list::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	First half should be similar to make_sparse_range_list.  
 	At the end build an index_list instead.  
@@ -280,6 +282,7 @@ object_list::make_param_expr_list(void) const {
 	}
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_NEW_CERTIFY_PORTS
@@ -316,6 +319,7 @@ object_list::make_port_connection(
 		return return_type(NULL);
 	}
 }
+#endif
 #endif
 
 //=============================================================================

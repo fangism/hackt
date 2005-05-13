@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.30 2005/05/10 04:51:09 fang Exp $
+ 	$Id: art_context.cc,v 1.30.2.1 2005/05/13 20:04:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -56,7 +56,9 @@ context::context(module& m) :
 		definition_stack(), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
+#if USE_OBJECT_STACK
 		object_stack(), 
+#endif
 		global_namespace(m.get_global_namespace()), 
 		master_instance_list(m.instance_management_list), 
 		strict_template_mode(true)
@@ -67,7 +69,9 @@ context::context(module& m) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
+#if USE_OBJECT_STACK
 	object_stack.push(count_ptr<object>(NULL));
+#endif
 	definition_stack.push(never_ptr<const definition_base>(NULL));
 	// initializing stacks else top() will seg-fault
 
@@ -920,6 +924,7 @@ context::add_port_formal(const token_identifier& id) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_OBJECT_STACK
 /**
 	Created objects are passed around on the context's object stack.  
 	For now we restrict the type to param_expr and instance_reference.  
@@ -963,6 +968,7 @@ context::pop_top_object_stack(void) {
 	object_stack.pop();
 	return ret;
 }
+#endif	// USE_OBJECT_STACK
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

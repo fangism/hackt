@@ -2,6 +2,23 @@
 
 2005-05-13	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-35-exprcheck-06:
+	  Pretty much done amputating:
+	  entity::object_list is practically eliminated, Gott sei dank!
+	  parser::context's object stack is gone.  
+	  parser::expr::check_build (and friends) has been phased out.  
+		(All conditionally commented out HAVE_EXPR_CHECK_BUILD.)
+	  No longer instantiating node_list<const expr>.
+	  Eliminated unused class parser::connection_argument_list.
+	  Updated calls to check_build to use check_expr and check_reference,
+		mostly affecting "AST/art_parser_instance.cc".
+	  Upgraded parser::connection_statement's lvalue to inst_ref-expr*.  
+	  It's all coming together... now just have to clean up
+		the mess of comments and obsolete code.  
+
+
+2005-05-13	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-35-exprcheck-05:
 	  Continued gradual elimination of expr::check_build (and friends).  
 	  Removed inst_ref_expr::check_build().

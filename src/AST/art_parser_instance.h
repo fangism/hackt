@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.12.2.3 2005/05/13 06:44:36 fang Exp $
+	$Id: art_parser_instance.h,v 1.12.2.4 2005/05/13 20:04:12 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -23,6 +23,7 @@ namespace entity {
 namespace parser {
 using util::good_bool;
 //=============================================================================
+#if 0
 /**
 	An expression list specialized for port connection arguments.
  */
@@ -42,6 +43,7 @@ using	expr_list::rightmost;
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class connection_argument_list
+#endif
 
 //=============================================================================
 /**
@@ -301,10 +303,10 @@ protected:
 		Instance reference to connect, may be indexed,
 		but must be scalar.  
 	 */
-	const excl_ptr<const expr>		lvalue;
+	const excl_ptr<const inst_ref_expr>		lvalue;
 //	const excl_ptr<const char_punctuation_type>		semi;
 public:
-	connection_statement(const expr* l, const expr_list* a);
+	connection_statement(const inst_ref_expr* l, const expr_list* a);
 
 	~connection_statement();
 

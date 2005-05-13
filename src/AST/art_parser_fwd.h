@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.6.2.2 2005/05/12 00:43:48 fang Exp $
+	$Id: art_parser_fwd.h,v 1.6.2.3 2005/05/13 20:04:12 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FWD_H__
@@ -108,7 +108,6 @@ struct template_formal_decl_list_pair;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_instance.h"
-class connection_argument_list;
 class data_type_ref_list;
 class instance_management;
 class alias_list;

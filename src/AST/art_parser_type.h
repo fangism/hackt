@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.5.2.1 2005/05/13 06:44:37 fang Exp $
+	$Id: art_parser_type.h,v 1.5.2.2 2005/05/13 20:04:13 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -109,6 +109,7 @@ protected:
 	/**
 		Optional template arguments.
 		TODO: Needs to be split into strict and relaxed arguments.  
+		(see "AST/art_parser_expr_list.h":template_argument_list_pair.)
 	 */
 	const excl_ptr<const expr_list>			temp_spec;
 public:

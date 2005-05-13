@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.24.2.2 2005/05/12 23:30:26 fang Exp $
+	$Id: art_parser_token.cc,v 1.24.2.3 2005/05/13 20:04:13 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -192,6 +192,7 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	Pushes a parameter expression (constant int) onto the 
 	context's expression stack.  
@@ -204,6 +205,7 @@ token_int::check_build(context& c) const {
 	c.push_object_stack(pe);
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 expr::return_type
 token_int::check_expr(context& c) const {
@@ -251,6 +253,7 @@ token_float::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	Need built-in float type first.  
  */
@@ -259,6 +262,7 @@ token_float::check_build(context& c) const {
 	cerr << "token_float::check_build(): not quite done yet!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 /**
 	Need built-in float type first.  
@@ -349,6 +353,7 @@ token_identifier::rightmost(void) const {
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 token_identifier::check_build(context& c) const {
 	STACKTRACE("token_identifier::check_build()");
@@ -370,6 +375,7 @@ token_identifier::check_build(context& c) const {
 	}
 	return inst;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -461,6 +467,7 @@ token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
 
+#if HAVE_EXPR_CHECK_BUILD
 never_ptr<const object>
 token_bool::check_build(context& c) const {
 	const count_ptr<param_expr>
@@ -468,6 +475,7 @@ token_bool::check_build(context& c) const {
 	c.push_object_stack(pe);
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 expr::return_type
 token_bool::check_expr(context& c) const {

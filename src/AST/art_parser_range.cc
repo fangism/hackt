@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.1.2.3 2005/05/13 06:44:37 fang Exp $
+	$Id: art_parser_range.cc,v 1.1.2.4 2005/05/13 20:04:12 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -78,6 +78,8 @@ range::rightmost(void) const {
         else            return lower->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	Both expressions of the range should be of type pint.  
 	No collective expressions, only single pints.  
@@ -166,7 +168,9 @@ range::check_build(context& c) const {
 	// not done yet
 	return o;
 }
+#endif	// HAVE_EXPR_CHECK_BUILD
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 range::return_type
 range::check_index(context& c) const {
 	const expr::return_type l(lower->check_expr(c));
@@ -242,7 +246,7 @@ range_list::range_list(const range* r) : parent_type(r) {
 range_list::~range_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	Note: limited to 4 dimensions.  
 
@@ -718,7 +722,7 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 							// also known as...
-template class node_list<const range>;			// range_list
+// template class node_list<const range>;			// range_list
 
 //=============================================================================
 };	// end namespace parser

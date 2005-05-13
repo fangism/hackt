@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.3.2.4 2005/05/13 06:44:36 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.3.2.5 2005/05/13 20:04:11 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -9,6 +9,8 @@
 
 #include "AST/art_parser_base.h"
 #include "util/STL/pair_fwd.h"
+
+#define	HAVE_EXPR_CHECK_BUILD		0
 
 namespace ART {
 //=============================================================================
@@ -57,12 +59,15 @@ virtual line_position
 
 virtual line_position
 	rightmost(void) const = 0;
+
+#if HAVE_EXPR_CHECK_BUILD
 /**
 	In all implementations, must create a param_expr object.
 	The created object will be pushed onto the context's stack.
  */
 virtual never_ptr<const object>
 	check_build(context& c) const = 0;
+#endif
 
 /**
 	Prototype for expression check method.  
