@@ -1,5 +1,25 @@
 "ChangeLog"
 
+2005-05-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35-exprcheck-05:
+	  Continued gradual elimination of expr::check_build (and friends).  
+	  Removed inst_ref_expr::check_build().
+	  Moved alias_list::postorder_check to expr_list, along with a few
+		other useful static functions.  
+	  New method for actuals_base::check_actuals, replacing check_build.
+	  Added replacement methods for instnace_connection, and 
+		connection_statement, calling new check_actuals.  
+	  entity::definition has new prototype for certify_port_actuals, 
+		process_definition::... has updated definition.  
+	  Ported object_list::make_port_connection to 
+		connection_statement::make_port_connection (static).
+	  parser::actuals_base no longer derived from instance_management.  
+	  parser::connection_statement now derived from instance_management.  
+	  Partially cleaned up some obsolete code, but there'll be more
+		deletions in the next revisions, I promise.  
+
+
 2005-05-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35-exprcheck-04:

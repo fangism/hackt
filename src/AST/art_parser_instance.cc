@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.23.2.2 2005/05/12 23:30:26 fang Exp $
+	$Id: art_parser_instance.cc,v 1.23.2.3 2005/05/13 06:44:36 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -85,6 +85,8 @@ using std::bind2nd_argval;
 using std::accumulate;
 using std::_Select1st;
 using std::_Select2nd;
+using std::find;
+using entity::instance_reference_connection;
 
 //=============================================================================
 // class instance_management method definitions
@@ -129,33 +131,11 @@ alias_list::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Just collects the result of type-checking of items in list.  
-	\param temp the result list.
-	\param c the context.
- */
-void
-alias_list::postorder_check(check_type& temp, context& c) const {
-	STACKTRACE("alias_list::postorder_check()");
-	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
-#if 0
-	std::transform(i, e, back_inserter(temp), 
-	unary_compose(
-		bind2nd_argval(mem_fun_ref(&expr::check_generic), c),
-		dereference<value_type>()
-	)
-	);
-#else
-	// in plain English, the above is equivalent to:
-	for ( ; i!=e; i++) {
-		temp.push_back((*i)->check_generic(c));
-	}
-#endif
-}
+	Converts a list into a param_expression_assignment object.
+	This is non-const because assignment requires that we 
+	initialize parameter instance references, which requires 
+	modification.
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Code from here is ripped from the old
 	object_list::make_param_assignment().
 	\param temp result of postorder_check of items in list, 
@@ -213,7 +193,14 @@ alias_list::make_param_assignment(const checked_exprs_type& temp) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates an alias connection object, given a list of instance
+	references.  Performs type-checking.
 
+	TODO: once we separate objects and stacks into different types,
+	then we can eliminate this generic object list altogether.
+	(SOON...)
+ */
 excl_ptr<const entity::aliases_connection_base>
 alias_list::make_alias_connection(const checked_refs_type& temp) {
 	typedef excl_ptr<const aliases_connection_base> const_return_type;
@@ -354,19 +341,23 @@ if (size() > 0) {		// non-empty
 
 	return ret;
 #else
-	check_type temp;
-	postorder_check(temp, c);
-	const check_type::const_iterator first_obj = temp.begin();
-	const check_type::const_iterator end_obj = temp.end();
+	checked_generic_type temp;
+	postorder_check_generic(temp, c);
+	const checked_generic_type::const_iterator first_obj = temp.begin();
+	const checked_generic_type::const_iterator end_obj = temp.end();
 	if (!first_obj->first && !first_obj->second) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
 		THROW_EXIT;
 	} else if (first_obj->first) {
 		checked_exprs_type checked_exprs;
+#if 0
 		transform(first_obj, end_obj, back_inserter(checked_exprs), 
-			_Select1st<check_type::value_type>()
+			_Select1st<checked_generic_type::value_type>()
 		);
+#else
+		expr_list::select_checked_exprs(temp, checked_exprs);
+#endif
 		
 		// then expect subsequent items to be the same
 		// or already param_expr in the case of some constants.
@@ -393,9 +384,14 @@ if (size() > 0) {		// non-empty
 		}
 	} else if (first_obj->second) {
 		checked_refs_type checked_refs;
+#if 0
 		transform(first_obj, end_obj, back_inserter(checked_refs), 
-			_Select2nd<check_type::value_type>()
+			_Select2nd<checked_generic_type::value_type>()
 		);
+#else
+		expr_list::select_checked_refs(temp, checked_refs);
+#endif
+
 		excl_ptr<const aliases_connection_base>
 			connection = make_alias_connection(checked_refs);
 		// also type-checks connections
@@ -463,7 +459,8 @@ connection_argument_list::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 actuals_base::actuals_base(const expr_list* a) : 
-		instance_management(), actuals(a) {
+//		instance_management(), 
+		actuals(a) {
 	NEVER_NULL(actuals);
 }
 
@@ -483,12 +480,46 @@ actuals_base::rightmost(void) const {
 
 /**
 	Just a wrapped call to expr_list::check_build.
+	Remember: result type is allowed to be NULL, 
+		if no expression was passed in its position.  
  */
+#if USE_NEW_CHECK_ACTUALS
+good_bool
+actuals_base::check_actuals(expr_list::checked_refs_type& ret,
+		context& c) const {
+	STACKTRACE("actuals_base::check_actuals()");
+	expr_list::checked_generic_type temp;
+	actuals->postorder_check_generic(temp, c);
+	expr_list::select_checked_refs(temp, ret);
+#if 0
+	expr_list::checked_refs_type::const_iterator
+		null_iter = find(ret.begin(), ret.end(), 
+			expr_list::checked_refs_type::value_type(NULL));
+	return good_bool(null_iter == ret.end());
+#else
+	expr_list::checked_generic_type::const_iterator
+		c_iter = temp.begin();
+	expr_list::const_iterator e_iter = actuals->begin();
+	const expr_list::const_iterator e_end = actuals->end();
+	for ( ; e_iter != e_end; e_iter++, c_iter++) {
+		if (*e_iter) {
+			if (!c_iter->first && !c_iter->second)
+				return good_bool(false);
+			// both results are NULL => check falied
+		}
+		// else expression is null; skip it
+	}
+	// all relevant checks passed
+	return good_bool(true);
+#endif
+}
+#else
 never_ptr<const object>
-actuals_base::check_build(context& c) const {
-	STACKTRACE("actuals_base::check_build()");
+actuals_base::check_actuals(context& c) const {
+	STACKTRACE("actuals_base::check_actuals()");
 	return actuals->check_build(c);
 }
+#endif
 
 //=============================================================================
 // class instance_base method definitions
@@ -705,6 +736,7 @@ instance_connection::rightmost(void) const {
 	else return actuals->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 instance_connection::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
@@ -727,7 +759,31 @@ instance_connection::check_build(context& c) const {
 		inst_ref(obj.is_a<const simple_instance_reference>());
 	NEVER_NULL(inst_ref);
 
-	actuals_base::check_build(c);
+#if USE_NEW_CHECK_ACTUALS
+	expr_list::checked_refs_type temp;
+	if (actuals_base::check_actuals(temp, c).good) {
+
+	excl_ptr<const port_connection>
+		port_con = connection_statement::make_port_connection(
+			temp, inst_ref);
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where(*this) << endl;
+		THROW_EXIT;
+	} else {
+		excl_ptr<const instance_reference_connection>
+			ircp = port_con.as_a_xfer<const instance_reference_connection>();
+		c.add_connection(ircp);
+		INVARIANT(!ircp);
+		INVARIANT(!port_con.owned());	// explicit transfer
+	}
+	} else {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		THROW_EXIT;
+	}
+#else
+	actuals_base::check_actuals(c);
 	obj = c.pop_top_object_stack();
 	if (!obj) {
 		cerr << "ERROR in object_list produced at "
@@ -751,6 +807,7 @@ instance_connection::check_build(context& c) const {
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
 	}
+#endif
 	return return_type(NULL);
 }
 
@@ -779,6 +836,50 @@ connection_statement::rightmost(void) const {
 	return actuals->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_NEW_CHECK_ACTUALS
+/**
+	Creates a port connection object, given an invoking instance
+	reference and a list of port actuals (instance references).
+	Copied and ripped from the old object_list::make_port_connection().  
+
+	\param temp the list of checked references.
+	\param ir the invoking instance to which port should connect.
+ */
+excl_ptr<const entity::port_connection>
+connection_statement::make_port_connection(
+		const expr_list::checked_refs_type& temp,
+		const count_ptr<const entity::simple_instance_reference>& ir) {
+	typedef	excl_ptr<const port_connection>		return_type;
+	typedef	expr_list::checked_refs_type		ref_list_type;
+	excl_ptr<port_connection>
+		ret(new entity::port_connection(ir));
+	never_ptr<const definition_base>
+		base_def(ir->get_base_def());
+
+	const size_t ir_dim = ir->dimensions();
+	if (ir_dim) {
+		cerr << "Instance reference port connection must be scalar, "
+			"but got a " << ir_dim << "-dim reference!" << endl;
+		return return_type(NULL);
+	} else if (base_def->certify_port_actuals(temp).good) {
+		ref_list_type::const_iterator i = temp.begin();
+		const ref_list_type::const_iterator e = temp.end();
+		for ( ; i!=e; i++) {
+			count_ptr<const instance_reference_base>
+				ir(i->is_a<const instance_reference_base>());
+			ret->append_instance_reference(ir);
+		}
+		// transfers ownership
+		return return_type(ret);
+	} else {
+		cerr << "At least one error in port connection.  " << endl;
+		return return_type(NULL);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return NULL always, rather useless.  
  */
@@ -797,7 +898,30 @@ connection_statement::check_build(context& c) const {
 		inst_ref(o.is_a<const simple_instance_reference>());
 	NEVER_NULL(inst_ref);
 
-	actuals_base::check_build(c);
+#if USE_NEW_CHECK_ACTUALS
+	expr_list::checked_refs_type temp;
+	if (actuals_base::check_actuals(temp, c).good) {
+	// useless return value, expect an object_list on object_stack
+	excl_ptr<const port_connection>
+		port_con = make_port_connection(temp, inst_ref);
+	if (!port_con) {
+		cerr << "HALT: at least one error in port connection list.  "
+			<< where(*this) << endl;
+		THROW_EXIT;
+	} else {
+		excl_ptr<const instance_reference_connection>
+			ircp = port_con.as_a_xfer<const instance_reference_connection>();
+		c.add_connection(ircp);
+		INVARIANT(!ircp);
+		INVARIANT(!port_con.owned());	// explicit transfer
+	}
+	} else {
+		cerr << "ERROR in object_list produced at "
+			<< where(*actuals) << endl;
+		THROW_EXIT;
+	}
+#else
+	actuals_base::check_actuals(c);
 	// useless return value, expect an object_list on object_stack
 	o = c.pop_top_object_stack();
 	if (!o) {
@@ -822,6 +946,7 @@ connection_statement::check_build(context& c) const {
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
 	}
+#endif
 	return never_ptr<const object>(NULL);
 }
 

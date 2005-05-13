@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.20.2.4 2005/05/12 23:30:25 fang Exp $
+	$Id: art_parser_expr.cc,v 1.20.2.5 2005/05/13 06:44:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -42,7 +42,7 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::parser::expr, "(expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
+// SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
 SPECIALIZE_UTIL_WHAT(ART::parser::qualified_id, "(qualified-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::id_expr, "(id-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::prefix_expr, "(prefix-expr)")
@@ -62,6 +62,9 @@ using namespace entity;
 
 namespace parser {
 #include "util/using_ostream.h"
+using std::transform;
+using std::_Select1st;
+using std::_Select2nd;
 
 //=============================================================================
 // class expr method definitions
@@ -69,13 +72,14 @@ namespace parser {
 #if 0
 /// Empty constructor
 CONSTRUCTOR_INLINE
-expr::expr() : node() { }
+expr::expr() { }
 
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
 expr::~expr() { }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	All non-inst-ref expressions will dynamically cast
 	the result of check_expr to an instance reference.  
@@ -94,6 +98,16 @@ expr::check_generic(context& c) const {
 //=============================================================================
 // class inst_ref_expr method definitions
 
+#if 0
+never_ptr<const object>
+inst_ref_expr::check_build(context& c) const {
+	cerr << "NEVER supposed to call inst_ref_expr::check_build()!" << endl;
+	DIE;
+	return never_ptr<const object>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	All inst-ref expressions will dynamically cast
 	the result of check_reference to an parameter expression.  
@@ -142,9 +156,15 @@ expr_list::expr_list(const expr* e) : parent_type(e) { }
 
 expr_list::~expr_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(expr_list)
+#endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
+	PHASE OUT.
 	Type-checker checks each individual expression and 
 	returns a collection of built object expressions.  
 	NULL members will be represented with NULL object 
@@ -169,6 +189,86 @@ expr_list::check_build(context& c) const {
 	}
 	c.push_object_stack(o);
 	return never_ptr<const object>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just collects the result of type-checking of items in list.
+	\param temp the type-checked result list.
+	\param c the context.
+ */
+void
+expr_list::postorder_check_generic(checked_generic_type& temp,
+		context& c) const {
+	STACKTRACE("expr_list::postorder_check_generic()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+#if 0
+	std::transform(i, e, back_inserter(temp),
+	unary_compose(
+		bind2nd_argval(mem_fun_ref(&expr::check_generic), c),
+		dereference<value_type>()
+	)
+	);
+#else
+	// in plain English, the above is equivalent to
+	// (without the ?: conditional):
+	for ( ; i!=e; i++) {
+		temp.push_back((*i) ? (*i)->check_generic(c) :
+			checked_generic_type::value_type());
+		// else pushes a pair of NULL pointers
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just collects the result of type-checking of items in list.
+	\param temp the type-checked result list.
+	\param c the context.
+ */
+void
+expr_list::postorder_check_exprs(checked_exprs_type& temp,
+		context& c) const {
+	STACKTRACE("expr_list::postorder_check_exprs()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+#if 0
+	std::transform(i, e, back_inserter(temp),
+	unary_compose(
+		bind2nd_argval(mem_fun_ref(&expr::check_expr), c),
+		dereference<value_type>()
+	)
+	);
+#else
+	// in plain English, the above is equivalent to:
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_expr(c));
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_list::select_checked_exprs(const checked_generic_type& src, 
+		checked_exprs_type& dst) {
+	INVARIANT(dst.empty());
+	transform(src.begin(), src.end(), back_inserter(dst),
+		_Select1st<checked_generic_type::value_type>()
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_list::select_checked_refs(const checked_generic_type& src, 
+		checked_refs_type& dst) {
+	INVARIANT(dst.empty());
+	transform(src.begin(), src.end(), back_inserter(dst),
+		_Select2nd<checked_generic_type::value_type>()
+	);
 }
 
 //=============================================================================
@@ -376,6 +476,7 @@ id_expr::is_absolute(void) const {
 	FIX ME: should return instance_reference!, not instance!
 	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
+#if 1
 never_ptr<const object>
 id_expr::check_build(context& c) const {
 	const never_ptr<const object>
@@ -410,6 +511,7 @@ id_expr::check_build(context& c) const {
 //	return c.lookup_instance(*qid);
 // also accomplishes same thing?
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inst_ref_expr::return_type
@@ -702,6 +804,7 @@ member_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
 	Type-check of member reference.  
 	Current restriction: left expression must be scalar 0-dimensional.
@@ -773,6 +876,7 @@ member_expr::check_build(context& c) const {
 
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -888,6 +992,7 @@ index_expr::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
 	TO DO: FINISH ME
 	Check index expression first, must be an integer type.  
@@ -953,6 +1058,7 @@ index_expr::check_build(context& c) const {
 #endif
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

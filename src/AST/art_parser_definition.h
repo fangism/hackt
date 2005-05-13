@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.12 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_definition.h,v 1.12.2.1 2005/05/13 06:44:35 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -424,7 +424,9 @@ public:
 };	// end class user_chan_type_def
 
 //=============================================================================
-
+/**
+	Typedef statement.  
+ */
 class typedef_alias : public def_body_item, public root_item {
 protected:
 	const excl_ptr<const template_formal_decl_list_pair>	temp_spec;

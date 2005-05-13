@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.12.2.3 2005/05/12 23:30:26 fang Exp $
+	$Id: art_parser_expr.h,v 1.12.2.4 2005/05/13 06:44:36 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -55,8 +55,10 @@ public:
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
 #if 0
 	CHECK_EXPR_PROTO;
@@ -167,8 +169,10 @@ public:
 	line_position
 	rightmost(void) const;
 
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
 #if 0
 	CHECK_EXPR_PROTO;
@@ -199,8 +203,10 @@ public:
 	line_position
 	rightmost(void) const;
 
+#if 1
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
 #if 0
 	CHECK_EXPR_PROTO;

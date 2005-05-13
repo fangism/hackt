@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.5 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_type.h,v 1.5.2.1 2005/05/13 06:44:37 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -95,6 +95,12 @@ virtual	never_ptr<const object>
 /**
 	Reference to a concrete type, i.e. definition with its
 	template parameters specified (if applicable).
+
+	NOTE (2005-05-12):
+	Eventually this may be a valid template argument once we support
+	template type arguments in addition to parameters.  
+	Plan: derive this from expr, introduce new virtual functions
+	to handle cases where subtypes are expected.  
  */
 class concrete_type_ref {
 protected:

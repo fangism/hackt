@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.3.2.3 2005/05/12 23:30:26 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.3.2.4 2005/05/13 06:44:36 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -121,6 +121,13 @@ virtual CHECK_REFERENCE_PROTO = 0;
 
 	// NOTE: this is non-virtual
 	CHECK_GENERIC_PROTO;
+
+#if 0
+private:
+	// never use this anymore
+	never_ptr<const object>
+	check_build(context& c) const;
+#endif
 
 };      // end class inst_ref_expr
 

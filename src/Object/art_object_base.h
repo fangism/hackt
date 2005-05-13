@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.27.2.2 2005/05/12 23:30:27 fang Exp $
+	$Id: art_object_base.h,v 1.27.2.3 2005/05/13 06:44:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_H__
@@ -136,6 +136,8 @@ public:
 //=============================================================================
 /**
 	List of objects.
+	DEPRECATED: THIS WILL BE PHASED OUT (2005-05-12)
+
 	Will potentially want to make the following sub-typed lists:
 	(some cases will have special implicit conversions)
 	list<pint_range> for array declarations/instantiations,
@@ -164,29 +166,11 @@ public:
 	dump(ostream& o) const;
 // using parent's list interface
 
-	// could use excl_ptr, but then would need to release to count_ptr...
-#if 0
-	count_ptr<range_expr_list>
-	make_formal_dense_range_list(void) const;
-
-	count_ptr<range_expr_list>
-	make_sparse_range_list(void) const;
-#endif
-
 	excl_ptr<index_list>
 	make_index_list(void) const;
 
 	excl_ptr<dynamic_param_expr_list>
 	make_param_expr_list(void) const;
-
-#if 0
-	// not const because may modify self
-	excl_ptr<param_expression_assignment>
-	make_param_assignment(void);
-
-	excl_ptr<const aliases_connection_base>
-	make_alias_connection(void) const;
-#endif
 
 	excl_ptr<const port_connection>
 	make_port_connection(

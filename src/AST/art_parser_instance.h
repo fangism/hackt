@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.12.2.2 2005/05/12 23:30:26 fang Exp $
+	$Id: art_parser_instance.h,v 1.12.2.3 2005/05/13 06:44:36 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -11,15 +11,17 @@
 #include "AST/art_parser_root.h"
 #include "AST/art_parser_definition_item.h"
 #include "util/STL/vector_fwd.h"
-// #include "util/boolean_types.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
 	class param_expression_assignment;
 	class aliases_connection_base;
+	class port_connection;
+	class simple_instance_reference;
 }
 namespace parser {
-// using util::good_bool;
+using util::good_bool;
 //=============================================================================
 /**
 	An expression list specialized for port connection arguments.
@@ -64,7 +66,11 @@ virtual	line_position
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
+#if 0
 typedef	node_list<const expr>		alias_list_base;
+#else
+typedef	expr_list			alias_list_base;
+#endif
 
 /**
 	A list of lvalue expressions aliased/connected together.  
@@ -96,13 +102,9 @@ public:
 	check_build(context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(expr::generic_return_type)	check_type;
-	typedef	DEFAULT_VECTOR(expr::return_type)	checked_exprs_type;
-	typedef	DEFAULT_VECTOR(inst_ref_return_type)
-							checked_refs_type;
-
-	void
-	postorder_check(check_type&, context&) const;
+	typedef	parent_type::checked_generic_type	checked_generic_type;
+	typedef	parent_type::checked_exprs_type		checked_exprs_type;
+	typedef	parent_type::checked_refs_type		checked_refs_type;
 
 	static
 	excl_ptr<const entity::param_expression_assignment>
@@ -114,11 +116,16 @@ private:
 };	// end class alias_list
 
 //=============================================================================
+#define	USE_NEW_CHECK_ACTUALS		1
 /**
 	Abstract base class for connection statements of instantiations.  
 	Contains actuals list of arguments, just wrapped around expr_list.  
  */
-class actuals_base : virtual public instance_management {
+class actuals_base
+#if 0
+	: virtual public instance_management
+#endif
+	{
 protected:
 	const excl_ptr<const expr_list>		actuals;
 public:
@@ -135,8 +142,13 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+#if USE_NEW_CHECK_ACTUALS
+	good_bool
+	check_actuals(expr_list::checked_refs_type&, context& c) const;
+#else
+	never_ptr<const object>
+	check_actuals(context& c) const;
+#endif
 };	// end class actuals_base
 
 //=============================================================================
@@ -277,7 +289,12 @@ public:
 	Unlike instance_connection, this doesn't create any new 
 	instantiations.  
  */
-class connection_statement : public actuals_base {
+class connection_statement :
+#if 1
+		public instance_management, 
+#endif
+		public actuals_base
+{
 protected:
 //	const excl_ptr<const expr_list>		actuals;	// inherited
 	/**
@@ -302,6 +319,12 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	static
+	excl_ptr<const entity::port_connection>
+	make_port_connection(const expr_list::checked_refs_type&, 
+                const count_ptr<const entity::simple_instance_reference>& ir);
+
 };	// end class connection_statement
 
 //-----------------------------------------------------------------------------

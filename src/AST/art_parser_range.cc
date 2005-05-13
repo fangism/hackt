@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.1.2.2 2005/05/12 04:45:30 fang Exp $
+	$Id: art_parser_range.cc,v 1.1.2.3 2005/05/13 06:44:37 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -241,6 +241,7 @@ range_list::range_list(const range* r) : parent_type(r) {
 
 range_list::~range_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 1
 /**
 	Note: limited to 4 dimensions.  
@@ -306,6 +307,7 @@ range_list::check_build(context& c) const {
 }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 range_list::postorder_check(check_type& temp, context& c) const {
 	const_iterator i = begin();
@@ -344,6 +346,7 @@ range_list::postorder_check(check_type& temp, context& c) const {
 	} else	return good_bool(true);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return index_expr_list.
  */
@@ -383,8 +386,17 @@ range_list::check_indices(context& c) const {
 	else return dyn_ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\return range_expr_list.
+	Creates a type-checked range-expression-list.
+	No restriction on this, may be single integer or pint_range.
+	Will automatically convert to ranges.
+	Walks list twice, once to see what the best classification is,
+	again to copy-create.
+	Intended for use in resolving dense array dimensions
+	of formal parameters and formal ports.
+	Cannot possibly be loop-dependent or conditional!
+	\return newly allocated range_expr_list.
  */
 range_list::checked_ranges_type
 range_list::check_ranges(context& c) const {
@@ -554,44 +566,7 @@ dense_range_list::dense_range_list(const expr* r) : parent_type(r) {
 dense_range_list::~dense_range_list() {
 }
 
-#if 0
-/**
-	Dense range lists are reserved for formal parameters and ports, 
-	which must be dense arrays, cannot be sparse.  
-	Limited to 4 dimensions.  
- */
-never_ptr<const object>
-dense_range_list::check_build(context& c) const {
-	parent_type::check_build(c);
-	const count_ptr<object_list> ol(new object_list);
-	size_t i = 0;
-	for ( ; i<size(); i++) {
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "Problem with dimension " << i+1 <<
-				" of dense_range_list between "
-				<< where(*this) << endl;
-			THROW_EXIT;		// terminate?
-		} else if (!o.is_a<pint_expr>()) {
-			// make sure that each item is an integer expr
-			cerr << "Expression in dimension " << i+1 <<
-				" of dense_range_list is not integer!  "
-				<< where(*this) << endl;
-			THROW_EXIT;
-		}
-		ol->push_front(o);
-	}
-	if (size() > 4) {		// define constant somewhere
-		cerr << "ERROR!  Exceeded dimension limit of 4.  "
-			<< where(*this) << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
-	} else {
-		c.push_object_stack(ol->make_formal_dense_range_list());
-	}
-	return never_ptr<const object>(NULL);
-}
-#endif
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Does basic checking of leaf nodes first.  
 	\param temp sequence of intermediate type check results, 
@@ -633,6 +608,19 @@ dense_range_list::postorder_check(check_type& temp, context& c) const {
 	return good_bool(true);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a type-checked range_expr_list.  
+	The restriction with this version is that each item must
+	be a single pint_expr, not a range.  
+	Walks list twice, once to see what the best classification is, 
+	again to copy-create.  
+	Intended for use in resolving dense array dimensions
+	of formal parameters and formal ports.  
+	Cannot possibly be loop-dependent or conditional!
+	\param c expression context.  
+	\return pointer to newly allocated range expression list.  
+ */
 dense_range_list::return_type
 dense_range_list::check_formal_dense_ranges(context& c) const {
 	STACKTRACE("dense_range_list::check_formal_dense_ranges()");
