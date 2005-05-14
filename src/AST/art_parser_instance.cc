@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.24 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_instance.cc,v 1.24.2.1 2005/05/14 22:38:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -256,6 +256,7 @@ if (size() > 0) {		// non-empty
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
 	checked_generic_type temp;
+//	check_list(temp, &expr::check_generic, c);
 	postorder_check_generic(temp, c);
 	const checked_generic_type::const_iterator first_obj = temp.begin();
 	const checked_generic_type::const_iterator end_obj = temp.end();

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.21 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_base.cc,v 1.21.2.1 2005/05/14 22:38:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -148,14 +148,14 @@ type_id::rightmost(void) const {
 	Use context object to lookup the actual type.  
 	\return pointer to type reference, else NULL if failure.  
  */
-never_ptr<const object>
-type_id::check_build(context& c) const {
+type_base::return_type
+type_id::check_definition(context& c) const {
 	STACKTRACE("type_id::check_build()");
 	const never_ptr<const definition_base>
 		d(c.lookup_definition(*base));
 	if (!d) {
 //		cerr << "type_id::check_build(context&) : ERROR!" << endl;
-		return never_ptr<const object>(NULL);
+		return type_base::return_type(NULL);
 	}
 	// set type definition reference
 	return c.push_current_definition_reference(*d);
@@ -210,11 +210,11 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 	return this;
 }
 
-never_ptr<const object>
-chan_type::check_build(context& c) const {
+type_base::return_type
+chan_type::check_definition(context& c) const {
 	STACKTRACE("chan_type::check_build()");
 	cerr << "chan_type::check_build(): FINISH ME!";
-	return never_ptr<const object>(NULL);
+	return type_base::return_type(NULL);
 }
 
 //=============================================================================
@@ -645,12 +645,15 @@ concrete_type_ref::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("concrete_type_ref::check_build()");
 
-	never_ptr<const object> o;
-
 	// sets context's current definition
-	o = base->check_build(c);
+#if USE_NEW_TYPE_BASE_CHECK
+	const never_ptr<const definition_base>
+		d(base->check_definition(c));
+#else
+	const never_ptr<const object> o(base->check_build(c));
 	const never_ptr<const definition_base>
 		d(o.is_a<const definition_base>());
+#endif
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "

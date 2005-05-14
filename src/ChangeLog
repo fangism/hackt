@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-05-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-01:
+	  This branch is for early development of PRS management.  
+	  The initial revisions do some clean-up with a few parsers'
+		check_build routines; they are still functionally ugly.  
+		Beginning to make check routines consistent using more
+		CHECK_PROTO macros to keep things straight (e.g. type_base).  
+	  node_list has a new check_list template method
+		that allows one to specify which element's member function
+		to invoke recursively.  We intend to eliminate all generic
+		calls to check_build accordingly.  
+
+
 2005-05-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35-exprcheck-07:

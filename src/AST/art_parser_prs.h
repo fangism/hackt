@@ -1,12 +1,13 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.12 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_prs.h,v 1.12.2.1 2005/05/14 22:38:36 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
 #define	__AST_ART_PARSER_PRS_H__
 
+#include "AST/art_parser_base.h"
 #include "AST/art_parser_prs_fwd.h"
 #include "AST/art_parser_expr_base.h"
 #include "AST/art_parser_definition_item.h"
@@ -43,7 +44,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
-#if 1
+#if 0
 virtual	never_ptr<const object>
 	check_build(context& c) const = 0;
 #endif
@@ -74,7 +75,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
+#if 0
 	never_ptr<const object>
 	check_build(context& c) const;
 #endif
@@ -107,7 +108,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
+#if 0
 	never_ptr<const object>
 	check_build(context& c) const;
 #endif
@@ -134,8 +135,8 @@ public:
 	rightmost(void) const;
 
 #if 1
-	never_ptr<const object>
-	check_build(context& ) const;
+	// needs the return-type of language-body
+	ROOT_CHECK_PROTO;
 #endif
 };	// end class body
 
@@ -170,8 +171,10 @@ public:
 	line_position
 	rightmost(void) const;
 
+#if 0
 	never_ptr<const object>
 	check_build(context& c) const;
+#endif
 
 	CHECK_EXPR_PROTO;
 };	// end class op_loop

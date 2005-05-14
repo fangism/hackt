@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.1 2005/05/14 22:38:36 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -74,11 +74,13 @@ rule::rightmost(void) const {
 	return dir->rightmost();
 }
 
+#if 0
 never_ptr<const object>
 rule::check_build(context& c) const {
 	cerr << "Fang, finish PRS::rule::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 //=============================================================================
 // class loop method definitions
@@ -109,12 +111,13 @@ loop::rightmost(void) const {
 	else		return rules->rightmost();
 }
 
+#if 0
 never_ptr<const object>
 loop::check_build(context& c) const {
 	cerr << "Fang, finish PRS::loop::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
-
+#endif
 
 //=============================================================================
 // class body method definitions
@@ -180,12 +183,14 @@ op_loop::rightmost(void) const {
 	else		return ex->rightmost();
 }
 
+#if 0
 /** temporary: FINISH ME */
 never_ptr<const object>
 op_loop::check_build(context& c) const {
 	cerr << "Fang, finish op_loop::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#endif
 
 /** temporary: FINISH ME */
 expr::return_type
@@ -197,7 +202,21 @@ op_loop::check_expr(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-template class node_list<const body_item>;		// PRS::rule_list
+// template class node_list<const body_item>;		// PRS::rule_list
+
+#if 1
+// This is temporary, until node_list::check_build is overhauled.  
+template
+node_list<const body_item>::node_list(const PRS::body_item*);
+
+template
+ostream&
+node_list<const body_item>::what(ostream&) const;
+
+template
+line_position
+node_list<const body_item>::leftmost(void) const;
+#endif
 
 //=============================================================================
 }	// end namespace PRS

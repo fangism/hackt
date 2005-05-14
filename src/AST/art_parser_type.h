@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.6 2005/05/13 21:24:29 fang Exp $
+	$Id: art_parser_type.h,v 1.6.2.1 2005/05/14 22:38:37 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -38,8 +38,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+virtual	TYPE_BASE_CHECK_PROTO;
 
 	friend
 	ostream&
@@ -63,7 +62,10 @@ public:
 };
 
 //-----------------------------------------------------------------------------
-/// full base channel type, including base type list
+/**
+	Full base channel type, including base type list.
+	So far, nothing derives from this...
+ */
 class chan_type : public type_base {
 protected:
 	const excl_ptr<const generic_keyword_type>	chan;	///< keyword "channel"
@@ -87,8 +89,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+virtual	TYPE_BASE_CHECK_PROTO;
 };	// end class chan_type
 
 //=============================================================================

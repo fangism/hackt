@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.20 2005/05/10 04:51:06 fang Exp $
+	$Id: art_parser_definition.cc,v 1.20.4.1 2005/05/14 22:38:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -696,10 +696,15 @@ typedef_alias::check_build(context& c) const {
 	// does base have any template params, even an empty list?
 	const never_ptr<const type_base>
 		basedef(base->get_base_def());
+#if USE_NEW_TYPE_BASE_CHECK
+	const never_ptr<const definition_base>
+		d(basedef->check_definition(c));
+#else
 	const never_ptr<const object>
 		o(basedef->check_build(c));
 	const never_ptr<const definition_base>
 		d(o.is_a<const definition_base>());
+#endif
 	if (!d) {
 		cerr << "typedef_alias: bad definition reference!  "
 			"ERROR!  " << where(*basedef) << endl;

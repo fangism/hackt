@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.2 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_range.cc,v 1.2.2.1 2005/05/14 22:38:36 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -201,6 +201,12 @@ range_list::checked_indices_type
 range_list::check_indices(context& c) const {
 	typedef	checked_indices_type	return_type;
 	check_type temp;
+#if 0
+	// causes apple-gcc-3.3 ICE :(
+	list_checker<check_type, parent_type, context&>
+		lc(&range::check_index, c);
+	lc(temp, *this);
+#endif
 	if (!postorder_check(temp, c).good) {
 		// THROW_EXIT;
 		return return_type(NULL);

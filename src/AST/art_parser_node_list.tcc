@@ -2,13 +2,15 @@
 	\file "AST/art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.7 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.7.4.1 2005/05/14 22:38:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_NODE_LIST_TCC__
 #define	__AST_ART_PARSER_NODE_LIST_TCC__
 
 #include <ostream>
+#include <algorithm>
+#include <functional>
 
 #include "util/STL/list.tcc"
 
@@ -20,6 +22,7 @@
 #include "util/what.tcc"
 #include "util/stacktrace.h"
 #include "util/type_traits.h"
+#include "util/binders.h"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!
@@ -55,6 +58,11 @@ namespace ART {
 namespace parser {
 using util::what;
 USING_STACKTRACE
+using std::transform;
+using std::bind2nd;
+using std::bind2nd_argval;
+using std::mem_fun;
+using std::mem_fun_ref;
 
 //-----------------------------------------------------------------------------
 // default definitions for syntax
@@ -94,13 +102,9 @@ ostream&
 node_list<T>::what(ostream& o) const {
 	// print first item to get type
 	const_iterator i = this->begin();
-#if 0
-	o << "(node_list): ";
-#else
 	o << "list<" <<
 		util::what<typename util::remove_const<T>::type>::name() <<
 		">: ";
-#endif
 	if (i == this->end()) {
 //		o << "<empty> ";
 	} else if (*i) { 
@@ -111,30 +115,6 @@ node_list<T>::what(ostream& o) const {
 	}
 	return o << "...";
 }
-
-//-----------------------------------------------------------------------------
-#if 0
-NODE_LIST_TEMPLATE_SIGNATURE
-void
-node_list<T>::push_back(const T* p) {
-	nodes.push_back(value_type(p));
-}
-
-//-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SIGNATURE
-void
-node_list<T>::push_front(const T* p) {
-	nodes.push_front(value_type(p));
-}
-
-//-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SIGNATURE
-void
-node_list<T>::wrap(const node_position* b, const node_position* e) {
-	open = excl_ptr<const node_position>(b);
-	close = excl_ptr<const node_position>(e);
-}
-#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -176,6 +156,46 @@ node_list<T>::check_build(context& c) const {
 
 //-----------------------------------------------------------------------------
 /**
+	Template check method, where each element is required to be 
+	non-NULL prior to checking.  
+	Results are accumulated in a sequence, passed in by reference.  
+ */
+NODE_LIST_TEMPLATE_SIGNATURE
+template <class R, class A>
+void
+node_list<T>::check_list(R& r, 
+		typename R::value_type (T::*f)(A&) const, A& a) const {
+	INVARIANT(r.empty());
+	const_iterator i = this->begin();
+	const const_iterator e = this->end();
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+		r.push_back(mem_fun_ref(f)(**i, a));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Another check method, but input elements are allowed to 
+	be NULL, in which case, null checked values are appended
+	to the result list.  
+ */
+NODE_LIST_TEMPLATE_SIGNATURE
+template <class R, class A>
+void
+node_list<T>::check_list_optional(R& r, 
+		typename R::value_type (T::*f)(A&) const, A& a) const {
+	INVARIANT(r.empty());
+	const_iterator i = this->begin();
+	const const_iterator e = this->end();
+	for ( ; i!=e; i++) {
+		r.push_back((*i) ? mem_fun_ref(f)(**i, a) :
+			typename R::value_type());
+	}
+}
+
+//-----------------------------------------------------------------------------
+/**
 	OBSOLETE: because lists contain count_ptrs, no need to release.
 
 	Releases memory owned by the list and copies over to the destination
@@ -196,89 +216,6 @@ node_list<T>::release_append(this_type& dest) {
 		INVARIANT(!*i);
 	}
 }
-
-//=============================================================================
-// for class node_list<>
-
-//-----------------------------------------------------------------------------
-#if 0
-/**
-	List copy constructor.  Uses the parent's copy constructor, 
-	which does NOT transfer ownership of the pointer elements.  
-	Does not copy the open and close delimiters, which aren't applicable.  
- */
-NODE_LIST_TEMPLATE_SIGNATURE
-node_list<T,D>::node_list(const node_list<T,D>& l) : 
-		node(), node_list_base<T>(l),
-		open(NULL), close(NULL), delim(l.delim) {
-	// delim list will also copy without transfer of ownership
-#if DEBUG_NODE_LIST
-	cerr << "node_list<T,D>::node_list(const node_list<T,D>&);" << endl;
-	cerr << "\targument's size() = " << l.size() << endl;
-	cerr << "\tthis size() = " << this->size() << endl; 
-#endif
-}
-
-//-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SIGNATURE
-node_list<T,D>::~node_list() {
-//	SAFEDELETE(open); SAFEDELETE(close);
-}
-
-//-----------------------------------------------------------------------------
-NODE_LIST_TEMPLATE_SIGNATURE
-node_list<T,D>*
-node_list<T,D>::wrap(const terminal* b, const terminal* e) {
-// don't care what they are
-	open = excl_ptr<const terminal>(b);
-//	if (b) assert(open.is_a<token_char>() || open.is_a<token_string>());
-	close = excl_ptr<const terminal>(e);
-//	if (e) assert(close.is_a<token_char>() || close.is_a<token_string>());
-	return this;
-}
-#endif
-
-//-----------------------------------------------------------------------------
-#if 0
-NODE_LIST_TEMPLATE_SIGNATURE
-node_list<T,D>*
-node_list<T,D>::append(const terminal* d, const T* n) {
-	if (d) {
-		// check for delimiter character match
-		// will fail if incorrect token is passed
-		assert(!(d->string_compare(D)));
-		// now use separate list for delimiters
-#if 0
-		excl_ptr<const terminal> xd(d);
-		some_ptr<const terminal> sd(xd);
-		assert(!xd && sd.owned());	// guarantee transfer
-		delim.push_back(sd);
-		assert(!sd.owned());
-		// explicit conversion
-#endif
-		delim.push_back(count_ptr<const terminal>(d));
-	} else {
-		// consider using template specialization for this
-		// for effective conditional compilation
-		assert(D == none);	// no delimiter was expected
-	}
-	// push_back(const T&), but excl_ptr<const T> is destructive :/
-	// either use different pointer class or introduce 
-	// list sub-class, with new push_back operation.  
-	// n may be null, is ok
-#if 0
-	excl_ptr<const T> xn(n);
-	some_ptr<const T> sn(xn);
-	assert(!xn  && sn.owned());		// guarantee transfer
-	push_back(sn);
-	assert(!sn.owned());
-//	push_back(excl_ptr<const T>(n));	// if implicit constructor allowed
-#endif
-	push_back(count_ptr<const T>(n));
-
-	return this;
-}
-#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -318,21 +255,18 @@ node_list<T>::rightmost(void) const {
 	return line_position();			// hopefully won't happen
 }
 
-//-----------------------------------------------------------------------------
+//=============================================================================
+// class list_checked method definitions
+
 #if 0
 /**
-	Releases memory owned by the list and copies over to the destination
-	list.  
-	\param dest the node-list to which items are transferred.  
  */
-NODE_LIST_TEMPLATE_SIGNATURE
+template <class R, class L, class A>
 void
-node_list<T,D>::release_append(node_list<T,D>& dest) {
-	parent::release_append(dest);
-	delim_list::iterator i = delim.begin();
-	for ( ; i!=delim.end(); i++) {
-		dest.delim.push_back(*i);
-	}
+list_checker<R,L,A>::operator () (R& r, const L& l) {
+	transform(l.begin(), l.end(), back_inserter(r), 
+		bind2nd(mem_fun(this->mem_func), this->bound_arg)
+	);
 }
 #endif
 
