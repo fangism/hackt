@@ -2,6 +2,16 @@
 
 2005-05-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-36-PRS-01-02:
+	  Added initial skeleton classes for PRS objects.  
+		Fill-in-the-blanks soon.  
+	  Some util library stop-tweaks: persistent_object_manager
+		now tracks raw_pointer read-visits separately, 
+		added collect_pointer_list template method.
+
+
+2005-05-14	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-36-PRS-01-01:
 	  This branch is for early development of PRS management.  
 	  The initial revisions do some clean-up with a few parsers'

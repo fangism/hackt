@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.57 2005/05/13 21:24:27 fang Exp $
+#	$Id: Makefile.am,v 1.57.2.1 2005/05/15 02:39:07 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -151,7 +151,8 @@ OBJECT_CC_FILES = \
 	Object/art_object_template_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
-	Object/art_built_ins.cc
+	Object/art_built_ins.cc \
+	Object/art_object_PRS.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \

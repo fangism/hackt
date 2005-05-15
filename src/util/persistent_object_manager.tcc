@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.16 2005/05/10 04:51:29 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.16.4.1 2005/05/15 02:39:12 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -285,6 +285,28 @@ persistent_object_manager::pointer_reader::operator() (const P& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Visits a sequence of pointers, calls registration.  
+	Container only needs a simple forward iterator interface.  
+ */
+template <class L>
+void
+persistent_object_manager::collect_pointer_list(const L& l) {
+	// concept requirements:
+	// L is a sequence-type container, has begin and end
+	// L must have public const_iterator type
+	// pointer_traits<L::value_type> is raw_pointer or pointer class
+	typedef	typename L::const_iterator	const_iterator;
+	const_iterator i = l.begin();
+	const const_iterator e = l.end();
+	for ( ; i!=e; i++) {
+		if (*i)
+			(*i)->collect_transient_info(*this);
+		// else skip
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Writes a sequence of pointers, mapped to indices.
 	Container only needs a simple forward iterator interface.  
  */
@@ -411,7 +433,7 @@ template <class P>
 void
 persistent_object_manager::visit_info::__mark_visit(const P*, 
 		const raw_pointer_tag) {
-	unowned_visits++;
+	raw_visits++;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
