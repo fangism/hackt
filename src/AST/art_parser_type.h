@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.6.2.1 2005/05/14 22:38:37 fang Exp $
+	$Id: art_parser_type.h,v 1.6.2.2 2005/05/15 23:10:36 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -69,10 +69,11 @@ public:
 class chan_type : public type_base {
 protected:
 	const excl_ptr<const generic_keyword_type>	chan;	///< keyword "channel"
-	const excl_ptr<const token_char>	dir;	///< port direction: in or out
+	const excl_ptr<const char_punctuation_type>	dir;	///< port direction: in or out
 	excl_ptr<const data_type_ref_list>	dtypes;	///< data types communicated
 public:
-	chan_type(const generic_keyword_type* c, const token_char* d = NULL, 
+	chan_type(const generic_keyword_type* c,
+		const char_punctuation_type* d = NULL, 
 		const data_type_ref_list* t = NULL);
 
 virtual	~chan_type();

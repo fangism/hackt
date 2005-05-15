@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.12 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_hse.cc,v 1.12.4.1 2005/05/15 23:10:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_HSE_CC__
@@ -81,7 +81,8 @@ body::check_build(context& c) const {
 // class guarded_command method definitions
 
 CONSTRUCTOR_INLINE
-guarded_command::guarded_command(const hse_expr* g, const terminal* a, 
+guarded_command::guarded_command(const hse_expr* g, 
+		const string_punctuation_type* a, 
 		const stmt_list* c) : 
 		guard(g),
 		// remember, may be keyword: else   
@@ -116,7 +117,7 @@ guarded_command::check_build(context& c) const {
 // class else_clause method definitions
 
 CONSTRUCTOR_INLINE
-else_clause::else_clause(const token_else* g, const terminal* a, 
+else_clause::else_clause(const token_else* g, const string_punctuation_type* a, 
 		const stmt_list* c) :
 		guarded_command(g,a,c) {
 	// check for keyword else, right-arrow terminal

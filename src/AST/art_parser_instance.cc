@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.24.2.1 2005/05/14 22:38:35 fang Exp $
+	$Id: art_parser_instance.cc,v 1.24.2.2 2005/05/15 23:10:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -830,7 +830,7 @@ loop_instantiation::check_build(context& c) const {
       
 CONSTRUCTOR_INLINE
 guarded_definition_body::guarded_definition_body(const expr* e,
-		const terminal* a, const definition_body* b) :
+		const string_punctuation_type* a, const definition_body* b) :
 		instance_management(), guard(e), arrow(a), body(b) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(body);
 }   

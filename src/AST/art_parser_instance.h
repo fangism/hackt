@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.13.2.1 2005/05/14 22:38:35 fang Exp $
+	$Id: art_parser_instance.h,v 1.13.2.2 2005/05/15 23:10:35 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -342,10 +342,11 @@ public:
 class guarded_definition_body : public instance_management {
 protected:
 	const excl_ptr<const expr>	guard;	///< condition expression
-	const excl_ptr<const terminal>		arrow;	///< right arrow
+	const excl_ptr<const string_punctuation_type>	arrow;	///< right arrow
 	const excl_ptr<const definition_body>	body;
 public:
-	guarded_definition_body(const expr* e, const terminal* a, 
+	guarded_definition_body(const expr* e, 
+		const string_punctuation_type* a, 
 		const definition_body* b);
 
 	~guarded_definition_body();

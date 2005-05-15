@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.21 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_expr.cc,v 1.21.2.1 2005/05/15 23:10:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -451,8 +451,10 @@ ostream& operator << (ostream& o, const id_expr& id) {
 	that the arguments exclusively "owned" their memory locations.
  */
 CONSTRUCTOR_INLINE
-unary_expr::unary_expr(const expr* n, const terminal* o) : expr(), 
-		e(n), op(o) {
+unary_expr::unary_expr(const expr* n, const char_punctuation_type* o) :
+		expr(), e(n), op(o) {
+	NEVER_NULL(e);
+	NEVER_NULL(op);
 }
 
 DESTRUCTOR_INLINE
@@ -463,7 +465,7 @@ unary_expr::~unary_expr() {
 // class prefix_expr method definitions
 
 CONSTRUCTOR_INLINE
-prefix_expr::prefix_expr(const terminal* o, const expr* n) :
+prefix_expr::prefix_expr(const char_punctuation_type* o, const expr* n) :
 		unary_expr(n,o) {
 }
 
@@ -500,7 +502,7 @@ prefix_expr::check_expr(context& c) const {
 	const count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
 	const count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
 
-	const int ch = op.is_a<const token_char>()->get_char();
+	const int ch = op->text[0];
 	switch(ch) {
 		case '-':
 			// integer negation
@@ -757,7 +759,7 @@ index_expr::check_reference(context& c) const {
 // class binary_expr method definitions
 
 CONSTRUCTOR_INLINE
-binary_expr::binary_expr(const expr* left, const terminal* o, 
+binary_expr::binary_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		expr(), l(left), op(o), r(right) {
 	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
@@ -781,7 +783,7 @@ binary_expr::rightmost(void) const {
 // class arith_expr method definitions
 
 CONSTRUCTOR_INLINE
-arith_expr::arith_expr(const expr* left, const terminal* o, 
+arith_expr::arith_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
 }
@@ -821,7 +823,7 @@ arith_expr::check_expr(context& c) const {
 		return return_type(NULL);
 	}
 	// else is safe to make arith_expr object
-	const char ch = op.is_a<const token_char>()->get_char();
+	const char ch = op->text[0];
 	if (li->is_static_constant() && ri->is_static_constant()) {
 		const int lc = li->static_constant_value();
 		const int rc = ri->static_constant_value();
@@ -858,8 +860,8 @@ arith_expr::check_expr(context& c) const {
 // class relational_expr method definitions
 
 CONSTRUCTOR_INLINE
-relational_expr::relational_expr(const expr* left, const terminal* o, 
-		const expr* right) :
+relational_expr::relational_expr(const expr* left, 
+		const char_punctuation_type* o, const expr* right) :
 		binary_expr(left, o, right) {
 }
 
@@ -871,16 +873,51 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 relational_expr::check_expr(context& c) const {
-	// same idea as arith expr
-	cerr << "Fang, finish relational_expr::check_expr()!" << endl;
-	return expr::return_type(NULL);
+	typedef	expr::return_type	return_type;
+	return_type lo(l->check_expr(c));
+	return_type ro(r->check_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
+	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
+	if (!li || !ri) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a pint, but got a ";
+		if (!li) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!ri) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	const entity::relational_expr::op_type*
+		o(entity::relational_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (li->is_static_constant() && ri->is_static_constant()) {
+		const int lc = li->static_constant_value();
+		const int rc = ri->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::relational_expr(li, o, ri));
+	}
 }
 
 //=============================================================================
 // class logical_expr method definitions
 
 CONSTRUCTOR_INLINE
-logical_expr::logical_expr(const expr* left, const terminal* o, 
+logical_expr::logical_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
 }
@@ -893,9 +930,44 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 logical_expr::check_expr(context& c) const {
-	// same idea as arith expr
-	cerr << "Fang, finish relational_expr::check_expr()!" << endl;
-	return expr::return_type(NULL);
+	typedef	expr::return_type	return_type;
+	return_type lo(l->check_expr(c));
+	return_type ro(r->check_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
+	const count_ptr<pbool_expr> rb(ro.is_a<pbool_expr>());
+	if (!lb || !rb) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a pbool, but got a ";
+		if (!lb) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!rb) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	const entity::logical_expr::op_type*
+		o(entity::logical_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (lb->is_static_constant() && rb->is_static_constant()) {
+		const bool lc = lb->static_constant_value();
+		const bool rc = rb->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::logical_expr(lb, o, rb));
+	}
 }
 
 //=============================================================================

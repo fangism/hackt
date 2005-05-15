@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.12 2005/05/10 04:51:06 fang Exp $
+	$Id: art_parser_chp.cc,v 1.12.4.1 2005/05/15 23:10:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -12,7 +12,7 @@
 #include "AST/art_parser_chp.h"
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
-#include "AST/art_parser_token_char.h"
+// #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_node_list.tcc"
 
 #include "util/what.h"
@@ -84,8 +84,8 @@ body::check_build(context& c) const {
 // class guarded_command method definitions
 
 CONSTRUCTOR_INLINE
-guarded_command::guarded_command(const chp_expr* g, const terminal* a,
-		const stmt_list* c) : 
+guarded_command::guarded_command(const chp_expr* g, 
+		const string_punctuation_type* a, const stmt_list* c) : 
 		guard(g),
 		// remember, may be keyword: else   
 		arrow(a), command(c) {
@@ -121,7 +121,7 @@ guarded_command::check_build(context& c) const {
 // class else_clause method definitions
 
 CONSTRUCTOR_INLINE
-else_clause::else_clause(const token_else* g, const terminal* a, 
+else_clause::else_clause(const token_else* g, const string_punctuation_type* a, 
 		const stmt_list* c) :
 		guarded_command(g,a,c) {
 	// check for keyword else, right-arrow terminal
@@ -270,7 +270,7 @@ incdec_stmt::check_build(context& c) const {
 // class communication method definitions
 
 CONSTRUCTOR_INLINE
-communication::communication(const expr* c, const token_char* d) :
+communication::communication(const expr* c, const char_punctuation_type* d) :
 		statement(), chan(c), dir(d) {
 	NEVER_NULL(chan); NEVER_NULL(dir);
 }
@@ -318,7 +318,7 @@ comm_list::check_build(context& c) const {
 // class send method definitions
 
 CONSTRUCTOR_INLINE
-send::send(const expr* c, const token_char* d, const expr_list* r) :
+send::send(const expr* c, const char_punctuation_type* d, const expr_list* r) :
 		communication(c, d), rvalues(r) {
 	NEVER_NULL(rvalues);
 }
@@ -343,7 +343,7 @@ send::check_build(context& c) const {
 // class receive method definitions
 
 CONSTRUCTOR_INLINE
-receive::receive(const expr* c, const token_char* d, const expr_list* l) :
+receive::receive(const expr* c, const char_punctuation_type* d, const expr_list* l) :
 		communication(c, d), lvalues(l) {
 	NEVER_NULL(lvalues);
 }

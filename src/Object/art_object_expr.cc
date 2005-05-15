@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.44 2005/05/10 04:51:12 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.44.4.1 2005/05/15 23:10:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -1956,6 +1956,17 @@ relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
+		const op_type* o, const count_ptr<const pint_expr>& r) :
+		lx(l), rx(r), op(o) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2181,6 +2192,17 @@ logical_expr::~logical_expr() {
 logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
 		const string& o, const count_ptr<const pbool_expr>& r) :
 		lx(l), rx(r), op(op_map[o]) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
+		const op_type* o, const count_ptr<const pbool_expr>& r) :
+		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);

@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-03:
+	  Parser: promoted token_string and token_char to node_position.
+	  Filled-in parser::relational_expr::check_expr, and
+		parser::logical_expr::check_expr.
+	  Upgraded some expression types in classes for stronger typing.  
+	  Started setting up check_prs_expr infrastructure in PRS and expr.  
+
+
 2005-05-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-36-PRS-01-02:

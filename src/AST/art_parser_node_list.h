@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.8.4.1 2005/05/14 22:38:35 fang Exp $
+	$Id: art_parser_node_list.h,v 1.8.4.2 2005/05/15 23:10:35 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_NODE_LIST_H__
@@ -11,11 +11,13 @@
 #include "AST/art_parser_fwd.h"
 #include "AST/art_parser_base.h"
 #include "util/memory/count_ptr.h"
+// #include "util/boolean_types.h"
 
 namespace ART {
 namespace parser {
 
 USING_LIST
+// using util::good_bool;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 
@@ -129,6 +131,7 @@ public:
 	rightmost(void) const;
 
 	/**
+		PHASING OUT.
 		Consider giving this an aggregate return type.  
 		Note that this is NON-VIRTUAL.  
 		Determine the return type from the template paraameter.
@@ -144,6 +147,18 @@ public:
 	void
 	check_list_optional(
 		R&, typename R::value_type (T::*)(A&) const, A&) const;
+
+#if 0
+	template <class R, class A>
+	good_bool
+	check_list_while_good(R&, 
+		typename R::value_type (T::*)(A&) const, A&) const;
+
+	template <class R, class A>
+	good_bool
+	check_list_optional_while_good(
+		R&, typename R::value_type (T::*)(A&) const, A&) const;
+#endif
 
 };	// end class node_list
 

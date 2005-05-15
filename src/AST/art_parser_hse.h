@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.11 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_hse.h,v 1.11.4.1 2005/05/15 23:10:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_HSE_H__
@@ -75,10 +75,10 @@ using	language_body::leftmost;
 class guarded_command {
 protected:
 	const excl_ptr<const hse_expr>	guard;		///< guard expression
-	const excl_ptr<const terminal>	arrow;		///< right-arrow
+	const excl_ptr<const string_punctuation_type>	arrow;	///< right-arrow
 	const excl_ptr<const stmt_list>	command;	///< statement body
 public:
-	guarded_command(const hse_expr* g, const terminal* a,
+	guarded_command(const hse_expr* g, const string_punctuation_type* a,
 		const stmt_list* c);
 
 virtual	~guarded_command();
@@ -102,7 +102,8 @@ virtual	ostream&
 /// HSE else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(const token_else* g, const terminal* a, const stmt_list* c);
+	else_clause(const token_else* g, const string_punctuation_type* a, 
+		const stmt_list* c);
 
 	~else_clause();
 

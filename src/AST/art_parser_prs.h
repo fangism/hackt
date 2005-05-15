@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.12.2.1 2005/05/14 22:38:36 fang Exp $
+	$Id: art_parser_prs.h,v 1.12.2.2 2005/05/15 23:10:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
@@ -11,13 +11,20 @@
 #include "AST/art_parser_prs_fwd.h"
 #include "AST/art_parser_expr_base.h"
 #include "AST/art_parser_definition_item.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
+namespace entity {
+namespace PRS {
+	class rule;
+}
+}
 namespace parser {
 /**
 	This is the namespace for the PRS sub-language.  
  */
 namespace PRS {
+using util::memory::count_ptr;
 
 //=============================================================================
 // local forward declarations
@@ -28,6 +35,8 @@ class body;
 //=============================================================================
 /// a single production rule
 class body_item {
+public:
+	typedef	count_ptr<entity::PRS::rule>		return_type;
 protected:
 	// no members
 public:
@@ -44,9 +53,15 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
+#define	PRS_ITEM_CHECK_PROTO						\
+	body_item::return_type						\
+	check_rule(context&) const
+
 #if 0
 virtual	never_ptr<const object>
 	check_build(context& c) const = 0;
+#else
+virtual	PRS_ITEM_CHECK_PROTO = 0;
 #endif
 };	// end class body_item
 
@@ -57,12 +72,12 @@ virtual	never_ptr<const object>
 class rule : public body_item {
 protected:
 	const excl_ptr<const expr>		guard;
-	const excl_ptr<const terminal>		arrow;
-	const excl_ptr<const expr>		r;
-	const excl_ptr<const terminal>		dir;
+	const excl_ptr<const char_punctuation_type>	arrow;
+	const excl_ptr<const inst_ref_expr>		r;
+	const excl_ptr<const char_punctuation_type>	dir;
 public:
-	rule(const expr* g, const terminal* a,
-		const expr* rhs, const terminal* d);
+	rule(const expr* g, const char_punctuation_type* a,
+		const inst_ref_expr* rhs, const char_punctuation_type* d);
 
 	~rule();
 
@@ -78,6 +93,8 @@ public:
 #if 0
 	never_ptr<const object>
 	check_build(context& c) const;
+#else
+	PRS_ITEM_CHECK_PROTO;
 #endif
 };	// end class rule
 
@@ -111,6 +128,8 @@ public:
 #if 0
 	never_ptr<const object>
 	check_build(context& c) const;
+#else
+	PRS_ITEM_CHECK_PROTO;
 #endif
 };	// end class loop
 
@@ -148,14 +167,14 @@ public:
 class op_loop : public expr {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
-	const excl_ptr<const token_char>	op;
+	const excl_ptr<const char_punctuation_type>	op;
 	const excl_ptr<const token_identifier>	index;
 	const excl_ptr<const range>		bounds;
 	const excl_ptr<const expr>		ex;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:
 	op_loop(const char_punctuation_type* l,
-		const token_char* o,
+		const char_punctuation_type* o,
 		const token_identifier* id, 
 		const range* b, 
 		const expr* e, const char_punctuation_type* r);

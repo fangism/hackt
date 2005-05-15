@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14.2.2 2005/05/15 02:39:09 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.3 2005/05/15 23:10:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -49,12 +49,12 @@ body_item::~body_item() { }
 // class rule method definitions
 
 CONSTRUCTOR_INLINE
-rule::rule(const expr* g, const terminal* a,
-		const expr* rhs, const terminal* d) :
+rule::rule(const expr* g, const char_punctuation_type* a,
+		const inst_ref_expr* rhs, const char_punctuation_type* d) :
 		body_item(), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
-	INVARIANT(r.is_a<const id_expr>() || r.is_a<const index_expr>());
+//	INVARIANT(r.is_a<const id_expr>() || r.is_a<const index_expr>());
 //	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
 //	INVARIANT(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
@@ -80,6 +80,11 @@ never_ptr<const object>
 rule::check_build(context& c) const {
 	cerr << "Fang, finish PRS::rule::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
+}
+#else
+body_item::return_type
+rule::check_rule(context& c) const {
+	return body_item::return_type();
 }
 #endif
 
@@ -118,6 +123,11 @@ loop::check_build(context& c) const {
 	cerr << "Fang, finish PRS::loop::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
+#else
+body_item::return_type
+loop::check_rule(context& c) const {
+	return body_item::return_type();
+}
 #endif
 
 //=============================================================================
@@ -154,7 +164,8 @@ body::check_build(context& c) const {
 //=============================================================================
 // class op_loop method definitions
 
-op_loop::op_loop(const char_punctuation_type* l, const token_char* o,
+op_loop::op_loop(const char_punctuation_type* l, 
+		const char_punctuation_type* o,
 		const token_identifier* id, 
 		const range* b, 
 		const expr* e, const char_punctuation_type* r) :
