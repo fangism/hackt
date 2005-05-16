@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14.2.3 2005/05/15 23:10:35 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.4 2005/05/16 03:52:19 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -17,6 +17,7 @@
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_node_list.tcc"
 
+#include "Object/art_object_definition_proc.h"	// for process_definition
 #include "Object/art_object_expr_base.h"
 #include "Object/art_object_PRS.h"
 
@@ -54,9 +55,6 @@ rule::rule(const expr* g, const char_punctuation_type* a,
 		body_item(), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
-//	INVARIANT(r.is_a<const id_expr>() || r.is_a<const index_expr>());
-//	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
-//	INVARIANT(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 
 DESTRUCTOR_INLINE
@@ -84,7 +82,25 @@ rule::check_build(context& c) const {
 #else
 body_item::return_type
 rule::check_rule(context& c) const {
-	return body_item::return_type();
+	prs_expr_return_type g(guard->check_prs_expr(c));
+	if (!g) {
+		cerr << "ERROR in production rule guard at " <<
+			where(*guard) << "." << endl;
+		THROW_EXIT;
+	}
+	prs_literal_ptr_type o(r->check_prs_literal(c));
+	if (!o) {
+		cerr << "ERROR in the output node reference at " <<
+			where(*r) << "." << endl;
+		THROW_EXIT;
+	}
+	excl_ptr<entity::PRS::prs_expr> g_arg(g.exclusive_release());
+	excl_ptr<entity::PRS::literal> o_arg(o.exclusive_release());
+	return body_item::return_type((dir->text[0] == '+') ?
+		static_cast<entity::PRS::rule*>(
+			new entity::PRS::pull_up(g_arg, o_arg)) :
+		static_cast<entity::PRS::rule*>(
+			new entity::PRS::pull_dn(g_arg, o_arg)));
 }
 #endif
 
@@ -155,9 +171,36 @@ body::rightmost(void) const {
 	return rules->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: remember to update return type with ROOT_CHECK_PROTO.
+	Currently, exits upon error.  
+ */
 never_ptr<const object>
 body::check_build(context& c) const {
+#if 0
 	cerr << "Fang, finish PRS::body::check_build()!" << endl;
+#else
+	if (rules) {
+		// check context's current open definition
+		never_ptr<definition_base> d(c.get_current_open_definition());
+		never_ptr<process_definition> pd(d.is_a<process_definition>());
+		NEVER_NULL(pd);
+		checked_rules_type checked_rules;
+		rules->check_list(checked_rules, &body_item::check_rule, c);
+		checked_rules_type::const_iterator
+			null_iter = find(checked_rules.begin(), 
+				checked_rules.end(), 
+				body_item::return_type());
+		if (null_iter == checked_rules.end()) {
+			// no errors found, add them too the process definition
+		} else {
+			cerr << "ERROR: at least one error in PRS body."
+				<< endl;
+			THROW_EXIT;
+		}
+	}
+#endif
 	return never_ptr<const object>(NULL);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.4.2.1 2005/05/15 23:10:34 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.4.2.2 2005/05/16 03:52:18 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -21,6 +21,7 @@ namespace entity {
 	class instance_reference_base;
 namespace PRS {
 	class prs_expr;
+	class literal;
 }
 }
 
@@ -40,6 +41,8 @@ typedef	count_ptr<entity::index_list>	range_list_return_type;
 typedef	count_ptr<entity::instance_reference_base>	inst_ref_return_type;
 
 typedef	count_ptr<entity::PRS::prs_expr>	prs_expr_return_type;
+
+typedef	count_ptr<entity::PRS::literal>		prs_literal_ptr_type;
 
 //=============================================================================
 /**
@@ -95,7 +98,7 @@ virtual	CHECK_GENERIC_PROTO;
 	prs_expr_return_type						\
 	check_prs_expr(context& c) const
 
-// virtual	CHECK_PRS_EXPR_PROTO;
+virtual	CHECK_PRS_EXPR_PROTO;
 
 };	// end class expr
 
@@ -127,7 +130,11 @@ virtual CHECK_REFERENCE_PROTO = 0;
 	// NOTE: this is non-virtual
 	CHECK_GENERIC_PROTO;
 
-//	CHECK_PRS_EXPR_PROTO;
+	prs_literal_ptr_type
+	check_prs_literal(context&) const;
+
+	CHECK_PRS_EXPR_PROTO;
+	
 };      // end class inst_ref_expr
 
 //=============================================================================

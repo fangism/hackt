@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.12.2.2 2005/05/15 23:10:35 fang Exp $
+	$Id: art_parser_prs.h,v 1.12.2.3 2005/05/16 03:52:19 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
@@ -11,6 +11,7 @@
 #include "AST/art_parser_prs_fwd.h"
 #include "AST/art_parser_expr_base.h"
 #include "AST/art_parser_definition_item.h"
+#include "util/STL/vector_fwd.h"
 #include "util/memory/count_ptr.h"
 
 namespace ART {
@@ -138,6 +139,7 @@ public:
 	Collection of production rules.  
  */
 class body : public language_body {
+	typedef	DEFAULT_VECTOR(body_item::return_type)	checked_rules_type;
 protected:
 	const excl_ptr<const rule_list>		rules;
 public:

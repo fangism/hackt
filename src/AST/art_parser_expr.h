@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.13.2.1 2005/05/15 23:10:34 fang Exp $
+	$Id: art_parser_expr.h,v 1.13.2.2 2005/05/16 03:52:18 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -97,6 +97,7 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
 };	// end class unary_expr
 
 //-----------------------------------------------------------------------------
@@ -120,6 +121,7 @@ public:
 
 	CHECK_EXPR_PROTO;
 
+	CHECK_PRS_EXPR_PROTO;
 };	// end class prefix_expr
 
 //-----------------------------------------------------------------------------
@@ -260,6 +262,8 @@ public:
 	what(ostream& o) const;
 
 	CHECK_EXPR_PROTO;
+
+	CHECK_PRS_EXPR_PROTO;
 };	// end class logical_expr
 
 //=============================================================================

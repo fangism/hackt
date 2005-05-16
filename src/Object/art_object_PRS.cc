@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.1.2.1 2005/05/15 02:39:10 fang Exp $
+	$Id: art_object_PRS.cc,v 1.1.2.2 2005/05/16 03:52:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -58,7 +58,7 @@ rule_set::~rule_set() { }
 pull_up::pull_up() : rule(), guard(), output() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(guard_type& g, prs_literal_type& o) :
+pull_up::pull_up(guard_arg_type& g, excl_ptr<literal>& o) :
 		rule(), guard(g), output(o) {
 	NEVER_NULL(guard);
 	NEVER_NULL(output);
@@ -100,7 +100,7 @@ pull_up::load_object(const persistent_object_manager& m, istream& i) {
 pull_dn::pull_dn() : rule(), guard(), output() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(guard_type& g, prs_literal_type& o) :
+pull_dn::pull_dn(guard_arg_type& g, excl_ptr<literal>& o) :
 		rule(), guard(g), output(o) {
 	NEVER_NULL(guard);
 	NEVER_NULL(output);
@@ -145,7 +145,7 @@ pull_dn::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class and_expr method definitions
 
-and_expr::and_expr() : prs_expr(), operands() { }
+and_expr::and_expr() : prs_expr(), sequence_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 and_expr::~and_expr() { }
@@ -158,26 +158,26 @@ void
 and_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(operands);
+	m.collect_pointer_list(*this);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 and_expr::write_object(const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer_list(o, operands);
+	m.write_pointer_list(o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 and_expr::load_object(const persistent_object_manager& m, istream& i) {
-	m.read_pointer_list(i, operands);
+	m.read_pointer_list(i, *this);
 }
 
 //=============================================================================
 // class or_expr method definitions
 
-or_expr::or_expr() : prs_expr(), operands() { }
+or_expr::or_expr() : prs_expr(), sequence_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 or_expr::~or_expr() { }
@@ -190,20 +190,20 @@ void
 or_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(operands);
+	m.collect_pointer_list(*this);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 or_expr::write_object(const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer_list(o, operands);
+	m.write_pointer_list(o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 or_expr::load_object(const persistent_object_manager& m, istream& i) {
-	m.read_pointer_list(i, operands);
+	m.read_pointer_list(i, *this);
 }
 
 //=============================================================================
@@ -212,7 +212,7 @@ or_expr::load_object(const persistent_object_manager& m, istream& i) {
 not_expr::not_expr() : prs_expr(), var() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-not_expr::not_expr(guard_type& g) : prs_expr(), var(g) {
+not_expr::not_expr(guard_arg_type& g) : prs_expr(), var(g) {
 	NEVER_NULL(var);
 }
 
@@ -249,7 +249,7 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 literal::literal() : prs_expr(), var() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-literal::literal(prs_literal_type& l) : prs_expr(), var(l) {
+literal::literal(literal_base_ptr_type& l) : prs_expr(), var(l) {
 	NEVER_NULL(var);
 }
 

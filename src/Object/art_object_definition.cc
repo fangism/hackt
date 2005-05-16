@@ -1,13 +1,15 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.44 2005/05/13 21:24:30 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.44.2.1 2005/05/16 03:52:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
 #define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
+
+#define	ENABLE_PRS			0
 
 #include <exception>
 #include <iostream>
@@ -21,6 +23,7 @@
 #include "util/hash_specializations.h"		// substitute for the following
 
 #include "Object/art_object_definition.h"
+#include "Object/art_object_definition_proc.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
@@ -1769,7 +1772,8 @@ process_definition::process_definition() :
 		key(), 
 		parent(), 
 		port_formals_list(), 
-		port_formals_map() {
+		port_formals_map(), 
+		prs() {
 	// no null check: because of partial reconstruction
 }
 
@@ -1787,7 +1791,8 @@ process_definition::process_definition(
 		key(s), 
 		parent(o), 
 		port_formals_list(), 
-		port_formals_map() {
+		port_formals_map(),
+		prs() {
 	// fill me in...
 	NEVER_NULL(o);
 }
@@ -1845,6 +1850,7 @@ process_definition::dump(ostream& o) const {
 			// i->second->what(o) << endl;	// 1 level for now
 			i->second->dump(o) << endl;
 		}
+		// PRS
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -2079,6 +2085,7 @@ if (!m.register_transient_object(this,
 	// b/c they're all registered in the used_id_map.  
 	scopespace::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
+	// PRS
 }
 }
 
@@ -2096,6 +2103,7 @@ process_definition::write_object(
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
+	// PRS
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2109,6 +2117,7 @@ process_definition::load_object(
 	scopespace::load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
+	// PRS
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,6 +2,23 @@
 
 2005-05-15	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-36-PRS-01-04:
+	  Completed expr::check_prs_expr implementations for the 
+		relevant expression classes (partially tested).
+	  Updated constructor interfaces of entity::PRS classes.  
+	  Added blank PRS::rules_list to process_definition, 
+		but doesn't do anything with them yet.
+		TODO NEXT: implement addition, dump, object persistence.  
+	  Moved some files, added some files:
+		Split off Object/art_object_PRS_base.h and
+			Object/art_object_definition_proc.h.
+		Added util/iterator_more.h.
+	  One basic test updated parser/basic/013.stderr, was unchecked,
+		now gives error.  
+
+
+2005-05-15	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-36-PRS-01-03:
 	  Parser: promoted token_string and token_char to node_position.
 	  Filled-in parser::relational_expr::check_expr, and

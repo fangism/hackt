@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.21.2.1 2005/05/15 23:10:34 fang Exp $
+	$Id: art_parser_expr.cc,v 1.21.2.2 2005/05/16 03:52:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -9,6 +9,7 @@
 
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
 #define	ENABLE_STACKTRACE		0
 
@@ -25,9 +26,14 @@
 #include "Object/art_object_definition_base.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_expr.h"
+#include "Object/art_object_PRS.h"
+// to dynamic_cast bool_instance_reference
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_classification_details.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/iterator_more.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -62,9 +68,11 @@ using namespace entity;
 
 namespace parser {
 #include "util/using_ostream.h"
+using std::copy;
 using std::transform;
 using std::_Select1st;
 using std::_Select2nd;
+using util::back_insert_assigner;
 
 //=============================================================================
 // class expr method definitions
@@ -92,6 +100,16 @@ expr::check_generic(context& c) const {
 	expr::return_type ret(check_expr(c));
 	return generic_return_type(ret,
 		ret.is_a<inst_ref_return_type::element_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary placeholder, never really supposed to be called.  
+ */
+prs_expr_return_type
+expr::check_prs_expr(context& c) const {
+	cerr << "Fang, unimplemented expr::check_prs_expr!" << endl;
+	return prs_expr_return_type();
 }
 
 //=============================================================================
@@ -135,6 +153,46 @@ inst_ref_expr::check_expr(context& c) const {
 		return expr::return_type(NULL);
 	}
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	After checking an instance_reference, this checks to make sure
+	that a bool is referenced, appropriate for PRS.  
+ */
+prs_literal_ptr_type
+inst_ref_expr::check_prs_literal(context& c) const {
+	return_type ref(check_reference(c));
+	count_ptr<bool_instance_reference>
+		bool_ref(ref.is_a<bool_instance_reference>());
+	if (bool_ref) {
+		ref.abandon();
+		INVARIANT(bool_ref.refs() == 1);
+		if (bool_ref->dimensions()) {
+			cerr << "ERROR: bool reference at " << where(*this) <<
+				" does not refer to a scalar instance." << endl;
+			return prs_literal_ptr_type(NULL);
+		} else {
+			// shared to exclusive ownership
+			entity::PRS::literal_base_ptr_type
+				lit(bool_ref.exclusive_release());
+			return prs_literal_ptr_type(
+				new entity::PRS::literal(lit));
+		}
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a bool." << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Down-casting literal to general PRS guard expression.  
+ */
+prs_expr_return_type
+inst_ref_expr::check_prs_expr(context& c) const {
+	return check_prs_literal(c);
 }
 
 //=============================================================================
@@ -535,13 +593,14 @@ prefix_expr::check_expr(context& c) const {
 				return return_type(new pint_unary_expr(ch, ie));
 			}
 		case '~':
+			// is this valid in the meta-language?
 			// context-dependent? in PRS or not?
 			// is bit-wise negation for ints, 
 			// logical negation for bools?
 			// for now, restrict to bools only...
 			if (!be) {
 				cerr << "Unary \'~\' operator requires a "
-					"pint argument, but got a ";
+					"pbool argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
 					<< where(*e) << endl;
 				return return_type(NULL);
@@ -560,6 +619,28 @@ prefix_expr::check_expr(context& c) const {
 			DIE;
 	}
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for logical-NOT for PRS.  
+ */
+prs_expr_return_type
+prefix_expr::check_prs_expr(context& c) const {
+	prs_expr_return_type pe(e->check_prs_expr(c));
+	if (!pe) {
+		cerr << "ERROR resolving PRS-expr at " << where(*e) <<
+			"." << endl;
+		THROW_EXIT;		// for now
+	}
+	if (op->text[0] != '~') {
+		cerr << "FATAL: Invalid unary operator: \'" << op->text[0] <<
+			"\' at " << where(*op) <<
+			".  Aborting... have a nice day." << endl;
+		DIE;
+	}
+	excl_ptr<entity::PRS::prs_expr> b(pe.exclusive_release());
+	return prs_expr_return_type(new entity::PRS::not_expr(b));
 }
 
 //=============================================================================
@@ -958,7 +1039,7 @@ logical_expr::check_expr(context& c) const {
 	}
 	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
-	const entity::logical_expr::op_type*
+	entity::logical_expr::op_type const* const
 		o(entity::logical_expr::op_map[op_str]);
 	INVARIANT(o);
 	if (lb->is_static_constant() && rb->is_static_constant()) {
@@ -967,6 +1048,100 @@ logical_expr::check_expr(context& c) const {
 		return return_type(new pbool_const((*o)(lc,rc)));
 	} else {
 		return return_type(new entity::logical_expr(lb, o, rb));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+logical_expr::check_prs_expr(context& c) const {
+	prs_expr_return_type lo(l->check_prs_expr(c));
+	prs_expr_return_type ro(r->check_prs_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building PRS-expr at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		THROW_EXIT;		// for now
+		return prs_expr_return_type(NULL);
+	}
+	const char op_char = op->text[0];
+	if (op_char == '&') {
+		typedef	entity::PRS::and_expr::iterator		iterator;
+		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
+		count_ptr<entity::PRS::and_expr>
+			l_and(lo.is_a<entity::PRS::and_expr>());
+		count_ptr<entity::PRS::and_expr>
+			r_and(ro.is_a<entity::PRS::and_expr>());
+		if (l_and) {
+			if (r_and) {
+				copy(r_and->begin(), r_and->end(), 
+					back_insert_assigner(*l_and));
+			} else {
+				entity::PRS::guard_arg_type
+					p(r_and.exclusive_release());
+				l_and->push_back(p);
+			}
+			return l_and;
+		} else if (r_and) {
+			entity::PRS::guard_arg_type
+				p(l_and.exclusive_release());
+			r_and->push_front(p);
+			return r_and;
+		} else {
+			count_ptr<entity::PRS::and_expr>
+				ret(new entity::PRS::and_expr);
+			entity::PRS::guard_arg_type
+				pl(l_and.exclusive_release());
+			entity::PRS::guard_arg_type
+				pr(r_and.exclusive_release());
+			ret->push_back(pl);
+			ret->push_back(pr);
+			INVARIANT(!pl);
+			INVARIANT(!pr);
+			return ret;
+		}
+	} else if (op_char == '|') {
+		typedef	entity::PRS::or_expr::iterator		iterator;
+		typedef	entity::PRS::or_expr::const_iterator	const_iterator;
+		count_ptr<entity::PRS::or_expr>
+			l_or(lo.is_a<entity::PRS::or_expr>());
+		count_ptr<entity::PRS::or_expr>
+			r_or(ro.is_a<entity::PRS::or_expr>());
+		if (l_or) {
+			if (r_or) {
+				copy(r_or->begin(), r_or->end(), 
+					back_insert_assigner(*l_or));
+			} else {
+				entity::PRS::guard_arg_type
+					p(r_or.exclusive_release());
+				l_or->push_back(p);
+			}
+			return l_or;
+		} else if (r_or) {
+			entity::PRS::guard_arg_type
+				p(l_or.exclusive_release());
+			r_or->push_front(p);
+			return r_or;
+		} else {
+			count_ptr<entity::PRS::or_expr>
+				ret(new entity::PRS::or_expr);
+			entity::PRS::guard_arg_type
+				pl(l_or.exclusive_release());
+			entity::PRS::guard_arg_type
+				pr(r_or.exclusive_release());
+			ret->push_back(pl);
+			ret->push_back(pr);
+			INVARIANT(!pl);
+			INVARIANT(!pr);
+			return ret;
+		}
+	} else {
+		cerr << "FATAL: Invalid PRS operor: \'" << op_char << "\' at "
+			<< where(*op) << ".  Aborting... have a nice day."
+			<< endl;
+		DIE;
+		return prs_expr_return_type(NULL);
 	}
 }
 

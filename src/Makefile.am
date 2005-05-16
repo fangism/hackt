@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.57.2.1 2005/05/15 02:39:07 fang Exp $
+#	$Id: Makefile.am,v 1.57.2.2 2005/05/16 03:52:16 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -169,6 +169,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_const_collection.h \
 	Object/art_object_const_collection.tcc \
 	Object/art_object_definition_base.h \
+	Object/art_object_definition_proc.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
@@ -193,7 +194,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_value_collection.h \
 	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.h \
-	Object/art_object_value_reference.tcc
+	Object/art_object_value_reference.tcc \
+	Object/art_object_PRS_base.h
 
 UTIL_HEADER_FILES = \
 	util/macros.h \
@@ -237,6 +239,7 @@ UTIL_HEADER_FILES = \
 	util/hash_specializations.h \
 	util/ifthenelse.h \
 	util/indent.h \
+	util/iterator_more.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
