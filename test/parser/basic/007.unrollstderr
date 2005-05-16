@@ -1,0 +1,34 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x31016c0	module__	0	0	28
+	2	 0x3100144	namespc_	0	28	52
+	3	 0x31016e0	procdefn	0	52	123
+	4	 0x3101764	dboolcol	0	123	157
+	5	 0x31017c0	datainst	0	157	177
+	6	 0x31017e0	datatprf	0	177	193
+	7	 0x31017f0	datadefn	0	193	230
+	8	 0x3101854	dboolcol	0	230	264
+	9	 0x31018b0	datainst	0	264	284
+	10	 0x31018d0	datatprf	0	284	300
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    myinverter = process-definition (defined) myinverter      (
+        bool<> a
+        bool<> b
+      )
+      In definition "myinverter", we have: {
+        a = bool<> a
+        b = bool<> b
+      }
+
+}
+
