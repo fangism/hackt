@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.1.2.2 2005/05/16 18:29:27 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.1.2.3 2005/05/16 21:43:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
@@ -83,6 +83,10 @@ virtual	~rule() { }
 
 virtual	ostream&
 	dump(ostream&) const = 0;
+
+virtual	excl_ptr<rule>
+	complement(void) const = 0;
+
 };	// end class rule
 
 //=============================================================================
@@ -103,6 +107,17 @@ virtual	~prs_expr() { }
 
 virtual	ostream&
 	dump(ostream&) const = 0;
+
+virtual	excl_ptr<prs_expr>
+	negation_normalize(void) const = 0;
+
+#if 0
+	struct negation_normalizer {
+		excl_ptr<prs_expr>
+		operator () (const sticky_ptr<prs_expr>&) const;
+	};	// end struct negation_normalizer
+#endif
+
 };	// end class prs_expr
 
 //=============================================================================

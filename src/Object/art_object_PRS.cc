@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.1.2.3 2005/05/16 18:29:26 fang Exp $
+	$Id: art_object_PRS.cc,v 1.1.2.4 2005/05/16 21:43:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -11,8 +11,11 @@
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_type_hash.h"
+
 #include "util/persistent_object_manager.tcc"
+#include "util/IO_utils.h"
 #include "util/indent.h"
+#include "util/memory/chunk_map_pool.tcc"
 
 //=============================================================================
 namespace util {
@@ -43,6 +46,8 @@ namespace PRS {
 using util::persistent_traits;
 using util::auto_indent;
 #include "util/using_ostream.h"
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class rule method definitions
@@ -56,6 +61,17 @@ rule::dumper::operator () (const P& r) {
 	NEVER_NULL(r);
 	r->dump(os) << endl;
 }
+
+//=============================================================================
+// class prs_expr::negation_normalizer method definitions
+
+#if 0
+excl_ptr<prs_expr>
+prs_expr::negation_normalizer::operator () (
+		const sticky_ptr<prs_expr>& e) const {
+	return e->negation_normalize();
+}
+#endif
 
 //=============================================================================
 // class rule_set method definitions
@@ -95,17 +111,19 @@ rule_set::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // class pull_up method definitions
 
-pull_up::pull_up() : rule(), guard(), output() { }
+pull_up::pull_up() : rule(), guard(), output(), cmpl(false) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(guard_arg_type& g, excl_ptr<literal>& o) :
-		rule(), guard(g), output(o) {
+pull_up::pull_up(guard_arg_type& g, const literal& o, const bool c) :
+		rule(), guard(g), output(o), cmpl(c) {
 	NEVER_NULL(guard);
-	NEVER_NULL(output);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_up::~pull_up() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pull_up)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
@@ -113,7 +131,17 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pull_up::dump(ostream& o) const {
-	return output->dump(guard->dump(o << auto_indent) << " -> ") << "+";
+	static const char* norm_arrow = " -> ";
+	static const char* comp_arrow = " => ";
+	return output.dump(
+		guard->dump(o << auto_indent) <<
+			((cmpl) ? comp_arrow : norm_arrow)) << "+";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+pull_up::complement(void) const {
+	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,7 +150,7 @@ pull_up::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	guard->collect_transient_info(m);
-	output->collect_transient_info(m);
+	output.collect_transient_info_base(m);
 }
 }
 
@@ -130,30 +158,36 @@ if (!m.register_transient_object(this,
 void
 pull_up::write_object(const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, guard);
-	m.write_pointer(o, output);
+//	m.write_pointer(o, output);
+	output.write_object(m, o);
+	write_value(o, cmpl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pull_up::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
-	m.read_pointer(i, output);
+//	m.read_pointer(i, output);
+	output.load_object(m, i);
+	read_value(i, cmpl);
 }
 
 //=============================================================================
 // class pull_dn method definitions
 
-pull_dn::pull_dn() : rule(), guard(), output() { }
+pull_dn::pull_dn() : rule(), guard(), output(), cmpl(false) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(guard_arg_type& g, excl_ptr<literal>& o) :
-		rule(), guard(g), output(o) {
+pull_dn::pull_dn(guard_arg_type& g, const literal& o, const bool c) :
+		rule(), guard(g), output(o), cmpl(c) {
 	NEVER_NULL(guard);
-	NEVER_NULL(output);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_dn::~pull_dn() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pull_dn)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_dn)
@@ -161,17 +195,26 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_dn)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pull_dn::dump(ostream& o) const {
-	return output->dump(guard->dump(o << auto_indent) << " -> ") << "-";
+	static const char* norm_arrow = " -> ";
+	static const char* comp_arrow = " => ";
+	return output.dump(
+		guard->dump(o << auto_indent) <<
+			((cmpl) ? comp_arrow : norm_arrow)) << "-";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+pull_dn::complement(void) const {
+	return excl_ptr<rule>(NULL);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pull_dn::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	guard->collect_transient_info(m);
-	output->collect_transient_info(m);
+	output.collect_transient_info_base(m);
 }
 }
 
@@ -179,18 +222,31 @@ if (!m.register_transient_object(this,
 void
 pull_dn::write_object(const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, guard);
-	m.write_pointer(o, output);
+	output.write_object(m, o);
+//	m.write_pointer(o, output);
+	write_value(o, cmpl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pull_dn::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
-	m.read_pointer(i, output);
+	output.load_object(m, i);
+//	m.read_pointer(i, output);
+	read_value(i, cmpl);
 }
 
 //=============================================================================
 // class pass method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pass)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+pass::complement(void) const {
+	return excl_ptr<rule>(NULL);
+}
 
 //=============================================================================
 // class prs_expr method definitions
@@ -202,6 +258,9 @@ and_expr::and_expr() : prs_expr(), sequence_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 and_expr::~and_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
@@ -218,6 +277,20 @@ and_expr::dump(ostream& o) const {
 		(*i)->dump(o << " & ");
 	}
 	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<prs_expr>
+and_expr::negation_normalize(void) const {
+#if 0
+	excl_ptr<or_expr> ret(new or_expr);
+	transform(begin(), end(), back_inserter(*ret), 
+		prs_expr::negation_normalizer()
+	);
+	return ret.as_a_xfer<prs_expr>;
+#else
+	return excl_ptr<prs_expr>(NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -250,6 +323,9 @@ or_expr::or_expr() : prs_expr(), sequence_type() { }
 or_expr::~or_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(or_expr)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,6 +340,12 @@ or_expr::dump(ostream& o) const {
 		(*i)->dump(o << " | ");
 	}
 	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<prs_expr>
+or_expr::negation_normalize(void) const {
+	return excl_ptr<prs_expr>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,12 +383,21 @@ not_expr::not_expr(guard_arg_type& g) : prs_expr(), var(g) {
 not_expr::~not_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(not_expr)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(not_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 not_expr::dump(ostream& o) const {
 	return var->dump(o << "~");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<prs_expr>
+not_expr::negation_normalize(void) const {
+	return excl_ptr<prs_expr>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -336,12 +427,15 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 literal::literal() : prs_expr(), var() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-literal::literal(literal_base_ptr_type& l) : prs_expr(), var(l) {
+literal::literal(const literal_base_ptr_type& l) : prs_expr(), var(l) {
 	NEVER_NULL(var);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(literal)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
@@ -356,11 +450,29 @@ literal::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<prs_expr>
+literal::negation_normalize(void) const {
+	return excl_ptr<prs_expr>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Doesn't register itself as a dynamically allocated object.  
+ */
+void
+literal::collect_transient_info_base(persistent_object_manager& m) const {
+	var->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers itself as a dynamically allocated object.  
+ */
 void
 literal::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	var->collect_transient_info(m);
+	collect_transient_info_base(m);
 }
 }
 

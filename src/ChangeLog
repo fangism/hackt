@@ -2,6 +2,20 @@
 
 2005-05-16	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-36-PRS-01-06:
+	  PRS::literal changed to include a count_ptr<bool_instance_reference>
+		making it trivially copy-constructible.
+	  PRS::pull_{up,dn} includes literal (not pointer thereof) now, 
+		resulting in more efficient storage.  
+	  PRS::prs_expr and rule's are now chunk_map_pool-allocated.  
+	  Some code clean up.  
+	  NEXT: negation-normal-form and other utility methods.  
+		Possibly reconsider choice of pointers classes
+		for expression operands.  
+
+
+2005-05-16	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-36-PRS-01-05:
 	  Now actually adding production rule objects to process_definition.
 	  Implemented PRS dump routines for readable feedback.  

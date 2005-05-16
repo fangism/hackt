@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.1.2.3 2005/05/16 18:29:27 fang Exp $
+	$Id: art_object_PRS.h,v 1.1.2.4 2005/05/16 21:43:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -9,6 +9,7 @@
 
 #include "Object/art_object_PRS_base.h"
 #include <vector>
+#include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -17,21 +18,65 @@ using std::vector;
 //=============================================================================
 // forward declarations
 
-class literal;
-typedef	excl_ptr<bool_instance_reference>	literal_base_ptr_type;
+typedef	count_ptr<bool_instance_reference>	literal_base_ptr_type;
 
 //=============================================================================
 /**
-	Pull-down production rule.  
+	Literal expression.  
+ */
+class literal : public prs_expr {
+	typedef	literal				this_type;
+private:
+	literal_base_ptr_type			var;
+public:
+	literal();
+
+	explicit
+	literal(const literal_base_ptr_type&);
+
+	// default copy constructor (is copy-constructible)
+
+	~literal();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
+
+	excl_ptr<prs_expr>
+	negation_normalize(void) const;
+
+	// fanout.. not until actually instantiated, unrolled, created...
+	PERSISTENT_METHODS_DECLARATIONS;
+	void
+	collect_transient_info_base(persistent_object_manager& m) const;
+
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class literal
+
+//=============================================================================
+/**
+	Pull-up production rule.  
  */
 class pull_up : public rule {
 	typedef	pull_up			this_type;
 protected:
+	/**
+		Guard expression.  
+	 */
 	guard_type			guard;
-	excl_ptr<literal>		output;
+	/**
+		Output node.  
+	 */
+	literal				output;
+	/**
+		Whether or not complement is implicit.
+	 */
+	bool				cmpl;
 public:
 	pull_up();
-	pull_up(guard_arg_type&, excl_ptr<literal>&);
+	pull_up(guard_arg_type&, const literal&, const bool);
 	~pull_up();
 
 	ostream&
@@ -40,21 +85,35 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	excl_ptr<rule>
+	complement(void) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class pull-up
 
 //=============================================================================
 /**
-	Pull-up production rule.  
+	Pull-down production rule.  
  */
 class pull_dn : public rule {
 	typedef	pull_dn			this_type;
 protected:
+	/**
+		Guard expression.  
+	 */
 	guard_type			guard;
-	excl_ptr<literal>		output;
+	/**
+		Output node.  
+	 */
+	literal				output;
+	/**
+		Whether or not complement is implicit.
+	 */
+	bool				cmpl;
 public:
 	pull_dn();
-	pull_dn(guard_arg_type&, excl_ptr<literal>&);
+	pull_dn(guard_arg_type&, const literal&, const bool);
 	~pull_dn();
 
 	ostream&
@@ -63,7 +122,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	excl_ptr<rule>
+	complement(void) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class pull_dn
 
 //=============================================================================
@@ -72,10 +135,11 @@ public:
 	PUNT!
  */
 class pass : public rule {
+	typedef	pass			this_type;
 protected:
 	guard_type			guard;
-	excl_ptr<literal>		output1;
-	excl_ptr<literal>		output2;
+	literal				output1;
+	literal				output2;
 public:
 
 	ostream&
@@ -84,7 +148,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	excl_ptr<rule>
+	complement(void) const;
+
 	PERSISTENT_METHODS_DECLARATIONS;
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// and class pass
 
 //=============================================================================
@@ -104,8 +172,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	excl_ptr<prs_expr>
+	negation_normalize(void) const;
+
 	PERSISTENT_METHODS_DECLARATIONS;
-	// POOL ALLOCATE
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class and_expr
 
 //=============================================================================
@@ -125,8 +196,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	excl_ptr<prs_expr>
+	negation_normalize(void) const;
+
 	PERSISTENT_METHODS_DECLARATIONS;
-	// POOL ALLOCATE
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class or_expr
 
 //=============================================================================
@@ -150,37 +224,12 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	excl_ptr<prs_expr>
+	negation_normalize(void) const;
+
 	PERSISTENT_METHODS_DECLARATIONS;
-	// POOL ALLOCATE
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class not_expr
-
-//=============================================================================
-/**
-	Literal expression.  
- */
-class literal : public prs_expr {
-	typedef	literal				this_type;
-//	typedef	bool_instance_reference		reference_parent_type;
-private:
-	literal_base_ptr_type		var;
-public:
-	literal();
-
-	explicit
-	literal(literal_base_ptr_type&);
-
-	~literal();
-
-	ostream&
-	what(ostream&) const;
-
-	ostream&
-	dump(ostream&) const;
-
-	// fanout.. not until actually instantiated, unrolled, created...
-	PERSISTENT_METHODS_DECLARATIONS;
-	// POOL ALLOCATE
-};	// end class literal
 
 //=============================================================================
 }	// end namespace PRS

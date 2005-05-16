@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14.2.5 2005/05/16 18:29:26 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.6 2005/05/16 21:43:41 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -31,7 +31,7 @@ namespace util {
 SPECIALIZE_UTIL_WHAT(ART::parser::PRS::rule, "(prs-rule)")
 SPECIALIZE_UTIL_WHAT(ART::parser::PRS::loop, "(prs-loop)")
 SPECIALIZE_UTIL_WHAT(ART::parser::PRS::body, "(prs-body)")
-SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "op-loop")
+SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "(prs-op-loop)")
 }
 
 namespace ART {
@@ -73,13 +73,12 @@ rule::rightmost(void) const {
 	return dir->rightmost();
 }
 
-#if 0
-never_ptr<const object>
-rule::check_build(context& c) const {
-	cerr << "Fang, finish PRS::rule::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type-checks and constructs a production rule.  
+	\return a newly constructed, type-checked production rule, 
+		to be added to a definition.  
+ */
 body_item::return_type
 rule::check_rule(context& c) const {
 	prs_expr_return_type g(guard->check_prs_expr(c));
@@ -95,15 +94,14 @@ rule::check_rule(context& c) const {
 		THROW_EXIT;
 	}
 	// temporary support for normal arrow only!
+	const bool arrow_type = (arrow->text[0] == '=');
 	excl_ptr<entity::PRS::prs_expr> g_arg(g.exclusive_release());
-	excl_ptr<entity::PRS::literal> o_arg(o.exclusive_release());
 	return body_item::return_type((dir->text[0] == '+') ?
 		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_up(g_arg, o_arg)) :
+			new entity::PRS::pull_up(g_arg, *o, arrow_type)) :
 		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_dn(g_arg, o_arg)));
+			new entity::PRS::pull_dn(g_arg, *o, arrow_type)));
 }
-#endif
 
 //=============================================================================
 // class loop method definitions
@@ -134,18 +132,12 @@ loop::rightmost(void) const {
 	else		return rules->rightmost();
 }
 
-#if 0
-never_ptr<const object>
-loop::check_build(context& c) const {
-	cerr << "Fang, finish PRS::loop::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 body_item::return_type
 loop::check_rule(context& c) const {
+	cerr << "Fang, write PRS::loop::check_rule()!" << endl;
 	return body_item::return_type();
 }
-#endif
 
 //=============================================================================
 // class body method definitions
@@ -179,9 +171,6 @@ body::rightmost(void) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
-#if 0
-	cerr << "Fang, finish PRS::body::check_build()!" << endl;
-#else
 	if (rules) {
 		// check context's current open definition
 		never_ptr<definition_base> d(c.get_current_open_definition());
@@ -207,7 +196,6 @@ body::check_build(context& c) const {
 			THROW_EXIT;
 		}
 	}
-#endif
 	return never_ptr<const object>(NULL);
 }
 
@@ -245,16 +233,10 @@ op_loop::rightmost(void) const {
 	else		return ex->rightmost();
 }
 
-#if 0
-/** temporary: FINISH ME */
-never_ptr<const object>
-op_loop::check_build(context& c) const {
-	cerr << "Fang, finish op_loop::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-#endif
-
-/** temporary: FINISH ME */
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: FINISH ME
+ */
 expr::return_type
 op_loop::check_expr(context& c) const {
 	cerr << "Fang, finish op_loop::check_expr()!" << endl;

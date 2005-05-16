@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.12.2.3 2005/05/16 03:52:19 fang Exp $
+	$Id: art_parser_prs.h,v 1.12.2.4 2005/05/16 21:43:41 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
@@ -58,12 +58,7 @@ virtual	line_position
 	body_item::return_type						\
 	check_rule(context&) const
 
-#if 0
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
-#else
 virtual	PRS_ITEM_CHECK_PROTO = 0;
-#endif
 };	// end class body_item
 
 //=============================================================================
@@ -91,12 +86,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	never_ptr<const object>
-	check_build(context& c) const;
-#else
 	PRS_ITEM_CHECK_PROTO;
-#endif
 };	// end class rule
 
 //=============================================================================
@@ -126,12 +116,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	never_ptr<const object>
-	check_build(context& c) const;
-#else
 	PRS_ITEM_CHECK_PROTO;
-#endif
 };	// end class loop
 
 //=============================================================================
@@ -192,12 +177,11 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	CHECK_EXPR_PROTO;
+
+#if 0
+	CHECK_PRS_EXPR_PROTO;
+#endif
 };	// end class op_loop
 
 //=============================================================================
