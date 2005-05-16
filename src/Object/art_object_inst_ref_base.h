@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.10 2005/05/10 04:51:14 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.10.4.1 2005/05/16 18:29:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -238,6 +238,9 @@ virtual	~simple_instance_reference();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+	ostream&
+	dump_briefer(ostream& o, const never_ptr<const scopespace>) const;
 
 	ostream&
 	dump_brief(ostream& o) const;

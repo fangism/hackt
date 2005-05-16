@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.1.2.2 2005/05/16 03:52:20 fang Exp $
+	$Id: art_object_PRS.h,v 1.1.2.3 2005/05/16 18:29:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -13,10 +13,7 @@
 namespace ART {
 namespace entity {
 namespace PRS {
-using std::istream;
-using std::ostream;
 using std::vector;
-using util::persistent_object_manager;
 //=============================================================================
 // forward declarations
 
@@ -40,6 +37,9 @@ public:
 	ostream&
 	what(ostream&) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pull-up
 
@@ -60,6 +60,9 @@ public:
 	ostream&
 	what(ostream&) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pull_dn
 
@@ -78,6 +81,9 @@ public:
 	ostream&
 	what(ostream&) const;
 
+	ostream&
+	dump(ostream&) const;
+
 	PERSISTENT_METHODS_DECLARATIONS;
 };	// and class pass
 
@@ -95,10 +101,8 @@ public:
 	ostream&
 	what(ostream&) const;
 
-#if 0
-	void
-	reserve(size_t n) { operands.reserve(n); }
-#endif
+	ostream&
+	dump(ostream&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	// POOL ALLOCATE
@@ -118,10 +122,8 @@ public:
 	ostream&
 	what(ostream&) const;
 
-#if 0
-	void
-	reserve(size_t n) { operands.reserve(n); }
-#endif
+	ostream&
+	dump(ostream&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	// POOL ALLOCATE
@@ -144,6 +146,9 @@ public:
 
 	ostream&
 	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	// POOL ALLOCATE
@@ -168,6 +173,9 @@ public:
 
 	ostream&
 	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS;

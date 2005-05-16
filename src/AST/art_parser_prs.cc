@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14.2.4 2005/05/16 03:52:19 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.5 2005/05/16 18:29:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -94,6 +94,7 @@ rule::check_rule(context& c) const {
 			where(*r) << "." << endl;
 		THROW_EXIT;
 	}
+	// temporary support for normal arrow only!
 	excl_ptr<entity::PRS::prs_expr> g_arg(g.exclusive_release());
 	excl_ptr<entity::PRS::literal> o_arg(o.exclusive_release());
 	return body_item::return_type((dir->text[0] == '+') ?
@@ -194,6 +195,12 @@ body::check_build(context& c) const {
 				body_item::return_type());
 		if (null_iter == checked_rules.end()) {
 			// no errors found, add them too the process definition
+			checked_rules_type::iterator i = checked_rules.begin();
+			for ( ; i!=checked_rules.end(); i++) {
+				excl_ptr<entity::PRS::rule>
+					xfer(i->exclusive_release());
+				pd->add_production_rule(xfer);
+			}
 		} else {
 			cerr << "ERROR: at least one error in PRS body."
 				<< endl;

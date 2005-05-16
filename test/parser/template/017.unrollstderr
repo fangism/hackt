@@ -4,18 +4,18 @@ Persistent Object Manager text dump:
 	0	         0	________	0	0	0
 	1	 0x3101cc0	module__	0	0	32
 	2	 0x3100144	namespc_	0	32	60
-	3	 0x3101ce0	procdefn	0	60	131
-	4	 0x3101c74	pintcoll	0	131	168
-	5	 0x3101d60	pintinst	0	168	184
-	6	 0x3101d90	spiref__	0	184	204
-	7	 0x3101da4	pintcoll	0	204	253
-	8	 0x3101df0	pintinst	0	253	269
-	9	 0x3101e04	dintcoll	0	269	314
-	10	 0x3101e60	datainst	0	314	334
-	11	 0x3101e80	datatprf	0	334	350
-	12	 0x3101e90	datadefn	0	350	386
-	13	 0x3101ef4	dprmlst_	0	386	402
-	14	 0x3101f20	spiref__	0	402	422
+	3	 0x3101ce0	procdefn	0	60	135
+	4	 0x3101c74	pintcoll	0	135	172
+	5	 0x3101d60	pintinst	0	172	188
+	6	 0x3101d90	spiref__	0	188	208
+	7	 0x3101da4	pintcoll	0	208	257
+	8	 0x3101df0	pintinst	0	257	273
+	9	 0x3101e04	dintcoll	0	273	318
+	10	 0x3101e60	datainst	0	318	338
+	11	 0x3101e80	datatprf	0	338	354
+	12	 0x3101e90	datadefn	0	354	390
+	13	 0x3101ef4	dprmlst_	0	390	406
+	14	 0x3101f20	spiref__	0	406	426
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

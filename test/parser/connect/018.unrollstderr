@@ -2,31 +2,31 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102bd0	module__	0	0	44
+	1	 0x3102d60	module__	0	0	44
 	2	 0x3100144	namespc_	0	44	76
-	3	 0x3102bf4	proccoll	2	76	597
-	4	 0x3102c40	procinst	0	597	617
-	5	 0x3102c60	proctprf	0	617	633
-	6	 0x3102c70	procdefn	0	633	674
-	7	 0x3102cf4	crnglst_	0	674	702
-	8	 0x3102d00	proctprf	0	702	718
-	9	 0x3102d14	proccoll	1	718	828
-	10	 0x3102d60	procinst	0	828	848
-	11	 0x3102d80	proctprf	0	848	864
-	12	 0x3102d94	crnglst_	0	864	884
-	13	 0x3102da0	proctprf	0	884	900
-	14	 0x3102db0	prcalias	0	900	920
-	15	 0x3102ddc	sprocref	0	920	940
-	16	 0x3102dfc	sprocref	0	940	960
-	17	 0x3102e04	cindlst_	0	960	980
-	18	 0x2496024	cnstpi__	0	980	992
-	19	 0x3802210	cnstrng_	0	992	1008
-	20	 0x3102e10	prcalias	0	1008	1028
-	21	 0x3102e3c	sprocref	0	1028	1048
-	22	 0x3102e44	cindlst_	0	1048	1068
-	23	 0x3802224	cnstrng_	0	1068	1084
-	24	 0x2496038	cnstpi__	0	1084	1096
-	25	 0x3102e6c	sprocref	0	1096	1116
+	3	 0x3102d84	proccoll	2	76	597
+	4	 0x3102dd0	procinst	0	597	617
+	5	 0x3102df0	proctprf	0	617	633
+	6	 0x3102e00	procdefn	0	633	678
+	7	 0x3102e84	crnglst_	0	678	706
+	8	 0x3102e90	proctprf	0	706	722
+	9	 0x3102ea4	proccoll	1	722	832
+	10	 0x3102ef0	procinst	0	832	852
+	11	 0x3102f10	proctprf	0	852	868
+	12	 0x3102f24	crnglst_	0	868	888
+	13	 0x3102f30	proctprf	0	888	904
+	14	 0x3102f40	prcalias	0	904	924
+	15	 0x3102f6c	sprocref	0	924	944
+	16	 0x3102f8c	sprocref	0	944	964
+	17	 0x3102f94	cindlst_	0	964	984
+	18	 0x24c5024	cnstpi__	0	984	996
+	19	 0x3802210	cnstrng_	0	996	1012
+	20	 0x3102fa0	prcalias	0	1012	1032
+	21	 0x3102fcc	sprocref	0	1032	1052
+	22	 0x3102fd4	cindlst_	0	1052	1072
+	23	 0x3802224	cnstrng_	0	1072	1088
+	24	 0x24c5038	cnstpi__	0	1088	1100
+	25	 0x3102ffc	sprocref	0	1100	1120
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

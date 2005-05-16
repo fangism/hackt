@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.1.2.1 2005/05/16 03:52:21 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.1.2.2 2005/05/16 18:29:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -123,6 +123,9 @@ public:
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
+
+	void
+	add_production_rule(excl_ptr<PRS::rule>&);
 
 // methods for object file I/O
 public:

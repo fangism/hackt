@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.44.2.1 2005/05/16 03:52:20 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.44.2.2 2005/05/16 18:29:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -1851,6 +1851,10 @@ process_definition::dump(ostream& o) const {
 			i->second->dump(o) << endl;
 		}
 		// PRS
+		if (!prs.empty()) {
+			o << auto_indent << "prs:" << endl;
+			prs.dump(o);	// << endl;
+		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -2073,6 +2077,15 @@ process_definition::equivalent_port_formals(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
+	NEVER_NULL(r);
+	prs.push_back(PRS::rule_set::value_type());
+	prs.back() = r;
+	INVARIANT(!r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2086,6 +2099,7 @@ if (!m.register_transient_object(this,
 	scopespace::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
 	// PRS
+	prs.collect_transient_info_base(m);
 }
 }
 
@@ -2104,6 +2118,7 @@ process_definition::write_object(
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
 	// PRS
+	prs.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2118,6 +2133,7 @@ process_definition::load_object(
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
 	// PRS
+	prs.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.1.2.2 2005/05/16 03:52:19 fang Exp $
+	$Id: art_object_PRS.cc,v 1.1.2.3 2005/05/16 18:29:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -12,6 +12,7 @@
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
+#include "util/indent.h"
 
 //=============================================================================
 namespace util {
@@ -40,17 +41,56 @@ namespace ART {
 namespace entity {
 namespace PRS {
 using util::persistent_traits;
+using util::auto_indent;
+#include "util/using_ostream.h"
 
 //=============================================================================
-// class rule_set methd definitions
+// class rule method definitions
+
+//=============================================================================
+// class rule::dumper method definitions
+
+template <class P>
+void
+rule::dumper::operator () (const P& r) {
+	NEVER_NULL(r);
+	r->dump(os) << endl;
+}
+
+//=============================================================================
+// class rule_set method definitions
 
 rule_set::rule_set() : parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 rule_set::~rule_set() { }
 
-//=============================================================================
-// class rule method definitions
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+rule_set::dump(ostream& o) const {
+	for_each(begin(), end(), rule::dumper(o));
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::collect_transient_info_base(persistent_object_manager& m) const {
+	m.collect_pointer_list(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer_list(o, *this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer_list(i, *this);
+}
 
 //=============================================================================
 // class pull_up method definitions
@@ -69,6 +109,12 @@ pull_up::~pull_up() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pull_up::dump(ostream& o) const {
+	return output->dump(guard->dump(o << auto_indent) << " -> ") << "+";
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -113,6 +159,13 @@ pull_dn::~pull_dn() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_dn)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pull_dn::dump(ostream& o) const {
+	return output->dump(guard->dump(o << auto_indent) << " -> ") << "-";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pull_dn::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -154,6 +207,20 @@ and_expr::~and_expr() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+and_expr::dump(ostream& o) const {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	NEVER_NULL(*i);
+	(*i)->dump(o << '(');
+	for (i++; i!=e; i++) {
+		NEVER_NULL(*i);
+		(*i)->dump(o << " & ");
+	}
+	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 and_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -184,6 +251,20 @@ or_expr::~or_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+or_expr::dump(ostream& o) const {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	NEVER_NULL(*i);
+	(*i)->dump(o << '(');
+	for (i++; i!=e; i++) {
+		NEVER_NULL(*i);
+		(*i)->dump(o << " | ");
+	}
+	return o << ')';
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -223,6 +304,12 @@ not_expr::~not_expr() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(not_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+not_expr::dump(ostream& o) const {
+	return var->dump(o << "~");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 not_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -258,6 +345,15 @@ literal::~literal() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Later, change prototype to pass in pointer to parent definition.  
+ */
+ostream&
+literal::dump(ostream& o) const {
+	return var->dump_briefer(o, never_ptr<const scopespace>());
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

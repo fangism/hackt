@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.1.2.1 2005/05/16 03:52:20 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.1.2.2 2005/05/16 18:29:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
@@ -22,9 +22,12 @@ namespace entity {
  */
 namespace PRS {
 using std::list;
+using std::istream;
+using std::ostream;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 using util::persistent;
+using util::persistent_object_manager;
 //=============================================================================
 
 class rule;
@@ -36,13 +39,27 @@ typedef	excl_ptr<prs_expr>			guard_arg_type;
 /**
 	A collection or production rules.  
  */
-class rule_set : public list<excl_ptr<rule> > {
+class rule_set : public list<sticky_ptr<rule> > {
 	typedef	rule_set			this_type;
 protected:
-	typedef	list<excl_ptr<rule> >		parent_type;
+	typedef	list<sticky_ptr<rule> >		parent_type;
+public:
+	typedef	parent_type::value_type		value_type;
 public:
 	rule_set();
 	~rule_set();
+
+	ostream&
+	dump(ostream&) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class rule_set
 
@@ -55,7 +72,17 @@ public:
 	rule() { }
 virtual	~rule() { }
 
-// virtual	ostream& dump(ostream&) const;
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
+
+		template <class P>
+		void
+		operator () (const P&);
+	};	// end struct dumper
+
+virtual	ostream&
+	dump(ostream&) const = 0;
 };	// end class rule
 
 //=============================================================================
@@ -74,6 +101,8 @@ public:
 	prs_expr() { }
 virtual	~prs_expr() { }
 
+virtual	ostream&
+	dump(ostream&) const = 0;
 };	// end class prs_expr
 
 //=============================================================================

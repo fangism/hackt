@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.28 2005/05/10 04:51:14 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.28.4.1 2005/05/16 18:29:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -582,6 +582,31 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 ostream&
 simple_instance_reference::dump_brief(ostream& o) const {
 	o << get_inst_base()->get_qualified_name();
+	if (array_indices) {
+		array_indices->dump(o);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Even briefer, without fully-qualified name.  
+	Make it smart, use qualiied name if referring outside of
+	a particular definition or scope (another argument).  
+	\param loc the local scope, used to determine whether or not
+		to print the qualified or abbreviated name.  
+		If null, then always used short name.  
+ */
+ostream&
+simple_instance_reference::dump_briefer(ostream& o, 
+		const never_ptr<const scopespace> loc) const {
+	never_ptr<const instance_collection_base>
+		ib(get_inst_base());
+	if (loc && loc == ib->get_owner()) {
+		o << ib->get_qualified_name();
+	} else {
+		o << ib->get_name();
+	}
 	if (array_indices) {
 		array_indices->dump(o);
 	}

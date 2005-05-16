@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-05-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-05:
+	  Now actually adding production rule objects to process_definition.
+	  Implemented PRS dump routines for readable feedback.  
+		Currently prints using short local (unqualified) names.  
+	  Updated many (object) tests to account for increased size of 
+		process_definition binary object
+		(+4B for size of PRS pointer list).  
+	  This snapshot is a candidate for merging back to main trunk.  
+
+
 2005-05-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-36-PRS-01-04:

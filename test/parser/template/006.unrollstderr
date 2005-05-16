@@ -2,23 +2,23 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3101f60	module__	0	0	28
+	1	 0x31020f0	module__	0	0	28
 	2	 0x3100144	namespc_	0	28	52
-	3	 0x3101f80	procdefn	0	52	112
-	4	 0x3102004	pintcoll	0	112	149
-	5	 0x3102050	pintinst	0	149	165
-	6	 0x3102064	dintcoll	1	165	200
-	7	 0x31020b0	datainst	0	200	220
-	8	 0x31020d0	datatprf	0	220	236
-	9	 0x31020e0	datadefn	0	236	272
-	10	 0x3102144	dprmlst_	0	272	288
-	11	 0x2496024	cnstpi__	0	288	300
-	12	 0x3102154	drnglst_	0	300	316
-	13	 0x3102174	dynrng__	0	316	332
-	14	 0x2496038	cnstpi__	0	332	344
-	15	 0x3102198	arithexp	0	344	361
-	16	 0x31021c0	spiref__	0	361	381
-	17	 0x249604c	cnstpi__	0	381	393
+	3	 0x3102110	procdefn	0	52	116
+	4	 0x3102194	pintcoll	0	116	153
+	5	 0x31021e0	pintinst	0	153	169
+	6	 0x31021f4	dintcoll	1	169	204
+	7	 0x3102240	datainst	0	204	224
+	8	 0x3102260	datatprf	0	224	240
+	9	 0x3102270	datadefn	0	240	276
+	10	 0x31022d4	dprmlst_	0	276	292
+	11	 0x24c5024	cnstpi__	0	292	304
+	12	 0x31022e4	drnglst_	0	304	320
+	13	 0x3102304	dynrng__	0	320	336
+	14	 0x24c5038	cnstpi__	0	336	348
+	15	 0x3102328	arithexp	0	348	365
+	16	 0x3102350	spiref__	0	365	385
+	17	 0x24c504c	cnstpi__	0	385	397
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {
