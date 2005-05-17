@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.57.2.2 2005/05/16 03:52:16 fang Exp $
+#	$Id: Makefile.am,v 1.57.2.3 2005/05/17 21:48:37 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -259,6 +259,9 @@ UTIL_HEADER_FILES = \
 	util/memory/pointer_manipulator.h \
 	util/memory/excl_ptr.h \
 	util/memory/count_ptr.h \
+	util/memory/count_ptr.tcc \
+	util/memory/ref_count_pool.h \
+	util/memory/ref_count_pool_anchor.h \
 	util/memory/thread_lock.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_qmap.h \
@@ -344,6 +347,7 @@ libart___la_SOURCES = \
 	util/stacktrace.cc \
 	util/static_trace.cc \
 	util/memory/thread_lock.cc \
+	util/memory/ref_count_pool.cc \
 	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \

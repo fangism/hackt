@@ -1,14 +1,14 @@
 /**
 	\file "count_ptr_test.cc"
 	Test program for checking reference-counted pointers.  
-	$Id: count_ptr_test.cc,v 1.5 2005/01/28 19:58:54 fang Exp $
+	$Id: count_ptr_test.cc,v 1.5.54.1 2005/05/17 21:48:46 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "var.h"
-#include "memory/count_ptr.h"
+#include "memory/count_ptr.tcc"
 
 using std::string;
 #include "using_ostream.h"

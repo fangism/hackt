@@ -1,11 +1,14 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.1.2.4 2005/05/16 21:43:42 fang Exp $
+	$Id: art_object_PRS.cc,v 1.1.2.5 2005/05/17 21:48:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
 #define	__OBJECT_ART_OBJECT_PRS_CC__
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_PRS.cc")
 
 #include "Object/art_object_PRS.h"
 #include "Object/art_object_inst_ref.h"
@@ -492,6 +495,8 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("Object/art_object_PRS.cc")
 
 #endif	// __OBJECT_ART_OBJECT_PRS_CC__
 

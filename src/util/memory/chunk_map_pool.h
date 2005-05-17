@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.4 2005/05/10 04:51:33 fang Exp $
+	$Id: chunk_map_pool.h,v 1.4.4.1 2005/05/17 21:48:44 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -65,7 +65,9 @@ REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(T)					\
 T::pool_ref_ref_type							\
 T::get_pool(void) {							\
 	static pool_type*	pool = new pool_type();			\
-	static size_t*		count = new size_t(0);			\
+	STATIC_RC_POOL_REF_INIT;					\
+	static size_t*		count = NEW_SIZE_T;			\
+	static const size_t	zero = (*count = 0);			\
 	return pool_ref_ref_type(pool, count);				\
 }									\
 void*									\
@@ -195,6 +197,14 @@ public:
 		return this->elements;
 	}
 
+	const void*
+	past_end_address(void) const {
+		return &this->elements[C];
+	}
+
+	bool
+	contains(void*) const;
+
 protected:		// really only intended for internal use
 	void*
 	__allocate(void);
@@ -226,6 +236,9 @@ public:
 	chunk_map_pool_chunk();
 
 	~chunk_map_pool_chunk();
+
+	bool
+	contains(pointer) const;
 
 	/// wrap around parent's
 	pointer
@@ -306,6 +319,9 @@ public:
 	chunk_map_pool();
 
 	~chunk_map_pool();
+
+	bool
+	contains(pointer p) const;
 
 	pointer
 	allocate(void);

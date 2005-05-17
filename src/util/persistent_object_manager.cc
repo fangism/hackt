@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.19.4.1 2005/05/15 02:39:11 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.19.4.2 2005/05/17 21:48:43 fang Exp $
  */
 
 // flags and switches
@@ -410,7 +410,9 @@ size_t*
 persistent_object_manager::reconstruction_table_entry::count(void) const {
 	STACKTRACE("recon_table_entry::count()");
 	if (!ref_count) {
-		ref_count = new size_t(0);
+		STATIC_RC_POOL_REF_INIT;
+		ref_count = NEW_SIZE_T;
+		*ref_count = 0;
 	}
 	NEVER_NULL(ref_count);
 	return ref_count;

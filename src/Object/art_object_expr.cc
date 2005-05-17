@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.44.4.1 2005/05/15 23:10:36 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.44.4.2 2005/05/17 21:48:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -13,6 +13,11 @@
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+
+//=============================================================================
+// start of static initializations
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("object-expr")
 
 #include <exception>
 #include <algorithm>
@@ -45,10 +50,8 @@
 #include "util/STL/list.tcc"
 #include "util/qmap.tcc"
 #include "util/stacktrace.h"
-#include "util/static_trace.h"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
-// #include "util/memory/pointer_classes.h"
 #include "util/sstream.h"		// for ostringstring, used by dump
 #include "util/discrete_interval_set.tcc"
 #include "util/compose.h"
@@ -69,9 +72,6 @@
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace util {

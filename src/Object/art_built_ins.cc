@@ -2,13 +2,16 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.18 2005/05/10 04:51:09 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.18.4.1 2005/05/17 21:48:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
 #define	__OBJECT_ART_BUILT_INS_CC__
 
 #define	DEBUG_ART_BUILT_INS			0
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("built-ins");
 
 #include "util/memory/pointer_classes.h"
 #include "util/memory/list_vector_pool.h"
@@ -17,11 +20,8 @@
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_expr_const.h"
-#include "util/static_trace.h"
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_classification_details.h"
-
-STATIC_TRACE_BEGIN("built-ins");
 
 #if DEBUG_ART_BUILT_INS
 	#define	ENABLE_STACKTRACE			1

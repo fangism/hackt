@@ -1,11 +1,14 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.25.2.1 2005/05/14 22:38:36 fang Exp $
+	$Id: art_parser_token.cc,v 1.25.2.2 2005/05/17 21:48:39 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
 #define	__AST_ART_PARSER_TOKEN_CC__
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("AST/art_parser_token.cc")
 
 #include <ostream>
 #include <cstdio>		// for sprintf
@@ -615,6 +618,8 @@ token_pint_type::check_definition(context& c) const {
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
+
+STATIC_TRACE_END("AST/art_parser_token.cc")
 
 #endif	// __AST_ART_PARSER_TOKEN_CC__
 

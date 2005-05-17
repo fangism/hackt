@@ -1,5 +1,34 @@
 "ChangeLog"
 
+2005-05-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-07:
+	  This revision doesn't really belong here, but it was done anyhow.
+	  What's good for the gander, is good for the goose.
+	  Most changes apply to the util library, almost nothing is specific
+		to art++ itself.  
+	  Updated some uses of util::static_trace -- it really should be
+		as early as possible in each translation unit
+		for accurate reporting.
+	  util::memory::count_ptr now pool allocates reference-counts, 
+		making their use extremely efficient.  
+		The difficulties lie with a global consistent reference
+		to the state of the count-allocator, which itself needs to
+		be reference-counted for coherent global static initialization.
+		Note: all maanual management of count pointes should use
+		the STATIC_RC_POOL_REF_INIT and NEW_SIZE_T macros
+		defined in "util/memory/count_ptr.h".
+		Also, count_ptr.tcc was split off to facilitate completing
+		definitions of other types before their destructor definitions
+		are required by the delete operator.  
+		Currently, the global reference-count pool is never freed
+		until exit -- see remark in 
+		"util/memory/ref_count_pool_anchor.h".  
+	  Added more useful utility functions to util::memory::chunk_map_pool
+		and friends.  
+	  Updated some tests in util/test to accommodate library updates.  
+		
+
 2005-05-16	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-36-PRS-01-06:

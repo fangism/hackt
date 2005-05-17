@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.2 2005/01/28 19:58:57 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.2.54.1 2005/05/17 21:48:47 fang Exp $
  */
 
 #define ENABLE_STATIC_TRACE				1
@@ -9,16 +9,18 @@
 #define	DEBUG_LIST_VECTOR_POOL				1
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
 
+#include "static_trace.h"
+STATIC_TRACE_BEGIN("named_pooled_thing.o")
+
 #include "named_pooled_thing.h"
+#include "memory/count_ptr.tcc"
 
 #include <iostream>
 #include <string>
 #include "using_ostream.h"
 #include "what.h"
 #include "stacktrace.h"
-#include "static_trace.h"
 
-#include "memory/pointer_classes.h"
 #include "memory/list_vector_pool.tcc"
 
 USING_STACKTRACE;
@@ -30,9 +32,6 @@ namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(named_thing)
 }
 }
-
-
-STATIC_TRACE_BEGIN("named_pooled_thing.o")
 
 // needed because stacktrace may be invoked (indirectly)
 // during static initialization

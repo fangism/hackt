@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.23 2005/05/10 04:51:19 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.23.4.1 2005/05/17 21:48:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -11,6 +11,8 @@
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_namepace.cc")
 
 #include <iostream>
 #include <fstream>
@@ -1555,6 +1557,8 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+STATIC_TRACE_END("Object/art_object_namepace.cc")
 
 #endif	// __OBJECT_ART_OBJECT_NAMESPACE_CC__
 

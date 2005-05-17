@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.44.2.2 2005/05/16 18:29:27 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.44.2.3 2005/05/17 21:48:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -9,7 +9,9 @@
 
 #define ENABLE_STACKTRACE		0
 
-#define	ENABLE_PRS			0
+//=============================================================================
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_definition.cc")
 
 #include <exception>
 #include <iostream>
@@ -37,11 +39,7 @@
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/stacktrace.h"
-#include "util/static_trace.h"
 #include "util/persistent_object_manager.tcc"
-
-//=============================================================================
-STATIC_TRACE_BEGIN("object-definition")
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -2342,7 +2340,7 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("object-definition")
+STATIC_TRACE_END("Object/art_object_definition.cc")
 
 #endif	// __OBJECT_ART_OBJECT_DEFINITION_CC__
 

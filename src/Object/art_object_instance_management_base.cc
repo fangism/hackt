@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.11 2005/05/10 04:51:18 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.11.4.1 2005/05/17 21:48:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -11,6 +11,9 @@
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_instance_management_base.cc")
 
 #include <iostream>
 #include <algorithm>
@@ -229,6 +232,8 @@ instance_management_base::dumper::operator () (
 #undef	STACKTRACE_DTOR
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
+
+STATIC_TRACE_END("Object/art_object_instance_management_base.cc")
 
 #endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 

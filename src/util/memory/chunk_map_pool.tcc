@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.5 2005/05/10 04:51:33 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.5.4.1 2005/05/17 21:48:44 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -26,6 +26,21 @@ using numeric::divide_by_constant;
 //=============================================================================
 // class typeless_memory_chunk method definitions
 
+TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE
+bool
+TYPELESS_MEMORY_CHUNK_CLASS::contains(void* p) const {
+	const size_t
+		diff = reinterpret_cast<size_t>(p)
+			-reinterpret_cast<size_t>(&elements[0]);
+	register const size_t offset =
+		divide_by_constant<element_size, size_t>(diff);
+	if (offset >= chunk_size)
+		return false;
+	register const bit_map_type dealloc_mask = bit_map_type(1) << offset;
+	return (free_mask & dealloc_mask);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns the address of an available element for allocation.  
 	An alternative to the invariant assertions could be exception throwing.
@@ -63,10 +78,14 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 			-reinterpret_cast<size_t>(&elements[0]);
 	register const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
-#if 0
-	cerr << "diff = " << diff <<
-		", offset = " << offset <<
-		", chunk_size = " << chunk_size << endl;
+#if 1
+	// for debugging
+	if (offset >= chunk_size) {
+		cerr << "p = " << p <<
+			", diff = " << diff <<
+			", offset = " << offset <<
+			", chunk_size = " << chunk_size << endl;
+	}
 #endif
 	INVARIANT(offset < chunk_size);	// else doesn't belong to this chunk!
 	register const bit_map_type dealloc_mask = bit_map_type(1) << offset;
@@ -97,6 +116,13 @@ CHUNK_MAP_POOL_CHUNK_CLASS::~chunk_map_pool_chunk() {
 		cerr << "WARNING: chunk freed while element still live!"
 			<< endl;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CHUNK_MAP_POOL_CHUNK_TEMPLATE_SIGNATURE
+bool
+CHUNK_MAP_POOL_CHUNK_CLASS::contains(pointer p) const {
+	return parent_type::contains(reinterpret_cast<void*>(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -148,9 +174,36 @@ CHUNK_MAP_POOL_CLASS::chunk_map_pool() :
 CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 CHUNK_MAP_POOL_CLASS::~chunk_map_pool() {
 	if (!this->chunk_map.empty()) {
-		cerr << "WARNING: chunk map destroyed while chunks were live!"
-			<< endl;
+		cerr << "WARNING: chunk_map_pool<" << what<T>::name() <<
+			"> destroyed while chunks were live!" << endl;
+		status(cerr);
+#if 0
+		cerr << "Hanging." << endl; while(1) { }
+#endif
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param p the pointer address in question
+	\return whether or not the pointer is managed by this allocator.  
+		If it WAS managed by this allocator, by was already freed, 
+		then this returns false.  
+ */
+CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
+bool
+CHUNK_MAP_POOL_CLASS::contains(pointer p) const {
+	if (chunk_map.empty())
+		return false;
+	const_alloc_map_iterator entry = chunk_map.upper_bound(p);
+	// find the chunk to which this pointer belongs
+	if (entry == chunk_map.begin()) {
+		// else out of bounds
+		return false;
+	}
+	entry--;
+	const chunk_set_iterator use_chunk = entry->second;
+	return (p >= use_chunk->start_address() && use_chunk->contains(p));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -192,7 +245,22 @@ CHUNK_MAP_POOL_TEMPLATE_SIGNATURE
 void
 CHUNK_MAP_POOL_CLASS::deallocate(pointer p) {
 	NEVER_NULL(p);
+#if 0
 	INVARIANT(!chunk_map.empty());
+#else
+	// for debugging
+	if (chunk_map.empty()) {
+		// This may happen on exit(1) without proper clean-up
+		// during stack unwinding.  Suggest throwing an exception
+		// to clean up the stack if intending to exit.  
+		cerr << "WARNING: trying to deallocate " << what<T>::name() <<
+			" at " << p << " after chunk map is already empty.  "
+			"Ignoring." << endl;
+		// { char c; std::cin >> c; }
+		// cerr << "Pausing." << endl; while(1) { }
+		return;
+	}
+#endif
 	// see "list_vector.h" for similar code.
 	alloc_map_iterator entry = chunk_map.upper_bound(p);
 	// find the chunk to which this pointer belongs
@@ -206,6 +274,7 @@ CHUNK_MAP_POOL_CLASS::deallocate(pointer p) {
 		avail_set.insert(&*use_chunk);
 	}
 	INVARIANT(p >= use_chunk->start_address());
+	INVARIANT(p < use_chunk->past_end_address());
 #if 0
 	this->status(cerr);
 	cerr << "about to delete " << p << endl;

@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.4 2005/05/10 04:51:33 fang Exp $
+	$Id: count_ptr.h,v 1.4.4.1 2005/05/17 21:48:45 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -25,6 +25,15 @@
 	INVARIANT(*ref_count < 10000)
 #else
 #define	REASONABLE_REFERENCE_COUNT
+#endif
+
+/**
+	Whether or not to use a global reference count pool
+	for allocating size_t's (counts).  
+	Overrideable per translation unit.  
+ */
+#ifndef	USE_REF_COUNT_POOL
+#define	USE_REF_COUNT_POOL				1
 #endif
 
 //=============================================================================
@@ -105,7 +114,27 @@ struct raw_count_ptr {
 	}
 
 };	// end struct raw_count_ptr
+//=============================================================================
+}	// end namespace memory
+}	// end namespace util
 
+#if USE_REF_COUNT_POOL
+	#define STATIC_RC_POOL_REF_INIT					\
+		static util::memory::ref_count_pool_type&		\
+		rc_pool_ref(*util::memory::get_ref_count_allocator_anchor())
+	#define	NEW_SIZE_T		rc_pool_ref.allocate()
+	#define	DELETE_SIZE_T(x)	rc_pool_ref.deallocate(x)
+	#define	VALIDATE_SIZE_T(x)	assert(rc_pool_ref.contains(x))
+	#include "util/memory/ref_count_pool.h"
+#else
+	#define STATIC_RC_POOL_REF_INIT		// blank
+	#define	NEW_SIZE_T		new size_t
+	#define	DELETE_SIZE_T(x)	delete x
+	#define	VALIDATE_SIZE_T(x)
+#endif
+
+namespace util {
+namespace memory {
 //=============================================================================
 /**
 	Reference counted pointer, non-const flavor.  
@@ -148,33 +177,14 @@ public:
 		\param p should be a newly allocated pointer, ONLY.  
 	 */
 	explicit
-	count_ptr(T* p = NULL) :
-	ptr(p), ref_count((p) ? new size_t(1) : NULL) { }
+	count_ptr(T* p = NULL);
 
 	explicit
-	count_ptr(const raw_count_ptr<T>& r) :
-			ptr(r.ptr), ref_count(r.ref_count) {
-		if (this->ref_count) {
-			(*this->ref_count)++;
-			NEVER_NULL(ptr);
-			REASONABLE_REFERENCE_COUNT;
-		} else {
-			INVARIANT(!ptr);
-		}
-	}
+	count_ptr(const raw_count_ptr<T>& r);
 
 	template <class S>
 	explicit
-	count_ptr(const raw_count_ptr<S>& r) :
-			ptr(r.ptr), ref_count(r.ref_count) {
-		if (this->ref_count) {
-			(*this->ref_count)++;
-			NEVER_NULL(ptr);
-			REASONABLE_REFERENCE_COUNT;
-		} else {
-			INVARIANT(!ptr);
-		}
-	}
+	count_ptr(const raw_count_ptr<S>& r);
 
 	/**
 		Copy constructor.  
@@ -207,24 +217,8 @@ public:
 		}
 	}
 
-	/**
-		UNSAFE: constructor that corecively sets the 
-		reference pointer and the count pointer 
-		and increments the pointer.  
-		The manager should initially allocate a counter set to zero.  
-		The manager should not own the pointer or the counter.  
-		Needed for transient pointer to object reconstruction.  
-		Use this only if you know what you're doing.
-	 */
-	count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) {
-		if (p) {
-			NEVER_NULL(c);		// counter must be valid
-			(*c)++;			// increment here
-			REASONABLE_REFERENCE_COUNT;
-		} else {
-			INVARIANT(!c);		// counter must also be NULL
-		}
-	}
+	/// Reserved, see comment in "util/memory/count_ptr.tcc"
+	count_ptr(T* p, size_t* c);
 
 protected:
 	/**
@@ -234,55 +228,13 @@ protected:
 	const pointer&
 	base_pointer(void) const { return ptr; }
 
-	/**
-		Overkill safety checks.  
-	 */
+	/// documented in "util/memory/count_ptr.tcc"
 	pointer
-	release(void) {
-		T* ret = ptr;
-		if(this->ref_count) {
-			INVARIANT(*this->ref_count);
-			(*this->ref_count)--;
-			REASONABLE_REFERENCE_COUNT;
-			if (!*this->ref_count) {
-				NEVER_NULL(ptr);
-				delete ptr;
-				delete this->ref_count;
-			}
-			ptr = NULL;
-			this->ref_count = NULL;
-		} else {
-			INVARIANT(!ptr);
-		}
-		return ret;
-	}
+	release(void);
 
-	/**
-		\param p the new pointer, from some other count_ptr.
-		\param c the corresponding reference count if p is valid, 
-			else is ignored.  
-	 */
+	/// documented in "util/memory/count_ptr.tcc"
 	void
-	reset(T* p, size_t* c) {
-		if(this->ref_count) {
-			INVARIANT(*this->ref_count);
-			(*this->ref_count)--;
-			REASONABLE_REFERENCE_COUNT;
-			if (!*this->ref_count) {
-				NEVER_NULL(ptr);
-				delete ptr;
-				delete this->ref_count;
-			}
-		} else {
-			INVARIANT(!ptr);
-		}
-		ptr = p;
-		this->ref_count = (ptr) ? c : NULL;
-		if (ptr && this->ref_count) {
-			(*this->ref_count)++;
-			REASONABLE_REFERENCE_COUNT;
-		}
-	}
+	reset(T* p, size_t* c);
 
 public:
 	/**
@@ -335,21 +287,9 @@ public:
 		return *this;
 	}
 
-	/**
-		Returns a naked pointer only if this is the final reference
-		to the object, otherwise returns NULL.  
-	 */
+	/// documented in "util/memory/count_ptr.tcc"
 	pointer
-	exclusive_release(void) {
-		if (this->owned()) {
-			T* ret = ptr;
-			ptr = NULL;
-			delete this->ref_count;
-			this->ref_count = NULL;
-			return ret;
-		} else
-			return NULL;
-	}
+	exclusive_release(void);
 
 	/**
 		Static cast.  
@@ -404,6 +344,10 @@ SPECIALIZE_ALL_POINTER_TRAITS(count_ptr)
 //=============================================================================
 }	// end namespace memory
 }	// end namespace util
+
+#if USE_REF_COUNT_POOL
+#include "util/memory/ref_count_pool_anchor.h"
+#endif
 
 //=============================================================================
 
