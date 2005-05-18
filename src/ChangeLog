@@ -2,6 +2,25 @@
 
 2005-05-17	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-36-PRS-01-08:
+	  Now using ref-counts for all entity::PRS::prs_expr.
+	  Finished implementing PRS::prs_expr::negate and 
+		negation_normalize (both untested).  
+	  Patched count_ptr so self-assignment is checked and handled
+		appropriately (could think of it as a bug before, 
+		or an unstated limitation).  
+	  TODO: generate new test cases for PRS functionality.  
+	  TODO: write an example of accessing a process-definition's
+		PRS, maybe doing some transformations or diagnostics.  
+	  TODO: write some template collection passes for 
+		namespace, definitions, etc.
+	  IDEA: collate structurally identical bool instance references 
+		together into the same reference count pointer, 
+		by caching the literals' vars.  
+
+
+2005-05-17	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-36-PRS-01-07:
 	  This revision doesn't really belong here, but it was done anyhow.
 	  What's good for the gander, is good for the goose.

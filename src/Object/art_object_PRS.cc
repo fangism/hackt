@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.1.2.5 2005/05/17 21:48:39 fang Exp $
+	$Id: art_object_PRS.cc,v 1.1.2.6 2005/05/18 03:58:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -19,6 +19,7 @@ STATIC_TRACE_BEGIN("Object/art_object_PRS.cc")
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/memory/chunk_map_pool.tcc"
+#include "util/likely.h"
 
 //=============================================================================
 namespace util {
@@ -68,13 +69,25 @@ rule::dumper::operator () (const P& r) {
 //=============================================================================
 // class prs_expr::negation_normalizer method definitions
 
-#if 0
-excl_ptr<prs_expr>
-prs_expr::negation_normalizer::operator () (
-		const sticky_ptr<prs_expr>& e) const {
-	return e->negation_normalize();
+prs_expr_ptr_type
+prs_expr::negater::operator () (const const_prs_expr_ptr_type& e) const {
+	return e->negate();
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return modified (normalized) expression if changed, else
+		pointer to the original expression.  
+ */
+prs_expr_ptr_type
+prs_expr::negation_normalizer::operator () (const prs_expr_ptr_type& e) const {
+	if (nb) {
+		return e->negate();
+	} else {
+		const prs_expr_ptr_type ret(e->negation_normalize());
+		return (ret ? ret : e);
+	}
+}
 
 //=============================================================================
 // class rule_set method definitions
@@ -117,7 +130,7 @@ rule_set::load_object_base(const persistent_object_manager& m,
 pull_up::pull_up() : rule(), guard(), output(), cmpl(false) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(guard_arg_type& g, const literal& o, const bool c) :
+pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o, const bool c) :
 		rule(), guard(g), output(o), cmpl(c) {
 	NEVER_NULL(guard);
 }
@@ -181,7 +194,7 @@ pull_up::load_object(const persistent_object_manager& m, istream& i) {
 pull_dn::pull_dn() : rule(), guard(), output(), cmpl(false) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(guard_arg_type& g, const literal& o, const bool c) :
+pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o, const bool c) :
 		rule(), guard(g), output(o), cmpl(c) {
 	NEVER_NULL(guard);
 }
@@ -283,17 +296,22 @@ and_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<prs_expr>
-and_expr::negation_normalize(void) const {
-#if 0
-	excl_ptr<or_expr> ret(new or_expr);
-	transform(begin(), end(), back_inserter(*ret), 
-		prs_expr::negation_normalizer()
-	);
-	return ret.as_a_xfer<prs_expr>;
-#else
-	return excl_ptr<prs_expr>(NULL);
-#endif
+prs_expr_ptr_type
+and_expr::negate(void) const {
+	count_ptr<or_expr> ret(new or_expr);
+	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifies itself in-place!
+ */
+prs_expr_ptr_type
+and_expr::negation_normalize(void) {
+	transform(begin(), end(), begin(),
+		prs_expr::negation_normalizer(false));
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -346,9 +364,19 @@ or_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<prs_expr>
-or_expr::negation_normalize(void) const {
-	return excl_ptr<prs_expr>(NULL);
+prs_expr_ptr_type
+or_expr::negate(void) const {
+	count_ptr<and_expr> ret(new and_expr);
+	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_ptr_type
+or_expr::negation_normalize(void) {
+	transform(begin(), end(), begin(), 
+		prs_expr::negation_normalizer(false));
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -378,7 +406,7 @@ or_expr::load_object(const persistent_object_manager& m, istream& i) {
 not_expr::not_expr() : prs_expr(), var() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-not_expr::not_expr(guard_arg_type& g) : prs_expr(), var(g) {
+not_expr::not_expr(const prs_expr_ptr_type& g) : prs_expr(), var(g) {
 	NEVER_NULL(var);
 }
 
@@ -398,9 +426,28 @@ not_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<prs_expr>
-not_expr::negation_normalize(void) const {
-	return excl_ptr<prs_expr>(NULL);
+prs_expr_ptr_type
+not_expr::negate(void) const {
+	const prs_expr_ptr_type temp(var->negation_normalize());
+	return (temp ? temp : var);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not-not reduction.  
+ */
+prs_expr_ptr_type
+not_expr::negation_normalize(void) {
+	const count_ptr<not_expr> nn(var.is_a<not_expr>());
+	if (UNLIKELY(nn)) {
+		// not-not reduction (rare)
+		return nn->negate();
+	} else {
+		const prs_expr_ptr_type temp(var->negation_normalize());
+		if (temp)		// if changed, replace in-place
+			var = temp;
+		return prs_expr_ptr_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -453,9 +500,22 @@ literal::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<prs_expr>
-literal::negation_normalize(void) const {
-	return excl_ptr<prs_expr>(NULL);
+/**
+	Could be more efficient...
+ */
+prs_expr_ptr_type
+literal::negate(void) const {
+	return prs_expr_ptr_type(new not_expr(
+		prs_expr_ptr_type(new literal(var))));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return NULL, signaling that it is already in normal form.  
+ */
+prs_expr_ptr_type
+literal::negation_normalize(void) {
+	return prs_expr_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

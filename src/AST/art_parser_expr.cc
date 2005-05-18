@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.21.2.2 2005/05/16 03:52:18 fang Exp $
+	$Id: art_parser_expr.cc,v 1.21.2.3 2005/05/18 03:58:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -639,8 +639,7 @@ prefix_expr::check_prs_expr(context& c) const {
 			".  Aborting... have a nice day." << endl;
 		DIE;
 	}
-	excl_ptr<entity::PRS::prs_expr> b(pe.exclusive_release());
-	return prs_expr_return_type(new entity::PRS::not_expr(b));
+	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
 
 //=============================================================================
@@ -1076,29 +1075,19 @@ logical_expr::check_prs_expr(context& c) const {
 		if (l_and) {
 			if (r_and) {
 				copy(r_and->begin(), r_and->end(), 
-					back_insert_assigner(*l_and));
+					back_inserter(*l_and));
 			} else {
-				entity::PRS::guard_arg_type
-					p(r_and.exclusive_release());
-				l_and->push_back(p);
+				l_and->push_back(r_and);
 			}
 			return l_and;
 		} else if (r_and) {
-			entity::PRS::guard_arg_type
-				p(l_and.exclusive_release());
-			r_and->push_front(p);
+			r_and->push_front(l_and);
 			return r_and;
 		} else {
 			count_ptr<entity::PRS::and_expr>
 				ret(new entity::PRS::and_expr);
-			entity::PRS::guard_arg_type
-				pl(l_and.exclusive_release());
-			entity::PRS::guard_arg_type
-				pr(r_and.exclusive_release());
-			ret->push_back(pl);
-			ret->push_back(pr);
-			INVARIANT(!pl);
-			INVARIANT(!pr);
+			ret->push_back(l_and);
+			ret->push_back(r_and);
 			return ret;
 		}
 	} else if (op_char == '|') {
@@ -1111,29 +1100,19 @@ logical_expr::check_prs_expr(context& c) const {
 		if (l_or) {
 			if (r_or) {
 				copy(r_or->begin(), r_or->end(), 
-					back_insert_assigner(*l_or));
+					back_inserter(*l_or));
 			} else {
-				entity::PRS::guard_arg_type
-					p(r_or.exclusive_release());
-				l_or->push_back(p);
+				l_or->push_back(r_or);
 			}
 			return l_or;
 		} else if (r_or) {
-			entity::PRS::guard_arg_type
-				p(l_or.exclusive_release());
-			r_or->push_front(p);
+			r_or->push_front(l_or);
 			return r_or;
 		} else {
 			count_ptr<entity::PRS::or_expr>
 				ret(new entity::PRS::or_expr);
-			entity::PRS::guard_arg_type
-				pl(l_or.exclusive_release());
-			entity::PRS::guard_arg_type
-				pr(r_or.exclusive_release());
-			ret->push_back(pl);
-			ret->push_back(pr);
-			INVARIANT(!pl);
-			INVARIANT(!pr);
+			ret->push_back(l_or);
+			ret->push_back(r_or);
 			return ret;
 		}
 	} else {

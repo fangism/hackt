@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.1.2.4 2005/05/16 21:43:42 fang Exp $
+	$Id: art_object_PRS.h,v 1.1.2.5 2005/05/18 03:58:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -44,8 +44,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-	excl_ptr<prs_expr>
-	negation_normalize(void) const;
+	prs_expr_ptr_type
+	negate(void) const;
+
+	prs_expr_ptr_type
+	negation_normalize(void);
 
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS;
@@ -65,7 +68,7 @@ protected:
 	/**
 		Guard expression.  
 	 */
-	guard_type			guard;
+	prs_expr_ptr_type		guard;
 	/**
 		Output node.  
 	 */
@@ -76,7 +79,7 @@ protected:
 	bool				cmpl;
 public:
 	pull_up();
-	pull_up(guard_arg_type&, const literal&, const bool);
+	pull_up(const prs_expr_ptr_type&, const literal&, const bool);
 	~pull_up();
 
 	ostream&
@@ -102,7 +105,7 @@ protected:
 	/**
 		Guard expression.  
 	 */
-	guard_type			guard;
+	prs_expr_ptr_type		guard;
 	/**
 		Output node.  
 	 */
@@ -113,7 +116,7 @@ protected:
 	bool				cmpl;
 public:
 	pull_dn();
-	pull_dn(guard_arg_type&, const literal&, const bool);
+	pull_dn(const prs_expr_ptr_type&, const literal&, const bool);
 	~pull_dn();
 
 	ostream&
@@ -137,7 +140,7 @@ public:
 class pass : public rule {
 	typedef	pass			this_type;
 protected:
-	guard_type			guard;
+	prs_expr_ptr_type		guard;
 	literal				output1;
 	literal				output2;
 public:
@@ -172,8 +175,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-	excl_ptr<prs_expr>
-	negation_normalize(void) const;
+	prs_expr_ptr_type
+	negate(void) const;
+
+	prs_expr_ptr_type
+	negation_normalize(void);
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -196,8 +202,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-	excl_ptr<prs_expr>
-	negation_normalize(void) const;
+	prs_expr_ptr_type
+	negate(void) const;
+
+	prs_expr_ptr_type
+	negation_normalize(void);
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -210,12 +219,12 @@ public:
 class not_expr : public prs_expr {
 	typedef	not_expr			this_type;
 private:
-	guard_type		var;
+	prs_expr_ptr_type			var;
 public:
 	not_expr();
 
 	explicit
-	not_expr(guard_arg_type&);
+	not_expr(const prs_expr_ptr_type&);
 	~not_expr();
 
 	ostream&
@@ -224,8 +233,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-	excl_ptr<prs_expr>
-	negation_normalize(void) const;
+	prs_expr_ptr_type
+	negate(void) const;
+
+	prs_expr_ptr_type
+	negation_normalize(void);
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)

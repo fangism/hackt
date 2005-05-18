@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14.2.6 2005/05/16 21:43:41 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.7 2005/05/18 03:58:06 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -95,12 +95,11 @@ rule::check_rule(context& c) const {
 	}
 	// temporary support for normal arrow only!
 	const bool arrow_type = (arrow->text[0] == '=');
-	excl_ptr<entity::PRS::prs_expr> g_arg(g.exclusive_release());
 	return body_item::return_type((dir->text[0] == '+') ?
 		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_up(g_arg, *o, arrow_type)) :
+			new entity::PRS::pull_up(g, *o, arrow_type)) :
 		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_dn(g_arg, *o, arrow_type)));
+			new entity::PRS::pull_dn(g, *o, arrow_type)));
 }
 
 //=============================================================================

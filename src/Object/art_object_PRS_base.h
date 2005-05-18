@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.1.2.3 2005/05/16 21:43:42 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.1.2.4 2005/05/18 03:58:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
@@ -32,8 +32,8 @@ using util::persistent_object_manager;
 
 class rule;
 class prs_expr;
-typedef	sticky_ptr<prs_expr>			guard_type;
-typedef	excl_ptr<prs_expr>			guard_arg_type;
+typedef	count_ptr<prs_expr>			prs_expr_ptr_type;
+typedef	count_ptr<const prs_expr>		const_prs_expr_ptr_type;
 
 //=============================================================================
 /**
@@ -100,7 +100,7 @@ public:
 		Worry about implementation efficiency later...
 		(Vector of raw pointers or excl_ptr with copy-constructor.)
 	 */
-	typedef	list<guard_type>	expr_sequence_type;
+	typedef	list<prs_expr_ptr_type>	expr_sequence_type;
 public:
 	prs_expr() { }
 virtual	~prs_expr() { }
@@ -108,15 +108,24 @@ virtual	~prs_expr() { }
 virtual	ostream&
 	dump(ostream&) const = 0;
 
-virtual	excl_ptr<prs_expr>
-	negation_normalize(void) const = 0;
+virtual	prs_expr_ptr_type
+	negate(void) const = 0;
 
-#if 0
-	struct negation_normalizer {
-		excl_ptr<prs_expr>
-		operator () (const sticky_ptr<prs_expr>&) const;
+virtual	prs_expr_ptr_type
+	negation_normalize(void) = 0;
+
+	struct negater {
+		prs_expr_ptr_type
+		operator () (const const_prs_expr_ptr_type&) const;
 	};	// end struct negation_normalizer
-#endif
+
+	struct negation_normalizer {
+		const bool nb;
+		negation_normalizer(const bool b) : nb(b) { }
+
+		prs_expr_ptr_type
+		operator () (const prs_expr_ptr_type&) const;
+	};	// end struct negation_normalizer
 
 };	// end class prs_expr
 

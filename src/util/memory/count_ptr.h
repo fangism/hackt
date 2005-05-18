@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.4.4.1 2005/05/17 21:48:45 fang Exp $
+	$Id: count_ptr.h,v 1.4.4.2 2005/05/18 03:58:07 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -280,6 +280,7 @@ public:
 
 	/**
 		Assignment operator.  
+		Need to be careful if assigning to self!
 	 */
 	count_ptr<T>&
 	operator = (const count_ptr<T>& c) {
@@ -297,9 +298,14 @@ public:
 	template <class S>
 	count_ptr<S>
 	as_a(void) const {
+#if 0
 		count_ptr<S> ret;
 		ret.reset(static_cast<S*>(this->ptr), this->ref_count);
 		return ret;
+#else
+		return count_ptr<S>(static_cast<S*>(this->ptr), 
+			this->ref_count);
+#endif
 	}
 
 	/**
@@ -308,9 +314,14 @@ public:
 	template <class S>
 	count_ptr<S>
 	is_a(void) const {
+#if 0
 		count_ptr<S> ret;
 		ret.reset(dynamic_cast<S*>(this->ptr), this->ref_count);
 		return ret;
+#else
+		return count_ptr<S>(dynamic_cast<S*>(this->ptr), 
+			this->ref_count);
+#endif
 	}
 
 	/**

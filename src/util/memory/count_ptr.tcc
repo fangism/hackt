@@ -4,7 +4,7 @@
 	type (T) of a count_ptr isn't complete until later -- 
 	compiles should complain about destructor of incomplete type.  
 
-	$Id: count_ptr.tcc,v 1.1.2.1 2005/05/17 21:48:45 fang Exp $
+	$Id: count_ptr.tcc,v 1.1.2.2 2005/05/18 03:58:07 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
@@ -22,15 +22,6 @@
 namespace util {
 namespace memory {
 //=============================================================================
-#if 0
-template <class T>
-// inline
-count_ptr<T>::count_ptr(T* p) :
-		ptr(p), ref_count((p) ? NEW_SIZE_T : NULL) {
-	if (ref_count)
-		*ref_count = 1;
-}
-#else
 template <class T>
 // inline
 count_ptr<T>::count_ptr(T* p) : ptr(p) {
@@ -42,7 +33,6 @@ count_ptr<T>::count_ptr(T* p) : ptr(p) {
 		ref_count = NULL;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -56,10 +46,12 @@ count_ptr<T>::count_ptr(T* p) : ptr(p) {
 
 	NOTE: if using REF_COUNT_POOL, then the pointer
 	passed in MUST BE allocated by the count pool!!!
+
+	If p is NULL, then count pointer is dropped.  
  */
 template <class T>
 // inline
-count_ptr<T>::count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) {
+count_ptr<T>::count_ptr(T* p, size_t* c) : ptr(p), ref_count(p ? c : NULL) {
 	if (p) {
 		STATIC_RC_POOL_REF_INIT;
 		NEVER_NULL(c);		// counter must be valid
@@ -67,7 +59,7 @@ count_ptr<T>::count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) {
 		(*c)++;			// increment here
 		REASONABLE_REFERENCE_COUNT;
 	} else {
-		INVARIANT(!c);		// counter must also be NULL
+		INVARIANT(!ref_count);	// counter must also be NULL
 	}
 }
 
@@ -133,9 +125,11 @@ count_ptr<T>::release(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: need to check if assigning to self!
 	NOTE: when using a pool of reference counts, it is critical 
 		to delete the count FIRST before ptr because
 		the reference-count-pool itself is reference-counted!!!
+	TODO: write this more optimally
 	\param p the new pointer, from some other count_ptr.
 	\param c the corresponding reference count if p is valid, 
 		else is ignored.  
@@ -144,6 +138,13 @@ template <class T>
 // inline
 void
 count_ptr<T>::reset(T* p, size_t* c) {
+	if (ptr == p) {
+		// true whether or not ptr == NULL
+		INVARIANT(this->ref_count == c);
+		// no need to decrement count, both source and
+		// destination are alive.  
+		return;
+	}
 	if(this->ref_count) {
 		INVARIANT(*this->ref_count);
 		(*this->ref_count)--;
