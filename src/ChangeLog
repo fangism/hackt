@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-05-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-09:
+	  Added a bunch of simple tests for PRS in tests/parser/prs.
+	  Fixed some minor bugs *gasp* I discovered on the way.  
+	  Added sanity check functions to entity::PRS classes.  
+	  Renamed and finished PRS::rule::expand_complement.
+	  Adding production rules now auto-expands complements.  
+	  prs_expr::dump is prettily-parenthesized.  
+	  Updated test/Make.test to include a 'cleaner' target.  
+
+
 2005-05-17	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-36-PRS-01-08:

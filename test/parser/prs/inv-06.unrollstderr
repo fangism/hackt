@@ -1,0 +1,56 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2b03180	module__	0	0	28
+	2	 0x2b00144	namespc_	0	28	52
+	3	 0x2b031a0	procdefn	0	52	116
+	4	 0x2b03224	dboolcol	1	116	145
+	5	 0x2b03270	datainst	0	145	165
+	6	 0x2b03290	datatprf	0	165	181
+	7	 0x2b032a0	datadefn	0	181	218
+	8	 0x2b03304	crnglst_	0	218	238
+	9	 0x4014408	PRSpuldn	0	238	255
+	10	 0x2b03318	PRSlitrl	0	255	267
+	11	 0x2b034bc	sdbref__	0	267	287
+	12	 0x2b034c4	cindlst_	0	287	303
+	13	 0x28cf024	cnstpi__	0	303	315
+	14	 0x2b034ec	sdbref__	0	315	335
+	15	 0x2b034f4	cindlst_	0	335	351
+	16	 0x28cf038	cnstpi__	0	351	363
+	17	 0x4014808	PRSpulup	0	363	380
+	18	 0x2b03508	PRSnot__	0	380	392
+	19	 0x2b03324	PRSlitrl	0	392	404
+	20	 0x2b036ac	sdbref__	0	404	424
+	21	 0x2b036b4	cindlst_	0	424	440
+	22	 0x28cf04c	cnstpi__	0	440	452
+	23	 0x2b036dc	sdbref__	0	452	472
+	24	 0x2b036e4	cindlst_	0	472	488
+	25	 0x28cf060	cnstpi__	0	488	500
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv      (
+        bool<> a with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "inv", we have: {
+        a = bool<> a with indices: {
+          [0..1]
+        }
+
+        prs:
+        a[0] -> a[1]-
+        ~a[0] -> a[1]+
+      }
+
+}
+

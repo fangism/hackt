@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.21.2.3 2005/05/18 03:58:05 fang Exp $
+	$Id: art_parser_expr.cc,v 1.21.2.4 2005/05/19 02:54:27 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -1053,8 +1053,9 @@ logical_expr::check_expr(context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_return_type
 logical_expr::check_prs_expr(context& c) const {
-	prs_expr_return_type lo(l->check_prs_expr(c));
-	prs_expr_return_type ro(r->check_prs_expr(c));
+	STACKTRACE("parser::PRS::logical_expr::check_prs_expr()");
+	const prs_expr_return_type lo(l->check_prs_expr(c));
+	const prs_expr_return_type ro(r->check_prs_expr(c));
 	if (!ro || !lo) {
 		static const char err_str[] = "ERROR building PRS-expr at ";
 		if (!lo)
@@ -1064,6 +1065,10 @@ logical_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 		return prs_expr_return_type(NULL);
 	}
+#if 0
+	lo->check();
+	ro->check();
+#endif
 	const char op_char = op->text[0];
 	if (op_char == '&') {
 		typedef	entity::PRS::and_expr::iterator		iterator;
@@ -1077,17 +1082,18 @@ logical_expr::check_prs_expr(context& c) const {
 				copy(r_and->begin(), r_and->end(), 
 					back_inserter(*l_and));
 			} else {
-				l_and->push_back(r_and);
+				l_and->push_back(ro);
 			}
 			return l_and;
 		} else if (r_and) {
-			r_and->push_front(l_and);
+			r_and->push_front(lo);
 			return r_and;
 		} else {
 			count_ptr<entity::PRS::and_expr>
 				ret(new entity::PRS::and_expr);
-			ret->push_back(l_and);
-			ret->push_back(r_and);
+			ret->push_back(lo);
+			ret->push_back(ro);
+//			ret->check();	// paranoia
 			return ret;
 		}
 	} else if (op_char == '|') {
@@ -1102,17 +1108,17 @@ logical_expr::check_prs_expr(context& c) const {
 				copy(r_or->begin(), r_or->end(), 
 					back_inserter(*l_or));
 			} else {
-				l_or->push_back(r_or);
+				l_or->push_back(ro);
 			}
 			return l_or;
 		} else if (r_or) {
-			r_or->push_front(l_or);
+			r_or->push_front(lo);
 			return r_or;
 		} else {
 			count_ptr<entity::PRS::or_expr>
 				ret(new entity::PRS::or_expr);
-			ret->push_back(l_or);
-			ret->push_back(r_or);
+			ret->push_back(lo);
+			ret->push_back(ro);
 			return ret;
 		}
 	} else {

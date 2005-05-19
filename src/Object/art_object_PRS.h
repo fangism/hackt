@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.1.2.5 2005/05/18 03:58:06 fang Exp $
+	$Id: art_object_PRS.h,v 1.1.2.6 2005/05/19 02:54:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -28,6 +28,8 @@ class literal : public prs_expr {
 	typedef	literal				this_type;
 private:
 	literal_base_ptr_type			var;
+private:
+	enum { print_stamp = 0 };
 public:
 	literal();
 
@@ -42,7 +44,13 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const int) const;
+
+	ostream&
+	dump(ostream& o) const { return dump(o, 0); }
+
+	void
+	check(void) const;
 
 	prs_expr_ptr_type
 	negate(void) const;
@@ -88,8 +96,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	void
+	check(void) const;
+
 	excl_ptr<rule>
-	complement(void) const;
+	expand_complement(void);
 
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -125,8 +136,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	void
+	check(void) const;
+
 	excl_ptr<rule>
-	complement(void) const;
+	expand_complement(void);
 
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -151,8 +165,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	void
+	check(void) const;
+
 	excl_ptr<rule>
-	complement(void) const;
+	expand_complement(void);
 
 	PERSISTENT_METHODS_DECLARATIONS;
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
@@ -165,6 +182,8 @@ public:
 class and_expr : public prs_expr, public prs_expr::expr_sequence_type {
 	typedef	and_expr			this_type;
 	typedef	prs_expr::expr_sequence_type	sequence_type;
+private:
+	enum { print_stamp = 2 };
 public:
 	and_expr();
 	~and_expr();
@@ -173,7 +192,10 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const int) const;
+
+	void
+	check(void) const;
 
 	prs_expr_ptr_type
 	negate(void) const;
@@ -192,6 +214,8 @@ public:
 class or_expr : public prs_expr, public prs_expr::expr_sequence_type {
 	typedef	or_expr				this_type;
 	typedef	prs_expr::expr_sequence_type	sequence_type;
+private:
+	enum { print_stamp = 3 };
 public:
 	or_expr();
 	~or_expr();
@@ -200,7 +224,10 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const int) const;
+
+	void
+	check(void) const;
 
 	prs_expr_ptr_type
 	negate(void) const;
@@ -220,6 +247,8 @@ class not_expr : public prs_expr {
 	typedef	not_expr			this_type;
 private:
 	prs_expr_ptr_type			var;
+private:
+	enum { print_stamp = 1 };
 public:
 	not_expr();
 
@@ -231,7 +260,10 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const int) const;
+
+	void
+	check(void) const;
 
 	prs_expr_ptr_type
 	negate(void) const;

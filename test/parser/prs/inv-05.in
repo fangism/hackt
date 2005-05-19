@@ -1,0 +1,9 @@
+// "inv-05.in" should parse, but fail type-check
+
+defproc inv(bool a, b[2]) {
+prs {
+	a -> b-
+	~a -> b+
+}
+}
+

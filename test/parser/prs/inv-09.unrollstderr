@@ -1,0 +1,75 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2b04250	module__	0	0	28
+	2	 0x2b00144	namespc_	0	28	52
+	3	 0x2b04270	procdefn	0	52	158
+	4	 0x2b042f4	pintcoll	0	158	195
+	5	 0x2b04340	pintinst	0	195	211
+	6	 0x2b04354	pintcoll	0	211	248
+	7	 0x2b043a0	pintinst	0	248	264
+	8	 0x2b043b4	pintcoll	0	264	301
+	9	 0x2b04400	pintinst	0	301	317
+	10	 0x2b04414	dboolcol	1	317	346
+	11	 0x2b04460	datainst	0	346	366
+	12	 0x2b04480	datatprf	0	366	382
+	13	 0x2b04490	datadefn	0	382	419
+	14	 0x2b044f4	drnglst_	0	419	435
+	15	 0x2b04514	dynrng__	0	435	451
+	16	 0x28cf024	cnstpi__	0	451	463
+	17	 0x2b04538	arithexp	0	463	480
+	18	 0x2b04560	spiref__	0	480	500
+	19	 0x28cf038	cnstpi__	0	500	512
+	20	 0x4018c08	PRSpuldn	0	512	529
+	21	 0x2b04578	PRSlitrl	0	529	541
+	22	 0x2b0471c	sdbref__	0	541	561
+	23	 0x2b04724	dindlst_	0	561	577
+	24	 0x2b04750	spiref__	0	577	597
+	25	 0x2b0477c	sdbref__	0	597	617
+	26	 0x2b04784	dindlst_	0	617	633
+	27	 0x2b047b0	spiref__	0	633	653
+	28	 0x4019608	PRSpulup	0	653	670
+	29	 0x2b047c8	PRSnot__	0	670	682
+	30	 0x2b04584	PRSlitrl	0	682	694
+	31	 0x2b0496c	sdbref__	0	694	714
+	32	 0x2b04974	dindlst_	0	714	730
+	33	 0x2b049a0	spiref__	0	730	750
+	34	 0x2b049cc	sdbref__	0	750	770
+	35	 0x2b049d4	dindlst_	0	770	786
+	36	 0x2b04a00	spiref__	0	786	806
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    crazy_inv = process-definition (defined) crazy_inv<
+      pint<> N
+      pint<> I
+      pint<> J
+      >
+      (
+        bool<> a with indices: {
+          [0..::crazy_inv::N-1]
+        }
+
+      )
+      In definition "crazy_inv", we have: {
+        I = pint<> I
+        J = pint<> J
+        N = pint<> N
+        a = bool<> a with indices: {
+          [0..::crazy_inv::N-1]
+        }
+
+        prs:
+        a[::crazy_inv::I] -> a[::crazy_inv::J]-
+        ~a[::crazy_inv::I] -> a[::crazy_inv::J]+
+      }
+
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.44.2.3 2005/05/17 21:48:39 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.44.2.4 2005/05/19 02:54:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2075,12 +2075,26 @@ process_definition::equivalent_port_formals(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Registers a production rule with this process definition.  
+	Automatically expands complements.  
+	\param r pointer to newly created and checked production rule.  
+		Transfers ownership to the definition.  
+	\post r is NULL, no longer owned by the passer.  
+ */
 void
 process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
 	NEVER_NULL(r);
+	r->check();		// paranoia
+	excl_ptr<PRS::rule> cmpl = r->expand_complement();
 	prs.push_back(PRS::rule_set::value_type());
 	prs.back() = r;
 	INVARIANT(!r);
+	if (cmpl) {
+		prs.push_back(PRS::rule_set::value_type());
+		prs.back() = cmpl;
+		INVARIANT(!cmpl);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.1.2.4 2005/05/18 03:58:07 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.1.2.5 2005/05/19 02:54:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
@@ -72,6 +72,21 @@ public:
 	rule() { }
 virtual	~rule() { }
 
+virtual	ostream&
+	dump(ostream&) const = 0;
+
+virtual	excl_ptr<rule>
+	expand_complement(void) = 0;
+
+virtual	void
+	check(void) const = 0;
+
+	struct checker {
+		template <class P>
+		void
+		operator () (const P&) const;
+	};
+
 	struct dumper {
 		ostream& os;
 		dumper(ostream& o) : os(o) { }
@@ -80,12 +95,6 @@ virtual	~rule() { }
 		void
 		operator () (const P&);
 	};	// end struct dumper
-
-virtual	ostream&
-	dump(ostream&) const = 0;
-
-virtual	excl_ptr<rule>
-	complement(void) const = 0;
 
 };	// end class rule
 
@@ -106,13 +115,24 @@ public:
 virtual	~prs_expr() { }
 
 virtual	ostream&
-	dump(ostream&) const = 0;
+	dump(ostream&, const int) const = 0;
+
+	ostream&
+	dump(ostream& o) const { return dump(o, 0); }
 
 virtual	prs_expr_ptr_type
 	negate(void) const = 0;
 
 virtual	prs_expr_ptr_type
 	negation_normalize(void) = 0;
+
+virtual	void
+	check(void) const = 0;
+
+	struct checker {
+		void
+		operator () (const const_prs_expr_ptr_type&) const;
+	};
 
 	struct negater {
 		prs_expr_ptr_type

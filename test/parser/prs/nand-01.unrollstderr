@@ -1,0 +1,56 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2b03550	module__	0	0	28
+	2	 0x2b00144	namespc_	0	28	52
+	3	 0x2b03570	procdefn	0	52	142
+	4	 0x2b034f4	dboolcol	0	142	176
+	5	 0x2b035f0	datainst	0	176	196
+	6	 0x2b03610	datatprf	0	196	212
+	7	 0x2b03620	datadefn	0	212	249
+	8	 0x2b03684	dboolcol	0	249	283
+	9	 0x2b036e0	datainst	0	283	303
+	10	 0x2b03704	dboolcol	0	303	337
+	11	 0x2b03760	datainst	0	337	357
+	12	 0x4015608	PRSpuldn	0	357	374
+	13	 0x2b03788	PRSand__	0	374	394
+	14	 0x2b03898	PRSlitrl	0	394	406
+	15	 0x2b03a3c	sdbref__	0	406	426
+	16	 0x2b038a4	PRSlitrl	0	426	438
+	17	 0x2b03a5c	sdbref__	0	438	458
+	18	 0x2b03a7c	sdbref__	0	458	478
+	19	 0x4015a08	PRSpulup	0	478	495
+	20	 0x2b03a88	PRSor___	0	495	515
+	21	 0x2b03b98	PRSnot__	0	515	527
+	22	 0x2b038b0	PRSlitrl	0	527	539
+	23	 0x2b03d3c	sdbref__	0	539	559
+	24	 0x2b03ba4	PRSnot__	0	559	571
+	25	 0x2b038bc	PRSlitrl	0	571	583
+	26	 0x2b03d5c	sdbref__	0	583	603
+	27	 0x2b03d7c	sdbref__	0	603	623
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    nand2 = process-definition (defined) nand2      (
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "nand2", we have: {
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        a & b -> c-
+        ~a | ~b -> c+
+      }
+
+}
+

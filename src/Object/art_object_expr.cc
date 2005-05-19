@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.44.4.2 2005/05/17 21:48:40 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.44.4.3 2005/05/19 02:54:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -3514,10 +3514,11 @@ const_index_list::dump(ostream& o) const {
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		const bool b = (i->is_a<const pint_expr>());
-		if (b) o << '[';
-		(*i)->dump(o);
-		if (b) o << ']';
+		const count_ptr<const pint_expr>
+			b(i->is_a<const pint_expr>());
+		if (b)
+			b->dump_brief(o << '[') << ']';
+		else	(*i)->dump(o);
 	}
 	return o;
 }
@@ -3834,10 +3835,11 @@ dynamic_index_list::dump(ostream& o) const {
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		const bool b = (i->is_a<const pint_expr>());
-		if (b) o << '[';
-		(*i)->dump(o);
-		if (b) o << ']';
+		const count_ptr<const pint_expr>
+			b(i->is_a<const pint_expr>());
+		if (b)
+			b->dump_brief(o << '[') << ']';
+		else	(*i)->dump(o);
 	}
 	return o;
 }

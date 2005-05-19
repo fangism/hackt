@@ -1,11 +1,13 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14.2.7 2005/05/18 03:58:06 fang Exp $
+	$Id: art_parser_prs.cc,v 1.14.2.8 2005/05/19 02:54:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
 #define	__AST_ART_PARSER_PRS_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
@@ -22,6 +24,7 @@
 #include "Object/art_object_PRS.h"
 
 #include "util/what.h"
+#include "util/stacktrace.h"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
@@ -81,12 +84,14 @@ rule::rightmost(void) const {
  */
 body_item::return_type
 rule::check_rule(context& c) const {
+	STACKTRACE("parser::PRS::rule::check_rule()");
 	prs_expr_return_type g(guard->check_prs_expr(c));
 	if (!g) {
 		cerr << "ERROR in production rule guard at " <<
 			where(*guard) << "." << endl;
 		THROW_EXIT;
 	}
+//	g->check();	// paranoia
 	prs_literal_ptr_type o(r->check_prs_literal(c));
 	if (!o) {
 		cerr << "ERROR in the output node reference at " <<
@@ -170,6 +175,7 @@ body::rightmost(void) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
+	STACKTRACE("PRS::body::check_build()");
 	if (rules) {
 		// check context's current open definition
 		never_ptr<definition_base> d(c.get_current_open_definition());
@@ -187,6 +193,7 @@ body::check_build(context& c) const {
 			for ( ; i!=checked_rules.end(); i++) {
 				excl_ptr<entity::PRS::rule>
 					xfer(i->exclusive_release());
+//				xfer->check();		// paranoia
 				pd->add_production_rule(xfer);
 			}
 		} else {

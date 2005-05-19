@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.1.2.6 2005/05/18 03:58:06 fang Exp $
+	$Id: art_object_PRS.cc,v 1.1.2.7 2005/05/19 02:54:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -9,6 +9,8 @@
 
 #include "util/static_trace.h"
 STATIC_TRACE_BEGIN("Object/art_object_PRS.cc")
+
+#define	ENABLE_STACKTRACE		0
 
 #include "Object/art_object_PRS.h"
 #include "Object/art_object_inst_ref.h"
@@ -20,6 +22,7 @@ STATIC_TRACE_BEGIN("Object/art_object_PRS.cc")
 #include "util/indent.h"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/likely.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 namespace util {
@@ -66,11 +69,30 @@ rule::dumper::operator () (const P& r) {
 	r->dump(os) << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+void
+rule::checker::operator () (const P& r) const {
+	STACKTRACE("rule::checker::operator()");
+	NEVER_NULL(r);
+	r->check();
+}
+
 //=============================================================================
 // class prs_expr::negation_normalizer method definitions
 
+void
+prs_expr::checker::operator () (const const_prs_expr_ptr_type& e) const {
+	STACKTRACE("prs_expr::checker::operator ()");
+	assert(e);
+	e->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_ptr_type
 prs_expr::negater::operator () (const const_prs_expr_ptr_type& e) const {
+	STACKTRACE("prs_expr::negater::operator ()");
+	NEVER_NULL(e);
 	return e->negate();
 }
 
@@ -81,6 +103,8 @@ prs_expr::negater::operator () (const const_prs_expr_ptr_type& e) const {
  */
 prs_expr_ptr_type
 prs_expr::negation_normalizer::operator () (const prs_expr_ptr_type& e) const {
+	STACKTRACE("prs_expr::negation_normalizer::operator ()");
+	NEVER_NULL(e);
 	if (nb) {
 		return e->negate();
 	} else {
@@ -155,9 +179,27 @@ pull_up::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pull_up::check(void) const {
+	STACKTRACE("pull_up::check()");
+	assert(guard);
+	output.check();
+	guard->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands this rule into its complement if the cmpl bit is set.  
+	The call to negate will result in negation-normal form.  
+	\return complement rule if the cmple bit is set, else NULL.  
+ */
 excl_ptr<rule>
-pull_up::complement(void) const {
-	return excl_ptr<rule>(NULL);
+pull_up::expand_complement(void) {
+	if (cmpl) {
+		cmpl = false;
+		return excl_ptr<rule>(
+			new pull_dn(guard->negate(), output, false));
+	} else	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -219,9 +261,22 @@ pull_dn::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pull_dn::check(void) const {
+	STACKTRACE("pull_dn::check()");
+	assert(guard);
+	output.check();
+	guard->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<rule>
-pull_dn::complement(void) const {
-	return excl_ptr<rule>(NULL);
+pull_dn::expand_complement(void) {
+	if (cmpl) {
+		cmpl = false;
+		return excl_ptr<rule>(
+			new pull_up(guard->negate(), output, false));
+	} else	return excl_ptr<rule>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -259,8 +314,18 @@ pull_dn::load_object(const persistent_object_manager& m, istream& i) {
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pass)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pass::check(void) const {
+	STACKTRACE("pass::check()");
+	// nothing to check yet
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pass-gate currently does not have a complement.  
+ */
 excl_ptr<rule>
-pass::complement(void) const {
+pass::expand_complement(void) {
 	return excl_ptr<rule>(NULL);
 }
 
@@ -283,21 +348,32 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-and_expr::dump(ostream& o) const {
+and_expr::dump(ostream& o, const int stamp) const {
+	const bool paren = stamp && (stamp != print_stamp);
 	const_iterator i = begin();
 	const const_iterator e = end();
 	NEVER_NULL(*i);
-	(*i)->dump(o << '(');
+	if (paren) o << '(';
+	(*i)->dump(o, print_stamp);
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << " & ");
+		(*i)->dump(o << " & ", print_stamp);
 	}
-	return o << ')';
+	if (paren) o << ')';
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr::check(void) const {
+	STACKTRACE("and_expr::check()");
+	for_each(begin(), end(), prs_expr::checker());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_ptr_type
 and_expr::negate(void) const {
+	STACKTRACE("and_expr::negate()");
 	count_ptr<or_expr> ret(new or_expr);
 	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
 	return ret;
@@ -309,6 +385,7 @@ and_expr::negate(void) const {
  */
 prs_expr_ptr_type
 and_expr::negation_normalize(void) {
+	STACKTRACE("and_expr::negation_normalize()");
 	transform(begin(), end(), begin(),
 		prs_expr::negation_normalizer(false));
 	return prs_expr_ptr_type(NULL);
@@ -351,21 +428,32 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-or_expr::dump(ostream& o) const {
+or_expr::dump(ostream& o, const int stamp) const {
+	const bool paren = stamp && (stamp != print_stamp);
 	const_iterator i = begin();
 	const const_iterator e = end();
 	NEVER_NULL(*i);
-	(*i)->dump(o << '(');
+	if (paren) o << '(';
+	(*i)->dump(o, print_stamp);
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << " | ");
+		(*i)->dump(o << " | ", print_stamp);
 	}
-	return o << ')';
+	if (paren) o << ')';
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr::check(void) const {
+	STACKTRACE("or_expr::check()");
+	for_each(begin(), end(), prs_expr::checker());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_ptr_type
 or_expr::negate(void) const {
+	STACKTRACE("or_expr::negate()");
 	count_ptr<and_expr> ret(new and_expr);
 	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
 	return ret;
@@ -374,6 +462,7 @@ or_expr::negate(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_ptr_type
 or_expr::negation_normalize(void) {
+	STACKTRACE("or_expr::negation_normalize()");
 	transform(begin(), end(), begin(), 
 		prs_expr::negation_normalizer(false));
 	return prs_expr_ptr_type(NULL);
@@ -421,13 +510,23 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(not_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-not_expr::dump(ostream& o) const {
-	return var->dump(o << "~");
+not_expr::dump(ostream& o, const int) const {
+	// never needs parentheses
+	return var->dump(o << "~", print_stamp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+not_expr::check(void) const {
+	STACKTRACE("not_expr::check()");
+	assert(var);
+	var->check();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 prs_expr_ptr_type
 not_expr::negate(void) const {
+	STACKTRACE("not_expr::negate()");
 	const prs_expr_ptr_type temp(var->negation_normalize());
 	return (temp ? temp : var);
 }
@@ -438,6 +537,7 @@ not_expr::negate(void) const {
  */
 prs_expr_ptr_type
 not_expr::negation_normalize(void) {
+	STACKTRACE("not_expr::negation_normalize()");
 	const count_ptr<not_expr> nn(var.is_a<not_expr>());
 	if (UNLIKELY(nn)) {
 		// not-not reduction (rare)
@@ -495,8 +595,17 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 	Later, change prototype to pass in pointer to parent definition.  
  */
 ostream&
-literal::dump(ostream& o) const {
+literal::dump(ostream& o, const int) const {
+	// never needs parentheses
 	return var->dump_briefer(o, never_ptr<const scopespace>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+literal::check(void) const {
+	STACKTRACE("literal::check()");
+	assert(var);
+	// var->check();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -505,6 +614,7 @@ literal::dump(ostream& o) const {
  */
 prs_expr_ptr_type
 literal::negate(void) const {
+	STACKTRACE("literal::negate()");
 	return prs_expr_ptr_type(new not_expr(
 		prs_expr_ptr_type(new literal(var))));
 }
@@ -515,6 +625,7 @@ literal::negate(void) const {
  */
 prs_expr_ptr_type
 literal::negation_normalize(void) {
+	STACKTRACE("literal::negation_normalize()");
 	return prs_expr_ptr_type(NULL);
 }
 
