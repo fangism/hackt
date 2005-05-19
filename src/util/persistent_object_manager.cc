@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.19 2005/05/10 04:51:29 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.20 2005/05/19 18:43:36 fang Exp $
  */
 
 // flags and switches
@@ -331,7 +331,6 @@ persistent_object_manager::reconstruction_table_entry::
 
 	// MARK AND SWEEP!
 	// check for un-claimed memory.
-#if 1
 if (recon_addr) {
 	bool uh_oh = false;
 	if (visits.total_visits) {
@@ -341,7 +340,9 @@ if (recon_addr) {
 			"which will surely result in double-free!"
 			<< endl;
 			uh_oh = true;
-		} else if (visits.owned_visits && visits.shared_visits) {
+		} else {
+		// no exclusive owners
+		if (visits.owned_visits && visits.shared_visits) {
 			cerr << "FATAL: object at " << recon_addr <<
 			" was claimed as both owned and shared, "
 			"which will surely result in double-free!"
@@ -359,6 +360,21 @@ if (recon_addr) {
 				uh_oh = true;
 			}
 		}
+		}
+		if (visits.raw_visits > 1 && !visits.owned_visits) {
+			cerr << "WARNING: object at " << recon_addr <<
+				" was loaded as a raw pointer " <<
+				visits.raw_visits << " times without "
+				"having been claimed by an owner, "
+				"which means the programmer is either "
+				"1) lazy or 2) made a grave mistake.  "
+				"It is my duty to strongly suggest using "
+				"either exclusive or shared ownership.  "
+				"Woe be unto you if you shut up this warning "
+				"by commenting it out, and you end up "
+				"with memory errors." << endl;
+				uh_oh = true;
+		}
 		// nonowned and shared -- dangerous!!!
 		// mixing oil and water...
 	} else {
@@ -374,10 +390,10 @@ if (recon_addr) {
 		cerr << ", unowned: " << visits.unowned_visits <<
 			", owned: " << visits.owned_visits <<
 			", shared: " << visits.shared_visits <<
+			", raw: " << visits.raw_visits <<
 			", total: " << visits.total_visits << endl;
 	}
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -394,7 +410,9 @@ size_t*
 persistent_object_manager::reconstruction_table_entry::count(void) const {
 	STACKTRACE("recon_table_entry::count()");
 	if (!ref_count) {
-		ref_count = new size_t(0);
+		STATIC_RC_POOL_REF_INIT;
+		ref_count = NEW_SIZE_T;
+		*ref_count = 0;
 	}
 	NEVER_NULL(ref_count);
 	return ref_count;

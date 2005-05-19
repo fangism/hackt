@@ -2,13 +2,13 @@
 	\file "throw_test.cc"
 	Demonstration that throwing exception will result in proper clean
 	up of objects on the stack.  
-	$Id: throw_test.cc,v 1.2 2005/01/28 19:59:00 fang Exp $
+	$Id: throw_test.cc,v 1.3 2005/05/19 18:43:39 fang Exp $
  */
 
 #include <exception>
 #include <list>
 #include "pooled_thing.h"
-#include "memory/count_ptr.h"
+#include "memory/count_ptr.tcc"
 
 using util::memory::count_ptr;
 

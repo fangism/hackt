@@ -1,10 +1,10 @@
 # "test/parser/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2004/11/02 07:52:27 fang Exp $
+#	$Id: Makefile.am,v 1.4 2005/05/19 18:43:39 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 SUBDIRS = basic namespace param array process datatype \
-	template typedef connect
+	template typedef connect prs
 # coming eventually:
 # channel
 

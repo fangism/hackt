@@ -1,12 +1,13 @@
 /**
 	\file "AST/art_parser_root.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root.h,v 1.6 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_root.h,v 1.7 2005/05/19 18:43:28 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_ROOT_H__
 #define __AST_ART_PARSER_ROOT_H__
 
+#include "AST/art_parser_base.h"
 #include "AST/art_parser_node_list.h"
 
 namespace ART {
@@ -33,8 +34,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
-virtual	never_ptr<const object>
-	check_build(context& ) const = 0;
+virtual	ROOT_CHECK_PROTO = 0;
 
 };	// end class root_item
 

@@ -1,0 +1,34 @@
+// "xor-01.in" should pass
+
+defproc xor2_ver1(bool a, b, c) {
+bool a_, b_;
+prs {
+	a			=> a_-
+	b			=> b_-
+	a & b | b_ & a_		-> c-
+	~a & ~b_ | ~a_ & ~b	-> c+
+}
+}
+
+defproc inv(bool a, b) {
+prs {	a => b-	}
+}
+
+defproc xor2_ver2(bool a, b, c) {
+bool a_, b_;
+inv	ai(a, a_), 
+	bi(b, b_);
+prs {
+	a & b | b_ & a_		=> c-
+}
+}
+
+defproc xor2_ver3(bool a, b, c) {
+bool a_, b_;
+inv	ai(a, a_), 
+	bi(b, b_);
+prs {
+	~a & ~b_ | ~a_ & ~b	=> c+
+}
+}
+

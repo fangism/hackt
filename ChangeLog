@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-19	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-37-merged-PRS-01-09:
+	  Merged revisions from -PRS-01 branch, which also includes
+		essential core utility library fixes.  
+		Details in src/ChangeLog.  
+	  Also updated a few parser/prs tests to account for bison/yacc 
+		differences.
+
+
 2005-05-13	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-36-merged-exprcheck-07:

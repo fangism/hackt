@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.18 2005/05/10 04:51:15 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.19 2005/05/19 18:43:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -13,6 +13,11 @@
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+
+//=============================================================================
+// start of static initializations
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_inst_stmt.cc")
 
 #include <iostream>
 #include <algorithm>
@@ -37,7 +42,6 @@
 
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
-#include "util/static_trace.h"
 
 // conditional defines, after inclusion of "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -87,9 +91,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 }	// end namespace util
 
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("inst_stmt")
 
 //=============================================================================
 namespace ART {
@@ -267,7 +268,7 @@ template class instantiation_statement<process_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("inst_stmt")
+STATIC_TRACE_END("Object/art_object_inst_stmt.cc")
 
 // responsibly, anally, undefining macros local to this module
 #undef	DEBUG_LIST_VECTOR_POOL

@@ -4,21 +4,21 @@ Persistent Object Manager text dump:
 	0	         0	________	0	0	0
 	1	 0x3102140	module__	0	0	36
 	2	 0x3100144	namespc_	0	36	64
-	3	 0x3102160	procdefn	0	64	135
-	4	 0x31020f4	pintcoll	0	135	172
-	5	 0x31021e0	pintinst	0	172	188
-	6	 0x3102210	spiref__	0	188	208
-	7	 0x3102224	pintcoll	0	208	257
-	8	 0x3102270	pintinst	0	257	273
-	9	 0x2469024	cnstpi__	0	273	285
-	10	 0x3102284	dintcoll	0	285	330
-	11	 0x31022e0	datainst	0	330	350
-	12	 0x3102300	datatprf	0	350	366
-	13	 0x3102310	datadefn	0	366	402
-	14	 0x3102374	dprmlst_	0	402	418
-	15	 0x31023a0	spiref__	0	418	438
-	16	 0x3800c00	piassign	0	438	458
-	17	 0x31023d0	spiref__	0	458	478
+	3	 0x3102160	procdefn	0	64	139
+	4	 0x31020f4	pintcoll	0	139	176
+	5	 0x31021e0	pintinst	0	176	192
+	6	 0x3102210	spiref__	0	192	212
+	7	 0x3102224	pintcoll	0	212	261
+	8	 0x3102270	pintinst	0	261	277
+	9	 0x24c5024	cnstpi__	0	277	289
+	10	 0x3102284	dintcoll	0	289	334
+	11	 0x31022e0	datainst	0	334	354
+	12	 0x3102300	datatprf	0	354	370
+	13	 0x3102310	datadefn	0	370	406
+	14	 0x3102374	dprmlst_	0	406	422
+	15	 0x31023a0	spiref__	0	422	442
+	16	 0x3800c00	piassign	0	442	462
+	17	 0x31023d0	spiref__	0	462	482
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

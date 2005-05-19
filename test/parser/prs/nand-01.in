@@ -1,0 +1,9 @@
+// "nand-01.in"
+
+defproc nand2(bool a, b, c) {
+prs {
+	a & b	-> c-
+	~a | ~b	-> c+
+}
+}
+

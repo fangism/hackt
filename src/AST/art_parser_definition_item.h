@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition_item.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.6 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_definition_item.h,v 1.7 2005/05/19 18:43:27 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_ITEM_H__
@@ -33,8 +33,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
-virtual	never_ptr<const object>
-	check_build(context& ) const = 0;
+virtual	ROOT_CHECK_PROTO = 0;
 };	// end class def_body_item
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -82,6 +81,8 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+virtual	ROOT_CHECK_PROTO = 0;
 };	// end class language_body
 
 //=============================================================================

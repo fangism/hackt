@@ -1,5 +1,148 @@
 "ChangeLog"
 
+2005-05-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-37-merged-PRS-01-09:
+	  Merged the -PRS-01 revisions (through -09) to main.  
+
+
+2005-05-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-09:
+	  Added a bunch of simple tests for PRS in tests/parser/prs.
+	  Fixed some minor bugs *gasp* I discovered on the way.  
+	  Added sanity check functions to entity::PRS classes.  
+	  Renamed and finished PRS::rule::expand_complement.
+	  Adding production rules now auto-expands complements.  
+	  prs_expr::dump is prettily-parenthesized.  
+	  Updated test/Make.test to include a 'cleaner' target.  
+
+
+2005-05-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-08:
+	  Now using ref-counts for all entity::PRS::prs_expr.
+	  Finished implementing PRS::prs_expr::negate and 
+		negation_normalize (both untested).  
+	  Patched count_ptr so self-assignment is checked and handled
+		appropriately (could think of it as a bug before, 
+		or an unstated limitation).  
+	  TODO: generate new test cases for PRS functionality.  
+	  TODO: write an example of accessing a process-definition's
+		PRS, maybe doing some transformations or diagnostics.  
+	  TODO: write some template collection passes for 
+		namespace, definitions, etc.
+	  IDEA: collate structurally identical bool instance references 
+		together into the same reference count pointer, 
+		by caching the literals' vars.  
+
+
+2005-05-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-07:
+	  This revision doesn't really belong here, but it was done anyhow.
+	  What's good for the gander, is good for the goose.
+	  Most changes apply to the util library, almost nothing is specific
+		to art++ itself.  
+	  Updated some uses of util::static_trace -- it really should be
+		as early as possible in each translation unit
+		for accurate reporting.
+	  util::memory::count_ptr now pool allocates reference-counts, 
+		making their use extremely efficient.  
+		The difficulties lie with a global consistent reference
+		to the state of the count-allocator, which itself needs to
+		be reference-counted for coherent global static initialization.
+		Note: all maanual management of count pointes should use
+		the STATIC_RC_POOL_REF_INIT and NEW_SIZE_T macros
+		defined in "util/memory/count_ptr.h".
+		Also, count_ptr.tcc was split off to facilitate completing
+		definitions of other types before their destructor definitions
+		are required by the delete operator.  
+		Currently, the global reference-count pool is never freed
+		until exit -- see remark in 
+		"util/memory/ref_count_pool_anchor.h".  
+	  Added more useful utility functions to util::memory::chunk_map_pool
+		and friends.  
+	  Updated some tests in util/test to accommodate library updates.  
+		
+
+2005-05-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-06:
+	  PRS::literal changed to include a count_ptr<bool_instance_reference>
+		making it trivially copy-constructible.
+	  PRS::pull_{up,dn} includes literal (not pointer thereof) now, 
+		resulting in more efficient storage.  
+	  PRS::prs_expr and rule's are now chunk_map_pool-allocated.  
+	  Some code clean up.  
+	  NEXT: negation-normal-form and other utility methods.  
+		Possibly reconsider choice of pointers classes
+		for expression operands.  
+
+
+2005-05-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-05:
+	  Now actually adding production rule objects to process_definition.
+	  Implemented PRS dump routines for readable feedback.  
+		Currently prints using short local (unqualified) names.  
+	  Updated many (object) tests to account for increased size of 
+		process_definition binary object
+		(+4B for size of PRS pointer list).  
+	  This snapshot is a candidate for merging back to main trunk.  
+
+
+2005-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-04:
+	  Completed expr::check_prs_expr implementations for the 
+		relevant expression classes (partially tested).
+	  Updated constructor interfaces of entity::PRS classes.  
+	  Added blank PRS::rules_list to process_definition, 
+		but doesn't do anything with them yet.
+		TODO NEXT: implement addition, dump, object persistence.  
+	  Moved some files, added some files:
+		Split off Object/art_object_PRS_base.h and
+			Object/art_object_definition_proc.h.
+		Added util/iterator_more.h.
+	  One basic test updated parser/basic/013.stderr, was unchecked,
+		now gives error.  
+
+
+2005-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-03:
+	  Parser: promoted token_string and token_char to node_position.
+	  Filled-in parser::relational_expr::check_expr, and
+		parser::logical_expr::check_expr.
+	  Upgraded some expression types in classes for stronger typing.  
+	  Started setting up check_prs_expr infrastructure in PRS and expr.  
+
+
+2005-05-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-02:
+	  Added initial skeleton classes for PRS objects.  
+		Fill-in-the-blanks soon.  
+	  Some util library stop-tweaks: persistent_object_manager
+		now tracks raw_pointer read-visits separately, 
+		added collect_pointer_list template method.
+
+
+2005-05-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-PRS-01-01:
+	  This branch is for early development of PRS management.  
+	  The initial revisions do some clean-up with a few parsers'
+		check_build routines; they are still functionally ugly.  
+		Beginning to make check routines consistent using more
+		CHECK_PROTO macros to keep things straight (e.g. type_base).  
+	  node_list has a new check_list template method
+		that allows one to specify which element's member function
+		to invoke recursively.  We intend to eliminate all generic
+		calls to check_build accordingly.  
+
+
 2005-05-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-35-exprcheck-07:

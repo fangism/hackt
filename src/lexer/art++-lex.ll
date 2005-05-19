@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.14 2005/05/10 04:51:21 fang Exp $
+ *	$Id: art++-lex.ll,v 1.15 2005/05/19 18:43:35 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -141,10 +141,12 @@ PBOOL_TYPE_UPDATE(void) {
 	yylval._token_pbool_type = new token_pbool_type(yytext); TOKEN_UPDATE();
 }
 
+/***
 static inline void
 MULTICHAR_UPDATE(void) {
 	yylval._token_string = new token_string(yytext); TOKEN_UPDATE();
 }
+***/
 
 static inline void
 NODE_POSITION_UPDATE(void) {
@@ -247,9 +249,7 @@ BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 
-/* UNICHARTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]	*/
-UNICHARTOKEN	[<>*%/|!?~&^+-]
-POSITIONTOKEN	[][(){},.;:=#]
+POSITIONTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]
 
 /* AT		"@"	*/
 /* POUND		"#"	*/
@@ -335,18 +335,18 @@ EXPORT		"export"
 
 <INITIAL>{
 
-{LE}		{ MULTICHAR_UPDATE(); return LE; }
-{GE}		{ MULTICHAR_UPDATE(); return GE; }
-{EQUAL}		{ MULTICHAR_UPDATE(); return EQUAL; }
-{NOTEQUAL}	{ MULTICHAR_UPDATE(); return NOTEQUAL; }
-{IMPLIES}	{ MULTICHAR_UPDATE(); return IMPLIES; }
-{RARROW}	{ MULTICHAR_UPDATE(); return RARROW; }
-{PLUSPLUS}	{ MULTICHAR_UPDATE(); return PLUSPLUS; }
-{MINUSMINUS}	{ MULTICHAR_UPDATE(); return MINUSMINUS; }
-{LOGICAL_AND}	{ MULTICHAR_UPDATE(); return LOGICAL_AND; }
-{LOGICAL_OR}	{ MULTICHAR_UPDATE(); return LOGICAL_OR; }
-{INSERT}	{ MULTICHAR_UPDATE(); return INSERT; }
-{EXTRACT}	{ MULTICHAR_UPDATE(); return EXTRACT; }
+{LE}		{ NODE_POSITION_UPDATE(); return LE; }
+{GE}		{ NODE_POSITION_UPDATE(); return GE; }
+{EQUAL}		{ NODE_POSITION_UPDATE(); return EQUAL; }
+{NOTEQUAL}	{ NODE_POSITION_UPDATE(); return NOTEQUAL; }
+{IMPLIES}	{ NODE_POSITION_UPDATE(); return IMPLIES; }
+{RARROW}	{ NODE_POSITION_UPDATE(); return RARROW; }
+{PLUSPLUS}	{ NODE_POSITION_UPDATE(); return PLUSPLUS; }
+{MINUSMINUS}	{ NODE_POSITION_UPDATE(); return MINUSMINUS; }
+{LOGICAL_AND}	{ NODE_POSITION_UPDATE(); return LOGICAL_AND; }
+{LOGICAL_OR}	{ NODE_POSITION_UPDATE(); return LOGICAL_OR; }
+{INSERT}	{ NODE_POSITION_UPDATE(); return INSERT; }
+{EXTRACT}	{ NODE_POSITION_UPDATE(); return EXTRACT; }
 
 {BEGINLOOP}	{ NODE_POSITION_UPDATE(); return BEGINLOOP; }
 {BEGINPROB}	{ NODE_POSITION_UPDATE(); return BEGINPROB; }
@@ -355,9 +355,6 @@ EXPORT		"export"
 {SCOPE}		{ NODE_POSITION_UPDATE(); return SCOPE; }
 {RANGE}		{ NODE_POSITION_UPDATE(); return RANGE; }
 {DEFINEOP}	{ NODE_POSITION_UPDATE(); return DEFINEOP; }
-
-{UNICHARTOKEN}	{ yylval._token_char = new token_char(yytext[0]); 
-			TOKEN_UPDATE(); return yytext[0]; }
 
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(); return yytext[0]; }
 

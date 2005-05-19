@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.21 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_base.cc,v 1.22 2005/05/19 18:43:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -148,14 +148,14 @@ type_id::rightmost(void) const {
 	Use context object to lookup the actual type.  
 	\return pointer to type reference, else NULL if failure.  
  */
-never_ptr<const object>
-type_id::check_build(context& c) const {
+type_base::return_type
+type_id::check_definition(context& c) const {
 	STACKTRACE("type_id::check_build()");
 	const never_ptr<const definition_base>
 		d(c.lookup_definition(*base));
 	if (!d) {
 //		cerr << "type_id::check_build(context&) : ERROR!" << endl;
-		return never_ptr<const object>(NULL);
+		return type_base::return_type(NULL);
 	}
 	// set type definition reference
 	return c.push_current_definition_reference(*d);
@@ -171,7 +171,8 @@ ostream& operator << (ostream& o, const type_id& id) {
 // class chan_type method definitions
 
 CONSTRUCTOR_INLINE
-chan_type::chan_type(const generic_keyword_type* c, const token_char* d, 
+chan_type::chan_type(const generic_keyword_type* c, 
+		const char_punctuation_type* d, 
 		const data_type_ref_list* t) : type_base(),
 		chan(c), dir(d), dtypes(t) {
 	NEVER_NULL(c);
@@ -210,11 +211,11 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 	return this;
 }
 
-never_ptr<const object>
-chan_type::check_build(context& c) const {
+type_base::return_type
+chan_type::check_definition(context& c) const {
 	STACKTRACE("chan_type::check_build()");
 	cerr << "chan_type::check_build(): FINISH ME!";
-	return never_ptr<const object>(NULL);
+	return type_base::return_type(NULL);
 }
 
 //=============================================================================
@@ -232,14 +233,14 @@ statement::~statement() { }
 // class incdec_stmt method definitions
 
 CONSTRUCTOR_INLINE
-incdec_stmt::incdec_stmt(const expr* n, const terminal* o) : statement(),
-		e(n), op(o) {
+incdec_stmt::incdec_stmt(const expr* n, const string_punctuation_type* o) :
+		statement(), e(n), op(o) {
 	NEVER_NULL(e); NEVER_NULL(op);
 }
 
 #if 0
 CONSTRUCTOR_INLINE
-incdec_stmt::incdec_stmt(excl_ptr<const expr> n, excl_const_ptr<terminal> o) :
+incdec_stmt::incdec_stmt(excl_ptr<const expr> n, excl_const_ptr<string_punctuation_type> o) :
 		statement(), e(n), op(o) {
 	assert(e); assert(op);
 }
@@ -261,7 +262,7 @@ incdec_stmt::release_expr(void) {
 	return e;
 }
 
-excl_ptr<const terminal>
+excl_ptr<const string_punctuation_type>
 incdec_stmt::release_op(void) {
 	return op;
 }
@@ -273,9 +274,9 @@ incdec_stmt::release_expr(void) {
 	return ret;
 }
 
-const terminal*
+const string_punctuation_type*
 incdec_stmt::release_op(void) {
-	const terminal* ret = op;
+	const string_punctuation_type* ret = op;
 	op = NULL;
 	return ret;
 }
@@ -307,7 +308,7 @@ assign_stmt::assign_stmt(const expr* left, const char_punctuation_type* o,
 
 #if 0
 CONSTRUCTOR_INLINE
-assign_stmt::assign_stmt(excl_ptr<const expr> left, excl_const_ptr<terminal> o, 
+assign_stmt::assign_stmt(excl_ptr<const expr> left, excl_const_ptr<string_punctuation_type> o, 
 		excl_ptr<const expr> right) : statement(),
 		lhs(left), op(o), rhs(right) {
 	assert(lhs); assert(op); assert(rhs);
@@ -325,7 +326,7 @@ assign_stmt::release_lhs(void) {
 	return lhs;
 }
 
-excl_ptr<const terminal>
+excl_ptr<const string_punctuation_type>
 assign_stmt::release_op(void) {
 	return op;
 }
@@ -645,12 +646,15 @@ concrete_type_ref::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("concrete_type_ref::check_build()");
 
-	never_ptr<const object> o;
-
 	// sets context's current definition
-	o = base->check_build(c);
+#if USE_NEW_TYPE_BASE_CHECK
+	const never_ptr<const definition_base>
+		d(base->check_definition(c));
+#else
+	const never_ptr<const object> o(base->check_build(c));
 	const never_ptr<const definition_base>
 		d(o.is_a<const definition_base>());
+#endif
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "

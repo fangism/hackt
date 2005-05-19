@@ -1,11 +1,14 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.25 2005/05/13 21:24:29 fang Exp $
+	$Id: art_parser_token.cc,v 1.26 2005/05/19 18:43:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
 #define	__AST_ART_PARSER_TOKEN_CC__
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("AST/art_parser_token.cc")
 
 #include <ostream>
 #include <cstdio>		// for sprintf
@@ -511,13 +514,6 @@ token_datatype::what(ostream& o) const {
 	return o << "datatype: " << AS_A(const string&, *this);
 }
 
-#if 0
-never_ptr<const object>
-token_datatype::check_build(context& c) const {
-	return c.set_datatype_def(*this);
-}
-#endif
-
 //=============================================================================
 // class token_paramtype method definitions
 
@@ -543,8 +539,8 @@ token_bool_type::~token_bool_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 
-never_ptr<const object>
-token_bool_type::check_build(context& c) const {
+type_base::return_type
+token_bool_type::check_definition(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
 	// bool_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(bool_def);
@@ -561,8 +557,8 @@ token_int_type::~token_int_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 
-never_ptr<const object>
-token_int_type::check_build(context& c) const {
+type_base::return_type
+token_int_type::check_definition(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
 	// int_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(int_def);
@@ -586,8 +582,8 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
 	"pbool" is always used as a type_reference, and never refers
 	to the definition.  
  */
-never_ptr<const object>
-token_pbool_type::check_build(context& c) const {
+type_base::return_type
+token_pbool_type::check_definition(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
 	// pbool_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(pbool_def);
@@ -609,8 +605,8 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 //	"pint" is always used as a type_reference, and never refers
 //	to the definition.  
  */
-never_ptr<const object>
-token_pint_type::check_build(context& c) const {
+type_base::return_type
+token_pint_type::check_definition(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
 	// pint_def declared in "art_built_ins.h"
 	return c.push_current_definition_reference(pint_def);
@@ -622,6 +618,8 @@ token_pint_type::check_build(context& c) const {
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
+
+STATIC_TRACE_END("AST/art_parser_token.cc")
 
 #endif	// __AST_ART_PARSER_TOKEN_CC__
 

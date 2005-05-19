@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root_item.h,v 1.4 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_root_item.h,v 1.5 2005/05/19 18:43:28 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_ROOT_ITEM_H__
@@ -34,8 +34,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 };	// end class namespace_body
 
 //-----------------------------------------------------------------------------
@@ -66,8 +65,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 };	// end class using_namespace
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "util/what.h"
 	Utility for user-defined type-names.
 	This file provides a generic default implementation.  
-	$Id: what.h,v 1.6 2005/05/10 04:51:31 fang Exp $
+	$Id: what.h,v 1.7 2005/05/19 18:43:36 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_H__
@@ -11,7 +11,7 @@
 // not using strings any more
 #include "util/string_fwd.h"
 #include "util/what_fwd.h"
-#include "util/memory/count_ptr.h"
+// #include "util/memory/count_ptr.h"
 
 #ifndef	UTIL_WHAT_PARTIAL_SPECIALIZATIONS
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	1

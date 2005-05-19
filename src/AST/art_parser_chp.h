@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.10 2005/05/10 04:51:06 fang Exp $
+	$Id: art_parser_chp.h,v 1.11 2005/05/19 18:43:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -75,10 +75,10 @@ using	language_body::leftmost;
 class guarded_command {
 protected:
 	const excl_ptr<const chp_expr>	guard;		///< guard expression
-	const excl_ptr<const terminal>	arrow;		///< right-arrow
+	const excl_ptr<const string_punctuation_type>	arrow;		///< right-arrow
 	const excl_ptr<const stmt_list>	command;	///< statement body
 public:
-	guarded_command(const chp_expr* g, const terminal* a,
+	guarded_command(const chp_expr* g, const string_punctuation_type* a,
 		const stmt_list* c);
 
 virtual	~guarded_command();
@@ -102,7 +102,7 @@ virtual	ostream&
 /// CHP else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(const token_else* g, const terminal* a, const stmt_list* c);
+	else_clause(const token_else* g, const string_punctuation_type* a, const stmt_list* c);
 
 	~else_clause();
 
@@ -235,13 +235,13 @@ public:
 class communication : public statement {
 protected:
 	const excl_ptr<const expr>		chan;
-	const excl_ptr<const token_char>	dir;
+	const excl_ptr<const char_punctuation_type>	dir;
 #if 0
 public:
 	static const char			separator[];	// comma
 #endif
 public:
-	communication(const expr* c, const token_char* d);
+	communication(const expr* c, const char_punctuation_type* d);
 
 virtual	~communication();
 
@@ -287,7 +287,7 @@ class send : public communication {
 protected:
 	const excl_ptr<const expr_list>	rvalues;
 public:
-	send(const expr* c, const token_char* d, const expr_list* r);
+	send(const expr* c, const char_punctuation_type* d, const expr_list* r);
 
 	~send();
 
@@ -309,7 +309,7 @@ class receive : public communication {
 protected:
 	const excl_ptr<const expr_list>	lvalues;
 public:
-	receive(const expr* c, const token_char* d, const expr_list* l);
+	receive(const expr* c, const char_punctuation_type* d, const expr_list* l);
 
 	~receive();
 

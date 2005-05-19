@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.13 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_expr.h,v 1.14 2005/05/19 18:43:27 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -83,9 +83,9 @@ public:
 class unary_expr : public expr {
 protected:
 	const excl_ptr<const expr>	e;	///< the argument expr
-	const excl_ptr<const terminal>	op;	///< the operator, may be null
+	const excl_ptr<const char_punctuation_type>	op;	///< the operator, may be null
 public:
-	unary_expr(const expr* n, const terminal* o);
+	unary_expr(const expr* n, const char_punctuation_type* o);
 
 virtual	~unary_expr();
 
@@ -97,6 +97,7 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
 };	// end class unary_expr
 
 //-----------------------------------------------------------------------------
@@ -106,7 +107,7 @@ virtual	line_position
  */
 class prefix_expr : public unary_expr {
 public:
-	prefix_expr(const terminal* o, const expr* n);
+	prefix_expr(const char_punctuation_type* o, const expr* n);
 	~prefix_expr();
 
 	ostream&
@@ -120,6 +121,7 @@ public:
 
 	CHECK_EXPR_PROTO;
 
+	CHECK_PRS_EXPR_PROTO;
 };	// end class prefix_expr
 
 //-----------------------------------------------------------------------------
@@ -189,10 +191,11 @@ private:
 class binary_expr : public expr {
 protected:
 	const excl_ptr<const expr> 	l;	///< left-hand side
-	const excl_ptr<const terminal>	op;	///< operator
+	const excl_ptr<const char_punctuation_type>	op;	///< operator
 	const excl_ptr<const expr>	r;	///< right-hand side
 public:
-	binary_expr(const expr* left, const terminal* o, const expr* right);
+	binary_expr(const expr* left, const char_punctuation_type* o, 
+		const expr* right);
 
 virtual	~binary_expr();
 
@@ -214,7 +217,8 @@ virtual	ostream&
  */
 class arith_expr : public binary_expr {
 public:
-	arith_expr(const expr* left, const terminal* o, const expr* right);
+	arith_expr(const expr* left, const char_punctuation_type* o, 
+		const expr* right);
 
 	~arith_expr();
 
@@ -231,7 +235,8 @@ public:
  */
 class relational_expr : public binary_expr {
 public:
-	relational_expr(const expr* left, const terminal* o, const expr* right);
+	relational_expr(const expr* left, const char_punctuation_type* o, 
+		const expr* right);
 
 	~relational_expr();
 
@@ -248,7 +253,8 @@ public:
  */
 class logical_expr : public binary_expr {
 public:
-	logical_expr(const expr* left, const terminal* o, const expr* right);
+	logical_expr(const expr* left, const char_punctuation_type* o, 
+		const expr* right);
 
 	~logical_expr();
 
@@ -256,6 +262,8 @@ public:
 	what(ostream& o) const;
 
 	CHECK_EXPR_PROTO;
+
+	CHECK_PRS_EXPR_PROTO;
 };	// end class logical_expr
 
 //=============================================================================
@@ -303,22 +311,14 @@ public:
 class loop_concatenation : public expr {
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
-//	const excl_ptr<const char_punctuation_type>	pd;
-//	const excl_ptr<const char_punctuation_type>	col1;
 	const excl_ptr<const token_identifier>		id;
-//	const excl_ptr<const char_punctuation_type>	col2;
 	const excl_ptr<const range>			bounds;
-//	const excl_ptr<const char_punctuation_type>	col3;
 	const excl_ptr<const expr>			ex;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:
 	loop_concatenation(const char_punctuation_type* l, 
-//		const char_punctuation_type* h, 
-//		const char_punctuation_type* c1, 
 		const token_identifier* i, 
-//		const char_punctuation_type* c2, 
 		const range* rng, 
-//		const char_punctuation_type* c3, 
 		const expr* e, 
 		const char_punctuation_type* r);
 

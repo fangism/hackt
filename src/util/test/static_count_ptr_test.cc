@@ -1,10 +1,14 @@
 /**
 	'static_count_ptr_test.cc"
 	Testing "unsafe" uses of count_ptr.  
-	$Id: static_count_ptr_test.cc,v 1.2 2005/01/28 19:58:59 fang Exp $
+	$Id: static_count_ptr_test.cc,v 1.3 2005/05/19 18:43:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
+
+#define	ENABLE_STATIC_TRACE		0
+#include "static_trace.h"
+STATIC_TRACE_BEGIN("static_count_ptr_test::main")
 
 #include <iostream>
 #include "memory/count_ptr.h"
@@ -25,7 +29,9 @@ typedef	count_ptr<named_thing>	ref_type;
 ref_type
 factory_func(void) {
 	static named_thing* local_obj = new named_thing;
-	static size_t* local_count = new size_t(0);
+	STATIC_RC_POOL_REF_INIT;
+	static size_t* local_count = NEW_SIZE_T;
+	static const size_t zero = (*local_count = 0);
 	return ref_type(local_obj, local_count);
 }
 
@@ -48,4 +54,6 @@ main(int argc, char* argv[]) {
 #endif
 	return 0;
 }
+
+STATIC_TRACE_END("static_count_ptr_test::main")
 

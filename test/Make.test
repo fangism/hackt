@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.9 2005/04/14 19:46:36 fang Exp $
+#	$Id: Make.test,v 1.10 2005/05/19 18:43:39 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -118,6 +118,12 @@ clean-cvsignore:
 # automatically removes $(CLEANFILES)
 clean-local:
 	-$(RM) *.core core.*
+
+# really remove these files!
+cleaner: clean
+	-$(RM) *.filter *.diff *.artobj
+	-$(RM) *.artctest *.artobjtest *.artobjunrolltest
+	-$(RM) *.indump *.outdump *.artobjunroll *.unrolldump *.unrolldiff
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...

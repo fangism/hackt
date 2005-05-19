@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.12 2005/05/10 04:51:29 fang Exp $
+	$Id: persistent.h,v 1.13 2005/05/19 18:43:36 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_H__
@@ -37,18 +37,20 @@
 
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
 	void								\
-	write_object(const persistent_object_manager&, ostream&) const;	\
+	write_object(const util::persistent_object_manager&, 		\
+		std::ostream&) const;					\
 	void								\
-	load_object(const persistent_object_manager&, istream&);
+	load_object(const util::persistent_object_manager&, std::istream&);
 
 /**
 	Same thing, but virtual functions.  
  */
 #define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS	\
 virtual	void								\
-	write_object(const persistent_object_manager&, ostream&) const;	\
+	write_object(const util::persistent_object_manager&, 		\
+		std::ostream&) const;					\
 virtual	void								\
-	load_object(const persistent_object_manager&, istream&);
+	load_object(const util::persistent_object_manager&, std::istream&);
 
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
@@ -58,22 +60,22 @@ virtual	void								\
 #define	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC			\
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS		\
 	void								\
-	collect_transient_info(persistent_object_manager&) const;
+	collect_transient_info(util::persistent_object_manager&) const;
 
 #define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC		\
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS	\
 virtual	void								\
-	collect_transient_info(persistent_object_manager&) const;
+	collect_transient_info(util::persistent_object_manager&) const;
 
 #define	PERSISTENT_METHODS_DECLARATIONS					\
 	PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS			\
 	void								\
-	collect_transient_info(persistent_object_manager&) const;
+	collect_transient_info(util::persistent_object_manager&) const;
 
 #define	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS				\
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS_NO_POINTERS		\
 virtual	void								\
-	collect_transient_info(persistent_object_manager&) const;
+	collect_transient_info(util::persistent_object_manager&) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

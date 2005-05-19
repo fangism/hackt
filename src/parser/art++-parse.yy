@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.19 2005/05/13 21:24:31 fang Exp $
+	$Id: art++-parse.yy,v 1.20 2005/05/19 18:43:35 fang Exp $
  */
 
 %{
@@ -43,12 +43,14 @@ util::memory::excl_ptr<root_body> AST_root;
 #define	DELETE_TOKEN(tok)		delete tok
 
 // kind of wasteful...
+#if 0
 #define	WRAP_ANGLE_LIST(left, list, right)				\
 	const char lc = left->get_char();				\
 	const char rc = right->get_char();				\
 	WRAP_LIST(new node_position(&lc, left->leftmost()),		\
 		list, new node_position(&rc, right->leftmost()));	\
 	DELETE_TOKEN(left); DELETE_TOKEN(right)
+#endif
 
 #define	APPEND_LIST(list, delim, item)					\
 	DELETE_TOKEN(delim); list->push_back(item)
@@ -188,8 +190,8 @@ extern const char* const yyrule[];
 	node_position*		_node_position;
 	keyword_position*	_keyword_position;
 	token_keyword*		_token_keyword;
-	token_string*		_token_string;
-	token_char*		_token_char;
+/*	token_string*		_token_string;	*/
+/*	token_char*		_token_char;	*/
 	token_int*		_token_int;
 	token_bool*		_token_bool;
 	token_float*		_token_float;
@@ -397,13 +399,14 @@ yyfreestacks(const short* yyss, const short* yyssp,
 */
 /* change these to _node_position (was _token_char) */
 %type	<_node_position>	'{' '}' '[' ']' '(' ')'
-%type	<_token_char>		'<' '>'
+%type	<_node_position>	'<' '>'
 /* glue tokens: should never need their positions, consider no return type */
 %type	<_node_position>	',' '.' ';'
 %type	<_node_position>	':' '=' '#'
 	/* used as template list wrappers and as comparators */
-%type	<_token_char>		'+' '-' '*' '/' '%'
-%type	<_token_char>		'!' '?' '~' '&' '|' '^'
+%type	<_node_position>	'+' '-' '*' '/' '%'
+%type	<_node_position>	'~' '&' '|' '^'
+%type	<_node_position>	'!' '?'
 
 /*
 	the following tokens are defined below because they consist of
@@ -422,11 +425,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_node_position>	DEFINEOP
 
 /* _token_string */
-%token	<_token_string>		LE GE EQUAL NOTEQUAL
-%token	<_token_string>		IMPLIES RARROW
-%token	<_token_string>		LOGICAL_AND LOGICAL_OR
-%token	<_token_string>		INSERT EXTRACT
-%token	<_token_string>		PLUSPLUS MINUSMINUS
+%token	<_node_position>	LE GE EQUAL NOTEQUAL
+%token	<_node_position>	IMPLIES RARROW
+%token	<_node_position>	LOGICAL_AND LOGICAL_OR
+%token	<_node_position>	INSERT EXTRACT
+%token	<_node_position>	PLUSPLUS MINUSMINUS
 
 /* _token_keyword: covert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
@@ -560,8 +563,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
 %type	<_expr> prs_not prs_and prs_or
 %type	<_expr> prs_and_loop prs_or_loop
-%type	<_token_string>	prs_arrow
-%type	<_token_char>	dir
+%type	<_node_position>	prs_arrow
+%type	<_node_position>	dir
 %type	<_expr>	paren_expr expr
 /* %type	<n>	primary_expr */
 %type	<_expr>	literal
@@ -772,7 +775,7 @@ concrete_type_ref
 
 template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
-		{ $$ = $2; WRAP_ANGLE_LIST($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 template_formal_decl_list_optional_in_angles
@@ -780,7 +783,7 @@ template_formal_decl_list_optional_in_angles
 		{ $$ = $1; }
 	| '<' '>'
 		{ $$ = new template_formal_decl_list();
-		  WRAP_ANGLE_LIST($1, $$, $2); }
+		  WRAP_LIST($1, $$, $2); }
 	;
 
 /** OBSOLETE
@@ -1841,7 +1844,7 @@ optional_template_arguments_in_angles
 
 shift_expr_optional_list_in_angles
 	: '<' shift_expr_optional_list '>'
-		{ $$ = $2; WRAP_ANGLE_LIST($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 shift_expr_optional_list

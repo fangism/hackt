@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.16 2005/05/13 21:24:29 fang Exp $
+	$Id: art_context.h,v 1.17 2005/05/19 18:43:29 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -305,6 +305,11 @@ public:
 
 	never_ptr<const process_definition_base>
 	get_current_process_definition(void) const;
+
+	never_ptr<definition_base>
+	get_current_open_definition(void) const {
+		return current_open_definition;
+	}
 
 	void
 	set_current_fundamental_type(

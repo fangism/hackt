@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.13 2005/05/13 21:24:29 fang Exp $
+	$Id: art_parser_token.h,v 1.14 2005/05/19 18:43:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_H__
@@ -182,8 +182,7 @@ virtual	ostream&
 	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
+virtual	TYPE_BASE_CHECK_PROTO = 0;
 };	// end class token_type
 
 //-----------------------------------------------------------------------------
@@ -200,8 +199,7 @@ virtual	~token_datatype();
 	ostream&
 	what(ostream& o) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
+virtual	TYPE_BASE_CHECK_PROTO = 0;
 };	// end class token_datatype
 
 //-----------------------------------------------------------------------------
@@ -216,8 +214,7 @@ public:
 
 	~token_int_type();
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	TYPE_BASE_CHECK_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_int_type
@@ -234,8 +231,7 @@ public:
 
 	~token_bool_type();
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	TYPE_BASE_CHECK_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_bool_type
@@ -254,8 +250,7 @@ virtual	~token_paramtype();
 	ostream&
 	what(ostream& o) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
+virtual	TYPE_BASE_CHECK_PROTO = 0;
 };	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
@@ -270,8 +265,7 @@ public:
 
 	~token_pbool_type();
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	TYPE_BASE_CHECK_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_pbool_type
@@ -288,8 +282,7 @@ public:
 
 	~token_pint_type();
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	TYPE_BASE_CHECK_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_pint_type

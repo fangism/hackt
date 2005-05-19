@@ -53,13 +53,15 @@ noinst_PROGRAMS = \
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
 
-BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
+BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
+count_ptr_test_LDADD = libfangutil.la
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
+deque_iterator_test_LDADD = libfangutil.la
 hash_qmap_test_SOURCES = hash_qmap_test.cc
 friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
 link_test_SOURCES = link_test.cc
@@ -71,6 +73,7 @@ chunk_map_pool_test_SOURCES = chunk_map_pool_test.cc
 discrete_interval_set_test_SOURCES = discrete_interval_set_test.cc
 EBCO_test_SOURCES = EBCO_test.cc
 multidimensional_sparse_set_test_SOURCES = multidimensional_sparse_set_test.cc
+multidimensional_sparse_set_test_LDADD = libfangutil.la
 multidimensional_qmap_test_SOURCES = multidimensional_qmap_test.cc
 maplikeset_test_SOURCES = maplikeset_test.cc
 multikey_qmap_test_SOURCES = multikey_qmap_test.cc
@@ -99,7 +102,8 @@ static_count_ptr_test_SOURCES = static_count_ptr_test.cc named_pooled_thing.cc
 static_count_ptr_test_LDADD = libfangutil.la
 ring_node_test_SOURCES = ring_node_test.cc
 
-libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc
+libfangutil_la_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc \
+	ref_count_pool.cc
 libbogusutil_la_SOURCES = bogus_stacktrace.cc bogus_stacktrace.h static_trace.cc
 libpooled_la_SOURCES = \
 	pool_module_a.cc pool_module_b.cc pool_module_a.h pool_module_b.h
@@ -119,6 +123,9 @@ static_trace.cc: ../static_trace.cc
 	$(LN_S) $< $@
 
 thread_lock.cc: ../memory/thread_lock.cc
+	$(LN_S) $< $@
+
+ref_count_pool.cc: ../memory/ref_count_pool.cc
 	$(LN_S) $< $@
 
 friend_function_formal_bug.stderr:

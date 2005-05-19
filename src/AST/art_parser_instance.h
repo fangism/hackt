@@ -1,12 +1,13 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.13 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_instance.h,v 1.14 2005/05/19 18:43:28 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
 #define __AST_ART_PARSER_INSTANCE_H__
 
+#include "AST/art_parser_base.h"
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_root.h"
 #include "AST/art_parser_definition_item.h"
@@ -42,6 +43,8 @@ virtual	line_position
 
 virtual	line_position
 	rightmost(void) const = 0;
+
+virtual	ROOT_CHECK_PROTO = 0;
 };	// end class instance_management
 
 //-----------------------------------------------------------------------------
@@ -73,8 +76,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 
 private:
 	typedef	parent_type::checked_generic_type	checked_generic_type;
@@ -141,8 +143,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+virtual	ROOT_CHECK_PROTO;
 };	// end class instance_base
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,8 +179,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 };	// end class instance_array
 
 //=============================================================================
@@ -212,8 +212,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 };	// end class instance_declaration
 
 //=============================================================================
@@ -240,8 +239,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 };	// end class instance_connection
 
 //-----------------------------------------------------------------------------
@@ -273,8 +271,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 
 	static
 	excl_ptr<const entity::port_connection>
@@ -309,8 +306,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	ROOT_CHECK_PROTO;
 };	// end class instance_alias
 
 //=============================================================================
@@ -338,10 +334,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
+	ROOT_CHECK_PROTO;
 };	// end class loop_instantiation
 
 //=============================================================================
@@ -349,10 +342,11 @@ public:
 class guarded_definition_body : public instance_management {
 protected:
 	const excl_ptr<const expr>	guard;	///< condition expression
-	const excl_ptr<const terminal>		arrow;	///< right arrow
+	const excl_ptr<const string_punctuation_type>	arrow;	///< right arrow
 	const excl_ptr<const definition_body>	body;
 public:
-	guarded_definition_body(const expr* e, const terminal* a, 
+	guarded_definition_body(const expr* e, 
+		const string_punctuation_type* a, 
 		const definition_body* b);
 
 	~guarded_definition_body();
@@ -366,10 +360,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
+	ROOT_CHECK_PROTO;
 };	// end class guarded_definition_body
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -409,10 +400,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
+	ROOT_CHECK_PROTO;
 };	// end class conditional_instantiation
 
 //=============================================================================
@@ -437,8 +425,7 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& ) const;
+virtual	ROOT_CHECK_PROTO;
 
 };	// end class type_completion_statement
 
@@ -464,9 +451,7 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& ) const;
-
+	ROOT_CHECK_PROTO;
 };	// end class type_completion_statement
 
 //=============================================================================

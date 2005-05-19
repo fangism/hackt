@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.6 2005/05/10 04:51:20 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7 2005/05/19 18:43:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -153,6 +153,12 @@
 #define	CONDITIONAL_SCOPE_TYPE_KEY				"condscop"
 
 // Language-specifics: (PRS, CHP, ...)
+#define	PRS_PULLUP_TYPE_KEY					"PRSpulup"
+#define	PRS_PULLDN_TYPE_KEY					"PRSpuldn"
+#define	PRS_AND_TYPE_KEY					"PRSand"
+#define	PRS_OR_TYPE_KEY						"PRSor"
+#define	PRS_NOT_TYPE_KEY					"PRSnot"
+#define	PRS_LITERAL_TYPE_KEY					"PRSlitrl"
 
 	// more class constants here...
 

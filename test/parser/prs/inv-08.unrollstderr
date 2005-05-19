@@ -1,0 +1,80 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2b04c50	module__	0	0	28
+	2	 0x2b00144	namespc_	0	28	52
+	3	 0x2b04c70	procdefn	0	52	146
+	4	 0x2b04cf4	pintcoll	0	146	183
+	5	 0x2b04d40	pintinst	0	183	199
+	6	 0x2b04d54	pintcoll	0	199	236
+	7	 0x2b04da0	pintinst	0	236	252
+	8	 0x2b04db4	dboolcol	2	252	281
+	9	 0x2b04e00	datainst	0	281	301
+	10	 0x2b04e20	datatprf	0	301	317
+	11	 0x2b04bf0	datadefn	0	317	354
+	12	 0x2b04e34	drnglst_	0	354	374
+	13	 0x2b04e54	dynrng__	0	374	390
+	14	 0x28cf024	cnstpi__	0	390	402
+	15	 0x2b04e78	arithexp	0	402	419
+	16	 0x2b04ea0	spiref__	0	419	439
+	17	 0x28cf038	cnstpi__	0	439	451
+	18	 0x2b04ec4	dynrng__	0	451	467
+	19	 0x28cf04c	cnstpi__	0	467	479
+	20	 0x2b04ee8	arithexp	0	479	496
+	21	 0x2b04f10	spiref__	0	496	516
+	22	 0x28cf060	cnstpi__	0	516	528
+	23	 0x401ba08	PRSpuldn	0	528	545
+	24	 0x2b04f28	PRSlitrl	0	545	557
+	25	 0x2b050cc	sdbref__	0	557	577
+	26	 0x2b050d4	cindlst_	0	577	597
+	27	 0x28cf074	cnstpi__	0	597	609
+	28	 0x28cf088	cnstpi__	0	609	621
+	29	 0x2b050fc	sdbref__	0	621	641
+	30	 0x2b05104	cindlst_	0	641	661
+	31	 0x28cf09c	cnstpi__	0	661	673
+	32	 0x28cf0b0	cnstpi__	0	673	685
+	33	 0x401be08	PRSpulup	0	685	702
+	34	 0x2b05118	PRSnot__	0	702	714
+	35	 0x2b04f34	PRSlitrl	0	714	726
+	36	 0x2b052bc	sdbref__	0	726	746
+	37	 0x2b052c4	cindlst_	0	746	766
+	38	 0x28cf0c4	cnstpi__	0	766	778
+	39	 0x28cf0d8	cnstpi__	0	778	790
+	40	 0x2b052ec	sdbref__	0	790	810
+	41	 0x2b052f4	cindlst_	0	810	830
+	42	 0x28cf0ec	cnstpi__	0	830	842
+	43	 0x28cf100	cnstpi__	0	842	854
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    crazy_inv = process-definition (defined) crazy_inv<
+      pint<> N
+      pint<> M
+      >
+      (
+        bool<> a with indices: {
+          [0..::crazy_inv::N-1][0..::crazy_inv::M-1]
+        }
+
+      )
+      In definition "crazy_inv", we have: {
+        M = pint<> M
+        N = pint<> N
+        a = bool<> a with indices: {
+          [0..::crazy_inv::N-1][0..::crazy_inv::M-1]
+        }
+
+        prs:
+        a[0][0] -> a[0][1]-
+        ~a[0][0] -> a[0][1]+
+      }
+
+}
+

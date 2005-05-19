@@ -1,0 +1,2 @@
+ERROR: bool reference at [5:7] does not refer to a scalar instance.
+ERROR in the output node reference at [5:7].

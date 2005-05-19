@@ -1,11 +1,12 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.8 2005/05/10 04:51:30 fang Exp $
+	$Id: stacktrace.cc,v 1.9 2005/05/19 18:43:36 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
 #define	ENABLE_STACKTRACE	1
+// #define	ENABLE_STATIC_TRACE	1
 
 #include <pthread.h>
 #include <iostream>
@@ -13,13 +14,14 @@
 #include <string>
 #include <stack>
 
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("stacktrace")
+
+#include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 #include "util/likely.h"
 #include "util/STL/list.tcc"
 #include "util/qmap.tcc"
-#include "util/static_trace.h"
-
-STATIC_TRACE_BEGIN("stacktrace")
 
 namespace util {
 USING_LIST
@@ -86,7 +88,9 @@ raw_count_ptr<stacktrace::stack_text_type>
 stacktrace::manager::get_stack_text(void) {
 	typedef	raw_count_ptr<stacktrace::stack_text_type>	return_type;
 	static stack_text_type* ptr = new stack_text_type;
-	static size_t* count = new size_t(0);
+	STATIC_RC_POOL_REF_INIT;
+	static size_t* const count = NEW_SIZE_T;
+	static const size_t zero = (*count = 0);
 	static const int check = (INVARIANT(ptr->empty()), 0);
 	return return_type(ptr, count);
 }
@@ -97,7 +101,9 @@ raw_count_ptr<stacktrace::stack_text_type>
 stacktrace::manager::get_stack_indent(void) {
 	typedef	raw_count_ptr<stacktrace::stack_text_type>	return_type;
 	static stack_text_type* const ptr = new stack_text_type;
-	static size_t* const count = new size_t(0);
+	STATIC_RC_POOL_REF_INIT;
+	static size_t* const count = NEW_SIZE_T;
+	static const size_t zero = (*count = 0);
 	static const int check =
 		(INVARIANT(ptr->empty()), INVARIANT(!ptr->size()), 0);
 	return return_type(ptr, count);
@@ -112,7 +118,9 @@ stacktrace::manager::get_stack_echo(void) {
 	typedef	raw_count_ptr<stacktrace::stack_echo_type>	return_type;
 	static stack_echo_type* stack_echo = new stack_echo_type;
 	static const int init_once = (stack_echo->push(1), 1);
-	static size_t* count = new size_t(0);
+	STATIC_RC_POOL_REF_INIT;
+	static size_t* const count = NEW_SIZE_T;
+	static const size_t zero = (*count = 0);
 	static const return_type ret(stack_echo, count);
 	INVARIANT(init_once && !stack_echo->empty());
 	return return_type(stack_echo, count);
@@ -127,7 +135,9 @@ stacktrace::manager::get_stack_streams(void) {
 	typedef	raw_count_ptr<stacktrace::stack_streams_type>	return_type;
 	static stack_streams_type* stack_streams = new stack_streams_type;
 	static const int init_once = (stack_streams->push(&cerr), 1);
-	static size_t* count = new size_t(0);
+	STATIC_RC_POOL_REF_INIT;
+	static size_t* const count = NEW_SIZE_T;
+	static const size_t zero = (*count = 0);
 	static const return_type ret(stack_streams, count);
 	INVARIANT(init_once && !stack_streams->empty());
 	return return_type(stack_streams, count);

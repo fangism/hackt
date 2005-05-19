@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.26 2005/05/10 04:51:13 fang Exp $
+	$Id: art_object_expr.h,v 1.27 2005/05/19 18:43:32 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
@@ -509,7 +509,9 @@ private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	qmap<string, const op_type*>	op_map_type;
 	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+public:
 	static const op_map_type		op_map;
+private:
 	static const reverse_op_map_type	reverse_op_map;
 	static const size_t			op_map_size;
 	static void op_map_register(const string&, const op_type* );
@@ -527,6 +529,8 @@ private:
 	relational_expr();
 public:
 	relational_expr(const count_ptr<const pint_expr>& l, const string& o, 
+		const count_ptr<const pint_expr>& r);
+	relational_expr(const count_ptr<const pint_expr>& l, const op_type* o, 
 		const count_ptr<const pint_expr>& r);
 
 	~relational_expr();
@@ -611,7 +615,9 @@ private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	qmap<string, const op_type*>	op_map_type;
 	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+public:
 	static const op_map_type		op_map;
+private:
 	static const reverse_op_map_type	reverse_op_map;
 	static const size_t			op_map_size;
 	static void op_map_register(const string&, const op_type* );
@@ -629,6 +635,8 @@ private:
 	logical_expr();
 public:
 	logical_expr(const count_ptr<const pbool_expr>& l, const string& o, 
+		const count_ptr<const pbool_expr>& r);
+	logical_expr(const count_ptr<const pbool_expr>& l, const op_type* o, 
 		const count_ptr<const pbool_expr>& r);
 
 	~logical_expr();

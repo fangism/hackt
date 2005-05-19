@@ -1,26 +1,28 @@
 /**
 	\file "count_ptr_test.cc"
 	Test program for checking reference-counted pointers.  
-	$Id: count_ptr_test.cc,v 1.5 2005/01/28 19:58:54 fang Exp $
+	$Id: count_ptr_test.cc,v 1.6 2005/05/19 18:43:38 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "var.h"
-#include "memory/count_ptr.h"
+#include "memory/count_ptr.tcc"
 
 using std::string;
 #include "using_ostream.h"
 using namespace util::memory;
-// using namespace COUNT_PTR_NAMESPACE;
 
-void test0(void);
-void test1(void);
+
+static void test0(void);
+static void test1(void);
+static void test2(void);
 
 int main(int argc, char* argv[]) {
 	test0();
 	test1();
+	test2();
 	return 0;
 }
 
@@ -65,4 +67,26 @@ void test1(void)  {
 
 	cout << "goodbye again" << endl;
 }
+
+void test2(void)  {
+	count_ptr<string> s0(new string("It\'s me again!"));
+	cout << *s0 << endl;
+	assert(s0.refs() == 1);
+	s0 = s0;		// could be a problem if not careful!
+	cout << "I\'m pointing to myself." << endl;
+	assert(s0.refs() == 1);
+	{
+		count_ptr<string> s1(s0);
+		assert(s1.refs() == 2);
+		s1 = s1;
+		assert(s1.refs() == 2);
+		s0 = s1;
+		assert(s1.refs() == 2);
+		s1 = s0;
+		assert(s1.refs() == 2);
+	}
+	assert(s0.refs() == 1);
+	cout << "I\'m done." << endl;
+}
+
 

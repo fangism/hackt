@@ -1,0 +1,42 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x2b02370	module__	0	0	28
+	2	 0x2b00144	namespc_	0	28	52
+	3	 0x2b02390	procdefn	0	52	128
+	4	 0x2b02414	dboolcol	0	128	162
+	5	 0x2b02470	datainst	0	162	182
+	6	 0x2b02490	datatprf	0	182	198
+	7	 0x2b024a0	datadefn	0	198	235
+	8	 0x2b02504	dboolcol	0	235	269
+	9	 0x2b02560	datainst	0	269	289
+	10	 0x4010a08	PRSpulup	0	289	306
+	11	 0x2b02588	PRSnot__	0	306	318
+	12	 0x2b02718	PRSlitrl	0	318	330
+	13	 0x2b028bc	sdbref__	0	330	350
+	14	 0x2b028dc	sdbref__	0	350	370
+	15	 0x4010e08	PRSpuldn	0	370	387
+
+In module created from: -stdin- (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv      (
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+        a = bool<> a
+        b = bool<> b
+        prs:
+        ~a -> b+
+        a -> b-
+      }
+
+}
+

@@ -1,7 +1,10 @@
 /**
 	\file "art_parser_node_position.cc"
-	$Id: art_parser_node_position.cc,v 1.4 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_node_position.cc,v 1.5 2005/05/19 18:43:28 fang Exp $
  */
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("AST/art_parser_node_position.cc")
 
 #include <iostream>
 #include "AST/art_parser_node_position.h"
@@ -71,4 +74,6 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(keyword_position)
 //=============================================================================
 }	// end namespace parser
 }	// end namespace ART
+
+STATIC_TRACE_END("AST/art_parser_node_position.cc")
 

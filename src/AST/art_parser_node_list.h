@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.8 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_node_list.h,v 1.9 2005/05/19 18:43:28 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_NODE_LIST_H__
@@ -11,11 +11,13 @@
 #include "AST/art_parser_fwd.h"
 #include "AST/art_parser_base.h"
 #include "util/memory/count_ptr.h"
+// #include "util/boolean_types.h"
 
 namespace ART {
 namespace parser {
 
 USING_LIST
+// using util::good_bool;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 
@@ -53,7 +55,7 @@ class node_list {
 protected:
 	// consider using a vector
 	typedef	list<count_ptr<T> >			list_type;
-protected:
+public:
 	typedef	typename list_type::value_type		value_type;
 	typedef	typename list_type::iterator		iterator;
 	typedef	typename list_type::const_iterator	const_iterator;
@@ -128,12 +130,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	line_range
-	where(void) const;
-#endif
-
 	/**
+		PHASING OUT.
 		Consider giving this an aggregate return type.  
 		Note that this is NON-VIRTUAL.  
 		Determine the return type from the template paraameter.
@@ -141,7 +139,82 @@ public:
 	never_ptr<const object>
 	check_build(context&) const;
 
+	template <class R, class A>
+	void
+	check_list(R&, typename R::value_type (T::*)(A&) const, A&) const;
+
+	template <class R, class A>
+	void
+	check_list_optional(
+		R&, typename R::value_type (T::*)(A&) const, A&) const;
+
+#if 0
+	template <class R, class A>
+	good_bool
+	check_list_while_good(R&, 
+		typename R::value_type (T::*)(A&) const, A&) const;
+
+	template <class R, class A>
+	good_bool
+	check_list_optional_while_good(
+		R&, typename R::value_type (T::*)(A&) const, A&) const;
+#endif
+
 };	// end class node_list
+
+//=============================================================================
+// non-member functions
+
+#if 0
+/**
+	Dedicated functor for checking a whole list of elements.  
+	\param L the sequence type to check.
+	\param R the sequence type to return.  
+	\param A is the type passed to 
+ */
+template <class R, class L, class A>
+class list_checker {
+	typedef	R					return_list_type;
+	typedef	L					base_list_type;
+	typedef	typename R::value_type			return_type;
+	/**
+		Assumes that is a list of pointers.  
+	 */
+	typedef	typename L::value_type			base_ptr_type;
+	/**
+		Could use pointer_traits pointee type.  
+	 */
+	typedef	typename base_ptr_type::element_type	base_type;
+	/**
+		Mostly likely some parse context object.  
+	 */
+	typedef	A					arg_type;
+	/**
+		Checking member function type.  
+	 */
+	typedef	return_type (base_type::*mem_func_type)(arg_type) const;
+private:
+	/**
+		mem_func is the member funct used to check 
+		and accumulate results.
+	 */
+	mem_func_type					mem_func;
+	/**
+		Bound context object.  
+		Assumes that argument is passed alike to each invocation
+		of the leemnets' check routine.  
+		Should be a reference type.  
+	 */
+	arg_type					bound_arg;
+public:
+	list_checker(mem_func_type m, arg_type a) :
+		mem_func(m), arg_type(a) { }
+
+	void
+	operator () (R&, const L&);
+
+};	// end class list_checker
+#endif
 
 //=============================================================================
 }	// end namespace parser

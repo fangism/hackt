@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.20 2005/05/10 04:51:18 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.21 2005/05/19 18:43:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
@@ -10,6 +10,11 @@
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define ENABLE_STACKTRACE				0
+
+//=============================================================================
+// start of static initializations
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_instance_pint.cc")
 
 #include <exception>
 #include <iostream>
@@ -29,12 +34,6 @@
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_value_collection.tcc"
 #include "Object/art_object_classification_details.h"
-
-#include "util/static_trace.h"
-
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("instance_pint")
 
 //=============================================================================
 namespace util {
@@ -112,7 +111,7 @@ template class value_array<pint_tag,4>;
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("instance_pint")
+STATIC_TRACE_END("Object/art_object_instance_pint.cc")
 
 #endif	// __OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
 

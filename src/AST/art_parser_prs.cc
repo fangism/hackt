@@ -1,11 +1,13 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.14 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_prs.cc,v 1.15 2005/05/19 18:43:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
 #define	__AST_ART_PARSER_PRS_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
@@ -17,9 +19,12 @@
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_node_list.tcc"
 
+#include "Object/art_object_definition_proc.h"	// for process_definition
 #include "Object/art_object_expr_base.h"
+#include "Object/art_object_PRS.h"
 
 #include "util/what.h"
+#include "util/stacktrace.h"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
@@ -29,7 +34,7 @@ namespace util {
 SPECIALIZE_UTIL_WHAT(ART::parser::PRS::rule, "(prs-rule)")
 SPECIALIZE_UTIL_WHAT(ART::parser::PRS::loop, "(prs-loop)")
 SPECIALIZE_UTIL_WHAT(ART::parser::PRS::body, "(prs-body)")
-SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "op-loop")
+SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "(prs-op-loop)")
 }
 
 namespace ART {
@@ -48,14 +53,11 @@ body_item::~body_item() { }
 // class rule method definitions
 
 CONSTRUCTOR_INLINE
-rule::rule(const expr* g, const terminal* a,
-		const expr* rhs, const terminal* d) :
+rule::rule(const expr* g, const char_punctuation_type* a,
+		const inst_ref_expr* rhs, const char_punctuation_type* d) :
 		body_item(), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
-	INVARIANT(r.is_a<const id_expr>() || r.is_a<const index_expr>());
-//	INVARIANT(r.is_a<const id_expr>() || r.is_a<const postfix_expr>());
-//	INVARIANT(IS_A(id_expr*, r) || IS_A(postfix_expr*, r));
 }
 
 DESTRUCTOR_INLINE
@@ -74,10 +76,35 @@ rule::rightmost(void) const {
 	return dir->rightmost();
 }
 
-never_ptr<const object>
-rule::check_build(context& c) const {
-	cerr << "Fang, finish PRS::rule::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type-checks and constructs a production rule.  
+	\return a newly constructed, type-checked production rule, 
+		to be added to a definition.  
+ */
+body_item::return_type
+rule::check_rule(context& c) const {
+	STACKTRACE("parser::PRS::rule::check_rule()");
+	prs_expr_return_type g(guard->check_prs_expr(c));
+	if (!g) {
+		cerr << "ERROR in production rule guard at " <<
+			where(*guard) << "." << endl;
+		THROW_EXIT;
+	}
+//	g->check();	// paranoia
+	prs_literal_ptr_type o(r->check_prs_literal(c));
+	if (!o) {
+		cerr << "ERROR in the output node reference at " <<
+			where(*r) << "." << endl;
+		THROW_EXIT;
+	}
+	// temporary support for normal arrow only!
+	const bool arrow_type = (arrow->text[0] == '=');
+	return body_item::return_type((dir->text[0] == '+') ?
+		static_cast<entity::PRS::rule*>(
+			new entity::PRS::pull_up(g, *o, arrow_type)) :
+		static_cast<entity::PRS::rule*>(
+			new entity::PRS::pull_dn(g, *o, arrow_type)));
 }
 
 //=============================================================================
@@ -109,12 +136,12 @@ loop::rightmost(void) const {
 	else		return rules->rightmost();
 }
 
-never_ptr<const object>
-loop::check_build(context& c) const {
-	cerr << "Fang, finish PRS::loop::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+body_item::return_type
+loop::check_rule(context& c) const {
+	cerr << "Fang, write PRS::loop::check_rule()!" << endl;
+	return body_item::return_type();
 }
-
 
 //=============================================================================
 // class body method definitions
@@ -141,16 +168,48 @@ body::rightmost(void) const {
 	return rules->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: remember to update return type with ROOT_CHECK_PROTO.
+	Currently, exits upon error.  
+ */
 never_ptr<const object>
 body::check_build(context& c) const {
-	cerr << "Fang, finish PRS::body::check_build()!" << endl;
+	STACKTRACE("PRS::body::check_build()");
+	if (rules) {
+		// check context's current open definition
+		never_ptr<definition_base> d(c.get_current_open_definition());
+		never_ptr<process_definition> pd(d.is_a<process_definition>());
+		NEVER_NULL(pd);
+		checked_rules_type checked_rules;
+		rules->check_list(checked_rules, &body_item::check_rule, c);
+		checked_rules_type::const_iterator
+			null_iter = find(checked_rules.begin(), 
+				checked_rules.end(), 
+				body_item::return_type());
+		if (null_iter == checked_rules.end()) {
+			// no errors found, add them too the process definition
+			checked_rules_type::iterator i = checked_rules.begin();
+			for ( ; i!=checked_rules.end(); i++) {
+				excl_ptr<entity::PRS::rule>
+					xfer(i->exclusive_release());
+//				xfer->check();		// paranoia
+				pd->add_production_rule(xfer);
+			}
+		} else {
+			cerr << "ERROR: at least one error in PRS body."
+				<< endl;
+			THROW_EXIT;
+		}
+	}
 	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
 // class op_loop method definitions
 
-op_loop::op_loop(const char_punctuation_type* l, const token_char* o,
+op_loop::op_loop(const char_punctuation_type* l, 
+		const char_punctuation_type* o,
 		const token_identifier* id, 
 		const range* b, 
 		const expr* e, const char_punctuation_type* r) :
@@ -180,14 +239,10 @@ op_loop::rightmost(void) const {
 	else		return ex->rightmost();
 }
 
-/** temporary: FINISH ME */
-never_ptr<const object>
-op_loop::check_build(context& c) const {
-	cerr << "Fang, finish op_loop::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-
-/** temporary: FINISH ME */
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: FINISH ME
+ */
 expr::return_type
 op_loop::check_expr(context& c) const {
 	cerr << "Fang, finish op_loop::check_expr()!" << endl;
@@ -197,7 +252,21 @@ op_loop::check_expr(context& c) const {
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-template class node_list<const body_item>;		// PRS::rule_list
+// template class node_list<const body_item>;		// PRS::rule_list
+
+#if 1
+// This is temporary, until node_list::check_build is overhauled.  
+template
+node_list<const body_item>::node_list(const PRS::body_item*);
+
+template
+ostream&
+node_list<const body_item>::what(ostream&) const;
+
+template
+line_position
+node_list<const body_item>::leftmost(void) const;
+#endif
 
 //=============================================================================
 }	// end namespace PRS

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.57 2005/05/13 21:24:27 fang Exp $
+#	$Id: Makefile.am,v 1.58 2005/05/19 18:43:26 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -151,7 +151,8 @@ OBJECT_CC_FILES = \
 	Object/art_object_template_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
-	Object/art_built_ins.cc
+	Object/art_built_ins.cc \
+	Object/art_object_PRS.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -168,6 +169,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_const_collection.h \
 	Object/art_object_const_collection.tcc \
 	Object/art_object_definition_base.h \
+	Object/art_object_definition_proc.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
@@ -192,7 +194,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_value_collection.h \
 	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.h \
-	Object/art_object_value_reference.tcc
+	Object/art_object_value_reference.tcc \
+	Object/art_object_PRS_base.h
 
 UTIL_HEADER_FILES = \
 	util/macros.h \
@@ -236,6 +239,7 @@ UTIL_HEADER_FILES = \
 	util/hash_specializations.h \
 	util/ifthenelse.h \
 	util/indent.h \
+	util/iterator_more.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/list_vector.h \
@@ -255,6 +259,9 @@ UTIL_HEADER_FILES = \
 	util/memory/pointer_manipulator.h \
 	util/memory/excl_ptr.h \
 	util/memory/count_ptr.h \
+	util/memory/count_ptr.tcc \
+	util/memory/ref_count_pool.h \
+	util/memory/ref_count_pool_anchor.h \
 	util/memory/thread_lock.h \
 	util/multidimensional_qmap_fwd.h \
 	util/multidimensional_qmap.h \
@@ -340,6 +347,7 @@ libart___la_SOURCES = \
 	util/stacktrace.cc \
 	util/static_trace.cc \
 	util/memory/thread_lock.cc \
+	util/memory/ref_count_pool.cc \
 	$(AST_CC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \

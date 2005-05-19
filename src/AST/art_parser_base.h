@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.23 2005/05/10 04:51:06 fang Exp $
+	$Id: art_parser_base.h,v 1.24 2005/05/19 18:43:26 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_BASE_H__
@@ -67,6 +67,13 @@ class context;		// defined in "Object/art_context.h"
 virtual	ostream& what(ostream& o) const = 0;				\
 virtual	line_position leftmost(void) const = 0;				\
 virtual	line_position rightmost(void) const = 0;
+
+/**
+	Method prototype intended for def_body_item and root_item.  
+ */
+#define	ROOT_CHECK_PROTO						\
+	never_ptr<const object>						\
+	check_build(context&) const
 
 /**
 	Generic way of finding the span of an AST construct, appropriate

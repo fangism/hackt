@@ -1,13 +1,17 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.44 2005/05/13 21:24:30 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.45 2005/05/19 18:43:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
 #define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
+
+//=============================================================================
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("Object/art_object_definition.cc")
 
 #include <exception>
 #include <iostream>
@@ -21,6 +25,7 @@
 #include "util/hash_specializations.h"		// substitute for the following
 
 #include "Object/art_object_definition.h"
+#include "Object/art_object_definition_proc.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
@@ -34,11 +39,7 @@
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/stacktrace.h"
-#include "util/static_trace.h"
 #include "util/persistent_object_manager.tcc"
-
-//=============================================================================
-STATIC_TRACE_BEGIN("object-definition")
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -1769,7 +1770,8 @@ process_definition::process_definition() :
 		key(), 
 		parent(), 
 		port_formals_list(), 
-		port_formals_map() {
+		port_formals_map(), 
+		prs() {
 	// no null check: because of partial reconstruction
 }
 
@@ -1787,7 +1789,8 @@ process_definition::process_definition(
 		key(s), 
 		parent(o), 
 		port_formals_list(), 
-		port_formals_map() {
+		port_formals_map(),
+		prs() {
 	// fill me in...
 	NEVER_NULL(o);
 }
@@ -1844,6 +1847,11 @@ process_definition::dump(ostream& o) const {
 			o << auto_indent << i->first << " = ";
 			// i->second->what(o) << endl;	// 1 level for now
 			i->second->dump(o) << endl;
+		}
+		// PRS
+		if (!prs.empty()) {
+			o << auto_indent << "prs:" << endl;
+			prs.dump(o);	// << endl;
 		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
@@ -2068,6 +2076,29 @@ process_definition::equivalent_port_formals(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Registers a production rule with this process definition.  
+	Automatically expands complements.  
+	\param r pointer to newly created and checked production rule.  
+		Transfers ownership to the definition.  
+	\post r is NULL, no longer owned by the passer.  
+ */
+void
+process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
+	NEVER_NULL(r);
+	r->check();		// paranoia
+	excl_ptr<PRS::rule> cmpl = r->expand_complement();
+	prs.push_back(PRS::rule_set::value_type());
+	prs.back() = r;
+	INVARIANT(!r);
+	if (cmpl) {
+		prs.push_back(PRS::rule_set::value_type());
+		prs.back() = cmpl;
+		INVARIANT(!cmpl);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
  */
@@ -2079,6 +2110,8 @@ if (!m.register_transient_object(this,
 	// b/c they're all registered in the used_id_map.  
 	scopespace::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
+	// PRS
+	prs.collect_transient_info_base(m);
 }
 }
 
@@ -2096,6 +2129,8 @@ process_definition::write_object(
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
+	// PRS
+	prs.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2109,6 +2144,8 @@ process_definition::load_object(
 	scopespace::load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
+	// PRS
+	prs.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2317,7 +2354,7 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("object-definition")
+STATIC_TRACE_END("Object/art_object_definition.cc")
 
 #endif	// __OBJECT_ART_OBJECT_DEFINITION_CC__
 

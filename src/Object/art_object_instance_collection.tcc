@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.8 2005/05/10 04:51:17 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.9 2005/05/19 18:43:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -260,7 +260,7 @@ void
 INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	instance_collection_generic_type* next_container;
+	never_ptr<instance_collection_generic_type> next_container;
 	m.read_pointer(i, next_container);
 	// reconstruction ordering problem:
 	// container must have its instances alread loaded, though 

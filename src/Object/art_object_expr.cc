@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.44 2005/05/10 04:51:12 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.45 2005/05/19 18:43:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -13,6 +13,11 @@
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+
+//=============================================================================
+// start of static initializations
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("object-expr")
 
 #include <exception>
 #include <algorithm>
@@ -45,10 +50,8 @@
 #include "util/STL/list.tcc"
 #include "util/qmap.tcc"
 #include "util/stacktrace.h"
-#include "util/static_trace.h"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
-// #include "util/memory/pointer_classes.h"
 #include "util/sstream.h"		// for ostringstring, used by dump
 #include "util/discrete_interval_set.tcc"
 #include "util/compose.h"
@@ -69,9 +72,6 @@
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 
-//=============================================================================
-// start of static initializations
-STATIC_TRACE_BEGIN("object-expr")
 
 //=============================================================================
 namespace util {
@@ -1956,6 +1956,17 @@ relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
+		const op_type* o, const count_ptr<const pint_expr>& r) :
+		lx(l), rx(r), op(o) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2181,6 +2192,17 @@ logical_expr::~logical_expr() {
 logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
 		const string& o, const count_ptr<const pbool_expr>& r) :
 		lx(l), rx(r), op(op_map[o]) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
+		const op_type* o, const count_ptr<const pbool_expr>& r) :
+		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -3492,10 +3514,11 @@ const_index_list::dump(ostream& o) const {
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		const bool b = (i->is_a<const pint_expr>());
-		if (b) o << '[';
-		(*i)->dump(o);
-		if (b) o << ']';
+		const count_ptr<const pint_expr>
+			b(i->is_a<const pint_expr>());
+		if (b)
+			b->dump_brief(o << '[') << ']';
+		else	(*i)->dump(o);
 	}
 	return o;
 }
@@ -3812,10 +3835,11 @@ dynamic_index_list::dump(ostream& o) const {
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		const bool b = (i->is_a<const pint_expr>());
-		if (b) o << '[';
-		(*i)->dump(o);
-		if (b) o << ']';
+		const count_ptr<const pint_expr>
+			b(i->is_a<const pint_expr>());
+		if (b)
+			b->dump_brief(o << '[') << ']';
+		else	(*i)->dump(o);
 	}
 	return o;
 }

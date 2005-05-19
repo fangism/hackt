@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.21 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_expr.cc,v 1.22 2005/05/19 18:43:27 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -9,6 +9,7 @@
 
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
 #define	ENABLE_STACKTRACE		0
 
@@ -25,9 +26,14 @@
 #include "Object/art_object_definition_base.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_expr.h"
+#include "Object/art_object_PRS.h"
+// to dynamic_cast bool_instance_reference
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_classification_details.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/iterator_more.h"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -62,9 +68,11 @@ using namespace entity;
 
 namespace parser {
 #include "util/using_ostream.h"
+using std::copy;
 using std::transform;
 using std::_Select1st;
 using std::_Select2nd;
+using util::back_insert_assigner;
 
 //=============================================================================
 // class expr method definitions
@@ -92,6 +100,16 @@ expr::check_generic(context& c) const {
 	expr::return_type ret(check_expr(c));
 	return generic_return_type(ret,
 		ret.is_a<inst_ref_return_type::element_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary placeholder, never really supposed to be called.  
+ */
+prs_expr_return_type
+expr::check_prs_expr(context& c) const {
+	cerr << "Fang, unimplemented expr::check_prs_expr!" << endl;
+	return prs_expr_return_type();
 }
 
 //=============================================================================
@@ -135,6 +153,46 @@ inst_ref_expr::check_expr(context& c) const {
 		return expr::return_type(NULL);
 	}
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	After checking an instance_reference, this checks to make sure
+	that a bool is referenced, appropriate for PRS.  
+ */
+prs_literal_ptr_type
+inst_ref_expr::check_prs_literal(context& c) const {
+	return_type ref(check_reference(c));
+	count_ptr<bool_instance_reference>
+		bool_ref(ref.is_a<bool_instance_reference>());
+	if (bool_ref) {
+		ref.abandon();
+		INVARIANT(bool_ref.refs() == 1);
+		if (bool_ref->dimensions()) {
+			cerr << "ERROR: bool reference at " << where(*this) <<
+				" does not refer to a scalar instance." << endl;
+			return prs_literal_ptr_type(NULL);
+		} else {
+			// shared to exclusive ownership
+			entity::PRS::literal_base_ptr_type
+				lit(bool_ref.exclusive_release());
+			return prs_literal_ptr_type(
+				new entity::PRS::literal(lit));
+		}
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a bool." << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Down-casting literal to general PRS guard expression.  
+ */
+prs_expr_return_type
+inst_ref_expr::check_prs_expr(context& c) const {
+	return check_prs_literal(c);
 }
 
 //=============================================================================
@@ -451,8 +509,10 @@ ostream& operator << (ostream& o, const id_expr& id) {
 	that the arguments exclusively "owned" their memory locations.
  */
 CONSTRUCTOR_INLINE
-unary_expr::unary_expr(const expr* n, const terminal* o) : expr(), 
-		e(n), op(o) {
+unary_expr::unary_expr(const expr* n, const char_punctuation_type* o) :
+		expr(), e(n), op(o) {
+	NEVER_NULL(e);
+	NEVER_NULL(op);
 }
 
 DESTRUCTOR_INLINE
@@ -463,7 +523,7 @@ unary_expr::~unary_expr() {
 // class prefix_expr method definitions
 
 CONSTRUCTOR_INLINE
-prefix_expr::prefix_expr(const terminal* o, const expr* n) :
+prefix_expr::prefix_expr(const char_punctuation_type* o, const expr* n) :
 		unary_expr(n,o) {
 }
 
@@ -500,7 +560,7 @@ prefix_expr::check_expr(context& c) const {
 	const count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
 	const count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
 
-	const int ch = op.is_a<const token_char>()->get_char();
+	const int ch = op->text[0];
 	switch(ch) {
 		case '-':
 			// integer negation
@@ -533,13 +593,14 @@ prefix_expr::check_expr(context& c) const {
 				return return_type(new pint_unary_expr(ch, ie));
 			}
 		case '~':
+			// is this valid in the meta-language?
 			// context-dependent? in PRS or not?
 			// is bit-wise negation for ints, 
 			// logical negation for bools?
 			// for now, restrict to bools only...
 			if (!be) {
 				cerr << "Unary \'~\' operator requires a "
-					"pint argument, but got a ";
+					"pbool argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
 					<< where(*e) << endl;
 				return return_type(NULL);
@@ -558,6 +619,27 @@ prefix_expr::check_expr(context& c) const {
 			DIE;
 	}
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for logical-NOT for PRS.  
+ */
+prs_expr_return_type
+prefix_expr::check_prs_expr(context& c) const {
+	prs_expr_return_type pe(e->check_prs_expr(c));
+	if (!pe) {
+		cerr << "ERROR resolving PRS-expr at " << where(*e) <<
+			"." << endl;
+		THROW_EXIT;		// for now
+	}
+	if (op->text[0] != '~') {
+		cerr << "FATAL: Invalid unary operator: \'" << op->text[0] <<
+			"\' at " << where(*op) <<
+			".  Aborting... have a nice day." << endl;
+		DIE;
+	}
+	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
 
 //=============================================================================
@@ -757,7 +839,7 @@ index_expr::check_reference(context& c) const {
 // class binary_expr method definitions
 
 CONSTRUCTOR_INLINE
-binary_expr::binary_expr(const expr* left, const terminal* o, 
+binary_expr::binary_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		expr(), l(left), op(o), r(right) {
 	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
@@ -781,7 +863,7 @@ binary_expr::rightmost(void) const {
 // class arith_expr method definitions
 
 CONSTRUCTOR_INLINE
-arith_expr::arith_expr(const expr* left, const terminal* o, 
+arith_expr::arith_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
 }
@@ -821,7 +903,7 @@ arith_expr::check_expr(context& c) const {
 		return return_type(NULL);
 	}
 	// else is safe to make arith_expr object
-	const char ch = op.is_a<const token_char>()->get_char();
+	const char ch = op->text[0];
 	if (li->is_static_constant() && ri->is_static_constant()) {
 		const int lc = li->static_constant_value();
 		const int rc = ri->static_constant_value();
@@ -858,8 +940,8 @@ arith_expr::check_expr(context& c) const {
 // class relational_expr method definitions
 
 CONSTRUCTOR_INLINE
-relational_expr::relational_expr(const expr* left, const terminal* o, 
-		const expr* right) :
+relational_expr::relational_expr(const expr* left, 
+		const char_punctuation_type* o, const expr* right) :
 		binary_expr(left, o, right) {
 }
 
@@ -871,16 +953,51 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 relational_expr::check_expr(context& c) const {
-	// same idea as arith expr
-	cerr << "Fang, finish relational_expr::check_expr()!" << endl;
-	return expr::return_type(NULL);
+	typedef	expr::return_type	return_type;
+	return_type lo(l->check_expr(c));
+	return_type ro(r->check_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
+	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
+	if (!li || !ri) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a pint, but got a ";
+		if (!li) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!ri) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	const entity::relational_expr::op_type*
+		o(entity::relational_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (li->is_static_constant() && ri->is_static_constant()) {
+		const int lc = li->static_constant_value();
+		const int rc = ri->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::relational_expr(li, o, ri));
+	}
 }
 
 //=============================================================================
 // class logical_expr method definitions
 
 CONSTRUCTOR_INLINE
-logical_expr::logical_expr(const expr* left, const terminal* o, 
+logical_expr::logical_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
 }
@@ -893,9 +1010,124 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::return_type
 logical_expr::check_expr(context& c) const {
-	// same idea as arith expr
-	cerr << "Fang, finish relational_expr::check_expr()!" << endl;
-	return expr::return_type(NULL);
+	typedef	expr::return_type	return_type;
+	return_type lo(l->check_expr(c));
+	return_type ro(r->check_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
+	const count_ptr<pbool_expr> rb(ro.is_a<pbool_expr>());
+	if (!lb || !rb) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a pbool, but got a ";
+		if (!lb) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!rb) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	entity::logical_expr::op_type const* const
+		o(entity::logical_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (lb->is_static_constant() && rb->is_static_constant()) {
+		const bool lc = lb->static_constant_value();
+		const bool rc = rb->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::logical_expr(lb, o, rb));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+logical_expr::check_prs_expr(context& c) const {
+	STACKTRACE("parser::PRS::logical_expr::check_prs_expr()");
+	const prs_expr_return_type lo(l->check_prs_expr(c));
+	const prs_expr_return_type ro(r->check_prs_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building PRS-expr at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		THROW_EXIT;		// for now
+		return prs_expr_return_type(NULL);
+	}
+#if 0
+	lo->check();
+	ro->check();
+#endif
+	const char op_char = op->text[0];
+	if (op_char == '&') {
+		typedef	entity::PRS::and_expr::iterator		iterator;
+		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
+		count_ptr<entity::PRS::and_expr>
+			l_and(lo.is_a<entity::PRS::and_expr>());
+		count_ptr<entity::PRS::and_expr>
+			r_and(ro.is_a<entity::PRS::and_expr>());
+		if (l_and) {
+			if (r_and) {
+				copy(r_and->begin(), r_and->end(), 
+					back_inserter(*l_and));
+			} else {
+				l_and->push_back(ro);
+			}
+			return l_and;
+		} else if (r_and) {
+			r_and->push_front(lo);
+			return r_and;
+		} else {
+			count_ptr<entity::PRS::and_expr>
+				ret(new entity::PRS::and_expr);
+			ret->push_back(lo);
+			ret->push_back(ro);
+//			ret->check();	// paranoia
+			return ret;
+		}
+	} else if (op_char == '|') {
+		typedef	entity::PRS::or_expr::iterator		iterator;
+		typedef	entity::PRS::or_expr::const_iterator	const_iterator;
+		count_ptr<entity::PRS::or_expr>
+			l_or(lo.is_a<entity::PRS::or_expr>());
+		count_ptr<entity::PRS::or_expr>
+			r_or(ro.is_a<entity::PRS::or_expr>());
+		if (l_or) {
+			if (r_or) {
+				copy(r_or->begin(), r_or->end(), 
+					back_inserter(*l_or));
+			} else {
+				l_or->push_back(ro);
+			}
+			return l_or;
+		} else if (r_or) {
+			r_or->push_front(lo);
+			return r_or;
+		} else {
+			count_ptr<entity::PRS::or_expr>
+				ret(new entity::PRS::or_expr);
+			ret->push_back(lo);
+			ret->push_back(ro);
+			return ret;
+		}
+	} else {
+		cerr << "FATAL: Invalid PRS operor: \'" << op_char << "\' at "
+			<< where(*op) << ".  Aborting... have a nice day."
+			<< endl;
+		DIE;
+		return prs_expr_return_type(NULL);
+	}
 }
 
 //=============================================================================

@@ -2,42 +2,42 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3103be0	module__	0	0	44
+	1	 0x3103d70	module__	0	0	44
 	2	 0x3100144	namespc_	0	44	84
-	3	 0x3103c04	proccoll	0	84	125
-	4	 0x3103c60	procinst	0	125	145
-	5	 0x3103c80	proctprf	0	145	161
-	6	 0x3103c90	procdefn	0	161	213
-	7	 0x3103d14	pintcoll	0	213	250
-	8	 0x3103d60	pintinst	0	250	266
-	9	 0x2496024	cnstpi__	0	266	278
-	10	 0x3103d74	dprmlst_	0	278	294
-	11	 0x3103d80	proctprf	0	294	310
-	12	 0x3103d94	cprmlst_	0	310	326
-	13	 0x2496038	cnstpi__	0	326	338
-	14	 0x3103da4	proccoll	0	338	378
-	15	 0x3103e00	procinst	0	378	398
-	16	 0x3103e20	proctprf	0	398	414
-	17	 0x3103e34	dprmlst_	0	414	430
-	18	 0x249604c	cnstpi__	0	430	442
-	19	 0x3103e40	proctprf	0	442	458
-	20	 0x3103e54	cprmlst_	0	458	474
-	21	 0x2496060	cnstpi__	0	474	486
-	22	 0x3103e64	proccoll	0	486	526
-	23	 0x3103ec0	procinst	0	526	546
-	24	 0x3103ee0	proctprf	0	546	562
-	25	 0x3103ef4	dprmlst_	0	562	578
-	26	 0x3103f00	proctprf	0	578	594
-	27	 0x3103f14	cprmlst_	0	594	610
-	28	 0x2496074	cnstpi__	0	610	622
-	29	 0x3103f24	proccoll	0	622	662
-	30	 0x3103f80	procinst	0	662	682
-	31	 0x3103fa0	proctprf	0	682	698
-	32	 0x3103fb4	dprmlst_	0	698	714
-	33	 0x2496088	cnstpi__	0	714	726
-	34	 0x3103fc0	proctprf	0	726	742
-	35	 0x3103fd4	cprmlst_	0	742	758
-	36	 0x249609c	cnstpi__	0	758	770
+	3	 0x3103d94	proccoll	0	84	125
+	4	 0x3103df0	procinst	0	125	145
+	5	 0x3103e10	proctprf	0	145	161
+	6	 0x3103e20	procdefn	0	161	217
+	7	 0x3103ea4	pintcoll	0	217	254
+	8	 0x3103ef0	pintinst	0	254	270
+	9	 0x24c5024	cnstpi__	0	270	282
+	10	 0x3103f04	dprmlst_	0	282	298
+	11	 0x3103f10	proctprf	0	298	314
+	12	 0x3103f24	cprmlst_	0	314	330
+	13	 0x24c5038	cnstpi__	0	330	342
+	14	 0x3103f34	proccoll	0	342	382
+	15	 0x3103f90	procinst	0	382	402
+	16	 0x3103fb0	proctprf	0	402	418
+	17	 0x3103fc4	dprmlst_	0	418	434
+	18	 0x24c504c	cnstpi__	0	434	446
+	19	 0x3103fd0	proctprf	0	446	462
+	20	 0x3103fe4	cprmlst_	0	462	478
+	21	 0x24c5060	cnstpi__	0	478	490
+	22	 0x3103ff4	proccoll	0	490	530
+	23	 0x3104050	procinst	0	530	550
+	24	 0x3104070	proctprf	0	550	566
+	25	 0x3104084	dprmlst_	0	566	582
+	26	 0x3104090	proctprf	0	582	598
+	27	 0x31040a4	cprmlst_	0	598	614
+	28	 0x24c5074	cnstpi__	0	614	626
+	29	 0x31040b4	proccoll	0	626	666
+	30	 0x3104110	procinst	0	666	686
+	31	 0x3104130	proctprf	0	686	702
+	32	 0x3104144	dprmlst_	0	702	718
+	33	 0x24c5088	cnstpi__	0	718	730
+	34	 0x3104150	proctprf	0	730	746
+	35	 0x3104164	cprmlst_	0	746	762
+	36	 0x24c509c	cnstpi__	0	762	774
 
 In module created from: -stdin- (unrolled)
 In namespace "", we have: {

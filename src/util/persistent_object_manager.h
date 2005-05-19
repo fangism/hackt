@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.17 2005/05/10 04:51:29 fang Exp $
+	$Id: persistent_object_manager.h,v 1.18 2005/05/19 18:43:36 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -49,6 +49,7 @@ public:
 	friend class persistent_object_manager::reconstruction_table_entry;
 	private:
 		int			unowned_visits;
+		int			raw_visits;
 		int			owned_visits;
 		int			shared_visits;
 		int			total_visits;
@@ -57,7 +58,8 @@ public:
 		/// HACKERY, temporary
 		bool			do_not_delete;
 	public:
-		visit_info() : unowned_visits(0), owned_visits(0), 
+		visit_info() : unowned_visits(0), 
+			raw_visits(0), owned_visits(0), 
 			shared_visits(0), total_visits(0), 
 			please_delete(false), do_not_delete(false) { }
 		
@@ -67,6 +69,7 @@ public:
 
 		void
 		reset_visits(void) {
+			raw_visits = 0;
 			unowned_visits = 0;
 			owned_visits = 0;
 			shared_visits = 0;
@@ -375,6 +378,14 @@ private:
 	};	// end class pointer_reader
 
 public:
+	/**
+		Writes a sequence of pointers, mapped to indices.
+		Container only needs a simple forward iterator interface.  
+	 */
+	template <class L>
+	void
+	collect_pointer_list(const L& l);
+
 	/**
 		Writes a sequence of pointers, mapped to indices.
 		Container only needs a simple forward iterator interface.  
