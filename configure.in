@@ -1,7 +1,7 @@
 # "configure.in"
 # Process this file with "autoconf" to generate the "configure" script.
 #
-#	$Id: configure.in,v 1.20 2005/05/04 19:31:38 fang Exp $
+#	$Id: configure.in,v 1.20.4.1 2005/05/19 02:54:13 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -115,6 +115,7 @@ AC_CONFIG_FILES([
 	test/parser/param/Makefile
 	test/parser/array/Makefile
 	test/parser/process/Makefile
+	test/parser/prs/Makefile
 	test/parser/datatype/Makefile
 	test/parser/template/Makefile
 	test/parser/typedef/Makefile
