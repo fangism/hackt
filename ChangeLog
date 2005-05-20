@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-05-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-38:
+	  configure.in: check for getopt
+	  Reorganized main programs, having factored out common top-level
+		functionality into main/main_funcs.{h,cc}
+	  see also src/ChangeLog, test/ChangeLog for more details.
+
+
 2005-05-19	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-37-merged-PRS-01-09:
