@@ -16,6 +16,10 @@
 	  some more comments in util/ChangeLog.
 	  see also test/ChangeLog for test script updates in this revision.  
 
+	* linux-gcc-3.4 linker not as forgiving about undefined typeinfo of
+		unused classes, read: I was lazy.
+	  Added skeletal method definitions for currently unused class.
+
 
 2005-05-19	David Fang		<fangism@users.sourceforge.net>
 

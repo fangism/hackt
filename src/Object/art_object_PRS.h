@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.2 2005/05/19 18:43:30 fang Exp $
+	$Id: art_object_PRS.h,v 1.3 2005/05/20 20:30:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -153,11 +153,14 @@ public:
  */
 class pass : public rule {
 	typedef	pass			this_type;
+	typedef	rule			parent_type;
 protected:
 	prs_expr_ptr_type		guard;
 	literal				output1;
 	literal				output2;
 public:
+	pass();
+	~pass();
 
 	ostream&
 	what(ostream&) const;

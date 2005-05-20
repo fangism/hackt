@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.3 2005/05/20 19:28:36 fang Exp $
+	$Id: art_object_PRS.cc,v 1.4 2005/05/20 20:30:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -310,8 +310,22 @@ pull_dn::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class pass method definitions
 
+pass::pass() : parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pass::~pass() { }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(pass)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pass)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+pass::dump(ostream& o) const {
+	return o << "PRS::pass::dump() unimplemented.";
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -327,6 +341,24 @@ pass::check(void) const {
 excl_ptr<rule>
 pass::expand_complement(void) {
 	return excl_ptr<rule>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pass::collect_transient_info(persistent_object_manager& m) const {
+	// FINISH ME!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pass::write_object(const persistent_object_manager& m, ostream& o) const {
+	// FINISH ME!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+pass::load_object(const persistent_object_manager& m, istream& i) {
+	// FINISH ME!
 }
 
 //=============================================================================
