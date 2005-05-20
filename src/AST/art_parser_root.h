@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_root.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_root.h,v 1.7 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_root.h,v 1.8 2005/05/20 19:28:34 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_ROOT_H__
@@ -46,6 +46,8 @@ class root_body : public root_item_list {
 protected:
 	typedef	root_item_list			parent;
 public:
+	root_body();
+
 	explicit
 	root_body(const root_item* r);
 

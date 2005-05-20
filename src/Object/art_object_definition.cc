@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.45 2005/05/19 18:43:30 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.46 2005/05/20 19:28:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -11,7 +11,7 @@
 
 //=============================================================================
 #include "util/static_trace.h"
-STATIC_TRACE_BEGIN("Object/art_object_definition.cc")
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
@@ -2354,7 +2354,7 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("Object/art_object_definition.cc")
+DEFAULT_STATIC_TRACE_END
 
 #endif	// __OBJECT_ART_OBJECT_DEFINITION_CC__
 

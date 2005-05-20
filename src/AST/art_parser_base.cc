@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.22 2005/05/19 18:43:26 fang Exp $
+	$Id: art_parser_base.cc,v 1.23 2005/05/20 19:28:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -95,6 +95,8 @@ root_item::~root_item() { }
 
 //-----------------------------------------------------------------------------
 // class root_body method definitions
+
+root_body::root_body() : parent() { }
 
 root_body::root_body(const root_item* r) : parent(r) { }
 

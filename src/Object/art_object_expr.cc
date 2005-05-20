@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.45 2005/05/19 18:43:31 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.46 2005/05/20 19:28:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -17,7 +17,7 @@
 //=============================================================================
 // start of static initializations
 #include "util/static_trace.h"
-STATIC_TRACE_BEGIN("object-expr")
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <algorithm>
@@ -4136,7 +4136,7 @@ template class value_reference<pbool_tag>;
 }	// end namepace entity
 }	// end namepace ART
 
-STATIC_TRACE_END("object-expr")
+DEFAULT_STATIC_TRACE_END
 
 // responsibly undefining macros used
 // IDEA: for each header, write an undef header file...

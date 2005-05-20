@@ -1,11 +1,16 @@
 /**
 	\file "Object/art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.19 2005/05/10 04:51:18 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.20 2005/05/20 19:28:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
 #define	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
+
+//=============================================================================
+// start of static initializations
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
@@ -21,17 +26,9 @@
 
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
-
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_value_collection.tcc"
-
-#include "util/static_trace.h"
-
-//=============================================================================
-// stat of static initializations
-
-STATIC_TRACE_BEGIN("instance_pbool")
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -153,7 +150,7 @@ template class value_array<pbool_tag,4>;
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("instance_pbool")
+DEFAULT_STATIC_TRACE_END
 
 #endif	// __OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
 

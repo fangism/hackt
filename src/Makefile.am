@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.58 2005/05/19 18:43:26 fang Exp $
+#	$Id: Makefile.am,v 1.59 2005/05/20 19:28:30 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -42,30 +42,32 @@ endif
 
 bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
 
-noinst_PROGRAMS = art_persistent_table
+noinst_PROGRAMS = art_persistent_table getopt_test
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 
 artc_SOURCES = art_main.cc
 art_main.$(OBJEXT) art_main.lo: parser/art++-parse-prefix.h
-artc_LDADD = libart++.la
+artc_LDADD = libart++.la libfangutil.la
 
 art__2obj_SOURCES = art++2obj.cc
 art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
-art__2obj_LDADD = libart++.la
+art__2obj_LDADD = libart++.la libfangutil.la
 
 artobjdump_SOURCES = artobjdump.cc
-artobjdump_LDADD = libart++.la
+artobjdump_LDADD = libart++.la libfangutil.la
 
 artobjunroll_SOURCES = artobjunroll.cc
-artobjunroll_LDADD = libart++.la
+artobjunroll_LDADD = libart++.la libfangutil.la
 
 art_persistent_table_SOURCES = test/art_persistent_table.cc
-art_persistent_table_LDADD = libart++.la
+art_persistent_table_LDADD = libart++.la libfangutil.la
+
+getopt_test_SOURCES = test/getopt_test.cc
 
 # convenience libraries
-noinst_LTLIBRARIES = libart++.la libbogus.la
+noinst_LTLIBRARIES = libart++.la libbogus.la libfangutil.la
 
 # need these first!  (easy to just stick them here)
 BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
@@ -339,7 +341,16 @@ libart___la_SOURCES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
-	$(UTIL_HEADER_FILES) \
+	$(AST_CC_FILES) $(AST_H_FILES) \
+	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
+	$(OBJECT_CC_NO_H_FILES) \
+	Object/art_object_IO.cc \
+	config.h \
+	art++.h \
+	main/main_funcs.cc \
+	main/main_funcs.h
+
+libfangutil_la_SOURCES = \
 	util/IO_utils.cc \
 	util/indent.cc \
 	util/persistent.cc \
@@ -348,12 +359,7 @@ libart___la_SOURCES = \
 	util/static_trace.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc \
-	$(AST_CC_FILES) $(AST_H_FILES) \
-	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
-	$(OBJECT_CC_NO_H_FILES) \
-	Object/art_object_IO.cc \
-	config.h \
-	art++.h
+	$(UTIL_HEADER_FILES)
 
 # note: Object/art_object_IO.cc only contains explicit template instantiations
 
@@ -481,6 +487,7 @@ EXTRA_DIST = \
 	parser/yyerror_bison_hack.awk \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
+	util/ChangeLog \
 	util/README \
 	util/TODO \
 	util/STL/README \

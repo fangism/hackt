@@ -1,0 +1,6 @@
+# src/main/README
+
+This directory contains source and headers for useful top-level
+routines, hence `main'.  
+This space may also be used to write small test programs.  
+

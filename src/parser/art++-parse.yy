@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.20 2005/05/19 18:43:35 fang Exp $
+	$Id: art++-parse.yy,v 1.21 2005/05/20 19:28:44 fang Exp $
  */
 
 %{
@@ -628,7 +628,7 @@ top_root
 	: body
 	/* allow empty file */
 	| 
-		{ $$ = NULL; }
+		{ $$ = new root_body(); }
 	;
 
 body

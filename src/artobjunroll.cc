@@ -2,66 +2,41 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.11 2005/05/10 04:51:06 fang Exp $
+	$Id: artobjunroll.cc,v 1.12 2005/05/20 19:28:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include <fstream>
-#include "art++.h"			// has everything you need
 
 #include "util/stacktrace.h"
+#include "main/main_funcs.h"
+#include "util/persistent_object_manager.h"
+
+using namespace ART;
+using util::persistent;
+using util::persistent_object_manager;
 
 #include "util/using_ostream.h"
-USING_STACKTRACE
 
 int
 main(int argc, char* argv[]) {
 	if (argc != 3) {
 		cerr << "Usage: " << argv[0] <<
-			" art-obj-infile art-obj-outfile" << endl;
+			" <art-obj-infile> <art-obj-outfile>" << endl;
 		exit(1);
 	}
-	{
-		// test if in file is valid
-		ifstream f(argv[1], ios_base::binary);
-		if (!f.good()) {
-			cerr << "Error opening object file \"" << argv[1]
-				<< "\"." << endl;
-			exit(1);
-		}
-		f.close();
-	}
-	{
-		// test if out file is valid (permissions, etc.)
-		ofstream f(argv[2], ios_base::binary);
-		if (!f.good()) {
-			cerr << "Error opening object file \"" << argv[2]
-				<< "\"." << endl;
-			exit(1);
-		}
-		f.close();
-	}
-	const string ifname(argv[1]);
-	const string ofname(argv[2]);
-
-	// the following is needed to force linkage of modules from libart++
-	{ entity::module bogus("please link modules from libart++.la"); }
+	if (!check_object_loadable(argv[1]).good)
+		return 1;
+	if (!check_file_writeable(argv[2]).good)
+		return 1;
 
 	persistent_object_manager::dump_reconstruction_table = false;
 	persistent::warn_unimplemented = true;	// for verbosity
 
-	excl_ptr<entity::module> the_module;
-try {
-	the_module = persistent_object_manager::load_object_from_file(ifname)
-			.is_a_xfer<entity::module>();
-}
-catch (...) {
-	// possibly empty file error from
-	// persistent_object_manager::load_header()
-	return 1;
-}
+	excl_ptr<module> the_module = load_module(argv[1]);
+	if (!the_module)
+		return 1;
 
 //	the_module->dump(cerr);
 	if (the_module->is_unrolled()) {
@@ -80,11 +55,7 @@ catch (...) {
 	}
 
 	persistent_object_manager::dump_reconstruction_table = false;
-	persistent_object_manager::save_object_to_file(ofname, *the_module);
-
-	// global will delete itself (recursively)
+	save_module(*the_module, argv[2]);
 	return 0;
 }
-
-#undef	ENABLE_STACKTRACE
 

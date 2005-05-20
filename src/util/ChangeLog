@@ -1,0 +1,14 @@
+# "src/util/ChangeLog"
+
+2005-05-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-38:
+	  Started this ChangeLog.
+	  From now on, util-library related changes should be noted here.  
+	  getopt_portable.h:
+		now uses conditional results of configure script in config.h.  
+	  static_trace.h:
+		added DEFAULT macros for convenience, now don't have to
+		pass in string argument for BEGIN and END, 
+		defaults to using built-in __FILE__.
+

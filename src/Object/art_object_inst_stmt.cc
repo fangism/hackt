@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.19 2005/05/19 18:43:33 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.20 2005/05/20 19:28:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -17,7 +17,7 @@
 //=============================================================================
 // start of static initializations
 #include "util/static_trace.h"
-STATIC_TRACE_BEGIN("Object/art_object_inst_stmt.cc")
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
@@ -268,7 +268,7 @@ template class instantiation_statement<process_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("Object/art_object_inst_stmt.cc")
+DEFAULT_STATIC_TRACE_END
 
 // responsibly, anally, undefining macros local to this module
 #undef	DEBUG_LIST_VECTOR_POOL

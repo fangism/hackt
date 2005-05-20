@@ -9,6 +9,7 @@ art++2obj
 artobjdump
 artobjunroll
 art_persistent_table
+getopt_test
 core.*
 *.core
 *.artobj

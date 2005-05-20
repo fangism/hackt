@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.18 2005/05/10 04:51:17 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.19 2005/05/20 19:28:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -11,6 +11,10 @@
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
+//=============================================================================
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
@@ -31,9 +35,6 @@
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
 
-
-//=============================================================================
-STATIC_TRACE_BEGIN("instance-int")
 
 //=============================================================================
 // module-local specializations
@@ -210,7 +211,7 @@ template class instance_array<int_tag, 4>;
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("instance-int")
+DEFAULT_STATIC_TRACE_END
 
 #endif	// __OBJECT_ART_OBJECT_INSTANCE_INT_CC__
 

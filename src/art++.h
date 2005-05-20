@@ -2,7 +2,7 @@
 	\file "art++.h"
 	The only header file needed to write top-level applications for ART.
 
-	$Id: art++.h,v 1.10 2005/05/10 04:51:06 fang Exp $
+	$Id: art++.h,v 1.11 2005/05/20 19:28:30 fang Exp $
  */
 
 #ifndef	__ARTXX_H__
@@ -11,7 +11,6 @@
 #include "util/getopt_portable.h"	// for getopt()
 
 #include "util/memory/pointer_classes.h"
-// #include "AST/art_parser.h"		// everything needed for "y.tab.h"
 #include "AST/art_parser_fwd.h"		// everything needed for "y.tab.h"
 #include "AST/art_parser_chp_fwd.h"	// everything needed for "y.tab.h"
 #include "AST/art_parser_hse_fwd.h"	// everything needed for "y.tab.h"

@@ -1,5 +1,22 @@
 "ChangeLog"
 
+2005-05-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-38:
+	  Added basic getopt functionality to main programs.  
+	  Updated "util/getopt_portable.h" to use configure results.  
+	  Factored out main-level functions into main/main_funcs.{h,cc}.
+		This nicely hides complexity, making main source 
+		tidy and modular.  
+	  Separated out util/ library to compile to libfangutil.la.
+	  Parser: empty file now returns in non-NULL empty root_body pointer.  
+	  util:
+		static_trace.h: DEFAULT macros added for simplicity
+			(updated uses in AST/*.cc Object/*.cc)
+	  some more comments in util/ChangeLog.
+	  see also test/ChangeLog for test script updates in this revision.  
+
+
 2005-05-19	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-37-merged-PRS-01-09:

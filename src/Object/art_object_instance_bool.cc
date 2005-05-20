@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.15 2005/05/19 18:43:33 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.16 2005/05/20 19:28:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -14,7 +14,7 @@
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include "util/static_trace.h"
-STATIC_TRACE_BEGIN("Object/art_object_instance_bool.cc")
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <iostream>
@@ -187,7 +187,7 @@ template class instance_array<bool_tag, 4>;
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("Object/art_object_instance_bool.cc")
+DEFAULT_STATIC_TRACE_END
 
 #endif	// __OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
 

@@ -3,57 +3,30 @@
 	Just dumps an object file to human-readable (?) output.  
 	Useful for testing object file integrity.  
 
-	$Id: artobjdump.cc,v 1.7 2005/02/27 22:54:07 fang Exp $
+	$Id: artobjdump.cc,v 1.8 2005/05/20 19:28:31 fang Exp $
  */
 
 #include <iostream>
-#include <fstream>
-#include "art++.h"			// has everything you need
+#include "main/main_funcs.h"
+#include "util/using_ostream.h"
 
-using namespace std;
+using namespace ART;
 
 int
 main(int argc, char* argv[]) {
 	if (argc != 2) {
-		cerr << "Usage: " << argv[0] << " art-obj-file" << endl;
-		exit(0);
+		cerr << "Usage: " << argv[0] << " <art-obj-file>" << endl;
+		return 0;
 	}
-	{
-		// test if file is valid
-		ifstream f(argv[1], ios_base::binary);
-		if (!f.good()) {
-			cerr << "Error opening object file \"" << argv[1]
-				<< "\"." << endl;
-			exit(1);
-		}
-		f.close();
-	}
-	string fname(argv[1]);
+	if (!check_object_loadable(argv[1]).good)
+		return 1;
+	excl_ptr<module> the_module =
+		load_module_debug(argv[1]);
+		// load_module(argv[1]);
+	if (!the_module)
+		return 1;
 
-//	persistent_object_manager::dump_registered_type_map(cerr);
-/***
-	The following line is required to make Appls's gcc think
-	that linking in the majority of libart++.la is required 
-	in the executable.  
-	Without it the only reference to the module type is through
-	a pointer-class, which is insufficient.  
-***/
-	{ entity::module bogus("please link modules from libart++.la"); }
-
-	persistent_object_manager::dump_reconstruction_table = true;
-	persistent::warn_unimplemented = true;	// for verbosity
-
-	excl_ptr<entity::module> the_module;
-try {
-	the_module = persistent_object_manager::load_object_from_file
-			(fname).is_a_xfer<entity::module>();
-}
-catch (...) {
-	return 1;
-}
 	the_module->dump(cerr);
-
-	// global will delete itself (recursively)
 	return 0;
 }
 

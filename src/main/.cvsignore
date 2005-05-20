@@ -1,0 +1,10 @@
+.deps
+.dirstamp
+.libs
+*.la
+*.o
+*.lo
+core.*
+*.core
+*.swp
+

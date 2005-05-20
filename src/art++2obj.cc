@@ -2,91 +2,91 @@
 	\file "art++2obj.cc"
 	Converts ART source code to an object file (pre-unrolled).
 
-	$Id: art++2obj.cc,v 1.10 2005/02/27 22:54:07 fang Exp $
+	$Id: art++2obj.cc,v 1.11 2005/05/20 19:28:30 fang Exp $
  */
 
 #include <iostream>
-#include <fstream>
-#include "art++.h"			// has everything you need
+#include "main/main_funcs.h"
+#include "util/getopt_portable.h"
 
+#include "util/using_ostream.h"
+
+using util::memory::excl_ptr;
+using ART::entity::module;
+using namespace ART;
+
+static	bool dump = false;
+static	int parse_command_options(int, char*[]);
+static	void usage(void);
+
+//=============================================================================
 int
 main(int argc, char* argv[]) {
-	if (argc != 3 && argc != 2) {
-		cerr << "Usage: " << argv[0] << " art-source-file "
-			"[art-obj-file]" << endl;
-		exit(0);
+	if (parse_command_options(argc, argv))
+		return 1;
+	int index = optind;
+	if (argc -optind > 2 || argc -optind <= 0) {
+		usage();
+		return 0;
 	}
-	{
-		// test if source is valid
-		ifstream f(argv[1], ios_base::binary);
-		if (!f.good()) {
-			cerr << "Error opening source file \"" << argv[1]
-				<< "\"." << endl;
-			exit(1);
-		}
-		f.close();
-		// I hate old stdio... FILE* yyin;
-		artxx_in = fopen(argv[1], "r");
-		assert(artxx_in);
+	argv += optind;		// shift
+	FILE* f = open_source_file(argv[0]);
+	if (!f)	return 1;
+	if (argc -optind >= 2) {
+		if (!check_file_writeable(argv[1]).good)
+			return 1;
 	}
-	if (argc >= 3) {
-		// test if file is valid
-		ofstream f(argv[2], ios_base::binary | ios_base::app);
-		if (!f.good()) {
-			cerr << "Error opening object file \"" << argv[2]
-				<< "\"." << endl;
-			exit(1);
-		}
-		f.close();
+	const excl_ptr<module> mod =
+		parse_and_check(argv[0]);
+	if (!mod)	return 1;
+	if (argc -optind >= 2) {
+		// save_module(*mod, argv[1]);
+		save_module_debug(*mod, argv[1]);
 	}
+	if (dump)
+		mod->dump(cerr);
 
-
-	excl_ptr<parser::root_body> root;	///< root of the syntax tree
-	entity::module the_module("-stdin-");
-	parser::context the_context(the_module);
-
-	// make sure yyin (in our case, artxx_in)  is set
-try {
-	artxx_parse();
-}
-catch (...) {
-	return 1;
-}
-	fclose(artxx_in);
-#if USING_YACC
-	root = excl_ptr<parser::root_body>(artxx_val._root_body);
-#elif USING_BISON
-	root = AST_root;
-#endif
-if (root) {
-	// type-check, build a useful manipulable art object, and return it
-	// the symbol tables will selectively retain info from the syntax tree
-	// need to build global table first, then pass it in context
-try {
-	root->check_build(the_context);		// useless return value
-}
-catch (...) {
-	return 1;
-}
-} else if (0) {
-	// don't print and exit, just continue to write empty object
-	cerr << "Empty file." << endl;
-	exit(0);
-}
-
-if (argc >= 3) {
-	const string fname(argv[2]);	// name of file
-	persistent::warn_unimplemented = true;	// just for verbosity
-	persistent_object_manager::dump_reconstruction_table = true;
-	persistent_object_manager::save_object_to_file(fname, the_module);
-}
-	// else don't bother
-	the_module.dump(cerr);
-//	global->dump(cerr);
-
-	// massive recursive deletion of syntax tree, reclaim memory
-	// root will delete itself (also recursively)
-	// global will delete itself (also recursively)
 	return 0;
+}
+
+//-----------------------------------------------------------------------------
+/**
+	\return 0 if is ok to continue, anything else will signal early
+		termination, an error will cause exit(1).
+ */
+static
+int
+parse_command_options(int argc, char* argv[]) {
+	static const char* optstring = "dh";
+	int c;
+	while ((c = getopt(argc, argv, optstring)) != -1) {
+	switch (c) {
+	case 'd':
+		dump = true;
+		break;
+	case 'h':
+		usage();
+		return 1;
+	case '?':
+		unknown_option(optopt);
+		usage();
+		exit(1);
+	default:
+		abort();
+	}       // end switch
+	}       // end while
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+static
+void
+usage(void) {
+	cerr << "art++2obj: compiles input file to module object file" << endl;
+	cerr << "usage: art++2obj [-dh] <art-source-file> [art-obj-file]" << endl;
+	cerr << "\t-d: produces text dump of compiled module" << endl
+		<< "\t-h: gives this usage messsage" << endl;
+	cerr << "\tIf output target is not given, module will not be saved."
+		<< endl;
 }
 
