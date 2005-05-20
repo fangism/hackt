@@ -176,7 +176,9 @@ CLEANFILES = \
 	$(noinst_PROGRAMS:=.test) \
 	$(noinst_PROGRAMS:=.diff) \
 	$(noinst_PROGRAMS:=.filter) \
+	$(noinst_PROGRAMS:=.stderr.filter) \
 	$(noinst_PROGRAMS:=.out) \
+	$(noinst_PROGRAMS:=.out.filter) \
 	$(PREFILTER_FILES) \
 	$(EMPTY_STDERR_FILES)
 

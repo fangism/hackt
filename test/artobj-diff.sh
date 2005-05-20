@@ -1,7 +1,7 @@
 #!/bin/sh
 # "artobj-diff.sh"
 # compares textual object dumps
-#	$Id: artobj-diff.sh,v 1.5 2005/01/28 19:59:00 fang Exp $
+#	$Id: artobj-diff.sh,v 1.6 2005/05/20 19:29:15 fang Exp $
 
 # $1 is the executable for generating the object file, (probably art++2obj)
 #	and producing a textual dump to stderr.  
@@ -18,7 +18,8 @@
 
 # if the .test file exists, then program didn't crash, we can proceed.
 
-cmd=$1
+cmd="$1 -d"
+# -d for dump flag
 dump=$2
 srcroot=$3/$4
 bldroot=$4
@@ -35,8 +36,8 @@ $dump $bldroot.artobj 2> /dev/null
 if [ $? -ne 0 ] ; then exit 1; fi
 $dump $bldroot.artobj 2>&1 | cat > $bldroot.indump
 
-$filter $bldroot.outdump > $bldroot.outdump.filter
-$filter $bldroot.indump > $bldroot.indump.filter
+cat $bldroot.outdump | $filter > $bldroot.outdump.filter
+cat $bldroot.indump | $filter > $bldroot.indump.filter
 diff -b -u $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | cat > $bldroot.objdiff
 
 if [ -s $bldroot.objdiff ] ; then

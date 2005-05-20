@@ -1,6 +1,6 @@
 #!/bin/sh
 # "artobjunroll-expect.sh"
-#	$Id: artobjunroll-expect.sh,v 1.2 2005/01/28 19:59:00 fang Exp $
+#	$Id: artobjunroll-expect.sh,v 1.3 2005/05/20 19:29:15 fang Exp $
 
 # $1 is the executable for the unroller, expecting 2 arguments
 # $2 is the executable for reading in the object file, (probably artobjdump)
@@ -40,11 +40,12 @@ case $? in
 	*) exit 1 ;;
 esac
 
-$filter $bldroot.unrolldump > $bldroot.unrolldump.filter
+cat $bldroot.unrolldump | $filter > $bldroot.unrolldump.filter
 
 # .unrollstderr comparison file must exist
-if [ -f $srcroot.unrollstderr ] ; then
-	$filter $srcroot.unrollstderr > $bldroot.unrollstderr.filter
+if [ -f $srcroot.unrollstderr ]
+then
+	cat $srcroot.unrollstderr | $filter > $bldroot.unrollstderr.filter
 else
 	echo "Missing $bldroot.unrollstderr."
 	exit 1
@@ -53,7 +54,8 @@ fi
 # ignore whitespace differences
 diff -buw $bldroot.unrollstderr.filter $bldroot.unrolldump.filter 2>&1 | cat > $bldroot.unrolldiff
 
-if [ -s $bldroot.unrolldiff ] ; then
+if [ -s $bldroot.unrolldiff ]
+then
 	echo "$bldroot.unrolldiff is non-empty!  See $logfile."
 	echo `pwd`/"$bldroot.unrolldiff" >> $logfile
 	exit 1
