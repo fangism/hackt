@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.8 2005/05/10 04:51:26 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.9 2005/05/22 06:24:20 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -28,7 +28,6 @@ using std::ostream;
 using std::string;
 using util::discrete_interval_set;
 using util::qmap;
-using namespace util::memory;
 
 //=============================================================================
 // forward declarations in "multidimensional_sparse_set_fwd.h"
@@ -83,7 +82,7 @@ protected:
 	typedef	multidimensional_sparse_set<D,T,R,L>	this_type;
 	typedef multidimensional_sparse_set<D-1,T,R,L>	child_type;
 	/** need count_ptr to be copy-constructable */
-	typedef	count_ptr<child_type>			map_value_type;
+	typedef	memory::count_ptr<child_type>		map_value_type;
 	typedef	qmap<T, map_value_type>			map_type;
 	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
 public:

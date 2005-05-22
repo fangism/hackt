@@ -1,13 +1,14 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.27 2005/05/19 18:43:32 fang Exp $
+	$Id: art_object_expr.h,v 1.28 2005/05/22 06:23:54 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
 #define __OBJECT_ART_OBJECT_EXPR_H__
 
 #include "Object/art_object_expr_const.h"	// include "art_object_expr_base.h"
+#include "util/memory/count_ptr.h"
 #include "util/qmap.h"
 #include "util/operators.h"
 
@@ -32,6 +33,7 @@ using std::string;
 using std::ostream;
 USING_UTIL_OPERATIONS
 using util::qmap;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**

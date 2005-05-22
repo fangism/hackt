@@ -2,16 +2,13 @@
 	\file "util/memory/pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.7 2005/05/10 04:51:34 fang Exp $
+	$Id: pointer_traits.h,v 1.8 2005/05/22 06:24:22 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
 #define	__UTIL_MEMORY_POINTER_TRAITS_H__
 
-#include "config.h"
-#if HAVE_STDDEF_H
-#include <cstddef>			// for size_t
-#endif
+#include "util/size_t.h"
 
 #define	USING_UTIL_MEMORY_POINTER_TRAITS				\
 using util::memory::pointee;						\
@@ -25,7 +22,9 @@ using util::memory::some_kind_of_pointer_tag;				\
 using util::memory::raw_pointer_tag;					\
 using util::memory::pointer_class_base_tag;				\
 using util::memory::single_owner_pointer_tag;				\
-using util::memory::shared_owner_pointer_tag;
+using util::memory::shared_owner_pointer_tag;				\
+using util::memory::exclusive_owner_pointer_tag;			\
+using util::memory::never_owner_pointer_tag;
 
 
 /***

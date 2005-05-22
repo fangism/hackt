@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.20 2005/05/10 04:51:14 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.21 2005/05/22 06:23:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -9,7 +9,7 @@
 
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_instance_base.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
 
 namespace ART {
@@ -17,7 +17,8 @@ namespace entity {
 class unroll_context;
 using std::ostream;
 using std::istream;
-using namespace util::memory;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
 using util::packed_array_generic;
 
 //=============================================================================

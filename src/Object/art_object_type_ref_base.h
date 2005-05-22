@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.11 2005/05/13 21:24:31 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.12 2005/05/22 06:24:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -25,7 +25,9 @@ namespace entity {
 using std::istream;
 using util::persistent;
 using util::persistent_object_manager;
-using namespace util::memory;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.22 2005/05/10 04:51:11 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.23 2005/05/22 06:23:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_CC__
@@ -28,6 +28,7 @@
 
 #include "util/what.tcc"
 #include "util/STL/list.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
 #include "util/stacktrace.h"

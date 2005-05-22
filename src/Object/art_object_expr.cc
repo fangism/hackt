@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.46 2005/05/20 19:28:36 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47 2005/05/22 06:23:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -50,6 +50,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/STL/list.tcc"
 #include "util/qmap.tcc"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/sstream.h"		// for ostringstring, used by dump

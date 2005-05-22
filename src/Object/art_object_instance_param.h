@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.18 2005/05/10 04:51:18 fang Exp $
+	$Id: art_object_instance_param.h,v 1.19 2005/05/22 06:24:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
@@ -19,7 +19,7 @@ namespace ART {
 namespace entity {
 
 USING_LIST
-using namespace util::memory;	// for experimental pointer classes
+using util::memory::count_ptr;
 using util::qmap;
 using util::multikey_map;
 using util::bad_bool;

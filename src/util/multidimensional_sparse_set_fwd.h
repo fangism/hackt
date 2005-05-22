@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_sparse_set_fwd.h"
 	Forward declarations for a fixed depth/dimension tree-set.
-	$Id: multidimensional_sparse_set_fwd.h,v 1.8 2005/05/10 04:51:26 fang Exp $
+	$Id: multidimensional_sparse_set_fwd.h,v 1.9 2005/05/22 06:24:20 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -10,7 +10,7 @@
 
 #include "util/STL/pair_fwd.h"
 #include "util/STL/list_fwd.h"
-
+#include "util/size_t.h"
 
 #define MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE			\
 template <size_t D, class T, class R, template <class> class L>

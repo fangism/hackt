@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2005-05-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-39:
+	  Modified and verified that all headers properly standalone.
+		(except using{i,o}stream.h, which aren't supposed to be.)
+	  Anything that directly depends on the definition of size_t
+		now includes configure-dependent "util/sizet.h".
+	  Split out forward declarations of persistent.h into separate file.  
+
+
 2005-05-20	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-38:

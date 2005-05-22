@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.9 2005/05/19 18:43:33 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.10 2005/05/22 06:24:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -42,6 +42,7 @@
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
 #include "util/packed_array.tcc"
+#include "util/memory/count_ptr.tcc"
 
 // #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"

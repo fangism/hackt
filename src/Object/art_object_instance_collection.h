@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.8 2005/05/10 04:51:17 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.9 2005/05/22 06:24:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -10,7 +10,10 @@
 #include <iosfwd>
 #include <set>
 
-#include "util/memory/pointer_classes.h"
+#include "Object/art_object_classification_fwd.h"
+#include "Object/art_object_index.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 #include "util/persistent.h"
 #include "util/multikey_set.h"
 #include "util/boolean_types.h"
@@ -22,10 +25,19 @@ using std::istream;
 using std::ostream;
 using std::set;
 using std::string;
-using namespace util::memory;
+using util::memory::count_ptr;
+using util::memory::never_ptr;
 using util::bad_bool;
 using util::multikey_set;
 using util::multikey_set_element_derived;
+using util::persistent;
+using util::persistent_object_manager;
+
+class scopespace;
+class instance_reference_base;
+class const_index_list;
+class const_range_list;
+class const_param_expr_list;
 
 //=============================================================================
 /**

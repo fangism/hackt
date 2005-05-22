@@ -1,13 +1,14 @@
 /**
 	\file "util/multikey_map_fwd.h"
 	Forward declarations for multidimensional map.  
-	$Id: multikey_map_fwd.h,v 1.7 2005/05/10 04:51:27 fang Exp $
+	$Id: multikey_map_fwd.h,v 1.8 2005/05/22 06:24:21 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_FWD_H__
 #define	__UTIL_MULTIKEY_MAP_FWD_H__
 
 #include "util/STL/map_fwd.h"
+#include "util/size_t.h"
 
 namespace util {
 

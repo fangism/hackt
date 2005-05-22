@@ -1,21 +1,30 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.5 2005/05/10 04:51:21 fang Exp $
+	$Id: art_object_value_reference.h,v 1.6 2005/05/22 06:24:19 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 #define __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 
+#include <iosfwd>
+#include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_fwd.h"
+#include "util/persistent.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
 USING_LIST
-using std::string;
 using std::ostream;
+using util::good_bool;
+using util::bad_bool;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 #define	VALUE_REFERENCE_TEMPLATE_SIGNATURE				\
 template <class Tag>

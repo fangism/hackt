@@ -1,27 +1,27 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.11 2005/05/10 04:51:13 fang Exp $
+	$Id: art_object_fwd.h,v 1.12 2005/05/22 06:23:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
 #define	__OBJECT_ART_OBJECT_FWD_H__
 
-#include <cstddef>			// for size_t
+#include "util/size_t.h"
 
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/STL/deque_fwd.h"
 #include "Object/art_object_classification_tags.h"
+#include "Object/art_object_classification_fwd.h"
+#include "Object/art_object_expr_types.h"
 
 namespace ART {
 namespace entity {
 	USING_DEQUE
-	using namespace util::memory;
+	using util::memory::never_ptr;
+	using util::memory::count_ptr;
 
 // TODO: organize into groups by where full declarations are found
-
-	template <class>
-	struct class_traits;
 
 	class module;
 	class object;
@@ -218,18 +218,6 @@ namespace entity {
 		pint_const_collection;
 	typedef	const_collection<pbool_tag>
 		pbool_const_collection;
-
-	/**
-		The global integer-type for parameter integers.  
-		This may have to be changed to int32 in the future, 
-		for 64b portability...
-	 */
-	typedef	long		pint_value_type;
-
-	/**
-		The global boolean-type for parameter integers.  
-	 */
-	typedef	bool		pbool_value_type;
 
 	class instance_collection_stack_item;
 

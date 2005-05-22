@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.38 2005/05/10 04:51:16 fang Exp $
+	$Id: art_object_instance.h,v 1.39 2005/05/22 06:24:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -9,14 +9,16 @@
 
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_index.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 
 namespace ART {
 namespace entity {
 //=============================================================================
 USING_LIST
-using namespace util::memory;	// for experimental pointer classes
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"

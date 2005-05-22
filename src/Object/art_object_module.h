@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.14 2005/05/10 04:51:19 fang Exp $
+	$Id: art_object_module.h,v 1.15 2005/05/22 06:24:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -30,6 +30,8 @@ using util::persistent_object_manager;
 class module : public persistent , public sequential_scope {
 friend class context;
 	typedef	module				this_type;
+public:
+	typedef	list<never_ptr<name_space> >	namespace_collection_type;
 protected:
 	/**
 		Name of the file.
@@ -52,7 +54,9 @@ protected:
 private:
 	module();
 public:
-explicit	module(const string& s);
+	explicit
+	module(const string& s);
+
 	~module();
 	// operations: merge, diff?
 
@@ -61,6 +65,9 @@ explicit	module(const string& s);
 
 	void
 	set_global_namespace(excl_ptr<name_space>& n);
+
+	void
+	collect_namespaces(namespace_collection_type&) const;
 
 	ostream&
 	what(ostream& o) const;

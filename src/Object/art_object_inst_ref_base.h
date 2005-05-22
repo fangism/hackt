@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.11 2005/05/19 18:43:32 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12 2005/05/22 06:23:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -10,7 +10,8 @@
 #include "Object/art_object_base.h"
 #include "util/persistent.h"
 #include "Object/art_object_instance_base.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
@@ -18,7 +19,10 @@ namespace entity {
 using std::ostream;
 using std::istream;
 USING_LIST
-using namespace util::memory;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
+using util::persistent;
 
 //=============================================================================
 /**

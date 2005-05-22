@@ -1,13 +1,14 @@
 /**
 	\file "util/multikey_fwd.h"
 	Forward declarations or multidimensional key class.  
-	$Id: multikey_fwd.h,v 1.12 2005/05/10 04:51:27 fang Exp $
+	$Id: multikey_fwd.h,v 1.13 2005/05/22 06:24:21 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H_FWD__
 #define	__UTIL_MULTIKEY_H_FWD__
 
 #include <iosfwd>
+#include "util/size_t.h"
 
 namespace util {
 using std::ostream;

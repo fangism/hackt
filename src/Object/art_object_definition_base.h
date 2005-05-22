@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.19 2005/05/13 21:24:30 fang Exp $
+	$Id: art_object_definition_base.h,v 1.20 2005/05/22 06:23:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -16,8 +16,8 @@
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/hash_qmap.h"		// need complete definition
-#include "util/memory/pointer_classes.h"
-				// need complete definition (never_ptr members)
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
 
 #include "Object/art_object_template_formals_manager.h"
@@ -42,7 +42,9 @@ using util::good_bool;
 using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
-using namespace util::memory;
+using util::memory::count_ptr;
+using util::memory::never_ptr;
+using util::memory::excl_ptr;
 
 //=============================================================================
 /**

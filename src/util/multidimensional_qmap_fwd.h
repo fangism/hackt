@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_qmap_fwd.h"
 	Forward declarations for a fixed depth/dimension sparse tree.
-	$Id: multidimensional_qmap_fwd.h,v 1.7 2005/05/10 04:51:26 fang Exp $
+	$Id: multidimensional_qmap_fwd.h,v 1.8 2005/05/22 06:24:20 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -13,6 +13,7 @@
 #else
 #include "util/STL/list_fwd.h"
 #endif
+#include "util/size_t.h"
 
 // full description in "multidimensional_qmap.h"
 namespace util {

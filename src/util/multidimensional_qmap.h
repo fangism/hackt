@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.11 2005/05/10 04:51:25 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.12 2005/05/22 06:24:20 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -38,8 +38,7 @@ namespace util {
 using std::pair;
 using std::string;
 using util::qmap;
-
-#include "util/using_ostream.h"
+using std::ostream;
 
 //=============================================================================
 // utility functions

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.22 2005/05/20 19:28:38 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.23 2005/05/22 06:24:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
@@ -34,6 +34,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_value_collection.tcc"
 #include "Object/art_object_classification_details.h"
+
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace util {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.5 2005/05/10 04:51:21 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.6 2005/05/22 06:24:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -42,7 +42,6 @@
 #include "Object/art_object_extern_templates.h"
 
 #include "util/persistent.h"
-
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR

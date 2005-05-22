@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.5 2005/05/10 04:51:19 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.6 2005/05/22 06:24:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
@@ -15,7 +15,7 @@ namespace entity {
 using std::ostream;
 using std::istream;
 USING_LIST
-using namespace util::memory;
+using util::memory::never_ptr;
 
 //=============================================================================
 #define	MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE			\

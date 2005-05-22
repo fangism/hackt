@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.29 2005/05/19 18:43:32 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30 2005/05/22 06:23:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -27,6 +27,7 @@
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_instance_collection.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 // specializations

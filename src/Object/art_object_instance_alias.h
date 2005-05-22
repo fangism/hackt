@@ -2,26 +2,32 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.4 2005/05/10 04:51:16 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5 2005/05/22 06:24:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
 
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 #include "util/multikey_set.h"
 #include "util/ring_node.h"
-
+#include "util/persistent.h"
+#include "Object/art_object_expr_types.h"
+#include "Object/art_object_classification_fwd.h"
 
 namespace ART {
 namespace entity {
 USING_CONSTRUCT
 using std::ostream;
+using std::istream;
 using std::string;
 using util::ring_node_derived;
-using namespace util::memory;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 using util::multikey_set_element_derived;
+using util::persistent_object_manager;
 
 //=============================================================================
 // class datatype_instance_collection declared in "art_object_instance.h"

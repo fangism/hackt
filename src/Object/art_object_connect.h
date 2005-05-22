@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.18 2005/05/10 04:51:11 fang Exp $
+	$Id: art_object_connect.h,v 1.19 2005/05/22 06:23:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
@@ -9,7 +9,7 @@
 
 #include "Object/art_object_fwd.h"
 #include "Object/art_object_instance_management_base.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/count_ptr.h"
 #include "util/multikey_fwd.h"
 
 namespace ART {
@@ -17,7 +17,7 @@ namespace entity {
 
 USING_LIST
 using std::ostream;
-using namespace util::memory;	// for experimental pointer classes
+using util::memory::count_ptr;
 class unroll_context;
 
 //=============================================================================

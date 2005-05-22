@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.18 2005/05/19 18:43:36 fang Exp $
+	$Id: persistent_object_manager.h,v 1.19 2005/05/22 06:24:21 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -12,19 +12,20 @@
 #include "util/persistent.h"
 
 #include "util/hash_qmap.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 #include "util/IO_utils.h"		// for read and write to streams
 
 //=============================================================================
 namespace util {
-using util::list_vector;
 using std::istream;
 using std::ostream;
 using std::streampos;
 using std::ofstream;
 using std::ifstream;
-using namespace util::memory;
-using util::hash_qmap;
+using memory::excl_ptr;
+using memory::count_ptr;
+USING_UTIL_MEMORY_POINTER_TRAITS
 
 //=============================================================================
 /**

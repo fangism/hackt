@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.15 2005/05/10 04:51:15 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.16 2005/05/22 06:24:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
@@ -16,7 +16,6 @@ namespace entity {
 //=============================================================================
 USING_LIST
 USING_CONSTRUCT
-using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 #define	INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE			\

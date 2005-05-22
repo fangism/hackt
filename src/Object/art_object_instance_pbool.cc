@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.20 2005/05/20 19:28:38 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.21 2005/05/22 06:24:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -29,6 +29,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_value_collection.tcc"
+
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 // specializations in other namespace (local to this file)

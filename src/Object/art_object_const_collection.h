@@ -1,14 +1,20 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.5 2005/05/10 04:51:11 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6 2005/05/22 06:23:52 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 #define __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 
-#include "Object/art_object_fwd.h"
+#include <iosfwd>
+#include "util/STL/construct_fwd.h"
+#include "Object/art_object_expr_const.h"	// for const_range_list
+#include "Object/art_object_expr_types.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/packed_array.h"
+#include "util/persistent.h"
+#include "util/memory/count_ptr.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
@@ -18,6 +24,7 @@ namespace entity {
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
+using util::memory::count_ptr;
 using util::persistent;
 using util::persistent_object_manager;	// forward declared
 

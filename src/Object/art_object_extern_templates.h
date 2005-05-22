@@ -4,7 +4,7 @@
 	template classes.  
 	Useful for common template classes that are shared all over the place, 
 	explicitly or implicitly.  
-	$Id: art_object_extern_templates.h,v 1.5 2005/05/10 04:51:13 fang Exp $
+	$Id: art_object_extern_templates.h,v 1.6 2005/05/22 06:23:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_H__
@@ -13,7 +13,7 @@
 // never include this in the .cc file
 #ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
 
-#include "Object/art_object_fwd.h"
+#include "Object/art_object_expr_types.h"
 #include "util/multikey_fwd.h"
 #include "util/packed_array_fwd.h"
 

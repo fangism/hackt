@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.24 2005/05/13 21:24:30 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25 2005/05/22 06:24:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -19,7 +19,6 @@ namespace entity {
 USING_LIST
 using std::ostream;
 using parser::token_identifier;
-using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 // class type_reference_base declared in "art_object_base.h"

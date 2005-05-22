@@ -5,4 +5,5 @@
 .deps
 .libs
 .dirstamp
+dummy.cc
 

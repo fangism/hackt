@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.3 2005/05/10 04:51:20 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4 2005/05/22 06:24:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 
 #include "util/hash_qmap.tcc"
 #include "util/persistent_object_manager.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.tcc"
 #include "util/indent.h"
 #include "util/stacktrace.h"

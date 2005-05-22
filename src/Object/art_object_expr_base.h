@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.11 2005/05/10 04:51:13 fang Exp $
+	$Id: art_object_expr_base.h,v 1.12 2005/05/22 06:23:54 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -20,6 +20,7 @@ using std::ostream;
 using util::persistent;
 using util::good_bool;
 using util::bad_bool;
+using util::memory::excl_ptr;
 
 //=============================================================================
 /**

@@ -1,11 +1,13 @@
 /**
 	\file "util/packed_array_fwd.h"
 	Forward declarations for packed array template class.
-	$Id: packed_array_fwd.h,v 1.4 2005/05/10 04:51:28 fang Exp $
+	$Id: packed_array_fwd.h,v 1.5 2005/05/22 06:24:21 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_FWD_H__
 #define	__UTIL_PACKED_ARRAY_FWD_H__
+
+#include "util/size_t.h"
 
 #define PACKED_ARRAY_TEMPLATE_SIGNATURE					\
 template <size_t D, class K, class T>

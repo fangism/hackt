@@ -2,7 +2,7 @@
 	\file "Object/art_object_control.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: art_object_control.h,v 1.8 2005/05/10 04:51:11 fang Exp $
+	$Id: art_object_control.h,v 1.9 2005/05/22 06:23:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONTROL_H__
@@ -11,7 +11,7 @@
 #include "util/string_fwd.h"
 #include "Object/art_object_fwd.h"
 #include "Object/art_object_instance_management_base.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace entity {
@@ -53,7 +53,7 @@ protected:
 public:
 	/** what about name of scope? none. */
 	explicit
-	loop_scope(never_ptr<const sequential_scope> p);
+	loop_scope(const never_ptr<const sequential_scope> p);
 		// more args...  
 	~loop_scope();
 
@@ -71,7 +71,7 @@ protected:
 	// condition expression
 	never_ptr<const sequential_scope>		parent;
 public:
-	conditional_scope(const string& n, never_ptr<const scopespace>);
+	conditional_scope(const string& n, const never_ptr<const scopespace>);
 		// more args...     
 	~conditional_scope();
 

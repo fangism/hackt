@@ -1,16 +1,22 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.4 2005/05/10 04:51:21 fang Exp $
+	$Id: art_object_value_collection.h,v 1.5 2005/05/22 06:24:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
 #define	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
 
+#include <iosfwd>
+#include "util/string_fwd.h"
+#include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_fwd.h"
+#include "Object/art_object_index.h"
 #include "util/memory/count_ptr.h"
 
+#include "util/persistent_fwd.h"
+#include "util/new_functor_fwd.h"
 #include "util/multikey_fwd.h"
 #include "util/multikey_qmap_fwd.h"
 
@@ -18,11 +24,18 @@ namespace ART {
 namespace entity {
 
 USING_LIST
-using namespace util::memory;	// for experimental pointer classes
+using std::istream;
+using std::ostream;
+using std::string;
+using util::memory::count_ptr;	// for experimental pointer classes
 using util::qmap;
 using util::multikey_map;
 using util::bad_bool;
 using util::good_bool;
+using util::persistent;
+using util::persistent_object_manager;
+
+class scopespace;
 
 //=============================================================================
 #define	VALUE_COLLECTION_TEMPLATE_SIGNATURE				\

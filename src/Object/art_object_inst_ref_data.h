@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.6 2005/05/10 04:51:14 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.7 2005/05/22 06:23:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
@@ -14,7 +14,6 @@ namespace ART {
 namespace entity {
 
 using std::ostream;
-using namespace util::memory;
 
 //=============================================================================
 // consider moving datatype_instance_reference here...

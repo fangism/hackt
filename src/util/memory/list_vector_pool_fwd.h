@@ -2,14 +2,13 @@
 	\file "util/memory/list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.6 2005/05/10 04:51:33 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.7 2005/05/22 06:24:22 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
 
 #include "util/STL/construct_fwd.h"
-// #include "util/memory/count_ptr.h"
 
 /**
 	These are the enw and delete operators required when
@@ -38,7 +37,7 @@
 	static void	operator delete (void*);			\
 	static void*	operator new (size_t, void*&);			\
 private:								\
-	typedef	list_vector_pool<this_type>		pool_type;	\
+	typedef	util::memory::list_vector_pool<this_type>	pool_type;\
 	static pool_type				pool;
 
 /**
@@ -68,10 +67,10 @@ private:								\
 	static void	operator delete (void*);			\
 private:								\
 	static void*	operator new (size_t, void*&);			\
-	typedef	list_vector_pool<this_type>		pool_type;	\
-	typedef	raw_count_ptr<pool_type>	pool_ref_ref_type;	\
+	typedef	util::memory::list_vector_pool<this_type>	pool_type;\
+	typedef	util::memory::raw_count_ptr<pool_type>	pool_ref_ref_type;\
 public:									\
-	typedef	count_ptr<const pool_type>		pool_ref_type;	\
+	typedef	util::memory::count_ptr<const pool_type>	pool_ref_type;\
 									\
 	static								\
 	pool_ref_ref_type						\
@@ -86,12 +85,14 @@ public:									\
 	Fortunately, there's no harm in keeping them; only the definition's
 	formal parameters matter -- it's just an eyesore to see them here.  
 
+	NOTE: doesn't like std::_Construct in friend declaration.
+
 	See "util/test/friend_function_formal_bug.cc" for example.  
  */
 #define	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS				\
-	friend class list_vector_pool<this_type>;			\
+	friend class util::memory::list_vector_pool<this_type>;		\
 	friend void _Construct<this_type>(this_type* __p);		\
-	friend void _Construct<this_type, this_type>(			\
+	friend void _Construct<this_type, this_type>(		\
 		this_type* __p, const this_type& __value);
 
 namespace util {

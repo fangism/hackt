@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.14 2005/05/10 04:51:16 fang Exp $
+	$Id: art_object_instance_base.h,v 1.15 2005/05/22 06:24:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -17,8 +17,8 @@
 #include "util/persistent.h"		// for persistent object interface
 	// includes <iosfwd>
 
-#include "util/memory/pointer_classes.h"
-	// need complete definition (never_ptr members)
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
@@ -31,7 +31,8 @@ using util::bad_bool;
 using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
-using namespace util::memory;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**

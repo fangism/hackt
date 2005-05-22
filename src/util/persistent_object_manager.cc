@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.20 2005/05/19 18:43:36 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.21 2005/05/22 06:24:21 fang Exp $
  */
 
 // flags and switches
@@ -16,10 +16,10 @@
 #include "util/new_functor.tcc"
 #include "util/list_vector.tcc"
 #include "util/persistent_object_manager.tcc"	// for read_pointer
-	// includes "util/count_ptr.h"
+#include "util/memory/chunk_map_pool.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/macros.h"
 #include "util/IO_utils.tcc"
-	// includes <iostream>
 #include "util/sstream.h"
 #include "util/stacktrace.h"
 
