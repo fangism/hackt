@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.17 2005/05/19 18:43:29 fang Exp $
+	$Id: art_context.h,v 1.18 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -12,24 +12,41 @@
 #include <stack>
 
 #include "util/STL/list.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 #include "Object/art_object_fwd.h"
 #include "util/boolean_types.h"
 
 namespace ART {
-
-//=============================================================================
-using namespace entity;
-
 namespace parser {
 //=============================================================================
+// forward declarations outside this namespace
 using std::ostream;
 using std::stack;
 using std::string;
 USING_LIST
 using util::good_bool;
 using util::bad_bool;
-using namespace util::memory;		// for pointer classes
+using util::memory::count_ptr;
+using util::memory::never_ptr;
+using util::memory::excl_ptr;
+using util::memory::sticky_ptr;
+using entity::object;
+using entity::module;
+using entity::scopespace;
+using entity::name_space;
+using entity::definition_base;
+using entity::datatype_definition_base;
+using entity::channel_definition_base;
+using entity::process_definition_base;
+using entity::fundamental_type_reference;
+using entity::sequential_scope;
+using entity::instance_collection_base;
+using entity::instance_management_base;
+using entity::instance_reference_connection;
+using entity::param_expr;
+using entity::param_expression_assignment;
+using entity::index_collection_item_ptr_type;
 
 //=============================================================================
 // forward declarations

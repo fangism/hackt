@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.22 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23 2005/05/22 06:18:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -34,6 +34,7 @@
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable

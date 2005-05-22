@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.13 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_hse.cc,v 1.14 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_HSE_CC__
@@ -15,6 +15,7 @@
 #include "AST/art_parser_node_list.tcc"
 
 #include "util/what.h"
+#include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE

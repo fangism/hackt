@@ -2,7 +2,7 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.12 2005/05/20 19:28:31 fang Exp $
+	$Id: artobjunroll.cc,v 1.13 2005/05/22 06:18:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,7 +24,7 @@ main(int argc, char* argv[]) {
 	if (argc != 3) {
 		cerr << "Usage: " << argv[0] <<
 			" <art-obj-infile> <art-obj-outfile>" << endl;
-		exit(1);
+		return 1;
 	}
 	if (!check_object_loadable(argv[1]).good)
 		return 1;

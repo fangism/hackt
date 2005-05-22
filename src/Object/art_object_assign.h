@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.18 2005/05/13 21:24:29 fang Exp $
+	$Id: art_object_assign.h,v 1.19 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -11,7 +11,7 @@
 #include "util/boolean_types.h"
 #include "Object/art_object_instance_management_base.h"
 #include "Object/art_object_expr_base.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
 namespace ART {
@@ -19,7 +19,7 @@ namespace entity {
 USING_LIST
 USING_CONSTRUCT
 using std::ostream;
-using namespace util::memory;	// for experimental pointer classes
+using util::memory::count_ptr;	// for experimental pointer classes
 using util::bad_bool;
 using util::good_bool;
 class unroll_context;

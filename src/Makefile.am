@@ -1,11 +1,12 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.59 2005/05/20 19:28:30 fang Exp $
+#	$Id: Makefile.am,v 1.60 2005/05/22 06:18:28 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
 SUBDIRS = util/test .
 
-SUFFIXES = .yy .ll
+# .yy for yacc (C++), .ll for lex (C++), .hchk for standalone header checks
+SUFFIXES = .yy .ll .hchk
 
 include $(top_srcdir)/Make.stddef
 
@@ -42,7 +43,8 @@ endif
 
 bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
 
-noinst_PROGRAMS = art_persistent_table getopt_test
+# dirgen is completely bogus, workaround to corce directory generation
+noinst_PROGRAMS = dirgen art_persistent_table getopt_test
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -69,9 +71,25 @@ getopt_test_SOURCES = test/getopt_test.cc
 # convenience libraries
 noinst_LTLIBRARIES = libart++.la libbogus.la libfangutil.la
 
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
+
+dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
+
 # need these first!  (easy to just stick them here)
 BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
-	parser/art++-parse.output.h
+	parser/art++-parse.output.h \
+	$(PHONYSOURCES)
+
+# these two targets cause automake to create the corresponding _build
+# subdirectories, that are needed for make distcheck, for check-headers
+util/STL/dummy.cc:
+	$(TOUCH) $@
+
+util/numeric/dummy.cc:
+	$(TOUCH) $@
+
+util/obsolete/dummy.cc:
+	$(TOUCH) $@
 
 # libbogus.la is not actually used, hence the name.
 # force use of lex/yacc suffix rules to generate the .c and .cc files
@@ -102,7 +120,10 @@ AST_CC_FILES = \
 	AST/art_parser_hse.cc \
 	AST/art_parser_prs.cc
 
+AST_TCC_FILES = AST/art_parser_node_list.tcc
+
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
+	$(AST_TCC_FILES:.tcc=.h) \
 	AST/art_parser_fwd.h \
 	AST/art_parser_chp_fwd.h \
 	AST/art_parser_hse_fwd.h \
@@ -110,7 +131,6 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/art_parser_delim.h \
 	AST/art_parser.h \
 	AST/art_parser_node_list.h \
-	AST/art_parser_node_list.tcc \
 	AST/art_parser_definition_item.h \
 	AST/art_parser_expr_base.h \
 	AST/art_parser_expr_list.h \
@@ -162,44 +182,79 @@ OBJECT_CC_NO_H_FILES = \
 	Object/art_object_instance_pbool.cc
 
 # these header files have source (.cc) files with different names
+OBJECT_TCC_FILES = \
+	Object/art_object_assign.tcc \
+	Object/art_object_connect.tcc \
+	Object/art_object_const_collection.tcc \
+	Object/art_object_instance_collection.tcc \
+	Object/art_object_inst_stmt.tcc \
+	Object/art_object_inst_ref.tcc \
+	Object/art_object_member_inst_ref.tcc \
+	Object/art_object_value_collection.tcc \
+	Object/art_object_value_reference.tcc
+
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
+	Object/art_object_classification_fwd.h \
 	Object/art_object_classification_tags.h \
-	Object/art_object_assign.tcc \
-	Object/art_object_connect.tcc \
 	Object/art_object_const_collection.h \
-	Object/art_object_const_collection.tcc \
 	Object/art_object_definition_base.h \
 	Object/art_object_definition_proc.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
+	Object/art_object_expr_types.h \
 	Object/art_object_index.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_alias.h \
 	Object/art_object_instance_collection.h \
-	Object/art_object_instance_collection.tcc \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
 	Object/art_object_inst_stmt_param.h \
 	Object/art_object_inst_stmt_data.h \
 	Object/art_object_inst_stmt_chan.h \
 	Object/art_object_inst_stmt_proc.h \
-	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_ref_base.h \
-	Object/art_object_inst_ref.tcc \
 	Object/art_object_member_inst_ref.h \
-	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h \
 	Object/art_object_value_collection.h \
-	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.h \
-	Object/art_object_value_reference.tcc \
 	Object/art_object_PRS_base.h
 
+UTIL_TCC_FILES = \
+	util/STL/list.tcc \
+	util/STL/map.tcc \
+	util/IO_utils.tcc \
+	util/const_assoc_query.tcc \
+	util/discrete_interval_set.tcc \
+	util/hash_qmap.tcc \
+	util/list_vector.tcc \
+	util/memory/chunk_map_pool.tcc \
+	util/memory/destruction_policy.tcc \
+	util/memory/list_vector_pool.tcc \
+	util/memory/count_ptr.tcc \
+	util/multidimensional_qmap.tcc \
+	util/multidimensional_sparse_set.tcc \
+	util/multikey.tcc \
+	util/multikey_assoc.tcc \
+	util/multikey_map.tcc \
+	util/multikey_qmap.tcc \
+	util/multikey_set.tcc \
+	util/new_functor.tcc \
+	util/packed_array.tcc \
+	util/persistent_object_manager.tcc \
+	util/qmap.tcc \
+	util/ring_node.tcc \
+	util/sublist.tcc \
+	util/unique_list.tcc \
+	util/what.tcc
+
+# POLICY: every .tcc MUST have a corresponding .h file, 
+# but the _fwd.h file is optional.  
 UTIL_HEADER_FILES = \
+	$(UTIL_TCC_FILES:.tcc=.h) \
 	util/macros.h \
 	util/STL/allocator_fwd.h \
 	util/STL/construct_fwd.h \
@@ -208,11 +263,7 @@ UTIL_HEADER_FILES = \
 	util/STL/hash_map_fwd.h \
 	util/STL/hash_map.h \
 	util/STL/list_fwd.h \
-	util/STL/list.h \
-	util/STL/list.tcc \
 	util/STL/map_fwd.h \
-	util/STL/map.h \
-	util/STL/map.tcc \
 	util/STL/namespace.h \
 	util/STL/pair_fwd.h \
 	util/STL/reverse_iterator.h \
@@ -221,75 +272,41 @@ UTIL_HEADER_FILES = \
 	util/STL/valarray_fwd.h \
 	util/STL/vector_fwd.h \
 	util/IO_utils_fwd.h \
-	util/IO_utils.h \
-	util/IO_utils.tcc \
 	util/array_traits.h \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
 	util/boolean_types.h \
-	util/const_assoc_query.h \
-	util/const_assoc_query.tcc \
 	util/const_traits.h \
 	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
-	util/discrete_interval_set.h \
-	util/discrete_interval_set.tcc \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
-	util/hash_qmap.h \
-	util/hash_qmap.tcc \
 	util/hash_specializations.h \
 	util/ifthenelse.h \
 	util/indent.h \
 	util/iterator_more.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
-	util/list_vector.h \
-	util/list_vector.tcc \
 	util/maplikeset.h \
 	util/memory/chunk_map_pool_fwd.h \
-	util/memory/chunk_map_pool.h \
-	util/memory/chunk_map_pool.tcc \
-	util/memory/destruction_policy.h \
-	util/memory/destruction_policy.tcc \
 	util/memory/list_vector_pool_fwd.h \
-	util/memory/list_vector_pool.h \
-	util/memory/list_vector_pool.tcc \
 	util/memory/pointer_classes_fwd.h \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
 	util/memory/pointer_manipulator.h \
 	util/memory/excl_ptr.h \
-	util/memory/count_ptr.h \
-	util/memory/count_ptr.tcc \
 	util/memory/ref_count_pool.h \
 	util/memory/ref_count_pool_anchor.h \
 	util/memory/thread_lock.h \
 	util/multidimensional_qmap_fwd.h \
-	util/multidimensional_qmap.h \
-	util/multidimensional_qmap.tcc \
 	util/multidimensional_sparse_set_fwd.h \
-	util/multidimensional_sparse_set.h \
-	util/multidimensional_sparse_set.tcc \
 	util/multikey_fwd.h \
-	util/multikey.h \
-	util/multikey.tcc \
 	util/multikey_assoc_fwd.h \
-	util/multikey_assoc.h \
-	util/multikey_assoc.tcc \
 	util/multikey_map_fwd.h \
-	util/multikey_map.h \
-	util/multikey_map.tcc \
 	util/multikey_qmap_fwd.h \
-	util/multikey_qmap.h \
-	util/multikey_qmap.tcc \
 	util/multikey_set_fwd.h \
-	util/multikey_set.h \
-	util/multikey_set.tcc \
 	util/nested_iterator.h \
 	util/new_functor_fwd.h \
-	util/new_functor.h \
-	util/new_functor.tcc \
 	util/nullary_function_fwd.h \
 	util/nullary_function.h \
 	util/null_construct.h \
@@ -297,31 +314,17 @@ UTIL_HEADER_FILES = \
 	util/numeric/nibble_tables.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
-	util/packed_array.h \
-	util/packed_array.tcc \
+	util/persistent_fwd.h \
 	util/persistent.h \
-	util/persistent_object_manager.h \
-	util/persistent_object_manager.tcc \
 	util/qmap_fwd.h \
-	util/qmap.h \
-	util/qmap.tcc \
 	util/ring_node_fwd.h \
-	util/ring_node.h \
-	util/ring_node.tcc \
+	util/size_t.h \
 	util/sstream.h \
 	util/stacktrace.h \
 	util/static_trace.h \
 	util/string_fwd.h \
-	util/sublist.h \
-	util/sublist.tcc \
 	util/type_traits.h \
-	util/unique_list.h \
-	util/unique_list.tcc \
-	util/using_istream.h \
-	util/using_ostream.h \
 	util/what_fwd.h \
-	util/what.h \
-	util/what.tcc \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
@@ -330,6 +333,11 @@ UTIL_HEADER_FILES = \
 	util/obsolete/ptrs_fwd.h \
 	util/obsolete/count_ptr.h \
 	util/obsolete/count_ptr_fwd.h
+
+# These are snippet include files that need not stand alone
+UTIL_NOCHECK_HEADER_FILES = \
+	util/using_istream.h \
+	util/using_ostream.h
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libart___la_SOURCES = \
@@ -341,8 +349,8 @@ libart___la_SOURCES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc \
 	lexer/art_lex.h \
-	$(AST_CC_FILES) $(AST_H_FILES) \
-	$(OBJECT_CC_FILES) $(OBJECT_H_FILES) \
+	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
+	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	Object/art_object_IO.cc \
 	config.h \
@@ -359,7 +367,19 @@ libfangutil_la_SOURCES = \
 	util/static_trace.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc \
-	$(UTIL_HEADER_FILES)
+	$(UTIL_HEADER_FILES) $(UTIL_TCC_FILES) \
+	$(UTIL_NOCHECK_HEADER_FILES)
+
+ALL_HEADER_FILES = \
+	$(UTIL_HEADER_FILES) \
+	$(OBJECT_H_FILES) \
+	$(AST_H_FILES)
+# and a few more miscellaneous
+
+ALL_TCC_FILES = \
+	$(UTIL_TCC_FILES) \
+	$(OBJECT_TCC_FILES) \
+	$(AST_TCC_FILES)
 
 # note: Object/art_object_IO.cc only contains explicit template instantiations
 
@@ -476,6 +496,19 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 # art__2obj_CPPFLAGS = $(AM_CPPFLAGS)
 # artobjdump_CPPFLAGS = $(AM_CPPFLAGS)
 
+EMPTY_SOURCE = $(srcdir)/test/header_test.cc
+
+.h.hchk:
+	$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+
+.tcc.hchk:
+	$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+
+# there are a few headers we want exempt from stand-alone testing
+Object/art_object_extern_templates.hchk:
+	$(TOUCH) $@
+	$(CHMOD) +x $@
+
 EXTRA_DIST = \
 	parser/lexyacc-prefix.awk \
 	parser/common-output-to-C.awk \
@@ -487,6 +520,7 @@ EXTRA_DIST = \
 	parser/yyerror_bison_hack.awk \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
+	test/header_test.cc \
 	util/ChangeLog \
 	util/README \
 	util/TODO \
@@ -496,7 +530,17 @@ EXTRA_DIST = \
 	NOTES \
 	wc-l
 
-TESTS = art_persistent_table
+# NOTE: subdirectories which will not have .o,.lo object files built
+# will not be generated in the _build tree of the distcheck.
+# This means we have to fake an object file in each subdirectory
+# containing headers we want to check for standalone-ness.  
+# Really, they should just be able to link to "test/header_test.cc"
+# Make links in BUILT_SOURCES.  
+HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.hchk)
+
+TESTS = $(HEADER_TCC_TESTS) art_persistent_table
+
+check-headers: $(HEADER_TCC_TESTS)
 
 CLEANPARSER = \
 	parser/yacc_or_bison.h \
@@ -525,7 +569,8 @@ CLEANLEXER = \
 	lexer/libbogus_la-art++-lex.lo \
 	lexer/libbogus_la-art++-lex.$(OBJEXT)
 
-CLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
+
+CLEANFILES = $(CLEANPARSER) $(CLEANLEXER) $(HEADER_TCC_TESTS)
 
 DISTCLEANFILES = 
 
@@ -534,6 +579,9 @@ clean-parser:
 
 clean-lexer:
 	-$(RM) $(CLEANLEXER)
+
+clean-header-tests:
+	-$(RM) $(HEADER_TCC_TESTS)
 
 clean-AST:
 	-$(RM) AST/*.$(OBJEXT)
@@ -546,7 +594,7 @@ clean-Object:
 CLEANSUBDIRS = lexer parser AST Object util
 
 # implies CLEANFILES
-clean-local: clean-AST clean-Object clean-lexer clean-parser
+clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests
 	for d in $(CLEANSUBDIRS); do \
 		$(RM) $$d/*.loT ; \
 	done

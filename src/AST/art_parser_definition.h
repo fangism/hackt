@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.13 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_definition.h,v 1.14 2005/05/22 06:18:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -57,7 +57,7 @@ protected:
 	const excl_ptr<const token_identifier>		id;
 public:
 	signature_base(const template_formal_decl_list_pair* tf, 
-		const token_identifier* i) : temp_spec(tf), id(i) { }
+		const token_identifier* i);
 
 virtual	~signature_base();
 

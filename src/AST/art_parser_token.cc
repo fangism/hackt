@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.27 2005/05/20 19:28:34 fang Exp $
+	$Id: art_parser_token.cc,v 1.28 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -66,6 +66,14 @@ namespace ART {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using entity::pint_const;
+using entity::pbool_const;
+
+// these are built-in instance references, not types.  
+using entity::pbool_def;
+using entity::pint_def;
+using entity::bool_def;
+using entity::int_def;
 
 //=============================================================================
 // class terminal definitions

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.5 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_identifier.h,v 1.6 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_IDENTIFIER_H__
@@ -12,7 +12,7 @@
 
 namespace ART {
 using util::sublist;
-using namespace util::memory;		// for experimental pointer classes
+using util::memory::excl_ptr;
 
 namespace parser {
 //=============================================================================

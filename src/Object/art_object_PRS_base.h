@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.2 2005/05/19 18:43:30 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.3 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
@@ -26,6 +26,7 @@ using std::istream;
 using std::ostream;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
+using util::memory::sticky_ptr;
 using util::persistent;
 using util::persistent_object_manager;
 //=============================================================================

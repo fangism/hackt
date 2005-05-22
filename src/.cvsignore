@@ -15,4 +15,5 @@ core.*
 *.artobj
 .gdb_history
 *.swp
+*.hchk
 

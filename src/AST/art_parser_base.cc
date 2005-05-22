@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.23 2005/05/20 19:28:34 fang Exp $
+	$Id: art_parser_base.cc,v 1.24 2005/05/22 06:18:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -37,6 +37,7 @@
 #include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -61,6 +62,8 @@ SPECIALIZE_UTIL_WHAT(ART::parser::concrete_type_ref, "(type-ref)")
 //=============================================================================
 namespace ART {
 namespace parser {
+using std::back_inserter;
+using entity::dynamic_param_expr_list;
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;

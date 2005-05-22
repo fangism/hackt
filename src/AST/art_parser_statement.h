@@ -1,13 +1,14 @@
 /**
 	\file "AST/art_parser_statement.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_statement.h,v 1.5 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_statement.h,v 1.6 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_STATEMENT_H__
 #define __AST_ART_PARSER_STATEMENT_H__
 
-#include "AST/art_parser_base.h"
+#include "AST/art_parser_fwd.h"
+#include "AST/art_parser_expr_base.h"
 
 namespace ART {
 namespace parser {

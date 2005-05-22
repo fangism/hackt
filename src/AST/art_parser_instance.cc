@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.25 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -84,7 +84,11 @@ using std::accumulate;
 using std::_Select1st;
 using std::_Select2nd;
 using std::find;
+using entity::instance_reference_base;
+using entity::simple_instance_reference;
+using entity::aliases_connection_base;
 using entity::instance_reference_connection;
+using entity::port_connection;
 
 //=============================================================================
 // class instance_management method definitions

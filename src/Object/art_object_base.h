@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.28 2005/05/13 21:24:30 fang Exp $
+	$Id: art_object_base.h,v 1.29 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_H__
@@ -13,7 +13,7 @@
 #include "Object/art_object_fwd.h"
 #include "util/macros.h"
 
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
 	// need complete definition (never_ptr members)
 
 //=============================================================================
@@ -27,7 +27,7 @@ namespace entity {
 //=============================================================================
 USING_LIST
 using std::ostream;
-using namespace util::memory;
+using util::memory::never_ptr;
 
 //=============================================================================
 // general non-member functions
@@ -114,7 +114,7 @@ public:
 			Someone else should have responsibility for deleting.  
 	 */
 	explicit
-	object_handle(never_ptr<const object> o);
+	object_handle(const never_ptr<const object> o);
 
 	/**
 		No intention to de-allocate reference object.  

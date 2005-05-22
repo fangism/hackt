@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.3 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_range.cc,v 1.4 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -23,6 +23,7 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable

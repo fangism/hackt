@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.15 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_prs.cc,v 1.16 2005/05/22 06:18:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -25,6 +25,7 @@
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
 #define	DESTRUCTOR_INLINE
@@ -41,6 +42,7 @@ namespace ART {
 namespace parser {
 namespace PRS {
 #include "util/using_ostream.h"
+using entity::process_definition;
 
 //=============================================================================
 // class body_item method definitions

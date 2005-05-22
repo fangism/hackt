@@ -1,5 +1,32 @@
 "ChangeLog"
 
+2005-05-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-39:
+	  Source organization revision.
+	  Instated really anal-retentive "standalone header" tests, 
+		affecting headers in all subdirectories.  
+	  New Makefile targets:
+		check-headers: compiles each {.h,.tcc} file into own executable
+			(empty main) to test whether header file depends on
+			other headers not already included.  
+			Nobody likes a header that only works when other
+			(unknown) headers are included.  
+		clean-header-tests: basically rm -rf *.hchk
+		check: always builds and runs all *.hchk's now.
+	  Finally conform to rule: NO "using namespace ...;" in header files, 
+		only allowed in source .cc files.  
+	  Had to painstakingly explicitly include proper pointer-class
+		sources where I was plain lazy before and just included
+		"util/memory/pointer_classes.h".  
+	  Split up some forward declaration files in util and Object for 
+		modularity, minimizing preprocessing in some cases.  
+	  Created "util/size_t.h" which includes (conditional on configure)
+		<cstddef> for the declaration of size_t.  
+	  Making this revision distcheck required some finesse with
+		Makefile.am.  
+
+
 2005-05-20	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-38:

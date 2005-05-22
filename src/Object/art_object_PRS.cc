@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.4 2005/05/20 20:30:42 fang Exp $
+	$Id: art_object_PRS.cc,v 1.5 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -20,6 +20,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
+#include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/likely.h"
 #include "util/stacktrace.h"

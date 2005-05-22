@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.21 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22 2005/05/22 06:18:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -36,6 +36,7 @@
 
 #include "util/what.h"		// already included in "art_parser.tcc"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -71,6 +72,11 @@ namespace ART {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using entity::enum_datatype_def;
+using entity::user_def_chan;
+using entity::user_def_datatype;
+using entity::process_definition;
+using entity::typedef_base;
 
 //=============================================================================
 // abstract class prototype method definitions
@@ -94,6 +100,12 @@ definition::~definition() {
 
 //=============================================================================
 // class signature_base method definitions
+
+inline
+signature_base::signature_base(const template_formal_decl_list_pair* tf,
+		const token_identifier* i) :
+		temp_spec(tf), id(i) {
+}
 
 inline
 signature_base::~signature_base() {

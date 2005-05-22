@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.33 2005/05/13 21:24:29 fang Exp $
+ 	$Id: art_object_base.cc,v 1.34 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_CC__
@@ -54,7 +54,7 @@ object::bogus(void) const { }
 	\param o pointer to object to be wrapped, 
 		which may not be another handle.  
  */
-object_handle::object_handle(never_ptr<const object> o) :
+object_handle::object_handle(const never_ptr<const object> o) :
 		object(), obj(*o) {
 	INVARIANT(!o.is_a<const object_handle>());
 }

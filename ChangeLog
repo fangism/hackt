@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-05-22	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-39:
+	  Major housework with headers, making them 'standalone'.
+		See src/ChangeLog for details.  
+
+
 2005-05-20	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-38:

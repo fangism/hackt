@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.23 2005/05/13 21:24:29 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.24 2005/05/22 06:18:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
@@ -18,6 +18,7 @@
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_assign.tcc"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace util {
@@ -37,6 +38,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class param_expression_assignment method definitions
