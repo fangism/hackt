@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.1 2005/05/20 19:28:41 fang Exp $
+	$Id: main_funcs.cc,v 1.2 2005/05/22 20:07:22 fang Exp $
  */
 
 #include <iostream>
@@ -23,12 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.h"
 
 // forward declarations needed for YSTYPE
-#include "AST/art_parser_fwd.h"
-#include "AST/art_parser_chp_fwd.h"
-#include "AST/art_parser_hse_fwd.h"
-#include "AST/art_parser_prs_fwd.h"
 #include "parser/yacc_or_bison.h"	// configuration-generated
-using namespace ART::parser;
 #include "parser/art++-parse-prefix.h"	// for YYSTYPE
 using util::memory::excl_ptr;
 

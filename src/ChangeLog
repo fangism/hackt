@@ -2,6 +2,19 @@
 
 2005-05-22	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-40:
+	  Lordy, lordy! Snapshot forty!  (This epoch is maturing...)
+	  Continued general maintenance:
+	  Makefile.am improvements on standalone header validation.  
+		Reorganized macro file lists a bit.  
+	  generated parser/art++-parse-prefix.h now includes
+		(new) "parser/art++-unioin.h" for necessary AST
+		class forward declarations to define the YYSTYPE union.  
+	  Distribution (distcheck) is still immaculate.  
+
+
+2005-05-22	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-39:
 	  Source organization revision.
 	  Instated really anal-retentive "standalone header" tests, 

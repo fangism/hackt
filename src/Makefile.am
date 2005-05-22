@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.60 2005/05/22 06:18:28 fang Exp $
+#	$Id: Makefile.am,v 1.61 2005/05/22 20:07:19 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -46,6 +46,9 @@ bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
 # dirgen is completely bogus, workaround to corce directory generation
 noinst_PROGRAMS = dirgen art_persistent_table getopt_test
 
+# convenience libraries
+noinst_LTLIBRARIES = libart++.la libbogus.la libfangutil.la
+
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 
@@ -68,17 +71,13 @@ art_persistent_table_LDADD = libart++.la libfangutil.la
 
 getopt_test_SOURCES = test/getopt_test.cc
 
-# convenience libraries
-noinst_LTLIBRARIES = libart++.la libbogus.la libfangutil.la
-
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
-
-dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
-
 # need these first!  (easy to just stick them here)
 BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
-	parser/art++-parse.output.h \
-	$(PHONYSOURCES)
+	parser/art++-parse.output.h
+
+# phony program to cause _build directories to be generated on distcheck
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
+dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
 # subdirectories, that are needed for make distcheck, for check-headers
@@ -98,14 +97,6 @@ util/obsolete/dummy.cc:
 libbogus_la_SOURCES = \
 	lexer/art++-lex.ll \
 	parser/art++-parse.yy
-
-# parser/libbogus_la-art++-parser.$(OBJEXT) \
-#	parser/libbogus_la-art++-parser.lo \
-#	parser/art++-parse.cc : parser/art++-parse.output.h
-
-# parser/art++-parse-prefix.$(OBJEXT) \
-#	parser/art++-parse-prefix.lo \
-#	parser/art++-parse-prefix.cc : parser/art++-parse.output.h
 
 AST_CC_FILES = \
 	AST/art_parser_base.cc \
@@ -179,7 +170,8 @@ OBJECT_CC_FILES = \
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
 	Object/art_object_instance_pint.cc \
-	Object/art_object_instance_pbool.cc
+	Object/art_object_instance_pbool.cc \
+	Object/art_object_IO.cc
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
@@ -223,6 +215,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_value_reference.h \
 	Object/art_object_PRS_base.h
 
+# template definition header files
 UTIL_TCC_FILES = \
 	util/STL/list.tcc \
 	util/STL/map.tcc \
@@ -324,6 +317,8 @@ UTIL_HEADER_FILES = \
 	util/static_trace.h \
 	util/string_fwd.h \
 	util/type_traits.h \
+	util/using_istream.h \
+	util/using_ostream.h \
 	util/what_fwd.h \
 	util/binders.h \
 	util/compose.h \
@@ -334,31 +329,7 @@ UTIL_HEADER_FILES = \
 	util/obsolete/count_ptr.h \
 	util/obsolete/count_ptr_fwd.h
 
-# These are snippet include files that need not stand alone
-UTIL_NOCHECK_HEADER_FILES = \
-	util/using_istream.h \
-	util/using_ostream.h
-
-# the generated lexer and parser sources aren't supposed to be distributed!
-libart___la_SOURCES = \
-	parser/yacc_or_bison.h \
-	parser/art++-parse-prefix.h \
-	parser/art++-parse-prefix.cc \
-	parser/art++-union.cc \
-	parser/art++-parse.output.h \
-	lexer/art++-lex-prefix.cc \
-	lexer/art_lex.cc \
-	lexer/art_lex.h \
-	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
-	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
-	$(OBJECT_CC_NO_H_FILES) \
-	Object/art_object_IO.cc \
-	config.h \
-	art++.h \
-	main/main_funcs.cc \
-	main/main_funcs.h
-
-libfangutil_la_SOURCES = \
+UTIL_CC_FILES = \
 	util/IO_utils.cc \
 	util/indent.cc \
 	util/persistent.cc \
@@ -366,15 +337,42 @@ libfangutil_la_SOURCES = \
 	util/stacktrace.cc \
 	util/static_trace.cc \
 	util/memory/thread_lock.cc \
-	util/memory/ref_count_pool.cc \
-	$(UTIL_HEADER_FILES) $(UTIL_TCC_FILES) \
-	$(UTIL_NOCHECK_HEADER_FILES)
+	util/memory/ref_count_pool.cc
+
+PARSER_H_FILES = \
+	parser/yacc_or_bison.h \
+	parser/art++-parse-prefix.h \
+	parser/art++-union.h \
+	parser/art++-parse.output.h \
+	lexer/art_lex.h
+
+PARSER_CC_FILES = \
+	parser/art++-parse-prefix.cc \
+	parser/art++-union.cc \
+	lexer/art++-lex-prefix.cc \
+	lexer/art_lex.cc
+
+# the generated lexer and parser sources aren't supposed to be distributed!
+libart___la_SOURCES = \
+	$(PARSER_CC_FILES) $(PARSER_H_FILES) \
+	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
+	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
+	$(OBJECT_CC_NO_H_FILES) \
+	config.h \
+	art++.h \
+	main/main_funcs.cc \
+	main/main_funcs.h
+# note "art+.h" is deprecated, no longer used
+
+libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 
 ALL_HEADER_FILES = \
 	$(UTIL_HEADER_FILES) \
 	$(OBJECT_H_FILES) \
-	$(AST_H_FILES)
-# and a few more miscellaneous
+	$(AST_H_FILES) \
+	$(PARSER_H_FILES) \
+	config.h \
+	main/main_funcs.h
 
 ALL_TCC_FILES = \
 	$(UTIL_TCC_FILES) \
@@ -405,8 +403,9 @@ parser/art++-parse-prefix.cc: parser/art++-parse.cc
 endif
 
 parser/art++-parse-prefix.h: parser/art++-parse.h
+	$(ECHO) "#include \"parser/art++-union.h\"" > $@
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) $? > $@
+		-v PREFIX=$(ARTXX_YACC_PREFIX) $? >> $@
 
 lexer/art++-lex-prefix.cc: lexer/art++-lex.cc
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
@@ -455,8 +454,8 @@ parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-par
 		exit 1 ; \
 	fi
 	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
-		-f $(YACC_UNION_SCRIPT) \
-		$(YACC_UNION_SCRIPT_ARGS) parser/art++-parse.output > $@
+		-f $(YACC_UNION_SCRIPT) $(YACC_UNION_SCRIPT_ARGS) \
+		parser/art++-parse.output > $@
 
 
 # AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
@@ -499,15 +498,22 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
 .h.hchk:
-	$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+	@$(ECHO) "Validating $< ... "
+	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 
 .tcc.hchk:
-	$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+	@$(ECHO) "Validating $< ... "
+	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 
 # there are a few headers we want exempt from stand-alone testing
 Object/art_object_extern_templates.hchk:
-	$(TOUCH) $@
-	$(CHMOD) +x $@
+	@$(TOUCH) $@
+
+util/using_istream.hchk:
+	@$(TOUCH) $@
+
+util/using_ostream.hchk:
+	@$(TOUCH) $@
 
 EXTRA_DIST = \
 	parser/lexyacc-prefix.awk \
@@ -538,47 +544,39 @@ EXTRA_DIST = \
 # Make links in BUILT_SOURCES.  
 HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.hchk)
 
-TESTS = $(HEADER_TCC_TESTS) art_persistent_table
+TESTS = art_persistent_table
 
 check-headers: $(HEADER_TCC_TESTS)
 
+all-local: check-headers
+
 CLEANPARSER = \
 	parser/yacc_or_bison.h \
-	parser/art++-parse.$(OBJEXT) \
-	parser/art++-parse.lo \
 	parser/art++-parse.cc \
 	parser/art++-parse.h \
-	parser/art++-parse-prefix.lo \
-	parser/art++-parse-prefix.$(OBJEXT) \
 	parser/art++-parse-prefix.cc \
 	parser/art++-parse-prefix.h \
 	parser/art++-parse.output \
 	parser/art++-parse.output.h \
-	parser/libbogus_la-art++-parse.lo \
-	parser/libbogus_la-art++-parse.$(OBJEXT) \
-	parser/art++-union.lo \
-	parser/art++-union.$(OBJEXT) \
 	parser/art++-union.cc \
 	parser/art++.types
 
 CLEANLEXER = \
-	lexer/art++-lex-prefix.$(OBJEXT) \
-	lexer/art++-lex-prefix.lo \
 	lexer/art++-lex-prefix.cc \
-	lexer/art++-lex.cc \
-	lexer/libbogus_la-art++-lex.lo \
-	lexer/libbogus_la-art++-lex.$(OBJEXT)
+	lexer/art++-lex.cc
 
 
-CLEANFILES = $(CLEANPARSER) $(CLEANLEXER) $(HEADER_TCC_TESTS)
+CLEANFILES =
 
-DISTCLEANFILES = 
+DISTCLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 
 clean-parser:
 	-$(RM) $(CLEANPARSER)
+	-$(RM) parser/*.$(OBJEXT) parser/*.lo
 
 clean-lexer:
 	-$(RM) $(CLEANLEXER)
+	-$(RM) lexer/*.$(OBJEXT) lexer/*.lo
 
 clean-header-tests:
 	-$(RM) $(HEADER_TCC_TESTS)
