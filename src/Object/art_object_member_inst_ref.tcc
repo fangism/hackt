@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_member_inst_ref.tcc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.6 2005/05/10 04:51:19 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.7 2005/05/23 01:02:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -11,6 +11,7 @@
 #include "util/what.h"
 #include "util/persistent_object_manager.h"
 #include "Object/art_object_member_inst_ref.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {

@@ -3,4 +3,5 @@
 dummy.cc
 .deps
 .dirstamp
+*.tchk
 

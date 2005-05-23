@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/list.h"
 	Class declaration for std::list wrapper.
-	$Id: list.h,v 1.2 2005/05/10 04:51:32 fang Exp $
+	$Id: list.h,v 1.3 2005/05/23 01:02:37 fang Exp $
  */
 
 #ifndef	__UTIL_STL_LIST_H__
@@ -252,8 +252,8 @@ public:
 
 // comparison operators
 
-}
-}
+}	// end namespace STL
+}	// end namespace util
 
 // not intended for external use
 #undef LIST_PARENT

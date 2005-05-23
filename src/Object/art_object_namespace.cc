@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.25 2005/05/20 19:28:38 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.26 2005/05/23 01:02:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -48,6 +48,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_type_hash.h"
 
+#include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -1452,6 +1453,20 @@ never_ptr<const name_space>
 name_space::lookup_open_alias(const string& id) const {
 	// need static cast to guarantee non-modification
 	return static_cast<const alias_map_type&>(open_aliases)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+void
+name_space::collect_namespaces(namespace_collection_type& l) const {
+	used_id_map_type::const_iterator i = used_id_map.begin();
+	const used_id_map_type::const_iterator e = used_id_map.end();
+	// consider transform_if
+	for ( ; i!=e; i++) {
+		namespace_collection_type::value_type
+			p(i->second.is_a<name_space>());
+		if (p)	l.push_back(p);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

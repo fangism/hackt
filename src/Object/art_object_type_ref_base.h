@@ -1,16 +1,18 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.12 2005/05/22 06:24:19 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.13 2005/05/23 01:02:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
 #define	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
 
 #include "util/macros.h"
-#include "util/memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 #include "util/persistent.h"		// for persistent object interface
 
+#include "Object/art_object_util_types.h"
 #include "Object/art_object_definition_base.h"
 
 #define	USE_NEW_TEMPLATE_ACTUALS		0

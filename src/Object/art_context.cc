@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.32 2005/05/19 18:43:29 fang Exp $
+ 	$Id: art_context.cc,v 1.33 2005/05/23 01:02:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -29,6 +29,7 @@
 #include "Object/art_object_module.h"
 
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.34 2005/05/19 18:43:35 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35 2005/05/23 01:02:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -35,6 +35,7 @@
 
 #include "util/sstream.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 // specializations

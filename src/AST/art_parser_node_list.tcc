@@ -2,7 +2,7 @@
 	\file "AST/art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.8 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.9 2005/05/23 01:02:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_NODE_LIST_TCC__
@@ -23,6 +23,7 @@
 #include "util/stacktrace.h"
 #include "util/type_traits.h"
 #include "util/binders.h"
+#include "util/memory/count_ptr.tcc"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
 // unless you want the contained class methods to be inlined!!!

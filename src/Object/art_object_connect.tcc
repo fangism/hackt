@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.6 2005/05/10 04:51:11 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.7 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -29,6 +29,7 @@
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
+#include "util/memory/count_ptr.tcc"
 
 // conditional defines, after including "stactrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -54,6 +55,7 @@ using util::persistent_traits;
 using std::mem_fun_ref;
 using std::transform;
 using util::dereference;
+using util::memory::never_ptr;
 USING_UTIL_COMPOSE
 USING_STACKTRACE
 

@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.18 2005/05/22 06:18:31 fang Exp $
+	$Id: art_context.h,v 1.19 2005/05/23 01:02:33 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -14,7 +14,7 @@
 #include "util/STL/list.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "Object/art_object_fwd.h"
+#include "Object/art_object_util_types.h"
 #include "util/boolean_types.h"
 
 namespace ART {

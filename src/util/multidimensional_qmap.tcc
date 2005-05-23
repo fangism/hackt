@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_qmap.tcc"
 	Template method definitions for multidimensional_qmap class.
-	$Id: multidimensional_qmap.tcc,v 1.3 2005/05/10 04:51:26 fang Exp $
+	$Id: multidimensional_qmap.tcc,v 1.4 2005/05/23 01:02:37 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
@@ -138,7 +138,7 @@ multidimensional_qmap<D,K,T,L>::dump(ostream& o, const string& pre) const {
 	const_map_iterator i = index_map.begin();
 	const const_map_iterator e = index_map.end();
 	for ( ; i!=e; i++) {
-		ostringstream p;
+		std::ostringstream p;
 		p << pre << '[' << i->first << ']';
 		i->second.dump(o, p.str());
 	}

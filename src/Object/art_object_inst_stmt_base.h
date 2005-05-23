@@ -1,15 +1,15 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.9 2005/05/22 06:24:17 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.10 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 
 #include <string>
-#include "Object/art_object_fwd.h"
 #include "Object/art_object_instance_management_base.h"
+#include "Object/art_object_util_types.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"

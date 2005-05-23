@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.3 2005/05/10 04:51:26 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.4 2005/05/23 01:02:37 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -9,6 +9,7 @@
 
 #include "util/multikey_assoc.h"
 
+#include <iostream>
 #include <limits>
 #include <functional>
 #include <algorithm>

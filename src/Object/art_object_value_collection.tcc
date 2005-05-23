@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.3 2005/05/10 04:51:21 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.4 2005/05/23 01:02:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -24,10 +24,9 @@
 #include <algorithm>
 
 #include "Object/art_object_value_collection.h"
-// experimental: suppressing automatic template instantiation
-#include "Object/art_object_extern_templates.h"
 
 #include "util/memory/list_vector_pool.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 #include "util/STL/list.tcc"
 #include "util/multikey_qmap.tcc"		// include "qmap.tcc"
@@ -38,6 +37,9 @@
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
+
+// experimental: suppressing automatic template instantiation
+// #include "Object/art_object_extern_templates.h"
 
 //=============================================================================
 namespace ART {
@@ -52,6 +54,8 @@ USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
+using util::memory::never_ptr;
+using util::multikey_generator;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

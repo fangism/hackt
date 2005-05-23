@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.6 2005/05/10 04:51:14 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.7 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -14,6 +14,7 @@
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 #include "util/persistent_object_manager.tcc"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {

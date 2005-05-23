@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.12 2005/05/22 06:23:54 fang Exp $
+	$Id: art_object_expr_base.h,v 1.13 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -10,6 +10,7 @@
 #include "Object/art_object_base.h"
 #include "util/persistent.h"
 #include "util/boolean_types.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 //=============================================================================
 namespace ART {
@@ -21,6 +22,7 @@ using util::persistent;
 using util::good_bool;
 using util::bad_bool;
 using util::memory::excl_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**

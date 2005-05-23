@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.20 2005/05/22 06:24:19 fang Exp $
+ 	$Id: art_object_module.cc,v 1.21 2005/05/23 01:02:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
@@ -92,10 +92,10 @@ module::set_global_namespace(excl_ptr<name_space>& n) {
 		pointers to namespaces.  
  */
 void
-module::collect_namespaces(namespace_collection_type& l) const {
+module::ollect_namespaces(namespace_collection_type& l) const {
 	INVARIANT(global_namespace);
 	l.push_back(global_namespace);
-	// global_namespace->collect_namespace(l);
+	global_namespace->collect_namespace(l);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

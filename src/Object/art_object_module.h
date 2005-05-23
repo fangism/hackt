@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.15 2005/05/22 06:24:19 fang Exp $
+	$Id: art_object_module.h,v 1.16 2005/05/23 01:02:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -9,6 +9,7 @@
 
 #include <string>
 #include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
 #include "Object/art_object_instance_management_base.h"
 #include "util/persistent.h"
 
@@ -30,8 +31,6 @@ using util::persistent_object_manager;
 class module : public persistent , public sequential_scope {
 friend class context;
 	typedef	module				this_type;
-public:
-	typedef	list<never_ptr<name_space> >	namespace_collection_type;
 protected:
 	/**
 		Name of the file.

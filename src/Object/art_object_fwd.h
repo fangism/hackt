@@ -1,25 +1,19 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.12 2005/05/22 06:23:55 fang Exp $
+	$Id: art_object_fwd.h,v 1.13 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
 #define	__OBJECT_ART_OBJECT_FWD_H__
 
 #include "util/size_t.h"
-
-#include "util/memory/pointer_classes_fwd.h"
-#include "util/STL/deque_fwd.h"
 #include "Object/art_object_classification_tags.h"
 #include "Object/art_object_classification_fwd.h"
 #include "Object/art_object_expr_types.h"
 
 namespace ART {
 namespace entity {
-	USING_DEQUE
-	using util::memory::never_ptr;
-	using util::memory::count_ptr;
 
 // TODO: organize into groups by where full declarations are found
 
@@ -220,26 +214,6 @@ namespace entity {
 		pbool_const_collection;
 
 	class instance_collection_stack_item;
-
-	/**
-		Value type of this needs to be more general
-		to accommodate loop and conditional scopes?
-	 */
-	// try to convert this to excl_ptr or sticky_ptr...
-	typedef count_ptr<const range_expr_list>
-			index_collection_item_ptr_type;
-
-	/**
-		UPDATE: now contains reference to instantiation_statements, 
-		which *contain* the index/range expressions.  
-
-		We keep track of the state of instance collections at
-		various program points with this container.
-
-		Eventually work with sub-types only?
-	 */
-	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
-			index_collection_type;
 
 	class unroll_context;
 

@@ -1,12 +1,12 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.61 2005/05/22 20:07:19 fang Exp $
+#	$Id: Makefile.am,v 1.62 2005/05/23 01:02:31 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
 SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), .hchk for standalone header checks
-SUFFIXES = .yy .ll .hchk
+SUFFIXES = .yy .ll .hchk .tchk
 
 include $(top_srcdir)/Make.stddef
 
@@ -211,6 +211,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_member_inst_ref.h \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h \
+	Object/art_object_util_types.h \
 	Object/art_object_value_collection.h \
 	Object/art_object_value_reference.h \
 	Object/art_object_PRS_base.h
@@ -501,7 +502,7 @@ EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 	@$(ECHO) "Validating $< ... "
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 
-.tcc.hchk:
+.tcc.tchk:
 	@$(ECHO) "Validating $< ... "
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 
@@ -542,7 +543,7 @@ EXTRA_DIST = \
 # containing headers we want to check for standalone-ness.  
 # Really, they should just be able to link to "test/header_test.cc"
 # Make links in BUILT_SOURCES.  
-HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.hchk)
+HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tchk)
 
 TESTS = art_persistent_table
 

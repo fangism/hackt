@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.28 2005/05/22 06:18:30 fang Exp $
+	$Id: art_parser_token.cc,v 1.29 2005/05/23 01:02:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.4 2005/05/10 04:51:11 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.5 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -39,6 +39,7 @@
 #include "util/persistent_object_manager.h"
 #include "util/stacktrace.h"
 #include "util/what.tcc"
+#include "util/memory/count_ptr.tcc"
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #ifndef	STACKTRACE_DTOR

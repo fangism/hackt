@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.15 2005/05/10 04:51:20 fang Exp $
+	$Id: art_object_namespace.h,v 1.16 2005/05/23 01:02:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
@@ -10,6 +10,7 @@
 #include "util/STL/list.h"
 
 #include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 	// includes <iosfwd> <string>
 
@@ -52,7 +53,9 @@ using util::persistent_object_manager;
 using parser::token_identifier;
 using parser::qualified_id_slice;
 using parser::qualified_id;
-using namespace util::memory;
+using util::memory::never_ptr;
+using util::memory::some_ptr;
+using util::memory::excl_ptr;
 using util::qmap;
 using util::good_bool;
 using util::bad_bool;
@@ -410,6 +413,9 @@ public:
 
 	never_ptr<const name_space>
 	lookup_open_alias(const string& id) const;
+
+	void
+	collect_namespaces(namespace_collection_type&) const;
 
 // type-specific counterparts, obsolete
 

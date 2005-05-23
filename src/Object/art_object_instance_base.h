@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.15 2005/05/22 06:24:17 fang Exp $
+	$Id: art_object_instance_base.h,v 1.16 2005/05/23 01:02:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -14,6 +14,7 @@
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 	// includes <iosfwd>
 
@@ -24,7 +25,6 @@ namespace ART {
 namespace entity {
 //=============================================================================
 USING_LIST
-USING_DEQUE
 using std::istream;
 using std::string;
 using util::bad_bool;

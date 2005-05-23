@@ -2,6 +2,18 @@
 
 2005-05-22	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-41:
+	  Header checks: now using .tchk for .tcc files so suffix rules
+		don't clash.  
+	  Added Object/art_object_util_types.h, which inherited some
+		less essential typedefs from Object/art_object_fwd.h.
+	  Chased down a few cases of using namespace in headers, 
+		and added count_ptr.tcc where necessary.  
+	  Few more spots of header fixes.  
+	  
+
+2005-05-22	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-40:
 	  Lordy, lordy! Snapshot forty!  (This epoch is maturing...)
 	  Continued general maintenance:

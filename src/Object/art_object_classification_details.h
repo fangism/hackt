@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.6 2005/05/10 04:51:10 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7 2005/05/23 01:02:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -10,6 +10,7 @@
 
 #include <iosfwd>
 #include "Object/art_object_fwd.h"
+#include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
 #include "util/ring_node_fwd.h"
 
@@ -24,6 +25,8 @@ using std::ostream;
 using util::packed_array_generic;
 using util::ring_node_derived;
 using util::persistent_object_manager;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 /**
 	Default definition is empty, must specialize for each class.  
