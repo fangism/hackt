@@ -1,12 +1,13 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.62 2005/05/23 01:02:31 fang Exp $
+#	$Id: Makefile.am,v 1.63 2005/05/24 02:38:09 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
 SUBDIRS = util/test .
 
-# .yy for yacc (C++), .ll for lex (C++), .hchk for standalone header checks
-SUFFIXES = .yy .ll .hchk .tchk
+# .yy for yacc (C++), .ll for lex (C++), 
+# .hchk and .tccchk for standalone header checks
+SUFFIXES = .yy .ll .hchk .tccchk
 
 include $(top_srcdir)/Make.stddef
 
@@ -41,7 +42,7 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = artc art++2obj artobjdump artobjunroll
+bin_PROGRAMS = artc art++2obj artobjdump artobjunroll prsobjdemo
 
 # dirgen is completely bogus, workaround to corce directory generation
 noinst_PROGRAMS = dirgen art_persistent_table getopt_test
@@ -65,6 +66,9 @@ artobjdump_LDADD = libart++.la libfangutil.la
 
 artobjunroll_SOURCES = artobjunroll.cc
 artobjunroll_LDADD = libart++.la libfangutil.la
+
+prsobjdemo_SOURCES = prsobjdemo.cc
+prsobjdemo_LDADD = libart++.la libfangutil.la
 
 art_persistent_table_SOURCES = test/art_persistent_table.cc
 art_persistent_table_LDADD = libart++.la libfangutil.la
@@ -182,6 +186,8 @@ OBJECT_TCC_FILES = \
 	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_ref.tcc \
 	Object/art_object_member_inst_ref.tcc \
+	Object/art_object_module.tcc \
+	Object/art_object_namespace.tcc \
 	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.tcc
 
@@ -502,7 +508,7 @@ EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 	@$(ECHO) "Validating $< ... "
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 
-.tcc.tchk:
+.tcc.tccchk:
 	@$(ECHO) "Validating $< ... "
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 
@@ -543,7 +549,7 @@ EXTRA_DIST = \
 # containing headers we want to check for standalone-ness.  
 # Really, they should just be able to link to "test/header_test.cc"
 # Make links in BUILT_SOURCES.  
-HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tchk)
+HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
 
 TESTS = art_persistent_table
 

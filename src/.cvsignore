@@ -8,6 +8,7 @@ artc
 art++2obj
 artobjdump
 artobjunroll
+prsobjdemo
 art_persistent_table
 getopt_test
 dirgen

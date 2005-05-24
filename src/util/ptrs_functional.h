@@ -3,7 +3,7 @@
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
- *	$Id: ptrs_functional.h,v 1.7 2005/05/10 04:51:29 fang Exp $
+ *	$Id: ptrs_functional.h,v 1.8 2005/05/24 02:38:13 fang Exp $
  */
 
 #ifndef	__UTIL_PTRS_FUNCTIONAL_H__
@@ -11,7 +11,10 @@
 
 #include <functional>
 
-namespace std {
+namespace util {
+using std::unary_function;
+using std::binary_function;
+
 //=============================================================================
 // adapters for pointer-class member functors
 //=============================================================================
@@ -193,7 +196,7 @@ mem_fun(R (T::*f)(A) const, const P<T>& null) {
 }
 
 //=============================================================================
-}	// end namespace std
+}	// end namespace util
 
 #endif	// __UTIL_PTRS_FUNCTIONAL_H__
 

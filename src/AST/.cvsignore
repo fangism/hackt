@@ -6,5 +6,5 @@
 *.swp
 ignore
 *.hchk
-*.tchk
+*.tccchk
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.2 2005/05/19 18:43:31 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.3 2005/05/24 02:38:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -126,6 +126,12 @@ public:
 
 	void
 	add_production_rule(excl_ptr<PRS::rule>&);
+
+	void
+	expand_prs_complements(void);
+
+	void
+	compact_prs_references(void);
 
 // methods for object file I/O
 public:

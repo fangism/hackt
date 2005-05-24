@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.5 2005/05/22 06:18:31 fang Exp $
+	$Id: art_object_PRS.cc,v 1.6 2005/05/24 02:38:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -127,6 +127,31 @@ ostream&
 rule_set::dump(ostream& o) const {
 	for_each(begin(), end(), rule::dumper(o));
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_set::compact_references(void) {
+	cerr << "Fang, write PRS::rule_set::compact_references()!" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits each rule, and if can be expanded, will insert its
+	complement before the original rule.  The original rule
+	will then unset its complement flag.  
+ */
+void
+rule_set::expand_complements(void) {
+	iterator i = begin();
+	const iterator e = end();
+	for ( ; i!=e; i++) {
+		excl_ptr<rule> cmpl = (*i)->expand_complement();
+		if (cmpl) {
+			*insert(i, value_type()) = cmpl;
+			INVARIANT(!cmpl);	// transferred ownership
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

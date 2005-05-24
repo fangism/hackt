@@ -1,18 +1,24 @@
 #!/usr/bin/awk -f
+# "POM-header-filter.awk"
+# filter for text dump of persistent_object_manager's object header
+
+# NOTE: when used as a pipe redirected from stdout combined with stderr,
+#	it may crash on particular print statements.  
+#	This is probably some problem with an implementation of awk itself.  
 
 {
 if (match($0,"^Persistent Object Manager")) {
+	print;		# echo title back out
 	rewrite_header();
 } else if (match($0,"^In module created from")) {
 	gsub(": [^ ]*[ ]", ": ##FILE## ",$0);
 	print $0;
 } else {
-	print;
+	print;		# crashes???
 }
 }
 
 function rewrite_header() {
-	print;		# echo title back out
 	getline;
 	print $0 "\tsize";	# echo table header back out
 	while (getline && NF == 6) {
@@ -20,7 +26,7 @@ function rewrite_header() {
 		rewrite_header_entry($1,$2,$3,$4,$5,$6);
 	}
 	# until empty line encountered
-	print "";
+	print "";	# crashes???
 }
 
 function rewrite_header_entry(ind,addr,type,arg,hd,tl) {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.47 2005/05/22 06:23:52 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.48 2005/05/24 02:38:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2096,6 +2096,24 @@ process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
 		prs.back() = cmpl;
 		INVARIANT(!cmpl);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call to prs's compact_referenes.  
+ */
+void
+process_definition::compact_prs_references(void) {
+	prs.compact_references();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call to prs's expand_complements.  
+ */
+void
+process_definition::expand_prs_complements(void) {
+	prs.expand_complements();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

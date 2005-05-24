@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.16 2005/05/23 01:02:36 fang Exp $
+	$Id: art_object_namespace.h,v 1.17 2005/05/24 02:38:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
@@ -416,6 +416,11 @@ public:
 
 	void
 	collect_namespaces(namespace_collection_type&) const;
+
+	// defined in "Object/art_object_namespace.tcc"
+	template <class L>
+	void
+	collect(L&) const;
 
 // type-specific counterparts, obsolete
 

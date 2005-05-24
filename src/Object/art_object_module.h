@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.16 2005/05/23 01:02:35 fang Exp $
+	$Id: art_object_module.h,v 1.17 2005/05/24 02:38:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -28,7 +28,7 @@ using util::persistent_object_manager;
 	1) order-independent data
 	2) source-order-dependent data
  */
-class module : public persistent , public sequential_scope {
+class module : public persistent, public sequential_scope {
 friend class context;
 	typedef	module				this_type;
 protected:
@@ -67,6 +67,10 @@ public:
 
 	void
 	collect_namespaces(namespace_collection_type&) const;
+
+	template <class L>
+	void
+	collect(L&) const;
 
 	ostream&
 	what(ostream& o) const;

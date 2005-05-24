@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-05-23	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42:
+	  Wrote example program of what one might do with production rules
+		in an object file, in "prsobjdemo.cc".
+	  Updated header checks to use .tccchk suffix for .tcc files.  
+	  artobjunroll: check to make sure input file != output (strcmp).  
+	  name_space::collect_namepaces works recursively, as it should.  
+	  Added collect<> template method to module and namespace, 
+		defined in their respective (new) .tcc files.  
+
+
 2005-05-22	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-41:

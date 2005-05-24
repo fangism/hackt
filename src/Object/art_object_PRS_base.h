@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.3 2005/05/22 06:18:31 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.4 2005/05/24 02:38:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
@@ -52,6 +52,12 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	void
+	expand_complements(void);
+
+	void
+	compact_references(void);
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

@@ -2,12 +2,13 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.13 2005/05/22 06:18:29 fang Exp $
+	$Id: artobjunroll.cc,v 1.14 2005/05/24 02:38:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <cstring>
 
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
@@ -24,6 +25,11 @@ main(int argc, char* argv[]) {
 	if (argc != 3) {
 		cerr << "Usage: " << argv[0] <<
 			" <art-obj-infile> <art-obj-outfile>" << endl;
+		return 1;
+	}
+	if (!strcmp(argv[1], argv[2])) {
+		cerr << "The output objfile should not be the same as the input."
+			<< endl;
 		return 1;
 	}
 	if (!check_object_loadable(argv[1]).good)
