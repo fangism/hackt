@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.22 2005/05/22 06:18:29 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22.2.1 2005/05/25 00:41:46 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -489,6 +489,7 @@ process_signature::get_name(void) const {
 	return *id;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	FINISH ME.
 	Creates and returns a process definition objects with signature.
@@ -501,7 +502,7 @@ process_signature::get_name(void) const {
 		else returns NULL upon failure.  
  */
 never_ptr<const object>
-process_signature::check_build(context& c) const {
+process_signature::check_signature(context& c) const {
 	STACKTRACE("process_signature::check_build()");
 //	cerr << "process_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base>
@@ -566,13 +567,14 @@ process_prototype::rightmost(void) const {
 	return ports->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO DO: complete me!
  */
 never_ptr<const object>
 process_prototype::check_build(context& c) const {
 	STACKTRACE("process_prototype::check_build()");
-	return process_signature::check_build(c);
+	return check_signature(c);
 }
 
 //=============================================================================
@@ -603,6 +605,7 @@ process_def::rightmost(void) const {
 	return body->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	To do: port_formals in process_signature...
 	FINISH ME!!! or START ME!!!
@@ -611,7 +614,7 @@ never_ptr<const object>
 process_def::check_build(context& c) const {
 	STACKTRACE("process_def::check_build()");
 	never_ptr<const object>
-		o(process_signature::check_build(c));
+		o(check_signature(c));
 	if (!o) {
 		cerr << "ERROR checking signature for process "
 			<< get_name() << " doesn\'t match that of "

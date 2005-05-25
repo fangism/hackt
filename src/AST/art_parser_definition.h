@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.14 2005/05/22 06:18:29 fang Exp $
+	$Id: art_parser_definition.h,v 1.14.2.1 2005/05/25 00:41:46 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -25,14 +25,7 @@ public:
 	definition();
 virtual	~definition();
 
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-virtual	line_position
-	leftmost(void) const = 0;
-
-virtual	line_position
-	rightmost(void) const = 0;
+PURE_VIRTUAL_NODE_METHODS
 };	// end class definition
 
 //-----------------------------------------------------------------------------
@@ -63,8 +56,10 @@ virtual	~signature_base();
 
 PURE_VIRTUAL_NODE_METHODS
 
+#if 0
 virtual	never_ptr<const object>
 	check_build(context& c) const = 0;
+#endif
 };	// end class signature_base
 
 //=============================================================================
@@ -88,14 +83,15 @@ public:
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
 
+	// need not be virtual since never use pointers of this type...
 virtual	~process_signature();
 
 // note: non-virtual
 	const token_identifier&
 	get_name(void) const;
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+	never_ptr<const object>
+	check_signature(context& c) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------

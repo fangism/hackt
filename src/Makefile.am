@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63 2005/05/24 02:38:09 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.1 2005/05/25 00:41:45 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -169,7 +169,8 @@ OBJECT_CC_FILES = \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
 	Object/art_built_ins.cc \
-	Object/art_object_PRS.cc
+	Object/art_object_PRS.cc \
+	Object/art_object_CHP.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -220,7 +221,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_util_types.h \
 	Object/art_object_value_collection.h \
 	Object/art_object_value_reference.h \
-	Object/art_object_PRS_base.h
+	Object/art_object_PRS_base.h \
+	Object/art_object_CHP_base.h
 
 # template definition header files
 UTIL_TCC_FILES = \

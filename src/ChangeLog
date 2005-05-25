@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-05-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-01:
+	  Starting CHP-01 branch.
+	  Liberated parser::CHP classes from the old "check_build".
+		Still null implementations at the moment.  
+	  Going to fix definition checking, possibly in a sub-branch, 
+		before embarking on channel definitions and CHP.  
+	  Temporarily made chp_body in grammar optional in several places.  
+	  Coming soon: test/parser/channel.  
+
+
 2005-05-23	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42:

@@ -1,7 +1,7 @@
 # "configure.in"
 # Process this file with "autoconf" to generate the "configure" script.
 #
-#	$Id: configure.in,v 1.22 2005/05/20 19:28:11 fang Exp $
+#	$Id: configure.in,v 1.22.2.1 2005/05/25 00:41:41 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -127,6 +127,7 @@ AC_CONFIG_FILES([
 	dox/util/Makefile
 	dox/objfmt/Makefile
 	])
+#	test/parser/channel/Makefile
 
 AC_OUTPUT
 

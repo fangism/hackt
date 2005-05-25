@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21 2005/05/20 19:28:44 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.1 2005/05/25 00:41:47 fang Exp $
  */
 
 %{
@@ -41,16 +41,6 @@ util::memory::excl_ptr<root_body> AST_root;
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
 #define	DELETE_TOKEN(tok)		delete tok
-
-// kind of wasteful...
-#if 0
-#define	WRAP_ANGLE_LIST(left, list, right)				\
-	const char lc = left->get_char();				\
-	const char rc = right->get_char();				\
-	WRAP_LIST(new node_position(&lc, left->leftmost()),		\
-		list, new node_position(&rc, right->leftmost()));	\
-	DELETE_TOKEN(left); DELETE_TOKEN(right)
-#endif
 
 #define	APPEND_LIST(list, delim, item)					\
 	DELETE_TOKEN(delim); list->push_back(item)
@@ -526,7 +516,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
 %type	<_guarded_definition_body>	guarded_definition_body
 %type	<_language_body>	language_body
-%type	<_chp_stmt_list>	chp_body
+%type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
 %type	<_chp_loop>	chp_loop
@@ -969,13 +959,13 @@ defdatatype
 	;
 
 set_body
-	: SET '{' chp_body '}'
+	: SET '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
 
 get_body
-	: GET '{' chp_body '}'
+	: GET '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
@@ -1018,13 +1008,13 @@ defchan
 	;
 
 send_body
-	: SEND '{' chp_body '}'
+	: SEND '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
 
 recv_body
-	: RECV '{' chp_body '}'
+	: RECV '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
@@ -1240,6 +1230,11 @@ language_body
 
 chp_body
 	: full_chp_body_item_list { $$ = $1; }
+	;
+
+chp_body_optional
+	: chp_body { $$ = $1; }
+	| { $$ = new CHP::stmt_list(); }
 	;
 
 full_chp_body_item_list

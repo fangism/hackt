@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11 2005/05/19 18:43:26 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.1 2005/05/25 00:41:45 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -11,8 +11,15 @@
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_statement.h"
 #include "AST/art_parser_definition_item.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
+namespace entity {
+namespace CHP {
+	class action;
+	class guarded_action;
+}
+}
 namespace parser {
 /**
 	This is the namespace for the CHP sub-language.  
@@ -27,6 +34,8 @@ typedef	expr	chp_expr;
 /// CHP statement base class
 class statement {
 public:
+	typedef	count_ptr<entity::CHP::action>		return_type;
+public:
 	statement();
 
 virtual	~statement();
@@ -40,11 +49,12 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
-#if 1
-virtual	never_ptr<const object>
-	check_build(context& ) const = 0;
-#endif
-};
+#define	CHP_CHECK_STMT_PROTO						\
+	CHP::statement::return_type					\
+	check_action(context&) const
+
+virtual	CHP_CHECK_STMT_PROTO = 0;
+};	// end class statement
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -64,15 +74,15 @@ using	language_body::leftmost;
 	line_position
 	rightmost(void) const;
 
-#if 1
 	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	check_build(context&) const;
+};	// end class body
 
 //=============================================================================
 /// CHP guarded command contains an expression condition and body
 class guarded_command {
+public:
+	typedef	count_ptr<entity::CHP::guarded_action>	return_type;
 protected:
 	const excl_ptr<const chp_expr>	guard;		///< guard expression
 	const excl_ptr<const string_punctuation_type>	arrow;		///< right-arrow
@@ -92,22 +102,24 @@ virtual	ostream&
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+#define	CHP_CHECK_GC_PROTO						\
+	CHP::guarded_command::return_type				\
+	check_guarded_action(context&) const
+
+	CHP_CHECK_GC_PROTO;
+};	// end class guarded_command
 
 //=============================================================================
 /// CHP else-clause is just a special case of a guarded_command
 class else_clause : public guarded_command {
 public:
-	else_clause(const token_else* g, const string_punctuation_type* a, const stmt_list* c);
+	else_clause(const token_else* g, 
+		const string_punctuation_type* a, const stmt_list* c);
 
 	~else_clause();
 
 	ostream& what(ostream& o) const;
-};
+};	// end class else_clause
 
 //=============================================================================
 /// CHP skip statement
@@ -136,21 +148,14 @@ public:
 	line_position
 	rightmost(void) const;
 
-// using	token_keyword::where;
-
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class skip
 
 //=============================================================================
 /// CHP wait contains just an expression
 class wait : public statement {
 protected:
-//	const excl_ptr<const char_punctuation_type>	lb;	///< left bracket
-	const excl_ptr<const expr>			cond;	///< wait until condition
-//	const excl_ptr<const char_punctuation_type>	rb;	///< right bracket
+	const excl_ptr<const expr>	cond;	///< wait until condition
 public:
 	explicit
 	wait(const expr* c);
@@ -166,11 +171,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class wait
 
 //=============================================================================
 /// CHP assignment statement in binary form
@@ -195,11 +197,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class assignment
 
 //-----------------------------------------------------------------------------
 /// CHP assignment statement is only boolean
@@ -228,7 +227,8 @@ public:
 	never_ptr<const object>
 	check_build(context& ) const;
 #endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class incdec_stmt
 
 //=============================================================================
 /// CHP communication action base class
@@ -247,7 +247,8 @@ virtual	~communication();
 
 	line_position
 	leftmost(void) const;
-};
+
+};	// end class communication
 
 //-----------------------------------------------------------------------------
 /// base type for CHP communication list
@@ -274,11 +275,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class comm_list
 
 
 //-----------------------------------------------------------------------------
@@ -297,11 +295,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class send
 
 //-----------------------------------------------------------------------------
 /// CHP receive action
@@ -319,11 +314,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class receive
 
 //=============================================================================
 /// CHP selection statement abstract base class
@@ -336,7 +328,7 @@ virtual	~selection();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
-};
+};	// end class selection
 
 //=============================================================================
 typedef	node_list<const guarded_command>		det_selection_list_base;
@@ -360,11 +352,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class det_selection
 
 //=============================================================================
 typedef	node_list<const guarded_command>	nondet_selection_list_base;
@@ -388,11 +377,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class nondet_selection
 
 //=============================================================================
 typedef	node_list<const guarded_command>	prob_selection_list_base;
@@ -416,11 +402,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class prob_selection
 
 //=============================================================================
 /// CHP loop contains a list of statements
@@ -442,11 +425,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class loop
 
 //=============================================================================
 /// CHP do-until: re-enter selection statement until all guards are false
@@ -470,11 +450,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class do_until
 
 //=============================================================================
 /// CHP log statement
@@ -496,11 +473,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
-};
+	CHP_CHECK_STMT_PROTO;
+};	// end class log
 
 //=============================================================================
 }	// end namespace CHP

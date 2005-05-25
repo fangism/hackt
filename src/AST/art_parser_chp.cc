@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14 2005/05/22 06:18:29 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.1 2005/05/25 00:41:45 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -13,6 +13,7 @@
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
+#include "Object/art_object_CHP.h"
 
 #include "util/what.h"
 #include "util/memory/count_ptr.tcc"
@@ -111,10 +112,11 @@ guarded_command::rightmost(void) const {
 	return command->rightmost();
 }
 
-never_ptr<const object>
-guarded_command::check_build(context& c) const {
-	cerr << "Fang, finish CHP::guarded_command::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+guarded_command::return_type
+guarded_command::check_guarded_action(context& c) const {
+	cerr << "Fang, finish CHP::guarded_command::check_guarded_action()!"
+		<< endl;
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -157,10 +159,10 @@ skip::rightmost(void) const {
 	return kw->rightmost();
 }
 
-never_ptr<const object>
-skip::check_build(context& c) const {
-	cerr << "Fang, finish CHP::skip::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+skip::check_action(context& c) const {
+	cerr << "Fang, finish CHP::skip::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 
@@ -188,10 +190,10 @@ wait::rightmost(void) const {
 	return cond->rightmost();
 }
 
-never_ptr<const object>
-wait::check_build(context& c) const {
-	cerr << "Fang, finish CHP::wait::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+wait::check_action(context& c) const {
+	cerr << "Fang, finish CHP::wait::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 
@@ -227,10 +229,10 @@ assignment::rightmost(void) const {
 	return assign_stmt::rightmost();
 }
 
-never_ptr<const object>
-assignment::check_build(context& c) const {
-	cerr << "Fang, finish CHP::assignment::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+assignment::check_action(context& c) const {
+	cerr << "Fang, finish CHP::assignment::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 
@@ -259,10 +261,10 @@ incdec_stmt::rightmost(void) const {
 	return incdec_stmt::rightmost();
 }
 
-never_ptr<const object>
-incdec_stmt::check_build(context& c) const {
-	cerr << "Fang, finish CHP::incdec_stmt::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+incdec_stmt::check_action(context& c) const {
+	cerr << "Fang, finish CHP::incdec_stmt::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 
@@ -307,10 +309,10 @@ comm_list::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
-never_ptr<const object>
-comm_list::check_build(context& c) const {
-	cerr << "Fang, finish CHP::comm_list::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+comm_list::check_action(context& c) const {
+	cerr << "Fang, finish CHP::comm_list::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 
@@ -333,17 +335,18 @@ send::rightmost(void) const {
 	return rvalues->rightmost();
 }
 
-never_ptr<const object>
-send::check_build(context& c) const {
-	cerr << "Fang, finish CHP::send::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+send::check_action(context& c) const {
+	cerr << "Fang, finish CHP::send::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
 // class receive method definitions
 
 CONSTRUCTOR_INLINE
-receive::receive(const expr* c, const char_punctuation_type* d, const expr_list* l) :
+receive::receive(const expr* c, const char_punctuation_type* d, 
+		const expr_list* l) :
 		communication(c, d), lvalues(l) {
 	NEVER_NULL(lvalues);
 }
@@ -358,10 +361,10 @@ receive::rightmost(void) const {
 	return lvalues->rightmost();
 }
 
-never_ptr<const object>
-receive::check_build(context& c) const {
-	cerr << "Fang, finish CHP::received::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+receive::check_action(context& c) const {
+	cerr << "Fang, finish CHP::received::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
@@ -396,10 +399,10 @@ det_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
-never_ptr<const object>
-det_selection::check_build(context& c) const {
-	cerr << "Fang, finish CHP::det_selection::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+det_selection::check_action(context& c) const {
+	cerr << "Fang, finish CHP::det_selection::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
@@ -425,10 +428,10 @@ nondet_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
-never_ptr<const object>
-nondet_selection::check_build(context& c) const {
-	cerr << "Fang, finish CHP::nondet_selection::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+nondet_selection::check_action(context& c) const {
+	cerr << "Fang, finish CHP::nondet_selection::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
@@ -454,10 +457,10 @@ prob_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
-never_ptr<const object>
-prob_selection::check_build(context& c) const {
-	cerr << "Fang, finish CHP::prob_selection::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+prob_selection::check_action(context& c) const {
+	cerr << "Fang, finish CHP::prob_selection::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 
@@ -483,10 +486,10 @@ loop::rightmost(void) const {
 	return commands->rightmost();
 }
 
-never_ptr<const object>
-loop::check_build(context& c) const {
-	cerr << "Fang, finish CHP::loop::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+loop::check_action(context& c) const {
+	cerr << "Fang, finish CHP::loop::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
@@ -511,10 +514,10 @@ do_until::rightmost(void) const {
 	return sel->rightmost();
 }
 
-never_ptr<const object>
-do_until::check_build(context& c) const {
-	cerr << "Fang, finish CHP::do_until::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+do_until::check_action(context& c) const {
+	cerr << "Fang, finish CHP::do_until::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
@@ -541,16 +544,16 @@ log::rightmost(void) const {
 	return args->rightmost();
 }
 
-never_ptr<const object>
-log::check_build(context& c) const {
-	cerr << "Fang, finish CHP::log::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+statement::return_type
+log::check_action(context& c) const {
+	cerr << "Fang, finish CHP::log::check_action()!" << endl;
+	return statement::return_type(NULL);
 }
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
-#if 1
+#if 0
 template class node_list<const statement>;	// CHP::stmt_list
 template class node_list<const guarded_command>;	// CHP::det_sel_base
 							// CHP::prob_sel_base
@@ -558,11 +561,20 @@ template class node_list<const guarded_command>;	// CHP::det_sel_base
 	// actually distinguish these types for the sake of printing?
 template class node_list<const communication>;	// CHP::comm_list_base
 #else
-template class node_list<const statement,semicolon>;	// CHP::stmt_list
-template class node_list<const guarded_command,thickbar>;	// CHP::det_sel_base
-							// CHP::prob_sel_base
-template class node_list<const guarded_command,colon>;	// CHP::nondet_sel_base
-template class node_list<const communication,comma>;	// CHP::comm_list_base
+// This is temporary, until node_list::check_build is overhauled.  
+template
+node_list<const statement>::node_list();
+
+template
+node_list<const statement>::node_list(const CHP::statement*);
+
+template
+ostream&
+node_list<const statement>::what(ostream&) const;
+
+template
+line_position
+node_list<const statement>::leftmost(void) const;
 #endif
 
 //=============================================================================
