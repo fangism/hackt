@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.1 2005/05/25 00:41:45 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.2 2005/05/25 22:35:39 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -166,6 +166,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
 	Object/art_object_template_formals_manager.cc \
+	Object/art_object_port_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
 	Object/art_built_ins.cc \

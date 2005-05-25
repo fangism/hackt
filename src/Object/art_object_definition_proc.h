@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.3 2005/05/24 02:38:12 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.3.2.1 2005/05/25 22:35:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -9,6 +9,12 @@
 
 #include "Object/art_object_definition.h"
 #include "Object/art_object_PRS_base.h"
+
+#define	USE_PORT_FORMALS_MANAGER		1
+
+#if USE_PORT_FORMALS_MANAGER
+#include "Object/art_object_port_formals_manager.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -53,6 +59,8 @@ class process_definition : public process_definition_base, public scopespace,
 private:
 	typedef	process_definition		this_type;
 public:
+#if USE_PORT_FORMALS_MANAGER
+#else
 	typedef	never_ptr<const instance_collection_base>
 						port_formals_value_type;
 	/**
@@ -67,15 +75,17 @@ public:
 						port_formals_list_type;
 	typedef hash_qmap<string, port_formals_value_type>
 						port_formals_map_type;
-
-	// List of language bodies, separate or merged?
-
+#endif
 protected:
 	const string		key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
 	const never_ptr<const name_space>	parent;
+#if USE_PORT_FORMALS_MANAGER
+	port_formals_manager			port_formals;
+#else
 	port_formals_list_type			port_formals_list;
 	port_formals_map_type			port_formals_map;
+#endif
 	// list language bodies
 	PRS::rule_set				prs;
 private:
@@ -117,9 +127,11 @@ public:
 	good_bool
 	certify_port_actuals(const checked_refs_type& ol) const;
 
+#if !USE_PORT_FORMALS_MANAGER
 	bool
 	equivalent_port_formals(
 		const never_ptr<const process_definition> p) const;
+#endif
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
@@ -141,6 +153,7 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
+#if !USE_PORT_FORMALS_MANAGER
 protected:
 	void
 	write_object_port_formals(const persistent_object_manager& m, 
@@ -149,6 +162,7 @@ protected:
 	void
 	load_object_port_formals(const persistent_object_manager& m,
 		istream& i);
+#endif
 
 };	// end class process_definition
 

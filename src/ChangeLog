@@ -2,6 +2,15 @@
 
 2005-05-25	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-03:
+	  Factored out port_formals_manager into own class, 
+		now can reuse it for channel_definition, etc.
+		That was too easy.  
+	  New class files: "Object/art_object_port_formals_manager.{h,cc}"
+
+
+2005-05-25	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-02:
 	  Reorganizing code to make way for channel definition type checking.  
 	  Some housecleaning of committed conditional code in

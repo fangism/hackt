@@ -1,13 +1,14 @@
 /**
 	\file "Object/art_object_util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.1 2005/05/23 01:02:36 fang Exp $
+	$Id: art_object_util_types.h,v 1.1.2.1 2005/05/25 22:35:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
 #define	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
 
 #include "Object/art_object_fwd.h"
+#include "util/STL/vector_fwd.h"
 #include "util/STL/deque_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -22,6 +23,14 @@ namespace entity {
 	typedef	list<never_ptr<name_space> >	namespace_collection_type;
 	typedef	list<never_ptr<const name_space> >
 						const_namespace_collection_type;
+
+	/**
+		Should be synchronized with
+		parser::expr_list::checked_refs_type.
+	 */
+	typedef DEFAULT_VECTOR(count_ptr<instance_reference_base>)
+						checked_refs_type;
+
 
 	/**
 		Value type of this needs to be more general

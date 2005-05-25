@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.48.2.1 2005/05/25 20:28:58 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.48.2.2 2005/05/25 22:35:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -1808,8 +1808,12 @@ process_definition::process_definition() :
 		sequential_scope(), 
 		key(), 
 		parent(), 
+#if USE_PORT_FORMALS_MANAGER
+		port_formals(), 
+#else
 		port_formals_list(), 
 		port_formals_map(), 
+#endif
 		prs() {
 	// no null check: because of partial reconstruction
 }
@@ -1827,8 +1831,12 @@ process_definition::process_definition(
 		sequential_scope(), 
 		key(s), 
 		parent(o), 
+#if USE_PORT_FORMALS_MANAGER
+		port_formals(), 
+#else
 		port_formals_list(), 
 		port_formals_map(),
+#endif
 		prs() {
 	// fill me in...
 	NEVER_NULL(o);
@@ -1856,6 +1864,9 @@ process_definition::dump(ostream& o) const {
 	definition_base::dump(o);	// dump template signature first
 	const indent __proc_indent__(o);
 	// now dump ports
+#if USE_PORT_FORMALS_MANAGER
+	port_formals.dump(o);
+#else
 	{
 		o << auto_indent << "(" << endl;
 		{
@@ -1870,6 +1881,7 @@ process_definition::dump(ostream& o) const {
 		}
 		o << auto_indent << ")" << endl;
 	}
+#endif
 
 	// now dump rest of contents
 //	list<never_ptr<const ...> > bin;		// later sort
@@ -1927,7 +1939,11 @@ process_definition::lookup_object_here(const string& s) const {
  */
 never_ptr<const instance_collection_base>
 process_definition::lookup_port_formal(const string& id) const {
+#if USE_PORT_FORMALS_MANAGER
+	return port_formals.lookup_port_formal(id);
+#else
 	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1938,6 +1954,9 @@ process_definition::lookup_port_formal(const string& id) const {
  */
 good_bool
 process_definition::certify_port_actuals(const checked_refs_type& ol) const {
+#if USE_PORT_FORMALS_MANAGER
+	return port_formals.certify_port_actuals(ol);
+#else
 	typedef	checked_refs_type	refs_list_type;
 	const size_t num_formals = port_formals_list.size();
 	const size_t num_actuals = ol.size();
@@ -1978,6 +1997,7 @@ process_definition::certify_port_actuals(const checked_refs_type& ol) const {
 	}
 	// if we've made it here, then no errors!
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2022,13 +2042,15 @@ process_definition::add_port_formal(
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
-	{
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
+#if USE_PORT_FORMALS_MANAGER
+	port_formals.add_port_formal(pf);
+#else
 	port_formals_list.push_back(pf);
 	port_formals_map[id] = pf;
+#endif
 	INVARIANT(lookup_port_formal(id));
-	}
 
 	return pf;
 }
@@ -2073,13 +2095,20 @@ process_definition::require_signature_match(
 		return good_bool(false);
 	}
 	// check for port formal list match (in order)
+#if USE_PORT_FORMALS_MANAGER
+	if (!port_formals.equivalent_port_formals(pd->port_formals)) {
+		return good_bool(false);
+	}
+#else
 	if (!equivalent_port_formals(pd)) {
 		return good_bool(false);
 	}
+#endif
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_PORT_FORMALS_MANAGER
 /**
 	Port formals are equivalent if their order of instantiations
 	matches exactly, type, size, and even name.  
@@ -2112,6 +2141,7 @@ process_definition::equivalent_port_formals(
 	INVARIANT(i == port_formals_list.end() && j == pports.end());
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2167,6 +2197,10 @@ if (!m.register_transient_object(this,
 	// b/c they're all registered in the used_id_map.  
 	scopespace::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
+#if USE_PORT_FORMALS_MANAGER && 0
+	port_formals.collect_transient_info_base(m);	// is a NO-OP, actually
+	// pointers already covered by scopespace::collect
+#endif
 	// PRS
 	prs.collect_transient_info_base(m);
 }
@@ -2182,7 +2216,11 @@ process_definition::write_object(
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
+#if USE_PORT_FORMALS_MANAGER
+	port_formals.write_object_base(m, f);
+#else
 	write_object_port_formals(m, f);
+#endif
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
@@ -2197,7 +2235,11 @@ process_definition::load_object(
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
+#if USE_PORT_FORMALS_MANAGER
+	port_formals.load_object_base(m, f);
+#else
 	load_object_port_formals(m, f);
+#endif
 	scopespace::load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
@@ -2220,6 +2262,7 @@ process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_PORT_FORMALS_MANAGER
 /**
 	Port formals will need to be in list order.
 	Just write out the list, the hash_qmap is redundant.  
@@ -2255,6 +2298,7 @@ process_definition::load_object_port_formals(
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}
 }
+#endif
 
 //=============================================================================
 // class process_definition_alias method definitions

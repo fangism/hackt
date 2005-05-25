@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.4.2.1 2005/05/25 20:28:59 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.4.2.2 2005/05/25 22:35:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -14,7 +14,7 @@
 #include "Object/art_object_fwd.h"
 
 #include "util/boolean_types.h"
-#include "util/persistent.h"	// for persistent object interface
+#include "util/persistent_fwd.h"	// for persistent object interface
 #include "util/hash_qmap.h"	// need complete definition
 #include "util/memory/excl_ptr.h"
 
