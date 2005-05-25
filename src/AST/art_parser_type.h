@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.7 2005/05/19 18:43:29 fang Exp $
+	$Id: art_parser_type.h,v 1.7.2.1 2005/05/25 20:28:58 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -10,9 +10,12 @@
 #include "AST/art_parser_type_base.h"
 #include "AST/art_parser_expr_list.h"
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace parser {
+using util::good_bool;
+
 //-----------------------------------------------------------------------------
 /**
 	Type identifier.
@@ -76,21 +79,25 @@ public:
 		const char_punctuation_type* d = NULL, 
 		const data_type_ref_list* t = NULL);
 
-virtual	~chan_type();
+	~chan_type();
 
 	chan_type*
 	attach_data_types(const data_type_ref_list* t);
 
-virtual	ostream&
+	ostream&
 	what(ostream& o) const;
 
-virtual	line_position
+	line_position
 	leftmost(void) const;
 
-virtual	line_position
+	line_position
 	rightmost(void) const;
 
-virtual	TYPE_BASE_CHECK_PROTO;
+	TYPE_BASE_CHECK_PROTO;
+
+	// dedicated for user_chan_type_signature
+	good_bool
+	check_base_chan_type(context&) const;
 };	// end class chan_type
 
 //=============================================================================

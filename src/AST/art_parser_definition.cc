@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.22.2.1 2005/05/25 00:41:46 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22.2.2 2005/05/25 20:28:57 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -232,6 +232,7 @@ enum_signature::enum_signature(const generic_keyword_type* e,
 enum_signature::~enum_signature() {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just constructs and returns an enumeration definition with 
 	the appropriate signature.  There's really no signature, just name.  
@@ -339,6 +340,7 @@ enum_def::rightmost(void) const {
 	return members->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reminder: don't forget to reset_current_prototype()
  */
@@ -380,19 +382,42 @@ user_chan_type_signature::user_chan_type_signature(
 DESTRUCTOR_INLINE
 user_chan_type_signature::~user_chan_type_signature() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just constructs and returns an channel definition with 
 	the appropriate signature.
  */
-never_ptr<const object>
-user_chan_type_signature::check_build(context& c) const {
+user_chan_type_signature::return_type
+user_chan_type_signature::check_signature(context& c) const {
 	STACKTRACE("user_chan_type_signature::check_build()");
 	cerr << "user_chan_type_signature::check_build() FINISH ME!" << endl;
-	excl_ptr<definition_base> dd(
-		new user_def_chan(c.get_current_namespace(), *id));
-	return c.set_current_prototype(dd);
+	excl_ptr<definition_base>
+		cd(new user_def_chan(c.get_current_namespace(), *id));
+	c.set_current_prototype(cd);
+	if (temp_spec) {
+		const never_ptr<const object> o(temp_spec->check_build(c));
+		if (!o) {
+			cerr << where(*temp_spec) << endl;
+			THROW_EXIT;
+		}
+	}
+	if (!bct->check_base_chan_type(c).good) {
+		cerr << "ERROR in base channel type at " << where(*bct) << endl;
+		THROW_EXIT;
+	}
+#if 0
+	params->check_chan_members(c);
+#endif
+	// params->check_list(..., c);
+	const never_ptr<definition_base>
+		o(c.add_declaration(c.get_current_prototype()));
+	INVARIANT(!c.get_current_prototype());
+	if (!o) {
+		cerr << where(*this) << endl;
+		THROW_EXIT;
+	}
+	return o;
 }
-
 
 //=============================================================================
 // class user_chan_type_prototype method definitions
@@ -491,7 +516,7 @@ process_signature::get_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	FINISH ME.
+	TODO: rewrite calls to subchecks (2005-05-25)
 	Creates and returns a process definition objects with signature.
 	Works in temporary space of new definition, then compares with
 	previous signature if found.  
@@ -501,10 +526,9 @@ process_signature::get_name(void) const {
 		or previous declaration if it is exact match, 
 		else returns NULL upon failure.  
  */
-never_ptr<const object>
+process_signature::return_type
 process_signature::check_signature(context& c) const {
 	STACKTRACE("process_signature::check_build()");
-//	cerr << "process_signature::check_build() FINISH ME!" << endl;
 	excl_ptr<definition_base>
 		ret(new process_definition(c.get_current_namespace(), *id));
 	c.set_current_prototype(ret);
@@ -519,16 +543,10 @@ process_signature::check_signature(context& c) const {
 		const never_ptr<const object> o(ports->check_build(c));
 		// return value NULL, useless
 		// would've exited already if there was error
-#if 0
-		if (!o) {
-			cerr << ports->where() << endl;
-			THROW_EXIT;
-		}
-#endif
 	}
 	// this checks for conflicts in definitions.  
 	// transfers ownership between context members
-	const never_ptr<const object>
+	const never_ptr<entity::definition_base>
 		o(c.add_declaration(c.get_current_prototype()));
 	INVARIANT(!c.get_current_prototype());
 	if (!o) {
@@ -568,6 +586,7 @@ process_prototype::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
 	TO DO: complete me!
  */
@@ -576,6 +595,7 @@ process_prototype::check_build(context& c) const {
 	STACKTRACE("process_prototype::check_build()");
 	return check_signature(c);
 }
+#endif
 
 //=============================================================================
 // class process_def method definitions
@@ -613,7 +633,7 @@ process_def::rightmost(void) const {
 never_ptr<const object>
 process_def::check_build(context& c) const {
 	STACKTRACE("process_def::check_build()");
-	never_ptr<const object>
+	process_signature::return_type
 		o(check_signature(c));
 	if (!o) {
 		cerr << "ERROR checking signature for process "
@@ -625,8 +645,8 @@ process_def::check_build(context& c) const {
 	// only problem from here is if process was already defined.  
 	// in which case, open_process_definition will THROW_EXIT;
 	c.open_process_definition(get_name());		// will handle errors
-	o = body->check_build(c);
-	// useless return value
+	body->check_build(c);
+	// useless return value, would've exited upon error already
 
 	c.close_process_definition();
 	// nothing better to do
@@ -648,6 +668,7 @@ user_data_type_signature::user_data_type_signature(
 
 user_data_type_signature::~user_data_type_signature() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just constructs and returns an datatype definition with 
 	the appropriate signature.
@@ -660,7 +681,6 @@ user_data_type_signature::check_build(context& c) const {
 		dd(new user_def_datatype(c.get_current_namespace(), *id));
 	return c.set_current_prototype(dd);
 }
-
 
 //=============================================================================
 // class typedef_alias method definitions
@@ -689,6 +709,7 @@ typedef_alias::rightmost(void) const {
 	return id->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Three syntaxes for typedef:
 	1) typedef old new;
@@ -712,15 +733,8 @@ typedef_alias::check_build(context& c) const {
 	// does base have any template params, even an empty list?
 	const never_ptr<const type_base>
 		basedef(base->get_base_def());
-#if USE_NEW_TYPE_BASE_CHECK
 	const never_ptr<const definition_base>
 		d(basedef->check_definition(c));
-#else
-	const never_ptr<const object>
-		o(basedef->check_build(c));
-	const never_ptr<const definition_base>
-		d(o.is_a<const definition_base>());
-#endif
 	if (!d) {
 		cerr << "typedef_alias: bad definition reference!  "
 			"ERROR!  " << where(*basedef) << endl;

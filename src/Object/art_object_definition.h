@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.32 2005/05/19 18:43:31 fang Exp $
+	$Id: art_object_definition.h,v 1.32.2.1 2005/05/25 20:28:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -516,6 +516,10 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	never_ptr<const instance_collection_base>
+	add_port_formal(const never_ptr<instantiation_statement_base>, 
+		const token_identifier&);
 
 #if 0
 	count_ptr<const fundamental_type_reference>

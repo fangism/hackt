@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24 2005/05/22 06:18:29 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.1 2005/05/25 20:28:57 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -29,7 +29,7 @@
 #include "AST/art_parser_node_list.tcc"
 
 #include "Object/art_context.h"
-#include "Object/art_object_definition_base.h"
+#include "Object/art_object_definition.h"	// for user_def_chan
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_expr.h"		// for dynamic_param_expr_list
 #include "Object/art_object_namespace.h"
@@ -216,6 +216,21 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 	return this;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+chan_type::check_base_chan_type(context& c) const {
+	cerr << "Fang, finish chan_type::check_base_chan_type()!" << endl;
+	never_ptr<definition_base> d(c.get_current_prototype());
+	never_ptr<entity::user_def_chan> cd(d.is_a<entity::user_def_chan>());
+	INVARIANT(cd);
+	if (dir) {
+		// do something with the direction
+	}
+	// add data port formals to cd
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
 chan_type::check_definition(context& c) const {
 	STACKTRACE("chan_type::check_build()");
@@ -652,14 +667,8 @@ concrete_type_ref::check_build(context& c) const {
 	STACKTRACE("concrete_type_ref::check_build()");
 
 	// sets context's current definition
-#if USE_NEW_TYPE_BASE_CHECK
 	const never_ptr<const definition_base>
 		d(base->check_definition(c));
-#else
-	const never_ptr<const object> o(base->check_build(c));
-	const never_ptr<const definition_base>
-		d(o.is_a<const definition_base>());
-#endif
 	// and should return reference to definition
 	if (!d) {
 		cerr << "concrete_type_ref: bad definition reference!  "

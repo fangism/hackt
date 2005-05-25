@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.48 2005/05/24 02:38:12 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.48.2.1 2005/05/25 20:28:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -699,6 +699,44 @@ user_def_chan::get_parent(void) const {
 never_ptr<const object>
 user_def_chan::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+never_ptr<const instance_collection_base>
+user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id) {
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	cerr << "Fang, write user_def_chan::add_port_formal()!" << endl;
+#if 0
+{
+	NEVER_NULL(f);
+	INVARIANT(f.is_a<data_instantiation_statement>());
+	// check and make sure identifier wasn't repeated in formal list!
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return never_ptr<const instance_collection_base>(NULL);
+	}
+	}
+
+	const return_type pf(add_instance(f, id));
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);
+
+	{
+	// since we already checked used_id_map, there cannot be a repeat
+	// in the port_formals_list!
+	port_formals_list.push_back(pf);
+	port_formals_map[id] = pf;
+	INVARIANT(lookup_port_formal(id));
+	}
+
+	return pf;
+}
+#endif
+	return return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

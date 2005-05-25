@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.4 2005/05/22 06:24:19 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.4.2.1 2005/05/25 20:28:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -21,7 +21,6 @@
 namespace ART {
 namespace entity {
 //=============================================================================
-// USING_LIST
 using std::string;
 using std::istream;
 using std::ostream;
@@ -35,6 +34,10 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 
 //=============================================================================
+/**
+	Template formal parameter manager class, useful for most definition
+	classes.  
+ */
 class template_formals_manager {
 public:
 	/**

@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-02:
+	  Reorganizing code to make way for channel definition type checking.  
+	  Some housecleaning of committed conditional code in
+		"AST/art_parser_type_base.h".  
+	  TODO next: factor out port_formals_manager from process_definition
+		so we may reuse it in used_def_chan.  
+
+
 2005-05-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-01:

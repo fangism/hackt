@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.21 2005/05/23 01:02:33 fang Exp $
+	$Id: art_parser_formal.cc,v 1.21.2.1 2005/05/25 20:28:58 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -400,11 +400,7 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
-#if USE_NEW_TYPE_BASE_CHECK
 	type->check_definition(c);
-#else
-	type->check_build(c);	// sets_current_definition_reference
-#endif
 	// useless return value, always NULL
 	const never_ptr<const definition_base>
 		def(c.get_current_definition_reference());
