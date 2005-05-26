@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7 2005/05/23 01:02:36 fang Exp $
+	$Id: art_object_value_reference.h,v 1.7.2.1 2005/05/26 21:31:25 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -12,6 +12,7 @@
 #include "util/boolean_types.h"
 #include "Object/art_object_fwd.h"
 #include "Object/art_object_index.h"
+#include "Object/art_object_expr_const.h"	// for const_index_list
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"

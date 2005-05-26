@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.h"
 	Header for built-in features of the art language, 
 	including primitive definitions and types.  
-	$Id: art_built_ins.h,v 1.9 2005/05/10 04:51:09 fang Exp $
+	$Id: art_built_ins.h,v 1.9.6.1 2005/05/26 21:31:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_H__
@@ -42,8 +42,11 @@ extern	name_space built_in_namespace;
 extern	const built_in_param_def	pbool_def;
 extern	const built_in_param_def	pint_def;
 
+#if 0
+// replaced with class_traits<Tag>::built_in_type_ptr below
 extern	const count_ptr<const param_type_reference>	pbool_type_ptr;
 extern	const count_ptr<const param_type_reference>	pint_type_ptr;
+#endif
 
 /**
 	Built-in data types.  

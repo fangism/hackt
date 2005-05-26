@@ -117,16 +117,16 @@ liblinktest_la_SOURCES = \
 # possibly confusing the parent directories when they expect .deps to
 # exist, especially on make distclean.  
 stacktrace.cc: ../stacktrace.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 static_trace.cc: ../static_trace.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 thread_lock.cc: ../memory/thread_lock.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 ref_count_pool.cc: ../memory/ref_count_pool.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 friend_function_formal_bug.stderr:
 	$(TOUCH) $@
@@ -148,7 +148,7 @@ EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
 	link_test.stderr
 
 multikey_set_derived_test.stderr: multikey_set_test.stderr
-	$(CP) $< $@
+	$(CP) $? $@
 
 AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
@@ -195,7 +195,7 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 # to forbid writing/appending to existing files... (read-only)
 .cvsignore: test.cvsignore
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
-	$(CAT) $< $@.temp > $@
+	$(CAT) test.cvsignore $@.temp > $@
 	-$(RM) $@.temp
 
 .cvsignore: Makefile.am Makefile.in

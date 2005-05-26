@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7 2005/05/23 01:02:34 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.1 2005/05/26 21:31:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -478,6 +478,12 @@ struct class_traits<pint_tag> {
 	typedef	param_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+
+	/**
+		Replacement for built-in type pointer.  
+		Initialized in "Object/art_built_ins.cc"
+	 */
+	static const type_ref_ptr_type		built_in_type_ptr;
 };	// end struct class_traits<pint_tag>
 
 //-----------------------------------------------------------------------------
@@ -529,8 +535,10 @@ struct class_traits<pbool_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 
-	// TODO: migrate declaration from "art_built_ins.h", 
-	// but keep definition in "art_built_ins.cc"
+	/**
+		Replacement for built-in type pointer.  
+		Initialized in "Object/art_built_ins.cc"
+	 */
 	static const type_ref_ptr_type		built_in_type_ptr;
 };	// end struct class_traits<pbool_tag>
 

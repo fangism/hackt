@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.4 2005/05/23 01:02:34 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.4.2.1 2005/05/26 21:31:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -61,6 +61,7 @@
 namespace ART {
 namespace entity {
 USING_STACKTRACE
+#include "util/using_ostream.h"
 using util::persistent_traits;
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT

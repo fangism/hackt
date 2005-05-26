@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-04:
+	  Revenge of the BSD.  
+	  Patches to satisfy gcc-3.4 on FreeBSD, more compiler anality.  
+		(Unfortunately, still need to run gmake, not bsdmake.)
+	  Changed built-in param type pointers to be part of
+		class_traits<Tag> specializations.  
+		Global static initialization remains in "art_built_ins.cc".
+	  Code cleanup: caught many missing declarations required by gcc-3.4+.
+	  src/test/Makefile.am link dependencies fixed to work with bsdmake.  
+
+
 2005-05-25	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-03:

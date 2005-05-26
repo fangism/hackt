@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.4 2005/05/23 01:02:34 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.4.2.1 2005/05/26 21:31:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
@@ -30,6 +30,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 USING_UTIL_COMPOSE
 using std::mem_fun_ref;
 using util::dereference;

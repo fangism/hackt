@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.35 2005/05/23 01:02:36 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35.2.1 2005/05/26 21:31:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -823,6 +823,10 @@ param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
 	typedef	excl_ptr<instantiation_statement_base>	return_type;
+	static const class_traits<pbool_tag>::type_ref_ptr_type&
+		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
+	static const class_traits<pint_tag>::type_ref_ptr_type&
+		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
 	INVARIANT(t == this);
 	if (this->must_be_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
@@ -852,6 +856,10 @@ param_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
+	static const class_traits<pbool_tag>::type_ref_ptr_type&
+		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
+	static const class_traits<pint_tag>::type_ref_ptr_type&
+		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
 	if (this->must_be_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pbool_instance_collection::make_array(*s, id, d));
