@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.14.2.2 2005/05/25 20:28:57 fang Exp $
+	$Id: art_parser_definition.h,v 1.14.2.3 2005/05/27 21:04:05 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -90,10 +90,6 @@ public:
 
 	// need not be virtual since never use pointers of this type...
 virtual	~process_signature();
-
-// note: non-virtual
-	const token_identifier&
-	get_name(void) const;
 
 	return_type
 	check_signature(context& c) const;

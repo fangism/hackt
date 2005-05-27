@@ -1,0 +1,39 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3602040	module__	0	0	29
+	2	 0x3600144	namespc_	0	29	57
+	3	 0x3602060	chandefn	0	57	132
+	4	 0x36020f4	enumcoll	0	132	170
+	5	 0x3602150	datainst	0	170	190
+	6	 0x3602170	datatprf	0	190	206
+	7	 0x3602180	enumdefn	0	206	241
+	8	 0x36021e4	enumcoll	0	241	279
+	9	 0x3602240	datainst	0	279	299
+	10	 0x3602260	datatprf	0	299	315
+
+In module created from: ./010.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    mychan = user-def-chan (declared) mychan
+      chan (
+        myenum<>
+      )
+      (
+        myenum<> e
+        myenum<> f
+      )
+      In channel definition "mychan", we have: {
+        e = myenum<> e
+        f = myenum<> f
+      }
+
+    myenum = enum-datatype-def: myenum (undefined)
+}
+

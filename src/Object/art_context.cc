@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.33.2.1 2005/05/27 02:05:01 fang Exp $
+ 	$Id: art_context.cc,v 1.33.2.2 2005/05/27 21:04:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -27,17 +27,23 @@
 #include "Object/art_object_instance.h"	// for instantiation_statement_base
 #include "Object/art_object_instance_param.h"	// for param_instantiation_statement
 #include "Object/art_object_module.h"
+#include "Object/art_context.tcc"
 
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {
-using namespace entity;
-
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using entity::object_handle;
+using entity::enum_datatype_def;
+using entity::instantiation_statement_base;
+using entity::param_type_reference;
+using entity::param_instance_collection;
+using entity::process_definition;
+using entity::user_def_chan;
 
 //=============================================================================
 // class context method definition
@@ -301,6 +307,7 @@ context::close_enum_definition(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_CONTEXT_TEMPLATE_METHODS
 /**
 	THIS NEEDS SERIOUS RE-WORK.  
 	Registers a process definition's signature.  
@@ -313,7 +320,7 @@ context::close_enum_definition(void) {
  */
 void
 context::open_process_definition(const token_identifier& pname) {
-	never_ptr<process_definition>
+	const never_ptr<process_definition>
 		pd(current_namespace->lookup_object_here_with_modify(pname)
 				.is_a<process_definition>());
 	if (pd) {
@@ -335,6 +342,7 @@ context::open_process_definition(const token_identifier& pname) {
 		// return NULL
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -350,6 +358,7 @@ context::close_current_definition(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_CONTEXT_TEMPLATE_METHODS
 /**
 	Closes a process definition in the context.  
 	Just sets current_open_definition to NULL.  
@@ -385,6 +394,7 @@ context::close_chantype_definition(void) {
 	current_open_definition.must_be_a<channel_definition_base>();
 	close_current_definition();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -415,6 +425,7 @@ context::get_current_param_definition(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_CONTEXT_TEMPLATE_METHODS
 /**
 	\return the current active datatype definition.  
  */
@@ -440,6 +451,7 @@ never_ptr<const process_definition_base>
 context::get_current_process_definition(void) const {
 	return current_definition_reference.is_a<const process_definition_base>();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -933,6 +945,13 @@ context::auto_indent(void) const {
 	ret += "+-";
 	return ret;
 }
+
+//=============================================================================
+// explicit template method instantiations
+
+INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(process_definition)
+INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_chan)
+// INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(enum_datatype_def)
 
 //=============================================================================
 }	// end namespace entity

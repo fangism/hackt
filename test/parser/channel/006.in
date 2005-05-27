@@ -1,0 +1,4 @@
+// "006.in" should fail, channel implementation types should be data types
+
+defchan mychan <: chan(bool) (pint i);
+

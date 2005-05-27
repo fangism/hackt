@@ -1,0 +1,4 @@
+// "007.in" should fail, data port members need name
+
+defchan mychan <: chan(bool) (int);
+

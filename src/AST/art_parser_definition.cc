@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.22.2.3 2005/05/27 02:05:00 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22.2.4 2005/05/27 21:04:04 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -351,15 +351,17 @@ enum_def::check_build(context& c) const {
 	never_ptr<const object> o(enum_signature::check_build(c));
 	if (!o)	return return_type(NULL);
 	// lookup and open definition
+//	c.open_definition<enum_datatype_def>(*id);	// marks as defined
 	c.open_enum_definition(*id);	// marks as defined
 	o = members->check_build(c);	// use current_open_definition
-		// always returns NULL
+		// always returns NULL, will exit upon error
 #if 0
 	if (!o) {
 		cerr << where() << endl;
 		THROW_EXIT;
 	}
 #endif
+//	c.close_definition<enum_datatype_def>();
 	c.close_enum_definition();
 	return return_type(NULL);
 }
@@ -495,8 +497,25 @@ user_chan_type_def::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_chan_type_def::check_build(context& c) const {
-	cerr << "Fang, finish user_chan_type_def::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+	STACKTRACE("user_chan_type_def::check_build()");
+	user_chan_type_signature::return_type
+		o(check_signature(c));
+	if (!o) {
+		cerr << "ERROR checking signature for channel "
+			<< *id << " doesn\'t match that of "
+			"previous declaration!  " << where(*this) << endl;
+		THROW_EXIT;
+	}
+	// only problem from here is if process was already defined.  
+	// in which case, open_channel_definition will THROW_EXIT;
+	c.open_definition<user_def_chan>(*id);		// will handle errors
+	sendb->check_build(c);
+	// useless return value, would've exited upon error already
+	recvb->check_build(c);
+	// useless return value, would've exited upon error already
+	c.close_definition<user_def_chan>();
+	// nothing better to do
+	return c.top_namespace();
 }
 
 //=============================================================================
@@ -514,10 +533,12 @@ process_signature::process_signature(const template_formal_decl_list_pair* tf,
 DESTRUCTOR_INLINE
 process_signature::~process_signature() { }
 
+#if 0
 const token_identifier&
 process_signature::get_name(void) const {
 	return *id;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -632,8 +653,7 @@ process_def::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	To do: port_formals in process_signature...
-	FINISH ME!!! or START ME!!!
+	Checks a whole process definition.  
  */
 never_ptr<const object>
 process_def::check_build(context& c) const {
@@ -642,18 +662,18 @@ process_def::check_build(context& c) const {
 		o(check_signature(c));
 	if (!o) {
 		cerr << "ERROR checking signature for process "
-			<< get_name() << " doesn\'t match that of "
+			<< *id << " doesn\'t match that of "
 			"previous declaration!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
 
 	// only problem from here is if process was already defined.  
 	// in which case, open_process_definition will THROW_EXIT;
-	c.open_process_definition(get_name());		// will handle errors
+	c.open_definition<process_definition>(*id);	// will handle errors
 	body->check_build(c);
 	// useless return value, would've exited upon error already
 
-	c.close_process_definition();
+	c.close_definition<process_definition>();
 	// nothing better to do
 	return c.top_namespace();
 }

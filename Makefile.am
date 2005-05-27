@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.13 2005/05/04 19:31:37 fang Exp $
+#	$Id: Makefile.am,v 1.13.6.1 2005/05/27 21:03:58 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -75,6 +75,7 @@ dist-hook:
 cvsdiffs: force
 	-$(CVS) diff -u > $@
 
+.NOTPARALLEL: commit
 commit: cvsdiffs distcheck
 	$(CVS) commit
 

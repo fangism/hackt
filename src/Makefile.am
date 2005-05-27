@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.3 2005/05/27 02:04:59 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.4 2005/05/27 21:04:04 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -181,6 +181,7 @@ OBJECT_CC_NO_H_FILES = \
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
+	Object/art_context.tcc \
 	Object/art_object_assign.tcc \
 	Object/art_object_connect.tcc \
 	Object/art_object_const_collection.tcc \

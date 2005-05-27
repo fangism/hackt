@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.19 2005/05/23 01:02:33 fang Exp $
+	$Id: art_context.h,v 1.19.2.1 2005/05/27 21:04:06 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -216,7 +216,18 @@ public:
 	never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base>& d);
 
+#define	USE_CONTEXT_TEMPLATE_METHODS	1
+
 // void	declare_process(const token_identifier& ps);
+#if USE_CONTEXT_TEMPLATE_METHODS
+	template <class D>
+	void
+	open_definition(const token_identifier& ps);
+
+	template <class D>
+	void
+	close_definition(void);
+#else
 	void
 	open_process_definition(const token_identifier& ps);
 
@@ -224,31 +235,42 @@ public:
 	close_process_definition(void);
 
 	void
-	declare_datatype(const token_identifier& ds);
-	void
-	open_datatype(const token_identifier& ds);
+	open_datatype_definition(const token_identifier& ds);
 
 	void
 	close_datatype_definition(void);
 
-// void	declare_enum(const token_identifier& en);
+	void
+	open_chantype_definition(const token_identifier& ds);
+
+	void
+	close_chantype_definition(void);
+#endif
+
+	// different: not sequential scopes
 	void
 	open_enum_definition(const token_identifier& en);
-
-	good_bool
-	add_enum_member(const token_identifier& em);
 
 	void
 	close_enum_definition(void);
 
+#if 0
+	void
+	open_channel_definition(const token_identifier& ps);
+
+	void
+	close_channel_definition(void);
+#endif
+
+	void
+	declare_datatype(const token_identifier& ds);
+
+// void	declare_enum(const token_identifier& en);
+	good_bool
+	add_enum_member(const token_identifier& em);
+
 	void
 	declare_chantype(const token_identifier& ds);
-
-	void
-	open_chantype(const token_identifier& ds);
-
-	void
-	close_chantype_definition(void);
 
 	good_bool
 	alias_definition(const never_ptr<const definition_base> d, 
@@ -302,8 +324,21 @@ public:
 	never_ptr<const definition_base>
 	get_current_prototype(void) const;
 
+#if USE_CONTEXT_TEMPLATE_METHODS
+	template <class D>
+	never_ptr<const D>
+	get_current_definition(void) const;
+#else
 	never_ptr<const datatype_definition_base>
 	get_current_datatype_definition(void) const;
+
+	never_ptr<const channel_definition_base>
+	get_current_channel_definition(void) const;
+
+	never_ptr<const process_definition_base>
+	get_current_process_definition(void) const;
+
+#endif
 
 // should be called by parser after done using definitions
 	void
@@ -316,12 +351,6 @@ public:
 	never_ptr<const built_in_param_def>
 	get_current_param_definition(void) const;
 #endif
-
-	never_ptr<const channel_definition_base>
-	get_current_channel_definition(void) const;
-
-	never_ptr<const process_definition_base>
-	get_current_process_definition(void) const;
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {

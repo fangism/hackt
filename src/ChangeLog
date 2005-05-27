@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-05-27	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-06:
+	  Added some template methods to context to replace annoying
+		copy-pasted methods.  
+	  Partially implemented user_chan_type_definition check.  
+	  Added a handful of test cases to test/parser/channel.
+
+
 2005-05-26	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-05:
