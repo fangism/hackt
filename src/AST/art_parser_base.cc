@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24.2.1 2005/05/25 20:28:57 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.2 2005/05/27 02:05:00 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -29,8 +29,8 @@
 #include "AST/art_parser_node_list.tcc"
 
 #include "Object/art_context.h"
-#include "Object/art_object_definition.h"	// for user_def_chan
-#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_definition_chan.h"	// for user_def_chan
+#include "Object/art_object_type_ref.h"		// for data_type_reference
 #include "Object/art_object_expr.h"		// for dynamic_param_expr_list
 #include "Object/art_object_namespace.h"
 
@@ -64,6 +64,8 @@ namespace ART {
 namespace parser {
 using std::back_inserter;
 using entity::dynamic_param_expr_list;
+using entity::data_type_reference;
+using entity::user_def_chan;
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
@@ -203,6 +205,7 @@ chan_type::rightmost(void) const {
 	else return chan->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Associates a channel or port with a data type, such as a list of 
 	ints and bools.  
@@ -217,17 +220,22 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call to check data types that implement the 
+	channel definition.  
+ */
 good_bool
 chan_type::check_base_chan_type(context& c) const {
-	cerr << "Fang, finish chan_type::check_base_chan_type()!" << endl;
-	never_ptr<definition_base> d(c.get_current_prototype());
-	never_ptr<entity::user_def_chan> cd(d.is_a<entity::user_def_chan>());
-	INVARIANT(cd);
 	if (dir) {
 		// do something with the direction
+		// should be NULL in this context
+		cerr << "Hmmm, ... I don\'t know what to do with the "
+			"direction in this context: " << where(*this) << endl;
+		THROW_EXIT;
 	}
-	// add data port formals to cd
-	return good_bool(false);
+	// add data types list to cd
+	// list of concrete_type_refs
+	return dtypes->check_data_types(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -655,6 +663,68 @@ concrete_type_ref::get_temp_spec(void) const {
 /**
 	Type-check a type reference, a definition with optional template
 	arguments.  The type reference is used for creating instantiations.  
+	\return valid type-checked type-reference if successful, 
+		else NULL (does not exit on failure).  
+ */
+concrete_type_ref::return_type
+concrete_type_ref::check_type(context& c) const {
+	STACKTRACE("concrete_type_ref::check_type()");
+	// sets context's current definition
+	const never_ptr<const definition_base>
+		d(base->check_definition(c));
+	// and should return reference to definition
+	if (!d) {
+		cerr << "concrete_type_ref: bad definition reference!  "
+			"ERROR! " << where(*base) << endl;
+		THROW_EXIT;		// temporary
+		return return_type(NULL);
+	}
+
+	// check template arguments, if given
+	if (temp_spec) {
+		STACKTRACE("checking template arguments (temp_spec)");
+		// FUTURE: need to extend to handle generic template
+		// type-argument placeholders.  
+		expr_list::checked_exprs_type temp;
+		temp_spec->postorder_check_exprs(temp, c);
+		// copied from object_list::make_param_expr_list()
+		excl_ptr<dynamic_param_expr_list>
+			tpl(new dynamic_param_expr_list);
+		expr_list::checked_exprs_type::const_iterator i = temp.begin();
+		copy(temp.begin(), temp.end(), back_inserter(*tpl));
+		const return_type
+			type_ref(d->make_fundamental_type_reference(tpl));
+		if (!type_ref) {
+			cerr << "ERROR making complete type reference.  "
+				<< where(*this) << endl;
+			return return_type(NULL);
+		} else	return type_ref;
+	} else {
+		STACKTRACE("empty template arguments (!temp_spec)");
+		// if no args are supplied, 
+		// make sure that the definition doesn't require template args!
+		// Now allows default values for unsupplied arguments.  
+		if(!d->check_null_template_argument().good) {
+			cerr << "definition expecting template arguments "
+				"where none were given!  " <<
+				where(*this) << endl;
+			return return_type(NULL);
+		} else {
+			const return_type
+				type_ref(d->make_fundamental_type_reference());
+			if (!type_ref) {
+				cerr << "ERROR making complete type reference.  "
+					<< where(*this) << endl;
+				return return_type(NULL);
+			} else	return type_ref;
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type-check a type reference, a definition with optional template
+	arguments.  The type reference is used for creating instantiations.  
 	If successful, this sets the current_fundamental_type in the context.  
 	\return NULL, caller needs to check the current_fundamental_type
 		set in the context.  
@@ -663,6 +733,7 @@ concrete_type_ref::get_temp_spec(void) const {
  */
 never_ptr<const object>
 concrete_type_ref::check_build(context& c) const {
+#if 0
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("concrete_type_ref::check_build()");
 
@@ -725,6 +796,13 @@ concrete_type_ref::check_build(context& c) const {
 //	return c.set_current_fundamental_type();
 	// who should reset_current_fundamental_type?
 	// the decl_lists? or their containers?
+#else
+	return_type ret(check_type(c));
+	if (ret)
+		c.set_current_fundamental_type(ret);
+	else	THROW_EXIT;
+	return never_ptr<const object>(NULL);
+#endif
 }
 
 //=============================================================================
@@ -734,6 +812,46 @@ data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
 		parent_type(c) { }
 
 data_type_ref_list::~data_type_ref_list() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks the list of type references, which must be data types.  
+ */
+good_bool
+data_type_ref_list::check_data_types(context& c) const {
+	typedef	list<concrete_type_ref::return_type>	checked_list_type;
+	const never_ptr<definition_base> d(c.get_current_prototype());
+	const never_ptr<user_def_chan> cd(d.is_a<user_def_chan>());
+	INVARIANT(cd);
+	checked_list_type checked_types;
+	check_list(checked_types, &concrete_type_ref::check_type, c);
+	// check if it contains NULL
+	checked_list_type::const_iterator i = checked_types.begin();
+	const checked_list_type::const_iterator e = checked_types.end();
+	const checked_list_type::const_iterator
+		ni(find(i, e, concrete_type_ref::return_type(NULL)));
+	if (ni != checked_types.end()) {
+		cerr << "At least one error in data-type list at " <<
+			where(*this) << endl;
+		return good_bool(false);
+	} else {
+		// copy to user_def_chan
+		const_iterator j = begin();
+		for ( ; i!=e; i++, j++) {
+			const count_ptr<const data_type_reference>
+				dtr(i->is_a<const data_type_reference>());
+			if (!dtr) {
+				cerr << "Channels can only carry data-types, ";
+				(*i)->what(cerr << "but resolved a ") <<
+					" at " << where(**j) << endl;
+				return good_bool(false);
+			} else {
+				cd->add_datatype(dtr);
+			}
+		}
+		return good_bool(true);
+	}
+}
 
 //=============================================================================
 // explicit class template instantiations

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.12 2005/05/10 04:51:07 fang Exp $
+	$Id: art_parser_formal.h,v 1.12.6.1 2005/05/27 02:05:01 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_FORMAL_H__
@@ -9,9 +9,11 @@
 
 #include "AST/art_parser_base.h"
 #include "AST/art_parser_node_list.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace parser {
+using util::good_bool;
 //=============================================================================
 /**
 	Class for port data (rather, members) of a user-defined channels.  
@@ -93,6 +95,7 @@ typedef	node_list<const data_param_decl>	data_param_decl_list_base;
 
 /**
 	Data or parameter declaration list.  
+	Consider just typedef to _base class.  
  */
 class data_param_decl_list : public data_param_decl_list_base {
 protected:
@@ -102,6 +105,9 @@ public:
 	data_param_decl_list(const data_param_decl* d);
 
 	~data_param_decl_list();
+
+	good_bool
+	check_chan_ports(context&) const;
 
 };	// end class data_param_decl_list
 

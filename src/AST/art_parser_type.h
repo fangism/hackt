@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.7.2.1 2005/05/25 20:28:58 fang Exp $
+	$Id: art_parser_type.h,v 1.7.2.2 2005/05/27 02:05:01 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -13,8 +13,12 @@
 #include "util/boolean_types.h"
 
 namespace ART {
+namespace entity {
+	class fundamental_type_reference;
+}
 namespace parser {
 using util::good_bool;
+using entity::fundamental_type_reference;
 
 //-----------------------------------------------------------------------------
 /**
@@ -62,7 +66,16 @@ public:
 	data_type_ref_list(const concrete_type_ref* c);
 
 	~data_type_ref_list();
-};
+
+	good_bool
+	check_data_types(context& c) const;
+
+#if 0
+	// functor for list transformation.  
+	struct datatype_caster;
+#endif
+
+};	// end class data_type_ref_list
 
 //-----------------------------------------------------------------------------
 /**
@@ -112,6 +125,8 @@ public:
 	to handle cases where subtypes are expected.  
  */
 class concrete_type_ref {
+public:
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
 protected:
 	/** definition name base */
 	const excl_ptr<const type_base>			base;
@@ -144,6 +159,10 @@ public:
 
 	never_ptr<const object>
 	check_build(context& c) const;
+
+	return_type
+	check_type(context&) const;
+
 };	// end class concrete_type_ref
 
 //=============================================================================

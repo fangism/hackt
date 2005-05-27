@@ -2,6 +2,31 @@
 
 2005-05-26	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-05:
+	  Finished initial crack at type-checking channel definitions, 
+		currently, only checking prototype declarations, 
+		punting definitions for a few more revisions until
+		further testing.  AST files (,h.,tcc) touched: art_parser_base,
+		art_parser_definition, art_parser_formal, art_parser_type.
+	  Factored out concrete_type_ref::check_build into more useful
+		::check_type (useful return value).  
+	  Split-off "Object/art_object_definition_chan.h" from 
+		"Object/art_object_definition.h", it also uses
+		the recently added "Object/art_object_port_formals_manager.h".
+		Added a few necessary virtual method overrides 
+		to user_def_chan, like those in process_definition.  
+		Also cleaned up conditionals, making USE_PORT_FORMALS_MANAGER 
+		permanent.  
+	  entity::user_def_chan has new field members:
+		datatype_list: the datatype (abstract) carried on channel
+		port_formals: the physical datatypes used to implement
+	  Very basic test cases added so far, more coming in next revision.  
+	  Grammar: updated to allow non-built-in datatypes in channel
+		definition's abstract data type list.  
+	  
+
+2005-05-26	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-04:
 	  Revenge of the BSD.  
 	  Patches to satisfy gcc-3.4 on FreeBSD, more compiler anality.  

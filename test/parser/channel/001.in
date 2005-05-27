@@ -1,7 +1,4 @@
-// "001.in" should pass
+// "001.in" should pass, just a channel definition prototype
 
-defchan mychan <: chan(bool) (int i) {
-send {}
-recv {}
-}
+defchan mychan <: chan(bool) (int i);
 

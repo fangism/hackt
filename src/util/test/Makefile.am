@@ -193,9 +193,9 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
-.cvsignore: test.cvsignore
+.cvsignore: $(srcdir)/test.cvsignore
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
-	$(CAT) test.cvsignore $@.temp > $@
+	$(CAT) $(srcdir)/test.cvsignore $@.temp > $@
 	-$(RM) $@.temp
 
 .cvsignore: Makefile.am Makefile.in

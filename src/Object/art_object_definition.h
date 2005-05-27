@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.32.2.1 2005/05/25 20:28:59 fang Exp $
+	$Id: art_object_definition.h,v 1.32.2.2 2005/05/27 02:05:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -453,6 +453,7 @@ private:
 };	// end class datatype_definition_alias
 
 //=============================================================================
+#if 0
 /// abstract base class for channels and their representations
 class channel_definition_base : virtual public definition_base {
 private:
@@ -590,6 +591,7 @@ private:
 	load_used_id_map_object(excl_ptr<persistent>& o);
 
 };	// end class channel_definition_alias
+#endif
 
 //-----------------------------------------------------------------------------
 /// Type aliases are analogous to typedefs in C (not yet implemented)

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21.2.1 2005/05/25 00:41:47 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.2 2005/05/27 02:05:03 fang Exp $
  */
 
 %{
@@ -478,12 +478,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_port_formal_decl>	port_formal_decl
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
-%type	<_concrete_type_ref>	physical_type_ref
-%type	<_concrete_type_ref>	data_type_ref
+%type	<_concrete_type_ref>	physical_type_ref generic_type_ref
+%type	<_concrete_type_ref>	data_type_ref base_data_type_ref
 %type	<_concrete_type_ref>	type_id
 /* %type	<_data_type_base>	base_param_type */
 %type	<_token_paramtype>	base_param_type
-/* %type	<n>	formal_id */
 %type	<_chan_type>	base_chan_type chan_or_port
 %type	<_data_type_ref_list>	data_type_ref_list_in_parens data_type_ref_list
 %type	<_token_datatype>	base_data_type
@@ -575,7 +574,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_statement>	assignment_stmt */
 %type	<_assign_stmt>	binary_assignment
 %type	<_incdec_stmt>	unary_assignment
-/* %type	<n>	conditional_expr optional_expr_in_braces */
 %type	<_expr_list>	optional_template_arguments_in_angles
 %type	<_expr_list>	expr_list_in_parens expr_list
 /* %type	<_range_list>	optional_range_list_in_brackets */
@@ -851,23 +849,33 @@ port_formal_id
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
-physical_type_ref
+generic_type_ref
 	: relative_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
 		{ $$ = new concrete_type_ref(new type_id($1), $2); }
 	| absolute_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
 		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+	;
+
+physical_type_ref
+	: generic_type_ref { $$ = $1; }
 	| base_chan_type
 		/* what would template channel type ref look like? */
 		{ $$ = new concrete_type_ref($1, NULL); }
-	| data_type_ref
+	| base_data_type_ref
 		{ $$ = $1; }
 	;
 
-data_type_ref
+base_data_type_ref
 	: base_data_type optional_template_arguments_in_angles
 		{ $$ = new concrete_type_ref($1, $2); }
+	;
+
+/** because general data types may be user-defined **/
+data_type_ref
+	: base_data_type_ref { $$ = $1; }
+	| generic_type_ref { $$ = $1; }
 	;
 
 type_id

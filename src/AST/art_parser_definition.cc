@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.22.2.2 2005/05/25 20:28:57 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22.2.3 2005/05/27 02:05:00 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -30,7 +30,7 @@
 
 #include "Object/art_context.h"
 #include "Object/art_object_type_ref_base.h"
-#include "Object/art_object_definition.h"
+#include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 #include "Object/art_object_expr_base.h"
 
@@ -389,8 +389,7 @@ user_chan_type_signature::~user_chan_type_signature() { }
  */
 user_chan_type_signature::return_type
 user_chan_type_signature::check_signature(context& c) const {
-	STACKTRACE("user_chan_type_signature::check_build()");
-	cerr << "user_chan_type_signature::check_build() FINISH ME!" << endl;
+	STACKTRACE("user_chan_type_signature::check_signature()");
 	excl_ptr<definition_base>
 		cd(new user_def_chan(c.get_current_namespace(), *id));
 	c.set_current_prototype(cd);
@@ -405,10 +404,11 @@ user_chan_type_signature::check_signature(context& c) const {
 		cerr << "ERROR in base channel type at " << where(*bct) << endl;
 		THROW_EXIT;
 	}
-#if 0
-	params->check_chan_members(c);
-#endif
-	// params->check_list(..., c);
+	if (!params->check_chan_ports(c).good) {
+		cerr << "ERROR: in channel ports list at " <<
+			where(*params) << endl;
+		THROW_EXIT;
+	}
 	const never_ptr<definition_base>
 		o(c.add_declaration(c.get_current_prototype()));
 	INVARIANT(!c.get_current_prototype());
@@ -448,9 +448,13 @@ user_chan_type_prototype::rightmost(void) const {
 	return params->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_chan_type_prototype::check_build(context& c) const {
-	cerr << "Fang, finish user_chan_type_prototype::check_build()!" << endl;
+	if (!check_signature(c)) {
+		THROW_EXIT;
+	}
+	// would've exited if there was error
 	return never_ptr<const object>(NULL);
 }
 
@@ -488,6 +492,7 @@ user_chan_type_def::rightmost(void) const {
 	else            return recvb->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_chan_type_def::check_build(context& c) const {
 	cerr << "Fang, finish user_chan_type_def::check_build()!" << endl;

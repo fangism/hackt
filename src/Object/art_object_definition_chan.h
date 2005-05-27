@@ -1,0 +1,175 @@
+/**
+	\file "Object/art_object_definition_chan.h"
+	Definition-related ART object classes.  
+	$Id: art_object_definition_chan.h,v 1.1.2.1 2005/05/27 02:05:03 fang Exp $
+ */
+
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
+#define	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
+
+#include "Object/art_object_definition.h"
+#include "Object/art_object_port_formals_manager.h"
+
+namespace ART {
+namespace entity {
+
+using std::ostream;
+USING_LIST
+using namespace util::memory;	// for experimental pointer classes
+
+//=============================================================================
+/// abstract base class for channels and their representations
+class channel_definition_base : virtual public definition_base {
+private:
+	typedef	definition_base			parent_type;
+public:
+	channel_definition_base() : parent_type() { }
+virtual	~channel_definition_base() { }
+
+// virtual	ostream& what(ostream& o) const = 0;
+
+	excl_ptr<definition_base>
+	make_typedef(never_ptr<const scopespace> s, 
+		const token_identifier& id) const;
+
+virtual	count_ptr<const fundamental_type_reference>
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
+
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
+};	// end class channel_definition_base
+
+//-----------------------------------------------------------------------------
+/**
+	Generalizable user-defined channel type, which can (eventually) 
+	build upon other user-defined channel types.  
+ */
+class user_def_chan : public channel_definition_base, public scopespace,
+		public sequential_scope {
+private:
+	typedef	user_def_chan			this_type;
+	typedef channel_definition_base		definition_parent_type;
+	typedef	scopespace			scope_parent_type;
+	typedef	sequential_scope		sequential_parent_type;
+	typedef	list<count_ptr<const data_type_reference> >
+						datatype_list_type;
+protected:
+	// list of other type definitions
+	const string				key;
+	const never_ptr<const name_space>	parent;
+	datatype_list_type			datatype_list;
+	port_formals_manager			port_formals;
+private:
+	user_def_chan();
+public:
+	user_def_chan(const never_ptr<const name_space> o, const string& name);
+	~user_def_chan();
+
+	const string&
+	get_key(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	never_ptr<const object>
+	lookup_object_here(const string& id) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	void
+	add_datatype(const count_ptr<const data_type_reference>&);
+
+	// maybe add_datatypes?
+
+	never_ptr<const instance_collection_base>
+	add_port_formal(const never_ptr<instantiation_statement_base>, 
+		const token_identifier&);
+
+	never_ptr<const instance_collection_base>
+	lookup_port_formal(const string&) const;
+
+	good_bool
+	certify_port_actuals(const checked_refs_type&) const;
+
+#if 0
+	count_ptr<const fundamental_type_reference>
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
+#endif
+public:
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
+
+private:
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+
+};	// end class user_def_chan
+
+//-----------------------------------------------------------------------------
+/**
+	Alias to a channel-type.  
+ */
+class channel_definition_alias : public channel_definition_base, 
+		public typedef_base {
+private:
+	typedef	channel_definition_alias	this_type;
+protected:
+	const string				key;
+	const never_ptr<const scopespace>	parent;
+	excl_ptr<const channel_type_reference>	base;
+private:
+	channel_definition_alias();
+public:
+	channel_definition_alias(const string& n, 
+		const never_ptr<const scopespace> p);
+
+	~channel_definition_alias();
+
+	ostream&
+	what(ostream& o) const;
+
+	const string&
+	get_key(void) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	never_ptr<const fundamental_type_reference>
+	get_base_type_ref(void) const;
+
+	bool
+	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
+#if 0
+	count_ptr<const fundamental_type_reference>
+	make_fundamental_type_reference(
+		excl_ptr<dynamic_param_expr_list>& ta) const;
+#endif
+
+public:
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
+
+private:
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+
+};	// end class channel_definition_alias
+
+//=============================================================================
+}	// end namespace entity
+}	// end namespace ART
+
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
+
