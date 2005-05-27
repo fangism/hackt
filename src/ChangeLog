@@ -35,7 +35,8 @@
 		class_traits<Tag> specializations.  
 		Global static initialization remains in "art_built_ins.cc".
 	  Code cleanup: caught many missing declarations required by gcc-3.4+.
-	  src/test/Makefile.am link dependencies fixed to work with bsdmake.  
+	  src/util/test/Makefile.am link dependencies fixed to work 
+		with bsdmake, on the off chance that I forget to run gmake.  
 
 
 2005-05-25	David Fang		<fangism@users.sourceforge.net>
