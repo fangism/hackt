@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21.2.2 2005/05/27 02:05:03 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.3 2005/05/28 03:00:58 fang Exp $
  */
 
 %{
@@ -209,6 +209,7 @@ extern const char* const yyrule[];
 	process_def*		_process_def;
 	type_base*		_type_base;
 	concrete_type_ref*	_concrete_type_ref;
+	generic_type_ref*	_generic_type_ref;
 	type_id*		_type_id;
 	port_formal_decl_list*	_port_formal_decl_list;
 	port_formal_decl*	_port_formal_decl;
@@ -478,7 +479,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_port_formal_decl>	port_formal_decl
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
-%type	<_concrete_type_ref>	physical_type_ref generic_type_ref
+%type	<_concrete_type_ref>	physical_type_ref
+%type	<_generic_type_ref>	generic_type_ref
 %type	<_concrete_type_ref>	data_type_ref base_data_type_ref
 %type	<_concrete_type_ref>	type_id
 /* %type	<_data_type_base>	base_param_type */
@@ -852,24 +854,25 @@ port_formal_id
 generic_type_ref
 	: relative_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
-		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+		{ $$ = new generic_type_ref(new type_id($1), $2); }
 	| absolute_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
-		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+		{ $$ = new generic_type_ref(new type_id($1), $2); }
 	;
 
 physical_type_ref
 	: generic_type_ref { $$ = $1; }
 	| base_chan_type
-		/* what would template channel type ref look like? */
-		{ $$ = new concrete_type_ref($1, NULL); }
+		/* what would template (base) channel type ref look like? */
+		/* { $$ = new concrete_type_ref($1, NULL); } */
+		{ $$ = $1; }
 	| base_data_type_ref
 		{ $$ = $1; }
 	;
 
 base_data_type_ref
 	: base_data_type optional_template_arguments_in_angles
-		{ $$ = new concrete_type_ref($1, $2); }
+		{ $$ = new generic_type_ref($1, $2); }
 	;
 
 /** because general data types may be user-defined **/
@@ -881,7 +884,7 @@ data_type_ref
 type_id
 	: physical_type_ref { $$ = $1; }
 	| base_param_type
-		{ $$ = new concrete_type_ref($1, NULL); }
+		{ $$ = new generic_type_ref($1, NULL); }
 		/* should parameter declarations be allowed 
 			in loops and conditionals? rather not */
 	;

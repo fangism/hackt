@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24.2.2 2005/05/27 02:05:00 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.3 2005/05/28 03:00:53 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -56,7 +56,10 @@ SPECIALIZE_UTIL_WHAT(ART::parser::assign_stmt, "(assign-stmt)")
 SPECIALIZE_UTIL_WHAT(ART::parser::namespace_body, "namespace-body")
 SPECIALIZE_UTIL_WHAT(ART::parser::namespace_id, "(namespace-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::using_namespace, "(using-namespace)")
+
+// purely lazy to update these to be distinct...
 SPECIALIZE_UTIL_WHAT(ART::parser::concrete_type_ref, "(type-ref)")
+SPECIALIZE_UTIL_WHAT(ART::parser::generic_type_ref, "(type-ref)")
 }
 
 //=============================================================================
@@ -158,14 +161,18 @@ type_id::rightmost(void) const {
 type_base::return_type
 type_id::check_definition(context& c) const {
 	STACKTRACE("type_id::check_build()");
-	const never_ptr<const definition_base>
+	const type_base::return_type
 		d(c.lookup_definition(*base));
+#if USE_DEFINITION_STACK
 	if (!d) {
 //		cerr << "type_id::check_build(context&) : ERROR!" << endl;
 		return type_base::return_type(NULL);
 	}
 	// set type definition reference
 	return c.push_current_definition_reference(*d);
+#else
+	return d;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -180,7 +187,7 @@ ostream& operator << (ostream& o, const type_id& id) {
 CONSTRUCTOR_INLINE
 chan_type::chan_type(const generic_keyword_type* c, 
 		const char_punctuation_type* d, 
-		const data_type_ref_list* t) : type_base(),
+		const data_type_ref_list* t) : parent_type(),
 		chan(c), dir(d), dtypes(t) {
 	NEVER_NULL(c);
 }
@@ -234,17 +241,40 @@ chan_type::check_base_chan_type(context& c) const {
 		THROW_EXIT;
 	}
 	// add data types list to cd
-	// list of concrete_type_refs
+	// list of generic_type_refs
 	return dtypes->check_data_types(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+chan_type::return_type
+chan_type::check_type(context& c) const {
+	cerr << "Fang, finish chan_type::check_type()!" << endl;
+#if 0
+	need count_ptr<const built_in_chan_type_reference>...
+	constructed from dtypes
+	will phase out add_chan_member...
+#endif
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Needs to return a channel definition reference.  
+	Here, direction matters.  
+	Problem, returns a never_ptr<definition_base>, 
+		but refers to implicit built-in chan type.  
+	Someone has to own it!
+	See comments in class entity::built_in_channel_def. 
+	\return channel definition reference.
+ */
 type_base::return_type
 chan_type::check_definition(context& c) const {
 	STACKTRACE("chan_type::check_build()");
-	cerr << "chan_type::check_build(): FINISH ME!";
+	cerr << "chan_type::check_build(): FINISH ME!" << endl;
 	return type_base::return_type(NULL);
 }
+#endif
 
 //=============================================================================
 // class statement method definitions
@@ -624,38 +654,38 @@ if (alias) {
 }
 
 //=============================================================================
-// class concrete_type_ref method definitions
+// class generic_type_ref method definitions
 
 CONSTRUCTOR_INLINE
-concrete_type_ref::concrete_type_ref(const type_base* n, const expr_list* t) : 
+generic_type_ref::generic_type_ref(const type_base* n, const expr_list* t) : 
 		base(n), temp_spec(t) {
 	NEVER_NULL(base);
 }
 
 DESTRUCTOR_INLINE
-concrete_type_ref::~concrete_type_ref() {
+generic_type_ref::~generic_type_ref() {
 }
 
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(concrete_type_ref)
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(generic_type_ref)
 
 line_position
-concrete_type_ref::leftmost(void) const {
+generic_type_ref::leftmost(void) const {
 	return base->leftmost();
 }
 
 line_position
-concrete_type_ref::rightmost(void) const {
+generic_type_ref::rightmost(void) const {
 	if (temp_spec)	return temp_spec->rightmost();
 	else		return base->rightmost();
 }
 
 never_ptr<const type_base>
-concrete_type_ref::get_base_def(void) const {
+generic_type_ref::get_base_def(void) const {
 	return base;
 }
 
 never_ptr<const expr_list>
-concrete_type_ref::get_temp_spec(void) const {
+generic_type_ref::get_temp_spec(void) const {
 	return temp_spec;
 }
 
@@ -666,14 +696,15 @@ concrete_type_ref::get_temp_spec(void) const {
 	\return valid type-checked type-reference if successful, 
 		else NULL (does not exit on failure).  
  */
-concrete_type_ref::return_type
-concrete_type_ref::check_type(context& c) const {
-	STACKTRACE("concrete_type_ref::check_type()");
+generic_type_ref::return_type
+generic_type_ref::check_type(context& c) const {
+	STACKTRACE("generic_type_ref::check_type()");
 	// sets context's current definition
 	const never_ptr<const definition_base>
 		d(base->check_definition(c));
 	// and should return reference to definition
 	if (!d) {
+		// didn't update the string out of laziness...
 		cerr << "concrete_type_ref: bad definition reference!  "
 			"ERROR! " << where(*base) << endl;
 		THROW_EXIT;		// temporary
@@ -722,6 +753,7 @@ concrete_type_ref::check_type(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Type-check a type reference, a definition with optional template
 	arguments.  The type reference is used for creating instantiations.  
@@ -732,78 +764,14 @@ concrete_type_ref::check_type(context& c) const {
 		else NULL.
  */
 never_ptr<const object>
-concrete_type_ref::check_build(context& c) const {
-#if 0
-	typedef	never_ptr<const object>		return_type;
-	STACKTRACE("concrete_type_ref::check_build()");
-
-	// sets context's current definition
-	const never_ptr<const definition_base>
-		d(base->check_definition(c));
-	// and should return reference to definition
-	if (!d) {
-		cerr << "concrete_type_ref: bad definition reference!  "
-			"ERROR! " << where(*base) << endl;
-		THROW_EXIT;		// temporary
-		return return_type(NULL);
-	}
-
-	// check template arguments, if given
-	if (temp_spec) {
-		STACKTRACE("checking template arguments (temp_spec)");
-		// FUTURE: need to extend to handle generic template
-		// type-argument placeholders.  
-		expr_list::checked_exprs_type temp;
-		temp_spec->postorder_check_exprs(temp, c);
-		// copied from object_list::make_param_expr_list()
-		excl_ptr<dynamic_param_expr_list>
-			tpl(new dynamic_param_expr_list);
-		expr_list::checked_exprs_type::const_iterator i = temp.begin();
-		copy(temp.begin(), temp.end(), back_inserter(*tpl));
-		const count_ptr<const fundamental_type_reference>
-			type_ref(d->make_fundamental_type_reference(tpl));
-		if (!type_ref) {
-			cerr << "ERROR making complete type reference.  "
-				<< where(*this) << endl;
-			THROW_EXIT;
-		}
-		c.set_current_fundamental_type(type_ref);
-	} else {
-		STACKTRACE("empty template arguments (!temp_spec)");
-		// if no args are supplied, 
-		// make sure that the definition doesn't require template args!
-		// Now allows default values for unsupplied arguments.  
-		if(!d->check_null_template_argument().good) {
-			cerr << "definition expecting template arguments "
-				"where none were given!  " <<
-				where(*this) << endl;
-			THROW_EXIT;		// temporary
-			return never_ptr<const object>(NULL);
-		} else {
-			const count_ptr<const fundamental_type_reference>
-				type_ref(d->make_fundamental_type_reference());
-			if (!type_ref) {
-				cerr << "ERROR making complete type reference.  "
-					<< where(*this) << endl;
-				THROW_EXIT;
-			}
-			c.set_current_fundamental_type(type_ref);
-		}
-	}
-	return return_type(NULL);
-
-// we've made it!  set the fundamental_type_reference for instantiation
-//	return c.set_current_fundamental_type();
-	// who should reset_current_fundamental_type?
-	// the decl_lists? or their containers?
-#else
+generic_type_ref::check_build(context& c) const {
 	return_type ret(check_type(c));
 	if (ret)
 		c.set_current_fundamental_type(ret);
 	else	THROW_EXIT;
 	return never_ptr<const object>(NULL);
-#endif
 }
+#endif
 
 //=============================================================================
 // class data_type_ref_list method definitions
@@ -856,7 +824,18 @@ data_type_ref_list::check_data_types(context& c) const {
 //=============================================================================
 // explicit class template instantiations
 
+#if 0
 template class node_list<const concrete_type_ref>;
+template class node_list<const generic_type_ref>;
+#else
+// template node_list<const concrete_type_ref>::node_list(const concrete_type_ref*);
+template ostream& node_list<const concrete_type_ref>::what(ostream&) const;
+// template line_position node_list<const concrete_type_ref>::leftmost() const;
+// template line_position node_list<const concrete_type_ref>::rightmost() const;
+template ostream& node_list<const generic_type_ref>::what(ostream&) const;
+// template line_position node_list<const generic_type_ref>::leftmost() const;
+// template line_position node_list<const generic_type_ref>::rightmost() const;
+#endif
 template class node_list<const root_item>;
 
 //=============================================================================

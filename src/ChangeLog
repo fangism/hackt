@@ -1,5 +1,31 @@
 "ChangeLog"
 
+2005-05-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-07:
+	  Reorganized parser type references to fit the needs of channels.
+	  The basic issue is that built-in channel types (chan(...)) 
+		currently have no home scopespace, therefore we must
+		work their type information into
+		"built-in-channel-type-references", which are coming soon.  
+	  TODO: split up channel type references into built-in and
+		user-defined (currently, only user-defined).
+	  parser::context: phased out definition_stack, which was once
+		used as a placeholder to construct complete type references.  
+	  concrete_type_ref now an abstract class, the old functionality
+		has been pushed down to (new) generic_type_ref.
+	  chan_type now derives from concrete_type_ref, no longer type_base.
+	  generic_type_ref::check_build has been phased out due to
+		abandoning the context definition_stack.  
+	  typedef_alias::check_build base type is concrete_type_ref, 
+		which is now abstract, so we temporarily wrapped the 
+		existing code (for generic_type_ref) in a conditional
+		dynamic cast, just to patch and move on... will revisit
+		later to complete the chan_type case.  
+	  parser/art++-parse.yy: updated symbol return types to reflect
+		changes in concrete_type_ref hierarchy.  
+
+
 2005-05-27	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-06:

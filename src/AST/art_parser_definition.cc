@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.22.2.4 2005/05/27 21:04:04 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22.2.5 2005/05/28 03:00:54 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -736,7 +736,7 @@ typedef_alias::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Three syntaxes for typedef:
+	Three syntaces for typedef:
 	1) typedef old new;
 	2) typedef old<...> new;
 	3) template <...> typedef old<...> new;
@@ -754,10 +754,22 @@ typedef_alias::rightmost(void) const {
 never_ptr<const object>
 typedef_alias::check_build(context& c) const {
 	STACKTRACE("typedef_alias::check_build()");
+	// NOTE: (2005-05-27)
+	// built-in chan types have no base definition!
+	// invalid to expect to call get_base_def or not?
+	// temporary work-around: dynamic_cast check if is generic_type_ref, 
+	// because chan_type cannot be templated.  
+	// This all has to do the with typedef semantics described in the
+	// commends for this method (also in lang. spec. documentation).  
+	const never_ptr<const generic_type_ref>
+		base_not_chan(base.is_a<const generic_type_ref>());
+
+if (base_not_chan) {
+	// Need to redo this!
 	// first we read the user's mind by peeking down base.  
 	// does base have any template params, even an empty list?
 	const never_ptr<const type_base>
-		basedef(base->get_base_def());
+		basedef(base_not_chan->get_base_def());
 	const never_ptr<const definition_base>
 		d(basedef->check_definition(c));
 	if (!d) {
@@ -767,7 +779,7 @@ typedef_alias::check_build(context& c) const {
 	}
 	// need to worry about resetting definition reference?
 
-if (base->get_temp_spec()) {
+if (base_not_chan->get_temp_spec()) {
 	// then base certainly refers to a concrete type
 	// so now we make a new definition to wrap around it
 	// what kind of alias? we need to peek at the definition
@@ -779,7 +791,7 @@ if (base->get_temp_spec()) {
 	NEVER_NULL(tdb);
 	c.set_current_prototype(td_ex);
 	if (temp_spec) {
-		never_ptr<const object> o(temp_spec->check_build(c));
+		const never_ptr<const object> o(temp_spec->check_build(c));
 		// will add template_formals to the alias
 		if (!o) {
 			cerr << "ERROR in template formals of typedef!  "
@@ -787,22 +799,29 @@ if (base->get_temp_spec()) {
 			THROW_EXIT;
 		}
 	}
-	base->check_build(c);	// make sure is complete type
+#if 0
+	base_not_chan->check_build(c);	// make sure is complete type
+	count_ptr<const fundamental_type_reference>
+		ftr(c.get_current_fundamental_type());
+#else
+	count_ptr<const fundamental_type_reference>
+		ftr(base_not_chan->check_type(c));
+#endif
 	// transfers ownership between context members
 	const never_ptr<const object>
 		obj(c.add_declaration(c.get_current_prototype()));
 		// also resets current_prototype, *after* checking type ref
 	INVARIANT(!c.get_current_prototype());
 	// useless return value NULL, check current_fundamental_type
-	count_ptr<const fundamental_type_reference>
-		ftr(c.get_current_fundamental_type());
 	if (!ftr) {
 		cerr << "ERROR resolving concrete type reference in typedef!  "
-			<< where(*base) << endl;
+			<< where(*base_not_chan) << endl;
 		THROW_EXIT;
 	}
 	// must reset because not making instances
+#if 0
 	c.reset_current_fundamental_type();
+#endif
 	INVARIANT(ftr.refs() == 1);
 	excl_ptr<const fundamental_type_reference>
 		ftr_ex(ftr.exclusive_release());
@@ -834,6 +853,12 @@ if (base->get_temp_spec()) {
 	}
 	// else was successful
 	return d;
+}
+} else {
+	// base is a chan, which cannot have a template signature
+	cerr << "Fang, finish typedef_alias for built-in chan types!" << endl;
+	THROW_EXIT;
+	return never_ptr<const object>(NULL);
 }
 }
 

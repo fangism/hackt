@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.1.2.1 2005/05/27 02:05:03 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.1.2.2 2005/05/28 03:00:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -115,6 +115,27 @@ private:
 	load_used_id_map_object(excl_ptr<persistent>& o);
 
 };	// end class user_def_chan
+
+//-----------------------------------------------------------------------------
+/**
+	Built-in channel definition type.  (commented 2005-05-27)
+	How do these definitions get created? and who manages them?
+	They are just referenced anoymously.  
+	The datatypes carried are like template parameters, but not really.  
+	Do we need a notion of built-in channel parameters?
+	Do we need to keep a static repository of seen types?
+	How will this be handled with respect to object persistence?
+	Would it be easier to sub-type channel type references?
+	Since built-in channel types are not templated, they can be handled
+	as a special case of concrete_type_ref: built-in chan type ref.
+ */
+class built_in_channel_def : public channel_definition_base {
+private:
+public:
+	built_in_channel_def();
+	~built_in_channel_def();
+
+};	// end class built_in_channel_def
 
 //-----------------------------------------------------------------------------
 /**

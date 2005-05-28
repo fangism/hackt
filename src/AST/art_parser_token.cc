@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.29 2005/05/23 01:02:33 fang Exp $
+	$Id: art_parser_token.cc,v 1.29.2.1 2005/05/28 03:00:56 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -548,11 +548,17 @@ token_bool_type::~token_bool_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
 token_bool_type::check_definition(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
 	// bool_def declared in "art_built_ins.h"
+#if USE_DEFINITION_STACK
 	return c.push_current_definition_reference(bool_def);
+#else
+	// safe to use never_ptr on address of statically allocated definition
+	return type_base::return_type(&bool_def);
+#endif
 }
 
 //=============================================================================
@@ -566,11 +572,17 @@ token_int_type::~token_int_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
 token_int_type::check_definition(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
 	// int_def declared in "art_built_ins.h"
+#if USE_DEFINITION_STACK
 	return c.push_current_definition_reference(int_def);
+#else
+	// safe to use never_ptr on address of statically allocated definition
+	return type_base::return_type(&int_def);
+#endif
 }
 
 //=============================================================================
@@ -584,6 +596,7 @@ token_pbool_type::~token_pbool_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Return pointer to the definition, 
 	the caller (concrete_type_ref) should convert it to the appropriate
@@ -595,7 +608,11 @@ type_base::return_type
 token_pbool_type::check_definition(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
 	// pbool_def declared in "art_built_ins.h"
+#if USE_DEFINITION_STACK
 	return c.push_current_definition_reference(pbool_def);
+#else
+	return type_base::return_type(&pbool_def);
+#endif
 }
 
 //=============================================================================
@@ -609,6 +626,7 @@ token_pint_type::~token_pint_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Let caller resolve to concrete type reference with the definition.  
 //	"pint" is always used as a type_reference, and never refers
@@ -618,7 +636,11 @@ type_base::return_type
 token_pint_type::check_definition(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
 	// pint_def declared in "art_built_ins.h"
+#if USE_DEFINITION_STACK
 	return c.push_current_definition_reference(pint_def);
+#else
+	return type_base::return_type(&pint_def);
+#endif
 }
 
 //=============================================================================

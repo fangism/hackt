@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.19.2.1 2005/05/27 21:04:06 fang Exp $
+	$Id: art_context.h,v 1.19.2.2 2005/05/28 03:00:57 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -54,6 +54,8 @@ class qualified_id;
 class token_identifier;
 class token_datatype;
 class token_paramtype;
+
+#define	USE_DEFINITION_STACK		0
 
 //=============================================================================
 // what is a context object?
@@ -120,6 +122,7 @@ protected:
 	 */
 	excl_ptr<definition_base>	current_prototype;
 
+#if USE_DEFINITION_STACK
 	/**
 		Pointer to the current definition referenced, usually
 		resolved by the last identifier.  
@@ -130,6 +133,7 @@ protected:
 	 */
 	stack<never_ptr<const definition_base> >	definition_stack;
 #define	current_definition_reference		definition_stack.top()
+#endif
 
 	/**
 		Pointer to the concrete type to instantiate.  
@@ -297,6 +301,7 @@ public:
 	get_current_namespace(void) const
 		{ return current_namespace; }
 
+#if USE_DEFINITION_STACK
 // sets context's definition for instantiation, or for member lookup
 	never_ptr<const definition_base>	
 	get_current_definition_reference(void) const
@@ -309,9 +314,10 @@ public:
 		return current_definition_reference;
 	}
 
-// never_ptr<const fundamental_type_reference>
-	count_ptr<const fundamental_type_reference>
-	get_current_fundamental_type(void) const;
+// should be called by parser after done using definitions
+	void
+	pop_current_definition_reference(void);
+#endif
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
@@ -340,13 +346,6 @@ public:
 
 #endif
 
-// should be called by parser after done using definitions
-	void
-	pop_current_definition_reference(void);
-
-	void
-	reset_current_fundamental_type(void);
-
 #if 0
 	never_ptr<const built_in_param_def>
 	get_current_param_definition(void) const;
@@ -359,7 +358,14 @@ public:
 
 	void
 	set_current_fundamental_type(
-		const count_ptr<const fundamental_type_reference>& tr);
+		const count_ptr<const fundamental_type_reference>&);
+
+// never_ptr<const fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
+	get_current_fundamental_type(void) const;
+
+	void
+	reset_current_fundamental_type(void);
 
 	never_ptr<const object>
 	lookup_object(const qualified_id& id) const;

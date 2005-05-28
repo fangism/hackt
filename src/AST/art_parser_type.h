@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.7.2.2 2005/05/27 02:05:01 fang Exp $
+	$Id: art_parser_type.h,v 1.7.2.3 2005/05/28 03:00:57 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -77,12 +77,86 @@ public:
 
 };	// end class data_type_ref_list
 
+//=============================================================================
+class concrete_type_ref {
+public:
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
+
+public:
+	concrete_type_ref() { }
+virtual	~concrete_type_ref() { }
+
+	PURE_VIRTUAL_NODE_METHODS
+
+virtual	return_type
+	check_type(context&) const = 0;
+};	// end class concrete_type_ref
+
 //-----------------------------------------------------------------------------
 /**
+	Reference to a concrete type, i.e. definition with its
+	template parameters specified (if applicable).
+
+	NOTE (2005-05-12):
+	Eventually this may be a valid template argument once we support
+	template type arguments in addition to parameters.  
+	Plan: derive this from expr, introduce new virtual functions
+	to handle cases where subtypes are expected.  
+ */
+class generic_type_ref : public concrete_type_ref {
+	typedef	concrete_type_ref			parent_type;
+public:
+	typedef	parent_type::return_type		return_type;
+protected:
+	/** definition name base */
+	const excl_ptr<const type_base>			base;
+	/**
+		Optional template arguments.
+		TODO: Needs to be split into strict and relaxed arguments.  
+		(see "AST/art_parser_expr_list.h":template_argument_list_pair.)
+	 */
+	const excl_ptr<const expr_list>			temp_spec;
+public:
+	explicit
+	generic_type_ref(const type_base* n, const expr_list* t = NULL);
+
+	~generic_type_ref();
+
+	never_ptr<const type_base>
+	get_base_def(void) const;
+
+	never_ptr<const expr_list>
+	get_temp_spec(void) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+#if 0
+	never_ptr<const object>
+	check_build(context& c) const;
+#endif
+
+	return_type
+	check_type(context&) const;
+
+};	// end class concrete_type_ref
+
+//-----------------------------------------------------------------------------
+/**
+	Built-in channel type reference.  
 	Full base channel type, including base type list.
 	So far, nothing derives from this...
  */
-class chan_type : public type_base {
+class chan_type : public concrete_type_ref {
+	typedef	concrete_type_ref			parent_type;
+public:
+	typedef	parent_type::return_type		return_type;
 protected:
 	const excl_ptr<const generic_keyword_type>	chan;	///< keyword "channel"
 	const excl_ptr<const char_punctuation_type>	dir;	///< port direction: in or out
@@ -106,64 +180,17 @@ public:
 	line_position
 	rightmost(void) const;
 
+#if 0
 	TYPE_BASE_CHECK_PROTO;
+#else
+	return_type
+	check_type(context&) const;
+#endif
 
 	// dedicated for user_chan_type_signature
 	good_bool
 	check_base_chan_type(context&) const;
 };	// end class chan_type
-
-//=============================================================================
-/**
-	Reference to a concrete type, i.e. definition with its
-	template parameters specified (if applicable).
-
-	NOTE (2005-05-12):
-	Eventually this may be a valid template argument once we support
-	template type arguments in addition to parameters.  
-	Plan: derive this from expr, introduce new virtual functions
-	to handle cases where subtypes are expected.  
- */
-class concrete_type_ref {
-public:
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
-protected:
-	/** definition name base */
-	const excl_ptr<const type_base>			base;
-	/**
-		Optional template arguments.
-		TODO: Needs to be split into strict and relaxed arguments.  
-		(see "AST/art_parser_expr_list.h":template_argument_list_pair.)
-	 */
-	const excl_ptr<const expr_list>			temp_spec;
-public:
-	explicit
-	concrete_type_ref(const type_base* n, const expr_list* t = NULL);
-
-	~concrete_type_ref();
-
-	never_ptr<const type_base>
-	get_base_def(void) const;
-
-	never_ptr<const expr_list>
-	get_temp_spec(void) const;
-
-	ostream&
-	what(ostream& o) const;
-
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-
-	never_ptr<const object>
-	check_build(context& c) const;
-
-	return_type
-	check_type(context&) const;
-
-};	// end class concrete_type_ref
 
 //=============================================================================
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.21.2.2 2005/05/27 02:05:00 fang Exp $
+	$Id: art_parser_formal.cc,v 1.21.2.3 2005/05/28 03:00:55 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -152,6 +152,7 @@ never_ptr<const object>
 data_param_decl::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("data_param_decl::check_build()");
+#if 0
 	type->check_build(c);
 	// useless return value
 		// should set the current_fundamental_type in context
@@ -159,14 +160,23 @@ data_param_decl::check_build(context& c) const {
 		ftr(c.get_current_fundamental_type());
 	c.pop_current_definition_reference();
 		// no longer need the base definition
+#else
+	const count_ptr<const fundamental_type_reference>
+		ftr(type->check_type(c));
+	// make sure is data-type!
+	c.set_current_fundamental_type(ftr);
+#endif
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
 		// error catching?
 		// consider calling different routine
 	} else {
+#if 0
+		// already have error message
 		cerr << "ERROR with concrete-type in chan port decl. at "
 			<< where(*type) << endl;
+#endif
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
@@ -285,6 +295,7 @@ port_formal_decl::rightmost(void) const {
 	return ids->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Very similar to instance_declaration::check_build.  
 	\return just NULL.  
@@ -295,6 +306,7 @@ never_ptr<const object>
 port_formal_decl::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("port_formal_decl::check_build()");
+#if USE_DEFINITION_STACK
 	type->check_build(c);
 	// useless return value
 		// should set the current_fundamental_type in context
@@ -302,13 +314,22 @@ port_formal_decl::check_build(context& c) const {
 		ftr(c.get_current_fundamental_type());
 	c.pop_current_definition_reference();
 		// no longer need the base definition
+#else
+	const count_ptr<const fundamental_type_reference>
+		ftr(type->check_type(c));
+	// make sure is data-type!
+	c.set_current_fundamental_type(ftr);
+#endif
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
 		// error catching?
 	} else {
+#if 0
+		// already have error message
 		cerr << "ERROR with concrete-type in port formal decl. at "
 			<< where(*type) << endl;
+#endif
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
@@ -452,10 +473,16 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
+#if USE_DEFINITION_STACK
 	type->check_definition(c);
 	// useless return value, always NULL
 	const never_ptr<const definition_base>
 		def(c.get_current_definition_reference());
+#else
+	// useless return value, always NULL
+	const never_ptr<const definition_base>
+		def(type->check_definition(c));
+#endif
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<
 			where(*type) << endl;
