@@ -28,6 +28,8 @@
 		in "art_object_classification_tags.h" but not used yet, 
 		until we decide to split off channel_tag.  
 	  Type hash keys for channel type references updated.  
+	  TODO: now ready to type-check and add CHP?
+	  TODO: more test cases, perhaps preliminary template checks.  
 
 
 2005-05-28	David Fang		<fangism@users.sourceforge.net>
