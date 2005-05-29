@@ -2,6 +2,36 @@
 
 2005-05-28	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-08:
+	  Purged all traces of parser::context::definition_stack.
+	  New class: old channel_type_reference was split off into
+		builtin_channel_type_reference and channel_type_reference, 
+		with common parent channel_type_reference_base.
+		(Will soon rename channel_type_reference 
+		to user_channel_type_reference.)
+	  builtin_channel_type_reference just contains a list of 
+		data_type_reference (pointers), which represents channel
+		types of the form "chan(type,...)" without having a 
+		builtin_channel_definition.  
+	  The base channel type of a user-defined channel has been reduced
+		to a builtin_channel_type_reference.  
+	  entity::user_def_chan now contains (pointer) 
+		builtin_channel_type_reference.  
+	  Moved some parser functionality around to follow changes
+		in the channel_type_references.  
+	  Updated class_traits<channel_tag> in 
+		"art_object_classification_details.h"
+		Never before have I been so happy that I did this -- 
+		what would've been days of changing code across tens of
+		files was accomplished with TWO line changes in the 
+		policy classes.  Also added new sub-tags of channel_tag
+		in "art_object_classification_tags.h" but not used yet, 
+		until we decide to split off channel_tag.  
+	  Type hash keys for channel type references updated.  
+
+
+2005-05-28	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-07:
 	  Reorganized parser type references to fit the needs of channels.
 	  The basic issue is that built-in channel types (chan(...)) 

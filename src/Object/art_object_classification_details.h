@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.1 2005/05/26 21:31:22 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.2 2005/05/29 02:08:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -326,9 +326,8 @@ struct class_traits<datastruct_tag> {
 	typedef	datastruct_alias_connection	alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	// need real type here!
-	typedef	count_ptr<const data_type_reference>
-						instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
+	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<datastruct_tag>
@@ -372,14 +371,19 @@ struct class_traits<process_tag> {
 	typedef	process_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
-	typedef	count_ptr<const process_type_reference>
-						instance_collection_parameter_type;
 	typedef	process_type_reference		type_ref_type;
+	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<process_tag>
 
 //-----------------------------------------------------------------------------
+/**
+	NOTE: recently split off channel type references into 
+	built-in and user-defined.  
+	Instantiation statements and collections now use
+	channel_type_reference_base (abstract) (2005-05-28).
+ */
 template <>
 struct class_traits<channel_tag> {
 	typedef	channel_tag			tag_type;
@@ -418,9 +422,8 @@ struct class_traits<channel_tag> {
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
-	typedef	count_ptr<const channel_type_reference>
-						instance_collection_parameter_type;
-	typedef	channel_type_reference		type_ref_type;
+	typedef	channel_type_reference_base	type_ref_type;
+	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<channel_tag>

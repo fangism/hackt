@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.1.2.2 2005/05/28 03:00:57 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.1.2.3 2005/05/29 02:08:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -54,13 +54,20 @@ private:
 	typedef channel_definition_base		definition_parent_type;
 	typedef	scopespace			scope_parent_type;
 	typedef	sequential_scope		sequential_parent_type;
+#if 0
 	typedef	list<count_ptr<const data_type_reference> >
 						datatype_list_type;
+#endif
 protected:
 	// list of other type definitions
 	const string				key;
 	const never_ptr<const name_space>	parent;
+#if 0
 	datatype_list_type			datatype_list;
+#else
+	count_ptr<const builtin_channel_type_reference>
+						base_chan_type_ref;
+#endif
 	port_formals_manager			port_formals;
 private:
 	user_def_chan();
@@ -86,8 +93,14 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+#if 0
 	void
 	add_datatype(const count_ptr<const data_type_reference>&);
+#else
+	void
+	attach_base_channel_type(
+		const count_ptr<const builtin_channel_type_reference>&);
+#endif
 
 	// maybe add_datatypes?
 

@@ -2,25 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3602d40	module__	0	0	29
-	2	 0x3600144	namespc_	0	29	53
-	3	 0x3602d60	chandefn	0	53	144
-	4	 0x3602ce4	dintcoll	0	144	182
-	5	 0x3602df0	datainst	0	182	202
-	6	 0x3602e10	datatprf	0	202	218
-	7	 0x3602e20	datadefn	0	218	254
-	8	 0x3602e84	dprmlst_	0	254	270
-	9	 0x3312024	cnstpi__	0	270	282
-	10	 0x3602e94	dintcoll	0	282	320
-	11	 0x3602ef0	datainst	0	320	340
-	12	 0x3602f14	dintcoll	0	340	378
-	13	 0x3602f70	datainst	0	378	398
-	14	 0x3602f90	datatprf	0	398	414
-	15	 0x3602fa4	dprmlst_	0	414	430
-	16	 0x3312038	cnstpi__	0	430	442
-	17	 0x3602fb0	datatprf	0	442	458
-	18	 0x3602fc0	datadefn	0	458	495
-	19	 0x3603020	datatprf	0	495	511
+	1	 0x3502eb0	module__	0	0	29
+	2	 0x3500144	namespc_	0	29	53
+	3	 0x3502ed0	chandefn	0	53	136
+	4	 0x3502e54	dintcoll	0	136	174
+	5	 0x3502f60	datainst	0	174	194
+	6	 0x3502f80	datatprf	0	194	210
+	7	 0x3502f90	datadefn	0	210	246
+	8	 0x3502ff4	dprmlst_	0	246	262
+	9	 0x32d1024	cnstpi__	0	262	274
+	10	 0x3503004	dintcoll	0	274	312
+	11	 0x3503060	datainst	0	312	332
+	12	 0x3503084	dintcoll	0	332	370
+	13	 0x35030e0	datainst	0	370	390
+	14	 0x3503100	datatprf	0	390	406
+	15	 0x3503114	dprmlst_	0	406	422
+	16	 0x32d1038	cnstpi__	0	422	434
+	17	 0x3503120	bchntprf	0	434	458
+	18	 0x3503130	datatprf	0	458	474
+	19	 0x3503140	datadefn	0	474	511
+	20	 0x35031a0	datatprf	0	511	527
 
 In module created from: ./005.in (unrolled)
 In namespace "", we have: {

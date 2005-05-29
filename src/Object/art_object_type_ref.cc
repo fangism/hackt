@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.35.2.2 2005/05/27 02:05:03 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35.2.3 2005/05/29 02:08:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -34,6 +34,7 @@
 #include "Object/art_object_inst_stmt_proc.h"
 
 #include "util/sstream.h"
+#include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 
@@ -44,7 +45,11 @@ namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_type_reference, CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
+	ART::entity::builtin_channel_type_reference,
+		BLTIN_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_type_reference,
+		USER_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
@@ -54,6 +59,8 @@ namespace entity {
 using std::ostringstream;
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using util::indent;
+using util::auto_indent;
 using util::persistent_traits;
 
 //=============================================================================
@@ -248,12 +255,15 @@ fundamental_type_reference::may_be_equivalent(
 /**
 	Must be equivalent.  
 	Conservatively returns false.  
+	TODO: special case when comparing built-in channel types.  (2005-05-28)
  */
 bool
 fundamental_type_reference::must_be_equivalent(
 		const fundamental_type_reference& t) const {
 	const never_ptr<const definition_base> left(get_base_def());
 	const never_ptr<const definition_base> right(t.get_base_def());
+	NEVER_NULL(left);
+	NEVER_NULL(right);
 	// TO DO: may need to resolve alias? unrolling context?
 	if (left != right) {
 #if 0
@@ -551,6 +561,151 @@ data_type_reference::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class channel_type_reference_base method definitions
+
+// inline
+channel_type_reference_base::channel_type_reference_base(
+		template_args_ptr_type& pl) :
+		parent_type(pl) {
+}
+
+//=============================================================================
+// class builtin_channel_type_reference method definitions
+
+builtin_channel_type_reference::builtin_channel_type_reference() :
+		parent_type(), datatype_list() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+builtin_channel_type_reference::~builtin_channel_type_reference() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+builtin_channel_type_reference::what(ostream& o) const {
+	return o << "builtin-channel-type-reference";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Single-line compact dump of built-in channel type reference.  
+	No newline at the end.  
+ */
+ostream&
+builtin_channel_type_reference::dump(ostream& o) const {
+	o << "chan(";
+	datatype_list_type::const_iterator i(datatype_list.begin());
+	const datatype_list_type::const_iterator e(datatype_list.end());
+	(*i)->dump(o);
+	for (i++; i!=e; i++) {
+		(*i)->dump(o << ", ");
+	}
+	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Indented, one-type-per-line-formatted dump of built-in channel 
+	type reference, called from at least user_def_chan::dump.
+ */
+ostream&
+builtin_channel_type_reference::dump_long(ostream& o) const {
+	o << auto_indent << "chan (" << endl;
+	{
+	const indent __indent__(o); 
+	datatype_list_type::const_iterator
+		i(datatype_list.begin());
+	const datatype_list_type::const_iterator
+		e(datatype_list.end());
+	for ( ; i!=e; i++) {
+		(*i)->dump(o << auto_indent) << endl;
+	}
+	}
+	return o << auto_indent << ')' << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Built-in channel types have no base definition... yet.
+	Perhaps a singleton global static definition should exist 
+	for this purpose.  
+	For now this returns NULL.  
+ */
+never_ptr<const definition_base>
+builtin_channel_type_reference::get_base_def(void) const {
+	cerr << "Got: builtin_chanel_type_reference::get_base_def(), "
+		"did you really mean this?" << endl;
+	return never_ptr<const built_in_channel_def>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::add_datatype(
+		const datatype_list_type::value_type& t) {
+	NEVER_NULL(t);
+	datatype_list.push_back(t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns a newly constructed channel instantiation statement object.
+	Currently same as (user-defined) channel_type_reference.  
+	Perhaps fold into parent class?
+	Q: Is there a need to distinguish between channel types
+		for making instantiation statements?
+	(2005-05-28: decide later)
+ */
+excl_ptr<instantiation_statement_base>
+builtin_channel_type_reference::make_instantiation_statement_private(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const {
+	return excl_ptr<instantiation_statement_base>(
+		new channel_instantiation_statement(
+			t.is_a<const this_type>(), d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns a newly constructed channel instance object.  
+	Q: Is there a need to distinguish between channel types
+		for making instantiation collections?
+	(2005-05-28: decide later)
+ */
+excl_ptr<instance_collection_base>
+builtin_channel_type_reference::make_instance_collection(
+		const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const {
+	return excl_ptr<instance_collection_base>(
+		channel_instance_collection::make_array(*s, id, d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
+	m.collect_pointer_list(datatype_list);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::write_object(
+		const persistent_object_manager& m, ostream& o) const {
+	parent_type::write_object_base(m, o);
+	m.write_pointer_list(o, datatype_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::load_object(
+		const persistent_object_manager& m, istream& i) {
+	parent_type::load_object_base(m, i);
+	m.read_pointer_list(i, datatype_list);
+}
+
+//=============================================================================
 // class channel_type_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -558,7 +713,7 @@ data_type_reference::load_object(const persistent_object_manager& m,
 	Private empty constructor.  
  */
 channel_type_reference::channel_type_reference() :
-		fundamental_type_reference(), 
+		parent_type(), 
 		base_chan_def(NULL) {
 	// no assert
 }
@@ -572,7 +727,7 @@ channel_type_reference::channel_type_reference() :
 channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd, 
 		template_args_ptr_type& pl) :
-		fundamental_type_reference(pl), 
+		parent_type(pl), 
 		base_chan_def(cd) {
 	NEVER_NULL(base_chan_def);
 }
@@ -580,7 +735,7 @@ channel_type_reference::channel_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd) :
-		fundamental_type_reference(), 	// NULL
+		parent_type(), 	// NULL
 		base_chan_def(cd) {
 	NEVER_NULL(base_chan_def);
 }
@@ -592,7 +747,7 @@ channel_type_reference::~channel_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_type_reference::what(ostream& o) const {
-	return o << "channel-type-reference";
+	return o << "user-channel-type-reference";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -611,7 +766,7 @@ channel_type_reference::make_instantiation_statement_private(
 		const index_collection_item_ptr_type& d) const {
 	return excl_ptr<instantiation_statement_base>(
 		new channel_instantiation_statement(
-			t.is_a<const channel_type_reference>(), d));
+			t.is_a<const this_type>(), d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

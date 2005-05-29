@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.22.2.5 2005/05/28 03:00:54 fang Exp $
+	$Id: art_parser_definition.cc,v 1.22.2.6 2005/05/29 02:08:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -29,7 +29,7 @@
 #include "AST/art_parser_node_list.tcc"
 
 #include "Object/art_context.h"
-#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_type_ref.h"	// for builtin_channel_type_reference
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 #include "Object/art_object_expr_base.h"
@@ -77,6 +77,7 @@ using entity::user_def_chan;
 using entity::user_def_datatype;
 using entity::process_definition;
 using entity::typedef_base;
+using entity::builtin_channel_type_reference;
 
 //=============================================================================
 // abstract class prototype method definitions
@@ -394,7 +395,9 @@ user_chan_type_signature::check_signature(context& c) const {
 	STACKTRACE("user_chan_type_signature::check_signature()");
 	excl_ptr<definition_base>
 		cd(new user_def_chan(c.get_current_namespace(), *id));
-	c.set_current_prototype(cd);
+	never_ptr<user_def_chan>
+		ncd(c.set_current_prototype(cd).is_a<user_def_chan>());
+	NEVER_NULL(ncd);
 	if (temp_spec) {
 		const never_ptr<const object> o(temp_spec->check_build(c));
 		if (!o) {
@@ -402,9 +405,14 @@ user_chan_type_signature::check_signature(context& c) const {
 			THROW_EXIT;
 		}
 	}
-	if (!bct->check_base_chan_type(c).good) {
+	const count_ptr<const builtin_channel_type_reference>
+		bcr(bct->check_type(c)
+			.is_a<const builtin_channel_type_reference>());
+	if (!bcr) {
 		cerr << "ERROR in base channel type at " << where(*bct) << endl;
 		THROW_EXIT;
+	} else {
+		ncd->attach_base_channel_type(bcr);
 	}
 	if (!params->check_chan_ports(c).good) {
 		cerr << "ERROR: in channel ports list at " <<

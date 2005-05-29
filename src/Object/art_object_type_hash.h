@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7 2005/05/19 18:43:34 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7.2.1 2005/05/29 02:08:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -47,7 +47,8 @@
 
 // Type references:
 #define	PROCESS_TYPE_REFERENCE_TYPE_KEY				"proctprf"
-#define	CHANNEL_TYPE_REFERENCE_TYPE_KEY				"chantprf"
+#define	BLTIN_CHANNEL_TYPE_REFERENCE_TYPE_KEY			"bchntprf"
+#define	USER_CHANNEL_TYPE_REFERENCE_TYPE_KEY			"uchntprf"
 #define	DATA_TYPE_REFERENCE_TYPE_KEY				"datatprf"
 	// no need for param type reference, or built-in data type reference
 

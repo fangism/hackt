@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.33.2.3 2005/05/28 03:00:57 fang Exp $
+ 	$Id: art_context.cc,v 1.33.2.4 2005/05/29 02:08:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -61,9 +61,6 @@ context::context(module& m) :
 		namespace_stack(), 
 		current_open_definition(NULL), 
 		current_prototype(NULL), 
-#if USE_DEFINITION_STACK
-		definition_stack(), 
-#endif
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
 		global_namespace(m.get_global_namespace()), 
@@ -76,10 +73,6 @@ context::context(module& m) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
-#if USE_DEFINITION_STACK
-	definition_stack.push(never_ptr<const definition_base>(NULL));
-	// initializing stacks else top() will seg-fault
-#endif
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
 	NEVER_NULL(current_namespace);	// make sure allocated properly
@@ -454,18 +447,6 @@ context::get_current_channel_definition(void) const {
 never_ptr<const process_definition_base>
 context::get_current_process_definition(void) const {
 	return current_definition_reference.is_a<const process_definition_base>();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_DEFINITION_STACK
-/**
-	Deactivates the current definition.  
- */
-void
-context::pop_current_definition_reference(void) {
-	INVARIANT(current_definition_reference);
-	definition_stack.pop();
 }
 #endif
 

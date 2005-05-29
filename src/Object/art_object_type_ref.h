@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.25 2005/05/22 06:24:19 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25.2.1 2005/05/29 02:08:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -89,17 +89,82 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class data_type_reference
 
+//=============================================================================
+/**
+	Abstract parent class for all channel types.  
+ */
+class channel_type_reference_base : public fundamental_type_reference {
+protected:
+	typedef	fundamental_type_reference		parent_type;
+protected:
+	channel_type_reference_base() : parent_type() { }
+public:
+	channel_type_reference_base(template_args_ptr_type&);
+virtual	~channel_type_reference_base() { }
+
+// everything else inherited, including pure virtual methods
+
+};	// end class channel_type_reference_base
+
+//-----------------------------------------------------------------------------
+/**
+	Reference to an intrinsic channel type, chan(...).
+	There is no built-in channel definition, which is why we need
+	this channel type split off.  
+ */
+class builtin_channel_type_reference : public channel_type_reference_base {
+	typedef	builtin_channel_type_reference		this_type;
+	typedef	channel_type_reference_base		parent_type;
+public:
+	typedef	list<count_ptr<const data_type_reference> >
+							datatype_list_type;
+private:
+	datatype_list_type				datatype_list;
+public:
+	builtin_channel_type_reference();
+	~builtin_channel_type_reference();
+
+	ostream&
+	what(ostream& o) const;
+
+	// overrides grandparent's
+	ostream&
+	dump(ostream&) const;
+
+	ostream&
+	dump_long(ostream&) const;
+
+	never_ptr<const definition_base>
+	get_base_def(void) const;
+
+	void
+	add_datatype(const datatype_list_type::value_type&);
+
+private:
+	excl_ptr<instantiation_statement_base>
+	make_instantiation_statement_private(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const;
+			
+	excl_ptr<instance_collection_base>
+	make_instance_collection(const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const;
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class builtin_channel_type_reference
+
 //-----------------------------------------------------------------------------
 /**
 	Reference to a channel-type definition.  
 	Includes optional template parameters.  
  */
-class channel_type_reference : public fundamental_type_reference {
+class channel_type_reference : public channel_type_reference_base {
 private:
 	typedef	channel_type_reference			this_type;
-	typedef	fundamental_type_reference		parent_type;
+	typedef	channel_type_reference_base		parent_type;
 protected:
-	typedef	parent_type::template_args_ptr_type		template_args_ptr_type;
+	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 	never_ptr<const channel_definition_base>	base_chan_def;
 private:
@@ -120,6 +185,7 @@ public:
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+
 private:
 	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
@@ -129,6 +195,7 @@ private:
 	excl_ptr<instance_collection_base>
 	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

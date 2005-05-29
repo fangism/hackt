@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.19.2.2 2005/05/28 03:00:57 fang Exp $
+	$Id: art_context.h,v 1.19.2.3 2005/05/29 02:08:27 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -54,8 +54,6 @@ class qualified_id;
 class token_identifier;
 class token_datatype;
 class token_paramtype;
-
-#define	USE_DEFINITION_STACK		0
 
 //=============================================================================
 // what is a context object?
@@ -121,19 +119,6 @@ protected:
 		Exclusive-pointer because is freshly constructed.  
 	 */
 	excl_ptr<definition_base>	current_prototype;
-
-#if USE_DEFINITION_STACK
-	/**
-		Pointer to the current definition referenced, usually
-		resolved by the last identifier.  
-		May point to any definition for a channel, data-type, 
-		process, or even the dummy built-in parameter and data-types.  
-		The definition will be combined with optional 
-		template parameters to form a type reference (below).  
-	 */
-	stack<never_ptr<const definition_base> >	definition_stack;
-#define	current_definition_reference		definition_stack.top()
-#endif
 
 	/**
 		Pointer to the concrete type to instantiate.  
@@ -300,24 +285,6 @@ public:
 	never_ptr<const name_space>
 	get_current_namespace(void) const
 		{ return current_namespace; }
-
-#if USE_DEFINITION_STACK
-// sets context's definition for instantiation, or for member lookup
-	never_ptr<const definition_base>	
-	get_current_definition_reference(void) const
-		{ return current_definition_reference; }
-
-// pointer instead of reference?
-	never_ptr<const definition_base>
-	push_current_definition_reference(const definition_base& d) {
-		definition_stack.push(never_ptr<const definition_base>(&d));
-		return current_definition_reference;
-	}
-
-// should be called by parser after done using definitions
-	void
-	pop_current_definition_reference(void);
-#endif
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);

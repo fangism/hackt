@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.1 2005/05/28 03:00:54 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.2 2005/05/29 02:08:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -702,17 +702,6 @@ member_expr::check_reference(context& c) const {
 		base_def(inst_ref->get_base_def());
 	NEVER_NULL(base_def);
 
-#if USE_DEFINITION_STACK
-	// CHECK THIS:
-	// is this needed? context is not passed down
-	// before definition reference is popped off stack.
-	c.push_current_definition_reference(*base_def);
-	// this should return a reference to an instance
-	// of some type that has members, such as data, channel, process.  
-	// should resolve to a *single* instance of something, 
-	// cannot be an array.  
-#endif
-
 	// use that instance_reference, get its referenced definition_base, 
 	// and make sure it has a member m, lookup ports only in the 
 	// current_definition_reference, don't lookup anywhere else!
@@ -732,11 +721,6 @@ member_expr::check_reference(context& c) const {
 
 	const count_ptr<instance_reference_base>
 	ret_inst_ref(member_inst->make_member_instance_reference(inst_ref));
-
-#if USE_DEFINITION_STACK
-	// reset definition reference in context
-	c.pop_current_definition_reference();
-#endif
 
 	// old comments:
 	// what should this return?  the same thing it expects:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.29.2.1 2005/05/28 03:00:56 fang Exp $
+	$Id: art_parser_token.cc,v 1.29.2.2 2005/05/29 02:08:27 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -553,12 +553,8 @@ type_base::return_type
 token_bool_type::check_definition(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
 	// bool_def declared in "art_built_ins.h"
-#if USE_DEFINITION_STACK
-	return c.push_current_definition_reference(bool_def);
-#else
 	// safe to use never_ptr on address of statically allocated definition
 	return type_base::return_type(&bool_def);
-#endif
 }
 
 //=============================================================================
@@ -577,12 +573,8 @@ type_base::return_type
 token_int_type::check_definition(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
 	// int_def declared in "art_built_ins.h"
-#if USE_DEFINITION_STACK
-	return c.push_current_definition_reference(int_def);
-#else
 	// safe to use never_ptr on address of statically allocated definition
 	return type_base::return_type(&int_def);
-#endif
 }
 
 //=============================================================================
@@ -608,11 +600,7 @@ type_base::return_type
 token_pbool_type::check_definition(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
 	// pbool_def declared in "art_built_ins.h"
-#if USE_DEFINITION_STACK
-	return c.push_current_definition_reference(pbool_def);
-#else
 	return type_base::return_type(&pbool_def);
-#endif
 }
 
 //=============================================================================
@@ -636,11 +624,7 @@ type_base::return_type
 token_pint_type::check_definition(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
 	// pint_def declared in "art_built_ins.h"
-#if USE_DEFINITION_STACK
-	return c.push_current_definition_reference(pint_def);
-#else
 	return type_base::return_type(&pint_def);
-#endif
 }
 
 //=============================================================================

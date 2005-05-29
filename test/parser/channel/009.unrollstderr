@@ -2,21 +2,22 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3602790	module__	0	0	29
-	2	 0x3600144	namespc_	0	29	57
-	3	 0x36027b0	chandefn	0	57	156
-	4	 0x3602844	dboolcol	0	156	190
-	5	 0x36028a0	datainst	0	190	210
-	6	 0x36028c0	datatprf	0	210	226
-	7	 0x36028d0	datadefn	0	226	263
-	8	 0x3602934	dboolcol	0	263	297
-	9	 0x3602990	datainst	0	297	317
-	10	 0x36029b4	dboolcol	0	317	351
-	11	 0x3602a10	datainst	0	351	371
-	12	 0x3602a34	dboolcol	0	371	405
-	13	 0x3602a90	datainst	0	405	425
-	14	 0x3602ab0	datatprf	0	425	441
-	15	 0x3602ac0	enumdefn	0	441	499
+	1	 0x35028f0	module__	0	0	29
+	2	 0x3500144	namespc_	0	29	57
+	3	 0x3502910	chandefn	0	57	152
+	4	 0x3502894	dboolcol	0	152	186
+	5	 0x35029a0	datainst	0	186	206
+	6	 0x35029c0	datatprf	0	206	222
+	7	 0x35029d0	datadefn	0	222	259
+	8	 0x3502a34	dboolcol	0	259	293
+	9	 0x3502a90	datainst	0	293	313
+	10	 0x3502ab4	dboolcol	0	313	347
+	11	 0x3502b10	datainst	0	347	367
+	12	 0x3502b34	dboolcol	0	367	401
+	13	 0x3502b90	datainst	0	401	421
+	14	 0x3502bb0	bchntprf	0	421	441
+	15	 0x3502bc0	datatprf	0	441	457
+	16	 0x3502bd0	enumdefn	0	457	515
 
 In module created from: ./009.in (unrolled)
 In namespace "", we have: {

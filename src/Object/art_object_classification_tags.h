@@ -3,7 +3,7 @@
 	Classification of types in ART.
 	These type tags may be used for specialization of many
 	features of the language.  
-	$Id: art_object_classification_tags.h,v 1.3 2005/05/10 04:51:11 fang Exp $
+	$Id: art_object_classification_tags.h,v 1.3.6.1 2005/05/29 02:08:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_TAGS_H__
@@ -80,6 +80,16 @@ struct enum_tag : public datatype_tag { };
 	Composite (struct) data type.  
  */
 struct datastruct_tag : public datatype_tag { };
+
+/**
+	User-defined channel type.  
+ */
+struct user_channel_tag : public channel_tag { };
+
+/**
+	Intrinsi base channel type.  
+ */
+struct builtin_channel_tag : public channel_tag { };
 
 }	// end namespace entity
 }	// end namespace ART

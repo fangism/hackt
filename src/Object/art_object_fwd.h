@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13 2005/05/23 01:02:34 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1 2005/05/29 02:08:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -32,6 +32,8 @@ namespace entity {
 	class user_def_chan;
 	class user_def_type;
 	class channel_definition_base;
+	class channel_type_reference_base;
+	class builtin_channel_type_reference;
 	class channel_type_reference;
 	class datatype_definition_base;
 	class enum_datatype_def;
@@ -42,6 +44,7 @@ namespace entity {
 	class process_definition;
 	class process_type_reference;
 	class built_in_param_def;
+	class built_in_channel_def;
 	class typedef_base;
 
 	template <class>

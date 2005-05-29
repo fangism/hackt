@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.7.2.3 2005/05/28 03:00:57 fang Exp $
+	$Id: art_parser_type.h,v 1.7.2.4 2005/05/29 02:08:27 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -15,10 +15,12 @@
 namespace ART {
 namespace entity {
 	class fundamental_type_reference;
+	class builtin_channel_type_reference;
 }
 namespace parser {
 using util::good_bool;
 using entity::fundamental_type_reference;
+using entity::builtin_channel_type_reference;
 
 //-----------------------------------------------------------------------------
 /**
@@ -59,6 +61,8 @@ typedef node_list<const concrete_type_ref>		data_type_ref_list_base;
 
 /// list of base data types
 class data_type_ref_list : public data_type_ref_list_base {
+public:
+	typedef	count_ptr<const builtin_channel_type_reference>	return_type;
 protected:
 	typedef	data_type_ref_list_base			parent_type;
 public:
@@ -67,8 +71,13 @@ public:
 
 	~data_type_ref_list();
 
+#if 0
 	good_bool
 	check_data_types(context& c) const;
+#else
+	return_type
+	check_builtin_channel_type(context&) const;
+#endif
 
 #if 0
 	// functor for list transformation.  
@@ -187,9 +196,11 @@ public:
 	check_type(context&) const;
 #endif
 
+#if 0
 	// dedicated for user_chan_type_signature
 	good_bool
 	check_base_chan_type(context&) const;
+#endif
 };	// end class chan_type
 
 //=============================================================================

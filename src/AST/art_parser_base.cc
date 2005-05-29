@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24.2.3 2005/05/28 03:00:53 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.4 2005/05/29 02:08:25 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -163,16 +163,7 @@ type_id::check_definition(context& c) const {
 	STACKTRACE("type_id::check_build()");
 	const type_base::return_type
 		d(c.lookup_definition(*base));
-#if USE_DEFINITION_STACK
-	if (!d) {
-//		cerr << "type_id::check_build(context&) : ERROR!" << endl;
-		return type_base::return_type(NULL);
-	}
-	// set type definition reference
-	return c.push_current_definition_reference(*d);
-#else
 	return d;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -227,6 +218,7 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Wrapped call to check data types that implement the 
 	channel definition.  
@@ -244,17 +236,18 @@ chan_type::check_base_chan_type(context& c) const {
 	// list of generic_type_refs
 	return dtypes->check_data_types(c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chan_type::return_type
 chan_type::check_type(context& c) const {
-	cerr << "Fang, finish chan_type::check_type()!" << endl;
+//	cerr << "Fang, finish chan_type::check_type()!" << endl;
 #if 0
 	need count_ptr<const built_in_chan_type_reference>...
 	constructed from dtypes
 	will phase out add_chan_member...
 #endif
-	return return_type(NULL);
+	return dtypes->check_builtin_channel_type(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -782,6 +775,7 @@ data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
 data_type_ref_list::~data_type_ref_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Checks the list of type references, which must be data types.  
  */
@@ -820,6 +814,46 @@ data_type_ref_list::check_data_types(context& c) const {
 		return good_bool(true);
 	}
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks the list of type references, which must be data types.  
+ */
+data_type_ref_list::return_type
+data_type_ref_list::check_builtin_channel_type(context& c) const {
+	typedef	list<concrete_type_ref::return_type>	checked_list_type;
+	const count_ptr<builtin_channel_type_reference>
+		ret(new builtin_channel_type_reference);
+	checked_list_type checked_types;
+	check_list(checked_types, &concrete_type_ref::check_type, c);
+	// check if it contains NULL
+	checked_list_type::const_iterator i = checked_types.begin();
+	const checked_list_type::const_iterator e = checked_types.end();
+	const checked_list_type::const_iterator
+		ni(find(i, e, concrete_type_ref::return_type(NULL)));
+	if (ni != checked_types.end()) {
+		cerr << "At least one error in data-type list at " <<
+			where(*this) << endl;
+		return return_type(NULL);
+	} else {
+		// copy to user_def_chan
+		const_iterator j = begin();
+		for ( ; i!=e; i++, j++) {
+			const count_ptr<const data_type_reference>
+				dtr(i->is_a<const data_type_reference>());
+			if (!dtr) {
+				cerr << "Channels can only carry data-types, ";
+				(*i)->what(cerr << "but resolved a ") <<
+					" at " << where(**j) << endl;
+				return return_type(NULL);
+			} else {
+				ret->add_datatype(dtr);
+			}
+		}
+		return ret;
+	}
+}
+#endif
 
 //=============================================================================
 // explicit class template instantiations
