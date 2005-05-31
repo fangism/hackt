@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7.2.1 2005/05/29 02:08:29 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7.2.2 2005/05/31 04:00:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -160,6 +160,17 @@
 #define	PRS_OR_TYPE_KEY						"PRSor"
 #define	PRS_NOT_TYPE_KEY					"PRSnot"
 #define	PRS_LITERAL_TYPE_KEY					"PRSlitrl"
+
+#define	CHP_SEQUENCE_TYPE_KEY					"CHPseqnc"
+#define	CHP_CONCURRENT_TYPE_KEY					"CHPconcr"
+#define	CHP_GUARDED_ACTION_TYPE_KEY				"CHPguard"
+#define	CHP_DET_TYPE_KEY					"CHPdetsl"
+#define	CHP_NONDET_TYPE_KEY					"CHPndtsl"
+#define	CHP_PROB_TYPE_KEY					"CHPprbsl"
+#define	CHP_ASSIGNMENT_TYPE_KEY					"CHPassgn"
+#define	CHP_WAIT_TYPE_KEY					"CHPwait"
+#define	CHP_SEND_TYPE_KEY					"CHPsend"
+#define	CHP_RECEIVE_TYPE_KEY					"CHPrecv"
 
 	// more class constants here...
 

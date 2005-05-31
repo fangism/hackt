@@ -1,5 +1,20 @@
 "ChangeLog"
 
+2005-05-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09:
+	  Partial implemention of parser::CHP::statement::check_action
+		for a few statement classes (untested).
+	  Skeletal implementation of entity::CHP classes in
+		"Object/art_object_chp.{h,cc}"
+	  Assigned CHP classes' type hash in "Object/art_object_type_hash.h".
+	  Added a few basic template channel prototype tests, so far so good.  
+	  TODO: object expressions... we need *datatype-expressions* for CHP, 
+		currently we only have meta-language (param) expressions.  
+		This work must be done IMMEDIATELY, probably on a sub-branch
+		of this branch.  
+
+
 2005-05-28	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-08:

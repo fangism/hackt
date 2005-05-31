@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.3 2005/05/20 20:30:43 fang Exp $
+	$Id: art_object_PRS.h,v 1.3.2.1 2005/05/31 04:00:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -59,7 +59,8 @@ public:
 	negation_normalize(void);
 
 	// fanout.. not until actually instantiated, unrolled, created...
-	PERSISTENT_METHODS_DECLARATIONS;
+	PERSISTENT_METHODS_DECLARATIONS
+
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
 
@@ -174,7 +175,7 @@ public:
 	excl_ptr<rule>
 	expand_complement(void);
 
-	PERSISTENT_METHODS_DECLARATIONS;
+	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// and class pass
 
@@ -206,7 +207,7 @@ public:
 	prs_expr_ptr_type
 	negation_normalize(void);
 
-	PERSISTENT_METHODS_DECLARATIONS;
+	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class and_expr
 
@@ -238,7 +239,7 @@ public:
 	prs_expr_ptr_type
 	negation_normalize(void);
 
-	PERSISTENT_METHODS_DECLARATIONS;
+	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class or_expr
 
@@ -274,7 +275,7 @@ public:
 	prs_expr_ptr_type
 	negation_normalize(void);
 
-	PERSISTENT_METHODS_DECLARATIONS;
+	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class not_expr
 

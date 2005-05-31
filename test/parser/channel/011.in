@@ -1,0 +1,5 @@
+// "011.in" should pass, valid template type
+
+template <pint J, K>
+defchan mychan <: chan(int<J>) (int<K> i);
+

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.16 2005/05/22 06:18:30 fang Exp $
+	$Id: art_parser_prs.cc,v 1.16.2.1 2005/05/31 04:00:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -178,32 +178,33 @@ body::rightmost(void) const {
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE("PRS::body::check_build()");
-	if (rules) {
-		// check context's current open definition
-		never_ptr<definition_base> d(c.get_current_open_definition());
-		never_ptr<process_definition> pd(d.is_a<process_definition>());
-		NEVER_NULL(pd);
-		checked_rules_type checked_rules;
-		rules->check_list(checked_rules, &body_item::check_rule, c);
-		checked_rules_type::const_iterator
-			null_iter = find(checked_rules.begin(), 
-				checked_rules.end(), 
-				body_item::return_type());
-		if (null_iter == checked_rules.end()) {
-			// no errors found, add them too the process definition
-			checked_rules_type::iterator i = checked_rules.begin();
-			for ( ; i!=checked_rules.end(); i++) {
-				excl_ptr<entity::PRS::rule>
-					xfer(i->exclusive_release());
-//				xfer->check();		// paranoia
-				pd->add_production_rule(xfer);
-			}
-		} else {
-			cerr << "ERROR: at least one error in PRS body."
-				<< endl;
-			THROW_EXIT;
+if (rules) {
+	// check context's current open definition
+	const never_ptr<definition_base> d(c.get_current_open_definition());
+	const never_ptr<process_definition> pd(d.is_a<process_definition>());
+	NEVER_NULL(pd);
+	checked_rules_type checked_rules;
+	rules->check_list(checked_rules, &body_item::check_rule, c);
+	checked_rules_type::const_iterator
+		null_iter = find(checked_rules.begin(), 
+			checked_rules.end(), 
+			body_item::return_type());
+	if (null_iter == checked_rules.end()) {
+		// no errors found, add them too the process definition
+		checked_rules_type::iterator i = checked_rules.begin();
+		for ( ; i!=checked_rules.end(); i++) {
+			excl_ptr<entity::PRS::rule>
+				xfer(i->exclusive_release());
+//			xfer->check();		// paranoia
+			pd->add_production_rule(xfer);
 		}
+	} else {
+		cerr << "ERROR: at least one error in PRS body."
+			<< endl;
+		THROW_EXIT;
 	}
+}
+	// else empty, no PRS to add
 	return never_ptr<const object>(NULL);
 }
 

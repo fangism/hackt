@@ -1,0 +1,65 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3503950	module__	0	0	29
+	2	 0x3500144	namespc_	0	29	53
+	3	 0x3503970	chandefn	0	53	136
+	4	 0x3503a04	pintcoll	0	136	173
+	5	 0x3503a50	pintinst	0	173	189
+	6	 0x3503a64	pintcoll	1	189	222
+	7	 0x3503ab0	pintinst	0	222	238
+	8	 0x3503ac4	drnglst_	0	238	254
+	9	 0x3503ae4	dynrng__	0	254	270
+	10	 0x32d1024	cnstpi__	0	270	282
+	11	 0x3503b08	arithexp	0	282	299
+	12	 0x3503b30	spiref__	0	299	319
+	13	 0x32d1038	cnstpi__	0	319	331
+	14	 0x35038f4	dintcoll	0	331	369
+	15	 0x3503b40	datainst	0	369	389
+	16	 0x3503b60	datatprf	0	389	405
+	17	 0x3503b70	datadefn	0	405	441
+	18	 0x3503bd4	dprmlst_	0	441	457
+	19	 0x3503c00	spiref__	0	457	477
+	20	 0x3503c14	cindlst_	0	477	493
+	21	 0x32d104c	cnstpi__	0	493	505
+	22	 0x3503c20	bchntprf	0	505	525
+	23	 0x3503c30	datatprf	0	525	541
+	24	 0x3503c44	dprmlst_	0	541	557
+	25	 0x3503c70	spiref__	0	557	577
+	26	 0x3503c84	cindlst_	0	577	593
+	27	 0x32d1060	cnstpi__	0	593	605
+
+In module created from: ./012.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    mychan = user-def-chan (declared) mychan<
+      pint<> K
+      pint<> J with indices: {
+        [0..::mychan::K-1]
+      }
+
+      >
+
+      chan (
+        int<pint-inst-ref ::mychan::J[0]>
+      )
+      (
+        int<pint-inst-ref ::mychan::J[1]> i
+      )
+      In channel definition "mychan", we have: {
+        J = pint<> J with indices: {
+          [0..::mychan::K-1]
+        }
+
+        K = pint<> K
+        i = int<pint-inst-ref ::mychan::J[1]> i
+      }
+
+}
+

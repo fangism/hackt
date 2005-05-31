@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.1 2005/05/25 00:41:45 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.2 2005/05/31 04:00:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -14,6 +14,7 @@
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
 #include "Object/art_object_CHP.h"
+#include "Object/art_object_expr_base.h"
 
 #include "util/what.h"
 #include "util/memory/count_ptr.tcc"
@@ -45,6 +46,10 @@ namespace ART {
 namespace parser {
 namespace CHP {
 #include "util/using_ostream.h"
+using entity::pbool_expr;
+using entity::CHP::action_sequence;
+using entity::CHP::guarded_action;
+using entity::CHP::condition_wait;
 
 //=============================================================================
 // class statement method definitions
@@ -75,9 +80,40 @@ body::rightmost(void) const {
 	return stmts->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Need to figure out the boundaries between loop statements with 
+	initializations, in the case of more than one loop body.  
+	First check individual statements and loops, 
+	worry about proper construction second.  
+ */
 never_ptr<const object>
 body::check_build(context& c) const {
 	cerr << "Fang, finish CHP::body::check_build()!" << endl;
+if (stmts) {
+	typedef	list<statement::return_type>	checked_stmts_type;
+#if 0
+	never_ptr<definition_base> d(c.get_current_open_definition());
+	// can be datatype or process definition...
+#endif
+	checked_stmts_type checked_stmts;
+	stmts->check_list(checked_stmts, &statement::check_action, c);
+	// for now, (this is wrong) construct as sequence.  
+	const checked_stmts_type::const_iterator i(checked_stmts.begin());
+	const checked_stmts_type::const_iterator e(checked_stmts.end());
+	const checked_stmts_type::const_iterator
+		ni(find(i, e, statement::return_type()));
+	if (ni == e) {
+		const count_ptr<action_sequence> ret(new action_sequence);
+		copy(i, e, back_inserter(*ret));
+		// for now, dropping checked action sequence
+		// until we figure out how to cleanly add it to a definition.  
+	} else {
+		cerr << "ERROR: at least one error in CHP body." << endl;
+		THROW_EXIT;
+	}
+}
+	// else empty, no CHP to add
 	return never_ptr<const object>(NULL);
 }
 
@@ -112,11 +148,54 @@ guarded_command::rightmost(void) const {
 	return command->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks and constructs a guarded CHP action.  
+	Temporary implementation.
+	TODO: account for else semantics, and skip (null) statement.  
+		(2005-05-30)
+ */
 guarded_command::return_type
 guarded_command::check_guarded_action(context& c) const {
+#if 0
 	cerr << "Fang, finish CHP::guarded_command::check_guarded_action()!"
 		<< endl;
 	return return_type(NULL);
+#else
+	typedef list<statement::return_type>	checked_stmts_type;
+	const expr::return_type checked_guard(guard->check_expr(c));
+	if (!checked_guard) {
+		cerr << "ERROR in guard expression at " << where(*guard)
+			<< endl;
+		return return_type(NULL);
+	}
+	const guarded_action::guard_ptr_type
+		checked_bool_guard(checked_guard.is_a<pbool_expr>());
+	if (!checked_bool_guard) {
+		cerr << "ERROR expression at " << where(*guard) <<
+			" is not boolean." << endl;
+		return return_type(NULL);
+	}
+	checked_stmts_type checked_stmts;
+	NEVER_NULL(command);
+	command->check_list(checked_stmts, &statement::check_action, c);
+	const checked_stmts_type::const_iterator i(checked_stmts.begin());
+	const checked_stmts_type::const_iterator e(checked_stmts.end());
+	const checked_stmts_type::const_iterator
+		ni(find(i, e, statement::return_type(NULL)));
+	if (ni == e) {
+		// no NULLs found
+		const count_ptr<action_sequence>
+			act_seq(new action_sequence);
+		copy(i, e, back_inserter(*act_seq));
+		return return_type(new guarded_action(
+			checked_bool_guard, act_seq));
+	} else {
+		cerr << "ERROR in CHP statement(s) at " <<
+			where(*command) << endl;
+		return return_type(NULL);
+	}
+#endif
 }
 
 //=============================================================================
@@ -161,7 +240,7 @@ skip::rightmost(void) const {
 
 statement::return_type
 skip::check_action(context& c) const {
-	cerr << "Fang, finish CHP::skip::check_action()!" << endl;
+//	cerr << "Fang, finish CHP::skip::check_action()!" << endl;
 	return statement::return_type(NULL);
 }
 
@@ -190,12 +269,30 @@ wait::rightmost(void) const {
 	return cond->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 wait::check_action(context& c) const {
+	typedef	statement::return_type		return_type;
+#if 1
 	cerr << "Fang, finish CHP::wait::check_action()!" << endl;
-	return statement::return_type(NULL);
+	return return_type(NULL);
+#else
+	const expr::return_type ret(cond->check_expr(c));
+	if (!ret) {
+		cerr << "ERROR in wait condition expression at " <<
+			where(*cond) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pbool_expr> bret(ret.is_a<pbool_expr>());
+	if (!bret) {
+		cerr << "ERROR: wait condition at " << where(*cond) <<
+			" is not boolean." << endl;
+		return return_type(NULL);
+	} else {
+		return return_type(new condition_wait(ret));
+	}
+#endif
 }
-
 
 //=============================================================================
 // class assignment method definitions
@@ -211,7 +308,7 @@ CONSTRUCTOR_INLINE
 assignment::assignment(base_assign* a) : parent_type(),
 	// destructive transfer of ownership
 	assign_stmt(a->release_lhs(), a->release_op(), a->release_rhs()) {
-	excl_ptr<base_assign> delete_me(a);
+	const excl_ptr<base_assign> delete_me(a);
 }
 
 DESTRUCTOR_INLINE

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11.2.1 2005/05/25 00:41:45 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.2 2005/05/31 04:00:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -55,6 +55,20 @@ virtual	line_position
 
 virtual	CHP_CHECK_STMT_PROTO = 0;
 };	// end class statement
+
+//=============================================================================
+#if 0
+/**
+	Statement list.  
+ */
+class stmt_list : public stmt_list_base {
+public:
+	stmt_list();
+	~stmt_list();
+
+	check_actions(...)
+};	// end class stmt_list
+#endif
 
 //=============================================================================
 /// CHP body is just a list of statements
