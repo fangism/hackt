@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47 2005/05/22 06:23:53 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.4.1 2005/06/02 18:35:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -222,7 +222,7 @@ typedef discrete_interval_set<pint_value_type>	interval_type;
 
 #if 0
 // inline
-param_expr::param_expr() : object(), persistent() { }
+param_expr::param_expr() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
@@ -422,7 +422,7 @@ pint_expr::must_be_equivalent_index(const index_expr& i) const {
 // class param_expr_list method definitions
 
 #if 0
-param_expr_list::param_expr_list() : object(), persistent() { }
+param_expr_list::param_expr_list() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_list::~param_expr_list() { }
@@ -959,7 +959,7 @@ dynamic_param_expr_list::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class index_expr method definitions
 
-index_expr::index_expr() : object(), persistent() { }
+index_expr::index_expr() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_expr::~index_expr() { }
@@ -2401,9 +2401,7 @@ pint_range::pint_range(const count_ptr<const pint_expr>& l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(const pint_range& pr) :
-		object(), persistent(), index_expr(), range_expr(), 
-		// virtual base object() needs to be explicitly invoked
-		// in this copy constructor
+		persistent(), index_expr(), range_expr(), 
 		lower(pr.lower), upper(pr.upper) {
 }
 
@@ -2599,7 +2597,6 @@ const_range::const_range(const pint_value_type l, const pint_value_type u,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /** standard copy constructor */
 const_range::const_range(const const_range& r) :
-		object(), 
 		persistent(), 
 		index_expr(),
 		range_expr(), 
@@ -2610,7 +2607,6 @@ const_range::const_range(const const_range& r) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range::const_range(const parent_type& r) :
-		object(), 
 		persistent(), 
 		index_expr(),
 		range_expr(), 
@@ -2816,7 +2812,7 @@ range_expr::must_be_equivalent_index(const index_expr& i) const {
 // class range_expr_list method definitions
 
 #if 0
-range_expr_list::range_expr_list() : object(), persistent() {
+range_expr_list::range_expr_list() : persistent() {
 }
 #endif
 
@@ -3448,7 +3444,7 @@ dynamic_range_list::load_object(const persistent_object_manager& m,
 // class index_list method definitions
 
 #if 0
-index_list::index_list() : object(), persistent() { }
+index_list::index_list() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 index_list::~index_list() { }

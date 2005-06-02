@@ -1,13 +1,15 @@
 /**
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.13 2005/05/23 01:02:34 fang Exp $
+	$Id: art_object_expr_base.h,v 1.13.4.1 2005/06/02 18:35:41 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
 #define __OBJECT_ART_OBJECT_EXPR_BASE_H__
 
-#include "Object/art_object_base.h"
+#include <iosfwd>
+#include "util/STL/list_fwd.h"
+#include "Object/art_object_fwd.h"
 #include "util/persistent.h"
 #include "util/boolean_types.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -16,7 +18,6 @@
 namespace ART {
 namespace entity {
 USING_LIST
-using std::string;
 using std::ostream;
 using util::persistent;
 using util::good_bool;
@@ -33,9 +34,9 @@ using util::memory::count_ptr;
 	scopespaces' used_id_map.  
 	Should statically sub-type into pints and pbools and pranges...
  */
-class param_expr : virtual public object, virtual public persistent {
+class param_expr : virtual public persistent {
 public:
-	param_expr() : object(), persistent() { }
+	param_expr() : persistent() { }
 
 virtual	~param_expr() { }
 
@@ -101,9 +102,9 @@ virtual	excl_ptr<param_expression_assignment>
 	A list of parameter expressions.  
 	Consider splitting into dynamic vs. const?
  */
-class param_expr_list : public object, public persistent {
+class param_expr_list : public persistent {
 public:
-	param_expr_list() : object(), persistent() { }
+	param_expr_list() : persistent() { }
 
 virtual	~param_expr_list() { }
 
@@ -152,7 +153,7 @@ virtual	excl_ptr<const_param_expr_list>
 	1-dimensional sub-array of x, size 1, in this case.  
 	A "range_expr" (below) may be an index, but not vice versa.  
  */
-class index_expr : virtual public object, virtual public persistent {
+class index_expr : virtual public persistent {
 protected:
 	index_expr();
 
@@ -208,9 +209,9 @@ virtual	bool
 	Instead the index list can tell one how may dimensions
 	are *collapsed* by the element types.  
  */
-class index_list : public object, public persistent {
+class index_list : public persistent {
 public:
-	index_list() : object(), persistent() { }
+	index_list() : persistent() { }
 
 virtual	~index_list() { }
 
@@ -267,15 +268,18 @@ virtual	bool
 	Elements of range_expr_list must be range_expr, 
 	i.e. fully expanded, no shorthand ranges.  
  */
-class range_expr_list : public object, public persistent {
+class range_expr_list : public persistent {
 protected:
 public:
-	range_expr_list() : object(), persistent() { }
+	range_expr_list() : persistent() { }
 
 virtual	~range_expr_list() { }
 
 virtual	size_t
 	size(void) const = 0;
+
+virtual	ostream&
+	dump(ostream&) const = 0;
 
 	size_t
 	dimensions(void) const { return size(); }
