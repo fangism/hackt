@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1 2005/05/29 02:08:29 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.1 2005/06/03 21:43:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -11,6 +11,8 @@
 #include "Object/art_object_classification_tags.h"
 #include "Object/art_object_classification_fwd.h"
 #include "Object/art_object_expr_types.h"
+
+#define	USE_DATA_REFERENCE		1
 
 namespace ART {
 namespace entity {
@@ -39,7 +41,7 @@ namespace entity {
 	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
-	class datatype_instance_reference;
+	class datatype_instance_reference_base;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
@@ -71,15 +73,24 @@ namespace entity {
 
 	template <class>
 	class instance_reference;
+	template <class>
+	class data_reference;
 
 	typedef	instance_reference<channel_tag>
 		channel_instance_reference;
 	typedef	instance_reference<process_tag>
 		process_instance_reference;
+#if USE_DATA_REFERENCE
+	typedef	data_reference<bool_tag>
+		bool_instance_reference;
+	typedef	data_reference<int_tag>
+		int_instance_reference;
+#else
 	typedef	instance_reference<bool_tag>
 		bool_instance_reference;
 	typedef	instance_reference<int_tag>
 		int_instance_reference;
+#endif
 	typedef	instance_reference<enum_tag>
 		enum_instance_reference;
 	typedef	instance_reference<datastruct_tag>
@@ -178,6 +189,9 @@ namespace entity {
 	typedef	value_reference<pbool_tag>
 		pbool_instance_reference;
 
+	class data_expr;
+	class bool_expr;
+	class int_expr;
 	class param_expr;
 	class const_param;
 	class param_expr_list;

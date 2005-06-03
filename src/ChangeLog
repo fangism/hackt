@@ -1,5 +1,30 @@
 "ChangeLog"
 
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-02:
+	  New base classes for data-expressions (CHP context)!
+	  data_expr is refined as int_expr and bool_expr, and now
+		(here's the kicker) pint_expr : int_expr and
+		pbool_expr : bool_expr!  
+		Rationale: In the CHP context, meta-parameter 
+		(of the same type) are valid rvalue expressions 
+		just as run-time variables of int and bool are.  
+	  Rename: datatype_instance_reference ->
+		datatype_instance_reference_base
+	  TODO: fahr-fahr-away, use GMP's mpz for arbitrary length integer.  
+	  Introduced refined instance_reference: data_reference<Tag>
+		which is derived from instance_reference<Tag>
+		and from an data expression interface class (int_expr
+		or bool_expr).  Such data instance references serve as
+		connectible entities and assignable entities in the
+		CHP context.  (Analogous to what was done with
+		value_reference for meta-param references.)
+	  Relocated datatype_instance_reference(_base) to 
+		"Object/art_object_inst_ref_data.h"
+	  A few new test cases for test/parser/channel.  
+
+
 2005-06-02	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-01:

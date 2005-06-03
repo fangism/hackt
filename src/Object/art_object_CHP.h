@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.2 2005/05/31 04:00:06 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.2.2.1 2005/06/03 21:43:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -158,7 +158,7 @@ private:
 	typedef	action					parent_type;
 	typedef	assignment				this_type;
 public:
-	typedef	count_ptr<datatype_instance_reference>	lval_ptr_type;
+	typedef	count_ptr<datatype_instance_reference_base>	lval_ptr_type;
 	typedef	count_ptr<param_expr>			rval_ptr_type;
 private:
 	lval_ptr_type					lval;
@@ -240,7 +240,7 @@ class channel_receive : public action {
 	typedef	action					parent_type;
 	typedef	channel_receive				this_type;
 public:
-	typedef	list<count_ptr<datatype_instance_reference> >
+	typedef	list<count_ptr<datatype_instance_reference_base> >
 							inst_ref_list_type;
 	typedef	count_ptr<channel_instance_reference>	chan_ptr_type;
 private:

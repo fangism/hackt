@@ -1,15 +1,16 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.1.2.4 2005/05/31 04:00:07 fang Exp $
+#	$Id: Makefile.am,v 1.1.2.4.2.1 2005/06/03 21:43:53 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 # 002 is temporary
-ARTC_TEST_FAILURES = 000 003 002 004 006 007
+ARTC_TEST_FAILURES = 000 003 002 004 006 007 \
+	013
 
 ARTC_TEST_PASSES = 001 005 008 009 010 \
-	011 012
+	011 012 014
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -26,7 +27,8 @@ TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS = 000 003 004 006 007
+BISON_OUTPUTS = 000 003 004 006 007 \
+	013
 
 # define empty, let template Makefile add to it
 CLEANFILES = 

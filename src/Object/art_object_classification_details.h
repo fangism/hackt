@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.2 2005/05/29 02:08:28 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.2.2.1 2005/06/03 21:43:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -204,8 +204,16 @@ struct class_traits<int_tag> {
 
 	// later add instantiation_statement support...
 
+	/**
+		Unit of state storage for integer data.
+		TODO: int is only temporary, this will have to become	
+		multiprecision to support arbitrary length, 
+		like mpz from GMP.  
+	 */
+	typedef	int				data_value_type;
+	typedef	int_expr			data_expr_base_type;
 	typedef	int_instance_reference		instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
+	typedef	datatype_instance_reference_base	instance_reference_parent_type;
 	typedef	int_member_instance_reference	member_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
@@ -239,9 +247,13 @@ struct class_traits<bool_tag> {
 	};
 
 	// later add instantiation_statement support...
-
+	/**
+		Unit of state storage for boolean data.
+	 */
+	typedef	bool				data_value_type;
+	typedef	bool_expr			data_expr_base_type;
 	typedef	bool_instance_reference		instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
+	typedef	datatype_instance_reference_base	instance_reference_parent_type;
 	typedef	bool_member_instance_reference	member_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
@@ -279,7 +291,7 @@ struct class_traits<enum_tag> {
 	// later add instantiation_statement support...
 
 	typedef	enum_instance_reference		instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
+	typedef	datatype_instance_reference_base	instance_reference_parent_type;
 	typedef	enum_member_instance_reference	member_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
@@ -318,7 +330,7 @@ struct class_traits<datastruct_tag> {
 	// later add instantiation_statement support...
 
 	typedef	datastruct_instance_reference	instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
+	typedef	datatype_instance_reference_base	instance_reference_parent_type;
 	typedef	datastruct_member_instance_reference
 						member_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>

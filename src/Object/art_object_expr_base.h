@@ -1,29 +1,24 @@
 /**
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.13.4.1 2005/06/02 18:35:41 fang Exp $
+	$Id: art_object_expr_base.h,v 1.13.4.2 2005/06/03 21:43:49 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
 #define __OBJECT_ART_OBJECT_EXPR_BASE_H__
 
-#include <iosfwd>
 #include "util/STL/list_fwd.h"
+#include "Object/art_object_data_expr_base.h"
 #include "Object/art_object_fwd.h"
-#include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "util/memory/pointer_classes_fwd.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
 USING_LIST
-using std::ostream;
-using util::persistent;
 using util::good_bool;
 using util::bad_bool;
 using util::memory::excl_ptr;
-using util::memory::count_ptr;
 
 //=============================================================================
 /**
@@ -306,7 +301,7 @@ virtual	bool
 /**
 	Abstract expression checked to be a single boolean.  
  */
-class pbool_expr : virtual public param_expr {
+class pbool_expr : virtual public param_expr, public bool_expr {
 public:
 	/**
 		The global boolean value type, set in "art_object_fwd.h".
@@ -315,7 +310,7 @@ public:
 	 */
 	typedef	pbool_value_type		value_type;
 public:
-	pbool_expr() : param_expr() { }
+	pbool_expr() : param_expr(), bool_expr() { }
 
 	// temporary de-inline for debugging
 virtual	~pbool_expr();
@@ -384,7 +379,8 @@ protected:
 /**
 	Abstract expression checked to be a single integer.  
  */
-class pint_expr : virtual public param_expr, virtual public index_expr {
+class pint_expr : virtual public param_expr, virtual public index_expr, 
+		public int_expr {
 public:
 	/**
 		The internal storage type, set in "art_object_fwd.h".
@@ -393,7 +389,7 @@ public:
 	 */
 	typedef	pint_value_type			value_type;
 protected:
-	pint_expr() : param_expr(), index_expr() { }
+	pint_expr() : param_expr(), index_expr(), int_expr() { }
 
 public:
 	// temporary de-inline for debugging purposes

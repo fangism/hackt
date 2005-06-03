@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30 2005/05/22 06:23:55 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.4.1 2005/06/03 21:43:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -16,6 +16,7 @@
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_namespace.h"
+#include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_inst_ref.tcc"
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_inst_stmt_base.h"
@@ -1154,37 +1155,37 @@ param_instance_reference::is_unconditional(void) const {
 // replaced with instance_reference template
 
 //=============================================================================
-// class datatype_instance_reference method definitions
+// class datatype_instance_reference_base method definitions
 
 /**
 	Private empty constructor.  
  */
-datatype_instance_reference::datatype_instance_reference() :
+datatype_instance_reference_base::datatype_instance_reference_base() :
 		simple_instance_reference() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_reference::datatype_instance_reference(
+datatype_instance_reference_base::datatype_instance_reference_base(
 		const instantiation_state& s) :
 		simple_instance_reference(s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-datatype_instance_reference::datatype_instance_reference(
+datatype_instance_reference_base::datatype_instance_reference_base(
 		excl_ptr<index_list>& i, const instantiation_state& s) :
 		simple_instance_reference(i, s) {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_reference::~datatype_instance_reference() {
+datatype_instance_reference_base::~datatype_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-datatype_instance_reference::what(ostream& o) const {
+datatype_instance_reference_base::what(ostream& o) const {
 	return o << "datatype-inst-ref";
 }
 
@@ -1192,7 +1193,7 @@ datatype_instance_reference::what(ostream& o) const {
 #if 0
 USE simple_instance_reference::dump
 ostream&
-datatype_instance_reference::dump(ostream& o) const {
+datatype_instance_reference_base::dump(ostream& o) const {
 	what(o) << ": ";
 	data_inst_ref->dump(o);
 	if (array_indices)

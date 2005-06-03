@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.21 2005/05/22 06:23:56 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.21.4.1 2005/06/03 21:43:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -100,46 +100,6 @@ public:
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class instance_reference
-
-//=============================================================================
-// consider relocating to "art_object_inst_ref_data.h"
-/**
-	A reference to a simple instance of datatype.  
-	Consider sub-typing into user-defined and built-in, 
-	making this an abstract base.
- */
-class datatype_instance_reference : public simple_instance_reference {
-private:
-	typedef	simple_instance_reference		parent_type;
-protected:
-//	excl_ptr<index_list>			array_indices;	// inherited
-
-protected:
-	datatype_instance_reference();
-
-	explicit
-	datatype_instance_reference(const instantiation_state& s);
-
-public:
-virtual	~datatype_instance_reference();
-
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-//	ostream& dump(ostream& o) const;
-
-virtual	never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-
-private:
-virtual	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const = 0;
-
-protected:
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-};	// end class datatype_instance_reference
 
 //=============================================================================
 // classes pint_instance_reference and pbool_instance_reference

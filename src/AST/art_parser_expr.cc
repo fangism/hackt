@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.2 2005/05/29 02:08:26 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.2.2.1 2005/06/03 21:43:47 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -24,7 +24,7 @@
 // will need these come time for type-checking
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_definition_base.h"
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_expr.h"
 #include "Object/art_object_PRS.h"
 // to dynamic_cast bool_instance_reference

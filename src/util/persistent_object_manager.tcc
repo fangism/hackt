@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.17 2005/05/19 18:43:36 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.17.4.1 2005/06/03 21:43:51 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -11,10 +11,9 @@
 // depend on whatever file includes this
 
 #include <fstream>
+#include <iostream>
 
 #include "util/persistent_object_manager.h"
-// already includes <iostream>
-
 #include "util/macros.h"
 #include "util/new_functor.tcc"
 #include "util/stacktrace.h"
