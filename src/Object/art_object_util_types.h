@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.1.2.1 2005/05/25 22:35:43 fang Exp $
+	$Id: art_object_util_types.h,v 1.1.2.1.2.1 2005/06/04 04:48:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
@@ -28,7 +28,7 @@ namespace entity {
 		Should be synchronized with
 		parser::expr_list::checked_refs_type.
 	 */
-	typedef DEFAULT_VECTOR(count_ptr<instance_reference_base>)
+	typedef DEFAULT_VECTOR(count_ptr<meta_instance_reference_base>)
 						checked_refs_type;
 
 

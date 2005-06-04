@@ -1,11 +1,11 @@
 /**
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.21.4.2 2005/06/04 04:47:57 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.1 2005/06/04 04:48:02 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
-#define	__OBJECT_ART_OBJECT_INST_REF_H__
+#ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
+#define	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
 
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_instance_base.h"
@@ -26,22 +26,22 @@ using util::packed_array_generic;
 template <class Tag>
 
 #define	INSTANCE_REFERENCE_CLASS					\
-meta_instance_reference<Tag>
+nonmeta_instance_reference<Tag>
 
 /**
 	Class template for physical instance references.
-	Needs to be virtual so that member_meta_instance_reference may safely
+	Needs to be virtual so that member_nonmeta_instance_reference may safely
 	derive from this class.  
 	\param Collection the instance collection type.
 	\param Parent the type from which this is derived, 
-		probably simple_meta_instance_reference or descendant.  
+		probably simple_nonmeta_instance_reference or descendant.  
  */
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class meta_instance_reference :
-	public class_traits<Tag>::meta_instance_reference_parent_type {
+class nonmeta_instance_reference :
+	public class_traits<Tag>::nonmeta_instance_reference_parent_type {
 	typedef	INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+	typedef	typename class_traits<Tag>::nonmeta_instance_reference_parent_type
 						parent_type;
 public:
 	/// the instance collection base type
@@ -62,12 +62,12 @@ public:
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:
-	meta_instance_reference();
+	nonmeta_instance_reference();
 public:
 	explicit
-	meta_instance_reference(const instance_collection_ptr_type);
+	nonmeta_instance_reference(const instance_collection_ptr_type);
 
-virtual	~meta_instance_reference();
+virtual	~nonmeta_instance_reference();
 
 	ostream&
 	what(ostream&) const;
@@ -77,7 +77,7 @@ virtual	~meta_instance_reference();
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
-	// overridden by member_meta_instance_reference
+	// overridden by member_nonmeta_instance_reference
 virtual	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
 
@@ -99,15 +99,15 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 
-};	// end class meta_instance_reference
+};	// end class nonmeta_instance_reference
 
 //=============================================================================
-// classes pint_meta_instance_reference and pbool_meta_instance_reference
+// classes pint_nonmeta_instance_reference and pbool_nonmeta_instance_reference
 //	are in "art_object_expr_param_ref.*"
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_REF_H__
+#endif	// __OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
 

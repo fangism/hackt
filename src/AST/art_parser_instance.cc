@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.1 2005/05/28 03:00:56 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.1.2.1 2005/06/04 04:47:51 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -84,10 +84,10 @@ using std::accumulate;
 using std::_Select1st;
 using std::_Select2nd;
 using std::find;
-using entity::instance_reference_base;
-using entity::simple_instance_reference;
+using entity::meta_instance_reference_base;
+using entity::simple_meta_instance_reference;
 using entity::aliases_connection_base;
-using entity::instance_reference_connection;
+using entity::meta_instance_reference_connection;
 using entity::port_connection;
 
 //=============================================================================
@@ -181,7 +181,7 @@ alias_list::make_param_assignment(const checked_exprs_type& temp) {
 		return const_return_type(NULL);
 	}
 
-	entity::param_expression_assignment::instance_reference_appender
+	entity::param_expression_assignment::meta_instance_reference_appender
 		append_it(*ret);
 	const checked_exprs_type::const_iterator dest_end = --temp.end();
 	checked_exprs_type::const_iterator dest_iter = temp.begin();
@@ -209,17 +209,17 @@ alias_list::make_alias_connection(const checked_refs_type& temp) {
 	typedef excl_ptr<aliases_connection_base> 	return_type;
 	checked_refs_type::const_iterator i = temp.begin();
 	INVARIANT(temp.size() > 1);          // else what are you connecting?
-	const count_ptr<const instance_reference_base> fir(*i);
-//		fir(i->is_a<const instance_reference_base>());
+	const count_ptr<const meta_instance_reference_base> fir(*i);
+//		fir(i->is_a<const meta_instance_reference_base>());
 	NEVER_NULL(fir);
 	return_type ret = 
-		entity::instance_reference_base::make_aliases_connection(fir);
+		entity::meta_instance_reference_base::make_aliases_connection(fir);
 	// keep this around for type-checking comparisons
-	ret->append_instance_reference(fir);
+	ret->append_meta_instance_reference(fir);
 	// starting with second instance reference, type-check and alias
 	int j = 2;
 	for (i++; i!=temp.end(); i++, j++) {
-		const count_ptr<const instance_reference_base> ir(*i);
+		const count_ptr<const meta_instance_reference_base> ir(*i);
 		INVARIANT(ir);
 		if (!fir->may_be_type_equivalent(*ir)) {
 			cerr << "ERROR: type/size of instance reference "
@@ -228,7 +228,7 @@ alias_list::make_alias_connection(const checked_refs_type& temp) {
 				<< endl;
 			return const_return_type(NULL);
 		} else {
-			ret->append_instance_reference(ir);
+			ret->append_meta_instance_reference(ir);
 		}
 	}
 	// transfers ownership
@@ -238,7 +238,7 @@ alias_list::make_alias_connection(const checked_refs_type& temp) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	COMPLETELY REDO THIS, since param_literal has been ELIMINATED
-		so that param_instance_reference are now subclasses
+		so that param_meta_instance_reference are now subclasses
 		of the respective expression types.  
 	TEMPORARILY made deletions so it still works as before...
 
@@ -307,8 +307,8 @@ if (size() > 0) {		// non-empty
 				<< where(*this) << endl;
 			THROW_EXIT;
 		} else {
-			excl_ptr<const instance_reference_connection>
-				ircp = connection.as_a_xfer<const instance_reference_connection>();
+			excl_ptr<const meta_instance_reference_connection>
+				ircp = connection.as_a_xfer<const meta_instance_reference_connection>();
 			c.add_connection(ircp);
 			INVARIANT(!ircp);
 			INVARIANT(!connection.owned());
@@ -597,8 +597,8 @@ instance_connection::check_build(context& c) const {
 	inst_ref_expr::return_type obj(id->check_reference(c));
 
 	NEVER_NULL(obj);		// we just created it!
-	const count_ptr<const simple_instance_reference>
-		inst_ref(obj.is_a<const simple_instance_reference>());
+	const count_ptr<const simple_meta_instance_reference>
+		inst_ref(obj.is_a<const simple_meta_instance_reference>());
 	NEVER_NULL(inst_ref);
 
 	expr_list::checked_refs_type temp;
@@ -612,8 +612,8 @@ instance_connection::check_build(context& c) const {
 			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
-		excl_ptr<const instance_reference_connection>
-			ircp = port_con.as_a_xfer<const instance_reference_connection>();
+		excl_ptr<const meta_instance_reference_connection>
+			ircp = port_con.as_a_xfer<const meta_instance_reference_connection>();
 		c.add_connection(ircp);
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
@@ -664,7 +664,7 @@ connection_statement::rightmost(void) const {
 excl_ptr<const entity::port_connection>
 connection_statement::make_port_connection(
 		const expr_list::checked_refs_type& temp,
-		const count_ptr<const entity::simple_instance_reference>& ir) {
+		const count_ptr<const entity::simple_meta_instance_reference>& ir) {
 	typedef	excl_ptr<const port_connection>		return_type;
 	typedef	expr_list::checked_refs_type		ref_list_type;
 	excl_ptr<port_connection>
@@ -681,9 +681,9 @@ connection_statement::make_port_connection(
 		ref_list_type::const_iterator i = temp.begin();
 		const ref_list_type::const_iterator e = temp.end();
 		for ( ; i!=e; i++) {
-			count_ptr<const instance_reference_base>
-				ir(i->is_a<const instance_reference_base>());
-			ret->append_instance_reference(ir);
+			count_ptr<const meta_instance_reference_base>
+				ir(i->is_a<const meta_instance_reference_base>());
+			ret->append_meta_instance_reference(ir);
 		}
 		// transfers ownership
 		return return_type(ret);
@@ -707,8 +707,8 @@ connection_statement::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	// is not a complex aggregate instance reference
-	const count_ptr<const simple_instance_reference>
-		inst_ref(o.is_a<const simple_instance_reference>());
+	const count_ptr<const simple_meta_instance_reference>
+		inst_ref(o.is_a<const simple_meta_instance_reference>());
 	NEVER_NULL(inst_ref);
 
 	expr_list::checked_refs_type temp;
@@ -721,8 +721,8 @@ connection_statement::check_build(context& c) const {
 			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
-		excl_ptr<const instance_reference_connection>
-			ircp = port_con.as_a_xfer<const instance_reference_connection>();
+		excl_ptr<const meta_instance_reference_connection>
+			ircp = port_con.as_a_xfer<const meta_instance_reference_connection>();
 		c.add_connection(ircp);
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer

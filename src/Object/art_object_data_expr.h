@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.h"
 	Class definitions for data expressions.
-	$Id: art_object_data_expr.h,v 1.1.2.1 2005/06/03 21:43:49 fang Exp $
+	$Id: art_object_data_expr.h,v 1.1.2.2 2005/06/04 04:47:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_H__
@@ -78,7 +78,7 @@ public:
 #if 0
 /**
 	In the CHP context, we allow indices to reference both
-	int_instance_references and pint_instance_references.  
+	int_meta_instance_references and pint_meta_instance_references.  
 	Should we allow (param) index expressions where we allow
 	data index expressions?
  */

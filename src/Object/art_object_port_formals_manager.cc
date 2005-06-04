@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.1.2.1 2005/05/25 22:35:42 fang Exp $
+ 	$Id: art_object_port_formals_manager.cc,v 1.1.2.1.2.1 2005/06/04 04:48:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
@@ -121,13 +121,13 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 		f_end = port_formals_list.end();
 	size_t i = 1;
 	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
-		const count_ptr<const instance_reference_base> a_iref(*a_iter);
+		const count_ptr<const meta_instance_reference_base> a_iref(*a_iter);
 		if (a_iref) {
 			const never_ptr<const instance_collection_base>
 				f_inst(*f_iter);
 			// FINISH ME
-			const count_ptr<const instance_reference_base>
-				f_iref(f_inst->make_instance_reference());
+			const count_ptr<const meta_instance_reference_base>
+				f_iref(f_inst->make_meta_instance_reference());
 			if (!f_iref->may_be_type_equivalent(*a_iref)) {
 				cerr << "ERROR: actual instance reference "
 					<< i << " of port connection "

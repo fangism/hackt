@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.11 2005/05/23 01:02:35 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.11.4.1 2005/06/04 04:48:00 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -478,12 +478,12 @@ INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	Depends on context's method for checking references in used_id_map.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<instance_reference_base>
-INSTANCE_COLLECTION_CLASS::make_instance_reference(void) const {
+count_ptr<meta_instance_reference_base>
+INSTANCE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//      check array dimensions -- when attach_indices() invoked
-	typedef	count_ptr<instance_reference_base>	return_type;
-	return return_type(new instance_reference_type(
+	typedef	count_ptr<meta_instance_reference_base>	return_type;
+	return return_type(new meta_instance_reference_type(
 			never_ptr<const this_type>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
@@ -492,11 +492,11 @@ INSTANCE_COLLECTION_CLASS::make_instance_reference(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::member_inst_ref_ptr_type
-INSTANCE_COLLECTION_CLASS::make_member_instance_reference(
+INSTANCE_COLLECTION_CLASS::make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	return member_inst_ref_ptr_type(
-		new member_instance_reference_type(
+		new member_meta_instance_reference_type(
 			b, never_ptr<const this_type>(this)));
 }
 

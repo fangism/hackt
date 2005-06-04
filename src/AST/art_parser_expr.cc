@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.2.2.1 2005/06/03 21:43:47 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.2.2.2 2005/06/04 04:47:50 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -27,7 +27,7 @@
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_expr.h"
 #include "Object/art_object_PRS.h"
-// to dynamic_cast bool_instance_reference
+// to dynamic_cast bool_meta_instance_reference
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_classification_details.h"
 
@@ -158,14 +158,14 @@ inst_ref_expr::check_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	After checking an instance_reference, this checks to make sure
+	After checking an meta_instance_reference, this checks to make sure
 	that a bool is referenced, appropriate for PRS.  
  */
 prs_literal_ptr_type
 inst_ref_expr::check_prs_literal(context& c) const {
 	return_type ref(check_reference(c));
-	count_ptr<bool_instance_reference>
-		bool_ref(ref.is_a<bool_instance_reference>());
+	count_ptr<bool_meta_instance_reference>
+		bool_ref(ref.is_a<bool_meta_instance_reference>());
 	if (bool_ref) {
 		ref.abandon();
 		INVARIANT(bool_ref.refs() == 1);
@@ -348,7 +348,7 @@ qualified_id::copy_beheaded(void) const {
 	\return a pointer to a definition_base or an instance_collection_base 
 		with the matching [un]qualified identifier if found, else NULL.
 		Other possibilities: namespace?
-		Consumer should wrap in instance_reference?
+		Consumer should wrap in meta_instance_reference?
 			might be collective, in the case of an array
  */
 never_ptr<const object>
@@ -479,7 +479,7 @@ id_expr::check_reference(context& c) const {
 			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
-			return inst->make_instance_reference();
+			return inst->make_meta_instance_reference();
 		} else {
 			cerr << "object \"" << *qid <<
 				"\" does not refer to an instance, ERROR!  "
@@ -672,7 +672,7 @@ member_expr::rightmost(void) const {
 /**
 	Type-check of member reference.  
 	Current restriction: left expression must be scalar 0-dimensional.
-	\return type-checked instance_reference or null.  
+	\return type-checked meta_instance_reference or null.  
 	Really, should never be able to refer to param_expr
 	member of an instance.
  */
@@ -681,14 +681,14 @@ member_expr::check_reference(context& c) const {
 	typedef	inst_ref_expr::return_type	return_type;
 	const inst_ref_expr::return_type o(owner->check_reference(c));
 	// useless return value
-	// expect: simple_instance_reference on object stack
+	// expect: simple_meta_instance_reference on object stack
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
 			<< where(*owner) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<const simple_instance_reference>
-		inst_ref(o.is_a<const simple_instance_reference>());
+	const count_ptr<const simple_meta_instance_reference>
+		inst_ref(o.is_a<const simple_meta_instance_reference>());
 	INVARIANT(inst_ref);
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
@@ -702,7 +702,7 @@ member_expr::check_reference(context& c) const {
 		base_def(inst_ref->get_base_def());
 	NEVER_NULL(base_def);
 
-	// use that instance_reference, get its referenced definition_base, 
+	// use that meta_instance_reference, get its referenced definition_base, 
 	// and make sure it has a member m, lookup ports only in the 
 	// current_definition_reference, don't lookup anywhere else!
 
@@ -719,8 +719,8 @@ member_expr::check_reference(context& c) const {
 		THROW_EXIT;
 	}
 
-	const count_ptr<instance_reference_base>
-	ret_inst_ref(member_inst->make_member_instance_reference(inst_ref));
+	const count_ptr<meta_instance_reference_base>
+	ret_inst_ref(member_inst->make_member_meta_instance_reference(inst_ref));
 
 	// old comments:
 	// what should this return?  the same thing it expects:
@@ -782,11 +782,11 @@ index_expr::intercept_indices_error(context& c) const {
  */
 inst_ref_expr::return_type
 index_expr::intercept_base_ref_error(context& c) const {
-	// should result in an instance_reference
+	// should result in an meta_instance_reference
 	const inst_ref_expr::return_type
 		base_expr(base->check_reference(c));
 	if (!base_expr) {
-		cerr << "ERROR in base instance_reference!  "
+		cerr << "ERROR in base meta_instance_reference!  "
 			<< where(*base) << endl;
 		THROW_EXIT;
 	}
@@ -797,7 +797,7 @@ index_expr::intercept_base_ref_error(context& c) const {
 /**
 	Build's an indexed reference from base and index.  
 	Check index expression first, must be an integer type.  
-	\return pointer to instance_reference_base.  
+	\return pointer to meta_instance_reference_base.  
  */
 inst_ref_expr::return_type
 index_expr::check_reference(context& c) const {
@@ -806,11 +806,11 @@ index_expr::check_reference(context& c) const {
 	const inst_ref_expr::return_type
 		base_expr(intercept_base_ref_error(c));
 
-	// later this may be a member_instance_reference...
-	// should cast to instance_reference_base instead, 
+	// later this may be a member_meta_instance_reference...
+	// should cast to meta_instance_reference_base instead, 
 	// abstract attach_indices
-	const count_ptr<simple_instance_reference>
-		base_inst(base_expr.is_a<simple_instance_reference>());
+	const count_ptr<simple_meta_instance_reference>
+		base_inst(base_expr.is_a<simple_meta_instance_reference>());
 	NEVER_NULL(base_inst);
 
 	excl_ptr<range_list::checked_indices_type::element_type>

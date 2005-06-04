@@ -1,5 +1,38 @@
 "ChangeLog"
 
+2005-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-03:
+	  MAJOR rework of instance-references beginning.
+	  All old existing instance reference were
+		meta-instance-references, references that would eventually
+		be resolved at compile time upon template instantiation. 
+		CHP and other non-meta languages work with run-time
+		resolved, or nonmeta-instance-references.  However, 
+		it's important to note that meta-instance-references are
+		acceptable where their non-meta-instance-references are
+		expected (they are just run-time constant, after all).  
+		Thus we introduce another level in the hierarchy, rooted
+		at nonmeta_instance_reference_base.  
+	  Global rename: (previous occurences)
+		instance_reference -> meta_instance_reference
+		(file names preserved for now, will change later)
+	  entity::object parent has been expunged as a parent class
+		from all instance-references.
+	  Temporarily reverted USE_DATA_REFERENCE (in "Object/art_object_fwd.h")
+		to 0 (off).  We intend to redefine data_reference in terms 
+		of nonmeta_instance_references.  
+	  NOTE: instance reference connections only live in meta
+		language domain, thus it is kind of redundant to 
+		call them meta_instance_reference_connection, but at least
+		this makes it clear.  
+	  NOTE: member instance references currently only exist in the
+		meta language domain, however they could also be
+		ported to the non-meta domain, oooooh.  
+	  Removed pure virtual get_inst_base from mete_instance_reference_base
+		because it only makes sense for simple_meta_instance_reference.
+
+
 2005-06-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-02:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.29.2.2 2005/05/29 02:08:27 fang Exp $
+	$Id: art_parser_token.cc,v 1.29.2.2.2.1 2005/06/04 04:47:51 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -328,7 +328,7 @@ token_identifier::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is used specifically to return param_expr.  
-	Another version will return instance_references.  
+	Another version will return meta_instance_references.  
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
@@ -342,7 +342,7 @@ token_identifier::check_reference(context& c) const {
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
-		return inst->make_instance_reference();
+		return inst->make_meta_instance_reference();
 	} else {
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;

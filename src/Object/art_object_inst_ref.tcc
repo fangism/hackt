@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
-	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.7 2005/05/23 01:02:34 fang Exp $
+	Method definitions for the meta_instance_reference family of objects.
+ 	$Id: art_object_inst_ref.tcc,v 1.7.4.1 2005/06/04 04:47:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -29,14 +29,14 @@ using util::persistent_traits;
 	Private empty constructor.  
  */
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-INSTANCE_REFERENCE_CLASS::instance_reference() :
+INSTANCE_REFERENCE_CLASS::meta_instance_reference() :
 		parent_type(), inst_collection_ref() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-INSTANCE_REFERENCE_CLASS::instance_reference(
+INSTANCE_REFERENCE_CLASS::meta_instance_reference(
 		const instance_collection_ptr_type pi) :
 		parent_type(pi->current_collection_state()),
 		inst_collection_ref(pi) {
@@ -45,7 +45,7 @@ INSTANCE_REFERENCE_CLASS::instance_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-INSTANCE_REFERENCE_CLASS::~instance_reference() {
+INSTANCE_REFERENCE_CLASS::~meta_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -74,7 +74,7 @@ INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
 		alias_collection_type& a) const {
-	// possibly factor this part out into simple_instance_reference?
+	// possibly factor this part out into simple_meta_instance_reference?
 if (this->inst_collection_ref->get_dimensions()) {
 	const_index_list cil;
 	if (this->array_indices) {

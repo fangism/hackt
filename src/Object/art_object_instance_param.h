@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.19 2005/05/22 06:24:18 fang Exp $
+	$Id: art_object_instance_param.h,v 1.19.4.1 2005/06/04 04:48:01 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
@@ -69,12 +69,12 @@ virtual	ostream&
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
-virtual	count_ptr<instance_reference_base>
-	make_instance_reference(void) const = 0;
+virtual	count_ptr<meta_instance_reference_base>
+	make_meta_instance_reference(void) const = 0;
 
 	/** should just assert fail, forbid reference to param members */
 	member_inst_ref_ptr_type
-	make_member_instance_reference(const inst_ref_ptr_type& b) const;
+	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const;
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>
@@ -114,7 +114,7 @@ virtual	good_bool
 	is_static_constant(void) const;
 
 #if 0
-NOTE: these functions should only be applicable to param_instance_references.  
+NOTE: these functions should only be applicable to param_meta_instance_references.  
 /**
 	Whether or not this parameter is itself a loop index,
 	or if indexed, its indices depend on some loop index.

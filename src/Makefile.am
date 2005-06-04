@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.4.2.1 2005/06/03 21:43:45 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.4.2.2 2005/06/04 04:47:47 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -160,6 +160,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
 	Object/art_object_inst_ref_data.cc \
+	Object/art_object_nonmeta_inst_ref.cc \
 	Object/art_object_inst_stmt.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
@@ -190,6 +191,7 @@ OBJECT_TCC_FILES = \
 	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_ref.tcc \
 	Object/art_object_inst_ref_data.tcc \
+	Object/art_object_nonmeta_inst_ref.tcc \
 	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
@@ -221,6 +223,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_inst_stmt_chan.h \
 	Object/art_object_inst_stmt_proc.h \
 	Object/art_object_inst_ref_base.h \
+	Object/art_object_nonmeta_inst_ref_base.h \
 	Object/art_object_member_inst_ref.h \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h \

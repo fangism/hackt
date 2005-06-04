@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47.4.1 2005/06/02 18:35:39 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.4.2 2005/06/04 04:47:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -91,9 +91,9 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_param_expr_list,
 		"const-param-expr-list")
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_param_expr_list,
 		"param-expr-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instance_reference,
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_meta_instance_reference,
 		"pbool-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_instance_reference,
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_meta_instance_reference,
 		"pint-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_const,
 		"pint-const")
@@ -129,10 +129,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::dynamic_param_expr_list,
 		DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_instance_reference, 
+	ART::entity::pbool_meta_instance_reference, 
 		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_instance_reference, 
+	ART::entity::pint_meta_instance_reference, 
 		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)

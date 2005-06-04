@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for the data_reference family of objects.
- 	$Id: art_object_inst_ref_data.tcc,v 1.1.2.1 2005/06/03 21:43:51 fang Exp $
+ 	$Id: art_object_inst_ref_data.tcc,v 1.1.2.2 2005/06/04 04:47:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_TCC__
@@ -86,7 +86,7 @@ DATA_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 DATA_REFERENCE_CLASS::unroll_references(unroll_context& c, 
 		alias_collection_type& a) const {
-	// possibly factor this part out into simple_instance_reference?
+	// possibly factor this part out into simple_meta_instance_reference?
 if (this->inst_collection_ref->get_dimensions()) {
 	const_index_list cil;
 	if (this->array_indices) {

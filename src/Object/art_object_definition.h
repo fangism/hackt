@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.32.2.2 2005/05/27 02:05:02 fang Exp $
+	$Id: art_object_definition.h,v 1.32.2.2.2.1 2005/06/04 04:47:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -213,6 +213,10 @@ private:
 //-----------------------------------------------------------------------------
 /**
 	Member of an enumeration, just an identifier.  
+	Kludge: derived from object, so it is storable as a used_id_map
+	entity.  
+	Need not be derived from persistent, since binary data
+	consists of just a string, and need not be dynamically allocated.  
  */
 class enum_member : public object {
 private:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.13.4.2 2005/06/03 21:43:49 fang Exp $
+	$Id: art_object_expr_base.h,v 1.13.4.3 2005/06/04 04:47:56 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -199,7 +199,7 @@ virtual	bool
 	whereas range_expr preserves dimension, even if range is one.  
 
 	Doesn't make sense to ask how many dimensions are in an index_list
-	because it depends on the instance_reference to which it is 
+	because it depends on the meta_instance_reference to which it is 
 	attached.  
 	Instead the index list can tell one how may dimensions
 	are *collapsed* by the element types.  

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.1 2005/05/26 21:31:25 fang Exp $
+	$Id: art_object_value_reference.h,v 1.7.2.1.2.1 2005/06/04 04:48:03 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -42,13 +42,13 @@ value_reference<Tag>
  */
 VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class value_reference :
-	public class_traits<Tag>::instance_reference_parent_type, 
+	public class_traits<Tag>::meta_instance_reference_parent_type, 
 	public class_traits<Tag>::expr_base_type {
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
 private:
 	typedef	VALUE_REFERENCE_CLASS			this_type;
-	typedef	typename class_traits<Tag>::instance_reference_parent_type
+	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
 							parent_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_base_type;
@@ -111,8 +111,8 @@ public:
 	initialize(const init_arg_type& i);
 
 	// try these
-	// using param_instance_reference::may_be_initialized;
-	// using param_instance_reference::must_be_initialized;
+	// using param_meta_instance_reference::may_be_initialized;
+	// using param_meta_instance_reference::must_be_initialized;
 
 	bool
 	may_be_initialized(void) const;

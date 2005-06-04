@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.5 2005/05/22 06:24:19 fang Exp $
+	$Id: art_object_value_collection.h,v 1.5.4.1 2005/06/04 04:48:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -51,15 +51,15 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 class value_collection :
 	public class_traits<Tag>::value_collection_parent_type {
 // friend class pbool_instantiation_statement;
-friend class instance_reference<Tag>;
+friend class meta_instance_reference<Tag>;
 private:
 	typedef	VALUE_COLLECTION_CLASS		this_type;
 	typedef	typename class_traits<Tag>::value_collection_parent_type
 						parent_type;
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::instance_reference_type
-						instance_reference_type;
+	typedef	typename class_traits<Tag>::meta_instance_reference_type
+						meta_instance_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 						expr_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
@@ -103,8 +103,8 @@ virtual	ostream&
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
-	count_ptr<instance_reference_base>
-	make_instance_reference(void) const;
+	count_ptr<meta_instance_reference_base>
+	make_meta_instance_reference(void) const;
 
 	good_bool
 	initialize(const init_arg_type& e);
@@ -139,7 +139,7 @@ virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
 public:
-// really should be protected, usable by pbool_instance_reference::assigner
+// really should be protected, usable by pbool_meta_instance_reference::assigner
 virtual	bad_bool
 	assign(const multikey_index_type& k, const value_type b) = 0;
 
@@ -156,7 +156,7 @@ public:
 	persistent*
 	construct_empty(const int);
 
-protected:	// restore to protected after upgrading param_instance_reference
+protected:	// restore to protected after upgrading param_meta_instance_reference
 public:		// temporary
 	void
 	collect_transient_info(persistent_object_manager& m) const;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.24 2005/05/22 06:18:31 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.24.4.1 2005/06/04 04:47:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
@@ -52,12 +52,12 @@ param_expression_assignment::~param_expression_assignment() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param o is already a pointer to instance_reference_base.  
+	\param o is already a pointer to meta_instance_reference_base.  
 	\return TRUE if there is an error condition in this iteration
 		or earlier.
  */
 bad_bool
-param_expression_assignment::instance_reference_appender::operator () (
+param_expression_assignment::meta_instance_reference_appender::operator () (
 		const bad_bool b, const arg_type& o) {
 	index++;
 	if (!o) {
@@ -65,13 +65,13 @@ param_expression_assignment::instance_reference_appender::operator () (
 			" of assign-list." << endl;
 		return bad_bool(true);
 	}
-	const dest_ptr_type i(o.is_a<param_instance_reference>());
+	const dest_ptr_type i(o.is_a<param_meta_instance_reference>());
 	if (!i) {
 		cerr << "ERROR: unhandled case for item " << index <<
 			" of assign-list." << endl;
 		return bad_bool(true);
 	}
-	return ex_ass.append_param_instance_reference(i) || b;
+	return ex_ass.append_param_meta_instance_reference(i) || b;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

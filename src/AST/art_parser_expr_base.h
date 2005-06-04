@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.5 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.5.4.1 2005/06/04 04:47:51 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -18,7 +18,7 @@ namespace entity {
 	class object;
 	class param_expr;
 	class index_list;
-	class instance_reference_base;
+	class meta_instance_reference_base;
 namespace PRS {
 	class prs_expr;
 	class literal;
@@ -38,7 +38,7 @@ namespace parser {
  */
 typedef	count_ptr<entity::index_list>	range_list_return_type;
 
-typedef	count_ptr<entity::instance_reference_base>	inst_ref_return_type;
+typedef	count_ptr<entity::meta_instance_reference_base>	inst_ref_return_type;
 
 typedef	count_ptr<entity::PRS::prs_expr>	prs_expr_return_type;
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.7.2.1 2005/05/26 21:31:26 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.7.2.1.2.1 2005/06/04 04:48:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -471,7 +471,7 @@ VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
 		if (lookup_err.bad) {
 			// discard incomplete results
 			cerr << "ERROR: in unroll_resolve-ing "
-				"pint_instance_reference." << endl;
+				"pint_meta_instance_reference." << endl;
 			return return_type(NULL);
 		} else {
 			// safe up-cast

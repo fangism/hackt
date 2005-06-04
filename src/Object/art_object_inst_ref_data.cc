@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.8.8.1 2005/06/03 21:43:51 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8.8.2 2005/06/04 04:47:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -25,67 +25,67 @@ using ART::entity::int_tag;
 using ART::entity::bool_tag;
 
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::int_instance_reference, "int-inst-ref")
+	ART::entity::int_meta_instance_reference, "int-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::bool_instance_reference, "bool-inst-ref")
+	ART::entity::bool_meta_instance_reference, "bool-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::enum_instance_reference, "enum-inst-ref")
+	ART::entity::enum_meta_instance_reference, "enum-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::datastruct_instance_reference, "struct-inst-ref")
+	ART::entity::datastruct_meta_instance_reference, "struct-inst-ref")
 
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::int_member_instance_reference, "int-member-inst-ref")
+	ART::entity::int_member_meta_instance_reference, "int-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::bool_member_instance_reference, "bool-member-inst-ref")
+	ART::entity::bool_member_meta_instance_reference, "bool-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::enum_member_instance_reference, "enum-member-inst-ref")
+	ART::entity::enum_member_meta_instance_reference, "enum-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::datastruct_member_instance_reference,
+	ART::entity::datastruct_member_meta_instance_reference,
 		"struct-member-inst-ref")
 
 #if USE_DATA_REFERENCE
 // not really used -- bogus type keys -- 
 // but needed for complete class instantiation
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::instance_reference<int_tag>, "BOGUSint", 0)
+	ART::entity::meta_instance_reference<int_tag>, "BOGUSint", 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::instance_reference<bool_tag>, "BOGUSbl", 0)
+	ART::entity::meta_instance_reference<bool_tag>, "BOGUSbl", 0)
 #endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_instance_reference, 
+	ART::entity::int_meta_instance_reference, 
 		SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_instance_reference, 
+	ART::entity::bool_meta_instance_reference, 
 		SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_instance_reference, 
+	ART::entity::enum_meta_instance_reference, 
 		SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datastruct_instance_reference, 
+	ART::entity::datastruct_meta_instance_reference, 
 		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_member_instance_reference, 
+	ART::entity::int_member_meta_instance_reference, 
 		MEMBER_DINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_member_instance_reference, 
+	ART::entity::bool_member_meta_instance_reference, 
 		MEMBER_DBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_member_instance_reference, 
+	ART::entity::enum_member_meta_instance_reference, 
 		MEMBER_ENUM_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datastruct_member_instance_reference, 
+	ART::entity::datastruct_member_meta_instance_reference, 
 		MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace ART {
 namespace entity {
 //=============================================================================
-// class int_instance_reference method definitions
-// class bool_instance_reference method definitions
-// class enum_instance_reference method definitions
-// class datastruct_instance_reference method definitions
+// class int_meta_instance_reference method definitions
+// class bool_meta_instance_reference method definitions
+// class enum_meta_instance_reference method definitions
+// class datastruct_meta_instance_reference method definitions
 //	... all have been replaced with template definitions!
 
 //=============================================================================
@@ -95,16 +95,16 @@ namespace entity {
 template class data_reference<bool_tag>;
 template class data_reference<int_tag>;
 #else
-template class instance_reference<bool_tag>;
-template class instance_reference<int_tag>;
+template class meta_instance_reference<bool_tag>;
+template class meta_instance_reference<int_tag>;
 #endif
-template class instance_reference<enum_tag>;
-template class instance_reference<datastruct_tag>;
+template class meta_instance_reference<enum_tag>;
+template class meta_instance_reference<datastruct_tag>;
 
-template class member_instance_reference<bool_tag>;
-template class member_instance_reference<int_tag>;
-template class member_instance_reference<enum_tag>;
-template class member_instance_reference<datastruct_tag>;
+template class member_meta_instance_reference<bool_tag>;
+template class member_meta_instance_reference<int_tag>;
+template class member_meta_instance_reference<enum_tag>;
+template class member_meta_instance_reference<datastruct_tag>;
 
 //=============================================================================
 }	// end namespace entity
