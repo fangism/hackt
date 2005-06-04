@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-10:
+	  Portability and compiler compliance patch, 
+		also for VPATH build robustness.
+	  Obsolete template method definition removed from parser::context.
+	  Added auto-generated empty stderr files
+		to BUILT_SOURCES in src/util/test/Makefile.am.  
+	  src/util/test/test-expect.sh:
+		check for auto-generated .stderr files, because
+		won't be in srcdir.  
+
+
 2005-05-30	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09:

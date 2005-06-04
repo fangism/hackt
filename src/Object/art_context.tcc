@@ -2,7 +2,7 @@
 	\file "Object/art_context.tcc"
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.tcc,v 1.1.2.1 2005/05/27 21:04:06 fang Exp $
+ 	$Id: art_context.tcc,v 1.1.2.2 2005/06/04 01:49:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_TCC__
@@ -83,17 +83,6 @@ context::close_definition(void) {
 #define	INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(T)			\
 template void context::open_definition<T >(const token_identifier&);	\
 template void context::close_definition<T >();
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Used for creating type-references.  
-	\return the current active datatype definition.  
- */
-template <class D>
-never_ptr<const D>
-context::get_current_definition(void) const {
-	return current_definition_reference.template is_a<const D>();
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

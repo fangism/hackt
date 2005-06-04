@@ -5,15 +5,15 @@
 	Generally not intended for mixed use with pointers from
 	the non-counted pointer classes in "ptrs.h":
 		excl_ptr, some_ptr, never_ptr.  
-	$Id: count_ptr.h,v 1.1.72.1 2005/05/26 21:31:29 fang Exp $
+	$Id: count_ptr.h,v 1.1.72.2 2005/06/04 01:49:46 fang Exp $
  */
 
 #ifndef	__COUNT_PTR_H__
 #define	__COUNT_PTR_H__
 
 #include <cassert>
-#include <cstddef>		// for size_t
-#include "count_ptr_fwd.h"
+#include "util/size_t.h"
+#include "util/obsolete/count_ptr_fwd.h"
 
 #ifndef NULL
 #define	NULL		0

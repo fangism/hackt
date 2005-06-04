@@ -53,7 +53,14 @@ noinst_PROGRAMS = \
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
 
-BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc
+# but is included in distribution, EXTRA_DIST? don't bother cleaning?
+EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
+	link_test.stderr
+
+AUTO_STDERR_FILES = multikey_set_derived_test.stderr
+
+BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc \
+	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -143,14 +150,8 @@ PREFILTER_FILES = \
 	$(MOREFILTER_TESTS:=.stderr.prefilter) \
 	$(MOREFILTER_TESTS:=.out.prefilter)
 
-# but is included in distribution, EXTRA_DIST? don't bother cleaning?
-EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
-	link_test.stderr
-
 multikey_set_derived_test.stderr: multikey_set_test.stderr
 	$(CP) $? $@
-
-AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
@@ -189,7 +190,7 @@ TESTS = $(noinst_PROGRAMS:=.test)
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
 AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
-	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES) $(PREFILTER_FILES)
+	$(BUILT_SOURCES) $(PREFILTER_FILES)
 
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
@@ -200,7 +201,7 @@ AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 
 .cvsignore: Makefile.am Makefile.in
 
-all-local: .cvsignore $(TESTS) $(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
+all-local: .cvsignore $(TESTS)
 
 clean-local:
 	-$(RM) $(BUILT_SOURCES)
