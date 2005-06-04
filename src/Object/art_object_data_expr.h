@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.h"
 	Class definitions for data expressions.
-	$Id: art_object_data_expr.h,v 1.1.2.2 2005/06/04 04:47:54 fang Exp $
+	$Id: art_object_data_expr.h,v 1.1.2.3 2005/06/04 23:26:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_H__
@@ -9,12 +9,14 @@
 
 #include "Object/art_object_data_expr_base.h"
 #include "Object/art_object_expr_base.h"		// for index_expr
+#include <list>
 #include "util/qmap.h"
 #include "util/operators.h"
 #include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
+using std::list;
 using util::qmap;
 USING_UTIL_OPERATIONS
 using util::persistent_object_manager;
@@ -75,17 +77,57 @@ public:
 };	// end class int_arith_expr
 
 //=============================================================================
-#if 0
 /**
 	In the CHP context, we allow indices to reference both
 	int_meta_instance_references and pint_meta_instance_references.  
 	Should we allow (param) index expressions where we allow
 	data index expressions?
  */
-class int_index_expr {
+class int_range_expr : public nonmeta_range_expr_base {
+	typedef	nonmeta_range_expr_base		parent_type;
+public:
+	typedef	count_ptr<const int_expr>	bound_ptr_type;
+protected:
+	bound_ptr_type				lower;
+	bound_ptr_type				upper;
+public:
+	int_range_expr();
+	int_range_expr(const bound_ptr_type&, const bound_ptr_type&);
+	~int_range_expr();
 
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
+
+	size_t
+	dimensions(void) const { return 0; }	// or bomb
+
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class int_index
-#endif
+
+//=============================================================================
+/**
+	List of indices, which may contain non-meta expressions, 
+	that will be run-time evaluated.  
+ */
+class nonmeta_index_list : public persistent {
+	typedef	list<count_ptr<nonmeta_index_expr_base> >	list_type;
+private:
+	list_type				indices;
+public:
+	nonmeta_index_list();
+	~nonmeta_index_list();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class nonmeta_index_list
 
 //=============================================================================
 }	// end namespace entity

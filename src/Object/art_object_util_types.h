@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.1.2.1.2.1 2005/06/04 04:48:03 fang Exp $
+	$Id: art_object_util_types.h,v 1.1.2.1.2.2 2005/06/04 23:26:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
@@ -37,7 +37,7 @@ namespace entity {
 		to accommodate loop and conditional scopes?
 	 */
 	// try to convert this to excl_ptr or sticky_ptr...
-	typedef count_ptr<const range_expr_list>
+	typedef count_ptr<const meta_range_list>
 			index_collection_item_ptr_type;
 
 	/**

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.5 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_range.h,v 1.5.6.1 2005/06/04 23:26:52 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_H__
@@ -11,7 +11,7 @@
 
 namespace ART {
 namespace entity {
-	class index_expr;
+	class meta_index_expr;
 }	// end namespace entity
 namespace parser {
 //=============================================================================
@@ -24,7 +24,7 @@ namespace parser {
  */
 class range {
 public:
-	typedef	count_ptr<entity::index_expr>	return_type;
+	typedef	count_ptr<entity::meta_index_expr>	return_type;
 protected:
 	const excl_ptr<const expr>	lower;	///< inclusive lower bound
 	const excl_ptr<const expr>	upper;	///< inclusive upper bound

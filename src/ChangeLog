@@ -2,6 +2,22 @@
 
 2005-06-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-04:
+	  Massive renaming of classes continues...
+		index_list -> meta_index_list, 
+		index_expr -> meta_index_expr, 
+		dynamic_index_list -> dynamic_meta_index_list, 
+		dynamic_range_list -> dynamic_meta_range_list, 
+		range_expr_list -> meta_range_list, 
+		range_expr -> meta_range_expr
+	  Added nonmeta expr classes to foundation of meta expr classes
+		so that meta exprs are acceptable to nonmeta exprs.  
+	  Inlined some empty base classes' ctors and dtors.  
+	  TODO: nonmeta instance references.  
+
+
+2005-06-04	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-03:
 	  MAJOR rework of instance-references beginning.
 	  All old existing instance reference were

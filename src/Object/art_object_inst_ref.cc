@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30.4.2 2005/06/04 04:47:57 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.4.3 2005/06/04 23:26:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -20,7 +20,7 @@
 #include "Object/art_object_inst_ref.tcc"
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_inst_stmt_base.h"
-#include "Object/art_object_expr.h"		// for dynamic_range_list
+#include "Object/art_object_expr.h"		// for dynamic_meta_range_list
 #include "Object/art_object_control.h"
 #include "Object/art_object_connect.h"		// for aliases_connection_base
 #include "util/persistent_object_manager.tcc"
@@ -222,7 +222,7 @@ simple_meta_instance_reference::simple_meta_instance_reference(
 	May be obsolete...
  */
 simple_meta_instance_reference::simple_meta_instance_reference(
-		excl_ptr<index_list>& i, 
+		excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st) :
 		array_indices(i), 
 		inst_state(st) {
@@ -284,8 +284,8 @@ simple_meta_instance_reference::is_static_constant_collection(void) const {
 	const instantiation_state
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {
-		const count_ptr<const dynamic_range_list>
-			drl((*iter)->get_indices().is_a<const dynamic_range_list>());
+		const count_ptr<const dynamic_meta_range_list>
+			drl((*iter)->get_indices().is_a<const dynamic_meta_range_list>());
 		if (drl) {
 			if (!drl->is_static_constant())
 				return false;
@@ -356,7 +356,7 @@ simple_meta_instance_reference::may_be_densely_packed(void) const {
 		return true;
 	// else is collective
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const meta_index_list> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		if (!cil)
@@ -405,7 +405,7 @@ simple_meta_instance_reference::must_be_densely_packed(void) const {
 		return true;
 	// else is collective
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const meta_index_list> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		if (!cil)
@@ -461,7 +461,7 @@ simple_meta_instance_reference::static_constant_dimensions(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	INVARIANT(base_dim);		// must have no-zero dimensions
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const meta_index_list> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		if (!cil)	// is dynamic
@@ -509,12 +509,12 @@ simple_meta_instance_reference::implicit_static_constant_indices(void) const {
 	INVARIANT(base_dim);		// non-zero dimension only!
 	// else is collective
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const meta_index_list> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		NEVER_NULL(cil);
 		const size_t a_size = array_indices->size();
-		// or compute equivalent from a const dynamic_index_list?
+		// or compute equivalent from a const dynamic_meta_index_list?
 		if (a_size < base_dim) {
 			// array indices are underspecified
 			// TO DO: unpack instance collection into
@@ -527,7 +527,7 @@ simple_meta_instance_reference::implicit_static_constant_indices(void) const {
 			const const_range_list crl(*cil);
 			const mset_base::range_list_type
 				rl(fui->query_compact_dimensions(crl));
-			// is a list<const_range>, must convert to index_list
+			// is a list<const_range>, must convert to meta_index_list
 			INVARIANT(!rl.empty());
 
 			// add implied indices (ranges) back to original
@@ -670,7 +670,7 @@ simple_meta_instance_reference::dump_type_size(ostream& o) const {
 	\return true if successful, else false.  
  */
 good_bool
-simple_meta_instance_reference::attach_indices(excl_ptr<index_list>& i) {
+simple_meta_instance_reference::attach_indices(excl_ptr<meta_index_list>& i) {
 	// make sure not already indexed
 	// side note: if indexing were truly recursive and not list-based, 
 	//	we'd be able to append indices one-by-one.  
@@ -697,12 +697,12 @@ simple_meta_instance_reference::attach_indices(excl_ptr<index_list>& i) {
 	// mset_base typedef'd privately
 	// overriding default implementation with pair<int, int>
 	INVARIANT(max_dim <= mset_base::LIMIT);
-	never_ptr<const index_list> il(i);
+	never_ptr<const meta_index_list> il(i);
 	never_ptr<const const_index_list>
 		cil(il.is_a<const const_index_list>());
 	if (!cil) {	// is dynamic, conservatively covers anything
-		never_ptr<const dynamic_index_list>
-			dil(il.is_a<const dynamic_index_list>());
+		never_ptr<const dynamic_meta_index_list>
+			dil(il.is_a<const dynamic_meta_index_list>());
 		NEVER_NULL(dil);
 		array_indices = i;
 		return good_bool(true);
@@ -882,7 +882,7 @@ simple_meta_instance_reference::unroll_static_instances(const size_t dim) const 
 		cov(mset_base::make_multidimensional_sparse_set(dim));
 	NEVER_NULL(cov);
 	for ( ; iter!=end; iter++) {
-		if ((*iter)->get_indices().is_a<const dynamic_range_list>())
+		if ((*iter)->get_indices().is_a<const dynamic_meta_range_list>())
 		{
 			// all we can do conservatively...
 			return excl_ptr<mset_base>(NULL);
@@ -1045,7 +1045,7 @@ param_meta_instance_reference::param_meta_instance_reference(
 		at the time of reference.  
  */
 param_meta_instance_reference::param_meta_instance_reference(
-		excl_ptr<index_list>& i, 
+		excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st) :
 		simple_meta_instance_reference(i, st) {
 }
@@ -1183,7 +1183,7 @@ datatype_meta_instance_reference_base::datatype_meta_instance_reference_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 datatype_meta_instance_reference_base::datatype_meta_instance_reference_base(
-		excl_ptr<index_list>& i, const instantiation_state& s) :
+		excl_ptr<meta_index_list>& i, const instantiation_state& s) :
 		simple_meta_instance_reference(i, s) {
 }
 #endif

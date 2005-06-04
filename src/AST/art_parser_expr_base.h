@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.5.4.1 2005/06/04 04:47:51 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.5.4.2 2005/06/04 23:26:52 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -17,7 +17,7 @@ namespace entity {
 	// defined in "art_object_base.h"
 	class object;
 	class param_expr;
-	class index_list;
+	class meta_index_list;
 	class meta_instance_reference_base;
 namespace PRS {
 	class prs_expr;
@@ -36,7 +36,7 @@ namespace parser {
 /**
 	Bah! breaks circular dependence of nested typedefs.  
  */
-typedef	count_ptr<entity::index_list>	range_list_return_type;
+typedef	count_ptr<entity::meta_index_list>	range_list_return_type;
 
 typedef	count_ptr<entity::meta_instance_reference_base>	inst_ref_return_type;
 

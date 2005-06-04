@@ -1,7 +1,8 @@
 /**
 	\file "Object/art_object_data_expr_base.h"
 	Base classes for data expressions.  
-	$Id: art_object_data_expr_base.h,v 1.1.2.1 2005/06/03 21:43:49 fang Exp $
+	TODO: future rename this file to nonmeta_expr_base.h
+	$Id: art_object_data_expr_base.h,v 1.1.2.2 2005/06/04 23:26:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_BASE_H__
@@ -19,13 +20,18 @@ using util::memory::count_ptr;
 //=============================================================================
 /**
 	Base class for all datatype expressions.  
+	Datatype expressions are classified as non-meta expressions, 
+	i.e. their values are only determined at run-time.  
+	It is always safe to accept a meta expression in place of a 
+	nonmeta expression.  
+	TODO: perhaps call this nonmeta_data_expr for clarity?
  */
 class data_expr : virtual public persistent {
 protected:
 	data_expr() : persistent() { }
+public:
 virtual	~data_expr() { }
 
-public:
 virtual	ostream&
 	what(ostream&) const = 0;
 
@@ -38,12 +44,36 @@ virtual	size_t
 
 //=============================================================================
 /**
+	base class for generic non-meta index expressions.  
+	meta_index_expr will derive from this.  
+ */
+class nonmeta_index_expr_base : virtual public persistent {
+protected:
+	nonmeta_index_expr_base() : persistent() { }
+public:
+virtual	~nonmeta_index_expr_base() { }
+
+};	// end class nonmeta_ndex_expr_base
+
+//=============================================================================
+class nonmeta_range_expr_base : virtual public nonmeta_index_expr_base {
+	typedef	nonmeta_index_expr_base		parent_type;
+protected:
+	nonmeta_range_expr_base() : parent_type() { }
+public:
+virtual	~nonmeta_range_expr_base() { }
+
+};	// end clas nonmeta_range_expr_base
+
+//=============================================================================
+/**
 	Abstract boolean data type expression.  
  */
 class bool_expr : public data_expr {
-	typedef	data_expr				parent_type;
-public:
+	typedef	data_expr			parent_type;
+protected:
 	bool_expr() : parent_type() { }
+public:
 virtual	~bool_expr() { }
 };	// end class bool_expr
 
@@ -51,10 +81,11 @@ virtual	~bool_expr() { }
 /**
 	Abstract boolean data type expression.  
  */
-class int_expr : public data_expr {
-	typedef	data_expr				parent_type;
+class int_expr : virtual public nonmeta_index_expr_base, public data_expr {
+	typedef	data_expr			parent_type;
+protected:
+	int_expr() : nonmeta_index_expr_base(), parent_type() { }
 public:
-	int_expr() : parent_type() { }
 virtual	~int_expr() { }
 };	// end class bool_expr
 

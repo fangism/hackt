@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.1.2.1 2005/06/04 04:48:03 fang Exp $
+	$Id: art_object_value_reference.h,v 1.7.2.1.2.2 2005/06/04 23:26:57 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -75,7 +75,7 @@ public:
 	value_reference(const never_ptr<value_collection_type> pi);
 
 	value_reference(const never_ptr<value_collection_type> pi, 
-		excl_ptr<index_list>& i);
+		excl_ptr<meta_index_list>& i);
 
 	~value_reference();
 

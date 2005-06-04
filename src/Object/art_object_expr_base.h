@@ -1,7 +1,8 @@
 /**
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr_base.h,v 1.13.4.3 2005/06/04 04:47:56 fang Exp $
+	TODO: rename to meta_expr_base.h
+	$Id: art_object_expr_base.h,v 1.13.4.4 2005/06/04 23:26:54 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -146,14 +147,16 @@ virtual	excl_ptr<const_param_expr_list>
 	For example, x[i] refers to a single instance (0-dimension)
 	of the x array, whereas x[i..i] refers to a 
 	1-dimensional sub-array of x, size 1, in this case.  
-	A "range_expr" (below) may be an index, but not vice versa.  
+	A "meta_range_expr" (below) may be an index, but not vice versa.  
  */
-class index_expr : virtual public persistent {
+class meta_index_expr : virtual public nonmeta_index_expr_base {
+	typedef	nonmeta_index_expr_base		parent_type;
+	typedef	meta_index_expr			this_type;
 protected:
-	index_expr();
+	meta_index_expr() : parent_type() { }
 
 public:
-virtual	~index_expr();
+virtual	~meta_index_expr() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -186,17 +189,17 @@ virtual	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const = 0;
 
 virtual	bool
-	must_be_equivalent_index(const index_expr& ) const = 0;
+	must_be_equivalent_index(const meta_index_expr& ) const = 0;
 
 // additional virtual functions for dimensionality...
-};	// end class index_expr
+};	// end class meta_index_expr
 
 //-----------------------------------------------------------------------------
 /**
 	May contained mixed pint_expr and ranges!
 	Don't forget their interpretation differs!
 	pint_expr is interpreted as a dimension collapse, 
-	whereas range_expr preserves dimension, even if range is one.  
+	whereas meta_range_expr preserves dimension, even if range is one.  
 
 	Doesn't make sense to ask how many dimensions are in an index_list
 	because it depends on the meta_instance_reference to which it is 
@@ -204,11 +207,11 @@ virtual	bool
 	Instead the index list can tell one how may dimensions
 	are *collapsed* by the element types.  
  */
-class index_list : public persistent {
+class meta_index_list : public persistent {
 public:
-	index_list() : persistent() { }
+	meta_index_list() : persistent() { }
 
-virtual	~index_list() { }
+virtual	~meta_index_list() { }
 
 // copy over most param_expr interface functions...
 virtual	ostream&
@@ -251,8 +254,8 @@ virtual	bool
 #endif
 
 virtual	bool
-	must_be_equivalent_indices(const index_list& ) const = 0;
-};	// end class index_list
+	must_be_equivalent_indices(const meta_index_list& ) const = 0;
+};	// end class meta_index_list
 
 //=============================================================================
 /**
@@ -260,15 +263,15 @@ virtual	bool
 	Make interface like std::list.  
 	Instance collection stack item?
 	Replace instance_collection_stack_item with this!
-	Elements of range_expr_list must be range_expr, 
+	Elements of meta_range_list must be meta_range_expr, 
 	i.e. fully expanded, no shorthand ranges.  
  */
-class range_expr_list : public persistent {
+class meta_range_list : public persistent {
 protected:
 public:
-	range_expr_list() : persistent() { }
+	meta_range_list() : persistent() { }
 
-virtual	~range_expr_list() { }
+virtual	~meta_range_list() { }
 
 virtual	size_t
 	size(void) const = 0;
@@ -283,7 +286,7 @@ virtual	bool
 	is_static_constant(void) const = 0;
 
 virtual	const_range_list
-	static_overlap(const range_expr_list& r) const = 0;
+	static_overlap(const meta_range_list& r) const = 0;
 
 // is this obsolete?
 virtual	good_bool
@@ -293,9 +296,9 @@ virtual	good_bool
 	unroll_resolve(const_range_list&, const unroll_context&) const = 0;
 
 virtual	bool
-	must_be_formal_size_equivalent(const range_expr_list& ) const = 0;
+	must_be_formal_size_equivalent(const meta_range_list& ) const = 0;
 
-};	// end class range_expr_list
+};	// end class meta_range_list
 
 //=============================================================================
 /**
@@ -379,7 +382,7 @@ protected:
 /**
 	Abstract expression checked to be a single integer.  
  */
-class pint_expr : virtual public param_expr, virtual public index_expr, 
+class pint_expr : virtual public param_expr, virtual public meta_index_expr, 
 		public int_expr {
 public:
 	/**
@@ -389,7 +392,7 @@ public:
 	 */
 	typedef	pint_value_type			value_type;
 protected:
-	pint_expr() : param_expr(), index_expr(), int_expr() { }
+	pint_expr() : param_expr(), meta_index_expr(), int_expr() { }
 
 public:
 	// temporary de-inline for debugging purposes
@@ -429,7 +432,7 @@ virtual	bool
 	must_be_equivalent(const pint_expr& ) const = 0;
 
 	bool
-	must_be_equivalent_index(const index_expr& ) const;
+	must_be_equivalent_index(const meta_index_expr& ) const;
 
 virtual bool
 	is_static_constant(void) const = 0;
@@ -473,7 +476,7 @@ protected:
 //=============================================================================
 /**
 	Abstract interface to range expression objects.  
-	Note: range_expr is not a param_expr.
+	Note: meta_range_expr is not a param_expr.
 	Range expressions are not the same as index expressions:
 	Range expressions are used exclusively for declarations of arrays, 
 	whereas index expressions are used for instance references.  
@@ -481,12 +484,15 @@ protected:
 	x[0..N-1], we will need to explicitly convert from the former 
 	to the latter.  
  */
-class range_expr : virtual public index_expr {
+class meta_range_expr : virtual public meta_index_expr, 
+		public nonmeta_range_expr_base {
+	typedef	meta_index_expr		parent_type;
+	typedef	nonmeta_range_expr_base	nonmeta_parent_type;
 protected:
-	range_expr();
+	meta_range_expr() : parent_type(), nonmeta_parent_type() { }
 
 public:
-virtual	~range_expr();
+virtual	~meta_range_expr() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -539,12 +545,12 @@ virtual	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const = 0;
 
 virtual	bool
-	must_be_formal_size_equivalent(const range_expr& ) const = 0;
+	must_be_formal_size_equivalent(const meta_range_expr& ) const = 0;
 
 	bool
-	must_be_equivalent_index(const index_expr& ) const;
+	must_be_equivalent_index(const meta_index_expr& ) const;
 
-};	// end class range_expr
+};	// end class meta_range_expr
 
 //=============================================================================
 }	// end namespace ART

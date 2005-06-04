@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.7.4.2 2005/06/04 04:47:58 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.7.4.3 2005/06/04 23:26:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
@@ -24,7 +24,7 @@ class datatype_meta_instance_reference_base : public simple_meta_instance_refere
 private:
 	typedef simple_meta_instance_reference               parent_type;
 protected:
-//      excl_ptr<index_list>                    array_indices;  // inherited
+//      excl_ptr<meta_index_list>                   array_indices;  // inherited
 
 protected:
 	datatype_meta_instance_reference_base();

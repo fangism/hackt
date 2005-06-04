@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.2.2.2 2005/06/04 04:47:50 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.2.2.3 2005/06/04 23:26:51 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -767,7 +767,7 @@ range_list::checked_indices_type
 index_expr::intercept_indices_error(context& c) const {
 	const range_list::checked_indices_type
 		checked_indices(ranges->check_indices(c));
-	// should result in a ART::entity::index_list
+	// should result in a ART::entity::meta_index_list
 	// what happened to object_list::make_index_list() ?
 	if (!checked_indices) {
 		cerr << "ERROR in index list!  " << where(*ranges) << endl;

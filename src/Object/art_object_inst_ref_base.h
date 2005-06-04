@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.4.1 2005/06/04 04:47:58 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.4.2 2005/06/04 23:26:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -169,7 +169,8 @@ public:
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class simple_meta_instance_reference : virtual public meta_instance_reference_base {
+class simple_meta_instance_reference :
+		virtual public meta_instance_reference_base {
 private:
 	typedef	simple_meta_instance_reference		this_type;
 	/**
@@ -192,7 +193,7 @@ protected:
 		not necessarily zero-dimensional (scalar).
 		Could be implicit reference to entire collection.  
 	 */
-	excl_ptr<index_list>			array_indices;
+	excl_ptr<meta_index_list>		array_indices;
 
 	/**
 		The current state of the instantiation collection
@@ -213,7 +214,7 @@ public:
 	explicit
 	simple_meta_instance_reference(const instantiation_state& st);
 
-	simple_meta_instance_reference(excl_ptr<index_list>& i, 
+	simple_meta_instance_reference(excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st);
 
 virtual	~simple_meta_instance_reference();
@@ -240,7 +241,7 @@ virtual	~simple_meta_instance_reference();
 	implicit_static_constant_indices(void) const;
 
 	good_bool
-	attach_indices(excl_ptr<index_list>& i);
+	attach_indices(excl_ptr<meta_index_list>& i);
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -306,7 +307,7 @@ private:
 class param_meta_instance_reference : public simple_meta_instance_reference {
 protected:
 	typedef	simple_meta_instance_reference	parent_type;
-//	excl_ptr<index_list>			array_indices;	// inherited
+//	excl_ptr<meta_index_list>		array_indices;	// inherited
 
 protected:
 	param_meta_instance_reference();

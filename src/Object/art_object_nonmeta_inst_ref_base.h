@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.1 2005/06/04 04:48:03 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.2 2005/06/04 23:26:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -9,11 +9,13 @@
 
 #include <iosfwd>
 #include "util/persistent.h"
+#include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace entity {
 using std::ostream;
 using util::persistent;
+using util::memory::excl_ptr;
 //=============================================================================
 /**
 	The most general instance reference.  
@@ -39,13 +41,44 @@ virtual	size_t
 };	// end class nonmeta_instance_reference_base
 
 //=============================================================================
+#if 0
 /**
 	A simple non-meta instance reference may have nonmeta
 	expressions and instance references in the index list.  
  */
 class simple_nonmeta_instance_reference :
-	public nonmeta_instance_reference_base {
+	virtual public nonmeta_instance_reference_base {
+	typedef	simple_nonmeta_instance_reference	this_type;
+public:
+	typedef	nonmeta_index_list			index_list_type;
+protected:
+	excl_ptr<index_list_type>			array_indices;
+	// don't bother tracking instantiation state for non-meta references
+protected:
+	simple_nonmeta_instance_reference();
+public:
+	explicit
+	simple_nonmeta_instance_reference(excl_ptr<index_list_type>&);
+
+virtual	~simple_nonmeta_instance_reference();
+
+	ostream&
+	dump(ostream&) const;
+
+	// type equivalence methods...
+
+public:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
 };	// end class simple_nonmeta_instance_reference
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.4 2005/05/22 06:18:30 fang Exp $
+	$Id: art_parser_range.cc,v 1.4.4.1 2005/06/04 23:26:52 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -213,8 +213,8 @@ range_list::check_indices(context& c) const {
 		return return_type(NULL);
 	}
 
-	count_ptr<dynamic_index_list>
-		dyn_ret(new dynamic_index_list);
+	count_ptr<dynamic_meta_index_list>
+		dyn_ret(new dynamic_meta_index_list);
 	NEVER_NULL(dyn_ret);
 	bool is_const = true;
 	check_type::const_iterator i = temp.begin();
@@ -250,7 +250,7 @@ range_list::check_indices(context& c) const {
 	Intended for use in resolving dense array dimensions
 	of formal parameters and formal ports.
 	Cannot possibly be loop-dependent or conditional!
-	\return newly allocated range_expr_list.
+	\return newly allocated meta_range_list.
  */
 range_list::checked_ranges_type
 range_list::check_ranges(context& c) const {
@@ -278,7 +278,7 @@ range_list::check_ranges(context& c) const {
 		}
 		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		// may be pint_const or pint_literal
-		const count_ptr<range_expr> r(i->is_a<range_expr>());
+		const count_ptr<meta_range_expr> r(i->is_a<meta_range_expr>());
 		// may be const_range or pint_range
 		if (p) {
 			// later modularize to some method function...
@@ -333,7 +333,7 @@ range_list::check_ranges(context& c) const {
 				err.bad = true;
 			}
 		} else {
-			// is neither pint_expr nor range_expr
+			// is neither pint_expr nor meta_range_expr
 			INVARIANT(!i->is_a<pint_const>());
 			INVARIANT(!i->is_a<const_range>());
 			is_valid_range = false;
@@ -354,7 +354,8 @@ range_list::check_ranges(context& c) const {
 		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
 			const count_ptr<pint_expr> p(j->is_a<pint_expr>());
-			const count_ptr<range_expr> r(j->is_a<range_expr>());
+			const count_ptr<meta_range_expr>
+				r(j->is_a<meta_range_expr>());
 			// don't forget to range check
 			if (p) {
 				const int n = p->static_constant_value();
@@ -391,8 +392,8 @@ range_list::check_ranges(context& c) const {
 		return ret;
 	} else if (is_initialized) {
 		check_type::const_iterator j = temp.begin();
-		const count_ptr<dynamic_range_list>
-			ret(new dynamic_range_list);
+		const count_ptr<dynamic_meta_range_list>
+			ret(new dynamic_meta_range_list);
 		for ( ; j!=temp.end(); j++) {
 			if (j->is_a<pint_expr>()) {
 				// convert N to 0..N-1
@@ -464,7 +465,7 @@ dense_range_list::postorder_check(check_type& temp, context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates a type-checked range_expr_list.  
+	Creates a type-checked meta_range_list.  
 	The restriction with this version is that each item must
 	be a single pint_expr, not a range.  
 	Walks list twice, once to see what the best classification is, 
@@ -554,8 +555,8 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 	} else if (is_initialized) {
 		STACKTRACE("is-initialized");
 		check_type::const_iterator j = temp.begin();
-		const count_ptr<dynamic_range_list>
-			ret(new dynamic_range_list);
+		const count_ptr<dynamic_meta_range_list>
+			ret(new dynamic_meta_range_list);
 		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
 			ret->push_back(count_ptr<pint_range>(

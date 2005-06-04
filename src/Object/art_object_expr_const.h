@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.15 2005/05/10 04:51:13 fang Exp $
+	$Id: art_object_expr_const.h,v 1.15.8.1 2005/06/04 23:26:55 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
@@ -154,12 +154,13 @@ public:
 /**
 	Abstract interface for constant indices and index ranges.  
  */
-class const_index : virtual public index_expr {
+class const_index : virtual public meta_index_expr {
+	typedef	meta_index_expr			parent_type;
 protected:
-	const_index();
+	const_index() : parent_type() { }
 
 public:
-virtual	~const_index();
+virtual	~const_index() { }
 
 // same pure virtual functions, and more...
 
@@ -190,7 +191,7 @@ virtual	bool
 	Because of arbitrary pointer copying,
 	members must be reference counted.  
  */
-class const_index_list : public index_list, 
+class const_index_list : public meta_index_list, 
 		private list<count_ptr<const_index> > {
 	typedef	const_index_list		this_type;
 public:
@@ -274,7 +275,7 @@ public:
 	equal_dimensions(const const_index_list& ) const;
 
 	bool
-	must_be_equivalent_indices(const index_list& ) const;
+	must_be_equivalent_indices(const meta_index_list& ) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
@@ -285,7 +286,7 @@ public:
 	List of constant range expressions.  
 	Would a vector be more appropriate?   consider changing later...
  */
-class const_range_list : public range_expr_list, public list<const_range> {
+class const_range_list : public meta_range_list, public list<const_range> {
 	typedef	const_range_list			this_type;
 protected:
 	// no need for pointers here
@@ -319,7 +320,7 @@ public:
 	is_static_constant(void) const { return true; }
 
 	const_range_list
-	static_overlap(const range_expr_list& r) const;
+	static_overlap(const meta_range_list& r) const;
 
 	bool
 	is_size_equivalent(const const_range_list& il) const;
@@ -351,7 +352,7 @@ public:
 	unroll_resolve(const_range_list&, const unroll_context&) const;
 
 	bool
-	must_be_formal_size_equivalent(const range_expr_list& ) const;
+	must_be_formal_size_equivalent(const meta_range_list& ) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
@@ -587,7 +588,7 @@ public:
 	Constant version of range expression.  
 	Deriving from pair to inherit its interface with first and second.  
  */
-class const_range : public range_expr, public const_index,
+class const_range : public meta_range_expr, public const_index,
 		public pair<pint_value_type, pint_value_type> {
 friend class const_range_list;
 private:
@@ -597,7 +598,11 @@ private:
 	// relocated to source file
 public:
 	// dispense with pint_const objects here
-	const_range();
+	/**
+		Default constructor initializes with invalid range.  
+	 */
+	const_range() :
+		meta_range_expr(), const_index(), parent_type(0, -1) { }
 
 	/** explicit conversion from x[N] to x[0..N-1] */
 	explicit
@@ -611,7 +616,9 @@ public:
 
 	const_range(const pint_value_type l, const pint_value_type u);
 
+#if 0
 	const_range(const const_range& r);
+#endif
 
 private:
 	const_range(const pint_value_type l, const pint_value_type u,
@@ -696,7 +703,7 @@ public:
 	unroll_resolve_index(const unroll_context&) const;
 
 	bool
-	must_be_formal_size_equivalent(const range_expr& ) const;
+	must_be_formal_size_equivalent(const meta_range_expr& ) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1.2.2 2005/06/04 04:47:57 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.3 2005/06/04 23:26:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -197,7 +197,7 @@ namespace entity {
 	class param_expr_list;
 	class const_param_expr_list;
 	class dynamic_param_expr_list;
-	class index_expr;               // BEWARE also in ART::parser!
+	class meta_index_expr;
 	class const_index;
 	class pbool_expr;
 	class pint_expr;
@@ -210,18 +210,18 @@ namespace entity {
 	class arith_expr;
 	class relational_expr;
 	class logical_expr;
-	class range_expr;
+	class meta_range_expr;
 	class pint_range;
 	class const_range;
-	class range_expr_list;
+	class meta_range_list;
 	class const_range_list;
-	class dynamic_range_list;
+	class dynamic_meta_range_list;
 //	class unconditional_range_list;
 //	class conditional_range_list;
 //	class loop_range_list;
-	class index_list;
+	class meta_index_list;
 	class const_index_list;
-	class dynamic_index_list;
+	class dynamic_meta_index_list;
 
 	template <class>
 	class const_collection;
