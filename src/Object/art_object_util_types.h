@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.1.2.1.2.2 2005/06/04 23:26:57 fang Exp $
+	$Id: art_object_util_types.h,v 1.1.2.1.2.3 2005/06/05 22:06:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
@@ -12,6 +12,8 @@
 #include "util/STL/deque_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
+
+#include <deque>		// to complete type for deque
 
 namespace ART {
 namespace entity {
@@ -51,6 +53,15 @@ namespace entity {
 	 */
 	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
 			index_collection_type;
+
+	/**
+		The state of an instance collection, kept track by each
+		instance reference.
+		Since the iterators are list-like, they remain valid
+		after sequence manipulation operations (like insert, erase).
+	 */
+	typedef index_collection_type::const_iterator
+			instantiation_state;
 
 }	// end namespace entity
 }	// end namespace ART

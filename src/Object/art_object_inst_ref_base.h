@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.4.2 2005/06/04 23:26:56 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.4.3 2005/06/05 22:06:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -9,15 +9,20 @@
 
 #include "util/persistent.h"
 #include "Object/art_object_nonmeta_inst_ref_base.h"
-#include "Object/art_object_instance_base.h"
+// #include "Object/art_object_instance_base.h"
+#include "Object/art_object_expr_const.h"	// for const_range_list
+#include "Object/art_object_util_types.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
-
+class definition_base;
+class fundamental_type_reference;
+class instance_collection_base;
+class param_instance_collection;
 using std::istream;
-USING_LIST
+using std::ostream;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -33,7 +38,8 @@ using util::memory::count_ptr;
 	We need separate stacks...
 	See NOTES.
  */
-class meta_instance_reference_base : public nonmeta_instance_reference_base {
+class meta_instance_reference_base : 
+		virtual public nonmeta_instance_reference_base {
 	typedef	nonmeta_instance_reference_base		parent_type;
 public:
 	meta_instance_reference_base() : parent_type() { }

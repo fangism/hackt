@@ -1,8 +1,9 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.4.2.2 2005/06/04 04:47:47 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.4.2.3 2005/06/05 22:06:09 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
+# for recursive make only
 SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -515,15 +516,38 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
+# expects name of temporary file after -MF
+FAST_MAKEDEP_FLAGS = -MT $@ -MMD -MP -MF
+
+# cray-zee anal-retentive header checking with depdendence-tracking
 .h.hchk:
 	@$(ECHO) "Validating $< ... "
+if am__fastdepCXX
+	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
+	if $(CXXCOMPILE) -I$(srcdir) -include $< \
+		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
+		$(EMPTY_SOURCE) -o $@; \
+	then $(MV) "$$depbase.Thd" "$$depbase.hchkd"; \
+	else $(RM) "$$depbase.Thd"; exit 1; fi
+else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+endif
 
 .tcc.tccchk:
 	@$(ECHO) "Validating $< ... "
+if am__fastdepCXX
+	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
+	if $(CXXCOMPILE) -I$(srcdir) -include $< \
+		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
+		$(EMPTY_SOURCE) -o $@; \
+	then $(MV) "$$depbase.Ttccd" "$$depbase.tccchkd"; \
+	else $(RM) "$$depbase.Ttccd"; exit 1; fi
+else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+endif
 
 # there are a few headers we want exempt from stand-alone testing
+# what about their dependencies, are they ignored if absent?
 Object/art_object_extern_templates.hchk:
 	@$(TOUCH) $@
 
@@ -550,6 +574,8 @@ EXTRA_DIST = \
 	util/TODO \
 	util/STL/README \
 	util/obsolete/README \
+	scripts/filter_namespaces.sed \
+	scripts/automake_include.awk \
 	ChangeLog \
 	NOTES \
 	wc-l
@@ -561,10 +587,21 @@ EXTRA_DIST = \
 # Really, they should just be able to link to "test/header_test.cc"
 # Make links in BUILT_SOURCES.  
 HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
+HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
 
 TESTS = art_persistent_table
 
 check-headers: $(HEADER_TCC_TESTS)
+
+headers_deps.make: Makefile.am
+	@$(ECHO) Regenerating $@ ...
+	@$(ECHO) $(HEADER_TCC_DEPBASES) | \
+		$(AWK) -f scripts/automake_include.awk > $@
+
+
+# inlined into Makefile.in by automake
+# really only needed for dynamic dependence-tracking
+include headers_deps.make
 
 all-local: check-headers
 
@@ -588,6 +625,9 @@ CLEANFILES =
 
 DISTCLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 
+CLEANSUBDIRS = lexer parser AST Object \
+	util util/numeric util/memory util/obsolete util/STL
+
 clean-parser:
 	-$(RM) $(CLEANPARSER)
 	-$(RM) parser/*.$(OBJEXT) parser/*.lo
@@ -599,6 +639,11 @@ clean-lexer:
 clean-header-tests:
 	-$(RM) $(HEADER_TCC_TESTS)
 
+clean-header-deps:
+	for d in $(CLEANSUBDIRS); do \
+		$(RM) $$d/$(DEPDIR)/*chkd ; \
+	done
+
 clean-AST:
 	-$(RM) AST/*.$(OBJEXT)
 	-$(RM) AST/*.lo
@@ -606,8 +651,6 @@ clean-AST:
 clean-Object:
 	-$(RM) Object/*.$(OBJEXT)
 	-$(RM) Object/*.lo
-
-CLEANSUBDIRS = lexer parser AST Object util
 
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests

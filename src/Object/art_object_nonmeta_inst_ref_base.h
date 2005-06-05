@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.2 2005/06/04 23:26:57 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.3 2005/06/05 22:06:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -13,8 +13,11 @@
 
 namespace ART {
 namespace entity {
+class nonmeta_index_list;
+using std::istream;
 using std::ostream;
 using util::persistent;
+using util::persistent_object_manager;
 using util::memory::excl_ptr;
 //=============================================================================
 /**
@@ -41,7 +44,7 @@ virtual	size_t
 };	// end class nonmeta_instance_reference_base
 
 //=============================================================================
-#if 0
+#if 1
 /**
 	A simple non-meta instance reference may have nonmeta
 	expressions and instance references in the index list.  
@@ -80,6 +83,10 @@ public:
 };	// end class simple_nonmeta_instance_reference
 #endif
 
+//=============================================================================
+// NOTE: probably not going to support
+//	complex_aggregate_nonmeta_instance_reference
+//	is too complicated, not particularly useful.  
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART

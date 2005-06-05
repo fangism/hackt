@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1.2.3 2005/06/04 23:26:55 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.4 2005/06/05 22:06:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -189,9 +189,17 @@ namespace entity {
 	typedef	value_reference<pbool_tag>
 		pbool_meta_instance_reference;
 
+	// from "Object/art_object_data_expr[_base].h"
 	class data_expr;
 	class bool_expr;
 	class int_expr;
+	class int_arith_expr;
+	class int_range_expr;
+	class nonmeta_index_expr_base;
+	class nonmeta_range_expr_base;
+	class nonmeta_index_list;
+	class nonmeta_range_list;
+
 	class param_expr;
 	class const_param;
 	class param_expr_list;

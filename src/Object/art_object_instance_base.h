@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.16.4.1 2005/06/04 04:47:59 fang Exp $
+	$Id: art_object_instance_base.h,v 1.16.4.2 2005/06/05 22:06:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -33,17 +33,6 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-
-//=============================================================================
-/**
-	The state of an instance collection, kept track by each 
-	instance reference.  
-	Since the iterators are list-like, they remain valid
-	after sequence manipulation operations (like insert, erase).  
- */
-typedef index_collection_type::const_iterator
-		instantiation_state;
-
 
 //=============================================================================
 /**

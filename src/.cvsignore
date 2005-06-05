@@ -18,4 +18,5 @@ core.*
 .gdb_history
 *.swp
 *.hchk
+headers_deps.make
 

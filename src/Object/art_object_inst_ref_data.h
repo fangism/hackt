@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.7.4.3 2005/06/04 23:26:56 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.7.4.4 2005/06/05 22:06:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
@@ -20,7 +20,8 @@ namespace entity {
 	Consider sub-typing into user-defined and built-in, 
 	making this an abstract base.
  */
-class datatype_meta_instance_reference_base : public simple_meta_instance_reference {
+class datatype_meta_instance_reference_base :
+		public simple_meta_instance_reference {
 private:
 	typedef simple_meta_instance_reference               parent_type;
 protected:
@@ -52,6 +53,13 @@ protected:
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 };      // end class datatype_meta_instance_reference_base
+
+//=============================================================================
+#if 0
+class datatype_nonmeta_instance_reference_base :
+		public simple_nonmeta_instance_reference {
+};	// end class datatype_nonmeta_instance_reference_base
+#endif
 
 //=============================================================================
 #define	DATA_REFERENCE_TEMPLATE_SIGNATURE			\

@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-06-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-05:
+	  Makefile enhancement: added (optional) dynamic dependence
+		tracking for header-tests, which conditionally creates
+		(user only) dependencies (.hchkd, .tccchkd) in the
+		respective .deps subdirectories.  A complete list of 
+		all such dependencies is auto-generated and used by 
+		Makefile.am to auto-include in Makefile.in.  
+		The major benefit of this is that now, the check-headers
+		target will check all target header files that depend on
+		the modified ones, not just the ones touched.  
+		This patchlet should ideally make it back to the main
+		trunk sooner...
+	  More class planning for nonmeta_instance_references.  
+		A massive reorganization is inevitable.  
+	  Some header file cleaning.  
+
+
 2005-06-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-04:
