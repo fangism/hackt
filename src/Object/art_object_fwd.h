@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1.2.5 2005/06/06 09:25:57 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.6 2005/06/06 21:18:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -42,7 +42,7 @@ namespace entity {
 	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
-	class datatype_meta_instance_reference_base;
+	class simple_datatype_meta_instance_reference_base;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
@@ -64,6 +64,13 @@ namespace entity {
 	class struct_instance_reference_base;
 	class pint_instance_reference_base;
 	class pbool_instance_reference_base;
+
+	template <class>
+	class meta_instance_reference;
+#if 0
+	typedef	meta_instance_reference<channel_tag>
+		channel_meta_instance_reference_base;
+#endif
 
 	template <class>
 	class simple_meta_instance_reference;
@@ -202,12 +209,12 @@ namespace entity {
 		process_instantiation_statement;
 
 // expressions and family
-	class param_meta_instance_reference;
+	class simple_param_meta_value_reference;
 	template <class>
-	class value_reference;
-	typedef	value_reference<pint_tag>
+	class simple_meta_value_reference;
+	typedef	simple_meta_value_reference<pint_tag>
 		pint_meta_instance_reference;
-	typedef	value_reference<pbool_tag>
+	typedef	simple_meta_value_reference<pbool_tag>
 		pbool_meta_instance_reference;
 
 	// from "Object/art_object_data_expr[_base].h"

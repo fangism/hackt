@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.7.2.1.2.1 2005/06/04 04:48:03 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.7.2.1.2.2 2005/06/06 21:18:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -77,20 +77,20 @@ REQUIRES_STACKTRACE_STATIC_INIT
 #endif
 
 //=============================================================================
-// class value_reference method definitions
+// class simple_meta_value_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-VALUE_REFERENCE_CLASS::value_reference() :
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
 		parent_type(), interface_type(), value_collection_ref(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-VALUE_REFERENCE_CLASS::value_reference(
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const never_ptr<value_collection_type> pi) :
 		parent_type(pi->current_collection_state()),
 		interface_type(), 
@@ -99,8 +99,8 @@ VALUE_REFERENCE_CLASS::value_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-VALUE_REFERENCE_CLASS::value_reference(
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const never_ptr<value_collection_type> pi,
 		excl_ptr<index_list>& i) :
 		parent_type(i, pi->current_collection_state()),
@@ -113,63 +113,63 @@ VALUE_REFERENCE_CLASS::value_reference(
 /**
 	Default destructor.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-VALUE_REFERENCE_CLASS::~value_reference() {
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_CLASS::~simple_meta_value_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<const instance_collection_base>
-VALUE_REFERENCE_CLASS::get_inst_base(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
 	return value_collection_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const typename VALUE_REFERENCE_CLASS::value_collection_parent_type>
-VALUE_REFERENCE_CLASS::get_param_inst_base(void) const {
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<const typename SIMPLE_META_VALUE_REFERENCE_CLASS::value_collection_parent_type>
+SIMPLE_META_VALUE_REFERENCE_CLASS::get_param_inst_base(void) const {
 	return value_collection_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-VALUE_REFERENCE_CLASS::what(ostream& o) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-VALUE_REFERENCE_CLASS::dump_brief(ostream& o) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::dump_brief(ostream& o) const {
 	return grandparent_type::dump_brief(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-VALUE_REFERENCE_CLASS::dump(ostream& o) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o) const {
 	return grandparent_type::dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
-VALUE_REFERENCE_CLASS::dimensions(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 	return grandparent_type::dimensions();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::has_static_constant_dimensions(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::has_static_constant_dimensions(void) const {
 	return grandparent_type::has_static_constant_dimensions();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_range_list
-VALUE_REFERENCE_CLASS::static_constant_dimensions(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_dimensions(void) const {
 	return grandparent_type::static_constant_dimensions();
 }
 
@@ -179,44 +179,44 @@ VALUE_REFERENCE_CLASS::static_constant_dimensions(void) const {
 	not the actual initialization that takes place during unrolling.  
 	\return true if sucessfully initialized with valid expression.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-VALUE_REFERENCE_CLASS::initialize(const init_arg_type& i) {
+SIMPLE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type& i) {
 	return this->value_collection_ref->initialize(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
 	return parent_type::may_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
 	return parent_type::must_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::is_static_constant(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
 	return parent_type::is_static_constant();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::is_loop_independent(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::is_loop_independent(void) const {
 	return parent_type::is_loop_independent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::is_unconditional(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::is_unconditional(void) const {
 	return parent_type::is_unconditional();
 }
 
@@ -225,9 +225,9 @@ VALUE_REFERENCE_CLASS::is_unconditional(void) const {
 	Better make sure that this is_static_constant before calling, 
 	else will assert-fail.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-typename VALUE_REFERENCE_CLASS::value_type
-VALUE_REFERENCE_CLASS::static_constant_value(void) const {
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+typename SIMPLE_META_VALUE_REFERENCE_CLASS::value_type
+SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_value(void) const {
 	INVARIANT(is_static_constant());
 	return value_collection_ref->initial_value()->static_constant_value();
 }
@@ -241,9 +241,9 @@ VALUE_REFERENCE_CLASS::static_constant_value(void) const {
 	template signatures whose member depend on template parameters.  
 	\return true if boolean instance references are equivalent.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) const {
 	const this_type* const br = IS_A(const this_type*, &b);
 	if (br) {
 		// compare template formal parameter positions for equivalence!
@@ -282,9 +282,9 @@ VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) const {
 	This code is grossly replicated... damn copy-paste...
 	\return true if resolution succeeds, else false.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-VALUE_REFERENCE_CLASS::unroll_resolve_value(
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
 	// lookup pbool_instance_collection
 	if (this->array_indices) {
@@ -318,9 +318,9 @@ VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	thus the array indices must be scalar (0-D).  
 	\return true if resolution succeeds, else false.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 	// lookup pbool_instance_collection
 	if (this->array_indices) {
 		const const_index_list
@@ -356,9 +356,9 @@ VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 	\param l the list in which to accumulate values.
 	\return false if there was error.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-VALUE_REFERENCE_CLASS::resolve_values_into_flat_list(
+SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_values_into_flat_list(
 		list<value_type>& l) const {
 	// base collection must be non-scalar
 	INVARIANT(value_collection_ref->get_dimensions());
@@ -383,9 +383,9 @@ VALUE_REFERENCE_CLASS::resolve_values_into_flat_list(
 	Really this should be independent of type?
 	Except for checking implicit indices...
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_index_list
-VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 	// criterion 1: indices (if any) must be resolved to constant values.  
 	if (this->array_indices) {
 		const const_index_list
@@ -417,11 +417,11 @@ VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 	\param c unrolling context.
 	\return dense array of values, NULL if error.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const_param>
-VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
-	STACKTRACE("value_reference<>::unroll_resolve()");
+	STACKTRACE("simple_meta_value_reference<>::unroll_resolve()");
 	if (value_collection_ref->get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -471,7 +471,7 @@ VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
 		if (lookup_err.bad) {
 			// discard incomplete results
 			cerr << "ERROR: in unroll_resolve-ing "
-				"pint_meta_instance_reference." << endl;
+				"simple_meta_instance_reference." << endl;
 			return return_type(NULL);
 		} else {
 			// safe up-cast
@@ -486,7 +486,7 @@ VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
 		const bad_bool valid(ps->lookup_value(_val));
 		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
-				"value_reference, "
+				"simple_meta_value_reference, "
 				"uninitialized value." << endl;
 			return return_type(NULL);
 		} else
@@ -499,9 +499,9 @@ VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
 /**
 	Parameters have value semantics, not alias semantics!
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 excl_ptr<aliases_connection_base>
-VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
 	DIE;
 	return excl_ptr<aliases_connection_base>(NULL);
 }
@@ -513,9 +513,9 @@ VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
 	for serialization.
 	\param m the persistent object manager.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
-VALUE_REFERENCE_CLASS::collect_transient_info(
+SIMPLE_META_VALUE_REFERENCE_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {  
@@ -534,9 +534,9 @@ if (!m.register_transient_object(this,
 		state information, for reconstruction purposes.
 	\param m the persistent object manager.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void    
-VALUE_REFERENCE_CLASS::write_object(
+SIMPLE_META_VALUE_REFERENCE_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, value_collection_ref);
 	write_object_base(m, f);
@@ -551,9 +551,9 @@ VALUE_REFERENCE_CLASS::write_object(
 		depends on the instantiation base being complete.
 	\param m the persistent object manager.
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
-VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& m, 
+SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& m, 
 		istream& f) {
 	m.read_pointer(f, value_collection_ref);
 	NEVER_NULL(value_collection_ref);
@@ -563,14 +563,14 @@ VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& m,
 }
 
 //-----------------------------------------------------------------------------
-// class VALUE_REFERENCE_CLASS::assigner method definitions
+// class SIMPLE_META_VALUE_REFERENCE_CLASS::assigner method definitions
 
 /**
 	Constructor caches the sequence of values for assigning to 
 	an integer instance collection.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-VALUE_REFERENCE_CLASS::assigner::assigner(const expr_base_type& p) :
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_CLASS::assigner::assigner(const expr_base_type& p) :
 		src(p), ranges(), vals() {
 	if (src.dimensions()) {
 		ranges = src.resolve_dimensions();
@@ -613,10 +613,10 @@ VALUE_REFERENCE_CLASS::assigner::assigner(const expr_base_type& p) :
 	\param p the destination instance reference.  
 	\return error (true) if anything goes wrong, or has gone wrong before.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-VALUE_REFERENCE_CLASS::assigner::operator() (const bad_bool b, 
-		const VALUE_REFERENCE_CLASS& p) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::assigner::operator() (const bad_bool b, 
+		const SIMPLE_META_VALUE_REFERENCE_CLASS& p) const {
 	// check dimensions for match first
 	if (ranges.empty()) {
 		INVARIANT(vals.size() == 1);

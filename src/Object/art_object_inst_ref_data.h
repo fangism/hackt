@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.7.4.5 2005/06/06 09:25:59 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.7.4.6 2005/06/06 21:18:47 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
@@ -20,7 +20,7 @@ namespace entity {
 	Consider sub-typing into user-defined and built-in, 
 	making this an abstract base.
  */
-class datatype_meta_instance_reference_base :
+class simple_datatype_meta_instance_reference_base :
 		public simple_meta_instance_reference_base {
 private:
 	typedef simple_meta_instance_reference_base               parent_type;
@@ -28,13 +28,13 @@ protected:
 //      excl_ptr<meta_index_list>                   array_indices;  // inherited
 
 protected:
-	datatype_meta_instance_reference_base();
+	simple_datatype_meta_instance_reference_base();
 
 	explicit
-	datatype_meta_instance_reference_base(const instantiation_state& s);
+	simple_datatype_meta_instance_reference_base(const instantiation_state& s);
 
 public:
-virtual ~datatype_meta_instance_reference_base();
+virtual ~simple_datatype_meta_instance_reference_base();
 
 virtual ostream&
 	what(ostream& o) const = 0;
@@ -52,7 +52,7 @@ protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
-};      // end class datatype_meta_instance_reference_base
+};      // end class simple_datatype_meta_instance_reference_base
 
 //=============================================================================
 #if 0

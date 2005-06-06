@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.5.4.2 2005/06/06 09:26:00 fang Exp $
+	$Id: art_object_value_collection.h,v 1.5.4.3 2005/06/06 21:18:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -156,7 +156,7 @@ public:
 	persistent*
 	construct_empty(const int);
 
-protected:	// restore to protected after upgrading param_meta_instance_reference
+protected:	// restore to protected after upgrading simple_param_meta_value_reference
 public:		// temporary
 	void
 	collect_transient_info(persistent_object_manager& m) const;

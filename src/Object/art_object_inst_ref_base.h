@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.4.4 2005/06/06 09:25:58 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.4.5 2005/06/06 21:18:47 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -309,18 +309,19 @@ private:
 	A reference to a simple instance of parameter.  
 	Abstract base class.  
  */
-class param_meta_instance_reference : public simple_meta_instance_reference_base {
+class simple_param_meta_value_reference :
+		public simple_meta_instance_reference_base {
 protected:
 	typedef	simple_meta_instance_reference_base	parent_type;
 //	excl_ptr<meta_index_list>		array_indices;	// inherited
 
 protected:
-	param_meta_instance_reference();
+	simple_param_meta_value_reference();
 public:
 	explicit
-	param_meta_instance_reference(const instantiation_state& st);
+	simple_param_meta_value_reference(const instantiation_state& st);
 
-virtual	~param_meta_instance_reference() { }
+virtual	~simple_param_meta_value_reference() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -353,7 +354,7 @@ protected:
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 
-};	// end class param_meta_instance_reference
+};	// end class simple_param_meta_value_reference
 
 //=============================================================================
 // classes pint_meta_instance_reference and pbool_meta_instance_reference

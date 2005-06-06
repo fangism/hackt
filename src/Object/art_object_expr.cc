@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47.4.3 2005/06/04 23:26:53 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.4.4 2005/06/06 21:18:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -4143,8 +4143,8 @@ dynamic_meta_index_list::load_object(const persistent_object_manager& m,
 template class const_collection<pint_tag>;
 template class const_collection<pbool_tag>;
 
-template class value_reference<pint_tag>;
-template class value_reference<pbool_tag>;
+template class simple_meta_value_reference<pint_tag>;
+template class simple_meta_value_reference<pbool_tag>;
 
 //=============================================================================
 }	// end namepace entity

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.19.4.1 2005/06/04 04:48:01 fang Exp $
+	$Id: art_object_instance_param.h,v 1.19.4.2 2005/06/06 21:18:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
@@ -114,7 +114,7 @@ virtual	good_bool
 	is_static_constant(void) const;
 
 #if 0
-NOTE: these functions should only be applicable to param_meta_instance_references.  
+NOTE: these functions should only be applicable to simple_param_meta_value_references.  
 /**
 	Whether or not this parameter is itself a loop index,
 	or if indexed, its indices depend on some loop index.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.1.2.2 2005/06/04 23:26:57 fang Exp $
+	$Id: art_object_value_reference.h,v 1.7.2.1.2.3 2005/06/06 21:18:49 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -28,11 +28,11 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
-#define	VALUE_REFERENCE_TEMPLATE_SIGNATURE				\
+#define	SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE			\
 template <class Tag>
 
-#define	VALUE_REFERENCE_CLASS						\
-value_reference<Tag>
+#define	SIMPLE_META_VALUE_REFERENCE_CLASS				\
+simple_meta_value_reference<Tag>
 
 //=============================================================================
 /**
@@ -40,14 +40,14 @@ value_reference<Tag>
 	Consider multiply deriving from pbool_expr, 
 	and replacing pbool_literal.  
  */
-VALUE_REFERENCE_TEMPLATE_SIGNATURE
-class value_reference :
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+class simple_meta_value_reference :
 	public class_traits<Tag>::meta_instance_reference_parent_type, 
 	public class_traits<Tag>::expr_base_type {
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
 private:
-	typedef	VALUE_REFERENCE_CLASS			this_type;
+	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
 	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
 							parent_type;
 	typedef	typename class_traits<Tag>::expr_base_type
@@ -69,15 +69,15 @@ protected:
 							const_expr_type;
 	never_ptr<value_collection_type>		value_collection_ref;
 private:
-	value_reference();
+	simple_meta_value_reference();
 public:
 	explicit
-	value_reference(const never_ptr<value_collection_type> pi);
+	simple_meta_value_reference(const never_ptr<value_collection_type> pi);
 
-	value_reference(const never_ptr<value_collection_type> pi, 
+	simple_meta_value_reference(const never_ptr<value_collection_type> pi, 
 		excl_ptr<meta_index_list>& i);
 
-	~value_reference();
+	~simple_meta_value_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -111,8 +111,8 @@ public:
 	initialize(const init_arg_type& i);
 
 	// try these
-	// using param_meta_instance_reference::may_be_initialized;
-	// using param_meta_instance_reference::must_be_initialized;
+	// using simple_param_meta_value_reference::may_be_initialized;
+	// using simple_param_meta_value_reference::must_be_initialized;
 
 	bool
 	may_be_initialized(void) const;
@@ -173,12 +173,12 @@ public:
 
 		bad_bool
 		operator () (const bad_bool b,
-			const VALUE_REFERENCE_CLASS& p) const;
+			const SIMPLE_META_VALUE_REFERENCE_CLASS& p) const;
 
 		template <template <class> class P>
 		bad_bool
 		operator () (const bad_bool b,
-			const P<const VALUE_REFERENCE_CLASS >& p) const {
+			const P<const SIMPLE_META_VALUE_REFERENCE_CLASS >& p) const {
 			assert(p);
 			return this->operator()(b, *p);
 		}
@@ -196,7 +196,7 @@ protected:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class value_reference
+};	// end class simple_meta_value_reference
 
 //=============================================================================
 }	// end namespace ART

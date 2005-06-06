@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.1.2.2 2005/06/06 09:25:55 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.1.2.3 2005/06/06 21:18:43 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -238,7 +238,7 @@ alias_list::make_alias_connection(const checked_refs_type& temp) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	COMPLETELY REDO THIS, since param_literal has been ELIMINATED
-		so that param_meta_instance_reference are now subclasses
+		so that simple_param_meta_value_reference are now subclasses
 		of the respective expression types.  
 	TEMPORARILY made deletions so it still works as before...
 

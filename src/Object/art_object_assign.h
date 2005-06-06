@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.19.4.1 2005/06/04 04:47:53 fang Exp $
+	$Id: art_object_assign.h,v 1.19.4.2 2005/06/06 21:18:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -38,8 +38,8 @@ class param_expression_assignment : public instance_management_base {
 public:
 	typedef	count_ptr<param_expr>				src_ptr_type;
 	typedef	count_ptr<const param_expr>			src_const_ptr_type;
-	typedef	count_ptr<param_meta_instance_reference>		dest_ptr_type;
-	typedef	count_ptr<const param_meta_instance_reference>	dest_const_ptr_type;
+	typedef	count_ptr<simple_param_meta_value_reference>		dest_ptr_type;
+	typedef	count_ptr<const simple_param_meta_value_reference>	dest_const_ptr_type;
 
 // protected:
 //	/** cached value for dimensions, computed on construction */
@@ -60,7 +60,7 @@ virtual	size_t
 	size(void) const = 0;
 
 virtual	bad_bool
-	append_param_meta_instance_reference(const dest_ptr_type& e) = 0;
+	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
 
 	/**
 		Helper class for appending instance references to
@@ -140,7 +140,7 @@ public:
 	size(void) const;
 
 	bad_bool
-	append_param_meta_instance_reference(
+	append_simple_param_meta_value_reference(
 		const typename parent_type::dest_ptr_type& e);
 
 	void

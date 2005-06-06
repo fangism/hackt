@@ -2,6 +2,17 @@
 
 2005-06-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-07:
+	  More painful reorganization and renaming... ugh.
+		*_meta_instance_reference_base ->
+			simple_*_meta_instance_reference_base
+		value_reference -> simple_meta_value_reference
+	  As soon as the dust clears, will rearrange (final)
+		simple_*_meta_instance_reference classes with MI.  
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
 	  Makefile.am: updated header-check make-dep flags (no -MT or -MP)
 		using new scripts to "promote" header dependencies:

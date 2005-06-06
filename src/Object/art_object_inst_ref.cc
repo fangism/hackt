@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30.4.4 2005/06/06 09:25:57 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.4.5 2005/06/06 21:18:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -1017,12 +1017,12 @@ collective_meta_instance_reference::hash_string(void) const {
 #endif
 
 //=============================================================================
-// class param_meta_instance_reference method definitions
+// class simple_param_meta_value_reference method definitions
 
 /**
 	Private empty constructor.
  */
-param_meta_instance_reference::param_meta_instance_reference() :
+simple_param_meta_value_reference::simple_param_meta_value_reference() :
 		simple_meta_instance_reference_base() {
 }
 
@@ -1032,7 +1032,7 @@ param_meta_instance_reference::param_meta_instance_reference() :
 	\param st the current state of the instance collection
 		at the time of reference.  
  */
-param_meta_instance_reference::param_meta_instance_reference(
+simple_param_meta_value_reference::simple_param_meta_value_reference(
 		const instantiation_state& st) :
 		simple_meta_instance_reference_base(st) {
 }
@@ -1044,7 +1044,7 @@ param_meta_instance_reference::param_meta_instance_reference(
 	\param st the current state of the instance collection
 		at the time of reference.  
  */
-param_meta_instance_reference::param_meta_instance_reference(
+simple_param_meta_value_reference::simple_param_meta_value_reference(
 		excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st) :
 		simple_meta_instance_reference_base(i, st) {
@@ -1053,7 +1053,7 @@ param_meta_instance_reference::param_meta_instance_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-param_meta_instance_reference::may_be_initialized(void) const {
+simple_param_meta_value_reference::may_be_initialized(void) const {
 	never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
 	return i.is_a<const param_instance_collection>()->may_be_initialized();
@@ -1061,7 +1061,7 @@ param_meta_instance_reference::may_be_initialized(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-param_meta_instance_reference::must_be_initialized(void) const {
+simple_param_meta_value_reference::must_be_initialized(void) const {
 	never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
 	return i.is_a<const param_instance_collection>()->must_be_initialized();
@@ -1080,7 +1080,7 @@ param_meta_instance_reference::must_be_initialized(void) const {
 	We may need some assignment stack.... PUNT!
  */
 bool
-param_meta_instance_reference::is_static_constant(void) const {
+simple_param_meta_value_reference::is_static_constant(void) const {
 	// "collective": if either reference is indexed, 
 	// 	(mind, this is conservative and not precise because
 	//	we don't track values of arrays at compile-time)
@@ -1109,7 +1109,7 @@ param_meta_instance_reference::is_static_constant(void) const {
 	(Of course, we need to actually use the instance_collection stack...)
  */
 bool
-param_meta_instance_reference::is_loop_independent(void) const {
+simple_param_meta_value_reference::is_loop_independent(void) const {
 	if (array_indices)
 		return array_indices->is_loop_independent();
 	else 
@@ -1141,7 +1141,7 @@ param_meta_instance_reference::is_loop_independent(void) const {
 	What about the indices themselves?  (shouldn't need to check?)
  */
 bool
-param_meta_instance_reference::is_unconditional(void) const {
+simple_param_meta_value_reference::is_unconditional(void) const {
 	if (array_indices)
 		return array_indices->is_unconditional();
 	// else see if point of reference is within some conditional scope
@@ -1164,37 +1164,37 @@ param_meta_instance_reference::is_unconditional(void) const {
 // replaced with meta_instance_reference template
 
 //=============================================================================
-// class datatype_meta_instance_reference_base method definitions
+// class simple_datatype_meta_instance_reference_base method definitions
 
 /**
 	Private empty constructor.  
  */
-datatype_meta_instance_reference_base::datatype_meta_instance_reference_base() :
+simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base() :
 		simple_meta_instance_reference_base() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_meta_instance_reference_base::datatype_meta_instance_reference_base(
+simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base(
 		const instantiation_state& s) :
 		simple_meta_instance_reference_base(s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-datatype_meta_instance_reference_base::datatype_meta_instance_reference_base(
+simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base(
 		excl_ptr<meta_index_list>& i, const instantiation_state& s) :
 		simple_meta_instance_reference_base(i, s) {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_meta_instance_reference_base::~datatype_meta_instance_reference_base() {
+simple_datatype_meta_instance_reference_base::~simple_datatype_meta_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-datatype_meta_instance_reference_base::what(ostream& o) const {
+simple_datatype_meta_instance_reference_base::what(ostream& o) const {
 	return o << "datatype-inst-ref";
 }
 
@@ -1202,7 +1202,7 @@ datatype_meta_instance_reference_base::what(ostream& o) const {
 #if 0
 USE simple_meta_instance_reference_base::dump
 ostream&
-datatype_meta_instance_reference_base::dump(ostream& o) const {
+simple_datatype_meta_instance_reference_base::dump(ostream& o) const {
 	what(o) << ": ";
 	data_inst_ref->dump(o);
 	if (array_indices)

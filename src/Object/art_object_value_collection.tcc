@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.4.2.1.2.1 2005/06/04 04:48:03 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.4.2.1.2.2 2005/06/06 21:18:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -265,7 +265,7 @@ VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
-	return count_ptr<param_meta_instance_reference>(
+	return count_ptr<simple_param_meta_value_reference>(
 		new meta_instance_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
