@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.3 2005/06/05 22:06:14 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.4 2005/06/06 09:25:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -44,26 +44,25 @@ virtual	size_t
 };	// end class nonmeta_instance_reference_base
 
 //=============================================================================
-#if 1
 /**
 	A simple non-meta instance reference may have nonmeta
 	expressions and instance references in the index list.  
  */
-class simple_nonmeta_instance_reference :
+class simple_nonmeta_instance_reference_base :
 	virtual public nonmeta_instance_reference_base {
-	typedef	simple_nonmeta_instance_reference	this_type;
+	typedef	simple_nonmeta_instance_reference_base	this_type;
 public:
 	typedef	nonmeta_index_list			index_list_type;
 protected:
 	excl_ptr<index_list_type>			array_indices;
 	// don't bother tracking instantiation state for non-meta references
 protected:
-	simple_nonmeta_instance_reference();
+	simple_nonmeta_instance_reference_base();
 public:
 	explicit
-	simple_nonmeta_instance_reference(excl_ptr<index_list_type>&);
+	simple_nonmeta_instance_reference_base(excl_ptr<index_list_type>&);
 
-virtual	~simple_nonmeta_instance_reference();
+virtual	~simple_nonmeta_instance_reference_base();
 
 	ostream&
 	dump(ostream&) const;
@@ -80,8 +79,7 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-};	// end class simple_nonmeta_instance_reference
-#endif
+};	// end class simple_nonmeta_instance_reference_base
 
 //=============================================================================
 // NOTE: probably not going to support

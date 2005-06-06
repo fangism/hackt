@@ -1,5 +1,34 @@
 "ChangeLog"
 
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  Makefile.am: updated header-check make-dep flags (no -MT or -MP)
+		using new scripts to "promote" header dependencies:
+		rather than depend on the headers, depend on the
+		*checked* header (*chk) files to ensure bottom-up
+		construction (after first time) of header-checks!
+		(I'm so proud of myself...)
+		../config.h is an exception, don't check it.  
+		Disabled clean-header-deps target.
+		This also catches circuilar dependencies in headers
+			e.g. betwee util/memory/ref_count_pool.h and
+			util/memory/count_ptr.h (now fixed).
+		for this project I want to be anal and forbid circular
+			dependent headers.  
+	  More massive class renaming:
+		simple_meta_instance_reference -> 
+			simple_meta_instance_reference_base
+		meta_instance_reference -> simple_meta_instance_reference
+			(class template)
+		simple_nonmeta_instance_reference =>
+			simple_nonmeta_instance_reference_base
+		nonmeta_instance_reference ->
+			simple_nonmeta_instance_reference
+	  Exapnded type-refinements for data, channel, proc, param
+		from nonmeta_instance_reference_base
+
+
 2005-06-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-05:

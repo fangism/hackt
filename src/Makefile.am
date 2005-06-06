@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.4.2.3 2005/06/05 22:06:09 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.4.2.4 2005/06/06 09:25:54 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -392,6 +392,7 @@ ALL_HEADER_FILES = \
 	$(PARSER_H_FILES) \
 	config.h \
 	main/main_funcs.h
+# don't bother checking:
 
 ALL_TCC_FILES = \
 	$(UTIL_TCC_FILES) \
@@ -516,8 +517,14 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
+# no need for -MT (already correct target)
+# no need for -MP for phony targets, awk-script already does it, 
+#	but redundant phony targets are ignored by it anyhow.
 # expects name of temporary file after -MF
-FAST_MAKEDEP_FLAGS = -MT $@ -MMD -MP -MF
+FAST_MAKEDEP_FLAGS = -MMD -MF
+PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk
+FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g'
+# some exceptions to checking
 
 # cray-zee anal-retentive header checking with depdendence-tracking
 .h.hchk:
@@ -527,7 +534,9 @@ if am__fastdepCXX
 	if $(CXXCOMPILE) -I$(srcdir) -include $< \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
 		$(EMPTY_SOURCE) -o $@; \
-	then $(MV) "$$depbase.Thd" "$$depbase.hchkd"; \
+	then $(CAT) "$$depbase.Thd" | $(FILTER_HEADER_DEPS) | \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.hchkd"; \
+		$(RM) "$$depbase.Thd" ; \
 	else $(RM) "$$depbase.Thd"; exit 1; fi
 else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
@@ -540,14 +549,18 @@ if am__fastdepCXX
 	if $(CXXCOMPILE) -I$(srcdir) -include $< \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
 		$(EMPTY_SOURCE) -o $@; \
-	then $(MV) "$$depbase.Ttccd" "$$depbase.tccchkd"; \
+	then $(CAT) "$$depbase.Ttccd" | $(FILTER_HEADER_DEPS) | \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.tccchkd"; \
+		$(RM) "$$depbase.Ttccd" ; \
 	else $(RM) "$$depbase.Ttccd"; exit 1; fi
 else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
 endif
 
 # there are a few headers we want exempt from stand-alone testing
-# what about their dependencies, are they ignored if absent?
+# what about their dependencies?  
+# automake produces empty placeholders (never updated) for them initially, 
+# so make will not die.
 Object/art_object_extern_templates.hchk:
 	@$(TOUCH) $@
 
@@ -555,6 +568,9 @@ util/using_istream.hchk:
 	@$(TOUCH) $@
 
 util/using_ostream.hchk:
+	@$(TOUCH) $@
+
+../config.hchk:
 	@$(TOUCH) $@
 
 EXTRA_DIST = \
@@ -576,6 +592,7 @@ EXTRA_DIST = \
 	util/obsolete/README \
 	scripts/filter_namespaces.sed \
 	scripts/automake_include.awk \
+	scripts/promote_header_deps.awk \
 	ChangeLog \
 	NOTES \
 	wc-l
@@ -596,7 +613,7 @@ check-headers: $(HEADER_TCC_TESTS)
 headers_deps.make: Makefile.am
 	@$(ECHO) Regenerating $@ ...
 	@$(ECHO) $(HEADER_TCC_DEPBASES) | \
-		$(AWK) -f scripts/automake_include.awk > $@
+		$(AWK) -f $(srcdir)/scripts/automake_include.awk > $@
 
 
 # inlined into Makefile.in by automake
@@ -639,10 +656,23 @@ clean-lexer:
 clean-header-tests:
 	-$(RM) $(HEADER_TCC_TESTS)
 
-clean-header-deps:
-	for d in $(CLEANSUBDIRS); do \
-		$(RM) $$d/$(DEPDIR)/*chkd ; \
-	done
+# Incidentally, automake is smart enough to make initial dummy files
+# for dependencies that are automatically generated.
+# You never want to manually remove the .Po .Plo files
+# (now including .hchkd, .tccchkd) from the .deps directories.  
+# IF you do remove it, be sure to replace it with an empty placeholder
+# before re-running make.  
+
+# disabling this for now to prevent self-infliction of harm...
+# perhaps enable only if maintainer-mode is on...
+# this should call clean-header-tests to guarantee proper regeneration...
+#clean-header-deps:
+#	@$(ECHO) "WARNING: you'll have to make clean-header-tests to properly "\
+#		"regenerate the header-dependencies."
+#	@$(ECHO) "Removing .deps/*chkd in all sub-directories..."
+#	@for d in $(CLEANSUBDIRS); do \
+#		$(RM) $$d/$(DEPDIR)/*chkd ; \
+#	done
 
 clean-AST:
 	-$(RM) AST/*.$(OBJEXT)

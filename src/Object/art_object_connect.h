@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.19.4.1 2005/06/04 04:47:54 fang Exp $
+	$Id: art_object_connect.h,v 1.19.4.2 2005/06/06 09:25:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
@@ -167,7 +167,7 @@ protected:
 	typedef	meta_instance_reference_connection		parent_type;
 	typedef	parent_type::generic_inst_ptr_type	generic_inst_ptr_type;
 	typedef	list<generic_inst_ptr_type>		inst_list_type;
-	typedef	count_ptr<const simple_meta_instance_reference>
+	typedef	count_ptr<const simple_meta_instance_reference_base>
 							ported_inst_ptr_type;
 	/** should be reference to a simple instance, may be indexed.  */
 	ported_inst_ptr_type				ported_inst;

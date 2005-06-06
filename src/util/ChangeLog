@@ -2,6 +2,14 @@
 
 2005-05-23	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  util/memory/ref_count_pool.h:
+		removed cyclic header dependence on count_ptr.h, 
+		replacing with forward declarations.  
+
+
+2005-05-23	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42:
 	  ptrs_functional.h: relocated to util namespace, not std anymore.  
 

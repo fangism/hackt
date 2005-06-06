@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.14.4.1 2005/06/04 04:47:51 fang Exp $
+	$Id: art_parser_instance.h,v 1.14.4.2 2005/06/06 09:25:56 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -19,7 +19,7 @@ namespace entity {
 	class param_expression_assignment;
 	class aliases_connection_base;
 	class port_connection;
-	class simple_meta_instance_reference;
+	class simple_meta_instance_reference_base;
 }
 namespace parser {
 using util::good_bool;
@@ -276,7 +276,7 @@ public:
 	static
 	excl_ptr<const entity::port_connection>
 	make_port_connection(const expr_list::checked_refs_type&, 
-                const count_ptr<const entity::simple_meta_instance_reference>& ir);
+                const count_ptr<const entity::simple_meta_instance_reference_base>& ir);
 
 };	// end class connection_statement
 

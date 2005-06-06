@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30.4.3 2005/06/04 23:26:55 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.4.4 2005/06/06 09:25:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -83,9 +83,9 @@ meta_instance_reference_base::make_aliases_connection(
 }
 
 //=============================================================================
-// class simple_meta_instance_reference::mset_base definition
+// class simple_meta_instance_reference_base::mset_base definition
 
-class simple_meta_instance_reference::mset_base {
+class simple_meta_instance_reference_base::mset_base {
 public:
 	typedef	multidimensional_sparse_set_traits<
 			pint_value_type, const_range, list>
@@ -123,7 +123,7 @@ virtual	ostream&
 	mset_base*
 	make_multidimensional_sparse_set(const size_t d);
 
-};	// end class simple_meta_instance_reference::mset_base
+};	// end class simple_meta_instance_reference_base::mset_base
 
 //=============================================================================
 /**
@@ -131,12 +131,12 @@ virtual	ostream&
 	implements a limited interface for use in this module.  
  */
 template <size_t D>
-class simple_meta_instance_reference::mset :
-		public simple_meta_instance_reference::mset_base {
+class simple_meta_instance_reference_base::mset :
+		public simple_meta_instance_reference_base::mset_base {
 protected:
 	typedef	multidimensional_sparse_set<D, pint_value_type, const_range>
 							impl_type;
-	typedef	simple_meta_instance_reference::mset_base	base_type;
+	typedef	simple_meta_instance_reference_base::mset_base	base_type;
 	typedef	mset<D>					this_type;
 public:
 	typedef base_type::range_type			range_type;
@@ -181,36 +181,36 @@ public:
 	}
 
 
-};	// end class simple_meta_instance_reference::mset
+};	// end class simple_meta_instance_reference_base::mset
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_meta_instance_reference::mset_base*
-simple_meta_instance_reference::mset_base::make_multidimensional_sparse_set(
+simple_meta_instance_reference_base::mset_base*
+simple_meta_instance_reference_base::mset_base::make_multidimensional_sparse_set(
 		const size_t d) {
 	INVARIANT(d > 0 && d <= LIMIT);
 	switch(d) {
-		case 1: return new simple_meta_instance_reference::mset<1>();
-		case 2: return new simple_meta_instance_reference::mset<2>();
-		case 3: return new simple_meta_instance_reference::mset<3>();
-		case 4: return new simple_meta_instance_reference::mset<4>();
+		case 1: return new simple_meta_instance_reference_base::mset<1>();
+		case 2: return new simple_meta_instance_reference_base::mset<2>();
+		case 3: return new simple_meta_instance_reference_base::mset<3>();
+		case 4: return new simple_meta_instance_reference_base::mset<4>();
 		// add more cases if LIMIT is ever extended.
 		default: return NULL;
 	}
 }
 
 //=============================================================================
-// class simple_meta_instance_reference method definitions
+// class simple_meta_instance_reference_base method definitions
 
 /**
 	Private empty constructor.
  */
-simple_meta_instance_reference::simple_meta_instance_reference() :
+simple_meta_instance_reference_base::simple_meta_instance_reference_base() :
 		array_indices(NULL), inst_state() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_meta_instance_reference::simple_meta_instance_reference(
+simple_meta_instance_reference_base::simple_meta_instance_reference_base(
 		const instantiation_state& st) :
 		array_indices(NULL), 
 		inst_state(st) {
@@ -221,7 +221,7 @@ simple_meta_instance_reference::simple_meta_instance_reference(
 /**
 	May be obsolete...
  */
-simple_meta_instance_reference::simple_meta_instance_reference(
+simple_meta_instance_reference_base::simple_meta_instance_reference_base(
 		excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st) :
 		array_indices(i), 
@@ -232,7 +232,7 @@ simple_meta_instance_reference::simple_meta_instance_reference(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_meta_instance_reference::~simple_meta_instance_reference() {
+simple_meta_instance_reference_base::~simple_meta_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,7 +247,7 @@ simple_meta_instance_reference::~simple_meta_instance_reference() {
 	\return the dimensions of the referenced array.  
  */
 size_t
-simple_meta_instance_reference::dimensions(void) const {
+simple_meta_instance_reference_base::dimensions(void) const {
 	size_t dim = get_inst_base()->get_dimensions();
 	if (array_indices) {
 		const size_t c = array_indices->dimensions_collapsed();
@@ -259,13 +259,13 @@ simple_meta_instance_reference::dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
-simple_meta_instance_reference::get_type_ref(void) const {
+simple_meta_instance_reference_base::get_type_ref(void) const {
 	return get_inst_base()->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const definition_base>
-simple_meta_instance_reference::get_base_def(void) const {
+simple_meta_instance_reference_base::get_base_def(void) const {
 	return get_inst_base()->get_base_def();
 }
 
@@ -279,7 +279,7 @@ simple_meta_instance_reference::get_base_def(void) const {
 		were static constant (sparse or dense) indices.  
  */
 bool
-simple_meta_instance_reference::is_static_constant_collection(void) const {
+simple_meta_instance_reference_base::is_static_constant_collection(void) const {
 	instantiation_state iter = inst_state;
 	const instantiation_state
 		end(get_inst_base()->collection_state_end());
@@ -317,7 +317,7 @@ simple_meta_instance_reference::is_static_constant_collection(void) const {
 		can conservatively return false.  
  */
 bool
-simple_meta_instance_reference::has_static_constant_dimensions(void) const {
+simple_meta_instance_reference_base::has_static_constant_dimensions(void) const {
 	// case 1: instance collection is not collective. 
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	if (base_dim == 0)
@@ -349,7 +349,7 @@ simple_meta_instance_reference::has_static_constant_dimensions(void) const {
 	In the conservative case, return true.  
  */
 bool
-simple_meta_instance_reference::may_be_densely_packed(void) const {
+simple_meta_instance_reference_base::may_be_densely_packed(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
@@ -398,7 +398,7 @@ simple_meta_instance_reference::may_be_densely_packed(void) const {
 	Much like may_be_densely_packed, but conservatively returns false.  
  */
 bool
-simple_meta_instance_reference::must_be_densely_packed(void) const {
+simple_meta_instance_reference_base::must_be_densely_packed(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
@@ -457,7 +457,7 @@ simple_meta_instance_reference::must_be_densely_packed(void) const {
 	\sa implicit_static_constant_indices
  */
 const_range_list
-simple_meta_instance_reference::static_constant_dimensions(void) const {
+simple_meta_instance_reference_base::static_constant_dimensions(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	INVARIANT(base_dim);		// must have no-zero dimensions
 	if (array_indices) {
@@ -503,7 +503,7 @@ simple_meta_instance_reference::static_constant_dimensions(void) const {
 		else will assert fail if anything goes wrong.  
  */
 const_index_list
-simple_meta_instance_reference::implicit_static_constant_indices(void) const {
+simple_meta_instance_reference_base::implicit_static_constant_indices(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	// if not collective, then return true (not really applicable)
 	INVARIANT(base_dim);		// non-zero dimension only!
@@ -582,7 +582,7 @@ simple_meta_instance_reference::implicit_static_constant_indices(void) const {
 	\return the output stream.
  */
 ostream&
-simple_meta_instance_reference::dump_brief(ostream& o) const {
+simple_meta_instance_reference_base::dump_brief(ostream& o) const {
 	o << get_inst_base()->get_qualified_name();
 	if (array_indices) {
 		array_indices->dump(o);
@@ -600,7 +600,7 @@ simple_meta_instance_reference::dump_brief(ostream& o) const {
 		If null, then always used short name.  
  */
 ostream&
-simple_meta_instance_reference::dump_briefer(ostream& o, 
+simple_meta_instance_reference_base::dump_briefer(ostream& o, 
 		const never_ptr<const scopespace> loc) const {
 	never_ptr<const instance_collection_base>
 		ib(get_inst_base());
@@ -620,7 +620,7 @@ simple_meta_instance_reference::dump_briefer(ostream& o,
 	Same as dump_brief, but with type information.  
  */
 ostream&
-simple_meta_instance_reference::dump(ostream& o) const {
+simple_meta_instance_reference_base::dump(ostream& o) const {
 	return dump_brief(what(o) << " ");
 }
 
@@ -629,7 +629,7 @@ simple_meta_instance_reference::dump(ostream& o) const {
 	Prints out the type and size (if known).  
  */
 ostream&
-simple_meta_instance_reference::dump_type_size(ostream& o) const {
+simple_meta_instance_reference_base::dump_type_size(ostream& o) const {
 	get_type_ref()->dump(o);
 	if (!dimensions()) {
 		return o;
@@ -670,7 +670,7 @@ simple_meta_instance_reference::dump_type_size(ostream& o) const {
 	\return true if successful, else false.  
  */
 good_bool
-simple_meta_instance_reference::attach_indices(excl_ptr<meta_index_list>& i) {
+simple_meta_instance_reference_base::attach_indices(excl_ptr<meta_index_list>& i) {
 	// make sure not already indexed
 	// side note: if indexing were truly recursive and not list-based, 
 	//	we'd be able to append indices one-by-one.  
@@ -755,15 +755,15 @@ simple_meta_instance_reference::attach_indices(excl_ptr<meta_index_list>& i) {
 	\return true if referenced instances' types may be equivalent.  
  */
 bool
-simple_meta_instance_reference::may_be_type_equivalent(
+simple_meta_instance_reference_base::may_be_type_equivalent(
 		const meta_instance_reference_base& i) const {
 	const never_ptr<const instance_collection_base>
 		lib(get_inst_base());
 	const this_type* const smir = IS_A(const this_type*, &i);
 	if (!smir) {
-		cerr << "Unhandled case in simple_meta_instance_reference"
+		cerr << "Unhandled case in simple_meta_instance_reference_base"
 			"::may_be_type_equivalent(): "
-			"comparing to non-simple_meta_instance_reference, "
+			"comparing to non-simple_meta_instance_reference_base, "
 			"probably intended for complex-aggregate instance "
 			"references *grin*... returning false." << endl;
 		return false;
@@ -825,10 +825,10 @@ simple_meta_instance_reference::may_be_type_equivalent(
 	// Here, we know we can obtain the implicit packed indices, 
 	// and then compare them.  
 
-	const simple_meta_instance_reference*
-		sir = IS_A(const simple_meta_instance_reference*, &i);
+	const simple_meta_instance_reference_base*
+		sir = IS_A(const simple_meta_instance_reference_base*, &i);
 	if (!sir) {
-		// then is not a simple_meta_instance_reference, 
+		// then is not a simple_meta_instance_reference_base, 
 		// is complex-aggregate, which is not handled yet
 		// eventually get around to this
 		return true;
@@ -855,7 +855,7 @@ simple_meta_instance_reference::may_be_type_equivalent(
 	"must" type-equivalence.  
  */
 bool
-simple_meta_instance_reference::must_be_type_equivalent(
+simple_meta_instance_reference_base::must_be_type_equivalent(
 		const meta_instance_reference_base& i) const {
 	// fix me...
 	return false;
@@ -873,8 +873,8 @@ simple_meta_instance_reference::must_be_type_equivalent(
 		if everything is constant, else returns null, 
 		if there is even a single non-const range_list.  
  */
-excl_ptr<simple_meta_instance_reference::mset_base>
-simple_meta_instance_reference::unroll_static_instances(const size_t dim) const {
+excl_ptr<simple_meta_instance_reference_base::mset_base>
+simple_meta_instance_reference_base::unroll_static_instances(const size_t dim) const {
 	INVARIANT(dim <= get_inst_base()->get_dimensions());
 	instantiation_state iter = inst_state;
 	const instantiation_state end(get_inst_base()->collection_state_end());
@@ -906,7 +906,7 @@ simple_meta_instance_reference::unroll_static_instances(const size_t dim) const 
 	Common persistence visitor for all subclasses.  
  */
 void
-simple_meta_instance_reference::collect_transient_info_base(
+simple_meta_instance_reference_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
@@ -919,7 +919,7 @@ simple_meta_instance_reference::collect_transient_info_base(
 	\pre o MUST BE the stream corresponding to this object.
  */
 void
-simple_meta_instance_reference::write_object_base(
+simple_meta_instance_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	write_instance_collection_state(o);
 	m.write_pointer(o, array_indices);
@@ -935,7 +935,7 @@ simple_meta_instance_reference::write_object_base(
 	\pre i MUST BE the stream corresponding to this object.
  */
 void
-simple_meta_instance_reference::load_object_base(
+simple_meta_instance_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	load_instance_collection_state(i);
 	m.read_pointer(i, array_indices);
@@ -951,7 +951,7 @@ simple_meta_instance_reference::load_object_base(
 	To do this we just use the distance from inst_state to the "end".
  */
 void
-simple_meta_instance_reference::write_instance_collection_state(ostream& f) const {
+simple_meta_instance_reference_base::write_instance_collection_state(ostream& f) const {
 	const instantiation_state end =
 		get_inst_base()->collection_state_end();
 	// assuming this is safe, of course...
@@ -965,7 +965,7 @@ simple_meta_instance_reference::write_instance_collection_state(ostream& f) cons
 	based on an index from the end, counting backwards.  
  */
 void
-simple_meta_instance_reference::load_instance_collection_state(istream& f) {
+simple_meta_instance_reference_base::load_instance_collection_state(istream& f) {
 	instantiation_state iter =
 		get_inst_base()->collection_state_end();
 	size_t i = 0;
@@ -1023,7 +1023,7 @@ collective_meta_instance_reference::hash_string(void) const {
 	Private empty constructor.
  */
 param_meta_instance_reference::param_meta_instance_reference() :
-		simple_meta_instance_reference() {
+		simple_meta_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1034,7 +1034,7 @@ param_meta_instance_reference::param_meta_instance_reference() :
  */
 param_meta_instance_reference::param_meta_instance_reference(
 		const instantiation_state& st) :
-		simple_meta_instance_reference(st) {
+		simple_meta_instance_reference_base(st) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1047,7 +1047,7 @@ param_meta_instance_reference::param_meta_instance_reference(
 param_meta_instance_reference::param_meta_instance_reference(
 		excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st) :
-		simple_meta_instance_reference(i, st) {
+		simple_meta_instance_reference_base(i, st) {
 }
 #endif
 
@@ -1170,21 +1170,21 @@ param_meta_instance_reference::is_unconditional(void) const {
 	Private empty constructor.  
  */
 datatype_meta_instance_reference_base::datatype_meta_instance_reference_base() :
-		simple_meta_instance_reference() {
+		simple_meta_instance_reference_base() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_meta_instance_reference_base::datatype_meta_instance_reference_base(
 		const instantiation_state& s) :
-		simple_meta_instance_reference(s) {
+		simple_meta_instance_reference_base(s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 datatype_meta_instance_reference_base::datatype_meta_instance_reference_base(
 		excl_ptr<meta_index_list>& i, const instantiation_state& s) :
-		simple_meta_instance_reference(i, s) {
+		simple_meta_instance_reference_base(i, s) {
 }
 #endif
 
@@ -1200,7 +1200,7 @@ datatype_meta_instance_reference_base::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-USE simple_meta_instance_reference::dump
+USE simple_meta_instance_reference_base::dump
 ostream&
 datatype_meta_instance_reference_base::dump(ostream& o) const {
 	what(o) << ": ";
@@ -1218,8 +1218,8 @@ datatype_meta_instance_reference_base::dump(ostream& o) const {
 //=============================================================================
 // explicit template instantiations
 
-template class meta_instance_reference<channel_tag>;
-template class meta_instance_reference<process_tag>;
+template class simple_meta_instance_reference<channel_tag>;
+template class simple_meta_instance_reference<process_tag>;
 template class member_meta_instance_reference<channel_tag>;
 template class member_meta_instance_reference<process_tag>;
 

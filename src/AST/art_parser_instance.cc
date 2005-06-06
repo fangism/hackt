@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.1.2.1 2005/06/04 04:47:51 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.1.2.2 2005/06/06 09:25:55 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -85,7 +85,7 @@ using std::_Select1st;
 using std::_Select2nd;
 using std::find;
 using entity::meta_instance_reference_base;
-using entity::simple_meta_instance_reference;
+using entity::simple_meta_instance_reference_base;
 using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;
@@ -597,8 +597,8 @@ instance_connection::check_build(context& c) const {
 	inst_ref_expr::return_type obj(id->check_reference(c));
 
 	NEVER_NULL(obj);		// we just created it!
-	const count_ptr<const simple_meta_instance_reference>
-		inst_ref(obj.is_a<const simple_meta_instance_reference>());
+	const count_ptr<const simple_meta_instance_reference_base>
+		inst_ref(obj.is_a<const simple_meta_instance_reference_base>());
 	NEVER_NULL(inst_ref);
 
 	expr_list::checked_refs_type temp;
@@ -664,7 +664,7 @@ connection_statement::rightmost(void) const {
 excl_ptr<const entity::port_connection>
 connection_statement::make_port_connection(
 		const expr_list::checked_refs_type& temp,
-		const count_ptr<const entity::simple_meta_instance_reference>& ir) {
+		const count_ptr<const entity::simple_meta_instance_reference_base>& ir) {
 	typedef	excl_ptr<const port_connection>		return_type;
 	typedef	expr_list::checked_refs_type		ref_list_type;
 	excl_ptr<port_connection>
@@ -707,8 +707,8 @@ connection_statement::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	// is not a complex aggregate instance reference
-	const count_ptr<const simple_meta_instance_reference>
-		inst_ref(o.is_a<const simple_meta_instance_reference>());
+	const count_ptr<const simple_meta_instance_reference_base>
+		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
 	NEVER_NULL(inst_ref);
 
 	expr_list::checked_refs_type temp;

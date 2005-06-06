@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.1 2005/06/04 04:48:02 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.2 2005/06/06 09:25:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
@@ -22,11 +22,11 @@ using util::memory::never_ptr;
 using util::packed_array_generic;
 
 //=============================================================================
-#define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
+#define	SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
 template <class Tag>
 
-#define	INSTANCE_REFERENCE_CLASS					\
-nonmeta_instance_reference<Tag>
+#define	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS				\
+simple_nonmeta_instance_reference<Tag>
 
 /**
 	Class template for physical instance references.
@@ -36,10 +36,11 @@ nonmeta_instance_reference<Tag>
 	\param Parent the type from which this is derived, 
 		probably simple_nonmeta_instance_reference or descendant.  
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class nonmeta_instance_reference :
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+class simple_nonmeta_instance_reference :
+	public simple_nonmeta_instance_reference_base, 
 	public class_traits<Tag>::nonmeta_instance_reference_parent_type {
-	typedef	INSTANCE_REFERENCE_CLASS	this_type;
+	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
 	typedef	typename class_traits<Tag>::nonmeta_instance_reference_parent_type
 						parent_type;
@@ -62,12 +63,12 @@ public:
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:
-	nonmeta_instance_reference();
+	simple_nonmeta_instance_reference();
 public:
 	explicit
-	nonmeta_instance_reference(const instance_collection_ptr_type);
+	simple_nonmeta_instance_reference(const instance_collection_ptr_type);
 
-virtual	~nonmeta_instance_reference();
+virtual	~simple_nonmeta_instance_reference();
 
 	ostream&
 	what(ostream&) const;
@@ -104,6 +105,99 @@ public:
 //=============================================================================
 // classes pint_nonmeta_instance_reference and pbool_nonmeta_instance_reference
 //	are in "art_object_expr_param_ref.*"
+
+class channel_instance_reference_base :
+		virtual public nonmeta_instance_reference_base {
+	typedef	nonmeta_instance_reference_base		parent_type;
+protected:
+	channel_instance_reference_base() : parent_type() { }
+public:
+virtual	~channel_instance_reference_base() { }
+};	// end class channel_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class process_instance_reference_base :
+		virtual public nonmeta_instance_reference_base {
+	typedef	nonmeta_instance_reference_base		parent_type;
+protected:
+	process_instance_reference_base() : parent_type() { }
+public:
+virtual	~process_instance_reference_base() { }
+};	// end class process_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class datatype_instance_reference_base :
+		virtual public nonmeta_instance_reference_base {
+	typedef	nonmeta_instance_reference_base		parent_type;
+protected:
+	datatype_instance_reference_base() : parent_type() { }
+public:
+virtual	~datatype_instance_reference_base() { }
+};	// end class datatype_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class int_instance_reference_base :
+		public datatype_instance_reference_base {
+	typedef	datatype_instance_reference_base	parent_type;
+protected:
+	int_instance_reference_base() : parent_type() { }
+public:
+virtual	~int_instance_reference_base() { }
+};	// end class int_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class bool_instance_reference_base :
+		public datatype_instance_reference_base {
+	typedef	datatype_instance_reference_base	parent_type;
+protected:
+	bool_instance_reference_base() : parent_type() { }
+public:
+virtual	~bool_instance_reference_base() { }
+};	// end clas bool_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class enum_instance_reference_base :
+		public datatype_instance_reference_base {
+	typedef	datatype_instance_reference_base	parent_type;
+protected:
+	enum_instance_reference_base() : parent_type() { }
+public:
+virtual	~enum_instance_reference_base() { }
+};	// end class enum_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class struct_instance_reference_base :
+		public datatype_instance_reference_base {
+	typedef	datatype_instance_reference_base	parent_type;
+protected:
+	struct_instance_reference_base() : parent_type() { }
+public:
+virtual	~struct_instance_reference_base() { }
+};	// end class struct_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class param_instance_reference_base :
+		virtual public nonmeta_instance_reference_base {
+	typedef	nonmeta_instance_reference_base		parent_type;
+protected:
+	param_instance_reference_base() : parent_type() { }
+public:
+virtual	~param_instance_reference_base() { }
+};	// end clas param_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class pint_instance_reference_base :
+		public param_instance_reference_base {
+protected:
+	pint_instance_reference_base() : parent_type() { }
+public:
+virtual	~pint_instance_reference_base() { }
+};	// end class pint_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class pbool_instance_reference_base :
+		public param_instance_reference_base {
+};	// end class pbool_instance_reference_base
 
 //=============================================================================
 }	// end namespace entity

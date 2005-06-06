@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.7.4.4 2005/06/05 22:06:13 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.7.4.5 2005/06/06 09:25:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
@@ -21,9 +21,9 @@ namespace entity {
 	making this an abstract base.
  */
 class datatype_meta_instance_reference_base :
-		public simple_meta_instance_reference {
+		public simple_meta_instance_reference_base {
 private:
-	typedef simple_meta_instance_reference               parent_type;
+	typedef simple_meta_instance_reference_base               parent_type;
 protected:
 //      excl_ptr<meta_index_list>                   array_indices;  // inherited
 
@@ -76,10 +76,10 @@ data_reference<Tag>
  */
 DATA_REFERENCE_TEMPLATE_SIGNATURE
 class data_reference :
-		public meta_instance_reference<Tag>,
+		public simple_meta_instance_reference<Tag>,
 		public class_traits<Tag>::data_expr_base_type {
 	typedef	DATA_REFERENCE_CLASS				this_type;
-	typedef	meta_instance_reference<Tag>				parent_type;
+	typedef	simple_meta_instance_reference<Tag>		parent_type;
 public:
 	typedef	typename class_traits<Tag>::data_expr_base_type	interface_type;
 	typedef	typename class_traits<Tag>::data_value_type	data_value_type;

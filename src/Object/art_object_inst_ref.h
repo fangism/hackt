@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.21.4.2 2005/06/04 04:47:57 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.21.4.3 2005/06/06 09:25:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -22,11 +22,11 @@ using util::memory::never_ptr;
 using util::packed_array_generic;
 
 //=============================================================================
-#define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
+#define	SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
 template <class Tag>
 
-#define	INSTANCE_REFERENCE_CLASS					\
-meta_instance_reference<Tag>
+#define	SIMPLE_META_INSTANCE_REFERENCE_CLASS				\
+simple_meta_instance_reference<Tag>
 
 /**
 	Class template for physical instance references.
@@ -34,12 +34,16 @@ meta_instance_reference<Tag>
 	derive from this class.  
 	\param Collection the instance collection type.
 	\param Parent the type from which this is derived, 
-		probably simple_meta_instance_reference or descendant.  
+		probably simple_meta_instance_reference_base or descendant.  
+	TODO: this could be properly renamed simple_meta_instance_reference.
+	TODO: derive using multiple inheritance from now on:
+		always derive from simple_meta_instance_reference_base and the
+		type interface designated by class_traits.
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class meta_instance_reference :
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+class simple_meta_instance_reference :
 	public class_traits<Tag>::meta_instance_reference_parent_type {
-	typedef	INSTANCE_REFERENCE_CLASS	this_type;
+	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
 	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
 						parent_type;
@@ -62,12 +66,12 @@ public:
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:
-	meta_instance_reference();
+	simple_meta_instance_reference();
 public:
 	explicit
-	meta_instance_reference(const instance_collection_ptr_type);
+	simple_meta_instance_reference(const instance_collection_ptr_type);
 
-virtual	~meta_instance_reference();
+virtual	~simple_meta_instance_reference();
 
 	ostream&
 	what(ostream&) const;

@@ -27,4 +27,5 @@ art++.doxygen.config
 art++.doxygen.log
 artxx-*.*.*
 DevelopmentPlan.ps
+*.hchk
 

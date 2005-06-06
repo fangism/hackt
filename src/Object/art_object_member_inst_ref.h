@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.6.4.1 2005/06/04 04:48:01 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.6.4.2 2005/06/06 09:25:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
@@ -28,7 +28,7 @@ member_meta_instance_reference<Tag>
 	Re-usable type-specific member_meta_instance_reference class template.  
 	This class is final, nothing else derives from it, 
 	no need for virtual functions.  
-	\param InstRef must be a type derived from simple_meta_instance_reference.
+	\param InstRef must be a type derived from simple_meta_instance_reference_base.
 	Consider moving this class definition to "art_object_inst_ref.h"?
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

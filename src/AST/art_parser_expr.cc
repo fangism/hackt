@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.2.2.3 2005/06/04 23:26:51 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.2.2.4 2005/06/06 09:25:55 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -681,14 +681,14 @@ member_expr::check_reference(context& c) const {
 	typedef	inst_ref_expr::return_type	return_type;
 	const inst_ref_expr::return_type o(owner->check_reference(c));
 	// useless return value
-	// expect: simple_meta_instance_reference on object stack
+	// expect: simple_meta_instance_reference_base on object stack
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
 			<< where(*owner) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<const simple_meta_instance_reference>
-		inst_ref(o.is_a<const simple_meta_instance_reference>());
+	const count_ptr<const simple_meta_instance_reference_base>
+		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
 	INVARIANT(inst_ref);
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
@@ -809,8 +809,8 @@ index_expr::check_reference(context& c) const {
 	// later this may be a member_meta_instance_reference...
 	// should cast to meta_instance_reference_base instead, 
 	// abstract attach_indices
-	const count_ptr<simple_meta_instance_reference>
-		base_inst(base_expr.is_a<simple_meta_instance_reference>());
+	const count_ptr<simple_meta_instance_reference_base>
+		base_inst(base_expr.is_a<simple_meta_instance_reference_base>());
 	NEVER_NULL(base_inst);
 
 	excl_ptr<range_list::checked_indices_type::element_type>

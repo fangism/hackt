@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.5.4.1 2005/06/04 04:48:03 fang Exp $
+	$Id: art_object_value_collection.h,v 1.5.4.2 2005/06/06 09:26:00 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -51,7 +51,7 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 class value_collection :
 	public class_traits<Tag>::value_collection_parent_type {
 // friend class pbool_instantiation_statement;
-friend class meta_instance_reference<Tag>;
+friend class simple_meta_instance_reference<Tag>;
 private:
 	typedef	VALUE_COLLECTION_CLASS		this_type;
 	typedef	typename class_traits<Tag>::value_collection_parent_type

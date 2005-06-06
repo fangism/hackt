@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.8.8.2 2005/06/04 04:47:58 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8.8.3 2005/06/06 09:25:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -95,11 +95,11 @@ namespace entity {
 template class data_reference<bool_tag>;
 template class data_reference<int_tag>;
 #else
-template class meta_instance_reference<bool_tag>;
-template class meta_instance_reference<int_tag>;
+template class simple_meta_instance_reference<bool_tag>;
+template class simple_meta_instance_reference<int_tag>;
 #endif
-template class meta_instance_reference<enum_tag>;
-template class meta_instance_reference<datastruct_tag>;
+template class simple_meta_instance_reference<enum_tag>;
+template class simple_meta_instance_reference<datastruct_tag>;
 
 template class member_meta_instance_reference<bool_tag>;
 template class member_meta_instance_reference<int_tag>;

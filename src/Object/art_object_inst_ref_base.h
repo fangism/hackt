@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.4.3 2005/06/05 22:06:13 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.4.4 2005/06/06 09:25:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -9,7 +9,6 @@
 
 #include "util/persistent.h"
 #include "Object/art_object_nonmeta_inst_ref_base.h"
-// #include "Object/art_object_instance_base.h"
 #include "Object/art_object_expr_const.h"	// for const_range_list
 #include "Object/art_object_util_types.h"
 #include "util/memory/excl_ptr.h"
@@ -29,7 +28,7 @@ using util::memory::count_ptr;
 
 //=============================================================================
 /**
-	PHASE this back into what is currently simple_meta_instance_reference.  
+	PHASE this back into what is currently simple_meta_instance_reference_base.  
 	Base class for anything that *refers* to an instance, 
 	or collection thereof.  
 	Instance reference should be cacheable?
@@ -160,7 +159,7 @@ public:
 //=============================================================================
 /**
 	PHASE THIS back into meta_instance_reference_base.
-	OR... call this "simple_meta_instance_reference" instead.  
+	OR... call this "simple_meta_instance_reference_base" instead.  
 		and replace collective_meta_instance_reference with
 		complex_aggregate_meta_instance_reference...
 	Base class for a reference to a particular instance.  
@@ -175,10 +174,10 @@ public:
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class simple_meta_instance_reference :
+class simple_meta_instance_reference_base :
 		virtual public meta_instance_reference_base {
 private:
-	typedef	simple_meta_instance_reference		this_type;
+	typedef	simple_meta_instance_reference_base		this_type;
 	/**
 		Helper class for evaluating sparse, multidimensional
 		collections.  
@@ -215,15 +214,15 @@ protected:
 //	never_ptr<const instance_collection_base>	inst_ref;
 
 protected:
-	simple_meta_instance_reference();
+	simple_meta_instance_reference_base();
 public:
 	explicit
-	simple_meta_instance_reference(const instantiation_state& st);
+	simple_meta_instance_reference_base(const instantiation_state& st);
 
-	simple_meta_instance_reference(excl_ptr<meta_index_list>& i, 
+	simple_meta_instance_reference_base(excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st);
 
-virtual	~simple_meta_instance_reference();
+virtual	~simple_meta_instance_reference_base();
 
 	size_t
 	dimensions(void) const;
@@ -303,16 +302,16 @@ private:
 
 	void
 	load_instance_collection_state(istream& f);
-};	// end class simple_meta_instance_reference
+};	// end class simple_meta_instance_reference_base
 
 //=============================================================================
 /**
 	A reference to a simple instance of parameter.  
 	Abstract base class.  
  */
-class param_meta_instance_reference : public simple_meta_instance_reference {
+class param_meta_instance_reference : public simple_meta_instance_reference_base {
 protected:
-	typedef	simple_meta_instance_reference	parent_type;
+	typedef	simple_meta_instance_reference_base	parent_type;
 //	excl_ptr<meta_index_list>		array_indices;	// inherited
 
 protected:

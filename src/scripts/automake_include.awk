@@ -6,6 +6,8 @@
 # output (stdout): a Makefile.in style output to include in Makefile.am
 
 BEGIN {
+	# added a '-' before @am__include@ allows make to
+	# ignores files that are missing, (but not recommended)
 	include_prefix = "@AMDEP_TRUE@@am__include@ @am__quote@";
 	include_suffix = "@am__quote@";
 }
