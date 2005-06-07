@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
-SUFFIXES = .test
+SUFFIXES = .test .ii
 TEST_EXPECT_SH = $(srcdir)/test-expect.sh
 
 include $(top_srcdir)/Make.stddef
@@ -118,6 +118,11 @@ liblinktest_la_SOURCES = \
 	link_mod_a.cc link_mod_b.cc link_mod_a.h link_mod_b.h
 
 # liblinktest_la_LDFLAGS = -multiply_defined
+
+# for occasional compiler debugging
+SAVETEMP = $(CXXCOMPILE) -v -save-temps
+.cc.ii:
+	$(SAVETEMP) -c $<
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 

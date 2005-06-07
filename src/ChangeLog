@@ -2,6 +2,23 @@
 
 2005-06-03	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-11:
+	  gcc-4.0-ism: Object/art_built_ins.cc: member initializations 
+		of specialized classes don't need empty 
+		template <> signature.  
+	  util/test/Makefile.am: added macro for compiling with -save-temps
+		for compiler debugging. 
+	  NOTE: This snapshot (on branch) is confirmed to compile and run
+		succesfully with Apple's gcc-4.0 build 5026 update.  
+		The one that shipped with OS X 10.4 Tiger (build 4061)
+		is badly broken, please update your compiler with the
+		XCode 2.1 Developer's Tools update before compiling.  
+	  Hopefully, after the dataexpr branch is done, this can all
+		be soon merged back onto the main trunk.  Patience!
+
+
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-10:
 	  Portability and compiler compliance patch, 
 		also for VPATH build robustness.

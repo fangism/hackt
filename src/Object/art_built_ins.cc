@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.22.2.1 2005/05/26 21:31:19 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.22.2.2 2005/06/07 08:16:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
@@ -72,14 +72,12 @@ pint_def = built_in_param_def(
 // will need to pool param_type_reference?
 
 /** built-in parameter pbool type reference */
-template <>
 const class_traits<pbool_tag>::type_ref_ptr_type
 class_traits<pbool_tag>::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
 		never_ptr<const built_in_param_def>(&pbool_def)));
 
 /** built-in parameter pint type reference */
-template <>
 const class_traits<pint_tag>::type_ref_ptr_type
 class_traits<pint_tag>::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
