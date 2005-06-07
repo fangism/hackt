@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.19.4.2 2005/06/06 21:18:43 fang Exp $
+	$Id: art_object_assign.h,v 1.19.4.3 2005/06/07 03:01:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -108,7 +108,7 @@ private:
 public:
 	typedef	typename class_traits<Tag>::expression_assignment_parent_type
 							parent_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_type
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
 							value_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_type;

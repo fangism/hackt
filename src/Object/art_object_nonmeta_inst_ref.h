@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.3 2005/06/06 21:18:48 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.4 2005/06/07 03:01:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
@@ -39,10 +39,10 @@ simple_nonmeta_instance_reference<Tag>
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
 	public simple_nonmeta_instance_reference_base, 
-	public class_traits<Tag>::nonmeta_instance_reference_parent_type {
+	public class_traits<Tag>::nonsimple_meta_instance_parent_type {
 	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	typedef	typename class_traits<Tag>::nonmeta_instance_reference_parent_type
+	typedef	typename class_traits<Tag>::nonsimple_meta_instance_parent_type
 						parent_type;
 public:
 	/// the instance collection base type

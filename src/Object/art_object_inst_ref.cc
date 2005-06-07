@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30.4.5 2005/06/06 21:18:46 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.4.6 2005/06/07 03:01:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -34,9 +34,9 @@
 // specializations
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::process_meta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_meta_instance_reference, 
 		"process-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::channel_meta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_meta_instance_reference, 
 		"channel-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::process_member_meta_instance_reference, 
 		"process-member-inst-ref")
@@ -44,10 +44,10 @@ SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_meta_instance_reference,
 		"channel-member-inst-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_meta_instance_reference, 
+	ART::entity::simple_process_meta_instance_reference, 
 		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_meta_instance_reference, 
+	ART::entity::simple_channel_meta_instance_reference, 
 		SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_member_meta_instance_reference, 

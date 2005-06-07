@@ -2,6 +2,22 @@
 
 2005-06-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-08:
+	  Progress!  Replaced (meta) simple_instance_reference
+		and value_reference class hierarchy with lattice, 
+		enabled by the NEW_SIMPLE_INST_REF flag in 
+		"Object/art_object_fwd.h".  
+		Inheritance is a mess, but I've got plans for alternate
+		implementations for the appropriate time.  
+	  Little more renaming:
+		*_meta_instance_reference ->
+			simple_*_meta_instance_reference
+		(rather than "simple" being implicit)
+	  TODO: replicate for simple non-meta instance/value references!
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-07:
 	  More painful reorganization and renaming... ugh.
 		*_meta_instance_reference_base ->

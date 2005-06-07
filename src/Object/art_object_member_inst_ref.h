@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.6.4.2 2005/06/06 09:25:59 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.6.4.3 2005/06/07 03:01:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
@@ -33,12 +33,12 @@ member_meta_instance_reference<Tag>
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class member_meta_instance_reference :
-	public class_traits<Tag>::meta_instance_reference_type {
+	public class_traits<Tag>::simple_meta_instance_reference_type {
 private:
 	typedef	MEMBER_INSTANCE_REFERENCE_CLASS		this_type;
 public:
 	/// the underlying type of the member instance referenced
-	typedef	typename class_traits<Tag>::meta_instance_reference_type
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
 							parent_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 						instance_collection_generic_type;

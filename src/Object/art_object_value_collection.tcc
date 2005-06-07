@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.4.2.1.2.2 2005/06/06 21:18:49 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.4.2.1.2.3 2005/06/07 03:01:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -25,6 +25,9 @@
 
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
+#if NEW_SIMPLE_INST_REF
+#include "Object/art_object_inst_ref_subtypes.h"
+#endif
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -266,7 +269,7 @@ VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 
 	// problem: needs to be modifiable for later initialization
 	return count_ptr<simple_param_meta_value_reference>(
-		new meta_instance_reference_type(
+		new simple_meta_instance_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }

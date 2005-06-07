@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.7.4.2 2005/06/06 09:25:58 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.7.4.3 2005/06/07 03:01:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -15,6 +15,9 @@
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
+#if NEW_SIMPLE_INST_REF
+#include "Object/art_object_inst_ref_subtypes.h"
+#endif
 
 //=============================================================================
 namespace ART {
@@ -30,6 +33,9 @@ using util::persistent_traits;
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference() :
+#if NEW_SIMPLE_INST_REF
+		simple_meta_instance_reference_base(), 
+#endif
 		parent_type(), inst_collection_ref() {
 	// no assert
 }
@@ -38,7 +44,13 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference() :
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
 		const instance_collection_ptr_type pi) :
+#if NEW_SIMPLE_INST_REF
+		simple_meta_instance_reference_base(
+			pi->current_collection_state()), 
+		parent_type(), 
+#else
 		parent_type(pi->current_collection_state()),
+#endif
 		inst_collection_ref(pi) {
 	NEVER_NULL(inst_collection_ref);
 }
@@ -140,7 +152,11 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
+#if NEW_SIMPLE_INST_REF
+	simple_meta_instance_reference_base::collect_transient_info_base(m);
+#else
 	parent_type::collect_transient_info_base(m);
+#endif
 	inst_collection_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -172,7 +188,11 @@ void
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, inst_collection_ref);
+#if NEW_SIMPLE_INST_REF
+	simple_meta_instance_reference_base::write_object_base(m, o);
+#else
 	parent_type::write_object_base(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,7 +223,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::load_object_base(
 	NEVER_NULL(inst_collection_ref);
 	m.load_object_once(const_cast<instance_collection_generic_type*>(
 		&*inst_collection_ref));
+#if NEW_SIMPLE_INST_REF
+	simple_meta_instance_reference_base::load_object_base(m, i);
+#else
 	parent_type::load_object_base(m, i);
+#endif
 }
 // else already visited
 

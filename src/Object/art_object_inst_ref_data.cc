@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.8.8.3 2005/06/06 09:25:58 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8.8.4 2005/06/07 03:01:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -25,13 +25,14 @@ using ART::entity::int_tag;
 using ART::entity::bool_tag;
 
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::int_meta_instance_reference, "int-inst-ref")
+	ART::entity::simple_int_meta_instance_reference, "int-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::bool_meta_instance_reference, "bool-inst-ref")
+	ART::entity::simple_bool_meta_instance_reference, "bool-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::enum_meta_instance_reference, "enum-inst-ref")
+	ART::entity::simple_enum_meta_instance_reference, "enum-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::datastruct_meta_instance_reference, "struct-inst-ref")
+	ART::entity::simple_datastruct_meta_instance_reference,
+							"struct-inst-ref")
 
 SPECIALIZE_UTIL_WHAT(
 	ART::entity::int_member_meta_instance_reference, "int-member-inst-ref")
@@ -52,17 +53,17 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::meta_instance_reference<bool_tag>, "BOGUSbl", 0)
 #endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_meta_instance_reference, 
+	ART::entity::simple_int_meta_instance_reference, 
 		SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_meta_instance_reference, 
+	ART::entity::simple_bool_meta_instance_reference, 
 		SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_meta_instance_reference, 
+	ART::entity::simple_enum_meta_instance_reference, 
 		SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datastruct_meta_instance_reference, 
+	ART::entity::simple_datastruct_meta_instance_reference, 
 		SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(

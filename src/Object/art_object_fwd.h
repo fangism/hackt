@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1.2.6 2005/06/06 21:18:46 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.7 2005/06/07 03:01:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -12,7 +12,8 @@
 #include "Object/art_object_classification_fwd.h"
 #include "Object/art_object_expr_types.h"
 
-#define	USE_DATA_REFERENCE		0
+#define	USE_DATA_REFERENCE		0	// OBSOLETE
+#define	NEW_SIMPLE_INST_REF		1	// IN PROGRESS
 
 namespace ART {
 namespace entity {
@@ -67,9 +68,26 @@ namespace entity {
 
 	template <class>
 	class meta_instance_reference;
-#if 0
+#if NEW_SIMPLE_INST_REF
 	typedef	meta_instance_reference<channel_tag>
 		channel_meta_instance_reference_base;
+	typedef	meta_instance_reference<process_tag>
+		process_meta_instance_reference_base;
+	typedef	meta_instance_reference<int_tag>
+		int_meta_instance_reference_base;
+	typedef	meta_instance_reference<bool_tag>
+		bool_meta_instance_reference_base;
+	typedef	meta_instance_reference<enum_tag>
+		enum_meta_instance_reference_base;
+	typedef	meta_instance_reference<datastruct_tag>
+		struct_meta_instance_reference_base;
+#if 1
+	// base classes for meta_value_references
+	typedef	meta_instance_reference<pbool_tag>
+		pbool_meta_instance_reference_base;
+	typedef	meta_instance_reference<int_tag>
+		pint_meta_instance_reference_base;
+#endif
 #endif
 
 	template <class>
@@ -105,24 +123,24 @@ namespace entity {
 #endif
 
 	typedef	simple_meta_instance_reference<channel_tag>
-		channel_meta_instance_reference;
+		simple_channel_meta_instance_reference;
 	typedef	simple_meta_instance_reference<process_tag>
-		process_meta_instance_reference;
+		simple_process_meta_instance_reference;
 #if USE_DATA_REFERENCE
 	typedef	data_reference<bool_tag>
-		bool_meta_instance_reference;
+		simple_bool_meta_instance_reference;
 	typedef	data_reference<int_tag>
-		int_meta_instance_reference;
+		simple_int_meta_instance_reference;
 #else
 	typedef	simple_meta_instance_reference<bool_tag>
-		bool_meta_instance_reference;
+		simple_bool_meta_instance_reference;
 	typedef	simple_meta_instance_reference<int_tag>
-		int_meta_instance_reference;
+		simple_int_meta_instance_reference;
 #endif
 	typedef	simple_meta_instance_reference<enum_tag>
-		enum_meta_instance_reference;
+		simple_enum_meta_instance_reference;
 	typedef	simple_meta_instance_reference<datastruct_tag>
-		datastruct_meta_instance_reference;
+		simple_datastruct_meta_instance_reference;
 
 	template <class>
 	class member_meta_instance_reference;
@@ -213,9 +231,9 @@ namespace entity {
 	template <class>
 	class simple_meta_value_reference;
 	typedef	simple_meta_value_reference<pint_tag>
-		pint_meta_instance_reference;
+		simple_pint_meta_instance_reference;
 	typedef	simple_meta_value_reference<pbool_tag>
-		pbool_meta_instance_reference;
+		simple_pbool_meta_instance_reference;
 
 	// from "Object/art_object_data_expr[_base].h"
 	class data_expr;

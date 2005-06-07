@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.9.4.1 2005/06/04 04:48:00 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.9.4.2 2005/06/07 03:01:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -136,10 +136,10 @@ public:
 							alias_collection_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
 							instance_collection_parameter_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_type
-							meta_instance_reference_type;
-	typedef	typename class_traits<Tag>::member_meta_instance_reference_type
-						member_meta_instance_reference_type;
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+							simple_meta_instance_reference_type;
+	typedef	typename class_traits<Tag>::member_simple_meta_instance_reference_type
+						member_simple_meta_instance_reference_type;
 //	typedef	meta_instance_reference_base		meta_instance_reference_base_type;
 // public:
 protected:

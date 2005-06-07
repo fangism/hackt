@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.3.2.1.2.1 2005/06/04 04:47:52 fang Exp $
+	$Id: art_object_PRS.h,v 1.3.2.1.2.2 2005/06/07 03:01:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
@@ -18,7 +18,7 @@ using std::vector;
 //=============================================================================
 // forward declarations
 
-typedef	count_ptr<bool_meta_instance_reference>	literal_base_ptr_type;
+typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
 
 //=============================================================================
 /**

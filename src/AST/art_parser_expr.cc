@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.2.2.4 2005/06/06 09:25:55 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.2.2.5 2005/06/07 03:01:19 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -25,6 +25,9 @@
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_definition_base.h"
 #include "Object/art_object_inst_ref_data.h"
+#if NEW_SIMPLE_INST_REF
+#include "Object/art_object_inst_ref_subtypes.h"
+#endif
 #include "Object/art_object_expr.h"
 #include "Object/art_object_PRS.h"
 // to dynamic_cast bool_meta_instance_reference
@@ -164,8 +167,8 @@ inst_ref_expr::check_expr(context& c) const {
 prs_literal_ptr_type
 inst_ref_expr::check_prs_literal(context& c) const {
 	return_type ref(check_reference(c));
-	count_ptr<bool_meta_instance_reference>
-		bool_ref(ref.is_a<bool_meta_instance_reference>());
+	count_ptr<simple_bool_meta_instance_reference>
+		bool_ref(ref.is_a<simple_bool_meta_instance_reference>());
 	if (bool_ref) {
 		ref.abandon();
 		INVARIANT(bool_ref.refs() == 1);

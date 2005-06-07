@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.19.4.2 2005/06/06 09:25:56 fang Exp $
+	$Id: art_object_connect.h,v 1.19.4.3 2005/06/07 03:01:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
@@ -106,8 +106,8 @@ public:
 	typedef	typename class_traits<Tag>::alias_connection_parent_type
 						parent_type;
 	/// the instance reference type used by this connection
-	typedef	typename class_traits<Tag>::meta_instance_reference_type
-						meta_instance_reference_type;
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+						simple_meta_instance_reference_type;
 	/// the instance collection type referenced
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 						instance_collection_generic_type;
@@ -117,7 +117,7 @@ public:
 
 	typedef	typename parent_type::generic_inst_ptr_type
 						generic_inst_ptr_type;
-	typedef	count_ptr<const meta_instance_reference_type>
+	typedef	count_ptr<const simple_meta_instance_reference_type>
 						inst_ref_ptr_type;
 	typedef	list<inst_ref_ptr_type>		inst_list_type;
 	typedef	typename inst_list_type::iterator
@@ -125,7 +125,7 @@ public:
 	typedef	typename inst_list_type::const_iterator
 						const_iterator;
 	/// the type of collection for unrolled aliases
-	typedef	typename meta_instance_reference_type::alias_collection_type
+	typedef	typename simple_meta_instance_reference_type::alias_collection_type
 						alias_collection_type;
 private:
 	typedef	util::multikey_generator_generic<pint_value_type>

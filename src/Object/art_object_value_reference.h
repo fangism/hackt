@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.1.2.3 2005/06/06 21:18:49 fang Exp $
+	$Id: art_object_value_reference.h,v 1.7.2.1.2.4 2005/06/07 03:01:27 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -13,6 +13,9 @@
 #include "Object/art_object_fwd.h"
 #include "Object/art_object_index.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
+#if NEW_SIMPLE_INST_REF
+#include "Object/art_object_inst_ref_base.h"
+#endif
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -28,13 +31,13 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
+//=============================================================================
 #define	SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE			\
 template <class Tag>
 
 #define	SIMPLE_META_VALUE_REFERENCE_CLASS				\
 simple_meta_value_reference<Tag>
 
-//=============================================================================
 /**
 	A reference to a instance of built-in type pbool.  
 	Consider multiply deriving from pbool_expr, 
@@ -42,17 +45,26 @@ simple_meta_value_reference<Tag>
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_value_reference :
-	public class_traits<Tag>::meta_instance_reference_parent_type, 
+#if NEW_SIMPLE_INST_REF
+	public simple_param_meta_value_reference, 
+#endif
+	public class_traits<Tag>::simple_meta_instance_parent_type, 
 	public class_traits<Tag>::expr_base_type {
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
 private:
 	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+	typedef	typename class_traits<Tag>::simple_meta_instance_parent_type
 							parent_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_base_type;
+#if NEW_SIMPLE_INST_REF
+	typedef	simple_param_meta_value_reference	common_base_type;
+	typedef	common_base_type::parent_type		grandparent_type;
+#else
+	typedef	parent_type				common_base_type;
 	typedef	typename parent_type::parent_type	grandparent_type;
+#endif
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;
@@ -189,9 +201,15 @@ private:
 	make_aliases_connection_private(void) const;
 
 protected:
+#if NEW_SIMPLE_INST_REF
+	using common_base_type::collect_transient_info_base;
+	using common_base_type::write_object_base;
+	using common_base_type::load_object_base;
+#else
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

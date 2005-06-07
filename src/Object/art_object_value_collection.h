@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.5.4.3 2005/06/06 21:18:48 fang Exp $
+	$Id: art_object_value_collection.h,v 1.5.4.4 2005/06/07 03:01:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -58,8 +58,8 @@ private:
 						parent_type;
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_type
-						meta_instance_reference_type;
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+						simple_meta_instance_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 						expr_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
