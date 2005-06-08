@@ -2,37 +2,37 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x31032f0	module__	0	0	56
-	2	 0x3100144	namespc_	0	56	96
-	3	 0x3103310	procdefn	0	96	141
-	4	 0x3103454	pintcoll	0	141	178
-	5	 0x31034a0	pintinst	0	178	194
-	6	 0x24c5024	cnstpi__	0	194	206
-	7	 0x31034b4	pintcoll	0	206	243
-	8	 0x3103500	pintinst	0	243	259
-	9	 0x24c5038	cnstpi__	0	259	271
-	10	 0x3103514	proccoll	2	271	423
-	11	 0x3103560	procinst	0	423	443
-	12	 0x3103580	proctprf	0	443	459
-	13	 0x3103594	crnglst_	0	459	487
-	14	 0x31035a0	proctprf	0	487	503
-	15	 0x31035b4	proccoll	2	503	689
-	16	 0x3103600	procinst	0	689	709
-	17	 0x3103620	proctprf	0	709	725
-	18	 0x3103634	crnglst_	0	725	753
-	19	 0x3103640	proctprf	0	753	769
-	20	 0x3800c00	piassign	0	769	789
-	21	 0x3103670	spiref__	0	789	809
-	22	 0x3800c10	piassign	0	809	829
-	23	 0x31036a0	spiref__	0	829	849
-	24	 0x31036b0	prcalias	0	849	869
-	25	 0x31036dc	sprocref	0	869	889
-	26	 0x31036e4	cindlst_	0	889	909
-	27	 0x3802210	cnstrng_	0	909	925
-	28	 0x3802224	cnstrng_	0	925	941
-	29	 0x310370c	sprocref	0	941	961
+	1	 0x4103bd0	module__	0	0	57
+	2	 0x4100144	namespc_	0	57	97
+	3	 0x4103d30	procdefn	0	97	142
+	4	 0x4103bf4	pintcoll	0	142	179
+	5	 0x4103c40	pintinst	0	179	195
+	6	 0x3466018	cnstpi__	0	195	207
+	7	 0x4103dc4	pintcoll	0	207	244
+	8	 0x4103c50	pintinst	0	244	260
+	9	 0x3466028	cnstpi__	0	260	272
+	10	 0x4103e14	proccoll	2	272	424
+	11	 0x4103e60	procinst	0	424	444
+	12	 0x4103c60	proctprf	0	444	460
+	13	 0x4103e80	crnglst_	0	460	488
+	14	 0x4103e90	proctprf	0	488	504
+	15	 0x4103ea4	proccoll	2	504	690
+	16	 0x4103ef0	procinst	0	690	710
+	17	 0x4103f10	proctprf	0	710	726
+	18	 0x4103f20	crnglst_	0	726	754
+	19	 0x4103f30	proctprf	0	754	770
+	20	 0x4800c00	piassign	0	770	790
+	21	 0x4103f40	spimref_	0	790	810
+	22	 0x4800c10	piassign	0	810	830
+	23	 0x4103f70	spimref_	0	830	850
+	24	 0x4103fa0	prcalias	0	850	870
+	25	 0x4103fb0	sprcmref	0	870	890
+	26	 0x4103fe0	cindlst_	0	890	910
+	27	 0x4805604	cnstrng_	0	910	926
+	28	 0x4805614	cnstrng_	0	926	942
+	29	 0x4103ff0	sprcmref	0	942	962
 
-In module created from: -stdin- (unrolled)
+In module created from: ./021.in (unrolled)
 In namespace "", we have: {
   2 parameter-collections
   2 instantiation-collections

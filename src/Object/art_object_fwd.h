@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1.2.7 2005/06/07 03:01:23 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.8 2005/06/08 04:03:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -12,7 +12,6 @@
 #include "Object/art_object_classification_fwd.h"
 #include "Object/art_object_expr_types.h"
 
-#define	USE_DATA_REFERENCE		0	// OBSOLETE
 #define	NEW_SIMPLE_INST_REF		1	// IN PROGRESS
 
 namespace ART {
@@ -95,6 +94,27 @@ namespace entity {
 	template <class>
 	class simple_nonmeta_instance_reference;
 
+	typedef	simple_nonmeta_instance_reference<channel_tag>
+	simple_channel_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<process_tag>
+	simple_process_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<int_tag>
+	simple_int_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<bool_tag>
+	simple_bool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<enum_tag>
+	simple_enum_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<datastruct_tag>
+	simple_datastruct_nonmeta_instance_reference;
+#if 0
+	typedef	simple_nonmeta_instance_reference<datatype_tag>
+	simple_datatype_nonmeta_instance_reference;
+#endif
+	typedef	simple_nonmeta_instance_reference<pbool_tag>
+	simple_pbool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<pint_tag>
+	simple_pint_nonmeta_instance_reference;
+
 	template <class>
 	class instance_collection;
 
@@ -117,26 +137,14 @@ namespace entity {
 	typedef	instance_collection<process_tag>
 		process_instance_collection;
 
-#if USE_DATA_REFERENCE
-	template <class>
-	class data_reference;
-#endif
-
 	typedef	simple_meta_instance_reference<channel_tag>
 		simple_channel_meta_instance_reference;
 	typedef	simple_meta_instance_reference<process_tag>
 		simple_process_meta_instance_reference;
-#if USE_DATA_REFERENCE
-	typedef	data_reference<bool_tag>
-		simple_bool_meta_instance_reference;
-	typedef	data_reference<int_tag>
-		simple_int_meta_instance_reference;
-#else
 	typedef	simple_meta_instance_reference<bool_tag>
 		simple_bool_meta_instance_reference;
 	typedef	simple_meta_instance_reference<int_tag>
 		simple_int_meta_instance_reference;
-#endif
 	typedef	simple_meta_instance_reference<enum_tag>
 		simple_enum_meta_instance_reference;
 	typedef	simple_meta_instance_reference<datastruct_tag>

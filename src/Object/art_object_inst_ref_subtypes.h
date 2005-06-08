@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
-	$Id: art_object_inst_ref_subtypes.h,v 1.1.2.1 2005/06/06 21:18:48 fang Exp $
+	$Id: art_object_inst_ref_subtypes.h,v 1.1.2.2 2005/06/08 04:03:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_SUBTYPES_H__
@@ -32,8 +32,6 @@ protected:
 public:
 virtual	~meta_instance_reference() { }
 };	// end class meta_instance_reference
-
-//=============================================================================
 
 //=============================================================================
 }	// end namespace entity

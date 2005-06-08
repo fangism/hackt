@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30.4.6 2005/06/07 03:01:23 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.4.7 2005/06/08 04:03:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -18,9 +18,11 @@
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_inst_ref.tcc"
+#include "Object/art_object_nonmeta_inst_ref.tcc"
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/art_object_expr.h"		// for dynamic_meta_range_list
+#include "Object/art_object_data_expr.h"	// for nonmeta_index_list
 #include "Object/art_object_control.h"
 #include "Object/art_object_connect.h"		// for aliases_connection_base
 #include "util/persistent_object_manager.tcc"
@@ -28,7 +30,7 @@
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_instance_collection.h"
-#include "util/memory/count_ptr.tcc"
+// #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 // specializations
@@ -38,6 +40,10 @@ SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_meta_instance_reference,
 		"process-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_meta_instance_reference, 
 		"channel-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_nonmeta_instance_reference, 
+		"process-nonmeta-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_nonmeta_instance_reference, 
+		"channel-nonmeta-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::process_member_meta_instance_reference, 
 		"process-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_meta_instance_reference, 
@@ -45,10 +51,16 @@ SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_meta_instance_reference,
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_process_meta_instance_reference, 
-		SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)
+		SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_channel_meta_instance_reference, 
-		SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY, 0)
+		SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_process_nonmeta_instance_reference, 
+		SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_channel_nonmeta_instance_reference, 
+		SIMPLE_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_member_meta_instance_reference, 
 		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)
@@ -977,6 +989,98 @@ simple_meta_instance_reference_base::load_instance_collection_state(istream& f) 
 }
 
 //=============================================================================
+// class simple_nonmeta_instance_reference_base method definitions
+
+simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
+		) : parent_type(), array_indices() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
+		excl_ptr<index_list_type>& i) :
+		parent_type(), array_indices(i) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_nonmeta_instance_reference_base::~simple_nonmeta_instance_reference_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+simple_nonmeta_instance_reference_base::dimensions(void) const {
+	size_t dim = get_inst_base()->get_dimensions();
+	if (array_indices) {
+		const size_t c = array_indices->dimensions_collapsed();
+		INVARIANT(c <= dim);
+		return dim -c;
+	}
+	else return dim;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+simple_nonmeta_instance_reference_base::dump(ostream& o) const {
+	return dump_brief(what(o) << ' ');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as dump, but without type information.  
+	This is used primarily for printing value-reference expressions, 
+	to reduce information clutter.  
+	We dump the full qualified name to disambiguate potentially 
+	conflicting identifiers.  
+	\param o the output stream.
+	\return the output stream.
+ */
+ostream&
+simple_nonmeta_instance_reference_base::dump_brief(ostream& o) const {
+	o << get_inst_base()->get_qualified_name();
+	if (array_indices) {
+		array_indices->dump(o);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Common persistence visitor for all subclasses.  
+ */
+void
+simple_nonmeta_instance_reference_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (array_indices)
+		array_indices->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param m the persistent object manager for pointer translation. 
+	\param o the output stream to write binary.
+	\pre o MUST BE the stream corresponding to this object.
+ */
+void
+simple_nonmeta_instance_reference_base::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, array_indices);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.
+	\param m the persistent object manager for pointer translation. 
+	\param i the input stream to read binary.
+	\pre i MUST BE the stream corresponding to this object.
+ */
+void
+simple_nonmeta_instance_reference_base::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, array_indices);
+	// must load the 
+	if (array_indices)
+		m.load_object_once(array_indices);
+}
+
+//=============================================================================
 #if 0
 PHASE IN later...
 // class collective_meta_instance_reference method definitions
@@ -1023,7 +1127,7 @@ collective_meta_instance_reference::hash_string(void) const {
 	Private empty constructor.
  */
 simple_param_meta_value_reference::simple_param_meta_value_reference() :
-		simple_meta_instance_reference_base() {
+		parent_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1034,7 +1138,7 @@ simple_param_meta_value_reference::simple_param_meta_value_reference() :
  */
 simple_param_meta_value_reference::simple_param_meta_value_reference(
 		const instantiation_state& st) :
-		simple_meta_instance_reference_base(st) {
+		parent_type(st) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1054,7 +1158,7 @@ simple_param_meta_value_reference::simple_param_meta_value_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 simple_param_meta_value_reference::may_be_initialized(void) const {
-	never_ptr<const instance_collection_base> i(get_inst_base());
+	const never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
 	return i.is_a<const param_instance_collection>()->may_be_initialized();
 }
@@ -1062,7 +1166,7 @@ simple_param_meta_value_reference::may_be_initialized(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 simple_param_meta_value_reference::must_be_initialized(void) const {
-	never_ptr<const instance_collection_base> i(get_inst_base());
+	const never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
 	return i.is_a<const param_instance_collection>()->must_be_initialized();
 }
@@ -1220,6 +1324,8 @@ simple_datatype_meta_instance_reference_base::dump(ostream& o) const {
 
 template class simple_meta_instance_reference<channel_tag>;
 template class simple_meta_instance_reference<process_tag>;
+template class simple_nonmeta_instance_reference<channel_tag>;
+template class simple_nonmeta_instance_reference<process_tag>;
 template class member_meta_instance_reference<channel_tag>;
 template class member_meta_instance_reference<process_tag>;
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.4.5 2005/06/06 21:18:47 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.4.6 2005/06/08 04:03:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -214,13 +214,15 @@ protected:
 //	never_ptr<const instance_collection_base>	inst_ref;
 
 protected:
+	// constructors for children only
 	simple_meta_instance_reference_base();
-public:
+
 	explicit
 	simple_meta_instance_reference_base(const instantiation_state& st);
 
 	simple_meta_instance_reference_base(excl_ptr<meta_index_list>& i, 
 		const instantiation_state& st);
+public:
 
 virtual	~simple_meta_instance_reference_base();
 

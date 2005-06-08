@@ -2,33 +2,33 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102d40	module__	0	0	28
-	2	 0x3100144	namespc_	0	28	56
-	3	 0x3102d60	procdefn	0	56	124
-	4	 0x3102cf4	dintcoll	1	124	159
-	5	 0x3102de0	datainst	0	159	179
-	6	 0x3102e00	datatprf	0	179	195
-	7	 0x3102e10	datadefn	0	195	231
-	8	 0x3102e74	dprmlst_	0	231	247
-	9	 0x24c5024	cnstpi__	0	247	259
-	10	 0x3102e84	drnglst_	0	259	275
-	11	 0x3102ea4	dynrng__	0	275	291
-	12	 0x24c5038	cnstpi__	0	291	303
-	13	 0x3102ec8	arithexp	0	303	320
-	14	 0x3102ef0	spiref__	0	320	340
-	15	 0x3102f04	pintcoll	0	340	377
-	16	 0x3102f50	pintinst	0	377	393
-	17	 0x24c504c	cnstpi__	0	393	405
-	18	 0x3102f60	procdefn	0	405	473
-	19	 0x3102fe4	pintcoll	0	473	510
-	20	 0x3103030	pintinst	0	510	526
-	21	 0x3103044	dintcoll	0	526	566
-	22	 0x31030a0	datainst	0	566	586
-	23	 0x31030c0	datatprf	0	586	602
-	24	 0x31030d4	dprmlst_	0	602	618
-	25	 0x3103100	spiref__	0	618	638
+	1	 0x41035d0	module__	0	0	29
+	2	 0x4100144	namespc_	0	29	57
+	3	 0x41035f0	procdefn	0	57	125
+	4	 0x4103584	dintcoll	1	125	160
+	5	 0x4103680	datainst	0	160	180
+	6	 0x41036a0	datatprf	0	180	196
+	7	 0x41036b0	datadefn	0	196	232
+	8	 0x4103710	dprmlst_	0	232	248
+	9	 0x3466018	cnstpi__	0	248	260
+	10	 0x4103720	drnglst_	0	260	276
+	11	 0x4103744	dynrng__	0	276	292
+	12	 0x3466028	cnstpi__	0	292	304
+	13	 0x4103768	arithexp	0	304	321
+	14	 0x4103770	spimref_	0	321	341
+	15	 0x41037a4	pintcoll	0	341	378
+	16	 0x41037f0	pintinst	0	378	394
+	17	 0x3466038	cnstpi__	0	394	406
+	18	 0x4103800	procdefn	0	406	474
+	19	 0x4103894	pintcoll	0	474	511
+	20	 0x41038e0	pintinst	0	511	527
+	21	 0x41038f4	dintcoll	0	527	567
+	22	 0x4103950	datainst	0	567	587
+	23	 0x4103970	datatprf	0	587	603
+	24	 0x4103980	dprmlst_	0	603	619
+	25	 0x4103990	spimref_	0	619	639
 
-In module created from: -stdin- (unrolled)
+In module created from: ./021.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

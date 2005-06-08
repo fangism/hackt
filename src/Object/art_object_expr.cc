@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47.4.5 2005/06/07 03:01:22 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.4.6 2005/06/08 04:03:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -130,10 +130,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_pbool_meta_instance_reference, 
-		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
+		SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_pint_meta_instance_reference, 
-		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
+		SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 

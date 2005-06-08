@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.2.2.5 2005/06/07 03:01:21 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.2.2.6 2005/06/08 04:03:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -84,7 +84,7 @@ struct class_traits {
 		(The 'simple' qualifier is implied.)
 	 */
 	typedef	void			simple_meta_instance_reference_type;
-	typedef	void			simple_meta_instance_parent_type;
+	typedef	void			simple_meta_instance_reference_parent_type;
 
 	/**
 		This sub-type is for member references that also
@@ -226,7 +226,9 @@ struct class_traits<int_tag> {
 #else
 	typedef	simple_datatype_meta_instance_reference_base
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+	typedef	int_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	int_member_meta_instance_reference
 					member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
@@ -275,9 +277,11 @@ struct class_traits<bool_tag> {
 #else
 	typedef	simple_datatype_meta_instance_reference_base
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+	typedef	bool_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	bool_member_meta_instance_reference
-					member_simple_meta_instance_reference_type;
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	bool_alias_connection		alias_connection_type;
@@ -322,9 +326,11 @@ struct class_traits<enum_tag> {
 #else
 	typedef	simple_datatype_meta_instance_reference_base
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+	typedef	enum_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	enum_member_meta_instance_reference
-					member_simple_meta_instance_reference_type;
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
@@ -370,9 +376,11 @@ struct class_traits<datastruct_tag> {
 #else
 	typedef	simple_datatype_meta_instance_reference_base
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+	typedef	struct_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	datastruct_member_meta_instance_reference
-					member_simple_meta_instance_reference_type;
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	datastruct_alias_connection	alias_connection_type;
@@ -423,9 +431,11 @@ struct class_traits<process_tag> {
 #else
 	typedef	simple_meta_instance_reference_base
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+	typedef	process_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	process_member_meta_instance_reference
-					member_simple_meta_instance_reference_type;
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	process_alias_connection	alias_connection_type;
@@ -482,9 +492,11 @@ struct class_traits<channel_tag> {
 #else
 	typedef	simple_meta_instance_reference_base
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+	typedef	channel_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	channel_member_meta_instance_reference
-					member_simple_meta_instance_reference_type;
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	channel_alias_connection	alias_connection_type;
@@ -541,7 +553,11 @@ struct class_traits<pint_tag> {
 #else
 	typedef	simple_param_meta_value_reference
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+#if 0
+	typedef	pint_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+#endif
 	typedef	pint_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 
@@ -605,7 +621,11 @@ struct class_traits<pbool_tag> {
 #else
 	typedef	simple_param_meta_value_reference
 #endif
-					simple_meta_instance_parent_type;
+				simple_meta_instance_reference_parent_type;
+#if 0
+	typedef	pbool_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+#endif
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 

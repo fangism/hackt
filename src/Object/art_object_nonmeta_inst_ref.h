@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.4 2005/06/07 03:01:26 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.5 2005/06/08 04:03:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
@@ -39,15 +39,19 @@ simple_nonmeta_instance_reference<Tag>
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
 	public simple_nonmeta_instance_reference_base, 
-	public class_traits<Tag>::nonsimple_meta_instance_parent_type {
+	public class_traits<Tag>::simple_nonmeta_instance_reference_parent_type {
 	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	typedef	typename class_traits<Tag>::nonsimple_meta_instance_parent_type
+	typedef	simple_nonmeta_instance_reference_base
+						common_base_type;
+	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_parent_type
 						parent_type;
 public:
 	/// the instance collection base type
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
-						instance_collection_generic_type;
+					instance_collection_generic_type;
+#if 0
+	// the following typedefs don't make sense in non-meta context
 	/// the type of alias element contained by instance collections
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
@@ -57,6 +61,7 @@ public:
 	/// type used to unroll collections of instance aliases
 	typedef	typename class_traits<Tag>::alias_collection_type
 						alias_collection_type;
+#endif
 	/// pointer type for instance collections
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
@@ -78,6 +83,7 @@ virtual	~simple_nonmeta_instance_reference();
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+#if 0
 	// overridden by member_nonmeta_instance_reference
 virtual	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
@@ -85,7 +91,11 @@ virtual	bad_bool
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
+#endif
 
+#if 0
+// only needed if included statically, such as in member_instance_reference
+// however, we don't support members references of non-meta instance references.
 protected:
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;
@@ -95,6 +105,7 @@ protected:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

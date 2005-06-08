@@ -2,35 +2,35 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3103050	module__	0	0	28
-	2	 0x3100144	namespc_	0	28	52
-	3	 0x3103070	procdefn	0	52	135
-	4	 0x31030f4	pintcoll	2	135	168
-	5	 0x3103140	pintinst	0	168	184
-	6	 0x3103154	drnglst_	0	184	204
-	7	 0x3103174	dynrng__	0	204	220
-	8	 0x24c5024	cnstpi__	0	220	232
-	9	 0x3103198	arithexp	0	232	249
-	10	 0x31031c0	spiref__	0	249	269
-	11	 0x31031d4	pintcoll	0	269	306
-	12	 0x3103220	pintinst	0	306	322
-	13	 0x24c5038	cnstpi__	0	322	334
-	14	 0x3103244	dynrng__	0	334	350
-	15	 0x24c504c	cnstpi__	0	350	362
-	16	 0x3103268	arithexp	0	362	379
-	17	 0x3103290	spiref__	0	379	399
-	18	 0x24c5060	cnstpi__	0	399	411
-	19	 0x3102ff4	dintcoll	0	411	453
-	20	 0x31032a0	datainst	0	453	473
-	21	 0x31032c0	datatprf	0	473	489
-	22	 0x31032d0	datadefn	0	489	525
-	23	 0x3103334	dprmlst_	0	525	541
-	24	 0x3103360	spiref__	0	541	561
-	25	 0x3103374	cindlst_	0	561	581
-	26	 0x24c5074	cnstpi__	0	581	593
-	27	 0x24c5088	cnstpi__	0	593	605
+	1	 0x4103950	module__	0	0	29
+	2	 0x4100144	namespc_	0	29	53
+	3	 0x4103970	procdefn	0	53	136
+	4	 0x4103a04	pintcoll	2	136	169
+	5	 0x4103a50	pintinst	0	169	185
+	6	 0x4103a60	drnglst_	0	185	205
+	7	 0x4103a84	dynrng__	0	205	221
+	8	 0x3466018	cnstpi__	0	221	233
+	9	 0x4103aa8	arithexp	0	233	250
+	10	 0x4103ab0	spimref_	0	250	270
+	11	 0x4103ae4	pintcoll	0	270	307
+	12	 0x4103b30	pintinst	0	307	323
+	13	 0x3466028	cnstpi__	0	323	335
+	14	 0x4103b54	dynrng__	0	335	351
+	15	 0x3466038	cnstpi__	0	351	363
+	16	 0x4103b78	arithexp	0	363	380
+	17	 0x4103b80	spimref_	0	380	400
+	18	 0x3466048	cnstpi__	0	400	412
+	19	 0x41038f4	dintcoll	0	412	454
+	20	 0x4103bb0	datainst	0	454	474
+	21	 0x4103bd0	datatprf	0	474	490
+	22	 0x4103be0	datadefn	0	490	526
+	23	 0x4103c40	dprmlst_	0	526	542
+	24	 0x4103c50	spimref_	0	542	562
+	25	 0x4103c80	cindlst_	0	562	582
+	26	 0x3466058	cnstpi__	0	582	594
+	27	 0x3466068	cnstpi__	0	594	606
 
-In module created from: -stdin- (unrolled)
+In module created from: ./018.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

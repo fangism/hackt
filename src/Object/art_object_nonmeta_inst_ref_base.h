@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.4 2005/06/06 09:25:59 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.2.5 2005/06/08 04:03:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -14,10 +14,12 @@
 namespace ART {
 namespace entity {
 class nonmeta_index_list;
+class instance_collection_base;
 using std::istream;
 using std::ostream;
 using util::persistent;
 using util::persistent_object_manager;
+using util::memory::never_ptr;
 using util::memory::excl_ptr;
 //=============================================================================
 /**
@@ -51,6 +53,7 @@ virtual	size_t
 class simple_nonmeta_instance_reference_base :
 	virtual public nonmeta_instance_reference_base {
 	typedef	simple_nonmeta_instance_reference_base	this_type;
+	typedef	nonmeta_instance_reference_base		parent_type;
 public:
 	typedef	nonmeta_index_list			index_list_type;
 protected:
@@ -65,7 +68,16 @@ public:
 virtual	~simple_nonmeta_instance_reference_base();
 
 	ostream&
+	dump_brief(ostream&) const;
+
+	ostream&
 	dump(ostream&) const;
+
+	size_t
+	dimensions(void) const;
+
+virtual	never_ptr<const instance_collection_base>
+	get_inst_base(void) const = 0;
 
 	// type equivalence methods...
 

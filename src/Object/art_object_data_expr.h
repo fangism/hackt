@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.h"
 	Class definitions for data expressions.
-	$Id: art_object_data_expr.h,v 1.1.2.3 2005/06/04 23:26:52 fang Exp $
+	$Id: art_object_data_expr.h,v 1.1.2.4 2005/06/08 04:03:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_H__
@@ -113,12 +113,18 @@ public:
 	that will be run-time evaluated.  
  */
 class nonmeta_index_list : public persistent {
+	typedef	nonmeta_index_list		this_type;
 	typedef	list<count_ptr<nonmeta_index_expr_base> >	list_type;
+public:
+	typedef	list_type::const_iterator	const_iterator;
 private:
 	list_type				indices;
 public:
 	nonmeta_index_list();
 	~nonmeta_index_list();
+
+	size_t
+	dimensions_collapsed(void) const;
 
 	ostream&
 	what(ostream&) const;
