@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.8.8.5 2005/06/08 04:03:48 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8.8.6 2005/06/08 19:00:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -34,6 +34,11 @@ SPECIALIZE_UTIL_WHAT(
 SPECIALIZE_UTIL_WHAT(
 	ART::entity::simple_datastruct_meta_instance_reference,
 							"struct-inst-ref")
+
+#if 0
+SPECIALIZE_UTIL_WHAT(
+	ART::entity::simple_datatype_nonmeta_instance_reference, "data-nonmeta-inst-ref")
+#endif
 SPECIALIZE_UTIL_WHAT(
 	ART::entity::simple_int_nonmeta_instance_reference, "int-nonmeta-inst-ref")
 SPECIALIZE_UTIL_WHAT(
@@ -66,6 +71,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_datastruct_meta_instance_reference, 
 		SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 
+#if 0
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_datatype_nonmeta_instance_reference, 
+		SIMPLE_DATATYPE_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_int_nonmeta_instance_reference, 
 		SIMPLE_DINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
@@ -110,6 +120,7 @@ template class simple_meta_instance_reference<int_tag>;
 template class simple_meta_instance_reference<enum_tag>;
 template class simple_meta_instance_reference<datastruct_tag>;
 
+// template class simple_nonmeta_instance_reference<datatype_tag>;
 template class simple_nonmeta_instance_reference<bool_tag>;
 template class simple_nonmeta_instance_reference<int_tag>;
 template class simple_nonmeta_instance_reference<enum_tag>;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.1.2.3 2005/06/06 21:18:43 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.1.2.4 2005/06/08 19:00:16 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -523,19 +523,9 @@ instance_declaration::rightmost(void) const {
 never_ptr<const object>
 instance_declaration::check_build(context& c) const {
 	STACKTRACE("instance_declaration::check_build()");
-#if USE_DEFNITION_STACK
-	type->check_build(c);
-	// useless return value
-	const count_ptr<const fundamental_type_reference>
-		ftr(c.get_current_fundamental_type());
-		// should set the current_fundamental_type
-	c.pop_current_definition_reference();
-		// no longer need the base definition
-#else
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
 	c.set_current_fundamental_type(ftr);
-#endif
 
 	if (ftr) {
 		ids->check_build(c);		// return value?

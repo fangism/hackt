@@ -7,14 +7,15 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21.2.3 2005/05/28 03:00:58 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.3.2.1 2005/06/08 19:00:22 fang Exp $
  */
 
 %{
 #include <iostream>
 
-#include "AST/art_parser.h"			// should be first
-#include "parser/art++-parse.output.h"		// auto-generated state strings! :)
+#include "AST/art_parser.h"		// should be first
+#include "parser/art++-parse.output.h"	// auto-generated state strings! :)
+#include "parser/art++-parse-options.h"
 #include "util/using_ostream.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/

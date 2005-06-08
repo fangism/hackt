@@ -1,6 +1,13 @@
 # "src/util/ChangeLog"
 
-2005-05-23	David Fang		<fangism@users.sourceforge.net>
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-10:
+	  Adding -Wundef to CFLAGS caught an unremoved obsolete conditional
+		in "util/packed_array_fwd.h", harmless, but fixed.  
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
 	  util/memory/ref_count_pool.h:

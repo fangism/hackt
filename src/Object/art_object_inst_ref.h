@@ -2,7 +2,7 @@
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
 	TODO: rename file to simple_meta_instance_reference
-	$Id: art_object_inst_ref.h,v 1.21.4.6 2005/06/08 04:03:47 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.21.4.7 2005/06/08 19:00:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -43,18 +43,14 @@ simple_meta_instance_reference<Tag>
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_instance_reference :
-#if NEW_SIMPLE_INST_REF
 	public simple_meta_instance_reference_base, 
-#endif
 	public class_traits<Tag>::simple_meta_instance_reference_parent_type {
 	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
 	typedef	typename class_traits<Tag>::simple_meta_instance_reference_parent_type
 						parent_type;
 public:
-#if NEW_SIMPLE_INST_REF
 	typedef	simple_meta_instance_reference_base	common_base_type;
-#endif
 	/// the instance collection base type
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;

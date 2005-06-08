@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.2.2.6 2005/06/08 04:03:42 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.2.2.7 2005/06/08 19:00:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -178,6 +178,8 @@ struct class_traits<datatype_tag> {
 					instance_collection_generic_type;
 	typedef	datatype_instance_reference_base
 					nonmeta_instance_reference_base_type;
+	typedef	datatype_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -221,11 +223,7 @@ struct class_traits<int_tag> {
 					simple_meta_instance_reference_type;
 	typedef	int_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	int_meta_instance_reference_base
-#else
-	typedef	simple_datatype_meta_instance_reference_base
-#endif
 				simple_meta_instance_reference_parent_type;
 	typedef	int_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
@@ -272,11 +270,7 @@ struct class_traits<bool_tag> {
 					simple_meta_instance_reference_type;
 	typedef	bool_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	bool_meta_instance_reference_base
-#else
-	typedef	simple_datatype_meta_instance_reference_base
-#endif
 				simple_meta_instance_reference_parent_type;
 	typedef	bool_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
@@ -321,11 +315,7 @@ struct class_traits<enum_tag> {
 					simple_meta_instance_reference_type;
 	typedef	enum_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	enum_meta_instance_reference_base
-#else
-	typedef	simple_datatype_meta_instance_reference_base
-#endif
 				simple_meta_instance_reference_parent_type;
 	typedef	enum_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
@@ -371,11 +361,7 @@ struct class_traits<datastruct_tag> {
 					simple_meta_instance_reference_type;
 	typedef	struct_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	struct_meta_instance_reference_base
-#else
-	typedef	simple_datatype_meta_instance_reference_base
-#endif
 				simple_meta_instance_reference_parent_type;
 	typedef	struct_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
@@ -426,11 +412,7 @@ struct class_traits<process_tag> {
 					simple_meta_instance_reference_type;
 	typedef	process_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	process_meta_instance_reference_base
-#else
-	typedef	simple_meta_instance_reference_base
-#endif
 				simple_meta_instance_reference_parent_type;
 	typedef	process_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
@@ -487,11 +469,7 @@ struct class_traits<channel_tag> {
 					simple_meta_instance_reference_type;
 	typedef	channel_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	channel_meta_instance_reference_base
-#else
-	typedef	simple_meta_instance_reference_base
-#endif
 				simple_meta_instance_reference_parent_type;
 	typedef	channel_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
@@ -548,11 +526,7 @@ struct class_traits<pint_tag> {
 					simple_meta_instance_reference_type;
 	typedef	pint_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	pint_meta_instance_reference_base
-#else
-	typedef	simple_param_meta_value_reference
-#endif
 				simple_meta_instance_reference_parent_type;
 #if 0
 	typedef	pint_instance_reference_base
@@ -616,11 +590,7 @@ struct class_traits<pbool_tag> {
 					simple_meta_instance_reference_type;
 	typedef	pbool_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-#if NEW_SIMPLE_INST_REF
 	typedef	pbool_meta_instance_reference_base
-#else
-	typedef	simple_param_meta_value_reference
-#endif
 				simple_meta_instance_reference_parent_type;
 #if 0
 	typedef	pbool_instance_reference_base

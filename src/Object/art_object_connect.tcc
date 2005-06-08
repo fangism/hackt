@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.7.4.2 2005/06/07 03:01:22 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.7.4.3 2005/06/08 19:00:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -20,10 +20,7 @@
 #include <algorithm>
 
 #include "Object/art_object_connect.h"
-// #include "Object/art_object_instance_alias.h"
-#if NEW_SIMPLE_INST_REF
 #include "Object/art_object_inst_ref_subtypes.h"
-#endif
 
 #include "util/persistent_object_manager.h"
 #include "util/STL/list.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.7.2.1.2.3 2005/06/07 03:01:27 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.7.2.1.2.4 2005/06/08 19:00:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -37,9 +37,7 @@
 
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_classification_details.h"
-#if NEW_SIMPLE_INST_REF
 #include "Object/art_object_inst_ref_subtypes.h"
-#endif
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/art_object_extern_templates.h"
@@ -88,9 +86,7 @@ REQUIRES_STACKTRACE_STATIC_INIT
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
-#if NEW_SIMPLE_INST_REF
 		common_base_type(), 
-#endif
 		parent_type(), interface_type(), value_collection_ref(NULL) {
 }
 
@@ -98,13 +94,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const never_ptr<value_collection_type> pi) :
-#if NEW_SIMPLE_INST_REF
 		common_base_type(
 			pi->current_collection_state()), 
 		parent_type(), 
-#else
-		parent_type(pi->current_collection_state()),
-#endif
 		interface_type(), 
 		value_collection_ref(pi) {
 }
@@ -115,9 +107,7 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const never_ptr<value_collection_type> pi,
 		excl_ptr<index_list>& i) :
-#if NEW_SIMPLE_INST_REF
 		common_base_type(), 
-#endif
 		parent_type(i, pi->current_collection_state()),
 		interface_type(), 
 		value_collection_ref(pi) {

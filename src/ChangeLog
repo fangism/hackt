@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-10:
+	  Makefile.am: added -Wundef (die if preprocessor evaluates undefined)
+		Also added new lex/parse options files to dist.  
+	  lex/yacc files updated with preprocessor headers to satisfy
+		use of undefined macros.  
+	  Committed changes involving NEW_SIMPLE_INST_REF, 
+		removing proprocessor conditionals.  
+	  Updated CHP object classes to use int/bool expressions and
+		non-meta instance references, finally!
+	  Ready to merge back up a branch.
+
+
 2005-06-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-09:

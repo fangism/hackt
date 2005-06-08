@@ -156,7 +156,7 @@ AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wsign-promo	# kills some code

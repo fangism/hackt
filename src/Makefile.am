@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.4.2.6 2005/06/08 04:03:41 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.4.2.7 2005/06/08 19:00:13 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -365,6 +365,8 @@ PARSER_H_FILES = \
 	parser/art++-parse-prefix.h \
 	parser/art++-union.h \
 	parser/art++-parse.output.h \
+	parser/art++-parse-options.h \
+	lexer/art++-lex-options.h \
 	lexer/art_lex.h
 
 PARSER_CC_FILES = \
@@ -488,7 +490,7 @@ AM_CPPFLAGS = -I$(srcdir)
 
 # extremely anal-retentive
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
 WARN_CXXFLAGS = 
 # -Woverloaded-virtual	# kills much of AST/ code, fix later...

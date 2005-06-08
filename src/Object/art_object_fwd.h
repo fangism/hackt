@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1.2.8 2005/06/08 04:03:46 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.1.2.9 2005/06/08 19:00:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -11,8 +11,6 @@
 #include "Object/art_object_classification_tags.h"
 #include "Object/art_object_classification_fwd.h"
 #include "Object/art_object_expr_types.h"
-
-#define	NEW_SIMPLE_INST_REF		1	// IN PROGRESS
 
 namespace ART {
 namespace entity {
@@ -67,7 +65,7 @@ namespace entity {
 
 	template <class>
 	class meta_instance_reference;
-#if NEW_SIMPLE_INST_REF
+
 	typedef	meta_instance_reference<channel_tag>
 		channel_meta_instance_reference_base;
 	typedef	meta_instance_reference<process_tag>
@@ -80,14 +78,11 @@ namespace entity {
 		enum_meta_instance_reference_base;
 	typedef	meta_instance_reference<datastruct_tag>
 		struct_meta_instance_reference_base;
-#if 1
 	// base classes for meta_value_references
 	typedef	meta_instance_reference<pbool_tag>
 		pbool_meta_instance_reference_base;
 	typedef	meta_instance_reference<int_tag>
 		pint_meta_instance_reference_base;
-#endif
-#endif
 
 	template <class>
 	class simple_meta_instance_reference;
@@ -106,7 +101,7 @@ namespace entity {
 	simple_enum_nonmeta_instance_reference;
 	typedef	simple_nonmeta_instance_reference<datastruct_tag>
 	simple_datastruct_nonmeta_instance_reference;
-#if 0
+#if 1
 	typedef	simple_nonmeta_instance_reference<datatype_tag>
 	simple_datatype_nonmeta_instance_reference;
 #endif

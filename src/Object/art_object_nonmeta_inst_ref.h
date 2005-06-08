@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.5 2005/06/08 04:03:49 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.1.2.6 2005/06/08 19:00:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
@@ -35,6 +35,8 @@ simple_nonmeta_instance_reference<Tag>
 	\param Collection the instance collection type.
 	\param Parent the type from which this is derived, 
 		probably simple_nonmeta_instance_reference or descendant.  
+	NOTE: nothing is virtual, this is a final class until
+		otherwise changed.  
  */
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
@@ -73,7 +75,7 @@ public:
 	explicit
 	simple_nonmeta_instance_reference(const instance_collection_ptr_type);
 
-virtual	~simple_nonmeta_instance_reference();
+	~simple_nonmeta_instance_reference();
 
 	ostream&
 	what(ostream&) const;
@@ -109,7 +111,7 @@ protected:
 
 public:
 	FRIEND_PERSISTENT_TRAITS
-	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class nonmeta_instance_reference
 
