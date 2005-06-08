@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47 2005/05/22 06:23:53 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.2.1 2005/06/08 19:13:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -91,9 +91,9 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_param_expr_list,
 		"const-param-expr-list")
 SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_param_expr_list,
 		"param-expr-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instance_reference,
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_pbool_meta_instance_reference,
 		"pbool-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_instance_reference,
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_pint_meta_instance_reference,
 		"pint-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_const,
 		"pint-const")
@@ -115,11 +115,11 @@ SPECIALIZE_UTIL_WHAT(ART::entity::const_range,
 		"const-range")
 SPECIALIZE_UTIL_WHAT(ART::entity::const_range_list, 
 		"const-range-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_range_list, 
-		"dynamic_range_list")
+SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_meta_range_list, 
+		"dynamic_meta_range_list")
 SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list, 
 		"const-index-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_index_list, 
+SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_meta_index_list, 
 		"dynamic-index-list")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -129,11 +129,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::dynamic_param_expr_list,
 		DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_instance_reference, 
-		SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY, 0)
+	ART::entity::simple_pbool_meta_instance_reference, 
+		SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_instance_reference, 
-		SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY, 0)
+	ART::entity::simple_pint_meta_instance_reference, 
+		SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 
@@ -167,11 +167,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY, 0)
+	ART::entity::dynamic_meta_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY, 0)
+	ART::entity::dynamic_meta_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY, 0)
 
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
@@ -222,7 +222,7 @@ typedef discrete_interval_set<pint_value_type>	interval_type;
 
 #if 0
 // inline
-param_expr::param_expr() : object(), persistent() { }
+param_expr::param_expr() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
@@ -409,7 +409,7 @@ pint_expr::resolve_index(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_expr::must_be_equivalent_index(const index_expr& i) const {
+pint_expr::must_be_equivalent_index(const meta_index_expr& i) const {
 	const pint_expr* const p = IS_A(const pint_expr*, &i);
 	if (p) {
 		return must_be_equivalent(*p);
@@ -422,7 +422,7 @@ pint_expr::must_be_equivalent_index(const index_expr& i) const {
 // class param_expr_list method definitions
 
 #if 0
-param_expr_list::param_expr_list() : object(), persistent() { }
+param_expr_list::param_expr_list() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_expr_list::~param_expr_list() { }
@@ -957,20 +957,24 @@ dynamic_param_expr_list::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
-// class index_expr method definitions
+// class meta_index_expr method definitions
 
-index_expr::index_expr() : object(), persistent() { }
+#if 0
+meta_index_expr::meta_index_expr() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-index_expr::~index_expr() { }
+meta_index_expr::~meta_index_expr() { }
+#endif
 
 //-----------------------------------------------------------------------------
 // class const_index method definitions
 
-const_index::const_index() : index_expr() { }
+#if 0
+const_index::const_index() : meta_index_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index::~const_index() { }
+#endif
 
 //=============================================================================
 // class param_expr_collective method defintions
@@ -2368,7 +2372,7 @@ logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 	Private empty constructor.  
  */
 pint_range::pint_range() :
-		range_expr(), lower(NULL), upper(NULL) {
+		meta_range_expr(), lower(NULL), upper(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2382,7 +2386,7 @@ pint_range::~pint_range() {
 	implicitly from 0 too expr -1, inclusive.
  */
 pint_range::pint_range(const count_ptr<const pint_expr>& n) :
-		range_expr(),
+		meta_range_expr(),
 		lower(new pint_const(0)),
 		upper(new arith_expr(n, '-', 
 			count_ptr<const pint_expr>(new pint_const(1)))) {
@@ -2394,18 +2398,20 @@ pint_range::pint_range(const count_ptr<const pint_expr>& n) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_range::pint_range(const count_ptr<const pint_expr>& l, 
 		const count_ptr<const pint_expr>& u) :
-		range_expr(), lower(l), upper(u) {
+		meta_range_expr(), lower(l), upper(u) {
 	NEVER_NULL(lower);
 	NEVER_NULL(upper);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/// default copy-constructor
 pint_range::pint_range(const pint_range& pr) :
-		object(), persistent(), index_expr(), range_expr(), 
-		// virtual base object() needs to be explicitly invoked
-		// in this copy constructor
+		persistent(), meta_index_expr(), meta_range_expr(), 
+		// need explicit virtual base constructors?
 		lower(pr.lower), upper(pr.upper) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_range)
@@ -2481,7 +2487,7 @@ pint_range::resolve_range(const_range& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-pint_range::must_be_formal_size_equivalent(const range_expr& re) const {
+pint_range::must_be_formal_size_equivalent(const meta_range_expr& re) const {
 	const const_range* const cr = IS_A(const const_range*, &re);
 	if (cr) {
 		if (!is_static_constant())
@@ -2528,18 +2534,21 @@ pint_range::load_object(const persistent_object_manager& m, istream& f) {
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(const_range, 64)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Default empty constructor. 
 	Makes an invalid range.  
  */
-const_range::const_range() : range_expr(), const_index(), parent_type(0,-1) {
+const_range::const_range() :
+		meta_range_expr(), const_index(), parent_type(0,-1) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /** Protected internal constructor. */
 const_range::const_range(const interval_type& i) :
-		range_expr(), const_index(), 
+		meta_range_expr(), const_index(), 
 		parent(i.empty() ? 0 : i.begin()->first,
 			i.empty() ? -1 : i.begin()->second) {
 	if (!i.empty())
@@ -2553,7 +2562,7 @@ const_range::const_range(const interval_type& i) :
 	\param n must be > 0, else assertion will fail.
  */
 const_range::const_range(const pint_value_type n) :
-		range_expr(), const_index(), 
+		meta_range_expr(), const_index(), 
 		parent_type(0, n-1) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
@@ -2564,7 +2573,7 @@ const_range::const_range(const pint_value_type n) :
 	\param n must be > 0, else assertion will fail.
  */
 const_range::const_range(const pint_const& n) :
-		range_expr(), const_index(), 
+		meta_range_expr(), const_index(), 
 		parent_type(0, n.static_constant_value() -1) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
@@ -2576,7 +2585,7 @@ const_range::const_range(const pint_const& n) :
 	\param u is upper bound, inclusive, and must be >= l.  
  */
 const_range::const_range(const pint_value_type l, const pint_value_type u) :
-		range_expr(), const_index(), 
+		meta_range_expr(), const_index(), 
 		parent_type(l, u) {
 	INVARIANT(upper() >= lower());		// else what!?!?
 }
@@ -2591,29 +2600,29 @@ const_range::const_range(const pint_value_type l, const pint_value_type u) :
  */
 const_range::const_range(const pint_value_type l, const pint_value_type u,
 		const bool b) :
-		range_expr(), const_index(), 
+		meta_range_expr(), const_index(), 
 		parent_type(l, u) {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /** standard copy constructor */
 const_range::const_range(const const_range& r) :
-		object(), 
 		persistent(), 
-		index_expr(),
-		range_expr(), 
+		meta_index_expr(),
+		meta_range_expr(), 
 		const_index(), 
 		parent_type(r) {
 	// assert check range?
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range::const_range(const parent_type& r) :
-		object(), 
 		persistent(), 
-		index_expr(),
-		range_expr(), 
+		meta_index_expr(),
+		meta_range_expr(), 
 		const_index(), 
 		parent_type(r) {
 	// assert check range?
@@ -2666,7 +2675,7 @@ const_range::operator == (const const_range& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-const_range::must_be_formal_size_equivalent(const range_expr& re) const {
+const_range::must_be_formal_size_equivalent(const meta_range_expr& re) const {
 	const const_range* const cr = IS_A(const const_range*, &re);
 	if (cr) {
 		return (*this) == *cr;
@@ -2765,21 +2774,23 @@ const_range::load_object(const persistent_object_manager& m, istream& f) {
 }
 
 //=============================================================================
-// class range_expr method definitions
+// class meta_range_expr method definitions
 
-range_expr::range_expr() : index_expr() {
+#if 0
+meta_range_expr::meta_range_expr() : meta_index_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-range_expr::~range_expr() {
+meta_range_expr::~meta_range_expr() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return a resolve constant range, or NULL if resolution fails.  
  */
 count_ptr<const_index>
-range_expr::unroll_resolve_index(const unroll_context& c) const {
+meta_range_expr::unroll_resolve_index(const unroll_context& c) const {
 	typedef	count_ptr<const_index>	return_type;
 	const_range tmp;
 	return (unroll_resolve_range(c, tmp).good) ?
@@ -2792,7 +2803,7 @@ range_expr::unroll_resolve_index(const unroll_context& c) const {
 	\return a resolve constant range, or NULL if resolution fails.  
  */
 count_ptr<const_index>
-range_expr::resolve_index(void) const {
+meta_range_expr::resolve_index(void) const {
 	typedef	count_ptr<const_index>	return_type;
 	const_range tmp;
 	return (resolve_range(tmp).good) ?
@@ -2802,8 +2813,8 @@ range_expr::resolve_index(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-range_expr::must_be_equivalent_index(const index_expr& i) const {
-	const range_expr* const r = IS_A(const range_expr*, &i);
+meta_range_expr::must_be_equivalent_index(const meta_index_expr& i) const {
+	const meta_range_expr* const r = IS_A(const meta_range_expr*, &i);
 	if (r) {
 		return must_be_formal_size_equivalent(*r);
 	} else {
@@ -2813,10 +2824,10 @@ range_expr::must_be_equivalent_index(const index_expr& i) const {
 }
 
 //=============================================================================
-// class range_expr_list method definitions
+// class meta_range_list method definitions
 
 #if 0
-range_expr_list::range_expr_list() : object(), persistent() {
+meta_range_list::meta_range_list() : persistent() {
 }
 #endif
 
@@ -2824,7 +2835,7 @@ range_expr_list::range_expr_list() : object(), persistent() {
 // class const_range_list method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list::const_range_list() : range_expr_list(), list_type() {
+const_range_list::const_range_list() : meta_range_list(), list_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2832,7 +2843,7 @@ const_range_list::const_range_list() : range_expr_list(), list_type() {
 	Implicit conversion.  
  */
 const_range_list::const_range_list(const list_type& l) :
-		range_expr_list(), list_type(l) {
+		meta_range_list(), list_type(l) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2843,7 +2854,7 @@ const_range_list::const_range_list(const list_type& l) :
 	Useful for static range-checking of indices.  
  */
 const_range_list::const_range_list(const const_index_list& i) :
-		range_expr_list(), list_type() {
+		meta_range_list(), list_type() {
 	const_index_list::const_iterator j = i.begin();
 	for ( ; j!=i.end(); j++) {
 		const count_ptr<const_index> k(*j);
@@ -2890,12 +2901,12 @@ const_range_list::size(void) const {
 		or the valid overlap range if there is overlap.  
  */
 const_range_list
-const_range_list::static_overlap(const range_expr_list& r) const {
+const_range_list::static_overlap(const meta_range_list& r) const {
 #if 0
 	// DEBUG
 	cerr << "In const_range_list::static_overlap with this = "
 		<< this << endl;
-	r.dump(cerr << "const range_expr_list& r = ") << endl;
+	r.dump(cerr << "const meta_range_list& r = ") << endl;
 #endif
 	const const_range_list* s = IS_A(const const_range_list*, &r);
 	const_range_list ret;	// initially empty
@@ -3090,13 +3101,13 @@ const_range_list::operator == (const const_range_list& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_range_list::must_be_formal_size_equivalent(
-		const range_expr_list& rl) const {
+		const meta_range_list& rl) const {
 	const const_range_list* const crl = IS_A(const const_range_list*, &rl);
 	if (crl) {
 		return is_size_equivalent(*crl);
 	} else {
-		const dynamic_range_list* const
-			drl = IS_A(const dynamic_range_list*, &rl);
+		const dynamic_meta_range_list* const
+			drl = IS_A(const dynamic_meta_range_list*, &rl);
 		INVARIANT(drl);
 		return drl->must_be_formal_size_equivalent(*this);
 	}
@@ -3253,22 +3264,22 @@ const_range_list::load_object(const persistent_object_manager& m, istream& f) {
 }
 
 //=============================================================================
-// class dynamic_range_list method definitions
+// class dynamic_meta_range_list method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_range_list::dynamic_range_list() : range_expr_list(), list_type() {
+dynamic_meta_range_list::dynamic_meta_range_list() : meta_range_list(), list_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_range_list::~dynamic_range_list() {
+dynamic_meta_range_list::~dynamic_meta_range_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_range_list)
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_range_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-dynamic_range_list::dump(ostream& o) const {
+dynamic_meta_range_list::dump(ostream& o) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
@@ -3279,13 +3290,13 @@ dynamic_range_list::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
-dynamic_range_list::size(void) const {
+dynamic_meta_range_list::size(void) const {
 	return list_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_range_list::is_static_constant(void) const {
+dynamic_meta_range_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		const count_ptr<const pint_range> pr(*i);
@@ -3302,7 +3313,7 @@ dynamic_range_list::is_static_constant(void) const {
 	Overlap is indefinite with dynamic ranges, conservatively.  
  */
 const_range_list
-dynamic_range_list::static_overlap(const range_expr_list& r) const {
+dynamic_meta_range_list::static_overlap(const meta_range_list& r) const {
 	return const_range_list();
 }
 
@@ -3313,7 +3324,7 @@ dynamic_range_list::static_overlap(const range_expr_list& r) const {
 	\return true if success, false if fail.  
  */
 good_bool
-dynamic_range_list::resolve_ranges(const_range_list& r) const {
+dynamic_meta_range_list::resolve_ranges(const_range_list& r) const {
 	// resolve ranges each step, each dynamic_range
 	r.clear();
 	const_iterator i = begin();
@@ -3332,7 +3343,7 @@ dynamic_range_list::resolve_ranges(const_range_list& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-dynamic_range_list::unroll_resolve(const_range_list& r, 
+dynamic_meta_range_list::unroll_resolve(const_range_list& r, 
 		const unroll_context& c) const {
 	INVARIANT(r.empty());
 	// write as transform?
@@ -3352,8 +3363,8 @@ dynamic_range_list::unroll_resolve(const_range_list& r,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_range_list::must_be_formal_size_equivalent(
-		const range_expr_list& rl) const {
+dynamic_meta_range_list::must_be_formal_size_equivalent(
+		const meta_range_list& rl) const {
 	const const_range_list* const crl = IS_A(const const_range_list*, &rl);
 	if (crl) {
 		INVARIANT(size() == crl->size());
@@ -3367,8 +3378,8 @@ dynamic_range_list::must_be_formal_size_equivalent(
 				return false;
 		}
 	} else {
-		const dynamic_range_list* const
-			drl = IS_A(const dynamic_range_list*, &rl);
+		const dynamic_meta_range_list* const
+			drl = IS_A(const dynamic_meta_range_list*, &rl);
 		INVARIANT(drl);
 		INVARIANT(size() == drl->size());
 		const_iterator i = begin();
@@ -3391,7 +3402,7 @@ dynamic_range_list::must_be_formal_size_equivalent(
 	objects with the persistent object manager.
  */
 void
-dynamic_range_list::collect_transient_info(
+dynamic_meta_range_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -3411,7 +3422,7 @@ if (!m.register_transient_object(this,
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_range_list::write_object(const persistent_object_manager& m, 
+dynamic_meta_range_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
@@ -3428,7 +3439,7 @@ dynamic_range_list::write_object(const persistent_object_manager& m,
 	indices to pointers in the reconstruction.  
  */
 void
-dynamic_range_list::load_object(const persistent_object_manager& m, 
+dynamic_meta_range_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
@@ -3445,20 +3456,20 @@ dynamic_range_list::load_object(const persistent_object_manager& m,
 
 
 //=============================================================================
-// class index_list method definitions
+// class meta_index_list method definitions
 
 #if 0
-index_list::index_list() : object(), persistent() { }
+meta_index_list::meta_index_list() : persistent() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-index_list::~index_list() { }
+meta_index_list::~meta_index_list() { }
 #endif
 
 //=============================================================================
 // class const_index_list method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_index_list::const_index_list() : index_list(), parent_type() { }
+const_index_list::const_index_list() : meta_index_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -3472,7 +3483,7 @@ const_index_list::const_index_list() : index_list(), parent_type() { }
  */
 const_index_list::const_index_list(const const_index_list& l, 
 		const pair<list<pint_value_type>, list<pint_value_type> >& f) :
-		index_list(), parent_type(l) {
+		meta_index_list(), parent_type(l) {
 	if (f.first.empty()) {
 		INVARIANT(f.second.empty());
 		clear();
@@ -3741,7 +3752,7 @@ const_index_list::equal_dimensions(const const_index_list& l) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-const_index_list::must_be_equivalent_indices(const index_list& l) const {
+const_index_list::must_be_equivalent_indices(const meta_index_list& l) const {
 	const const_index_list* const cl = IS_A(const const_index_list*, &l);
 	if (cl) {
 		// here, we DO NOT skip collapsed dimensions for comparison
@@ -3753,8 +3764,8 @@ const_index_list::must_be_equivalent_indices(const index_list& l) const {
 		)
 		);
 	} else {
-		const dynamic_index_list* const
-			dl = IS_A(const dynamic_index_list*, &l);
+		const dynamic_meta_index_list* const
+			dl = IS_A(const dynamic_meta_index_list*, &l);
 		return dl->must_be_equivalent_indices(*this);
 	}
 }
@@ -3818,20 +3829,21 @@ const_index_list::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
-// class dynamic_index_list method definitions
+// class dynamic_meta_index_list method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_index_list::dynamic_index_list() : index_list(), parent_type() { }
+dynamic_meta_index_list::dynamic_meta_index_list() :
+		meta_index_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_index_list::~dynamic_index_list() { }
+dynamic_meta_index_list::~dynamic_meta_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_index_list)
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_index_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-dynamic_index_list::dump(ostream& o) const {
+dynamic_meta_index_list::dump(ostream& o) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
@@ -3847,7 +3859,7 @@ dynamic_index_list::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
+dynamic_meta_index_list::push_back(const count_ptr<meta_index_expr>& i) {
 	NEVER_NULL(i);
 	if (i->dimensions() != 0) {
 		cerr << "i->dimensions = " << i->dimensions() << endl;
@@ -3858,7 +3870,7 @@ dynamic_index_list::push_back(const count_ptr<index_expr>& i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
-dynamic_index_list::size(void) const {
+dynamic_meta_index_list::size(void) const {
 	return parent_type::size();
 }
 
@@ -3868,13 +3880,13 @@ dynamic_index_list::size(void) const {
 	See description in const_index_list::dimensions_collapsed().  
  */
 size_t
-dynamic_index_list::dimensions_collapsed(void) const {
+dynamic_meta_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		if (i->is_a<const pint_expr>())
 			ret++;
-		else INVARIANT(i->is_a<const range_expr>());
+		else INVARIANT(i->is_a<const meta_range_expr>());
 			// sanity check
 	}
 	return ret;
@@ -3882,7 +3894,7 @@ dynamic_index_list::dimensions_collapsed(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_index_list::may_be_initialized(void) const {
+dynamic_meta_index_list::may_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
@@ -3894,7 +3906,7 @@ dynamic_index_list::may_be_initialized(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_index_list::must_be_initialized(void) const {
+dynamic_meta_index_list::must_be_initialized(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
@@ -3906,7 +3918,7 @@ dynamic_index_list::must_be_initialized(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_index_list::is_static_constant(void) const {
+dynamic_meta_index_list::is_static_constant(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
@@ -3918,7 +3930,7 @@ dynamic_index_list::is_static_constant(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_index_list::is_loop_independent(void) const {
+dynamic_meta_index_list::is_loop_independent(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
@@ -3930,7 +3942,7 @@ dynamic_index_list::is_loop_independent(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_index_list::is_unconditional(void) const {
+dynamic_meta_index_list::is_unconditional(void) const {
 	const_iterator i = begin();
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
@@ -3949,13 +3961,13 @@ dynamic_index_list::is_unconditional(void) const {
 		otherwise, returns an empty list.  
  */
 const_index_list
-dynamic_index_list::resolve_index_list(void) const {
+dynamic_meta_index_list::resolve_index_list(void) const {
 	const_index_list ret;
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		const count_ptr<index_expr> ind(*i);
+		const count_ptr<meta_index_expr> ind(*i);
 		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
 		if (c_ind) {
 			// direct reference copy
@@ -3976,27 +3988,28 @@ dynamic_index_list::resolve_index_list(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_index_list::must_be_equivalent_indices(const index_list& l) const {
+dynamic_meta_index_list::must_be_equivalent_indices(
+		const meta_index_list& l) const {
 	const const_index_list* const cl = IS_A(const const_index_list*, &l);
 	if (cl) {
 		INVARIANT(size() == cl->size());
-		// heterogenous comparison between const_index, index_expr
+		// heterogenous comparison between const_index, meta_index_expr
 		return std::equal(begin(), end(), cl->begin(), 
 		binary_compose(
-			mem_fun_ref(&index_expr::must_be_equivalent_index), 
-			dereference<count_ptr<const index_expr> >(), 
+			mem_fun_ref(&meta_index_expr::must_be_equivalent_index), 
+			dereference<count_ptr<const meta_index_expr> >(), 
 			dereference<count_ptr<const const_index> >()
 		)
 		);
 	} else {
-		const dynamic_index_list* const
-			dl = IS_A(const dynamic_index_list*, &l);
+		const dynamic_meta_index_list* const
+			dl = IS_A(const dynamic_meta_index_list*, &l);
 		INVARIANT(size() == dl->size());
 		return std::equal(begin(), end(), dl->begin(), 
 		binary_compose(
-			mem_fun_ref(&index_expr::must_be_equivalent_index), 
-			dereference<count_ptr<const index_expr> >(), 
-			dereference<count_ptr<const index_expr> >()
+			mem_fun_ref(&meta_index_expr::must_be_equivalent_index), 
+			dereference<count_ptr<const meta_index_expr> >(), 
+			dereference<count_ptr<const meta_index_expr> >()
 		)
 		);
 	}
@@ -4010,13 +4023,13 @@ dynamic_index_list::must_be_equivalent_indices(const index_list& l) const {
 		successful resolved, else an empty list.
  */
 const_index_list
-dynamic_index_list::unroll_resolve(const unroll_context& c) const {
+dynamic_meta_index_list::unroll_resolve(const unroll_context& c) const {
 	const_index_list ret;
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		const count_ptr<index_expr> ind(*i);
+		const count_ptr<meta_index_expr> ind(*i);
 		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
 		if (c_ind) {
 			// direct reference copy
@@ -4038,7 +4051,7 @@ dynamic_index_list::unroll_resolve(const unroll_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 bool
-dynamic_index_list::resolve_multikey(
+dynamic_meta_index_list::resolve_multikey(
 		excl_ptr<multikey_index_type>& k) const {
 	k = excl_ptr<multikey_index_type>(
 		multikey_index_type::make_multikey(size()));
@@ -4047,7 +4060,7 @@ dynamic_index_list::resolve_multikey(
 	const const_iterator e = end();
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		const count_ptr<const index_expr> ip(*i);
+		const count_ptr<const meta_index_expr> ip(*i);
 		const count_ptr<const pint_expr> pi(ip.is_a<pint_expr>());
 		// assert(pi); ?
 		if (pi) {
@@ -4073,14 +4086,14 @@ dynamic_index_list::resolve_multikey(
 	objects with the persistent object manager.
  */
 void
-dynamic_index_list::collect_transient_info(
+dynamic_meta_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_ptr<const index_expr> ip(*i);
+		const count_ptr<const meta_index_expr> ip(*i);
 		ip->collect_transient_info(m);
 	}
 }
@@ -4093,13 +4106,13 @@ if (!m.register_transient_object(this,
 	pointers to indices as they are encountered.  
  */
 void
-dynamic_index_list::write_object(const persistent_object_manager& m, 
+dynamic_meta_index_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		const count_ptr<const index_expr> ip(*i);
+		const count_ptr<const meta_index_expr> ip(*i);
 		m.write_pointer(f, ip);
 	}
 }
@@ -4110,12 +4123,12 @@ dynamic_index_list::write_object(const persistent_object_manager& m,
 	indices to pointers in the reconstruction.  
  */
 void
-dynamic_index_list::load_object(const persistent_object_manager& m, 
+dynamic_meta_index_list::load_object(const persistent_object_manager& m, 
 		istream& f) {
 	size_t s, i=0;
 	read_value(f, s);		// how many exprs to expect?
 	for ( ; i<s; i++) {
-		count_ptr<index_expr> ip;
+		count_ptr<meta_index_expr> ip;
 		m.read_pointer(f, ip);
 		if (ip)
 			m.load_object_once(ip);
@@ -4130,8 +4143,8 @@ dynamic_index_list::load_object(const persistent_object_manager& m,
 template class const_collection<pint_tag>;
 template class const_collection<pbool_tag>;
 
-template class value_reference<pint_tag>;
-template class value_reference<pbool_tag>;
+template class simple_meta_value_reference<pint_tag>;
+template class simple_meta_value_reference<pbool_tag>;
 
 //=============================================================================
 }	// end namepace entity

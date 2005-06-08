@@ -1,5 +1,170 @@
 "ChangeLog"
 
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-12-merged-dataexpr-10:
+	  Child branch merge, details of this series below.  
+
+
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-10:
+	  Makefile.am: added -Wundef (die if preprocessor evaluates undefined)
+		Also added new lex/parse options files to dist.  
+	  lex/yacc files updated with preprocessor headers to satisfy
+		use of undefined macros.  
+	  Committed changes involving NEW_SIMPLE_INST_REF, 
+		removing proprocessor conditionals.  
+	  Updated CHP object classes to use int/bool expressions and
+		non-meta instance references, finally!
+	  Ready to merge back up a branch.
+
+
+2005-06-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-09:
+	  Skeletal (trivial) implementation of nonmeta_index_list.
+	  Type hash keys for simple (meta) instance references updated
+		to become distinguishable from simple nonmeta
+		instance references.  (Macro names updated too.)
+		Unroll test header dumps have been updated to reflect 
+		this change.  
+	  Added simple_nonmeta_instance_reference<Tag> classes, modeled
+		after their meta-counterparts.  
+	  Purged the proposed data_reference template class for good.  
+	  Implemented essential methods of 
+		simple_nonmeta_instance_reference_base.
+	  Implemented core methods of simple_nonmeta_instance_reference
+		template class.  
+	  PLAN: After nonmeta_[data]_instance_references have been validated, 
+		then that feature may be leveraged in the CHP object classes, 
+		at which point, we can merge up a branch.
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-08:
+	  Progress!  Replaced (meta) simple_instance_reference
+		and value_reference class hierarchy with lattice, 
+		enabled by the NEW_SIMPLE_INST_REF flag in 
+		"Object/art_object_fwd.h".  
+		Inheritance is a mess, but I've got plans for alternate
+		implementations for the appropriate time.  
+	  Little more renaming:
+		*_meta_instance_reference ->
+			simple_*_meta_instance_reference
+		(rather than "simple" being implicit)
+	  TODO: replicate for simple non-meta instance/value references!
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-07:
+	  More painful reorganization and renaming... ugh.
+		*_meta_instance_reference_base ->
+			simple_*_meta_instance_reference_base
+		value_reference -> simple_meta_value_reference
+	  As soon as the dust clears, will rearrange (final)
+		simple_*_meta_instance_reference classes with MI.  
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  Makefile.am: updated header-check make-dep flags (no -MT or -MP)
+		using new scripts to "promote" header dependencies:
+		rather than depend on the headers, depend on the
+		*checked* header (*chk) files to ensure bottom-up
+		construction (after first time) of header-checks!
+		(I'm so proud of myself...)
+		../config.h is an exception, don't check it.  
+		Disabled clean-header-deps target.
+		This also catches circuilar dependencies in headers
+			e.g. betwee util/memory/ref_count_pool.h and
+			util/memory/count_ptr.h (now fixed).
+		for this project I want to be anal and forbid circular
+			dependent headers.  
+	  More massive class renaming:
+		simple_meta_instance_reference -> 
+			simple_meta_instance_reference_base
+		meta_instance_reference -> simple_meta_instance_reference
+			(class template)
+		simple_nonmeta_instance_reference =>
+			simple_nonmeta_instance_reference_base
+		nonmeta_instance_reference ->
+			simple_nonmeta_instance_reference
+	  Exapnded type-refinements for data, channel, proc, param
+		from nonmeta_instance_reference_base
+
+
+2005-06-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-05:
+	  Makefile enhancement: added (optional) dynamic dependence
+		tracking for header-tests, which conditionally creates
+		(user only) dependencies (.hchkd, .tccchkd) in the
+		respective .deps subdirectories.  A complete list of 
+		all such dependencies is auto-generated and used by 
+		Makefile.am to auto-include in Makefile.in.  
+		The major benefit of this is that now, the check-headers
+		target will check all target header files that depend on
+		the modified ones, not just the ones touched.  
+		This patchlet should ideally make it back to the main
+		trunk sooner...
+	  More class planning for nonmeta_instance_references.  
+		A massive reorganization is inevitable.  
+	  Some header file cleaning.  
+
+
+2005-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-04:
+	  Massive renaming of classes continues...
+		index_list -> meta_index_list, 
+		index_expr -> meta_index_expr, 
+		dynamic_index_list -> dynamic_meta_index_list, 
+		dynamic_range_list -> dynamic_meta_range_list, 
+		range_expr_list -> meta_range_list, 
+		range_expr -> meta_range_expr
+	  Added nonmeta expr classes to foundation of meta expr classes
+		so that meta exprs are acceptable to nonmeta exprs.  
+	  Inlined some empty base classes' ctors and dtors.  
+	  TODO: nonmeta instance references.  
+
+
+2005-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-03:
+	  MAJOR rework of instance-references beginning.
+	  All old existing instance reference were
+		meta-instance-references, references that would eventually
+		be resolved at compile time upon template instantiation. 
+		CHP and other non-meta languages work with run-time
+		resolved, or nonmeta-instance-references.  However, 
+		it's important to note that meta-instance-references are
+		acceptable where their non-meta-instance-references are
+		expected (they are just run-time constant, after all).  
+		Thus we introduce another level in the hierarchy, rooted
+		at nonmeta_instance_reference_base.  
+	  Global rename: (previous occurences)
+		instance_reference -> meta_instance_reference
+		(file names preserved for now, will change later)
+	  entity::object parent has been expunged as a parent class
+		from all instance-references.
+	  Temporarily reverted USE_DATA_REFERENCE (in "Object/art_object_fwd.h")
+		to 0 (off).  We intend to redefine data_reference in terms 
+		of nonmeta_instance_references.  
+	  NOTE: instance reference connections only live in meta
+		language domain, thus it is kind of redundant to 
+		call them meta_instance_reference_connection, but at least
+		this makes it clear.  
+	  NOTE: member instance references currently only exist in the
+		meta language domain, however they could also be
+		ported to the non-meta domain, oooooh.  
+	  Removed pure virtual get_inst_base from mete_instance_reference_base
+		because it only makes sense for simple_meta_instance_reference.
+
+
 2005-06-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-11:
@@ -28,6 +193,43 @@
 	  src/util/test/test-expect.sh:
 		check for auto-generated .stderr files, because
 		won't be in srcdir.  
+
+
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-02:
+	  New base classes for data-expressions (CHP context)!
+	  data_expr is refined as int_expr and bool_expr, and now
+		(here's the kicker) pint_expr : int_expr and
+		pbool_expr : bool_expr!  
+		Rationale: In the CHP context, meta-parameter 
+		(of the same type) are valid rvalue expressions 
+		just as run-time variables of int and bool are.  
+	  Rename: datatype_instance_reference ->
+		datatype_instance_reference_base
+	  TODO: fahr-fahr-away, use GMP's mpz for arbitrary length integer.  
+	  Introduced refined instance_reference: data_reference<Tag>
+		which is derived from instance_reference<Tag>
+		and from an data expression interface class (int_expr
+		or bool_expr).  Such data instance references serve as
+		connectible entities and assignable entities in the
+		CHP context.  (Analogous to what was done with
+		value_reference for meta-param references.)
+	  Relocated datatype_instance_reference(_base) to 
+		"Object/art_object_inst_ref_data.h"
+	  A few new test cases for test/parser/channel.  
+
+
+2005-06-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-01:
+	  This branch is for developing expression framework for datatypes, 
+		very similar to those of meta-parameter expressions.  
+	  In this revision, we've FINALLY liberated the param_expr
+		(and friends) class hierarchy from the 'object' parent class, 
+		which we could've done after we did away with the 
+		object-expression stack in parser::context.  
+		One less virtual pointer per expr-object!
 
 
 2005-05-30	David Fang		<fangism@users.sourceforge.net>

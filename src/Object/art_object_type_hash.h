@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7.2.2 2005/05/31 04:00:06 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7.2.3 2005/06/08 19:13:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -67,14 +67,26 @@
 
 // Instance references:
 	// simple instance reference may contain multidimensional indices
-#define	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"sprocref"
-#define	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"schanref"
-#define	SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"sdbref"
-#define	SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY			"sdiref"
-#define	SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"sderef"
-#define	SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY		"sdsref"
-#define	SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"spbref"
-#define	SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY			"spiref"
+#define	SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY		"sprcmref"
+#define	SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY		"schnmref"
+#define	SIMPLE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"sdbmref"
+#define	SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdimref"
+#define	SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"sdemref"
+#define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmref"
+#define	SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"spbmref"
+#define	SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY		"spimref"
+
+	// simple non-meta instance references
+#define	SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprcnref"
+#define	SIMPLE_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"schnnref"
+#define	SIMPLE_DBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sdbnref"
+#define	SIMPLE_DINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"sdinref"
+#define	SIMPLE_ENUM_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"sdenref"
+#define	SIMPLE_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sdsnref"
+#define	SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"spbnref"
+#define	SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"spinref"
+
+
 
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
@@ -124,6 +136,9 @@
 #define	ARITH_EXPR_TYPE_KEY					"arithexp"
 #define	RELATIONAL_EXPR_TYPE_KEY				"relatexp"
 #define	LOGICAL_EXPR_TYPE_KEY					"logicexp"
+
+// nonmeta expressions
+#define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlst"
 
 // Sequential and control statements: (loops and conditionals)
 // including sequential instantiations, assignments and connections:

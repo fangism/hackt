@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.4.2.1 2005/05/26 21:31:25 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.4.2.2 2005/06/08 19:13:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -25,6 +25,7 @@
 
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
+#include "Object/art_object_inst_ref_subtypes.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -259,14 +260,14 @@ VALUE_COLLECTION_CLASS::initial_value(void) const {
 	\return NULL.
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<instance_reference_base>
-VALUE_COLLECTION_CLASS::make_instance_reference(void) const {
+count_ptr<meta_instance_reference_base>
+VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
-	return count_ptr<param_instance_reference>(
-		new instance_reference_type(
+	return count_ptr<simple_param_meta_value_reference>(
+		new simple_meta_instance_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }
@@ -503,7 +504,7 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	If integer is uninitialized, report as error.  
 
 	TODO: really this should take a const_index_list argument, 
-	to valid dynamic allocation in instance_reference methods.  
+	to valid dynamic allocation in meta_instance_reference methods.  
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool

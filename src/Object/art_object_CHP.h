@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.2 2005/05/31 04:00:06 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.3 2005/06/08 19:13:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -14,6 +14,8 @@
 
 namespace ART {
 namespace entity {
+
+
 namespace CHP {
 using std::list;
 using std::istream;
@@ -79,7 +81,7 @@ public:
  */
 class guarded_action : public persistent {
 public:
-	typedef	count_ptr<pbool_expr>		guard_ptr_type;
+	typedef	count_ptr<bool_expr>		guard_ptr_type;
 	typedef	count_ptr<action>		stmt_ptr_type;
 	typedef	guarded_action			this_type;
 protected:
@@ -152,14 +154,17 @@ public:
 //=============================================================================
 /**
 	Variable assignment.  
+	Consider sub-typing, like with param_expression_assignment?
+	For now, use only generic datatype for brevity.  
  */
 class assignment : public action {
 private:
 	typedef	action					parent_type;
 	typedef	assignment				this_type;
 public:
-	typedef	count_ptr<datatype_instance_reference>	lval_ptr_type;
-	typedef	count_ptr<param_expr>			rval_ptr_type;
+	typedef	count_ptr<simple_datatype_nonmeta_instance_reference>
+							lval_ptr_type;
+	typedef	count_ptr<data_expr>			rval_ptr_type;
 private:
 	lval_ptr_type					lval;
 	rval_ptr_type					rval;
@@ -188,7 +193,7 @@ public:
 class condition_wait : public action {
 	typedef	action					parent_type;
 	typedef	condition_wait				this_type;
-	typedef	count_ptr<pbool_expr>			cond_ptr_type;
+	typedef	count_ptr<bool_expr>			cond_ptr_type;
 private:
 	cond_ptr_type					cond;
 public:
@@ -213,8 +218,12 @@ class channel_send : public action {
 	typedef	action					parent_type;
 	typedef	channel_send				this_type;
 public:
-	typedef	list<count_ptr<param_expr> >		expr_list_type;
-	typedef	count_ptr<channel_instance_reference>	chan_ptr_type;
+	typedef	list<count_ptr<data_expr> >		expr_list_type;
+	/**
+		should be simple_channel_nonmeta_instnace_reference
+	 */
+	typedef	count_ptr<simple_channel_meta_instance_reference>
+							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
 	expr_list_type					exprs;
@@ -240,9 +249,11 @@ class channel_receive : public action {
 	typedef	action					parent_type;
 	typedef	channel_receive				this_type;
 public:
-	typedef	list<count_ptr<datatype_instance_reference> >
-							inst_ref_list_type;
-	typedef	count_ptr<channel_instance_reference>	chan_ptr_type;
+	typedef	count_ptr<simple_datatype_nonmeta_instance_reference>
+							inst_ref_ptr_type;
+	typedef	list<inst_ref_ptr_type>			inst_ref_list_type;
+	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
+							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
 	inst_ref_list_type				insts;

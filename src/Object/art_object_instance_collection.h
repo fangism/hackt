@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.9 2005/05/22 06:24:17 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.9.2.1 2005/06/08 19:13:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -34,7 +34,7 @@ using util::persistent;
 using util::persistent_object_manager;
 
 class scopespace;
-class instance_reference_base;
+class meta_instance_reference_base;
 class const_index_list;
 class const_range_list;
 class const_param_expr_list;
@@ -136,11 +136,11 @@ public:
 							alias_collection_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
 							instance_collection_parameter_type;
-	typedef	typename class_traits<Tag>::instance_reference_type
-							instance_reference_type;
-	typedef	typename class_traits<Tag>::member_instance_reference_type
-						member_instance_reference_type;
-//	typedef	instance_reference_base		instance_reference_base_type;
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+							simple_meta_instance_reference_type;
+	typedef	typename class_traits<Tag>::member_simple_meta_instance_reference_type
+						member_simple_meta_instance_reference_type;
+//	typedef	meta_instance_reference_base		meta_instance_reference_base_type;
 // public:
 protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
@@ -182,11 +182,11 @@ virtual	bool
 	bad_bool
 	commit_type(const type_ref_ptr_type& );
 
-	count_ptr<instance_reference_base>
-	make_instance_reference(void) const;
+	count_ptr<meta_instance_reference_base>
+	make_meta_instance_reference(void) const;
 
 	member_inst_ref_ptr_type
-	make_member_instance_reference(const inst_ref_ptr_type&) const;
+	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
 
 virtual	void
 	instantiate_indices(const const_range_list& i) = 0;

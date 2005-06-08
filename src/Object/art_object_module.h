@@ -1,14 +1,13 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.17 2005/05/24 02:38:13 fang Exp $
+	$Id: art_object_module.h,v 1.17.2.1 2005/06/08 19:13:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
 #define	__OBJECT_ART_OBJECT_MODULE_H__
 
 #include <string>
-#include "Object/art_object_base.h"
 #include "Object/art_object_util_types.h"
 #include "Object/art_object_instance_management_base.h"
 #include "util/persistent.h"

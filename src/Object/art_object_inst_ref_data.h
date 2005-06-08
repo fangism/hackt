@@ -1,26 +1,58 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.7 2005/05/22 06:23:56 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.7.2.1 2005/06/08 19:13:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
 #define	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
 
 #include "Object/art_object_inst_ref.h"
-#include "util/memory/pointer_classes.h"
+// might as well include this here because data_reference<Tag>::interface_type
+// is going to be int_expr or bool_expr from the base class header file.  
+#include "Object/art_object_data_expr_base.h"
 
 namespace ART {
 namespace entity {
-
-using std::ostream;
-
 //=============================================================================
-// consider moving datatype_instance_reference here...
-// consider moving datatype_member_instance_reference here...
+/**
+	A reference to a simple instance of datatype.  
+	Consider sub-typing into user-defined and built-in, 
+	making this an abstract base.
+ */
+class simple_datatype_meta_instance_reference_base :
+		public simple_meta_instance_reference_base {
+private:
+	typedef simple_meta_instance_reference_base               parent_type;
+protected:
+//      excl_ptr<meta_index_list>                   array_indices;  // inherited
 
-//=============================================================================
-// this whole file has been replaced by using the intance_reference_template
+protected:
+	simple_datatype_meta_instance_reference_base();
+
+	explicit
+	simple_datatype_meta_instance_reference_base(const instantiation_state& s);
+
+public:
+virtual ~simple_datatype_meta_instance_reference_base();
+
+virtual ostream&
+	what(ostream& o) const = 0;
+
+//      ostream& dump(ostream& o) const;
+
+virtual never_ptr<const instance_collection_base>
+	get_inst_base(void) const = 0;
+
+private:
+virtual excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const = 0;
+
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
+};      // end class simple_datatype_meta_instance_reference_base
 
 //=============================================================================
 }	// end namespace entity

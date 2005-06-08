@@ -2,34 +2,34 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102f50	module__	0	0	56
-	2	 0x3100144	namespc_	0	56	96
-	3	 0x3102f70	procdefn	0	96	141
-	4	 0x3102ff4	pintcoll	0	141	178
-	5	 0x3103040	pintinst	0	178	194
-	6	 0x24c5024	cnstpi__	0	194	206
-	7	 0x3103054	pintcoll	0	206	243
-	8	 0x31030a0	pintinst	0	243	259
-	9	 0x24c5038	cnstpi__	0	259	271
-	10	 0x31030b4	proccoll	2	271	481
-	11	 0x3103100	procinst	0	481	501
-	12	 0x3103120	proctprf	0	501	517
-	13	 0x3103134	crnglst_	0	517	545
-	14	 0x3103140	proctprf	0	545	561
-	15	 0x3103154	proccoll	2	561	771
-	16	 0x31031a0	procinst	0	771	791
-	17	 0x31031c0	proctprf	0	791	807
-	18	 0x31031d4	crnglst_	0	807	835
-	19	 0x31031e0	proctprf	0	835	851
-	20	 0x3800c00	piassign	0	851	871
-	21	 0x3103210	spiref__	0	871	891
-	22	 0x3800c10	piassign	0	891	911
-	23	 0x3103240	spiref__	0	911	931
-	24	 0x3103250	prcalias	0	931	951
-	25	 0x310327c	sprocref	0	951	971
-	26	 0x310329c	sprocref	0	971	991
+	1	 0x4103860	module__	0	0	57
+	2	 0x4100144	namespc_	0	57	97
+	3	 0x4103880	procdefn	0	97	142
+	4	 0x4103914	pintcoll	0	142	179
+	5	 0x4103960	pintinst	0	179	195
+	6	 0x3466018	cnstpi__	0	195	207
+	7	 0x4103974	pintcoll	0	207	244
+	8	 0x41039c0	pintinst	0	244	260
+	9	 0x3466028	cnstpi__	0	260	272
+	10	 0x41039d4	proccoll	2	272	482
+	11	 0x4103a20	procinst	0	482	502
+	12	 0x4103a40	proctprf	0	502	518
+	13	 0x4103a50	crnglst_	0	518	546
+	14	 0x4103a60	proctprf	0	546	562
+	15	 0x4103a74	proccoll	2	562	772
+	16	 0x4103ac0	procinst	0	772	792
+	17	 0x4103ae0	proctprf	0	792	808
+	18	 0x4103af0	crnglst_	0	808	836
+	19	 0x4103b00	proctprf	0	836	852
+	20	 0x4800c00	piassign	0	852	872
+	21	 0x4103b10	spimref_	0	872	892
+	22	 0x4800c10	piassign	0	892	912
+	23	 0x4103b40	spimref_	0	912	932
+	24	 0x4103b70	prcalias	0	932	952
+	25	 0x4103b80	sprcmref	0	952	972
+	26	 0x4103bb0	sprcmref	0	972	992
 
-In module created from: -stdin- (unrolled)
+In module created from: ./019.in (unrolled)
 In namespace "", we have: {
   2 parameter-collections
   2 instantiation-collections

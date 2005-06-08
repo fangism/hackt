@@ -2,30 +2,30 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3302704	module__	0	0	60
-	2	 0x3300170	namespc_	0	60	96
-	3	 0x3806450	pintcoll	0	96	133
-	4	 0x3803004	pintinst	0	133	149
-	5	 0x2672024	cnstpi__	0	149	161
-	6	 0x380649c	pintcoll	0	161	198
-	7	 0x3803018	pintinst	0	198	214
-	8	 0x2672038	cnstpi__	0	214	226
-	9	 0x3302724	pboolcol	0	226	256
-	10	 0x3802404	pboolins	0	256	272
-	11	 0x267700c	cnstpb__	0	272	281
-	12	 0x3302774	pboolcol	0	281	311
-	13	 0x3802418	pboolins	0	311	327
-	14	 0x267701c	cnstpb__	0	327	336
-	15	 0x3805600	piassign	0	336	356
-	16	 0x33027e0	spiref__	0	356	376
-	17	 0x3805614	piassign	0	376	396
-	18	 0x3302810	spiref__	0	396	416
-	19	 0x3805000	pbassign	0	416	436
-	20	 0x3302840	spbref__	0	436	456
-	21	 0x3805014	pbassign	0	456	476
-	22	 0x3302870	spbref__	0	476	496
+	1	 0x4103130	module__	0	0	61
+	2	 0x4100144	namespc_	0	61	97
+	3	 0x4103154	pintcoll	0	97	134
+	4	 0x41031a0	pintinst	0	134	150
+	5	 0x3466018	cnstpi__	0	150	162
+	6	 0x41031b4	pintcoll	0	162	199
+	7	 0x4103200	pintinst	0	199	215
+	8	 0x3466028	cnstpi__	0	215	227
+	9	 0x4103214	pboolcol	0	227	257
+	10	 0x4103260	pboolins	0	257	273
+	11	 0x4801e04	cnstpb__	0	273	282
+	12	 0x4103274	pboolcol	0	282	312
+	13	 0x41032c0	pboolins	0	312	328
+	14	 0x4801e10	cnstpb__	0	328	337
+	15	 0x4800c00	piassign	0	337	357
+	16	 0x41032d0	spimref_	0	357	377
+	17	 0x4800c10	piassign	0	377	397
+	18	 0x4103300	spimref_	0	397	417
+	19	 0x4808200	pbassign	0	417	437
+	20	 0x4103330	spbmref_	0	437	457
+	21	 0x4808210	pbassign	0	457	477
+	22	 0x4103360	spbmref_	0	477	497
 
-In module created from: -stdin- (unrolled)
+In module created from: ./002.in (unrolled)
 In namespace "", we have: {
   4 parameter-collections
   0 instantiation-collections

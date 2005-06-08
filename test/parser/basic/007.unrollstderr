@@ -2,27 +2,27 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102450	module__	0	0	28
-	2	 0x3100144	namespc_	0	28	52
-	3	 0x3102470	procdefn	0	52	135
-	4	 0x31023f4	dboolcol	0	135	169
-	5	 0x31024f0	datainst	0	169	189
-	6	 0x3102510	datatprf	0	189	205
-	7	 0x3102520	datadefn	0	205	242
-	8	 0x3102584	dboolcol	0	242	276
-	9	 0x31025e0	datainst	0	276	296
-	10	 0x3102600	datatprf	0	296	312
-	11	 0x3102610	PRSpuldn	0	312	329
-	12	 0x3102630	PRSlitrl	0	329	341
-	13	 0x310265c	sdbref__	0	341	361
-	14	 0x310267c	sdbref__	0	361	381
-	15	 0x3102680	PRSpulup	0	381	398
-	16	 0x31026a0	PRSnot__	0	398	410
-	17	 0x31026b0	PRSlitrl	0	410	422
-	18	 0x31026dc	sdbref__	0	422	442
-	19	 0x31026fc	sdbref__	0	442	462
+	1	 0x4102d40	module__	0	0	29
+	2	 0x4100144	namespc_	0	29	53
+	3	 0x4102d60	procdefn	0	53	136
+	4	 0x4102ce4	dboolcol	0	136	170
+	5	 0x4102df0	datainst	0	170	190
+	6	 0x4102e10	datatprf	0	190	206
+	7	 0x4102e20	datadefn	0	206	243
+	8	 0x4102e84	dboolcol	0	243	277
+	9	 0x4102ee0	datainst	0	277	297
+	10	 0x4102f00	datatprf	0	297	313
+	11	 0x4816208	PRSpuldn	0	313	330
+	12	 0x4102f18	PRSlitrl	0	330	342
+	13	 0x41030a0	sdbmref_	0	342	362
+	14	 0x41030d0	sdbmref_	0	362	382
+	15	 0x4816608	PRSpulup	0	382	399
+	16	 0x4103108	PRSnot__	0	399	411
+	17	 0x4102f24	PRSlitrl	0	411	423
+	18	 0x4103290	sdbmref_	0	423	443
+	19	 0x41032c0	sdbmref_	0	443	463
 
-In module created from: -stdin- (unrolled)
+In module created from: ./007.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

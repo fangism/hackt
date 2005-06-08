@@ -1,4 +1,4 @@
-// "011.in" should pass, valid (but weird) template type
+// "012.in" should pass, valid (but weird) template type
 
 template <pint K, J[K]>
 defchan mychan <: chan(int<J[0]>) (int<J[1]> i);

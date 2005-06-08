@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.33.2.4 2005/05/29 02:08:27 fang Exp $
+ 	$Id: art_context.cc,v 1.33.2.5 2005/06/08 19:13:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -539,7 +539,7 @@ context::alias_definition(const never_ptr<const definition_base> d,
 	\param c the new connection or assignment list.
  */
 void
-context::add_connection(excl_ptr<const instance_reference_connection>& c) {
+context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
 
 	STACKTRACE("context::add_connection()");

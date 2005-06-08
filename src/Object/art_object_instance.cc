@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.43 2005/05/23 01:02:35 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.43.2.1 2005/06/08 19:13:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -418,7 +418,7 @@ instance_collection_base::formal_size_equivalent(
 		// For template, need notion of positional parameter 
 		// equivalence -- expressions referring to earlier
 		// formal parameters.  
-		// is count_ptr<range_expr_list>
+		// is count_ptr<meta_range_list>
 		const index_collection_item_ptr_type ii = (*i)->get_indices();
 		const index_collection_item_ptr_type ji = (*j)->get_indices();
 		if (ii && ji) {

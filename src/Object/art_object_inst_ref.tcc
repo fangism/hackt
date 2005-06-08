@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
-	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.7 2005/05/23 01:02:34 fang Exp $
+	Method definitions for the meta_instance_reference family of objects.
+ 	$Id: art_object_inst_ref.tcc,v 1.7.2.1 2005/06/08 19:13:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -14,7 +14,7 @@
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 #include "util/persistent_object_manager.tcc"
-#include "util/memory/count_ptr.tcc"
+#include "Object/art_object_inst_ref_subtypes.h"
 
 //=============================================================================
 namespace ART {
@@ -28,37 +28,39 @@ using util::persistent_traits;
 /**
 	Private empty constructor.  
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-INSTANCE_REFERENCE_CLASS::instance_reference() :
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference() :
+		common_base_type(), 
 		parent_type(), inst_collection_ref() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-INSTANCE_REFERENCE_CLASS::instance_reference(
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
 		const instance_collection_ptr_type pi) :
-		parent_type(pi->current_collection_state()),
+		common_base_type(pi->current_collection_state()), 
+		parent_type(), 
 		inst_collection_ref(pi) {
 	NEVER_NULL(inst_collection_ref);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-INSTANCE_REFERENCE_CLASS::~instance_reference() {
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::~simple_meta_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<const instance_collection_base>
-INSTANCE_REFERENCE_CLASS::get_inst_base(void) const {
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_inst_base(void) const {
 	return inst_collection_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
 }
 
@@ -70,11 +72,11 @@ INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 		resolved instance aliases.  
 	\return true on error, else false.
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
 		alias_collection_type& a) const {
-	// possibly factor this part out into simple_instance_reference?
+	// possibly factor this part out into simple_meta_instance_reference_base?
 if (this->inst_collection_ref->get_dimensions()) {
 	const_index_list cil;
 	if (this->array_indices) {
@@ -129,18 +131,18 @@ if (this->inst_collection_ref->get_dimensions()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 excl_ptr<aliases_connection_base>
-INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
 	return excl_ptr<aliases_connection_base>(new alias_connection_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-INSTANCE_REFERENCE_CLASS::collect_transient_info_base(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	parent_type::collect_transient_info_base(m);
+	common_base_type::collect_transient_info_base(m);
 	inst_collection_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -151,9 +153,9 @@ INSTANCE_REFERENCE_CLASS::collect_transient_info_base(
 	for serialization.  
 	\param m the persistent object manager.
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-INSTANCE_REFERENCE_CLASS::collect_transient_info(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -165,14 +167,14 @@ if (!m.register_transient_object(this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Common functionality for this->write_object and 
-	member_INSTANCE_REFERENCE_CLASS::write_object.
+	member_SIMPLE_META_INSTANCE_REFERENCE_CLASS::write_object.
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-INSTANCE_REFERENCE_CLASS::write_object_base(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, inst_collection_ref);
-	parent_type::write_object_base(m, o);
+	common_base_type::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,9 +185,9 @@ INSTANCE_REFERENCE_CLASS::write_object_base(
 		state information, for reconstruction purposes.  
 	\param m the persistent object manager.  
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-INSTANCE_REFERENCE_CLASS::write_object(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	this->write_object_base(m, f);
 }
@@ -193,17 +195,20 @@ INSTANCE_REFERENCE_CLASS::write_object(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Common functionality for this->load_object and
-	member_INSTANCE_REFERENCE_CLASS::load_object.
+	member_SIMPLE_META_INSTANCE_REFERENCE_CLASS::load_object.
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-INSTANCE_REFERENCE_CLASS::load_object_base(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, inst_collection_ref);
 	NEVER_NULL(inst_collection_ref);
+#if 0
+	// necessary? nope, just let the object_manager do it
 	m.load_object_once(const_cast<instance_collection_generic_type*>(
 		&*inst_collection_ref));
-	parent_type::load_object_base(m, i);
+#endif
+	common_base_type::load_object_base(m, i);
 }
 // else already visited
 
@@ -216,10 +221,10 @@ INSTANCE_REFERENCE_CLASS::load_object_base(
 		depends on the instantiation base being complete.  
 	\param m the persistent object manager.  
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-INSTANCE_REFERENCE_CLASS::load_object(const persistent_object_manager& m, 
-		istream& f) {
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::load_object(
+		const persistent_object_manager& m, istream& f) {
 	this->load_object_base(m, f);
 }
 

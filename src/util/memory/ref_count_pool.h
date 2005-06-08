@@ -1,19 +1,23 @@
 /**
 	\file "util/memory/ref_count_pool.h"
 	Interface to reference-count pool allocator.
-	$Id: ref_count_pool.h,v 1.2 2005/05/19 18:43:38 fang Exp $
+	$Id: ref_count_pool.h,v 1.2.2.1 2005/06/08 19:13:35 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_REF_COUNT_POOL_H__
 #define	__UTIL_MEMORY_REF_COUNT_POOL_H__
 
 // mutually dependent
-#include "util/memory/count_ptr.h"
+// #include "util/memory/count_ptr.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace util {
 namespace memory {
 //=============================================================================
+template <class>
+class count_ptr;
+template <class>
+class raw_count_ptr;
 
 typedef	chunk_map_pool<size_t, 32>		ref_count_pool_type;
 typedef	count_ptr<ref_count_pool_type>		ref_count_pool_ptr_type;

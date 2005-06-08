@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.6 2005/05/22 06:24:18 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.6.2.1 2005/06/08 19:13:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
@@ -22,23 +22,23 @@ using util::memory::never_ptr;
 template <class Tag>
 
 #define	MEMBER_INSTANCE_REFERENCE_CLASS					\
-member_instance_reference<Tag>
+member_meta_instance_reference<Tag>
 
 /**
-	Re-usable type-specific member_instance_reference class template.  
+	Re-usable type-specific member_meta_instance_reference class template.  
 	This class is final, nothing else derives from it, 
 	no need for virtual functions.  
-	\param InstRef must be a type derived from simple_instance_reference.
+	\param InstRef must be a type derived from simple_meta_instance_reference_base.
 	Consider moving this class definition to "art_object_inst_ref.h"?
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class member_instance_reference :
-	public class_traits<Tag>::instance_reference_type {
+class member_meta_instance_reference :
+	public class_traits<Tag>::simple_meta_instance_reference_type {
 private:
 	typedef	MEMBER_INSTANCE_REFERENCE_CLASS		this_type;
 public:
 	/// the underlying type of the member instance referenced
-	typedef	typename class_traits<Tag>::instance_reference_type
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
 							parent_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 						instance_collection_generic_type;
@@ -47,7 +47,7 @@ public:
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
 	/// the containing type, whose member is referenced
-	typedef	instance_reference_base			base_inst_type;
+	typedef	meta_instance_reference_base			base_inst_type;
 	// should be kept consistent with
 	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
@@ -59,12 +59,12 @@ protected:
 	 */
 	const base_inst_ptr_type			base_inst_ref;
 private:
-	member_instance_reference();
+	member_meta_instance_reference();
 public:
-	member_instance_reference(const base_inst_ptr_type& b, 
+	member_meta_instance_reference(const base_inst_ptr_type& b, 
 		const instance_collection_ptr_type m);
 
-	~member_instance_reference();
+	~member_meta_instance_reference();
 
 	ostream&
 	what(ostream&) const;
@@ -80,7 +80,7 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	// final, non-virtual
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class member_instance_reference
+};	// end class member_meta_instance_reference
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.2 2005/05/29 02:08:28 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.3 2005/06/08 19:13:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -63,7 +63,7 @@ struct class_traits {
 		arrays and a scalar instance.  
 		This tag is only applicable to physical instance types.  
 	 */
-	typedef	void				instance_collection_generic_type;
+	typedef	void			instance_collection_generic_type;
 	/**
 		The parent type of instance_collection_generic_type.
 	 */
@@ -80,15 +80,17 @@ struct class_traits {
 		Before unrolling, this is the simple kind of 
 		reference object that will be unrolled into
 		(possibly) a collection of instance_aliases.  
+		NOTE: this should be a simple_meta_instance_reference.
+		(The 'simple' qualifier is implied.)
 	 */
-	typedef	void				instance_reference_type;
-	typedef	void				instance_reference_parent_type;
+	typedef	void			simple_meta_instance_reference_type;
+	typedef	void			simple_meta_instance_reference_parent_type;
 
 	/**
 		This sub-type is for member references that also
 		resolve to the same kind of instance aliases.  
 	 */
-	typedef	void				member_instance_reference_type;
+	typedef	void		member_simple_meta_instance_reference_type;
 
 	/**
 		Instantiation statement type.
@@ -97,7 +99,7 @@ struct class_traits {
 	/**
 		Instantiation statement parent type.
 	 */
-	typedef	void				instantiation_statement_parent_type;
+	typedef	void			instantiation_statement_parent_type;
 
 	/**
 		This is the type of aggregate object that contains
@@ -121,7 +123,7 @@ struct class_traits {
 		This may be an empty class, which opens opportunities
 		for the Empty Base Class Optimization (EBCO).  
 	 */
-	typedef	void				instance_collection_parameter_type;
+	typedef	void			instance_collection_parameter_type;
 
 	/**
 		The type reference class used to distinguish types
@@ -172,7 +174,12 @@ struct class_traits<datatype_tag> {
 					instantiation_statement_parent_type;
 	typedef	data_instantiation_statement
 					instantiation_statement_type;
-	typedef	datatype_instance_collection	instance_collection_generic_type;
+	typedef	datatype_instance_collection
+					instance_collection_generic_type;
+	typedef	datatype_instance_reference_base
+					nonmeta_instance_reference_base_type;
+	typedef	datatype_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -204,9 +211,24 @@ struct class_traits<int_tag> {
 
 	// later add instantiation_statement support...
 
-	typedef	int_instance_reference		instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
-	typedef	int_member_instance_reference	member_instance_reference_type;
+	/**
+		Unit of state storage for integer data.
+		TODO: int is only temporary, this will have to become	
+		multiprecision to support arbitrary length, 
+		like mpz from GMP.  
+	 */
+	typedef	int				data_value_type;
+	typedef	int_expr			data_expr_base_type;
+	typedef	simple_int_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	int_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	int_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+	typedef	int_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+	typedef	int_member_meta_instance_reference
+					member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	int_alias_connection		alias_connection_type;
@@ -239,10 +261,21 @@ struct class_traits<bool_tag> {
 	};
 
 	// later add instantiation_statement support...
-
-	typedef	bool_instance_reference		instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
-	typedef	bool_member_instance_reference	member_instance_reference_type;
+	/**
+		Unit of state storage for boolean data.
+	 */
+	typedef	bool				data_value_type;
+	typedef	bool_expr			data_expr_base_type;
+	typedef	simple_bool_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	bool_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	bool_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+	typedef	bool_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+	typedef	bool_member_meta_instance_reference
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	bool_alias_connection		alias_connection_type;
@@ -278,9 +311,16 @@ struct class_traits<enum_tag> {
 
 	// later add instantiation_statement support...
 
-	typedef	enum_instance_reference		instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
-	typedef	enum_member_instance_reference	member_instance_reference_type;
+	typedef	simple_enum_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	enum_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	enum_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+	typedef	enum_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+	typedef	enum_member_meta_instance_reference
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
@@ -317,10 +357,16 @@ struct class_traits<datastruct_tag> {
 
 	// later add instantiation_statement support...
 
-	typedef	datastruct_instance_reference	instance_reference_type;
-	typedef	datatype_instance_reference	instance_reference_parent_type;
-	typedef	datastruct_member_instance_reference
-						member_instance_reference_type;
+	typedef	simple_datastruct_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	struct_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	struct_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+	typedef	struct_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+	typedef	datastruct_member_meta_instance_reference
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	datastruct_alias_connection	alias_connection_type;
@@ -362,10 +408,16 @@ struct class_traits<process_tag> {
 	// define this elsewhere, in "art_object_inst_stmt_proc.h"
 	class instantiation_statement_type_ref_base;
 
-	typedef	process_instance_reference	instance_reference_type;
-	typedef	simple_instance_reference	instance_reference_parent_type;
-	typedef	process_member_instance_reference
-						member_instance_reference_type;
+	typedef	simple_process_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	process_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	process_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+	typedef	process_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+	typedef	process_member_meta_instance_reference
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	process_alias_connection	alias_connection_type;
@@ -413,10 +465,16 @@ struct class_traits<channel_tag> {
 	// define this elsewhere, in "art_object_inst_stmt_chan.h"
 	class instantiation_statement_type_ref_base;
 
-	typedef	channel_instance_reference	instance_reference_type;
-	typedef	simple_instance_reference	instance_reference_parent_type;
-	typedef	channel_member_instance_reference
-						member_instance_reference_type;
+	typedef	simple_channel_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	channel_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	channel_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+	typedef	channel_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+	typedef	channel_member_meta_instance_reference
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	channel_alias_connection	alias_connection_type;
@@ -431,6 +489,8 @@ struct class_traits<channel_tag> {
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<parameter_value_tag> {
+	typedef	param_instance_reference_base	
+					nonmeta_instance_reference_base_type;
 };	// end struct class_traits<parameter_value_tag>
 
 //-----------------------------------------------------------------------------
@@ -462,8 +522,16 @@ struct class_traits<pint_tag> {
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
-	typedef	pint_instance_reference		instance_reference_type;
-	typedef	param_instance_reference	instance_reference_parent_type;
+	typedef	simple_pint_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	pint_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	pint_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+#if 0
+	typedef	pint_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+#endif
 	typedef	pint_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 
@@ -518,8 +586,16 @@ struct class_traits<pbool_tag> {
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
-	typedef	pbool_instance_reference	instance_reference_type;
-	typedef	param_instance_reference	instance_reference_parent_type;
+	typedef	simple_pbool_meta_instance_reference
+					simple_meta_instance_reference_type;
+	typedef	pbool_instance_reference_base	
+					nonmeta_instance_reference_base_type;
+	typedef	pbool_meta_instance_reference_base
+				simple_meta_instance_reference_parent_type;
+#if 0
+	typedef	pbool_instance_reference_base
+				simple_nonmeta_instance_reference_parent_type;
+#endif
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 

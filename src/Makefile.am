@@ -1,8 +1,9 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.4 2005/05/27 21:04:04 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.5 2005/06/08 19:13:14 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
+# for recursive make only
 SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -145,6 +146,7 @@ OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
 	Object/art_object_classification_details.cc \
+	Object/art_object_data_expr.cc \
 	Object/art_object_expr.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
@@ -159,6 +161,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
 	Object/art_object_inst_ref_data.cc \
+	Object/art_object_nonmeta_inst_ref.cc \
 	Object/art_object_inst_stmt.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
@@ -188,6 +191,8 @@ OBJECT_TCC_FILES = \
 	Object/art_object_instance_collection.tcc \
 	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_ref.tcc \
+	Object/art_object_inst_ref_data.tcc \
+	Object/art_object_nonmeta_inst_ref.tcc \
 	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
@@ -203,6 +208,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_definition_base.h \
 	Object/art_object_definition_chan.h \
 	Object/art_object_definition_proc.h \
+	Object/art_object_data_expr_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
@@ -218,6 +224,9 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_inst_stmt_chan.h \
 	Object/art_object_inst_stmt_proc.h \
 	Object/art_object_inst_ref_base.h \
+	Object/art_object_inst_ref_subtypes.h \
+	Object/art_object_nonmeta_inst_ref_base.h \
+	Object/art_object_nonmeta_inst_ref_subtypes.h \
 	Object/art_object_member_inst_ref.h \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h \
@@ -356,6 +365,8 @@ PARSER_H_FILES = \
 	parser/art++-parse-prefix.h \
 	parser/art++-union.h \
 	parser/art++-parse.output.h \
+	parser/art++-parse-options.h \
+	lexer/art++-lex-options.h \
 	lexer/art_lex.h
 
 PARSER_CC_FILES = \
@@ -385,6 +396,7 @@ ALL_HEADER_FILES = \
 	$(PARSER_H_FILES) \
 	config.h \
 	main/main_funcs.h
+# don't bother checking:
 
 ALL_TCC_FILES = \
 	$(UTIL_TCC_FILES) \
@@ -478,7 +490,7 @@ AM_CPPFLAGS = -I$(srcdir)
 
 # extremely anal-retentive
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
 WARN_CXXFLAGS = 
 # -Woverloaded-virtual	# kills much of AST/ code, fix later...
@@ -509,15 +521,50 @@ libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
+# no need for -MT (already correct target)
+# no need for -MP for phony targets, awk-script already does it, 
+#	but redundant phony targets are ignored by it anyhow.
+# expects name of temporary file after -MF
+FAST_MAKEDEP_FLAGS = -MMD -MF
+PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk
+FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g'
+# some exceptions to checking
+
+# cray-zee anal-retentive header checking with depdendence-tracking
 .h.hchk:
 	@$(ECHO) "Validating $< ... "
+if am__fastdepCXX
+	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
+	if $(CXXCOMPILE) -I$(srcdir) -include $< \
+		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
+		$(EMPTY_SOURCE) -o $@; \
+	then $(CAT) "$$depbase.Thd" | $(FILTER_HEADER_DEPS) | \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.hchkd"; \
+		$(RM) "$$depbase.Thd" ; \
+	else $(RM) "$$depbase.Thd"; exit 1; fi
+else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+endif
 
 .tcc.tccchk:
 	@$(ECHO) "Validating $< ... "
+if am__fastdepCXX
+	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
+	if $(CXXCOMPILE) -I$(srcdir) -include $< \
+		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
+		$(EMPTY_SOURCE) -o $@; \
+	then $(CAT) "$$depbase.Ttccd" | $(FILTER_HEADER_DEPS) | \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.tccchkd"; \
+		$(RM) "$$depbase.Ttccd" ; \
+	else $(RM) "$$depbase.Ttccd"; exit 1; fi
+else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+endif
 
 # there are a few headers we want exempt from stand-alone testing
+# what about their dependencies?  
+# automake produces empty placeholders (never updated) for them initially, 
+# so make will not die.
 Object/art_object_extern_templates.hchk:
 	@$(TOUCH) $@
 
@@ -525,6 +572,9 @@ util/using_istream.hchk:
 	@$(TOUCH) $@
 
 util/using_ostream.hchk:
+	@$(TOUCH) $@
+
+../config.hchk:
 	@$(TOUCH) $@
 
 EXTRA_DIST = \
@@ -544,6 +594,9 @@ EXTRA_DIST = \
 	util/TODO \
 	util/STL/README \
 	util/obsolete/README \
+	scripts/filter_namespaces.sed \
+	scripts/automake_include.awk \
+	scripts/promote_header_deps.awk \
 	ChangeLog \
 	NOTES \
 	wc-l
@@ -555,10 +608,23 @@ EXTRA_DIST = \
 # Really, they should just be able to link to "test/header_test.cc"
 # Make links in BUILT_SOURCES.  
 HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
+HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
 
 TESTS = art_persistent_table
 
 check-headers: $(HEADER_TCC_TESTS)
+
+headers_deps.make: Makefile.am
+	@$(ECHO) Regenerating $@ ...
+	@$(ECHO) "# $@ -- generated by rule in Makefile.am" > $@
+	@$(ECHO) "#	(This is not an automake feature, just a custom extension.)" >> $@
+	@$(ECHO) $(HEADER_TCC_DEPBASES) | \
+		$(AWK) -f $(srcdir)/scripts/automake_include.awk >> $@
+
+
+# inlined into Makefile.in by automake
+# really only needed for dynamic dependence-tracking
+include headers_deps.make
 
 all-local: check-headers
 
@@ -582,6 +648,9 @@ CLEANFILES =
 
 DISTCLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 
+CLEANSUBDIRS = lexer parser AST Object \
+	util util/numeric util/memory util/obsolete util/STL
+
 clean-parser:
 	-$(RM) $(CLEANPARSER)
 	-$(RM) parser/*.$(OBJEXT) parser/*.lo
@@ -593,6 +662,24 @@ clean-lexer:
 clean-header-tests:
 	-$(RM) $(HEADER_TCC_TESTS)
 
+# Incidentally, automake is smart enough to make initial dummy files
+# for dependencies that are automatically generated.
+# You never want to manually remove the .Po .Plo files
+# (now including .hchkd, .tccchkd) from the .deps directories.  
+# IF you do remove it, be sure to replace it with an empty placeholder
+# before re-running make.  
+
+# disabling this for now to prevent self-infliction of harm...
+# perhaps enable only if maintainer-mode is on...
+# this should call clean-header-tests to guarantee proper regeneration...
+#clean-header-deps:
+#	@$(ECHO) "WARNING: you'll have to make clean-header-tests to properly "\
+#		"regenerate the header-dependencies."
+#	@$(ECHO) "Removing .deps/*chkd in all sub-directories..."
+#	@for d in $(CLEANSUBDIRS); do \
+#		$(RM) $$d/$(DEPDIR)/*chkd ; \
+#	done
+
 clean-AST:
 	-$(RM) AST/*.$(OBJEXT)
 	-$(RM) AST/*.lo
@@ -600,8 +687,6 @@ clean-AST:
 clean-Object:
 	-$(RM) Object/*.$(OBJEXT)
 	-$(RM) Object/*.lo
-
-CLEANSUBDIRS = lexer parser AST Object util
 
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests

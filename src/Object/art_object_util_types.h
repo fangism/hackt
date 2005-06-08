@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.1.2.1 2005/05/25 22:35:43 fang Exp $
+	$Id: art_object_util_types.h,v 1.1.2.2 2005/06/08 19:13:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
@@ -12,6 +12,8 @@
 #include "util/STL/deque_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
+
+#include <deque>		// to complete type for deque
 
 namespace ART {
 namespace entity {
@@ -28,7 +30,7 @@ namespace entity {
 		Should be synchronized with
 		parser::expr_list::checked_refs_type.
 	 */
-	typedef DEFAULT_VECTOR(count_ptr<instance_reference_base>)
+	typedef DEFAULT_VECTOR(count_ptr<meta_instance_reference_base>)
 						checked_refs_type;
 
 
@@ -37,7 +39,7 @@ namespace entity {
 		to accommodate loop and conditional scopes?
 	 */
 	// try to convert this to excl_ptr or sticky_ptr...
-	typedef count_ptr<const range_expr_list>
+	typedef count_ptr<const meta_range_list>
 			index_collection_item_ptr_type;
 
 	/**
@@ -51,6 +53,15 @@ namespace entity {
 	 */
 	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
 			index_collection_type;
+
+	/**
+		The state of an instance collection, kept track by each
+		instance reference.
+		Since the iterators are list-like, they remain valid
+		after sequence manipulation operations (like insert, erase).
+	 */
+	typedef index_collection_type::const_iterator
+			instantiation_state;
 
 }	// end namespace entity
 }	// end namespace ART

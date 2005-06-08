@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.19.2.3 2005/05/29 02:08:27 fang Exp $
+	$Id: art_context.h,v 1.19.2.4 2005/06/08 19:13:17 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -43,7 +43,7 @@ using entity::fundamental_type_reference;
 using entity::sequential_scope;
 using entity::instance_collection_base;
 using entity::instance_management_base;
-using entity::instance_reference_connection;
+using entity::meta_instance_reference_connection;
 using entity::param_expr;
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
@@ -266,7 +266,7 @@ public:
 		const token_identifier& id);
 
 	void
-	add_connection(excl_ptr<const instance_reference_connection>& c);
+	add_connection(excl_ptr<const meta_instance_reference_connection>& c);
 
 	void
 	add_assignment(excl_ptr<const param_expression_assignment>& a);

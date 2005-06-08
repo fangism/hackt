@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.1 2005/05/29 02:08:29 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.2 2005/06/08 19:13:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -24,10 +24,11 @@ namespace entity {
 	class name_space;
 	class built_in_datatype_def;
 	class fundamental_type_reference;
-	class simple_instance_reference;
+	class simple_meta_instance_reference_base;
+	class simple_nonmeta_instance_reference_base;
 	class instance_collection_base;
 	class physical_instance_collection;
-	class instance_reference_base;
+	class meta_instance_reference_base;
 	class definition_base;
 	class user_def_chan;
 	class user_def_type;
@@ -39,13 +40,75 @@ namespace entity {
 	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
-	class datatype_instance_reference;
+	class simple_datatype_meta_instance_reference_base;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
 	class built_in_param_def;
 	class built_in_channel_def;
 	class typedef_base;
+
+	// from "Object/art_object_nonmeta_inst_ref.h"
+	// note there are generic (non-meta) abstract base classes from which
+	// the meta-versions are derived.
+	class nonmeta_instance_reference_base;
+	class channel_instance_reference_base;
+	class process_instance_reference_base;
+	class datatype_instance_reference_base;
+	class param_instance_reference_base;
+	class int_instance_reference_base;
+	class bool_instance_reference_base;
+	class enum_instance_reference_base;
+	class struct_instance_reference_base;
+	class pint_instance_reference_base;
+	class pbool_instance_reference_base;
+
+	template <class>
+	class meta_instance_reference;
+
+	typedef	meta_instance_reference<channel_tag>
+		channel_meta_instance_reference_base;
+	typedef	meta_instance_reference<process_tag>
+		process_meta_instance_reference_base;
+	typedef	meta_instance_reference<int_tag>
+		int_meta_instance_reference_base;
+	typedef	meta_instance_reference<bool_tag>
+		bool_meta_instance_reference_base;
+	typedef	meta_instance_reference<enum_tag>
+		enum_meta_instance_reference_base;
+	typedef	meta_instance_reference<datastruct_tag>
+		struct_meta_instance_reference_base;
+	// base classes for meta_value_references
+	typedef	meta_instance_reference<pbool_tag>
+		pbool_meta_instance_reference_base;
+	typedef	meta_instance_reference<int_tag>
+		pint_meta_instance_reference_base;
+
+	template <class>
+	class simple_meta_instance_reference;
+	template <class>
+	class simple_nonmeta_instance_reference;
+
+	typedef	simple_nonmeta_instance_reference<channel_tag>
+	simple_channel_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<process_tag>
+	simple_process_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<int_tag>
+	simple_int_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<bool_tag>
+	simple_bool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<enum_tag>
+	simple_enum_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<datastruct_tag>
+	simple_datastruct_nonmeta_instance_reference;
+#if 1
+	typedef	simple_nonmeta_instance_reference<datatype_tag>
+	simple_datatype_nonmeta_instance_reference;
+#endif
+	typedef	simple_nonmeta_instance_reference<pbool_tag>
+	simple_pbool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<pint_tag>
+	simple_pint_nonmeta_instance_reference;
 
 	template <class>
 	class instance_collection;
@@ -69,37 +132,34 @@ namespace entity {
 	typedef	instance_collection<process_tag>
 		process_instance_collection;
 
-	template <class>
-	class instance_reference;
-
-	typedef	instance_reference<channel_tag>
-		channel_instance_reference;
-	typedef	instance_reference<process_tag>
-		process_instance_reference;
-	typedef	instance_reference<bool_tag>
-		bool_instance_reference;
-	typedef	instance_reference<int_tag>
-		int_instance_reference;
-	typedef	instance_reference<enum_tag>
-		enum_instance_reference;
-	typedef	instance_reference<datastruct_tag>
-		datastruct_instance_reference;
+	typedef	simple_meta_instance_reference<channel_tag>
+		simple_channel_meta_instance_reference;
+	typedef	simple_meta_instance_reference<process_tag>
+		simple_process_meta_instance_reference;
+	typedef	simple_meta_instance_reference<bool_tag>
+		simple_bool_meta_instance_reference;
+	typedef	simple_meta_instance_reference<int_tag>
+		simple_int_meta_instance_reference;
+	typedef	simple_meta_instance_reference<enum_tag>
+		simple_enum_meta_instance_reference;
+	typedef	simple_meta_instance_reference<datastruct_tag>
+		simple_datastruct_meta_instance_reference;
 
 	template <class>
-	class member_instance_reference;
+	class member_meta_instance_reference;
 
-	typedef	member_instance_reference<process_tag>
-		process_member_instance_reference;
-	typedef	member_instance_reference<channel_tag>
-		channel_member_instance_reference;
-	typedef	member_instance_reference<bool_tag>
-		bool_member_instance_reference;
-	typedef	member_instance_reference<int_tag>
-		int_member_instance_reference;
-	typedef	member_instance_reference<enum_tag>
-		enum_member_instance_reference;
-	typedef	member_instance_reference<datastruct_tag>
-		datastruct_member_instance_reference;
+	typedef	member_meta_instance_reference<process_tag>
+		process_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<channel_tag>
+		channel_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<bool_tag>
+		bool_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<int_tag>
+		int_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<enum_tag>
+		enum_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<datastruct_tag>
+		datastruct_member_meta_instance_reference;
 
 	class param_type_reference;
 	class pbool_type_reference;
@@ -135,7 +195,7 @@ namespace entity {
 		pint_expression_assignment;
 
 	// defined in "art_object_connect.h"
-	class instance_reference_connection;
+	class meta_instance_reference_connection;
 	class port_connection;
 	class aliases_connection_base;
 	class data_alias_connection_base;
@@ -170,20 +230,31 @@ namespace entity {
 		process_instantiation_statement;
 
 // expressions and family
-	class param_instance_reference;
+	class simple_param_meta_value_reference;
 	template <class>
-	class value_reference;
-	typedef	value_reference<pint_tag>
-		pint_instance_reference;
-	typedef	value_reference<pbool_tag>
-		pbool_instance_reference;
+	class simple_meta_value_reference;
+	typedef	simple_meta_value_reference<pint_tag>
+		simple_pint_meta_instance_reference;
+	typedef	simple_meta_value_reference<pbool_tag>
+		simple_pbool_meta_instance_reference;
+
+	// from "Object/art_object_data_expr[_base].h"
+	class data_expr;
+	class bool_expr;
+	class int_expr;
+	class int_arith_expr;
+	class int_range_expr;
+	class nonmeta_index_expr_base;
+	class nonmeta_range_expr_base;
+	class nonmeta_index_list;
+	class nonmeta_range_list;
 
 	class param_expr;
 	class const_param;
 	class param_expr_list;
 	class const_param_expr_list;
 	class dynamic_param_expr_list;
-	class index_expr;               // BEWARE also in ART::parser!
+	class meta_index_expr;
 	class const_index;
 	class pbool_expr;
 	class pint_expr;
@@ -196,18 +267,18 @@ namespace entity {
 	class arith_expr;
 	class relational_expr;
 	class logical_expr;
-	class range_expr;
+	class meta_range_expr;
 	class pint_range;
 	class const_range;
-	class range_expr_list;
+	class meta_range_list;
 	class const_range_list;
-	class dynamic_range_list;
+	class dynamic_meta_range_list;
 //	class unconditional_range_list;
 //	class conditional_range_list;
 //	class loop_range_list;
-	class index_list;
+	class meta_index_list;
 	class const_index_list;
-	class dynamic_index_list;
+	class dynamic_meta_index_list;
 
 	template <class>
 	class const_collection;

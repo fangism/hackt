@@ -1,7 +1,8 @@
 /**
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.21 2005/05/22 06:23:56 fang Exp $
+	TODO: rename file to simple_meta_instance_reference
+	$Id: art_object_inst_ref.h,v 1.21.2.1 2005/06/08 19:13:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -22,31 +23,37 @@ using util::memory::never_ptr;
 using util::packed_array_generic;
 
 //=============================================================================
-#define	INSTANCE_REFERENCE_TEMPLATE_SIGNATURE				\
+#define	SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
 template <class Tag>
 
-#define	INSTANCE_REFERENCE_CLASS					\
-instance_reference<Tag>
+#define	SIMPLE_META_INSTANCE_REFERENCE_CLASS				\
+simple_meta_instance_reference<Tag>
 
 /**
 	Class template for physical instance references.
-	Needs to be virtual so that member_instance_reference may safely
+	Needs to be virtual so that member_meta_instance_reference may safely
 	derive from this class.  
 	\param Collection the instance collection type.
 	\param Parent the type from which this is derived, 
-		probably simple_instance_reference or descendant.  
+		probably simple_meta_instance_reference_base or descendant.  
+	TODO: this could be properly renamed simple_meta_instance_reference.
+	TODO: derive using multiple inheritance from now on:
+		always derive from simple_meta_instance_reference_base and the
+		type interface designated by class_traits.
  */
-INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class instance_reference :
-	public class_traits<Tag>::instance_reference_parent_type {
-	typedef	INSTANCE_REFERENCE_CLASS	this_type;
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+class simple_meta_instance_reference :
+	public simple_meta_instance_reference_base, 
+	public class_traits<Tag>::simple_meta_instance_reference_parent_type {
+	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	typedef	typename class_traits<Tag>::instance_reference_parent_type
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_parent_type
 						parent_type;
 public:
+	typedef	simple_meta_instance_reference_base	common_base_type;
 	/// the instance collection base type
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
-						instance_collection_generic_type;
+					instance_collection_generic_type;
 	/// the type of alias element contained by instance collections
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
@@ -62,12 +69,12 @@ public:
 private:
 	const instance_collection_ptr_type	inst_collection_ref;
 protected:
-	instance_reference();
+	simple_meta_instance_reference();
 public:
 	explicit
-	instance_reference(const instance_collection_ptr_type);
+	simple_meta_instance_reference(const instance_collection_ptr_type);
 
-virtual	~instance_reference();
+virtual	~simple_meta_instance_reference();
 
 	ostream&
 	what(ostream&) const;
@@ -77,7 +84,7 @@ virtual	~instance_reference();
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
-	// overridden by member_instance_reference
+	// overridden by member_meta_instance_reference
 virtual	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
 
@@ -99,50 +106,10 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 
-};	// end class instance_reference
+};	// end class meta_instance_reference
 
 //=============================================================================
-// consider relocating to "art_object_inst_ref_data.h"
-/**
-	A reference to a simple instance of datatype.  
-	Consider sub-typing into user-defined and built-in, 
-	making this an abstract base.
- */
-class datatype_instance_reference : public simple_instance_reference {
-private:
-	typedef	simple_instance_reference		parent_type;
-protected:
-//	excl_ptr<index_list>			array_indices;	// inherited
-
-protected:
-	datatype_instance_reference();
-
-	explicit
-	datatype_instance_reference(const instantiation_state& s);
-
-public:
-virtual	~datatype_instance_reference();
-
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-//	ostream& dump(ostream& o) const;
-
-virtual	never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-
-private:
-virtual	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const = 0;
-
-protected:
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-};	// end class datatype_instance_reference
-
-//=============================================================================
-// classes pint_instance_reference and pbool_instance_reference
+// classes pint_meta_instance_reference and pbool_meta_instance_reference
 //	are in "art_object_expr_param_ref.*"
 
 //=============================================================================

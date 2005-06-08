@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.7 2005/05/23 01:02:34 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.7.2.1 2005/06/08 19:13:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -20,7 +20,7 @@
 #include <algorithm>
 
 #include "Object/art_object_connect.h"
-// #include "Object/art_object_instance_alias.h"
+#include "Object/art_object_inst_ref_subtypes.h"
 
 #include "util/persistent_object_manager.h"
 #include "util/STL/list.h"
@@ -105,12 +105,12 @@ ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
  */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 void
-ALIAS_CONNECTION_CLASS::append_instance_reference(
+ALIAS_CONNECTION_CLASS::append_meta_instance_reference(
 		const generic_inst_ptr_type& i) {
 	NEVER_NULL(i);
 	// need dynamic cast
 	const inst_ref_ptr_type
-		irp(i.template is_a<const instance_reference_type>());
+		irp(i.template is_a<const simple_meta_instance_reference_type>());
 		// gcc-3.3 slightly crippled, needs template keyword :(
 	NEVER_NULL(irp);
 	inst_list.push_back(irp);
@@ -274,7 +274,7 @@ if (!m.register_transient_object(this,
 	for_each(inst_list.begin(), inst_list.end(),
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
-			&instance_reference_type::collect_transient_info), m),
+			&simple_meta_instance_reference_type::collect_transient_info), m),
 		dereference<inst_ref_ptr_type>()
 	)
 	);

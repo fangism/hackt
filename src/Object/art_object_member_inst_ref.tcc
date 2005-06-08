@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_member_inst_ref.tcc"
-	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.7 2005/05/23 01:02:35 fang Exp $
+	Method definitions for the meta_instance_reference family of objects.
+ 	$Id: art_object_member_inst_ref.tcc,v 1.7.2.1 2005/06/08 19:13:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -22,20 +22,20 @@ using util::read_value;
 using util::persistent_traits;
 
 //=============================================================================
-// class member_instance_reference method definitions
+// class member_meta_instance_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-MEMBER_INSTANCE_REFERENCE_CLASS::member_instance_reference() :
+MEMBER_INSTANCE_REFERENCE_CLASS::member_meta_instance_reference() :
 		parent_type(), base_inst_ref() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-MEMBER_INSTANCE_REFERENCE_CLASS::member_instance_reference(
+MEMBER_INSTANCE_REFERENCE_CLASS::member_meta_instance_reference(
 		const base_inst_ptr_type& b, 
 		const instance_collection_ptr_type m) :
 		parent_type(m), base_inst_ref(b) {
@@ -43,7 +43,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::member_instance_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-MEMBER_INSTANCE_REFERENCE_CLASS::~member_instance_reference() {
+MEMBER_INSTANCE_REFERENCE_CLASS::~member_meta_instance_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

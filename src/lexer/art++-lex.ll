@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.15 2005/05/19 18:43:35 fang Exp $
+ *	$Id: art++-lex.ll,v 1.15.2.1 2005/06/08 19:13:33 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -69,6 +69,7 @@ using namespace ART::parser;
 #endif
 
 #include "lexer/art_lex.h"
+#include "lexer/art++-lex-options.h"
 
 namespace ART {
 /**
@@ -329,6 +330,15 @@ EXPORT		"export"
 %s incomment
 %s instring
 %s inescape
+
+/*
+	Explicitly stating options to guarantee proper definition of 
+	macros in the generated source file, because I've turned on
+	-Wundef for all translation units.  
+ */
+%option never-interactive
+%option nomain
+%option nostack
 
 /****** rules ****************************************************************/
 %%

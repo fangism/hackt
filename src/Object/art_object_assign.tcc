@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.4.2.1 2005/05/26 21:31:21 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.4.2.2 2005/06/08 19:13:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
@@ -20,6 +20,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "Object/art_object_inst_ref_subtypes.h"
 
 #include "util/what.h"
 #include "util/binders.h"
@@ -162,7 +163,7 @@ EXPRESSION_ASSIGNMENT_CLASS::dumper::operator() (
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 bad_bool
-EXPRESSION_ASSIGNMENT_CLASS::append_param_instance_reference(
+EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 		const typename parent_type::dest_ptr_type& e) {
 	// cache the value of dimensions to avoid recomputation?
 	NEVER_NULL(e);

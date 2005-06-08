@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range_list.h,v 1.5 2005/05/13 21:24:28 fang Exp $
+	$Id: art_parser_range_list.h,v 1.5.4.1 2005/06/08 19:13:16 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_LIST_H__
@@ -14,8 +14,8 @@
 
 namespace ART {
 namespace entity {
-	class index_list;
-	class range_expr_list;
+	class meta_index_list;
+	class meta_range_list;
 }	// end namespace entity
 namespace parser {
 using util::good_bool;
@@ -28,13 +28,13 @@ typedef node_list<const range>		range_list_base;
 	All sparse range lists are C-style x[N][M], 
 	now limited to 4-dimensions.  
 	range_list currently has two uses:
-	1) index_expr: to index sub-slices of arrays
+	1) meta_index_expr: to index sub-slices of arrays
 	2) instance_array: to declare dense arrays
  */
 class range_list : public range_list_base {
 public:
 	typedef	range_list_return_type			checked_indices_type;
-	typedef	count_ptr<entity::range_expr_list>	checked_ranges_type;
+	typedef	count_ptr<entity::meta_range_list>	checked_ranges_type;
 protected:
 	typedef	range_list_base				parent_type;
 	// no additional members
@@ -71,7 +71,7 @@ typedef node_list<const expr>		dense_range_list_base;
  */
 class dense_range_list : public dense_range_list_base {
 public:
-	typedef	count_ptr<entity::range_expr_list>	return_type;
+	typedef	count_ptr<entity::meta_range_list>	return_type;
 protected:
 	typedef	dense_range_list_base			parent_type;
 	// no additional members
