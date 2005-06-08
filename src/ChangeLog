@@ -2,6 +2,14 @@
 
 2005-06-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-13:
+	  distcheck fix: being smarter about auto-generated
+		header-check dependencies -- basic script improvements
+		for distcheck robustness.  
+
+
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-12-merged-dataexpr-10:
 	  Child branch merge, details of this series below.  
 

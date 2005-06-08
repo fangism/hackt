@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.5 2005/06/08 19:13:14 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.6 2005/06/08 21:33:03 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -526,8 +526,9 @@ EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 #	but redundant phony targets are ignored by it anyhow.
 # expects name of temporary file after -MF
 FAST_MAKEDEP_FLAGS = -MMD -MF
-PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk
-FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g'
+PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
+	-v srcdir=$(srcdir)
+FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g' | $(SED) 's|[^ ]*\.cc||g'
 # some exceptions to checking
 
 # cray-zee anal-retentive header checking with depdendence-tracking
