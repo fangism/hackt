@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.1.4.2 2005/06/08 19:13:20 fang Exp $
+	$Id: art_object_data_expr.cc,v 1.1.4.3 2005/06/08 23:50:25 fang Exp $
  */
 
 #include <iostream>
@@ -12,11 +12,16 @@
 #include "util/what.h"
 
 namespace util {
-	using ART::entity::nonmeta_index_list;
+using ART::entity::nonmeta_index_list;
+using ART::entity::int_range_expr;
+
 	SPECIALIZE_UTIL_WHAT(nonmeta_index_list, "nonmeta-index-list")
+	SPECIALIZE_UTIL_WHAT(int_range_expr, "int-range-expr")
 
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		nonmeta_index_list, NONMETA_INDEX_LIST_TYPE_KEY, 0)
+	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+		int_range_expr, NONMETA_RANGE_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace ART {
@@ -24,6 +29,57 @@ namespace entity {
 using std::istream;
 using util::persistent_traits;
 //=============================================================================
+// class int_range_expr method definitions
+
+// empty constructor should really be private
+int_range_expr::int_range_expr() : parent_type(), lower(), upper() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_range_expr::int_range_expr(const bound_ptr_type& l, 
+		const bound_ptr_type& u) : 
+		parent_type(), lower(l), upper(u) {
+	NEVER_NULL(lower);
+	NEVER_NULL(upper);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_range_expr::~int_range_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_range_expr)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+int_range_expr::dump(ostream& o) const {
+	return upper->what(lower->what(o << '[') << "..") << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_range_expr::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	upper->collect_transient_info(m);
+	lower->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_range_expr::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, lower);
+	m.write_pointer(o, upper);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+int_range_expr::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, lower);
+	m.read_pointer(i, upper);
+	// don't bother loading here, let object manager do it
+}
 
 //=============================================================================
 // class nonmeta_index_list method definitions

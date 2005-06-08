@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.h"
 	Class definitions for data expressions.
-	$Id: art_object_data_expr.h,v 1.1.4.2 2005/06/08 19:13:20 fang Exp $
+	$Id: art_object_data_expr.h,v 1.1.4.3 2005/06/08 23:50:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_H__
@@ -84,6 +84,7 @@ public:
 	data index expressions?
  */
 class int_range_expr : public nonmeta_range_expr_base {
+	typedef	int_range_expr			this_type;
 	typedef	nonmeta_range_expr_base		parent_type;
 public:
 	typedef	count_ptr<const int_expr>	bound_ptr_type;

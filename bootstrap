@@ -3,6 +3,9 @@
 # run this after "make maintainer-clean" or "make distclean"
 # beware: this file is NOT included in the distribution!
 
+# May need this to break chicken-before-the-egg
+touch src/headers_deps.make
+
 aclocal -I config && \
 autoheader && \
 libtoolize -c && \

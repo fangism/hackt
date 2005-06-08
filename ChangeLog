@@ -2,6 +2,11 @@
 
 2005-06-08	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-14:
+	  Introducing 'bootstrap' 1.2!
+		added: touch src/headers_deps.make
+		to break the chicken-before-the-egg dependency problem.  
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-12-merged-dataexpr-10:
 	  Child branch merge.  Details in src/ChangeLog.  
 

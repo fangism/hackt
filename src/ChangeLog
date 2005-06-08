@@ -2,6 +2,14 @@
 
 2005-06-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-14:
+	  gcc4-isms: wants method and typeinfo definitions for unused
+		classes, probably being conservative.  
+		Now builds and runs smoothly (but largely) on OS X 10.4.  
+	  Updated parser/art++-parse-options.h to account for 
+		bison-2.0 differences from bison-1.875.  
+		Damn you, bison!
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-13:
 	  distcheck fix: being smarter about auto-generated
 		header-check dependencies -- basic script improvements

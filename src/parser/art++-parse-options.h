@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: art++-parse-options.h,v 1.1.4.2 2005/06/08 19:13:33 fang Exp $
+	$Id: art++-parse-options.h,v 1.1.4.3 2005/06/08 23:50:28 fang Exp $
  */
 
 #ifndef	__ARTXX_PARSE_OPTIONS_H__
@@ -18,8 +18,22 @@
 
 // some yacc/bison implementations will choose some reasonable
 // default value if you predefine to 0
+/***
+	NB: bison-1.875 default differs from bison-2.0.
+	With bison-1.875 if undefined macros were assumed to be 0, 
+		then the code geneated would set it so some default
+		if the value was 0.
+	With bison-2.0, it chooses a default value if macro is
+		*undefined*, not 0.
+	To make both work we choose a reasonable value ourselves.  
+***/
 #ifndef	YYMAXDEPTH
-#define	YYMAXDEPTH			0
+#define	YYMAXDEPTH			1024
+#endif
+
+// introduced and used by bison-2.0
+#ifndef	YYLTYPE_IS_TRIVIAL
+#define	YYLTYPE_IS_TRIVIAL		0
 #endif
 
 #endif	// __ARTXX_PARSE_OPTIONS_H__

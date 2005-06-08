@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7.2.3 2005/06/08 19:13:31 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7.2.4 2005/06/08 23:50:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -138,7 +138,9 @@
 #define	LOGICAL_EXPR_TYPE_KEY					"logicexp"
 
 // nonmeta expressions
-#define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlst"
+#define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlist"
+#define	NONMETA_RANGE_TYPE_KEY					"nmetarng"
+#define	NONMETA_RANGE_LIST_TYPE_KEY				"nrnglist"
 
 // Sequential and control statements: (loops and conditionals)
 // including sequential instantiations, assignments and connections:
