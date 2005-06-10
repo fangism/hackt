@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.16.2.1 2005/06/08 19:13:27 fang Exp $
+	$Id: art_object_instance_base.h,v 1.16.2.2 2005/06/10 04:16:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -206,12 +206,11 @@ protected:
 	check_expression_dimensions(const param_expr& pr) const;
 
 public:
-/**
-	always pushes onto context's object_stack, 
-	currently always returns NULL, useless
- */
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
+
+virtual	count_ptr<nonmeta_instance_reference_base>
+	make_nonmeta_instance_reference(void) const = 0;
 
 // return type may become generic...
 virtual	member_inst_ref_ptr_type

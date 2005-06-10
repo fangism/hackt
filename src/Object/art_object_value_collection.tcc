@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.4.2.2 2005/06/08 19:13:32 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.4.2.3 2005/06/10 04:16:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -26,6 +26,7 @@
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
 #include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/art_object_nonmeta_inst_ref.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -268,6 +269,20 @@ VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	// problem: needs to be modifiable for later initialization
 	return count_ptr<simple_param_meta_value_reference>(
 		new simple_meta_instance_reference_type(
+			never_ptr<this_type>(const_cast<this_type*>(this))));
+		// omitting index argument
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<nonmeta_instance_reference_base>
+VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
+	// depends on whether this instance is collective, 
+	//	check array dimensions.  
+
+	// problem: needs to be modifiable for later initialization
+	return count_ptr<nonmeta_instance_reference_base>(
+		new simple_nonmeta_instance_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }

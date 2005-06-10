@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.11.2.1 2005/06/08 19:13:28 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.11.2.2 2005/06/10 04:16:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -37,6 +37,7 @@
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_expr_const.h"
 #include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/art_object_nonmeta_inst_ref.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
@@ -471,7 +472,8 @@ INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Create a int data reference object.
+	TODO: update this description, nothing to do with context
+	Create a meta instance reference object.
 	See if it's already registered in the current context.  
 	If so, delete the new one (inefficient), 
 	and return the one found.  
@@ -485,6 +487,22 @@ INSTANCE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	//      check array dimensions -- when attach_indices() invoked
 	typedef	count_ptr<meta_instance_reference_base>	return_type;
 	return return_type(new simple_meta_instance_reference_type(
+			never_ptr<const this_type>(this)));
+		// omitting index argument, set it later...
+		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a nonmeta instance reference.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<nonmeta_instance_reference_base>
+INSTANCE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
+	// depends on whether this instance is collective, 
+	//      check array dimensions -- when attach_indices() invoked
+	typedef	count_ptr<nonmeta_instance_reference_base>	return_type;
+	return return_type(new simple_nonmeta_instance_reference_type(
 			never_ptr<const this_type>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()

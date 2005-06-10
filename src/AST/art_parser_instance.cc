@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.2 2005/06/08 19:13:15 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.3 2005/06/10 04:16:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -464,8 +464,8 @@ never_ptr<const object>
 instance_array::check_build(context& c) const {
 	STACKTRACE("instance_array::check_build()");
 	if (ranges) {
-		const range_list::checked_ranges_type
-			d(ranges->check_ranges(c));
+		const range_list::checked_meta_ranges_type
+			d(ranges->check_meta_ranges(c));
 		if (!d) {
 			cerr << "ERROR in building sparse range list!  " <<
 				where(*ranges) << endl;
@@ -584,7 +584,8 @@ instance_connection::check_build(context& c) const {
 		return return_type(NULL);
 	}
 
-	inst_ref_expr::return_type obj(id->check_reference(c));
+	const inst_ref_expr::meta_return_type
+		obj(id->check_meta_reference(c));
 
 	NEVER_NULL(obj);		// we just created it!
 	const count_ptr<const simple_meta_instance_reference_base>
@@ -690,7 +691,8 @@ connection_statement::make_port_connection(
 never_ptr<const object>
 connection_statement::check_build(context& c) const {
 	STACKTRACE("connection_statement::check_build()");
-	const inst_ref_expr::return_type o(lvalue->check_reference(c));
+	const inst_ref_expr::meta_return_type
+		o(lvalue->check_meta_reference(c));
 	if (!o) {
 		cerr << "ERROR resolving instance reference of "
 			"connection_statement at " << where(*lvalue) << endl;

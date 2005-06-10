@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.28.2.1 2005/06/08 19:13:22 fang Exp $
+	$Id: art_object_expr.h,v 1.28.2.2 2005/06/10 04:16:37 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
@@ -392,6 +392,7 @@ class arith_expr : public pint_expr {
 public:
 	typedef	pint_value_type			arg_type;
 	typedef	pint_value_type			value_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 	typedef	binary_arithmetic_operation<value_type, arg_type>
 						op_type;
 	static const plus<value_type, arg_type>		adder;
@@ -410,8 +411,8 @@ private:
 	static void op_map_register(const char, const op_type* );
 	static size_t op_map_init(void);
 protected:
-	count_ptr<const pint_expr>	lx;
-	count_ptr<const pint_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 
 	/**
 		Safe to use a naked pointer, b/c/ refers to a static object.  
@@ -421,8 +422,8 @@ private:
 	arith_expr();
 public:
 	// change: const ptr& arguments
-	arith_expr(const count_ptr<const pint_expr>& l, const char o, 
-		const count_ptr<const pint_expr>& r);
+	arith_expr(const operand_ptr_type& l, const char o, 
+		const operand_ptr_type& r);
 
 	~arith_expr();
 
@@ -498,6 +499,7 @@ class relational_expr : public pbool_expr {
 public:
 	typedef	pbool_value_type		value_type;
 	typedef	pint_value_type			arg_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 	typedef	binary_relational_operation<value_type, arg_type>
 							op_type;
 	static const equal_to<value_type, arg_type>	op_equal_to;
@@ -520,8 +522,8 @@ private:
 	static size_t op_map_init(void);
 
 protected:
-	count_ptr<const pint_expr>	lx;
-	count_ptr<const pint_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 	/**
 		Points to the operator functor.  
 	 */
@@ -530,10 +532,10 @@ protected:
 private:
 	relational_expr();
 public:
-	relational_expr(const count_ptr<const pint_expr>& l, const string& o, 
-		const count_ptr<const pint_expr>& r);
-	relational_expr(const count_ptr<const pint_expr>& l, const op_type* o, 
-		const count_ptr<const pint_expr>& r);
+	relational_expr(const operand_ptr_type& l, const string& o, 
+		const operand_ptr_type& r);
+	relational_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
 
 	~relational_expr();
 
@@ -609,6 +611,7 @@ class logical_expr : public pbool_expr {
 public:
 	typedef	pbool_value_type			value_type;
 	typedef	pbool_value_type			arg_type;
+	typedef	count_ptr<const pbool_expr>		operand_ptr_type;
 	typedef	binary_logical_operation<value_type, arg_type>	op_type;
 	static const util::logical_and<value_type, arg_type>	op_and;
 	static const util::logical_or<value_type, arg_type>	op_or;
@@ -636,10 +639,10 @@ protected:
 private:
 	logical_expr();
 public:
-	logical_expr(const count_ptr<const pbool_expr>& l, const string& o, 
-		const count_ptr<const pbool_expr>& r);
-	logical_expr(const count_ptr<const pbool_expr>& l, const op_type* o, 
-		const count_ptr<const pbool_expr>& r);
+	logical_expr(const operand_ptr_type& l, const string& o, 
+		const operand_ptr_type& r);
+	logical_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
 
 	~logical_expr();
 

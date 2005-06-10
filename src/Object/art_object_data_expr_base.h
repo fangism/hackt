@@ -2,7 +2,7 @@
 	\file "Object/art_object_data_expr_base.h"
 	Base classes for data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: art_object_data_expr_base.h,v 1.1.4.2 2005/06/08 19:13:20 fang Exp $
+	$Id: art_object_data_expr_base.h,v 1.1.4.3 2005/06/10 04:16:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_BASE_H__
@@ -78,6 +78,10 @@ protected:
 	bool_expr() : parent_type() { }
 public:
 virtual	~bool_expr() { }
+
+virtual	ostream&
+	dump_brief(ostream&) const = 0;
+
 };	// end class bool_expr
 
 //=============================================================================
@@ -93,6 +97,9 @@ virtual	~int_expr() { }
 
 virtual	ostream&
 	dump(ostream&) const = 0;
+
+virtual	ostream&
+	dump_brief(ostream&) const = 0;
 
 };	// end class bool_expr
 

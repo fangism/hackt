@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.21.2.4 2005/05/29 02:08:26 fang Exp $
+	$Id: art_parser_formal.cc,v 1.21.2.5 2005/06/10 04:16:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -97,7 +97,7 @@ data_param_id::check_build(context& c) const {
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
 	if (dim) {
-		const dense_range_list::return_type
+		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
 			cerr << "ERROR in array dimensions " <<
@@ -248,7 +248,7 @@ port_formal_id::check_build(context& c) const {
 		// should be anything but param_instantiation
 
 	if (dim) {
-		const dense_range_list::return_type
+		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
 			cerr << "ERROR in array dimensions " <<
@@ -396,7 +396,7 @@ template_formal_id::check_build(context& c) const {
 	// type should already be set in the context
 	count_ptr<const param_expr> default_val;
 	if (dflt) {
-		count_ptr<const param_expr> p(dflt->check_expr(c));
+		count_ptr<const param_expr> p(dflt->check_meta_expr(c));
 		if (!p) {
 			cerr << "ERROR in default value expression " <<
 				where(*dflt) << endl;
@@ -406,7 +406,7 @@ template_formal_id::check_build(context& c) const {
 	}
 	if (dim) {
 		// attach array dimensions to current instantiation
-		const dense_range_list::return_type
+		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
 			cerr << "ERROR in array dimensions " <<

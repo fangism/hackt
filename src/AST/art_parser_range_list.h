@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_range.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_range_list.h,v 1.5.4.1 2005/06/08 19:13:16 fang Exp $
+	$Id: art_parser_range_list.h,v 1.5.4.2 2005/06/10 04:16:34 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_RANGE_LIST_H__
@@ -16,6 +16,8 @@ namespace ART {
 namespace entity {
 	class meta_index_list;
 	class meta_range_list;
+	class nonmeta_index_list;
+	class int_range_list;		// a.k.a. nonmeta_index_list
 }	// end namespace entity
 namespace parser {
 using util::good_bool;
@@ -33,8 +35,12 @@ typedef node_list<const range>		range_list_base;
  */
 class range_list : public range_list_base {
 public:
-	typedef	range_list_return_type			checked_indices_type;
-	typedef	count_ptr<entity::meta_range_list>	checked_ranges_type;
+	typedef	range_list_meta_return_type	checked_meta_indices_type;
+	typedef	count_ptr<entity::meta_range_list>
+						checked_meta_ranges_type;
+	typedef	range_list_nonmeta_return_type	checked_nonmeta_indices_type;
+	typedef	count_ptr<entity::int_range_list>
+						checked_nonmeta_ranges_type;
 protected:
 	typedef	range_list_base				parent_type;
 	// no additional members
@@ -44,20 +50,34 @@ public:
 
 	~range_list();
 
-	range_list::checked_indices_type
-	check_indices(context& c) const;
+	checked_meta_indices_type
+	check_meta_indices(context& c) const;
 
-	range_list::checked_ranges_type
-	check_ranges(context& c) const;
+	checked_meta_ranges_type
+	check_meta_ranges(context& c) const;
+
+	checked_nonmeta_indices_type
+	check_nonmeta_indices(context& c) const;
+
+	checked_nonmeta_ranges_type
+	check_nonmeta_ranges(context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(range::return_type)	check_type;
+	typedef	DEFAULT_VECTOR(range::meta_return_type)	meta_check_type;
+	typedef	DEFAULT_VECTOR(range::nonmeta_return_type)
+							nonmeta_check_type;
 
 	/**
 		Intermediate check.  
 	 */
 	good_bool
-	postorder_check(check_type&, context&) const;
+	postorder_check_meta(meta_check_type&, context&) const;
+
+	/**
+		Intermediate check.  
+	 */
+	good_bool
+	postorder_check_nonmeta(nonmeta_check_type&, context&) const;
 };	// end class range_list
 
 //-----------------------------------------------------------------------------
@@ -71,7 +91,8 @@ typedef node_list<const expr>		dense_range_list_base;
  */
 class dense_range_list : public dense_range_list_base {
 public:
-	typedef	count_ptr<entity::meta_range_list>	return_type;
+	typedef	count_ptr<entity::meta_range_list>	meta_return_type;
+	typedef	count_ptr<entity::int_range_list>	nonmeta_return_type;
 protected:
 	typedef	dense_range_list_base			parent_type;
 	// no additional members
@@ -81,17 +102,19 @@ public:
 
 	~dense_range_list();
 
-	dense_range_list::return_type
+	meta_return_type
 	check_formal_dense_ranges(context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(expr::return_type)	check_type;
+	typedef	DEFAULT_VECTOR(expr::meta_return_type)	meta_check_type;
+	typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
+							nonmeta_check_type;
 	
 	/**
 		Intermediate check.  
 	 */
 	good_bool
-	postorder_check(check_type&, context&) const;
+	postorder_check_meta(meta_check_type&, context&) const;
 };	// end class range_list
 
 //=============================================================================

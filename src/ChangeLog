@@ -1,5 +1,27 @@
 "ChangeLog"
 
+2005-06-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-15:
+	  Significant development to completing CHP objects using
+		nonmeta-instance-references (-300, +1900 LOC).  
+	  "AST/art_parser_chp.*" checked types are now (nonmeta) 
+		bools and ints, not pbools and pints.  
+	  Type name substitution for distinction: return_type ->
+		meta_return_type and nonmeta_return_type
+	  Method name substitution, analogously: check_foo ->
+		check_meta_foo and check_nonmeta_foo.
+	  Implemented most of expr::check_nonmeta_expr, untested.  
+		(same with ranges and indices...)
+	  Implemented (trivial) 
+		instance_collection_base::make_nonmeta_instance_reference.
+	  Implemented many classes in "Object/art_object_data_expr.cc"
+		adapting many from their meta expression counterparts.  
+	  Added new type hash keys to "Object/art_object_type_hash.h".
+	  Removed: "art++.h"
+	  Minor assertion updates in "util/persistent_object_manager.cc"
+
+
 2005-06-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-14:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.13 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_prs.h,v 1.13.2.1 2005/06/10 04:16:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
@@ -177,7 +177,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 
 #if 0
 	CHECK_PRS_EXPR_PROTO;

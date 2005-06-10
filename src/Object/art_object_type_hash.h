@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7.2.4 2005/06/08 23:50:27 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7.2.5 2005/06/10 04:16:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -133,11 +133,16 @@
 	// symbolic expressions
 #define	PINT_UNARY_EXPR_TYPE_KEY				"intunary"
 #define	PBOOL_UNARY_EXPR_TYPE_KEY				"boolunry"
-#define	ARITH_EXPR_TYPE_KEY					"arithexp"
-#define	RELATIONAL_EXPR_TYPE_KEY				"relatexp"
-#define	LOGICAL_EXPR_TYPE_KEY					"logicexp"
+#define	META_ARITH_EXPR_TYPE_KEY				"arithexp"
+#define	META_RELATIONAL_EXPR_TYPE_KEY				"relatexp"
+#define	META_LOGICAL_EXPR_TYPE_KEY				"logicexp"
 
 // nonmeta expressions
+#define	NONMETA_INT_ARITH_EXPR_TYPE_KEY				"narithex"
+#define	NONMETA_INT_RELATIONAL_EXPR_TYPE_KEY			"nrelatex"
+#define	NONMETA_BOOL_LOGICAL_EXPR_TYPE_KEY			"nlogicex"
+#define	NONMETA_INT_NEGATION_EXPR_TYPE_KEY			"nnegatex"
+#define	NONMETA_BOOL_NEGATION_EXPR_TYPE_KEY			"nbnotex"
 #define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlist"
 #define	NONMETA_RANGE_TYPE_KEY					"nmetarng"
 #define	NONMETA_RANGE_LIST_TYPE_KEY				"nrnglist"

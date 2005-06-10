@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.5.2.1 2005/06/08 19:13:15 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.5.2.2 2005/06/10 04:16:33 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -19,11 +19,16 @@ namespace entity {
 	class param_expr;
 	class meta_index_list;
 	class meta_instance_reference_base;
+	class data_expr;		// nonmeta expressions
+	class nonmeta_instance_reference_base;
+	class datatype_instance_reference_base;
+	class nonmeta_index_list;
+	class int_range_list;		// a.k.a. nonmeta_range_list
 namespace PRS {
 	class prs_expr;
 	class literal;
 }
-}
+}	// end namespace entity
 
 using std::ostream;
 using std::pair;
@@ -36,13 +41,22 @@ namespace parser {
 /**
 	Bah! breaks circular dependence of nested typedefs.  
  */
-typedef	count_ptr<entity::meta_index_list>	range_list_return_type;
+typedef	count_ptr<entity::meta_index_list>	range_list_meta_return_type;
+typedef	count_ptr<entity::nonmeta_index_list>	range_list_nonmeta_return_type;
 
-typedef	count_ptr<entity::meta_instance_reference_base>	inst_ref_return_type;
+typedef	count_ptr<entity::meta_instance_reference_base>
+						inst_ref_meta_return_type;
+
+typedef	count_ptr<entity::nonmeta_instance_reference_base>
+						inst_ref_nonmeta_return_type;
 
 typedef	count_ptr<entity::PRS::prs_expr>	prs_expr_return_type;
 
 typedef	count_ptr<entity::PRS::literal>		prs_literal_ptr_type;
+
+typedef	count_ptr<entity::param_expr>		meta_expr_return_type;
+
+typedef	count_ptr<entity::data_expr>		nonmeta_expr_return_type;
 
 //=============================================================================
 /**
@@ -52,7 +66,8 @@ typedef	count_ptr<entity::PRS::literal>		prs_literal_ptr_type;
  */
 class expr {
 public:
-	typedef	count_ptr<entity::param_expr>	return_type;
+	typedef	meta_expr_return_type		meta_return_type;
+	typedef	nonmeta_expr_return_type	nonmeta_return_type;
 public:
 	expr() { }
 virtual ~expr() { }
@@ -69,11 +84,17 @@ virtual line_position
 /**
 	Prototype for expression check method.  
  */
-#define	CHECK_EXPR_PROTO						\
-	expr::return_type						\
-	check_expr(context& c) const
+#define	CHECK_META_EXPR_PROTO						\
+	expr::meta_return_type						\
+	check_meta_expr(context& c) const
 
-virtual CHECK_EXPR_PROTO = 0;
+virtual CHECK_META_EXPR_PROTO = 0;
+
+#define	CHECK_NONMETA_EXPR_PROTO					\
+	nonmeta_expr_return_type					\
+	check_nonmeta_expr(context& c) const
+
+virtual	CHECK_NONMETA_EXPR_PROTO;
 
 public:
 	/**
@@ -82,7 +103,7 @@ public:
 		If both are non-NULL, they point to the same object, 
 		just that each is statically cast to a different subtype.  
 	 */
-	typedef	pair<expr::return_type, inst_ref_return_type>
+	typedef	pair<expr::meta_return_type, inst_ref_meta_return_type>
 						generic_return_type;
 
 #define	CHECK_GENERIC_PROTO						\
@@ -113,19 +134,27 @@ public:
 	/**
 		Type of the result returned by parse-checker.
 	 */
-	typedef inst_ref_return_type                    return_type;
+	typedef inst_ref_meta_return_type		meta_return_type;
+	typedef inst_ref_nonmeta_return_type		nonmeta_return_type;
 
 	inst_ref_expr() : parent_type() { }
 virtual ~inst_ref_expr() { }
 
-#define CHECK_REFERENCE_PROTO                                           \
-	inst_ref_expr::return_type                                      \
-	check_reference(context&) const
+#define CHECK_META_REFERENCE_PROTO					\
+	inst_ref_expr::meta_return_type					\
+	check_meta_reference(context&) const
 
-virtual CHECK_REFERENCE_PROTO = 0;
+virtual CHECK_META_REFERENCE_PROTO = 0;
+
+#define CHECK_NONMETA_REFERENCE_PROTO					\
+	inst_ref_expr::nonmeta_return_type				\
+	check_nonmeta_reference(context&) const
+
+virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 
 	// NOTE: this is non-virtual
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 
 	// NOTE: this is non-virtual
 	CHECK_GENERIC_PROTO;

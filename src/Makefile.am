@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.6 2005/06/08 21:33:03 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.7 2005/06/10 04:16:31 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -382,7 +382,6 @@ libart___la_SOURCES = \
 	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	config.h \
-	art++.h \
 	main/main_funcs.cc \
 	main/main_funcs.h
 # note "art+.h" is deprecated, no longer used

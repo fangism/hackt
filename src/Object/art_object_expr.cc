@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47.2.1 2005/06/08 19:13:21 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.2.2 2005/06/10 04:16:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_const_collection.tcc"
 #include "Object/art_object_value_reference.tcc"
+#include "Object/art_object_nonmeta_inst_ref.tcc"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"	// for ~aliases_connection_base
 #include "Object/art_object_type_hash.h"
@@ -95,6 +96,10 @@ SPECIALIZE_UTIL_WHAT(ART::entity::simple_pbool_meta_instance_reference,
 		"pbool-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::simple_pint_meta_instance_reference,
 		"pint-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_pbool_nonmeta_instance_reference,
+		"nonmeta-pbool-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_pint_nonmeta_instance_reference,
+		"nonmeta-pint-inst-ref")
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_const,
 		"pint-const")
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const,
@@ -135,6 +140,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::simple_pint_meta_instance_reference, 
 		SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_pbool_nonmeta_instance_reference, 
+		SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_pint_nonmeta_instance_reference, 
+		SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 
 // pint_const_collection requires special treatment:
@@ -155,11 +166,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::arith_expr, ARITH_EXPR_TYPE_KEY, 0)
+	ART::entity::arith_expr, META_ARITH_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::relational_expr, RELATIONAL_EXPR_TYPE_KEY, 0)
+	ART::entity::relational_expr, META_RELATIONAL_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::logical_expr, LOGICAL_EXPR_TYPE_KEY, 0)
+	ART::entity::logical_expr, META_LOGICAL_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -1673,8 +1684,8 @@ arith_expr::~arith_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arith_expr::arith_expr(const count_ptr<const pint_expr>& l, const char o,
-		const count_ptr<const pint_expr>& r) :
+arith_expr::arith_expr(const operand_ptr_type& l, const char o,
+		const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -1950,8 +1961,8 @@ relational_expr::~relational_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
-		const string& o, const count_ptr<const pint_expr>& r) :
+relational_expr::relational_expr(const operand_ptr_type& l,
+		const string& o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -1961,8 +1972,8 @@ relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::relational_expr(const count_ptr<const pint_expr>& l,
-		const op_type* o, const count_ptr<const pint_expr>& r) :
+relational_expr::relational_expr(const operand_ptr_type& l,
+		const op_type* o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -2194,8 +2205,8 @@ logical_expr::~logical_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
-		const string& o, const count_ptr<const pbool_expr>& r) :
+logical_expr::logical_expr(const operand_ptr_type& l,
+		const string& o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -2205,8 +2216,8 @@ logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::logical_expr(const count_ptr<const pbool_expr>& l,
-		const op_type* o, const count_ptr<const pbool_expr>& r) :
+logical_expr::logical_expr(const operand_ptr_type& l,
+		const op_type* o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
@@ -4145,6 +4156,14 @@ template class const_collection<pbool_tag>;
 
 template class simple_meta_value_reference<pint_tag>;
 template class simple_meta_value_reference<pbool_tag>;
+
+#if 0
+template class simple_nonmeta_value_reference<pint_tag>;
+template class simple_nonmeta_value_reference<pbool_tag>;
+#else
+template class simple_nonmeta_instance_reference<pint_tag>;
+template class simple_nonmeta_instance_reference<pbool_tag>;
+#endif
 
 //=============================================================================
 }	// end namepace entity

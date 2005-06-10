@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.3 2005/06/08 19:13:18 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.4 2005/06/10 04:16:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -84,6 +84,7 @@ struct class_traits {
 		(The 'simple' qualifier is implied.)
 	 */
 	typedef	void			simple_meta_instance_reference_type;
+	typedef	void			simple_nonmeta_instance_reference_type;
 	typedef	void			simple_meta_instance_reference_parent_type;
 
 	/**
@@ -219,6 +220,8 @@ struct class_traits<int_tag> {
 	 */
 	typedef	int				data_value_type;
 	typedef	int_expr			data_expr_base_type;
+	typedef	simple_int_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_int_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	int_instance_reference_base	
@@ -266,6 +269,8 @@ struct class_traits<bool_tag> {
 	 */
 	typedef	bool				data_value_type;
 	typedef	bool_expr			data_expr_base_type;
+	typedef	simple_bool_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_bool_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	bool_instance_reference_base	
@@ -311,6 +316,8 @@ struct class_traits<enum_tag> {
 
 	// later add instantiation_statement support...
 
+	typedef	simple_enum_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_enum_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	enum_instance_reference_base	
@@ -357,6 +364,8 @@ struct class_traits<datastruct_tag> {
 
 	// later add instantiation_statement support...
 
+	typedef	simple_datastruct_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_datastruct_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	struct_instance_reference_base	
@@ -408,6 +417,8 @@ struct class_traits<process_tag> {
 	// define this elsewhere, in "art_object_inst_stmt_proc.h"
 	class instantiation_statement_type_ref_base;
 
+	typedef	simple_process_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_process_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	process_instance_reference_base	
@@ -465,6 +476,8 @@ struct class_traits<channel_tag> {
 	// define this elsewhere, in "art_object_inst_stmt_chan.h"
 	class instantiation_statement_type_ref_base;
 
+	typedef	simple_channel_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_channel_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	channel_instance_reference_base	
@@ -522,16 +535,16 @@ struct class_traits<pint_tag> {
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
+	typedef	simple_pint_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_pint_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	pint_instance_reference_base	
 					nonmeta_instance_reference_base_type;
 	typedef	pint_meta_instance_reference_base
 				simple_meta_instance_reference_parent_type;
-#if 0
 	typedef	pint_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
-#endif
 	typedef	pint_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 
@@ -586,16 +599,16 @@ struct class_traits<pbool_tag> {
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
+	typedef	simple_pbool_nonmeta_instance_reference
+					simple_nonmeta_instance_reference_type;
 	typedef	simple_pbool_meta_instance_reference
 					simple_meta_instance_reference_type;
 	typedef	pbool_instance_reference_base	
 					nonmeta_instance_reference_base_type;
 	typedef	pbool_meta_instance_reference_base
 				simple_meta_instance_reference_parent_type;
-#if 0
 	typedef	pbool_instance_reference_base
 				simple_nonmeta_instance_reference_parent_type;
-#endif
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 

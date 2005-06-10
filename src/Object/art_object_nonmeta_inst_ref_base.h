@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.2 2005/06/08 19:13:31 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.3 2005/06/10 04:16:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -17,6 +18,7 @@ class nonmeta_index_list;
 class instance_collection_base;
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
@@ -78,6 +80,9 @@ virtual	~simple_nonmeta_instance_reference_base();
 
 virtual	never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
+
+	good_bool
+	attach_indices(excl_ptr<index_list_type>&);
 
 	// type equivalence methods...
 

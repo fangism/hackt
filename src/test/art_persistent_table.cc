@@ -4,9 +4,11 @@
  */
 
 #include <iostream>
-#include "art++.h"			// has everything you need
+#include "util/persistent_object_manager.h"
+#include "Object/art_object_module.h"
 
-using namespace std;
+using std::cerr;
+
 using util::persistent_object_manager;
 using ART::entity::module;
 

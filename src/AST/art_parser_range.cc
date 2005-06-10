@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.4.2.1 2005/06/08 19:13:16 fang Exp $
+	$Id: art_parser_range.cc,v 1.4.2.2 2005/06/10 04:16:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -12,6 +12,7 @@
 
 #include <exception>
 #include <iostream>
+#include <iterator>
 
 #include "AST/art_parser_range_list.h"
 #include "AST/art_parser_token_char.h"
@@ -20,6 +21,7 @@
 // will need these come time for type-checking
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_expr.h"
+#include "Object/art_object_data_expr.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -43,6 +45,7 @@ SPECIALIZE_UTIL_WHAT(ART::parser::range, "(range)")
 //=============================================================================
 namespace ART {
 using namespace entity;
+using std::back_inserter;
 
 namespace parser {
 #include "util/using_ostream.h"
@@ -85,9 +88,10 @@ range::rightmost(void) const {
 	\param c the context where to start resolving identifiers.  
 	\return pointer to checked entity::index_expr.
  */
-range::return_type
-range::check_index(context& c) const {
-	const expr::return_type l(lower->check_expr(c));
+range::meta_return_type
+range::check_meta_index(context& c) const {
+	typedef	meta_return_type	return_type;
+	const expr::meta_return_type l(lower->check_meta_expr(c));
 	const count_ptr<pint_expr> lp(l.is_a<pint_expr>());
 	if (l) {
 		if (!lp) {
@@ -104,7 +108,7 @@ range::check_index(context& c) const {
 	}
 
 	if (upper) {
-		const expr::return_type u(upper->check_expr(c));
+		const expr::meta_return_type u(upper->check_meta_expr(c));
 		// puts param_expr on stack
 		// grab the last two expressions, 
 		// check that they are both pints, 
@@ -151,6 +155,62 @@ range::check_index(context& c) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: write this comment
+	Both expressions of the range should be of type pint.  
+	No collective expressions, only single pints.  
+	Do we check for constant cases?
+	How do we interpret x[i]?
+	\param c the context where to start resolving identifiers.  
+	\return pointer to checked entity::index_expr.
+ */
+range::nonmeta_return_type
+range::check_nonmeta_index(context& c) const {
+	typedef	nonmeta_return_type	return_type;
+	const expr::nonmeta_return_type l(lower->check_nonmeta_expr(c));
+	const count_ptr<int_expr> lp(l.is_a<int_expr>());
+	if (l) {
+		if (!lp) {
+			cerr << "Expression is not a int-type, ERROR!  " <<
+				where(*lower) << endl;
+			THROW_EXIT;
+		}
+		// check if expression is initialized
+	} else {
+		cerr << endl;
+		cerr << "Error resolving expression " << where(*lower)
+			<< endl;
+		THROW_EXIT;
+	}
+
+	if (upper) {
+		const expr::nonmeta_return_type u(upper->check_nonmeta_expr(c));
+		// puts param_expr on stack
+		// grab the last two expressions, 
+		// check that they are both pints, 
+		// and make a range object
+		const count_ptr<int_expr> up(u.is_a<int_expr>());
+		if (u) {
+			if (!up) {
+				cerr << "Expression is not a int-type, "
+					"ERROR!  " << where(*upper) << endl;
+				THROW_EXIT;
+			}
+			// check if expression is initialized
+		} else {
+			cerr << "Error resolving expression " <<
+				where(*upper) << endl;
+			THROW_EXIT;
+		}
+		// at this point, is ok
+
+		return return_type(new int_range_expr(lp, up));
+	} else {
+		return lp;
+	}
+}
+
 //=============================================================================
 // class range_list method definitions
 
@@ -166,17 +226,54 @@ range_list::~range_list() { }
 	Should we take this opportunity to const-ify as much as possible?
 
 	This is called by instance_array::check_build and 
-	index_expr::check_reference.  
+	index_expr::check_meta_reference.  
 
 	\return success of type-check of all elements.  
  */
 good_bool
-range_list::postorder_check(check_type& temp, context& c) const {
+range_list::postorder_check_meta(meta_check_type& temp, context& c) const {
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
-		const range::return_type o((*i)->check_index(c));
+		const range::meta_return_type o((*i)->check_meta_index(c));
+		if (!o) {
+			cerr << "Problem with dimension " << j <<
+				" of sparse_range_list between "
+				<< where(*this) << endl;
+			THROW_EXIT;		// terminate?
+			return good_bool(false);
+		}
+		// collect first, store temporary, check for constness
+		temp.push_back(o);
+	}
+	if (size() > 4) {		// define constant somewhere
+		cerr << "ERROR!  Exceeded dimension limit of 4.  "
+			<< where(*this) << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: limited to 4 dimensions.  
+
+	Should we take this opportunity to const-ify as much as possible?
+
+	This is called by instance_array::check_build and 
+	index_expr::check_meta_reference.  
+
+	\return success of type-check of all elements.  
+ */
+good_bool
+range_list::postorder_check_nonmeta(nonmeta_check_type& temp, 
+		context& c) const {
+	const_iterator i = begin();
+	const const_iterator e = end();
+	size_t j = 1;
+	for ( ; i!=e; i++, j++) {
+		const range::nonmeta_return_type
+			o((*i)->check_nonmeta_index(c));
 		if (!o) {
 			cerr << "Problem with dimension " << j <<
 				" of sparse_range_list between "
@@ -198,17 +295,18 @@ range_list::postorder_check(check_type& temp, context& c) const {
 /**
 	\return index_expr_list.
  */
-range_list::checked_indices_type
-range_list::check_indices(context& c) const {
-	typedef	checked_indices_type	return_type;
+range_list::checked_meta_indices_type
+range_list::check_meta_indices(context& c) const {
+	typedef	checked_meta_indices_type	return_type;
+	typedef	meta_check_type			check_type;
 	check_type temp;
 #if 0
 	// causes apple-gcc-3.3 ICE :(
 	list_checker<check_type, parent_type, context&>
-		lc(&range::check_index, c);
+		lc(&range::check_meta_index, c);
 	lc(temp, *this);
 #endif
-	if (!postorder_check(temp, c).good) {
+	if (!postorder_check_meta(temp, c).good) {
 		// THROW_EXIT;
 		return return_type(NULL);
 	}
@@ -242,6 +340,41 @@ range_list::check_indices(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return nonmeta_index_list.
+ */
+range_list::checked_nonmeta_indices_type
+range_list::check_nonmeta_indices(context& c) const {
+	typedef	checked_nonmeta_indices_type	return_type;
+	typedef	nonmeta_check_type		check_type;
+	check_type temp;
+#if 0
+	// causes apple-gcc-3.3 ICE :(
+	list_checker<check_type, parent_type, context&>
+		lc(&range::check_meta_index, c);
+	lc(temp, *this);
+#endif
+	if (!postorder_check_nonmeta(temp, c).good) {
+		// THROW_EXIT;
+		return return_type(NULL);
+	}
+
+	count_ptr<nonmeta_index_list>
+		ret(new nonmeta_index_list);
+	NEVER_NULL(ret);
+#if 0
+	check_type::const_iterator i = temp.begin();
+	const check_type::const_iterator e = temp.end();
+	for ( ; i!=e; i++) {
+		ret->push_back(*i);
+	}
+#else
+	copy(temp.begin(), temp.end(), back_inserter(*ret));
+#endif
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Creates a type-checked range-expression-list.
 	No restriction on this, may be single integer or pint_range.
 	Will automatically convert to ranges.
@@ -252,11 +385,12 @@ range_list::check_indices(context& c) const {
 	Cannot possibly be loop-dependent or conditional!
 	\return newly allocated meta_range_list.
  */
-range_list::checked_ranges_type
-range_list::check_ranges(context& c) const {
-	typedef	checked_ranges_type	return_type;
+range_list::checked_meta_ranges_type
+range_list::check_meta_ranges(context& c) const {
+	typedef	checked_meta_ranges_type	return_type;
+	typedef	meta_check_type			check_type;
 	check_type temp;
-	if (!postorder_check(temp, c).good) {
+	if (!postorder_check_meta(temp, c).good) {
 		// THROW_EXIT;
 		return return_type(NULL);
 	}
@@ -429,13 +563,14 @@ dense_range_list::~dense_range_list() {
 	\param c the parse context.  
  */
 good_bool
-dense_range_list::postorder_check(check_type& temp, context& c) const {
+dense_range_list::postorder_check_meta(meta_check_type& temp, 
+		context& c) const {
 	INVARIANT(temp.empty());
 	const_iterator i = begin();
 	const const_iterator e = end();
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
-		const expr::return_type o((*i)->check_expr(c));
+		const expr::meta_return_type o((*i)->check_meta_expr(c));
 		// accumulate multiple errors?
 		if (!o) {
 			cerr << "Problem with dimension " << j <<
@@ -476,11 +611,13 @@ dense_range_list::postorder_check(check_type& temp, context& c) const {
 	\param c expression context.  
 	\return pointer to newly allocated range expression list.  
  */
-dense_range_list::return_type
+dense_range_list::meta_return_type
 dense_range_list::check_formal_dense_ranges(context& c) const {
+	typedef	meta_return_type	return_type;
+	typedef	meta_check_type		check_type;
 	STACKTRACE("dense_range_list::check_formal_dense_ranges()");
 	check_type temp;
-	if (!postorder_check(temp, c).good)
+	if (!postorder_check_meta(temp, c).good)
 		return return_type(NULL);
 	// copied from the old object_list::make_formal_dense_range_list()
 	// initialize some bools to true

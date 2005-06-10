@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.6 2005/05/13 21:24:27 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.6.4.1 2005/06/10 04:16:33 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_LIST_H__
@@ -38,8 +38,8 @@ public:
 	typedef	parent_type::const_iterator	const_iterator;
         typedef	DEFAULT_VECTOR(expr::generic_return_type)
 							checked_generic_type;
-        typedef	DEFAULT_VECTOR(expr::return_type)	checked_exprs_type;
-        typedef	DEFAULT_VECTOR(inst_ref_return_type)	checked_refs_type;
+        typedef	DEFAULT_VECTOR(expr::meta_return_type)	checked_exprs_type;
+        typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)	checked_refs_type;
 public:
 	expr_list();
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.2 2005/05/31 04:00:05 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.3 2005/06/10 04:16:32 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -46,7 +46,7 @@ namespace ART {
 namespace parser {
 namespace CHP {
 #include "util/using_ostream.h"
-using entity::pbool_expr;
+using entity::bool_expr;
 using entity::CHP::action_sequence;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
@@ -157,20 +157,22 @@ guarded_command::rightmost(void) const {
  */
 guarded_command::return_type
 guarded_command::check_guarded_action(context& c) const {
-#if 0
+#if 1
 	cerr << "Fang, finish CHP::guarded_command::check_guarded_action()!"
 		<< endl;
 	return return_type(NULL);
 #else
 	typedef list<statement::return_type>	checked_stmts_type;
-	const expr::return_type checked_guard(guard->check_expr(c));
+	// will need to be more general non-meta (bool) expression
+	const expr::nonmeta_return_type
+		checked_guard(guard->check_nonmeta_expr(c));
 	if (!checked_guard) {
 		cerr << "ERROR in guard expression at " << where(*guard)
 			<< endl;
 		return return_type(NULL);
 	}
 	const guarded_action::guard_ptr_type
-		checked_bool_guard(checked_guard.is_a<pbool_expr>());
+		checked_bool_guard(checked_guard.is_a<bool_expr>());
 	if (!checked_bool_guard) {
 		cerr << "ERROR expression at " << where(*guard) <<
 			" is not boolean." << endl;
@@ -277,13 +279,13 @@ wait::check_action(context& c) const {
 	cerr << "Fang, finish CHP::wait::check_action()!" << endl;
 	return return_type(NULL);
 #else
-	const expr::return_type ret(cond->check_expr(c));
+	const expr::nonmeta_return_type ret(cond->check_nonmeta_expr(c));
 	if (!ret) {
 		cerr << "ERROR in wait condition expression at " <<
 			where(*cond) << endl;
 		return return_type(NULL);
 	}
-	const count_ptr<pbool_expr> bret(ret.is_a<pbool_expr>());
+	const count_ptr<bool_expr> bret(ret.is_a<bool_expr>());
 	if (!bret) {
 		cerr << "ERROR: wait condition at " << where(*cond) <<
 			" is not boolean." << endl;

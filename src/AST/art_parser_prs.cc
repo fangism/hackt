@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.16.2.1 2005/05/31 04:00:05 fang Exp $
+	$Id: art_parser_prs.cc,v 1.16.2.2 2005/06/10 04:16:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -246,10 +246,20 @@ op_loop::rightmost(void) const {
 /**
 	TODO: FINISH ME
  */
-expr::return_type
-op_loop::check_expr(context& c) const {
-	cerr << "Fang, finish op_loop::check_expr()!" << endl;
-	return expr::return_type(NULL);
+expr::meta_return_type
+op_loop::check_meta_expr(context& c) const {
+	cerr << "Fang, finish op_loop::check_meta_expr()!" << endl;
+	return expr::meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: FINISH ME
+ */
+nonmeta_expr_return_type
+op_loop::check_nonmeta_expr(context& c) const {
+	cerr << "Fang, finish op_loop::check_non_meta_expr()!" << endl;
+	return nonmeta_expr_return_type(NULL);
 }
 
 //=============================================================================

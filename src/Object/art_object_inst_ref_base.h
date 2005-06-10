@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.2.1 2005/06/08 19:13:24 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.2.2 2005/06/10 04:16:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -188,6 +188,8 @@ private:
 	template <size_t>
 	class mset;
 protected:
+	typedef	meta_index_list			index_list_type;
+protected:
 	/**
 		The indices (optional) for this particular reference.
 		Why modifiable pointer?
@@ -198,7 +200,7 @@ protected:
 		not necessarily zero-dimensional (scalar).
 		Could be implicit reference to entire collection.  
 	 */
-	excl_ptr<meta_index_list>		array_indices;
+	excl_ptr<index_list_type>		array_indices;
 
 	/**
 		The current state of the instantiation collection
@@ -220,7 +222,7 @@ protected:
 	explicit
 	simple_meta_instance_reference_base(const instantiation_state& st);
 
-	simple_meta_instance_reference_base(excl_ptr<meta_index_list>& i, 
+	simple_meta_instance_reference_base(excl_ptr<index_list_type>& i, 
 		const instantiation_state& st);
 public:
 
@@ -248,7 +250,7 @@ virtual	~simple_meta_instance_reference_base();
 	implicit_static_constant_indices(void) const;
 
 	good_bool
-	attach_indices(excl_ptr<meta_index_list>& i);
+	attach_indices(excl_ptr<index_list_type>& i);
 
 virtual	ostream&
 	what(ostream& o) const = 0;
