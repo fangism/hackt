@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.6.4.2 2005/06/11 03:34:00 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.6.4.3 2005/06/11 21:48:06 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_LIST_H__
@@ -41,6 +41,8 @@ public:
 						checked_meta_generic_type;
         typedef	DEFAULT_VECTOR(expr::meta_return_type)
 						checked_meta_exprs_type;
+        typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
+						checked_nonmeta_exprs_type;
         typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
 						checked_meta_refs_type;
 public:
@@ -72,6 +74,10 @@ public:
 
 	void
 	postorder_check_meta_exprs(checked_meta_exprs_type&, context&) const;
+
+	void
+	postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type&, 
+		context&) const;
 
 	static
 	void

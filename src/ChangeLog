@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-06-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17:
+	  Working on CHP::send construction and type-checking.  
+	  TODO: check data_expr against nonmeta_datatype_instance_reference.  
+		Will need nonmeat_value_reference extensions.  
+	  Partially implemented CHP::send::check_action().
+	  Added expr_list::postorder_check_nonmeta_exprs().
+	  Partially implemented entity::CHP::channel_send::push_back, 
+		but likely to rewrite as for-loop.  
+	  Some list members updated to vector types:
+		builtin_channel_type_reference, CHP::send_action.
+	  Obsolete code cleanup in "Object/art_object_definition[_chan].h"
+	  Some quick helper methods added to channel-related classes.  
+
+
 2005-06-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-16:

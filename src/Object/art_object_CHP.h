@@ -1,16 +1,18 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.3 2005/06/08 19:13:17 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.4 2005/06/11 21:48:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
 #define	__OBJECT_ART_OBJECT_CHP_H__
 
 #include <list>
+#include <vector>
 #include "Object/art_object_CHP_base.h"
 #include "Object/art_object_fwd.h"
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -18,7 +20,9 @@ namespace entity {
 
 namespace CHP {
 using std::list;
+using std::vector;
 using std::istream;
+using util::good_bool;
 using util::memory::count_ptr;
 //=============================================================================
 /**
@@ -218,17 +222,19 @@ class channel_send : public action {
 	typedef	action					parent_type;
 	typedef	channel_send				this_type;
 public:
-	typedef	list<count_ptr<data_expr> >		expr_list_type;
+	typedef	vector<count_ptr<data_expr> >		expr_list_type;
 	/**
 		should be simple_channel_nonmeta_instnace_reference
 	 */
-	typedef	count_ptr<simple_channel_meta_instance_reference>
+	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
 	expr_list_type					exprs;
-public:
+private:
 	channel_send();
+public:
+	explicit
 	channel_send(const chan_ptr_type&);
 	~channel_send();
 
@@ -238,6 +244,10 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	good_bool
+	push_back(const expr_list_type::value_type&);
+
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_send
 

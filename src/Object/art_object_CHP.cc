@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.1.2.3 2005/06/08 19:13:17 fang Exp $
+	$Id: art_object_CHP.cc,v 1.1.2.4 2005/06/11 21:48:06 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -9,8 +9,11 @@
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/art_object_type_ref.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_classification_details.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_collection.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 
@@ -58,6 +61,7 @@ namespace ART {
 namespace entity {
 namespace CHP {
 using util::persistent_traits;
+#include "util/using_ostream.h"
 //=============================================================================
 // class action_sequence method definitions
 
@@ -370,6 +374,56 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_send)
 ostream&
 channel_send::dump(ostream& o) const {
 	return what(o);		// temporary
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type-checked wrapping around interface for adding expressions.  
+	TODO: type-check (2005-06-11)
+	TODO: this is inside a for-loop, apply transformation to 
+		save some work, minimize repeated function calls. 
+	\param e the nonmeta expression to append to send list (never NULL).  
+	\pre already checked for match of number of expressions expected.
+	\return good if successful, bad if type check failed.  
+ */
+good_bool
+channel_send::push_back(const expr_list_type::value_type& e) {
+	NEVER_NULL(e);
+	// check type
+	const size_t index = exprs.size();
+	// get chan's type, in canonical form
+	const never_ptr<const channel_instance_collection>
+		inst_base(chan->get_inst_base_subtype());
+	const count_ptr<const channel_type_reference_base>
+		type_ref(inst_base->get_type_ref()
+			.is_a<const channel_type_reference_base>());
+	// critical that this next pointer only exists locally
+	// see channel_type_reference::resolve_builtin_channel_type
+	const never_ptr<const builtin_channel_type_reference>
+		bctr(type_ref->resolve_builtin_channel_type());
+	// the remainder belongs in a for-loop
+	if (bctr) {
+		const size_t max = bctr->num_datatypes();
+		if (index >= max) {
+			cerr << "You doofus, you tried to add too many "
+				"expressions to channel-send, which requires "
+				<< max << " arguments." << endl;
+			// somewhere need to catch insufficient...
+			return good_bool(false);
+		}
+		// was able to resolve built-in channel type
+		const builtin_channel_type_reference::datatype_ptr_type
+			dt(bctr->index_datatype(index));
+		// TODO: TYPE CHECK e against dt
+		exprs.push_back(e);
+		return good_bool(true);
+	} else {
+		// not able to resolve, probably because of template
+		// parameter dependence.  Will resolve in meta-expansion
+		// phase.  Assume it's good for now, do not reject.
+		exprs.push_back(e);
+		return good_bool(true);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

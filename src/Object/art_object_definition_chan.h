@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.1.2.3 2005/05/29 02:08:29 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.1.2.4 2005/06/11 21:48:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -22,11 +22,10 @@ using namespace util::memory;	// for experimental pointer classes
 class channel_definition_base : virtual public definition_base {
 private:
 	typedef	definition_base			parent_type;
-public:
+protected:
 	channel_definition_base() : parent_type() { }
+public:
 virtual	~channel_definition_base() { }
-
-// virtual	ostream& what(ostream& o) const = 0;
 
 	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 
@@ -54,20 +53,12 @@ private:
 	typedef channel_definition_base		definition_parent_type;
 	typedef	scopespace			scope_parent_type;
 	typedef	sequential_scope		sequential_parent_type;
-#if 0
-	typedef	list<count_ptr<const data_type_reference> >
-						datatype_list_type;
-#endif
 protected:
 	// list of other type definitions
 	const string				key;
 	const never_ptr<const name_space>	parent;
-#if 0
-	datatype_list_type			datatype_list;
-#else
 	count_ptr<const builtin_channel_type_reference>
 						base_chan_type_ref;
-#endif
 	port_formals_manager			port_formals;
 private:
 	user_def_chan();
@@ -93,14 +84,14 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-#if 0
-	void
-	add_datatype(const count_ptr<const data_type_reference>&);
-#else
+	const builtin_channel_type_reference&
+	get_builtin_channel_type(void) const {
+		return *base_chan_type_ref;
+	}
+
 	void
 	attach_base_channel_type(
 		const count_ptr<const builtin_channel_type_reference>&);
-#endif
 
 	// maybe add_datatypes?
 
@@ -114,11 +105,6 @@ public:
 	good_bool
 	certify_port_actuals(const checked_refs_type&) const;
 
-#if 0
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
-#endif
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -184,12 +170,6 @@ public:
 
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
-
-#if 0
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

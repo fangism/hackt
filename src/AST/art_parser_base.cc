@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24.2.5 2005/06/11 03:33:59 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.6 2005/06/11 21:48:04 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -797,6 +797,7 @@ data_type_ref_list::check_builtin_channel_type(context& c) const {
 		return return_type(NULL);
 	} else {
 		// copy to user_def_chan
+		ret->reserve_datatypes(size());
 		const_iterator j = begin();
 		for ( ; i!=e; i++, j++) {
 			const count_ptr<const data_type_reference>

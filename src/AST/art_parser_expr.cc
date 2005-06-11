@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.5 2005/06/11 03:34:00 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.6 2005/06/11 21:48:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -271,6 +271,31 @@ expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_meta_expr(c) :
 			checked_meta_exprs_type::value_type(NULL));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: consider templating these traversals?
+	Q: are these expressions allowed to be NULL?  (CHP context)
+	Just collects the result of type-checking of items in list.
+	\param temp the type-checked result list.
+	\param c the context.
+ */
+void
+expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
+		context& c) const {
+	STACKTRACE("expr_list::postorder_check_nonmeta_exprs()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+#if 0
+		temp.push_back((*i) ? (*i)->check_nonmeta_expr(c) :
+			checked_nonmeta_exprs_type::value_type(NULL));
+#else
+		temp.push_back((*i)->check_nonmeta_expr(c));
+#endif
 	}
 }
 

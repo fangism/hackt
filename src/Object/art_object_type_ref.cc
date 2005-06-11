@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.35.2.4 2005/06/11 03:34:02 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35.2.5 2005/06/11 21:48:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -647,11 +647,33 @@ builtin_channel_type_reference::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applicable if datatype_list_type is a vector.  
+ */
+void
+builtin_channel_type_reference::reserve_datatypes(const size_t s) {
+	datatype_list.reserve(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 builtin_channel_type_reference::add_datatype(
 		const datatype_list_type::value_type& t) {
 	NEVER_NULL(t);
 	datatype_list.push_back(t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+builtin_channel_type_reference::datatype_ptr_type
+builtin_channel_type_reference::index_datatype(const size_t i) const {
+	return datatype_list[i];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const builtin_channel_type_reference>
+builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
+	typedef	never_ptr<const builtin_channel_type_reference>	return_type;
+	return return_type(this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -765,6 +787,28 @@ channel_type_reference::what(ostream& o) const {
 never_ptr<const definition_base>
 channel_type_reference::get_base_def(void) const {
 	return base_chan_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return what does it mean to return NULL?
+	TODO: handles cases for resolving typedefs.  
+ */
+never_ptr<const builtin_channel_type_reference>
+channel_type_reference::resolve_builtin_channel_type(void) const {
+	typedef	never_ptr<const builtin_channel_type_reference>	return_type;
+	const never_ptr<const user_def_chan>
+		udc(base_chan_def.is_a<const user_def_chan>());
+	if (!udc) {
+		cerr << "Fang, finish channel_type_reference::resolve_builtin_channel_type(): "
+			"case where base_chan_def is not user_def_chan."
+			<< endl;
+		return return_type(NULL);
+	}
+	// KLUDGE: count_ptr coerced to never_ptr!
+	// the consumer of this pointer better not hold onto it!
+	// see entity::CHP::channel_send::push_back().
+	return return_type(&udc->get_builtin_channel_type());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

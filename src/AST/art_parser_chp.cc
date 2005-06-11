@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.4 2005/06/11 03:33:59 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.5 2005/06/11 21:48:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -535,7 +535,7 @@ send::check_action(context& c) const {
 	cerr << "Fang, finish CHP::send::check_action()!" << endl;
 	return statement::return_type(NULL);
 #else
-	communication::checked_channel_type
+	const communication::checked_channel_type
 		sender(check_channel(c));
 	if (!sender) {
 		return statement::return_type(NULL);
@@ -546,8 +546,38 @@ send::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	// check expression list...
-	cerr << "Fang, check expression list in send::check_action()!" << endl;
-	return statement::return_type(NULL);
+//	cerr << "Fang, check expression list in send::check_action()!" << endl;
+	typedef	expr_list::checked_nonmeta_exprs_type::const_iterator
+							const_iterator;
+	expr_list::checked_nonmeta_exprs_type checked_exprs;
+	rvalues->postorder_check_nonmeta_exprs(checked_exprs, c);
+	const_iterator i(checked_exprs.begin());
+	const const_iterator e(checked_exprs.end());
+	const const_iterator ni(find(i, e, expr::nonmeta_return_type(NULL)));
+	if (ni != e) {
+		cerr << "At least one error in expr-list at " <<
+			where(*rvalues) << endl;
+		return statement::return_type(NULL);
+	}
+
+	typedef	count_ptr<entity::CHP::channel_send>	return_type;
+	const return_type ret(new entity::CHP::channel_send(sender));
+	NEVER_NULL(ret);
+	good_bool g(true);
+	for ( ; i!=e && g.good; i++) {
+		if (!ret->push_back(*i).good) {
+			cerr << "Type-check failed for expression, "
+				"somewhere in " << where(*rvalues) << endl;
+			g.good = false;
+		}
+	}
+	if (!g.good) {
+		cerr << "At least one type error in expr-list in " <<
+			where(*rvalues) << endl;
+		return statement::return_type(NULL);
+	} else {
+		return ret;
+	}
 #endif
 }
 

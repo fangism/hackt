@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.25.2.2 2005/06/11 03:34:02 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25.2.3 2005/06/11 21:48:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -119,6 +119,9 @@ virtual	~channel_type_reference_base() { }
 	char
 	get_direction(void) const { return direction; }
 
+virtual	never_ptr<const builtin_channel_type_reference>
+	resolve_builtin_channel_type(void) const = 0;
+
 protected:
 	// write_object_base?
 	// load_object_base?
@@ -137,8 +140,8 @@ class builtin_channel_type_reference : public channel_type_reference_base {
 	typedef	builtin_channel_type_reference		this_type;
 	typedef	channel_type_reference_base		parent_type;
 public:
-	typedef	list<count_ptr<const data_type_reference> >
-							datatype_list_type;
+	typedef	count_ptr<const data_type_reference>	datatype_ptr_type;
+	typedef	vector<datatype_ptr_type>		datatype_list_type;
 private:
 	datatype_list_type				datatype_list;
 public:
@@ -159,7 +162,19 @@ public:
 	get_base_def(void) const;
 
 	void
+	reserve_datatypes(const size_t);
+
+	void
 	add_datatype(const datatype_list_type::value_type&);
+
+	size_t
+	num_datatypes(void) const { return datatype_list.size(); }
+
+	datatype_ptr_type
+	index_datatype(const size_t) const;
+
+	never_ptr<const builtin_channel_type_reference>
+	resolve_builtin_channel_type(void) const;
 
 private:
 	excl_ptr<instantiation_statement_base>
@@ -206,6 +221,9 @@ public:
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+
+	never_ptr<const builtin_channel_type_reference>
+	resolve_builtin_channel_type(void) const;
 
 private:
 	excl_ptr<instantiation_statement_base>
