@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24.2.4 2005/05/29 02:08:25 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.5 2005/06/11 03:33:59 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -709,12 +709,13 @@ generic_type_ref::check_type(context& c) const {
 		STACKTRACE("checking template arguments (temp_spec)");
 		// FUTURE: need to extend to handle generic template
 		// type-argument placeholders.  
-		expr_list::checked_exprs_type temp;
-		temp_spec->postorder_check_exprs(temp, c);
+		expr_list::checked_meta_exprs_type temp;
+		temp_spec->postorder_check_meta_exprs(temp, c);
 		// copied from object_list::make_param_expr_list()
 		excl_ptr<dynamic_param_expr_list>
 			tpl(new dynamic_param_expr_list);
-		expr_list::checked_exprs_type::const_iterator i = temp.begin();
+		expr_list::checked_meta_exprs_type::const_iterator
+			i(temp.begin());
 		copy(temp.begin(), temp.end(), back_inserter(*tpl));
 		const return_type
 			type_ref(d->make_fundamental_type_reference(tpl));
@@ -775,47 +776,6 @@ data_type_ref_list::data_type_ref_list(const concrete_type_ref* c) :
 data_type_ref_list::~data_type_ref_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Checks the list of type references, which must be data types.  
- */
-good_bool
-data_type_ref_list::check_data_types(context& c) const {
-	typedef	list<concrete_type_ref::return_type>	checked_list_type;
-	const never_ptr<definition_base> d(c.get_current_prototype());
-	const never_ptr<user_def_chan> cd(d.is_a<user_def_chan>());
-	INVARIANT(cd);
-	checked_list_type checked_types;
-	check_list(checked_types, &concrete_type_ref::check_type, c);
-	// check if it contains NULL
-	checked_list_type::const_iterator i = checked_types.begin();
-	const checked_list_type::const_iterator e = checked_types.end();
-	const checked_list_type::const_iterator
-		ni(find(i, e, concrete_type_ref::return_type(NULL)));
-	if (ni != checked_types.end()) {
-		cerr << "At least one error in data-type list at " <<
-			where(*this) << endl;
-		return good_bool(false);
-	} else {
-		// copy to user_def_chan
-		const_iterator j = begin();
-		for ( ; i!=e; i++, j++) {
-			const count_ptr<const data_type_reference>
-				dtr(i->is_a<const data_type_reference>());
-			if (!dtr) {
-				cerr << "Channels can only carry data-types, ";
-				(*i)->what(cerr << "but resolved a ") <<
-					" at " << where(**j) << endl;
-				return good_bool(false);
-			} else {
-				cd->add_datatype(dtr);
-			}
-		}
-		return good_bool(true);
-	}
-}
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks the list of type references, which must be data types.  
  */
@@ -853,7 +813,6 @@ data_type_ref_list::check_builtin_channel_type(context& c) const {
 		return ret;
 	}
 }
-#endif
 
 //=============================================================================
 // explicit class template instantiations

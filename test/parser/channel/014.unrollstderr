@@ -2,20 +2,20 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x36025b0	module__	0	0	29
-	2	 0x3600144	namespc_	0	29	53
-	3	 0x36025d0	chandefn	0	53	112
-	4	 0x3602664	dintcoll	1	112	145
-	5	 0x36026b0	datainst	0	145	165
-	6	 0x36026d0	datatprf	0	165	181
-	7	 0x36026e0	datadefn	0	181	217
-	8	 0x3602740	dprmlst_	0	217	233
-	9	 0x3388010	cnstpi__	0	233	245
-	10	 0x3602750	crnglst_	0	245	265
-	11	 0x3602760	bchntprf	0	265	285
-	12	 0x3602770	datatprf	0	285	301
-	13	 0x3602780	dprmlst_	0	301	317
-	14	 0x3388020	cnstpi__	0	317	329
+	1	 0x43023f0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302410	chandefn	0	53	112
+	4	 0x43024a4	dintcoll	1	112	145
+	5	 0x43024f0	datainst	0	145	165
+	6	 0x4302510	datatprf	0	165	181
+	7	 0x4302520	datadefn	0	181	217
+	8	 0x4302580	dprmlst_	0	217	233
+	9	 0x3633018	cnstpi__	0	233	245
+	10	 0x4302590	crnglst_	0	245	265
+	11	 0x43025a0	bchntprf	0	265	286
+	12	 0x43025b0	datatprf	0	286	302
+	13	 0x43025c0	dprmlst_	0	302	318
+	14	 0x3633028	cnstpi__	0	318	330
 
 In module created from: ./014.in (unrolled)
 In namespace "", we have: {
@@ -26,7 +26,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     mychan = user-def-chan (declared) mychan
-      chan (
+      chan(
         int<32>
       )
       (

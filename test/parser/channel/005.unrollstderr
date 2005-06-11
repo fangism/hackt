@@ -2,26 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3502eb0	module__	0	0	29
-	2	 0x3500144	namespc_	0	29	53
-	3	 0x3502ed0	chandefn	0	53	136
-	4	 0x3502e54	dintcoll	0	136	174
-	5	 0x3502f60	datainst	0	174	194
-	6	 0x3502f80	datatprf	0	194	210
-	7	 0x3502f90	datadefn	0	210	246
-	8	 0x3502ff4	dprmlst_	0	246	262
-	9	 0x32d1024	cnstpi__	0	262	274
-	10	 0x3503004	dintcoll	0	274	312
-	11	 0x3503060	datainst	0	312	332
-	12	 0x3503084	dintcoll	0	332	370
-	13	 0x35030e0	datainst	0	370	390
-	14	 0x3503100	datatprf	0	390	406
-	15	 0x3503114	dprmlst_	0	406	422
-	16	 0x32d1038	cnstpi__	0	422	434
-	17	 0x3503120	bchntprf	0	434	458
-	18	 0x3503130	datatprf	0	458	474
-	19	 0x3503140	datadefn	0	474	511
-	20	 0x35031a0	datatprf	0	511	527
+	1	 0x4302cf0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302d10	chandefn	0	53	136
+	4	 0x4302c94	dintcoll	0	136	174
+	5	 0x4302da0	datainst	0	174	194
+	6	 0x4302dc0	datatprf	0	194	210
+	7	 0x4302dd0	datadefn	0	210	246
+	8	 0x4302e30	dprmlst_	0	246	262
+	9	 0x3633018	cnstpi__	0	262	274
+	10	 0x4302e44	dintcoll	0	274	312
+	11	 0x4302ea0	datainst	0	312	332
+	12	 0x4302ec4	dintcoll	0	332	370
+	13	 0x4302f20	datainst	0	370	390
+	14	 0x4302f40	datatprf	0	390	406
+	15	 0x4302f50	dprmlst_	0	406	422
+	16	 0x3633028	cnstpi__	0	422	434
+	17	 0x4302f60	bchntprf	0	434	459
+	18	 0x4302f70	datatprf	0	459	475
+	19	 0x4302f80	datadefn	0	475	512
+	20	 0x4302fe0	datatprf	0	512	528
 
 In module created from: ./005.in (unrolled)
 In namespace "", we have: {
@@ -32,7 +32,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     mychan = user-def-chan (declared) mychan
-      chan (
+      chan(
         bool<>
         bool<>
       )

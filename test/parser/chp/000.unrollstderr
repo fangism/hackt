@@ -1,0 +1,36 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302160	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302180	procdefn	0	53	123
+	4	 0x4302214	chancoll	0	123	161
+	5	 0x4302270	chaninst	0	161	181
+	6	 0x4302290	bchntprf	0	181	202
+	7	 0x43022a0	datatprf	0	202	218
+	8	 0x43022b0	datadefn	0	218	255
+	9	 0x4302314	chancoll	0	255	293
+	10	 0x4302370	chaninst	0	293	313
+	11	 0x4302390	bchntprf	0	313	334
+	12	 0x43023a0	datatprf	0	334	350
+
+In module created from: ./000.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    empty = process-definition (declared) empty      (
+        chan(bool<>) L
+        chan(bool<>) R
+      )
+      In definition "empty", we have: {
+        L = chan(bool<>) L
+        R = chan(bool<>) R
+      }
+
+}
+

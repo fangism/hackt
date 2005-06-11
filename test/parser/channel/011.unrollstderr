@@ -2,23 +2,23 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4102a60	module__	0	0	29
-	2	 0x4100144	namespc_	0	29	53
-	3	 0x4102a80	chandefn	0	53	136
-	4	 0x4102b14	pintcoll	0	136	173
-	5	 0x4102b60	pintinst	0	173	189
-	6	 0x4102b74	pintcoll	0	189	226
-	7	 0x4102bc0	pintinst	0	226	242
-	8	 0x4102a04	dintcoll	0	242	280
-	9	 0x4102bd0	datainst	0	280	300
-	10	 0x4102bf0	datatprf	0	300	316
-	11	 0x4102c00	datadefn	0	316	352
-	12	 0x4102c60	dprmlst_	0	352	368
-	13	 0x4102c70	spimref_	0	368	388
-	14	 0x4102ca0	bchntprf	0	388	408
-	15	 0x4102cb0	datatprf	0	408	424
-	16	 0x4102cc0	dprmlst_	0	424	440
-	17	 0x4102cd0	spimref_	0	440	460
+	1	 0x43028a0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43028c0	chandefn	0	53	136
+	4	 0x4302954	pintcoll	0	136	173
+	5	 0x43029a0	pintinst	0	173	189
+	6	 0x43029b4	pintcoll	0	189	226
+	7	 0x4302a00	pintinst	0	226	242
+	8	 0x4302844	dintcoll	0	242	280
+	9	 0x4302a10	datainst	0	280	300
+	10	 0x4302a30	datatprf	0	300	316
+	11	 0x4302a40	datadefn	0	316	352
+	12	 0x4302aa0	dprmlst_	0	352	368
+	13	 0x4302ab0	spimref_	0	368	388
+	14	 0x4302ae0	bchntprf	0	388	409
+	15	 0x4302af0	datatprf	0	409	425
+	16	 0x4302b00	dprmlst_	0	425	441
+	17	 0x4302b10	spimref_	0	441	461
 
 In module created from: ./011.in (unrolled)
 In namespace "", we have: {
@@ -33,7 +33,7 @@ In namespace "", we have: {
       pint<> K
       >
 
-      chan (
+      chan(
         int<pint-inst-ref ::mychan::J>
       )
       (

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11.2.2 2005/05/31 04:00:05 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.3 2005/06/11 03:34:00 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -12,14 +12,20 @@
 #include "AST/art_parser_statement.h"
 #include "AST/art_parser_definition_item.h"
 #include "util/memory/count_ptr.h"
+#include "util/STL/vector_fwd.h"
 
 namespace ART {
 namespace entity {
+	struct channel_tag;
+	template <class> class simple_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<channel_tag>
+		simple_channel_nonmeta_instance_reference;
 namespace CHP {
 	class action;
 	class guarded_action;
 }
-}
+}	// end namespace entity
+
 namespace parser {
 /**
 	This is the namespace for the CHP sub-language.  
@@ -247,20 +253,32 @@ public:
 //=============================================================================
 /// CHP communication action base class
 class communication : public statement {
+	typedef	statement			parent_type;
 protected:
-	const excl_ptr<const expr>		chan;
+	typedef	count_ptr<entity::simple_channel_nonmeta_instance_reference>
+						checked_channel_type;
+protected:
+	const excl_ptr<const inst_ref_expr>		chan;
 	const excl_ptr<const char_punctuation_type>	dir;
 #if 0
 public:
 	static const char			separator[];	// comma
 #endif
 public:
-	communication(const expr* c, const char_punctuation_type* d);
+	communication(const inst_ref_expr* c, const char_punctuation_type* d);
 
 virtual	~communication();
 
 	line_position
 	leftmost(void) const;
+
+protected:
+	checked_channel_type
+	check_channel(context& c) const;
+
+	static
+	char
+	get_channel_direction(const checked_channel_type::element_type&);
 
 };	// end class communication
 
@@ -290,6 +308,9 @@ public:
 	rightmost(void) const;
 
 	CHP_CHECK_STMT_PROTO;
+private:
+	typedef	DEFAULT_VECTOR(communication::return_type)
+						checked_actions_type;
 };	// end class comm_list
 
 
@@ -299,7 +320,8 @@ class send : public communication {
 protected:
 	const excl_ptr<const expr_list>	rvalues;
 public:
-	send(const expr* c, const char_punctuation_type* d, const expr_list* r);
+	send(const inst_ref_expr* c, const char_punctuation_type* d, 
+		const expr_list* r);
 
 	~send();
 
@@ -316,9 +338,10 @@ public:
 /// CHP receive action
 class receive : public communication {
 protected:
-	const excl_ptr<const expr_list>	lvalues;
+	const excl_ptr<const inst_ref_expr_list>	lvalues;
 public:
-	receive(const expr* c, const char_punctuation_type* d, const expr_list* l);
+	receive(const inst_ref_expr* c, 
+		const char_punctuation_type* d, const inst_ref_expr_list* l);
 
 	~receive();
 

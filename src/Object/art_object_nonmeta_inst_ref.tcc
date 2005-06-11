@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref.tcc"
-	$Id: art_object_nonmeta_inst_ref.tcc,v 1.1.4.2 2005/06/08 19:13:31 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.tcc,v 1.1.4.3 2005/06/11 03:34:01 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_TCC__
@@ -36,6 +36,13 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::simple_nonmeta_instance_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::~simple_nonmeta_instance_reference() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+typename SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::instance_collection_ptr_type
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_inst_base_subtype(void) const {
+	return inst_collection_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _

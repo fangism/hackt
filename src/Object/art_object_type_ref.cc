@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.35.2.3 2005/05/29 02:08:29 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35.2.4 2005/06/11 03:34:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -62,6 +62,8 @@ USING_STACKTRACE
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;
+using util::read_value;
+using util::write_value;
 
 //=============================================================================
 // class fundamental_type_reference method definitions
@@ -566,7 +568,7 @@ data_type_reference::load_object(const persistent_object_manager& m,
 // inline
 channel_type_reference_base::channel_type_reference_base(
 		template_args_ptr_type& pl) :
-		parent_type(pl) {
+		parent_type(pl), direction('\0') {
 }
 
 //=============================================================================
@@ -592,7 +594,11 @@ builtin_channel_type_reference::what(ostream& o) const {
  */
 ostream&
 builtin_channel_type_reference::dump(ostream& o) const {
-	o << "chan(";
+	o << "chan";
+	if (direction == '!' || direction == '?')
+		o << direction;
+	// else no direction
+	o << '(';
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
 	(*i)->dump(o);
@@ -609,7 +615,10 @@ builtin_channel_type_reference::dump(ostream& o) const {
  */
 ostream&
 builtin_channel_type_reference::dump_long(ostream& o) const {
-	o << auto_indent << "chan (" << endl;
+	o << auto_indent << "chan";
+	if (direction == '!' || direction == '?')
+		o << direction;
+	o << '(' << endl;
 	{
 	const indent __indent__(o); 
 	datatype_list_type::const_iterator
@@ -694,6 +703,7 @@ void
 builtin_channel_type_reference::write_object(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
+	write_value(o, direction);
 	m.write_pointer_list(o, datatype_list);
 }
 
@@ -702,6 +712,7 @@ void
 builtin_channel_type_reference::load_object(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
+	read_value(i, direction);
 	m.read_pointer_list(i, datatype_list);
 }
 

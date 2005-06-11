@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21.2.4 2005/06/08 19:13:34 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.5 2005/06/11 03:34:02 fang Exp $
  */
 
 %{
@@ -268,6 +268,7 @@ extern const char* const yyrule[];
 	assign_stmt*		_assign_stmt;
 	incdec_stmt*		_incdec_stmt;
 	expr_list*		_expr_list;
+	inst_ref_expr_list*	_inst_ref_expr_list;
 /** not used
 	template_argument_list*	_template_argument_list;
 	connection_argument_list*	_connection_argument_list;
@@ -562,7 +563,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
-%type	<_expr_list>	member_index_expr_list member_index_expr_list_in_parens
+%type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_expr> simple_expr
@@ -1644,7 +1645,7 @@ qualified_id
 member_index_expr_list
 	: member_index_expr_list ',' optional_member_index_expr
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| optional_member_index_expr { $$ = new expr_list($1); }
+	| optional_member_index_expr { $$ = new inst_ref_expr_list($1); }
 	;
 
 optional_member_index_expr

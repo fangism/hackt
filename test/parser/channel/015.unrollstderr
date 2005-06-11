@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	 0x4303ac0	cindlst_	0	578	594
 	27	 0x3633048	cnstpi__	0	594	606
 
-In module created from: ./012.in (unrolled)
+In module created from: ./015.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

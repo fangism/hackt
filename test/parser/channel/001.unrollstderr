@@ -2,18 +2,18 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x35022d0	module__	0	0	29
-	2	 0x3500144	namespc_	0	29	53
-	3	 0x35022f0	chandefn	0	53	112
-	4	 0x3502384	dintcoll	0	112	150
-	5	 0x35023e0	datainst	0	150	170
-	6	 0x3502400	datatprf	0	170	186
-	7	 0x3502410	datadefn	0	186	222
-	8	 0x3502474	dprmlst_	0	222	238
-	9	 0x32d1024	cnstpi__	0	238	250
-	10	 0x3502480	bchntprf	0	250	270
-	11	 0x3502490	datatprf	0	270	286
-	12	 0x35024a0	datadefn	0	286	323
+	1	 0x4302110	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302130	chandefn	0	53	112
+	4	 0x43021c4	dintcoll	0	112	150
+	5	 0x4302220	datainst	0	150	170
+	6	 0x4302240	datatprf	0	170	186
+	7	 0x4302250	datadefn	0	186	222
+	8	 0x43022b0	dprmlst_	0	222	238
+	9	 0x3633018	cnstpi__	0	238	250
+	10	 0x43022c0	bchntprf	0	250	271
+	11	 0x43022d0	datatprf	0	271	287
+	12	 0x43022e0	datadefn	0	287	324
 
 In module created from: ./001.in (unrolled)
 In namespace "", we have: {
@@ -24,7 +24,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     mychan = user-def-chan (declared) mychan
-      chan (
+      chan(
         bool<>
       )
       (

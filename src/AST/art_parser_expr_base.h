@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.5.2.2 2005/06/10 04:16:33 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.5.2.3 2005/06/11 03:34:00 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -104,11 +104,11 @@ public:
 		just that each is statically cast to a different subtype.  
 	 */
 	typedef	pair<expr::meta_return_type, inst_ref_meta_return_type>
-						generic_return_type;
+						generic_meta_return_type;
 
 #define	CHECK_GENERIC_PROTO						\
-	generic_return_type						\
-	check_generic(context& c) const
+	generic_meta_return_type					\
+	check_meta_generic(context& c) const
 /**
 	Needed by alias_list's check routine.
 	The caller of this will need to #include <utility>.

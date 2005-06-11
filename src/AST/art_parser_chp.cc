@@ -1,20 +1,27 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.3 2005/06/10 04:16:32 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.4 2005/06/11 03:33:59 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
 #define	__AST_ART_PARSER_CHP_CC__
 
 #include <iostream>
+#include <vector>
 
 #include "AST/art_parser_chp.h"
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
 #include "Object/art_object_CHP.h"
+#include "Object/art_object_type_ref.h"
 #include "Object/art_object_expr_base.h"
+#include "Object/art_object_nonmeta_inst_ref.h"
+#include "Object/art_object_nonmeta_inst_ref_subtypes.h"
+#include "Object/art_object_classification_details.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_collection.h"
 
 #include "util/what.h"
 #include "util/memory/count_ptr.tcc"
@@ -40,16 +47,22 @@ SPECIALIZE_UTIL_WHAT(ART::parser::CHP::prob_selection, "(chp-prob-sel)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::log, "(chp-log)")
-}
+}	// end namespace util
 
 namespace ART {
 namespace parser {
 namespace CHP {
+using std::vector;
+using std::list;
+using std::find;
+using std::copy;
+using std::back_inserter;
 #include "util/using_ostream.h"
 using entity::bool_expr;
 using entity::CHP::action_sequence;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
+using entity::channel_type_reference_base;
 
 //=============================================================================
 // class statement method definitions
@@ -82,7 +95,7 @@ body::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Need to figure out the boundaries between loop statements with 
+	TODO: Need to figure out the boundaries between loop statements with 
 	initializations, in the case of more than one loop body.  
 	First check individual statements and loops, 
 	worry about proper construction second.  
@@ -371,7 +384,8 @@ incdec_stmt::check_action(context& c) const {
 // class communication method definitions
 
 CONSTRUCTOR_INLINE
-communication::communication(const expr* c, const char_punctuation_type* d) :
+communication::communication(const inst_ref_expr* c, 
+		const char_punctuation_type* d) :
 		statement(), chan(c), dir(d) {
 	NEVER_NULL(chan); NEVER_NULL(dir);
 }
@@ -382,6 +396,50 @@ communication::~communication() { }
 line_position
 communication::leftmost(void) const {
 	return chan->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks the referenced channel expression (nonmeta).  
+	Does not check direction here, send and recv will check.  
+ */
+communication::checked_channel_type
+communication::check_channel(context& c) const {
+	typedef	checked_channel_type::element_type	ret_chan_type;
+	const inst_ref_expr::nonmeta_return_type
+		ch(chan->check_nonmeta_reference(c));
+	if (!ch) {
+		cerr << "ERROR resolving instance reference at " <<
+			where(*chan) << endl;
+		return checked_channel_type(NULL);
+	}
+	const checked_channel_type ret(ch.is_a<ret_chan_type>());
+	if (!ret) {
+		cerr << "ERROR instance referenced at " <<
+			where(*chan) << " is not a channel!" << endl;
+		return checked_channel_type(NULL);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param c reference to resolved channel instance reference.  
+	\return channel type direction (char).  
+ */
+char
+communication::get_channel_direction(
+		const checked_channel_type::element_type& c) {
+	typedef	checked_channel_type::element_type	ret_chan_type;
+	const ret_chan_type::instance_collection_ptr_type
+		inst_base(c.get_inst_base_subtype());
+	NEVER_NULL(inst_base);
+	// get type reference
+	const count_ptr<const channel_type_reference_base>
+		type_ref(inst_base->get_type_ref()
+			.is_a<const channel_type_reference_base>());
+	NEVER_NULL(type_ref);
+	return type_ref->get_direction();
 }
 
 //=============================================================================
@@ -408,18 +466,51 @@ comm_list::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 comm_list::check_action(context& c) const {
+#if 0
 	cerr << "Fang, finish CHP::comm_list::check_action()!" << endl;
 	return statement::return_type(NULL);
+#else
+	// typedef	list<statement::return_type>	checked_actions_type;
+	checked_actions_type actions;
+	// actions.reserve(size());
+	// static_cast<const parent_type&>(*this).
+#if 0
+	// WTF, this should compile!!!
+	check_list(actions, &communication::check_action, c);
+	// parent_type::template check_list<>(actions, &communication::check_action, c);
+#else
+	const_iterator ci(begin());
+	const const_iterator ce(end());
+	for ( ; ci!=ce; ci++) {
+		actions.push_back((*ci)->check_action(c));
+	}
+#endif
+	const checked_actions_type::const_iterator i(actions.begin());
+	const checked_actions_type::const_iterator e(actions.end());
+	const checked_actions_type::const_iterator
+		ni(find(i, e, statement::return_type()));
+	if (ni != e) {
+		cerr << "ERROR in one of the communcation actions in "
+			<< where(*this) << endl;
+		return statement::return_type(NULL);
+	} else {
+		const count_ptr<entity::CHP::concurrent_actions>
+			ret(new entity::CHP::concurrent_actions);
+		copy(i, e, back_inserter(*ret));
+		return ret;
+	}
+#endif
 }
-
 
 //=============================================================================
 // class send method definitions
 
 CONSTRUCTOR_INLINE
-send::send(const expr* c, const char_punctuation_type* d, const expr_list* r) :
+send::send(const inst_ref_expr* c, const char_punctuation_type* d, 
+		const expr_list* r) :
 		communication(c, d), rvalues(r) {
 	NEVER_NULL(rvalues);
 }
@@ -434,18 +525,38 @@ send::rightmost(void) const {
 	return rvalues->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: check expression list, type-for-type
+ */
 statement::return_type
 send::check_action(context& c) const {
+#if 0
 	cerr << "Fang, finish CHP::send::check_action()!" << endl;
 	return statement::return_type(NULL);
+#else
+	communication::checked_channel_type
+		sender(check_channel(c));
+	if (!sender) {
+		return statement::return_type(NULL);
+	}
+	if (get_channel_direction(*sender) == '?') {
+		cerr << "ERROR: cannot send on a receive-only channel, at " <<
+			where(*chan) << endl;
+		return statement::return_type(NULL);
+	}
+	// check expression list...
+	cerr << "Fang, check expression list in send::check_action()!" << endl;
+	return statement::return_type(NULL);
+#endif
 }
 
 //=============================================================================
 // class receive method definitions
 
 CONSTRUCTOR_INLINE
-receive::receive(const expr* c, const char_punctuation_type* d, 
-		const expr_list* l) :
+receive::receive(const inst_ref_expr* c, const char_punctuation_type* d, 
+		const inst_ref_expr_list* l) :
 		communication(c, d), lvalues(l) {
 	NEVER_NULL(lvalues);
 }

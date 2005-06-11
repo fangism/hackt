@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.4 2005/06/10 04:16:32 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.5 2005/06/11 03:34:00 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -94,14 +94,14 @@ expr::~expr() { }
 /**
 	All non-inst-ref expressions will dynamically cast
 	the result of check_meta_expr to an instance reference.  
-	This is overridden by inst_ref_expr::check_generic.
+	This is overridden by inst_ref_expr::check_meta_generic.
 	\return pair of typed pointers.  
  */
-expr::generic_return_type
-expr::check_generic(context& c) const {
-	STACKTRACE("expr::check_generic()");
+expr::generic_meta_return_type
+expr::check_meta_generic(context& c) const {
+	STACKTRACE("expr::check_meta_generic()");
 	const expr::meta_return_type ret(check_meta_expr(c));
-	return generic_return_type(ret,
+	return generic_meta_return_type(ret,
 		ret.is_a<inst_ref_meta_return_type::element_type>());
 }
 
@@ -135,11 +135,11 @@ expr::check_prs_expr(context& c) const {
 	the result of check_meta_reference to an parameter expression.  
 	\return pair of typed pointers.  
  */
-expr::generic_return_type
-inst_ref_expr::check_generic(context& c) const {
-	STACKTRACE("inst_ref_expr::check_generic()");
+expr::generic_meta_return_type
+inst_ref_expr::check_meta_generic(context& c) const {
+	STACKTRACE("inst_ref_expr::check_meta_generic()");
 	const meta_return_type ret(check_meta_reference(c));
-	return generic_return_type(
+	return generic_meta_return_type(
 		ret.is_a<expr::meta_return_type::element_type>(), ret);
 }
 
@@ -242,15 +242,15 @@ expr_list::~expr_list() { }
 	\param c the context.
  */
 void
-expr_list::postorder_check_generic(checked_generic_type& temp,
+expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
 		context& c) const {
-	STACKTRACE("expr_list::postorder_check_generic()");
+	STACKTRACE("expr_list::postorder_check_meta_generic()");
 	INVARIANT(temp.empty());
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-		temp.push_back((*i) ? (*i)->check_generic(c) :
-			checked_generic_type::value_type());
+		temp.push_back((*i) ? (*i)->check_meta_generic(c) :
+			checked_meta_generic_type::value_type());
 		// else pushes a pair of NULL pointers
 	}
 }
@@ -262,37 +262,49 @@ expr_list::postorder_check_generic(checked_generic_type& temp,
 	\param c the context.
  */
 void
-expr_list::postorder_check_exprs(checked_exprs_type& temp,
+expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
 		context& c) const {
-	STACKTRACE("expr_list::postorder_check_exprs()");
+	STACKTRACE("expr_list::postorder_check_meta_exprs()");
 	INVARIANT(temp.empty());
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_meta_expr(c) :
-			checked_exprs_type::value_type(NULL));
+			checked_meta_exprs_type::value_type(NULL));
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-expr_list::select_checked_exprs(const checked_generic_type& src, 
-		checked_exprs_type& dst) {
+expr_list::select_checked_meta_exprs(const checked_meta_generic_type& src, 
+		checked_meta_exprs_type& dst) {
 	INVARIANT(dst.empty());
 	transform(src.begin(), src.end(), back_inserter(dst),
-		_Select1st<checked_generic_type::value_type>()
+		_Select1st<checked_meta_generic_type::value_type>()
 	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-expr_list::select_checked_refs(const checked_generic_type& src, 
-		checked_refs_type& dst) {
+expr_list::select_checked_meta_refs(const checked_meta_generic_type& src, 
+		checked_meta_refs_type& dst) {
 	INVARIANT(dst.empty());
 	transform(src.begin(), src.end(), back_inserter(dst),
-		_Select2nd<checked_generic_type::value_type>()
+		_Select2nd<checked_meta_generic_type::value_type>()
 	);
 }
+
+//=============================================================================
+// class expr_list method definitions
+
+// inst_ref_expr_list::inst_ref_expr_list() : parent_type() { }
+
+inst_ref_expr_list::inst_ref_expr_list(const inst_ref_expr* e) :
+		parent_type(e) { }
+
+inst_ref_expr_list::~inst_ref_expr_list() { }
+
+// more later
 
 //=============================================================================
 // class qualified_id method definitions
@@ -539,7 +551,6 @@ id_expr::check_meta_reference(context& c) const {
 inst_ref_expr::nonmeta_return_type
 id_expr::check_nonmeta_reference(context& c) const {
 	typedef inst_ref_expr::nonmeta_return_type	return_type;
-#if 0
 	STACKTRACE("id_expr::check_nonmeta_reference()");
 	const never_ptr<const object>
 		o(qid->check_build(c));		// will lookup_object
@@ -563,9 +574,6 @@ id_expr::check_nonmeta_reference(context& c) const {
 			<< where(*qid) << endl;
 		THROW_EXIT;
 	}
-#else
-	cerr << "Fang, finish id_expr::check_nonmeta_reference()!" << endl;
-#endif
 	return return_type(NULL);
 }
 
@@ -1553,16 +1561,16 @@ array_concatenation::check_nonmeta_expr(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-expr::generic_return_type
-array_concatenation::check_generic(context& c) const {
-	STACKTRACE("array_concatenation::check_generic()");
+expr::generic_meta_return_type
+array_concatenation::check_meta_generic(context& c) const {
+	STACKTRACE("array_concatenation::check_meta_generic()");
 	if (size() == 1) {
 		const const_iterator only = begin();
-		return (*only)->check_generic(c);
+		return (*only)->check_meta_generic(c);
 	} else {
-		cerr << "Fang, finish array_concatenation::check_generic()!" <<
+		cerr << "Fang, finish array_concatenation::check_meta_generic()!" <<
 			endl;
-		return expr::generic_return_type();
+		return expr::generic_meta_return_type();
 	}
 }
 
@@ -1612,10 +1620,10 @@ loop_concatenation::check_nonmeta_expr(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-expr::generic_return_type
-loop_concatenation::check_generic(context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_generic()!" << endl;
-	return expr::generic_return_type();
+expr::generic_meta_return_type
+loop_concatenation::check_meta_generic(context& c) const {
+	cerr << "Fang, finish loop_concatenation::check_meta_generic()!" << endl;
+	return expr::generic_meta_return_type();
 }
 
 //=============================================================================
@@ -1660,10 +1668,10 @@ array_construction::check_nonmeta_expr(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-expr::generic_return_type
-array_construction::check_generic(context& c) const {
-	cerr << "Fang, finish array_construction::check_generic()!" << endl;
-	return expr::generic_return_type();
+expr::generic_meta_return_type
+array_construction::check_meta_generic(context& c) const {
+	cerr << "Fang, finish array_construction::check_meta_generic()!" << endl;
+	return expr::generic_meta_return_type();
 }
 
 //=============================================================================
@@ -1672,6 +1680,14 @@ array_construction::check_generic(context& c) const {
 template
 ostream&
 node_list<const token_identifier>::what(ostream&) const;
+
+template
+ostream&
+node_list<const inst_ref_expr>::what(ostream&) const;
+
+template
+line_position
+node_list<const inst_ref_expr>::leftmost(void) const;
 
 //=============================================================================
 }	// end namespace parser

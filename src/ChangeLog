@@ -1,5 +1,30 @@
 "ChangeLog"
 
+2005-06-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-16:
+	  Starting to test CHP checking piece by piece.  
+	  New basic CHP tests will go into test/parser/chp.  
+	  expr_list::types added "meta" to names to distinguish from future
+		"nonmeta" versions.  
+	  Initial implementation of CHP::statement::check_action (virtual).
+	  parser::CHP::communication's chan member now restricted to
+		inst_ref_expr, naturally.  
+	  parser::CHP::receive::lvalues is now inst_ref_expr_list, 
+		was just expr_list.
+	  Enabled id_expr::check_nonmeta_reference, which uses
+		inst_base->make_nonmeta_instance_reference... works fine.  
+	  entity::nonmeta_instance_reference new method
+		get_inst_base_subtype, returns type-specific
+		instance-collection ptr, as dictated by template type.  
+	  Added direction (char) field to channel_type_reference_base, 
+		valid values are '\0', '!', '?'.
+	  Updated channel_type_reference_base::dump to include direction.  
+	  Updated unroll test outputs in test/parser/channel.
+	  parser/art++-parse.yy: update nonterminal types for
+		chp_receive and inst_ref_expr_list.
+
+
 2005-06-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-15:

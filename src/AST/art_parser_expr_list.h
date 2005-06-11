@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.6.4.1 2005/06/10 04:16:33 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.6.4.2 2005/06/11 03:34:00 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_LIST_H__
@@ -24,6 +24,7 @@ using std::vector;
 
  */
 typedef node_list<const expr>				expr_list_base;
+typedef node_list<const inst_ref_expr>			inst_ref_expr_list_base;
 
 //=============================================================================
 /**
@@ -36,10 +37,12 @@ protected:
 	typedef	expr_list_base			parent_type;
 public:
 	typedef	parent_type::const_iterator	const_iterator;
-        typedef	DEFAULT_VECTOR(expr::generic_return_type)
-							checked_generic_type;
-        typedef	DEFAULT_VECTOR(expr::meta_return_type)	checked_exprs_type;
-        typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)	checked_refs_type;
+        typedef	DEFAULT_VECTOR(expr::generic_meta_return_type)
+						checked_meta_generic_type;
+        typedef	DEFAULT_VECTOR(expr::meta_return_type)
+						checked_meta_exprs_type;
+        typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+						checked_meta_refs_type;
 public:
 	expr_list();
 
@@ -64,19 +67,45 @@ public:
 #endif
 
 	void
-	postorder_check_generic(checked_generic_type&, context&) const;
+	postorder_check_meta_generic(checked_meta_generic_type&, 
+		context&) const;
 
 	void
-	postorder_check_exprs(checked_exprs_type&, context&) const;
-
-	static
-	void
-	select_checked_exprs(const checked_generic_type&, checked_exprs_type&);
+	postorder_check_meta_exprs(checked_meta_exprs_type&, context&) const;
 
 	static
 	void
-	select_checked_refs(const checked_generic_type&, checked_refs_type&);
+	select_checked_meta_exprs(const checked_meta_generic_type&, 
+		checked_meta_exprs_type&);
+
+	static
+	void
+	select_checked_meta_refs(const checked_meta_generic_type&, 
+		checked_meta_refs_type&);
 };	// end class expr_list
+
+//=============================================================================
+/**
+	List of instance references.  
+ */
+class inst_ref_expr_list : public inst_ref_expr_list_base {
+	typedef	inst_ref_expr_list		this_type;
+protected:
+	typedef	inst_ref_expr_list_base		parent_type;
+public:
+	explicit
+	inst_ref_expr_list(const inst_ref_expr*);
+
+	~inst_ref_expr_list();
+
+	using parent_type::leftmost;
+	using parent_type::rightmost;
+
+
+//	check_meta_references...
+//	check_nonmeta_references...
+
+};	// end class inst_ref_expr_list
 
 //=============================================================================
 /**

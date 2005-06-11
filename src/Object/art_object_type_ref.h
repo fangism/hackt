@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.25.2.1 2005/05/29 02:08:30 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25.2.2 2005/06/11 03:34:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -92,15 +92,36 @@ public:
 //=============================================================================
 /**
 	Abstract parent class for all channel types.  
+	TODO: direction flag
  */
 class channel_type_reference_base : public fundamental_type_reference {
 protected:
 	typedef	fundamental_type_reference		parent_type;
+public:
+#if 0
+	typedef	enum {
+		BIDIRECTIONAL, 
+		SEND, 
+		RECEIVE
+	}	direction_type;
+#endif
 protected:
-	channel_type_reference_base() : parent_type() { }
+	char						direction;
+protected:
+	channel_type_reference_base() : parent_type(), direction('\0') { }
 public:
 	channel_type_reference_base(template_args_ptr_type&);
 virtual	~channel_type_reference_base() { }
+
+	void
+	set_direction(const char c) { direction = c; }
+
+	char
+	get_direction(void) const { return direction; }
+
+protected:
+	// write_object_base?
+	// load_object_base?
 
 // everything else inherited, including pure virtual methods
 

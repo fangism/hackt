@@ -1,0 +1,7 @@
+// "003.in" rejects empty CHP body
+
+defproc empty(chan?(bool) L; chan!(bool) R) {
+chp {
+}
+}
+

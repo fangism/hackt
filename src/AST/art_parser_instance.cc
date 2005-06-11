@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.3 2005/06/10 04:16:33 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.4 2005/06/11 03:34:01 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -140,18 +140,18 @@ alias_list::rightmost(void) const {
 
 	Code from here is ripped from the old
 	object_list::make_param_assignment().
-	\param temp result of postorder_check of items in list, 
+	\param temp result of postorder_check_meta of items in list, 
 		which may contain errors, but they are caught here.  
 	\return newly allocated expression assignment object if
 		successfully type-checked, else NULL.  
  */
 excl_ptr<const entity::param_expression_assignment>
-alias_list::make_param_assignment(const checked_exprs_type& temp) {
+alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	typedef	excl_ptr<const entity::param_expression_assignment>
 							const_return_type;
 	typedef	excl_ptr<entity::param_expression_assignment>
 							return_type;
-	typedef	checked_exprs_type::value_type		checked_expr_ptr_type;
+	typedef	checked_meta_exprs_type::value_type		checked_expr_ptr_type;
 	// then expect subsequent items to be the same
 	// or already param_expr in the case of some constants.
 	// However, only the last item may be a constant.  
@@ -183,8 +183,8 @@ alias_list::make_param_assignment(const checked_exprs_type& temp) {
 
 	entity::param_expression_assignment::meta_instance_reference_appender
 		append_it(*ret);
-	const checked_exprs_type::const_iterator dest_end = --temp.end();
-	checked_exprs_type::const_iterator dest_iter = temp.begin();
+	const checked_meta_exprs_type::const_iterator dest_end = --temp.end();
+	checked_meta_exprs_type::const_iterator dest_iter = temp.begin();
 	err = accumulate(dest_iter, dest_end, err, append_it);
 
 	// if there are any errors, discard everything?
@@ -204,10 +204,10 @@ alias_list::make_param_assignment(const checked_exprs_type& temp) {
 	(SOON...)
  */
 excl_ptr<const entity::aliases_connection_base>
-alias_list::make_alias_connection(const checked_refs_type& temp) {
+alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	typedef excl_ptr<const aliases_connection_base> const_return_type;
 	typedef excl_ptr<aliases_connection_base> 	return_type;
-	checked_refs_type::const_iterator i = temp.begin();
+	checked_meta_refs_type::const_iterator i = temp.begin();
 	INVARIANT(temp.size() > 1);          // else what are you connecting?
 	const count_ptr<const meta_instance_reference_base> fir(*i);
 //		fir(i->is_a<const meta_instance_reference_base>());
@@ -259,18 +259,18 @@ if (size() > 0) {		// non-empty
 	const never_ptr<const object> ret(NULL);
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
-	checked_generic_type temp;
+	checked_meta_generic_type temp;
 //	check_list(temp, &expr::check_generic, c);
-	postorder_check_generic(temp, c);
-	const checked_generic_type::const_iterator first_obj = temp.begin();
-	const checked_generic_type::const_iterator end_obj = temp.end();
+	postorder_check_meta_generic(temp, c);
+	const checked_meta_generic_type::const_iterator first_obj = temp.begin();
+	const checked_meta_generic_type::const_iterator end_obj = temp.end();
 	if (!first_obj->first && !first_obj->second) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
 		THROW_EXIT;
 	} else if (first_obj->first) {
-		checked_exprs_type checked_exprs;
-		expr_list::select_checked_exprs(temp, checked_exprs);
+		checked_meta_exprs_type checked_exprs;
+		expr_list::select_checked_meta_exprs(temp, checked_exprs);
 		
 		// then expect subsequent items to be the same
 		// or already param_expr in the case of some constants.
@@ -296,8 +296,8 @@ if (size() > 0) {		// non-empty
 			INVARIANT(!exass.owned());
 		}
 	} else if (first_obj->second) {
-		checked_refs_type checked_refs;
-		expr_list::select_checked_refs(temp, checked_refs);
+		checked_meta_refs_type checked_refs;
+		expr_list::select_checked_meta_refs(temp, checked_refs);
 
 		excl_ptr<const aliases_connection_base>
 			connection = make_alias_connection(checked_refs);
@@ -359,13 +359,13 @@ actuals_base::rightmost(void) const {
 		if no expression was passed in its position.  
  */
 good_bool
-actuals_base::check_actuals(expr_list::checked_refs_type& ret,
+actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
 		context& c) const {
 	STACKTRACE("actuals_base::check_actuals()");
-	expr_list::checked_generic_type temp;
-	actuals->postorder_check_generic(temp, c);
-	expr_list::select_checked_refs(temp, ret);
-	expr_list::checked_generic_type::const_iterator
+	expr_list::checked_meta_generic_type temp;
+	actuals->postorder_check_meta_generic(temp, c);
+	expr_list::select_checked_meta_refs(temp, ret);
+	expr_list::checked_meta_generic_type::const_iterator
 		c_iter = temp.begin();
 	expr_list::const_iterator e_iter = actuals->begin();
 	const expr_list::const_iterator e_end = actuals->end();
@@ -592,7 +592,7 @@ instance_connection::check_build(context& c) const {
 		inst_ref(obj.is_a<const simple_meta_instance_reference_base>());
 	NEVER_NULL(inst_ref);
 
-	expr_list::checked_refs_type temp;
+	expr_list::checked_meta_refs_type temp;
 	if (actuals_base::check_actuals(temp, c).good) {
 
 	excl_ptr<const port_connection>
@@ -654,10 +654,10 @@ connection_statement::rightmost(void) const {
  */
 excl_ptr<const entity::port_connection>
 connection_statement::make_port_connection(
-		const expr_list::checked_refs_type& temp,
+		const expr_list::checked_meta_refs_type& temp,
 		const count_ptr<const entity::simple_meta_instance_reference_base>& ir) {
 	typedef	excl_ptr<const port_connection>		return_type;
-	typedef	expr_list::checked_refs_type		ref_list_type;
+	typedef	expr_list::checked_meta_refs_type		ref_list_type;
 	excl_ptr<port_connection>
 		ret(new entity::port_connection(ir));
 	never_ptr<const definition_base>
@@ -703,7 +703,7 @@ connection_statement::check_build(context& c) const {
 		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
 	NEVER_NULL(inst_ref);
 
-	expr_list::checked_refs_type temp;
+	expr_list::checked_meta_refs_type temp;
 	if (actuals_base::check_actuals(temp, c).good) {
 	// useless return value, expect an object_list on object_stack
 	excl_ptr<const port_connection>

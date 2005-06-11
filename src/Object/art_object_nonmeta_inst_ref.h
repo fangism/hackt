@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.1.4.2 2005/06/08 19:13:31 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.1.4.3 2005/06/11 03:34:01 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
@@ -84,6 +84,9 @@ public:
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+
+	instance_collection_ptr_type
+	get_inst_base_subtype(void) const;
 
 #if 0
 	// overridden by member_nonmeta_instance_reference
