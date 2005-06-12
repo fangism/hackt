@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_inst_ref_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
-	$Id: art_object_inst_ref_subtypes.h,v 1.1.4.2 2005/06/08 19:13:26 fang Exp $
+	$Id: art_object_inst_ref_subtypes.h,v 1.1.4.2.2.1 2005/06/12 21:27:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_SUBTYPES_H__
 #define	__OBJECT_ART_OBJECT_INST_REF_SUBTYPES_H__
 
 #include "Object/art_object_inst_ref_base.h"
-
+#include "Object/art_object_classification_fwd.h"
 // might as well include it here
 #include "Object/art_object_nonmeta_inst_ref_subtypes.h"
 

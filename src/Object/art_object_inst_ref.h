@@ -2,7 +2,7 @@
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
 	TODO: rename file to simple_meta_instance_reference
-	$Id: art_object_inst_ref.h,v 1.21.2.1.2.1 2005/06/12 19:01:24 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.21.2.1.2.2 2005/06/12 21:27:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -10,6 +10,7 @@
 
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_instance_base.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
 

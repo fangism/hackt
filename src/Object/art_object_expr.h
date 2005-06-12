@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.28.2.2 2005/06/10 04:16:37 fang Exp $
+	$Id: art_object_expr.h,v 1.28.2.2.2.1 2005/06/12 21:27:57 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
@@ -27,7 +27,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
-
+class pint_range;
 USING_LIST
 using std::string;
 using std::ostream;

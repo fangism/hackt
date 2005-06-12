@@ -1,7 +1,7 @@
 /**
-	\file "Object/art_object_fwd.h"
+	\file "Object/art_object_expr_types.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_expr_types.h,v 1.1.2.1.2.1 2005/06/12 19:01:23 fang Exp $
+	$Id: art_object_expr_types.h,v 1.1.2.1.2.2 2005/06/12 21:27:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_TYPES_H__

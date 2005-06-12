@@ -2,14 +2,12 @@
 	\file "Object/art_built_ins.h"
 	Header for built-in features of the art language, 
 	including primitive definitions and types.  
-	$Id: art_built_ins.h,v 1.9.6.1 2005/05/26 21:31:20 fang Exp $
+	$Id: art_built_ins.h,v 1.9.6.1.4.1 2005/06/12 21:27:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_H__
 #define	__OBJECT_ART_BUILT_INS_H__
 
-// don't need all forward declarations, just a few
-// #include "Object/art_object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 
 /***

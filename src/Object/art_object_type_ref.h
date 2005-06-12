@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.25.2.3 2005/06/11 21:48:07 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25.2.3.2.1 2005/06/12 21:28:00 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -15,7 +15,12 @@ namespace parser {
 }
 
 namespace entity {
-
+class datatype_definition_base;
+class unroll_context;
+class builtin_channel_type_reference;
+class channel_definition_base;
+class process_definition_base;
+class built_in_param_def;
 USING_LIST
 using std::ostream;
 using parser::token_identifier;

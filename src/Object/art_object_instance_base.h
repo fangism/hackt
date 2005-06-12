@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.16.2.2 2005/06/10 04:16:39 fang Exp $
+	$Id: art_object_instance_base.h,v 1.16.2.2.2.1 2005/06/12 21:27:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -24,6 +24,13 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+class definition_base;
+class scopespace;
+class meta_instance_reference_base;
+class nonmeta_instance_reference_base;
+class fundamental_type_reference;
+class const_range_list;
+class param_expr;
 USING_LIST
 using std::istream;
 using std::string;

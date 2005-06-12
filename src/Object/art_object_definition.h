@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.32.2.4 2005/06/11 21:48:06 fang Exp $
+	$Id: art_object_definition.h,v 1.32.2.4.2.1 2005/06/12 21:27:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -38,7 +38,7 @@ using parser::token_identifier;
 
 //=============================================================================
 namespace entity {
-
+class data_type_reference;
 using std::ostream;
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes

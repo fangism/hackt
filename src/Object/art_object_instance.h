@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.39.2.1 2005/06/08 19:13:27 fang Exp $
+	$Id: art_object_instance.h,v 1.39.2.1.2.1 2005/06/12 21:27:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -16,6 +16,8 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+class data_type_reference;
+class const_param_expr_list;
 USING_LIST
 using util::memory::never_ptr;
 using util::memory::count_ptr;

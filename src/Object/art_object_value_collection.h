@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.5.2.2 2005/06/10 04:16:40 fang Exp $
+	$Id: art_object_value_collection.h,v 1.5.2.2.2.1 2005/06/12 21:28:01 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -11,8 +11,8 @@
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/art_object_fwd.h"
 #include "Object/art_object_index.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/memory/count_ptr.h"
 
 #include "util/persistent_fwd.h"
@@ -22,7 +22,14 @@
 
 namespace ART {
 namespace entity {
-
+template <class>
+class simple_meta_instance_reference;
+class meta_instance_reference_base;
+class nonmeta_instance_reference_base;
+class fundamental_type_reference;
+class param_expr;
+class const_range_list;
+class const_index_list;
 USING_LIST
 using std::istream;
 using std::ostream;

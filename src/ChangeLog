@@ -2,6 +2,17 @@
 
 2005-06-12	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-02:
+	  Header clean-up: liberating most Object/*.h headers from
+		dependence on "Object/art_object_fwd.h" --
+		conforming to a need-to-know policy for headers.  
+		Consequentially, affected header files use their
+		own forward declarations.  
+		I'm so glad I have the 'check-headers' target for this...
+	  Slightly faster rebuilds, certainly less building each time
+		the art_object_fwd file is touched.  
+
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-01:
 	  This branch is for developing nonmeta data instance references
 		as run-time value-expressions, children of entity::data_expr.

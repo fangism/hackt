@@ -1,14 +1,13 @@
 /**
 	\file "Object/art_object_PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.4 2005/05/24 02:38:12 fang Exp $
+	$Id: art_object_PRS_base.h,v 1.4.6.1 2005/06/12 21:27:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__
 #define	__OBJECT_ART_OBJECT_PRS_BASE_H__
 
 #include <list>
-#include "Object/art_object_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.3.2.2 2005/05/27 02:05:03 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.3.2.2.4.1 2005/06/12 21:27:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -13,6 +13,7 @@
 
 namespace ART {
 namespace entity {
+class process_type_reference;
 //=============================================================================
 /**
 	Process definition base class.  From this, there will arise: true

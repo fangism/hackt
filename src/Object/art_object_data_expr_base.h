@@ -2,7 +2,7 @@
 	\file "Object/art_object_data_expr_base.h"
 	Base classes for data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: art_object_data_expr_base.h,v 1.1.4.3.2.1 2005/06/12 19:01:22 fang Exp $
+	$Id: art_object_data_expr_base.h,v 1.1.4.3.2.2 2005/06/12 21:27:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_BASE_H__
@@ -12,8 +12,11 @@
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
 
+#define	USE_DATA_EXPR_EQUIVALENCE	0
+
 namespace ART {
 namespace entity {
+class data_type_reference;
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -40,6 +43,22 @@ virtual	ostream&
 
 virtual	size_t
 	dimensions(void) const = 0;
+
+#if 0
+#define	GET_DATA_TYPE_REF_PROTO						\
+	count_ptr<const data_type_reference>				\
+	get_data_type_ref(void) const
+
+virtual	GET_DATA_TYPE_REF_PROTO = 0;
+#endif
+
+#if USE_DATA_EXPR_EQUIVALENCE
+#define	DATA_EXPR_MAY_EQUIVALENCE_PROTO					\
+	bool may_be_type_equivalent(const data_expr&) const
+
+virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
+#endif
+
 };	// end class data_expr
 
 //=============================================================================

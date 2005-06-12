@@ -20,6 +20,11 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		Proposal: implement as public ports of the int built-in
 			intrinsic definition, like:
 			deftype int <: (bits b[W]);
+	For data-ranges [x..y] where x,y are run-time values, 
+		do we place any restrictions on the type (width) of x,y?
+		must x <= y?
+		Don't fee good about have size of expression be unknown...
+			very ugly semantics, tons of run-time checks...
 
 //=============================================================================
 2005-04-29:
