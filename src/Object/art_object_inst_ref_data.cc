@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.8.6.1 2005/06/08 19:13:25 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8.6.1.2.1 2005/06/12 19:01:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -14,8 +14,9 @@
 #include "Object/art_object_connect.h"
 #include "Object/art_object_inst_ref.tcc"
 #include "Object/art_object_nonmeta_inst_ref.tcc"
-#include "Object/art_object_inst_ref_data.tcc"	// empty?
+// #include "Object/art_object_inst_ref_data.tcc"	// empty?
 #include "Object/art_object_member_inst_ref.tcc"
+#include "Object/art_object_nonmeta_value_reference.tcc"
 
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
@@ -37,23 +38,31 @@ SPECIALIZE_UTIL_WHAT(
 
 #if 0
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::simple_datatype_nonmeta_instance_reference, "data-nonmeta-inst-ref")
+	ART::entity::simple_datatype_nonmeta_instance_reference,
+		"data-nonmeta-inst-ref")
 #endif
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::simple_int_nonmeta_instance_reference, "int-nonmeta-inst-ref")
+	ART::entity::simple_int_nonmeta_instance_reference,
+		"int-nonmeta-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::simple_bool_nonmeta_instance_reference, "bool-nonmeta-inst-ref")
+	ART::entity::simple_bool_nonmeta_instance_reference,
+		"bool-nonmeta-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::simple_enum_nonmeta_instance_reference, "enum-nonmeta-inst-ref")
+	ART::entity::simple_enum_nonmeta_instance_reference,
+		"enum-nonmeta-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::simple_datastruct_nonmeta_instance_reference, "struct-nonmeta-inst-ref")
+	ART::entity::simple_datastruct_nonmeta_instance_reference,
+		"struct-nonmeta-inst-ref")
 
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::int_member_meta_instance_reference, "int-member-inst-ref")
+	ART::entity::int_member_meta_instance_reference,
+		"int-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::bool_member_meta_instance_reference, "bool-member-inst-ref")
+	ART::entity::bool_member_meta_instance_reference,
+		"bool-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
-	ART::entity::enum_member_meta_instance_reference, "enum-member-inst-ref")
+	ART::entity::enum_member_meta_instance_reference,
+		"enum-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(
 	ART::entity::datastruct_member_meta_instance_reference,
 		"struct-member-inst-ref")
@@ -121,10 +130,11 @@ template class simple_meta_instance_reference<enum_tag>;
 template class simple_meta_instance_reference<datastruct_tag>;
 
 // template class simple_nonmeta_instance_reference<datatype_tag>;
-template class simple_nonmeta_instance_reference<bool_tag>;
-template class simple_nonmeta_instance_reference<int_tag>;
-template class simple_nonmeta_instance_reference<enum_tag>;
-template class simple_nonmeta_instance_reference<datastruct_tag>;
+// recently upgraded from simple_nonmeta_instance_reference
+template class simple_nonmeta_value_reference<bool_tag>;
+template class simple_nonmeta_value_reference<int_tag>;
+template class simple_nonmeta_value_reference<enum_tag>;
+template class simple_nonmeta_value_reference<datastruct_tag>;
 
 template class member_meta_instance_reference<bool_tag>;
 template class member_meta_instance_reference<int_tag>;

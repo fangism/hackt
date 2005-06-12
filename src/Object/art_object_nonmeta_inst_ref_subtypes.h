@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_subtypes.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref_subtypes.h,v 1.1.4.2 2005/06/08 19:13:31 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_subtypes.h,v 1.1.4.2.2.1 2005/06/12 19:01:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_SUBTYPES_H__
@@ -11,52 +11,6 @@
 
 namespace ART {
 namespace entity {
-template <class> struct class_traits;
-
-using std::ostream;
-using std::istream;
-
-//=============================================================================
-#if 0
-#define	SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
-template <class Tag>
-
-#define SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS				\
-simple_nonmeta_instance_reference<Tag>
-
-/**
-	Final class, need not be virtual.  
- */
-SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class simple_nonmeta_instance_reference :
-		public simple_nonmeta_instance_reference_base, 
-		public class_traits<Tag>::nonmeta_instance_reference_base_type {
-	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
-	// one of the *_instance_reference_base classes listed below
-	typedef	typename class_traits<Tag>::nonmeta_instance_reference_base_type
-							parent_type;
-	typedef	simple_nonmeta_instance_reference_base	common_base_type;
-	// see Object/art_object_inst_ref.h for more inspiring typedefs...
-protected:
-	simple_nonmeta_instance_reference();
-public:
-	explicit
-	simple_nonmeta_instance_reference(excl_ptr<index_list_type>&);
-
-virtual	~simple_nonmeta_instance_reference();
-
-	ostream&
-	dump(ostream&) const;
-
-	ostream&
-	what(ostream&) const;
-
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class simple_nonmeta_instance_reference
-#endif
-
 //=============================================================================
 // classes pint_nonmeta_instance_reference and pbool_nonmeta_instance_reference
 //	are in "art_object_expr_param_ref.*"

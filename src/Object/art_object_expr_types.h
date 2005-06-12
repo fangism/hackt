@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_expr_types.h,v 1.1.2.1 2005/06/10 04:16:38 fang Exp $
+	$Id: art_object_expr_types.h,v 1.1.2.1.2.1 2005/06/12 19:01:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_TYPES_H__
@@ -33,6 +33,20 @@ namespace entity {
 		Intuitive choice.  
 	 */
 	typedef	bool		bool_value_type;
+
+	/**
+		For now, limiting to 256 enumerations.  
+	 */
+	typedef	char		enum_value_type;
+
+#if 1
+	class			struct_value_type;
+#else
+	/**
+		Generic meta-type for structured values.  
+	 */
+	typedef	something_or_other	struct_value_type;
+#endif
 
 }	// end namespace entity
 }	// end namespace ART

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.3 2005/06/10 04:16:40 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.3.2.1 2005/06/12 19:01:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -97,6 +97,31 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class simple_nonmeta_instance_reference_base
+
+//=============================================================================
+/**
+	A reference to a nonmeta data type.  
+	Abstract base class.
+	NOTE: both true datatypes and nonmeta-dependent 
+		meta parameter references fall into this category.  
+	This will be the base class interface for all
+		simple_nonmeta_value_references.  
+ */
+class simple_datatype_nonmeta_value_reference :
+	public simple_nonmeta_instance_reference_base {
+protected:
+	typedef	simple_nonmeta_instance_reference_base	parent_type;
+protected:
+	simple_datatype_nonmeta_value_reference() : parent_type() { }
+public:
+virtual	~simple_datatype_nonmeta_value_reference() { }
+
+protected:
+	using parent_type::collect_transient_info_base;
+	using parent_type::write_object_base;
+	using parent_type::load_object_base;
+
+};	// end class simple_datatype_nonmeta_value_reference
 
 //=============================================================================
 // NOTE: probably not going to support

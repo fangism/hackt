@@ -1,5 +1,30 @@
 "ChangeLog"
 
+2005-06-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-01:
+	  This branch is for developing nonmeta data instance references
+		as run-time value-expressions, children of entity::data_expr.
+	  This will enable basic expression type checking of data exprs.
+	  Reserved for later development: operator overloading.
+		See 2005-06-11 entry in NOTES.  
+	  In this revision:
+		Removed "Object/art_object_inst_ref_data.tcc"
+		Added "Object/art_object_nonmeta_value_reference.{h,tcc}"
+		Renamed: simple_meta_instance_reference_parent_type ->
+			meta_instance_reference_parent_type
+			(analogously for nonmeta)
+		Introduced enum_expr and struct_expr (empty) in
+			"Object/art_object_data_expr_base.h"
+		Placeholder data_value_types for enum and struct (undefined)
+			in "Object/art_object_expr_types.h"
+		Added appropriate data_expr_base_type to class_traits for
+			data and parameter type tag specializations.  
+		Replaced data and param -subtyped nonmeta_instance_references
+			with nonmeta_value_reference template class, 
+			preserving typedef'd names.  
+
+
 2005-06-11	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-17:

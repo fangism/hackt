@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47.2.2 2005/06/10 04:16:36 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.2.2.2.1 2005/06/12 19:01:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_const_collection.tcc"
 #include "Object/art_object_value_reference.tcc"
+#include "Object/art_object_nonmeta_value_reference.tcc"
 #include "Object/art_object_nonmeta_inst_ref.tcc"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"	// for ~aliases_connection_base
@@ -4157,7 +4158,8 @@ template class const_collection<pbool_tag>;
 template class simple_meta_value_reference<pint_tag>;
 template class simple_meta_value_reference<pbool_tag>;
 
-#if 0
+#if 1
+// maybe this belongs in "Object/art_object_data_expr.cc"?
 template class simple_nonmeta_value_reference<pint_tag>;
 template class simple_nonmeta_value_reference<pbool_tag>;
 #else

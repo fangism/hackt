@@ -1,11 +1,11 @@
 /**
-	\file "Object/art_object_value_reference.h"
-	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.2.2.1 2005/06/12 19:01:28 fang Exp $
+	\file "Object/art_object_nonmeta_value_reference.h"
+	Classes related to nonmeta (data) instance reference expressions. 
+	$Id: art_object_nonmeta_value_reference.h,v 1.1.2.1 2005/06/12 19:01:27 fang Exp $
  */
 
-#ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
-#define __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
+#ifndef __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
+#define __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
 
 #include <iosfwd>
 #include "util/STL/list_fwd.h"
@@ -13,7 +13,7 @@
 #include "Object/art_object_fwd.h"
 #include "Object/art_object_index.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_nonmeta_inst_ref_base.h"
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -30,59 +30,67 @@ using util::memory::never_ptr;
 using util::memory::count_ptr;
 
 //=============================================================================
-#define	SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE			\
+#define	SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE		\
 template <class Tag>
 
-#define	SIMPLE_META_VALUE_REFERENCE_CLASS				\
-simple_meta_value_reference<Tag>
+#define	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS				\
+simple_nonmeta_value_reference<Tag>
 
 /**
 	A reference to a instance of built-in type pbool.  
-	Consider multiply deriving from pbool_expr, 
-	and replacing pbool_literal.  
+	This is intended as a replacement for 
+	simple_nonmeta_instance_reference.
  */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-class simple_meta_value_reference :
-	public simple_param_meta_value_reference, 
-	public class_traits<Tag>::meta_instance_reference_parent_type, 
-	public class_traits<Tag>::expr_base_type {
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+class simple_nonmeta_value_reference :
+	public simple_datatype_nonmeta_value_reference, 
+	public class_traits<Tag>::nonmeta_instance_reference_parent_type, 
+	// will be something like int_expr or bool_expr
+	public class_traits<Tag>::data_expr_base_type {
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
+	typedef	typename class_traits<Tag>::data_value_type
+							data_value_type;
 private:
-	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+	typedef	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS	this_type;
+	typedef	typename class_traits<Tag>::nonmeta_instance_reference_parent_type
 							parent_type;
-	typedef	typename class_traits<Tag>::expr_base_type
-							expr_base_type;
-	typedef	simple_param_meta_value_reference	common_base_type;
+	typedef	typename class_traits<Tag>::data_expr_base_type
+							data_expr_base_type;
+	typedef	simple_datatype_nonmeta_value_reference	common_base_type;
 	typedef	common_base_type::parent_type		grandparent_type;
-	typedef	expr_base_type				interface_type;
+	typedef	data_expr_base_type			interface_type;
+#if 0
 public:
-	typedef	count_ptr<const interface_type>		init_arg_type;
 	typedef	typename class_traits<Tag>::value_collection_parent_type
 						value_collection_parent_type;
+#endif
 protected:
+#if 0
 	typedef	typename class_traits<Tag>::template value_array<0>::type
 							value_scalar_type;
-	typedef	typename class_traits<Tag>::value_collection_generic_type
+#endif
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							value_collection_type;
+#if 0
 	typedef	typename class_traits<Tag>::const_collection_type
 							const_collection_type;
 	typedef	typename class_traits<Tag>::const_expr_type
 							const_expr_type;
-	typedef	never_ptr<value_collection_type>
+#endif
+	// NOTE: this is const, unlike simple_meta_value_reference
+	typedef	never_ptr<const value_collection_type>
 						value_collection_ptr_type;
 	value_collection_ptr_type			value_collection_ref;
 private:
-	simple_meta_value_reference();
+	simple_nonmeta_value_reference();
 public:
 	explicit
-	simple_meta_value_reference(const value_collection_ptr_type);
+	simple_nonmeta_value_reference(const value_collection_ptr_type);
 
-	simple_meta_value_reference(const value_collection_ptr_type, 
+	simple_nonmeta_value_reference(const value_collection_ptr_type, 
 		excl_ptr<index_list_type>&);
 
-	~simple_meta_value_reference();
+	~simple_nonmeta_value_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -100,12 +108,15 @@ public:
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+#if 0
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
+#endif
 
 	size_t
 	dimensions(void) const;
 
+#if 0
 	bool
 	has_static_constant_dimensions(void) const;
 
@@ -134,32 +145,38 @@ public:
 	bool
 	is_loop_independent(void) const;
 
-	value_type
+	data_value_type
 	static_constant_value(void) const;
+#endif
 
 	bool
 	must_be_equivalent(const interface_type& ) const;
 
+#if 0
 	good_bool
-	resolve_value(value_type& i) const;
+	resolve_value(data_value_type& i) const;
 
 	good_bool
-	unroll_resolve_value(const unroll_context&, value_type& i) const;
+	unroll_resolve_value(const unroll_context&, data_value_type& i) const;
+#endif
 
 	const_index_list
 	resolve_dimensions(void) const;
 
+#if 0
 	good_bool
-	resolve_values_into_flat_list(list<value_type>& l) const;
+	resolve_values_into_flat_list(list<data_value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
+#endif
 
 #if 0
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
 #endif
 
+#if 0
 public:
 	/**
 		Helper class for assigning values to instances.
@@ -171,19 +188,19 @@ public:
 		/** resolved range list */
 		const_index_list	ranges;
 		/** flat list of unrolled values */
-		list<value_type>		vals;
+		list<data_value_type>		vals;
 	public:
 		assigner(const interface_type& p);
 		// default destructor
 
 		bad_bool
 		operator () (const bad_bool b,
-			const SIMPLE_META_VALUE_REFERENCE_CLASS& p) const;
+			const SIMPLE_NONMETA_VALUE_REFERENCE_CLASS& p) const;
 
 		template <template <class> class P>
 		bad_bool
 		operator () (const bad_bool b,
-			const P<const SIMPLE_META_VALUE_REFERENCE_CLASS >& p) const {
+			const P<const SIMPLE_NONMETA_VALUE_REFERENCE_CLASS >& p) const {
 			assert(p);
 			return this->operator()(b, *p);
 		}
@@ -192,20 +209,23 @@ public:
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
+#endif
 
+#if 0
 protected:
 	using common_base_type::collect_transient_info_base;
 	using common_base_type::write_object_base;
 	using common_base_type::load_object_base;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class simple_meta_value_reference
+};	// end class simple_nonmeta_value_reference
 
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
+#endif	// __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
 

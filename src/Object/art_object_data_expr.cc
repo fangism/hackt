@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.1.4.4 2005/06/10 04:16:35 fang Exp $
+	$Id: art_object_data_expr.cc,v 1.1.4.4.2.1 2005/06/12 19:01:22 fang Exp $
  */
 
 #include <iostream>
 #include "Object/art_object_data_expr.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/art_object_nonmeta_value_reference.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
@@ -702,6 +703,9 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// explicit template instantiations
+
+// steal nonmeta_value_references from "Object/art_object_expr.cc"?
 
 //=============================================================================
 }	// end namespace entity

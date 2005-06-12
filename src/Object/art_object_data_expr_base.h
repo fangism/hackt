@@ -2,7 +2,7 @@
 	\file "Object/art_object_data_expr_base.h"
 	Base classes for data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: art_object_data_expr_base.h,v 1.1.4.3 2005/06/10 04:16:36 fang Exp $
+	$Id: art_object_data_expr_base.h,v 1.1.4.3.2.1 2005/06/12 19:01:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_BASE_H__
@@ -102,6 +102,34 @@ virtual	ostream&
 	dump_brief(ostream&) const = 0;
 
 };	// end class bool_expr
+
+//=============================================================================
+/**
+	Expressions that represent enumerated values.  
+	Pretty much limited to enum_nonmeta_instance_references.  
+ */
+class enum_expr : public data_expr {
+	typedef	data_expr			parent_type;
+protected:
+	enum_expr() : parent_type() { }
+public:
+virtual	~enum_expr() { }
+
+};	// end class enum_expr
+
+//=============================================================================
+/**
+	Expressions that represent structured values.  
+	Pretty much limited to struct_nonmeta_instance_references.  
+ */
+class struct_expr : public data_expr {
+	typedef	data_expr			parent_type;
+protected:
+	struct_expr() : parent_type() { }
+public:
+virtual	~struct_expr() { }
+
+};	// end class struct_expr
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.14 2005/05/10 04:51:17 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.14.10.1 2005/06/12 19:01:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -21,7 +21,7 @@
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_definition.h"
-
+#include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic template instantiation
