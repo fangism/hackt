@@ -2,7 +2,7 @@
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
 	TODO: rename to meta_expr_base.h
-	$Id: art_object_expr_base.h,v 1.13.2.1.2.1 2005/06/12 21:27:57 fang Exp $
+	$Id: art_object_expr_base.h,v 1.13.2.1.2.2 2005/06/13 17:52:07 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -338,6 +338,8 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
+	GET_DATA_TYPE_REF_PROTO;
+
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;
 
@@ -417,6 +419,8 @@ virtual	ostream&
 
 virtual	size_t
 	dimensions(void) const = 0;
+
+	GET_DATA_TYPE_REF_PROTO;
 
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.h"
 	Class definitions for data expressions.
-	$Id: art_object_data_expr.h,v 1.1.4.4 2005/06/10 04:16:36 fang Exp $
+	$Id: art_object_data_expr.h,v 1.1.4.4.2.1 2005/06/13 17:52:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_H__
@@ -77,6 +77,8 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+	GET_DATA_TYPE_REF_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -144,6 +146,8 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+	GET_DATA_TYPE_REF_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -205,6 +209,8 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+	GET_DATA_TYPE_REF_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -237,6 +243,8 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }
+
+	GET_DATA_TYPE_REF_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS
@@ -273,6 +281,8 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+	GET_DATA_TYPE_REF_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -306,6 +316,8 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }	// or bomb
+
+	GET_DATA_TYPE_REF_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class int_index

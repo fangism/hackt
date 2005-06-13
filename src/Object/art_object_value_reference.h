@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.2.2.2 2005/06/12 21:28:01 fang Exp $
+	$Id: art_object_value_reference.h,v 1.7.2.2.2.3 2005/06/13 17:52:14 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -99,6 +99,9 @@ public:
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+
+	never_ptr<const instance_collection_base>
+	get_inst_base_subtype(void) const;
 
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;

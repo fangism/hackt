@@ -1,5 +1,38 @@
 "ChangeLog"
 
+2005-06-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-03:
+	  Added built-in bool_type_ptr (data_type_reference)
+		for data expression type checking, 
+		and int32_type_ptr just for convenience.  
+		Tentatively pints are promoted to int<32>s when
+		type-checking data expressions.  This may change later.  
+	  Implemented (new, virtual) data_expr::get_data_type_ref()
+		for non-meta expression type-checking (untested).  
+		Tentative policy regarding int<>s:
+			arithmetic and relational expressions must
+			operate on ints of the same width 
+			(if that can be determined statically, 
+				i.e. not template or array-dependent)
+			if cannot be resolved, then don't reject until unroll.
+			if mismatch found, return NULL to signal error.  
+		pbools are promoted to bool in nonmeta context.
+	  Added new template policy to simple_nonmeta_value_reference:
+		data_type_resolver: where each specialization dictates
+			how a type-reference is created from reference.  
+		simple_nonmeta_value_reference<Tag>::get_data_type_ref()
+			is implemented using this policy.  
+	  Renamed fundamental_type_reference::may_be_equivalent to
+		may_be_type_equivalent, analogously for must_be_equivalent.  
+	  The three policy structs for instance_collection<Tag>
+		have been consolidated into one "collection_type_manager", 
+		and also added new static function, get_type().
+	  data_type_reference::make_quick_int_type_ref(size_t)
+		purely for convenience.  
+	  TODO: check expressions of send and receive actions in CHP.  
+
+
 2005-06-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-02:

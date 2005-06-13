@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_value_reference.h"
 	Classes related to nonmeta (data) instance reference expressions. 
-	$Id: art_object_nonmeta_value_reference.h,v 1.1.2.2 2005/06/12 21:28:00 fang Exp $
+	$Id: art_object_nonmeta_value_reference.h,v 1.1.2.3 2005/06/13 17:52:13 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
@@ -11,7 +11,7 @@
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_index.h"
-#include "Object/art_object_expr_const.h"	// for const_index_list
+#include "Object/art_object_data_expr_base.h"
 #include "Object/art_object_nonmeta_inst_ref_base.h"
 #include "Object/art_object_classification_fwd.h"
 #include "util/persistent.h"
@@ -21,6 +21,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+class const_index_list;
 USING_LIST
 using std::ostream;
 using util::good_bool;
@@ -28,6 +29,21 @@ using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+
+//=============================================================================
+/**
+	Generic template for the functor that resolves the 
+	data type reference.  
+	(This generalized declaration remains undefined.)
+	Specializations should follow this form.  
+ */
+template <class Tag>
+struct data_type_resolver {
+	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type&) const;
+};	// end struct data_type_resolver
 
 //=============================================================================
 #define	SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE		\
@@ -47,6 +63,7 @@ class simple_nonmeta_value_reference :
 	public class_traits<Tag>::nonmeta_instance_reference_parent_type, 
 	// will be something like int_expr or bool_expr
 	public class_traits<Tag>::data_expr_base_type {
+friend struct data_type_resolver<Tag>;
 public:
 	typedef	typename class_traits<Tag>::data_value_type
 							data_value_type;
@@ -108,6 +125,9 @@ public:
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+	value_collection_ptr_type
+	get_inst_base_subtype(void) const;
+
 #if 0
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
@@ -115,6 +135,8 @@ public:
 
 	size_t
 	dimensions(void) const;
+
+	GET_DATA_TYPE_REF_PROTO;
 
 #if 0
 	bool
@@ -160,8 +182,10 @@ public:
 	unroll_resolve_value(const unroll_context&, data_value_type& i) const;
 #endif
 
+#if 0
 	const_index_list
 	resolve_dimensions(void) const;
+#endif
 
 #if 0
 	good_bool

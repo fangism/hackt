@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.19.6.1 2005/06/12 19:01:25 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.19.6.2 2005/06/13 17:52:11 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -67,26 +67,24 @@ namespace entity {
 //=============================================================================
 // functor specializations
 template <>
-struct type_dumper<int_tag> {
-	typedef class_traits<int_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	ostream& os;
-	type_dumper(ostream& o) : os(o) { }
-
-	ostream&
-	operator () (const instance_collection_generic_type& c) {
-		return os << "int<" << c.get_type_parameter() <<
-			">^" << c.get_dimensions();
-	}
-};      // end struct type_dumper<int_tag>
-
-//-----------------------------------------------------------------------------
-template <>
-struct collection_parameter_persistence<int_tag> {
+struct collection_type_manager<int_tag> {
 	typedef class_traits<int_tag>::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef class_traits<int_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
+	typedef class_traits<int_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
+
+		ostream&
+		operator () (const instance_collection_generic_type& c) {
+			return os << "int<" << c.get_type_parameter() <<
+				">^" << c.get_dimensions();
+		}
+	};	// end struct dumper
 
 	static
 	void
@@ -111,16 +109,24 @@ struct collection_parameter_persistence<int_tag> {
 		read_value(i, c.type_parameter);
 	}
 
-};      // end struct collection_parameter_persistence
-
-//-----------------------------------------------------------------------------
-
-template <>
-struct collection_type_committer<int_tag> {
-	typedef class_traits<int_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<int_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
+	/**
+		TODO: optimization, cache the result of the first call
+		to this function (for this collection), and return the
+		cached type, because it's not supposed to change.  
+		See also implementation in "Object/art_built_ins.cc", 
+			under int32_type_ptr.
+		TODO: What if parameter is template-dependent and not
+			yet resolved?
+			Should probably return the template-dependent
+			width expression in the type pointer.  
+	 */
+	static
+	type_ref_ptr_type
+	get_type(const instance_collection_generic_type& i) {
+		return type_ref_ptr_type(
+			data_type_reference::make_quick_int_type_ref(
+				i.type_parameter));
+	}
 
 	/**
 		During unroll phase, this commits the type of the collection.  
@@ -129,9 +135,10 @@ struct collection_type_committer<int_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
+	static
 	bad_bool
-	operator () (instance_collection_generic_type& c,
-		const type_ref_ptr_type& t) const {
+	commit_type(instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) {
 		// resolve type def?
 		INVARIANT(t->get_base_def() == &int_def);
 		const never_ptr<const param_expr_list>
@@ -158,7 +165,7 @@ struct collection_type_committer<int_tag> {
 			return bad_bool(false);
 		}
 	}
-};      // end struct collection_type_committer
+};      // end struct collection_type_manager
 
 //=============================================================================
 // class int_instance method definitions

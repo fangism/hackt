@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.9.2.2 2005/06/10 04:16:39 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.9.2.2.2.1 2005/06/13 17:52:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -48,29 +48,23 @@ class const_param_expr_list;
 	(Why not use plain static functions?)
  */
 template <class Tag>
-struct type_dumper {
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	ostream& os;
-	type_dumper(ostream& o) : os(o) { }
-
-	// intentionally undefined
-	ostream&
-	operator () (const instance_collection_generic_type&);
-};	// end struct type_dumper
-
-//-----------------------------------------------------------------------------
-/**
-	This pair of functors is used to save and restore
-	instance_collections' parameters.  
-	This definition just shows the interface pattern.  
- */
-template <class Tag>
-struct collection_parameter_persistence {
+struct collection_type_manager {
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	typename class_traits<Tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	/// was separate type-dumper functor
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
+
+		// intentionally undefined
+		ostream&
+		operator () (const instance_collection_generic_type&);
+	};	// end struct dumper
 
 	static
 	void
@@ -86,24 +80,23 @@ struct collection_parameter_persistence {
 	void
 	load(const persistent_object_manager&, istream&, 
 		instance_collection_generic_type&);
-};	// end struct collection_parameter
 
-//-----------------------------------------------------------------------------
-template <class Tag>
-struct collection_type_committer {
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef	typename class_traits<Tag>::type_ref_ptr_type
-					type_ref_ptr_type;
+	static
+	type_ref_ptr_type
+	get_type(const instance_collection_generic_type&);
 
-	// return true on error, false on success
+	/**
+		NOTE: Was separate type-dumper functor.
+		\return true on error, false on success.
+	 */
+	static
 	bad_bool
-	operator () (instance_collection_generic_type&, 
-		const type_ref_ptr_type&) const;
-};	// end struct collection_type_committer
+	commit_type(instance_collection_generic_type&, 
+		const type_ref_ptr_type&);
+
+};	// end struct type_manager
 
 //-----------------------------------------------------------------------------
-
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
 template <class Tag>
@@ -118,8 +111,7 @@ instance_collection<Tag>
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public class_traits<Tag>::instance_collection_parent_type {
-friend struct collection_parameter_persistence<Tag>;
-friend struct collection_type_committer<Tag>;
+friend struct collection_type_manager<Tag>;
 private:
 	typedef	Tag					category_type;
 	typedef	typename class_traits<Tag>::instance_collection_parent_type
@@ -181,6 +173,9 @@ virtual	bool
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 #endif
+
+	type_ref_ptr_type
+	get_type_ref_subtype(void) const;
 
 	bad_bool
 	commit_type(const type_ref_ptr_type& );

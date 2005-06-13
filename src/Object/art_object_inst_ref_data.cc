@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.8.6.1.2.1 2005/06/12 19:01:24 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.8.6.1.2.2 2005/06/13 17:52:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -14,9 +14,9 @@
 #include "Object/art_object_connect.h"
 #include "Object/art_object_inst_ref.tcc"
 #include "Object/art_object_nonmeta_inst_ref.tcc"
-// #include "Object/art_object_inst_ref_data.tcc"	// empty?
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_nonmeta_value_reference.tcc"
+#include "Object/art_built_ins.h"
 
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
@@ -115,11 +115,56 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 //=============================================================================
-// class int_meta_instance_reference method definitions
-// class bool_meta_instance_reference method definitions
-// class enum_meta_instance_reference method definitions
-// class datastruct_meta_instance_reference method definitions
-//	... all have been replaced with template definitions!
+// policy specializations
+// for simple_nonmeta_value_reference
+
+template <>
+struct data_type_resolver<bool_tag> {
+	typedef	class_traits<bool_tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type&) const {
+		// easy, no parameters!
+		return bool_type_ptr;
+	}
+};	// end class data_type_resolver
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct data_type_resolver<int_tag> {
+	typedef	class_traits<int_tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type& d) const {
+		// need to do some real work... 
+		// extract parameter from collection
+		return d.get_inst_base_subtype()->get_type_ref_subtype();
+	}
+};	// end class data_type_resolver
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct data_type_resolver<enum_tag> {
+	typedef	class_traits<enum_tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type& d) const {
+		// leverange enum_instance_collection?
+		return d.get_inst_base_subtype()->get_type_ref_subtype();
+	}
+};	// end class data_type_resolver
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct data_type_resolver<datastruct_tag> {
+	typedef	class_traits<datastruct_tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type& d) const {
+		// leverange struct_instance_collection?
+		return d.get_inst_base_subtype()->get_type_ref_subtype();
+	}
+};	// end class data_type_resolver
 
 //=============================================================================
 // explicit template instantiations

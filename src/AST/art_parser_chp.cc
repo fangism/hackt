@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.5 2005/06/11 21:48:05 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.5.2.1 2005/06/13 17:52:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -562,6 +562,7 @@ send::check_action(context& c) const {
 
 	typedef	count_ptr<entity::CHP::channel_send>	return_type;
 	const return_type ret(new entity::CHP::channel_send(sender));
+	// need to check that number of arguments match...
 	NEVER_NULL(ret);
 	good_bool g(true);
 	for ( ; i!=e && g.good; i++) {

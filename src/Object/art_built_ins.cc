@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.22.2.2 2005/06/07 08:16:21 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.22.2.2.2.1 2005/06/13 17:52:05 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
@@ -156,6 +156,26 @@ __cerr__(int_def.dump(std::cerr) << std::endl);
 const data_type_reference
 bool_type = data_type_reference(
 	never_ptr<const built_in_datatype_def>(&bool_def));
+#endif
+
+const count_ptr<const data_type_reference>
+bool_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&bool_def)));
+
+#if 0
+// is an excl_ptr...
+static fundamental_type_reference::template_args_ptr_type
+__thirty_two__(new const_param_expr_list(
+	count_ptr<const pint_const>(new pint_const(32))));
+
+const count_ptr<const data_type_reference>
+int32_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&int_def), __thirty_two__));
+#else
+// be careful once type references are memory-pooled!
+// the following function call calls a bunch of allocators (new)
+const count_ptr<const data_type_reference>
+int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 #endif
 
 //=============================================================================

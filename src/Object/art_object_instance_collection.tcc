@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.11.2.2 2005/06/10 04:16:39 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.11.2.2.2.1 2005/06/13 17:52:11 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -451,8 +451,15 @@ INSTANCE_COLLECTION_CLASS::~instance_collection() {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	type_dumper<Tag> dump_it(o);
+	typename collection_type_manager<Tag>::dumper dump_it(o);
 	return dump_it(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
+INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
+	return collection_type_manager<Tag>::get_type(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -467,7 +474,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bad_bool
 INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	// functor, specialized for each class
-	return collection_type_committer<Tag>()(*this, t);
+	return collection_type_manager<Tag>::commit_type(*this, t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -553,7 +560,7 @@ void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	parent_type::collect_transient_info_base(m);
-	collection_parameter_persistence<Tag>::collect(m, *this);
+	collection_type_manager<Tag>::collect(m, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -563,7 +570,7 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
 	// specialization functor parameter writer
-	collection_parameter_persistence<Tag>::write(m, o, *this);
+	collection_type_manager<Tag>::write(m, o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -573,7 +580,7 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
 	// specialization functor parameter loader
-	collection_parameter_persistence<Tag>::load(m, i, *this);
+	collection_type_manager<Tag>::load(m, i, *this);
 }
 
 //=============================================================================

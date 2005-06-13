@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_value_reference.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_nonmeta_value_reference.tcc,v 1.1.2.1 2005/06/12 19:01:28 fang Exp $
+ 	$Id: art_object_nonmeta_value_reference.tcc,v 1.1.2.2 2005/06/13 17:52:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_TCC__
@@ -26,6 +26,8 @@
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_nonmeta_inst_ref_subtypes.h"
+#include "Object/art_object_type_ref.h"		// for data_type_reference
+// #include "Object/art_object_expr_const.h"	// for const_index_list
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
@@ -105,6 +107,13 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
 	return value_collection_ref;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::value_collection_ptr_type
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base_subtype(void) const {
+	return value_collection_ref;
+}
+
 #if 0
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
@@ -140,6 +149,13 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
 	return grandparent_type::dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const data_type_reference>
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(void) const {
+	return data_type_resolver<Tag>()(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
