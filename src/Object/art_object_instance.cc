@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.43.2.1 2005/06/08 19:13:26 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.43.2.2 2005/06/14 05:38:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -338,7 +338,7 @@ instance_collection_base::template_formal_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	// used to be may_be_equivalent...
-	if (!this_type->must_be_equivalent(*b_type)) {
+	if (!this_type->must_be_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -363,7 +363,7 @@ instance_collection_base::port_formal_equivalent(
 		this_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_equivalent(*b_type)) {
+	if (!this_type->may_be_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}

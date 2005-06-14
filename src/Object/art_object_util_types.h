@@ -1,13 +1,12 @@
 /**
 	\file "Object/art_object_util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.1.2.2 2005/06/08 19:13:32 fang Exp $
+	$Id: art_object_util_types.h,v 1.1.2.3 2005/06/14 05:38:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
 #define	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
 
-#include "Object/art_object_fwd.h"
 #include "util/STL/vector_fwd.h"
 #include "util/STL/deque_fwd.h"
 #include "util/STL/list_fwd.h"
@@ -17,6 +16,10 @@
 
 namespace ART {
 namespace entity {
+	class name_space;
+	class meta_instance_reference_base;
+	class meta_range_list;
+	class instantiation_statement_base;
 	USING_DEQUE
 	USING_LIST
 	using util::memory::never_ptr;

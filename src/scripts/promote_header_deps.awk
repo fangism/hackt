@@ -79,7 +79,7 @@ function srcdir_to_builddir(f,
 END {
 	print "";
 	# print one phony target for the top-level header file
-	if (length(srcdir))
+	if (length(srcdir) && srcdir != ".")
 		printf(srcdir "/");
 	# else leave blank
 	print demote_header_dep(current_target) ":";

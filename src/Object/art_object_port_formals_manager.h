@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.h"
 	Definition port formal instance manager class.  
-	$Id: art_object_port_formals_manager.h,v 1.1.2.1 2005/05/25 22:35:42 fang Exp $
+	$Id: art_object_port_formals_manager.h,v 1.1.2.2 2005/06/14 05:38:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_H__
@@ -21,8 +21,9 @@ namespace ART {
 namespace parser {
 	class token_identifier;
 }
-namespace entity {
 //=============================================================================
+namespace entity {
+class instance_collection_base;
 using std::string;
 using std::istream;
 using std::ostream;

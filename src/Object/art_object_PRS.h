@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.3.2.2 2005/06/08 19:13:18 fang Exp $
+	$Id: art_object_PRS.h,v 1.3.2.3 2005/06/14 05:38:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
 #define	__OBJECT_ART_OBJECT_PRS_H__
 
+#include "Object/art_object_fwd.h"
 #include "Object/art_object_PRS_base.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"

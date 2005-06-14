@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.47.2.2 2005/06/10 04:16:36 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.47.2.3 2005/06/14 05:38:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -28,13 +28,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/art_object_index.h"
 #include "Object/art_object_expr.h"	// includes "art_object_expr_const.h"
+#include "Object/art_built_ins.h"
 // #include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_const_collection.tcc"
 #include "Object/art_object_value_reference.tcc"
+#include "Object/art_object_nonmeta_value_reference.tcc"
 #include "Object/art_object_nonmeta_inst_ref.tcc"
+#include "Object/art_object_type_ref.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"	// for ~aliases_connection_base
 #include "Object/art_object_type_hash.h"
@@ -242,6 +245,15 @@ param_expr::~param_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	When pint is interpreted as an int, in non-meta language...
+ */
+count_ptr<const data_type_reference>
+pint_expr::get_data_type_ref(void) const {
+	return int32_type_ptr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Constructs an expression assignment object of the appropriate
 	value type.  
 	Wrapped calls to private constructors.  
@@ -279,6 +291,16 @@ pbool_expr::~pbool_expr() {
 	STACKTRACE_DTOR("~pbool_expr()");
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	When pint is interpreted as an int, in non-meta language...
+ */
+count_ptr<const data_type_reference>
+pbool_expr::get_data_type_ref(void) const {
+	return bool_type_ptr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_expr::may_be_equivalent_generic(const param_expr& p) const {
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
@@ -445,6 +467,13 @@ param_expr_list::~param_expr_list() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::const_param_expr_list() :
 		param_expr_list(), parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_param_expr_list::const_param_expr_list(
+		const parent_type::value_type& p) :
+		param_expr_list(), parent_type() {
+	push_back(p);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() {
@@ -1286,7 +1315,6 @@ pbool_const::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // class pint_unary_expr method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
@@ -4149,6 +4177,47 @@ dynamic_meta_index_list::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// policy specializations for simple_nonmeta_value_reference
+// MAKE SURE THESE MOVE WITH THE EXPLICIT TEMPLATE INSTANTIATIONS
+// until files are drastically reorganized.  
+
+/**
+	Specialized data type reference resolved for parameter ints, 
+	which are promoted to int<32> in data context.  
+ */
+template <>
+struct data_type_resolver<pint_tag> {
+	typedef	class_traits<pint_tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	/**
+		\return type reference to int<32>
+	 */
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type&) const {
+		return int32_type_ptr;
+	}
+};	// end struct data_type_resolver
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Specialized data type reference resolved for parameter ints, 
+	which are promoted to int<32> in data context.  
+ */
+template <>
+struct data_type_resolver<pbool_tag> {
+	typedef	class_traits<pbool_tag>::simple_nonmeta_instance_reference_type
+						data_value_reference_type;
+	/**
+		\return type reference to int<32>
+	 */
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type&) const {
+		return bool_type_ptr;
+	}
+};	// end struct data_type_resolver
+
+
+//=============================================================================
 // explicit template instantiations
 
 template class const_collection<pint_tag>;
@@ -4157,13 +4226,10 @@ template class const_collection<pbool_tag>;
 template class simple_meta_value_reference<pint_tag>;
 template class simple_meta_value_reference<pbool_tag>;
 
-#if 0
+// maybe this belongs in "Object/art_object_data_expr.cc"?
 template class simple_nonmeta_value_reference<pint_tag>;
 template class simple_nonmeta_value_reference<pbool_tag>;
-#else
-template class simple_nonmeta_instance_reference<pint_tag>;
-template class simple_nonmeta_instance_reference<pbool_tag>;
-#endif
+// used to be simple_nonmeta_instance_reference<...>
 
 //=============================================================================
 }	// end namepace entity

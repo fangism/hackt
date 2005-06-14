@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.20.2.1 2005/05/25 22:35:42 fang Exp $
+	$Id: art_object_definition_base.h,v 1.20.2.2 2005/06/14 05:38:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -35,6 +35,11 @@ using parser::token_identifier;
 
 //=============================================================================
 namespace entity {
+class param_expr;
+class param_expr_list;
+class scopespace;
+class instance_collection_base;
+class fundamental_type_reference;
 using std::string;
 using std::istream;
 using std::vector;

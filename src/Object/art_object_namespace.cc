@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.27 2005/05/24 02:38:13 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.27.2.1 2005/06/14 05:38:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -281,7 +281,7 @@ scopespace::add_instance(
 				new_type(inst_stmt->get_type_ref());
 			// type comparison is conservative, in the 
 			// case of dynamic template parameters.  
-			if (!old_type->may_be_equivalent(*new_type)) {
+			if (!old_type->may_be_type_equivalent(*new_type)) {
 				cerr << "ERROR: type of redeclaration of "
 					<< id << " does not match "
 					"previous declaration: " << endl <<

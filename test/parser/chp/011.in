@@ -1,0 +1,8 @@
+// "011.in" -- dies on unknown identifier
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+chp {
+	R!(WTF)		// WTF is WTF?
+}
+}
+

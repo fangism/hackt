@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.13.2.2 2005/06/08 19:13:23 fang Exp $
+	$Id: art_object_fwd.h,v 1.13.2.3 2005/06/14 05:38:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -88,27 +88,32 @@ namespace entity {
 	class simple_meta_instance_reference;
 	template <class>
 	class simple_nonmeta_instance_reference;
+	template <class>
+	class simple_nonmeta_value_reference;
 
 	typedef	simple_nonmeta_instance_reference<channel_tag>
-	simple_channel_nonmeta_instance_reference;
+		simple_channel_nonmeta_instance_reference;
 	typedef	simple_nonmeta_instance_reference<process_tag>
-	simple_process_nonmeta_instance_reference;
-	typedef	simple_nonmeta_instance_reference<int_tag>
-	simple_int_nonmeta_instance_reference;
-	typedef	simple_nonmeta_instance_reference<bool_tag>
-	simple_bool_nonmeta_instance_reference;
-	typedef	simple_nonmeta_instance_reference<enum_tag>
-	simple_enum_nonmeta_instance_reference;
-	typedef	simple_nonmeta_instance_reference<datastruct_tag>
-	simple_datastruct_nonmeta_instance_reference;
+		simple_process_nonmeta_instance_reference;
+
 #if 1
+	// value reference this?
 	typedef	simple_nonmeta_instance_reference<datatype_tag>
-	simple_datatype_nonmeta_instance_reference;
+		simple_datatype_nonmeta_instance_reference;
 #endif
-	typedef	simple_nonmeta_instance_reference<pbool_tag>
-	simple_pbool_nonmeta_instance_reference;
-	typedef	simple_nonmeta_instance_reference<pint_tag>
-	simple_pint_nonmeta_instance_reference;
+	// data: use value reference
+	typedef	simple_nonmeta_value_reference<int_tag>
+		simple_int_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<bool_tag>
+		simple_bool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<enum_tag>
+		simple_enum_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<datastruct_tag>
+		simple_datastruct_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<pbool_tag>
+		simple_pbool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<pint_tag>
+		simple_pint_nonmeta_instance_reference;
 
 	template <class>
 	class instance_collection;
@@ -238,10 +243,23 @@ namespace entity {
 	typedef	simple_meta_value_reference<pbool_tag>
 		simple_pbool_meta_instance_reference;
 
+	template <class>
+	class simple_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<int_tag>
+		simple_int_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<bool_tag>
+		simple_bool_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<enum_tag>
+		simple_enum_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<datastruct_tag>
+		simple_struct_nonmeta_value_reference;
+
 	// from "Object/art_object_data_expr[_base].h"
 	class data_expr;
 	class bool_expr;
 	class int_expr;
+	class enum_expr;
+	class struct_expr;
 	class int_arith_expr;
 	class int_range_expr;
 	class nonmeta_index_expr_base;

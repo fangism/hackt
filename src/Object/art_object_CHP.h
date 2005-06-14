@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.4 2005/06/11 21:48:06 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.5 2005/06/14 05:38:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -244,8 +244,14 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if 0
 	good_bool
 	push_back(const expr_list_type::value_type&);
+#endif
+
+	template <class L>
+	good_bool
+	add_expressions(const L&);
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -280,6 +286,43 @@ public:
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_receive
+
+//=============================================================================
+/**
+	do-forever loop: *[ never ends ]
+ */
+class do_forever_loop : public action {
+	typedef	action					parent_type;
+	typedef	do_forever_loop				this_type;
+public:
+	typedef	count_ptr<action>			body_ptr_type;
+private:
+	body_ptr_type					body;
+public:
+	do_forever_loop();
+	~do_forever_loop();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
+
+	/**
+		Substitute for mem_fun_ref predicate functor...
+	 */
+	template <template <class> class P>
+	struct detector {
+		typedef	P<const do_forever_loop>	ptr_type;
+
+		ptr_type
+		operator () (const P<action>& p) const {
+			return p.template is_a<const do_forever_loop>();
+		}
+	};	// end struct detector
+};	// end class do_forever_loop
 
 //=============================================================================
 }	// end namespace CHP

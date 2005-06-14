@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.17 2005/05/24 02:38:13 fang Exp $
+	$Id: art_object_namespace.h,v 1.17.2.1 2005/06/14 05:38:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
@@ -43,6 +43,10 @@ namespace parser {
  */
 namespace entity {
 //=============================================================================
+class definition_base;
+class typedef_base;
+class instance_collection_base;
+class param_instance_collection;
 USING_LIST
 USING_CONSTRUCT
 using std::string;

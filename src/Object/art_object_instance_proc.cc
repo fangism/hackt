@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.13 2005/05/10 04:51:19 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.13.6.1 2005/06/14 05:38:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -60,32 +60,28 @@ namespace entity {
 
 //=============================================================================
 template <>
-struct type_dumper<process_tag> {
+struct collection_type_manager<process_tag> {
 	typedef class_traits<process_tag>::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef class_traits<process_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	ostream& os;
-	type_dumper(ostream& o) : os(o) { }
+	typedef class_traits<process_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
 
-	ostream&
-	operator () (const instance_collection_generic_type& c) {
-		os << "process ";
-		const instance_collection_parameter_type&
-			tr = c.get_type_parameter();
-		INVARIANT(tr);
-		tr->dump(os) << '^' << c.get_dimensions();
-		return os;
-	}
-};      // end struct type_dumper<process_tag>
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
 
-//-----------------------------------------------------------------------------
-template <>
-struct collection_parameter_persistence<process_tag> {
-	typedef class_traits<process_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<process_tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
+		ostream&
+		operator () (const instance_collection_generic_type& c) {
+			os << "process ";
+			const instance_collection_parameter_type&
+				tr = c.get_type_parameter();
+			INVARIANT(tr);
+			tr->dump(os) << '^' << c.get_dimensions();
+			return os;
+		}
+	};	// end struct dumper
 
 	static
 	void
@@ -108,16 +104,13 @@ struct collection_parameter_persistence<process_tag> {
 		instance_collection_generic_type& c) {
 		m.read_pointer(i, c.type_parameter);
 	}
-};      // end struct collection_parameter_persistence
 
-//-----------------------------------------------------------------------------
-
-template <>
-struct collection_type_committer<process_tag> {
-	typedef class_traits<process_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<process_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
+	static
+	type_ref_ptr_type
+	get_type(const instance_collection_generic_type& c) {
+		return c.type_parameter;
+	}
+	
 
 	/**
 		During unroll phase, this commits the type of the collection.  
@@ -126,9 +119,10 @@ struct collection_type_committer<process_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
+	static
 	bad_bool
-	operator () (instance_collection_generic_type& c,
-		const type_ref_ptr_type& t) const {
+	commit_type(instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) {
 		// make sure this is the canonical definition
 		//      in case type is typedef!
 		// this really should be statically type-checked
@@ -138,13 +132,13 @@ struct collection_type_committer<process_tag> {
 		// not necessarily "connectible".
 		if (c.type_parameter)
 			return bad_bool(
-				!c.type_parameter->must_be_equivalent(*t));
+				!c.type_parameter->must_be_type_equivalent(*t));
 		else {
 			c.type_parameter = t;
 			return bad_bool(false);
 		}
 	}
-};
+};	// end struct collection_type_manager
 
 //=============================================================================
 // class proc_instance method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.1.2.4 2005/06/11 21:48:06 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.1.2.5 2005/06/14 05:38:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -12,7 +12,8 @@
 
 namespace ART {
 namespace entity {
-
+class builtin_channel_type_reference;
+class channel_type_reference;
 using std::ostream;
 USING_LIST
 using namespace util::memory;	// for experimental pointer classes

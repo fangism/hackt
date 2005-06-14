@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.19.2.1 2005/06/08 19:13:18 fang Exp $
+	$Id: art_object_assign.h,v 1.19.2.2 2005/06/14 05:38:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -11,11 +11,13 @@
 #include "util/boolean_types.h"
 #include "Object/art_object_instance_management_base.h"
 #include "Object/art_object_expr_base.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
+class simple_param_meta_value_reference;
 USING_LIST
 USING_CONSTRUCT
 using std::ostream;

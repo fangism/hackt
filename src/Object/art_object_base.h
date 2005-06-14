@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.h"
 	Base classes for semantic objects.  
-	$Id: art_object_base.h,v 1.29 2005/05/22 06:18:31 fang Exp $
+	$Id: art_object_base.h,v 1.29.2.1 2005/06/14 05:38:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_H__
@@ -10,7 +10,6 @@
 #include <iosfwd>
 #include "util/STL/list.h"
 
-#include "Object/art_object_fwd.h"
 #include "util/macros.h"
 
 #include "util/memory/excl_ptr.h"

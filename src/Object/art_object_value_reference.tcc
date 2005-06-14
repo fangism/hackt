@@ -1,7 +1,7 @@
 /**
-	\file "Object/art_object_expr.cc"
+	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.7.2.2 2005/06/08 19:13:32 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.7.2.3 2005/06/14 05:38:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -93,7 +93,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
-		const never_ptr<value_collection_type> pi) :
+		const value_collection_ptr_type pi) :
 		common_base_type(
 			pi->current_collection_state()), 
 		parent_type(), 
@@ -105,7 +105,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 #if 0
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
-		const never_ptr<value_collection_type> pi,
+		const value_collection_ptr_type pi,
 		excl_ptr<index_list>& i) :
 		common_base_type(), 
 		parent_type(i, pi->current_collection_state()),
@@ -500,7 +500,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Parameters have value semantics, not alias semantics!
  */
@@ -510,7 +509,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
 	DIE;
 	return excl_ptr<aliases_connection_base>(NULL);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

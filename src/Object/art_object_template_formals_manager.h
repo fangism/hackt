@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.4.2.2 2005/05/25 22:35:43 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.4.2.3 2005/06/14 05:38:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "util/macros.h"
-#include "Object/art_object_fwd.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"	// for persistent object interface
@@ -21,6 +20,8 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+class param_instance_collection;
+class dynamic_param_expr_list;
 using std::string;
 using std::istream;
 using std::ostream;

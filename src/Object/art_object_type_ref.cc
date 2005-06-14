@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.35.2.5 2005/06/11 21:48:06 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35.2.6 2005/06/14 05:38:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -185,7 +185,7 @@ fundamental_type_reference::make_instantiation_statement(
 	TO DO: resolve typedefs!
  */
 bool
-fundamental_type_reference::may_be_equivalent(
+fundamental_type_reference::may_be_type_equivalent(
 		const fundamental_type_reference& t) const {
 	never_ptr<const definition_base> left(get_base_def());
 	never_ptr<const definition_base> right(t.get_base_def());
@@ -260,7 +260,7 @@ fundamental_type_reference::may_be_equivalent(
 	TODO: special case when comparing built-in channel types.  (2005-05-28)
  */
 bool
-fundamental_type_reference::must_be_equivalent(
+fundamental_type_reference::must_be_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const never_ptr<const definition_base> left(get_base_def());
 	const never_ptr<const definition_base> right(t.get_base_def());
@@ -508,6 +508,21 @@ data_type_reference::make_instance_collection(
 			return return_type(NULL);
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenience function for creating data int type-references.
+ */
+data_type_reference*
+data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
+	// is an excl_ptr, incidentally
+	fundamental_type_reference::template_args_ptr_type
+	width_params(new const_param_expr_list(
+		count_ptr<const pint_const>(new pint_const(w))));
+	return new data_type_reference(
+		never_ptr<const built_in_datatype_def>(&int_def), 
+		width_params);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1038,10 +1053,10 @@ param_type_reference::make_instantiation_statement_private(
 	static const class_traits<pint_tag>::type_ref_ptr_type&
 		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
 	INVARIANT(t == this);
-	if (this->must_be_equivalent(*pbool_type_ptr)) {
+	if (this->must_be_type_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
 			pbool_type_ptr, d));
-	} else if (this->must_be_equivalent(*pint_type_ptr)) {
+	} else if (this->must_be_type_equivalent(*pint_type_ptr)) {
 		return return_type(new pint_instantiation_statement(
 			pint_type_ptr, d));
 	} else {
@@ -1070,10 +1085,10 @@ param_type_reference::make_instance_collection(
 		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
 	static const class_traits<pint_tag>::type_ref_ptr_type&
 		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
-	if (this->must_be_equivalent(*pbool_type_ptr))
+	if (this->must_be_type_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pbool_instance_collection::make_array(*s, id, d));
-	else if (this->must_be_equivalent(*pint_type_ptr))
+	else if (this->must_be_type_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pint_instance_collection::make_array(*s, id, d));
 	else {

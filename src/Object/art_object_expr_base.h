@@ -2,7 +2,7 @@
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
 	TODO: rename to meta_expr_base.h
-	$Id: art_object_expr_base.h,v 1.13.2.1 2005/06/08 19:13:22 fang Exp $
+	$Id: art_object_expr_base.h,v 1.13.2.2 2005/06/14 05:38:26 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -10,12 +10,20 @@
 
 #include "util/STL/list_fwd.h"
 #include "Object/art_object_data_expr_base.h"
-#include "Object/art_object_fwd.h"
+#include "Object/art_object_expr_types.h"
 #include "util/boolean_types.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
+class const_range_list;
+class const_param;
+class param_expression_assignment;
+class const_range;
+class const_index;
+class const_index_list;
+class const_param_expr_list;
+class unroll_context;
 USING_LIST
 using util::good_bool;
 using util::bad_bool;
@@ -330,6 +338,8 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
+	GET_DATA_TYPE_REF_PROTO;
+
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;
 
@@ -409,6 +419,8 @@ virtual	ostream&
 
 virtual	size_t
 	dimensions(void) const = 0;
+
+	GET_DATA_TYPE_REF_PROTO;
 
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;

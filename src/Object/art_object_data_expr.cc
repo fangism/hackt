@@ -1,12 +1,15 @@
 /**
 	\file "Object/art_object_data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.1.4.4 2005/06/10 04:16:35 fang Exp $
+	$Id: art_object_data_expr.cc,v 1.1.4.5 2005/06/14 05:38:22 fang Exp $
  */
 
 #include <iostream>
 #include "Object/art_object_data_expr.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/art_object_nonmeta_value_reference.tcc"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_built_ins.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
@@ -139,6 +142,28 @@ int_arith_expr::dump(ostream& o) const {
 ostream&
 int_arith_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_type_reference>
+int_arith_expr::get_data_type_ref(void) const {
+	typedef	count_ptr<const data_type_reference>	return_type;
+	const return_type lt(lx->get_data_type_ref());
+	const return_type rt(rx->get_data_type_ref());
+	if (!lt || !rt)
+		return return_type(NULL);
+	// check that they may be equivalent...
+	// this call currently uses generic check, which is ok.
+	if (lt->may_be_type_equivalent(*rt)) {
+		return lt;	// or rt, doesn't matter in this phase
+	// idea: if one type is complete and resolvable, then prefer it.
+	} else {
+		cerr << "Operand types mismatch in int_arith_expr, got:"
+			<< endl;
+		lt->dump(cerr << "\tleft = ") << endl;
+		rt->dump(cerr << "\tright = ") << endl;
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -288,6 +313,31 @@ int_relational_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	BUG: may_be_type_equivalent rejects pint vs. int comparison.  
+ */
+count_ptr<const data_type_reference>
+int_relational_expr::get_data_type_ref(void) const {
+	typedef	count_ptr<const data_type_reference>	return_type;
+	const return_type lt(lx->get_data_type_ref());
+	const return_type rt(rx->get_data_type_ref());
+	if (!lt || !rt)
+		return return_type(NULL);
+	// check that they may be equivalent...
+	// this call currently uses generic check, which is ok.
+	if (lt->may_be_type_equivalent(*rt)) {
+		return bool_type_ptr;
+	// idea: if one type is complete and resolvable, then prefer it.
+	} else {
+		cerr << "Operand types mismatch in int_relational_expr, got:"
+			<< endl;
+		lt->dump(cerr << "\tleft = ") << endl;
+		rt->dump(cerr << "\tright = ") << endl;
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -421,6 +471,24 @@ bool_logical_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_type_reference>
+bool_logical_expr::get_data_type_ref(void) const {
+	typedef	count_ptr<const data_type_reference>	return_type;
+	const return_type lt(lx->get_data_type_ref());
+	const return_type rt(rx->get_data_type_ref());
+	if (!lt || !rt)
+		return return_type(NULL);
+	// check that they may be equivalent...
+	// type's MAY actually be template dependent
+	// so it's possible to defer, don't just assume they are boolean.
+	// this call currently uses generic check, which is ok.
+	if (lt->may_be_type_equivalent(*rt))
+		return bool_type_ptr;
+	// idea: if one type is complete and resolvable, then prefer it.
+	else	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_logical_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -481,6 +549,12 @@ int_negation_expr::dump_brief(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_type_reference>
+int_negation_expr::get_data_type_ref(void) const {
+	return ex->get_data_type_ref();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_negation_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -528,6 +602,12 @@ bool_negation_expr::dump(ostream& o) const {
 ostream&
 bool_negation_expr::dump_brief(ostream& o) const {
 	return ex->dump_brief(o << '~');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_type_reference>
+bool_negation_expr::get_data_type_ref(void) const {
+	return ex->get_data_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -702,6 +782,9 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// explicit template instantiations
+
+// steal nonmeta_value_references from "Object/art_object_expr.cc"?
 
 //=============================================================================
 }	// end namespace entity

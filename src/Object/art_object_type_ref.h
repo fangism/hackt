@@ -1,13 +1,14 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.25.2.3 2005/06/11 21:48:07 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25.2.4 2005/06/14 05:38:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
 #define	__OBJECT_ART_OBJECT_TYPE_REF_H__
 
 #include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_expr_types.h"
 
 namespace ART {
 namespace parser {
@@ -15,7 +16,12 @@ namespace parser {
 }
 
 namespace entity {
-
+class datatype_definition_base;
+class unroll_context;
+class builtin_channel_type_reference;
+class channel_definition_base;
+class process_definition_base;
+class built_in_param_def;
 USING_LIST
 using std::ostream;
 using parser::token_identifier;
@@ -36,7 +42,7 @@ private:
 	typedef	datatype_definition_base		definition_type;
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
-	typedef	parent_type::template_args_ptr_type		template_args_ptr_type;
+	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 	/**
 		Reference to data type definition, which may be a 
@@ -74,6 +80,10 @@ public:
 	// need to be able to lookup parameters... update later...
 	count_ptr<const this_type>
 	unroll_resolve(unroll_context&) const;
+
+	static
+	data_type_reference*
+	make_quick_int_type_ref(const pint_value_type);
 
 private:
 	excl_ptr<instantiation_statement_base>
@@ -169,6 +179,10 @@ public:
 
 	size_t
 	num_datatypes(void) const { return datatype_list.size(); }
+
+	// for convenience...
+	const datatype_list_type&
+	get_datatype_list(void) const { return datatype_list; }
 
 	datatype_ptr_type
 	index_datatype(const size_t) const;

@@ -1,20 +1,22 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.19.2.1 2005/06/08 19:13:19 fang Exp $
+	$Id: art_object_connect.h,v 1.19.2.2 2005/06/14 05:38:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
 #define	__OBJECT_ART_OBJECT_CONNECT_H__
 
-#include "Object/art_object_fwd.h"
+#include "Object/art_object_expr_types.h"
 #include "Object/art_object_instance_management_base.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/multikey_fwd.h"
 
 namespace ART {
 namespace entity {
-
+class meta_instance_reference_base;
+class simple_meta_instance_reference_base;
 USING_LIST
 using std::ostream;
 using util::memory::count_ptr;

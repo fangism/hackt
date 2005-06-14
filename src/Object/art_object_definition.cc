@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.48.2.4 2005/05/29 02:08:28 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.48.2.5 2005/06/14 05:38:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2164,6 +2164,13 @@ process_definition::compact_prs_references(void) {
 void
 process_definition::expand_prs_complements(void) {
 	prs.expand_complements();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
+	NEVER_NULL(a);
+	chp.push_back(a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

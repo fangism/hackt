@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.14 2005/05/10 04:51:17 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.14.6.1 2005/06/14 05:38:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -21,7 +21,7 @@
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_definition.h"
-
+#include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic template instantiation
@@ -56,27 +56,25 @@ namespace entity {
 
 //=============================================================================
 template <>
-struct type_dumper<enum_tag> {
-	typedef class_traits<enum_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	ostream& os;
-	type_dumper(ostream& o) : os(o) { }
-
-	ostream&
-	operator () (const instance_collection_generic_type& c) {
-		return os << "enum " <<
-			c.get_base_def()->get_qualified_name() <<
-			'^' << c.get_dimensions();
-	}
-};      // end struct type_dumper<enum_tag>
-
-//-----------------------------------------------------------------------------
-template <>
-struct collection_parameter_persistence<enum_tag> {
+struct collection_type_manager<enum_tag> {
 	typedef class_traits<enum_tag>::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef class_traits<enum_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
+	typedef class_traits<enum_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
+
+		ostream&
+		operator () (const instance_collection_generic_type& c) {
+			return os << "enum " <<
+				c.get_base_def()->get_qualified_name() <<
+				'^' << c.get_dimensions();
+		}
+	};	// end struct dumper
 
 	static
 	void
@@ -99,16 +97,21 @@ struct collection_parameter_persistence<enum_tag> {
 		instance_collection_generic_type& c) {
 		m.read_pointer(i, c.type_parameter);
 	}
-};      // end struct collection_parameter_persistence
 
-//-----------------------------------------------------------------------------
-
-template <>
-struct collection_type_committer<enum_tag> {
-	typedef class_traits<enum_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<enum_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
+	/**
+		TODO: what if type_parameter is not already set
+			because it is template-dependent and unresolved?
+		Then return the template-dependent type.  
+		Consumer is responsible to testing template-dependence. 
+	 */
+	static
+	type_ref_ptr_type
+	get_type(const instance_collection_generic_type& e) {
+		return type_ref_ptr_type(new data_type_reference(
+			// want get_base_def_subtype!!!
+			e.get_base_def()
+			.is_a<const datatype_definition_base>()));
+	}
 
 	/**
 		During unroll phase, this commits the type of the collection.  
@@ -117,9 +120,10 @@ struct collection_type_committer<enum_tag> {
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
 	 */
+	static
 	bad_bool
-	operator () (instance_collection_generic_type& c,
-		const type_ref_ptr_type& t) const {
+	commit_type(instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) {
 		// make sure this is the canonical definition
 		//	in case type is typedef!
 		// this really should be statically type-checked
@@ -131,7 +135,7 @@ struct collection_type_committer<enum_tag> {
 				.is_a<const enum_datatype_def>();
 		return bad_bool(false);
 	}
-};
+};	// end struct collection_type_manager
 
 //=============================================================================
 // class enum_instance method definitions

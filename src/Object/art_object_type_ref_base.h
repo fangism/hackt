@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.13 2005/05/23 01:02:36 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.13.2.1 2005/06/14 05:38:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -151,10 +151,10 @@ virtual	excl_ptr<instance_collection_base>
 
 public:
 	bool
-	may_be_equivalent(const fundamental_type_reference& t) const;
+	may_be_type_equivalent(const fundamental_type_reference& t) const;
 
 	bool
-	must_be_equivalent(const fundamental_type_reference& t) const;
+	must_be_type_equivalent(const fundamental_type_reference& t) const;
 
 	// something for resolving typedefs
 	// or return by value? statically would require copy constructor

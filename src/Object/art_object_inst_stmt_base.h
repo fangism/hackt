@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.10 2005/05/23 01:02:34 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.10.2.1 2005/06/14 05:38:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
@@ -16,6 +16,9 @@
 
 namespace ART {
 namespace entity {
+class const_range_list;
+class instance_collection_base;
+class fundamental_type_reference;
 using std::string;
 using std::istream;
 USING_LIST

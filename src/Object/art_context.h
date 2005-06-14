@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.19.2.4 2005/06/08 19:13:17 fang Exp $
+	$Id: art_context.h,v 1.19.2.5 2005/06/14 05:38:20 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -18,6 +18,25 @@
 #include "util/boolean_types.h"
 
 namespace ART {
+namespace entity {
+	// forward declarations
+	class object;
+	class module;
+	class scopespace;
+	class name_space;
+	class definition_base;
+	class datatype_definition_base;
+	class channel_definition_base;
+	class process_definition_base;
+	class fundamental_type_reference;
+	class sequential_scope;
+	class instance_collection_base;
+	class instance_management_base;
+	class meta_instance_reference_connection;
+	class param_expr;
+	class param_expression_assignment;
+}	// end namespace entity
+
 namespace parser {
 //=============================================================================
 // forward declarations outside this namespace

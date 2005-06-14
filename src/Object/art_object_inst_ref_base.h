@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.12.2.2 2005/06/10 04:16:38 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.12.2.3 2005/06/14 05:38:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -16,10 +16,12 @@
 
 namespace ART {
 namespace entity {
+class scopespace;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
 class param_instance_collection;
+class aliases_connection_base;
 using std::istream;
 using std::ostream;
 using util::memory::excl_ptr;

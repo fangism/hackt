@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
-	Classes related to parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.7.2.2 2005/06/08 19:13:32 fang Exp $
+	Classes related to meta parameter instance reference expressions. 
+	$Id: art_object_value_reference.h,v 1.7.2.3 2005/06/14 05:38:38 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -10,10 +10,10 @@
 #include <iosfwd>
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/art_object_fwd.h"
 #include "Object/art_object_index.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
 #include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -44,13 +44,13 @@ simple_meta_value_reference<Tag>
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_value_reference :
 	public simple_param_meta_value_reference, 
-	public class_traits<Tag>::simple_meta_instance_reference_parent_type, 
+	public class_traits<Tag>::meta_instance_reference_parent_type, 
 	public class_traits<Tag>::expr_base_type {
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
 private:
 	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::simple_meta_instance_reference_parent_type
+	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
 							parent_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_base_type;
@@ -70,15 +70,17 @@ protected:
 							const_collection_type;
 	typedef	typename class_traits<Tag>::const_expr_type
 							const_expr_type;
-	never_ptr<value_collection_type>		value_collection_ref;
+	typedef	never_ptr<value_collection_type>
+						value_collection_ptr_type;
+	value_collection_ptr_type			value_collection_ref;
 private:
 	simple_meta_value_reference();
 public:
 	explicit
-	simple_meta_value_reference(const never_ptr<value_collection_type> pi);
+	simple_meta_value_reference(const value_collection_ptr_type);
 
-	simple_meta_value_reference(const never_ptr<value_collection_type> pi, 
-		excl_ptr<meta_index_list>& i);
+	simple_meta_value_reference(const value_collection_ptr_type, 
+		excl_ptr<index_list_type>&);
 
 	~simple_meta_value_reference();
 
@@ -97,6 +99,9 @@ public:
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+
+	never_ptr<const instance_collection_base>
+	get_inst_base_subtype(void) const;
 
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
@@ -160,6 +165,7 @@ public:
 
 public:
 	/**
+		TODO: consider separate file?
 		Helper class for assigning values to instances.
 	 */
 	class assigner {
