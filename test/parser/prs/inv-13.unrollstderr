@@ -2,22 +2,22 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x41028e0	module__	0	0	32
-	2	 0x4100144	namespc_	0	32	56
-	3	 0x4102900	procdefn	0	56	132
-	4	 0x4102994	dboolcol	0	132	166
-	5	 0x41029f0	datainst	0	166	186
-	6	 0x4102a10	datatprf	0	186	202
-	7	 0x4102a20	datadefn	0	202	239
-	8	 0x4102a84	dboolcol	0	239	273
-	9	 0x4102ae0	datainst	0	273	293
-	10	 0x4815008	PRSpuldn	0	293	310
-	11	 0x4102b08	PRSlitrl	0	310	322
-	12	 0x4102c90	sdbmref_	0	322	342
-	13	 0x4102cc0	sdbmref_	0	342	362
-	14	 0x4815408	PRSpulup	0	362	379
-	15	 0x4102cf8	PRSnot__	0	379	391
-	16	 0x4102b14	PRSlitrl	0	391	403
+	1	 0x4302750	module__	0	0	32
+	2	 0x4300144	namespc_	0	32	56
+	3	 0x4302770	procdefn	0	56	136
+	4	 0x4302804	dboolcol	0	136	170
+	5	 0x4302860	datainst	0	170	190
+	6	 0x4302880	datatprf	0	190	206
+	7	 0x4302890	datadefn	0	206	243
+	8	 0x43028f4	dboolcol	0	243	277
+	9	 0x4302950	datainst	0	277	297
+	10	 0x4815208	PRSpuldn	0	297	314
+	11	 0x4302978	PRSlitrl	0	314	326
+	12	 0x4302b00	sdbmref_	0	326	346
+	13	 0x4302b30	sdbmref_	0	346	366
+	14	 0x4815c08	PRSpulup	0	366	383
+	15	 0x4302b68	PRSnot__	0	383	395
+	16	 0x4302984	PRSlitrl	0	395	407
 
 In module created from: ./inv-13.in (unrolled)
 In namespace "", we have: {

@@ -2,20 +2,20 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4102600	module__	0	0	33
-	2	 0x4100144	namespc_	0	33	61
-	3	 0x4102620	procdefn	0	61	136
-	4	 0x41025b4	pintcoll	0	136	173
-	5	 0x41026b0	pintinst	0	173	189
-	6	 0x41026c0	spimref_	0	189	209
-	7	 0x41026f4	pintcoll	0	209	258
-	8	 0x4102740	pintinst	0	258	274
-	9	 0x4102754	dintcoll	0	274	319
-	10	 0x41027b0	datainst	0	319	339
-	11	 0x41027d0	datatprf	0	339	355
-	12	 0x41027e0	datadefn	0	355	391
-	13	 0x4102840	dprmlst_	0	391	407
-	14	 0x4102850	spimref_	0	407	427
+	1	 0x4302470	module__	0	0	33
+	2	 0x4300144	namespc_	0	33	61
+	3	 0x4302490	procdefn	0	61	140
+	4	 0x4302424	pintcoll	0	140	177
+	5	 0x4302520	pintinst	0	177	193
+	6	 0x4302530	spimref_	0	193	213
+	7	 0x4302564	pintcoll	0	213	262
+	8	 0x43025b0	pintinst	0	262	278
+	9	 0x43025c4	dintcoll	0	278	323
+	10	 0x4302620	datainst	0	323	343
+	11	 0x4302640	datatprf	0	343	359
+	12	 0x4302650	datadefn	0	359	395
+	13	 0x43026b0	dprmlst_	0	395	411
+	14	 0x43026c0	spimref_	0	411	431
 
 In module created from: ./017.in (unrolled)
 In namespace "", we have: {

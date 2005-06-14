@@ -2,26 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4102ea0	module__	0	0	29
-	2	 0x4100144	namespc_	0	29	57
-	3	 0x4102ec0	procdefn	0	57	137
-	4	 0x4102e54	pboolcol	0	137	167
-	5	 0x4102f50	pboolins	0	167	183
-	6	 0x4102f64	pintcoll	0	183	220
-	7	 0x4102fb0	pintinst	0	220	236
-	8	 0x4102fc0	spimref_	0	236	256
-	9	 0x4102ff4	pintcoll	0	256	293
-	10	 0x4103040	pintinst	0	293	309
-	11	 0x4800c00	piassign	0	309	329
-	12	 0x4103050	spimref_	0	329	349
-	13	 0x4103080	procdefn	0	349	417
-	14	 0x4103114	pintcoll	0	417	454
-	15	 0x4103160	pintinst	0	454	470
-	16	 0x4103170	spimref_	0	470	490
-	17	 0x41031a4	pintcoll	0	490	527
-	18	 0x41031f0	pintinst	0	527	543
-	19	 0x4800c10	piassign	0	543	563
-	20	 0x4103200	spimref_	0	563	583
+	1	 0x4302cc0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	57
+	3	 0x4302d70	procdefn	0	57	141
+	4	 0x4302d24	pboolcol	0	141	171
+	5	 0x4302ce0	pboolins	0	171	187
+	6	 0x4302e04	pintcoll	0	187	224
+	7	 0x4302cf0	pintinst	0	224	240
+	8	 0x4302e50	spimref_	0	240	260
+	9	 0x4302e84	pintcoll	0	260	297
+	10	 0x4302d00	pintinst	0	297	313
+	11	 0x4800c00	piassign	0	313	333
+	12	 0x4302ed0	spimref_	0	333	353
+	13	 0x4302f00	procdefn	0	353	425
+	14	 0x4302f94	pintcoll	0	425	462
+	15	 0x4302d10	pintinst	0	462	478
+	16	 0x4302fe0	spimref_	0	478	498
+	17	 0x4303014	pintcoll	0	498	535
+	18	 0x4303060	pintinst	0	535	551
+	19	 0x4800c10	piassign	0	551	571
+	20	 0x4303070	spimref_	0	571	591
 
 In module created from: ./026.in (unrolled)
 In namespace "", we have: {

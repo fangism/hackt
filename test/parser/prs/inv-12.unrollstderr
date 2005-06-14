@@ -2,21 +2,21 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4102770	module__	0	0	32
-	2	 0x4100144	namespc_	0	32	56
-	3	 0x4102790	procdefn	0	56	132
-	4	 0x4102824	dboolcol	0	132	166
-	5	 0x4102880	datainst	0	166	186
-	6	 0x41028a0	datatprf	0	186	202
-	7	 0x41028b0	datadefn	0	202	239
-	8	 0x4102914	dboolcol	0	239	273
-	9	 0x4102970	datainst	0	273	293
-	10	 0x4814a08	PRSpulup	0	293	310
-	11	 0x4102998	PRSnot__	0	310	322
-	12	 0x4102b28	PRSlitrl	0	322	334
-	13	 0x4102cb0	sdbmref_	0	334	354
-	14	 0x4102ce0	sdbmref_	0	354	374
-	15	 0x4814e08	PRSpuldn	0	374	391
+	1	 0x43025e0	module__	0	0	32
+	2	 0x4300144	namespc_	0	32	56
+	3	 0x4302600	procdefn	0	56	136
+	4	 0x4302694	dboolcol	0	136	170
+	5	 0x43026f0	datainst	0	170	190
+	6	 0x4302710	datatprf	0	190	206
+	7	 0x4302720	datadefn	0	206	243
+	8	 0x4302784	dboolcol	0	243	277
+	9	 0x43027e0	datainst	0	277	297
+	10	 0x4814c08	PRSpulup	0	297	314
+	11	 0x4302808	PRSnot__	0	314	326
+	12	 0x4302998	PRSlitrl	0	326	338
+	13	 0x4302b20	sdbmref_	0	338	358
+	14	 0x4302b50	sdbmref_	0	358	378
+	15	 0x4815608	PRSpuldn	0	378	395
 
 In module created from: ./inv-12.in (unrolled)
 In namespace "", we have: {

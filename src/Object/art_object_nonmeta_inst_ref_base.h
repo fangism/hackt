@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.4 2005/06/14 05:38:36 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.5 2005/06/14 23:36:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -14,6 +14,7 @@
 
 namespace ART {
 namespace entity {
+class scopespace;
 class nonmeta_index_list;
 class instance_collection_base;
 using std::istream;
@@ -68,6 +69,9 @@ public:
 	simple_nonmeta_instance_reference_base(excl_ptr<index_list_type>&);
 
 virtual	~simple_nonmeta_instance_reference_base();
+
+	ostream&
+	dump_briefer(ostream&, const never_ptr<const scopespace>) const;
 
 	ostream&
 	dump_brief(ostream&) const;

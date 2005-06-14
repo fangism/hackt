@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: art_object_CHP.tcc,v 1.1.4.3 2005/06/14 18:16:26 fang Exp $
+	$Id: art_object_CHP.tcc,v 1.1.4.4 2005/06/14 23:36:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_TCC__
@@ -50,7 +50,7 @@ channel_send::add_expressions(const L& l) {
 		const size_t max = bctr->num_datatypes();
 		if (l_size != max) {
 			cerr << "You doofus, you passed the wrong number of "
-				"expressions to channel-send, which requires "
+				"expressions to a channel-send that expects "
 				<< max << " arguments." << endl;
 			// somewhere need to catch insufficient...
 			return good_bool(false);
@@ -65,6 +65,7 @@ channel_send::add_expressions(const L& l) {
 		typename L::const_iterator ei(l.begin());
 		size_t i = 1;
 		for ( ; ti!=te; ti++, ei++, i++) {
+			// TODO: consider using a predicated copy_if functor?
 			const count_ptr<const data_type_reference>
 				etype((*ei)->get_data_type_ref());
 			if (!etype) {
@@ -75,6 +76,8 @@ channel_send::add_expressions(const L& l) {
 			if (!(*ti)->may_be_type_equivalent(*etype)) {
 				cerr << "Type mismatch in expression " << i <<
 					" of send expression list.  " << endl;
+				etype->dump(cerr << "\tgot: ") << endl;
+				(*ti)->dump(cerr << "\texpected: ") << endl;
 				return good_bool(false);
 			}
 			// temporary measure:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.6 2005/06/14 05:38:19 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.7 2005/06/14 23:36:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -105,7 +105,9 @@ body::rightmost(void) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
+#if 0
 	cerr << "Fang, finish CHP::body::check_build()!" << endl;
+#endif
 if (stmts) {
 	typedef	list<statement::return_type>	checked_stmts_type;
 	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
@@ -496,14 +498,8 @@ comm_list::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 comm_list::check_action(context& c) const {
-#if 0
-	cerr << "Fang, finish CHP::comm_list::check_action()!" << endl;
-	return statement::return_type(NULL);
-#else
-	// typedef	list<statement::return_type>	checked_actions_type;
 	checked_actions_type actions;
 	// actions.reserve(size());
-	// static_cast<const parent_type&>(*this).
 #if 0
 	// WTF, this should compile!!!
 	check_list(actions, &communication::check_action, c);
@@ -524,12 +520,16 @@ comm_list::check_action(context& c) const {
 			<< where(*this) << endl;
 		return statement::return_type(NULL);
 	} else {
-		const count_ptr<entity::CHP::concurrent_actions>
-			ret(new entity::CHP::concurrent_actions);
-		copy(i, e, back_inserter(*ret));
-		return ret;
+		if (actions.size() == 1) {
+			// there's only one item, no need to make list
+			return *i;	// already points to first item
+		} else {
+			const count_ptr<entity::CHP::concurrent_actions>
+				ret(new entity::CHP::concurrent_actions);
+			copy(i, e, back_inserter(*ret));
+			return ret;
+		}
 	}
-#endif
 }
 
 //=============================================================================
@@ -558,10 +558,6 @@ send::rightmost(void) const {
  */
 statement::return_type
 send::check_action(context& c) const {
-#if 0
-	cerr << "Fang, finish CHP::send::check_action()!" << endl;
-	return statement::return_type(NULL);
-#else
 	const communication::checked_channel_type
 		sender(check_channel(c));
 	if (!sender) {
@@ -573,7 +569,6 @@ send::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	// check expression list...
-//	cerr << "Fang, check expression list in send::check_action()!" << endl;
 	typedef	expr_list::checked_nonmeta_exprs_type::const_iterator
 							const_iterator;
 	expr_list::checked_nonmeta_exprs_type checked_exprs;
@@ -591,18 +586,7 @@ send::check_action(context& c) const {
 	const return_type ret(new entity::CHP::channel_send(sender));
 	// need to check that number of arguments match...
 	NEVER_NULL(ret);
-#if 0
-	good_bool g(true);
-	for ( ; i!=e && g.good; i++) {
-		if (!ret->push_back(*i).good) {
-			cerr << "Type-check failed for expression, "
-				"somewhere in " << where(*rvalues) << endl;
-			g.good = false;
-		}
-	}
-#else
 	const good_bool g(ret->add_expressions(checked_exprs));
-#endif
 	if (!g.good) {
 		cerr << "At least one type error in expr-list in " <<
 			where(*rvalues) << endl;
@@ -610,7 +594,6 @@ send::check_action(context& c) const {
 	} else {
 		return ret;
 	}
-#endif
 }
 
 //=============================================================================

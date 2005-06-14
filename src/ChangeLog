@@ -2,6 +2,22 @@
 
 2005-06-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-19:
+	  Finished basic type-checking of CHP bodies, and added a bunch of 
+		simple test cases in test/parser/chp.  More tests to come.  
+	  Parse-failures for nonmeta expressions and references 
+		have more verbose error messages, because of longer
+		return path (rather than throw() on deepest error).  
+		Distant TODO: organize and present error hierarchically
+	  Implemented CHP object dump, and persistence in methods.  
+	  Added CHP dump/persistence to process_definition, 
+		which resulted in larger process_definition objects
+		stored in the object file, tests have been updated.  
+	  That said, this branch is in pretty good shape.  
+
+
+2005-06-14	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-18-merged-nonmeta-04:
 	  Merged revisions from child branch, also including a minor
 		typo fix in AST/art_parser_chp.cc.  

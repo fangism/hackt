@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.1.2.6 2005/06/14 18:16:26 fang Exp $
+	$Id: art_object_CHP.cc,v 1.1.2.7 2005/06/14 23:36:22 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -16,6 +16,7 @@
 #include "Object/art_object_instance_collection.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "util/indent.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::entity::CHP::action_sequence,
@@ -64,6 +65,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 namespace CHP {
+using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
 //=============================================================================
@@ -78,7 +80,15 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(action_sequence)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 action_sequence::dump(ostream& o) const {
-	return what(o);		// temporary
+	o << "sequential: {" << endl;
+	{
+		INDENT_SECTION(o);
+		const_iterator i(begin());
+		const const_iterator e(end());
+		for ( ; i!=e; i++)
+			(*i)->dump(o << auto_indent) << endl;
+	}
+	return o << auto_indent << '}';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -116,7 +126,22 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(concurrent_actions)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 concurrent_actions::dump(ostream& o) const {
-	return what(o);		// temporary
+	o << "concurrent: {" << endl;
+	{
+		INDENT_SECTION(o);
+		const_iterator i(begin());
+		const const_iterator e(end());
+		for ( ; i!=e; i++)
+			(*i)->dump(o << auto_indent) << endl;
+	}
+	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+concurrent_actions::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	m.collect_pointer_list(static_cast<const list_type&>(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -124,22 +149,36 @@ void
 concurrent_actions::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(static_cast<const list_type&>(*this));
+	collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-concurrent_actions::write_object(const persistent_object_manager& m, 
+concurrent_actions::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-concurrent_actions::load_object(const persistent_object_manager& m, 
+concurrent_actions::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+concurrent_actions::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+concurrent_actions::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	load_object_base(m, i);
 }
 
 //=============================================================================
@@ -159,7 +198,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(guarded_action)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 guarded_action::dump(ostream& o) const {
-	return what(o);		// temporary
+	return stmt->dump(guard->dump(o) << " -> ");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -201,7 +240,15 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(deterministic_selection)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 deterministic_selection::dump(ostream& o) const {
-	return what(o);		// temporary
+	o << "deterministic: {" << endl;
+	{
+		INDENT_SECTION(o);
+		const_iterator i(begin());
+		const const_iterator e(end());
+		for ( ; i!=e; i++)
+			(*i)->dump(o << auto_indent) << endl;
+	}
+	return o << auto_indent << '}';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -241,7 +288,15 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nondeterministic_selection)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 nondeterministic_selection::dump(ostream& o) const {
-	return what(o);		// temporary
+	o << "nondeterministic: {" << endl;
+	{
+		INDENT_SECTION(o);
+		const_iterator i(begin());
+		const const_iterator e(end());
+		for ( ; i!=e; i++)
+			(*i)->dump(o << auto_indent) << endl;
+	}
+	return o << auto_indent << '}';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -286,7 +341,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(assignment)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 assignment::dump(ostream& o) const {
-	return what(o);		// temporary
+	return rval->dump(lval->dump(o) << " := ");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -333,7 +388,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(condition_wait)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 condition_wait::dump(ostream& o) const {
-	return what(o);		// temporary
+	return cond->dump(o << '[') << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -377,60 +432,17 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_send)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_send::dump(ostream& o) const {
-	return what(o);		// temporary
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Type-checked wrapping around interface for adding expressions.  
-	TODO: type-check (2005-06-11)
-	TODO: this is inside a for-loop, apply transformation to 
-		save some work, minimize repeated function calls. 
-	\param e the nonmeta expression to append to send list (never NULL).  
-	\pre already checked for match of number of expressions expected.
-	\return good if successful, bad if type check failed.  
- */
-good_bool
-channel_send::push_back(const expr_list_type::value_type& e) {
-	NEVER_NULL(e);
-	// check type
-	const size_t index = exprs.size();
-	// get chan's type, in canonical form
-	const never_ptr<const channel_instance_collection>
-		inst_base(chan->get_inst_base_subtype());
-	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
-			.is_a<const channel_type_reference_base>());
-	// critical that this next pointer only exists locally
-	// see channel_type_reference::resolve_builtin_channel_type
-	const never_ptr<const builtin_channel_type_reference>
-		bctr(type_ref->resolve_builtin_channel_type());
-	// the remainder belongs in a for-loop
-	if (bctr) {
-		const size_t max = bctr->num_datatypes();
-		if (index >= max) {
-			cerr << "You doofus, you tried to add too many "
-				"expressions to channel-send, which requires "
-				<< max << " arguments." << endl;
-			// somewhere need to catch insufficient...
-			return good_bool(false);
-		}
-		// was able to resolve built-in channel type
-		const builtin_channel_type_reference::datatype_ptr_type
-			dt(bctr->index_datatype(index));
-		// TODO: TYPE CHECK e against dt
-		exprs.push_back(e);
-		return good_bool(true);
-	} else {
-		// not able to resolve, probably because of template
-		// parameter dependence.  Will resolve in meta-expansion
-		// phase.  Assume it's good for now, do not reject.
-		exprs.push_back(e);
-		return good_bool(true);
+	typedef	expr_list_type::const_iterator	const_iterator;
+	chan->dump_briefer(o, never_ptr<const scopespace>()) << "!(";
+	INVARIANT(!exprs.empty());
+	const_iterator i(exprs.begin());
+	const const_iterator e(exprs.end());
+	(*i)->dump(o);
+	for (i++; i!=e; i++) {
+		(*i)->dump(o << ',');
 	}
+	return o << ')';
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -476,7 +488,16 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_receive)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_receive::dump(ostream& o) const {
-	return what(o);		// temporary
+	typedef	inst_ref_list_type::const_iterator	const_iterator;
+	chan->dump_briefer(o, never_ptr<const scopespace>()) << "?(";
+	INVARIANT(!insts.empty());
+	const_iterator i(insts.begin());
+	const const_iterator e(insts.end());
+	(*i)->dump(o);
+	for (i++; i!=e; i++) {
+		(*i)->dump(o << ',');
+	}
+	return o << ')';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -519,7 +540,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(do_forever_loop)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 do_forever_loop::dump(ostream& o) const {
-	return what(o);		// temporary
+	o << "*[" << endl;
+	{
+		INDENT_SECTION(o);
+		body->dump(o << auto_indent) << endl;
+	}
+	return o << auto_indent << "]";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,30 +2,30 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4103470	module__	0	0	33
-	2	 0x4100144	namespc_	0	33	57
-	3	 0x4103490	procdefn	0	57	147
-	4	 0x4103414	dboolcol	0	147	181
-	5	 0x4103520	datainst	0	181	201
-	6	 0x4103540	datatprf	0	201	217
-	7	 0x4103550	datadefn	0	217	254
-	8	 0x41035b4	dboolcol	0	254	288
-	9	 0x4103610	datainst	0	288	308
-	10	 0x4103634	dboolcol	0	308	342
-	11	 0x4103690	datainst	0	342	362
-	12	 0x4818208	PRSpuldn	0	362	379
-	13	 0x41036b8	PRSand__	0	379	399
-	14	 0x41037c8	PRSlitrl	0	399	411
-	15	 0x4103950	sdbmref_	0	411	431
-	16	 0x41037d4	PRSlitrl	0	431	443
-	17	 0x4103980	sdbmref_	0	443	463
-	18	 0x41039b0	sdbmref_	0	463	483
-	19	 0x4818608	PRSpulup	0	483	500
-	20	 0x41039e8	PRSor___	0	500	520
-	21	 0x4103af8	PRSnot__	0	520	532
-	22	 0x41037e0	PRSlitrl	0	532	544
-	23	 0x4103b04	PRSnot__	0	544	556
-	24	 0x41037ec	PRSlitrl	0	556	568
+	1	 0x4303370	module__	0	0	33
+	2	 0x4300144	namespc_	0	33	57
+	3	 0x4303390	procdefn	0	57	151
+	4	 0x4303314	dboolcol	0	151	185
+	5	 0x4303420	datainst	0	185	205
+	6	 0x4303440	datatprf	0	205	221
+	7	 0x4303450	datadefn	0	221	258
+	8	 0x43034b4	dboolcol	0	258	292
+	9	 0x4303510	datainst	0	292	312
+	10	 0x4303534	dboolcol	0	312	346
+	11	 0x4303590	datainst	0	346	366
+	12	 0x4818a08	PRSpuldn	0	366	383
+	13	 0x43035b8	PRSand__	0	383	403
+	14	 0x43036c8	PRSlitrl	0	403	415
+	15	 0x4303850	sdbmref_	0	415	435
+	16	 0x43036d4	PRSlitrl	0	435	447
+	17	 0x4303880	sdbmref_	0	447	467
+	18	 0x43038b0	sdbmref_	0	467	487
+	19	 0x4818e08	PRSpulup	0	487	504
+	20	 0x43038e8	PRSor___	0	504	524
+	21	 0x43039f8	PRSnot__	0	524	536
+	22	 0x43036e0	PRSlitrl	0	536	548
+	23	 0x4303a04	PRSnot__	0	548	560
+	24	 0x43036ec	PRSlitrl	0	560	572
 
 In module created from: ./nand-02.in (unrolled)
 In namespace "", we have: {

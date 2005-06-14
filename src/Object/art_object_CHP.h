@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.5 2005/06/14 05:38:21 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.6 2005/06/14 23:36:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -24,6 +24,7 @@ using std::vector;
 using std::istream;
 using util::good_bool;
 using util::memory::count_ptr;
+using util::persistent_object_manager;
 //=============================================================================
 /**
 	Typical action list.  
@@ -70,6 +71,16 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	// helper methods needed for process_definition
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class concurrent_actions
@@ -243,11 +254,6 @@ public:
 
 	ostream&
 	dump(ostream&) const;
-
-#if 0
-	good_bool
-	push_back(const expr_list_type::value_type&);
-#endif
 
 	template <class L>
 	good_bool

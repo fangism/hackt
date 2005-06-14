@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.48.2.5 2005/06/14 05:38:23 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.48.2.6 2005/06/14 23:36:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -1913,7 +1913,7 @@ process_definition::process_definition() :
 		key(), 
 		parent(), 
 		port_formals(), 
-		prs() {
+		prs(), chp() {
 	// no null check: because of partial reconstruction
 }
 
@@ -1931,7 +1931,7 @@ process_definition::process_definition(
 		key(s), 
 		parent(o), 
 		port_formals(), 
-		prs() {
+		prs(), chp() {
 	// fill me in...
 	NEVER_NULL(o);
 }
@@ -1980,6 +1980,11 @@ process_definition::dump(ostream& o) const {
 		if (!prs.empty()) {
 			o << auto_indent << "prs:" << endl;
 			prs.dump(o);	// << endl;
+		}
+		// PRS
+		if (!chp.empty()) {
+			o << auto_indent << "chp:" << endl;
+			chp.dump(o << auto_indent) << endl;
 		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
@@ -2192,6 +2197,7 @@ if (!m.register_transient_object(this,
 #endif
 	// PRS
 	prs.collect_transient_info_base(m);
+	chp.collect_transient_info_base(m);
 }
 }
 
@@ -2211,6 +2217,7 @@ process_definition::write_object(
 	sequential_scope::write_object_base(m, f);
 	// PRS
 	prs.write_object_base(m, f);
+	chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2226,6 +2233,7 @@ process_definition::load_object(
 	sequential_scope::load_object_base(m, f);
 	// PRS
 	prs.load_object_base(m, f);
+	chp.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

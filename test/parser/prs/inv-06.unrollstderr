@@ -2,31 +2,31 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4103580	module__	0	0	32
-	2	 0x4100144	namespc_	0	32	56
-	3	 0x41035a0	procdefn	0	56	120
-	4	 0x4103634	dboolcol	1	120	149
-	5	 0x4103680	datainst	0	149	169
-	6	 0x41036a0	datatprf	0	169	185
-	7	 0x41036b0	datadefn	0	185	222
-	8	 0x4103710	crnglst_	0	222	242
-	9	 0x4818a08	PRSpuldn	0	242	259
-	10	 0x4103728	PRSlitrl	0	259	271
-	11	 0x41038b0	sdbmref_	0	271	291
-	12	 0x41038e0	cindlst_	0	291	307
-	13	 0x3466018	cnstpi__	0	307	319
-	14	 0x41038f0	sdbmref_	0	319	339
-	15	 0x4103920	cindlst_	0	339	355
-	16	 0x3466028	cnstpi__	0	355	367
-	17	 0x4818e08	PRSpulup	0	367	384
-	18	 0x4103938	PRSnot__	0	384	396
-	19	 0x4103734	PRSlitrl	0	396	408
-	20	 0x4103ac0	sdbmref_	0	408	428
-	21	 0x4103af0	cindlst_	0	428	444
-	22	 0x3466038	cnstpi__	0	444	456
-	23	 0x4103b00	sdbmref_	0	456	476
-	24	 0x4103b30	cindlst_	0	476	492
-	25	 0x3466048	cnstpi__	0	492	504
+	1	 0x43034d0	module__	0	0	32
+	2	 0x4300144	namespc_	0	32	56
+	3	 0x43034f0	procdefn	0	56	124
+	4	 0x4303484	dboolcol	1	124	153
+	5	 0x4303580	datainst	0	153	173
+	6	 0x43035a0	datatprf	0	173	189
+	7	 0x43035b0	datadefn	0	189	226
+	8	 0x4303610	crnglst_	0	226	246
+	9	 0x4818808	PRSpuldn	0	246	263
+	10	 0x4303628	PRSlitrl	0	263	275
+	11	 0x43037b0	sdbmref_	0	275	295
+	12	 0x43037e0	cindlst_	0	295	311
+	13	 0x374a028	cnstpi__	0	311	323
+	14	 0x43037f0	sdbmref_	0	323	343
+	15	 0x4303820	cindlst_	0	343	359
+	16	 0x374a038	cnstpi__	0	359	371
+	17	 0x4819208	PRSpulup	0	371	388
+	18	 0x4303838	PRSnot__	0	388	400
+	19	 0x4303634	PRSlitrl	0	400	412
+	20	 0x43039c0	sdbmref_	0	412	432
+	21	 0x43039f0	cindlst_	0	432	448
+	22	 0x374a048	cnstpi__	0	448	460
+	23	 0x4303a00	sdbmref_	0	460	480
+	24	 0x4303a30	cindlst_	0	480	496
+	25	 0x374a058	cnstpi__	0	496	508
 
 In module created from: ./inv-06.in (unrolled)
 In namespace "", we have: {

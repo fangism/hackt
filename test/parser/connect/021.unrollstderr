@@ -2,35 +2,35 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4103bd0	module__	0	0	57
-	2	 0x4100144	namespc_	0	57	97
-	3	 0x4103d30	procdefn	0	97	142
-	4	 0x4103bf4	pintcoll	0	142	179
-	5	 0x4103c40	pintinst	0	179	195
-	6	 0x3466018	cnstpi__	0	195	207
-	7	 0x4103dc4	pintcoll	0	207	244
-	8	 0x4103c50	pintinst	0	244	260
-	9	 0x3466028	cnstpi__	0	260	272
-	10	 0x4103e14	proccoll	2	272	424
-	11	 0x4103e60	procinst	0	424	444
-	12	 0x4103c60	proctprf	0	444	460
-	13	 0x4103e80	crnglst_	0	460	488
-	14	 0x4103e90	proctprf	0	488	504
-	15	 0x4103ea4	proccoll	2	504	690
-	16	 0x4103ef0	procinst	0	690	710
-	17	 0x4103f10	proctprf	0	710	726
-	18	 0x4103f20	crnglst_	0	726	754
-	19	 0x4103f30	proctprf	0	754	770
-	20	 0x4800c00	piassign	0	770	790
-	21	 0x4103f40	spimref_	0	790	810
-	22	 0x4800c10	piassign	0	810	830
-	23	 0x4103f70	spimref_	0	830	850
-	24	 0x4103fa0	prcalias	0	850	870
-	25	 0x4103fb0	sprcmref	0	870	890
-	26	 0x4103fe0	cindlst_	0	890	910
-	27	 0x4805604	cnstrng_	0	910	926
-	28	 0x4805614	cnstrng_	0	926	942
-	29	 0x4103ff0	sprcmref	0	942	962
+	1	 0x4303a40	module__	0	0	57
+	2	 0x4300144	namespc_	0	57	97
+	3	 0x4303ba0	procdefn	0	97	146
+	4	 0x4303a64	pintcoll	0	146	183
+	5	 0x4303ab0	pintinst	0	183	199
+	6	 0x374a028	cnstpi__	0	199	211
+	7	 0x4303c34	pintcoll	0	211	248
+	8	 0x4303ac0	pintinst	0	248	264
+	9	 0x374a038	cnstpi__	0	264	276
+	10	 0x4303c84	proccoll	2	276	428
+	11	 0x4303cd0	procinst	0	428	448
+	12	 0x4303ad0	proctprf	0	448	464
+	13	 0x4303cf0	crnglst_	0	464	492
+	14	 0x4303d00	proctprf	0	492	508
+	15	 0x4303d14	proccoll	2	508	694
+	16	 0x4303d60	procinst	0	694	714
+	17	 0x4303d80	proctprf	0	714	730
+	18	 0x4303d90	crnglst_	0	730	758
+	19	 0x4303da0	proctprf	0	758	774
+	20	 0x4800c00	piassign	0	774	794
+	21	 0x4303db0	spimref_	0	794	814
+	22	 0x4800c10	piassign	0	814	834
+	23	 0x4303de0	spimref_	0	834	854
+	24	 0x4303e10	prcalias	0	854	874
+	25	 0x4303e20	sprcmref	0	874	894
+	26	 0x4303e50	cindlst_	0	894	914
+	27	 0x4805804	cnstrng_	0	914	930
+	28	 0x4805814	cnstrng_	0	930	946
+	29	 0x4303e60	sprcmref	0	946	966
 
 In module created from: ./021.in (unrolled)
 In namespace "", we have: {

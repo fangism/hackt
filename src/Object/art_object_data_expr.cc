@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.1.4.5 2005/06/14 05:38:22 fang Exp $
+	$Id: art_object_data_expr.cc,v 1.1.4.6 2005/06/14 23:36:22 fang Exp $
  */
 
 #include <iostream>
@@ -773,10 +773,9 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
-		const count_ptr<nonmeta_index_expr_base> ip;
+		const count_ptr<const nonmeta_index_expr_base> ip(*i);
 		NEVER_NULL(ip);
-		// if (ip)
-			m.load_object_once(ip);
+		m.load_object_once(&const_cast<nonmeta_index_expr_base&>(*ip));
 	}
 #endif
 }

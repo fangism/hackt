@@ -2,7 +2,7 @@
 	\file "util/indent.h"
 	Utility for semi-automatically indenting output.  
 
-	$Id: indent.h,v 1.3 2005/05/10 04:51:24 fang Exp $
+	$Id: indent.h,v 1.3.6.1 2005/06/14 23:36:24 fang Exp $
  */
 
 #ifndef	__UTIL_INDENT_H__
@@ -10,6 +10,13 @@
 
 #include <iosfwd>
 #include <string>
+
+/**
+	Handy macro for declaring an indented section.  
+	\param f file stream, such as cout, cerr.  
+ */
+#define	INDENT_SECTION(f)						\
+util::indent __indent_ ## __LINE__ ## __(f)
 
 namespace util {
 using std::string;
@@ -75,7 +82,7 @@ operator << (ostream& o, const auto_indenter&);
 
 /**
 	Though explicit registration is unnecessary, 
-	this can be used to customize the 
+	this can be used to customize the indentation string.  
 	Note: this clobbers the existing entry, which can cause
 	problems if misused (will issue a warning)!
  */

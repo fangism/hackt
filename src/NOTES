@@ -30,6 +30,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		Need to extend type-references (of built-in channel type)
 			to include (unnamed) packed arrays.
 		Not difficult, just low priority for now.  
+	Support for dataless communications?  X!, Y? ?
 
 //=============================================================================
 2005-04-29:

@@ -2,22 +2,22 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3101c70	module__	0	0	32
-	2	 0x3100144	namespc_	0	32	60
-	3	 0x3101c90	procdefn	0	60	116
-	4	 0x3101d14	pintcoll	0	116	153
-	5	 0x3101d60	pintinst	0	153	169
-	6	 0x24c5024	cnstpi__	0	169	181
-	7	 0x3101d74	proccoll	0	181	221
-	8	 0x3101dd0	procinst	0	221	241
-	9	 0x3101df0	proctprf	0	241	257
-	10	 0x3101e04	dprmlst_	0	257	273
-	11	 0x24c5038	cnstpi__	0	273	285
-	12	 0x3101e10	proctprf	0	285	301
-	13	 0x3101e24	cprmlst_	0	301	317
-	14	 0x24c504c	cnstpi__	0	317	329
+	1	 0x4302420	module__	0	0	33
+	2	 0x4300144	namespc_	0	33	61
+	3	 0x4302440	procdefn	0	61	121
+	4	 0x43024d4	pintcoll	0	121	158
+	5	 0x4302520	pintinst	0	158	174
+	6	 0x374a028	cnstpi__	0	174	186
+	7	 0x4302534	proccoll	0	186	226
+	8	 0x4302590	procinst	0	226	246
+	9	 0x43025b0	proctprf	0	246	262
+	10	 0x43025c0	dprmlst_	0	262	278
+	11	 0x374a038	cnstpi__	0	278	290
+	12	 0x43025d0	proctprf	0	290	306
+	13	 0x43025e0	cprmlst_	0	306	322
+	14	 0x374a048	cnstpi__	0	322	334
 
-In module created from: -stdin- (unrolled)
+In module created from: ./011.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   1 instantiation-collections

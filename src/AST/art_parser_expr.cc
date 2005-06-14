@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.7 2005/06/14 05:38:19 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.8 2005/06/14 23:36:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -174,16 +174,18 @@ inst_ref_expr::check_nonmeta_expr(context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;
 	typedef	expr::nonmeta_return_type::element_type	data_type;
 	const nonmeta_return_type inst_ref(check_nonmeta_reference(c));
+	if (!inst_ref) {
+		// already printed error message
+		return return_type(NULL);
+	}
 	const expr::nonmeta_return_type data_ref(inst_ref.is_a<data_type>());
 	if (data_ref) {
 		return data_ref;
 	} else {
 		cerr << "ERROR: Expression at " << where(*this) <<
 			" does not refer to a data type." << endl;
-		THROW_EXIT;
 		return return_type(NULL);
 	}
-	return return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -591,15 +593,14 @@ id_expr::check_nonmeta_reference(context& c) const {
 			cerr << "object \"" << *qid <<
 				"\" does not refer to an instance, ERROR!  "
 				<< where(*qid) << endl;
-			THROW_EXIT;
+			return return_type(NULL);
 		}
 	} else {
 		// push NULL or error object to continue?
 		cerr << "object \"" << *qid << "\" not found, ERROR!  "
 			<< where(*qid) << endl;
-		THROW_EXIT;
+		return return_type(NULL);
 	}
-	return return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1026,7 +1027,7 @@ index_expr::intercept_nonmeta_indices_error(context& c) const {
 	if (!checked_indices) {
 		cerr << "ERROR in nonmeta index list!  " <<
 			where(*ranges) << endl;
-		THROW_EXIT;
+		return range_list::checked_nonmeta_indices_type(NULL);
 	}
 	return checked_indices;
 }
@@ -1104,8 +1105,13 @@ index_expr::check_meta_reference(context& c) const {
  */
 inst_ref_expr::nonmeta_return_type
 index_expr::check_nonmeta_reference(context& c) const {
+	typedef	inst_ref_expr::nonmeta_return_type	return_type;
 	range_list::checked_nonmeta_indices_type
 		checked_indices(intercept_nonmeta_indices_error(c));
+	if (!checked_indices) {
+		// already printed error message
+		return return_type(NULL);
+	}
 	const inst_ref_expr::nonmeta_return_type
 		base_expr(intercept_base_nonmeta_ref_error(c));
 
@@ -1121,7 +1127,7 @@ index_expr::check_nonmeta_reference(context& c) const {
 	const bad_bool ai(base_inst->attach_indices(passing_indices));
 	if (ai.bad) {
 		cerr << where(*ranges) << endl;
-		THROW_EXIT;
+		return return_type(NULL);
 	}
 	// return indexed instance reference
 	return base_inst;

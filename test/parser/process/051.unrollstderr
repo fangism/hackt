@@ -2,17 +2,17 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x31014f0	module__	0	0	28
-	2	 0x3100144	namespc_	0	28	52
-	3	 0x3101510	procdefn	0	52	109
-	4	 0x3101594	dintcoll	0	109	151
-	5	 0x31015f0	datainst	0	151	171
-	6	 0x3101610	datatprf	0	171	187
-	7	 0x3101620	datadefn	0	187	223
-	8	 0x3101684	dprmlst_	0	223	239
-	9	 0x24c5024	cnstpi__	0	239	251
+	1	 0x4301cf0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4301d10	procdefn	0	53	114
+	4	 0x4301da4	dintcoll	0	114	156
+	5	 0x4301e00	datainst	0	156	176
+	6	 0x4301e20	datatprf	0	176	192
+	7	 0x4301e30	datadefn	0	192	228
+	8	 0x4301e90	dprmlst_	0	228	244
+	9	 0x374a028	cnstpi__	0	244	256
 
-In module created from: -stdin- (unrolled)
+In module created from: ./051.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

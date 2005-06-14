@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.4.2.2 2005/06/10 04:16:34 fang Exp $
+	$Id: art_parser_range.cc,v 1.4.2.3 2005/06/14 23:36:22 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -174,14 +174,14 @@ range::check_nonmeta_index(context& c) const {
 		if (!lp) {
 			cerr << "Expression is not a int-type, ERROR!  " <<
 				where(*lower) << endl;
-			THROW_EXIT;
+			return return_type(NULL);;
 		}
 		// check if expression is initialized
 	} else {
 		cerr << endl;
 		cerr << "Error resolving expression " << where(*lower)
 			<< endl;
-		THROW_EXIT;
+		return return_type(NULL);;
 	}
 
 	if (upper) {
@@ -195,13 +195,13 @@ range::check_nonmeta_index(context& c) const {
 			if (!up) {
 				cerr << "Expression is not a int-type, "
 					"ERROR!  " << where(*upper) << endl;
-				THROW_EXIT;
+				return return_type(NULL);;
 			}
 			// check if expression is initialized
 		} else {
 			cerr << "Error resolving expression " <<
 				where(*upper) << endl;
-			THROW_EXIT;
+			return return_type(NULL);;
 		}
 		// at this point, is ok
 
@@ -278,7 +278,6 @@ range_list::postorder_check_nonmeta(nonmeta_check_type& temp,
 			cerr << "Problem with dimension " << j <<
 				" of sparse_range_list between "
 				<< where(*this) << endl;
-			THROW_EXIT;		// terminate?
 			return good_bool(false);
 		}
 		// collect first, store temporary, check for constness

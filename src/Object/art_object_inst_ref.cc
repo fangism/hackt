@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.30.2.3 2005/06/14 05:38:27 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.30.2.4 2005/06/14 23:36:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -1056,7 +1056,29 @@ simple_nonmeta_instance_reference_base::attach_indices(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 simple_nonmeta_instance_reference_base::dump(ostream& o) const {
+#if 0
+	// sometimes seeing the type prefix is annoying
 	return dump_brief(what(o) << ' ');
+#else
+	return dump_briefer(o, never_ptr<const scopespace>());
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+simple_nonmeta_instance_reference_base::dump_briefer(ostream& o, 
+		const never_ptr<const scopespace> loc) const {
+	never_ptr<const instance_collection_base>
+		ib(get_inst_base());
+	if (loc && loc == ib->get_owner()) {
+		o << ib->get_qualified_name();
+	} else {
+		o << ib->get_name();
+	}
+	if (array_indices) {
+		array_indices->dump(o);
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
