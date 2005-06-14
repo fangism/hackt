@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7.2.5 2005/06/10 04:16:40 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.7.2.6 2005/06/14 18:16:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -193,6 +193,7 @@
 #define	CHP_WAIT_TYPE_KEY					"CHPwait"
 #define	CHP_SEND_TYPE_KEY					"CHPsend"
 #define	CHP_RECEIVE_TYPE_KEY					"CHPrecv"
+#define	CHP_FOREVER_LOOP_TYPE_KEY				"CHPloop"
 
 	// more class constants here...
 

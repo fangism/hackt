@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.1.2.5 2005/06/14 05:38:20 fang Exp $
+	$Id: art_object_CHP.cc,v 1.1.2.6 2005/06/14 18:16:26 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -36,6 +36,8 @@ SPECIALIZE_UTIL_WHAT(ART::entity::CHP::channel_send,
 		"CHP-channel-send")
 SPECIALIZE_UTIL_WHAT(ART::entity::CHP::channel_receive,
 		"CHP-channel-receive")
+SPECIALIZE_UTIL_WHAT(ART::entity::CHP::do_forever_loop, 
+		"CHP-forever-loop")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::CHP::action_sequence, CHP_SEQUENCE_TYPE_KEY, 0)
@@ -55,6 +57,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::CHP::channel_send, CHP_SEND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::CHP::channel_receive, CHP_RECEIVE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::CHP::do_forever_loop, CHP_FOREVER_LOOP_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace ART {
@@ -499,6 +503,46 @@ channel_receive::load_object(const persistent_object_manager& m,
 		istream& i) {
 	m.read_pointer(i, chan);
 	m.read_pointer_list(i, insts);
+}
+
+//=============================================================================
+// class do_forever_loop method definitions
+
+do_forever_loop::do_forever_loop() : parent_type(), body() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+do_forever_loop::~do_forever_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(do_forever_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+do_forever_loop::dump(ostream& o) const {
+	return what(o);		// temporary
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	body->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+do_forever_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, body);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+do_forever_loop::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, body);
 }
 
 //=============================================================================
