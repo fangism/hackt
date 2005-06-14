@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.25.2.3.2.2 2005/06/13 17:52:14 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.25.2.3.2.3 2005/06/14 05:28:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -179,6 +179,10 @@ public:
 
 	size_t
 	num_datatypes(void) const { return datatype_list.size(); }
+
+	// for convenience...
+	const datatype_list_type&
+	get_datatype_list(void) const { return datatype_list; }
 
 	datatype_ptr_type
 	index_datatype(const size_t) const;

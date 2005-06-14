@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.19.6.2 2005/06/13 17:52:11 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.19.6.3 2005/06/14 05:28:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -31,6 +31,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_built_ins.h"
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_instance_collection.tcc"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_inst_stmt_data.h"
+	// for class_traits<>::instantiation_statement_type_ref_base
 
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
@@ -123,9 +126,22 @@ struct collection_type_manager<int_tag> {
 	static
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type& i) {
-		return type_ref_ptr_type(
-			data_type_reference::make_quick_int_type_ref(
-				i.type_parameter));
+		if (i.type_parameter) {
+			// then type was already committed
+			return type_ref_ptr_type(
+				data_type_reference::make_quick_int_type_ref(
+					i.type_parameter));
+		} else {
+			// not yet unrolled... need to extract from
+			// first instantiation statement.
+			// extract as in pulling teeth...
+			// TODO: subtype versions of the following calls
+			const never_ptr<const data_instantiation_statement>
+				first(i.index_collection.front()
+				.is_a<const data_instantiation_statement>());
+			return first->get_type_ref()
+				.is_a<const data_type_reference>();
+		}
 	}
 
 	/**
@@ -155,7 +171,8 @@ struct collection_type_manager<int_tag> {
 		const count_ptr<const pint_const>
 			pwidth(param1.is_a<const pint_const>());
 		NEVER_NULL(pwidth);
-		const pint_value_type new_width = pwidth->static_constant_value();
+		const pint_value_type
+			new_width = pwidth->static_constant_value();
 		INVARIANT(new_width);
 		if (c.is_partially_unrolled()) {
 			INVARIANT(c.type_parameter);

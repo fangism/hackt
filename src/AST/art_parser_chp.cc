@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.5.2.1 2005/06/13 17:52:05 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.5.2.2 2005/06/14 05:28:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -14,7 +14,7 @@
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
-#include "Object/art_object_CHP.h"
+#include "Object/art_object_CHP.tcc"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_expr_base.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
@@ -22,6 +22,7 @@
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_collection.h"
+#include "Object/art_object_definition_proc.h"
 
 #include "util/what.h"
 #include "util/memory/count_ptr.tcc"
@@ -55,6 +56,7 @@ namespace CHP {
 using std::vector;
 using std::list;
 using std::find;
+using std::find_if;
 using std::copy;
 using std::back_inserter;
 #include "util/using_ostream.h"
@@ -63,6 +65,7 @@ using entity::CHP::action_sequence;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
 using entity::channel_type_reference_base;
+using entity::process_definition;
 
 //=============================================================================
 // class statement method definitions
@@ -105,6 +108,7 @@ body::check_build(context& c) const {
 	cerr << "Fang, finish CHP::body::check_build()!" << endl;
 if (stmts) {
 	typedef	list<statement::return_type>	checked_stmts_type;
+	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
 #if 0
 	never_ptr<definition_base> d(c.get_current_open_definition());
 	// can be datatype or process definition...
@@ -112,15 +116,38 @@ if (stmts) {
 	checked_stmts_type checked_stmts;
 	stmts->check_list(checked_stmts, &statement::check_action, c);
 	// for now, (this is wrong) construct as sequence.  
-	const checked_stmts_type::const_iterator i(checked_stmts.begin());
-	const checked_stmts_type::const_iterator e(checked_stmts.end());
-	const checked_stmts_type::const_iterator
+	const const_checked_iterator i(checked_stmts.begin());
+	const const_checked_iterator e(checked_stmts.end());
+	const const_checked_iterator
 		ni(find(i, e, statement::return_type()));
 	if (ni == e) {
+#if 0
 		const count_ptr<action_sequence> ret(new action_sequence);
 		copy(i, e, back_inserter(*ret));
 		// for now, dropping checked action sequence
 		// until we figure out how to cleanly add it to a definition.  
+#else
+		const never_ptr<definition_base>
+			def(c.get_current_open_definition());
+		NEVER_NULL(proc_def);
+		const never_ptr<process_definition>
+			proc_def(def.is_a<process_definition>());
+		if (!proc_def) {
+			cerr << "Currently only support CHP in "
+				"process definition, bug Fang about it."
+				<< endl;
+			return never_ptr<const object>(NULL);
+		}
+		const_checked_iterator loop_iter(i);
+		do {
+		const_checked_iterator start(loop_iter);
+		loop_iter = find_if(loop_iter, e, 
+			entity::CHP::do_forever_loop::detector<count_ptr>());
+		const count_ptr<action_sequence> seq(new action_sequence);
+		copy(start, loop_iter, back_inserter(*seq));
+		proc_def->add_concurrent_chp_body(seq);
+		} while (loop_iter != e);
+#endif
 	} else {
 		cerr << "ERROR: at least one error in CHP body." << endl;
 		THROW_EXIT;
@@ -564,6 +591,7 @@ send::check_action(context& c) const {
 	const return_type ret(new entity::CHP::channel_send(sender));
 	// need to check that number of arguments match...
 	NEVER_NULL(ret);
+#if 0
 	good_bool g(true);
 	for ( ; i!=e && g.good; i++) {
 		if (!ret->push_back(*i).good) {
@@ -572,6 +600,9 @@ send::check_action(context& c) const {
 			g.good = false;
 		}
 	}
+#else
+	const good_bool g(ret->add_expressions(checked_exprs));
+#endif
 	if (!g.good) {
 		cerr << "At least one type error in expr-list in " <<
 			where(*rvalues) << endl;

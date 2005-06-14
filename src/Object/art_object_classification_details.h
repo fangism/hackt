@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	Consider splitting into one file per tag type?
-	$Id: art_object_classification_details.h,v 1.7.2.4.2.1 2005/06/12 19:01:21 fang Exp $
+	$Id: art_object_classification_details.h,v 1.7.2.4.2.2 2005/06/14 05:28:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -203,7 +203,7 @@ struct class_traits<int_tag> {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
 
-	typedef	int_instance_collection		instance_collection_generic_type;
+	typedef	int_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
 	template <size_t D>
 	struct instance_array {
@@ -231,7 +231,7 @@ struct class_traits<int_tag> {
 	typedef	int_instance_reference_base
 				nonmeta_instance_reference_parent_type;
 	typedef	int_member_meta_instance_reference
-					member_simple_meta_instance_reference_type;
+				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
 	typedef	int_alias_connection		alias_connection_type;

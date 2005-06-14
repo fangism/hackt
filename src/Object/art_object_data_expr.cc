@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.1.4.4.2.2 2005/06/13 17:52:05 fang Exp $
+	$Id: art_object_data_expr.cc,v 1.1.4.4.2.3 2005/06/14 05:28:07 fang Exp $
  */
 
 #include <iostream>
@@ -154,10 +154,16 @@ int_arith_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_type_equivalent(*rt))
+	if (lt->may_be_type_equivalent(*rt)) {
 		return lt;	// or rt, doesn't matter in this phase
 	// idea: if one type is complete and resolvable, then prefer it.
-	else	return return_type(NULL);
+	} else {
+		cerr << "Operand types mismatch in int_arith_expr, got:"
+			<< endl;
+		lt->dump(cerr << "\tleft = ") << endl;
+		rt->dump(cerr << "\tright = ") << endl;
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -307,6 +313,9 @@ int_relational_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	BUG: may_be_type_equivalent rejects pint vs. int comparison.  
+ */
 count_ptr<const data_type_reference>
 int_relational_expr::get_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
@@ -316,10 +325,16 @@ int_relational_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_type_equivalent(*rt))
+	if (lt->may_be_type_equivalent(*rt)) {
 		return bool_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
-	else	return return_type(NULL);
+	} else {
+		cerr << "Operand types mismatch in int_relational_expr, got:"
+			<< endl;
+		lt->dump(cerr << "\tleft = ") << endl;
+		rt->dump(cerr << "\tright = ") << endl;
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,0 +1,9 @@
+// "016.in" -- should fail
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+bool b[4];
+chp {
+	R!(b)
+}
+}
+

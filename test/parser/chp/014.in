@@ -1,0 +1,9 @@
+// "014.in" -- should fail: bad expression
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+bool Z;
+chp {
+	R!(-Z)		// arithmetic negate bool, bad.
+}
+}
+

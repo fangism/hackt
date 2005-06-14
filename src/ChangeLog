@@ -1,5 +1,33 @@
 "ChangeLog"
 
+2005-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-04:
+	  Final revision in this sub-sub-branch.
+	  Added: Object/art_object_CHP.tcc for template method definitions.  
+	  In CHP::body::check_build(), 
+		now splitting up sequence of CHP statements as follows:
+		Each group contains a sequence of CHP statements
+		that end with a do-forever-loop.
+		Each of these groups is added to the list of concurrent
+		actions in the process definition.  
+		Within each group, actions are sequential.  
+	  Implemented: process_definition::add_concurrent_chp_body().
+		Also added CHP field to process-definition, 
+		but nothing is done yet with it.
+	  TODO: in mother branch, make CHP body persistent.  
+	  Replaced entity::CHP::channel_send::push_back
+		with template method that takes care of type-checking.  
+		Done some preliminary spot check testing, 
+		but not added the new test cases to Makefile.am yet.
+	  Object/art_object_CHP.h: new (unimplemented) do_forever_loop.
+	  Update error messages on data (nonmeta) expression type mismatch.  
+	  Fixed int_instance_collection::get_type_ref, actually now 
+		fetches the type-ref of the first instantiation statmeent.
+	  TODO: proper sub-typing of instantiation_statement, 
+		further abstraction of index_collection_list.  
+
+
 2005-06-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-03:

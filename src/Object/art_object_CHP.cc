@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.1.2.4 2005/06/11 21:48:06 fang Exp $
+	$Id: art_object_CHP.cc,v 1.1.2.4.2.1 2005/06/14 05:28:06 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -377,6 +377,7 @@ channel_send::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Type-checked wrapping around interface for adding expressions.  
 	TODO: type-check (2005-06-11)
@@ -425,6 +426,7 @@ channel_send::push_back(const expr_list_type::value_type& e) {
 		return good_bool(true);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

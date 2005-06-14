@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.6 2005/06/11 21:48:05 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.6.2.1 2005/06/14 05:28:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -1249,13 +1249,13 @@ arith_expr::check_nonmeta_expr(context& c) const {
 	const count_ptr<int_expr> ri(ro.is_a<int_expr>());
 	if (!li || !ri) {
 		static const char err_str[] =
-			"ERROR int_arith_expr expected an int, but got a ";
+			"ERROR: int_arith_expr expected an int, but got a ";
 		if (!li) {
-			cerr << err_str << lo->what(cerr) <<
+			lo->what(cerr << err_str) <<
 				" at " << where(*l) << endl;
 		}
 		if (!ri) {
-			cerr << err_str << ro->what(cerr) <<
+			ro->what(cerr << err_str) <<
 				" at " << where(*r) << endl;
 		}
 		return return_type(NULL);

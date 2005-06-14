@@ -25,6 +25,11 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		must x <= y?
 		Don't fee good about have size of expression be unknown...
 			very ugly semantics, tons of run-time checks...
+	Non-scalar data/expression references in CHP context?
+		Currently, not allowed.  
+		Need to extend type-references (of built-in channel type)
+			to include (unnamed) packed arrays.
+		Not difficult, just low priority for now.  
 
 //=============================================================================
 2005-04-29:

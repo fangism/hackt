@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.63.2.7.2.1 2005/06/12 19:01:18 fang Exp $
+#	$Id: Makefile.am,v 1.63.2.7.2.2 2005/06/14 05:28:01 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -197,7 +197,8 @@ OBJECT_TCC_FILES = \
 	Object/art_object_namespace.tcc \
 	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.tcc \
-	Object/art_object_nonmeta_value_reference.tcc
+	Object/art_object_nonmeta_value_reference.tcc \
+	Object/art_object_CHP.tcc
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
@@ -385,7 +386,6 @@ libart___la_SOURCES = \
 	config.h \
 	main/main_funcs.cc \
 	main/main_funcs.h
-# note "art+.h" is deprecated, no longer used
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 

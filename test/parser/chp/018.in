@@ -1,0 +1,10 @@
+// "018.in" -- should die, indexing requires ints
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+bool x;
+bool b[4];
+chp {
+	R!(b[x])
+}
+}
+
