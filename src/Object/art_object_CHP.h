@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.6 2005/06/14 23:36:22 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.7 2005/06/16 06:20:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -16,8 +16,7 @@
 
 namespace ART {
 namespace entity {
-
-
+class simple_datatype_nonmeta_value_reference;
 namespace CHP {
 using std::list;
 using std::vector;
@@ -271,16 +270,17 @@ class channel_receive : public action {
 	typedef	action					parent_type;
 	typedef	channel_receive				this_type;
 public:
-	typedef	count_ptr<simple_datatype_nonmeta_instance_reference>
+	typedef	count_ptr<simple_datatype_nonmeta_value_reference>
 							inst_ref_ptr_type;
-	typedef	list<inst_ref_ptr_type>			inst_ref_list_type;
+	typedef	vector<inst_ref_ptr_type>		inst_ref_list_type;
 	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
 	inst_ref_list_type				insts;
-public:
+protected:
 	channel_receive();
+public:
 	channel_receive(const chan_ptr_type&);
 	~channel_receive();
 
@@ -290,6 +290,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	template <class L>
+	good_bool
+	add_references(const L&);
+
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_receive
 

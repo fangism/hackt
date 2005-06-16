@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.5.2.3 2005/06/11 03:34:00 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.5.2.4 2005/06/16 06:20:19 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -49,6 +49,8 @@ typedef	count_ptr<entity::meta_instance_reference_base>
 
 typedef	count_ptr<entity::nonmeta_instance_reference_base>
 						inst_ref_nonmeta_return_type;
+typedef	count_ptr<entity::datatype_instance_reference_base>
+						data_ref_nonmeta_return_type;
 
 typedef	count_ptr<entity::PRS::prs_expr>	prs_expr_return_type;
 
@@ -136,6 +138,7 @@ public:
 	 */
 	typedef inst_ref_meta_return_type		meta_return_type;
 	typedef inst_ref_nonmeta_return_type		nonmeta_return_type;
+	typedef data_ref_nonmeta_return_type	nonmeta_data_return_type;
 
 	inst_ref_expr() : parent_type() { }
 virtual ~inst_ref_expr() { }
@@ -155,6 +158,9 @@ virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 	// NOTE: this is non-virtual
 	CHECK_META_EXPR_PROTO;
 	CHECK_NONMETA_EXPR_PROTO;
+
+	nonmeta_data_return_type
+	check_nonmeta_data_reference(context&) const;
 
 	// NOTE: this is non-virtual
 	CHECK_GENERIC_PROTO;

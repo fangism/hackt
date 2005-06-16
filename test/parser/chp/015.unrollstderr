@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	 0x43032d0	schnnref	0	490	506
 	20	 0x43032e0	sdbnref_	0	506	522
 	21	 0x4303300	nindlist	0	522	538
-	22	 0x374f028	cnstpi__	0	538	550
+	22	 0x377d028	cnstpi__	0	538	550
 
 In module created from: ./015.in (unrolled)
 In namespace "", we have: {
@@ -33,13 +33,13 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    one_shot = process-definition (defined) one_shot      (
-        chan(bool<>) L
-        chan(bool<>) R
+    one_shot = process-definition (defined) one_shot(
+        chan?(bool<>) L
+        chan!(bool<>) R
       )
       In definition "one_shot", we have: {
-        L = chan(bool<>) L
-        R = chan(bool<>) R
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
         b = bool<> b with indices: {
           [0..3]
         }

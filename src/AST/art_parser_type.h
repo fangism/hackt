@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.7.2.4 2005/05/29 02:08:27 fang Exp $
+	$Id: art_parser_type.h,v 1.7.2.5 2005/06/16 06:20:19 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -62,7 +62,8 @@ typedef node_list<const concrete_type_ref>		data_type_ref_list_base;
 /// list of base data types
 class data_type_ref_list : public data_type_ref_list_base {
 public:
-	typedef	count_ptr<const builtin_channel_type_reference>	return_type;
+	/// returns as non const so direction may be assigned
+	typedef	count_ptr<builtin_channel_type_reference>	return_type;
 protected:
 	typedef	data_type_ref_list_base			parent_type;
 public:

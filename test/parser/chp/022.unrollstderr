@@ -1,0 +1,88 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4305a50	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4305a70	procdefn	0	53	150
+	4	 0x4305b04	chancoll	0	150	188
+	5	 0x4305b60	chaninst	0	188	208
+	6	 0x4305b80	bchntprf	0	208	229
+	7	 0x4305ba0	datatprf	0	229	245
+	8	 0x4305bb0	datadefn	0	245	282
+	9	 0x4305c14	chancoll	0	282	320
+	10	 0x4305c70	chaninst	0	320	340
+	11	 0x4305c90	bchntprf	0	340	361
+	12	 0x4305cb0	datatprf	0	361	377
+	13	 0x4305cc4	dintcoll	0	377	415
+	14	 0x4305d20	datainst	0	415	435
+	15	 0x4305d40	datatprf	0	435	451
+	16	 0x4305d50	datadefn	0	451	487
+	17	 0x4305db0	dprmlst_	0	487	503
+	18	 0x377d028	cnstpi__	0	503	515
+	19	 0x4305dc4	dintcoll	0	515	553
+	20	 0x4305e20	datainst	0	553	573
+	21	 0x4305e40	CHPseqnc	0	573	609
+	22	 0x4305e50	CHPsend_	0	609	629
+	23	 0x4305e70	schnnref	0	629	645
+	24	 0x4305e80	nrelatex	0	645	667
+	25	 0x4305ea0	sdinref_	0	667	683
+	26	 0x4305ec0	sdinref_	0	683	699
+	27	 0x4305ee0	CHPsend_	0	699	719
+	28	 0x4305f00	schnnref	0	719	735
+	29	 0x4305f10	nrelatex	0	735	757
+	30	 0x4305f30	sdinref_	0	757	773
+	31	 0x4305f50	sdinref_	0	773	789
+	32	 0x4305f70	CHPsend_	0	789	809
+	33	 0x4305f90	schnnref	0	809	825
+	34	 0x4305fa0	nrelatex	0	825	847
+	35	 0x4305fc0	sdinref_	0	847	863
+	36	 0x4305fe0	sdinref_	0	863	879
+	37	 0x4306000	CHPsend_	0	879	899
+	38	 0x4306020	schnnref	0	899	915
+	39	 0x4306030	nrelatex	0	915	937
+	40	 0x4306050	sdinref_	0	937	953
+	41	 0x4306070	sdinref_	0	953	969
+	42	 0x4306090	CHPsend_	0	969	989
+	43	 0x43060b0	schnnref	0	989	1005
+	44	 0x43060c0	nrelatex	0	1005	1026
+	45	 0x43060e0	sdinref_	0	1026	1042
+	46	 0x4306100	sdinref_	0	1042	1058
+	47	 0x4306120	CHPsend_	0	1058	1078
+	48	 0x4306140	schnnref	0	1078	1094
+	49	 0x4306150	nrelatex	0	1094	1115
+	50	 0x4306170	sdinref_	0	1115	1131
+	51	 0x4306190	sdinref_	0	1131	1147
+
+In module created from: ./022.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    one_shot = process-definition (defined) one_shot(
+        chan?(bool<>) L
+        chan!(bool<>) R
+      )
+      In definition "one_shot", we have: {
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
+        x = int<32> x
+        z = int<32> z
+        chp:
+        concurrent: {
+          sequential: {
+            R!(x==z)
+            R!(x!=z)
+            R!(x<=z)
+            R!(x>=z)
+            R!(x<z)
+            R!(x>z)
+          }
+        }
+      }
+
+}
+

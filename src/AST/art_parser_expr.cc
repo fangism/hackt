@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.8 2005/06/14 23:36:21 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.9 2005/06/16 06:20:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -228,6 +228,24 @@ inst_ref_expr::check_prs_expr(context& c) const {
 	return check_prs_literal(c);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inst_ref_expr::nonmeta_data_return_type
+inst_ref_expr::check_nonmeta_data_reference(context& c) const {
+	typedef	nonmeta_data_return_type::element_type	ref_type;
+	const nonmeta_return_type
+		inst_ref(check_nonmeta_reference(c));
+	if (!inst_ref) {
+		// already have error message?
+		return nonmeta_data_return_type(NULL);
+	}
+	const nonmeta_data_return_type ret(inst_ref.is_a<ref_type>());
+	if (!ret) {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a data type." << endl;
+	}
+	return ret;
+}
+
 //=============================================================================
 // class expr_list method definitions
 
@@ -331,7 +349,17 @@ inst_ref_expr_list::inst_ref_expr_list(const inst_ref_expr* e) :
 
 inst_ref_expr_list::~inst_ref_expr_list() { }
 
-// more later
+void
+inst_ref_expr_list::postorder_check_nonmeta_data_refs(
+		checked_nonmeta_data_refs_type& temp, context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_nonmeta_data_refs()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_nonmeta_data_reference(c));
+	}
+}
 
 //=============================================================================
 // class qualified_id method definitions

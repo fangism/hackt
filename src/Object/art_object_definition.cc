@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.48.2.6 2005/06/14 23:36:22 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.48.2.7 2005/06/16 06:20:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -683,7 +683,7 @@ user_def_chan::what(ostream& o) const {
 ostream&
 user_def_chan::dump(ostream& o) const {
 	definition_base::dump(o);	// dump template signature first
-	const indent __chan_indent__(o);
+	INDENT_SECTION(o);
 
 	o << endl;
 	// the list of datatype(s) carried by this channel
@@ -703,7 +703,7 @@ user_def_chan::dump(ostream& o) const {
 		o << auto_indent << ")" << endl;
 	}
 #else
-	base_chan_type_ref->dump_long(o);
+	base_chan_type_ref->dump_long(o << auto_indent);
 #endif
 	// now dump ports
 	port_formals.dump(o);
@@ -1955,8 +1955,9 @@ process_definition::what(ostream& o) const {
  */
 ostream&
 process_definition::dump(ostream& o) const {
+//	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
-	const indent __proc_indent__(o);
+	INDENT_SECTION(o);
 	// now dump ports
 	port_formals.dump(o);
 
@@ -1965,11 +1966,11 @@ process_definition::dump(ostream& o) const {
 	o << auto_indent <<
 		"In definition \"" << key << "\", we have: {" << endl;
 	{	// begin indent level
-		const indent __indent__(o);
+		INDENT_SECTION(o);
 		used_id_map_type::const_iterator
-			i = used_id_map.begin();
+			i(used_id_map.begin());
 		const used_id_map_type::const_iterator
-			e = used_id_map.end();
+			e(used_id_map.end());
 		for ( ; i!=e; i++) {
 			// pair_dump?
 			o << auto_indent << i->first << " = ";

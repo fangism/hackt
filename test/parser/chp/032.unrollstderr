@@ -1,0 +1,67 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4304070	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4304090	procdefn	0	53	155
+	4	 0x4304124	chancoll	0	155	193
+	5	 0x4304180	chaninst	0	193	213
+	6	 0x43041a0	bchntprf	0	213	234
+	7	 0x43041c0	datatprf	0	234	250
+	8	 0x43041d0	datadefn	0	250	286
+	9	 0x4304230	dprmlst_	0	286	302
+	10	 0x377d028	cnstpi__	0	302	314
+	11	 0x4304244	chancoll	0	314	352
+	12	 0x43042a0	chaninst	0	352	372
+	13	 0x43042c0	bchntprf	0	372	393
+	14	 0x43042e0	datatprf	0	393	409
+	15	 0x43042f0	dprmlst_	0	409	425
+	16	 0x4304304	dintcoll	0	425	463
+	17	 0x4304360	datainst	0	463	483
+	18	 0x4304380	datatprf	0	483	499
+	19	 0x4304390	dprmlst_	0	499	515
+	20	 0x43043a4	dintcoll	0	515	553
+	21	 0x4304400	datainst	0	553	573
+	22	 0x4304420	CHPseqnc	0	573	597
+	23	 0x4304430	CHPrecv_	0	597	617
+	24	 0x4304450	schnnref	0	617	633
+	25	 0x4304460	sdinref_	0	633	649
+	26	 0x4304480	CHPrecv_	0	649	669
+	27	 0x43044a0	schnnref	0	669	685
+	28	 0x43044b0	sdinref_	0	685	701
+	29	 0x43044d0	CHPsend_	0	701	721
+	30	 0x43044f0	schnnref	0	721	737
+	31	 0x4304518	narithex	0	737	754
+	32	 0x4304520	sdinref_	0	754	770
+	33	 0x4304540	sdinref_	0	770	786
+
+In module created from: ./032.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    adjacent_diff = process-definition (defined) adjacent_diff(
+        chan?(int<32>) L
+        chan!(int<32>) R
+      )
+      In definition "adjacent_diff", we have: {
+        L = chan?(int<32>) L
+        R = chan!(int<32>) R
+        x = int<32> x
+        z = int<32> z
+        chp:
+        concurrent: {
+          sequential: {
+            L?(x)
+            L?(z)
+            R!(x-z)
+          }
+        }
+      }
+
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref_base.h"
 	Most general non-meta instance references.  
-	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.5 2005/06/14 23:36:24 fang Exp $
+	$Id: art_object_nonmeta_inst_ref_base.h,v 1.1.4.6 2005/06/16 06:20:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_BASE_H__
@@ -11,12 +11,14 @@
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 namespace ART {
 namespace entity {
 class scopespace;
 class nonmeta_index_list;
 class instance_collection_base;
+class data_type_reference;
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -24,6 +26,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::excl_ptr;
+using util::memory::count_ptr;
 //=============================================================================
 /**
 	The most general instance reference.  
@@ -119,6 +122,9 @@ protected:
 	simple_datatype_nonmeta_value_reference() : parent_type() { }
 public:
 virtual	~simple_datatype_nonmeta_value_reference() { }
+
+virtual	count_ptr<const data_type_reference>
+	get_data_type_ref(void) const = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;

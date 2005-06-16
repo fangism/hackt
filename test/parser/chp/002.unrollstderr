@@ -23,13 +23,13 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    empty = process-definition (defined) empty      (
-        chan(bool<>) L
-        chan(bool<>) R
+    empty = process-definition (defined) empty(
+        chan?(bool<>) L
+        chan!(bool<>) R
       )
       In definition "empty", we have: {
-        L = chan(bool<>) L
-        R = chan(bool<>) R
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
       }
 
 }

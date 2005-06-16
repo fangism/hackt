@@ -1,0 +1,37 @@
+Operand types mismatch in int_relational_expr, got:
+	left = int<16>
+	right = int<32>
+Error resolving expression 1 in send expression list.  
+At least one type error in expr-list in [7:4..11]
+ERROR in one of the communcation actions in [7:2..11]
+Operand types mismatch in int_relational_expr, got:
+	left = int<16>
+	right = int<32>
+Error resolving expression 1 in send expression list.  
+At least one type error in expr-list in [8:4..11]
+ERROR in one of the communcation actions in [8:2..11]
+Operand types mismatch in int_relational_expr, got:
+	left = int<16>
+	right = int<32>
+Error resolving expression 1 in send expression list.  
+At least one type error in expr-list in [9:4..11]
+ERROR in one of the communcation actions in [9:2..11]
+Operand types mismatch in int_relational_expr, got:
+	left = int<16>
+	right = int<32>
+Error resolving expression 1 in send expression list.  
+At least one type error in expr-list in [10:4..11]
+ERROR in one of the communcation actions in [10:2..11]
+Operand types mismatch in int_relational_expr, got:
+	left = int<16>
+	right = int<32>
+Error resolving expression 1 in send expression list.  
+At least one type error in expr-list in [11:4..10]
+ERROR in one of the communcation actions in [11:2..10]
+Operand types mismatch in int_relational_expr, got:
+	left = int<16>
+	right = int<32>
+Error resolving expression 1 in send expression list.  
+At least one type error in expr-list in [12:4..10]
+ERROR in one of the communcation actions in [12:2..10]
+ERROR: at least one error in CHP body.

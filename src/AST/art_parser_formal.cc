@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.21.2.5 2005/06/10 04:16:33 fang Exp $
+	$Id: art_parser_formal.cc,v 1.21.2.6 2005/06/16 06:20:19 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -230,7 +230,8 @@ port_formal_id::leftmost(void) const {
 
 line_position
 port_formal_id::rightmost(void) const {
-	return dim->rightmost();
+	if (dim)	return dim->rightmost();
+	else		return name->rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

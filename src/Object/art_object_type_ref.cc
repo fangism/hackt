@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.35.2.6 2005/06/14 05:38:37 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.35.2.7 2005/06/16 06:20:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -609,6 +609,7 @@ builtin_channel_type_reference::what(ostream& o) const {
  */
 ostream&
 builtin_channel_type_reference::dump(ostream& o) const {
+//	STACKTRACE_VERBOSE;
 	o << "chan";
 	if (direction == '!' || direction == '?')
 		o << direction;
@@ -630,16 +631,15 @@ builtin_channel_type_reference::dump(ostream& o) const {
  */
 ostream&
 builtin_channel_type_reference::dump_long(ostream& o) const {
-	o << auto_indent << "chan";
+//	STACKTRACE_VERBOSE;
+	o << "chan";
 	if (direction == '!' || direction == '?')
 		o << direction;
 	o << '(' << endl;
 	{
 	const indent __indent__(o); 
-	datatype_list_type::const_iterator
-		i(datatype_list.begin());
-	const datatype_list_type::const_iterator
-		e(datatype_list.end());
+	datatype_list_type::const_iterator i(datatype_list.begin());
+	const datatype_list_type::const_iterator e(datatype_list.end());
 	for ( ; i!=e; i++) {
 		(*i)->dump(o << auto_indent) << endl;
 	}

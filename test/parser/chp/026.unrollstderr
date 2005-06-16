@@ -1,0 +1,83 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4305490	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43054b0	procdefn	0	53	150
+	4	 0x4305544	chancoll	0	150	188
+	5	 0x43055a0	chaninst	0	188	208
+	6	 0x43055c0	bchntprf	0	208	229
+	7	 0x43055e0	datatprf	0	229	245
+	8	 0x43055f0	datadefn	0	245	281
+	9	 0x4305650	dprmlst_	0	281	297
+	10	 0x377d028	cnstpi__	0	297	309
+	11	 0x4305664	chancoll	0	309	347
+	12	 0x43056c0	chaninst	0	347	367
+	13	 0x43056e0	bchntprf	0	367	388
+	14	 0x4305700	datatprf	0	388	404
+	15	 0x4305710	dprmlst_	0	404	420
+	16	 0x4305724	dintcoll	0	420	458
+	17	 0x4305780	datainst	0	458	478
+	18	 0x43057a0	datatprf	0	478	494
+	19	 0x43057b0	dprmlst_	0	494	510
+	20	 0x43057c4	dintcoll	0	510	548
+	21	 0x4305820	datainst	0	548	568
+	22	 0x4305840	CHPseqnc	0	568	600
+	23	 0x4305850	CHPsend_	0	600	620
+	24	 0x4305870	schnnref	0	620	636
+	25	 0x4305898	narithex	0	636	653
+	26	 0x43058a0	sdinref_	0	653	669
+	27	 0x43058c0	sdinref_	0	669	685
+	28	 0x43058e0	CHPsend_	0	685	705
+	29	 0x4305900	schnnref	0	705	721
+	30	 0x4305928	narithex	0	721	738
+	31	 0x4305930	sdinref_	0	738	754
+	32	 0x4305950	sdinref_	0	754	770
+	33	 0x4305970	CHPsend_	0	770	790
+	34	 0x4305990	schnnref	0	790	806
+	35	 0x43059b8	narithex	0	806	823
+	36	 0x43059c0	sdinref_	0	823	839
+	37	 0x43059e0	sdinref_	0	839	855
+	38	 0x4305a00	CHPsend_	0	855	875
+	39	 0x4305a20	schnnref	0	875	891
+	40	 0x4305a48	narithex	0	891	908
+	41	 0x4305a50	sdinref_	0	908	924
+	42	 0x4305a70	sdinref_	0	924	940
+	43	 0x4305a90	CHPsend_	0	940	960
+	44	 0x4305ab0	schnnref	0	960	976
+	45	 0x4305ad8	narithex	0	976	993
+	46	 0x4305ae0	sdinref_	0	993	1009
+	47	 0x4305b00	sdinref_	0	1009	1025
+
+In module created from: ./026.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    one_shot = process-definition (defined) one_shot(
+        chan?(int<32>) L
+        chan!(int<32>) R
+      )
+      In definition "one_shot", we have: {
+        L = chan?(int<32>) L
+        R = chan!(int<32>) R
+        x = int<32> x
+        z = int<32> z
+        chp:
+        concurrent: {
+          sequential: {
+            R!(x+z)
+            R!(x-z)
+            R!(x*z)
+            R!(x/z)
+            R!(x%z)
+          }
+        }
+      }
+
+}
+

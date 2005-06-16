@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.1.2.2 2005/06/08 19:13:31 fang Exp $
+ 	$Id: art_object_port_formals_manager.cc,v 1.1.2.3 2005/06/16 06:20:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
@@ -72,18 +72,19 @@ port_formals_manager::what(ostream& o) const {
  */
 ostream&
 port_formals_manager::dump(ostream& o) const {
-	o << auto_indent << "(" << endl;
+//	STACKTRACE_VERBOSE;
+	o << '(' << endl;
 	{
-		const indent __indent__(o);
+		INDENT_SECTION(o);
 		port_formals_list_type::const_iterator
-			i = port_formals_list.begin();
+			i(port_formals_list.begin());
 		const port_formals_list_type::const_iterator
-			e = port_formals_list.end();
+			e(port_formals_list.end());
 		for ( ; i!=e; i++) {
 			(*i)->dump(o << auto_indent) << endl;
 		}
 	}
-	return o << auto_indent << ")" << endl;
+	return o << auto_indent << ')' << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

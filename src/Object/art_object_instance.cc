@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.43.2.2 2005/06/14 05:38:29 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.43.2.3 2005/06/16 06:20:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -116,6 +116,7 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump(ostream& o) const {
 	// but we need a version for unrolled and resolved parameters.  
+//	STACKTRACE_VERBOSE;
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
 	} else {
@@ -129,7 +130,7 @@ instance_collection_base::dump(ostream& o) const {
 		INVARIANT(!index_collection.empty());
 		o << " with indices: {" << endl;
 	{	// indentation scope
-		indent indenter(o);
+		INDENT_SECTION(o);
 		index_collection_type::const_iterator
 			i = index_collection.begin();
 		const index_collection_type::const_iterator

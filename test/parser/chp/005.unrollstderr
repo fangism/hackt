@@ -27,13 +27,13 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    one_shot = process-definition (defined) one_shot      (
-        chan(bool<>) L
-        chan(bool<>) R
+    one_shot = process-definition (defined) one_shot(
+        chan?(bool<>) L
+        chan!(bool<>) R
       )
       In definition "one_shot", we have: {
-        L = chan(bool<>) L
-        R = chan(bool<>) R
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
         chp:
         concurrent: {
           sequential: {

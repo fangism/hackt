@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.7 2005/06/14 23:36:21 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.8 2005/06/16 06:20:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <vector>
+#include <functional>
 
 #include "AST/art_parser_chp.h"
 #include "AST/art_parser_expr_list.h"
@@ -59,6 +60,7 @@ using std::find;
 using std::find_if;
 using std::copy;
 using std::back_inserter;
+using std::mem_fun_ref;
 #include "util/using_ostream.h"
 using entity::bool_expr;
 using entity::CHP::action_sequence;
@@ -66,6 +68,7 @@ using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
 using entity::channel_type_reference_base;
 using entity::process_definition;
+using entity::simple_datatype_nonmeta_value_reference;
 
 //=============================================================================
 // class statement method definitions
@@ -554,7 +557,7 @@ send::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: check expression list, type-for-type
+	Checks list of expressions send across channel.  
  */
 statement::return_type
 send::check_action(context& c) const {
@@ -616,10 +619,63 @@ receive::rightmost(void) const {
 	return lvalues->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 receive::check_action(context& c) const {
-	cerr << "Fang, finish CHP::received::check_action()!" << endl;
-	return statement::return_type(NULL);
+	const communication::checked_channel_type
+		receiver(check_channel(c));
+	if (!receiver) {
+		return statement::return_type(NULL);
+	}
+	if (get_channel_direction(*receiver) == '!') {
+		cerr << "ERROR: cannot receive on a send-only channel, at " <<
+			where(*chan) << endl;
+		return statement::return_type(NULL);
+	}
+	// check expression list...
+	typedef	inst_ref_expr_list::checked_nonmeta_data_refs_type::
+		value_type::element_type		checked_element_type;
+
+	typedef	inst_ref_expr_list::checked_nonmeta_data_refs_type::const_iterator
+							const_iterator;
+	// NOTE: these are generic instance references, may not even be data
+	inst_ref_expr_list::checked_nonmeta_data_refs_type checked_refs;
+	lvalues->postorder_check_nonmeta_data_refs(checked_refs, c);
+	const_iterator i(checked_refs.begin());
+	const const_iterator e(checked_refs.end());
+	const const_iterator
+		ni(find(i, e, inst_ref_expr::nonmeta_data_return_type(NULL)));
+	if (ni != e) {
+		cerr << "At least one error in inst-ref-list at " <<
+			where(*lvalues) << endl;
+		return statement::return_type(NULL);
+	}
+	// need to dynamic cast the list into simple_nonmeta_datatype_value_refs
+	typedef vector<count_ptr<simple_datatype_nonmeta_value_reference> >
+						val_refs_type;
+	val_refs_type val_refs;
+	transform(i, e, back_inserter(val_refs), 
+		mem_fun_ref(&count_ptr<checked_element_type>::
+			is_a<simple_datatype_nonmeta_value_reference>)
+	);
+	if (find(val_refs.begin(), val_refs.end(), val_refs_type::value_type())
+			!= val_refs.end()) {
+		cerr << "Houston, we have a problem." << endl;
+		return statement::return_type(NULL);
+	}
+
+	typedef	count_ptr<entity::CHP::channel_receive>	return_type;
+	const return_type ret(new entity::CHP::channel_receive(receiver));
+	// need to check that number of arguments match...
+	NEVER_NULL(ret);
+	const good_bool g(ret->add_references(val_refs));
+	if (!g.good) {
+		cerr << "At least one type error in expr-list in " <<
+			where(*lvalues) << endl;
+		return statement::return_type(NULL);
+	} else {
+		return ret;
+	}
 }
 
 //=============================================================================

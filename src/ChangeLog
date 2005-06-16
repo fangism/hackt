@@ -1,5 +1,20 @@
 "ChangeLog"
 
+2005-06-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-20:
+	  Remembered to set_direction in chan_type::check_type... oops!
+	  Implemented parser::CHP::receive::check_action().
+	  Implemented inst_ref_expr::check_nonmeta_data_referencee(), 
+		and inst_ref_expr_list::postorder_check_nonmeta_data_refs().
+	  Implemented entity::CHP::channel_receive::add_references<>().
+	  Slightly modified some type-reference dump methods.  
+	  Many chp test outputs updated to include channel direction
+		in ports list (and types in general).  
+	  Added a bunch of new tests for type checking CHP receives.  
+	  TODO: check CHP loops, guarded statements, selections, etc...
+
+
 2005-06-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-19:

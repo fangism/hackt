@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.24.2.6 2005/06/11 21:48:04 fang Exp $
+	$Id: art_parser_base.cc,v 1.24.2.7 2005/06/16 06:20:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -241,13 +241,18 @@ chan_type::check_base_chan_type(context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 chan_type::return_type
 chan_type::check_type(context& c) const {
+//	STACKTRACE_VERBOSE;
 //	cerr << "Fang, finish chan_type::check_type()!" << endl;
 #if 0
 	need count_ptr<const built_in_chan_type_reference>...
 	constructed from dtypes
 	will phase out add_chan_member...
 #endif
-	return dtypes->check_builtin_channel_type(c);
+	const data_type_ref_list::return_type
+		ret(dtypes->check_builtin_channel_type(c));
+	if (dir)
+		ret->set_direction(dir->text[0]);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

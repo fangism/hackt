@@ -1,0 +1,101 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4306500	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4306520	procdefn	0	53	174
+	4	 0x43065b4	chancoll	0	174	212
+	5	 0x4306610	chaninst	0	212	232
+	6	 0x4306630	bchntprf	0	232	253
+	7	 0x4306650	datatprf	0	253	269
+	8	 0x4306660	datadefn	0	269	306
+	9	 0x43066c4	chancoll	0	306	344
+	10	 0x4306720	chaninst	0	344	364
+	11	 0x4306740	bchntprf	0	364	385
+	12	 0x4306760	datatprf	0	385	401
+	13	 0x4306774	pintcoll	0	401	438
+	14	 0x43067c0	pintinst	0	438	454
+	15	 0x43067d4	pintcoll	0	454	491
+	16	 0x4306820	pintinst	0	491	507
+	17	 0x4306834	dintcoll	0	507	545
+	18	 0x4306890	datainst	0	545	565
+	19	 0x43068b0	datatprf	0	565	581
+	20	 0x43068c0	datadefn	0	581	617
+	21	 0x4306920	dprmlst_	0	617	633
+	22	 0x4306930	spimref_	0	633	653
+	23	 0x4306964	dintcoll	0	653	691
+	24	 0x43069c0	datainst	0	691	711
+	25	 0x43069e0	datatprf	0	711	727
+	26	 0x43069f0	dprmlst_	0	727	743
+	27	 0x4306a00	spimref_	0	743	763
+	28	 0x4306a30	CHPseqnc	0	763	799
+	29	 0x4306a40	CHPsend_	0	799	819
+	30	 0x4306a60	schnnref	0	819	835
+	31	 0x4306a70	nrelatex	0	835	857
+	32	 0x4306a90	sdinref_	0	857	873
+	33	 0x4306ab0	sdinref_	0	873	889
+	34	 0x4306ad0	CHPsend_	0	889	909
+	35	 0x4306af0	schnnref	0	909	925
+	36	 0x4306b00	nrelatex	0	925	947
+	37	 0x4306b20	sdinref_	0	947	963
+	38	 0x4306b40	sdinref_	0	963	979
+	39	 0x4306b60	CHPsend_	0	979	999
+	40	 0x4306b80	schnnref	0	999	1015
+	41	 0x4306b90	nrelatex	0	1015	1037
+	42	 0x4306bb0	sdinref_	0	1037	1053
+	43	 0x4306bd0	sdinref_	0	1053	1069
+	44	 0x4306bf0	CHPsend_	0	1069	1089
+	45	 0x4306c10	schnnref	0	1089	1105
+	46	 0x4306c20	nrelatex	0	1105	1127
+	47	 0x4306c40	sdinref_	0	1127	1143
+	48	 0x4306c60	sdinref_	0	1143	1159
+	49	 0x4306c80	CHPsend_	0	1159	1179
+	50	 0x4306ca0	schnnref	0	1179	1195
+	51	 0x4306cb0	nrelatex	0	1195	1216
+	52	 0x4306cd0	sdinref_	0	1216	1232
+	53	 0x4306cf0	sdinref_	0	1232	1248
+	54	 0x4306d10	CHPsend_	0	1248	1268
+	55	 0x4306d30	schnnref	0	1268	1284
+	56	 0x4306d40	nrelatex	0	1284	1305
+	57	 0x4306d60	sdinref_	0	1305	1321
+	58	 0x4306d80	sdinref_	0	1321	1337
+
+In module created from: ./024.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    one_shot = process-definition (defined) one_shot<
+      pint<> X
+      pint<> Y
+      >
+(
+        chan?(bool<>) L
+        chan!(bool<>) R
+      )
+      In definition "one_shot", we have: {
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
+        X = pint<> X
+        Y = pint<> Y
+        x = int<pint-inst-ref ::one_shot::Y> x
+        z = int<pint-inst-ref ::one_shot::X> z
+        chp:
+        concurrent: {
+          sequential: {
+            R!(x==z)
+            R!(x!=z)
+            R!(x<=z)
+            R!(x>=z)
+            R!(x<z)
+            R!(x>z)
+          }
+        }
+      }
+
+}
+

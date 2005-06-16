@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.6.4.3 2005/06/11 21:48:06 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.6.4.4 2005/06/16 06:20:19 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_LIST_H__
@@ -31,19 +31,20 @@ typedef node_list<const inst_ref_expr>			inst_ref_expr_list_base;
 	General parser expression list.  
 	Class connection_argument_list is derived from expr_list, 
 	so we should keep methods virtual.
+	TODO: typedef expr_list	connection_argument_list;
  */
 class expr_list : public expr_list_base {
 protected:
 	typedef	expr_list_base			parent_type;
 public:
 	typedef	parent_type::const_iterator	const_iterator;
-        typedef	DEFAULT_VECTOR(expr::generic_meta_return_type)
+	typedef	DEFAULT_VECTOR(expr::generic_meta_return_type)
 						checked_meta_generic_type;
-        typedef	DEFAULT_VECTOR(expr::meta_return_type)
+	typedef	DEFAULT_VECTOR(expr::meta_return_type)
 						checked_meta_exprs_type;
-        typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
+	typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
 						checked_nonmeta_exprs_type;
-        typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
 						checked_meta_refs_type;
 public:
 	expr_list();
@@ -99,6 +100,13 @@ class inst_ref_expr_list : public inst_ref_expr_list_base {
 protected:
 	typedef	inst_ref_expr_list_base		parent_type;
 public:
+	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+						checked_meta_refs_type;
+	typedef	DEFAULT_VECTOR(inst_ref_nonmeta_return_type)
+						checked_nonmeta_refs_type;
+	typedef	DEFAULT_VECTOR(data_ref_nonmeta_return_type)
+						checked_nonmeta_data_refs_type;
+public:
 	explicit
 	inst_ref_expr_list(const inst_ref_expr*);
 
@@ -107,6 +115,14 @@ public:
 	using parent_type::leftmost;
 	using parent_type::rightmost;
 
+	// generic refs (UNUSED)
+	void
+	postorder_check_nonmeta_refs(checked_nonmeta_refs_type&, 
+		context&) const;
+
+	void
+	postorder_check_nonmeta_data_refs(checked_nonmeta_data_refs_type&, 
+		context&) const;
 
 //	check_meta_references...
 //	check_nonmeta_references...
