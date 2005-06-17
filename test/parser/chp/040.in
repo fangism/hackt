@@ -1,0 +1,15 @@
+// "040.in"
+
+defproc sink(chan(bool) S) {
+bool b;
+chp {
+	*[ S?(b) ]
+}
+}
+
+defproc source(chan(bool) S) {
+chp {
+	*[ S!(false) ]
+}
+}
+

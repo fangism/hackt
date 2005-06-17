@@ -1,0 +1,57 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303200	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4303220	procdefn	0	53	140
+	4	 0x43031a4	chancoll	0	140	178
+	5	 0x43032b0	chaninst	0	178	198
+	6	 0x43032d0	bchntprf	0	198	219
+	7	 0x43032f0	datatprf	0	219	235
+	8	 0x4303300	datadefn	0	235	272
+	9	 0x4303364	chancoll	0	272	310
+	10	 0x43033c0	chaninst	0	310	330
+	11	 0x43033e0	bchntprf	0	330	351
+	12	 0x4303400	datatprf	0	351	367
+	13	 0x4303414	dboolcol	0	367	401
+	14	 0x4303470	datainst	0	401	421
+	15	 0x4303490	datatprf	0	421	437
+	16	 0x43034a0	CHPloop_	0	437	449
+	17	 0x43034b0	CHPseqnc	0	449	469
+	18	 0x43034c0	CHPrecv_	0	469	489
+	19	 0x43034e0	schnnref	0	489	505
+	20	 0x43034f0	sdbnref_	0	505	521
+	21	 0x4303510	CHPsend_	0	521	541
+	22	 0x4303530	schnnref	0	541	557
+	23	 0x4303540	sdbnref_	0	557	573
+
+In module created from: ./043.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    buffer = process-definition (defined) buffer(
+        chan?(bool<>) S
+        chan!(bool<>) T
+      )
+      In definition "buffer", we have: {
+        S = chan?(bool<>) S
+        T = chan!(bool<>) T
+        b = bool<> b
+        chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(b)
+              T!(b)
+            }
+          ]
+        }
+      }
+
+}
+

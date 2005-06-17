@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.1.2.7 2005/06/14 23:36:22 fang Exp $
+	$Id: art_object_CHP.cc,v 1.1.2.8 2005/06/17 19:45:58 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -532,6 +532,12 @@ channel_receive::load_object(const persistent_object_manager& m,
 do_forever_loop::do_forever_loop() : parent_type(), body() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+do_forever_loop::do_forever_loop(const body_ptr_type& b) :
+		parent_type(), body(b) {
+	NEVER_NULL(body);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 do_forever_loop::~do_forever_loop() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -545,7 +551,7 @@ do_forever_loop::dump(ostream& o) const {
 		INDENT_SECTION(o);
 		body->dump(o << auto_indent) << endl;
 	}
-	return o << auto_indent << "]";
+	return o << auto_indent << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

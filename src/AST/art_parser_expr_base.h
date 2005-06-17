@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.5.2.4 2005/06/16 06:20:19 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.5.2.5 2005/06/17 19:45:58 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -22,6 +22,7 @@ namespace entity {
 	class data_expr;		// nonmeta expressions
 	class nonmeta_instance_reference_base;
 	class datatype_instance_reference_base;
+	class simple_datatype_nonmeta_value_reference;
 	class nonmeta_index_list;
 	class int_range_list;		// a.k.a. nonmeta_range_list
 namespace PRS {
@@ -49,6 +50,8 @@ typedef	count_ptr<entity::meta_instance_reference_base>
 
 typedef	count_ptr<entity::nonmeta_instance_reference_base>
 						inst_ref_nonmeta_return_type;
+
+// why not simple_datatype_nonmeta_value_reference?
 typedef	count_ptr<entity::datatype_instance_reference_base>
 						data_ref_nonmeta_return_type;
 

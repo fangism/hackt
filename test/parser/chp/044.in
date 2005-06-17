@@ -1,0 +1,11 @@
+// "044.in" -- basic buffer with initial token, should pass
+
+defproc buffer(chan?(bool) S; chan!(bool) T) {
+bool b;
+chp {
+	b:=true;
+	T!(b);
+	*[ S?(b); T!(b) ]
+}
+}
+

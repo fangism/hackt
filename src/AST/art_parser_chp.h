@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11.2.3 2005/06/11 03:34:00 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.4 2005/06/17 19:45:57 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -196,17 +196,17 @@ public:
 
 //=============================================================================
 /// CHP assignment statement in binary form
-class assignment : public statement, public assign_stmt {
+class binary_assignment : public statement {
 private:
 	typedef	CHP::statement			parent_type;
-	typedef ART::parser::assign_stmt	base_assign;
+private:
+	const excl_ptr<const inst_ref_expr>	lval;
+	const excl_ptr<const expr>		rval;
 public:
 	explicit
-	assignment(base_assign* a);
+	binary_assignment(const inst_ref_expr*, const expr*);
 
-	~assignment();
-
-// remember to type check in CHP language mode
+	~binary_assignment();
 
 	ostream&
 	what(ostream& o) const;
@@ -218,19 +218,20 @@ public:
 	rightmost(void) const;
 
 	CHP_CHECK_STMT_PROTO;
-};	// end class assignment
+};	// end class binary_assignment
 
 //-----------------------------------------------------------------------------
 /// CHP assignment statement is only boolean
-class incdec_stmt : public statement, public parser::incdec_stmt {
+class bool_assignment : public statement {
 private:
 	typedef	CHP::statement			parent_type;
-	typedef ART::parser::incdec_stmt	base_assign;
+	const excl_ptr<const inst_ref_expr>		bool_var;
+	const excl_ptr<const char_punctuation_type>	dir;
 public:
-	explicit
-	incdec_stmt(base_assign* a);
+	bool_assignment(const inst_ref_expr*,
+		const char_punctuation_type*);
 
-	~incdec_stmt();
+	~bool_assignment();
 
 // remember to type check in CHP language mode
 
@@ -243,12 +244,12 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 1
+#if 0
 	never_ptr<const object>
 	check_build(context& ) const;
 #endif
 	CHP_CHECK_STMT_PROTO;
-};	// end class incdec_stmt
+};	// end class bool_assignment
 
 //=============================================================================
 /// CHP communication action base class
@@ -463,6 +464,9 @@ public:
 	rightmost(void) const;
 
 	CHP_CHECK_STMT_PROTO;
+private:
+	typedef	DEFAULT_VECTOR(statement::return_type)
+						checked_actions_type;
 };	// end class loop
 
 //=============================================================================

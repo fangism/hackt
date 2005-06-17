@@ -1,11 +1,13 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.8 2005/06/16 06:20:18 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.9 2005/06/17 19:45:56 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
 #define	__AST_ART_PARSER_CHP_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <vector>
@@ -15,6 +17,7 @@
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
+#include "Object/art_built_ins.h"		// for bool_type_ptr
 #include "Object/art_object_CHP.tcc"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_expr_base.h"
@@ -26,6 +29,7 @@
 #include "Object/art_object_definition_proc.h"
 
 #include "util/what.h"
+#include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 
 #define	CONSTRUCTOR_INLINE
@@ -34,12 +38,13 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::body, "(chp-body)")
+SPECIALIZE_UTIL_WHAT(ART::parser::CHP::statement, "(chp-statement)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::guarded_command, "(chp-guarded-cmd)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::else_clause, "(chp-else-clause)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::skip, "(chp-skip)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::wait, "(chp-wait)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::assignment, "(chp-assignment)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::incdec_stmt, "(chp-assignment)")
+SPECIALIZE_UTIL_WHAT(ART::parser::CHP::binary_assignment, "(chp-assignment)")
+SPECIALIZE_UTIL_WHAT(ART::parser::CHP::bool_assignment, "(chp-assignment)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::comm_list, "(chp-comm-list)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::send, "(chp-send)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::receive, "(chp-receive)")
@@ -69,6 +74,7 @@ using entity::CHP::condition_wait;
 using entity::channel_type_reference_base;
 using entity::process_definition;
 using entity::simple_datatype_nonmeta_value_reference;
+using entity::data_type_reference;
 
 //=============================================================================
 // class statement method definitions
@@ -108,9 +114,7 @@ body::rightmost(void) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
-#if 0
-	cerr << "Fang, finish CHP::body::check_build()!" << endl;
-#endif
+	STACKTRACE_VERBOSE;
 if (stmts) {
 	typedef	list<statement::return_type>	checked_stmts_type;
 	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
@@ -126,12 +130,6 @@ if (stmts) {
 	const const_checked_iterator
 		ni(find(i, e, statement::return_type()));
 	if (ni == e) {
-#if 0
-		const count_ptr<action_sequence> ret(new action_sequence);
-		copy(i, e, back_inserter(*ret));
-		// for now, dropping checked action sequence
-		// until we figure out how to cleanly add it to a definition.  
-#else
 		const never_ptr<definition_base>
 			def(c.get_current_open_definition());
 		NEVER_NULL(def);
@@ -144,15 +142,22 @@ if (stmts) {
 			return never_ptr<const object>(NULL);
 		}
 		const_checked_iterator loop_iter(i);
-		do {
-		const_checked_iterator start(loop_iter);
-		loop_iter = find_if(loop_iter, e, 
-			entity::CHP::do_forever_loop::detector<count_ptr>());
-		const count_ptr<action_sequence> seq(new action_sequence);
-		copy(start, loop_iter, back_inserter(*seq));
-		proc_def->add_concurrent_chp_body(seq);
-		} while (loop_iter != e);
-#endif
+		while (loop_iter != e) {
+			const const_checked_iterator start(loop_iter);
+			loop_iter = find_if(loop_iter, e, 
+				entity::CHP::do_forever_loop::detector<count_ptr>());
+			if (loop_iter != e) loop_iter++;
+			// need if-guard, else will loop infintely!
+			if (distance(start, loop_iter) == 1) {
+				proc_def->add_concurrent_chp_body(*start);
+			} else {
+				const count_ptr<action_sequence>
+					seq(new action_sequence);
+				NEVER_NULL(seq);
+				copy(start, loop_iter, back_inserter(*seq));
+				proc_def->add_concurrent_chp_body(seq);
+			}
+		}
 	} else {
 		cerr << "ERROR: at least one error in CHP body." << endl;
 		THROW_EXIT;
@@ -342,75 +347,167 @@ wait::check_action(context& c) const {
 }
 
 //=============================================================================
-// class assignment method definitions
+// class binary_assignment method definitions
 
 /**
 	This constructor upgrades a regular parser::assign_stmt into
-	a CHP-class assignment statement.  
+	a CHP-class binary_assignment statement.  
 	The constructor releases the members of the assign_stmt
 	and re-wraps them.  
 	\param a the constructed assign_stmt.
  */
 CONSTRUCTOR_INLINE
-assignment::assignment(base_assign* a) : parent_type(),
-	// destructive transfer of ownership
-	assign_stmt(a->release_lhs(), a->release_op(), a->release_rhs()) {
-	const excl_ptr<base_assign> delete_me(a);
+binary_assignment::binary_assignment(const inst_ref_expr* l, 
+		const expr* r) : 
+		parent_type(), lval(l), rval(r) {
+	NEVER_NULL(lval);
+	NEVER_NULL(rval);
 }
 
 DESTRUCTOR_INLINE
-assignment::~assignment() { }
+binary_assignment::~binary_assignment() { }
 
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(assignment)
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(binary_assignment)
 
 line_position
-assignment::leftmost(void) const {
-	return assign_stmt::leftmost();
+binary_assignment::leftmost(void) const {
+	return lval->leftmost();
 }
 
 line_position
-assignment::rightmost(void) const {
-	return assign_stmt::rightmost();
+binary_assignment::rightmost(void) const {
+	return rval->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-assignment::check_action(context& c) const {
-	cerr << "Fang, finish CHP::assignment::check_action()!" << endl;
-	return statement::return_type(NULL);
+binary_assignment::check_action(context& c) const {
+	const inst_ref_expr::nonmeta_data_return_type
+		lr(lval->check_nonmeta_data_reference(c));
+	if (!lr) {
+		cerr << "Error resolving lvalue of assignment at " <<
+			where(*lval) << endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<simple_datatype_nonmeta_value_reference>
+		lref(lr.is_a<simple_datatype_nonmeta_value_reference>());
+	if (!lref) {
+		cerr << "Unsupported reference at " << where(*lval) << endl;
+		cerr << "Sorry, currently only support simple datatype "
+			"instance references, bug Fang about it." << endl;
+		return statement::return_type(NULL);
+	}
+	const expr::nonmeta_return_type
+		rv(rval->check_nonmeta_expr(c));
+	if (!rv) {
+		cerr << "Error in rvalue of assignment at " <<
+			where(*rval) << endl;
+		return statement::return_type(NULL);
+	}
+	// type-check
+	if (lref->dimensions()) {
+		cerr << "Sorry, non-scalar instance reference at " <<
+			where(*lval) << " not supported in CHP yet." << endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<const data_type_reference>
+		ltype(lref->get_data_type_ref());
+	if (!ltype) {
+		// may be template-dependent, but shouldn't be null
+		cerr << "Error resolving type of lval at " <<
+			where(*lval) << endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<const data_type_reference>
+		rtype(rv->get_data_type_ref());
+	if (!rtype) {
+		// may be template-dependent, but shouldn't be null
+		cerr << "Error resolving type of rval at " <<
+			where(*rval) << endl;
+		return statement::return_type(NULL);
+	}
+	if (!ltype->may_be_type_equivalent(*rtype)) {
+		cerr << "Type mismatch in assignment at " <<
+			where(*this) << ':' << endl;
+		ltype->dump(cerr << "\tleft: ") << endl;
+		rtype->dump(cerr << "\tright: ") << endl;
+		return statement::return_type(NULL);
+	}
+	// at this point, all is good
+	return statement::return_type(
+		new entity::CHP::assignment(lref, rv));
 }
-
 
 //=============================================================================
-// class incdec_stmt method definitions
+// class bool_assignment method definitions
 
 CONSTRUCTOR_INLINE
-incdec_stmt::incdec_stmt(base_assign* a) : parent_type(), 
-		// destructive transfer of ownership
-		parser::incdec_stmt(a->release_expr(), a->release_op()) {
-	excl_ptr<base_assign> delete_me(a);
+bool_assignment::bool_assignment(const inst_ref_expr* l, 
+		const char_punctuation_type* d) :
+		parent_type(), bool_var(l), dir(d) {
+	NEVER_NULL(bool_var);
+	NEVER_NULL(dir);
 }
 
 DESTRUCTOR_INLINE
-incdec_stmt::~incdec_stmt() { }
+bool_assignment::~bool_assignment() { }
 
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(incdec_stmt)
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(bool_assignment)
 
 line_position
-incdec_stmt::leftmost(void) const {
-	return incdec_stmt::leftmost();
+bool_assignment::leftmost(void) const {
+	return bool_var->leftmost();
 }
 
 line_position
-incdec_stmt::rightmost(void) const {
-	return incdec_stmt::rightmost();
+bool_assignment::rightmost(void) const {
+	return dir->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
-incdec_stmt::check_action(context& c) const {
-	cerr << "Fang, finish CHP::incdec_stmt::check_action()!" << endl;
-	return statement::return_type(NULL);
+bool_assignment::check_action(context& c) const {
+	const inst_ref_expr::nonmeta_data_return_type
+		lr(bool_var->check_nonmeta_data_reference(c));
+	if (!lr) {
+		cerr << "Error resolving lvalue of assignment at " <<
+			where(*bool_var) << endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<simple_datatype_nonmeta_value_reference>
+		lref(lr.is_a<simple_datatype_nonmeta_value_reference>());
+	if (!lref) {
+		cerr << "Unsupported reference at " << where(*bool_var) << endl;
+		cerr << "Sorry, currently only support simple datatype "
+			"instance references, bug Fang about it." << endl;
+		return statement::return_type(NULL);
+	}
+	if (lref->dimensions()) {
+		cerr << "Sorry, non-scalar instance reference at " <<
+			where(*bool_var) << " not supported in CHP yet."
+			<< endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<const data_type_reference>
+		ltype(lref->get_data_type_ref());
+	if (!ltype) {
+		// may be template-dependent, but shouldn't be null
+		cerr << "Error resolving type of lval at " <<
+			where(*bool_var) << endl;
+		return statement::return_type(NULL);
+	}
+	if (!ltype->may_be_type_equivalent(*entity::bool_type_ptr)) {
+		cerr << "Type mismatch in boolean assignment at " <<
+			where(*this) << ':' << endl;
+		ltype->dump(cerr << "\tgot: ") << endl;
+		return statement::return_type(NULL);
+	}
+	// at this point, all is good
+	return statement::return_type(
+		new entity::CHP::assignment(lref, 
+			count_ptr<entity::pbool_const>(
+				new entity::pbool_const(dir->text[0] == '+'))));
 }
-
 
 //=============================================================================
 // class communication method definitions
@@ -501,6 +598,7 @@ comm_list::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 comm_list::check_action(context& c) const {
+	STACKTRACE_VERBOSE;
 	checked_actions_type actions;
 	// actions.reserve(size());
 #if 0
@@ -799,8 +897,42 @@ loop::rightmost(void) const {
 
 statement::return_type
 loop::check_action(context& c) const {
-	cerr << "Fang, finish CHP::loop::check_action()!" << endl;
-	return statement::return_type(NULL);
+	typedef	stmt_list::const_iterator	const_iterator;
+	STACKTRACE_VERBOSE;
+	checked_actions_type actions;
+	// actions.reserve(size());
+#if 0
+	// WTF, this should compile!!!
+	check_list(actions, &communication::check_action, c);
+	// parent_type::template check_list<>(actions, &communication::check_action, c);
+#else
+	const_iterator ci(commands->begin());
+	const const_iterator ce(commands->end());
+	for ( ; ci!=ce; ci++) {
+		actions.push_back((*ci)->check_action(c));
+	}
+#endif
+	const checked_actions_type::const_iterator i(actions.begin());
+	const checked_actions_type::const_iterator e(actions.end());
+	const checked_actions_type::const_iterator
+		ni(find(i, e, statement::return_type()));
+	if (ni != e) {
+		cerr << "ERROR in one of the actions in "
+			<< where(*this) << endl;
+		return statement::return_type(NULL);
+	} else {
+		if (actions.size() == 1) {
+			// there's only one item, no need to make list
+			return statement::return_type(
+				new entity::CHP::do_forever_loop(*i));
+		} else {
+			const count_ptr<entity::CHP::action_sequence>
+				ret(new entity::CHP::action_sequence);
+			copy(i, e, back_inserter(*ret));
+			return statement::return_type(
+				new entity::CHP::do_forever_loop(ret));
+		}
+	}
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.7 2005/06/16 06:20:19 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.8 2005/06/17 19:45:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -176,7 +176,7 @@ private:
 	typedef	action					parent_type;
 	typedef	assignment				this_type;
 public:
-	typedef	count_ptr<simple_datatype_nonmeta_instance_reference>
+	typedef	count_ptr<simple_datatype_nonmeta_value_reference>
 							lval_ptr_type;
 	typedef	count_ptr<data_expr>			rval_ptr_type;
 private:
@@ -278,7 +278,7 @@ public:
 private:
 	chan_ptr_type					chan;
 	inst_ref_list_type				insts;
-protected:
+private:
 	channel_receive();
 public:
 	channel_receive(const chan_ptr_type&);
@@ -309,8 +309,11 @@ public:
 	typedef	count_ptr<action>			body_ptr_type;
 private:
 	body_ptr_type					body;
-public:
+private:
 	do_forever_loop();
+public:
+	explicit
+	do_forever_loop(const body_ptr_type&);
 	~do_forever_loop();
 
 	ostream&
@@ -319,8 +322,10 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
+public:
 	/**
 		Substitute for mem_fun_ref predicate functor...
 	 */

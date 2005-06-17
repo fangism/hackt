@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.15.2.1 2005/06/08 19:13:33 fang Exp $
+ *	$Id: art++-lex.ll,v 1.15.2.2 2005/06/17 19:45:58 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -270,6 +270,7 @@ EXTRACT		"<<"
 FWDSLASH	"\\"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
+ASSIGN		":="
 
 /** syntactic sugar tokens, value is not important, return _node_position */
 BEGINLOOP	"*["
@@ -357,6 +358,7 @@ EXPORT		"export"
 {LOGICAL_OR}	{ NODE_POSITION_UPDATE(); return LOGICAL_OR; }
 {INSERT}	{ NODE_POSITION_UPDATE(); return INSERT; }
 {EXTRACT}	{ NODE_POSITION_UPDATE(); return EXTRACT; }
+{ASSIGN}	{ NODE_POSITION_UPDATE(); return ASSIGN; }
 
 {BEGINLOOP}	{ NODE_POSITION_UPDATE(); return BEGINLOOP; }
 {BEGINPROB}	{ NODE_POSITION_UPDATE(); return BEGINPROB; }

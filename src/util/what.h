@@ -2,16 +2,14 @@
 	\file "util/what.h"
 	Utility for user-defined type-names.
 	This file provides a generic default implementation.  
-	$Id: what.h,v 1.7 2005/05/19 18:43:36 fang Exp $
+	$Id: what.h,v 1.7.2.1 2005/06/17 19:45:59 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_H__
 #define	__UTIL_WHAT_H__
 
-// not using strings any more
 #include "util/string_fwd.h"
 #include "util/what_fwd.h"
-// #include "util/memory/count_ptr.h"
 
 #ifndef	UTIL_WHAT_PARTIAL_SPECIALIZATIONS
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	1
@@ -26,24 +24,6 @@
 	then you can set this to 0.  
  */
 #define	SUFFIX_STYLE_CONST			1
-
-#if 0
-// attempted to solve a problem, but this wasn't the solution
-/**
-	This needs to be invoked in the util namespace.  
- */
-#define	SUPPRESS_UTIL_WHAT_IMPLICIT_INSTANTIATION(T)			\
-extern template class what<T>;						\
-extern template class what<const T>;					\
-extern template class what<T&>;						\
-extern template class what<T*>;
-
-#define	UTIL_WHAT_EXPLICIT_INSTANTIATION(T)				\
-template class what<T>;							\
-template class what<const T>;						\
-template class what<T&>;						\
-template class what<T*>;
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 namespace util {
@@ -63,11 +43,6 @@ struct what {
 	typedef	const char*		name_type;
 	/// the full name of the type
 	static name_type		name(void);
-#if 0
-private:
-	static bool			init_once;
-	static const name_type		local_name;
-#endif
 };	// end struct what
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,21 +56,18 @@ private:
 
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<const T> {
-	// static const string		name_string;
 	typedef	const char*		name_type;
 	static name_type		name(void);
 };
 
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<T&> {
-	// static const string		name_string;
 	typedef	const char*		name_type;
 	static name_type		name(void);
 };
 
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<T*> {
-	// static const string		name_string;
 	typedef	const char*		name_type;
 	static name_type		name(void);
 };
@@ -104,13 +76,29 @@ struct what<T*> {
 // this is not necessary when using the suffix-style const qualifier
 UTIL_WHAT_TEMPLATE_SIGNATURE
 struct what<T* const> {
-	// static const string		name_string;
 	typedef	const char*		name_type;
 	static name_type		name(void);
 };
 #endif
 
 #endif	// UTIL_WHAT_PARTIAL_SPECIALIZATIONS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A way of getting the canonical type of an identified object
+	instance, just a wrapped call to what<T>::name().
+	NOTE: this takes an argument by const reference, so no
+	copy constructor is required.  
+	As a result, constness and reference-ness will be stripped.
+	\param T the type of object.
+	\return string of type name.  
+ */
+template <class T>
+inline
+typename what<T>::name_type
+what_is(const T&) {
+	return what<T>::name();		// specialized!
+}
 
 }	// end namespace util
 

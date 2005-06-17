@@ -1,5 +1,28 @@
 "ChangeLog"
 
+2005-06-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-21:
+	  Grammar: isolated CHP expressions from general meta language
+		expressions for modularity.  Updated assignments to
+		use the traditional ":=" operator.  Re-enabled
+		boolean assignment using +/- after transforming away
+		a s/r conflict.  (Used to be ++, --)
+	  AST::CHP updated assignment classes, now called
+		binary_assignment and bool_assignment, no longer using
+		generic base classes (parser::assignment and incdec_stmt).  
+		TODO: phase-out generics
+	  CHP::body::check_build():
+		Fixed block partitioning w.r.t. loops, 
+			now correctly divides up slices of statements
+			based on position(s) of forever-loop statements.  
+		Minor enhancement: one-statement actions no longer 
+			go into action-sequences.  
+	  Implemented statement::check_action for loop, 
+		binary_assignment, and bool_assignment.
+	  More test cases added to test/parser/chp.
+
+
 2005-06-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-20:

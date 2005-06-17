@@ -14,7 +14,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		What about comparisons?  operands must match.  
 		Provide sign-extensions definition?  built-in?
 		Truncation operations?
-	Do pints implicitly have width 32?
+	Do pints implicitly have width 32?  (For now assume yes.)
 		How is it possible for them to mix with other widths?
 	"bits" type, bit fields of integers (not the same as bool).  
 		Proposal: implement as public ports of the int built-in
@@ -30,7 +30,15 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		Need to extend type-references (of built-in channel type)
 			to include (unnamed) packed arrays.
 		Not difficult, just low priority for now.  
-	Support for dataless communications?  X!, Y? ?
+	Support for dataless communications?  X!, Y? ?  just 'X'?
+	CHP language:
+		',' and ';'
+		Can we allow ',' between actions other than communications?
+			Currently grammar doesn't support it.  
+	Grammar:
+		dark corner: guard expressions starting with a + or - b
+			must be wrapped in parens, after a transformation
+			to eliminate the s/r conflict on x+.
 
 //=============================================================================
 2005-04-29:

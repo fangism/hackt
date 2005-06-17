@@ -1,0 +1,4 @@
+Type mismatch in assignment at [6:2..5]:
+	left: bool<>
+	right: int<32>
+ERROR: at least one error in CHP body.
