@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.26.2.4 2005/06/11 03:34:01 fang Exp $
+	$Id: art_parser_instance.cc,v 1.26.2.5 2005/06/18 23:34:40 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -530,12 +530,7 @@ instance_declaration::check_build(context& c) const {
 	if (ftr) {
 		ids->check_build(c);		// return value?
 	} else {
-#if 0
 		// already have error message
-		cerr << "ERROR with concrete-type to instantiate at "
-			<< where(*type) << endl;
-		THROW_EXIT;
-#endif
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type

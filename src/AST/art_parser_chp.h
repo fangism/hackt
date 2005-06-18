@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11.2.6 2005/06/18 22:57:26 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.7 2005/06/18 23:34:39 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -135,9 +135,9 @@ public:
 	guarded_command(const chp_expr* g, const string_punctuation_type* a,
 		const statement* c);
 
-virtual	~guarded_command();
+	~guarded_command();
 
-virtual	ostream&
+	ostream&
 	what(ostream& o) const;
 
 	line_position
@@ -154,23 +154,11 @@ virtual	ostream&
 };	// end class guarded_command
 
 //=============================================================================
-/// CHP else-clause is just a special case of a guarded_command
-#if 0
-class else_clause : public guarded_command {
-public:
-	else_clause(const token_else* g, 
-		const string_punctuation_type* a, const stmt_list* c);
-
-	~else_clause();
-
-	ostream& what(ostream& o) const;
-};	// end class else_clause
-#endif
+// CHP else-clause is just a special case of a guarded_command
 
 //=============================================================================
 /// CHP skip statement
 class skip : public statement {
-// , public token_keyword {
 private:
 	const excl_ptr<const generic_keyword_type>	kw;
 public:
@@ -182,8 +170,6 @@ public:
 	skip(const generic_keyword_type* s);
 
 	~skip();
-
-// check that nothing appears after skip statement
 
 	ostream&
 	what(ostream& o) const;
@@ -270,10 +256,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	never_ptr<const object>
-	check_build(context& ) const;
-#endif
 	CHP_CHECK_STMT_PROTO;
 };	// end class bool_assignment
 
@@ -427,14 +409,6 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if 0
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-#endif
-
 	CHP_CHECK_STMT_PROTO;
 };	// end class det_selection
 
@@ -452,14 +426,6 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if 0
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-#endif
-
 	CHP_CHECK_STMT_PROTO;
 };	// end class nondet_selection
 
@@ -476,14 +442,6 @@ public:
 
 	ostream&
 	what(ostream& o) const;
-
-#if 0
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-#endif
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class prob_selection

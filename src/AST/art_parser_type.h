@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.7.2.5 2005/06/16 06:20:19 fang Exp $
+	$Id: art_parser_type.h,v 1.7.2.6 2005/06/18 23:34:41 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -72,18 +72,8 @@ public:
 
 	~data_type_ref_list();
 
-#if 0
-	good_bool
-	check_data_types(context& c) const;
-#else
 	return_type
 	check_builtin_channel_type(context&) const;
-#endif
-
-#if 0
-	// functor for list transformation.  
-	struct datatype_caster;
-#endif
 
 };	// end class data_type_ref_list
 
@@ -147,11 +137,6 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	never_ptr<const object>
-	check_build(context& c) const;
-#endif
-
 	return_type
 	check_type(context&) const;
 
@@ -190,18 +175,9 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	TYPE_BASE_CHECK_PROTO;
-#else
 	return_type
 	check_type(context&) const;
-#endif
 
-#if 0
-	// dedicated for user_chan_type_signature
-	good_bool
-	check_base_chan_type(context&) const;
-#endif
 };	// end class chan_type
 
 //=============================================================================

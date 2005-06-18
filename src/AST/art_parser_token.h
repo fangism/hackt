@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.14.2.1 2005/06/10 04:16:35 fang Exp $
+	$Id: art_parser_token.h,v 1.14.2.2 2005/06/18 23:34:41 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_H__
@@ -48,7 +48,6 @@ public:
 	rightmost(void) const;
 
 	CHECK_META_EXPR_PROTO;
-//	CHECK_NONMETA_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_int
@@ -80,7 +79,6 @@ public:
 	rightmost(void) const;
 
 	CHECK_META_EXPR_PROTO;
-//	CHECK_NONMETA_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(16);
 };	// end class token_float
@@ -105,7 +103,6 @@ public:
 	rightmost(void) const;
 
 	CHECK_META_EXPR_PROTO;
-//	CHECK_NONMETA_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
 };	// end class token_bool
@@ -133,7 +130,6 @@ public:
 	check_build(context& c) const;
 
 	CHECK_META_EXPR_PROTO;
-//	CHECK_NONMETA_EXPR_PROTO;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(8);
 };	// end class token_else
@@ -161,7 +157,6 @@ public:
 	check_build(context& c) const;
 
 	CHECK_META_EXPR_PROTO;
-//	CHECK_NONMETA_EXPR_PROTO;
 
 };	// end class token_quoted_string
 

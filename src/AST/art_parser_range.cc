@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.4.2.3 2005/06/14 23:36:22 fang Exp $
+	$Id: art_parser_range.cc,v 1.4.2.4 2005/06/18 23:34:41 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -360,15 +360,7 @@ range_list::check_nonmeta_indices(context& c) const {
 	count_ptr<nonmeta_index_list>
 		ret(new nonmeta_index_list);
 	NEVER_NULL(ret);
-#if 0
-	check_type::const_iterator i = temp.begin();
-	const check_type::const_iterator e = temp.end();
-	for ( ; i!=e; i++) {
-		ret->push_back(*i);
-	}
-#else
 	copy(temp.begin(), temp.end(), back_inserter(*ret));
-#endif
 	return ret;
 }
 

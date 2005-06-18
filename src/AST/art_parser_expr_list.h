@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.6.4.4 2005/06/16 06:20:19 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.6.4.5 2005/06/18 23:34:40 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_LIST_H__
@@ -54,20 +54,8 @@ public:
 
 virtual	~expr_list();
 
-#if 0
-virtual	ostream&
-	what(ostream& o) const;
-#endif
-
 	using parent_type::leftmost;
 	using parent_type::rightmost;
-
-#if 0
-private:
-virtual	never_ptr<const object>
-	check_build(context& c) const;
-public:
-#endif
 
 	void
 	postorder_check_meta_generic(checked_meta_generic_type&, 

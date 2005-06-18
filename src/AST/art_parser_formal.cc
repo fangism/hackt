@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.21.2.6 2005/06/16 06:20:19 fang Exp $
+	$Id: art_parser_formal.cc,v 1.21.2.7 2005/06/18 23:34:40 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -152,31 +152,17 @@ never_ptr<const object>
 data_param_decl::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("data_param_decl::check_build()");
-#if 0
-	type->check_build(c);
-	// useless return value
-		// should set the current_fundamental_type in context
-	const count_ptr<const fundamental_type_reference>
-		ftr(c.get_current_fundamental_type());
-	c.pop_current_definition_reference();
-		// no longer need the base definition
-#else
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
 	// make sure is data-type!
 	c.set_current_fundamental_type(ftr);
-#endif
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
 		// error catching?
 		// consider calling different routine
 	} else {
-#if 0
 		// already have error message
-		cerr << "ERROR with concrete-type in chan port decl. at "
-			<< where(*type) << endl;
-#endif
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
@@ -316,11 +302,7 @@ port_formal_decl::check_build(context& c) const {
 		// always returns NULL
 		// error catching?
 	} else {
-#if 0
 		// already have error message
-		cerr << "ERROR with concrete-type in port formal decl. at "
-			<< where(*type) << endl;
-#endif
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();

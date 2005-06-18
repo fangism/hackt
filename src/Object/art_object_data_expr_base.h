@@ -2,7 +2,7 @@
 	\file "Object/art_object_data_expr_base.h"
 	Base classes for data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: art_object_data_expr_base.h,v 1.1.4.4 2005/06/14 05:38:23 fang Exp $
+	$Id: art_object_data_expr_base.h,v 1.1.4.5 2005/06/18 23:34:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_BASE_H__
@@ -76,6 +76,9 @@ virtual	ostream&
 };	// end class nonmeta_ndex_expr_base
 
 //=============================================================================
+/**
+	Base class for general range expressions, meta or nonmeta.  
+ */
 class nonmeta_range_expr_base : virtual public nonmeta_index_expr_base {
 	typedef	nonmeta_index_expr_base		parent_type;
 protected:

@@ -2,6 +2,13 @@
 
 2005-06-18	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-24:
+	  Code clean-up only.  
+	  distcheck passes.  
+	  Candidate for trunk merge.  
+	  (Multi-platform check pending.)
+
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-23:
 	  parser::CHP: Moved list<guarded_command> functionality into 
 		the 'selection' base class.  

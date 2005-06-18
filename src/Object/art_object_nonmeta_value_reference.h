@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_value_reference.h"
 	Classes related to nonmeta (data) instance reference expressions. 
-	$Id: art_object_nonmeta_value_reference.h,v 1.1.4.2 2005/06/14 05:38:36 fang Exp $
+	$Id: art_object_nonmeta_value_reference.h,v 1.1.4.3 2005/06/18 23:34:42 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
@@ -76,24 +76,9 @@ private:
 	typedef	simple_datatype_nonmeta_value_reference	common_base_type;
 	typedef	common_base_type::parent_type		grandparent_type;
 	typedef	data_expr_base_type			interface_type;
-#if 0
-public:
-	typedef	typename class_traits<Tag>::value_collection_parent_type
-						value_collection_parent_type;
-#endif
 protected:
-#if 0
-	typedef	typename class_traits<Tag>::template value_array<0>::type
-							value_scalar_type;
-#endif
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							value_collection_type;
-#if 0
-	typedef	typename class_traits<Tag>::const_collection_type
-							const_collection_type;
-	typedef	typename class_traits<Tag>::const_expr_type
-							const_expr_type;
-#endif
 	// NOTE: this is const, unlike simple_meta_value_reference
 	typedef	never_ptr<const value_collection_type>
 						value_collection_ptr_type;
@@ -118,122 +103,19 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-#if 0
-	using parent_type::dump;
-#endif
-
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
 	value_collection_ptr_type
 	get_inst_base_subtype(void) const;
 
-#if 0
-	never_ptr<const value_collection_parent_type>
-	get_param_inst_base(void) const;
-#endif
-
 	size_t
 	dimensions(void) const;
 
 	GET_DATA_TYPE_REF_PROTO;
 
-#if 0
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	good_bool
-	initialize(const init_arg_type& i);
-
-	// try these
-	// using simple_param_meta_value_reference::may_be_initialized;
-	// using simple_param_meta_value_reference::must_be_initialized;
-
-	bool
-	may_be_initialized(void) const;
-
-	bool
-	must_be_initialized(void) const;
-
-	bool
-	is_static_constant(void) const;
-
-	bool
-	is_unconditional(void) const;
-
-	bool
-	is_loop_independent(void) const;
-
-	data_value_type
-	static_constant_value(void) const;
-#endif
-
 	bool
 	must_be_equivalent(const interface_type& ) const;
-
-#if 0
-	good_bool
-	resolve_value(data_value_type& i) const;
-
-	good_bool
-	unroll_resolve_value(const unroll_context&, data_value_type& i) const;
-#endif
-
-#if 0
-	const_index_list
-	resolve_dimensions(void) const;
-#endif
-
-#if 0
-	good_bool
-	resolve_values_into_flat_list(list<data_value_type>& l) const;
-
-	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
-#endif
-
-#if 0
-	count_ptr<const_index>
-	unroll_resolve_index(const unroll_context&) const;
-#endif
-
-#if 0
-public:
-	/**
-		Helper class for assigning values to instances.
-	 */
-	class assigner {
-	protected:
-		/** reference to the source of values */
-		const interface_type&	src;
-		/** resolved range list */
-		const_index_list	ranges;
-		/** flat list of unrolled values */
-		list<data_value_type>		vals;
-	public:
-		assigner(const interface_type& p);
-		// default destructor
-
-		bad_bool
-		operator () (const bad_bool b,
-			const SIMPLE_NONMETA_VALUE_REFERENCE_CLASS& p) const;
-
-		template <template <class> class P>
-		bad_bool
-		operator () (const bad_bool b,
-			const P<const SIMPLE_NONMETA_VALUE_REFERENCE_CLASS >& p) const {
-			assert(p);
-			return this->operator()(b, *p);
-		}
-	};	// end class assigner
-
-private:
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
-#endif
 
 #if 0
 protected:

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.11 2005/06/18 22:57:26 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.12 2005/06/18 23:34:39 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -337,23 +337,6 @@ guarded_command::check_guarded_action(context& c) const {
 		seq(command->check_action(c));
 	return return_type(new guarded_action(checked_bool_guard, seq));
 }
-
-//=============================================================================
-// class else_clause method definitions
-
-#if 0
-CONSTRUCTOR_INLINE
-else_clause::else_clause(const token_else* g, const string_punctuation_type* a, 
-		const stmt_list* c) :
-		guarded_command(g,a,c) {
-	// check for keyword else, right-arrow terminal
-}
-
-DESTRUCTOR_INLINE
-else_clause::~else_clause() { }
-
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(else_clause)
-#endif
 
 //=============================================================================
 // class skip method definitions
@@ -694,9 +677,8 @@ comm_list::check_action(context& c) const {
 	checked_actions_type actions;
 	// actions.reserve(size());
 #if 0
-	// WTF, this should compile!!!
+	// WTF? this should compile!!!
 	check_list(actions, &communication::check_action, c);
-	// parent_type::template check_list<>(actions, &communication::check_action, c);
 #else
 	const_iterator ci(begin());
 	const const_iterator ce(end());
@@ -924,18 +906,6 @@ det_selection::~det_selection() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 
-#if 0
-line_position
-det_selection::leftmost(void) const {
-	return parent_type::leftmost();
-}
-
-line_position
-det_selection::rightmost(void) const {
-	return parent_type::rightmost();
-}
-#endif
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 det_selection::check_action(context& c) const {
@@ -964,18 +934,6 @@ nondet_selection::~nondet_selection() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 
-#if 0
-line_position
-nondet_selection::leftmost(void) const {
-	return parent_type::leftmost();
-}
-
-line_position
-nondet_selection::rightmost(void) const {
-	return parent_type::rightmost();
-}
-#endif
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 nondet_selection::check_action(context& c) const {
@@ -1003,18 +961,6 @@ DESTRUCTOR_INLINE
 prob_selection::~prob_selection() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(prob_selection)
-
-#if 0
-line_position
-prob_selection::leftmost(void) const {
-	return parent_type::leftmost();
-}
-
-line_position
-prob_selection::rightmost(void) const {
-	return parent_type::rightmost();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
@@ -1128,30 +1074,6 @@ log::check_action(context& c) const {
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
-
-#if 0
-template class node_list<const statement>;	// CHP::stmt_list
-template class node_list<const guarded_command>;	// CHP::det_sel_base
-							// CHP::prob_sel_base
-							// CHP::nondet_sel_base
-	// actually distinguish these types for the sake of printing?
-template class node_list<const communication>;	// CHP::comm_list_base
-#else
-// This is temporary, until node_list::check_build is overhauled.  
-template
-node_list<const statement>::node_list();
-
-template
-node_list<const statement>::node_list(const CHP::statement*);
-
-template
-ostream&
-node_list<const statement>::what(ostream&) const;
-
-template
-line_position
-node_list<const statement>::leftmost(void) const;
-#endif
 
 //=============================================================================
 }	// end namespace CHP

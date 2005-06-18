@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.h"
 	Class definitions for data expressions.
-	$Id: art_object_data_expr.h,v 1.1.4.5 2005/06/14 05:38:23 fang Exp $
+	$Id: art_object_data_expr.h,v 1.1.4.6 2005/06/18 23:34:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DATA_EXPR_H__
@@ -217,6 +217,9 @@ public:
 };      // end class bool_logical_expr
 
 //=============================================================================
+/**
+	Signed integer data negation.  
+ */
 class int_negation_expr : public int_expr {
 	typedef	int_negation_expr		this_type;
 	typedef	int_expr			parent_type;
@@ -254,6 +257,9 @@ public:
 //=============================================================================
 // what about ! int -> bool ?
 //=============================================================================
+/**
+	Boolean data negation.  
+ */
 class bool_negation_expr : public bool_expr {
 	typedef	bool_negation_expr		this_type;
 	typedef	bool_expr			parent_type;

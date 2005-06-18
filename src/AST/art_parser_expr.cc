@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.23.2.9 2005/06/16 06:20:18 fang Exp $
+	$Id: art_parser_expr.cc,v 1.23.2.10 2005/06/18 23:34:39 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -310,12 +310,7 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 	const_iterator i = begin();
 	const const_iterator e = end();
 	for ( ; i!=e; i++) {
-#if 0
-		temp.push_back((*i) ? (*i)->check_nonmeta_expr(c) :
-			checked_nonmeta_exprs_type::value_type(NULL));
-#else
 		temp.push_back((*i)->check_nonmeta_expr(c));
-#endif
 	}
 }
 
