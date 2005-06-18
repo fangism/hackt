@@ -1,0 +1,59 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303200	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	57
+	3	 0x4303220	procdefn	0	57	144
+	4	 0x43031a4	chancoll	0	144	182
+	5	 0x43032b0	chaninst	0	182	202
+	6	 0x43032d0	bchntprf	0	202	223
+	7	 0x43032f0	datatprf	0	223	239
+	8	 0x4303300	enumdefn	0	239	294
+	9	 0x4303364	chancoll	0	294	332
+	10	 0x43033c0	chaninst	0	332	352
+	11	 0x43033e0	bchntprf	0	352	373
+	12	 0x4303400	datatprf	0	373	389
+	13	 0x4303414	enumcoll	0	389	427
+	14	 0x4303470	datainst	0	427	447
+	15	 0x4303490	datatprf	0	447	463
+	16	 0x43034a0	CHPloop_	0	463	475
+	17	 0x43034b0	CHPseqnc	0	475	495
+	18	 0x43034c0	CHPrecv_	0	495	515
+	19	 0x43034e0	schnnref	0	515	531
+	20	 0x43034f0	sdenref_	0	531	547
+	21	 0x4303510	CHPsend_	0	547	567
+	22	 0x4303530	schnnref	0	567	583
+	23	 0x4303540	sdenref_	0	583	599
+
+In module created from: ./049.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    buffer = process-definition (defined) buffer(
+        chan?(foo<>) S
+        chan!(foo<>) T
+      )
+      In definition "buffer", we have: {
+        S = chan?(foo<>) S
+        T = chan!(foo<>) T
+        b = foo<> b
+        chp:
+        concurrent: {
+          *[
+            sequential: {
+              S?(b)
+              T!(b)
+            }
+          ]
+        }
+      }
+
+    foo = enum-datatype-def: foo
+      { THREE, TWO, ONE,  }
+}
+

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21.2.6 2005/06/17 19:45:58 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.7 2005/06/18 20:12:07 fang Exp $
  */
 
 %{
@@ -523,6 +523,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
+%type	<_chp_stmt>	chp_body_or_skip
 %type	<_chp_loop>	chp_loop
 %type	<_chp_do_until>	chp_do_until
 %type	<_chp_selection>	chp_selection
@@ -1259,6 +1260,11 @@ chp_body_optional
 	| { $$ = new CHP::stmt_list(); }
 	;
 
+chp_body_or_skip
+	: chp_body { $$ = $1; }
+	| SKIP { $$ = new CHP::skip($1); }
+	;
+
 full_chp_body_item_list
 	: full_chp_body_item_list ';' full_chp_body_item
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
@@ -1291,7 +1297,7 @@ chp_body_item
 /*	| binary_assignment { $$ = new CHP::assignment($1); } 	*/
 /*	| unary_assignment { $$ = new CHP::incdec_stmt($1); }	*/
 	| chp_comm_list { $$ = $1; }
-	| SKIP { $$ = new CHP::skip($1); }
+/*	| SKIP { $$ = new CHP::skip($1); }		*/
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
 	;
@@ -1353,13 +1359,13 @@ chp_unmatched_det_guarded_command_list
 	;
 
 chp_guarded_command
-	: chp_guard_expr RARROW chp_body
+	: chp_guard_expr RARROW chp_body_or_skip
 		{ $$ = new CHP::guarded_command($1, $2, $3); }
 	;
 
 /* must be boolean, literals must not be aggregates */
 chp_guard_expr
-	: chp_or_expr { $$ = NULL; }
+	: chp_or_expr
 	;
 
 chp_unary_bool_expr
@@ -1450,7 +1456,7 @@ chp_not_expr
 	;
 
 chp_else_clause
-	: ELSE RARROW chp_body
+	: ELSE RARROW chp_body_or_skip
 		{ $$ = new CHP::else_clause($1, $2, $3); }
 	;
 

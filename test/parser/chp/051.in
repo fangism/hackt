@@ -1,0 +1,11 @@
+// "051.in" -- should fail, type mismatch
+
+enum foo { ONE, TWO, THREE }
+
+defproc buffer(chan?(foo) S; chan!(foo) T) {
+bool b;
+chp {
+	*[ S?(b); T!(b) ]
+}
+}
+

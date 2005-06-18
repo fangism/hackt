@@ -16,5 +16,4 @@ acceptable tokens are:
 	ID (shift)
 	SCOPE (shift)
 	BEGINLOOP (shift)
-	SKIP (shift)
 	LOG (shift)

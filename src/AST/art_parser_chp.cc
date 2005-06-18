@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.9 2005/06/17 19:45:56 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.10 2005/06/18 20:12:06 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -17,6 +17,7 @@
 #include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
+#include "AST/art_parser_token.h"
 #include "Object/art_built_ins.h"		// for bool_type_ptr
 #include "Object/art_object_CHP.tcc"
 #include "Object/art_object_type_ref.h"
@@ -40,7 +41,7 @@ namespace util {
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::body, "(chp-body)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::statement, "(chp-statement)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::guarded_command, "(chp-guarded-cmd)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::else_clause, "(chp-else-clause)")
+// SPECIALIZE_UTIL_WHAT(ART::parser::CHP::else_clause, "(chp-else-clause)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::skip, "(chp-skip)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::wait, "(chp-wait)")
 SPECIALIZE_UTIL_WHAT(ART::parser::CHP::binary_assignment, "(chp-assignment)")
@@ -69,6 +70,7 @@ using std::mem_fun_ref;
 #include "util/using_ostream.h"
 using entity::bool_expr;
 using entity::CHP::action_sequence;
+using entity::CHP::concurrent_actions;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
 using entity::channel_type_reference_base;
@@ -84,6 +86,86 @@ statement::statement() { }
 
 DESTRUCTOR_INLINE
 statement::~statement() { }
+
+//=============================================================================
+// class stmt_list method definitions
+
+stmt_list::stmt_list() : statement(), stmt_list_base(), is_concurrent(false) { }
+
+stmt_list::stmt_list(const statement* s) :
+		statement(), stmt_list_base(s), is_concurrent(false) {
+	NEVER_NULL(s);
+}
+
+stmt_list::~stmt_list() { }
+
+ostream&
+stmt_list::what(ostream& o) const {
+	return stmt_list_base::what(o);
+}
+
+line_position
+stmt_list::leftmost(void) const {
+	return stmt_list_base::leftmost();
+}
+
+line_position
+stmt_list::rightmost(void) const {
+	return stmt_list_base::rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks all statements and appends their results in a checked-list.  
+	Provided as a public convenience function.
+	\param sl the list in which to return results.  
+	\param c the context of the occurrence of this statement list.  
+ */
+void
+stmt_list::postorder_check_stmts(checked_stmts_type& sl, context& c) const {
+	check_list(sl, &statement::check_action, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If there is only one statement in the list, then 
+	this will return the result of the one statement.  
+	If there is more than one statement in the list, then depending on 
+	the is_concurrent flag, this will either return a 
+	entity::CHP::concurrent_actions, or an entity::CHP::action_sequence.  
+	\param c parser context.
+	\return singular or collective checked CHP action.  
+ */
+statement::return_type
+stmt_list::check_action(context& c) const {
+	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
+	checked_stmts_type checked_stmts;
+	postorder_check_stmts(checked_stmts, c);
+	const const_checked_iterator i(checked_stmts.begin());
+	const const_checked_iterator e(checked_stmts.end());
+	const const_checked_iterator
+		ni(find(i, e, statement::return_type(NULL)));
+	if (ni == e) {
+		// no NULLs found
+		if (checked_stmts.size() == 1) {
+			return *i;
+		} else if (is_concurrent) {
+			const count_ptr<concurrent_actions>
+				act_pll(new concurrent_actions);
+			copy(i, e, back_inserter(*act_pll));
+			return act_pll;
+		} else {	// is not concurrent
+			const count_ptr<action_sequence>
+				act_seq(new action_sequence);
+			copy(i, e, back_inserter(*act_seq));
+			return act_seq;
+		}
+	} else {
+		cerr << "ERROR in CHP statement(s) at " <<
+			where(*this) << endl;
+		return return_type(NULL);
+	}
+}
 
 //=============================================================================
 // class body method definitions
@@ -107,10 +189,15 @@ body::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: Need to figure out the boundaries between loop statements with 
-	initializations, in the case of more than one loop body.  
-	First check individual statements and loops, 
-	worry about proper construction second.  
+	This routine is special.  
+	It checks all CHP statements in the list, but assembles them
+	in the following manner:
+	A 'cut' is made after each do-forever-loop statement.  
+	All sequences of statements between the cuts are assembled
+		as action_sequences.  
+		(Presumably, anything after an infinite loop would be
+		unreachable, so we use it as a natural boundary.)
+	All sequences are then composed concurrently.  
  */
 never_ptr<const object>
 body::check_build(context& c) const {
@@ -123,7 +210,7 @@ if (stmts) {
 	// can be datatype or process definition...
 #endif
 	checked_stmts_type checked_stmts;
-	stmts->check_list(checked_stmts, &statement::check_action, c);
+	stmts->postorder_check_stmts(checked_stmts, c);
 	// for now, (this is wrong) construct as sequence.  
 	const const_checked_iterator i(checked_stmts.begin());
 	const const_checked_iterator e(checked_stmts.end());
@@ -172,13 +259,12 @@ if (stmts) {
 
 CONSTRUCTOR_INLINE
 guarded_command::guarded_command(const chp_expr* g, 
-		const string_punctuation_type* a, const stmt_list* c) : 
+		const string_punctuation_type* a, const statement* c) : 
 		guard(g),
 		// remember, may be keyword: else   
 		arrow(a), command(c) {
 	NEVER_NULL(guard);
 	NEVER_NULL(arrow);
-	if (c) NEVER_NULL(command);
 }
 
 DESTRUCTOR_INLINE
@@ -207,52 +293,55 @@ guarded_command::rightmost(void) const {
  */
 guarded_command::return_type
 guarded_command::check_guarded_action(context& c) const {
-#if 1
-	cerr << "Fang, finish CHP::guarded_command::check_guarded_action()!"
-		<< endl;
-	return return_type(NULL);
-#else
-	typedef list<statement::return_type>	checked_stmts_type;
+	typedef stmt_list::checked_stmts_type	checked_stmts_type;
 	// will need to be more general non-meta (bool) expression
-	const expr::nonmeta_return_type
-		checked_guard(guard->check_nonmeta_expr(c));
-	if (!checked_guard) {
-		cerr << "ERROR in guard expression at " << where(*guard)
-			<< endl;
-		return return_type(NULL);
+	const never_ptr<const token_else>
+		have_else(guard.is_a<const token_else>());
+	expr::nonmeta_return_type checked_guard;
+	if (!have_else) {
+		checked_guard = guard->check_nonmeta_expr(c);
+		if (!checked_guard) {
+			cerr << "ERROR in guard expression at " << where(*guard)
+				<< endl;
+			return return_type(NULL);
+		}
 	}
+	// else with else clause, guard is allowed to be NULL
+#if 1
+	// NOTE this won't work once we implement template types
 	const guarded_action::guard_ptr_type
 		checked_bool_guard(checked_guard.is_a<bool_expr>());
-	if (!checked_bool_guard) {
+	if (!have_else && !checked_bool_guard) {
 		cerr << "ERROR expression at " << where(*guard) <<
 			" is not boolean." << endl;
 		return return_type(NULL);
 	}
-	checked_stmts_type checked_stmts;
-	NEVER_NULL(command);
-	command->check_list(checked_stmts, &statement::check_action, c);
-	const checked_stmts_type::const_iterator i(checked_stmts.begin());
-	const checked_stmts_type::const_iterator e(checked_stmts.end());
-	const checked_stmts_type::const_iterator
-		ni(find(i, e, statement::return_type(NULL)));
-	if (ni == e) {
-		// no NULLs found
-		const count_ptr<action_sequence>
-			act_seq(new action_sequence);
-		copy(i, e, back_inserter(*act_seq));
-		return return_type(new guarded_action(
-			checked_bool_guard, act_seq));
-	} else {
-		cerr << "ERROR in CHP statement(s) at " <<
-			where(*command) << endl;
+#else
+	const count_ptr<const data_type_reference>
+		gtype(checked_guard->get_data_type_ref());
+	if (!gtype) {
+		cerr << "Error resolving guard type at " << where(*guard)
+			<< endl;
+		return return_type(NULL);
+	}
+	if (!gtype->may_be_type_equivalent(*entity::bool_type_ptr)) {
+		cerr << "Error: guard expression at " << where(*guard) <<
+			" expected bool, but got: ";
+		gtype->dump(cerr) << endl;
 		return return_type(NULL);
 	}
 #endif
+	checked_stmts_type checked_stmts;
+	NEVER_NULL(command);
+	const statement::return_type
+		seq(command->check_action(c));
+	return return_type(new guarded_action(checked_bool_guard, seq));
 }
 
 //=============================================================================
 // class else_clause method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 else_clause::else_clause(const token_else* g, const string_punctuation_type* a, 
 		const stmt_list* c) :
@@ -264,6 +353,7 @@ DESTRUCTOR_INLINE
 else_clause::~else_clause() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(else_clause)
+#endif
 
 //=============================================================================
 // class skip method definitions
@@ -290,12 +380,15 @@ skip::rightmost(void) const {
 	return kw->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Skip statements are allowed to return NULL, 
+	and thus, must be handled exceptionally by calls to check_action.  
+ */
 statement::return_type
 skip::check_action(context& c) const {
-//	cerr << "Fang, finish CHP::skip::check_action()!" << endl;
 	return statement::return_type(NULL);
 }
-
 
 //=============================================================================
 // class wait method definitions
@@ -322,28 +415,27 @@ wait::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: far future: handle template-dependent types
+ */
 statement::return_type
 wait::check_action(context& c) const {
 	typedef	statement::return_type		return_type;
-#if 1
-	cerr << "Fang, finish CHP::wait::check_action()!" << endl;
-	return return_type(NULL);
-#else
 	const expr::nonmeta_return_type ret(cond->check_nonmeta_expr(c));
 	if (!ret) {
 		cerr << "ERROR in wait condition expression at " <<
 			where(*cond) << endl;
 		return return_type(NULL);
 	}
+	// this will work until we introduce template-dependent types
 	const count_ptr<bool_expr> bret(ret.is_a<bool_expr>());
 	if (!bret) {
 		cerr << "ERROR: wait condition at " << where(*cond) <<
 			" is not boolean." << endl;
 		return return_type(NULL);
 	} else {
-		return return_type(new condition_wait(ret));
+		return return_type(new condition_wait(bret));
 	}
-#endif
 }
 
 //=============================================================================
@@ -779,11 +871,13 @@ receive::check_action(context& c) const {
 //=============================================================================
 // abstract class selection method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
 selection::selection() : statement() { }
 
 DESTRUCTOR_INLINE
 selection::~selection() { }
+#endif
 
 //=============================================================================
 // class det_selection method definitions
@@ -808,10 +902,27 @@ det_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 det_selection::check_action(context& c) const {
-	cerr << "Fang, finish CHP::det_selection::check_action()!" << endl;
-	return statement::return_type(NULL);
+	INVARIANT(size() > 1);		// otherwise, not a selection!
+	checked_gcs_type checked_gcs;	// checked guarded commands
+	check_list(checked_gcs, &guarded_command::check_guarded_action, c);
+	typedef	checked_gcs_type::const_iterator	const_checked_iterator;
+	const const_checked_iterator ci(checked_gcs.begin());
+	const const_checked_iterator ce(checked_gcs.end());
+	const const_checked_iterator
+		ni(find(ci, ce, guarded_command::return_type(NULL)));
+	if (ni != ce) {
+		cerr << "At least one error in guarded statement list in " <<
+			where(*this) << endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<entity::CHP::deterministic_selection>
+		ret(new entity::CHP::deterministic_selection);
+	NEVER_NULL(ret);
+	copy(ci, ce, back_inserter(*ret));
+	return ret;
 }
 
 //=============================================================================
@@ -837,10 +948,27 @@ nondet_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 nondet_selection::check_action(context& c) const {
-	cerr << "Fang, finish CHP::nondet_selection::check_action()!" << endl;
-	return statement::return_type(NULL);
+	INVARIANT(size() > 1);		// otherwise, not a selection!
+	checked_gcs_type checked_gcs;	// checked guarded commands
+	check_list(checked_gcs, &guarded_command::check_guarded_action, c);
+	typedef	checked_gcs_type::const_iterator	const_checked_iterator;
+	const const_checked_iterator ci(checked_gcs.begin());
+	const const_checked_iterator ce(checked_gcs.end());
+	const const_checked_iterator
+		ni(find(ci, ce, guarded_command::return_type(NULL)));
+	if (ni != ce) {
+		cerr << "At least one error in guarded statement list in " <<
+			where(*this) << endl;
+		return statement::return_type(NULL);
+	}
+	const count_ptr<entity::CHP::nondeterministic_selection>
+		ret(new entity::CHP::nondeterministic_selection);
+	NEVER_NULL(ret);
+	copy(ci, ce, back_inserter(*ret));
+	return ret;
 }
 
 //=============================================================================
@@ -866,18 +994,19 @@ prob_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 prob_selection::check_action(context& c) const {
 	cerr << "Fang, finish CHP::prob_selection::check_action()!" << endl;
 	return statement::return_type(NULL);
 }
 
-
 //=============================================================================
 // class loop method definitions
 
 CONSTRUCTOR_INLINE
 loop::loop(const stmt_list* n) : statement(), commands(n) {
+	NEVER_NULL(commands);
 }
 
 DESTRUCTOR_INLINE
@@ -897,13 +1026,14 @@ loop::rightmost(void) const {
 
 statement::return_type
 loop::check_action(context& c) const {
-	typedef	stmt_list::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE;
+#if 0
+	typedef	stmt_list::const_iterator	const_iterator;
 	checked_actions_type actions;
 	// actions.reserve(size());
 #if 0
 	// WTF, this should compile!!!
-	check_list(actions, &communication::check_action, c);
+	commands->check_list(actions, &communication::check_action, c);
 	// parent_type::template check_list<>(actions, &communication::check_action, c);
 #else
 	const_iterator ci(commands->begin());
@@ -933,6 +1063,19 @@ loop::check_action(context& c) const {
 				new entity::CHP::do_forever_loop(ret));
 		}
 	}
+#else
+	const statement::return_type
+		body(commands->check_action(c));
+	if (!body) {
+		// already printed error message
+		cerr << "ERROR in one of the actions in "
+			<< where(*this) << endl;
+		return statement::return_type(NULL);
+	} else {
+		return statement::return_type(
+			new entity::CHP::do_forever_loop(body));
+	}
+#endif
 }
 
 //=============================================================================

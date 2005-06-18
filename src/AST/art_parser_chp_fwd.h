@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: art_parser_chp_fwd.h,v 1.3.6.2 2005/06/17 19:45:58 fang Exp $
+	$Id: art_parser_chp_fwd.h,v 1.3.6.3 2005/06/18 20:12:06 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_FWD_H__
@@ -16,7 +16,8 @@ namespace CHP {
 
 class body;
 class statement;
-typedef	node_list<const statement>		stmt_list;
+typedef	node_list<const statement>		stmt_list_base;
+class stmt_list;
 class skip;
 class log;
 class loop;
@@ -26,7 +27,7 @@ class selection;
 class det_selection;
 class nondet_selection;
 class guarded_command;
-class else_clause;
+typedef guarded_command	else_clause;
 class comm_list;
 class communication;
 class send;

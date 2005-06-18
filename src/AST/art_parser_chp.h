@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11.2.4 2005/06/17 19:45:57 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.5 2005/06/18 20:12:06 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -63,18 +63,40 @@ virtual	CHP_CHECK_STMT_PROTO = 0;
 };	// end class statement
 
 //=============================================================================
-#if 0
 /**
 	Statement list.  
  */
-class stmt_list : public stmt_list_base {
+class stmt_list : public statement, public stmt_list_base {
+public:
+	typedef	list<statement::return_type>	checked_stmts_type;
+protected:
+	bool				is_concurrent;
 public:
 	stmt_list();
+
+	explicit
+	stmt_list(const statement*);
+
 	~stmt_list();
 
-	check_actions(...)
+	void
+	set_concurrent(const bool b) { is_concurrent = b; }
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	void
+	postorder_check_stmts(checked_stmts_type&, context&) const;
+
+	CHP_CHECK_STMT_PROTO;
+
 };	// end class stmt_list
-#endif
 
 //=============================================================================
 /// CHP body is just a list of statements
@@ -106,10 +128,10 @@ public:
 protected:
 	const excl_ptr<const chp_expr>	guard;		///< guard expression
 	const excl_ptr<const string_punctuation_type>	arrow;		///< right-arrow
-	const excl_ptr<const stmt_list>	command;	///< statement body
+	const excl_ptr<const statement>	command;	///< statement body
 public:
 	guarded_command(const chp_expr* g, const string_punctuation_type* a,
-		const stmt_list* c);
+		const statement* c);
 
 virtual	~guarded_command();
 
@@ -131,6 +153,7 @@ virtual	ostream&
 
 //=============================================================================
 /// CHP else-clause is just a special case of a guarded_command
+#if 0
 class else_clause : public guarded_command {
 public:
 	else_clause(const token_else* g, 
@@ -140,6 +163,7 @@ public:
 
 	ostream& what(ostream& o) const;
 };	// end class else_clause
+#endif
 
 //=============================================================================
 /// CHP skip statement
@@ -359,10 +383,13 @@ public:
 /// CHP selection statement abstract base class
 class selection : public statement {
 // is this class even necessary?
+protected:
+	typedef	DEFAULT_VECTOR(guarded_command::return_type)
+							checked_gcs_type;
 public:
-	selection();
+	selection() { }
 
-virtual	~selection();
+virtual	~selection() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;

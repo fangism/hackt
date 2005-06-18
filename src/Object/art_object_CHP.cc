@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.1.2.8 2005/06/17 19:45:58 fang Exp $
+	$Id: art_object_CHP.cc,v 1.1.2.9 2005/06/18 20:12:06 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -189,6 +189,8 @@ guarded_action::guarded_action() : persistent(), guard(), stmt() { }
 guarded_action::guarded_action(
 		const guard_ptr_type& g, const stmt_ptr_type& p) :
 		persistent(), guard(g), stmt(p) {
+	// guard may be NULL
+	// stmt may be NULL
 }
 
 guarded_action::~guarded_action() { }
@@ -198,7 +200,13 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(guarded_action)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 guarded_action::dump(ostream& o) const {
-	return stmt->dump(guard->dump(o) << " -> ");
+	if (guard)
+		guard->dump(o);
+	else 	o << "else";
+	o << " -> ";
+	if (stmt)
+		return stmt->dump(o);
+	else 	return o << "skip";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

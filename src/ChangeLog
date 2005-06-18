@@ -1,5 +1,29 @@
 "ChangeLog"
 
+2005-06-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-22:
+	  Reinstated stmt_list as a class from stmt_list_base, 
+		and implemented common convenience check_action, 
+		that automatically returns single action for list size 1.  
+		Added is_concurrent flag to direct whether or not
+		action_sequence or concurrent_actions should be constructed
+		if size > 1.
+	  typedef parser::CHP::guarded_command	parser::CHP::else_clause;
+		Note: token_else is allowed to return NULL for guard
+			and skip statment allowed to return NULL.  
+		These cases are handled appropriately.  
+	  Updated some comments in "AST/art_parser_chp.cc".
+	  Implemented guarded_command::check_guarded_action().  
+	  Implemented wait::check_action().
+	  Implemented [non]det_selection::check_action().
+	  Updated loop::check_action(), using stmt_list::check_postorder_stmts.
+	  Updated entity::CHP::guarded_action::dump(), allowing NULLs.  
+	  Grammar (CHP): skip statements may only appear by themselves, 
+		i.e. chp_body_or_skip, in place of a stmt_list.  
+	  More new test cases, most for guarded statements and selections.  
+
+
 2005-06-17	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-21:

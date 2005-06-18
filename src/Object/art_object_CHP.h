@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.8 2005/06/17 19:45:58 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.9 2005/06/18 20:12:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -89,7 +89,6 @@ public:
 //=============================================================================
 /**
 	A guarded action.  
-	TODO: need "bool_expr" not "pbool_expr"!!!
 	CHP not part of the meta-language.  
 	Do guards need back-references to selection statement?
  */
@@ -99,7 +98,18 @@ public:
 	typedef	count_ptr<action>		stmt_ptr_type;
 	typedef	guarded_action			this_type;
 protected:
+	/**
+		In the case of an else-clause, this guard is allowed to 
+		be NULL.  
+		For any set of guarded statements, at most one guarded
+		action may have a NULL guard, which designates
+		it as the else clause.  
+	 */
 	guard_ptr_type				guard;
+	/**
+		May be a sequence of actions or single action.  
+		May also be NULL in the case of a skip action.  
+	 */
 	stmt_ptr_type				stmt;
 public:
 	guarded_action();

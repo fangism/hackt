@@ -1,0 +1,11 @@
+// "049.in" -- should pass
+
+enum foo { ONE, TWO, THREE }
+
+defproc buffer(chan?(foo) S; chan!(foo) T) {
+foo b;
+chp {
+	*[ S?(b); T!(b) ]
+}
+}
+
