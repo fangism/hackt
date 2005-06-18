@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.1.2.9 2005/06/18 20:12:07 fang Exp $
+	$Id: art_object_CHP.h,v 1.1.2.10 2005/06/18 22:57:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -307,6 +307,27 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_receive
+
+//=============================================================================
+/**
+	do-while loop: repeat while at least one guard is true.  
+ */
+class do_while_loop : public action, public selection_list_type {
+	typedef	action					parent_type;
+	typedef	selection_list_type			list_type;
+	typedef	do_while_loop				this_type;
+public:
+	do_while_loop();
+	~do_while_loop();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class do_while_loop
 
 //=============================================================================
 /**

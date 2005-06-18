@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.1.4.6 2005/06/14 23:36:22 fang Exp $
+	$Id: art_object_data_expr.cc,v 1.1.4.7 2005/06/18 22:57:27 fang Exp $
  */
 
 #include <iostream>
@@ -414,11 +414,14 @@ bool_logical_expr::op_map_register(const string& s, const op_type* o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Static initialization of registered logicalmetic operators.  
+	TODO: maintain operators, in case we decide to change them, 
+		hopefully more C-style to allow for logical and bitwise 
+		operators. 
  */
 size_t
 bool_logical_expr::op_map_init(void) {
-	op_map_register("&&", &op_and);
-	op_map_register("||", &op_or);
+	op_map_register("&", &op_and);
+	op_map_register("|", &op_or);
 	op_map_register("^", &op_xor);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();

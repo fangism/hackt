@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21.2.7 2005/06/18 20:12:07 fang Exp $
+	$Id: art++-parse.yy,v 1.21.2.8 2005/06/18 22:57:27 fang Exp $
  */
 
 %{
@@ -1310,7 +1310,8 @@ chp_loop
 
 chp_do_until
 	/* do-until-all-guards-false */
-	: BEGINLOOP chp_matched_det_guarded_command_list ']'
+	/* else-clause not allowed in do-until, hence unmatched list */
+	: BEGINLOOP chp_unmatched_det_guarded_command_list ']'
 		{ WRAP_LIST($1, $2, $3); $$ = new CHP::do_until($2); }
 	;
 

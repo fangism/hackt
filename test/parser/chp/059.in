@@ -1,0 +1,13 @@
+// "059.in" should fail, nondeterministic selections should not have else clause
+
+defproc split_bool_soup(chan?(bool) A, B, G; chan!(bool) Z) {
+bool g, x;
+chp {
+	*[
+		G?(g);
+		[g -> A?(x) : else -> B?(x) ];
+		Z!(x)
+	]
+}
+}
+

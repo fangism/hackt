@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.14.2.10 2005/06/18 20:12:06 fang Exp $
+	$Id: art_parser_chp.cc,v 1.14.2.11 2005/06/18 22:57:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -871,20 +871,52 @@ receive::check_action(context& c) const {
 //=============================================================================
 // abstract class selection method definitions
 
-#if 0
 CONSTRUCTOR_INLINE
-selection::selection() : statement() { }
+selection::selection() : statement(), list_type() { }
+
+CONSTRUCTOR_INLINE
+selection::selection(const guarded_command* n) : statement(), list_type(n) {
+	NEVER_NULL(n);
+}
 
 DESTRUCTOR_INLINE
 selection::~selection() { }
-#endif
+
+line_position
+selection::leftmost(void) const {
+	return list_type::leftmost();
+}
+
+line_position
+selection::rightmost(void) const {
+	return list_type::rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+selection::postorder_check_gcs(checked_gcs_type& gl, context& c) const {
+	INVARIANT(size() > 1);		// otherwise, not a selection!
+	check_list(gl, &guarded_command::check_guarded_action, c);
+	typedef	checked_gcs_type::const_iterator	const_checked_iterator;
+	const const_checked_iterator ci(gl.begin());
+	const const_checked_iterator ce(gl.end());
+	const const_checked_iterator
+		ni(find(ci, ce, guarded_command::return_type(NULL)));
+	if (ni != ce) {
+		cerr << "At least one error in guarded statement list in " <<
+			where(*this) << endl;
+		return good_bool(false);
+	} else {
+		return good_bool(true);
+	}
+}
 
 //=============================================================================
 // class det_selection method definitions
 
 CONSTRUCTOR_INLINE
 det_selection::det_selection(const guarded_command* n) :
-		selection(), parent_type(n) {
+		parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -892,6 +924,7 @@ det_selection::~det_selection() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(det_selection)
 
+#if 0
 line_position
 det_selection::leftmost(void) const {
 	return parent_type::leftmost();
@@ -901,27 +934,20 @@ line_position
 det_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 det_selection::check_action(context& c) const {
-	INVARIANT(size() > 1);		// otherwise, not a selection!
 	checked_gcs_type checked_gcs;	// checked guarded commands
-	check_list(checked_gcs, &guarded_command::check_guarded_action, c);
-	typedef	checked_gcs_type::const_iterator	const_checked_iterator;
-	const const_checked_iterator ci(checked_gcs.begin());
-	const const_checked_iterator ce(checked_gcs.end());
-	const const_checked_iterator
-		ni(find(ci, ce, guarded_command::return_type(NULL)));
-	if (ni != ce) {
-		cerr << "At least one error in guarded statement list in " <<
-			where(*this) << endl;
+	if (!postorder_check_gcs(checked_gcs, c).good) {
+		// already have error message
 		return statement::return_type(NULL);
 	}
 	const count_ptr<entity::CHP::deterministic_selection>
 		ret(new entity::CHP::deterministic_selection);
 	NEVER_NULL(ret);
-	copy(ci, ce, back_inserter(*ret));
+	copy(checked_gcs.begin(), checked_gcs.end(), back_inserter(*ret));
 	return ret;
 }
 
@@ -930,7 +956,7 @@ det_selection::check_action(context& c) const {
 
 CONSTRUCTOR_INLINE
 nondet_selection::nondet_selection(const guarded_command* n) :
-		selection(), parent_type(n) {
+		parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -938,6 +964,7 @@ nondet_selection::~nondet_selection() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(nondet_selection)
 
+#if 0
 line_position
 nondet_selection::leftmost(void) const {
 	return parent_type::leftmost();
@@ -947,27 +974,20 @@ line_position
 nondet_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 nondet_selection::check_action(context& c) const {
-	INVARIANT(size() > 1);		// otherwise, not a selection!
 	checked_gcs_type checked_gcs;	// checked guarded commands
-	check_list(checked_gcs, &guarded_command::check_guarded_action, c);
-	typedef	checked_gcs_type::const_iterator	const_checked_iterator;
-	const const_checked_iterator ci(checked_gcs.begin());
-	const const_checked_iterator ce(checked_gcs.end());
-	const const_checked_iterator
-		ni(find(ci, ce, guarded_command::return_type(NULL)));
-	if (ni != ce) {
-		cerr << "At least one error in guarded statement list in " <<
-			where(*this) << endl;
+	if (!postorder_check_gcs(checked_gcs, c).good) {
+		// already have error message
 		return statement::return_type(NULL);
 	}
 	const count_ptr<entity::CHP::nondeterministic_selection>
 		ret(new entity::CHP::nondeterministic_selection);
 	NEVER_NULL(ret);
-	copy(ci, ce, back_inserter(*ret));
+	copy(checked_gcs.begin(), checked_gcs.end(), back_inserter(*ret));
 	return ret;
 }
 
@@ -976,7 +996,7 @@ nondet_selection::check_action(context& c) const {
 
 CONSTRUCTOR_INLINE
 prob_selection::prob_selection(const guarded_command* n) :
-		selection(), parent_type(n) {
+		parent_type(n) {
 }
 
 DESTRUCTOR_INLINE
@@ -984,6 +1004,7 @@ prob_selection::~prob_selection() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(prob_selection)
 
+#if 0
 line_position
 prob_selection::leftmost(void) const {
 	return parent_type::leftmost();
@@ -993,6 +1014,7 @@ line_position
 prob_selection::rightmost(void) const {
 	return parent_type::rightmost();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
@@ -1027,43 +1049,6 @@ loop::rightmost(void) const {
 statement::return_type
 loop::check_action(context& c) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	typedef	stmt_list::const_iterator	const_iterator;
-	checked_actions_type actions;
-	// actions.reserve(size());
-#if 0
-	// WTF, this should compile!!!
-	commands->check_list(actions, &communication::check_action, c);
-	// parent_type::template check_list<>(actions, &communication::check_action, c);
-#else
-	const_iterator ci(commands->begin());
-	const const_iterator ce(commands->end());
-	for ( ; ci!=ce; ci++) {
-		actions.push_back((*ci)->check_action(c));
-	}
-#endif
-	const checked_actions_type::const_iterator i(actions.begin());
-	const checked_actions_type::const_iterator e(actions.end());
-	const checked_actions_type::const_iterator
-		ni(find(i, e, statement::return_type()));
-	if (ni != e) {
-		cerr << "ERROR in one of the actions in "
-			<< where(*this) << endl;
-		return statement::return_type(NULL);
-	} else {
-		if (actions.size() == 1) {
-			// there's only one item, no need to make list
-			return statement::return_type(
-				new entity::CHP::do_forever_loop(*i));
-		} else {
-			const count_ptr<entity::CHP::action_sequence>
-				ret(new entity::CHP::action_sequence);
-			copy(i, e, back_inserter(*ret));
-			return statement::return_type(
-				new entity::CHP::do_forever_loop(ret));
-		}
-	}
-#else
 	const statement::return_type
 		body(commands->check_action(c));
 	if (!body) {
@@ -1075,15 +1060,13 @@ loop::check_action(context& c) const {
 		return statement::return_type(
 			new entity::CHP::do_forever_loop(body));
 	}
-#endif
 }
 
 //=============================================================================
 // class do_until method definitions
 
 CONSTRUCTOR_INLINE
-do_until::do_until(const det_selection* n) : statement(),
-		sel(n) { }
+do_until::do_until(const det_selection* n) : statement(), sel(n) { }
 
 DESTRUCTOR_INLINE
 do_until::~do_until() { }
@@ -1102,8 +1085,15 @@ do_until::rightmost(void) const {
 
 statement::return_type
 do_until::check_action(context& c) const {
-	cerr << "Fang, finish CHP::do_until::check_action()!" << endl;
-	return statement::return_type(NULL);
+	selection::checked_gcs_type checked_gcs;
+	if (!sel->postorder_check_gcs(checked_gcs, c).good) {
+		return statement::return_type(NULL);
+	}
+	const count_ptr<entity::CHP::do_while_loop>
+		ret(new entity::CHP::do_while_loop);
+	NEVER_NULL(ret);
+	copy(checked_gcs.begin(), checked_gcs.end(), back_inserter(*ret));
+	return ret;
 }
 
 //=============================================================================

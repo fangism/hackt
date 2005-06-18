@@ -2,6 +2,20 @@
 
 2005-06-18	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-23:
+	  parser::CHP: Moved list<guarded_command> functionality into 
+		the 'selection' base class.  
+	  Implemented parser::CHP::do_until and entity::CHP::do_while_loop
+		(yeah, I know: terrible names...)
+	  This branch is ready for merging to main-line after a clean-up.  
+	  Grammar: chp_do_until builds from *unmatched* deterministic
+		guarded command list, because any else clause would
+		make it an infinite loop.  
+	  Updated hash_keys of bool_logical_expr::op_map
+		for AND to "&" and OR to "|" to stick with old-style CHP, 
+		until further change.  (Must be consistent with grammar.)
+
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-22:
 	  Reinstated stmt_list as a class from stmt_list_base, 
 		and implemented common convenience check_action, 

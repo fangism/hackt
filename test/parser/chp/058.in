@@ -1,11 +1,11 @@
-// "057.in" should pass, else -> skip is valid
+// "058.in" testing nondeterministic guard selection, should pass
 
 defproc split_bool_soup(chan?(bool) A, B, G; chan!(bool) Z) {
 bool g, x;
 chp {
 	*[
 		G?(g);
-		[g -> A?(x) [] else -> skip ];
+		[g -> A?(x) : ~g -> B?(x) ];
 		Z!(x)
 	]
 }

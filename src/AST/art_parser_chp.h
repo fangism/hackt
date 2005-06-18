@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.11.2.5 2005/06/18 20:12:06 fang Exp $
+	$Id: art_parser_chp.h,v 1.11.2.6 2005/06/18 22:57:26 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -13,6 +13,7 @@
 #include "AST/art_parser_definition_item.h"
 #include "util/memory/count_ptr.h"
 #include "util/STL/vector_fwd.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -31,6 +32,7 @@ namespace parser {
 	This is the namespace for the CHP sub-language.  
  */
 namespace CHP {
+using util::good_bool;
 
 //=============================================================================
 /// for now, just a carbon copy of expr class type, type-check later
@@ -380,28 +382,42 @@ public:
 };	// end class receive
 
 //=============================================================================
+typedef	node_list<const guarded_command>		selection_list_base;
+
 /// CHP selection statement abstract base class
-class selection : public statement {
+class selection : public statement, public selection_list_base {
+	typedef	selection_list_base			list_type;
 // is this class even necessary?
-protected:
+public:
 	typedef	DEFAULT_VECTOR(guarded_command::return_type)
 							checked_gcs_type;
 public:
-	selection() { }
+	selection();
 
-virtual	~selection() { }
+	explicit
+	selection(const guarded_command*);
+
+virtual	~selection();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	good_bool
+	postorder_check_gcs(checked_gcs_type&, context&) const;
+
 };	// end class selection
 
 //=============================================================================
-typedef	node_list<const guarded_command>		det_selection_list_base;
-
 /// container for deterministic selection statement
-class det_selection : public selection, public det_selection_list_base {
+class det_selection : public selection {
 private:
-	typedef	det_selection_list_base			parent_type;
+	typedef	selection			parent_type;
 public:
 	explicit
 	det_selection(const guarded_command* n);
@@ -411,22 +427,22 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if 0
 	line_position
 	leftmost(void) const;
 
 	line_position
 	rightmost(void) const;
+#endif
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class det_selection
 
 //=============================================================================
-typedef	node_list<const guarded_command>	nondet_selection_list_base;
-
 /// container for non-deterministic selection statement
-class nondet_selection : public selection, public nondet_selection_list_base {
+class nondet_selection : public selection {
 private:
-	typedef	nondet_selection_list_base		parent_type;
+	typedef	selection		parent_type;
 public:
 	explicit
 	nondet_selection(const guarded_command* n);
@@ -436,22 +452,22 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if 0
 	line_position
 	leftmost(void) const;
 
 	line_position
 	rightmost(void) const;
+#endif
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class nondet_selection
 
 //=============================================================================
-typedef	node_list<const guarded_command>	prob_selection_list_base;
-
 /// container for probablistic selection statement
-class prob_selection : public selection, public prob_selection_list_base {
+class prob_selection : public selection {
 private:
-	typedef	prob_selection_list_base		parent_type;
+	typedef	selection		parent_type;
 public:
 	explicit
 	prob_selection(const guarded_command* n);
@@ -461,11 +477,13 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if 0
 	line_position
 	leftmost(void) const;
 
 	line_position
 	rightmost(void) const;
+#endif
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class prob_selection
@@ -497,7 +515,11 @@ private:
 };	// end class loop
 
 //=============================================================================
-/// CHP do-until: re-enter selection statement until all guards are false
+/**
+	CHP do-until: re-enter selection statement until all guards are false
+	TODO: rename this to do_while, because loop is repeated
+		while at least one guard is true.  
+ */
 class do_until : public statement {
 protected:
 	const excl_ptr<const det_selection>		sel;
