@@ -2,6 +2,11 @@
 
 2005-06-18	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-42-CHP-01-25:
+	  After a configuration header patch, this snapshot is gold!
+	  Certified for merge to trunk.  
+
+
 	* ARTXX-00-01-04-main-00-42-CHP-01-24:
 	  Code clean-up only.  
 	  distcheck passes.  
