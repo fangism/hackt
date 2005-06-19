@@ -7,14 +7,15 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.21 2005/05/20 19:28:44 fang Exp $
+	$Id: art++-parse.yy,v 1.22 2005/06/19 01:58:51 fang Exp $
  */
 
 %{
 #include <iostream>
 
-#include "AST/art_parser.h"			// should be first
-#include "parser/art++-parse.output.h"		// auto-generated state strings! :)
+#include "AST/art_parser.h"		// should be first
+#include "parser/art++-parse.output.h"	// auto-generated state strings! :)
+#include "parser/art++-parse-options.h"
 #include "util/using_ostream.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
@@ -41,16 +42,6 @@ util::memory::excl_ptr<root_body> AST_root;
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
 #define	DELETE_TOKEN(tok)		delete tok
-
-// kind of wasteful...
-#if 0
-#define	WRAP_ANGLE_LIST(left, list, right)				\
-	const char lc = left->get_char();				\
-	const char rc = right->get_char();				\
-	WRAP_LIST(new node_position(&lc, left->leftmost()),		\
-		list, new node_position(&rc, right->leftmost()));	\
-	DELETE_TOKEN(left); DELETE_TOKEN(right)
-#endif
 
 #define	APPEND_LIST(list, delim, item)					\
 	DELETE_TOKEN(delim); list->push_back(item)
@@ -219,6 +210,7 @@ extern const char* const yyrule[];
 	process_def*		_process_def;
 	type_base*		_type_base;
 	concrete_type_ref*	_concrete_type_ref;
+	generic_type_ref*	_generic_type_ref;
 	type_id*		_type_id;
 	port_formal_decl_list*	_port_formal_decl_list;
 	port_formal_decl*	_port_formal_decl;
@@ -276,6 +268,7 @@ extern const char* const yyrule[];
 	assign_stmt*		_assign_stmt;
 	incdec_stmt*		_incdec_stmt;
 	expr_list*		_expr_list;
+	inst_ref_expr_list*	_inst_ref_expr_list;
 /** not used
 	template_argument_list*	_template_argument_list;
 	connection_argument_list*	_connection_argument_list;
@@ -306,8 +299,8 @@ extern const char* const yyrule[];
 	CHP::communication*	_chp_communication;
 	CHP::send*		_chp_send;
 	CHP::receive*		_chp_receive;
-	CHP::assignment*	_chp_assignment;
-	CHP::incdec_stmt*	_chp_incdec_stmt;
+	CHP::binary_assignment*	_chp_binary_assignment;
+	CHP::bool_assignment*	_chp_bool_assignment;
 
 	HSE::body*		_hse_body;
 	HSE::statement*		_hse_stmt;
@@ -430,6 +423,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_node_position>	LOGICAL_AND LOGICAL_OR
 %token	<_node_position>	INSERT EXTRACT
 %token	<_node_position>	PLUSPLUS MINUSMINUS
+%token	<_node_position>	ASSIGN
 
 /* _token_keyword: covert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
@@ -489,11 +483,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
 %type	<_concrete_type_ref>	physical_type_ref
-%type	<_concrete_type_ref>	data_type_ref
+%type	<_generic_type_ref>	generic_type_ref
+%type	<_concrete_type_ref>	data_type_ref base_data_type_ref
 %type	<_concrete_type_ref>	type_id
 /* %type	<_data_type_base>	base_param_type */
 %type	<_token_paramtype>	base_param_type
-/* %type	<n>	formal_id */
 %type	<_chan_type>	base_chan_type chan_or_port
 %type	<_data_type_ref_list>	data_type_ref_list_in_parens data_type_ref_list
 %type	<_token_datatype>	base_data_type
@@ -526,9 +520,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
 %type	<_guarded_definition_body>	guarded_definition_body
 %type	<_language_body>	language_body
-%type	<_chp_stmt_list>	chp_body
+%type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
+%type	<_chp_stmt>	chp_body_or_skip
 %type	<_chp_loop>	chp_loop
 %type	<_chp_do_until>	chp_do_until
 %type	<_chp_selection>	chp_selection
@@ -538,11 +533,17 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_det_selection>	chp_matched_det_guarded_command_list
 %type	<_chp_guarded_command>	chp_guarded_command
 %type	<_chp_else_clause>	chp_else_clause
-/* %type	<_chp_assignment>	chp_assignment */
+%type	<_chp_binary_assignment>	chp_binary_assignment
+%type	<_chp_bool_assignment>	chp_bool_assignment
 %type	<_chp_comm_list>	chp_comm_list
 %type	<_chp_communication>	chp_comm_action
 %type	<_chp_send>	chp_send
 %type	<_chp_receive>	chp_recv
+%type	<_expr>		chp_guard_expr
+%type	<_expr>		chp_unary_bool_expr chp_simple_bool_expr chp_unary_expr
+%type	<_expr>		chp_mult_expr chp_add_expr chp_add_expr_only
+%type	<_expr>		chp_paren_add_expr chp_shift_expr chp_relational_expr
+%type	<_expr>		chp_and_expr chp_xor_expr chp_or_expr chp_not_expr
 %type	<_hse_stmt_list>	hse_body
 %type	<_hse_stmt_list>	full_hse_body_item_list
 %type	<_hse_stmt>	full_hse_body_item hse_body_item
@@ -570,7 +571,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
-%type	<_expr_list>	member_index_expr_list member_index_expr_list_in_parens
+%type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_expr> simple_expr
@@ -580,12 +581,13 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>	multiplicative_expr additive_expr
 %type	<_expr> shift_expr optional_shift_expr
 %type	<_expr>	relational_equality_expr and_expr
+%type	<_node_position>	relational_op
+%type	<_node_position>	muldiv_op
 %type	<_expr>	exclusive_or_expr inclusive_or_expr
 %type	<_expr>	logical_and_expr logical_or_expr
 /* %type	<_statement>	assignment_stmt */
-%type	<_assign_stmt>	binary_assignment
+/* %type	<_assign_stmt>	binary_assignment */
 %type	<_incdec_stmt>	unary_assignment
-/* %type	<n>	conditional_expr optional_expr_in_braces */
 %type	<_expr_list>	optional_template_arguments_in_angles
 %type	<_expr_list>	expr_list_in_parens expr_list
 /* %type	<_range_list>	optional_range_list_in_brackets */
@@ -861,29 +863,40 @@ port_formal_id
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
-physical_type_ref
+generic_type_ref
 	: relative_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
-		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+		{ $$ = new generic_type_ref(new type_id($1), $2); }
 	| absolute_id optional_template_arguments_in_angles
 		/* for userdef or chan type, and templating */
-		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+		{ $$ = new generic_type_ref(new type_id($1), $2); }
+	;
+
+physical_type_ref
+	: generic_type_ref { $$ = $1; }
 	| base_chan_type
-		/* what would template channel type ref look like? */
-		{ $$ = new concrete_type_ref($1, NULL); }
-	| data_type_ref
+		/* what would template (base) channel type ref look like? */
+		/* { $$ = new concrete_type_ref($1, NULL); } */
+		{ $$ = $1; }
+	| base_data_type_ref
 		{ $$ = $1; }
 	;
 
-data_type_ref
+base_data_type_ref
 	: base_data_type optional_template_arguments_in_angles
-		{ $$ = new concrete_type_ref($1, $2); }
+		{ $$ = new generic_type_ref($1, $2); }
+	;
+
+/** because general data types may be user-defined **/
+data_type_ref
+	: base_data_type_ref { $$ = $1; }
+	| generic_type_ref { $$ = $1; }
 	;
 
 type_id
 	: physical_type_ref { $$ = $1; }
 	| base_param_type
-		{ $$ = new concrete_type_ref($1, NULL); }
+		{ $$ = new generic_type_ref($1, NULL); }
 		/* should parameter declarations be allowed 
 			in loops and conditionals? rather not */
 	;
@@ -969,13 +982,13 @@ defdatatype
 	;
 
 set_body
-	: SET '{' chp_body '}'
+	: SET '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
 
 get_body
-	: GET '{' chp_body '}'
+	: GET '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
@@ -1018,13 +1031,13 @@ defchan
 	;
 
 send_body
-	: SEND '{' chp_body '}'
+	: SEND '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
 
 recv_body
-	: RECV '{' chp_body '}'
+	: RECV '{' chp_body_optional '}'
 		{ WRAP_LIST($2, $3, $4);
 		  $$ = new CHP::body($1, $3); }
 	;
@@ -1242,6 +1255,16 @@ chp_body
 	: full_chp_body_item_list { $$ = $1; }
 	;
 
+chp_body_optional
+	: chp_body { $$ = $1; }
+	| { $$ = new CHP::stmt_list(); }
+	;
+
+chp_body_or_skip
+	: chp_body { $$ = $1; }
+	| SKIP { $$ = new CHP::skip($1); }
+	;
+
 full_chp_body_item_list
 	: full_chp_body_item_list ';' full_chp_body_item
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
@@ -1269,11 +1292,12 @@ chp_body_item
 	| chp_do_until { $$ = $1; }
 	| chp_selection { $$ = $1; }
 	| chp_wait { $$ = $1; }
-/*	| chp_assignment { $$ = $1; }	-- expanded */
-	| binary_assignment { $$ = new CHP::assignment($1); }
-	| unary_assignment { $$ = new CHP::incdec_stmt($1); }
+	| chp_binary_assignment { $$ = $1; }
+	| chp_bool_assignment { $$ = $1; }
+/*	| binary_assignment { $$ = new CHP::assignment($1); } 	*/
+/*	| unary_assignment { $$ = new CHP::incdec_stmt($1); }	*/
 	| chp_comm_list { $$ = $1; }
-	| SKIP { $$ = new CHP::skip($1); }
+/*	| SKIP { $$ = new CHP::skip($1); }		*/
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
 	;
@@ -1286,13 +1310,14 @@ chp_loop
 
 chp_do_until
 	/* do-until-all-guards-false */
-	: BEGINLOOP chp_matched_det_guarded_command_list ']'
+	/* else-clause not allowed in do-until, hence unmatched list */
+	: BEGINLOOP chp_unmatched_det_guarded_command_list ']'
 		{ WRAP_LIST($1, $2, $3); $$ = new CHP::do_until($2); }
 	;
 
 chp_wait
 	/* wait for expr to become true */
-	: '[' expr ']'
+	: '[' chp_guard_expr ']'
 		{ $$ = new CHP::wait($2);
 		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
@@ -1335,25 +1360,129 @@ chp_unmatched_det_guarded_command_list
 	;
 
 chp_guarded_command
-	: expr RARROW chp_body
+	: chp_guard_expr RARROW chp_body_or_skip
 		{ $$ = new CHP::guarded_command($1, $2, $3); }
 	;
 
+/* must be boolean, literals must not be aggregates */
+chp_guard_expr
+	: chp_or_expr
+	;
+
+chp_unary_bool_expr
+	: chp_simple_bool_expr
+	| chp_not_expr
+	| '(' chp_or_expr ')'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
+	;
+
+chp_simple_bool_expr
+	: member_index_expr { $$ = $1; }
+	| BOOL_TRUE { $$ = $1; }
+	| BOOL_FALSE { $$ = $1; }
+	;
+
+chp_unary_expr
+	: '-' chp_unary_expr
+		{ $$ = new prefix_expr($1, $2); }
+	| chp_unary_bool_expr	/* include all paren exprs */
+	| INT	{ $$ = $1; }
+	| FLOAT	{ $$ = $1; }
+	;
+
+chp_mult_expr
+	: chp_unary_expr
+	| chp_mult_expr muldiv_op chp_unary_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+chp_add_expr
+	: chp_mult_expr
+	| chp_add_expr_only
+	;
+
+chp_add_expr_only
+	: chp_add_expr '+' chp_mult_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	| chp_add_expr '-' chp_mult_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+/* requiring parens around add/sub expressions to eliminate
+	shift-reduce conflict with boolean assignment using '+' '-' */
+chp_paren_add_expr
+	: '(' chp_add_expr_only ')'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
+	| chp_mult_expr
+	;
+
+/* reduction must not have unparenthesized +/- */
+chp_shift_expr
+	: chp_paren_add_expr	/* reduction */
+	| chp_shift_expr EXTRACT chp_add_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	| chp_shift_expr INSERT chp_add_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+chp_relational_expr
+	: chp_shift_expr relational_op chp_shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
+/*	| chp_shift_expr	*/
+	| chp_unary_bool_expr
+	;
+
+/* uses '&' and '|' for logical operations (not C-style) */
+chp_and_expr
+	: chp_relational_expr
+	| chp_and_expr '&' chp_relational_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+
+chp_xor_expr
+	: chp_and_expr
+	| chp_xor_expr '^' chp_and_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+
+chp_or_expr
+	: chp_xor_expr
+	| chp_or_expr '|' chp_xor_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+
+chp_not_expr
+	: '~' chp_unary_bool_expr
+		{ $$ = new prefix_expr($1, $2); }
+	;
+
 chp_else_clause
-	: ELSE RARROW chp_body
+	: ELSE RARROW chp_body_or_skip
 		{ $$ = new CHP::else_clause($1, $2, $3); }
 	;
 
 /*
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
-chp_assignment
-// allow binary and unary assignments
-// constructors re-wrap with transfer of ownership
-	: binary_assignment { $$ = new CHP::assignment($1); }
-	| unary_assignment { $$ = new CHP::bool_assign($1); }
-	;
 */
+chp_binary_assignment
+	: member_index_expr ASSIGN expr
+		{ DELETE_TOKEN($2);
+		  $$ = new CHP::binary_assignment($1, $3); }
+	;
+
+chp_bool_assignment
+	/* using '+' '-' creates shift-reduce conflicts on:
+		member_index_expr . ['+']
+		between assignment and guard_expr
+		To eliminate: require parens around add_expr
+	 */
+	: member_index_expr '+'
+		{ $$ = new CHP::bool_assignment($1, $2); }
+	| member_index_expr '-'
+		{ $$ = new CHP::bool_assignment($1, $2); }
+	/* could borrow from prs: dir */
+	;
 
 chp_comm_list
 	/* gives comma-separated communications precedence */
@@ -1637,7 +1766,7 @@ qualified_id
 member_index_expr_list
 	: member_index_expr_list ',' optional_member_index_expr
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| optional_member_index_expr { $$ = new expr_list($1); }
+	| optional_member_index_expr { $$ = new inst_ref_expr_list($1); }
 	;
 
 optional_member_index_expr
@@ -1693,12 +1822,14 @@ unary_expr
 
 multiplicative_expr
 	: unary_expr
-	| multiplicative_expr '*' unary_expr
+	| multiplicative_expr muldiv_op unary_expr
 		{ $$ = new arith_expr($1, $2, $3); }
-	| multiplicative_expr '/' unary_expr
-		{ $$ = new arith_expr($1, $2, $3); }
-	| multiplicative_expr '%' unary_expr
-		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+muldiv_op
+	: '*'
+	| '/'
+	| '%'
 	;
 
 additive_expr
@@ -1720,22 +1851,21 @@ shift_expr
 
 relational_equality_expr
 	: shift_expr
-	| shift_expr '<' shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr '>' shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr LE shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr GE shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr EQUAL shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr NOTEQUAL shift_expr
+	| shift_expr relational_op shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 /*
 // can't cascade relational_expr
 //	| relational_expr GE shift_expr
 */
+	;
+
+relational_op
+	: '<'
+	| '>'
+	| LE
+	| GE
+	| EQUAL
+	| NOTEQUAL
 	;
 
 and_expr
@@ -1784,13 +1914,14 @@ assignment_stmt
 	;
 **/
 
-binary_assignment
 /*
+binary_assignment
 //	: conditional_expr		// not supported
 //	: logical_or_expr		// not supported
-*/
 	: member_index_expr '=' expr
 		{ $$ = new assign_stmt($1, $2, $3); }
+*/
+
 /*
 //	| member_index_expr STARASSIGN expr
 //	| member_index_expr DIVIDEASSIGN expr

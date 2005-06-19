@@ -2,14 +2,12 @@
 	\file "Object/art_built_ins.h"
 	Header for built-in features of the art language, 
 	including primitive definitions and types.  
-	$Id: art_built_ins.h,v 1.9 2005/05/10 04:51:09 fang Exp $
+	$Id: art_built_ins.h,v 1.10 2005/06/19 01:58:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_H__
 #define	__OBJECT_ART_BUILT_INS_H__
 
-// don't need all forward declarations, just a few
-// #include "Object/art_object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 
 /***
@@ -21,6 +19,8 @@
 
 namespace ART {
 namespace entity {
+class data_type_reference;
+// class param_type_reference;
 using util::memory::count_ptr;
 
 // forward declarations
@@ -42,8 +42,11 @@ extern	name_space built_in_namespace;
 extern	const built_in_param_def	pbool_def;
 extern	const built_in_param_def	pint_def;
 
+#if 0
+// replaced with class_traits<Tag>::built_in_type_ptr below
 extern	const count_ptr<const param_type_reference>	pbool_type_ptr;
 extern	const count_ptr<const param_type_reference>	pint_type_ptr;
+#endif
 
 /**
 	Built-in data types.  
@@ -56,6 +59,9 @@ extern	const built_in_datatype_def	int_def;
 extern	const data_type_reference	bool_type;
 // no int_type because is templated
 #endif
+
+extern	const count_ptr<const data_type_reference>	bool_type_ptr;
+extern	const count_ptr<const data_type_reference>	int32_type_ptr;
 
 //=============================================================================
 }	// end namespace entity

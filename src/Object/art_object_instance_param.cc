@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.13 2005/05/22 06:24:18 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.14 2005/06/19 01:58:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
@@ -192,7 +192,7 @@ param_instance_collection::is_static_constant(void) const {
 	One should be able to statically determine whether or not
 	something is loop-dependent.  
 	Wait, does it even make sense for an "instantiation"?
-	This should only be applicable to instance_references...
+	This should only be applicable to meta_instance_references...
 	put this on hold...
  */
 bool
@@ -208,7 +208,7 @@ param_instance_collection::is_loop_independent(void) const {
 	3) This is just a placeholder that should never be called.  
  */
 param_instance_collection::member_inst_ref_ptr_type
-param_instance_collection::make_member_instance_reference(
+param_instance_collection::make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const {
 	typedef	member_inst_ref_ptr_type	return_type;
 	NEVER_NULL(b);

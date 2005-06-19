@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_node_position.h"
 	Node whose sole purpose is to record a position of a token.  
-	$Id: art_parser_node_position.h,v 1.5 2005/05/10 04:51:08 fang Exp $
+	$Id: art_parser_node_position.h,v 1.6 2005/06/19 01:58:31 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_NODE_POSITION_H__
@@ -62,14 +62,9 @@ public:
 	line_position
 	rightmost(void) const;
 
-#if 0
-	line_range
-	where(void) const;
-#endif
-
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 
-};
+};	// end class node_position
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -109,11 +104,6 @@ public:
 
 	line_position
 	rightmost(void) const;
-
-#if 0
-	line_range
-	where(void) const;
-#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 

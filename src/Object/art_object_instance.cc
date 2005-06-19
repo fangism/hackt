@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.43 2005/05/23 01:02:35 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.44 2005/06/19 01:58:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -116,6 +116,7 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump(ostream& o) const {
 	// but we need a version for unrolled and resolved parameters.  
+//	STACKTRACE_VERBOSE;
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
 	} else {
@@ -129,7 +130,7 @@ instance_collection_base::dump(ostream& o) const {
 		INVARIANT(!index_collection.empty());
 		o << " with indices: {" << endl;
 	{	// indentation scope
-		indent indenter(o);
+		INDENT_SECTION(o);
 		index_collection_type::const_iterator
 			i = index_collection.begin();
 		const index_collection_type::const_iterator
@@ -338,7 +339,7 @@ instance_collection_base::template_formal_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	// used to be may_be_equivalent...
-	if (!this_type->must_be_equivalent(*b_type)) {
+	if (!this_type->must_be_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -363,7 +364,7 @@ instance_collection_base::port_formal_equivalent(
 		this_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_equivalent(*b_type)) {
+	if (!this_type->may_be_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -418,7 +419,7 @@ instance_collection_base::formal_size_equivalent(
 		// For template, need notion of positional parameter 
 		// equivalence -- expressions referring to earlier
 		// formal parameters.  
-		// is count_ptr<range_expr_list>
+		// is count_ptr<meta_range_list>
 		const index_collection_item_ptr_type ii = (*i)->get_indices();
 		const index_collection_item_ptr_type ji = (*j)->get_indices();
 		if (ii && ji) {

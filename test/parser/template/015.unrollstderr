@@ -2,25 +2,25 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3102140	module__	0	0	36
-	2	 0x3100144	namespc_	0	36	64
-	3	 0x3102160	procdefn	0	64	139
-	4	 0x31020f4	pintcoll	0	139	176
-	5	 0x31021e0	pintinst	0	176	192
-	6	 0x3102210	spiref__	0	192	212
-	7	 0x3102224	pintcoll	0	212	261
-	8	 0x3102270	pintinst	0	261	277
-	9	 0x24c5024	cnstpi__	0	277	289
-	10	 0x3102284	dintcoll	0	289	334
-	11	 0x31022e0	datainst	0	334	354
-	12	 0x3102300	datatprf	0	354	370
-	13	 0x3102310	datadefn	0	370	406
-	14	 0x3102374	dprmlst_	0	406	422
-	15	 0x31023a0	spiref__	0	422	442
-	16	 0x3800c00	piassign	0	442	462
-	17	 0x31023d0	spiref__	0	462	482
+	1	 0x43028c0	module__	0	0	37
+	2	 0x4300144	namespc_	0	37	65
+	3	 0x43028e0	procdefn	0	65	144
+	4	 0x4302874	pintcoll	0	144	181
+	5	 0x4302970	pintinst	0	181	197
+	6	 0x4302980	spimref_	0	197	217
+	7	 0x43029b4	pintcoll	0	217	266
+	8	 0x4302a00	pintinst	0	266	282
+	9	 0x374a028	cnstpi__	0	282	294
+	10	 0x4302a14	dintcoll	0	294	339
+	11	 0x4302a70	datainst	0	339	359
+	12	 0x4302a90	datatprf	0	359	375
+	13	 0x4302aa0	datadefn	0	375	411
+	14	 0x4302b00	dprmlst_	0	411	427
+	15	 0x4302b10	spimref_	0	427	447
+	16	 0x4800c00	piassign	0	447	467
+	17	 0x4302b40	spimref_	0	467	487
 
-In module created from: -stdin- (unrolled)
+In module created from: ./015.in (unrolled)
 In namespace "", we have: {
   1 parameter-collections
   0 instantiation-collections

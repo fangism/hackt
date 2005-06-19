@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.29 2005/05/23 01:02:33 fang Exp $
+	$Id: art_parser_token.cc,v 1.30 2005/06/19 01:58:31 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -208,9 +208,9 @@ token_int::rightmost(void) const {
 /**
 	\return newly created constant integer value.  
  */
-expr::return_type
-token_int::check_expr(context& c) const {
-	return return_type(new pint_const(val));
+expr::meta_return_type
+token_int::check_meta_expr(context& c) const {
+	return expr::meta_return_type(new pint_const(val));
 }
 
 //=============================================================================
@@ -257,10 +257,10 @@ token_float::rightmost(void) const {
 /**
 	Need built-in float type first.  
  */
-expr::return_type
-token_float::check_expr(context& c) const {
-	cerr << "token_float::check_expr(): not quite done yet!" << endl;
-	return expr::return_type(NULL);
+expr::meta_return_type
+token_float::check_meta_expr(context& c) const {
+	cerr << "token_float::check_meta_expr(): not quite done yet!" << endl;
+	return expr::meta_return_type(NULL);
 }
 
 //=============================================================================
@@ -328,21 +328,47 @@ token_identifier::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is used specifically to return param_expr.  
-	Another version will return instance_references.  
+	Another version will return meta_instance_references.  
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
-inst_ref_expr::return_type
-token_identifier::check_reference(context& c) const {
-	typedef	inst_ref_expr::return_type		return_type;
-	STACKTRACE("token_identifier::check_expr()");
+inst_ref_expr::meta_return_type
+token_identifier::check_meta_reference(context& c) const {
+	typedef	inst_ref_expr::meta_return_type		return_type;
+	STACKTRACE("token_identifier::check_meta_expr()");
 
 	// don't look up, instantiate (checked) in the context's current scope!
 	const never_ptr<const instance_collection_base>
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
-		return inst->make_instance_reference();
+		return inst->make_meta_instance_reference();
+	} else {
+		// better error handling later...
+		what(cerr << "failed to find ") << endl;
+		THROW_EXIT;		// temporary termination
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is used specifically to return a data_expr.  
+	Another version will return meta_instance_references.  
+	\param c the context of the current position in the syntax tree.  
+	\return pointer to the instance named if found, else NULL.  
+ */
+inst_ref_expr::nonmeta_return_type
+token_identifier::check_nonmeta_reference(context& c) const {
+	typedef	inst_ref_expr::nonmeta_return_type	return_type;
+	STACKTRACE("token_identifier::check_nonmeta_expr()");
+
+	// don't look up, instantiate (checked) in the context's current scope!
+	const never_ptr<const instance_collection_base>
+		inst(c.lookup_instance(*this));
+	// problem: stack is count_ptr, incompatible with never_ptr
+	if (inst) {
+		return inst->make_nonmeta_instance_reference();
 	} else {
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;
@@ -400,9 +426,9 @@ token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
 
-expr::return_type
-token_bool::check_expr(context& c) const {
-	return expr::return_type(new pbool_const(strcmp(c_str(),"true") == 0));
+expr::meta_return_type
+token_bool::check_meta_expr(context& c) const {
+	return expr::meta_return_type(new pbool_const(strcmp(c_str(),"true") == 0));
 }
 
 //=============================================================================
@@ -443,10 +469,10 @@ token_else::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
-expr::return_type
-token_else::check_expr(context& c) const {
+expr::meta_return_type
+token_else::check_meta_expr(context& c) const {
 	cerr << "token_else::check_build(): Don't call me!";
-	return expr::return_type(NULL);
+	return expr::meta_return_type(NULL);
 }
 
 //=============================================================================
@@ -484,10 +510,10 @@ token_quoted_string::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
-expr::return_type
-token_quoted_string::check_expr(context& c) const {
-	cerr << "token_quoted_string::check_expr(): FINISH ME!" << endl;
-	return expr::return_type(NULL);
+expr::meta_return_type
+token_quoted_string::check_meta_expr(context& c) const {
+	cerr << "token_quoted_string::check_meta_expr(): FINISH ME!" << endl;
+	return expr::meta_return_type(NULL);
 }
 
 //=============================================================================
@@ -548,11 +574,13 @@ token_bool_type::~token_bool_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
 token_bool_type::check_definition(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
 	// bool_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(bool_def);
+	// safe to use never_ptr on address of statically allocated definition
+	return type_base::return_type(&bool_def);
 }
 
 //=============================================================================
@@ -566,11 +594,13 @@ token_int_type::~token_int_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
 token_int_type::check_definition(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
 	// int_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(int_def);
+	// safe to use never_ptr on address of statically allocated definition
+	return type_base::return_type(&int_def);
 }
 
 //=============================================================================
@@ -584,6 +614,7 @@ token_pbool_type::~token_pbool_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Return pointer to the definition, 
 	the caller (concrete_type_ref) should convert it to the appropriate
@@ -595,7 +626,7 @@ type_base::return_type
 token_pbool_type::check_definition(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
 	// pbool_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(pbool_def);
+	return type_base::return_type(&pbool_def);
 }
 
 //=============================================================================
@@ -609,6 +640,7 @@ token_pint_type::~token_pint_type() { }
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Let caller resolve to concrete type reference with the definition.  
 //	"pint" is always used as a type_reference, and never refers
@@ -618,7 +650,7 @@ type_base::return_type
 token_pint_type::check_definition(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
 	// pint_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(pint_def);
+	return type_base::return_type(&pint_def);
 }
 
 //=============================================================================

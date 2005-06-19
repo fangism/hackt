@@ -1,0 +1,6 @@
+Type mismatch in expression 1 of send expression list.  
+	got: int<32>
+	expected: bool<>
+At least one type error in expr-list in [5:4..6]
+ERROR in one of the communcation actions in [5:2..6]
+ERROR: at least one error in CHP body.

@@ -1,0 +1,79 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43044d0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43044f0	procdefn	0	53	181
+	4	 0x4304584	chancoll	0	181	219
+	5	 0x43045e0	chaninst	0	219	239
+	6	 0x4304600	bchntprf	0	239	260
+	7	 0x4304620	datatprf	0	260	276
+	8	 0x4304630	datadefn	0	276	313
+	9	 0x4304694	chancoll	0	313	351
+	10	 0x43046f0	chaninst	0	351	371
+	11	 0x4304714	chancoll	0	371	409
+	12	 0x4304770	chaninst	0	409	429
+	13	 0x4304794	chancoll	0	429	467
+	14	 0x43047f0	chaninst	0	467	487
+	15	 0x4304810	bchntprf	0	487	508
+	16	 0x4304830	datatprf	0	508	524
+	17	 0x4304844	dboolcol	0	524	558
+	18	 0x43048a0	datainst	0	558	578
+	19	 0x43048c0	datatprf	0	578	594
+	20	 0x43048d4	dboolcol	0	594	628
+	21	 0x4304930	datainst	0	628	648
+	22	 0x4304950	CHPloop_	0	648	660
+	23	 0x4304960	CHPseqnc	0	660	684
+	24	 0x4304970	CHPrecv_	0	684	704
+	25	 0x4304990	schnnref	0	704	720
+	26	 0x43049a0	sdbnref_	0	720	736
+	27	 0x43049c0	CHPdetsl	0	736	756
+	28	 0x43049d0	CHPguard	0	756	772
+	29	 0x43049f0	sdbnref_	0	772	788
+	30	 0x4304a10	CHPrecv_	0	788	808
+	31	 0x4304a30	schnnref	0	808	824
+	32	 0x4304a40	sdbnref_	0	824	840
+	33	 0x4304a60	CHPguard	0	840	856
+	34	 0x4304a80	CHPsend_	0	856	876
+	35	 0x4304aa0	schnnref	0	876	892
+	36	 0x4304ab0	sdbnref_	0	892	908
+
+In module created from: ./057.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    split_bool_soup = process-definition (defined) split_bool_soup(
+        chan?(bool<>) A
+        chan?(bool<>) B
+        chan?(bool<>) G
+        chan!(bool<>) Z
+      )
+      In definition "split_bool_soup", we have: {
+        A = chan?(bool<>) A
+        B = chan?(bool<>) B
+        G = chan?(bool<>) G
+        Z = chan!(bool<>) Z
+        g = bool<> g
+        x = bool<> x
+        chp:
+        concurrent: {
+          *[
+            sequential: {
+              G?(g)
+              deterministic: {
+                g -> A?(x)
+                else -> skip
+              }
+              Z!(x)
+            }
+          ]
+        }
+      }
+
+}
+

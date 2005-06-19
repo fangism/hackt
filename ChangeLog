@@ -1,5 +1,30 @@
 "ChangeLog"
 
+2005-06-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-43-merged-CHP-01-25:
+	  Details of source code merge in src/ChangeLog.  
+	  In this directory, updates to include new test subdirectories
+		test/parser/{chp,channel}.
+
+
+2005-06-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-14:
+	  Introducing 'bootstrap' 1.2!
+		added: touch src/headers_deps.make
+		to break the chicken-before-the-egg dependency problem.  
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-12-merged-dataexpr-10:
+	  Child branch merge.  Details in src/ChangeLog.  
+
+
+2005-06-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  .cvsignore: ignore auto-generated config.hchk
+
+
 2005-05-22	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-39:

@@ -1,0 +1,13 @@
+Type mismatch in reference 1 of receive list.  
+	got: int<31>
+	expected: int<32>
+At least one type error in expr-list in [6:7..9]
+ERROR in one of the communcation actions in [6:5..9]
+Type mismatch in expression 1 of send expression list.  
+	got: int<31>
+	expected: int<32>
+At least one type error in expr-list in [6:14..16]
+ERROR in one of the communcation actions in [6:12..16]
+ERROR in CHP statement(s) at [6:2..18]
+ERROR in one of the actions in [6:2..18]
+ERROR: at least one error in CHP body.

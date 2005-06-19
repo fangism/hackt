@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.4 2005/05/22 06:24:19 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.5 2005/06/19 01:58:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -11,17 +11,17 @@
 #include <vector>
 
 #include "util/macros.h"
-#include "Object/art_object_fwd.h"
 
 #include "util/boolean_types.h"
-#include "util/persistent.h"	// for persistent object interface
+#include "util/persistent_fwd.h"	// for persistent object interface
 #include "util/hash_qmap.h"	// need complete definition
 #include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
-// USING_LIST
+class param_instance_collection;
+class dynamic_param_expr_list;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -35,6 +35,10 @@ using util::memory::excl_ptr;
 using util::memory::never_ptr;
 
 //=============================================================================
+/**
+	Template formal parameter manager class, useful for most definition
+	classes.  
+ */
 class template_formals_manager {
 public:
 	/**

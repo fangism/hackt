@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.19 2005/05/22 06:18:31 fang Exp $
+	$Id: art_object_assign.h,v 1.20 2005/06/19 01:58:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -11,11 +11,13 @@
 #include "util/boolean_types.h"
 #include "Object/art_object_instance_management_base.h"
 #include "Object/art_object_expr_base.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
+class simple_param_meta_value_reference;
 USING_LIST
 USING_CONSTRUCT
 using std::ostream;
@@ -30,7 +32,7 @@ class unroll_context;
 	Includes both static and dynamic expressions.  
 	Consider separating, rhs from the rest?
 		rhs is any param_expr, while the rest are 
-		instance_references, may eventually be complex-aggregate.
+		meta_instance_references, may eventually be complex-aggregate.
 	Consider sub-typing into pint and pbool assignments, 
 		since types are static.  
  */
@@ -38,8 +40,8 @@ class param_expression_assignment : public instance_management_base {
 public:
 	typedef	count_ptr<param_expr>				src_ptr_type;
 	typedef	count_ptr<const param_expr>			src_const_ptr_type;
-	typedef	count_ptr<param_instance_reference>		dest_ptr_type;
-	typedef	count_ptr<const param_instance_reference>	dest_const_ptr_type;
+	typedef	count_ptr<simple_param_meta_value_reference>		dest_ptr_type;
+	typedef	count_ptr<const simple_param_meta_value_reference>	dest_const_ptr_type;
 
 // protected:
 //	/** cached value for dimensions, computed on construction */
@@ -60,7 +62,7 @@ virtual	size_t
 	size(void) const = 0;
 
 virtual	bad_bool
-	append_param_instance_reference(const dest_ptr_type& e) = 0;
+	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
 
 	/**
 		Helper class for appending instance references to
@@ -68,7 +70,7 @@ virtual	bad_bool
 		Written as a binary operator to accumulate error conditions.  
 		Used by object_list::make_param_expression_assignment.
 	 */
-	class instance_reference_appender {
+	class meta_instance_reference_appender {
 		// used to be object_list::value_type
 		typedef	count_ptr<param_expr>	arg_type;
 	protected:
@@ -76,12 +78,12 @@ virtual	bad_bool
 		param_expression_assignment&	ex_ass;
 	public:
 		explicit
-		instance_reference_appender(param_expression_assignment& p) :
+		meta_instance_reference_appender(param_expression_assignment& p) :
 			index(0), ex_ass(p) { }
 
 		bad_bool
 		operator () (const bad_bool b, const arg_type& i);
-	};	// end class instance_reference_appender
+	};	// end class meta_instance_reference_appender
 
 protected:
 	good_bool
@@ -108,7 +110,7 @@ private:
 public:
 	typedef	typename class_traits<Tag>::expression_assignment_parent_type
 							parent_type;
-	typedef	typename class_traits<Tag>::instance_reference_type
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
 							value_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_type;
@@ -140,7 +142,7 @@ public:
 	size(void) const;
 
 	bad_bool
-	append_param_instance_reference(
+	append_simple_param_meta_value_reference(
 		const typename parent_type::dest_ptr_type& e);
 
 	void

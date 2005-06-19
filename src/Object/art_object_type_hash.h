@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: art_object_type_hash.h,v 1.7 2005/05/19 18:43:34 fang Exp $
+ *	$Id: art_object_type_hash.h,v 1.8 2005/06/19 01:58:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
@@ -47,7 +47,8 @@
 
 // Type references:
 #define	PROCESS_TYPE_REFERENCE_TYPE_KEY				"proctprf"
-#define	CHANNEL_TYPE_REFERENCE_TYPE_KEY				"chantprf"
+#define	BLTIN_CHANNEL_TYPE_REFERENCE_TYPE_KEY			"bchntprf"
+#define	USER_CHANNEL_TYPE_REFERENCE_TYPE_KEY			"uchntprf"
 #define	DATA_TYPE_REFERENCE_TYPE_KEY				"datatprf"
 	// no need for param type reference, or built-in data type reference
 
@@ -66,14 +67,26 @@
 
 // Instance references:
 	// simple instance reference may contain multidimensional indices
-#define	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"sprocref"
-#define	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"schanref"
-#define	SIMPLE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"sdbref"
-#define	SIMPLE_DINT_INSTANCE_REFERENCE_TYPE_KEY			"sdiref"
-#define	SIMPLE_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"sderef"
-#define	SIMPLE_STRUCT_INSTANCE_REFERENCE_TYPE_KEY		"sdsref"
-#define	SIMPLE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"spbref"
-#define	SIMPLE_PINT_INSTANCE_REFERENCE_TYPE_KEY			"spiref"
+#define	SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY		"sprcmref"
+#define	SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY		"schnmref"
+#define	SIMPLE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"sdbmref"
+#define	SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdimref"
+#define	SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"sdemref"
+#define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmref"
+#define	SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"spbmref"
+#define	SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY		"spimref"
+
+	// simple non-meta instance references
+#define	SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprcnref"
+#define	SIMPLE_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"schnnref"
+#define	SIMPLE_DBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sdbnref"
+#define	SIMPLE_DINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"sdinref"
+#define	SIMPLE_ENUM_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"sdenref"
+#define	SIMPLE_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sdsnref"
+#define	SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"spbnref"
+#define	SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"spinref"
+
+
 
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
@@ -120,9 +133,19 @@
 	// symbolic expressions
 #define	PINT_UNARY_EXPR_TYPE_KEY				"intunary"
 #define	PBOOL_UNARY_EXPR_TYPE_KEY				"boolunry"
-#define	ARITH_EXPR_TYPE_KEY					"arithexp"
-#define	RELATIONAL_EXPR_TYPE_KEY				"relatexp"
-#define	LOGICAL_EXPR_TYPE_KEY					"logicexp"
+#define	META_ARITH_EXPR_TYPE_KEY				"arithexp"
+#define	META_RELATIONAL_EXPR_TYPE_KEY				"relatexp"
+#define	META_LOGICAL_EXPR_TYPE_KEY				"logicexp"
+
+// nonmeta expressions
+#define	NONMETA_INT_ARITH_EXPR_TYPE_KEY				"narithex"
+#define	NONMETA_INT_RELATIONAL_EXPR_TYPE_KEY			"nrelatex"
+#define	NONMETA_BOOL_LOGICAL_EXPR_TYPE_KEY			"nlogicex"
+#define	NONMETA_INT_NEGATION_EXPR_TYPE_KEY			"nnegatex"
+#define	NONMETA_BOOL_NEGATION_EXPR_TYPE_KEY			"nbnotex"
+#define	NONMETA_INDEX_LIST_TYPE_KEY				"nindlist"
+#define	NONMETA_RANGE_TYPE_KEY					"nmetarng"
+#define	NONMETA_RANGE_LIST_TYPE_KEY				"nrnglist"
 
 // Sequential and control statements: (loops and conditionals)
 // including sequential instantiations, assignments and connections:
@@ -159,6 +182,19 @@
 #define	PRS_OR_TYPE_KEY						"PRSor"
 #define	PRS_NOT_TYPE_KEY					"PRSnot"
 #define	PRS_LITERAL_TYPE_KEY					"PRSlitrl"
+
+#define	CHP_SEQUENCE_TYPE_KEY					"CHPseqnc"
+#define	CHP_CONCURRENT_TYPE_KEY					"CHPconcr"
+#define	CHP_GUARDED_ACTION_TYPE_KEY				"CHPguard"
+#define	CHP_DET_TYPE_KEY					"CHPdetsl"
+#define	CHP_NONDET_TYPE_KEY					"CHPndtsl"
+#define	CHP_PROB_TYPE_KEY					"CHPprbsl"
+#define	CHP_ASSIGNMENT_TYPE_KEY					"CHPassgn"
+#define	CHP_WAIT_TYPE_KEY					"CHPwait"
+#define	CHP_SEND_TYPE_KEY					"CHPsend"
+#define	CHP_RECEIVE_TYPE_KEY					"CHPrecv"
+#define	CHP_FOREVER_LOOP_TYPE_KEY				"CHPloop"
+#define	CHP_DO_WHILE_TYPE_KEY					"CHPdowhl"
 
 	// more class constants here...
 

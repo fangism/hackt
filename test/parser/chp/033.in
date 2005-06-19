@@ -1,0 +1,10 @@
+// "033.in" -- should pass
+
+defproc adjacent_diff(chan?(int, int) L; chan!(int) R) {
+int x, z;
+chp {
+	L?(x, z);
+	R!(x - z)
+}
+}
+

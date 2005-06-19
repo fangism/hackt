@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.11 2005/05/23 01:02:35 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12 2005/06/19 01:58:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -36,6 +36,8 @@
 #include "Object/art_object_instance_alias.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_expr_const.h"
+#include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/art_object_nonmeta_inst_ref.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
@@ -449,8 +451,15 @@ INSTANCE_COLLECTION_CLASS::~instance_collection() {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	type_dumper<Tag> dump_it(o);
+	typename collection_type_manager<Tag>::dumper dump_it(o);
 	return dump_it(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
+INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
+	return collection_type_manager<Tag>::get_type(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -465,12 +474,13 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bad_bool
 INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	// functor, specialized for each class
-	return collection_type_committer<Tag>()(*this, t);
+	return collection_type_manager<Tag>::commit_type(*this, t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Create a int data reference object.
+	TODO: update this description, nothing to do with context
+	Create a meta instance reference object.
 	See if it's already registered in the current context.  
 	If so, delete the new one (inefficient), 
 	and return the one found.  
@@ -478,12 +488,28 @@ INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	Depends on context's method for checking references in used_id_map.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<instance_reference_base>
-INSTANCE_COLLECTION_CLASS::make_instance_reference(void) const {
+count_ptr<meta_instance_reference_base>
+INSTANCE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//      check array dimensions -- when attach_indices() invoked
-	typedef	count_ptr<instance_reference_base>	return_type;
-	return return_type(new instance_reference_type(
+	typedef	count_ptr<meta_instance_reference_base>	return_type;
+	return return_type(new simple_meta_instance_reference_type(
+			never_ptr<const this_type>(this)));
+		// omitting index argument, set it later...
+		// done by parser::instance_array::check_build()
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a nonmeta instance reference.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<nonmeta_instance_reference_base>
+INSTANCE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
+	// depends on whether this instance is collective, 
+	//      check array dimensions -- when attach_indices() invoked
+	typedef	count_ptr<nonmeta_instance_reference_base>	return_type;
+	return return_type(new simple_nonmeta_instance_reference_type(
 			never_ptr<const this_type>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
@@ -492,11 +518,11 @@ INSTANCE_COLLECTION_CLASS::make_instance_reference(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::member_inst_ref_ptr_type
-INSTANCE_COLLECTION_CLASS::make_member_instance_reference(
+INSTANCE_COLLECTION_CLASS::make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const {
 	NEVER_NULL(b);
 	return member_inst_ref_ptr_type(
-		new member_instance_reference_type(
+		new member_simple_meta_instance_reference_type(
 			b, never_ptr<const this_type>(this)));
 }
 
@@ -534,7 +560,7 @@ void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	parent_type::collect_transient_info_base(m);
-	collection_parameter_persistence<Tag>::collect(m, *this);
+	collection_type_manager<Tag>::collect(m, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -544,7 +570,7 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
 	// specialization functor parameter writer
-	collection_parameter_persistence<Tag>::write(m, o, *this);
+	collection_type_manager<Tag>::write(m, o, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -554,7 +580,7 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
 	// specialization functor parameter loader
-	collection_parameter_persistence<Tag>::load(m, i, *this);
+	collection_type_manager<Tag>::load(m, i, *this);
 }
 
 //=============================================================================

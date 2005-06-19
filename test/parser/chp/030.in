@@ -1,0 +1,13 @@
+// "030.in" -- should fail, sending type mismatch
+
+defproc one_shot(chan?(int) L; chan!(int<4>) R) {
+int x, z;
+chp {
+	R!(x + z);
+	R!(x - z);
+	R!(x * z);
+	R!(x / z);
+	R!(x % z)
+}
+}
+

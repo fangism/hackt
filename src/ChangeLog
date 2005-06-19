@@ -1,5 +1,686 @@
 "ChangeLog"
 
+2005-06-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-43-merged-CHP-01-25:
+	  Merged summary:
+		CHP language support with persistent intermediate objects.  
+		Framework for nonmeta language instances, value references, 
+			and expressions.  
+		Some CHP-related grammar updates.  
+	  TODO: documentation... in dox/lang
+
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-25:
+	  After a configuration header patch, this snapshot is gold!
+	  Certified for merge to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-24:
+	  Code clean-up only.  
+	  distcheck passes.  
+	  Candidate for trunk merge.  
+	  (Multi-platform check pending.)
+
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-23:
+	  parser::CHP: Moved list<guarded_command> functionality into 
+		the 'selection' base class.  
+	  Implemented parser::CHP::do_until and entity::CHP::do_while_loop
+		(yeah, I know: terrible names...)
+	  This branch is ready for merging to main-line after a clean-up.  
+	  Grammar: chp_do_until builds from *unmatched* deterministic
+		guarded command list, because any else clause would
+		make it an infinite loop.  
+	  Updated hash_keys of bool_logical_expr::op_map
+		for AND to "&" and OR to "|" to stick with old-style CHP, 
+		until further change.  (Must be consistent with grammar.)
+
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-22:
+	  Reinstated stmt_list as a class from stmt_list_base, 
+		and implemented common convenience check_action, 
+		that automatically returns single action for list size 1.  
+		Added is_concurrent flag to direct whether or not
+		action_sequence or concurrent_actions should be constructed
+		if size > 1.
+	  typedef parser::CHP::guarded_command	parser::CHP::else_clause;
+		Note: token_else is allowed to return NULL for guard
+			and skip statment allowed to return NULL.  
+		These cases are handled appropriately.  
+	  Updated some comments in "AST/art_parser_chp.cc".
+	  Implemented guarded_command::check_guarded_action().  
+	  Implemented wait::check_action().
+	  Implemented [non]det_selection::check_action().
+	  Updated loop::check_action(), using stmt_list::check_postorder_stmts.
+	  Updated entity::CHP::guarded_action::dump(), allowing NULLs.  
+	  Grammar (CHP): skip statements may only appear by themselves, 
+		i.e. chp_body_or_skip, in place of a stmt_list.  
+	  More new test cases, most for guarded statements and selections.  
+
+
+2005-06-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-21:
+	  Grammar: isolated CHP expressions from general meta language
+		expressions for modularity.  Updated assignments to
+		use the traditional ":=" operator.  Re-enabled
+		boolean assignment using +/- after transforming away
+		a s/r conflict.  (Used to be ++, --)
+	  AST::CHP updated assignment classes, now called
+		binary_assignment and bool_assignment, no longer using
+		generic base classes (parser::assignment and incdec_stmt).  
+		TODO: phase-out generics
+	  CHP::body::check_build():
+		Fixed block partitioning w.r.t. loops, 
+			now correctly divides up slices of statements
+			based on position(s) of forever-loop statements.  
+		Minor enhancement: one-statement actions no longer 
+			go into action-sequences.  
+	  Implemented statement::check_action for loop, 
+		binary_assignment, and bool_assignment.
+	  More test cases added to test/parser/chp.
+
+
+2005-06-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-20:
+	  Remembered to set_direction in chan_type::check_type... oops!
+	  Implemented parser::CHP::receive::check_action().
+	  Implemented inst_ref_expr::check_nonmeta_data_referencee(), 
+		and inst_ref_expr_list::postorder_check_nonmeta_data_refs().
+	  Implemented entity::CHP::channel_receive::add_references<>().
+	  Slightly modified some type-reference dump methods.  
+	  Many chp test outputs updated to include channel direction
+		in ports list (and types in general).  
+	  Added a bunch of new tests for type checking CHP receives.  
+	  TODO: check CHP loops, guarded statements, selections, etc...
+
+
+2005-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-19:
+	  Finished basic type-checking of CHP bodies, and added a bunch of 
+		simple test cases in test/parser/chp.  More tests to come.  
+	  Parse-failures for nonmeta expressions and references 
+		have more verbose error messages, because of longer
+		return path (rather than throw() on deepest error).  
+		Distant TODO: organize and present error hierarchically
+	  Implemented CHP object dump, and persistence in methods.  
+	  Added CHP dump/persistence to process_definition, 
+		which resulted in larger process_definition objects
+		stored in the object file, tests have been updated.  
+	  That said, this branch is in pretty good shape.  
+
+
+2005-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-18-merged-nonmeta-04:
+	  Merged revisions from child branch, also including a minor
+		typo fix in AST/art_parser_chp.cc.  
+	  Summary: nonmeta value-references and data type checking.  
+
+
+2005-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-04:
+	  Final revision in this sub-sub-branch.
+	  Added: Object/art_object_CHP.tcc for template method definitions.  
+	  In CHP::body::check_build(), 
+		now splitting up sequence of CHP statements as follows:
+		Each group contains a sequence of CHP statements
+		that end with a do-forever-loop.
+		Each of these groups is added to the list of concurrent
+		actions in the process definition.  
+		Within each group, actions are sequential.  
+	  Implemented: process_definition::add_concurrent_chp_body().
+		Also added CHP field to process-definition, 
+		but nothing is done yet with it.
+	  TODO: in mother branch, make CHP body persistent.  
+	  Replaced entity::CHP::channel_send::push_back
+		with template method that takes care of type-checking.  
+		Done some preliminary spot check testing, 
+		but not added the new test cases to Makefile.am yet.
+	  Object/art_object_CHP.h: new (unimplemented) do_forever_loop.
+	  Update error messages on data (nonmeta) expression type mismatch.  
+	  Fixed int_instance_collection::get_type_ref, actually now 
+		fetches the type-ref of the first instantiation statmeent.
+	  TODO: proper sub-typing of instantiation_statement, 
+		further abstraction of index_collection_list.  
+
+
+2005-06-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-03:
+	  Added built-in bool_type_ptr (data_type_reference)
+		for data expression type checking, 
+		and int32_type_ptr just for convenience.  
+		Tentatively pints are promoted to int<32>s when
+		type-checking data expressions.  This may change later.  
+	  Implemented (new, virtual) data_expr::get_data_type_ref()
+		for non-meta expression type-checking (untested).  
+		Tentative policy regarding int<>s:
+			arithmetic and relational expressions must
+			operate on ints of the same width 
+			(if that can be determined statically, 
+				i.e. not template or array-dependent)
+			if cannot be resolved, then don't reject until unroll.
+			if mismatch found, return NULL to signal error.  
+		pbools are promoted to bool in nonmeta context.
+	  Added new template policy to simple_nonmeta_value_reference:
+		data_type_resolver: where each specialization dictates
+			how a type-reference is created from reference.  
+		simple_nonmeta_value_reference<Tag>::get_data_type_ref()
+			is implemented using this policy.  
+	  Renamed fundamental_type_reference::may_be_equivalent to
+		may_be_type_equivalent, analogously for must_be_equivalent.  
+	  The three policy structs for instance_collection<Tag>
+		have been consolidated into one "collection_type_manager", 
+		and also added new static function, get_type().
+	  data_type_reference::make_quick_int_type_ref(size_t)
+		purely for convenience.  
+	  TODO: check expressions of send and receive actions in CHP.  
+
+
+2005-06-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-02:
+	  Header clean-up: liberating most Object/*.h headers from
+		dependence on "Object/art_object_fwd.h" --
+		conforming to a need-to-know policy for headers.  
+		Consequentially, affected header files use their
+		own forward declarations.  
+		I'm so glad I have the 'check-headers' target for this...
+	  Slightly faster rebuilds, certainly less building each time
+		the art_object_fwd file is touched.  
+
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17-nonmeta-01:
+	  This branch is for developing nonmeta data instance references
+		as run-time value-expressions, children of entity::data_expr.
+	  This will enable basic expression type checking of data exprs.
+	  Reserved for later development: operator overloading.
+		See 2005-06-11 entry in NOTES.  
+	  In this revision:
+		Removed "Object/art_object_inst_ref_data.tcc"
+		Added "Object/art_object_nonmeta_value_reference.{h,tcc}"
+		Renamed: simple_meta_instance_reference_parent_type ->
+			meta_instance_reference_parent_type
+			(analogously for nonmeta)
+		Introduced enum_expr and struct_expr (empty) in
+			"Object/art_object_data_expr_base.h"
+		Placeholder data_value_types for enum and struct (undefined)
+			in "Object/art_object_expr_types.h"
+		Added appropriate data_expr_base_type to class_traits for
+			data and parameter type tag specializations.  
+		Replaced data and param -subtyped nonmeta_instance_references
+			with nonmeta_value_reference template class, 
+			preserving typedef'd names.  
+
+
+2005-06-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-17:
+	  Working on CHP::send construction and type-checking.  
+	  TODO: check data_expr against nonmeta_datatype_instance_reference.  
+		Will need nonmeat_value_reference extensions.  
+	  Partially implemented CHP::send::check_action().
+	  Added expr_list::postorder_check_nonmeta_exprs().
+	  Partially implemented entity::CHP::channel_send::push_back, 
+		but likely to rewrite as for-loop.  
+	  Some list members updated to vector types:
+		builtin_channel_type_reference, CHP::send_action.
+	  Obsolete code cleanup in "Object/art_object_definition[_chan].h"
+	  Some quick helper methods added to channel-related classes.  
+
+
+2005-06-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-16:
+	  Starting to test CHP checking piece by piece.  
+	  New basic CHP tests will go into test/parser/chp.  
+	  expr_list::types added "meta" to names to distinguish from future
+		"nonmeta" versions.  
+	  Initial implementation of CHP::statement::check_action (virtual).
+	  parser::CHP::communication's chan member now restricted to
+		inst_ref_expr, naturally.  
+	  parser::CHP::receive::lvalues is now inst_ref_expr_list, 
+		was just expr_list.
+	  Enabled id_expr::check_nonmeta_reference, which uses
+		inst_base->make_nonmeta_instance_reference... works fine.  
+	  entity::nonmeta_instance_reference new method
+		get_inst_base_subtype, returns type-specific
+		instance-collection ptr, as dictated by template type.  
+	  Added direction (char) field to channel_type_reference_base, 
+		valid values are '\0', '!', '?'.
+	  Updated channel_type_reference_base::dump to include direction.  
+	  Updated unroll test outputs in test/parser/channel.
+	  parser/art++-parse.yy: update nonterminal types for
+		chp_receive and inst_ref_expr_list.
+
+
+2005-06-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-15:
+	  Significant development to completing CHP objects using
+		nonmeta-instance-references (-300, +1900 LOC).  
+	  "AST/art_parser_chp.*" checked types are now (nonmeta) 
+		bools and ints, not pbools and pints.  
+	  Type name substitution for distinction: return_type ->
+		meta_return_type and nonmeta_return_type
+	  Method name substitution, analogously: check_foo ->
+		check_meta_foo and check_nonmeta_foo.
+	  Implemented most of expr::check_nonmeta_expr, untested.  
+		(same with ranges and indices...)
+	  Implemented (trivial) 
+		instance_collection_base::make_nonmeta_instance_reference.
+	  Implemented many classes in "Object/art_object_data_expr.cc"
+		adapting many from their meta expression counterparts.  
+	  Added new type hash keys to "Object/art_object_type_hash.h".
+	  Removed: "art++.h"
+	  Minor assertion updates in "util/persistent_object_manager.cc"
+
+
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-14:
+	  gcc4-isms: wants method and typeinfo definitions for unused
+		classes, probably being conservative.  
+		Now builds and runs smoothly (but largely) on OS X 10.4.  
+	  Updated parser/art++-parse-options.h to account for 
+		bison-2.0 differences from bison-1.875.  
+		Damn you, bison!
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-13:
+	  distcheck fix: being smarter about auto-generated
+		header-check dependencies -- basic script improvements
+		for distcheck robustness.  
+
+
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-12-merged-dataexpr-10:
+	  Child branch merge, details of this series below.  
+
+
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-10:
+	  Makefile.am: added -Wundef (die if preprocessor evaluates undefined)
+		Also added new lex/parse options files to dist.  
+	  lex/yacc files updated with preprocessor headers to satisfy
+		use of undefined macros.  
+	  Committed changes involving NEW_SIMPLE_INST_REF, 
+		removing proprocessor conditionals.  
+	  Updated CHP object classes to use int/bool expressions and
+		non-meta instance references, finally!
+	  Ready to merge back up a branch.
+
+
+2005-06-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-09:
+	  Skeletal (trivial) implementation of nonmeta_index_list.
+	  Type hash keys for simple (meta) instance references updated
+		to become distinguishable from simple nonmeta
+		instance references.  (Macro names updated too.)
+		Unroll test header dumps have been updated to reflect 
+		this change.  
+	  Added simple_nonmeta_instance_reference<Tag> classes, modeled
+		after their meta-counterparts.  
+	  Purged the proposed data_reference template class for good.  
+	  Implemented essential methods of 
+		simple_nonmeta_instance_reference_base.
+	  Implemented core methods of simple_nonmeta_instance_reference
+		template class.  
+	  PLAN: After nonmeta_[data]_instance_references have been validated, 
+		then that feature may be leveraged in the CHP object classes, 
+		at which point, we can merge up a branch.
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-08:
+	  Progress!  Replaced (meta) simple_instance_reference
+		and value_reference class hierarchy with lattice, 
+		enabled by the NEW_SIMPLE_INST_REF flag in 
+		"Object/art_object_fwd.h".  
+		Inheritance is a mess, but I've got plans for alternate
+		implementations for the appropriate time.  
+	  Little more renaming:
+		*_meta_instance_reference ->
+			simple_*_meta_instance_reference
+		(rather than "simple" being implicit)
+	  TODO: replicate for simple non-meta instance/value references!
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-07:
+	  More painful reorganization and renaming... ugh.
+		*_meta_instance_reference_base ->
+			simple_*_meta_instance_reference_base
+		value_reference -> simple_meta_value_reference
+	  As soon as the dust clears, will rearrange (final)
+		simple_*_meta_instance_reference classes with MI.  
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  Makefile.am: updated header-check make-dep flags (no -MT or -MP)
+		using new scripts to "promote" header dependencies:
+		rather than depend on the headers, depend on the
+		*checked* header (*chk) files to ensure bottom-up
+		construction (after first time) of header-checks!
+		(I'm so proud of myself...)
+		../config.h is an exception, don't check it.  
+		Disabled clean-header-deps target.
+		This also catches circuilar dependencies in headers
+			e.g. betwee util/memory/ref_count_pool.h and
+			util/memory/count_ptr.h (now fixed).
+		for this project I want to be anal and forbid circular
+			dependent headers.  
+	  More massive class renaming:
+		simple_meta_instance_reference -> 
+			simple_meta_instance_reference_base
+		meta_instance_reference -> simple_meta_instance_reference
+			(class template)
+		simple_nonmeta_instance_reference =>
+			simple_nonmeta_instance_reference_base
+		nonmeta_instance_reference ->
+			simple_nonmeta_instance_reference
+	  Exapnded type-refinements for data, channel, proc, param
+		from nonmeta_instance_reference_base
+
+
+2005-06-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-05:
+	  Makefile enhancement: added (optional) dynamic dependence
+		tracking for header-tests, which conditionally creates
+		(user only) dependencies (.hchkd, .tccchkd) in the
+		respective .deps subdirectories.  A complete list of 
+		all such dependencies is auto-generated and used by 
+		Makefile.am to auto-include in Makefile.in.  
+		The major benefit of this is that now, the check-headers
+		target will check all target header files that depend on
+		the modified ones, not just the ones touched.  
+		This patchlet should ideally make it back to the main
+		trunk sooner...
+	  More class planning for nonmeta_instance_references.  
+		A massive reorganization is inevitable.  
+	  Some header file cleaning.  
+
+
+2005-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-04:
+	  Massive renaming of classes continues...
+		index_list -> meta_index_list, 
+		index_expr -> meta_index_expr, 
+		dynamic_index_list -> dynamic_meta_index_list, 
+		dynamic_range_list -> dynamic_meta_range_list, 
+		range_expr_list -> meta_range_list, 
+		range_expr -> meta_range_expr
+	  Added nonmeta expr classes to foundation of meta expr classes
+		so that meta exprs are acceptable to nonmeta exprs.  
+	  Inlined some empty base classes' ctors and dtors.  
+	  TODO: nonmeta instance references.  
+
+
+2005-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-03:
+	  MAJOR rework of instance-references beginning.
+	  All old existing instance reference were
+		meta-instance-references, references that would eventually
+		be resolved at compile time upon template instantiation. 
+		CHP and other non-meta languages work with run-time
+		resolved, or nonmeta-instance-references.  However, 
+		it's important to note that meta-instance-references are
+		acceptable where their non-meta-instance-references are
+		expected (they are just run-time constant, after all).  
+		Thus we introduce another level in the hierarchy, rooted
+		at nonmeta_instance_reference_base.  
+	  Global rename: (previous occurences)
+		instance_reference -> meta_instance_reference
+		(file names preserved for now, will change later)
+	  entity::object parent has been expunged as a parent class
+		from all instance-references.
+	  Temporarily reverted USE_DATA_REFERENCE (in "Object/art_object_fwd.h")
+		to 0 (off).  We intend to redefine data_reference in terms 
+		of nonmeta_instance_references.  
+	  NOTE: instance reference connections only live in meta
+		language domain, thus it is kind of redundant to 
+		call them meta_instance_reference_connection, but at least
+		this makes it clear.  
+	  NOTE: member instance references currently only exist in the
+		meta language domain, however they could also be
+		ported to the non-meta domain, oooooh.  
+	  Removed pure virtual get_inst_base from mete_instance_reference_base
+		because it only makes sense for simple_meta_instance_reference.
+
+
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-11:
+	  gcc-4.0-ism: Object/art_built_ins.cc: member initializations 
+		of specialized classes don't need empty 
+		template <> signature.  
+	  util/test/Makefile.am: added macro for compiling with -save-temps
+		for compiler debugging. 
+	  NOTE: This snapshot (on branch) is confirmed to compile and run
+		succesfully with Apple's gcc-4.0 build 5026 update.  
+		The one that shipped with OS X 10.4 Tiger (build 4061)
+		is badly broken, please update your compiler with the
+		XCode 2.1 Developer's Tools update before compiling.  
+	  Hopefully, after the dataexpr branch is done, this can all
+		be soon merged back onto the main trunk.  Patience!
+
+
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-10:
+	  Portability and compiler compliance patch, 
+		also for VPATH build robustness.
+	  Obsolete template method definition removed from parser::context.
+	  Added auto-generated empty stderr files
+		to BUILT_SOURCES in src/util/test/Makefile.am.  
+	  src/util/test/test-expect.sh:
+		check for auto-generated .stderr files, because
+		won't be in srcdir.  
+
+
+2005-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-02:
+	  New base classes for data-expressions (CHP context)!
+	  data_expr is refined as int_expr and bool_expr, and now
+		(here's the kicker) pint_expr : int_expr and
+		pbool_expr : bool_expr!  
+		Rationale: In the CHP context, meta-parameter 
+		(of the same type) are valid rvalue expressions 
+		just as run-time variables of int and bool are.  
+	  Rename: datatype_instance_reference ->
+		datatype_instance_reference_base
+	  TODO: fahr-fahr-away, use GMP's mpz for arbitrary length integer.  
+	  Introduced refined instance_reference: data_reference<Tag>
+		which is derived from instance_reference<Tag>
+		and from an data expression interface class (int_expr
+		or bool_expr).  Such data instance references serve as
+		connectible entities and assignable entities in the
+		CHP context.  (Analogous to what was done with
+		value_reference for meta-param references.)
+	  Relocated datatype_instance_reference(_base) to 
+		"Object/art_object_inst_ref_data.h"
+	  A few new test cases for test/parser/channel.  
+
+
+2005-06-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-01:
+	  This branch is for developing expression framework for datatypes, 
+		very similar to those of meta-parameter expressions.  
+	  In this revision, we've FINALLY liberated the param_expr
+		(and friends) class hierarchy from the 'object' parent class, 
+		which we could've done after we did away with the 
+		object-expression stack in parser::context.  
+		One less virtual pointer per expr-object!
+
+
+2005-05-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09:
+	  Partial implemention of parser::CHP::statement::check_action
+		for a few statement classes (untested).
+	  Skeletal implementation of entity::CHP classes in
+		"Object/art_object_chp.{h,cc}"
+	  Assigned CHP classes' type hash in "Object/art_object_type_hash.h".
+	  Added a few basic template channel prototype tests, so far so good.  
+	  TODO: object expressions... we need *datatype-expressions* for CHP, 
+		currently we only have meta-language (param) expressions.  
+		This work must be done IMMEDIATELY, probably on a sub-branch
+		of this branch.  
+
+
+2005-05-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-08:
+	  Purged all traces of parser::context::definition_stack.
+	  New class: old channel_type_reference was split off into
+		builtin_channel_type_reference and channel_type_reference, 
+		with common parent channel_type_reference_base.
+		(Will soon rename channel_type_reference 
+		to user_channel_type_reference.)
+	  builtin_channel_type_reference just contains a list of 
+		data_type_reference (pointers), which represents channel
+		types of the form "chan(type,...)" without having a 
+		builtin_channel_definition.  
+	  The base channel type of a user-defined channel has been reduced
+		to a builtin_channel_type_reference.  
+	  entity::user_def_chan now contains (pointer) 
+		builtin_channel_type_reference.  
+	  Moved some parser functionality around to follow changes
+		in the channel_type_references.  
+	  Updated class_traits<channel_tag> in 
+		"art_object_classification_details.h"
+		Never before have I been so happy that I did this -- 
+		what would've been days of changing code across tens of
+		files was accomplished with TWO line changes in the 
+		policy classes.  Also added new sub-tags of channel_tag
+		in "art_object_classification_tags.h" but not used yet, 
+		until we decide to split off channel_tag.  
+	  Type hash keys for channel type references updated.  
+	  TODO: now ready to type-check and add CHP?
+	  TODO: more test cases, perhaps preliminary template checks.  
+
+
+2005-05-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-07:
+	  Reorganized parser type references to fit the needs of channels.
+	  The basic issue is that built-in channel types (chan(...)) 
+		currently have no home scopespace, therefore we must
+		work their type information into
+		"built-in-channel-type-references", which are coming soon.  
+	  TODO: split up channel type references into built-in and
+		user-defined (currently, only user-defined).
+	  parser::context: phased out definition_stack, which was once
+		used as a placeholder to construct complete type references.  
+	  concrete_type_ref now an abstract class, the old functionality
+		has been pushed down to (new) generic_type_ref.
+	  chan_type now derives from concrete_type_ref, no longer type_base.
+	  generic_type_ref::check_build has been phased out due to
+		abandoning the context definition_stack.  
+	  typedef_alias::check_build base type is concrete_type_ref, 
+		which is now abstract, so we temporarily wrapped the 
+		existing code (for generic_type_ref) in a conditional
+		dynamic cast, just to patch and move on... will revisit
+		later to complete the chan_type case.  
+	  parser/art++-parse.yy: updated symbol return types to reflect
+		changes in concrete_type_ref hierarchy.  
+
+
+2005-05-27	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-06:
+	  Added some template methods to context to replace annoying
+		copy-pasted methods.  
+	  Partially implemented user_chan_type_definition check.  
+	  Added a handful of test cases to test/parser/channel.
+
+
+2005-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-05:
+	  Finished initial crack at type-checking channel definitions, 
+		currently, only checking prototype declarations, 
+		punting definitions for a few more revisions until
+		further testing.  AST files (,h.,tcc) touched: art_parser_base,
+		art_parser_definition, art_parser_formal, art_parser_type.
+	  Factored out concrete_type_ref::check_build into more useful
+		::check_type (useful return value).  
+	  Split-off "Object/art_object_definition_chan.h" from 
+		"Object/art_object_definition.h", it also uses
+		the recently added "Object/art_object_port_formals_manager.h".
+		Added a few necessary virtual method overrides 
+		to user_def_chan, like those in process_definition.  
+		Also cleaned up conditionals, making USE_PORT_FORMALS_MANAGER 
+		permanent.  
+	  entity::user_def_chan has new field members:
+		datatype_list: the datatype (abstract) carried on channel
+		port_formals: the physical datatypes used to implement
+	  Very basic test cases added so far, more coming in next revision.  
+	  Grammar: updated to allow non-built-in datatypes in channel
+		definition's abstract data type list.  
+	  
+
+2005-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-04:
+	  Revenge of the BSD.  
+	  Patches to satisfy gcc-3.4 on FreeBSD, more compiler anality.  
+		(Unfortunately, still need to run gmake, not bsdmake.)
+	  Changed built-in param type pointers to be part of
+		class_traits<Tag> specializations.  
+		Global static initialization remains in "art_built_ins.cc".
+	  Code cleanup: caught many missing declarations required by gcc-3.4+.
+	  src/util/test/Makefile.am link dependencies fixed to work 
+		with bsdmake, on the off chance that I forget to run gmake.  
+
+
+2005-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-03:
+	  Factored out port_formals_manager into own class, 
+		now can reuse it for channel_definition, etc.
+		That was too easy.  
+	  New class files: "Object/art_object_port_formals_manager.{h,cc}"
+
+
+2005-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-02:
+	  Reorganizing code to make way for channel definition type checking.  
+	  Some housecleaning of committed conditional code in
+		"AST/art_parser_type_base.h".  
+	  TODO next: factor out port_formals_manager from process_definition
+		so we may reuse it in used_def_chan.  
+
+
+2005-05-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-01:
+	  Starting CHP-01 branch.
+	  Liberated parser::CHP classes from the old "check_build".
+		Still null implementations at the moment.  
+	  Going to fix definition checking, possibly in a sub-branch, 
+		before embarking on channel definitions and CHP.  
+	  Temporarily made chp_body in grammar optional in several places.  
+	  Coming soon: test/parser/channel.  
+
+
 2005-05-23	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42:

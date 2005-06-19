@@ -1,0 +1,51 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302cf0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302d10	chandefn	0	53	136
+	4	 0x4302c94	dintcoll	0	136	174
+	5	 0x4302da0	datainst	0	174	194
+	6	 0x4302dc0	datatprf	0	194	210
+	7	 0x4302dd0	datadefn	0	210	246
+	8	 0x4302e30	dprmlst_	0	246	262
+	9	 0x3633018	cnstpi__	0	262	274
+	10	 0x4302e44	dintcoll	0	274	312
+	11	 0x4302ea0	datainst	0	312	332
+	12	 0x4302ec4	dintcoll	0	332	370
+	13	 0x4302f20	datainst	0	370	390
+	14	 0x4302f40	datatprf	0	390	406
+	15	 0x4302f50	dprmlst_	0	406	422
+	16	 0x3633028	cnstpi__	0	422	434
+	17	 0x4302f60	bchntprf	0	434	459
+	18	 0x4302f70	datatprf	0	459	475
+	19	 0x4302f80	datadefn	0	475	512
+	20	 0x4302fe0	datatprf	0	512	528
+
+In module created from: ./005.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    mychan = user-def-chan (declared) mychan
+      chan(
+        bool<>
+        bool<>
+      )
+      (
+        int<32> i
+        int<32> j
+        int<16> k
+      )
+      In channel definition "mychan", we have: {
+        i = int<32> i
+        j = int<32> j
+        k = int<16> k
+      }
+
+}
+

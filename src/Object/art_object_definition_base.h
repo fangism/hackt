@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.20 2005/05/22 06:23:53 fang Exp $
+	$Id: art_object_definition_base.h,v 1.21 2005/06/19 01:58:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -12,6 +12,7 @@
 
 #include "util/macros.h"
 #include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
@@ -34,6 +35,11 @@ using parser::token_identifier;
 
 //=============================================================================
 namespace entity {
+class param_expr;
+class param_expr_list;
+class scopespace;
+class instance_collection_base;
+class fundamental_type_reference;
 using std::string;
 using std::istream;
 using std::vector;
@@ -67,14 +73,6 @@ public:
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
-protected:
-	/**
-		Should be synchronized with
-		parser::expr_list::checked_refs_type.
-	 */
-	typedef	DEFAULT_VECTOR(count_ptr<instance_reference_base>)
-					checked_refs_type;
-
 protected:
 	template_formals_manager	template_formals;
 

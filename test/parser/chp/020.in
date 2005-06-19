@@ -1,0 +1,14 @@
+// "020.in" -- should pass
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+int z;
+chp {
+	R!(1 == 0);
+	R!(1 != 0);
+	R!(1 <= 0);
+	R!(1 >= 0);
+	R!(1 < 0);
+	R!(1 > 0)
+}
+}
+

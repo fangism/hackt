@@ -1,0 +1,3 @@
+Type mismatch in boolean assignment at [6:2..3]:
+	got: int<32>
+ERROR: at least one error in CHP body.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.4 2005/05/22 06:24:17 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5 2005/06/19 01:58:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -27,16 +27,15 @@ protected:
 		same as pint_type_ptr.
 	 */
 	explicit
-	instantiation_statement_type_ref_base(
-		const type_ref_ptr_type&) { }
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
 	count_ptr<const fundamental_type_reference>
-	get_type(void) const { return pint_type_ptr; }
+	get_type(void) const { return built_in_type_ptr; }
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {
 		// trivial unrolling, context independent
-		return pint_type_ptr;
+		return built_in_type_ptr;
 	}
 
 	static
@@ -62,16 +61,15 @@ protected:
 		same as pbool_type_ptr.
 	 */
 	explicit
-	instantiation_statement_type_ref_base(
-		const type_ref_ptr_type&) { }
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
 	count_ptr<const fundamental_type_reference>
-	get_type(void) const { return pbool_type_ptr; }
+	get_type(void) const { return built_in_type_ptr; }
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {
 		// trivial unrolling, context independent
-		return pbool_type_ptr;
+		return built_in_type_ptr;
 	}
 
 	static

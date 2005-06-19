@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.21 2005/05/23 01:02:33 fang Exp $
+	$Id: art_parser_formal.cc,v 1.22 2005/06/19 01:58:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -29,7 +29,7 @@
 #include "Object/art_context.h"
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_instance_base.h"
-#include "Object/art_object_definition.h"
+#include "Object/art_object_definition_chan.h"		// for user_def_chan
 #include "Object/art_object_expr_base.h"
 
 #include "util/what.h"
@@ -58,6 +58,7 @@ namespace ART {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
+using entity::user_def_chan;
 
 //=============================================================================
 // class data_param_id method definitions
@@ -84,12 +85,32 @@ data_param_id::rightmost(void) const {
 	else		return id->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves data-type formal, and adds it to a channel definition's
+	public port list.  
+ */
 never_ptr<const object>
 data_param_id::check_build(context& c) const {
-	cerr << "Fang, finish data_param_id::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+	STACKTRACE("data_param_id::check_build()");
+	INVARIANT(c.get_current_prototype().is_a<user_def_chan>());
+	never_ptr<const instance_collection_base> t;
+		// should be anything but param_instantiation
+	if (dim) {
+		const dense_range_list::meta_return_type
+			d(dim->check_formal_dense_ranges(c));
+		if (!d) {
+			cerr << "ERROR in array dimensions " <<
+				where(*dim) << endl;
+			THROW_EXIT;
+		}
+		t = c.add_port_formal(*id, d);
+		// reuse generic definition_base::add_port (virtual)
+	} else {
+		t = c.add_port_formal(*id);
+	}
+	return t;
 }
-
 
 //=============================================================================
 // class data_param_id_list method definitions
@@ -123,10 +144,29 @@ data_param_decl::rightmost(void) const {
 	return ids->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ripped from port_formal_decl::check_build, 2005-05-25.
+ */
 never_ptr<const object>
 data_param_decl::check_build(context& c) const {
-	cerr << "Fang, finish data_param_decl::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+	typedef	never_ptr<const object>		return_type;
+	STACKTRACE("data_param_decl::check_build()");
+	const count_ptr<const fundamental_type_reference>
+		ftr(type->check_type(c));
+	// make sure is data-type!
+	c.set_current_fundamental_type(ftr);
+	if (ftr) {
+		ids->check_build(c);
+		// always returns NULL
+		// error catching?
+		// consider calling different routine
+	} else {
+		// already have error message
+		THROW_EXIT;
+	}
+	c.reset_current_fundamental_type();
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -136,6 +176,17 @@ data_param_decl_list::data_param_decl_list(const data_param_decl* d) :
 		parent_type(d) { }
 
 data_param_decl_list::~data_param_decl_list() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation temporary until I have more time...
+ */
+good_bool
+data_param_decl_list::check_chan_ports(context& c) const {
+	parent_type::check_build(c);
+	// would've exited by now if there was an error.  
+	return good_bool(true);
+}
 
 //=============================================================================
 // class port_formal_id method definitions
@@ -165,9 +216,11 @@ port_formal_id::leftmost(void) const {
 
 line_position
 port_formal_id::rightmost(void) const {
-	return dim->rightmost();
+	if (dim)	return dim->rightmost();
+	else		return name->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Should be very similar to instance_base's check_build.  
 	// there should be some open definition already
@@ -182,7 +235,7 @@ port_formal_id::check_build(context& c) const {
 		// should be anything but param_instantiation
 
 	if (dim) {
-		const dense_range_list::return_type
+		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
 			cerr << "ERROR in array dimensions " <<
@@ -229,6 +282,7 @@ port_formal_decl::rightmost(void) const {
 	return ids->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Very similar to instance_declaration::check_build.  
 	\return just NULL.  
@@ -239,20 +293,16 @@ never_ptr<const object>
 port_formal_decl::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("port_formal_decl::check_build()");
-	type->check_build(c);
-	// useless return value
-		// should set the current_fundamental_type in context
 	const count_ptr<const fundamental_type_reference>
-		ftr(c.get_current_fundamental_type());
-	c.pop_current_definition_reference();
-		// no longer need the base definition
+		ftr(type->check_type(c));
+	// make sure is data-type!
+	c.set_current_fundamental_type(ftr);
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
 		// error catching?
 	} else {
-		cerr << "ERROR with concrete-type in port formal decl. at "
-			<< where(*type) << endl;
+		// already have error message
 		THROW_EXIT;
 	}
 	c.reset_current_fundamental_type();
@@ -290,10 +340,6 @@ template_formal_id::template_formal_id(const token_identifier* n,
 	// dim may be NULL
 	if (eq) NEVER_NULL(dflt);
 }
-
-/**
-	
- */
 
 DESTRUCTOR_INLINE
 template_formal_id::~template_formal_id() {
@@ -333,7 +379,7 @@ template_formal_id::check_build(context& c) const {
 	// type should already be set in the context
 	count_ptr<const param_expr> default_val;
 	if (dflt) {
-		count_ptr<const param_expr> p(dflt->check_expr(c));
+		count_ptr<const param_expr> p(dflt->check_meta_expr(c));
 		if (!p) {
 			cerr << "ERROR in default value expression " <<
 				where(*dflt) << endl;
@@ -343,7 +389,7 @@ template_formal_id::check_build(context& c) const {
 	}
 	if (dim) {
 		// attach array dimensions to current instantiation
-		const dense_range_list::return_type
+		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
 		if (!d) {
 			cerr << "ERROR in array dimensions " <<
@@ -400,14 +446,8 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
-#if USE_NEW_TYPE_BASE_CHECK
-	type->check_definition(c);
-#else
-	type->check_build(c);	// sets_current_definition_reference
-#endif
-	// useless return value, always NULL
 	const never_ptr<const definition_base>
-		def(c.get_current_definition_reference());
+		def(type->check_definition(c));
 	if (!def) {
 		cerr << "ERROR resolving base definition!  " <<
 			where(*type) << endl;

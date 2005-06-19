@@ -2,7 +2,7 @@
 	\file "util/getopt_portable.h"
 	Configuration-dependent locations for getopt prototypes.  
 	(Not actually used yet.)
-	$Id: getopt_portable.h,v 1.5 2005/05/20 19:28:49 fang Exp $
+	$Id: getopt_portable.h,v 1.6 2005/06/19 01:58:51 fang Exp $
  */
 
 #ifndef __UTIL_GETOPT_PORTABLE_H__
@@ -16,11 +16,11 @@
 
 #include "config.h"
 
-#if HAVE_UNISTD_H
+#if defined(HAVE_UNISTD_H) && HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#if HAVE_GETOPT_H
+#if defined(HAVE_GETOPT_H) && HAVE_GETOPT_H
 #include <getopt.h>
 #endif
 

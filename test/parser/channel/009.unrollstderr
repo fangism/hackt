@@ -1,0 +1,50 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302730	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	57
+	3	 0x4302750	chandefn	0	57	152
+	4	 0x43026d4	dboolcol	0	152	186
+	5	 0x43027e0	datainst	0	186	206
+	6	 0x4302800	datatprf	0	206	222
+	7	 0x4302810	datadefn	0	222	259
+	8	 0x4302874	dboolcol	0	259	293
+	9	 0x43028d0	datainst	0	293	313
+	10	 0x43028f4	dboolcol	0	313	347
+	11	 0x4302950	datainst	0	347	367
+	12	 0x4302974	dboolcol	0	367	401
+	13	 0x43029d0	datainst	0	401	421
+	14	 0x43029f0	bchntprf	0	421	442
+	15	 0x4302a00	datatprf	0	442	458
+	16	 0x4302a10	enumdefn	0	458	516
+
+In module created from: ./009.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    mychan = user-def-chan (declared) mychan
+      chan(
+        myenum<>
+      )
+      (
+        bool<> a
+        bool<> b
+        bool<> c
+        bool<> d
+      )
+      In channel definition "mychan", we have: {
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        d = bool<> d
+      }
+
+    myenum = enum-datatype-def: myenum
+      { THREE, TWO, ONE,  }
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.16 2005/05/20 19:28:37 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.17 2005/06/19 01:58:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -29,7 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_built_ins.h"
-
+#include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_instance_collection.tcc"
 
 // experimental: suppressing automatic template instantiation
@@ -75,25 +75,23 @@ namespace entity {
 // struct type_dumper specialization
 
 template <>
-struct type_dumper<bool_tag> {
-	typedef	class_traits<bool_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	ostream& os;
-	type_dumper(ostream& o) : os(o) { }
-
-	ostream&
-	operator () (const instance_collection_generic_type& c) {
-		return os << "bool^" << c.get_dimensions();
-	}
-};	// end struct type_dumper<bool_tag>
-
-//-----------------------------------------------------------------------------
-template <>
-struct collection_parameter_persistence<bool_tag> {
+struct collection_type_manager<bool_tag> {
 	typedef	class_traits<bool_tag>::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef class_traits<bool_tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
+	typedef class_traits<bool_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
+
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
+
+		ostream&
+		operator () (const instance_collection_generic_type& c) {
+			return os << "bool^" << c.get_dimensions();
+		}
+	};	// end struct dumper
 
 	static
 	void
@@ -115,20 +113,19 @@ struct collection_parameter_persistence<bool_tag> {
 		instance_collection_generic_type&) {
 		// do nothing! bool has no parameters!
 	}
-};	// end struct collection_parameter_persistence
-//-----------------------------------------------------------------------------
 
-template <>
-struct collection_type_committer<bool_tag> {
-	typedef class_traits<bool_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<bool_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
+	static
+	type_ref_ptr_type
+	get_type(const instance_collection_generic_type& i) {
+		// just return built-in type
+		return bool_type_ptr;
+	}
 
 	// return true on error, false on success
+	static
 	bad_bool
-	operator () (instance_collection_generic_type& c, 
-		const type_ref_ptr_type& t) const {
+	commit_type(instance_collection_generic_type& c, 
+		const type_ref_ptr_type& t) {
 		// INVARIANT(!is_partially_unrolled());
 		INVARIANT(t->get_base_def() == &bool_def);
 		// shouldn't have any parameters, NULL or empty list

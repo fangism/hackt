@@ -1,0 +1,5 @@
+// "002.in" should pass, empty body
+
+defproc empty(chan?(bool) L; chan!(bool) R) {
+}
+

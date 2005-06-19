@@ -1,0 +1,11 @@
+// "037.in" -- should fail, width mismatch on channel L1
+
+// note: L2 has no direction specified, so may be send or receive, or both!
+defproc sum_diff(chan?(int<6>) L1; chan(int) L2; chan!(int) R) {
+int x, z;
+chp {
+	L1?(x), L2?(z);
+	R!(x-z), L2!(x+z)
+}
+}
+

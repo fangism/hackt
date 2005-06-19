@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.15 2005/05/19 18:43:35 fang Exp $
+ *	$Id: art++-lex.ll,v 1.16 2005/06/19 01:58:50 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -69,6 +69,7 @@ using namespace ART::parser;
 #endif
 
 #include "lexer/art_lex.h"
+#include "lexer/art++-lex-options.h"
 
 namespace ART {
 /**
@@ -269,6 +270,7 @@ EXTRACT		"<<"
 FWDSLASH	"\\"
 LOGICAL_AND	"&&"
 LOGICAL_OR	"||"
+ASSIGN		":="
 
 /** syntactic sugar tokens, value is not important, return _node_position */
 BEGINLOOP	"*["
@@ -330,6 +332,15 @@ EXPORT		"export"
 %s instring
 %s inescape
 
+/*
+	Explicitly stating options to guarantee proper definition of 
+	macros in the generated source file, because I've turned on
+	-Wundef for all translation units.  
+ */
+%option never-interactive
+%option nomain
+%option nostack
+
 /****** rules ****************************************************************/
 %%
 
@@ -347,6 +358,7 @@ EXPORT		"export"
 {LOGICAL_OR}	{ NODE_POSITION_UPDATE(); return LOGICAL_OR; }
 {INSERT}	{ NODE_POSITION_UPDATE(); return INSERT; }
 {EXTRACT}	{ NODE_POSITION_UPDATE(); return EXTRACT; }
+{ASSIGN}	{ NODE_POSITION_UPDATE(); return ASSIGN; }
 
 {BEGINLOOP}	{ NODE_POSITION_UPDATE(); return BEGINLOOP; }
 {BEGINPROB}	{ NODE_POSITION_UPDATE(); return BEGINPROB; }

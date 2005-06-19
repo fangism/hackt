@@ -1,0 +1,53 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302e90	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302eb0	procdefn	0	53	142
+	4	 0x4302e34	chancoll	0	142	180
+	5	 0x4302f40	chaninst	0	180	200
+	6	 0x4302f60	bchntprf	0	200	221
+	7	 0x4302f80	datatprf	0	221	237
+	8	 0x4302f90	datadefn	0	237	274
+	9	 0x4302ff4	chancoll	0	274	312
+	10	 0x4303050	chaninst	0	312	332
+	11	 0x4303070	bchntprf	0	332	353
+	12	 0x4303090	datatprf	0	353	369
+	13	 0x43030a4	dboolcol	1	369	398
+	14	 0x43030f0	datainst	0	398	418
+	15	 0x4303110	datatprf	0	418	434
+	16	 0x4303120	crnglst_	0	434	454
+	17	 0x4303130	CHPsend_	0	454	474
+	18	 0x4303150	schnnref	0	474	490
+	19	 0x4303160	sdbnref_	0	490	506
+	20	 0x4303180	nindlist	0	506	522
+	21	 0x3781028	cnstpi__	0	522	534
+
+In module created from: ./015.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    one_shot = process-definition (defined) one_shot(
+        chan?(bool<>) L
+        chan!(bool<>) R
+      )
+      In definition "one_shot", we have: {
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
+        b = bool<> b with indices: {
+          [0..3]
+        }
+
+        chp:
+        concurrent: {
+          R!(b[0])
+        }
+      }
+
+}
+

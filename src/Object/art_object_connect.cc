@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.23 2005/05/22 06:23:51 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.24 2005/06/19 01:58:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_CC__
@@ -100,14 +100,14 @@ USING_UTIL_COMPOSE
 USING_STACKTRACE
 
 //=============================================================================
-// class instance_reference_connection method definitions
+// class meta_instance_reference_connection method definitions
 
-instance_reference_connection::instance_reference_connection() :
+meta_instance_reference_connection::meta_instance_reference_connection() :
 		instance_management_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-instance_reference_connection::~instance_reference_connection() {
+meta_instance_reference_connection::~meta_instance_reference_connection() {
 }
 
 //=============================================================================
@@ -115,7 +115,7 @@ instance_reference_connection::~instance_reference_connection() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 aliases_connection_base::aliases_connection_base() : 
-		instance_reference_connection() { }
+		meta_instance_reference_connection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 aliases_connection_base::~aliases_connection_base() {
@@ -187,7 +187,7 @@ port_connection::dump(ostream& o) const {
 	\param i instance reference to connect, may be NULL.
  */
 void
-port_connection::append_instance_reference(const generic_inst_ptr_type& i) {
+port_connection::append_meta_instance_reference(const generic_inst_ptr_type& i) {
 	// do not assert, may be NULL.  
 	inst_list.push_back(i);
 }

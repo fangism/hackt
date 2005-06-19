@@ -1,0 +1,4 @@
+You doofus, you passed the wrong number of expressions to a channel-send that expects 1 arguments.
+At least one type error in expr-list in [5:4..16]
+ERROR in one of the communcation actions in [5:2..16]
+ERROR: at least one error in CHP body.

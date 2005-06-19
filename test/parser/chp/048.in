@@ -1,0 +1,9 @@
+// "048.in" -- should fail type mismatch
+
+defproc buffer(chan?(int) S; chan!(int) T) {
+int<31> b;
+chp {
+	*[ S?(b); T!(b) ]
+}
+}
+

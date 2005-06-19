@@ -1,0 +1,14 @@
+// "022.in" -- should pass
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+int<32> z, x;
+chp {
+	R!(x == z);
+	R!(x != z);
+	R!(x <= z);
+	R!(x >= z);
+	R!(x < z);
+	R!(x > z)
+}
+}
+

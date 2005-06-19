@@ -18,6 +18,7 @@ BEGIN {
 
 	# strings to match
 	case1 = ".*[:].*[.].*[(][0-9]+[)]$";
+	case1b = "\\|.*[.].*[(][0-9]+[)]$";
 	case2 = "in state [0-9]+, possible rules are:";
 	case3 = "^[0-9]+\t";
 	case4 = " \\(rule [0-9]+\\)";	# note extra first space
@@ -28,6 +29,8 @@ BEGIN {
 	str = $0;
 	# assertion: in all below cases, the regexp [0-9]+ matches only once
 	if (match(str, case1)) {
+		gsub("[0-9]+", rule_str, str);
+	} else if (match(str, case1b)) {
 		gsub("[0-9]+", rule_str, str);
 	} else if (match(str, case2)) {
 		gsub("[0-9]+", state_str, str);

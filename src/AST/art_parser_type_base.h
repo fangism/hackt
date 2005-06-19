@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type_base.h,v 1.4 2005/05/19 18:43:29 fang Exp $
+	$Id: art_parser_type_base.h,v 1.5 2005/06/19 01:58:32 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_BASE_H__
@@ -14,7 +14,6 @@ namespace entity {
 	class definition_base;
 }
 namespace parser {
-using entity::definition_base;
 //=============================================================================
 /**
 	Abstract base class for types in general (parameters, data, channel, 
@@ -22,14 +21,8 @@ using entity::definition_base;
 	Does not include any template parameters.  
  */
 class type_base {
-#define	USE_NEW_TYPE_BASE_CHECK				1
-
 public:
-#if USE_NEW_TYPE_BASE_CHECK
-	typedef	never_ptr<const definition_base>	return_type;
-#else
-	typedef	never_ptr<const object>			return_type;
-#endif
+	typedef	never_ptr<const entity::definition_base>	return_type;
 
 public:
 	type_base() { }
@@ -45,15 +38,9 @@ virtual	line_position
 virtual	line_position
 	rightmost(void) const = 0;
 
-#if USE_NEW_TYPE_BASE_CHECK
 #define	TYPE_BASE_CHECK_PROTO						\
 	type_base::return_type						\
 	check_definition(context&) const
-#else
-#define	TYPE_BASE_CHECK_PROTO						\
-	type_base::return_type						\
-	check_build(context&) const
-#endif
 
 	/**
 		Should return valid pointer to a fundamental type definition, 

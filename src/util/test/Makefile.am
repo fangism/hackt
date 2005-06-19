@@ -2,7 +2,7 @@
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
-SUFFIXES = .test
+SUFFIXES = .test .ii
 TEST_EXPECT_SH = $(srcdir)/test-expect.sh
 
 include $(top_srcdir)/Make.stddef
@@ -53,7 +53,14 @@ noinst_PROGRAMS = \
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
 
-BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc
+# but is included in distribution, EXTRA_DIST? don't bother cleaning?
+EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
+	link_test.stderr
+
+AUTO_STDERR_FILES = multikey_set_derived_test.stderr
+
+BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc \
+	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
@@ -112,21 +119,26 @@ liblinktest_la_SOURCES = \
 
 # liblinktest_la_LDFLAGS = -multiply_defined
 
+# for occasional compiler debugging
+SAVETEMP = $(CXXCOMPILE) -v -save-temps
+.cc.ii:
+	$(SAVETEMP) -c $<
+
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
 # possibly confusing the parent directories when they expect .deps to
 # exist, especially on make distclean.  
 stacktrace.cc: ../stacktrace.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 static_trace.cc: ../static_trace.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 thread_lock.cc: ../memory/thread_lock.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 ref_count_pool.cc: ../memory/ref_count_pool.cc
-	$(LN_S) $< $@
+	$(LN_S) $? $@
 
 friend_function_formal_bug.stderr:
 	$(TOUCH) $@
@@ -143,20 +155,14 @@ PREFILTER_FILES = \
 	$(MOREFILTER_TESTS:=.stderr.prefilter) \
 	$(MOREFILTER_TESTS:=.out.prefilter)
 
-# but is included in distribution, EXTRA_DIST? don't bother cleaning?
-EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
-	link_test.stderr
-
 multikey_set_derived_test.stderr: multikey_set_test.stderr
-	$(CP) $< $@
-
-AUTO_STDERR_FILES = multikey_set_derived_test.stderr
+	$(CP) $? $@
 
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wno-unused -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wsign-promo	# kills some code
@@ -189,18 +195,18 @@ TESTS = $(noinst_PROGRAMS:=.test)
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
 AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
-	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES) $(PREFILTER_FILES)
+	$(BUILT_SOURCES) $(PREFILTER_FILES)
 
 # resorting to intermediate file because distcheck sets file permissions
 # to forbid writing/appending to existing files... (read-only)
-.cvsignore: test.cvsignore
+.cvsignore: $(srcdir)/test.cvsignore
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
-	$(CAT) $< $@.temp > $@
+	$(CAT) $(srcdir)/test.cvsignore $@.temp > $@
 	-$(RM) $@.temp
 
 .cvsignore: Makefile.am Makefile.in
 
-all-local: .cvsignore $(TESTS) $(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
+all-local: .cvsignore $(TESTS)
 
 clean-local:
 	-$(RM) $(BUILT_SOURCES)

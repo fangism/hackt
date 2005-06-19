@@ -1,0 +1,4 @@
+object "one_shot" does not refer to an instance, ERROR!  [5:5..12]
+At least one error in expr-list at [5:4..13]
+ERROR in one of the communcation actions in [5:2..13]
+ERROR: at least one error in CHP body.

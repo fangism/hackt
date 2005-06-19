@@ -1,0 +1,5 @@
+Sorry, non-scalar instance references are not yet supported in data expressions.  
+See 2005-06-11 entry of NOTES.
+At least one type error in expr-list in [6:4..6]
+ERROR in one of the communcation actions in [6:2..6]
+ERROR: at least one error in CHP body.

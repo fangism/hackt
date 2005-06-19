@@ -1,13 +1,14 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.16 2005/05/22 06:24:16 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.17 2005/06/19 01:58:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_H__
 
 #include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_classification_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 

@@ -2,35 +2,35 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x2b03550	module__	0	0	28
-	2	 0x2b00144	namespc_	0	28	52
-	3	 0x2b03570	procdefn	0	52	142
-	4	 0x2b034f4	dboolcol	0	142	176
-	5	 0x2b035f0	datainst	0	176	196
-	6	 0x2b03610	datatprf	0	196	212
-	7	 0x2b03620	datadefn	0	212	249
-	8	 0x2b03684	dboolcol	0	249	283
-	9	 0x2b036e0	datainst	0	283	303
-	10	 0x2b03704	dboolcol	0	303	337
-	11	 0x2b03760	datainst	0	337	357
-	12	 0x4015608	PRSpuldn	0	357	374
-	13	 0x2b03788	PRSand__	0	374	394
-	14	 0x2b03898	PRSlitrl	0	394	406
-	15	 0x2b03a3c	sdbref__	0	406	426
-	16	 0x2b038a4	PRSlitrl	0	426	438
-	17	 0x2b03a5c	sdbref__	0	438	458
-	18	 0x2b03a7c	sdbref__	0	458	478
-	19	 0x4015a08	PRSpulup	0	478	495
-	20	 0x2b03a88	PRSor___	0	495	515
-	21	 0x2b03b98	PRSnot__	0	515	527
-	22	 0x2b038b0	PRSlitrl	0	527	539
-	23	 0x2b03d3c	sdbref__	0	539	559
-	24	 0x2b03ba4	PRSnot__	0	559	571
-	25	 0x2b038bc	PRSlitrl	0	571	583
-	26	 0x2b03d5c	sdbref__	0	583	603
-	27	 0x2b03d7c	sdbref__	0	603	623
+	1	 0x43037c0	module__	0	0	33
+	2	 0x4300144	namespc_	0	33	57
+	3	 0x43037e0	procdefn	0	57	151
+	4	 0x4303764	dboolcol	0	151	185
+	5	 0x4303870	datainst	0	185	205
+	6	 0x4303890	datatprf	0	205	221
+	7	 0x43038a0	datadefn	0	221	258
+	8	 0x4303904	dboolcol	0	258	292
+	9	 0x4303960	datainst	0	292	312
+	10	 0x4303984	dboolcol	0	312	346
+	11	 0x43039e0	datainst	0	346	366
+	12	 0x4819c08	PRSpuldn	0	366	383
+	13	 0x4303a08	PRSand__	0	383	403
+	14	 0x4303b18	PRSlitrl	0	403	415
+	15	 0x4303ca0	sdbmref_	0	415	435
+	16	 0x4303b24	PRSlitrl	0	435	447
+	17	 0x4303cd0	sdbmref_	0	447	467
+	18	 0x4303d00	sdbmref_	0	467	487
+	19	 0x481a008	PRSpulup	0	487	504
+	20	 0x4303d38	PRSor___	0	504	524
+	21	 0x4303e48	PRSnot__	0	524	536
+	22	 0x4303b30	PRSlitrl	0	536	548
+	23	 0x4303fd0	sdbmref_	0	548	568
+	24	 0x4303e54	PRSnot__	0	568	580
+	25	 0x4303b3c	PRSlitrl	0	580	592
+	26	 0x4304000	sdbmref_	0	592	612
+	27	 0x4304030	sdbmref_	0	612	632
 
-In module created from: -stdin- (unrolled)
+In module created from: ./nand-01.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.21 2005/05/22 06:24:21 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.22 2005/06/19 01:58:52 fang Exp $
  */
 
 // flags and switches
@@ -77,7 +77,7 @@
                 cerr << "<persistent>::load_object(): " << endl		\
                         << "\tthis = " << p << ", index = " << index	\
                         << ", expected: " << hohum << endl;		\
-                assert(index == lookup_ptr_index(p));			\
+                INVARIANT(index == lookup_ptr_index(p));		\
         }								\
         }
 #endif
@@ -104,7 +104,7 @@
 	{								\
 	long neg_one;							\
 	read_value(f, neg_one);						\
-	assert(neg_one == -1L);						\
+	INVARIANT(neg_one == -1L);					\
 	}
 #endif
 
@@ -596,8 +596,9 @@ persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
 	if (probe < 0) {
 		// more useful diagnosis message
 		if (ptr) {
-			ptr->what(cerr << "FATAL: Object (") << ") at addr "
-				<< ptr << " has not been registered with "
+			ptr->what(cerr << "FATAL: Object (") << ") at addr " <<
+				static_cast<const void*>(ptr) <<
+				" has not been registered with "
 				"the object manager!" << endl;
 			DIE;
 		}
@@ -624,7 +625,7 @@ persistent_object_manager::lookup_reconstruction_table_entry(
  */
 persistent*
 persistent_object_manager::lookup_obj_ptr(const long i) const {
-	assert((unsigned long) i < reconstruction_table.size());
+	INVARIANT((unsigned long) i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return const_cast<persistent*>(e.addr());
 }
@@ -636,7 +637,7 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
  */
 std::pair<persistent*, persistent_object_manager::visit_info*>
 persistent_object_manager::lookup_ptr_visit_info(const long i) const {
-	assert((unsigned long) i < reconstruction_table.size());
+	INVARIANT((unsigned long) i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return std::make_pair(
 		const_cast<persistent*>(e.addr()),
@@ -796,7 +797,7 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 			reconstruct_function_ptr_type ctor = ctor_vec[j];
 			if (ctor) {
 				const excl_ptr<persistent> tmp((*ctor)());
-				assert(tmp);
+				NEVER_NULL(tmp);
 				tmp->what(o << '\t' << iter->first << '[' <<
 					j << "]\t") << endl;
 			}
@@ -897,7 +898,7 @@ persistent_object_manager::load_header(ifstream& f) {
 	}
 	long neg_one;
 	read_value(f, neg_one);
-	assert(neg_one == -1L);
+	INVARIANT(neg_one == -1L);
 	start_of_objects = f.tellg();
 }
 
@@ -954,11 +955,11 @@ persistent_object_manager::finish_write(ofstream& f) {
 		reconstruction_table_entry& e = reconstruction_table[i];
 		// flush out each stream buffer in order
 		istream& o = e.get_buffer();	// is a stringstream
-		assert(o.good());
+		INVARIANT(o.good());
 		stringbuf* sb = IS_A(stringbuf*, o.rdbuf());
-		assert(sb);
+		NEVER_NULL(sb);
 		const int size = sb->in_avail();	// characters available
-		assert(size == e.tail_pos() -e.head_pos());
+		INVARIANT(size == e.tail_pos() -e.head_pos());
 		const string str(sb->str());
 		f.write(str.c_str(), size);
 	}
@@ -1023,7 +1024,7 @@ persistent_object_manager::finish_load(ifstream& f) {
 		const int size = e.tail_pos() -e.head_pos();
 		f.seekg(e.head_pos() +start_of_objects);
 		ostream& o = e.get_buffer();
-		assert(o.good());
+		INVARIANT(o.good());
 #if 1
 		// is there a better way to do this, 
 		// eliminating intermediate? and need to allocate/free?
@@ -1036,8 +1037,9 @@ persistent_object_manager::finish_load(ifstream& f) {
 			o.write(sbuf, size);
 		} else {
 			// larger streams will require more temporary space
+			// consider alloca
 			char* cbuf = new char [size];
-			assert(cbuf);
+			INVARIANT(cbuf);
 			f.read(cbuf, size);
 			o.write(cbuf, size);
 			delete [] cbuf;
@@ -1166,7 +1168,7 @@ void
 persistent_object_manager::save_object_to_file(const string& s, 
 		const persistent& m) {
 	ofstream f(s.c_str(), ios_base::binary | ios_base::trunc);
-	assert(f.good());
+	INVARIANT(f.good());
 	persistent_object_manager pom;
 	pom.initialize_null();			// reserved 0th entry
 	m.collect_transient_info(pom);		// recursive visitor
@@ -1264,7 +1266,7 @@ persistent_object_manager::self_test(const string& s, const persistent& m) {
  */
 excl_ptr<persistent>
 persistent_object_manager::get_root(void) {
-	assert(root);           // necessary?
+	NEVER_NULL(root);           // necessary?
 	return root.is_a_xfer<persistent>();
 	// this relinquishes ownership and responsibility for deleting
 	// to whomever consumes the returned excl_ptr

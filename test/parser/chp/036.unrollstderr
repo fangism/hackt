@@ -1,0 +1,86 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43051b0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43051d0	procdefn	0	53	162
+	4	 0x4305264	chancoll	0	162	201
+	5	 0x43052c0	chaninst	0	201	221
+	6	 0x43052e0	bchntprf	0	221	242
+	7	 0x4305300	datatprf	0	242	258
+	8	 0x4305310	datadefn	0	258	294
+	9	 0x4305370	dprmlst_	0	294	310
+	10	 0x377d028	cnstpi__	0	310	322
+	11	 0x4305384	chancoll	0	322	361
+	12	 0x43053e0	chaninst	0	361	381
+	13	 0x4305400	bchntprf	0	381	402
+	14	 0x4305420	datatprf	0	402	418
+	15	 0x4305430	dprmlst_	0	418	434
+	16	 0x4305444	chancoll	0	434	472
+	17	 0x43054a0	chaninst	0	472	492
+	18	 0x43054c0	bchntprf	0	492	513
+	19	 0x43054e0	datatprf	0	513	529
+	20	 0x43054f0	dprmlst_	0	529	545
+	21	 0x4305504	dintcoll	0	545	583
+	22	 0x4305560	datainst	0	583	603
+	23	 0x4305580	datatprf	0	603	619
+	24	 0x4305590	dprmlst_	0	619	635
+	25	 0x43055a4	dintcoll	0	635	673
+	26	 0x4305600	datainst	0	673	693
+	27	 0x4305620	CHPseqnc	0	693	713
+	28	 0x4305630	CHPconcr	0	713	733
+	29	 0x4305640	CHPrecv_	0	733	753
+	30	 0x4305660	schnnref	0	753	769
+	31	 0x4305670	sdinref_	0	769	785
+	32	 0x4305690	CHPrecv_	0	785	805
+	33	 0x43056b0	schnnref	0	805	821
+	34	 0x43056c0	sdinref_	0	821	837
+	35	 0x43056e0	CHPconcr	0	837	857
+	36	 0x43056f0	CHPsend_	0	857	877
+	37	 0x4305710	schnnref	0	877	893
+	38	 0x4305738	narithex	0	893	910
+	39	 0x4305740	sdinref_	0	910	926
+	40	 0x4305760	sdinref_	0	926	942
+	41	 0x4305780	CHPsend_	0	942	962
+	42	 0x43057a0	schnnref	0	962	978
+	43	 0x43057c8	narithex	0	978	995
+	44	 0x43057d0	sdinref_	0	995	1011
+	45	 0x43057f0	sdinref_	0	1011	1027
+
+In module created from: ./036.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    sum_diff = process-definition (defined) sum_diff(
+        chan?(int<32>) L1
+        chan(int<32>) L2
+        chan!(int<32>) R
+      )
+      In definition "sum_diff", we have: {
+        L1 = chan?(int<32>) L1
+        L2 = chan(int<32>) L2
+        R = chan!(int<32>) R
+        x = int<32> x
+        z = int<32> z
+        chp:
+        concurrent: {
+          sequential: {
+            concurrent: {
+              L1?(x)
+              L2?(z)
+            }
+            concurrent: {
+              R!(x-z)
+              L2!(x+z)
+            }
+          }
+        }
+      }
+
+}
+

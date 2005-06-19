@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.22 2005/05/23 01:02:33 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.23 2005/06/19 01:58:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
@@ -72,12 +72,14 @@ pint_def = built_in_param_def(
 // will need to pool param_type_reference?
 
 /** built-in parameter pbool type reference */
-const count_ptr<const param_type_reference> pbool_type_ptr =
+const class_traits<pbool_tag>::type_ref_ptr_type
+class_traits<pbool_tag>::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
 		never_ptr<const built_in_param_def>(&pbool_def)));
 
 /** built-in parameter pint type reference */
-const count_ptr<const param_type_reference> pint_type_ptr =
+const class_traits<pint_tag>::type_ref_ptr_type
+class_traits<pint_tag>::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
 	never_ptr<const built_in_param_def>(&pint_def)));
 
@@ -154,6 +156,26 @@ __cerr__(int_def.dump(std::cerr) << std::endl);
 const data_type_reference
 bool_type = data_type_reference(
 	never_ptr<const built_in_datatype_def>(&bool_def));
+#endif
+
+const count_ptr<const data_type_reference>
+bool_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&bool_def)));
+
+#if 0
+// is an excl_ptr...
+static fundamental_type_reference::template_args_ptr_type
+__thirty_two__(new const_param_expr_list(
+	count_ptr<const pint_const>(new pint_const(32))));
+
+const count_ptr<const data_type_reference>
+int32_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&int_def), __thirty_two__));
+#else
+// be careful once type references are memory-pooled!
+// the following function call calls a bunch of allocators (new)
+const count_ptr<const data_type_reference>
+int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 #endif
 
 //=============================================================================

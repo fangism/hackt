@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.16 2005/05/23 01:02:35 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17 2005/06/19 01:58:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -24,6 +24,13 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+class definition_base;
+class scopespace;
+class meta_instance_reference_base;
+class nonmeta_instance_reference_base;
+class fundamental_type_reference;
+class const_range_list;
+class param_expr;
 USING_LIST
 using std::istream;
 using std::string;
@@ -33,17 +40,6 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-
-//=============================================================================
-/**
-	The state of an instance collection, kept track by each 
-	instance reference.  
-	Since the iterators are list-like, they remain valid
-	after sequence manipulation operations (like insert, erase).  
- */
-typedef index_collection_type::const_iterator
-		instantiation_state;
-
 
 //=============================================================================
 /**
@@ -67,11 +63,11 @@ class instance_collection_base : public object, public persistent {
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
 	// should be consistent with 
-	//	member_instance_reference_base::base_inst_ptr_type
-	typedef	count_ptr<const instance_reference_base>
+	//	member_meta_instance_reference_base::base_inst_ptr_type
+	typedef	count_ptr<const meta_instance_reference_base>
 						inst_ref_ptr_type;
 	// needs to be of a type that can be pushed onto object stack
-	typedef	count_ptr<instance_reference_base>
+	typedef	count_ptr<meta_instance_reference_base>
 						member_inst_ref_ptr_type;
 protected:
 	/**
@@ -217,16 +213,15 @@ protected:
 	check_expression_dimensions(const param_expr& pr) const;
 
 public:
-/**
-	always pushes onto context's object_stack, 
-	currently always returns NULL, useless
- */
-virtual	count_ptr<instance_reference_base>
-	make_instance_reference(void) const = 0;
+virtual	count_ptr<meta_instance_reference_base>
+	make_meta_instance_reference(void) const = 0;
+
+virtual	count_ptr<nonmeta_instance_reference_base>
+	make_nonmeta_instance_reference(void) const = 0;
 
 // return type may become generic...
 virtual	member_inst_ref_ptr_type
-	make_member_instance_reference(const inst_ref_ptr_type& b) const = 0;
+	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)
 	void

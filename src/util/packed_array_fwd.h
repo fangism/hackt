@@ -1,7 +1,7 @@
 /**
 	\file "util/packed_array_fwd.h"
 	Forward declarations for packed array template class.
-	$Id: packed_array_fwd.h,v 1.5 2005/05/22 06:24:21 fang Exp $
+	$Id: packed_array_fwd.h,v 1.6 2005/06/19 01:58:52 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_FWD_H__
@@ -17,11 +17,6 @@ template <class K, class T>
 
 
 namespace util {
-
-#if USE_PACKED_ARRAY_BASE
-template <class T>
-class packed_array_base;
-#endif
 
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 class packed_array;

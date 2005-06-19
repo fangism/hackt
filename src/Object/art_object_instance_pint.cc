@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.23 2005/05/22 06:24:18 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.24 2005/06/19 01:58:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
@@ -24,7 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_param_ref.h"	// for pint/pbool_instance_reference
+#include "Object/art_object_expr_param_ref.h"	// for pint/pbool_meta_instance_reference
 #include "Object/art_built_ins.h"
 #include "Object/art_object_type_hash.h"
 
@@ -32,6 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_value_reference.h"
+#include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_value_collection.tcc"
 #include "Object/art_object_classification_details.h"
 

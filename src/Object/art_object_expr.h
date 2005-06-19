@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.28 2005/05/22 06:23:54 fang Exp $
+	$Id: art_object_expr.h,v 1.29 2005/06/19 01:58:39 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
@@ -27,7 +27,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
-
+class pint_range;
 USING_LIST
 using std::string;
 using std::ostream;
@@ -96,19 +96,19 @@ public:
 /**
 	Elements of this index list are no necessarily static constants.  
  */
-class dynamic_index_list : public index_list, 
-		private list<count_ptr<index_expr> > {
-	typedef	dynamic_index_list			this_type;
+class dynamic_meta_index_list : public meta_index_list, 
+		private list<count_ptr<meta_index_expr> > {
+	typedef	dynamic_meta_index_list			this_type;
 protected:
-	typedef	list<count_ptr<index_expr> >	parent_type;
+	typedef	list<count_ptr<meta_index_expr> >	parent_type;
 public:
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
-	dynamic_index_list();
-	~dynamic_index_list();
+	dynamic_meta_index_list();
+	~dynamic_meta_index_list();
 
 	ostream&
 	what(ostream& o) const;
@@ -122,7 +122,7 @@ public:
 	using parent_type::rend;
 
 	void
-	push_back(const count_ptr<index_expr>& i);
+	push_back(const count_ptr<meta_index_expr>& i);
 
 /** NOT THE SAME **/
 	size_t
@@ -158,11 +158,11 @@ public:
 	unroll_resolve(const unroll_context&) const;
 
 	bool
-	must_be_equivalent_indices(const index_list& ) const;
+	must_be_equivalent_indices(const meta_index_list& ) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class dynamic_index_list
+};	// end class dynamic_meta_index_list
 
 //=============================================================================
 /**
@@ -177,9 +177,9 @@ public:
 		is_loop_independent
 	also cache these results...?
  */
-class dynamic_range_list : public range_expr_list,
+class dynamic_meta_range_list : public meta_range_list,
 		public list<count_ptr<pint_range> > {
-	typedef	dynamic_range_list			this_type;
+	typedef	dynamic_meta_range_list			this_type;
 protected:
 	// list of pointers to pint_ranges?  or just copy construct?
 	// can't copy construct, is abstract
@@ -190,9 +190,9 @@ public:
 	typedef	list_type::reverse_iterator		reverse_iterator;
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
-	dynamic_range_list();
+	dynamic_meta_range_list();
 
-	~dynamic_range_list();
+	~dynamic_meta_range_list();
 
 	ostream&
 	what(ostream& o) const;
@@ -207,7 +207,7 @@ public:
 	is_static_constant(void) const;
 
 	const_range_list
-	static_overlap(const range_expr_list& r) const;
+	static_overlap(const meta_range_list& r) const;
 		// false, will be empty
 	good_bool
 	resolve_ranges(const_range_list& r) const;
@@ -216,11 +216,11 @@ public:
 	unroll_resolve(const_range_list&, const unroll_context&) const;
 
 	bool
-	must_be_formal_size_equivalent(const range_expr_list& ) const;
+	must_be_formal_size_equivalent(const meta_range_list& ) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class dynamic_range_list
+};	// end class dynamic_meta_range_list
 
 //=============================================================================
 /**
@@ -392,6 +392,7 @@ class arith_expr : public pint_expr {
 public:
 	typedef	pint_value_type			arg_type;
 	typedef	pint_value_type			value_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 	typedef	binary_arithmetic_operation<value_type, arg_type>
 						op_type;
 	static const plus<value_type, arg_type>		adder;
@@ -410,8 +411,8 @@ private:
 	static void op_map_register(const char, const op_type* );
 	static size_t op_map_init(void);
 protected:
-	count_ptr<const pint_expr>	lx;
-	count_ptr<const pint_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 
 	/**
 		Safe to use a naked pointer, b/c/ refers to a static object.  
@@ -421,8 +422,8 @@ private:
 	arith_expr();
 public:
 	// change: const ptr& arguments
-	arith_expr(const count_ptr<const pint_expr>& l, const char o, 
-		const count_ptr<const pint_expr>& r);
+	arith_expr(const operand_ptr_type& l, const char o, 
+		const operand_ptr_type& r);
 
 	~arith_expr();
 
@@ -498,6 +499,7 @@ class relational_expr : public pbool_expr {
 public:
 	typedef	pbool_value_type		value_type;
 	typedef	pint_value_type			arg_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 	typedef	binary_relational_operation<value_type, arg_type>
 							op_type;
 	static const equal_to<value_type, arg_type>	op_equal_to;
@@ -520,8 +522,8 @@ private:
 	static size_t op_map_init(void);
 
 protected:
-	count_ptr<const pint_expr>	lx;
-	count_ptr<const pint_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 	/**
 		Points to the operator functor.  
 	 */
@@ -530,10 +532,10 @@ protected:
 private:
 	relational_expr();
 public:
-	relational_expr(const count_ptr<const pint_expr>& l, const string& o, 
-		const count_ptr<const pint_expr>& r);
-	relational_expr(const count_ptr<const pint_expr>& l, const op_type* o, 
-		const count_ptr<const pint_expr>& r);
+	relational_expr(const operand_ptr_type& l, const string& o, 
+		const operand_ptr_type& r);
+	relational_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
 
 	~relational_expr();
 
@@ -609,6 +611,7 @@ class logical_expr : public pbool_expr {
 public:
 	typedef	pbool_value_type			value_type;
 	typedef	pbool_value_type			arg_type;
+	typedef	count_ptr<const pbool_expr>		operand_ptr_type;
 	typedef	binary_logical_operation<value_type, arg_type>	op_type;
 	static const util::logical_and<value_type, arg_type>	op_and;
 	static const util::logical_or<value_type, arg_type>	op_or;
@@ -636,10 +639,10 @@ protected:
 private:
 	logical_expr();
 public:
-	logical_expr(const count_ptr<const pbool_expr>& l, const string& o, 
-		const count_ptr<const pbool_expr>& r);
-	logical_expr(const count_ptr<const pbool_expr>& l, const op_type* o, 
-		const count_ptr<const pbool_expr>& r);
+	logical_expr(const operand_ptr_type& l, const string& o, 
+		const operand_ptr_type& r);
+	logical_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
 
 	~logical_expr();
 
@@ -712,7 +715,8 @@ public:
 	Must contain pint_expr's.
 	Derive from object or param_expr?
  */
-class pint_range : public range_expr {
+class pint_range : public meta_range_expr {
+	typedef	meta_range_expr				parent_type;
 	typedef	pint_range				this_type;
 protected:
 	// need to be const, or modifiable?
@@ -728,7 +732,9 @@ public:
 	pint_range(const count_ptr<const pint_expr>& l,
 		const count_ptr<const pint_expr>& u);
 
+#if 0
 	pint_range(const pint_range& pr);
+#endif
 
 	~pint_range();
 
@@ -775,7 +781,7 @@ public:
 	unroll_resolve_range(const unroll_context&, const_range& r) const;
 
 	bool
-	must_be_formal_size_equivalent(const range_expr& ) const;
+	must_be_formal_size_equivalent(const meta_range_expr& ) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.14 2005/05/22 06:18:29 fang Exp $
+	$Id: art_parser_definition.h,v 1.15 2005/06/19 01:58:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -12,6 +12,10 @@
 #include "AST/art_parser_definition_item.h"
 
 namespace ART {
+namespace entity {
+	class definition_base;
+	class process_definition;
+}
 namespace parser {
 //=============================================================================
 /**
@@ -25,14 +29,7 @@ public:
 	definition();
 virtual	~definition();
 
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-virtual	line_position
-	leftmost(void) const = 0;
-
-virtual	line_position
-	rightmost(void) const = 0;
+	PURE_VIRTUAL_NODE_METHODS
 };	// end class definition
 
 //-----------------------------------------------------------------------------
@@ -61,10 +58,7 @@ public:
 
 virtual	~signature_base();
 
-PURE_VIRTUAL_NODE_METHODS
-
-virtual	never_ptr<const object>
-	check_build(context& c) const = 0;
+	PURE_VIRTUAL_NODE_METHODS
 };	// end class signature_base
 
 //=============================================================================
@@ -75,6 +69,12 @@ virtual	never_ptr<const object>
 	constructed on the symbol stack.  
  */
 class process_signature : public signature_base {
+public:
+#if 0
+	typedef	never_ptr<const entity::process_definition>	return_type;
+#else
+	typedef	never_ptr<const object>			return_type;
+#endif
 protected:
 	const excl_ptr<const generic_keyword_type>	def;	///< definition keyword
 		// should never be NULL, could be const reference?
@@ -88,14 +88,11 @@ public:
 		const generic_keyword_type* d, const token_identifier* i, 
 		const port_formal_decl_list* p);
 
+	// need not be virtual since never use pointers of this type...
 virtual	~process_signature();
 
-// note: non-virtual
-	const token_identifier&
-	get_name(void) const;
-
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+	return_type
+	check_signature(context& c) const;
 };	// end class process_signature
 
 //-----------------------------------------------------------------------------
@@ -330,6 +327,8 @@ public:
 //=============================================================================
 /// user-defined channel type signature
 class user_chan_type_signature : public signature_base {
+public:
+	typedef	never_ptr<const object>			return_type;
 protected:
 	const excl_ptr<const generic_keyword_type>	def;	///< "defchan" keyword
 	const excl_ptr<const string_punctuation_type>	dop;	///< <: operator
@@ -344,8 +343,8 @@ public:
 
 virtual	~user_chan_type_signature();
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+	return_type
+	check_signature(context& c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------

@@ -1,0 +1,15 @@
+// "023.in" -- should fail, widths must match
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+int<32> z;
+int<16> x;
+chp {
+	R!(x == z);
+	R!(x != z);
+	R!(x <= z);
+	R!(x >= z);
+	R!(x < z);
+	R!(x > z)
+}
+}
+

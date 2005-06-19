@@ -1,6 +1,6 @@
 #!/bin/sh
 # "test-expect.sh"
-#	$Id: test-expect.sh,v 1.4 2005/01/28 19:59:00 fang Exp $
+#	$Id: test-expect.sh,v 1.5 2005/06/19 01:58:53 fang Exp $
 
 # $1 is the executable, expecting no input
 # $2 is the path to the source directory, which is not necessarily ./
@@ -20,13 +20,22 @@ $cmd 2>&1 | cat > $bldroot.out
 
 $filter $bldroot.out > $bldroot.out.filter
 
-if ! [ -f $srcroot.stderr ]
+# because some .stderr files are auto-generated, and may be in
+# the build directory, not the source directory
+if [ -f $srcroot.stderr ]
 then
-	echo "Missing $srcroot.stderr"
-	exit 1
+	expect=$srcroot.stderr
+else
+	if [ -f $1.stderr ]
+	then
+		expect=$1.stderr
+	else
+		echo "Missing $srcroot.stderr (or $1.stderr)"
+		exit 1
+	fi
 fi
 
-$filter $srcroot.stderr > $bldroot.stderr.filter
+$filter $expect > $bldroot.stderr.filter
 
 # optional filter hook script, to do more than the default filtering
 # requirement of morefilter script: should mv .filter files to .prefilter

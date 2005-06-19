@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.14 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_instance.h,v 1.15 2005/06/19 01:58:31 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -19,7 +19,7 @@ namespace entity {
 	class param_expression_assignment;
 	class aliases_connection_base;
 	class port_connection;
-	class simple_instance_reference;
+	class simple_meta_instance_reference_base;
 }
 namespace parser {
 using util::good_bool;
@@ -79,17 +79,20 @@ public:
 	ROOT_CHECK_PROTO;
 
 private:
-	typedef	parent_type::checked_generic_type	checked_generic_type;
-	typedef	parent_type::checked_exprs_type		checked_exprs_type;
-	typedef	parent_type::checked_refs_type		checked_refs_type;
+	typedef	parent_type::checked_meta_generic_type
+						checked_meta_generic_type;
+	typedef	parent_type::checked_meta_exprs_type	
+						checked_meta_exprs_type;
+	typedef	parent_type::checked_meta_refs_type	
+						checked_meta_refs_type;
 
 	static
 	excl_ptr<const entity::param_expression_assignment>
-	make_param_assignment(const checked_exprs_type&);
+	make_param_assignment(const checked_meta_exprs_type&);
 
 	static
 	excl_ptr<const entity::aliases_connection_base>
-	make_alias_connection(const checked_refs_type&);
+	make_alias_connection(const checked_meta_refs_type&);
 };	// end class alias_list
 
 //=============================================================================
@@ -115,7 +118,7 @@ virtual	line_position
 	rightmost(void) const;
 
 	good_bool
-	check_actuals(expr_list::checked_refs_type&, context& c) const;
+	check_actuals(expr_list::checked_meta_refs_type&, context& c) const;
 };	// end class actuals_base
 
 //=============================================================================
@@ -275,8 +278,8 @@ public:
 
 	static
 	excl_ptr<const entity::port_connection>
-	make_port_connection(const expr_list::checked_refs_type&, 
-                const count_ptr<const entity::simple_instance_reference>& ir);
+	make_port_connection(const expr_list::checked_meta_refs_type&, 
+                const count_ptr<const entity::simple_meta_instance_reference_base>& ir);
 
 };	// end class connection_statement
 

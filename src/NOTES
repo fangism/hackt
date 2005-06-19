@@ -3,6 +3,44 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-06-11:
+	Need well-defined semantics of data (int, bool) operators
+		in the CHP context.  
+		e.g. what does int<X> + int<X> return?
+		what does int<X> + int<Y> return?
+		what does int<X> * int<X> return?
+		Gut feeling: for now types must match, and return same type
+			for arithmetic operators.
+		What about comparisons?  operands must match.  
+		Provide sign-extensions definition?  built-in?
+		Truncation operations?
+	Do pints implicitly have width 32?  (For now assume yes.)
+		How is it possible for them to mix with other widths?
+	"bits" type, bit fields of integers (not the same as bool).  
+		Proposal: implement as public ports of the int built-in
+			intrinsic definition, like:
+			deftype int <: (bits b[W]);
+	For data-ranges [x..y] where x,y are run-time values, 
+		do we place any restrictions on the type (width) of x,y?
+		must x <= y?
+		Don't fee good about have size of expression be unknown...
+			very ugly semantics, tons of run-time checks...
+	Non-scalar data/expression references in CHP context?
+		Currently, not allowed.  
+		Need to extend type-references (of built-in channel type)
+			to include (unnamed) packed arrays.
+		Not difficult, just low priority for now.  
+	Support for dataless communications?  X!, Y? ?  just 'X'?
+	CHP language:
+		',' and ';'
+		Can we allow ',' between actions other than communications?
+			Currently grammar doesn't support it.  
+	Grammar:
+		dark corner: guard expressions starting with a + or - b
+			must be wrapped in parens, after a transformation
+			to eliminate the s/r conflict on x+.
+
+//=============================================================================
 2005-04-29:
 	We had a VLSI group meeting on "the big picture of tools."
 	Concern: certain synthesis-class tools will want to 

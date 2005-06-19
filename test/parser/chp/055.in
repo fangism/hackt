@@ -1,0 +1,15 @@
+// "055.in" should parse fail on 'else'
+
+defproc split_bool_soup(chan?(bool) A, B, G; chan!(bool) Z) {
+bool g, x;
+chp {
+	*[
+		G?(g);
+		[ else -> A?(x) 
+		[]~g -> B?(x)
+		];
+		Z!(x)
+	]
+}
+}
+

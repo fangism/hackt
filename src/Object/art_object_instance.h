@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.39 2005/05/22 06:24:17 fang Exp $
+	$Id: art_object_instance.h,v 1.40 2005/06/19 01:58:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -16,6 +16,8 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+class data_type_reference;
+class const_param_expr_list;
 USING_LIST
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -113,8 +115,8 @@ virtual	bad_bool
 
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
-virtual	count_ptr<instance_reference_base>
-	make_instance_reference(void) const = 0;
+virtual	count_ptr<meta_instance_reference_base>
+	make_meta_instance_reference(void) const = 0;
 
 virtual void
 	instantiate_indices(const const_range_list& i) = 0;

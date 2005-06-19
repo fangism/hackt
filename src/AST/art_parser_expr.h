@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.h"
 	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.14 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_expr.h,v 1.15 2005/06/19 01:58:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_H__
@@ -53,7 +53,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_REFERENCE_PROTO;
+	CHECK_META_REFERENCE_PROTO;
+	CHECK_NONMETA_REFERENCE_PROTO;
 
 	never_ptr<const qualified_id>
 	get_id(void) const { return qid; }
@@ -119,8 +120,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_EXPR_PROTO;
-
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
 };	// end class prefix_expr
 
@@ -151,7 +152,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_REFERENCE_PROTO;
+	CHECK_META_REFERENCE_PROTO;
+	CHECK_NONMETA_REFERENCE_PROTO;
 };	// end class member_expr
 
 //-----------------------------------------------------------------------------
@@ -176,14 +178,21 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_REFERENCE_PROTO;
+	CHECK_META_REFERENCE_PROTO;
+	CHECK_NONMETA_REFERENCE_PROTO;
 
 private:
-	range_list_return_type
-	intercept_indices_error(context& c) const;
+	range_list_meta_return_type
+	intercept_meta_indices_error(context& c) const;
 
-	inst_ref_expr::return_type
-	intercept_base_ref_error(context& c) const;
+	inst_ref_expr::meta_return_type
+	intercept_base_meta_ref_error(context& c) const;
+
+	range_list_nonmeta_return_type
+	intercept_nonmeta_indices_error(context& c) const;
+
+	inst_ref_expr::nonmeta_return_type
+	intercept_base_nonmeta_ref_error(context& c) const;
 };	// end class index_expr
 
 //=============================================================================
@@ -225,7 +234,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -243,7 +253,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -261,8 +272,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-	CHECK_EXPR_PROTO;
-
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
 };	// end class logical_expr
 
@@ -298,7 +309,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 
 	// have to do something different
 	CHECK_GENERIC_PROTO;
@@ -333,7 +345,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 
 	// have to do something different (see array_concatenation explanation)
 	CHECK_GENERIC_PROTO;
@@ -365,7 +378,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	CHECK_EXPR_PROTO;
+	CHECK_META_EXPR_PROTO;
+	CHECK_NONMETA_EXPR_PROTO;
 
 	// have to do something different (see array_concatenation explanation)
 	CHECK_GENERIC_PROTO;

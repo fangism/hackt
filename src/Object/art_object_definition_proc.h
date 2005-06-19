@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.3 2005/05/24 02:38:12 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.4 2005/06/19 01:58:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -9,9 +9,12 @@
 
 #include "Object/art_object_definition.h"
 #include "Object/art_object_PRS_base.h"
+#include "Object/art_object_port_formals_manager.h"
+#include "Object/art_object_CHP.h"		// reduce later
 
 namespace ART {
 namespace entity {
+class process_type_reference;
 //=============================================================================
 /**
 	Process definition base class.  From this, there will arise: true
@@ -53,31 +56,14 @@ class process_definition : public process_definition_base, public scopespace,
 private:
 	typedef	process_definition		this_type;
 public:
-	typedef	never_ptr<const instance_collection_base>
-						port_formals_value_type;
-	/**
-		Table of port formals.
-		The types can be data-types or channel-types, 
-		either base-types or user-defined types.  
-		Needs to be ordered for argument checking, 
-		and have fast lookup, thus hashlist.  
-		Implemented as a hash_qmap and list.  
-	**/
-	typedef list<port_formals_value_type>
-						port_formals_list_type;
-	typedef hash_qmap<string, port_formals_value_type>
-						port_formals_map_type;
-
-	// List of language bodies, separate or merged?
-
 protected:
 	const string		key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
 	const never_ptr<const name_space>	parent;
-	port_formals_list_type			port_formals_list;
-	port_formals_map_type			port_formals_map;
+	port_formals_manager			port_formals;
 	// list language bodies
 	PRS::rule_set				prs;
+	CHP::concurrent_actions			chp;
 private:
 	process_definition();
 public:
@@ -117,10 +103,6 @@ public:
 	good_bool
 	certify_port_actuals(const checked_refs_type& ol) const;
 
-	bool
-	equivalent_port_formals(
-		const never_ptr<const process_definition> p) const;
-
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
@@ -133,6 +115,9 @@ public:
 	void
 	compact_prs_references(void);
 
+	void
+	add_concurrent_chp_body(const count_ptr<CHP::action>&);
+
 // methods for object file I/O
 public:
 	FRIEND_PERSISTENT_TRAITS
@@ -141,14 +126,6 @@ public:
 private:
 	void
 	load_used_id_map_object(excl_ptr<persistent>& o);
-protected:
-	void
-	write_object_port_formals(const persistent_object_manager& m, 
-		ostream& o) const;
-
-	void
-	load_object_port_formals(const persistent_object_manager& m,
-		istream& i);
 
 };	// end class process_definition
 
