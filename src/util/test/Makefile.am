@@ -166,7 +166,7 @@ GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wsign-promo	# kills some code
-DIALECT_FLAGS = -ansi
+DIALECT_FLAGS = -ansi -pedantic-errors
 # -pedantic	# kills some code
 MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)

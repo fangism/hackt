@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.9 2005/05/10 04:51:22 fang Exp $
+	$Id: IO_utils.tcc,v 1.9.12.1 2005/06/20 21:53:15 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -24,9 +24,12 @@ using std::istream;
 //=============================================================================
 // automatic template instantiation suppression
 
+#if 0
+// breaks -pedantic
 // these are instantiated in "IO_utils.cc"
 extern template void write_value(ostream&, const char&);
 extern template void read_value(istream&, char&);
+#endif
 
 //=============================================================================
 /**
@@ -61,7 +64,8 @@ value_reader<T>::operator () (T& t) {
  */
 template <class T>
 // inline
-void    write_value(ostream& f, const T& v) {
+void
+write_value(ostream& f, const T& v) {
 	f.write(reinterpret_cast<const char*>(&v), sizeof(T));
 }
 
@@ -76,7 +80,8 @@ void    write_value(ostream& f, const T& v) {
  */
 template <class T>
 // inline
-void    read_value(istream& f, T& v) {
+void
+read_value(istream& f, T& v) {
 	f.read(reinterpret_cast<char*>(&v), sizeof(T));
 }
 

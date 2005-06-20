@@ -1,5 +1,22 @@
 "ChangeLog"
 
+2005-06-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44-anal-01:
+	  Mini-branch dedicated to making life miserable.  
+	  The aim of this branch is to enforce the utmost strictness in
+		standard conformance and warning cleanliness.  
+	  This will only hurt a little.
+	  This revision: enforce -pedantic in CFLAGS and CXXFLAGS
+		eliminated redundant operator conversion 
+			in "util/memory/excl_ptr.h".
+		disabled uses of "extern template", a GNU extension.
+	  Upcoming:
+		Macros in .tcc files to control implicit vs. explicit
+		template instantiation by excluding dependent
+		template definition .tcc files.  
+
+
 2005-06-18	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-43-merged-CHP-01-25:

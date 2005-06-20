@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.5 2005/05/10 04:51:33 fang Exp $
+	$Id: excl_ptr.h,v 1.5.12.1 2005/06/20 21:53:16 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -944,9 +944,13 @@ public:
 	}
 #endif
 
+#if 0
+	// pedantic: ambiguous conversion from some_ptr to never_ptr
+	//	by default, prefers constructor.  
 	operator never_ptr<T> () const throw() {
 		return never_ptr<T>(this->ptr);
 	}
+#endif
 
 #if 0
 	// safe type-casting

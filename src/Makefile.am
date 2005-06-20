@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.64 2005/06/19 01:58:28 fang Exp $
+#	$Id: Makefile.am,v 1.64.2.1 2005/06/20 21:53:12 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -496,7 +496,7 @@ WARN_CXXFLAGS =
 # -Woverloaded-virtual	# kills much of AST/ code, fix later...
 # -Wold-style-cast	# kills bison/yacc parser code... consider separate lib
 # -Wsign-promo
-DIALECT_FLAGS = -ansi
+DIALECT_FLAGS = -ansi -pedantic-errors
 # -pedantic		# kills some pointer class conversions, fix later...
 MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
