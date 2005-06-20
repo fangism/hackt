@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-06-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44:
+	  Added documentation for channel types, CHP and PRS.  
+	  Some useful macros were added to "artxx.tex".  
+
+
 2005-05-01	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-27-template-01-04:

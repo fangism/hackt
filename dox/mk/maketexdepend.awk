@@ -2,7 +2,7 @@
 
 # "maketexdepend.awk"
 # by Fang <fangism@users.sourceforge.net>
-#	$Id: maketexdepend.awk,v 1.1 2005/05/04 19:31:43 fang Exp $
+#	$Id: maketexdepend.awk,v 1.2 2005/06/20 19:47:36 fang Exp $
 #
 # auto-generate LaTeX dependencies
 # usage: awk -f <this script> [variables] <top-level tex file>
@@ -221,10 +221,15 @@ if (!flat_mode) {
 	for (i=1; i<=num_deps; i++) {
 		f = sorted_dep_files[i];
 		if (f != "") {
-			if (readable)	# each dependent file on one line
-				printf(" \\\n\t\t%s", srcdir "/" f);
-			else
-				printf(" %s", srcdir "/" f);
+			if (readable) {	# each dependent file on one line
+				printf(" \\\n\t\t");
+			} else {
+				printf(" ");
+			}
+			if (srcdir != ".") {
+				printf(srcdir "/");
+			}
+			printf(f);
 		}
 	}
 

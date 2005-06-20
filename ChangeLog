@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2005-06-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44:
+	  Renamed "configure.in" to "configure.ac" to be more correct.
+
+
 2005-06-18	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-43-merged-CHP-01-25:

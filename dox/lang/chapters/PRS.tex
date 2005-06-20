@@ -1,11 +1,59 @@
 % "chapters/PRS.tex"
 
-%	$Id: PRS.tex,v 1.1 2004/12/08 03:48:39 fang Exp $
+%	$Id: PRS.tex,v 1.2 2005/06/20 19:47:36 fang Exp $
 
 \chapter{Production Rule Set (PRS)}
 \label{sec:prs}
 
-This chapter describes the Production Rule Set sub-language.  
+This chapter describes the Production Rule Set (PRS) sub-language.  
+PRS operates strictly in the meta-language domain of \artxx, 
+meaning that all involved instance references and connections are resolved
+at compile-time, upon instantiation of each complete definition.  
+Production rules, like connections, may be programmed to depend
+on meta-language parameters.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Basics}
+\label{sec:prs:basics}
+
+Basic production rules are written as follows:
+
+\begin{itemize}
+\item \tit{rule} : \tit{PRS-expr} \prsrarrow\ \tit{node} \tit{dir}
+\end{itemize}
+
+(Reference to lines of grammar...)
+(Denotational semantics, type-inference later...)
+
+The \tit{dir} is either \prsup\ (pull-up) or \prsdn\ (pull-down).  
+A \tit{literal} is an occurence of a (\bool) \tit{node} on the
+left-hand-side of a production rule.  
+A PRS \tit{literal} and the right-hand-side node
+must be a refer to a single (scalar) \bool\ instance.  
+A \tit{PRS-expr} may be any boolean expression using the 
+operators \prsnot, \prsand, \prsor, and literals.  
+(The unary \prsnot\ operator has the highest precedence, 
+and the \prsand\ operator has higher precedence than the \prsor\ operator.)
+
+Since production rules are an abstract description of logic, 
+the rules themselves need not be CMOS-implementable.  
+Enforcement of CMOS-implementability can be introduced by later tools
+or compiler phases where desired.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Sizing}
+\label{sec:prs:basics:sizing}
+
+We provide a way of specifying transistor widths for every literal.  
+Each literal on the LHS may be followed by an optional size argument:
+
+\begin{itemize}
+\item \tit{literal} :
+	\tit{node-reference} \{ \ttt{<} \tit{float} \ttt{>} \}$_{opt}$
+\end{itemize}
+
+Ideas: Specify a width/strength on the RHS and automatically infer
+the sizes of the literals on the LHS (only for this rule).  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Attributes}
@@ -49,6 +97,51 @@ Automatic sizing
 \label{sec:prs:loops}
 
 Loop syntax, unrolling, etc...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Extensions}
+\label{sec:prs:ext}
+
+This section describes some of the recent extensions to the PRS language.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Pass-gates}
+\label{sec:prs:ext:passgates}
+
+True pass-gate logic was missing from the original CAST-PRS implementation.  
+A pass-gate could be emulated as a latch if the `direction' of operation was
+known at compile time.  
+Not having to support pass-gates greatly simplified other pieces of the 
+tool-chain, such as LVS and PRSIM.  
+
+We propose the following syntax for pass-gates:
+
+\begin{enumerate}
+\item $node_1$ \ttt{<-} $node_2$ \ttt{->} $node_3$\\
+	denotes an NFET connecting $node_1$ and $node_3$ gated by $node_2$
+\item $node_1$ \ttt{<+} $node_2$ \ttt{+>} $node_3$\\
+	denotes a PFET connecting $node_1$ and $node_3$ gated by $node_2$
+% \item $node_1$ \ttt{<=} $node_2$ \ttt{=>} $node_3$\\
+%	denotes an NFET connecting $node_1$ and $node_3$ gated by $node_2$
+%	with a PFET gated by $\overline{node_2}$
+\end{enumerate}
+
+% In all cases, $node_2$ may be a literal node or its complement, 
+% prefixed with a tilde.
+In case 1, when $node_2$ is logic-1, the nodes on either side are connected.
+In case 2, when $node_2$ is logic-0, the other terminals are connected.  
+In all cases, 
+if nodes on opposite sides are both driving in opposite directions, 
+then it is considered a short-circuit (error).  
+If neither side is driving, and the nodes' states are in opposition, 
+then both nodes will become unknown (X). 
+Otherwise, the one side that is being driven will flip the other side.  
+
+$node_2$ may be given an optional \ttt{<size>} argument for specifying
+gate width.  
+
+Technically, one may use pass-gate to construct arbitrary transistor
+topologies.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Options}
