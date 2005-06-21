@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.64.2.1 2005/06/20 21:53:12 fang Exp $
+#	$Id: Makefile.am,v 1.64.2.2 2005/06/21 01:08:08 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -566,8 +566,6 @@ endif
 # what about their dependencies?  
 # automake produces empty placeholders (never updated) for them initially, 
 # so make will not die.
-Object/art_object_extern_templates.hchk:
-	@$(TOUCH) $@
 
 util/using_istream.hchk:
 	@$(TOUCH) $@

@@ -4,7 +4,7 @@
 	template classes.  
 	Useful for common template classes that are shared all over the place, 
 	explicitly or implicitly.  
-	$Id: art_object_extern_templates.h,v 1.6.8.1 2005/06/20 21:53:15 fang Exp $
+	$Id: art_object_extern_templates.h,v 1.6.8.2 2005/06/21 01:08:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_H__
@@ -25,8 +25,9 @@ using ART::entity::pint_value_type;
 using ART::entity::pbool_value_type;
 
 // NOTE: -pedantic forbids extern template, not ISO C++ :(
-#if 0
+// see alternative in #else case below
 //=============================================================================
+#if 0
 // in the section, use "extern" prefixing to suppress instantiation
 // extern template
 // class multikey_base<pint_value_type>;
@@ -50,6 +51,17 @@ class packed_array_generic<pint_value_type, pbool_value_type>;
 
 extern template
 class multikey_generator_generic<pint_value_type>;
+
+#else
+
+// Preferred method of template instantiation control, since -pedantic
+// disables the GNU "extern template" extension:
+
+// predefine these macros to suppress
+// NB: the inclusion of this file MUST precede the (attempted)
+// inclusion of the affected .tcc files for this to be effective.  
+#define	EXTERN_TEMPLATE_UTIL_MULTIKEY
+#define	EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
 #endif
 

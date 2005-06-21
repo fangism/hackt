@@ -2,6 +2,18 @@
 
 2005-06-20	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-44-anal-02:
+	  Now compiling with -pedantic-errors dialect flag.
+		(read: total overkill anal retentiveness)
+	  Updated a few header/tcc files to use the new scheme of
+		suppressing implicit template instantiations.  
+	  See "src/util/ChangeLog" for details.
+	  Notably: in "Object/art_object_extern_templates.h"
+		Replaced non-ISO extern template declarations with
+		template definition-suppressing macros.  
+	  Dependent files affected: "Object/art_object_instance_collection.tcc"
+
+
 	* ARTXX-00-01-04-main-00-44-anal-01:
 	  Mini-branch dedicated to making life miserable.  
 	  The aim of this branch is to enforce the utmost strictness in
