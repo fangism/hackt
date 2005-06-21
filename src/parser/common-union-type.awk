@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "common-union-type.awk"
 # David Fang, 2004
-#	$Id: common-union-type.awk,v 1.2 2005/05/04 17:54:14 fang Exp $
+#	$Id: common-union-type.awk,v 1.2.12.1 2005/06/21 06:47:06 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/yacc-union-type.awk OR parser/bison-union-type.awk
@@ -347,10 +347,10 @@ if (0) {
 	print "} /* end while */";
 	print "if (iter && iter->state == j) {";
 		print "\t/* then we've found a match, return appropriately wrapped pointer */";
-		print "\tconst int i = iter->type_enum;";
-		print "\tassert(i >= 0);";
-		print "\tassert(i < " member_count ");";
-		print "\treturn i;";
+		print "\tconst int k = iter->type_enum;";
+		print "\tassert(k >= 0);";
+		print "\tassert(k < " member_count ");";
+		print "\treturn k;";
 	print "} else {";
 		print "\treturn -1;\t// error, not found";
 	print "}";

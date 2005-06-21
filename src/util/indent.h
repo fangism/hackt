@@ -2,7 +2,7 @@
 	\file "util/indent.h"
 	Utility for semi-automatically indenting output.  
 
-	$Id: indent.h,v 1.4 2005/06/19 01:58:52 fang Exp $
+	$Id: indent.h,v 1.4.2.1 2005/06/21 06:47:06 fang Exp $
  */
 
 #ifndef	__UTIL_INDENT_H__
@@ -13,10 +13,12 @@
 
 /**
 	Handy macro for declaring an indented section.  
+	NOTE: Using __LINE__ to automatically generate unique identifiers
+		doesn't seem to be working.  WTF?
 	\param f file stream, such as cout, cerr.  
  */
 #define	INDENT_SECTION(f)						\
-const util::indent __indent_ ## __LINE__ ## __(f)
+const util::indent __indent_##__LINE__##__ (f)
 
 namespace util {
 using std::string;

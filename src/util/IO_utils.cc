@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.4 2005/05/10 04:51:22 fang Exp $
+	$Id: IO_utils.cc,v 1.4.12.1 2005/06/21 06:47:06 fang Exp $
  */
 
 #include <cassert>
@@ -83,7 +83,8 @@ write_string(ostream& f, const string& s) {
 	const string::size_type len = s.length();
 		// excludes null-termination
 	assert(len < STRING_LIMIT);	// sanity check, not a real limit
-	f.write(reinterpret_cast<const char*>(&len), sizeof(len));
+	// careful: raw memory write
+	write_value(f, len);
 //	assert(len >= 0);		// unsigned, always true
 	if (len)
 		f.write(s.c_str(), len);
@@ -100,7 +101,8 @@ void
 read_string(istream& f, string& s) {
 	static const size_t def_size = 64;
 	string::size_type len;
-	f.read((char*) &len, sizeof(len));
+	// careful: raw memory read
+	read_value(f, len);
 //	assert(len >= 0);		// unsigned, always true
 	if (len >= STRING_LIMIT) {
 		cerr << "read_string(): got len = " << len << ", WTF?" << endl;

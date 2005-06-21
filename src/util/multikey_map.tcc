@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.6.12.1 2005/06/21 01:08:24 fang Exp $
+	$Id: multikey_map.tcc,v 1.6.12.2 2005/06/21 06:47:07 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -104,9 +104,9 @@ istream&
 multikey_map<D,K,T,M>::read(istream& f) {
 	INVARIANT(f.good());
 	INVARIANT(this->empty());
-	size_t size, i=0;
-	read_value(f, size);
-	for ( ; i<size; i++) {
+	size_t sz, i=0;
+	read_value(f, sz);
+	for ( ; i<sz; i++) {
 		key_type key;
 		mapped_type val;
 		// ok to do this if key contains no pointers

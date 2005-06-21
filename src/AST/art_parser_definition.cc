@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.23 2005/06/19 01:58:29 fang Exp $
+	$Id: art_parser_definition.cc,v 1.23.2.1 2005/06/21 06:47:02 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -794,8 +794,8 @@ if (base_not_chan->get_temp_spec()) {
 
 	excl_ptr<definition_base>
 		td_ex = d->make_typedef(c.get_current_named_scope(), *id);
-	const never_ptr<definition_base> td(td_ex);
-	const never_ptr<typedef_base> tdb(td.is_a<typedef_base>());
+	const never_ptr<definition_base> tdf(td_ex);
+	const never_ptr<typedef_base> tdb(tdf.is_a<typedef_base>());
 	NEVER_NULL(tdb);
 	c.set_current_prototype(td_ex);
 	if (temp_spec) {
@@ -843,7 +843,7 @@ if (base_not_chan->get_temp_spec()) {
 	}
 	// let context add the complete alias to the scope
 	// check for collision error
-	return td;
+	return tdf;
 } else {	// base may actually refer to the definition, not the type
 	// in this case we create a definition alias
 	// restriction: temp_spec for this definition must be empty or null.  

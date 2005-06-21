@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.15 2005/06/19 01:58:29 fang Exp $
+	$Id: art_parser_chp.cc,v 1.15.2.1 2005/06/21 06:47:01 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -403,7 +403,7 @@ wait::rightmost(void) const {
  */
 statement::return_type
 wait::check_action(context& c) const {
-	typedef	statement::return_type		return_type;
+//	typedef	statement::return_type		return_type;
 	const expr::nonmeta_return_type ret(cond->check_nonmeta_expr(c));
 	if (!ret) {
 		cerr << "ERROR in wait condition expression at " <<
@@ -757,8 +757,8 @@ send::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 
-	typedef	count_ptr<entity::CHP::channel_send>	return_type;
-	const return_type ret(new entity::CHP::channel_send(sender));
+	typedef	count_ptr<entity::CHP::channel_send>	local_return_type;
+	const local_return_type ret(new entity::CHP::channel_send(sender));
 	// need to check that number of arguments match...
 	NEVER_NULL(ret);
 	const good_bool g(ret->add_expressions(checked_exprs));
@@ -836,8 +836,8 @@ receive::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 
-	typedef	count_ptr<entity::CHP::channel_receive>	return_type;
-	const return_type ret(new entity::CHP::channel_receive(receiver));
+	typedef	count_ptr<entity::CHP::channel_receive>	local_return_type;
+	const local_return_type ret(new entity::CHP::channel_receive(receiver));
 	// need to check that number of arguments match...
 	NEVER_NULL(ret);
 	const good_bool g(ret->add_references(val_refs));

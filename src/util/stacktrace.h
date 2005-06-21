@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.7 2005/05/10 04:51:30 fang Exp $
+	$Id: stacktrace.h,v 1.7.12.1 2005/06/21 06:47:08 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -20,47 +20,49 @@
 
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
-	#define	USING_STACKTRACE	using util::stacktrace;
-	#define	STACKTRACE(str)	util::stacktrace __stacktrace__(str)
-	/**
-		No user-supplied string required, uses __PRETTY_FUNCTION__
-		built-in internal string.  Is this gcc-only?
-		There's always __func__ for brevity.
-	 */
-	#define	STACKTRACE_BRIEF					\
-			util::stacktrace __stacktrace__(__func__)
-	#define	STACKTRACE_VERBOSE					\
-			util::stacktrace __stacktrace__(__PRETTY_FUNCTION__)
-	/**
-		This enables echoing each time trace stack is updated, i.e., 
-		upon entering and leaving function call stack 
-		or lexical scopes.  
-	 */
-	#define STACKTRACE_ECHO_ON					\
-			util::stacktrace::echo __echo_stacktrace__(1)
-	#define STACKTRACE_ECHO_OFF					\
-			util::stacktrace::echo __echo_stacktrace__(0)
-	#define	STACKTRACE_STREAM					\
-			util::stacktrace::stream()
-	#define REDIRECT_STACKTRACE(os)					\
-			util::stacktrace::redirect __redir_stacktrace__(os)
-	#define	ASSERT_STACKTRACE(expr)					\
-			if (!(expr)) { util::stacktrace::full_dump(); assert(expr); }
-	#define	REQUIRES_STACKTRACE_STATIC_INIT				\
-			static const util::stacktrace::init_token		\
-			__stacktrace_init__(util::stacktrace::require_static_init());
-#else
-	#define	USING_STACKTRACE
-	#define	STACKTRACE(str)
-	#define	STACKTRACE_BRIEF
-	#define	STACKTRACE_VERBOSE
-	#define STACKTRACE_ECHO_ON
-	#define STACKTRACE_ECHO_OFF
-	#define	STACKTRACE_STREAM		std::cerr
-	#define REDIRECT_STACKTRACE(os)
-	#define	ASSERT_STACKTRACE(expr)		assert(expr)
-	#define	REQUIRES_STACKTRACE_STATIC_INIT	
-#endif
+#define	USING_STACKTRACE	using util::stacktrace;
+#define	STACKTRACE(str)							\
+	const util::stacktrace __stacktrace_##__LINE__##__(str)
+/**
+	No user-supplied string required, uses __PRETTY_FUNCTION__
+	built-in internal string.  Is this gcc-only?
+	There's always __func__ for brevity.
+ */
+#define	STACKTRACE_BRIEF						\
+	const util::stacktrace __stacktrace_##__LINE__##__(__func__)
+#define	STACKTRACE_VERBOSE						\
+	const util::stacktrace __stacktrace__##__LINE__##_(__PRETTY_FUNCTION__)
+/**
+	This enables echoing each time trace stack is updated, i.e., 
+	upon entering and leaving function call stack 
+	or lexical scopes.  
+ */
+#define STACKTRACE_ECHO_ON						\
+	const util::stacktrace::echo __echo_stacktrace__##__LINE__##_(1)
+#define STACKTRACE_ECHO_OFF						\
+	const util::stacktrace::echo __echo_stacktrace__##__LINE__##_(0)
+#define	STACKTRACE_STREAM						\
+		util::stacktrace::stream()
+#define REDIRECT_STACKTRACE(os)						\
+	const util::stacktrace::redirect __redir_stacktrace__##__LINE__##_(os)
+#define	ASSERT_STACKTRACE(expr)						\
+	if (!(expr)) { util::stacktrace::full_dump(); assert(expr); }
+#define	REQUIRES_STACKTRACE_STATIC_INIT					\
+	static const util::stacktrace::init_token			\
+	__stacktrace_init_##__LINE__##__(util::stacktrace::require_static_init());
+
+#else	// ENABLE_STACKTRACE
+#define	USING_STACKTRACE
+#define	STACKTRACE(str)
+#define	STACKTRACE_BRIEF
+#define	STACKTRACE_VERBOSE
+#define STACKTRACE_ECHO_ON
+#define STACKTRACE_ECHO_OFF
+#define	STACKTRACE_STREAM		std::cerr
+#define REDIRECT_STACKTRACE(os)
+#define	ASSERT_STACKTRACE(expr)		assert(expr)
+#define	REQUIRES_STACKTRACE_STATIC_INIT	
+#endif	// ENABLE_STACKTRACE
 
 
 //=============================================================================

@@ -162,12 +162,15 @@ multikey_set_derived_test.stderr: multikey_set_test.stderr
 AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
-WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
+	-Wcast-qual -Wcast-align -Wconversion -Werror
+# C specific warnings
+WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
+	-Wbad-function-cast -Wnested-externs
+# C++ specific warnings
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wsign-promo	# kills some code
 DIALECT_FLAGS = -ansi -pedantic-errors
-# -pedantic	# kills some code
 MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 

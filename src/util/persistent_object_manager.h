@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.19 2005/05/22 06:24:21 fang Exp $
+	$Id: persistent_object_manager.h,v 1.19.8.1 2005/06/21 06:47:08 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -127,11 +127,11 @@ private:
 	 */
 	class Long {
 		public:
-			long val;
-			Long() : val(-1) { }
-			Long(const long v) : val(v) { }
+			size_t val;
+			Long() : val(size_t(-1)) { }
+			Long(const size_t v) : val(v) { }
 			~Long() { }
-			operator long () { return val; }
+			operator size_t () { return val; }
 	};	// end class Long
 
 	/**
@@ -246,12 +246,12 @@ private:
 	istream&
 	lookup_read_buffer(const persistent* ptr) const;
 
-	long
+	size_t
 	lookup_ptr_index(const persistent* ptr) const;
 
 	// was public, but this is nor a good idea, use read_pointer only
 	persistent*
-	lookup_obj_ptr(const long i) const;
+	lookup_obj_ptr(const size_t) const;
 
 public:
 	bool
@@ -281,14 +281,14 @@ public:
 private:
 #if 0
 	const reconstruction_table_entry&
-	lookup_reconstruction_table_entry(const long) const;
+	lookup_reconstruction_table_entry(const size_t) const;
 #endif
 
 	std::pair<persistent*, visit_info*>
-	lookup_ptr_visit_info(const long) const;
+	lookup_ptr_visit_info(const size_t) const;
 
 	size_t*
-	lookup_ref_count(const long i) const;
+	lookup_ref_count(const size_t) const;
 
 	size_t*
 	lookup_ref_count(const persistent* i) const;

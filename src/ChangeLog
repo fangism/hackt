@@ -1,5 +1,31 @@
 "ChangeLog"
 
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44-anal-03:
+	  Instated possibly THE MOST anal retentive compiler warning policy
+		known to man.  If you don't know what the following warning
+		flags mean, I suggest learning.  
+	  In Makefile.am:
+		GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused
+			-Wpointer-arith -Wcast-qual -Wcast-align
+			-Wconversion -Werror
+		WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
+			-Wbad-function-cast -Wnested-externs
+		WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
+		The only files that need exceptions are the yacc/lex-generated
+			parser and lexer files, which are given
+		PARSER_NOWARN_FLAGS = -Wno-old-style-cast -Wno-shadow
+			as additional flags for preliminary compilation into a 
+			separate convenience library, libhacktparsers.la.
+		libart++.la links in libhacktparser.la, so libart++.la
+			remains all-inclusive.  
+	  Rest of source code gets a minor face-lift to conform to 
+		the new compiling standard.  Mostly renaming of local
+		identifiers to satisfy -Wshadow.
+	  Minor entry also in src/util/ChangeLog.
+
+
 2005-06-20	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-44-anal-02:

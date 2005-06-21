@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.22 2005/06/19 01:58:52 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.22.2.1 2005/06/21 06:47:07 fang Exp $
  */
 
 // flags and switches
@@ -70,10 +70,10 @@
 #else
 #define STRIP_POINTER_INDEX(f, p)                                       \
 	{								\
-        long index;							\
+        size_t index;							\
         read_value(f, index);						\
         if (index != lookup_ptr_index(p)) {				\
-                const long hohum = lookup_ptr_index(p);			\
+                const size_t hohum = lookup_ptr_index(p);		\
                 cerr << "<persistent>::load_object(): " << endl		\
                         << "\tthis = " << p << ", index = " << index	\
                         << ", expected: " << hohum << endl;		\
@@ -517,10 +517,10 @@ persistent_object_manager::register_transient_object(
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a) {
 	STACKTRACE("pom::register_transient_object()");
-	const long probe = addr_to_index_map[ptr];
+	const size_t probe = addr_to_index_map[ptr];
 	if (ptr)
 		assert(t != persistent::hash_key::null);
-	if (probe >= 0) {
+	if (probe < reconstruction_table.size()) {
 		// sanity check
 		const reconstruction_table_entry& e = 
 			reconstruction_table[probe];
@@ -569,9 +569,8 @@ persistent_object_manager::initialize_null(void) {
  */
 bool
 persistent_object_manager::flag_visit(const persistent* ptr) {
-	const long probe = addr_to_index_map[ptr];
-	INVARIANT(probe >= 0);
-	INVARIANT(size_t(probe) < reconstruction_table.size());
+	const size_t probe = addr_to_index_map[ptr];
+	INVARIANT(probe < reconstruction_table.size());
 	reconstruction_table_entry& e = reconstruction_table[probe];
 	INVARIANT(e.addr() == ptr);		// sanity check
 	if (e.flagged())
@@ -589,11 +588,11 @@ persistent_object_manager::flag_visit(const persistent* ptr) {
 		and may be NULL.  
 	\return index corresponding to the entry.  
  */
-long
+size_t
 persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
-	const long probe = addr_to_index_map[ptr];
+	const size_t probe = addr_to_index_map[ptr];
 	// because uninitialized value of Long is -1
-	if (probe < 0) {
+	if (probe >= reconstruction_table.size()) {
 		// more useful diagnosis message
 		if (ptr) {
 			ptr->what(cerr << "FATAL: Object (") << ") at addr " <<
@@ -612,8 +611,8 @@ persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
 #if 0
 const reconstruction_table_entry&
 persistent_object_manager::lookup_reconstruction_table_entry(
-		const long i) const {
-	assert((unsigned long) i < reconstruction_table.size());
+		const size_t i) const {
+	assert(i < reconstruction_table.size());
 	return reconstruction_table[i];
 }
 #endif
@@ -624,8 +623,8 @@ persistent_object_manager::lookup_reconstruction_table_entry(
 	reconstruction table entry.  
  */
 persistent*
-persistent_object_manager::lookup_obj_ptr(const long i) const {
-	INVARIANT((unsigned long) i < reconstruction_table.size());
+persistent_object_manager::lookup_obj_ptr(const size_t i) const {
+	INVARIANT(i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return const_cast<persistent*>(e.addr());
 }
@@ -636,8 +635,8 @@ persistent_object_manager::lookup_obj_ptr(const long i) const {
 	reconstruction table entry.  
  */
 std::pair<persistent*, persistent_object_manager::visit_info*>
-persistent_object_manager::lookup_ptr_visit_info(const long i) const {
-	INVARIANT((unsigned long) i < reconstruction_table.size());
+persistent_object_manager::lookup_ptr_visit_info(const size_t i) const {
+	INVARIANT(i < reconstruction_table.size());
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return std::make_pair(
 		const_cast<persistent*>(e.addr()),
@@ -654,7 +653,7 @@ persistent_object_manager::check_reconstruction_table_range(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 persistent_object_manager::please_delete(const persistent* p) const {
-	const long i = lookup_ptr_index(p);
+	const size_t i = lookup_ptr_index(p);
 	INVARIANT(check_reconstruction_table_range(i));
 	reconstruction_table[i].get_visit_info().request_delete();
 }
@@ -664,7 +663,7 @@ persistent_object_manager::please_delete(const persistent* p) const {
 // DISABLED, UNUSED
 void
 persistent_object_manager::do_not_delete(const persistent* p) const {
-	const long i = lookup_ptr_index(p);
+	const size_t i = lookup_ptr_index(p);
 	INVARIANT(check_reconstruction_table_range(i));
 	reconstruction_table[i].get_visit_info().forbid_delete();
 }
@@ -676,8 +675,8 @@ persistent_object_manager::do_not_delete(const persistent* p) const {
 	If it is NULL, then will allocate and initialize to zero.  
  */
 size_t*
-persistent_object_manager::lookup_ref_count(const long i) const {
-	STACKTRACE("lookup_ref_count(long)");
+persistent_object_manager::lookup_ref_count(const size_t i) const {
+	STACKTRACE("lookup_ref_count(size_t)");
 	const reconstruction_table_entry& e = reconstruction_table[i];
 	return e.count();
 }
@@ -810,8 +809,8 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 ostream&
 persistent_object_manager::dump_text(ostream& o) const {
 	o << "Persistent Object Manager text dump: " << endl;
-	long i = 0;
-	const long max = reconstruction_table.size();
+	size_t i = 0;
+	const size_t max = reconstruction_table.size();
 	o << "\ti\taddr\t\ttype\t\targ\thead\ttail" << endl;
 	for ( ; i < max; i++) {
 		const reconstruction_table_entry& e = reconstruction_table[i];
@@ -821,7 +820,7 @@ persistent_object_manager::dump_text(ostream& o) const {
 		o << e.addr();
 		o.width(w);
 		o << '\t' << e.type() 
-			<< '\t' << (size_t) e.get_alloc_arg()
+			<< '\t' << size_t(e.get_alloc_arg())
 			<< '\t' << e.head_pos()
 			<< '\t' << e.tail_pos() << endl;
 	}

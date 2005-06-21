@@ -3,7 +3,7 @@
 	Testing portability of libc's getopt.  
 	Copied (slightly modified) from:
 	http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html#Example-of-Getopt
-	$Id: getopt_test.cc,v 1.1 2005/05/20 19:28:46 fang Exp $
+	$Id: getopt_test.cc,v 1.1.8.1 2005/06/21 06:47:06 fang Exp $
  */
 
 #include <iostream>
@@ -60,15 +60,15 @@ main (int argc, char *argv[]) {
 	if (index == argc) {
 		cout << "No standard arguments found, expecting input "
 			"from stdin:" << endl;
-		char c;
-		while (cin.get(c)) cout.put(c);
+		char ch;
+		while (cin.get(ch)) cout.put(ch);
 	} else {
 		for ( ; index < argc; index++) {
 			cout << "Non-option argument " << argv[index] << endl;
 			ifstream inf(argv[index]);
 			if (inf) {
-				char c;
-				while (inf.get(c)) cout.put(c);
+				char ch;
+				while (inf.get(ch)) cout.put(ch);
 			} else {
 				cout << "Couldn't open \"" << argv[index] <<
 					"\" for reading." << endl;

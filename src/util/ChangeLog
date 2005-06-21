@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44-anal-03:
+	  Updated a bunch of files to conform to new warning strictness, 
+		describe in src/ChangeLog (same entry).
+	  persistent_object_manager's indices have been updated to
+		size_t (unsigned int) type.  
+
+
 2005-06-20	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-44-anal-02:

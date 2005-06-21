@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.18.2.1 2005/06/21 01:08:25 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.18.2.2 2005/06/21 06:47:08 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -165,7 +165,7 @@ persistent_object_manager::__read_pointer(istream& f,
 		const P& ptr, const raw_pointer_tag) const {
 	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
-	unsigned long i;
+	size_t i;
 	read_value(f, i);
 	INVARIANT(check_reconstruction_table_range(i));
 #if 0
