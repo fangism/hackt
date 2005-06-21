@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_thing.h"
 	Named, pooled object for testing.  
-	$Id: named_pooled_thing.h,v 1.2 2005/01/28 19:58:57 fang Exp $
+	$Id: named_pooled_thing.h,v 1.2.62.1 2005/06/21 13:47:09 fang Exp $
  */
 
 #ifndef	__NAMED_POOLED_THING_H__
@@ -71,7 +71,7 @@ public:
 #endif
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT_DECLARATION(named_thing);
+	SPECIALIZE_UTIL_WHAT_DECLARATION(named_thing)
 }
 
 #endif	// __NAMED_POOLED_THING_H__

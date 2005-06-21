@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.15 2005/06/19 01:58:31 fang Exp $
+	$Id: art_parser_token.h,v 1.15.2.1 2005/06/21 13:47:02 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_H__
@@ -49,7 +49,7 @@ public:
 
 	CHECK_META_EXPR_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_int
 
 //=============================================================================
@@ -80,7 +80,7 @@ public:
 
 	CHECK_META_EXPR_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(16);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(16)
 };	// end class token_float
 
 //=============================================================================
@@ -104,7 +104,7 @@ public:
 
 	CHECK_META_EXPR_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_bool
 
 //-----------------------------------------------------------------------------
@@ -131,7 +131,7 @@ public:
 
 	CHECK_META_EXPR_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(8);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(8)
 };	// end class token_else
 
 //-----------------------------------------------------------------------------
@@ -216,7 +216,7 @@ public:
 
 	TYPE_BASE_CHECK_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_int_type
 
 //-----------------------------------------------------------------------------
@@ -233,7 +233,7 @@ public:
 
 	TYPE_BASE_CHECK_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_bool_type
 
 //-----------------------------------------------------------------------------
@@ -267,7 +267,7 @@ public:
 
 	TYPE_BASE_CHECK_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pbool_type
 
 //-----------------------------------------------------------------------------
@@ -284,7 +284,7 @@ public:
 
 	TYPE_BASE_CHECK_PROTO;
 
-	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32);
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pint_type
 
 //=============================================================================

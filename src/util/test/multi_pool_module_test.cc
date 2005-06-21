@@ -2,7 +2,7 @@
 	\file "multi_pool_module_test.cc"
 	Testing robust static initialization of separate memory pools.
 	This is just a dummy file to provide a main symbol.
-	$Id: multi_pool_module_test.cc,v 1.2 2005/01/28 19:58:56 fang Exp $
+	$Id: multi_pool_module_test.cc,v 1.2.62.1 2005/06/21 13:47:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
@@ -18,7 +18,7 @@
 #include "stacktrace.h"
 #include "static_trace.h"
 
-STATIC_TRACE_BEGIN("test-main");
+STATIC_TRACE_BEGIN("test-main")
 
 USING_STACKTRACE
 
@@ -46,5 +46,5 @@ main(int argc, char* argv[]) {
 	return 0;
 }
 
-STATIC_TRACE_END("test-main");
+STATIC_TRACE_END("test-main")
 
