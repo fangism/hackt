@@ -1,17 +1,26 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.6 2005/05/19 18:43:37 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.6.8.1 2005/06/21 01:08:29 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 #define	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 
+#include "util/memory/chunk_map_pool.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_CHUNK_MAP_POOL
+
 #include <iostream>
 #include "util/macros.h"
-#include "util/memory/chunk_map_pool.h"
 #include "util/numeric/nibble_tables.h"
 #include "util/numeric/integer_traits.h"
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MEMORY_CHUNK_MAP_POOL
+#define	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
+#define	EXTERN_TEMPLATE_UTIL_WHAT
+#endif
+
 #include "util/memory/destruction_policy.tcc"
 #include "util/what.tcc"
 
@@ -307,5 +316,6 @@ CHUNK_MAP_POOL_CLASS::status(ostream& o) const {
 }	// end namespace memory
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_MEMORY_CHUNK_MAP_POOL
 #endif	// __UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
 

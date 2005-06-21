@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.4 2005/05/23 01:02:37 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.4.8.1 2005/06/21 01:08:24 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -9,12 +9,14 @@
 
 #include "util/multikey_assoc.h"
 
+// predefine to suppress template definition
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
+
 #include <iostream>
 #include <limits>
 #include <functional>
 #include <algorithm>
 #include <iterator>
-
 
 #define	DEBUG_SLICE		0
 
@@ -480,5 +482,6 @@ multikey_assoc<1,C>::is_compact(void) const {
 
 #undef	DEBUG_SLICE
 
+#endif	EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
 #endif	// __UTIL_MULTIKEY_ASSOC_TCC__
 

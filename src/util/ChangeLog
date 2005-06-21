@@ -1,5 +1,30 @@
 # "src/util/ChangeLog"
 
+2005-06-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44-anal-02:
+	  Every util/.tcc file has been updated with the following
+		macros for controlling template instantiation:
+		EXTERN_TEMPLATE_<file-name>
+			predefine to suppress template method definitions
+			and only include the .h header of the same class(es).
+		EXCLUDE_DEPENDENT_TEMPLATES_<file-name>
+			predefine to exclude the template definitions
+			that this file/class depends on.  
+	  By default, when the user does nothing different, all dependent
+		definitions are included recursively in .tcc files.  
+		So If you don't even think about it, it just works.  
+	  We now explicitly suppress template instantiation by *hiding*
+		the complete template definition when the above macros
+		are used.  Since -pendantic was added to the compiler 
+		dialiect flags, replace "extern template" with these
+		macros.  
+	  Caveat: There can be cross-interactive effects between 
+		multiple .tcc files that share the same dependencies, 
+		so be warned.  You can always diagnose a problem
+		by using -save-temps and examining the .ii files.  
+
+
 2005-06-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-42-CHP-01-19:

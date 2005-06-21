@@ -1,7 +1,7 @@
 /**
 	\file "util/sublist.tcc"
 	Template method definitions for sublist.
-	$Id: sublist.tcc,v 1.3 2005/05/10 04:51:30 fang Exp $
+	$Id: sublist.tcc,v 1.3.12.1 2005/06/21 01:08:26 fang Exp $
  */
 
 #ifndef	__UTIL_SUBLIST_TCC__
@@ -11,6 +11,8 @@
 // not needed because we only need the list iterator
 
 #include "util/sublist.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_SUBLIST
 
 namespace util {
 //=============================================================================
@@ -42,5 +44,6 @@ sublist<T>::~sublist() { }
 //=============================================================================
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_SUBLIST
 #endif	// __UTIL_SUBLIST_TCC__
 

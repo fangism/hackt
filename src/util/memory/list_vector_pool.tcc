@@ -3,14 +3,22 @@
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.5 2005/05/10 04:51:33 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.5.12.1 2005/06/21 01:08:29 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 #define	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 
-#include <iostream>
 #include "util/memory/list_vector_pool.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_LIST_VECTOR_POOL
+
+#include <iostream>
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MEMORY_LIST_VECTOR_POOL
+#define	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
+#endif
+
 #include "util/memory/destruction_policy.tcc"
 
 
@@ -387,5 +395,6 @@ operator != (const list_vector_pool<T>&, const list_vector_pool<T>&) {
 
 #undef	INVARIANT_ASSERT
 
+#endif	// EXTERN_TEMPLATE_UTIL_MEMORY_LIST_VECTOR_POOL
 #endif	//	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
 

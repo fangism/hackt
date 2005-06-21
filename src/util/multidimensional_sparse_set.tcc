@@ -1,16 +1,26 @@
 /**
 	\file "util/multidimensional_sparse_set.tcc"
 	Template method definitions for multidimensional_sparse_set.
-	$Id: multidimensional_sparse_set.tcc,v 1.5 2005/05/19 18:43:35 fang Exp $
+	$Id: multidimensional_sparse_set.tcc,v 1.5.8.1 2005/06/21 01:08:24 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 
+#include "util/multidimensional_sparse_set.h"
+
+// predefine to suppress definition
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_SPARSE_SET
+
 #include <iostream>
 #include "util/sstream.h"		// used by the dumo method
-#include "util/multidimensional_sparse_set.h"
 #include "util/memory/count_ptr.tcc"
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIDIMENSIONAL_SPARSE_SET
+#define	EXTERN_TEMPLATE_UTIL_QMAP
+#define	EXTERN_TEMPLATE_UTIL_DISCRETE_INTERVAL_SET
+#endif
+
 #include "util/qmap.tcc"
 #include "util/discrete_interval_set.tcc"
 
@@ -422,6 +432,8 @@ multidimensional_sparse_set<1,T,R,L>::query_compact_dimensions(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //=============================================================================
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_SPARSE_SET
 
 #endif	// __UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 

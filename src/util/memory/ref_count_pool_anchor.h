@@ -1,13 +1,12 @@
 /**
 	\file "util/memory/ref_count_pool_anchor.h"
 	Interface to reference-count pool allocator.
-	$Id: ref_count_pool_anchor.h,v 1.2 2005/05/19 18:43:38 fang Exp $
+	$Id: ref_count_pool_anchor.h,v 1.2.8.1 2005/06/21 01:08:30 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_REF_COUNT_POOL_ANCHOR_H__
 #define	__UTIL_MEMORY_REF_COUNT_POOL_ANCHOR_H__
 
-// mutually dependent
 #include "util/memory/ref_count_pool.h"
 
 /**

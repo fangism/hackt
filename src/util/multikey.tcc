@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.7 2005/05/10 04:51:26 fang Exp $
+	$Id: multikey.tcc,v 1.7.12.1 2005/06/21 01:08:24 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -9,12 +9,17 @@
 
 #include "util/multikey.h"
 
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY
+
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
 
-#include "util/IO_utils.tcc"
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIKEY
+#define	EXTERN_TEMPLATE_UTIL_IO_UTILS
+#endif
 
+#include "util/IO_utils.tcc"
 
 namespace util {
 using util::write_value;
@@ -607,6 +612,8 @@ value_reader<multikey_generic<K> >::operator () (value_type& v) {
 
 //=============================================================================
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIKEY
 
 #endif	// __UTIL_MULTIKEY_TCC__
 

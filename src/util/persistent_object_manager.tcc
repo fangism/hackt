@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.18 2005/06/19 01:58:52 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.18.2.1 2005/06/21 01:08:25 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -10,21 +10,29 @@
 // #define	ENABLE_STACKTRACE		1
 // depend on whatever file includes this
 
+#include "util/persistent_object_manager.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_PERSISTENT_OBJECT_MANAGER
+
 #include <fstream>
 #include <iostream>
 
-#include "util/persistent_object_manager.h"
 #include "util/macros.h"
-#include "util/new_functor.tcc"
 #include "util/stacktrace.h"
-#include "util/IO_utils.tcc"
 
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_PERSISTENT_OBJECT_MANAGER
+#define	EXTERN_TEMPLATE_UTIL_NEW_FUNCTOR
+#define	EXTERN_TEMPLATE_UTIL_IO_UTILS
+#define	EXTERN_TEMPLATE_UTIL_WHAT
+#endif
+
+#include "util/new_functor.tcc"
+#include "util/IO_utils.tcc"
 #include "util/what.tcc"
+
 #if ENABLE_STACKTRACE
 #include "util/sstream.h"
 #endif
-
-
 
 
 #define	WELCOME_TO_TYPE_REGISTRATION			0
@@ -477,5 +485,6 @@ persistent_object_manager::visit_info::__mark_visit(const P&,
 //=============================================================================
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_PERSISTENT_OBJECT_MANAGER
 #endif	//	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 

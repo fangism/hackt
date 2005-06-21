@@ -1,18 +1,28 @@
 /**
 	\file "util/multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.6 2005/05/10 04:51:27 fang Exp $
+	$Id: multikey_map.tcc,v 1.6.12.1 2005/06/21 01:08:24 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
 #define	__UTIL_MULTIKEY_MAP_TCC__
 
+#include "util/multikey_map.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_MAP
+
+#include <iostream>
 #include <limits>
 #include <functional>
 #include <algorithm>
 #include <iterator>
 
-#include "util/multikey_map.h"
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIKEY_MAP
+#define	EXTERN_TEMPLATE_UTIL_MULTIKEY
+#define	EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
+#define	EXTERN_TEMPLATE_UTIL_IO_UTILS
+#endif
+
 #include "util/multikey.tcc"
 #include "util/multikey_assoc.tcc"
 #include "util/IO_utils.tcc"
@@ -111,5 +121,6 @@ multikey_map<D,K,T,M>::read(istream& f) {
 //=============================================================================
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIKEY_MAP
 #endif	// __UTIL_MULTIKEY_MAP_TCC__
 
