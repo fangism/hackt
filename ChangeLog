@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-06-21	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-45-merged-anal-04:
+	  Merged in branch revisions for anal-retentitiveness, 
+		turning on max warnings, warnings-to-errors.  
+	  Code was cleaned up, no non-standardness remains.  
+	  Life is good.  
+
+
 2005-06-20	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-44:

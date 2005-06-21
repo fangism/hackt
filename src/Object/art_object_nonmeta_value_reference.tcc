@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_value_reference.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_nonmeta_value_reference.tcc,v 1.2 2005/06/19 01:58:47 fang Exp $
+ 	$Id: art_object_nonmeta_value_reference.tcc,v 1.3 2005/06/21 21:26:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_TCC__
@@ -20,6 +20,7 @@
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 #endif
 
+#include <iostream>
 #include <exception>
 #include <algorithm>
 
@@ -29,6 +30,7 @@
 #include "Object/art_object_type_ref.h"		// for data_type_reference
 // #include "Object/art_object_expr_const.h"	// for const_index_list
 
+#include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
 #include "util/memory/count_ptr.tcc"

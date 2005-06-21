@@ -1,13 +1,21 @@
 /**
 	\file "util/qmap.tcc"
 	Template class method definitions for queryable map.  
-	$Id: qmap.tcc,v 1.4 2005/05/10 04:51:29 fang Exp $
+	$Id: qmap.tcc,v 1.5 2005/06/21 21:26:38 fang Exp $
  */
 
 #ifndef	__UTIL_QMAP_TCC__
 #define	__UTIL_QMAP_TCC__
 
 #include "util/qmap.h"
+
+// predefine to suppress template definition
+#ifndef	EXTERN_TEMPLATE_UTIL_QMAP
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_QMAP
+// don't bother...
+#endif
+
 #include "util/STL/map.tcc"
 #include "util/const_assoc_query.tcc"
 
@@ -37,6 +45,8 @@ qmap<K,T,C,A>::clean(void) {
 }
 
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_QMAP
 
 #endif	// __UTIL_QMAP_TCC__
 

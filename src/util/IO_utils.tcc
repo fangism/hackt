@@ -1,11 +1,16 @@
 /**
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
-	$Id: IO_utils.tcc,v 1.9 2005/05/10 04:51:22 fang Exp $
+	Consider renaming this file to value_read/writer...
+	$Id: IO_utils.tcc,v 1.10 2005/06/21 21:26:36 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
 #define __UTIL_IO_UTILS_TCC__
+
+#include "util/IO_utils.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_IO_UTILS
 
 #include <string>
 #include <iostream>
@@ -16,17 +21,18 @@
 // only needed for functional for_each where call_traits are needed.  
 // #include "util/binders.h"
 
-#include "util/IO_utils.h"
-
 namespace util {
 using std::ostream;
 using std::istream;
 //=============================================================================
 // automatic template instantiation suppression
 
+#if 0
+// breaks -pedantic
 // these are instantiated in "IO_utils.cc"
 extern template void write_value(ostream&, const char&);
 extern template void read_value(istream&, char&);
+#endif
 
 //=============================================================================
 /**
@@ -61,7 +67,8 @@ value_reader<T>::operator () (T& t) {
  */
 template <class T>
 // inline
-void    write_value(ostream& f, const T& v) {
+void
+write_value(ostream& f, const T& v) {
 	f.write(reinterpret_cast<const char*>(&v), sizeof(T));
 }
 
@@ -76,7 +83,8 @@ void    write_value(ostream& f, const T& v) {
  */
 template <class T>
 // inline
-void    read_value(istream& f, T& v) {
+void
+read_value(istream& f, T& v) {
 	f.read(reinterpret_cast<char*>(&v), sizeof(T));
 }
 
@@ -327,5 +335,6 @@ read_map(istream& f, M& m) {
 
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_IO_UTILS
 #endif	// __UTIL_IO_UTILS_TCC__
 

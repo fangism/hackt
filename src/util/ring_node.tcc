@@ -1,13 +1,15 @@
 /**
 	\file "util/ring_node.tcc"
 	Implementation of ring_node class.
-	$Id: ring_node.tcc,v 1.3 2005/05/10 04:51:30 fang Exp $
+	$Id: ring_node.tcc,v 1.4 2005/06/21 21:26:38 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_TCC__
 #define	__UTIL_RING_NODE_TCC__
 
 #include "util/ring_node.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_RING_NODE
 
 namespace util {
 //=============================================================================
@@ -100,5 +102,6 @@ ring_node_derived<T>::contains(const this_type& r) const {
 //=============================================================================
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_RING_NODE
 #endif	// __UTIL_RING_NODE_TCC__
 

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/art++-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: art++-lex.ll,v 1.16 2005/06/19 01:58:50 fang Exp $
+ *	$Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp $
  */
 
 /***************** FOREWORD ***************************************************
@@ -587,7 +587,7 @@ EXPORT		"export"
 "\\\\"	{ *string_buf_ptr++ = '\\';	STRING_UPDATE();	}
 
 {OCTAL_ESCAPE}	{
-	int result;
+	unsigned int result;
 	sscanf(yytext +1, "%o", &result);
 	if ( result > 0xff ) {
 		cerr << "bad octal escape sequence " << yytext << " " <<

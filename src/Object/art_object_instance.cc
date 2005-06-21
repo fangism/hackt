@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.44 2005/06/19 01:58:41 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45 2005/06/21 21:26:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -601,10 +601,11 @@ physical_instance_collection::dump(ostream& o) const {
 	parent_type::dump(o);
 	if (is_partially_unrolled()) {
 		if (dimensions) {
-			indent indenter(o);
+			INDENT_SECTION(o);
 			o << auto_indent << "unrolled indices: {" << endl;
 			{
-				indent indenter(o);
+				// INDENT_SECTION macro not making unique IDs
+				const indent __ind__(o);
 				dump_unrolled_instances(o);
 			}
 			o << auto_indent << "}";        // << endl;

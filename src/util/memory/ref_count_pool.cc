@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/ref_count_pool.cc"
 	Implementation of reference count pool allocator.  
-	$Id: ref_count_pool.cc,v 1.2 2005/05/19 18:43:37 fang Exp $
+	$Id: ref_count_pool.cc,v 1.3 2005/06/21 21:26:41 fang Exp $
  */
 
 /**
@@ -36,6 +36,9 @@ namespace memory {
 //-----------------------------------------------------------------------------
 /**
 	Bootstrapping!
+	This method returns a reference count pointer to the refernce count
+	pool, which is needed to guarantee that the count pool at 
+	least out-lives every reference-count pointer.  
  */
 ref_count_pool_ref_type
 get_ref_count_allocator_anchor(void) {
@@ -60,8 +63,13 @@ get_ref_count_allocator_anchor(void) {
 	return ref_count_pool_ref_type(pool, count);
 }
 
-//-----------------------------------------------------------------------------
+//=============================================================================
+// explicit template instantiations
 
+// should match ref_count_pool_type in "ref_count_pool.h"
+template class chunk_map_pool<size_t, 32>;
+
+//=============================================================================
 }	// end namespace memory
 }	// end namespace util
 

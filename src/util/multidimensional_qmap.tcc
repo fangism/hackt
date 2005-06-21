@@ -1,17 +1,25 @@
 /**
 	\file "util/multidimensional_qmap.tcc"
 	Template method definitions for multidimensional_qmap class.
-	$Id: multidimensional_qmap.tcc,v 1.4 2005/05/23 01:02:37 fang Exp $
+	$Id: multidimensional_qmap.tcc,v 1.5 2005/06/21 21:26:37 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 #define	__UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 
+#include "util/multidimensional_qmap.h"
+
+// predefine to suppress this definition
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_QMAP
+
 #include <iostream>
 #include <numeric>		// for accumulate
-
 #include "util/sstream.h"
-#include "util/multidimensional_qmap.h"
+
+// predefine to suppress dependent template definitions
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_MULTIDIMENSIONAL_QMAP
+#define	EXTERN_TEMPLATE_UTIL_QMAP
+#endif
 
 #include "util/qmap.tcc"
 
@@ -194,6 +202,8 @@ multidimensional_qmap<1,K,T,L>::dump(ostream& o, const string& pre) const {
 
 //=============================================================================
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_QMAP
 
 #endif	// __UTIL_MULTIDIMENSIONAL_QMAP_TCC__
 

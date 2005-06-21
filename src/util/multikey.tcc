@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.7 2005/05/10 04:51:26 fang Exp $
+	$Id: multikey.tcc,v 1.8 2005/06/21 21:26:37 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -9,12 +9,17 @@
 
 #include "util/multikey.h"
 
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY
+
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
 
-#include "util/IO_utils.tcc"
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIKEY
+#define	EXTERN_TEMPLATE_UTIL_IO_UTILS
+#endif
 
+#include "util/IO_utils.tcc"
 
 namespace util {
 using util::write_value;
@@ -64,10 +69,10 @@ template <template <class> class S>
 multikey<D,K>::multikey(const S<K>& s, const K i) {
 	const size_t sz = s.size();
 	if (D < sz) {
-		size_t i = 0;
+		size_t j = 0;
 		typename S<K>::const_iterator iter = s.begin();
-		for ( ; i<sz; i++)
-			(*this)[i] = *iter;
+		for ( ; j<sz; j++)
+			(*this)[j] = *iter;
 	} else {
 		copy(s.begin(), s.end(), this->begin());
 		fill(&(*this)[sz-1] +1, this->end(), i);
@@ -546,11 +551,11 @@ multikey_generator_generic<K>::multikey_generator_generic(const LP& l) :
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
 void
 multikey_generator_generic<K>::validate(void) const {
-	const_iterator min = lower_corner.begin();
-	const_iterator max = upper_corner.begin();
+	const_iterator min_iter = lower_corner.begin();
+	const_iterator max_iter = upper_corner.begin();
 	const const_iterator min_end = lower_corner.end();
-	for ( ; min != min_end; min++, max++) {
-		INVARIANT(*min <= *max);
+	for ( ; min_iter != min_end; min_iter++, max_iter++) {
+		INVARIANT(*min_iter <= *max_iter);
 	}
 }
 
@@ -573,11 +578,11 @@ typename multikey_generator_generic<K>::corner_type&
 multikey_generator_generic<K>::operator ++ (int) {
 	reverse_iterator inc = this->rbegin();
 	const const_reverse_iterator msp = this->rend();
-	const_reverse_iterator min = lower_corner.rbegin();
-	const_reverse_iterator max = upper_corner.rbegin();
-	for ( ; inc != msp; inc++, min++, max++) {
-		if (*inc >= *max)
-			*inc = *min;
+	const_reverse_iterator min_iter = lower_corner.rbegin();
+	const_reverse_iterator max_iter = upper_corner.rbegin();
+	for ( ; inc != msp; inc++, min_iter++, max_iter++) {
+		if (*inc >= *max_iter)
+			*inc = *min_iter;
 		else {
 			(*inc)++;
 			break;
@@ -607,6 +612,8 @@ value_reader<multikey_generic<K> >::operator () (value_type& v) {
 
 //=============================================================================
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIKEY
 
 #endif	// __UTIL_MULTIKEY_TCC__
 

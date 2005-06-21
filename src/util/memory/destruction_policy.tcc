@@ -1,14 +1,17 @@
 /**
 	\file "util/memory/destruction_policy.tcc"
 	Implementation of policy-specific explicit destructor invokers.  
-	$Id: destruction_policy.tcc,v 1.4 2005/05/10 04:51:33 fang Exp $
+	$Id: destruction_policy.tcc,v 1.5 2005/06/21 21:26:40 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 #define	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 
-#include "util/STL/construct_fwd.h"
 #include "util/memory/destruction_policy.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
+
+#include "util/STL/construct_fwd.h"
 
 namespace util {
 namespace memory {
@@ -77,5 +80,6 @@ lazy_construct(T* const p, const lazy_destruction_tag) {
 }	// end namespace memory
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
 #endif	// __UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
 

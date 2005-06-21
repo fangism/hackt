@@ -1,16 +1,24 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.11 2005/05/10 04:51:28 fang Exp $
+	$Id: packed_array.tcc,v 1.12 2005/06/21 21:26:38 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
 #define	__UTIL_PACKED_ARRAY_TCC__
 
+#include "util/packed_array.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
+
 #include <iostream>
 #include <numeric>
 #include <iterator>
 #include "util/macros.h"
-#include "util/packed_array.h"
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_PACKED_ARRAY
+#define	EXTERN_TEMPLATE_UTIL_MULTIKEY
+#endif
+
 #include "util/multikey.tcc"
 
 namespace util {
@@ -633,5 +641,6 @@ packed_array_generic<K,T>::read(istream& i) {
 //=============================================================================
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 #endif	// __UTIL_PACKED_ARRAY_TCC__
 

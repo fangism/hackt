@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_b.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_b.cc,v 1.2 2005/01/28 19:58:58 fang Exp $
+	$Id: pool_module_b.cc,v 1.3 2005/06/21 21:26:42 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -46,11 +46,11 @@ STATIC_TRACE_BEGIN("twiddle_dee module")
 REQUIRES_STACKTRACE_STATIC_INIT
 
 #if 0
-REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dum);
-REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dee);
+REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dum)
+REQUIRES_UTIL_WHAT_STATIC_INIT(twiddle_dee)
 #endif
 
-REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dum);
+REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dum)
 LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(twiddle_dee, 8)
 
 static const excl_ptr<twiddle_dum>

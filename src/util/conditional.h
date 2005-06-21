@@ -1,7 +1,7 @@
 /**
 	\file "util/conditional.h"
 	Functor compositions for conditional or predicated execution.  
-	$Id: conditional.h,v 1.7 2005/05/10 04:51:22 fang Exp $
+	$Id: conditional.h,v 1.8 2005/06/21 21:26:36 fang Exp $
  */
 
 #ifndef	__UTIL_CONDITIONAL_H__
@@ -47,7 +47,7 @@ for_each_if (In first, In last, Pred p, Op& f) {
 		first++;
 	}
 	return f;
-};	// end for_each_if
+}	// end for_each_if
 
 //-----------------------------------------------------------------------------
 #if 0

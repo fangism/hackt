@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.3 2005/05/19 18:43:39 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.4 2005/06/21 21:26:42 fang Exp $
  */
 
 #define ENABLE_STATIC_TRACE				1
@@ -23,7 +23,7 @@ STATIC_TRACE_BEGIN("named_pooled_thing.o")
 
 #include "memory/list_vector_pool.tcc"
 
-USING_STACKTRACE;
+USING_STACKTRACE
 
 namespace util {
 namespace memory {
@@ -98,7 +98,7 @@ named_thing::~named_thing() {
 #endif
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT_DEFINITION(named_thing, "named_thing");
+	SPECIALIZE_UTIL_WHAT_DEFINITION(named_thing, "named_thing")
 }
 
 #if ENABLE_POOL

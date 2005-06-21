@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.22 2005/06/19 01:58:51 fang Exp $
+	$Id: art++-parse.yy,v 1.23 2005/06/21 21:26:36 fang Exp $
  */
 
 %{
@@ -2124,21 +2124,21 @@ complex_aggregate_reference_list
  */
 static
 void
-yyfreestacks(const short* yyss, const short* yyssp, 
-		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
-		const YYSTYPE yylval) {
+yyfreestacks(const short* _yyss_, const short* _yyssp_, 
+		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
+		const YYSTYPE _yylval_) {
 	const short* s;
 	const YYSTYPE* v;
-	s=yyss+1;
-	v=yyvs+1;
-	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
+	s=_yyss_+1;
+	v=_yyvs_+1;
+	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
 		if (v) {
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
 	if (!at_eof()) {
 		// free the last token (if not EOF)
-		yy_union_lookup_delete(yylval, yychar);
+		yy_union_lookup_delete(_yylval_, yychar);
 	}
 }
 
@@ -2253,22 +2253,22 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	cerr << "acceptable tokens are: " << endl;
 	int accept_count = 0;
 	{
-		int yychar;
+		int _yychar_ = 0;
 		int yyn;
-		for (yychar = 0; yychar <= MAXIMUM_BOGOSITY; yychar++) {
+		for ( ; _yychar_ <= MAXIMUM_BOGOSITY; _yychar_++) {
 			// try all terminal tokens
 			if ((yyn = yysindex[*yyssp]) && 
-					(yyn += yychar) >= 0 && 
+					(yyn += _yychar_) >= 0 && 
 					yyn <= YYTABLESIZE && 
-					yycheck[yyn] == yychar) {
-				cerr << '\t' << yyname[yychar]
+					yycheck[yyn] == _yychar_) {
+				cerr << '\t' << yyname[_yychar_]
 					<< " (shift)" << endl;
 				accept_count++;
 			} else if ((yyn = yyrindex[*yyssp]) && 
-					(yyn += yychar) >= 0 && 
+					(yyn += _yychar_) >= 0 && 
 					yyn <= YYTABLESIZE && 
-					yycheck[yyn] == yychar) {
-				cerr << '\t' << yyname[yychar]
+					yycheck[yyn] == _yychar_) {
+				cerr << '\t' << yyname[_yychar_]
 					<< " (reduce)" << endl;
 				accept_count++;
 			}

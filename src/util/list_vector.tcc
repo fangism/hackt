@@ -2,18 +2,26 @@
 	file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.8 2005/05/10 04:51:25 fang Exp $
+	$Id: list_vector.tcc,v 1.9 2005/06/21 21:26:37 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
 #define	__UTIL_LIST_VECTOR_TCC__
 
-#include <iostream>
-#include <numeric>
-#include "util/STL/list.tcc"
 #include "util/list_vector.h"
 
-// should we include this automatically?
+// to suppress definition entirely
+#ifndef	EXTERN_TEMPLATE_UTIL_LIST_VECTOR
+
+#include "util/STL/list.tcc"			// is just <list>
+#include <iostream>
+#include <numeric>
+
+// by default include dependent template definitions
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_LIST_VECTOR
+#define	EXTERN_TEMPLATE_UTIL_QMAP
+#endif
+
 #include "util/qmap.tcc"
 
 namespace util {
@@ -48,8 +56,8 @@ LIST_VECTOR_CLASS::check_invariants(void) const {
 	const size_type vdiff = vec_list.size() -vec_map.size() -2;
 	const difference_type dist = distance(this->begin(), this->end());
 	const difference_type rdist = distance(this->rbegin(), this->rend());
-#if 1
 	assert(dist == rdist);
+#if 0
 	if (dist != difference_type(this_size)) {
 		if (this_size) {
 			cerr << "begin() at " << &*this->begin() <<
@@ -148,6 +156,8 @@ LIST_VECTOR_CLASS::dump_details(ostream& o) const {
 
 //=============================================================================
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_LIST_VECTOR
 
 #endif	// __UTIL_LIST_VECTOR_TCC__
 

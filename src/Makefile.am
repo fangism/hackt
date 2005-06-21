@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.64 2005/06/19 01:58:28 fang Exp $
+#	$Id: Makefile.am,v 1.65 2005/06/21 21:26:33 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -49,7 +49,7 @@ bin_PROGRAMS = artc art++2obj artobjdump artobjunroll prsobjdemo
 noinst_PROGRAMS = dirgen art_persistent_table getopt_test
 
 # convenience libraries
-noinst_LTLIBRARIES = libart++.la libbogus.la libfangutil.la
+noinst_LTLIBRARIES = libart++.la libhacktparsers.la libbogus.la libfangutil.la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -379,13 +379,21 @@ PARSER_CC_FILES = \
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libart___la_SOURCES = \
-	$(PARSER_CC_FILES) $(PARSER_H_FILES) \
 	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	config.h \
 	main/main_funcs.cc \
 	main/main_funcs.h
+
+# build up main library from pieces
+# Here, libart++ will include all of libhacktparsers
+libart___la_LIBADD = libhacktparsers.la
+
+# compile lexer and parser into separate library to for convenient way
+# of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS
+libhacktparsers_la_SOURCES = \
+	$(PARSER_CC_FILES) $(PARSER_H_FILES)
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 
@@ -490,16 +498,21 @@ AM_CPPFLAGS = -I$(srcdir)
 
 # extremely anal-retentive
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused -Werror
-WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
-WARN_CXXFLAGS = 
-# -Woverloaded-virtual	# kills much of AST/ code, fix later...
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
+	-Wcast-qual -Wcast-align -Wconversion -Werror
+# -Wshadow
+WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
+	-Wbad-function-cast -Wnested-externs
+WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wold-style-cast	# kills bison/yacc parser code... consider separate lib
 # -Wsign-promo
-DIALECT_FLAGS = -ansi
+DIALECT_FLAGS = -ansi -pedantic-errors
 # -pedantic		# kills some pointer class conversions, fix later...
 MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
+# These flags are used to cancel out previous warning flags, 
+# such exceptions are needed for the automatic lexers and parsers
+PARSER_NOWARN_FLAGS = -Wno-old-style-cast -Wno-shadow
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
@@ -514,6 +527,11 @@ AM_LFLAGS =
 # *COUGH* *HACK*:
 # NO_FANCY_YYERROR tells lexer/art++-lex.cc to use un-transfomed symbol names
 libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
+libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
+# here we give the exceptional flags to the lexer and parser, 
+# which are generated automatically by yacc/bison/[f]lex for 
+# traditional C compilers.  (Not the cleanest code ever generated.)
+libhacktparsers_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 
 # artc_CPPFLAGS = $(AM_CPPFLAGS)
 # art__2obj_CPPFLAGS = $(AM_CPPFLAGS)
@@ -566,8 +584,6 @@ endif
 # what about their dependencies?  
 # automake produces empty placeholders (never updated) for them initially, 
 # so make will not die.
-Object/art_object_extern_templates.hchk:
-	@$(TOUCH) $@
 
 util/using_istream.hchk:
 	@$(TOUCH) $@

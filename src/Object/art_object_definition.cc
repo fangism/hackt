@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.49 2005/06/19 01:58:37 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.50 2005/06/21 21:26:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -1957,7 +1957,8 @@ ostream&
 process_definition::dump(ostream& o) const {
 //	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
-	INDENT_SECTION(o);
+	// unique ID not working with INDENT_SECTION marco... :(
+	const indent _ind__(o);	
 	// now dump ports
 	port_formals.dump(o);
 

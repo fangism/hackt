@@ -1,13 +1,16 @@
 /**
 	\file "util/what.tcc"
 	Default implementation for user-defined type-names.
-	$Id: what.tcc,v 1.6 2005/05/10 04:51:31 fang Exp $
+	$Id: what.tcc,v 1.7 2005/06/21 21:26:39 fang Exp $
  */
 
 #ifndef	__UTIL_WHAT_TCC__
 #define	__UTIL_WHAT_TCC__
 
 #include "util/what.h"
+
+#ifndef	EXTERN_TEMPLATE_UTIL_WHAT
+
 #include <string>
 #include <typeinfo>
 
@@ -94,5 +97,6 @@ what<T* const>::name(void) {
 
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_WHAT
 #endif	// __UTIL_WHAT_TCC__
 

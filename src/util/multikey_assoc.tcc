@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.4 2005/05/23 01:02:37 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.5 2005/06/21 21:26:37 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -9,12 +9,14 @@
 
 #include "util/multikey_assoc.h"
 
+// predefine to suppress template definition
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
+
 #include <iostream>
 #include <limits>
 #include <functional>
 #include <algorithm>
 #include <iterator>
-
 
 #define	DEBUG_SLICE		0
 
@@ -394,11 +396,11 @@ multikey_assoc<D,C>::index_extremities(void) const {
 	if (this->empty())
 		return return_type();
 	const const_iterator iter = this->begin();
-	const const_iterator end = this->end();
+	const const_iterator t_end = this->end();
 	const key_type&
 		start = _Select1st<value_type>()(*iter);
 	key_pair_type ext(start, start);
-	ext = accumulate(iter, end, ext,
+	ext = accumulate(iter, t_end, ext,
 		typename key_type::accumulate_extremities());
 	return_type ret;
 	copy(ext.first.begin(), ext.first.end(),
@@ -453,16 +455,16 @@ multikey_assoc<1,C>::is_compact(void) const {
 		return return_type();
 	}
 	const const_iterator first = this->begin();
-	const const_iterator end = this->end();
-	const_iterator last = end;
+	const const_iterator this_end = this->end();
+	const_iterator last = this_end;
 	last--;
 	index_type k = _Select1st<value_type>()(*first);
 	const index_type k_end = _Select1st<value_type>()(*last);
 	for ( ; k <= k_end; k++) {
 		const const_iterator i = find(k);
-		if (i == this->end() ||
+		if (i == this_end ||
 			_Select2nd<value_type>()(*i) == mapped_type())
-//		if (i == this->end() || i->second == mapped_type())
+//		if (i == this_end || i->second == mapped_type())
 //		if ((*this)[k] == mapped_type())
 		{        // static_cast const?
 			return return_type();
@@ -480,5 +482,6 @@ multikey_assoc<1,C>::is_compact(void) const {
 
 #undef	DEBUG_SLICE
 
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
 #endif	// __UTIL_MULTIKEY_ASSOC_TCC__
 

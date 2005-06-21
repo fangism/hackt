@@ -1,16 +1,26 @@
 /**
 	\file "util/multidimensional_sparse_set.tcc"
 	Template method definitions for multidimensional_sparse_set.
-	$Id: multidimensional_sparse_set.tcc,v 1.5 2005/05/19 18:43:35 fang Exp $
+	$Id: multidimensional_sparse_set.tcc,v 1.6 2005/06/21 21:26:37 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 #define	__UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 
+#include "util/multidimensional_sparse_set.h"
+
+// predefine to suppress definition
+#ifndef	EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_SPARSE_SET
+
 #include <iostream>
 #include "util/sstream.h"		// used by the dumo method
-#include "util/multidimensional_sparse_set.h"
 #include "util/memory/count_ptr.tcc"
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIDIMENSIONAL_SPARSE_SET
+#define	EXTERN_TEMPLATE_UTIL_QMAP
+#define	EXTERN_TEMPLATE_UTIL_DISCRETE_INTERVAL_SET
+#endif
+
 #include "util/qmap.tcc"
 #include "util/discrete_interval_set.tcc"
 
@@ -270,9 +280,9 @@ multidimensional_sparse_set<D,T,R,L>::query_compact_dimensions(
 		return compact_dimensions();
 	// else proceed
 	range_list_type sub(r);
-	typename range_list_type::const_iterator t = sub.begin();
-	const T min = t->first;
-	const T max = t->second;
+	const typename range_list_type::const_iterator tb = sub.begin();
+	const T min = tb->first;
+	const T max = tb->second;
 	INVARIANT(min <= max);
 	sub.pop_front();
 	T i = min;
@@ -284,12 +294,12 @@ multidimensional_sparse_set<D,T,R,L>::query_compact_dimensions(
 	if (s.empty())
 		return range_list_type();
 	for (i++; i<=max; i++) {
-		map_value_type probe =  // shadows
+		map_value_type lprobe =  // shadows
 			static_cast<const map_type&>(index_map)[i];
-		if (!probe)     // referencing un-instantiated index
+		if (!lprobe)     // referencing un-instantiated index
 			return range_list_type();
 		range_list_type t =
-			probe->query_compact_dimensions(sub);
+			lprobe->query_compact_dimensions(sub);
 		if (t.empty())
 			return range_list_type();
 		else if (!traits_type::match_range_list(s,t))
@@ -402,8 +412,8 @@ multidimensional_sparse_set<1,T,R,L>::query_compact_dimensions(
 		const T min = f->first;
 		const T max = f->second;
 		if (index_map.contains_entirely(min, max) != index_map.end()) {
-			range_type r(min, max);
-			ret.push_back(r);
+			const range_type rng(min, max);
+			ret.push_back(rng);
 		}
 	} else {
 		// not specified, entire set must be compact, 
@@ -411,8 +421,8 @@ multidimensional_sparse_set<1,T,R,L>::query_compact_dimensions(
 		if (index_map.size() == 1) {
 			typename map_type::const_iterator
 				m = index_map.begin();
-			range_type r(m->first, m->second);
-			ret.push_back(r);
+			const range_type rng(m->first, m->second);
+			ret.push_back(rng);
 		}
 		// else is not packed, return empty
 	}
@@ -422,6 +432,8 @@ multidimensional_sparse_set<1,T,R,L>::query_compact_dimensions(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //=============================================================================
 }	// end namespace util
+
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIDIMENSIONAL_SPARSE_SET
 
 #endif	// __UTIL_MULTIDIMENSIONAL_SPARSE_SET_TCC__
 

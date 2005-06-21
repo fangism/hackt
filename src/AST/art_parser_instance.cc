@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.27 2005/06/19 01:58:30 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28 2005/06/21 21:26:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -667,9 +667,9 @@ connection_statement::make_port_connection(
 		ref_list_type::const_iterator i = temp.begin();
 		const ref_list_type::const_iterator e = temp.end();
 		for ( ; i!=e; i++) {
-			count_ptr<const meta_instance_reference_base>
-				ir(i->is_a<const meta_instance_reference_base>());
-			ret->append_meta_instance_reference(ir);
+			const count_ptr<const meta_instance_reference_base>
+				mir(i->is_a<const meta_instance_reference_base>());
+			ret->append_meta_instance_reference(mir);
 		}
 		// transfers ownership
 		return return_type(ret);

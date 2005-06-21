@@ -4,7 +4,7 @@
 	type (T) of a count_ptr isn't complete until later -- 
 	compiles should complain about destructor of incomplete type.  
 
-	$Id: count_ptr.tcc,v 1.2 2005/05/19 18:43:37 fang Exp $
+	$Id: count_ptr.tcc,v 1.3 2005/06/21 21:26:40 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
@@ -12,8 +12,15 @@
 
 #include "util/memory/count_ptr.h"
 
+#ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
+
+#ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MEMORY_COUNT_PTR
+#define	EXTERN_TEMPLATE_UTIL_MEMORY_CHUNK_MAP_POOL
+#endif
+
 #if USE_REF_COUNT_POOL
-#include "util/memory/chunk_map_pool.tcc"
+// only include header, not definition!
+#include "util/memory/chunk_map_pool.h"
 #endif
 
 //=============================================================================
@@ -189,5 +196,6 @@ count_ptr<T>::exclusive_release(void) {
 }	// end namespace memory
 }	// end namespace util
 
+#endif	// EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
 #endif	//	__UTIL_MEMORY_COUNT_PTR_TCC__
 

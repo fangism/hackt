@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.8 2005/06/19 01:58:50 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9 2005/06/21 21:26:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -28,6 +28,7 @@
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 #endif
 
+#include <iostream>
 #include <exception>
 #include <algorithm>
 
@@ -42,6 +43,7 @@
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/art_object_extern_templates.h"
 
+#include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
 #include "util/memory/count_ptr.tcc"

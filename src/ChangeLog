@@ -1,5 +1,73 @@
 "ChangeLog"
 
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-45-merged-anal-04:
+	  Merged in branch revisions for anal-retentitiveness, 
+		turning on max warnings, warnings-to-errors.  
+	  Code was cleaned up, no non-standardness remains.  
+	  Life is good.  
+
+
+	* ARTXX-00-01-04-main-00-44-anal-04:
+	  Cross-checked clean, warning-free code across a few platforms
+		and gcc versions.  
+	  Ready to merge to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-44-anal-03:
+	  Instated possibly THE MOST anal retentive compiler warning policy
+		known to man.  If you don't know what the following warning
+		flags mean, I suggest learning.  
+	  In Makefile.am:
+		GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused
+			-Wpointer-arith -Wcast-qual -Wcast-align
+			-Wconversion -Werror
+		WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes
+			-Wbad-function-cast -Wnested-externs
+		WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
+		The only files that need exceptions are the yacc/lex-generated
+			parser and lexer files, which are given
+		PARSER_NOWARN_FLAGS = -Wno-old-style-cast -Wno-shadow
+			as additional flags for preliminary compilation into a 
+			separate convenience library, libhacktparsers.la.
+		libart++.la links in libhacktparser.la, so libart++.la
+			remains all-inclusive.  
+	  Rest of source code gets a minor face-lift to conform to 
+		the new compiling standard.  Mostly renaming of local
+		identifiers to satisfy -Wshadow.
+	  Minor entry also in src/util/ChangeLog.
+
+
+2005-06-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44-anal-02:
+	  Now compiling with -pedantic-errors dialect flag.
+		(read: total overkill anal retentiveness)
+	  Updated a few header/tcc files to use the new scheme of
+		suppressing implicit template instantiations.  
+	  See "src/util/ChangeLog" for details.
+	  Notably: in "Object/art_object_extern_templates.h"
+		Replaced non-ISO extern template declarations with
+		template definition-suppressing macros.  
+	  Dependent files affected: "Object/art_object_instance_collection.tcc"
+
+
+	* ARTXX-00-01-04-main-00-44-anal-01:
+	  Mini-branch dedicated to making life miserable.  
+	  The aim of this branch is to enforce the utmost strictness in
+		standard conformance and warning cleanliness.  
+	  This will only hurt a little.
+	  This revision: enforce -pedantic in CFLAGS and CXXFLAGS
+		eliminated redundant operator conversion 
+			in "util/memory/excl_ptr.h".
+		disabled uses of "extern template", a GNU extension.
+	  Upcoming:
+		Macros in .tcc files to control implicit vs. explicit
+		template instantiation by excluding dependent
+		template definition .tcc files.  
+
+
 2005-06-18	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-43-merged-CHP-01-25:

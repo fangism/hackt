@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.30 2005/06/19 01:58:31 fang Exp $
+	$Id: art_parser_token.cc,v 1.31 2005/06/21 21:26:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -160,7 +160,7 @@ token_char::string_compare(const char* d) const {
 
 ostream&
 token_char::what(ostream& o) const {
-	return o << (char) c;
+	return o << char(c);
 }
 
 //=============================================================================
@@ -488,7 +488,8 @@ token_quoted_string::~token_quoted_string() { }
 ostream&
 token_quoted_string::what(ostream& o) const {
 	// punt: handle special characters later...
-	return ((const token_string*) this)->what(o << "string: \"") << "\"";
+	return static_cast<const token_string*>(this)->what(o << "string: \"") << "\"";
+//	return token_string::what(o << "string: \"") << "\"";
 }
 
 line_position

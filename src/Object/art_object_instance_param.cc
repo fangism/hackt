@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.14 2005/06/19 01:58:44 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.15 2005/06/21 21:26:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
@@ -70,11 +70,11 @@ param_instance_collection::dump(ostream& o) const {
 	// print out the values of instances that have been unrolled
 	if (is_partially_unrolled()) {
 		if (dimensions) {
-			indent indenter(o);
+			INDENT_SECTION(o);
 			o << auto_indent <<
 				"unrolled index-value pairs: {" << endl;
 			{
-				indent indenter(o);
+				const indent __ind__(o);
 				dump_unrolled_values(o);
 			}
 			o << auto_indent << "}";	// << endl;
