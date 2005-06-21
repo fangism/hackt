@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.4.8.2 2005/06/21 06:47:07 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.4.8.3 2005/06/21 20:59:47 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -482,6 +482,6 @@ multikey_assoc<1,C>::is_compact(void) const {
 
 #undef	DEBUG_SLICE
 
-#endif	EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
+#endif	// EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
 #endif	// __UTIL_MULTIKEY_ASSOC_TCC__
 
