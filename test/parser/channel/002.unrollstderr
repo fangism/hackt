@@ -1,0 +1,38 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3e02ca0	module__	0	0	29
+	2	 0x6000c04	namespc_	0	29	53
+	3	 0x3e02cf0	chandefn	0	53	120
+	4	 0x3e02da4	dintcoll	0	120	158
+	5	 0x3e02e20	datainst	0	158	178
+	6	 0x3e02e40	datatprf	0	178	194
+	7	 0x3e02e70	datadefn	0	194	230
+	8	 0x3e02ee0	dprmlst_	0	230	246
+	9	 0x39c8028	cnstpi__	0	246	258
+	10	 0x3e02f20	bchntprf	0	258	279
+	11	 0x3e02f40	datatprf	0	279	295
+	12	 0x3e02f70	datadefn	0	295	332
+
+In module created from: ./002.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    mychan = user-def-chan (defined) mychan
+      chan(
+        bool<>
+      )
+      (
+        int<32> i
+      )
+      In channel definition "mychan", we have: {
+        i = int<32> i
+      }
+
+}
+
