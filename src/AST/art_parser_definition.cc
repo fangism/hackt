@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.24 2005/06/21 21:26:33 fang Exp $
+	$Id: art_parser_definition.cc,v 1.25 2005/06/22 02:56:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -27,6 +27,7 @@
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_node_list.tcc"
+#include "AST/art_parser_chp.h"
 
 #include "Object/art_context.h"
 #include "Object/art_object_type_ref.h"	// for builtin_channel_type_reference
@@ -477,7 +478,7 @@ user_chan_type_def::user_chan_type_def(
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
-		const language_body* s, const language_body* g, 
+		const CHP::body* s, const CHP::body* g, 
 		const char_punctuation_type* r) :
 		definition(), 
 		user_chan_type_signature(tf, df, n, dp, b, p), 
@@ -517,10 +518,12 @@ user_chan_type_def::check_build(context& c) const {
 	// only problem from here is if process was already defined.  
 	// in which case, open_channel_definition will THROW_EXIT;
 	c.open_definition<user_def_chan>(*id);		// will handle errors
-	sendb->check_build(c);
-	// useless return value, would've exited upon error already
-	recvb->check_build(c);
-	// useless return value, would've exited upon error already
+	if (!sendb->check_channel_CHP(c, true).good) {
+		THROW_EXIT;
+	}
+	if (!recvb->check_channel_CHP(c, false).good) {
+		THROW_EXIT;
+	}
 	c.close_definition<user_def_chan>();
 	// nothing better to do
 	return c.top_namespace();

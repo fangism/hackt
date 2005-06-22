@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.12 2005/06/19 01:58:29 fang Exp $
+	$Id: art_parser_chp.h,v 1.13 2005/06/22 02:56:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_H__
@@ -103,6 +103,8 @@ public:
 //=============================================================================
 /// CHP body is just a list of statements
 class body : public language_body {
+	typedef	stmt_list::checked_stmts_type		checked_stmts_type;
+	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
 protected:
 	const excl_ptr<const stmt_list>	stmts;	///< list of CHP statements
 public:
@@ -118,8 +120,22 @@ using	language_body::leftmost;
 	line_position
 	rightmost(void) const;
 
+	// common check routine
+	good_bool
+	check_CHP(checked_stmts_type&, context&) const;
+
+	// called by process-definitions
 	never_ptr<const object>
 	check_build(context&) const;
+
+	// called by channel-definitions
+	good_bool
+	check_channel_CHP(context&, const bool is_send) const;
+
+	// called by datatype-definitions
+	good_bool
+	check_datatype_CHP(context&, const bool is_set) const;
+
 };	// end class body
 
 //=============================================================================

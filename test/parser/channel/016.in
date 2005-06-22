@@ -1,0 +1,7 @@
+// "016.in" should pass, valid send and recv CHP bodies
+
+defchan my_vewwy_first_e1of2 <: chan(bool) (bool t, f, e) {
+	send { }
+	recv { }
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.2 2005/06/19 01:58:33 fang Exp $
+	$Id: art_object_CHP.cc,v 1.3 2005/06/22 02:56:34 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -97,25 +97,46 @@ action_sequence::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+action_sequence::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	m.collect_pointer_list(static_cast<const list_type&>(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 action_sequence::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(static_cast<const list_type&>(*this));
+	collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-action_sequence::write_object(const persistent_object_manager& m, 
+action_sequence::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	m.write_pointer_list(o, static_cast<const list_type&>(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-action_sequence::load_object(const persistent_object_manager& m, 
+action_sequence::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+action_sequence::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+action_sequence::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	load_object_base(m, i);
 }
 
 //=============================================================================

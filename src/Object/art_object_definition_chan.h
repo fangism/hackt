@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.2 2005/06/19 01:58:37 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.3 2005/06/22 02:56:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -9,6 +9,7 @@
 
 #include "Object/art_object_definition.h"
 #include "Object/art_object_port_formals_manager.h"
+#include "Object/art_object_CHP.h"
 
 namespace ART {
 namespace entity {
@@ -61,6 +62,8 @@ protected:
 	count_ptr<const builtin_channel_type_reference>
 						base_chan_type_ref;
 	port_formals_manager			port_formals;
+	CHP::action_sequence			send_chp;
+	CHP::action_sequence			recv_chp;
 private:
 	user_def_chan();
 public:
@@ -94,7 +97,11 @@ public:
 	attach_base_channel_type(
 		const count_ptr<const builtin_channel_type_reference>&);
 
-	// maybe add_datatypes?
+	CHP::action_sequence&
+	get_send_body(void) { return send_chp; }
+
+	CHP::action_sequence&
+	get_recv_body(void) { return recv_chp; }
 
 	never_ptr<const instance_collection_base>
 	add_port_formal(const never_ptr<instantiation_statement_base>, 

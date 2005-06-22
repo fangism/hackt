@@ -2,6 +2,15 @@
 
 2005-06-21	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-46:
+	  Added send/recv CHP bodies to user-defined channel definitions.  
+	  parser::user_chan_type_def's bodies down-typed to CHP::body.
+	  Some code clean-up.
+	  Few simple test cases to demonstrate channel CHP bodies.  
+
+
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-45-merged-anal-04:
 	  Merged in branch revisions for anal-retentitiveness, 
 		turning on max warnings, warnings-to-errors.  

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.16 2005/06/21 21:26:33 fang Exp $
+	$Id: art_parser_chp.cc,v 1.17 2005/06/22 02:56:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -27,6 +27,7 @@
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_collection.h"
+#include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 
 #include "util/what.h"
@@ -74,6 +75,7 @@ using entity::CHP::concurrent_actions;
 using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
 using entity::channel_type_reference_base;
+using entity::user_def_chan;
 using entity::process_definition;
 using entity::simple_datatype_nonmeta_value_reference;
 using entity::data_type_reference;
@@ -189,6 +191,32 @@ body::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Basic common routine to check CHP statements, 
+	with no special assembling.  
+	\return good if all succeeded, else bad.  
+ */
+good_bool
+body::check_CHP(checked_stmts_type& checked_stmts, context& c) const {
+	if (!stmts) {
+		// no CHP to add
+		return good_bool(true);
+	}
+	stmts->postorder_check_stmts(checked_stmts, c);
+	// for now, (this is wrong) construct as sequence.  
+	const const_checked_iterator i(checked_stmts.begin());
+	const const_checked_iterator e(checked_stmts.end());
+	const const_checked_iterator
+		ni(find(i, e, statement::return_type()));
+	if (ni != e) {
+		cerr << "ERROR: at least one error in CHP body." << endl;
+		return good_bool(false);
+	} else {
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This routine is special.  
 	It checks all CHP statements in the list, but assembles them
 	in the following manner:
@@ -201,22 +229,11 @@ body::rightmost(void) const {
  */
 never_ptr<const object>
 body::check_build(context& c) const {
-	STACKTRACE_VERBOSE;
-if (stmts) {
-	typedef	list<statement::return_type>	checked_stmts_type;
-	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
-#if 0
-	never_ptr<definition_base> d(c.get_current_open_definition());
-	// can be datatype or process definition...
-#endif
+	if (!stmts)
+		return never_ptr<const object>(NULL);
+	// else proceed to check body
 	checked_stmts_type checked_stmts;
-	stmts->postorder_check_stmts(checked_stmts, c);
-	// for now, (this is wrong) construct as sequence.  
-	const const_checked_iterator i(checked_stmts.begin());
-	const const_checked_iterator e(checked_stmts.end());
-	const const_checked_iterator
-		ni(find(i, e, statement::return_type()));
-	if (ni == e) {
+	if (check_CHP(checked_stmts, c).good) {
 		const never_ptr<definition_base>
 			def(c.get_current_open_definition());
 		NEVER_NULL(def);
@@ -228,7 +245,8 @@ if (stmts) {
 				<< endl;
 			return never_ptr<const object>(NULL);
 		}
-		const_checked_iterator loop_iter(i);
+		const_checked_iterator loop_iter(checked_stmts.begin());
+		const const_checked_iterator e(checked_stmts.end());
 		while (loop_iter != e) {
 			const const_checked_iterator start(loop_iter);
 			loop_iter = find_if(loop_iter, e, 
@@ -246,12 +264,41 @@ if (stmts) {
 			}
 		}
 	} else {
-		cerr << "ERROR: at least one error in CHP body." << endl;
+		// until better error handling comes along
 		THROW_EXIT;
 	}
-}
-	// else empty, no CHP to add
 	return never_ptr<const object>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks CHP in the context oc a channel definition, 
+	either the send or recv body.  
+	\param c parse context.
+	\param is_send whether or not this CHP belongs to the 
+		send body or the recv body of the channel_definition.  
+ */
+good_bool
+body::check_channel_CHP(context& c, const bool is_send) const {
+	if (!stmts)
+		return good_bool(true);
+	checked_stmts_type checked_stmts;
+	if (check_CHP(checked_stmts, c).good) {
+		const never_ptr<definition_base>
+			def(c.get_current_open_definition());
+		NEVER_NULL(def);
+		const never_ptr<user_def_chan>
+			chan_def(def.is_a<user_def_chan>());
+		NEVER_NULL(chan_def);
+		entity::CHP::action_sequence&
+			seq = is_send ? chan_def->get_send_body() :
+				chan_def->get_recv_body();
+		copy(checked_stmts.begin(), checked_stmts.end(), 
+			back_inserter(seq));
+		return good_bool(true);
+	} else {
+		return good_bool(false);
+	}
 }
 
 //=============================================================================

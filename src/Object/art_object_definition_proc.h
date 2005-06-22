@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.4 2005/06/19 01:58:38 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.5 2005/06/22 02:56:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -25,9 +25,10 @@ private:
 	typedef	definition_base		parent_type;
 protected:
 	// no new members?
-public:
+protected:
 //	process_definition_base(const string& n);
-	process_definition_base() { }
+	process_definition_base() : definition_base() { }
+public:
 virtual	~process_definition_base() { }
 
 	excl_ptr<definition_base>

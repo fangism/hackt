@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: art_object_CHP.h,v 1.2 2005/06/19 01:58:33 fang Exp $
+	$Id: art_object_CHP.h,v 1.3 2005/06/22 02:56:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_H__
@@ -48,6 +48,16 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	// helper methods needed for process_definition
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class action_sequence

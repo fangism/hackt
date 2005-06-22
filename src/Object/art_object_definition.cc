@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.50 2005/06/21 21:26:34 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.51 2005/06/22 02:56:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -644,12 +644,9 @@ user_def_chan::user_def_chan() :
 		scopespace(),
 		sequential_scope(), 
 		key(), parent(), 
-#if 0
-		datatype_list(), 
-#else
 		base_chan_type_ref(), 
-#endif
-		port_formals() {
+		port_formals(), 
+		send_chp(), recv_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -660,13 +657,9 @@ user_def_chan::user_def_chan(const never_ptr<const name_space> o,
 		scopespace(),
 		sequential_scope(), 
 		key(name), parent(o), 
-#if 0
-		datatype_list(), 
-#else
 		base_chan_type_ref(), 
-#endif
-		port_formals() {
-	// FINISH ME
+		port_formals(), 
+		send_chp(), recv_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -687,26 +680,9 @@ user_def_chan::dump(ostream& o) const {
 
 	o << endl;
 	// the list of datatype(s) carried by this channel
-#if 0
-	{
-		o << auto_indent << "chan (" << endl;
-		{
-		const indent __indent__(o);
-		datatype_list_type::const_iterator
-			i(datatype_list.begin());
-		const datatype_list_type::const_iterator
-			e(datatype_list.end());
-		for ( ; i!=e; i++) {
-			(*i)->dump(o << auto_indent) << endl;
-		}
-		}
-		o << auto_indent << ")" << endl;
-	}
-#else
 	base_chan_type_ref->dump_long(o << auto_indent);
-#endif
 	// now dump ports
-	port_formals.dump(o);
+	port_formals.dump(o << auto_indent);
 
 	// now dump rest of contents
 //	list<never_ptr<const ...> > bin;		// later sort
@@ -724,7 +700,15 @@ user_def_chan::dump(ostream& o) const {
 			// i->second->what(o) << endl;	// 1 level for now
 			i->second->dump(o) << endl;
 		}
-		// TODO: send and recv bodies
+		// CHP
+		if (!send_chp.empty()) {
+			o << auto_indent << "send-CHP:" << endl;
+			send_chp.dump(o << auto_indent) << endl;
+		}
+		if (!recv_chp.empty()) {
+			o << auto_indent << "recv-CHP:" << endl;
+			recv_chp.dump(o << auto_indent) << endl;
+		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -756,13 +740,6 @@ user_def_chan::lookup_object_here(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-#if 0
-void
-user_def_chan::add_datatype(const count_ptr<const data_type_reference>& dtr) {
-	INVARIANT(dtr);
-	datatype_list.push_back(dtr);
-}
-#else
 void
 user_def_chan::attach_base_channel_type(
 		const count_ptr<const builtin_channel_type_reference>& bc) {
@@ -770,7 +747,6 @@ user_def_chan::attach_base_channel_type(
 	INVARIANT(!base_chan_type_ref);
 	base_chan_type_ref = bc;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /**
@@ -831,16 +807,14 @@ if (!m.register_transient_object(this,
 	definition_base::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);
 	// recursively visit members...
-#if 0
-	m.collect_pointer_list(datatype_list);
-#else
 	base_chan_type_ref->collect_transient_info(m);
-#endif
 #if 0
 	// unnecessary, pointers covered by scopespace already
 	port_formals.collect_transient_info_base(m);
 #endif
 	sequential_scope::collect_transient_info_base(m);
+	send_chp.collect_transient_info_base(m);
+	recv_chp.collect_transient_info_base(m);
 }
 }
 
@@ -855,15 +829,12 @@ user_def_chan::write_object(
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
-#if 0
-	m.write_pointer_list(f, datatype_list);
-#else
 	m.write_pointer(f, base_chan_type_ref);
-#endif
 	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
-	// body
+	send_chp.write_object_base(m, f);
+	recv_chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -876,15 +847,12 @@ user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
-#if 0
-	m.read_pointer_list(f, datatype_list);
-#else
 	m.read_pointer(f, base_chan_type_ref);
-#endif
 	port_formals.load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
-	// body
+	send_chp.load_object_base(m, f);
+	recv_chp.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1983,7 +1951,7 @@ process_definition::dump(ostream& o) const {
 			o << auto_indent << "prs:" << endl;
 			prs.dump(o);	// << endl;
 		}
-		// PRS
+		// CHP
 		if (!chp.empty()) {
 			o << auto_indent << "chp:" << endl;
 			chp.dump(o << auto_indent) << endl;

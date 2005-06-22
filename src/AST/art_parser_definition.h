@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.15 2005/06/19 01:58:29 fang Exp $
+	$Id: art_parser_definition.h,v 1.16 2005/06/22 02:56:34 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -17,6 +17,9 @@ namespace entity {
 	class process_definition;
 }
 namespace parser {
+namespace CHP {
+	class body;
+}
 //=============================================================================
 /**
 	Abstract base class for definitions of complex types, 
@@ -383,16 +386,16 @@ protected:
 //	const excl_ptr<const chan_type>		bct;	// inherited
 //	const excl_ptr<const data_param_decl_list>	params;	// inherited
 	const excl_ptr<const char_punctuation_type>	lb;	///< left brace
-	const excl_ptr<const language_body>	sendb;	///< set body
-	const excl_ptr<const language_body>	recvb;	///< get body
+	const excl_ptr<const CHP::body>		sendb;	///< set body
+	const excl_ptr<const CHP::body>		recvb;	///< get body
 	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
 public:
 	user_chan_type_def(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, 
-		const char_punctuation_type* l, const language_body* s, 
-		const language_body* g, const char_punctuation_type* r);
+		const char_punctuation_type* l, const CHP::body* s, 
+		const CHP::body* g, const char_punctuation_type* r);
 
 	~user_chan_type_def();
 
