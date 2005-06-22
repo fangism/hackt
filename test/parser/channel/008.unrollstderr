@@ -11,7 +11,7 @@ Persistent Object Manager text dump:
 	7	 0x4302000	enumdefn	0	198	256
 	8	 0x4302060	bchntprf	0	256	277
 	9	 0x4302080	datatprf	0	277	293
-	10	 0x4302090	datadefn	0	293	330
+	10	 0x4302090	datadefn	0	293	346
 
 In module created from: ./008.in (unrolled)
 In namespace "", we have: {

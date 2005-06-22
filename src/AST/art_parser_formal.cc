@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.22 2005/06/19 01:58:30 fang Exp $
+	$Id: art_parser_formal.cc,v 1.23 2005/06/22 22:13:32 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -93,7 +93,8 @@ data_param_id::rightmost(void) const {
 never_ptr<const object>
 data_param_id::check_build(context& c) const {
 	STACKTRACE("data_param_id::check_build()");
-	INVARIANT(c.get_current_prototype().is_a<user_def_chan>());
+	// INVARIANT(c.get_current_prototype().is_a<user_def_chan>());
+	// not true anymore!
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
 	if (dim) {
@@ -183,6 +184,17 @@ data_param_decl_list::~data_param_decl_list() { }
  */
 good_bool
 data_param_decl_list::check_chan_ports(context& c) const {
+	parent_type::check_build(c);
+	// would've exited by now if there was an error.  
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation temporary until I have more time...
+ */
+good_bool
+data_param_decl_list::check_data_ports(context& c) const {
 	parent_type::check_build(c);
 	// would've exited by now if there was an error.  
 	return good_bool(true);

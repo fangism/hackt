@@ -8,13 +8,13 @@ Persistent Object Manager text dump:
 	4	 0x43023e4	dboolcol	0	158	192
 	5	 0x4302440	datainst	0	192	212
 	6	 0x4302460	datatprf	0	212	228
-	7	 0x4302470	datadefn	0	228	265
-	8	 0x43024d4	dboolcol	0	265	299
-	9	 0x4302530	datainst	0	299	319
-	10	 0x4302554	dboolcol	0	319	353
-	11	 0x43025b0	datainst	0	353	373
-	12	 0x43025d0	bchntprf	0	373	394
-	13	 0x43025f0	datatprf	0	394	410
+	7	 0x4302470	datadefn	0	228	281
+	8	 0x4302514	dboolcol	0	281	315
+	9	 0x4302570	datainst	0	315	335
+	10	 0x4302594	dboolcol	0	335	369
+	11	 0x43025f0	datainst	0	369	389
+	12	 0x4302610	bchntprf	0	389	410
+	13	 0x4302630	datatprf	0	410	426
 
 In module created from: ./016.in (unrolled)
 In namespace "", we have: {

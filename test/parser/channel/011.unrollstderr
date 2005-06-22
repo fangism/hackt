@@ -12,13 +12,13 @@ Persistent Object Manager text dump:
 	8	 0x4302874	dintcoll	0	250	288
 	9	 0x4302a50	datainst	0	288	308
 	10	 0x4302a70	datatprf	0	308	324
-	11	 0x4302a80	datadefn	0	324	360
-	12	 0x4302ae0	dprmlst_	0	360	376
-	13	 0x4302af0	spimref_	0	376	396
-	14	 0x4302b20	bchntprf	0	396	417
-	15	 0x4302b40	datatprf	0	417	433
-	16	 0x4302b50	dprmlst_	0	433	449
-	17	 0x4302b60	spimref_	0	449	469
+	11	 0x4302a80	datadefn	0	324	376
+	12	 0x4302b20	dprmlst_	0	376	392
+	13	 0x4302b30	spimref_	0	392	412
+	14	 0x4302b60	bchntprf	0	412	433
+	15	 0x4302b80	datatprf	0	433	449
+	16	 0x4302b90	dprmlst_	0	449	465
+	17	 0x4302ba0	spimref_	0	465	485
 
 In module created from: ./011.in (unrolled)
 In namespace "", we have: {

@@ -8,9 +8,9 @@ Persistent Object Manager text dump:
 	4	 0x4301da4	dintcoll	0	114	156
 	5	 0x4301e00	datainst	0	156	176
 	6	 0x4301e20	datatprf	0	176	192
-	7	 0x4301e30	datadefn	0	192	228
-	8	 0x4301e90	dprmlst_	0	228	244
-	9	 0x374a028	cnstpi__	0	244	256
+	7	 0x4301e30	datadefn	0	192	244
+	8	 0x4301ed0	dprmlst_	0	244	260
+	9	 0x3716028	cnstpi__	0	260	272
 
 In module created from: ./049.in (unrolled)
 In namespace "", we have: {
@@ -20,7 +20,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    food = process-definition (declared) food      (
+    food = process-definition (declared) food(
         int<32> sleep
       )
       In definition "food", we have: {

@@ -8,19 +8,19 @@ Persistent Object Manager text dump:
 	4	 0x4302b54	dboolcol	0	140	174
 	5	 0x4302c60	datainst	0	174	194
 	6	 0x4302c80	datatprf	0	194	210
-	7	 0x4302c90	datadefn	0	210	247
-	8	 0x4302cf4	dboolcol	0	247	281
-	9	 0x4302d50	datainst	0	281	301
-	10	 0x4302d70	datatprf	0	301	317
-	11	 0x4816408	PRSpuldn	0	317	334
-	12	 0x4302d88	PRSlitrl	0	334	346
-	13	 0x4302f10	sdbmref_	0	346	366
-	14	 0x4302f40	sdbmref_	0	366	386
-	15	 0x4816e08	PRSpulup	0	386	403
-	16	 0x4302f78	PRSnot__	0	403	415
-	17	 0x4302d94	PRSlitrl	0	415	427
-	18	 0x4303100	sdbmref_	0	427	447
-	19	 0x4303130	sdbmref_	0	447	467
+	7	 0x4302c90	datadefn	0	210	263
+	8	 0x4302d34	dboolcol	0	263	297
+	9	 0x4302d90	datainst	0	297	317
+	10	 0x4302db0	datatprf	0	317	333
+	11	 0x4816a08	PRSpuldn	0	333	350
+	12	 0x4302dc8	PRSlitrl	0	350	362
+	13	 0x4302f50	sdbmref_	0	362	382
+	14	 0x4302f80	sdbmref_	0	382	402
+	15	 0x4816e08	PRSpulup	0	402	419
+	16	 0x4302fb8	PRSnot__	0	419	431
+	17	 0x4302dd4	PRSlitrl	0	431	443
+	18	 0x4303140	sdbmref_	0	443	463
+	19	 0x4303170	sdbmref_	0	463	483
 
 In module created from: ./007.in (unrolled)
 In namespace "", we have: {
@@ -30,7 +30,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    myinverter = process-definition (defined) myinverter      (
+    myinverter = process-definition (defined) myinverter(
         bool<> a
         bool<> b
       )

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.51 2005/06/22 02:56:34 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.52 2005/06/22 22:13:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -24,7 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/hash_qmap.tcc"
 #include "util/hash_specializations.h"		// substitute for the following
 
-#include "Object/art_object_definition.h"
+#include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 #include "Object/art_object_type_ref.h"
@@ -1166,14 +1166,21 @@ void
 built_in_datatype_def::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("built_in_data::write_object()");
+	static const port_formals_manager port_formals;
+	static const CHP::action_sequence fake_chp;
 	write_string(f, key);
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
 	// bogus template and port formals
 	definition_base::write_object_base_fake(m, f);	// is empty
 	scopespace::write_object_base_fake(m, f);
+	m.write_pointer(f, count_ptr<const data_type_reference>(NULL));
+	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base_fake(m, f);
+	// fake definition body
+	fake_chp.write_object_base(m, f);
+	fake_chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1526,7 +1533,6 @@ enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class user_def_datatype method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// private empty constructor
 user_def_datatype::user_def_datatype() :
 		definition_base(), 
@@ -1534,7 +1540,10 @@ user_def_datatype::user_def_datatype() :
 		scopespace(),
 		sequential_scope(), 
 		key(), 
-		parent() {
+		parent(), 
+		base_type(), 
+		port_formals(), 
+		set_chp(), get_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1547,7 +1556,10 @@ user_def_datatype::user_def_datatype(
 		scopespace(),
 		sequential_scope(), 
 		key(name), 
-		parent(o) {
+		parent(o), 
+		base_type(), 
+		port_formals(), 
+		set_chp(), get_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1562,7 +1574,41 @@ user_def_datatype::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
-	return what(o) << ": " << key;
+//	return what(o) << ": " << key;
+	definition_base::dump(o);	// dump template signature first
+	INDENT_SECTION(o);
+	o << endl;
+	base_type->dump(o << auto_indent);
+	// now dump ports
+	port_formals.dump(o << auto_indent);
+
+	// now dump rest of contents
+//	list<never_ptr<const ...> > bin;		// later sort
+	o << auto_indent <<
+		"In datatype definition \"" << key << "\", we have: {" << endl;
+	{	// begin indent level
+		const indent __indent__(o);
+		used_id_map_type::const_iterator
+			i = used_id_map.begin();
+		const used_id_map_type::const_iterator
+			e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			// pair_dump?
+			o << auto_indent << i->first << " = ";
+			// i->second->what(o) << endl;	// 1 level for now
+			i->second->dump(o) << endl;
+		}
+		// CHP
+		if (!set_chp.empty()) {
+			o << auto_indent << "set-CHP:" << endl;
+			set_chp.dump(o << auto_indent) << endl;
+		}
+		if (!get_chp.empty()) {
+			o << auto_indent << "get-CHP:" << endl;
+			get_chp.dump(o << auto_indent) << endl;
+		}
+	}	// end indent scope
+	return o << auto_indent << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1598,6 +1644,58 @@ user_def_datatype::lookup_object_here(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::attach_base_data_type(
+		const count_ptr<const data_type_reference>& d) {
+	INVARIANT(!base_type);
+	NEVER_NULL(d);
+	base_type = d;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Shamelessly ripped off from user_def_chan's, 
+	Ripped off from process_definition's.
+ */
+never_ptr<const instance_collection_base>
+user_def_datatype::add_port_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id) {
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	NEVER_NULL(f);
+	INVARIANT(f.is_a<data_instantiation_statement>());
+	// check and make sure identifier wasn't repeated in formal list!
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return return_type(NULL);
+	}
+	}
+
+	const return_type pf(add_instance(f, id));
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);
+
+	// since we already checked used_id_map, there cannot be a repeat
+	// in the port_formals_list!
+	port_formals.add_port_formal(pf);
+	INVARIANT(lookup_port_formal(id));
+	return pf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Override's definition_base's port formal lookup.  
+	\return pointer to port's instantiation if found, else NULL.  
+ */
+never_ptr<const instance_collection_base>
+user_def_datatype::lookup_port_formal(const string& id) const {
+	return port_formals.lookup_port_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
 user_def_datatype::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
@@ -1625,9 +1723,16 @@ user_def_datatype::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-
+	STACKTRACE("user_def_datatype::collect_transient()");
 // later: template formals
 	sequential_scope::collect_transient_info_base(m);
+	scopespace::collect_transient_info_base(m);
+	if (base_type)
+		base_type->collect_transient_info(m);
+	// no need to call port_formals.collect_transient_info, 
+	// already covered by scopespace::collect...
+	set_chp.collect_transient_info_base(m);
+	get_chp.collect_transient_info_base(m);
 }
 }
 
@@ -1640,14 +1745,19 @@ if (!m.register_transient_object(this,
 void
 user_def_datatype::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE("user_def_datatype::write_object()");
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
 //	write_object_port_formals(m);
 	scopespace::write_object_base(m, f);
+	m.write_pointer(f, base_type);
+	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
 	// body
+	set_chp.write_object_base(m, f);
+	get_chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1660,9 +1770,13 @@ user_def_datatype::load_object(
 	definition_base::load_object_base(m, f);
 //	load_object_port_formals(m);
 	scopespace::load_object_base(m, f);
+	m.read_pointer(f, base_type);
+	port_formals.load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
 	// body
+	set_chp.load_object_base(m, f);
+	get_chp.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

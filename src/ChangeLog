@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-06-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-47:
+	  Added CHP bodies to user-defined-datatype (set, get), 
+		even though I don't know what these do yet.
+	  Added port-formals and data-type-reference base to 
+		user_def_datatype.  
+	  As a result, the fake built-in definition for int and bool
+		are bigger by 16 bytes.  Nearly every unrollstderr
+		test output was updated to reflect this change.  
+	  Split off "Object/art_object_definition_data.h" from
+		"Object/art_object_definition.h".
+	  Parser now checks and handles datatype's CHP, similarly to
+		channel definitions.  
+		
+
 2005-06-21	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-46:

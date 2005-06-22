@@ -13,9 +13,9 @@ Persistent Object Manager text dump:
 	9	 0x43025c4	dintcoll	0	278	323
 	10	 0x4302620	datainst	0	323	343
 	11	 0x4302640	datatprf	0	343	359
-	12	 0x4302650	datadefn	0	359	395
-	13	 0x43026b0	dprmlst_	0	395	411
-	14	 0x43026c0	spimref_	0	411	431
+	12	 0x4302650	datadefn	0	359	411
+	13	 0x43026f0	dprmlst_	0	411	427
+	14	 0x4302700	spimref_	0	427	447
 
 In module created from: ./017.in (unrolled)
 In namespace "", we have: {
@@ -30,7 +30,7 @@ In namespace "", we have: {
     something_wide = process-definition (defined) something_wide<
       pint<> W (default = pint-inst-ref ::default_width)
       >
-      (
+(
       )
       In definition "something_wide", we have: {
         W = pint<> W (default = pint-inst-ref ::default_width)

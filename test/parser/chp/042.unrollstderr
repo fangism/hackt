@@ -9,24 +9,24 @@ Persistent Object Manager text dump:
 	5	 0x4303590	chaninst	0	187	207
 	6	 0x43035b0	bchntprf	0	207	228
 	7	 0x43035d0	datatprf	0	228	244
-	8	 0x43035e0	datadefn	0	244	281
-	9	 0x4303644	chancoll	0	281	319
-	10	 0x43036a0	chaninst	0	319	339
-	11	 0x43036c0	bchntprf	0	339	360
-	12	 0x43036e0	datatprf	0	360	376
-	13	 0x43036f4	dboolcol	0	376	410
-	14	 0x4303750	datainst	0	410	430
-	15	 0x4303770	datatprf	0	430	446
-	16	 0x4303780	CHPloop_	0	446	458
-	17	 0x4303790	CHPloop_	0	458	470
-	18	 0x43037a0	CHPrecv_	0	470	490
-	19	 0x43037c0	schnnref	0	490	506
-	20	 0x43037d0	sdbnref_	0	506	522
-	21	 0x43037f0	CHPloop_	0	522	534
-	22	 0x4303800	CHPloop_	0	534	546
-	23	 0x4303810	CHPsend_	0	546	566
-	24	 0x4303830	schnnref	0	566	582
-	25	 0x4802004	cnstpb__	0	582	591
+	8	 0x43035e0	datadefn	0	244	297
+	9	 0x4303684	chancoll	0	297	335
+	10	 0x43036e0	chaninst	0	335	355
+	11	 0x4303700	bchntprf	0	355	376
+	12	 0x4303720	datatprf	0	376	392
+	13	 0x4303734	dboolcol	0	392	426
+	14	 0x4303790	datainst	0	426	446
+	15	 0x43037b0	datatprf	0	446	462
+	16	 0x43037c0	CHPloop_	0	462	474
+	17	 0x43037d0	CHPloop_	0	474	486
+	18	 0x43037e0	CHPrecv_	0	486	506
+	19	 0x4303800	schnnref	0	506	522
+	20	 0x4303810	sdbnref_	0	522	538
+	21	 0x4303830	CHPloop_	0	538	550
+	22	 0x4303840	CHPloop_	0	550	562
+	23	 0x4303850	CHPsend_	0	562	582
+	24	 0x4303870	schnnref	0	582	598
+	25	 0x4802004	cnstpb__	0	598	607
 
 In module created from: ./042.in (unrolled)
 In namespace "", we have: {

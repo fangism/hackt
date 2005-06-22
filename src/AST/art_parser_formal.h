@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.h"
 	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.13 2005/06/19 01:58:30 fang Exp $
+	$Id: art_parser_formal.h,v 1.14 2005/06/22 22:13:32 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_FORMAL_H__
@@ -108,6 +108,9 @@ public:
 
 	good_bool
 	check_chan_ports(context&) const;
+
+	good_bool
+	check_data_ports(context&) const;
 
 };	// end class data_param_decl_list
 

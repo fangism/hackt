@@ -8,16 +8,16 @@ Persistent Object Manager text dump:
 	4	 0x4302834	dboolcol	0	160	194
 	5	 0x4302890	datainst	0	194	214
 	6	 0x43028b0	datatprf	0	214	230
-	7	 0x43028c0	datadefn	0	230	267
-	8	 0x4302924	dboolcol	0	267	301
-	9	 0x4302980	datainst	0	301	321
-	10	 0x43029a4	dboolcol	0	321	355
-	11	 0x4302a00	datainst	0	355	375
-	12	 0x4302a24	dboolcol	0	375	409
-	13	 0x4302a80	datainst	0	409	429
-	14	 0x4302aa0	bchntprf	0	429	450
-	15	 0x4302ac0	datatprf	0	450	466
-	16	 0x4302ad0	enumdefn	0	466	524
+	7	 0x43028c0	datadefn	0	230	283
+	8	 0x4302964	dboolcol	0	283	317
+	9	 0x43029c0	datainst	0	317	337
+	10	 0x43029e4	dboolcol	0	337	371
+	11	 0x4302a40	datainst	0	371	391
+	12	 0x4302a64	dboolcol	0	391	425
+	13	 0x4302ac0	datainst	0	425	445
+	14	 0x4302ae0	bchntprf	0	445	466
+	15	 0x4302b00	datatprf	0	466	482
+	16	 0x4302b10	enumdefn	0	482	540
 
 In module created from: ./009.in (unrolled)
 In namespace "", we have: {

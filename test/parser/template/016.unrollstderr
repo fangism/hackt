@@ -10,15 +10,15 @@ Persistent Object Manager text dump:
 	6	 0x4302980	spimref_	0	197	217
 	7	 0x43029b4	pintcoll	0	217	266
 	8	 0x4302a00	pintinst	0	266	282
-	9	 0x374a028	cnstpi__	0	282	294
+	9	 0x3716028	cnstpi__	0	282	294
 	10	 0x4302a14	dintcoll	0	294	339
 	11	 0x4302a70	datainst	0	339	359
 	12	 0x4302a90	datatprf	0	359	375
-	13	 0x4302aa0	datadefn	0	375	411
-	14	 0x4302b00	dprmlst_	0	411	427
-	15	 0x4302b10	spimref_	0	427	447
-	16	 0x4800c00	piassign	0	447	467
-	17	 0x4302b40	spimref_	0	467	487
+	13	 0x4302aa0	datadefn	0	375	427
+	14	 0x4302b40	dprmlst_	0	427	443
+	15	 0x4302b50	spimref_	0	443	463
+	16	 0x4800c00	piassign	0	463	483
+	17	 0x4302b80	spimref_	0	483	503
 
 In module created from: ./016.in (unrolled)
 In namespace "", we have: {
@@ -33,7 +33,7 @@ In namespace "", we have: {
     something_wide = process-definition (defined) something_wide<
       pint<> W (default = pint-inst-ref ::default_width)
       >
-      (
+(
       )
       In definition "something_wide", we have: {
         W = pint<> W (default = pint-inst-ref ::default_width)

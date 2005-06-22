@@ -8,13 +8,13 @@ Persistent Object Manager text dump:
 	4	 0x43023b4	dboolcol	0	126	162
 	5	 0x4302410	datainst	0	162	182
 	6	 0x4302430	datatprf	0	182	198
-	7	 0x4302440	datadefn	0	198	235
-	8	 0x43024a4	dintcoll	0	235	276
-	9	 0x4302500	datainst	0	276	296
-	10	 0x4302520	datatprf	0	296	312
-	11	 0x4302530	datadefn	0	312	348
-	12	 0x4302590	dprmlst_	0	348	364
-	13	 0x374a028	cnstpi__	0	364	376
+	7	 0x4302440	datadefn	0	198	251
+	8	 0x43024e4	dintcoll	0	251	292
+	9	 0x4302540	datainst	0	292	312
+	10	 0x4302560	datatprf	0	312	328
+	11	 0x4302570	datadefn	0	328	380
+	12	 0x4302610	dprmlst_	0	380	396
+	13	 0x3716028	cnstpi__	0	396	408
 
 In module created from: ./042.in (unrolled)
 In namespace "", we have: {
@@ -24,7 +24,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    fang = process-definition (declared) fang      (
+    fang = process-definition (declared) fang(
         int<32> food
         bool<> now
       )

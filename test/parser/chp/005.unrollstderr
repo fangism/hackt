@@ -9,14 +9,14 @@ Persistent Object Manager text dump:
 	5	 0x43026a0	chaninst	0	172	192
 	6	 0x43026c0	bchntprf	0	192	213
 	7	 0x43026e0	datatprf	0	213	229
-	8	 0x43026f0	datadefn	0	229	266
-	9	 0x4302754	chancoll	0	266	304
-	10	 0x43027b0	chaninst	0	304	324
-	11	 0x43027d0	bchntprf	0	324	345
-	12	 0x43027f0	datatprf	0	345	361
-	13	 0x4302800	CHPsend_	0	361	381
-	14	 0x4302820	schnnref	0	381	397
-	15	 0x4802004	cnstpb__	0	397	406
+	8	 0x43026f0	datadefn	0	229	282
+	9	 0x4302794	chancoll	0	282	320
+	10	 0x43027f0	chaninst	0	320	340
+	11	 0x4302810	bchntprf	0	340	361
+	12	 0x4302830	datatprf	0	361	377
+	13	 0x4302840	CHPsend_	0	377	397
+	14	 0x4302860	schnnref	0	397	413
+	15	 0x4802004	cnstpb__	0	413	422
 
 In module created from: ./005.in (unrolled)
 In namespace "", we have: {

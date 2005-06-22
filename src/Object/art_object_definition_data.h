@@ -1,118 +1,22 @@
 /**
-	\file "Object/art_object_definition.h"
+	\file "Object/art_object_definition_data.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.34 2005/06/22 22:13:33 fang Exp $
+	$Id: art_object_definition_data.h,v 1.1 2005/06/22 22:13:34 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
-#define	__OBJECT_ART_OBJECT_DEFINITION_H__
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_DATA_H__
+#define	__OBJECT_ART_OBJECT_DEFINITION_DATA_H__
 
-#include "Object/art_object_definition_base.h"
-#include "Object/art_object_namespace.h"
-#include "Object/art_object_instance_management_base.h"
-
-/*********** note on use of data structures ***************
-Lists are needed for sets that need to maintain sequence, such as
-formal declarations in definitions.  Type-checking is done in order
-of elements, comparing actuals against formals one-by-one.  
-For some lists, however, we'd like constant time access to 
-elements in the sequence by hashing indices.  Hashlist provides
-this added functionality by associating a key to each element in the 
-list.  
-
-Maps...
-
-********************** end note **************************/
+#include "Object/art_object_definition.h"
+#include "Object/art_object_port_formals_manager.h"
+#include "Object/art_object_CHP.h"
 
 namespace ART {
 //=============================================================================
-// forward declarations from outside namespaces
-namespace parser {
-	// note: methods may specify string as formal types, 
-	// but you can still pass token_identifiers and token_strings
-	// because they are derived from string.
-	class token_string;
-	class token_identifier;
-}
-using parser::token_identifier;
-
-//=============================================================================
 namespace entity {
 class data_type_reference;
-using std::ostream;
-USING_LIST
-using util::memory::count_ptr;
-using util::memory::excl_ptr;
-using util::memory::never_ptr;
-
-// class definition_base declared in "art_object_base.h"
 
 //=============================================================================
-/**
-	Common interface for parameterizable (template) definitions.  
-	? Are all definitions with scopespaces templatable ?
- */
-class templatable_definition {	// : public scopespace?
-public:
-
-};	// end class templatable_definition
-
-//=============================================================================
-/**
-	Abstract base class interface for typedef alias definitions.  
-	All typedefs are templateable, and thus have their own little
-	scope space for template parameters.  
-	Awkward?
-	Why sequential scope? for the template parameters
- */
-class typedef_base : virtual public definition_base, public scopespace, 
-	public sequential_scope {
-private:
-	typedef	definition_base		definition_parent_type;
-	typedef	scopespace		scope_parent_type;
-	typedef	sequential_scope	sequential_parent_type;
-protected:
-	// no new members
-public:
-	typedef_base() : definition_base(), scopespace(), sequential_scope() { }
-
-virtual	~typedef_base();
-
-virtual	const string&
-	get_key(void) const = 0;
-
-	string
-	get_qualified_name(void) const;
-
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-	ostream&
-	dump(ostream& o) const;
-
-virtual never_ptr<const fundamental_type_reference>
-	get_base_type_ref(void) const = 0;
-
-virtual	bool
-	assign_typedef(excl_ptr<const fundamental_type_reference>& f) = 0;
-
-	excl_ptr<const fundamental_type_reference>
-	resolve_complete_type(never_ptr<const param_expr_list> p) const;
-
-private:
-virtual	void
-	load_used_id_map_object(excl_ptr<persistent>& o) = 0;
-};	// end class typedef_base
-
-//=============================================================================
-// process_definition and friends have been relocated to 
-//	"Object/art_object_definition_proc.h"
-//=============================================================================
-// datatype_definition and friends have been relocated to 
-//	"Object/art_object_definition_data.h"
-//=============================================================================
-
-#if 0
 /**
 	Base class interface for data type definitions.  
  */
@@ -298,56 +202,8 @@ private:
 	load_used_id_map_object(excl_ptr<persistent>& o);
 
 };	// end class enum_datatype_def
-#endif
 
 //-----------------------------------------------------------------------------
-/**
-	Consider templating this to make it extensible to other types.
-
-	Reserved for special built-in parameter types, pint and pbool.  
-	Nothing can really be derived from them... yet.  
-	Note that there is no intermediate param_definition class, 
-	because parameter types can only be built in; there are no
-	user-defined parameter types, for now...
-	Doesn't have a param_type_reference pointer member, because
-	type is hard-wired to the built-ins.  
- */
-class built_in_param_def : public definition_base {
-private:
-	typedef	definition_base			parent_type;
-	typedef	built_in_param_def		this_type;
-protected:
-	const string				key;
-	const never_ptr<const name_space>	parent;
-public:
-	built_in_param_def(never_ptr<const name_space> p, const string& n);
-	~built_in_param_def();
-
-	ostream& what(ostream& o) const;
-//	ostream& dump(ostream& o) const;
-
-	const string&
-	get_key(void) const;
-
-	never_ptr<const scopespace>
-	get_parent(void) const;
-
-	/** can't alias built-in param types, would be confusing */
-	excl_ptr<definition_base>
-	make_typedef(never_ptr<const scopespace> s, 
-		const token_identifier& id) const;
-
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
-
-private:
-	PERSISTENT_METHODS_DECLARATIONS
-
-};	// end class built_in_param_def
-
-//-----------------------------------------------------------------------------
-#if 0
 /**
 	Generalizable user-defined data type, which can (eventually) 
 	build upon other user-defined data types.  
@@ -359,6 +215,10 @@ private:
 protected:
 	const string				key;
 	const never_ptr<const name_space>	parent;
+	count_ptr<const data_type_reference>	base_type;
+	port_formals_manager			port_formals;
+	CHP::action_sequence			set_chp;
+	CHP::action_sequence			get_chp;
 private:
 	user_def_datatype();
 public:
@@ -386,6 +246,21 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	DEFINITION_ADD_PORT_FORMAL_PROTO;
+
+	void
+	attach_base_data_type(const count_ptr<const data_type_reference>&);
+
+	CHP::action_sequence&
+	get_set_body(void) { return set_chp; }
+
+	// yeah, I know: funny name
+	CHP::action_sequence&
+	get_get_body(void) { return get_chp; }
+
+	never_ptr<const instance_collection_base>
+	lookup_port_formal(const string&) const;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
@@ -464,24 +339,10 @@ private:
 	load_used_id_map_object(excl_ptr<persistent>& o);
 
 };	// end class datatype_definition_alias
-#endif
-
-//=============================================================================
-/// Type aliases are analogous to typedefs in C (not yet implemented)
-// for renaming convenience
-// going to use this mechanism to inherit built-in types into each namespace
-//	to accelerate their resolution, not having to search sequentially
-//	up to the global namespace.  
-// add an alias into each scope's used_id_map...
-// also templatable, for partial template spcifications?  YES
-// should we sub-type? hold off...
-// new definition class hierarchy sub-types!
-
-// class type_alias was here.
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_DEFINITION_H__
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_DATA_H__
 

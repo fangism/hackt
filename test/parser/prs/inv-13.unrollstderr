@@ -8,16 +8,16 @@ Persistent Object Manager text dump:
 	4	 0x4302804	dboolcol	0	136	170
 	5	 0x4302860	datainst	0	170	190
 	6	 0x4302880	datatprf	0	190	206
-	7	 0x4302890	datadefn	0	206	243
-	8	 0x43028f4	dboolcol	0	243	277
-	9	 0x4302950	datainst	0	277	297
-	10	 0x4815208	PRSpuldn	0	297	314
-	11	 0x4302978	PRSlitrl	0	314	326
-	12	 0x4302b00	sdbmref_	0	326	346
-	13	 0x4302b30	sdbmref_	0	346	366
-	14	 0x4815c08	PRSpulup	0	366	383
-	15	 0x4302b68	PRSnot__	0	383	395
-	16	 0x4302984	PRSlitrl	0	395	407
+	7	 0x4302890	datadefn	0	206	259
+	8	 0x4302934	dboolcol	0	259	293
+	9	 0x4302990	datainst	0	293	313
+	10	 0x4815808	PRSpuldn	0	313	330
+	11	 0x43029b8	PRSlitrl	0	330	342
+	12	 0x4302b40	sdbmref_	0	342	362
+	13	 0x4302b70	sdbmref_	0	362	382
+	14	 0x4815c08	PRSpulup	0	382	399
+	15	 0x4302ba8	PRSnot__	0	399	411
+	16	 0x43029c4	PRSlitrl	0	411	423
 
 In module created from: ./inv-13.in (unrolled)
 In namespace "", we have: {
@@ -27,7 +27,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    inv = process-definition (defined) inv      (
+    inv = process-definition (defined) inv(
         bool<> a
         bool<> b
       )

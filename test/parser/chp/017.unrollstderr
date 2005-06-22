@@ -9,26 +9,26 @@ Persistent Object Manager text dump:
 	5	 0x43038e0	chaninst	0	188	208
 	6	 0x4303900	bchntprf	0	208	229
 	7	 0x4303920	datatprf	0	229	245
-	8	 0x4303930	datadefn	0	245	282
-	9	 0x4303994	chancoll	0	282	320
-	10	 0x43039f0	chaninst	0	320	340
-	11	 0x4303a10	bchntprf	0	340	361
-	12	 0x4303a30	datatprf	0	361	377
-	13	 0x4303a44	dboolcol	1	377	406
-	14	 0x4303a90	datainst	0	406	426
-	15	 0x4303ab0	datatprf	0	426	442
-	16	 0x4303ac0	crnglst_	0	442	462
-	17	 0x4303ad4	dintcoll	0	462	500
-	18	 0x4303b30	datainst	0	500	520
-	19	 0x4303b50	datatprf	0	520	536
-	20	 0x4303b60	datadefn	0	536	572
-	21	 0x4303bc0	dprmlst_	0	572	588
-	22	 0x3781028	cnstpi__	0	588	600
-	23	 0x4303bd0	CHPsend_	0	600	620
-	24	 0x4303bf0	schnnref	0	620	636
-	25	 0x4303c00	sdbnref_	0	636	652
-	26	 0x4303c20	nindlist	0	652	668
-	27	 0x4303c30	sdinref_	0	668	684
+	8	 0x4303930	datadefn	0	245	298
+	9	 0x43039d4	chancoll	0	298	336
+	10	 0x4303a30	chaninst	0	336	356
+	11	 0x4303a50	bchntprf	0	356	377
+	12	 0x4303a70	datatprf	0	377	393
+	13	 0x4303a84	dboolcol	1	393	422
+	14	 0x4303ad0	datainst	0	422	442
+	15	 0x4303af0	datatprf	0	442	458
+	16	 0x4303b00	crnglst_	0	458	478
+	17	 0x4303b14	dintcoll	0	478	516
+	18	 0x4303b70	datainst	0	516	536
+	19	 0x4303b90	datatprf	0	536	552
+	20	 0x4303ba0	datadefn	0	552	604
+	21	 0x4303c40	dprmlst_	0	604	620
+	22	 0x3716028	cnstpi__	0	620	632
+	23	 0x4303c50	CHPsend_	0	632	652
+	24	 0x4303c70	schnnref	0	652	668
+	25	 0x4303c80	sdbnref_	0	668	684
+	26	 0x4303ca0	nindlist	0	684	700
+	27	 0x4303cb0	sdinref_	0	700	716
 
 In module created from: ./017.in (unrolled)
 In namespace "", we have: {

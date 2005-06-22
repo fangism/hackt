@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.17 2005/06/22 02:56:33 fang Exp $
+	$Id: art_parser_chp.cc,v 1.18 2005/06/22 22:13:31 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -27,6 +27,7 @@
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_collection.h"
+#include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 
@@ -76,6 +77,7 @@ using entity::CHP::guarded_action;
 using entity::CHP::condition_wait;
 using entity::channel_type_reference_base;
 using entity::user_def_chan;
+using entity::user_def_datatype;
 using entity::process_definition;
 using entity::simple_datatype_nonmeta_value_reference;
 using entity::data_type_reference;
@@ -272,7 +274,7 @@ body::check_build(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Checks CHP in the context oc a channel definition, 
+	Checks CHP in the context of a channel definition, 
 	either the send or recv body.  
 	\param c parse context.
 	\param is_send whether or not this CHP belongs to the 
@@ -293,6 +295,37 @@ body::check_channel_CHP(context& c, const bool is_send) const {
 		entity::CHP::action_sequence&
 			seq = is_send ? chan_def->get_send_body() :
 				chan_def->get_recv_body();
+		copy(checked_stmts.begin(), checked_stmts.end(), 
+			back_inserter(seq));
+		return good_bool(true);
+	} else {
+		return good_bool(false);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks CHP in the context of a data type definition, 
+	either the send or recv body.  
+	\param c parse context.
+	\param is_send whether or not this CHP belongs to the 
+		send body or the recv body of the channel_definition.  
+ */
+good_bool
+body::check_datatype_CHP(context& c, const bool is_send) const {
+	if (!stmts)
+		return good_bool(true);
+	checked_stmts_type checked_stmts;
+	if (check_CHP(checked_stmts, c).good) {
+		const never_ptr<definition_base>
+			def(c.get_current_open_definition());
+		NEVER_NULL(def);
+		const never_ptr<user_def_datatype>
+			chan_def(def.is_a<user_def_datatype>());
+		NEVER_NULL(chan_def);
+		entity::CHP::action_sequence&
+			seq = is_send ? chan_def->get_set_body() :
+				chan_def->get_get_body();
 		copy(checked_stmts.begin(), checked_stmts.end(), 
 			back_inserter(seq));
 		return good_bool(true);

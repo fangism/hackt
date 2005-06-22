@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.21 2005/06/19 01:58:37 fang Exp $
+	$Id: art_object_definition_base.h,v 1.22 2005/06/22 22:13:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -206,17 +206,15 @@ virtual	never_ptr<const instance_collection_base>
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
+#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
+	never_ptr<const instance_collection_base>			\
+	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
+		const token_identifier&)
+
 /**
 	Really, only some definitions should have ports...
  */
-virtual	never_ptr<const instance_collection_base>
-	add_port_formal(const never_ptr<instantiation_statement_base> f, 
-		const token_identifier& id);
-
-#if 0
-virtual	bool
-	exclude_object(const used_id_map_type::value_type& i) const;
-#endif
+virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
 protected:
 	void

@@ -2,24 +2,24 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3101e50	module__	0	0	40
-	2	 0x3100144	namespc_	0	40	68
-	3	 0x3101e74	dboolcol	1	68	171
-	4	 0x3101ec0	datainst	0	171	191
-	5	 0x3101ee0	datatprf	0	191	207
-	6	 0x3101ef0	datadefn	0	207	244
-	7	 0x3101f54	crnglst_	0	244	264
-	8	 0x3100178	namespc_	0	264	303
-	9	 0x3101f84	dboolcol	3	303	1184
-	10	 0x3101f60	datainst	0	1184	1204
-	11	 0x3101fd0	datatprf	0	1204	1220
-	12	 0x3101fe4	crnglst_	0	1220	1256
-	13	 0x3101ff4	dboolcol	2	1256	1550
-	14	 0x3102040	datainst	0	1550	1570
-	15	 0x3102060	datatprf	0	1570	1586
-	16	 0x3102074	crnglst_	0	1586	1614
+	1	 0x4302770	module__	0	0	41
+	2	 0x4300144	namespc_	0	41	69
+	3	 0x4302794	dboolcol	1	69	172
+	4	 0x43027e0	datainst	0	172	192
+	5	 0x4302800	datatprf	0	192	208
+	6	 0x43028a0	datadefn	0	208	261
+	7	 0x4302810	crnglst_	0	261	281
+	8	 0x4300178	namespc_	0	281	320
+	9	 0x4302824	dboolcol	3	320	1201
+	10	 0x4302870	datainst	0	1201	1221
+	11	 0x4302890	datatprf	0	1221	1237
+	12	 0x4302940	crnglst_	0	1237	1273
+	13	 0x4302954	dboolcol	2	1273	1567
+	14	 0x43029a0	datainst	0	1567	1587
+	15	 0x43029c0	datatprf	0	1587	1603
+	16	 0x43029d0	crnglst_	0	1603	1631
 
-In module created from: -stdin- (unrolled)
+In module created from: ./014.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   1 instantiation-collections

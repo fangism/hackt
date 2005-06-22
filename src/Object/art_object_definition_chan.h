@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.3 2005/06/22 02:56:35 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.4 2005/06/22 22:13:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -103,9 +103,8 @@ public:
 	CHP::action_sequence&
 	get_recv_body(void) { return recv_chp; }
 
-	never_ptr<const instance_collection_base>
-	add_port_formal(const never_ptr<instantiation_statement_base>, 
-		const token_identifier&);
+	// from class definition_base
+	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string&) const;

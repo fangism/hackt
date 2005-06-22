@@ -2,45 +2,45 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3103d60	module__	0	0	60
-	2	 0x3100144	namespc_	0	60	84
-	3	 0x3103d84	dintcoll	1	84	550
-	4	 0x3103dd0	datainst	0	550	570
-	5	 0x3103df0	datatprf	0	570	586
-	6	 0x3103e00	datadefn	0	586	622
-	7	 0x3103e64	dprmlst_	0	622	638
-	8	 0x2496024	cnstpi__	0	638	650
-	9	 0x3103e74	crnglst_	0	650	670
-	10	 0x3103e80	datainst	0	670	690
-	11	 0x3103ea0	datatprf	0	690	706
-	12	 0x3103eb4	dprmlst_	0	706	722
-	13	 0x3103ec4	crnglst_	0	722	742
-	14	 0x3103ed0	datainst	0	742	762
-	15	 0x3103ef0	datatprf	0	762	778
-	16	 0x3103f04	dprmlst_	0	778	794
-	17	 0x3103f14	crnglst_	0	794	814
-	18	 0x3103f20	datainst	0	814	834
-	19	 0x3103f40	datatprf	0	834	850
-	20	 0x3103f54	dprmlst_	0	850	866
-	21	 0x3103f64	crnglst_	0	866	886
-	22	 0x3103f70	datainst	0	886	906
-	23	 0x3103f90	datatprf	0	906	922
-	24	 0x3103fa4	dprmlst_	0	922	938
-	25	 0x3103fb4	crnglst_	0	938	958
-	26	 0x3103fc0	datainst	0	958	978
-	27	 0x3103fe0	datatprf	0	978	994
-	28	 0x3103ff4	dprmlst_	0	994	1010
-	29	 0x3104004	crnglst_	0	1010	1030
-	30	 0x3104010	datainst	0	1030	1050
-	31	 0x3104030	datatprf	0	1050	1066
-	32	 0x3104044	dprmlst_	0	1066	1082
-	33	 0x3104054	crnglst_	0	1082	1102
-	34	 0x3104060	datainst	0	1102	1122
-	35	 0x3104080	datatprf	0	1122	1138
-	36	 0x3104094	dprmlst_	0	1138	1154
-	37	 0x31040a4	crnglst_	0	1154	1174
+	1	 0x43045c0	module__	0	0	61
+	2	 0x4300144	namespc_	0	61	85
+	3	 0x43045e4	dintcoll	1	85	551
+	4	 0x4304630	datainst	0	551	571
+	5	 0x4304650	datatprf	0	571	587
+	6	 0x4304660	datadefn	0	587	639
+	7	 0x4304700	dprmlst_	0	639	655
+	8	 0x3716028	cnstpi__	0	655	667
+	9	 0x4304710	crnglst_	0	667	687
+	10	 0x4304720	datainst	0	687	707
+	11	 0x4304740	datatprf	0	707	723
+	12	 0x4304750	dprmlst_	0	723	739
+	13	 0x4304760	crnglst_	0	739	759
+	14	 0x4304770	datainst	0	759	779
+	15	 0x4304790	datatprf	0	779	795
+	16	 0x43047a0	dprmlst_	0	795	811
+	17	 0x43047b0	crnglst_	0	811	831
+	18	 0x43047c0	datainst	0	831	851
+	19	 0x43047e0	datatprf	0	851	867
+	20	 0x43047f0	dprmlst_	0	867	883
+	21	 0x4304800	crnglst_	0	883	903
+	22	 0x4304810	datainst	0	903	923
+	23	 0x4304830	datatprf	0	923	939
+	24	 0x4304840	dprmlst_	0	939	955
+	25	 0x4304850	crnglst_	0	955	975
+	26	 0x4304860	datainst	0	975	995
+	27	 0x4304880	datatprf	0	995	1011
+	28	 0x4304890	dprmlst_	0	1011	1027
+	29	 0x43048a0	crnglst_	0	1027	1047
+	30	 0x43048b0	datainst	0	1047	1067
+	31	 0x43048d0	datatprf	0	1067	1083
+	32	 0x43048e0	dprmlst_	0	1083	1099
+	33	 0x43048f0	crnglst_	0	1099	1119
+	34	 0x4304900	datainst	0	1119	1139
+	35	 0x4304920	datatprf	0	1139	1155
+	36	 0x4304930	dprmlst_	0	1155	1171
+	37	 0x4304940	crnglst_	0	1171	1191
 
-In module created from: -stdin- (unrolled)
+In module created from: ./015.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   1 instantiation-collections

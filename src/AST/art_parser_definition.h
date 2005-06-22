@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_definition.h"
 	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.16 2005/06/22 02:56:34 fang Exp $
+	$Id: art_parser_definition.h,v 1.17 2005/06/22 22:13:32 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_DEFINITION_H__
@@ -155,12 +155,15 @@ public:
 /// user-defined data type
 class user_data_type_signature : public signature_base {
 protected:
+	typedef	never_ptr<const object>			return_type;
+protected:
 	const excl_ptr<const generic_keyword_type>	def;	///< "deftype" keyword
 	const excl_ptr<const string_punctuation_type>	dop;	///< <: operator
 	const excl_ptr<const concrete_type_ref>	bdt;	///< the represented type
 	const excl_ptr<const data_param_decl_list>
 						params;	///< implementation type
-public:
+
+protected:
 	user_data_type_signature(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, 
@@ -169,8 +172,8 @@ public:
 
 virtual	~user_data_type_signature();
 
-virtual	never_ptr<const object>
-	check_build(context& c) const;
+	return_type
+	check_signature(context& c) const;
 };	// end class user_data_type_signature
 
 //-----------------------------------------------------------------------------
@@ -208,17 +211,17 @@ protected:
 //	const excl_ptr<const token_string>	dop;	// inherited
 //	const excl_ptr<const concrete_type_ref>	bdt;	// inherited
 //	const excl_ptr<const data_param_decl_list>	params;	// inherited
-	const excl_ptr<const char_punctuation_type>	lb;	///< left brace
-	const excl_ptr<const language_body>	setb;	///< set body
-	const excl_ptr<const language_body>	getb;	///< get body
-	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
+	const excl_ptr<const brace_type>	lb;	///< left brace
+	const excl_ptr<const CHP::body>	setb;	///< set body
+	const excl_ptr<const CHP::body>	getb;	///< get body
+	const excl_ptr<const brace_type>	rb;	///< right brace
 public:
 	user_data_type_def(const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, 
-		const brace_type* l, const language_body* s,
-		const language_body* g, const brace_type* r);
+		const brace_type* l, const CHP::body* s,
+		const CHP::body* g, const brace_type* r);
 
 	~user_data_type_def();
 

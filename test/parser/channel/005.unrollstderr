@@ -8,20 +8,20 @@ Persistent Object Manager text dump:
 	4	 0x4302cc4	dintcoll	0	144	182
 	5	 0x4302de0	datainst	0	182	202
 	6	 0x4302e00	datatprf	0	202	218
-	7	 0x4302e10	datadefn	0	218	254
-	8	 0x4302e70	dprmlst_	0	254	270
-	9	 0x3715028	cnstpi__	0	270	282
-	10	 0x4302e84	dintcoll	0	282	320
-	11	 0x4302ee0	datainst	0	320	340
-	12	 0x4302f04	dintcoll	0	340	378
-	13	 0x4302f60	datainst	0	378	398
-	14	 0x4302f80	datatprf	0	398	414
-	15	 0x4302f90	dprmlst_	0	414	430
-	16	 0x3715038	cnstpi__	0	430	442
-	17	 0x4302fa0	bchntprf	0	442	467
-	18	 0x4302fc0	datatprf	0	467	483
-	19	 0x4302fd0	datadefn	0	483	520
-	20	 0x4303030	datatprf	0	520	536
+	7	 0x4302e10	datadefn	0	218	270
+	8	 0x4302eb0	dprmlst_	0	270	286
+	9	 0x3716028	cnstpi__	0	286	298
+	10	 0x4302ec4	dintcoll	0	298	336
+	11	 0x4302f20	datainst	0	336	356
+	12	 0x4302f44	dintcoll	0	356	394
+	13	 0x4302fa0	datainst	0	394	414
+	14	 0x4302fc0	datatprf	0	414	430
+	15	 0x4302fd0	dprmlst_	0	430	446
+	16	 0x3716038	cnstpi__	0	446	458
+	17	 0x4302fe0	bchntprf	0	458	483
+	18	 0x4303000	datatprf	0	483	499
+	19	 0x4303010	datadefn	0	499	552
+	20	 0x43030b0	datatprf	0	552	568
 
 In module created from: ./005.in (unrolled)
 In namespace "", we have: {

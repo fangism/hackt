@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.25 2005/06/22 02:56:34 fang Exp $
+	$Id: art_parser_definition.cc,v 1.26 2005/06/22 22:13:32 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -31,6 +31,7 @@
 
 #include "Object/art_context.h"
 #include "Object/art_object_type_ref.h"	// for builtin_channel_type_reference
+#include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 #include "Object/art_object_expr_base.h"
@@ -79,6 +80,7 @@ using entity::user_def_datatype;
 using entity::process_definition;
 using entity::typedef_base;
 using entity::builtin_channel_type_reference;
+using entity::data_type_reference;
 
 //=============================================================================
 // abstract class prototype method definitions
@@ -103,6 +105,7 @@ definition::~definition() {
 //=============================================================================
 // class signature_base method definitions
 
+// safe to inline if this is the only translation unit that uses them
 inline
 signature_base::signature_base(const template_formal_decl_list_pair* tf,
 		const token_identifier* i) :
@@ -111,6 +114,73 @@ signature_base::signature_base(const template_formal_decl_list_pair* tf,
 
 inline
 signature_base::~signature_base() {
+}
+
+
+//=============================================================================
+// class user_data_type_signature method definitions
+
+user_data_type_signature::user_data_type_signature(
+		const template_formal_decl_list_pair* tf, 
+		const generic_keyword_type* df, const token_identifier* n, 
+		const string_punctuation_type* dp, 
+		const concrete_type_ref* b, 
+		const data_param_decl_list* p) :
+		signature_base(tf,n), def(df), dop(dp), bdt(b), params(p) {
+	NEVER_NULL(def); NEVER_NULL(dop); NEVER_NULL(bdt); NEVER_NULL(params);
+}
+
+user_data_type_signature::~user_data_type_signature() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just constructs and returns an datatype definition with 
+	the appropriate signature.
+ */
+user_data_type_signature::return_type
+user_data_type_signature::check_signature(context& c) const {
+	STACKTRACE("user_data_type_signature::check_build()");
+	excl_ptr<definition_base>
+		dd(new user_def_datatype(c.get_current_namespace(), *id));
+	const never_ptr<user_def_datatype>
+		ndd(c.set_current_prototype(dd).is_a<user_def_datatype>());
+	NEVER_NULL(ndd);
+	if (temp_spec) {
+		const never_ptr<const object> o(temp_spec->check_build(c));
+		if (!o) {
+			cerr << where(*temp_spec) << endl;
+			THROW_EXIT;	// until better error reponting
+		}
+	}
+	const count_ptr<const fundamental_type_reference>
+		ftr(bdt->check_type(c));
+	if (!ftr) {
+		cerr << "ERROR in base type at " << where(*bdt) << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<const data_type_reference>
+		bdr(ftr.is_a<const data_type_reference>());
+	// does it have to be a built-in data type reference?
+	if (!bdr) {
+		cerr << "ERROR: base type of data type definition at " <<
+			where(*bdt) << " is not a data type." << endl;
+		THROW_EXIT;
+	} else {
+		ndd->attach_base_data_type(bdr);
+	}
+	if (!params->check_data_ports(c).good) {
+		cerr << "ERROR: in data ports list at " <<
+			where(*params) << endl;
+		THROW_EXIT;
+	}
+	const never_ptr<definition_base>
+		o(c.add_declaration(c.get_current_prototype()));
+	INVARIANT(!c.get_current_prototype());
+	if (!o) {
+		cerr << where(*this) << endl;
+		THROW_EXIT;
+	}
+	return o;
 }
 
 //=============================================================================
@@ -148,19 +218,11 @@ user_data_type_prototype::rightmost(void) const {
 never_ptr<const object>
 user_data_type_prototype::check_build(context& c) const {
 	STACKTRACE("user_data_type_prototype::check_build()");
-#if 0
-	never_ptr<const object> o;
-	c.declare_datatype(*this);	// really only need name
-	// visit template formals
-	o = bdt->check_build(c);
-	assert(o);
-	o = params->check_build(c);
-	assert(o);
-	c.close_datatype_definition();
-#else
-	cerr << "TO DO: user_data_type_prototype::check_build();" << endl;
-#endif
-	return c.top_namespace();
+	if (!check_signature(c)) {
+		THROW_EXIT;
+	}
+	// else would've exited already
+	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -171,9 +233,9 @@ user_data_type_def::user_data_type_def(
 		const template_formal_decl_list_pair* tf, 
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
-		const data_param_decl_list* p, const char_punctuation_type* l, 
-		const language_body* s, const language_body* g,
-		const char_punctuation_type* r) :
+		const data_param_decl_list* p, const brace_type* l, 
+		const CHP::body* s, const CHP::body* g,
+		const brace_type* r) :
 		definition(), 
 		user_data_type_signature(tf, df, n, dp, b, p), 
 		lb(l), setb(s), getb(g), rb(r) {
@@ -197,27 +259,29 @@ user_data_type_def::rightmost(void) const {
 	else		return getb->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_data_type_def::check_build(context& c) const {
-	cerr << "Fang, finish user_data_type_def::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-}
-
-/*** unveil later...
-never_ptr<const object>
-user_data_type_def::check_build(context& c) const {
-	never_ptr<const object> o;
-	c.open_datatype(*this);	// really only need name
-	o = bdt->check_build(c);
-	assert(o);
-	o = params->check_build(c);
-	assert(o);
-//	setb->check_build(c);
-//	getb->check_build(c);
-	c.close_datatype_definition();
+	STACKTRACE("user_data_type_def::check_build()");
+	user_chan_type_signature::return_type
+		o(check_signature(c));
+	if (!o) {
+		cerr << "ERROR checking signature for data-type " << *id <<
+			" doesn\'nt match that of previous declaration!  " <<
+			where(*this) << endl;
+		THROW_EXIT;
+	}
+	// check if already defined?
+	c.open_definition<user_def_datatype>(*id);
+	if (!setb->check_datatype_CHP(c, true).good) {
+		THROW_EXIT;
+	}
+	if (!getb->check_datatype_CHP(c, false).good) {
+		THROW_EXIT;
+	}
+	c.close_definition<user_def_datatype>();
 	return c.top_namespace();
 }
-***/
 
 //=============================================================================
 // class enum_signature method definitions
@@ -515,7 +579,7 @@ user_chan_type_def::check_build(context& c) const {
 			"previous declaration!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
-	// only problem from here is if process was already defined.  
+	// only problem from here is if channel type was already defined.  
 	// in which case, open_channel_definition will THROW_EXIT;
 	c.open_definition<user_def_chan>(*id);		// will handle errors
 	if (!sendb->check_channel_CHP(c, true).good) {
@@ -687,35 +751,6 @@ process_def::check_build(context& c) const {
 	c.close_definition<process_definition>();
 	// nothing better to do
 	return c.top_namespace();
-}
-
-//=============================================================================
-// class user_data_type_signature method definitions
-
-user_data_type_signature::user_data_type_signature(
-		const template_formal_decl_list_pair* tf, 
-		const generic_keyword_type* df, const token_identifier* n, 
-		const string_punctuation_type* dp, 
-		const concrete_type_ref* b, 
-		const data_param_decl_list* p) :
-		signature_base(tf,n), def(df), dop(dp), bdt(b), params(p) {
-	NEVER_NULL(def); NEVER_NULL(dop); NEVER_NULL(bdt); NEVER_NULL(params);
-}
-
-user_data_type_signature::~user_data_type_signature() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just constructs and returns an datatype definition with 
-	the appropriate signature.
- */
-never_ptr<const object>
-user_data_type_signature::check_build(context& c) const {
-	STACKTRACE("user_data_type_signature::check_build()");
-	cerr << "user_data_type_signature::check_build() FINISH ME!" << endl;
-	excl_ptr<definition_base>
-		dd(new user_def_datatype(c.get_current_namespace(), *id));
-	return c.set_current_prototype(dd);
 }
 
 //=============================================================================

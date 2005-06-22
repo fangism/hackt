@@ -10,15 +10,15 @@ Persistent Object Manager text dump:
 	6	 0x4302984	dintcoll	1	174	209
 	7	 0x43029d0	datainst	0	209	229
 	8	 0x43029f0	datatprf	0	229	245
-	9	 0x4302a00	datadefn	0	245	281
-	10	 0x4302a60	dprmlst_	0	281	297
-	11	 0x374a028	cnstpi__	0	297	309
-	12	 0x4302a70	drnglst_	0	309	325
-	13	 0x4302a94	dynrng__	0	325	341
-	14	 0x374a038	cnstpi__	0	341	353
-	15	 0x4302ab8	arithexp	0	353	370
-	16	 0x4302ac0	spimref_	0	370	390
-	17	 0x374a048	cnstpi__	0	390	402
+	9	 0x4302a00	datadefn	0	245	297
+	10	 0x4302aa0	dprmlst_	0	297	313
+	11	 0x3716028	cnstpi__	0	313	325
+	12	 0x4302ab0	drnglst_	0	325	341
+	13	 0x4302ad4	dynrng__	0	341	357
+	14	 0x3716038	cnstpi__	0	357	369
+	15	 0x4302af8	arithexp	0	369	386
+	16	 0x4302b00	spimref_	0	386	406
+	17	 0x3716048	cnstpi__	0	406	418
 
 In module created from: ./006.in (unrolled)
 In namespace "", we have: {
@@ -31,7 +31,7 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >
-      (
+(
       )
       In definition "foo", we have: {
         N = pint<> N

@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.34 2005/06/19 01:58:32 fang Exp $
+ 	$Id: art_context.cc,v 1.35 2005/06/22 22:13:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -17,6 +17,7 @@
 #include "Object/art_context.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
+#include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
 #include "Object/art_object_type_ref.h"
@@ -44,6 +45,7 @@ using entity::param_type_reference;
 using entity::param_instance_collection;
 using entity::process_definition;
 using entity::user_def_chan;
+using entity::user_def_datatype;
 
 //=============================================================================
 // class context method definition
@@ -938,6 +940,7 @@ context::auto_indent(void) const {
 
 INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(process_definition)
 INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_chan)
+INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_datatype)
 // INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(enum_datatype_def)
 
 //=============================================================================

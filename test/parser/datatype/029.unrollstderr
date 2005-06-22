@@ -1,0 +1,35 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302190	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43021b0	datadefn	0	53	121
+	4	 0x4302250	datainst	0	121	141
+	5	 0x4302274	dintcoll	0	141	179
+	6	 0x43022d0	datatprf	0	179	195
+	7	 0x43022e0	datadefn	0	195	247
+	8	 0x4302380	dprmlst_	0	247	263
+	9	 0x3723028	cnstpi__	0	263	275
+	10	 0x4302390	datatprf	0	275	291
+	11	 0x43023a0	dprmlst_	0	291	307
+	12	 0x3723038	cnstpi__	0	307	319
+
+In module created from: ./029.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    my_data = user-defined-datatype (declared) my_data
+      int<24>      (
+        int<28> x
+      )
+      In datatype definition "my_data", we have: {
+        x = int<28> x
+      }
+
+}
+

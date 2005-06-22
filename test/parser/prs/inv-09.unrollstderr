@@ -14,30 +14,30 @@ Persistent Object Manager text dump:
 	10	 0x4304694	dboolcol	1	325	354
 	11	 0x43046e0	datainst	0	354	374
 	12	 0x4304700	datatprf	0	374	390
-	13	 0x4304710	datadefn	0	390	427
-	14	 0x4304770	drnglst_	0	427	443
-	15	 0x4304794	dynrng__	0	443	459
-	16	 0x374a028	cnstpi__	0	459	471
-	17	 0x43047b8	arithexp	0	471	488
-	18	 0x43047c0	spimref_	0	488	508
-	19	 0x374a038	cnstpi__	0	508	520
-	20	 0x481d408	PRSpuldn	0	520	537
-	21	 0x43047f8	PRSlitrl	0	537	549
-	22	 0x4304980	sdbmref_	0	549	569
-	23	 0x43049b0	dindlst_	0	569	585
-	24	 0x43049c0	spimref_	0	585	605
-	25	 0x43049f0	sdbmref_	0	605	625
-	26	 0x4304a20	dindlst_	0	625	641
-	27	 0x4304a30	spimref_	0	641	661
-	28	 0x481d808	PRSpulup	0	661	678
-	29	 0x4304a68	PRSnot__	0	678	690
-	30	 0x4304804	PRSlitrl	0	690	702
-	31	 0x4304bf0	sdbmref_	0	702	722
-	32	 0x4304c20	dindlst_	0	722	738
-	33	 0x4304c30	spimref_	0	738	758
-	34	 0x4304c60	sdbmref_	0	758	778
-	35	 0x4304c90	dindlst_	0	778	794
-	36	 0x4304ca0	spimref_	0	794	814
+	13	 0x4304710	datadefn	0	390	443
+	14	 0x43047b0	drnglst_	0	443	459
+	15	 0x43047d4	dynrng__	0	459	475
+	16	 0x3716028	cnstpi__	0	475	487
+	17	 0x43047f8	arithexp	0	487	504
+	18	 0x4304800	spimref_	0	504	524
+	19	 0x3716038	cnstpi__	0	524	536
+	20	 0x481da08	PRSpuldn	0	536	553
+	21	 0x4304838	PRSlitrl	0	553	565
+	22	 0x43049c0	sdbmref_	0	565	585
+	23	 0x43049f0	dindlst_	0	585	601
+	24	 0x4304a00	spimref_	0	601	621
+	25	 0x4304a30	sdbmref_	0	621	641
+	26	 0x4304a60	dindlst_	0	641	657
+	27	 0x4304a70	spimref_	0	657	677
+	28	 0x481de08	PRSpulup	0	677	694
+	29	 0x4304aa8	PRSnot__	0	694	706
+	30	 0x4304844	PRSlitrl	0	706	718
+	31	 0x4304c30	sdbmref_	0	718	738
+	32	 0x4304c60	dindlst_	0	738	754
+	33	 0x4304c70	spimref_	0	754	774
+	34	 0x4304ca0	sdbmref_	0	774	794
+	35	 0x4304cd0	dindlst_	0	794	810
+	36	 0x4304ce0	spimref_	0	810	830
 
 In module created from: ./inv-09.in (unrolled)
 In namespace "", we have: {
@@ -52,7 +52,7 @@ In namespace "", we have: {
       pint<> I
       pint<> J
       >
-      (
+(
         bool<> a with indices: {
           [0..::crazy_inv::N-1]
         }

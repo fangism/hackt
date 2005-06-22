@@ -8,14 +8,14 @@ Persistent Object Manager text dump:
 	4	 0x4302424	dintcoll	1	120	153
 	5	 0x4302530	datainst	0	153	173
 	6	 0x4302550	datatprf	0	173	189
-	7	 0x4302560	datadefn	0	189	225
-	8	 0x43025c0	dprmlst_	0	225	241
-	9	 0x3715028	cnstpi__	0	241	253
-	10	 0x43025d0	crnglst_	0	253	273
-	11	 0x43025e0	bchntprf	0	273	294
-	12	 0x4302600	datatprf	0	294	310
-	13	 0x4302610	dprmlst_	0	310	326
-	14	 0x3715038	cnstpi__	0	326	338
+	7	 0x4302560	datadefn	0	189	241
+	8	 0x4302600	dprmlst_	0	241	257
+	9	 0x3716028	cnstpi__	0	257	269
+	10	 0x4302610	crnglst_	0	269	289
+	11	 0x4302620	bchntprf	0	289	310
+	12	 0x4302640	datatprf	0	310	326
+	13	 0x4302650	dprmlst_	0	326	342
+	14	 0x3716038	cnstpi__	0	342	354
 
 In module created from: ./014.in (unrolled)
 In namespace "", we have: {

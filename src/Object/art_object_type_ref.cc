@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.36 2005/06/19 01:58:49 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.37 2005/06/22 22:13:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -13,6 +13,7 @@
 
 #include "AST/art_parser_token_string.h"	// so token_identifier : string
 #include "Object/art_object_definition_chan.h"
+#include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_proc.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_bool.h"

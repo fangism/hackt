@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.5 2005/06/22 02:56:35 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.6 2005/06/22 22:13:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -97,9 +97,7 @@ public:
 	make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const;
 
-	never_ptr<const instance_collection_base>
-	add_port_formal(const never_ptr<instantiation_statement_base> f, 
-		const token_identifier& id);
+	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
 	good_bool
 	certify_port_actuals(const checked_refs_type& ol) const;
