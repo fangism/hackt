@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2005/02/27 22:54:42 fang Exp $
+#	$Id: Makefile.am,v 1.7 2005/06/23 03:00:31 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -25,7 +25,7 @@ ARTC_TEST_PASSES = \
 	051 057 058 \
 	062 063 064 065 067 069 \
 	078 \
-	083 084 085
+	083 084 085 086 087
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 

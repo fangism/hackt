@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.8 2005/06/19 01:58:32 fang Exp $
+	$Id: art_parser_type.h,v 1.9 2005/06/23 03:00:29 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
@@ -116,9 +116,13 @@ protected:
 		(see "AST/art_parser_expr_list.h":template_argument_list_pair.)
 	 */
 	const excl_ptr<const expr_list>			temp_spec;
+	/**
+		Optional channel direction, only applies to channels.  
+	 */
+	const excl_ptr<const char_punctuation_type>	chan_dir;
 public:
-	explicit
-	generic_type_ref(const type_base* n, const expr_list* t = NULL);
+	generic_type_ref(const type_base* n, const expr_list* t = NULL,
+		const char_punctuation_type* d = NULL);
 
 	~generic_type_ref();
 

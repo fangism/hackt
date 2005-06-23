@@ -1,0 +1,7 @@
+// "086.in" should pass -- testing port connections with user-defined types
+
+defchan fake_chan <: chan(int) (int d; bool e);
+
+defproc chan_proc(fake_chan L, R);
+
+

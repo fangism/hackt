@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.26 2005/06/19 01:58:49 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27 2005/06/23 03:00:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -102,7 +102,6 @@ public:
 //=============================================================================
 /**
 	Abstract parent class for all channel types.  
-	TODO: direction flag
  */
 class channel_type_reference_base : public fundamental_type_reference {
 protected:
@@ -116,12 +115,22 @@ public:
 	}	direction_type;
 #endif
 protected:
+	/**
+		Three possible values: '\0' means bidirections (unspecified), 
+		'!' means send-only, '?' means receive-only.
+	 */
 	char						direction;
 protected:
 	channel_type_reference_base() : parent_type(), direction('\0') { }
-public:
+
+	explicit
 	channel_type_reference_base(template_args_ptr_type&);
+
+public:
 virtual	~channel_type_reference_base() { }
+
+virtual	ostream&
+	dump(ostream&) const = 0;
 
 	void
 	set_direction(const char c) { direction = c; }
@@ -129,14 +138,20 @@ virtual	~channel_type_reference_base() { }
 	char
 	get_direction(void) const { return direction; }
 
+	ostream&
+	dump_direction(ostream&) const;
+
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
 
 protected:
-	// write_object_base?
-	// load_object_base?
+	using parent_type::collect_transient_info_base;
 
-// everything else inherited, including pure virtual methods
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class channel_type_reference_base
 
@@ -232,6 +247,10 @@ public:
 
 	ostream&
 	what(ostream& o) const;
+
+	// override grandparent's
+	ostream&
+	dump(ostream& o) const;
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;

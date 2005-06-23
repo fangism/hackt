@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.22 2005/06/22 22:13:33 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23 2005/06/23 03:00:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -73,6 +73,8 @@ public:
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
+	typedef	count_ptr<fundamental_type_reference>
+					type_ref_ptr_type;
 protected:
 	template_formals_manager	template_formals;
 
@@ -158,14 +160,17 @@ virtual	good_bool
 	certify_port_actuals(const checked_refs_type&) const;
 
 public:
+#define	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO				\
+	definition_base::type_ref_ptr_type				\
+	make_fundamental_type_reference(				\
+		excl_ptr<dynamic_param_expr_list>& ta) const
+
 // proposing to replace set_context_fundamental_type with the following:
-virtual count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
+virtual MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
-	count_ptr<const fundamental_type_reference>
+	definition_base::type_ref_ptr_type
 	make_fundamental_type_reference(void) const;
 // why virtual? special cases for built-in types?
 

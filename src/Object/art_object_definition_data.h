@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_data.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_data.h,v 1.1 2005/06/22 22:13:34 fang Exp $
+	$Id: art_object_definition_data.h,v 1.2 2005/06/23 03:00:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_DATA_H__
@@ -45,9 +45,7 @@ virtual	ostream&
 virtual	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const = 0;
 
-virtual	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
+virtual	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
 virtual	good_bool
 	require_signature_match(
@@ -97,9 +95,7 @@ public:
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
 
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	// ah, but it is now!
@@ -184,9 +180,7 @@ public:
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
 
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
@@ -266,9 +260,7 @@ public:
 	require_signature_match(const never_ptr<const definition_base> d) const
 		{ return good_bool(false); }	// temporary
 
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 #if 0
 	good_bool
@@ -323,9 +315,7 @@ public:
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
 
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;

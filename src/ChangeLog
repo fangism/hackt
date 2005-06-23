@@ -2,6 +2,21 @@
 
 2005-06-22	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48:
+	  Grammar: generic_type_ref can take an optional direction [!?]
+		non-terminal after optional_template_actuals
+		to account for directionality of user-defined channel types.  
+	  AST classes updated to accommodate this update.  
+		generic_type_ref::check_type properly checks for
+		channel type (dynamic_cast) before applying direction.  
+	  entity::definition_base::make_fundamental_type_reference's return
+		type is now (non-const) count_ptr<fundamental_type_reference>.
+	  Fixed channel_type_reference::dump to print directionality.  
+	  Few new test cases that use user-defined channel-type in ports
+		added to parser/test/connect, but not unroll-checked yet.  
+	  TODO: next branch port connection, and all prerequisites... oi...
+
+
 	* ARTXX-00-01-04-main-00-47:
 	  Added CHP bodies to user-defined-datatype (set, get), 
 		even though I don't know what these do yet.

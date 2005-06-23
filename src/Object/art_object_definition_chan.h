@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.4 2005/06/22 22:13:33 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.5 2005/06/23 03:00:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -33,9 +33,7 @@ virtual	~channel_definition_base() { }
 	make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const;
 
-virtual	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+virtual	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 protected:
 	using parent_type::collect_transient_info_base;

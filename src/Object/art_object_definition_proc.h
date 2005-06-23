@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.6 2005/06/22 22:13:34 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.7 2005/06/23 03:00:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -93,9 +93,7 @@ public:
 	never_ptr<const object>
 	lookup_object_here(const string& id) const;
 
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
@@ -169,9 +167,7 @@ public:
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
 
-	count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const;
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.52 2005/06/22 22:13:33 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53 2005/06/23 03:00:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -305,7 +305,7 @@ definition_base::make_default_template_arguments(void) const {
 /**
 	Wrapper for making a type reference with default template args.  
  */
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 definition_base::make_fundamental_type_reference(void) const {
 	// assign, not copy construct!
 	excl_ptr<dynamic_param_expr_list>
@@ -576,10 +576,10 @@ datatype_definition_base::make_typedef(never_ptr<const scopespace> s,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 // now pure virtual
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 datatype_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta)) {
 		return return_type(
 			new data_type_reference(
@@ -617,10 +617,10 @@ channel_definition_base::make_typedef(never_ptr<const scopespace> s,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 channel_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
@@ -1077,10 +1077,10 @@ built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 built_in_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
+	typedef	type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
@@ -1262,13 +1262,12 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 	Managed cache may solve this...
 	\param ta template arguments are never used.  
  */
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 built_in_param_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	INVARIANT(!ta);
-	return count_ptr<const fundamental_type_reference>(
-		new param_type_reference(
-			never_ptr<const built_in_param_def>(this)));
+	return type_ref_ptr_type(new param_type_reference(
+		never_ptr<const built_in_param_def>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1379,14 +1378,13 @@ enum_datatype_def::resolve_canonical_datatype_definition(void) const {
 /**
 	NOTE: ta is not used.
  */
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 enum_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	INVARIANT(!ta);
-	return return_type(
-		new data_type_reference(
-			never_ptr<const datatype_definition_base>(this)));
+	return return_type(new data_type_reference(
+		never_ptr<const datatype_definition_base>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1696,10 +1694,10 @@ user_def_datatype::lookup_port_formal(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 user_def_datatype::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
@@ -1869,16 +1867,15 @@ datatype_definition_alias::assign_typedef(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 datatype_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
+	typedef	type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
-		return return_type(
-			new data_type_reference(
-				never_ptr<const datatype_definition_alias>(this), 
-				plp));
+		return return_type(new data_type_reference(
+			never_ptr<const datatype_definition_alias>(this), 
+			plp));
 	} else {
 		cerr << "ERROR: failed to make data_type_alias type reference "
 			"because template argument types do not match." << endl;
@@ -2120,10 +2117,10 @@ process_definition::certify_port_actuals(const checked_refs_type& ol) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 process_definition::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(new process_type_reference(
@@ -2402,16 +2399,15 @@ process_definition_alias::assign_typedef(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 process_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
+	typedef	type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
-		return return_type(
-			new process_type_reference(
-				never_ptr<const process_definition_alias>(this), 
-				plp));
+		return return_type(new process_type_reference(
+			never_ptr<const process_definition_alias>(this), 
+			plp));
 	} else {
 		cerr << "ERROR: failed to make process_definition_alias "
 			"type reference because template argument types "

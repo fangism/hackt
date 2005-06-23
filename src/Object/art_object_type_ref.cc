@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.37 2005/06/22 22:13:35 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38 2005/06/23 03:00:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -587,6 +587,31 @@ channel_type_reference_base::channel_type_reference_base(
 		parent_type(pl), direction('\0') {
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_type_reference_base::dump_direction(ostream& o) const {
+	if (direction == '!' || direction == '?')
+		o << direction;
+	// else no direction
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference_base::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	parent_type::write_object_base(m, o);
+	write_value(o, direction);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference_base::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	parent_type::load_object_base(m, i);
+	read_value(i, direction);
+}
+
 //=============================================================================
 // class builtin_channel_type_reference method definitions
 
@@ -612,9 +637,7 @@ ostream&
 builtin_channel_type_reference::dump(ostream& o) const {
 //	STACKTRACE_VERBOSE;
 	o << "chan";
-	if (direction == '!' || direction == '?')
-		o << direction;
-	// else no direction
+	dump_direction(o);
 	o << '(';
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
@@ -741,7 +764,6 @@ void
 builtin_channel_type_reference::write_object(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
-	write_value(o, direction);
 	m.write_pointer_list(o, datatype_list);
 }
 
@@ -750,7 +772,6 @@ void
 builtin_channel_type_reference::load_object(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
-	read_value(i, direction);
 	m.read_pointer_list(i, datatype_list);
 }
 
@@ -797,6 +818,12 @@ channel_type_reference::~channel_type_reference() {
 ostream&
 channel_type_reference::what(ostream& o) const {
 	return o << "user-channel-type-reference";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_type_reference::dump(ostream& o) const {
+	return dump_direction(fundamental_type_reference::dump(o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

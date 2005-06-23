@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.25 2005/06/19 01:58:28 fang Exp $
+	$Id: art_parser_base.cc,v 1.26 2005/06/23 03:00:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -68,6 +68,7 @@ namespace parser {
 using std::back_inserter;
 using entity::dynamic_param_expr_list;
 using entity::data_type_reference;
+using entity::channel_type_reference;
 using entity::user_def_chan;
 #include "util/using_ostream.h"
 using util::indent;
@@ -655,8 +656,9 @@ if (alias) {
 // class generic_type_ref method definitions
 
 CONSTRUCTOR_INLINE
-generic_type_ref::generic_type_ref(const type_base* n, const expr_list* t) : 
-		base(n), temp_spec(t) {
+generic_type_ref::generic_type_ref(const type_base* n, const expr_list* t, 
+		const char_punctuation_type* d) : 
+		base(n), temp_spec(t), chan_dir(d) {
 	NEVER_NULL(base);
 }
 
@@ -673,8 +675,9 @@ generic_type_ref::leftmost(void) const {
 
 line_position
 generic_type_ref::rightmost(void) const {
-	if (temp_spec)	return temp_spec->rightmost();
-	else		return base->rightmost();
+	if (chan_dir)		return chan_dir->rightmost();
+	else if (temp_spec)	return temp_spec->rightmost();
+	else			return base->rightmost();
 }
 
 never_ptr<const type_base>
@@ -693,10 +696,16 @@ generic_type_ref::get_temp_spec(void) const {
 	arguments.  The type reference is used for creating instantiations.  
 	\return valid type-checked type-reference if successful, 
 		else NULL (does not exit on failure).  
+	TODO: check for channel direction.
+	TODO: real handling of template_actuals
  */
 generic_type_ref::return_type
 generic_type_ref::check_type(context& c) const {
-	STACKTRACE("generic_type_ref::check_type()");
+	// note: this is non-const, whereas we're returning const
+	typedef	definition_base::type_ref_ptr_type	local_return_type;
+#if ENABLE_STACKTRACE
+	util::stacktrace __st__("generic_type_ref::check_type()");
+#endif
 	// sets context's current definition
 	const never_ptr<const definition_base>
 		d(base->check_definition(c));
@@ -710,6 +719,7 @@ generic_type_ref::check_type(context& c) const {
 	}
 
 	// check template arguments, if given
+	local_return_type type_ref;
 	if (temp_spec) {
 		STACKTRACE("checking template arguments (temp_spec)");
 		// FUTURE: need to extend to handle generic template
@@ -722,13 +732,7 @@ generic_type_ref::check_type(context& c) const {
 		expr_list::checked_meta_exprs_type::const_iterator
 			i(temp.begin());
 		copy(temp.begin(), temp.end(), back_inserter(*tpl));
-		const return_type
-			type_ref(d->make_fundamental_type_reference(tpl));
-		if (!type_ref) {
-			cerr << "ERROR making complete type reference.  "
-				<< where(*this) << endl;
-			return return_type(NULL);
-		} else	return type_ref;
+		type_ref = d->make_fundamental_type_reference(tpl);
 	} else {
 		STACKTRACE("empty template arguments (!temp_spec)");
 		// if no args are supplied, 
@@ -740,15 +744,28 @@ generic_type_ref::check_type(context& c) const {
 				where(*this) << endl;
 			return return_type(NULL);
 		} else {
-			const return_type
-				type_ref(d->make_fundamental_type_reference());
-			if (!type_ref) {
-				cerr << "ERROR making complete type reference.  "
-					<< where(*this) << endl;
-				return return_type(NULL);
-			} else	return type_ref;
+			type_ref = d->make_fundamental_type_reference();
 		}
 	}
+	if (chan_dir) {
+		STACKTRACE("have channel direction");
+		const count_ptr<channel_type_reference>
+			ctr(type_ref.is_a<channel_type_reference>());
+		if (!ctr) {
+			cerr << "ERROR: only channel types "
+				"have directionality.  "
+				<< where(*chan_dir) << endl;
+			return return_type(NULL);
+		}
+		const char dir(chan_dir->text[0]);
+		INVARIANT(dir == '!' || dir == '?');
+		ctr->set_direction(dir);
+	}
+	if (!type_ref) {
+		cerr << "ERROR making complete type reference.  "
+			<< where(*this) << endl;
+		return return_type(NULL);
+	} else	return type_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

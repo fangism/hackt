@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.23 2005/06/21 21:26:36 fang Exp $
+	$Id: art++-parse.yy,v 1.24 2005/06/23 03:00:30 fang Exp $
  */
 
 %{
@@ -489,6 +489,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_data_type_base>	base_param_type */
 %type	<_token_paramtype>	base_param_type
 %type	<_chan_type>	base_chan_type chan_or_port
+%type	<_node_position>	optional_chan_dir
 %type	<_data_type_ref_list>	data_type_ref_list_in_parens data_type_ref_list
 %type	<_token_datatype>	base_data_type
 %type	<_enum_prototype>	declare_enum
@@ -864,12 +865,18 @@ port_formal_id
 	;
 
 generic_type_ref
-	: relative_id optional_template_arguments_in_angles
+	: relative_id optional_template_arguments_in_angles optional_chan_dir
 		/* for userdef or chan type, and templating */
-		{ $$ = new generic_type_ref(new type_id($1), $2); }
-	| absolute_id optional_template_arguments_in_angles
+		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
+	| absolute_id optional_template_arguments_in_angles optional_chan_dir
 		/* for userdef or chan type, and templating */
-		{ $$ = new generic_type_ref(new type_id($1), $2); }
+		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
+	;
+
+optional_chan_dir
+	: '?'
+	| '!'
+	| { $$ = NULL; }
 	;
 
 physical_type_ref
@@ -885,6 +892,7 @@ physical_type_ref
 base_data_type_ref
 	: base_data_type optional_template_arguments_in_angles
 		{ $$ = new generic_type_ref($1, $2); }
+		/* 3rd argument is channel direction, doesn't apply here */
 	;
 
 /** because general data types may be user-defined **/
@@ -896,7 +904,7 @@ data_type_ref
 type_id
 	: physical_type_ref { $$ = $1; }
 	| base_param_type
-		{ $$ = new generic_type_ref($1, NULL); }
+		{ $$ = new generic_type_ref($1); }
 		/* should parameter declarations be allowed 
 			in loops and conditionals? rather not */
 	;
@@ -920,11 +928,7 @@ base_chan_type
 	;
 
 chan_or_port
-	: CHANNEL		/* a channel */
-		{ $$ = new chan_type($1); }
-	| CHANNEL '!'		/* an output port */
-		{ $$ = new chan_type($1, $2); }
-	| CHANNEL '?'		/* an input port */
+	: CHANNEL optional_chan_dir		/* a channel, input or output */
 		{ $$ = new chan_type($1, $2); }
 	;
 
