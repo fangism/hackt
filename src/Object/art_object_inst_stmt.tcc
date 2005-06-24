@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.1 2005/06/24 19:02:56 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.2 2005/06/24 22:51:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -159,7 +159,7 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 	this will require some serious specialization
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
 	// unroll_type_check is specialized for each tag type.  
@@ -169,6 +169,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
 		THROW_EXIT;
+		return good_bool(false);
 	}
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
@@ -179,6 +180,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			util::what<this_type>::name() <<
 			"::unroll." << endl;
 		THROW_EXIT;
+		return good_bool(false);
 	}
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
@@ -189,7 +191,19 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
+		THROW_EXIT;
+		return good_bool(false);
 	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+good_bool
+INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
+		unroll_context& c) const {
+	// would've exited already
+	return this->unroll(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.1 2005/06/24 19:02:57 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.2 2005/06/24 22:51:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -111,15 +111,11 @@ public:
 	~param_instantiation_statement();
 
 	UNROLL_META_EVALUATE_PROTO;
+	UNROLL_META_INSTANTIATE_PROTO;	// no-op
 
 	FRIEND_PERSISTENT_TRAITS
 
-#if 0
-	void
-	collect_transient_info(persistent_object_manager&) const;
-#else
 	using parent_type::collect_transient_info;
-#endif
 	using parent_type::write_object;
 	using parent_type::load_object;
 };	// end class param_instantiation_statement

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.13.10.1 2005/06/24 19:02:58 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.13.10.2 2005/06/24 22:51:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -141,9 +141,10 @@ sequential_scope::append_instance_management(
 /**
 	This may be temporary.  
  */
-void
+good_bool
 sequential_scope::unroll(unroll_context& c) const {
 	STACKTRACE("sequential_scope::unroll()");
+#if 0
 	for_each(instance_management_list.begin(), 
 		instance_management_list.end(), 
 	unary_compose_void(
@@ -152,9 +153,34 @@ sequential_scope::unroll(unroll_context& c) const {
 		dereference<sticky_ptr<const instance_management_base> >()
 	)
 	);
+#else
+	const_iterator i(instance_management_list.begin());
+	const const_iterator e(instance_management_list.end());
+	for ( ; i!=e; i++) {
+		if (!(*i)->unroll(c).good) {
+			return good_bool(false);
+		}
+	}
+#endif
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+sequential_scope::unroll_meta_evaluate(unroll_context& c) const {
+	STACKTRACE("sequential_scope::unroll_meta_evaluate()");
+	const_iterator i(instance_management_list.begin());
+	const const_iterator e(instance_management_list.end());
+	for ( ; i!=e; i++) {
+		if (!(*i)->unroll_meta_evaluate(c).good) {
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 inline
 void
 sequential_scope::collect_object_pointer_list(
@@ -186,6 +212,7 @@ sequential_scope::collect_object_pointer_list(
 	);
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -193,10 +220,12 @@ sequential_scope::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT(
 		"sequential_scope::collect_transient_info_base()");
-	collect_object_pointer_list(m);
+//	collect_object_pointer_list(m);
+	m.collect_pointer_list(instance_management_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 inline
 void
 sequential_scope::write_object_pointer_list(
@@ -204,6 +233,7 @@ sequential_scope::write_object_pointer_list(
 	STACKTRACE_PERSISTENT("sequential_scope::write_object_pointer_list()");
 	m.write_pointer_list(f, instance_management_list);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -219,10 +249,12 @@ void
 sequential_scope::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("sequential_scope::write_object_base()");
-	write_object_pointer_list(m, f);
+//	write_object_pointer_list(m, f);
+	m.write_pointer_list(f, instance_management_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 inline
 void
 sequential_scope::load_object_pointer_list(
@@ -230,13 +262,15 @@ sequential_scope::load_object_pointer_list(
 	STACKTRACE_PERSISTENT("sequential_scope::load_object_pointer_list()");
 	m.read_pointer_list(f, instance_management_list);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 sequential_scope::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("sequential_scope::load_object_base()");
-	load_object_pointer_list(m, f);
+//	load_object_pointer_list(m, f);
+	m.read_pointer_list(f, instance_management_list);
 }
 
 //=============================================================================

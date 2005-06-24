@@ -2,6 +2,16 @@
 
 2005-06-24	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-03:
+	  Fleshed out 3 phases of unrolling, re-using old unified-unroll code.
+		Implemented unroll_meta_instantiate and unroll_meta_connect.  
+	  Try: replacing unified unroll with 3-phase unroll to see what
+		test cases differ.  
+	  Tentatively gave old unroll method good_bool return value. 
+		TODO: try eliminating THROW_EXIT statements.  
+	  Phase out generic "unroll", if possible.  
+	  
+
 	* ARTXX-00-01-04-main-00-48-connect-01-02:
 	  Planned a 3-pass approach to unrolling (updated NOTES):
 		1) meta param instantiation and evaluation

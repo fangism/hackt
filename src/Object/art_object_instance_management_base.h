@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.8.14.1 2005/06/24 19:02:58 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.8.14.2 2005/06/24 22:51:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -75,7 +75,7 @@ virtual ostream&
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
 	// possible single-pass unroll may be phased out...
-virtual void
+virtual good_bool
 	unroll(unroll_context& ) const = 0;
 
 virtual	UNROLL_META_EVALUATE_PROTO;
@@ -98,6 +98,8 @@ public:
 	 */
 	typedef list<sticky_ptr<const instance_management_base> >
 					instance_management_list_type;
+	typedef	instance_management_list_type::const_iterator
+							const_iterator;
 protected:
 	/**
 		The unified list of sequential instance management actions, 
@@ -122,6 +124,7 @@ public:
 	append_instance_management(
 		excl_ptr<const instance_management_base>& i);
 
+#if 0
 private:
 	void
 	collect_object_pointer_list(persistent_object_manager& m) const;
@@ -135,6 +138,7 @@ private:
 	void
 	load_object_pointer_list(const persistent_object_manager& m, 
 		istream&);
+#endif
 
 protected:
 	void
@@ -151,10 +155,14 @@ public:
 	void
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
+protected:
 // need not be virtual?
-// may need context later...
-	void
+	good_bool
 	unroll(unroll_context& ) const;
+
+	UNROLL_META_EVALUATE_PROTO;
+	UNROLL_META_INSTANTIATE_PROTO;
+	UNROLL_META_CONNECT_PROTO;
 
 };      // end class sequential_scope
 

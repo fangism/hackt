@@ -1,24 +1,30 @@
 /**
-	\file "art_object_assign.h"
+	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.10 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_assign.h,v 1.20.4.1 2005/06/24 22:51:10 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_ASSIGN_H__
-#define	__ART_OBJECT_ASSIGN_H__
+#ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
+#define	__OBJECT_ART_OBJECT_ASSIGN_H__
 
-#include "art_object_instance_management_base.h"
-#include "art_object_expr_base.h"
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool_fwd.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_instance_management_base.h"
+#include "Object/art_object_expr_base.h"
+#include "Object/art_object_classification_fwd.h"
+#include "util/memory/count_ptr.h"
+#include "util/memory/list_vector_pool_fwd.h"
 
 namespace ART {
 namespace entity {
+class simple_param_meta_value_reference;
 USING_LIST
 USING_CONSTRUCT
 using std::ostream;
-using namespace util::memory;	// for experimental pointer classes
+using util::memory::count_ptr;	// for experimental pointer classes
+using util::bad_bool;
+using util::good_bool;
+class unroll_context;
 
 //=============================================================================
 /**
@@ -26,7 +32,7 @@ using namespace util::memory;	// for experimental pointer classes
 	Includes both static and dynamic expressions.  
 	Consider separating, rhs from the rest?
 		rhs is any param_expr, while the rest are 
-		instance_references, may eventually be complex-aggregate.
+		meta_instance_references, may eventually be complex-aggregate.
 	Consider sub-typing into pint and pbool assignments, 
 		since types are static.  
  */
@@ -34,8 +40,8 @@ class param_expression_assignment : public instance_management_base {
 public:
 	typedef	count_ptr<param_expr>				src_ptr_type;
 	typedef	count_ptr<const param_expr>			src_const_ptr_type;
-	typedef	count_ptr<param_instance_reference>		dest_ptr_type;
-	typedef	count_ptr<const param_instance_reference>	dest_const_ptr_type;
+	typedef	count_ptr<simple_param_meta_value_reference>		dest_ptr_type;
+	typedef	count_ptr<const simple_param_meta_value_reference>	dest_const_ptr_type;
 
 // protected:
 //	/** cached value for dimensions, computed on construction */
@@ -55,8 +61,10 @@ virtual	ostream&
 virtual	size_t
 	size(void) const = 0;
 
-virtual	bool
-	append_param_instance_reference(const dest_ptr_type& e) = 0;
+virtual	bad_bool
+	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
+
+virtual	UNROLL_META_EVALUATE_PROTO = 0;
 
 	/**
 		Helper class for appending instance references to
@@ -64,57 +72,67 @@ virtual	bool
 		Written as a binary operator to accumulate error conditions.  
 		Used by object_list::make_param_expression_assignment.
 	 */
-	class instance_reference_appender {
+	class meta_instance_reference_appender {
+		// used to be object_list::value_type
+		typedef	count_ptr<param_expr>	arg_type;
 	protected:
 		size_t				index;
 		param_expression_assignment&	ex_ass;
 	public:
 		explicit
-		instance_reference_appender(param_expression_assignment& p) :
+		meta_instance_reference_appender(param_expression_assignment& p) :
 			index(0), ex_ass(p) { }
 
-		bool
-		operator () (const bool b, const object_list::value_type& i);
-	};	// end class instance_reference_appender
+		bad_bool
+		operator () (const bad_bool b, const arg_type& i);
+	};	// end class meta_instance_reference_appender
 
 protected:
-	bool
+	good_bool
 	validate_dimensions_match(const dest_const_ptr_type&, 
 		const size_t ) const;
 
-	bool
+	good_bool
 	validate_reference_is_uninitialized(const dest_const_ptr_type&) const;
 
 };	// end class param_expression_assignment
 
 //-----------------------------------------------------------------------------
-/**
-	pbool-specific version of expression assignments.  
- */
-class pbool_expression_assignment : public param_expression_assignment, 
-		public object {
+#define	EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE			\
+template <class Tag>
+
+#define	EXPRESSION_ASSIGNMENT_CLASS					\
+expression_assignment<Tag>
+
+EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
+class expression_assignment :
+	public class_traits<Tag>::expression_assignment_parent_type {
 private:
-	typedef	pbool_expression_assignment		this_type;
+	typedef	EXPRESSION_ASSIGNMENT_CLASS		this_type;
 public:
-	typedef	param_expression_assignment		parent_type;
-	typedef	count_ptr<pbool_instance_reference>	dest_ptr_type;
-	typedef	count_ptr<const pbool_instance_reference>
-							dest_const_ptr_type;
+	typedef	typename class_traits<Tag>::expression_assignment_parent_type
+							parent_type;
+	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+							value_reference_type;
+	typedef	typename class_traits<Tag>::expr_base_type
+							expr_type;
+	typedef	count_ptr<value_reference_type>	dest_ptr_type;
+	typedef	count_ptr<const value_reference_type>	dest_const_ptr_type;
 	typedef	list<dest_const_ptr_type>		dest_list_type;
-	typedef	count_ptr<pbool_expr>			src_ptr_type;
-	typedef	count_ptr<const pbool_expr>		src_const_ptr_type;
+	typedef	count_ptr<expr_type>			src_ptr_type;
+	typedef	count_ptr<const expr_type>		src_const_ptr_type;
 protected:
 	/** right-hand-side expression */
 	src_const_ptr_type				src;
 	/** left-hand-side destinations, where to assign expr. */
 	dest_list_type					dests;
 private:
-	pbool_expression_assignment();
+	expression_assignment();
 public:
 	explicit
-	pbool_expression_assignment(const src_const_ptr_type& s);
+	expression_assignment(const src_const_ptr_type& s);
 
-	~pbool_expression_assignment();
+	~expression_assignment();
 
 	ostream&
 	what(ostream& o) const;
@@ -125,11 +143,14 @@ public:
 	size_t
 	size(void) const;
 
-	bool
-	append_param_instance_reference(const parent_type::dest_ptr_type& e);
+	bad_bool
+	append_simple_param_meta_value_reference(
+		const typename parent_type::dest_ptr_type& e);
 
-	void
-	unroll(void) const;
+	good_bool
+	unroll(unroll_context& ) const;
+
+	UNROLL_META_EVALUATE_PROTO;
 
 public:
 	/** helper class for printing dump of list */
@@ -142,85 +163,21 @@ public:
 		dumper(ostream& o, const size_t i = 0);
 
 		void
-		operator () (const dest_list_type::value_type& i);
+		operator () (const typename dest_list_type::value_type& i);
 	};	// end class dumper
 
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
-};	// end class pbool_expression_assignment
-
-//-----------------------------------------------------------------------------
-/**
-	pint-specific version of expression assignments.  
- */
-class pint_expression_assignment : public param_expression_assignment, 
-		public object {
-private:
-	typedef	pint_expression_assignment		this_type;
-public:
-	typedef	param_expression_assignment		parent_type;
-	typedef	count_ptr<pint_instance_reference>	dest_ptr_type;
-	typedef	count_ptr<const pint_instance_reference>
-							dest_const_ptr_type;
-	typedef	list<dest_const_ptr_type>		dest_list_type;
-	typedef	count_ptr<pint_expr>			src_ptr_type;
-	typedef	count_ptr<const pint_expr>		src_const_ptr_type;
-protected:
-	/** right-hand-side expression */
-	src_const_ptr_type				src;
-	/** left-hand-side destinations, where to assign expr. */
-	dest_list_type					dests;
-private:
-	pint_expression_assignment();
-public:
-	explicit
-	pint_expression_assignment(const src_const_ptr_type& s);
-
-	~pint_expression_assignment();
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-
-	size_t
-	size(void) const;
-
-	bool
-	append_param_instance_reference(const parent_type::dest_ptr_type& e);
-
-	void
-	unroll(void) const;
-
-public:
-	/** helper class for printing dump of list */
-	class dumper {
-	private:
-		size_t index;
-		ostream& os;
-	public:
-		explicit
-		dumper(ostream& o, const size_t i = 0);
-
-		void
-		operator () (const dest_list_type::value_type& i);
-	};	// end class dumper
-
-public:
-	PERSISTENT_METHODS
-
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
-};	// end class pint_expression_assignment
+};	// end cllass expression_assignment
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_ASSIGN_H__
+#endif	// __OBJECT_ART_OBJECT_ASSIGN_H__
 

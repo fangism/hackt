@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.tcc"
 	Template method definitions for param_instantiation_statement.  
-	$Id: art_object_inst_stmt_param.tcc,v 1.1.2.1 2005/06/24 19:02:57 fang Exp $
+	$Id: art_object_inst_stmt_param.tcc,v 1.1.2.2 2005/06/24 22:51:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_TCC__
@@ -40,22 +40,19 @@ PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_evaluate(
 		unroll_context& c) const {
-	unroll(c);
-	return good_bool(true);
+	return parent_type::unroll(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+/**
+	No-op: params are evaluated in earlier pass.  
+ */
 PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-void
-PARAM_INSTANTIATION_STATEMENT_CLASS::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	parent_type::collect_transient_info_base(m);
+good_bool
+PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
+		unroll_context& c) const {
+	return good_bool(true);
 }
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

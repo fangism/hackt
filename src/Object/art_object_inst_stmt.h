@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.17.4.1 2005/06/24 19:02:56 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.17.4.2 2005/06/24 22:51:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
@@ -96,8 +96,12 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
-	void
+	good_bool
 	unroll(unroll_context& ) const;
+
+	// careful: not declared virtual here, 
+	// yet overridden by param_instantiation_statement<>
+	UNROLL_META_INSTANTIATE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

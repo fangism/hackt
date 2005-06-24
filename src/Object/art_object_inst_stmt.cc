@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.21.10.2 2005/06/24 19:02:56 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.21.10.3 2005/06/24 22:51:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -207,12 +207,14 @@ instantiation_statement_base::dimensions(void) const {
 /**
 	Temporary, should be pure virtual in the end.
  */
-void
+good_bool
 instantiation_statement_base::unroll(unroll_context& c) const {
 	cerr << "instantiation_statement_base::unroll(): Fang, finish me!" << endl;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Method for the instantiation pass of meta-unrolling.  
 	Default (un-implemented) is no-op.  
@@ -231,6 +233,7 @@ good_bool
 instantiation_statement_base::unroll_meta_connect(unroll_context& c) const {
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

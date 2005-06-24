@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.11.4.2 2005/06/24 19:02:57 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.11.4.3 2005/06/24 22:51:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
@@ -80,14 +80,10 @@ virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
 // should be pure virtual eventually
-virtual	void
+virtual	good_bool
 	unroll(unroll_context& ) const;
 
-virtual	good_bool
-	unroll_meta_instantiate(unroll_context& ) const;
-
-virtual	good_bool
-	unroll_meta_connect(unroll_context& ) const;
+virtual	UNROLL_META_INSTANTIATE_PROTO = 0;
 
 /***
 	case: A top-level instantiation is called.
