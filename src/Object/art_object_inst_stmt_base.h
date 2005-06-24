@@ -1,21 +1,30 @@
 /**
-	\file "art_object_inst_stmt_base.h"
+	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.5 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.11.4.1 2005/06/24 00:48:49 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_STMT_BASE_H__
-#define	__ART_OBJECT_INST_STMT_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
+#define	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 
-#include "art_object_instance_management_base.h"
-#include "memory/pointer_classes.h"
+#include <string>
+#include "Object/art_object_instance_management_base.h"
+#include "Object/art_object_util_types.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
-
+class const_range_list;
+class instance_collection_base;
+class fundamental_type_reference;
+using std::string;
 using std::istream;
 USING_LIST
-using namespace util::memory;	// for experimental pointer classes
+using util::memory::never_ptr;
+using util::memory::count_ptr;
+using util::good_bool;
 
 //=============================================================================
 /**
@@ -28,19 +37,19 @@ using namespace util::memory;	// for experimental pointer classes
 	Should this point to an unrolled instance?
 	No, it will be looked up.  
  */
-class instantiation_statement : public instance_management_base {
+class instantiation_statement_base : public instance_management_base {
 protected:
 	index_collection_item_ptr_type		indices;
 
 protected:
-	instantiation_statement() : instance_management_base(), 
+	instantiation_statement_base() : instance_management_base(), 
 		indices(NULL) { }
 public:
 	explicit
-	instantiation_statement(
+	instantiation_statement_base(
 		const index_collection_item_ptr_type& i);
 
-virtual	~instantiation_statement();
+virtual	~instantiation_statement_base();
 
 	ostream&
 	dump(ostream& o) const;
@@ -63,11 +72,22 @@ virtual	never_ptr<const instance_collection_base>
 	index_collection_item_ptr_type
 	get_indices(void) const;
 
+	good_bool
+	resolve_instantiation_range(const_range_list&, 
+		const unroll_context&) const;
+
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
 // should be pure virtual eventually
-virtual	void unroll(void) const;
+virtual	void
+	unroll(unroll_context& ) const;
+
+virtual	good_bool
+	unroll_meta_instantiate(unroll_context& ) const;
+
+virtual	good_bool
+	unroll_meta_connect(unroll_context& ) const;
 
 /***
 	case: A top-level instantiation is called.
@@ -84,13 +104,13 @@ protected:
 	write_object_base(const persistent_object_manager& m, ostream& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& );
+	load_object_base(const persistent_object_manager& m, istream& );
 
-};	// end class instantiation_statement
+};	// end class instantiation_statement_base
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_STMT_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 

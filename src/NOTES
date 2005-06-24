@@ -3,6 +3,169 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-06-23:
+	Major goal: port and member instance connections (unroll-time)
+	requires (meta) member_instance_reference unrolling, which
+	requires complete-type reference/definition unrolling, which
+	requires principle definitions to keep track of what template
+		parameters have been used to complete type-references.
+		(type-reference need non-const definition handles)
+		Propose to keep some sort of map/repository of unrolled
+		types and their substructure layouts.  
+		Repeated instantations of same type should be able to
+		trivially initialize with the same 'footprint'.
+		(Far Future: each complete type should back-point to the 
+		template (general, or specialized) used to generate it. 
+		This is especially important for checking partial-order
+		specialization consistency.)
+	Substructure_manager / offset_map:
+		map of member name to some index/offset.
+		mapped type is some pointer to what?
+		e.g.: how should "x.y.z" be resolved?
+			lookup top-level instance x, 
+			lookup member y, obtain offset to y.
+			Use y's offset to get reference to the actual 
+				sub-instance x.y.
+			lookup member z of y, obtain offset in y.
+			resolve instance z of y.  
+		Need to have a public (port) section, 
+			and a private internal section.  
+			Basic meta language restricted to public ports,
+			whereas tool-specific languages *may* use private.  (?)
+			(Everything in top-level is default public.)
+			e.g. params cannot be in ports, thus must be private
+		entries of map contain pointers to index_maps for arrays.
+		Index_maps are are similar to the implementation of the
+			instance_array sparse collection class.  
+			instance_array is currently constructed on the fly, 
+				where offsets are not established.  
+			Index maps will have established indices after
+				a complete unroll of the instantiation
+				statements in the scope.  
+		Keep around reverse offset <-> key-index map?
+		What kind of pointers?  count_ptr?
+	Unrolling revisited: proposing 2-pass approach:
+		1) meta instantiation only
+		2) meta connections only
+		advantages: can create static sparse collection map
+			to translate offsets.  Provides static offset
+			translation maps to the connection phase.  
+		disadvantage: makes tracking proper instantiation before use
+			more difficult because of decoupling.  
+			(Should we not consider them errors?
+			out-of-order declaration-uses?)
+			Consider re-specifying language?
+	What if type is relaxed, like a relaxed array (port) declaration?
+		Technically, type is incomplete, unless we constrain
+		relaxed types (in same family) to have same public ports.  
+		But then their private internal members may be completely 
+			different.  Tools that use private member references
+			will require a separate instance checking phase...
+
+//=============================================================================
+2005-06-11:
+	Need well-defined semantics of data (int, bool) operators
+		in the CHP context.  
+		e.g. what does int<X> + int<X> return?
+		what does int<X> + int<Y> return?
+		what does int<X> * int<X> return?
+		Gut feeling: for now types must match, and return same type
+			for arithmetic operators.
+		What about comparisons?  operands must match.  
+		Provide sign-extensions definition?  built-in?
+		Truncation operations?
+	Do pints implicitly have width 32?  (For now assume yes.)
+		How is it possible for them to mix with other widths?
+	"bits" type, bit fields of integers (not the same as bool).  
+		Proposal: implement as public ports of the int built-in
+			intrinsic definition, like:
+			deftype int <: (bits b[W]);
+	For data-ranges [x..y] where x,y are run-time values, 
+		do we place any restrictions on the type (width) of x,y?
+		must x <= y?
+		Don't fee good about have size of expression be unknown...
+			very ugly semantics, tons of run-time checks...
+	Non-scalar data/expression references in CHP context?
+		Currently, not allowed.  
+		Need to extend type-references (of built-in channel type)
+			to include (unnamed) packed arrays.
+		Not difficult, just low priority for now.  
+	Support for dataless communications?  X!, Y? ?  just 'X'?
+	CHP language:
+		',' and ';'
+		Can we allow ',' between actions other than communications?
+			Currently grammar doesn't support it.  
+	Grammar:
+		dark corner: guard expressions starting with a + or - b
+			must be wrapped in parens, after a transformation
+			to eliminate the s/r conflict on x+.
+
+//=============================================================================
+2005-04-29:
+	We had a VLSI group meeting on "the big picture of tools."
+	Concern: certain synthesis-class tools will want to 
+	automatically generate or modify definition and instance objects.  
+	How will templates complicate things?
+	Think about the hooks...
+
+//=============================================================================
+2005-04-28:
+	Tackling structure definition layout:
+	Definition-identifiers are really references to
+	concrete definition collections (in the case of templates), 
+	corresponding to content layout.  
+	Regarding specializations:
+		I think it would be best if we avoid specializations
+		at this point.  However, to plan for them in the future, 
+		we should make sure that the shortcut we choose does
+		not preclude partial and full specializations of definitions.  
+	Regarding the hash_map of identifiers local to a definition:
+		For now, without specialization is ok as is.
+		Later, each specialization definition will need its own map.  
+	Note however, that instantiation may be conditional, so
+		each concrete definition should have its own layout map.  
+	Generate these layout maps on-demand during unroll/instantiation.  
+	When considering template actual parameters, 
+		strict and relaxed parameters are considered equal
+		and part of the distinction process.  
+		It is possible for relaxed parameters to affect the
+		layout of a concrete definition.  
+		Consequence: many redundant and identical layouts kept...
+			(this is unavoidable for semanctic correctness)
+	TODO soon: update parser to accommodate relaxed and strict parameters.
+
+//=============================================================================
+2005-04-10:
+	front-end:
+	parser: multiple-parsers, possibly multiple-lexers
+		use .yy.m4 or (cpp) for grammar snippets
+	modular parser-functors
+	import vs. include? support cpp directives such as #file line?
+		file stacks
+
+//=============================================================================
+2005-02-17:
+	TODO
+	Target: 0.1.5
+	After improving parser... (after second convergence -00-01-04-main-01)
+	Must re-do object stack for type-checking!
+		Make one stack for values and parameters, 
+		another stack for physical instances, 
+		and let the context restrict which one may be used!
+	{chan, proc, bool, int, enum, struct, param}
+	port-like connections require a generic stack, though...
+	3 classes: alias, port, assign (expression)
+		their uses should never mix!
+	During alias-parse/type-checking, one type of list
+		should "lock-out" the use of the others.  
+	This will eliminate the need for any generic object list!
+		And perhaps generic "objects" in general!
+	In general, context interface could be more like stacktrace 
+		interface: automatic stack-like management upon destruction.
+
+
+
+//=============================================================================
 2005-01-05:
 CRITICAL BUG: util/memory/pointer_classes:
 	some destructors (excl_ptr) use release instead of reset, 
@@ -21,7 +184,7 @@ Added FIX_DEBUG predefine-style switch to pointer_classes.h,
 	FIXED: is safe to remove this conditional macro (2005-01-11)
 	Even if ONLY sticky_ptr is fixed, there is still problem!
 	Problem was failed ownership transfer leading to 
-		premature deallocation, and implicit defaul copy-constructor, 
+		premature deallocation, and implicit default copy-constructor, 
 		which gives wrong behavior.  
 	Produce (emulate) test cases?
 
