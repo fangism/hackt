@@ -1,5 +1,25 @@
 "ChangeLog"
 
+2005-06-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-02:
+	  Planned a 3-pass approach to unrolling (updated NOTES):
+		1) meta param instantiation and evaluation
+			::unroll_meta_evaluate()
+		2) physical instantiation
+			::unroll_meta_instantiate()
+		3) physical connection
+			::unroll_meta_connect()
+	  Renamed param_instantiation_statement to 
+		param_instantiation_base.
+	  New template param_instantiation_statement to override
+		instantiation_statement, and implement unroll_meta_evaluate.
+	  Updated instantiation_statement template class to make methods
+		available to children, and updated this_type
+		to follow the class_traits policy.  
+	  NEXT: Implement 3-phases of unrolling.  
+
+
 2005-06-23	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-01:

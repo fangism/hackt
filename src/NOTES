@@ -44,9 +44,26 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 				statements in the scope.  
 		Keep around reverse offset <-> key-index map?
 		What kind of pointers?  count_ptr?
-	Unrolling revisited: proposing 2-pass approach:
-		1) meta instantiation only
-		2) meta connections only
+	Unrolling revisited: proposing 3-pass approach:
+		1) meta evaluation only -- instantiation and value assignment
+			of local meta parameters only.  Since meta-parameters
+			may depend on other meta parameters, both instantiation
+			and assignments have to be integrated into the 
+			same evaluation pass.  Need to distinguish value
+			instantiation statements from physical instantiations.  
+		2) meta instantiation only -- creation of physical instances
+			or sub-instances.  During this phase, meta types
+			and values have been completed, so only
+			completed types remain.  Recall, each 'type' refers
+			back to a principle definition base with 
+			template actuals.  The first time a specific
+			type is instantiated, the completed definition
+			goes through a definition-unroll to generate the
+			substructure map (for the given set of parameters).  
+			Subsequent instantiations of the same type will
+			reuse those maps for fast instance creation.  
+		3) meta connections only -- establishes physical connections
+			between created instances.  
 		advantages: can create static sparse collection map
 			to translate offsets.  Provides static offset
 			translation maps to the connection phase.  

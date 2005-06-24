@@ -1,34 +1,90 @@
 /**
-	\file "art_object_instance_management_base.cc"
+	\file "Object/art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.8 2005/01/28 19:58:43 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.13.10.1 2005/06/24 19:02:58 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
-#define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 
+// compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
 
-#include "ptrs_functional.h"
-#include "compose.h"
-#include "binders.h"
+#include "util/ptrs_functional.h"
+#include "util/dereference.h"
+#include "util/compose.h"
+#include "util/binders.h"
 
-#include "STL/list.tcc"
-#include "art_object_instance_management_base.h"
-#include "persistent_object_manager.tcc"
-#include "stacktrace.h"
+#include "util/STL/list.tcc"
+#include "Object/art_object_instance_management_base.h"
+#include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
+
+// conditional defines, after including "stactrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define	STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
 
 namespace ART {
 namespace entity {
 using std::mem_fun_ref;
-using std::dereference;
+using util::dereference;
 using std::istream;
-#include "using_ostream.h"
-using namespace ADS;
+#include "util/using_ostream.h"
+USING_UTIL_COMPOSE
 USING_STACKTRACE
+
+//=============================================================================
+// class instance_management_base method definitions
+
+/**
+	Overriding implementations reserved for param_instantiation_statements
+	and param_expression_assignments.  (also flow control scopes)
+	Default action does nothing.  
+ */
+good_bool
+instance_management_base::unroll_meta_evaluate(unroll_context& ) const {
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overriding implementations reserved for physical
+	instantiation_statements.  (also flow control scopes)
+	Default action does nothing.  
+ */
+good_bool
+instance_management_base::unroll_meta_instantiate(unroll_context& ) const {
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overriding implementations reserved for instance_reference_connections.
+	(also for flow control scopes)
+	Default action does nothing.  
+ */
+good_bool
+instance_management_base::unroll_meta_connect(unroll_context& ) const {
+	return good_bool(true);
+}
 
 //=============================================================================
 // class sequential_scope method definitions
@@ -38,7 +94,7 @@ sequential_scope::sequential_scope() : instance_management_list() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 sequential_scope::~sequential_scope() {
-	STACKTRACE("~sequential_scope()");
+	STACKTRACE_DTOR("~sequential_scope()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -86,13 +142,14 @@ sequential_scope::append_instance_management(
 	This may be temporary.  
  */
 void
-sequential_scope::unroll(void) const {
+sequential_scope::unroll(unroll_context& c) const {
+	STACKTRACE("sequential_scope::unroll()");
 	for_each(instance_management_list.begin(), 
 		instance_management_list.end(), 
 	unary_compose_void(
-		mem_fun_ref(&instance_management_base::unroll), 
-		dereference<sticky_ptr, const instance_management_base>()
-		// const_dereference<excl_const_ptr, instance_management_base>()
+		bind2nd_argval_void(
+			mem_fun_ref(&instance_management_base::unroll), c), 
+		dereference<sticky_ptr<const instance_management_base> >()
 	)
 	);
 }
@@ -102,7 +159,8 @@ inline
 void
 sequential_scope::collect_object_pointer_list(
 		persistent_object_manager& m) const {
-	STACKTRACE("sequential_scope::collect_object_pointer_list()");
+	STACKTRACE_PERSISTENT(
+		"sequential_scope::collect_object_pointer_list()");
 #if 0
 	// for debugging purposes...
 	instance_management_list_type::const_iterator
@@ -111,7 +169,7 @@ sequential_scope::collect_object_pointer_list(
 		e = instance_management_list.end();
 	for ( ; i!=e; i++) {
 #if 0
-		STACKTRACE("for all instance_management_list:");
+		STACKTRACE_PERSISTENT("for all instance_management_list:");
 		NEVER_NULL(*i);
 		(*i)->what(cerr << "at " << &**i << ", ") << endl;
 #endif
@@ -123,8 +181,7 @@ sequential_scope::collect_object_pointer_list(
 	unary_compose_void(
 		bind2nd_argval_void(mem_fun_ref(
 			&instance_management_base::collect_transient_info), m), 
-		dereference<sticky_ptr, const instance_management_base>()
-		// const_dereference<excl_const_ptr, instance_management_base>()
+		dereference<sticky_ptr<const instance_management_base> >()
 	)
 	);
 #endif
@@ -134,7 +191,8 @@ sequential_scope::collect_object_pointer_list(
 void
 sequential_scope::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE("sequential_scope::collect_transient_info_base()");
+	STACKTRACE_PERSISTENT(
+		"sequential_scope::collect_transient_info_base()");
 	collect_object_pointer_list(m);
 }
 
@@ -143,6 +201,7 @@ inline
 void
 sequential_scope::write_object_pointer_list(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT("sequential_scope::write_object_pointer_list()");
 	m.write_pointer_list(f, instance_management_list);
 }
 
@@ -151,6 +210,7 @@ void
 sequential_scope::write_object_base_fake(
 		const persistent_object_manager& m, ostream& f) {
 	static const instance_management_list_type dummy;
+	STACKTRACE_PERSISTENT("sequential_scope::write_object_base_fake()");
 	m.write_pointer_list(f, dummy);
 }
 
@@ -158,6 +218,7 @@ sequential_scope::write_object_base_fake(
 void
 sequential_scope::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT("sequential_scope::write_object_base()");
 	write_object_pointer_list(m, f);
 }
 
@@ -166,7 +227,7 @@ inline
 void
 sequential_scope::load_object_pointer_list(
 		const persistent_object_manager& m, istream& f) {
-	STACKTRACE("sequential_scope::load_object_pointer_list()");
+	STACKTRACE_PERSISTENT("sequential_scope::load_object_pointer_list()");
 	m.read_pointer_list(f, instance_management_list);
 }
 
@@ -174,7 +235,7 @@ sequential_scope::load_object_pointer_list(
 void
 sequential_scope::load_object_base(
 		const persistent_object_manager& m, istream& f) {
-	STACKTRACE("sequential_scope::load_object_base()");
+	STACKTRACE_PERSISTENT("sequential_scope::load_object_base()");
 	load_object_pointer_list(m, f);
 }
 
@@ -200,5 +261,14 @@ instance_management_base::dumper::operator () (
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+// cleaning up macros used for this module
+#undef	ENABLE_STACKTRACE
+#undef	STACKTRACE_DESTRUCTORS
+#undef	STACKTRACE_DTOR
+#undef	STACKTRACE_PERSISTENTS
+#undef	STACKTRACE_PERSISTENT
+
+DEFAULT_STATIC_TRACE_END
+
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
 

@@ -1,44 +1,45 @@
 /**
-	\file "art_object_instance_base.h"
+	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.11 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.1 2005/06/24 19:02:57 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_BASE_H__
-#define	__ART_OBJECT_INSTANCE_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
 
+#include <string>
 #include <deque>
-#include "STL/list.h"
+#include "util/STL/list.h"
 
-#include "macros.h"
-#include "art_object_base.h"
-#include "persistent.h"		// for persistent object interface
-	// includes <iosfwd> <string>
+#include "util/macros.h"
+#include "util/boolean_types.h"
+#include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
+#include "util/persistent.h"		// for persistent object interface
+	// includes <iosfwd>
 
-#include "memory/pointer_classes.h"
-	// need complete definition (never_ptr members)
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
+class definition_base;
+class scopespace;
+class meta_instance_reference_base;
+class nonmeta_instance_reference_base;
+class fundamental_type_reference;
+class const_range_list;
+class param_expr;
 USING_LIST
-USING_DEQUE
 using std::istream;
 using std::string;
+using util::bad_bool;
+using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
-using namespace util::memory;
-
-//=============================================================================
-/**
-	The state of an instance collection, kept track by each 
-	instance reference.  
-	Since the iterators are list-like, they remain valid
-	after sequence manipulation operations (like insert, erase).  
- */
-typedef index_collection_type::const_iterator
-		instantiation_state;
-
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**
@@ -61,6 +62,13 @@ typedef index_collection_type::const_iterator
 class instance_collection_base : public object, public persistent {
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
+	// should be consistent with 
+	//	member_meta_instance_reference_base::base_inst_ptr_type
+	typedef	count_ptr<const meta_instance_reference_base>
+						inst_ref_ptr_type;
+	// needs to be of a type that can be pushed onto object stack
+	typedef	count_ptr<meta_instance_reference_base>
+						member_inst_ref_ptr_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -86,6 +94,8 @@ protected:
 		at specified indices in the multidimensional collection, 
 		implemented in the leaf children classes.  
 		Can elements be NULL?
+		TODO: subtype this!  don't use generic type common to all
+		children.  Implement using class_traits policy.  
 	 */
 	index_collection_type		index_collection;
 
@@ -123,11 +133,21 @@ virtual	~instance_collection_base();
 	size_t
 	get_dimensions(void) const { return dimensions; }
 
+virtual	bool
+	is_partially_unrolled(void) const = 0;
+
 virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
 	dump(ostream& o) const;	// temporary
+
+	/**
+		Depending on whether the collection is partially unrolled, 
+		print the type.  
+	 */
+virtual	ostream&
+	type_dump(ostream& o) const = 0;
 
 	ostream&
 	pair_dump(ostream& o) const;
@@ -146,9 +166,12 @@ virtual	string
 	all over the place, so we reference count all type references.  
 	Unfortunately this forces us to do the same with static 
 	built-in types.  
+
+	Note: that this doesn't return the unrolled actual type, 
+	need a different method for that.  
  */
-virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
@@ -173,7 +196,7 @@ private:
 	formal_size_equivalent(
 		const never_ptr<const instance_collection_base> b) const;
 public:
-	bool
+	size_t
 	is_template_formal(void) const;
 
 	bool
@@ -188,20 +211,19 @@ public:
 		const never_ptr<const instance_collection_base> b) const;
 
 protected:
-	bool
+	good_bool
 	check_expression_dimensions(const param_expr& pr) const;
 
 public:
-/**
-	always pushes onto context's object_stack, 
-	currently always returns NULL, useless
- */
-virtual	count_ptr<instance_reference_base>
-	make_instance_reference(void) const = 0;
+virtual	count_ptr<meta_instance_reference_base>
+	make_meta_instance_reference(void) const = 0;
 
-virtual	count_ptr<member_instance_reference_base>
-	make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const = 0;
+virtual	count_ptr<nonmeta_instance_reference_base>
+	make_nonmeta_instance_reference(void) const = 0;
+
+// return type may become generic...
+virtual	member_inst_ref_ptr_type
+	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
 private:
 	// utility functions for handling index collection (inlined)
 	void
@@ -214,7 +236,7 @@ private:
 
 	void
 	load_index_collection_pointers(
-		persistent_object_manager& m, istream&);
+		const persistent_object_manager& m, istream&);
 protected:
 	// wrappers to provide consistent interface to children
 	void
@@ -224,7 +246,7 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 public:
 	/** just for convenience */
@@ -235,5 +257,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_BASE_H__
 

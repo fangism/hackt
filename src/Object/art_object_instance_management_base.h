@@ -1,17 +1,17 @@
 /**
-	\file "art_object_instance_management_base.h"
+	\file "Object/art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.6 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.8.14.1 2005/06/24 19:02:58 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
-#define	__ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#define	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
 
 #include <iosfwd>
-#include "STL/list.h"
-#include "persistent.h"
-#include "memory/pointer_classes.h"
-#include "persistent_object_manager.h"
+#include "util/STL/list.h"
+#include "util/persistent.h"
+#include "util/memory/excl_ptr.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace parser {
@@ -26,15 +26,16 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
 using util::memory::sticky_ptr;
+using util::good_bool;
 using parser::context;
+class unroll_context;
 
 //=============================================================================
 /**
 	Abstract base class for sequential instantiation management objects, 
 	including instantiations, parameters, assignments, connections.  
-	Don't bother deriving from object, unless it is necessary.  
  */
-class instance_management_base : public persistent {
+class instance_management_base : virtual public persistent {
 protected:
 	// none
 public:
@@ -44,25 +45,43 @@ public:
 		Consider using this in object as well.  
 	 */
 	class dumper {
-		private:
-			ostream& os;
-		public:
-			explicit
-			dumper(ostream& o);
+	private:
+		ostream& os;
+	public:
+		explicit
+		dumper(ostream& o);
 
-			template <template <class> class P>
-			ostream&
-			operator () (const P<const instance_management_base>& i) const;
+		template <template <class> class P>
+		ostream&
+		operator () (const P<const instance_management_base>& i) const;
 	};      // end class dumper
 
 public:
 virtual ostream&
 	dump(ostream& o) const = 0;
 
+#define	UNROLL_META_EVALUATE_PROTO					\
+	good_bool							\
+	unroll_meta_evaluate(unroll_context& ) const
+
+#define	UNROLL_META_INSTANTIATE_PROTO					\
+	good_bool							\
+	unroll_meta_instantiate(unroll_context& ) const
+
+#define	UNROLL_META_CONNECT_PROTO					\
+	good_bool							\
+	unroll_meta_connect(unroll_context& ) const
+
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
+	// possible single-pass unroll may be phased out...
 virtual void
-	unroll(void) const = 0;
+	unroll(unroll_context& ) const = 0;
+
+virtual	UNROLL_META_EVALUATE_PROTO;
+virtual	UNROLL_META_INSTANTIATE_PROTO;
+virtual	UNROLL_META_CONNECT_PROTO;
+
 };	// end class instance_management_base
 
 //=============================================================================
@@ -134,7 +153,8 @@ public:
 
 // need not be virtual?
 // may need context later...
-	void unroll(void) const;
+	void
+	unroll(unroll_context& ) const;
 
 };      // end class sequential_scope
 
@@ -142,5 +162,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
 

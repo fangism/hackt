@@ -1,13 +1,13 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.11.4.1 2005/06/24 00:48:49 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.11.4.2 2005/06/24 19:02:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
 
-#include <string>
+#include "util/string_fwd.h"
 #include "Object/art_object_instance_management_base.h"
 #include "Object/art_object_util_types.h"
 #include "util/memory/excl_ptr.h"
@@ -44,11 +44,11 @@ protected:
 protected:
 	instantiation_statement_base() : instance_management_base(), 
 		indices(NULL) { }
-public:
 	explicit
 	instantiation_statement_base(
 		const index_collection_item_ptr_type& i);
 
+public:
 virtual	~instantiation_statement_base();
 
 	ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.21.10.1 2005/06/24 00:48:48 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.21.10.2 2005/06/24 19:02:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -57,12 +57,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 #endif
 
 #include "Object/art_object_inst_stmt.tcc"
+#include "Object/art_object_inst_stmt_param.tcc"
 
 //=============================================================================
 // local specializations
 // Alternatively, explicit specialization here guarantees that the
 // static initialization occurs in the correct order in this module.  
 namespace util {
+using ART::entity::pbool_tag;
+using ART::entity::pint_tag;
+
 SPECIALIZE_UTIL_WHAT(ART::entity::data_instantiation_statement,
 	"data_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
@@ -253,34 +257,39 @@ instantiation_statement_base::load_object_base(
 }
 
 //=============================================================================
-// class param_instantiation_statement method definitions
+// class param_instantiation_statement_base method definitions
 
 #if 0
 /**
 	Private empty constructor.
  */
-param_instantiation_statement::param_instantiation_statement() :
+param_instantiation_statement_base::param_instantiation_statement_base() :
 		parent_type() {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-param_instantiation_statement::param_instantiation_statement(
+param_instantiation_statement_base::param_instantiation_statement_base(
 		const index_collection_item_ptr_type& i) :
 		parent_type(i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-param_instantiation_statement::~param_instantiation_statement() {
+param_instantiation_statement_base::~param_instantiation_statement_base() {
 }
 #endif
 
 //=============================================================================
 // explicit template class instantiations
 
+#if 0
 template class instantiation_statement<pbool_tag>;
 template class instantiation_statement<pint_tag>;
+#else
+template class param_instantiation_statement<pbool_tag>;
+template class param_instantiation_statement<pint_tag>;
+#endif
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;

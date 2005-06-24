@@ -1,51 +1,82 @@
 /**
-	\file "art_object_definition.cc"
+	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.32 2005/01/28 19:58:40 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.1 2005/06/24 19:02:53 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_DEFINITION_CC__
-#define	__ART_OBJECT_DEFINITION_CC__
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
+#define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
 
+//=============================================================================
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
+
 #include <exception>
 #include <iostream>
+#include <functional>
 
-#include "art_parser_base.h"
+#include "AST/art_parser_delim.h"
+#include "AST/art_parser_token_string.h"
 
-#include "STL/list.tcc"
-#include "hash_qmap.tcc"
-#include "hash_specializations.h"		// substitute for the following
+#include "util/STL/list.tcc"
+#include "util/hash_qmap.tcc"
+#include "util/hash_specializations.h"		// substitute for the following
 
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr.h"			// for dynamic_param_expr_list
-#include "art_object_expr_param_ref.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_definition_data.h"
+#include "Object/art_object_definition_chan.h"
+#include "Object/art_object_definition_proc.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_inst_stmt_param_base.h"
+#include "Object/art_object_inst_stmt_data.h"
+#include "Object/art_object_expr.h"		// for dynamic_param_expr_list
+#include "Object/art_object_expr_param_ref.h"
+#include "Object/art_object_type_hash.h"
 
-#include "indent.h"
-#include "stacktrace.h"
-#include "static_trace.h"
-#include "persistent_object_manager.tcc"
+#include "util/memory/count_ptr.tcc"
+#include "util/indent.h"
+#include "util/binders.h"
+#include "util/compose.h"
+#include "util/stacktrace.h"
+#include "util/persistent_object_manager.tcc"
 
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
-
-//=============================================================================
-STATIC_TRACE_BEGIN("object-definition")
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY, 0)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
 namespace entity {
+using std::_Select2nd;
+#include "util/using_ostream.h"
 using parser::scope;
 using util::indent;
 using util::auto_indent;
 USING_STACKTRACE
+using namespace ADS;
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
+using util::persistent_traits;
 
 //=============================================================================
 // class definition_base method definitions
@@ -59,9 +90,8 @@ definition_base::null(NULL);
  */
 inline
 definition_base::definition_base() :
-		object(), persistent(), 
-		template_formals_map(), 
-		template_formals_list(), 
+		persistent(), object(), 
+		template_formals(), 
 		defined(false) {
 	// synchronize template formals with used_id_map
 }
@@ -83,49 +113,25 @@ definition_base::~definition_base() {
 ostream&
 definition_base::dump(ostream& o) const {
 	const string key = get_key();
-	what(o) << " " << key;
-	dump_template_formals(o);
+	what(o) << ((defined) ? " (defined) " : " (declared) ") << key;
+	template_formals.dump(o);
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints key in addition to dumping.  
+	Prints key in addition to dumping, including newline.  
+	Called by the name_space::dump().
  */
 ostream&
 definition_base::pair_dump(ostream& o) const {
 	o << auto_indent << get_key() << " = ";
-	return dump(o);
+	return dump(o) << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Sequentially prints template formal parameters.  
- */
-ostream&
-definition_base::dump_template_formals(ostream& o) const {
-	STACKTRACE("definition_base::dump_template_formals()");
-	// sanity check
-	INVARIANT(template_formals_list.size() == template_formals_map.size());
-	if (!template_formals_list.empty()) {
-		o << "<" << endl;	// continued from last print
-		indent tfl_ind(o);
-		template_formals_list_type::const_iterator
-			i = template_formals_list.begin();
-		const template_formals_list_type::const_iterator
-			e = template_formals_list.end();
-		for ( ; i!=e; i++) {
-			// sanity check
-			NEVER_NULL(*i);
-			INVARIANT((*i)->is_template_formal());
-			(*i)->dump(o << auto_indent) << endl;
-		}
-		o << auto_indent << ">" << endl;
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+UNVEIL LATER
 /**
 	Creates a map from template formals to actual values.  
 	Precondition: list passed by reference must be initially empty.
@@ -170,6 +176,7 @@ if (cpl) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -177,8 +184,17 @@ if (cpl) {
  */
 never_ptr<const param_instance_collection>
 definition_base::lookup_template_formal(const string& id) const {
-	return static_cast<const template_formals_map_type&>
-		(template_formals_map)[id];
+	return template_formals.lookup_template_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the (1-indexed) position of the referenced parameter 
+		in the list if found, else 0 if not found.
+ */
+size_t
+definition_base::lookup_template_formal_position(const string& id) const {
+	return template_formals.lookup_template_formal_position(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,27 +215,10 @@ definition_base::lookup_object_here(const string& id) const {
 		or the template formals signature is empty, 
 		or default parameters are available for all formals.  
  */
-bool
+good_bool
 definition_base::check_null_template_argument(void) const {
-//	STACKTRACE("definition_base::check_null_template_argument()");
-	if (template_formals_list.empty())
-		return true;
-	// else make sure each formal has a default parameter value
-	template_formals_list_type::const_iterator i =
-		template_formals_list.begin();
-	for ( ; i!=template_formals_list.end(); i++) {
-		const never_ptr<const param_instance_collection> p(*i);
-		NEVER_NULL(p);
-		p.must_be_a<const param_instance_collection>();
-		// if any formal is missing a default value, then this 
-		// definition cannot have null template arguments
-		if (!(*p).default_value()) {
-			return false;
-		}
-		// else continue;	// keep checking
-	}
-	// if we've reached end of list, we're good!
-	return true;
+	STACKTRACE("definition_base::check_null_template_argument()");
+	return template_formals.check_null_template_argument();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -241,32 +240,8 @@ bool
 definition_base::equivalent_template_formals(
 		const never_ptr<const definition_base> d) const {
 	NEVER_NULL(d);
-	const template_formals_list_type& dtemp = d->template_formals_list;
-	if (template_formals_list.size() != dtemp.size()) {
-		// useful error message here
-		cerr << "ERROR: number of template formal parameters "
-			"doesn\'t match!" << endl;
-		return false;
-	}
-	template_formals_list_type::const_iterator i =
-		template_formals_list.begin();
-	template_formals_list_type::const_iterator j = dtemp.begin();
-	for ( ; i!=template_formals_list.end() && j!=dtemp.end(); i++, j++) {
-		const never_ptr<const param_instance_collection> itf(*i);
-		const never_ptr<const param_instance_collection> jtf(*j);
-		NEVER_NULL(itf);	// template formals not optional
-		NEVER_NULL(jtf);	// template formals not optional
-		// only type and size need to be equal, not name
-		if (!itf->template_formal_equivalent(jtf)) {
-			// useful error message goes here
-			cerr << "ERROR: template formals do not match!" << endl;
-			return false;
-		}
-		// else continue checking
-	}
-	// sanity check, we made sure sizes match.
-	INVARIANT(i == template_formals_list.end() && j == dtemp.end());
-	return true;
+	return template_formals.equivalent_template_formals(
+		d->template_formals);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,77 +272,10 @@ definition_base::get_qualified_name(void) const {
 	\return true if arguments successfully type-checked 
 		and default arguments supplied in missing places.  
  */
-bool
+good_bool
 definition_base::certify_template_arguments(
 		const never_ptr<dynamic_param_expr_list> ta) const {
-if (ta) {
-	// first, number of arguments must match
-	const size_t a_size = ta->size();
-	const size_t f_size = template_formals_list.size();
-	const template_formals_list_type::const_iterator f_end =
-		template_formals_list.end();
-	template_formals_list_type::const_iterator f_iter =
-		template_formals_list.begin();
-	if (a_size != f_size) {
-		if (a_size)
-			return false;
-		// else a_size == 0, passed actuals list is empty, 
-		// try to fill in all default arguments
-		for ( ; f_iter!=f_end; f_iter++) {
-			const never_ptr<const param_instance_collection>
-				pinst(*f_iter);
-			NEVER_NULL(pinst);
-			const count_ptr<const param_expr>
-				default_expr(pinst->default_value());
-			if (!default_expr) {
-				// no default value to supply
-				return false;
-			} else {
-				ta->push_back(default_expr);
-			}
-		}
-		// if it fails, then list will be incomplete.  
-		// if this point is reached, then fill-in was successfull
-		return true;
-	}
-	dynamic_param_expr_list::iterator p_iter = ta->begin();
-	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
-		// eventually also work for complex aggregate types!
-		// "I promise this pointer is only local."  
-		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
-			pinst(*f_iter);
-		NEVER_NULL(pinst);
-		if (pex) {
-			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex)) {
-				// error message?
-				return false;
-			}
-			// else continue checking successive arguments
-		} else {
-			// no parameter expression given, 
-			// check for default -- if exists, use it, 
-			// else is error
-			const count_ptr<const param_expr>
-				default_expr(pinst->default_value());
-			if (!default_expr) {
-				// error message?
-				return false;
-			} else {
-				// else, actually assign it a copy in the list
-				*p_iter = default_expr;
-			}
-		}
-	}
-	// end of checking reached, everything passed
-	return true;
-} else {
-	// no arguments supplied, make sure template specification is
-	// null, or every formal has default values.  
-	return check_null_template_argument();
-}
+	return template_formals.certify_template_arguments(ta);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -375,43 +283,30 @@ if (ta) {
 	Default: return false (if unimplemented)
 	Temporarily prints an error message.  
  */
-bool
-definition_base::certify_port_actuals(const object_list& ol) const {
+good_bool
+definition_base::certify_port_actuals(const checked_refs_type&) const {
 	cerr << "Default definition_base::certify_port_actuals() = false."
 		<< endl;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: replace with pair of parameter lists
 	Prerequisiste for calling this: must satisfy
 		check_null_template_arguments.  
 	\returns a list of default parameter expressions.  
  */
 excl_ptr<dynamic_param_expr_list>
 definition_base::make_default_template_arguments(void) const {
-	typedef	excl_ptr<dynamic_param_expr_list>	return_type;
-	INVARIANT(check_null_template_argument());
-	if (template_formals_list.empty())
-		return return_type(NULL);
-	// defaulting to dynamic_param_expr_list
-	return_type ret(new dynamic_param_expr_list);
-	template_formals_list_type::const_iterator i = 
-		template_formals_list.begin();
-	for ( ; i!=template_formals_list.end(); i++) {
-		const count_ptr<const param_expr> d((*i)->default_value());
-		NEVER_NULL(d);	// everything must have default
-		ret->push_back(d);
-	}
-	// should transfer ownership
-	return ret;
+	return template_formals.make_default_template_arguments();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapper for making a type reference with default template args.  
  */
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 definition_base::make_fundamental_type_reference(void) const {
 	// assign, not copy construct!
 	excl_ptr<dynamic_param_expr_list>
@@ -432,10 +327,10 @@ definition_base::make_fundamental_type_reference(void) const {
 		must be modifiable for used_id_map
  */
 never_ptr<const instance_collection_base>
-definition_base::add_template_formal(
-		const never_ptr<instantiation_statement> i, 
+definition_base::add_strict_template_formal(
+		const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id) {
-	STACKTRACE("definition_base::add_template_formal()");
+	STACKTRACE("definition_base::add_strict_template_formal()");
 	typedef	never_ptr<const instance_collection_base>	return_type;
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
@@ -465,12 +360,41 @@ definition_base::add_template_formal(
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
 
-	template_formals_list.push_back(pf);
-	template_formals_map[id] = pf;
+	template_formals.add_strict_template_formal(pf);
 
 	// sanity check
 	INVARIANT(lookup_template_formal(id));
 	// later return a never_ptr<>
+	return pf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as add_strict_template_formal, except distinguished as
+	a relaxed template formal parameter.  
+ */
+never_ptr<const instance_collection_base>
+definition_base::add_relaxed_template_formal(
+		const never_ptr<instantiation_statement_base> i, 
+		const token_identifier& id) {
+	STACKTRACE("definition_base::add_relaxed_template_formal()");
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return return_type(NULL);
+	} 
+	}
+	scopespace* ss = IS_A(scopespace*, this);
+	NEVER_NULL(ss);
+	const never_ptr<const param_instance_collection>
+		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);	// consistency check
+	template_formals.add_relaxed_template_formal(pf);
+	INVARIANT(lookup_template_formal(id));
 	return pf;
 }
 
@@ -482,30 +406,10 @@ definition_base::add_template_formal(
  */
 never_ptr<const instance_collection_base>
 definition_base::add_port_formal(
-		const never_ptr<instantiation_statement> f, 
+		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& i) {
 	DIE;
 	return never_ptr<const instance_collection_base>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Note: calling this is unnecessary if one guarantees that
-	the template formals are a strict subset of the used_id_map.  
-	However, it can't hurt to revisit pointers.
- */
-inline
-void
-definition_base::collect_template_formal_pointers(
-		persistent_object_manager& m) const {
-	STACKTRACE("definition_base::collect_transients()");
-	template_formals_list_type::const_iterator
-		iter = template_formals_list.begin();
-	const template_formals_list_type::const_iterator
-		end = template_formals_list.end();
-	for ( ; iter!=end; iter++) {
-		(*iter)->collect_transient_info(m);
-	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -515,21 +419,7 @@ definition_base::collect_template_formal_pointers(
 void
 definition_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	collect_template_formal_pointers(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Template formals will need to be in list order.
-	Just write out the list, the hash_qmap is redundant.  
- */
-inline
-void
-definition_base::write_object_template_formals(
-		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE("definition_base::write_object_template_formals()");
-	INVARIANT(template_formals_list.size() == template_formals_map.size());
-	m.write_pointer_list(o, template_formals_list);
+	template_formals.collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -540,50 +430,26 @@ void
 definition_base::write_object_base_fake(
 		const persistent_object_manager& m, ostream& o) {
 	static const template_formals_list_type dummy;
-	m.write_pointer_list(o, dummy);
+	// this is a non-member function, emulating write_object_base
+	static const bool fake_defined = false;	// value doesn't matter
+	write_value(o, fake_defined);
+	template_formals_manager::write_object_base_fake(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 definition_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	write_object_template_formals(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Template formals are loaded in list order.
-	Remember that the redundant hash_map also needs to be reconstructed.  
-	Another method will add the entries to the corresponding
-	used_id_map where appropriate.  
- */
-inline
-void
-definition_base::load_object_template_formals(
-		persistent_object_manager& m, istream& f) {
-	STACKTRACE("definition_base::load_object_template_formals()");
-	m.read_pointer_list(f, template_formals_list);
-	// then copy list into hash_map to synchronize
-	template_formals_list_type::const_iterator
-		iter = template_formals_list.begin();
-	const template_formals_list_type::const_iterator
-		end = template_formals_list.end();
-	for ( ; iter!=end; iter++) {
-		STACKTRACE("for-loop: load a map entry");
-		const template_formals_value_type inst_ptr = *iter;
-		NEVER_NULL(inst_ptr);
-		// we need to load the instantiation to use its key!
-		const_cast<param_instance_collection&>(*inst_ptr).load_object(m);
-		template_formals_map[inst_ptr->get_name()] = inst_ptr;
-	}
-	INVARIANT(template_formals_list.size() == template_formals_map.size());
+	write_value(o, defined);
+	template_formals.write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 definition_base::load_object_base(
-		persistent_object_manager& m, istream& f) {
-	load_object_template_formals(m, f);
+		const persistent_object_manager& m, istream& f) {
+	read_value(f, defined);
+	template_formals.load_object_base(m, f);
 }
 
 //=============================================================================
@@ -614,7 +480,7 @@ typedef_base::get_qualified_name(void) const {
 ostream&
 typedef_base::dump(ostream& o) const {
 	what(o) << ": " << get_key();
-	dump_template_formals(o) << " = ";
+	template_formals.dump(o) << " = ";
 	get_base_type_ref()->dump(o);
 	return o;
 }
@@ -711,10 +577,10 @@ datatype_definition_base::make_typedef(never_ptr<const scopespace> s,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 // now pure virtual
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 datatype_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list> ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	if (certify_template_arguments(ta)) {
 		return return_type(
 			new data_type_reference(
@@ -752,11 +618,11 @@ channel_definition_base::make_typedef(never_ptr<const scopespace> s,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 channel_definition_base::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	typedef type_ref_ptr_type	return_type;
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new channel_type_reference(
@@ -772,19 +638,29 @@ channel_definition_base::make_fundamental_type_reference(
 //=============================================================================
 // class user_def_chan method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_chan, 
-	USER_DEF_CHAN_DEFINITION_TYPE_KEY)
+/// Private empty constructor.  
+user_def_chan::user_def_chan() :
+		definition_base(), 
+		channel_definition_base(), 
+		scopespace(),
+		sequential_scope(), 
+		key(), parent(), 
+		base_chan_type_ref(), 
+		port_formals(), 
+		send_chp(), recv_chp() {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-user_def_chan::user_def_chan(never_ptr<const name_space> o, 
+user_def_chan::user_def_chan(const never_ptr<const name_space> o, 
 		const string& name) :
 		definition_base(), 
 		channel_definition_base(), 
 		scopespace(),
 		sequential_scope(), 
-		key(name), 
-		parent(o) {
-	// FINISH ME
+		key(name), parent(o), 
+		base_chan_type_ref(), 
+		port_formals(), 
+		send_chp(), recv_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -800,8 +676,42 @@ user_def_chan::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump(ostream& o) const {
-	return o << "fang, get off your lazy ass and "
-		"write user_def_chan::dump()!" << endl;
+	definition_base::dump(o);	// dump template signature first
+	INDENT_SECTION(o);
+
+	o << endl;
+	// the list of datatype(s) carried by this channel
+	base_chan_type_ref->dump_long(o << auto_indent);
+	// now dump ports
+	port_formals.dump(o << auto_indent);
+
+	// now dump rest of contents
+//	list<never_ptr<const ...> > bin;		// later sort
+	o << auto_indent <<
+		"In channel definition \"" << key << "\", we have: {" << endl;
+	{	// begin indent level
+		const indent __indent__(o);
+		used_id_map_type::const_iterator
+			i = used_id_map.begin();
+		const used_id_map_type::const_iterator
+			e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			// pair_dump?
+			o << auto_indent << i->first << " = ";
+			// i->second->what(o) << endl;	// 1 level for now
+			i->second->dump(o) << endl;
+		}
+		// CHP
+		if (!send_chp.empty()) {
+			o << auto_indent << "send-CHP:" << endl;
+			send_chp.dump(o << auto_indent) << endl;
+		}
+		if (!recv_chp.empty()) {
+			o << auto_indent << "recv-CHP:" << endl;
+			recv_chp.dump(o << auto_indent) << endl;
+		}
+	}	// end indent scope
+	return o << auto_indent << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -832,41 +742,100 @@ user_def_chan::lookup_object_here(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void
-user_def_chan::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, USER_DEF_CHAN_DEFINITION_TYPE_KEY)) {
+user_def_chan::attach_base_channel_type(
+		const count_ptr<const builtin_channel_type_reference>& bc) {
+	NEVER_NULL(bc);
+	INVARIANT(!base_chan_type_ref);
+	base_chan_type_ref = bc;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Ripped off from process_definition's.
+	Last touched: 2005-05-25.
+ */
+never_ptr<const instance_collection_base>
+user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id) {
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	NEVER_NULL(f);
+	INVARIANT(f.is_a<data_instantiation_statement>());
+	// check and make sure identifier wasn't repeated in formal list!
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return return_type(NULL);
+	}
+	}
+
+	const return_type pf(add_instance(f, id));
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);
+
+	// since we already checked used_id_map, there cannot be a repeat
+	// in the port_formals_list!
+	port_formals.add_port_formal(pf);
+	INVARIANT(lookup_port_formal(id));
+	return pf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Override's definition_base's port formal lookup.  
+	\return pointer to port's instantiation if found, else NULL.  
+ */
+never_ptr<const instance_collection_base>
+user_def_chan::lookup_port_formal(const string& id) const {
+	return port_formals.lookup_port_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Wrapped call to port formal's certifier.  
+ */
+good_bool
+user_def_chan::certify_port_actuals(const checked_refs_type& cr) const {
+	return port_formals.certify_port_actuals(cr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+void
+user_def_chan::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	definition_base::collect_transient_info_base(m);
+	scopespace::collect_transient_info_base(m);
 	// recursively visit members...
+	base_chan_type_ref->collect_transient_info(m);
+#if 0
+	// unnecessary, pointers covered by scopespace already
+	port_formals.collect_transient_info_base(m);
+#endif
 	sequential_scope::collect_transient_info_base(m);
+	send_chp.collect_transient_info_base(m);
+	recv_chp.collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /**
-	Just allocate with bogus arguments.  
- */
-persistent*
-user_def_chan::construct_empty(const int i) {
-	return new user_def_chan(never_ptr<const name_space>(NULL), "");
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Not recursive, manager will call this once.  
  */
 void
-user_def_chan::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+user_def_chan::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
-//	write_object_port_formals(m);
 	scopespace::write_object_base(m, f);
+	m.write_pointer(f, base_chan_type_ref);
+	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
-	// body
-	WRITE_OBJECT_FOOTER(f);
+	send_chp.write_object_base(m, f);
+	recv_chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -874,22 +843,17 @@ user_def_chan::write_object(const persistent_object_manager& m) const {
 	Reads in fields from input stream.  
  */
 void
-user_def_chan::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
-//	load_object_port_formals(m);
 	scopespace::load_object_base(m, f);
+	m.read_pointer(f, base_chan_type_ref);
+	port_formals.load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
-	// body
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
+	send_chp.load_object_base(m, f);
+	recv_chp.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -909,12 +873,18 @@ user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class channel_definition_alias method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_definition_alias, 
-	CHANNEL_TYPEDEF_TYPE_KEY)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Private empty constructor.
+channel_definition_alias::channel_definition_alias() :
+		definition_base(), 
+		channel_definition_base(), 
+		typedef_base(), 
+		key(), parent(), base(NULL) {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_definition_alias::channel_definition_alias(
-		const string& n, never_ptr<const scopespace> p) :
+		const string& n, const never_ptr<const scopespace> p) :
 		definition_base(), 
 		channel_definition_base(), 
 		typedef_base(), 
@@ -967,7 +937,8 @@ channel_definition_alias::assign_typedef(
 void
 channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
 	definition_base::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);	// covers formals?
@@ -977,49 +948,29 @@ if (!m.register_transient_object(this, CHANNEL_TYPEDEF_TYPE_KEY)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Empty allocator.  
- */
-persistent*
-channel_definition_alias::construct_empty(const int i) {
-	return new channel_definition_alias("",
-		never_ptr<const scopespace>(NULL));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Not recursive, manager will call this once.  
  */
 void
 channel_definition_alias::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_definition_alias::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+channel_definition_alias::load_object(
+		const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1127,11 +1078,11 @@ built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 built_in_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	typedef	type_ref_ptr_type	return_type;
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new data_type_reference(
@@ -1168,8 +1119,10 @@ built_in_datatype_def::add_template_formal(
 		return never_ptr<const instance_collection_base>(NULL);
 	}
 
-	template_formals_list.push_back(pf);
-	template_formals_map[pf->hash_string()] = pf;
+// built-in definitions (int) only use strict template formals so far
+	template_formals.add_strict_template_formal(pf);
+//	template_formals.add_relaxed_template_formal(pf);
+
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the template_formals_list!
 	// template_formals_list and _map are strict subsets of used_id_map
@@ -1191,7 +1144,9 @@ void
 built_in_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
 	STACKTRACE("built_in_data::collect_transients()");
-	m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY);
+	m.register_transient_object(this, 
+		persistent_traits<user_def_datatype>::type_key);
+	// NOTE: not using this_type is INTENTIONAL
 	// don't bother with parent pointer to built-in namespace
 #if 0
 	definition_base::collect_transient_info_base(m);
@@ -1209,25 +1164,30 @@ built_in_datatype_def::collect_transient_info(
 	name as the built-in types because they are reserved keywords.  
  */
 void
-built_in_datatype_def::write_object(const persistent_object_manager& m) const {
+built_in_datatype_def::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("built_in_data::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+	static const port_formals_manager port_formals;
+	static const CHP::action_sequence fake_chp;
 	write_string(f, key);
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
 	// bogus template and port formals
 	definition_base::write_object_base_fake(m, f);	// is empty
 	scopespace::write_object_base_fake(m, f);
+	m.write_pointer(f, count_ptr<const data_type_reference>(NULL));
+	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base_fake(m, f);
-	WRITE_OBJECT_FOOTER(f);
+	// fake definition body
+	fake_chp.write_object_base(m, f);
+	fake_chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-built_in_datatype_def::load_object(persistent_object_manager& m) {
+built_in_datatype_def::load_object(
+		const persistent_object_manager& m, istream& f) {
 	cerr << "ERROR: built_in_datatype_def::load_object() "
 		"should never be called!" << endl;
 	DIE;
@@ -1303,13 +1263,12 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 	Managed cache may solve this...
 	\param ta template arguments are never used.  
  */
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 built_in_param_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
 	INVARIANT(!ta);
-	return count_ptr<const fundamental_type_reference>(
-		new param_type_reference(
-			never_ptr<const built_in_param_def>(this)));
+	return type_ref_ptr_type(new param_type_reference(
+		never_ptr<const built_in_param_def>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1341,8 +1300,15 @@ enum_member::dump(ostream& o) const {
 //=============================================================================
 // class enum_datatype_def method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_datatype_def, 
-	ENUM_DEFINITION_TYPE_KEY)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// Private empty constructor.  
+enum_datatype_def::enum_datatype_def() :
+		definition_base(), 
+		datatype_definition_base(), 
+		scopespace(), 
+		key(), 
+		parent() {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_datatype_def::enum_datatype_def(never_ptr<const name_space> o, 
@@ -1367,7 +1333,20 @@ enum_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
-	return what(o) << ": " << key;
+	what(o) << ": " << key;
+	if (defined) {
+		indent enum_ind(o);
+		o << endl << auto_indent << "{ ";
+		used_id_map_type::const_iterator i = used_id_map.begin();
+		const used_id_map_type::const_iterator e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			o << i->first << ", ";
+		}
+		o << " }";
+	} else {
+		o << " (undefined)";
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1400,14 +1379,13 @@ enum_datatype_def::resolve_canonical_datatype_definition(void) const {
 /**
 	NOTE: ta is not used.
  */
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 enum_datatype_def::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+	typedef type_ref_ptr_type	return_type;
 	INVARIANT(!ta);
-	return return_type(
-		new data_type_reference(
-			never_ptr<const datatype_definition_base>(this)));
+	return return_type(new data_type_reference(
+		never_ptr<const datatype_definition_base>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1421,7 +1399,7 @@ enum_datatype_def::make_fundamental_type_reference(
 	\param d the definition (signature) to compare, 
 		the name MUST match, else comparison is pointless!
  */
-bool
+good_bool
 enum_datatype_def::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	NEVER_NULL(d);
@@ -1431,13 +1409,13 @@ enum_datatype_def::require_signature_match(
 	if (ed) {
 		// only names need to match...
 		// no other signature information!  easy.
-		return true;
+		return good_bool(true);
 	} else {
 		// class type doesn't even match!  report error.
 		d->what(cerr << key << " is already declared as a ")
 			<< " but is being redeclared as a ";
 		what(cerr) << "  ERROR!  ";
-		return false;
+		return good_bool(false);
 	}
 }
 
@@ -1447,10 +1425,11 @@ enum_datatype_def::require_signature_match(
  */
 bool
 enum_datatype_def::add_member(const token_identifier& em) {
-	never_ptr<const object> probe(scopespace::lookup_object_here(em));
+	const never_ptr<const object>
+		probe(scopespace::lookup_object_here(em));
 	if (probe) {
-		const never_ptr<const enum_member> probe_em(
-			probe.is_a<const enum_member>());
+		const never_ptr<const enum_member>
+			probe_em(probe.is_a<const enum_member>());
 		NEVER_NULL(probe_em);	// can't contain enything else
 		return false;
 	} else {
@@ -1475,66 +1454,67 @@ enum_datatype_def::add_member(const token_identifier& em) {
 void
 enum_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, ENUM_DEFINITION_TYPE_KEY)) {
-
-// later: template formals... but enums cannot be templated!
-
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	definition_base::collect_transient_info_base(m);
+		// but no templates
+	scopespace::collect_transient_info_base(m);
 }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Empty allocator.  
- */
-persistent*
-enum_datatype_def::construct_empty(const int i) {
-	return new enum_datatype_def(never_ptr<const name_space>(NULL), "");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
+	Since enum-members are merely strings, we just write them out as 
+	strings.  
  */
 void
-enum_datatype_def::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-
-	// Index number: not necessary, but can't hurt
-	write_value(f, m.lookup_ptr_index(this));
-
+enum_datatype_def::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
-
 	m.write_pointer(f, parent);
+	definition_base::write_object_base(m, f);
 
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
+	// can't use scopespace because enum_member is not persistent
+//	scopespace::write_object_base(m, f);
+	{
+		const size_t s = used_id_map.size();
+		write_value(f, s);
+		used_id_map_type::const_iterator i = used_id_map.begin();
+		const used_id_map_type::const_iterator e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			write_value(f, i->first);
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Not recursive, manager will call this once.  
+	Since enum-members are merely strings, we just read them in as 
+	strings.  
+ */
 void
-enum_datatype_def::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-
-	// Strip away index number.
-	{
-	long index;
-	read_value(f, index);
-	}
+enum_datatype_def::load_object(const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
-
 	m.read_pointer(f, parent);
+	definition_base::load_object_base(m, f);
 
-	// template formals (list)
-
-	// port formals (list)
-
-	// body
-}
-// else already visited
+	// can't use scopespace because enum_member is not persistent
+//	scopespace::load_object_base(m, f);
+	{
+		size_t s;
+		read_value(f, s);
+		size_t i = 0;
+		for ( ; i<s; i++) {
+			string temp;
+			read_value(f, temp);
+			// copied from ::add_member, member function
+			excl_ptr<enum_member> member_ptr(new enum_member(temp));
+			used_id_map[temp] = member_ptr;
+			INVARIANT(!member_ptr);
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1552,20 +1532,33 @@ enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class user_def_datatype method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(user_def_datatype, 
-	USER_DEF_DATA_DEFINITION_TYPE_KEY)
+/// private empty constructor
+user_def_datatype::user_def_datatype() :
+		definition_base(), 
+		datatype_definition_base(), 
+		scopespace(),
+		sequential_scope(), 
+		key(), 
+		parent(), 
+		base_type(), 
+		port_formals(), 
+		set_chp(), get_chp() {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /// constructor for user defined type
 user_def_datatype::user_def_datatype(
-		never_ptr<const name_space> o,
+		const never_ptr<const name_space> o,
 		const string& name) :
 		definition_base(), 
 		datatype_definition_base(), 
 		scopespace(),
 		sequential_scope(), 
 		key(name), 
-		parent(o) {
+		parent(o), 
+		base_type(), 
+		port_formals(), 
+		set_chp(), get_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1580,7 +1573,41 @@ user_def_datatype::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
-	return what(o) << ": " << key;
+//	return what(o) << ": " << key;
+	definition_base::dump(o);	// dump template signature first
+	INDENT_SECTION(o);
+	o << endl;
+	base_type->dump(o << auto_indent);
+	// now dump ports
+	port_formals.dump(o << auto_indent);
+
+	// now dump rest of contents
+//	list<never_ptr<const ...> > bin;		// later sort
+	o << auto_indent <<
+		"In datatype definition \"" << key << "\", we have: {" << endl;
+	{	// begin indent level
+		const indent __indent__(o);
+		used_id_map_type::const_iterator
+			i = used_id_map.begin();
+		const used_id_map_type::const_iterator
+			e = used_id_map.end();
+		for ( ; i!=e; i++) {
+			// pair_dump?
+			o << auto_indent << i->first << " = ";
+			// i->second->what(o) << endl;	// 1 level for now
+			i->second->dump(o) << endl;
+		}
+		// CHP
+		if (!set_chp.empty()) {
+			o << auto_indent << "set-CHP:" << endl;
+			set_chp.dump(o << auto_indent) << endl;
+		}
+		if (!get_chp.empty()) {
+			o << auto_indent << "get-CHP:" << endl;
+			get_chp.dump(o << auto_indent) << endl;
+		}
+	}	// end indent scope
+	return o << auto_indent << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1616,11 +1643,63 @@ user_def_datatype::lookup_object_here(const string& id) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+void
+user_def_datatype::attach_base_data_type(
+		const count_ptr<const data_type_reference>& d) {
+	INVARIANT(!base_type);
+	NEVER_NULL(d);
+	base_type = d;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Shamelessly ripped off from user_def_chan's, 
+	Ripped off from process_definition's.
+ */
+never_ptr<const instance_collection_base>
+user_def_datatype::add_port_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id) {
+	typedef	never_ptr<const instance_collection_base>	return_type;
+	NEVER_NULL(f);
+	INVARIANT(f.is_a<data_instantiation_statement>());
+	// check and make sure identifier wasn't repeated in formal list!
+	{
+	const never_ptr<const object>
+		probe(lookup_object_here(id));
+	if (probe) {
+		probe->what(cerr << " already taken as a ") << " ERROR!";
+		return return_type(NULL);
+	}
+	}
+
+	const return_type pf(add_instance(f, id));
+	NEVER_NULL(pf);
+	INVARIANT(pf->get_name() == id);
+
+	// since we already checked used_id_map, there cannot be a repeat
+	// in the port_formals_list!
+	port_formals.add_port_formal(pf);
+	INVARIANT(lookup_port_formal(id));
+	return pf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Override's definition_base's port formal lookup.  
+	\return pointer to port's instantiation if found, else NULL.  
+ */
+never_ptr<const instance_collection_base>
+user_def_datatype::lookup_port_formal(const string& id) const {
+	return port_formals.lookup_port_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+definition_base::type_ref_ptr_type
 user_def_datatype::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	typedef type_ref_ptr_type	return_type;
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(
 			new data_type_reference(
@@ -1641,20 +1720,19 @@ user_def_datatype::make_fundamental_type_reference(
 void
 user_def_datatype::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, USER_DEF_DATA_DEFINITION_TYPE_KEY)) {
-
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	STACKTRACE("user_def_datatype::collect_transient()");
 // later: template formals
 	sequential_scope::collect_transient_info_base(m);
+	scopespace::collect_transient_info_base(m);
+	if (base_type)
+		base_type->collect_transient_info(m);
+	// no need to call port_formals.collect_transient_info, 
+	// already covered by scopespace::collect...
+	set_chp.collect_transient_info_base(m);
+	get_chp.collect_transient_info_base(m);
 }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Empty allocator.  
- */
-persistent*
-user_def_datatype::construct_empty(const int i) {
-	return new user_def_datatype(never_ptr<const name_space>(NULL), "");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1664,40 +1742,40 @@ user_def_datatype::construct_empty(const int i) {
 	built_in_datatype_def::write_object.  
  */
 void
-user_def_datatype::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+user_def_datatype::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE("user_def_datatype::write_object()");
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
 //	write_object_port_formals(m);
 	scopespace::write_object_base(m, f);
+	m.write_pointer(f, base_type);
+	port_formals.write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
 	// body
-	WRITE_OBJECT_FOOTER(f);
+	set_chp.write_object_base(m, f);
+	get_chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-user_def_datatype::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+user_def_datatype::load_object(
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("user_def_datatype::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
 //	load_object_port_formals(m);
 	scopespace::load_object_base(m, f);
+	m.read_pointer(f, base_type);
+	port_formals.load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
 	// body
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
+	set_chp.load_object_base(m, f);
+	get_chp.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1717,12 +1795,19 @@ user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 //=============================================================================
 // class datatype_definition_alias method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_definition_alias, 
-	DATA_TYPEDEF_TYPE_KEY)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/// private empty constructor
+datatype_definition_alias::datatype_definition_alias() :
+		definition_base(), 
+		datatype_definition_base(), 
+		typedef_base(), 
+		key(), 
+		parent() {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::datatype_definition_alias(
-		const string& n, never_ptr<const scopespace> p) :
+		const string& n, const never_ptr<const scopespace> p) :
 		definition_base(), 
 		datatype_definition_base(), 
 		typedef_base(), 
@@ -1783,16 +1868,15 @@ datatype_definition_alias::assign_typedef(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 datatype_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	typedef	type_ref_ptr_type	return_type;
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
-		return return_type(
-			new data_type_reference(
-				never_ptr<const datatype_definition_alias>(this), 
-				plp));
+		return return_type(new data_type_reference(
+			never_ptr<const datatype_definition_alias>(this), 
+			plp));
 	} else {
 		cerr << "ERROR: failed to make data_type_alias type reference "
 			"because template argument types do not match." << endl;
@@ -1801,11 +1885,11 @@ datatype_definition_alias::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+good_bool
 datatype_definition_alias::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
-	return false;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1816,7 +1900,8 @@ datatype_definition_alias::require_signature_match(
 void
 datatype_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
 //	scopespace::collect_transient_info_base(m);	// covers formals?
 	definition_base::collect_transient_info_base(m);
@@ -1827,51 +1912,31 @@ if (!m.register_transient_object(this, DATA_TYPEDEF_TYPE_KEY)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Empty allocator.  
- */
-persistent*
-datatype_definition_alias::construct_empty(const int i) {
-	return new datatype_definition_alias("",
-		never_ptr<const scopespace>(NULL));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Not recursive, manager will call this once.  
  */
 void
 datatype_definition_alias::write_object(
-		const persistent_object_manager& m) const {
+		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("data_def_alias::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-datatype_definition_alias::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+datatype_definition_alias::load_object(
+		const persistent_object_manager& m, istream& f) {
 	STACKTRACE("data_def_alias::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1916,8 +1981,21 @@ process_definition_base::make_typedef(never_ptr<const scopespace> s,
 //=============================================================================
 // class process_definition method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition, 
-	PROCESS_DEFINITION_TYPE_KEY)
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private empty constructor.
+ */
+process_definition::process_definition() :
+		definition_base(), 
+		process_definition_base(),
+		scopespace(),
+		sequential_scope(), 
+		key(), 
+		parent(), 
+		port_formals(), 
+		prs(), chp() {
+	// no null check: because of partial reconstruction
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1932,10 +2010,10 @@ process_definition::process_definition(
 		sequential_scope(), 
 		key(s), 
 		parent(o), 
-		port_formals_list(), 
-		port_formals_map() {
+		port_formals(), 
+		prs(), chp() {
 	// fill me in...
-	// NEVER_NULL(o);		// no: because of partial reconstruction
+	NEVER_NULL(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1957,30 +2035,41 @@ process_definition::what(ostream& o) const {
  */
 ostream&
 process_definition::dump(ostream& o) const {
+//	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
-
+	// unique ID not working with INDENT_SECTION marco... :(
+	const indent _ind__(o);	
 	// now dump ports
-	{
-		o << "(" << endl;
-		port_formals_list_type::const_iterator i =
-			port_formals_list.begin();
-		for ( ; i!=port_formals_list.end(); i++) {
-			(*i)->dump(o) << endl;
-		}
-		o << ")" << endl;
-	}
+	port_formals.dump(o);
 
 	// now dump rest of contents
-	o << "{" << endl;
-	used_id_map_type::const_iterator i;
 //	list<never_ptr<const ...> > bin;		// later sort
-	o << "In definition \"" << key << "\", we have: " << endl;
-	for (i=used_id_map.begin(); i!=used_id_map.end(); i++) {
-		o << "  " << i->first << " = ";
-//		i->second->what(o) << endl;		// 1 level for now
-		i->second->dump(o) << endl;
-	}
-	return o << "}" << endl;
+	o << auto_indent <<
+		"In definition \"" << key << "\", we have: {" << endl;
+	{	// begin indent level
+		INDENT_SECTION(o);
+		used_id_map_type::const_iterator
+			i(used_id_map.begin());
+		const used_id_map_type::const_iterator
+			e(used_id_map.end());
+		for ( ; i!=e; i++) {
+			// pair_dump?
+			o << auto_indent << i->first << " = ";
+			// i->second->what(o) << endl;	// 1 level for now
+			i->second->dump(o) << endl;
+		}
+		// PRS
+		if (!prs.empty()) {
+			o << auto_indent << "prs:" << endl;
+			prs.dump(o);	// << endl;
+		}
+		// CHP
+		if (!chp.empty()) {
+			o << auto_indent << "chp:" << endl;
+			chp.dump(o << auto_indent) << endl;
+		}
+	}	// end indent scope
+	return o << auto_indent << "}" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2014,7 +2103,7 @@ process_definition::lookup_object_here(const string& s) const {
  */
 never_ptr<const instance_collection_base>
 process_definition::lookup_port_formal(const string& id) const {
-	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
+	return port_formals.lookup_port_formal(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2023,61 +2112,17 @@ process_definition::lookup_port_formal(const string& id) const {
 	the port formal specification.  
 	\return true if type checks (is conservative).
  */
-bool
-process_definition::certify_port_actuals(const object_list& ol) const {
-#if 0
-	cerr << "process_definition::certify_port_actuals(): FINISH ME!"
-		<< endl;
-#endif
-	const size_t num_formals = port_formals_list.size();
-	const size_t num_actuals = ol.size();
-	if (port_formals_list.size() != ol.size()) {
-		cerr << "Number of port actuals (" << num_actuals <<
-			") doesn\'t match the number of port formals (" <<
-			num_formals << ").  ERROR!  " << endl;
-		return false;
-	}
-	object_list::const_iterator
-		a_iter = ol.begin();
-	port_formals_list_type::const_iterator
-		f_iter = port_formals_list.begin();
-	const port_formals_list_type::const_iterator
-		f_end = port_formals_list.end();
-	size_t i = 1;
-	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
-		const count_ptr<const object> a_obj(*a_iter);
-		if (a_obj) {
-			const count_ptr<const instance_reference_base>
-				a_iref(a_obj.is_a<const instance_reference_base>());
-			const never_ptr<const instance_collection_base>
-				f_inst(*f_iter);
-			// FINISH ME
-			const count_ptr<const instance_reference_base>
-				f_iref(f_inst->make_instance_reference());
-			if (!f_iref->may_be_type_equivalent(*a_iref)) {
-				cerr << "ERROR: actual instance reference "
-					<< i << " of port connection "
-					"doesn\'t match the formal type/size."
-					<< endl << "\tgot: ";
-				a_iref->dump_type_size(cerr);
-				f_iref->dump_type_size(
-					cerr << ", expected: ") << endl;
-				return false;
-			}
-			// else continue checking
-		}
-		// else is NULL, no connection to check, just continue
-	}
-	// if we've made it here, then no errors!
-	return true;
+good_bool
+process_definition::certify_port_actuals(const checked_refs_type& ol) const {
+	return port_formals.certify_port_actuals(ol);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 process_definition::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	typedef type_ref_ptr_type	return_type;
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
 		return return_type(new process_type_reference(
 				never_ptr<const process_definition>(this),
@@ -2095,10 +2140,10 @@ process_definition::make_fundamental_type_reference(
  */
 never_ptr<const instance_collection_base>
 process_definition::add_port_formal(
-		const never_ptr<instantiation_statement> f, 
+		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
 	NEVER_NULL(f);
-	INVARIANT(!f.is_a<param_instantiation_statement>());
+	INVARIANT(!f.is_a<param_instantiation_statement_base>());
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
@@ -2114,14 +2159,10 @@ process_definition::add_port_formal(
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
-	{
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
-	port_formals_list.push_back(pf);
-	port_formals_map[id] = pf;
+	port_formals.add_port_formal(pf);
 	INVARIANT(lookup_port_formal(id));
-	}
-
 	return pf;
 }
 
@@ -2135,7 +2176,7 @@ process_definition::add_port_formal(
 	\param d the definition to check against.  
 	\return true if equivalent, else false.  
  */
-bool
+good_bool
 process_definition::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	NEVER_NULL(d);
@@ -2144,65 +2185,79 @@ process_definition::require_signature_match(
 	if (!pd) {
 		cerr << "ERROR: definition " << d->get_name() <<
 			" is not even a process!" << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for name match
 	if (key != pd->get_name()) {
 		cerr << "ERROR: names " << key << " and " << d->get_name() <<
 			" don\'t even match!" << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for owner-namespace match
 	if (parent != pd->parent) {
 		cerr << "ERROR: definition owner namespaces don\'t match: "
 			<< endl << "\tgot: " << parent->get_qualified_name()
 			<< " and " << pd->parent->get_qualified_name() << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for template formal list match (in order)
 	if (!equivalent_template_formals(pd)) {
 		cerr << "ERROR: template formals do not match!  " << endl;
-		return false;
+		return good_bool(false);
 	}
 	// check for port formal list match (in order)
-	if (!equivalent_port_formals(pd)) {
-		return false;
+	if (!port_formals.equivalent_port_formals(pd->port_formals)) {
+		return good_bool(false);
 	}
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Port formals are equivalent if their order of instantiations
-	matches exactly, type, size, and even name.  
+	Registers a production rule with this process definition.  
+	Automatically expands complements.  
+	\param r pointer to newly created and checked production rule.  
+		Transfers ownership to the definition.  
+	\post r is NULL, no longer owned by the passer.  
  */
-bool
-process_definition::equivalent_port_formals(
-		const never_ptr<const process_definition> p) const {
-	NEVER_NULL(p);
-	const port_formals_list_type& pports = p->port_formals_list;
-	if (port_formals_list.size() != pports.size()) {
-		cerr << "ERROR: number of port formal parameters "
-			"doesn\'t match!" << endl;
-		return false;
+void
+process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
+	NEVER_NULL(r);
+	r->check();		// paranoia
+	excl_ptr<PRS::rule> cmpl = r->expand_complement();
+	prs.push_back(PRS::rule_set::value_type());
+	prs.back() = r;
+	INVARIANT(!r);
+	if (cmpl) {
+		prs.push_back(PRS::rule_set::value_type());
+		prs.back() = cmpl;
+		INVARIANT(!cmpl);
 	}
-	port_formals_list_type::const_iterator
-		i = port_formals_list.begin();
-	port_formals_list_type::const_iterator
-		j = pports.begin();
-	for ( ; i!=port_formals_list.end() && j!=pports.end(); i++, j++) {
-		const never_ptr<const instance_collection_base> ipf(*i);
-		const never_ptr<const instance_collection_base> jpf(*j);
-		NEVER_NULL(ipf);
-		NEVER_NULL(jpf);
-		if (!ipf->port_formal_equivalent(jpf)) {
-			// descriptive error message, please
-			cerr << "ERROR: port formals do not match!" << endl;
-			return false;
-		}
-	}
-	INVARIANT(i == port_formals_list.end() && j == pports.end());
-	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call to prs's compact_referenes.  
+ */
+void
+process_definition::compact_prs_references(void) {
+	prs.compact_references();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call to prs's expand_complements.  
+ */
+void
+process_definition::expand_prs_complements(void) {
+	prs.expand_complements();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
+	NEVER_NULL(a);
+	chp.push_back(a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2212,21 +2267,20 @@ process_definition::equivalent_port_formals(
  */
 void
 process_definition::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_DEFINITION_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	// no need to visit template formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
 	scopespace::collect_transient_info_base(m);
 	sequential_scope::collect_transient_info_base(m);
+#if 0
+	port_formals.collect_transient_info_base(m);	// is a NO-OP, actually
+	// pointers already covered by scopespace::collect
+#endif
+	// PRS
+	prs.collect_transient_info_base(m);
+	chp.collect_transient_info_base(m);
 }
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Temporary allocation.  
- */
-persistent*
-process_definition::construct_empty(const int i) {
-	return new process_definition(never_ptr<const name_space>(NULL), "");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2234,37 +2288,34 @@ process_definition::construct_empty(const int i) {
 	Not recursive, manager will call this once.  
  */
 void
-process_definition::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+process_definition::write_object(
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
-	write_object_port_formals(m);
+	port_formals.write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	// connections and assignments
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
+	// PRS
+	prs.write_object_base(m, f);
+	chp.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+process_definition::load_object(
+		const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
-	load_object_port_formals(m);
+	port_formals.load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	// connections and assignments
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
+	// PRS
+	prs.load_object_base(m, f);
+	chp.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2281,48 +2332,8 @@ process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 	}
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Port formals will need to be in list order.
-	Just write out the list, the hash_qmap is redundant.  
- */
-void
-process_definition::write_object_port_formals(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	m.write_pointer_list(f, port_formals_list);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Template formals are loaded in list order.
-	Remember that the redundant hash_map also needs to be reconstructed.  
-	Another method will add the entries to the corresponding
-	used_id_map where appropriate.  
- */
-void
-process_definition::load_object_port_formals(
-		persistent_object_manager& m) {
-	istream& f = m.lookup_read_buffer(this);
-	m.read_pointer_list(f, port_formals_list);
-	// then copy list into hash_map to synchronize
-	port_formals_list_type::const_iterator
-		iter = port_formals_list.begin();
-	const port_formals_list_type::const_iterator
-		end = port_formals_list.end();
-	for ( ; iter!=end; iter++) {
-		const port_formals_value_type inst_ptr = *iter;
-		NEVER_NULL(inst_ptr);
-		const_cast<instance_collection_base*>(&*inst_ptr)->load_object(m);
-		port_formals_map[inst_ptr->get_name()] = inst_ptr;
-	}
-}
-
 //=============================================================================
 // class process_definition_alias method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_definition_alias, 
-	PROCESS_TYPEDEF_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2338,7 +2349,7 @@ process_definition_alias::process_definition_alias() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_definition_alias::process_definition_alias(const string& n, 
-		never_ptr<const scopespace> p) :
+		const never_ptr<const scopespace> p) :
 		definition_base(), 
 		process_definition_base(), 
 		typedef_base(), 
@@ -2389,16 +2400,15 @@ process_definition_alias::assign_typedef(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const fundamental_type_reference>
+definition_base::type_ref_ptr_type
 process_definition_alias::make_fundamental_type_reference(
 		excl_ptr<dynamic_param_expr_list>& ta) const {
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	if (certify_template_arguments(ta)) {
+	typedef	type_ref_ptr_type	return_type;
+	if (certify_template_arguments(ta).good) {
 		excl_ptr<const param_expr_list> plp(ta);
-		return return_type(
-			new process_type_reference(
-				never_ptr<const process_definition_alias>(this), 
-				plp));
+		return return_type(new process_type_reference(
+			never_ptr<const process_definition_alias>(this), 
+			plp));
 	} else {
 		cerr << "ERROR: failed to make process_definition_alias "
 			"type reference because template argument types "
@@ -2415,7 +2425,8 @@ process_definition_alias::make_fundamental_type_reference(
 void
 process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
 	definition_base::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);	// covers formals?
@@ -2425,48 +2436,29 @@ if (!m.register_transient_object(this, PROCESS_TYPEDEF_TYPE_KEY)) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Empty allocator.  
- */
-persistent*
-process_definition_alias::construct_empty(const int i) {
-	return new process_definition_alias();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Not recursive, manager will call this once.  
  */
 void
 process_definition_alias::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
+		const persistent_object_manager& m, ostream& f) const {
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
 	definition_base::write_object_base(m, f);
 	scopespace::write_object_base(m, f);
 	sequential_scope::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition_alias::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
+process_definition_alias::load_object(
+		const persistent_object_manager& m, istream& f) {
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
 	definition_base::load_object_base(m, f);
 	scopespace::load_object_base(m, f);
 	sequential_scope::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2494,7 +2486,7 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace entity
 }	// end namespace ART
 
-STATIC_TRACE_END("object-definition")
+DEFAULT_STATIC_TRACE_END
 
-#endif	// __ART_OBJECT_DEFINITION_CC__
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_CC__
 

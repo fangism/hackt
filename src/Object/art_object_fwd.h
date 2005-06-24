@@ -1,19 +1,19 @@
 /**
-	\file "art_object_fwd.h"
+	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.6 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_fwd.h,v 1.14.4.1 2005/06/24 19:02:56 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_FWD_H__
-#define	__ART_OBJECT_FWD_H__
+#ifndef	__OBJECT_ART_OBJECT_FWD_H__
+#define	__OBJECT_ART_OBJECT_FWD_H__
 
-#include "memory/pointer_classes_fwd.h"
-#include "STL/deque_fwd.h"
+#include "util/size_t.h"
+#include "Object/art_object_classification_tags.h"
+#include "Object/art_object_classification_fwd.h"
+#include "Object/art_object_expr_types.h"
 
 namespace ART {
 namespace entity {
-	USING_DEQUE
-	using namespace util::memory;
 
 // TODO: organize into groups by where full declarations are found
 
@@ -24,42 +24,159 @@ namespace entity {
 	class name_space;
 	class built_in_datatype_def;
 	class fundamental_type_reference;
-	class simple_instance_reference;
+	class simple_meta_instance_reference_base;
+	class simple_nonmeta_instance_reference_base;
 	class instance_collection_base;
-	class instance_reference_base;
+	class physical_instance_collection;
+	class meta_instance_reference_base;
 	class definition_base;
 	class user_def_chan;
 	class user_def_type;
 	class channel_definition_base;
+	class channel_type_reference_base;
+	class builtin_channel_type_reference;
 	class channel_type_reference;
-	class channel_instance_collection;
-	class channel_instance_reference;
 	class datatype_definition_base;
+	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
-	class datatype_instance_reference;
+	class simple_datatype_meta_instance_reference_base;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
-	class process_instance_collection;
-	class process_instance_reference;
 	class built_in_param_def;
+	class built_in_channel_def;
 	class typedef_base;
-	class member_instance_reference_base;
+
+	// from "Object/art_object_nonmeta_inst_ref.h"
+	// note there are generic (non-meta) abstract base classes from which
+	// the meta-versions are derived.
+	class nonmeta_instance_reference_base;
+	class channel_instance_reference_base;
+	class process_instance_reference_base;
+	class datatype_instance_reference_base;
+	class param_instance_reference_base;
+	class int_instance_reference_base;
+	class bool_instance_reference_base;
+	class enum_instance_reference_base;
+	class struct_instance_reference_base;
+	class pint_instance_reference_base;
+	class pbool_instance_reference_base;
+
+	template <class>
+	class meta_instance_reference;
+
+	typedef	meta_instance_reference<channel_tag>
+		channel_meta_instance_reference_base;
+	typedef	meta_instance_reference<process_tag>
+		process_meta_instance_reference_base;
+	typedef	meta_instance_reference<int_tag>
+		int_meta_instance_reference_base;
+	typedef	meta_instance_reference<bool_tag>
+		bool_meta_instance_reference_base;
+	typedef	meta_instance_reference<enum_tag>
+		enum_meta_instance_reference_base;
+	typedef	meta_instance_reference<datastruct_tag>
+		struct_meta_instance_reference_base;
+	// base classes for meta_value_references
+	typedef	meta_instance_reference<pbool_tag>
+		pbool_meta_instance_reference_base;
+	typedef	meta_instance_reference<int_tag>
+		pint_meta_instance_reference_base;
+
+	template <class>
+	class simple_meta_instance_reference;
+	template <class>
+	class simple_nonmeta_instance_reference;
+	template <class>
+	class simple_nonmeta_value_reference;
+
+	typedef	simple_nonmeta_instance_reference<channel_tag>
+		simple_channel_nonmeta_instance_reference;
+	typedef	simple_nonmeta_instance_reference<process_tag>
+		simple_process_nonmeta_instance_reference;
+
+#if 1
+	// value reference this?
+	typedef	simple_nonmeta_instance_reference<datatype_tag>
+		simple_datatype_nonmeta_instance_reference;
+#endif
+	// data: use value reference
+	typedef	simple_nonmeta_value_reference<int_tag>
+		simple_int_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<bool_tag>
+		simple_bool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<enum_tag>
+		simple_enum_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<datastruct_tag>
+		simple_datastruct_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<pbool_tag>
+		simple_pbool_nonmeta_instance_reference;
+	typedef	simple_nonmeta_value_reference<pint_tag>
+		simple_pint_nonmeta_instance_reference;
+
+	template <class>
+	class instance_collection;
+
+	template <class, size_t>
+	class instance_array;
+	template <class, size_t>
+	class value_array;
+
+	// subclasses of datatype_instance_collection
+	typedef	instance_collection<bool_tag>
+		bool_instance_collection;
+	typedef	instance_collection<int_tag>
+		int_instance_collection;
+	typedef	instance_collection<enum_tag>
+		enum_instance_collection;
+	typedef	instance_collection<datastruct_tag>
+		struct_instance_collection;
+	typedef	instance_collection<channel_tag>
+		channel_instance_collection;
+	typedef	instance_collection<process_tag>
+		process_instance_collection;
+
+	typedef	simple_meta_instance_reference<channel_tag>
+		simple_channel_meta_instance_reference;
+	typedef	simple_meta_instance_reference<process_tag>
+		simple_process_meta_instance_reference;
+	typedef	simple_meta_instance_reference<bool_tag>
+		simple_bool_meta_instance_reference;
+	typedef	simple_meta_instance_reference<int_tag>
+		simple_int_meta_instance_reference;
+	typedef	simple_meta_instance_reference<enum_tag>
+		simple_enum_meta_instance_reference;
+	typedef	simple_meta_instance_reference<datastruct_tag>
+		simple_datastruct_meta_instance_reference;
+
+	template <class>
+	class member_meta_instance_reference;
+
+	typedef	member_meta_instance_reference<process_tag>
+		process_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<channel_tag>
+		channel_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<bool_tag>
+		bool_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<int_tag>
+		int_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<enum_tag>
+		enum_member_meta_instance_reference;
+	typedef	member_meta_instance_reference<datastruct_tag>
+		datastruct_member_meta_instance_reference;
 
 	class param_type_reference;
 	class pbool_type_reference;
 	class pint_type_reference;
 
+	template <class>
+	class value_collection;
 	class param_instance_collection;
-	class pbool_instance_collection;
-	class pint_instance_collection;
-
-	// subclasses of datatype_instance_collection
-	class bool_instance_collection;
-	class int_instance_collection;
-	class enum_instance_collection;
-	class struct_instance_collection;
+	typedef	value_collection<pint_tag>
+		pint_instance_collection;
+	typedef	value_collection<pbool_tag>
+		pbool_instance_collection;
 
 	class pint_instance;
 	class pbool_instance;
@@ -67,39 +184,98 @@ namespace entity {
 	class bool_instance;
 	class enum_instance;
 	class struct_instance;
+	class channel_instance;
+	class process_instance;
 
-	class int_instance_alias;
-	class bool_instance_alias;
-	class enum_instance_alias;
-	class struct_instance_alias;
-	class proc_instance_alias;
-	class chan_instance_alias;
+	template <class>		class instance_alias_info;
+	template <class, size_t>	class instance_alias;
 
 	class instance_management_base;
 	class param_expression_assignment;
-	class instance_reference_connection;
-	class aliases_connection;
-	class port_connection;
+	template <class>
+	class expression_assignment;
+	typedef	expression_assignment<pbool_tag>
+		pbool_expression_assignment;
+	typedef	expression_assignment<pint_tag>
+		pint_expression_assignment;
 
+	// defined in "art_object_connect.h"
+	class meta_instance_reference_connection;
+	class port_connection;
+	class aliases_connection_base;
+	class data_alias_connection_base;
+	template <class>	class alias_connection;
+	typedef alias_connection<int_tag>
+		int_alias_connection;
+	typedef alias_connection<bool_tag>
+		bool_alias_connection;
+	typedef alias_connection<enum_tag>
+		enum_alias_connection;
+	typedef alias_connection<datastruct_tag>
+		datastruct_alias_connection;
+	typedef alias_connection<channel_tag>
+		channel_alias_connection;
+	typedef alias_connection<process_tag>
+		process_alias_connection;
+
+	template <class>
 	class instantiation_statement;
+	template <class>
 	class param_instantiation_statement;
-	class pbool_instantiation_statement;
-	class pint_instantiation_statement;
-	class channel_instantiation_statement;
-	class data_instantiation_statement;
-	class process_instantiation_statement;
+
+	class instantiation_statement_base;
+	class param_instantiation_statement_base;
+
+	typedef	param_instantiation_statement<pbool_tag>
+		pbool_instantiation_statement;
+	typedef	param_instantiation_statement<pint_tag>
+		pint_instantiation_statement;
+	typedef	instantiation_statement<datatype_tag>
+		data_instantiation_statement;
+	typedef	instantiation_statement<channel_tag>
+		channel_instantiation_statement;
+	typedef	instantiation_statement<process_tag>
+		process_instantiation_statement;
 
 // expressions and family
-	class param_instance_reference;
-	class pint_instance_reference;
-	class pbool_instance_reference;
+	class simple_param_meta_value_reference;
+	template <class>
+	class simple_meta_value_reference;
+	typedef	simple_meta_value_reference<pint_tag>
+		simple_pint_meta_instance_reference;
+	typedef	simple_meta_value_reference<pbool_tag>
+		simple_pbool_meta_instance_reference;
+
+	template <class>
+	class simple_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<int_tag>
+		simple_int_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<bool_tag>
+		simple_bool_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<enum_tag>
+		simple_enum_nonmeta_value_reference;
+	typedef	simple_nonmeta_value_reference<datastruct_tag>
+		simple_struct_nonmeta_value_reference;
+
+	// from "Object/art_object_data_expr[_base].h"
+	class data_expr;
+	class bool_expr;
+	class int_expr;
+	class enum_expr;
+	class struct_expr;
+	class int_arith_expr;
+	class int_range_expr;
+	class nonmeta_index_expr_base;
+	class nonmeta_range_expr_base;
+	class nonmeta_index_list;
+	class nonmeta_range_list;
 
 	class param_expr;
 	class const_param;
 	class param_expr_list;
 	class const_param_expr_list;
 	class dynamic_param_expr_list;
-	class index_expr;               // BEWARE also in ART::parser!
+	class meta_index_expr;
 	class const_index;
 	class pbool_expr;
 	class pint_expr;
@@ -112,53 +288,32 @@ namespace entity {
 	class arith_expr;
 	class relational_expr;
 	class logical_expr;
-	class range_expr;
+	class meta_range_expr;
 	class pint_range;
 	class const_range;
-	class range_expr_list;
+	class meta_range_list;
 	class const_range_list;
-	class dynamic_range_list;
+	class dynamic_meta_range_list;
 //	class unconditional_range_list;
 //	class conditional_range_list;
 //	class loop_range_list;
-	class index_list;
+	class meta_index_list;
 	class const_index_list;
-	class dynamic_index_list;
+	class dynamic_meta_index_list;
 
-	/**
-		The global integer-type for parameter integers.  
-	 */
-	typedef	long		pint_value_type;
-
-	/**
-		The global boolean-type for parameter integers.  
-	 */
-	typedef	bool		pbool_value_type;
+	template <class>
+	class const_collection;
+	typedef	const_collection<pint_tag>
+		pint_const_collection;
+	typedef	const_collection<pbool_tag>
+		pbool_const_collection;
 
 	class instance_collection_stack_item;
-
-	/**
-		Value type of this needs to be more general
-		to accommodate loop and conditional scopes?
-	 */
-	// try to convert this to excl_ptr or sticky_ptr...
-	typedef count_ptr<const range_expr_list>
-			index_collection_item_ptr_type;
-
-	/**
-		UPDATE: now contains reference to instantiation_statements, 
-		which *contain* the index/range expressions.  
-
-		We keep track of the state of instance collections at
-		various program points with this container.
-	 */
-	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement>)
-			index_collection_type;
 
 	class unroll_context;
 
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_FWD_H__
+#endif	// __OBJECT_ART_OBJECT_FWD_H__
 

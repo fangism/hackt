@@ -1,12 +1,12 @@
 /**
-	\file "art_context.cc"
+	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.22 2005/01/28 19:58:39 fang Exp $
+ 	$Id: art_context.cc,v 1.35.2.1 2005/06/24 19:02:52 fang Exp $
  */
 
-#ifndef	__ART_CONTEXT_CC__
-#define	__ART_CONTEXT_CC__
+#ifndef	__OBJECT_ART_CONTEXT_CC__
+#define	__OBJECT_ART_CONTEXT_CC__
 
 #define ENABLE_STACKTRACE		0
 
@@ -14,27 +14,38 @@
 #include <exception>
 #include <iostream>
 
-#include "art_context.h"
-#include "art_parser_base.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_assign.h"
-#include "art_object_connect.h"
-#include "art_object_instance.h"	// for instantiation_statement
-#include "art_object_instance_param.h"	// for param_instantiation_statement
-#include "art_object_module.h"
+#include "Object/art_context.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_identifier.h"
+#include "Object/art_object_definition_data.h"
+#include "Object/art_object_definition_chan.h"
+#include "Object/art_object_definition_proc.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_assign.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_instance.h"	// for instantiation_statement_base
+#include "Object/art_object_instance_param.h"	// for param_instantiation_statement_base
+#include "Object/art_object_module.h"
+#include "Object/art_context.tcc"
 
-#include "stacktrace.h"
+#include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {
-using namespace entity;
-
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
+using entity::object_handle;
+using entity::enum_datatype_def;
+using entity::instantiation_statement_base;
+using entity::param_type_reference;
+using entity::param_instance_collection;
+using entity::process_definition;
+using entity::user_def_chan;
+using entity::user_def_datatype;
 
 //=============================================================================
 // class context method definition
@@ -52,12 +63,11 @@ context::context(module& m) :
 		namespace_stack(), 
 		current_open_definition(NULL), 
 		current_prototype(NULL), 
-		definition_stack(), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
-		object_stack(), 
 		global_namespace(m.get_global_namespace()), 
-		master_instance_list(m.instance_management_list)
+		master_instance_list(m.instance_management_list), 
+		strict_template_mode(true)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -65,9 +75,6 @@ context::context(module& m) :
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
-	object_stack.push(count_ptr<object>(NULL));
-	definition_stack.push(never_ptr<const definition_base>(NULL));
-	// initializing stacks else top() will seg-fault
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
 	NEVER_NULL(current_namespace);	// make sure allocated properly
@@ -129,7 +136,7 @@ context::open_namespace(const token_identifier& id) {
 	} else {
 		// leave current_namespace as it is
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -164,7 +171,7 @@ context::using_namespace(const qualified_id& id) {
 		current_namespace->add_using_directive(id);
 	if (!ret) {
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 	}
 }
@@ -181,7 +188,7 @@ context::alias_namespace(const qualified_id& id, const string& a) {
 		ret(current_namespace->add_using_alias(id, a));
 	if (!ret) {
 		type_error_count++;
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		THROW_EXIT;			// temporary
 	}
 }
@@ -212,7 +219,7 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 		type_error_count++;
 		// additional error message isn't really necessary...
 //		cerr << endl << "ERROR in context::add_declaration().  ";
-//		cerr << d->where() << endl;	// caller will do
+//		cerr << where(*d) << endl;	// caller will do
 		// For now, we intentionally delete the bad definition, 
 		// though later, it may be useful for precise error messages.
 		INVARIANT(d);
@@ -245,7 +252,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	if (ed) {
 		if (ed->is_defined()) {
 			cerr << ename << " is already defined!  attempted "
-				"redefinition at " << ename.where() << endl;
+				"redefinition at " << where(ename) << endl;
 			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
@@ -255,7 +262,7 @@ context::open_enum_definition(const token_identifier& ename) {
 	} else {
 		// no real reason why this should ever fail...
 		type_error_count++;
-		cerr << ename.where() << endl;
+		cerr << where(ename) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
@@ -269,22 +276,22 @@ context::open_enum_definition(const token_identifier& ename) {
 	\param em name of the enumeration member.  
 	\return true if successful, false if there was conflict.  
  */
-bool
+good_bool
 context::add_enum_member(const token_identifier& em) {
-	never_ptr<enum_datatype_def>
+	const never_ptr<enum_datatype_def>
 		ed(current_open_definition.is_a<enum_datatype_def>());
 	if (!ed) {
 		cerr << "expected current_open_definition to be "
 			"enum_datatype_def!  FATAL ERROR." << endl;
 		THROW_EXIT;
 	} else if (ed->add_member(em)) {
-		return true;
+		return good_bool(true);
 	} else {
 		cerr << "enum " << ed->get_name() << " already has a member "
-			"named " << em << ".  ERROR! " << em.where() << endl;
+			"named " << em << ".  ERROR! " << where(em) << endl;
 		type_error_count++;
 		THROW_EXIT;
-		return false;
+		return good_bool(false);
 	}
 }
 
@@ -299,6 +306,7 @@ context::close_enum_definition(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_CONTEXT_TEMPLATE_METHODS
 /**
 	THIS NEEDS SERIOUS RE-WORK.  
 	Registers a process definition's signature.  
@@ -311,13 +319,13 @@ context::close_enum_definition(void) {
  */
 void
 context::open_process_definition(const token_identifier& pname) {
-	never_ptr<process_definition>
+	const never_ptr<process_definition>
 		pd(current_namespace->lookup_object_here_with_modify(pname)
 				.is_a<process_definition>());
 	if (pd) {
 		if (pd->is_defined()) {
 			cerr << pname << " is already defined!  attempted "
-				"redefinition at " << pname.where() << endl;
+				"redefinition at " << where(pname) << endl;
 			THROW_EXIT;
 		}
 		INVARIANT(!current_open_definition);	// sanity check
@@ -328,11 +336,12 @@ context::open_process_definition(const token_identifier& pname) {
 	} else {
 		// no real reason why this should ever fail...
 		type_error_count++;
-		cerr << pname.where() << endl;
+		cerr << where(pname) << endl;
 		THROW_EXIT;			// temporary
 		// return NULL
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -348,6 +357,7 @@ context::close_current_definition(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_CONTEXT_TEMPLATE_METHODS
 /**
 	Closes a process definition in the context.  
 	Just sets current_open_definition to NULL.  
@@ -383,6 +393,7 @@ context::close_chantype_definition(void) {
 	current_open_definition.must_be_a<channel_definition_base>();
 	close_current_definition();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -413,6 +424,7 @@ context::get_current_param_definition(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_CONTEXT_TEMPLATE_METHODS
 /**
 	\return the current active datatype definition.  
  */
@@ -438,16 +450,7 @@ never_ptr<const process_definition_base>
 context::get_current_process_definition(void) const {
 	return current_definition_reference.is_a<const process_definition_base>();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Deactivates the current definition.  
- */
-void
-context::pop_current_definition_reference(void) {
-	INVARIANT(current_definition_reference);
-	definition_stack.pop();
-}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -525,7 +528,7 @@ context::lookup_object(const qualified_id& id) const {
 	\param a the local name to alias the definition.  
 	\return true if successful (no collisions).  
  */
-bool
+good_bool
 context::alias_definition(const never_ptr<const definition_base> d,
 		const token_identifier& a) {
 	return get_current_named_scope()->add_definition_alias(d, a);
@@ -538,7 +541,7 @@ context::alias_definition(const never_ptr<const definition_base> d,
 	\param c the new connection or assignment list.
  */
 void
-context::add_connection(excl_ptr<const instance_reference_connection>& c) {
+context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
 
 	STACKTRACE("context::add_connection()");
@@ -755,7 +758,7 @@ context::add_instance(const token_identifier& id,
 		current_named_scope(get_current_named_scope());
 	NEVER_NULL(current_named_scope);
 
-	excl_ptr<instantiation_statement> inst_stmt =
+	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
@@ -763,7 +766,7 @@ context::add_instance(const token_identifier& id,
 	// adds non-const back-reference
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -782,9 +785,9 @@ context::add_instance(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: write it, finish it -- what about arrays?
-	Using the current_type_reference, 
-	adds a template formal parameter.  
+	TODO: write it, finish it -- what about arrays?
+	TODO: distinguish between strict and relaxed template formals.  
+	Using the current_type_reference, adds a template formal parameter.  
 	Is like add_instance, above.  
 	If already exists, then checks against previous formal declaration.  
 	For now, only allow parameters.  
@@ -806,18 +809,24 @@ context::add_template_formal(const token_identifier& id,
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
-	excl_ptr<instantiation_statement> inst_stmt =
+	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim);
 	NEVER_NULL(inst_stmt);
-	// instance is constructed and added in add_instance
-	never_ptr<const instance_collection_base>
-		inst_base(current_prototype->add_template_formal(
-			inst_stmt, id));
+	// formal instance is constructed and added in add_instance
+	const never_ptr<const instance_collection_base>
+		inst_base(
+			// depends on strict_template_mode
+			(strict_template_mode) ?
+			current_prototype->add_strict_template_formal(
+				inst_stmt, id) :
+			current_prototype->add_relaxed_template_formal(
+				inst_stmt, id)
+			);
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -829,10 +838,10 @@ context::add_template_formal(const token_identifier& id,
 		never_ptr<param_instance_collection>
 			pic(ib.is_a<param_instance_collection>());
 		NEVER_NULL(pic);
-		if (!pic->assign_default_value(d)) {
+		if (!pic->assign_default_value(d).good) {
 			// error: type check failed
 			cerr << "ERROR assigning default value to " << id <<
-				", type/size mismatch!  " << id.where() << endl;
+				", type/size mismatch!  " << where(id) << endl;
 			type_error_count++;
 			THROW_EXIT;
 		}
@@ -876,7 +885,7 @@ context::add_port_formal(const token_identifier& id,
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate
-	excl_ptr<instantiation_statement> inst_stmt =
+	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
@@ -886,7 +895,7 @@ context::add_port_formal(const token_identifier& id,
 		// same as current_named_scope? perhaps assert check?
 
 	if (!inst_base) {
-		cerr << id.where() << endl;
+		cerr << where(id) << endl;
 		type_error_count++;
 		THROW_EXIT;
 	}
@@ -913,51 +922,6 @@ context::add_port_formal(const token_identifier& id) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Created objects are passed around on the context's object stack.  
-	For now we restrict the type to param_expr and instance_reference.  
-	We permit NULL objects on the stack, as error placeholders.  
- */
-void
-context::push_object_stack(const count_ptr<object>& o)
-// context::push_object_stack(excl_ptr<object> o)
-{
-	if (o) {
-		// UGLY... rework later
-		const object* oself = &o->self();
-		// can we go back to not using maked pointer for check?
-		if (!(IS_A(const param_expr*, oself) ||
-			IS_A(const ART::entity::index_expr*, oself) ||
-			IS_A(const object_list*, oself) ||
-//			IS_A(const pint_const*, oself) ||
-				// eliminate object_list after making others
-			IS_A(const range_expr_list*, oself) ||
-			IS_A(const index_list*, oself) ||
-			IS_A(const instance_reference_base*, oself))) {
-			oself->what(cerr << "Unexpectedly got a ") <<
-				" on the context's object stack." << endl;
-		}
-		INVARIANT(IS_A(const param_expr*, oself) ||
-			IS_A(const ART::entity::index_expr*, oself) ||
-			IS_A(const object_list*, oself) ||
-//			IS_A(const pint_const*, oself) ||
-				// eliminate object_list after making others
-			IS_A(const range_expr_list*, oself) ||
-			IS_A(const index_list*, oself) ||
-			IS_A(const instance_reference_base*, oself));
-	}
-	object_stack.push(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<object>
-context::pop_top_object_stack(void) {
-	count_ptr<object> ret = object_stack.top();
-	object_stack.pop();
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Automatic indentation for nicer debug printing.
 	TODO: phase this out in favor of util::indent.  
  */
@@ -972,8 +936,16 @@ context::auto_indent(void) const {
 }
 
 //=============================================================================
+// explicit template method instantiations
+
+INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(process_definition)
+INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_chan)
+INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_datatype)
+// INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(enum_datatype_def)
+
+//=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_CONTEXT_CC__
+#endif	// __OBJECT_ART_CONTEXT_CC__
 
