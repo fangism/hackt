@@ -1,27 +1,43 @@
 /**
-	\file "art_parser_expr.cc"
+	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.13 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.1 2005/06/25 21:07:15 fang Exp $
  */
 
-#ifndef	__ART_PARSER_EXPR_CC__
-#define	__ART_PARSER_EXPR_CC__
+#ifndef	__AST_ART_PARSER_EXPR_CC__
+#define	__AST_ART_PARSER_EXPR_CC__
 
 #include <exception>
 #include <iostream>
+#include <algorithm>
 
-#include "art_parser_token.h"
-#include "art_parser_expr.h"
-#include "art_parser.tcc"
-#include "sublist.tcc"
+#define	ENABLE_STACKTRACE		0
+
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_expr.h"
+#include "AST/art_parser_expr_list.h"
+#include "AST/art_parser_range_list.h"
+#include "AST/art_parser_node_list.tcc"
+#include "util/sublist.tcc"
 
 // will need these come time for type-checking
-#include "art_object_instance_base.h"
-#include "art_object_definition_base.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_expr.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/art_object_expr.h"
+#include "Object/art_object_data_expr.h"
+#include "Object/art_object_PRS.h"
+// to dynamic_cast bool_meta_instance_reference
+#include "Object/art_object_inst_ref.h"
+#include "Object/art_object_bool_traits.h"
+#include "Object/art_object_int_traits.h"
 
-#include "what.h"
+#include "util/what.h"
+#include "util/stacktrace.h"
+#include "util/iterator_more.h"
+#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -35,11 +51,10 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
-SPECIALIZE_UTIL_WHAT(ART::parser::paren_expr, "(paren-expr)")
+SPECIALIZE_UTIL_WHAT(ART::parser::expr, "(expr)")
+// SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
 SPECIALIZE_UTIL_WHAT(ART::parser::qualified_id, "(qualified-id)")
 SPECIALIZE_UTIL_WHAT(ART::parser::id_expr, "(id-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::range, "(range)")
 SPECIALIZE_UTIL_WHAT(ART::parser::prefix_expr, "(prefix-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::member_expr, "(member-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::index_expr, "(index-expr)")
@@ -56,7 +71,12 @@ namespace ART {
 using namespace entity;
 
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
+using std::copy;
+using std::transform;
+using std::_Select1st;
+using std::_Select2nd;
+using util::back_insert_assigner;
 
 //=============================================================================
 // class expr method definitions
@@ -64,95 +84,277 @@ namespace parser {
 #if 0
 /// Empty constructor
 CONSTRUCTOR_INLINE
-expr::expr() : node() { }
+expr::expr() { }
 
 /// Empty virtual destructor
 DESTRUCTOR_INLINE
 expr::~expr() { }
 #endif
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	All non-inst-ref expressions will dynamically cast
+	the result of check_meta_expr to an instance reference.  
+	This is overridden by inst_ref_expr::check_meta_generic.
+	\return pair of typed pointers.  
+ */
+expr::generic_meta_return_type
+expr::check_meta_generic(context& c) const {
+	STACKTRACE("expr::check_meta_generic()");
+	const expr::meta_return_type ret(check_meta_expr(c));
+	return generic_meta_return_type(ret,
+		ret.is_a<inst_ref_meta_return_type::element_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default behavior for non-overridden check_nonmeta_expr.
+ */
+nonmeta_expr_return_type
+expr::check_nonmeta_expr(context& c) const {
+	const expr::meta_return_type ret(check_meta_expr(c));
+	// check for ret && !cast?  diagnostic error message would be nice?
+	return ret.is_a<nonmeta_expr_return_type::element_type>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary placeholder, never really supposed to be called.  
+ */
+prs_expr_return_type
+expr::check_prs_expr(context& c) const {
+	cerr << "Fang, unimplemented expr::check_prs_expr!" << endl;
+	return prs_expr_return_type();
+}
+
+//=============================================================================
+// class inst_ref_expr method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	All inst-ref expressions will dynamically cast
+	the result of check_meta_reference to an parameter expression.  
+	\return pair of typed pointers.  
+ */
+expr::generic_meta_return_type
+inst_ref_expr::check_meta_generic(context& c) const {
+	STACKTRACE("inst_ref_expr::check_meta_generic()");
+	const meta_return_type ret(check_meta_reference(c));
+	return generic_meta_return_type(
+		ret.is_a<expr::meta_return_type::element_type>(), ret);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should really not be called...
+ */
+expr::meta_return_type
+inst_ref_expr::check_meta_expr(context& c) const {
+	STACKTRACE("inst_ref_expr::check_meta_expr() (should not be called)");
+#if 0
+	return check_meta_reference(c).is_a<expr::meta_return_type::element_type>();
+#else
+	typedef	expr::meta_return_type::element_type	param_type;
+	const inst_ref_expr::meta_return_type inst_ref(check_meta_reference(c));
+	const expr::meta_return_type param_ref(inst_ref.is_a<param_type>());
+	if (param_ref) {
+		// accepted
+		return param_ref;
+	} else {
+		cerr << "ERROR: Expression at " << where(*this) <<
+			" does not refer to a parameter." << endl;
+		THROW_EXIT;
+		return expr::meta_return_type(NULL);
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+inst_ref_expr::check_nonmeta_expr(context& c) const {
+	typedef	nonmeta_expr_return_type	return_type;
+	typedef	expr::nonmeta_return_type::element_type	data_type;
+	const nonmeta_return_type inst_ref(check_nonmeta_reference(c));
+	if (!inst_ref) {
+		// already printed error message
+		return return_type(NULL);
+	}
+	const expr::nonmeta_return_type data_ref(inst_ref.is_a<data_type>());
+	if (data_ref) {
+		return data_ref;
+	} else {
+		cerr << "ERROR: Expression at " << where(*this) <<
+			" does not refer to a data type." << endl;
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	After checking an meta_instance_reference, this checks to make sure
+	that a bool is referenced, appropriate for PRS.  
+ */
+prs_literal_ptr_type
+inst_ref_expr::check_prs_literal(context& c) const {
+	meta_return_type ref(check_meta_reference(c));
+	count_ptr<simple_bool_meta_instance_reference>
+		bool_ref(ref.is_a<simple_bool_meta_instance_reference>());
+	if (bool_ref) {
+		ref.abandon();
+		INVARIANT(bool_ref.refs() == 1);
+		if (bool_ref->dimensions()) {
+			cerr << "ERROR: bool reference at " << where(*this) <<
+				" does not refer to a scalar instance." << endl;
+			return prs_literal_ptr_type(NULL);
+		} else {
+			// shared to exclusive ownership
+			entity::PRS::literal_base_ptr_type
+				lit(bool_ref.exclusive_release());
+			return prs_literal_ptr_type(
+				new entity::PRS::literal(lit));
+		}
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a bool." << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Down-casting literal to general PRS guard expression.  
+ */
+prs_expr_return_type
+inst_ref_expr::check_prs_expr(context& c) const {
+	return check_prs_literal(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inst_ref_expr::nonmeta_data_return_type
+inst_ref_expr::check_nonmeta_data_reference(context& c) const {
+	typedef	nonmeta_data_return_type::element_type	ref_type;
+	const nonmeta_return_type
+		inst_ref(check_nonmeta_reference(c));
+	if (!inst_ref) {
+		// already have error message?
+		return nonmeta_data_return_type(NULL);
+	}
+	const nonmeta_data_return_type ret(inst_ref.is_a<ref_type>());
+	if (!ret) {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a data type." << endl;
+	}
+	return ret;
+}
+
 //=============================================================================
 // class expr_list method definitions
 
-expr_list::expr_list() : parent() { }
+expr_list::expr_list() : parent_type() { }
 
-expr_list::expr_list(const expr* e) : parent(e) { }
+expr_list::expr_list(const expr* e) : parent_type(e) { }
 
 expr_list::~expr_list() { }
 
-#if 0
-ostream&
-expr_list::what(ostream& o) const {
-	return o << "(expr-list)";
-}
-#else
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(expr_list)
-#endif
-
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Type-checker checks each individual expression and 
-	returns a collection of built object expressions.  
-	NULL members will be represented with NULL object 
-	expression place-holders.  
-	Caller just has to grab the object_list off the stack
-	and go from there.  
+	Just collects the result of type-checking of items in list.
+	\param temp the type-checked result list.
+	\param c the context.
  */
-never_ptr<const object>
-expr_list::check_build(context& c) const {
-	const count_ptr<object_list> o(new object_list);
+void
+expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
+		context& c) const {
+	STACKTRACE("expr_list::postorder_check_meta_generic()");
+	INVARIANT(temp.empty());
 	const_iterator i = begin();
-	for ( ; i!=end(); i++) {
-		if (*i) {
-			(*i)->check_build(c);
-			// ignore useless return values (should be always NULL)
-			o->push_back(c.pop_top_object_stack());
-			// do error checking on list elsewhere
-		} else {
-			// add NULL placeholder
-			o->push_back(count_ptr<object>(NULL));
-		}
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		temp.push_back((*i) ? (*i)->check_meta_generic(c) :
+			checked_meta_generic_type::value_type());
+		// else pushes a pair of NULL pointers
 	}
-	c.push_object_stack(o);
-	return never_ptr<const object>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just collects the result of type-checking of items in list.
+	\param temp the type-checked result list.
+	\param c the context.
+ */
+void
+expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
+		context& c) const {
+	STACKTRACE("expr_list::postorder_check_meta_exprs()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		temp.push_back((*i) ? (*i)->check_meta_expr(c) :
+			checked_meta_exprs_type::value_type(NULL));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: consider templating these traversals?
+	Q: are these expressions allowed to be NULL?  (CHP context)
+	Just collects the result of type-checking of items in list.
+	\param temp the type-checked result list.
+	\param c the context.
+ */
+void
+expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
+		context& c) const {
+	STACKTRACE("expr_list::postorder_check_nonmeta_exprs()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_nonmeta_expr(c));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_list::select_checked_meta_exprs(const checked_meta_generic_type& src, 
+		checked_meta_exprs_type& dst) {
+	INVARIANT(dst.empty());
+	transform(src.begin(), src.end(), back_inserter(dst),
+		_Select1st<checked_meta_generic_type::value_type>()
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_list::select_checked_meta_refs(const checked_meta_generic_type& src, 
+		checked_meta_refs_type& dst) {
+	INVARIANT(dst.empty());
+	transform(src.begin(), src.end(), back_inserter(dst),
+		_Select2nd<checked_meta_generic_type::value_type>()
+	);
 }
 
 //=============================================================================
-// class paren_expr method definitions
+// class expr_list method definitions
 
-CONSTRUCTOR_INLINE
-paren_expr::paren_expr(const token_char* l, const expr* n, 
-		const token_char* r) : expr(),
-		lp(l), e(n), rp(r) {
-	NEVER_NULL(lp); NEVER_NULL(e); NEVER_NULL(rp);
-}
+// inst_ref_expr_list::inst_ref_expr_list() : parent_type() { }
 
-DESTRUCTOR_INLINE
-paren_expr::~paren_expr() { }
+inst_ref_expr_list::inst_ref_expr_list(const inst_ref_expr* e) :
+		parent_type(e) { }
 
-#if 0
-ostream&
-paren_expr::what(ostream& o) const {
-	return o << "(paren-expr)";
-}
-#else
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(paren_expr)
-#endif
+inst_ref_expr_list::~inst_ref_expr_list() { }
 
-line_position
-paren_expr::leftmost(void) const {
-	if (lp)	return lp->leftmost();
-	else	return e->leftmost();
-}
-
-line_position
-paren_expr::rightmost(void) const {
-	if (rp)	return rp->rightmost();
-	else	return e->rightmost();
-}
-
-never_ptr<const object>
-paren_expr::check_build(context& c) const {
-	return e->check_build(c);
+void
+inst_ref_expr_list::postorder_check_nonmeta_data_refs(
+		checked_nonmeta_data_refs_type& temp, context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_nonmeta_data_refs()");
+	INVARIANT(temp.empty());
+	const_iterator i = begin();
+	const const_iterator e = end();
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_nonmeta_data_reference(c));
+	}
 }
 
 //=============================================================================
@@ -160,19 +362,19 @@ paren_expr::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const token_identifier* n) : 
-	parent(n), absolute(NULL) {
+		parent_type(n), absolute(NULL) {
 }
 
 /// copy constructor, no transfer of ownership
 CONSTRUCTOR_INLINE
 qualified_id::qualified_id(const qualified_id& i) :
-		node(), qualified_id_base(i), absolute(NULL) {
+		parent_type(i), absolute(NULL) {
 #if DEBUG_ID_EXPR
 	cerr << "qualified_id::qualified_id(const qualified_id&);" << endl;
 #endif
 	if (i.absolute) {
-		absolute = excl_ptr<const token_string>(
-			new token_string(*i.absolute));
+		absolute = excl_ptr<const string_punctuation_type>(
+			new string_punctuation_type(*i.absolute));
 		// actually *copy* the token
 		NEVER_NULL(absolute);
 	}
@@ -181,6 +383,7 @@ qualified_id::qualified_id(const qualified_id& i) :
 DESTRUCTOR_INLINE
 qualified_id::~qualified_id() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Call this function in the parser to mark an un/qualified identifier
 	as absolute, as oppposed to relative.  
@@ -189,25 +392,13 @@ qualified_id::~qualified_id() { }
 	\return pointer to this object
  */
 qualified_id*
-qualified_id::force_absolute(const token_string* s) {
-	absolute = excl_ptr<const token_string>(s);
+qualified_id::force_absolute(const string_punctuation_type* s) {
+	absolute = excl_ptr<const string_punctuation_type>(s);
 	INVARIANT(absolute);
 	return this;
 }
 
-#if 0
-ostream&
-qualified_id::what(ostream& o) const {
-	return o << "(id-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(qualified_id)
-#endif
-
-qualified_id*
-qualified_id::append(terminal* d, token_identifier* n) {
-	return IS_A(qualified_id*, qualified_id_base::append(d,n));
-}
 
 line_position
 qualified_id::leftmost(void) const {
@@ -219,6 +410,7 @@ qualified_id::rightmost(void) const {
 	return qualified_id_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /***
 	Future: instead of copying, give an iterator range.
 	These might be obsoleted by the sublist slice interface.  
@@ -228,21 +420,19 @@ qualified_id::copy_namespace_portion(void) const {
 	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_back();		// remove last element
-	if (!ret.delim.empty())
-		ret.delim.pop_back();
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 qualified_id
 qualified_id::copy_beheaded(void) const {
 	qualified_id ret(*this);		// copy, not-owned
 	if (!ret.empty())
 		ret.pop_front();		// remove last element
-	if (!ret.delim.empty())
-		ret.delim.pop_front();
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Finds an object referenced by the name, be it type or instance.  
 	Remember to check the return type in the caller, even virtual
@@ -251,7 +441,7 @@ qualified_id::copy_beheaded(void) const {
 	\return a pointer to a definition_base or an instance_collection_base 
 		with the matching [un]qualified identifier if found, else NULL.
 		Other possibilities: namespace?
-		Consumer should wrap in instance_reference?
+		Consumer should wrap in meta_instance_reference?
 			might be collective, in the case of an array
  */
 never_ptr<const object>
@@ -284,6 +474,7 @@ operator << (ostream& o, const qualified_id& id) {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // friend operator
 ostream&
 operator << (ostream& o, const qualified_id_slice& id) {
@@ -309,7 +500,7 @@ operator << (ostream& o, const qualified_id_slice& id) {
 // class qualified_id_slice method definitions
 
 qualified_id_slice::qualified_id_slice(const qualified_id& qid) :
-		parent(qid), absolute(qid.is_absolute()) {
+		parent(qid.raw_list()), absolute(qid.is_absolute()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -324,12 +515,12 @@ qualified_id_slice::~qualified_id_slice() {
 //=============================================================================
 // class id_expr method definitions
 
-id_expr::id_expr(qualified_id* i) : expr(), qid(i) {
+id_expr::id_expr(qualified_id* i) : parent_type(), qid(i) {
 	assert(qid);
 }
 
 id_expr::id_expr(const id_expr& i) :
-		node(), expr(), qid(new qualified_id(*i.qid)) {
+		parent_type(), qid(new qualified_id(*i.qid)) {
 	NEVER_NULL(qid);
 }
 
@@ -337,11 +528,7 @@ id_expr::~id_expr() { }
 
 ostream&
 id_expr::what(ostream& o) const {
-#if 0
-        return o << "(namespace-id): " << *qid;
-#else
         return o << util::what<id_expr>::name() << ": " << *qid;
-#endif
 }
 
 line_position     
@@ -355,7 +542,7 @@ id_expr::rightmost(void) const {
 }
 
 qualified_id*
-id_expr::force_absolute(token_string* s) {
+id_expr::force_absolute(const string_punctuation_type* s) {
 	return qid->force_absolute(s);
 }
 
@@ -364,304 +551,86 @@ id_expr::is_absolute(void) const {
 	return qid->is_absolute();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	UPDATE DOCUMENTATION.
+	TODO: update this comment
 	The qualified_id member's check build can return a definition 
-	or instance pointer.  (Only instance pointer now.)
+	or instance pointer.  
+	A different method will be used to lookup definition/type identifiers.
 	\param c the context where to begin searching for named object.  
 	\return pointer to the found instantiation base instance if found,
 		else NULL.
-	FIX ME: should return instance_reference!, not instance!
-	ACTUALLY: instance_base, caller will wrap into instance reference. 
  */
-never_ptr<const object>
-id_expr::check_build(context& c) const {
+inst_ref_expr::meta_return_type
+id_expr::check_meta_reference(context& c) const {
+	STACKTRACE("id_expr::check_meta_reference()");
 	const never_ptr<const object>
 		o(qid->check_build(c));		// will lookup_object
 	if (o) {
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());
 		if (inst) {
+			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
-			c.push_object_stack(inst->make_instance_reference());
-			// pushes the created reference onto
-			// context's instance_reference_stack.
-			// if indexed, check in the caller, and modify
-			//	in index_expr...
-
-			// doesn't have to be a parameter, does it?
+			return inst->make_meta_instance_reference();
 		} else {
-			// push NULL or error object to continue?
 			cerr << "object \"" << *qid <<
-				"\" is not an instance, ERROR!  "
-				<< qid->where() << endl;
+				"\" does not refer to an instance, ERROR!  "
+				<< where(*qid) << endl;
 			THROW_EXIT;
 		}
 	} else {
 		// push NULL or error object to continue?
 		cerr << "object \"" << *qid << "\" not found, ERROR!  "
-			<< qid->where() << endl;
+			<< where(*qid) << endl;
 		THROW_EXIT;
 	}
-	return never_ptr<const object>(NULL);
-//	return c.lookup_instance(*qid);
-// also accomplishes same thing?
+	return inst_ref_expr::meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: update this comment
+	The qualified_id member's check build can return a definition 
+	or instance pointer.  
+	A different method will be used to lookup definition/type identifiers.
+	\param c the context where to begin searching for named object.  
+	\return pointer to the found instantiation base instance if found,
+		else NULL.
+ */
+inst_ref_expr::nonmeta_return_type
+id_expr::check_nonmeta_reference(context& c) const {
+	typedef inst_ref_expr::nonmeta_return_type	return_type;
+	STACKTRACE("id_expr::check_nonmeta_reference()");
+	const never_ptr<const object>
+		o(qid->check_build(c));		// will lookup_object
+	if (o) {
+		const never_ptr<const instance_collection_base>
+			inst(o.is_a<const instance_collection_base>());
+		if (inst) {
+			STACKTRACE("valid instance collection found");
+			// we found an instance which may be single
+			// or collective... info is in inst.
+			return inst->make_nonmeta_instance_reference();
+		} else {
+			cerr << "object \"" << *qid <<
+				"\" does not refer to an instance, ERROR!  "
+				<< where(*qid) << endl;
+			return return_type(NULL);
+		}
+	} else {
+		// push NULL or error object to continue?
+		cerr << "object \"" << *qid << "\" not found, ERROR!  "
+			<< where(*qid) << endl;
+		return return_type(NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
 ostream& operator << (ostream& o, const id_expr& id) {
 	return o << *id.qid;
-}
-
-//=============================================================================
-// class range method definitions
-
-CONSTRUCTOR_INLINE
-range::range(const expr* l) : lower(l), op(NULL), upper(NULL) {
-	NEVER_NULL(lower); 
-}
-
-CONSTRUCTOR_INLINE
-range::range(const expr* l, const terminal* o, const expr* u) : 
-		lower(l), op(o), upper(u) {
-	NEVER_NULL(lower); NEVER_NULL(op); NEVER_NULL(upper);
-}
-
-DESTRUCTOR_INLINE
-range::~range() { }
-
-#if 0
-ostream&
-range::what(ostream& o) const {
-	return o << "(range)";
-}
-#else
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(range)
-#endif
-
-line_position
-range::leftmost(void) const {
-	return lower->leftmost();
-}
-
-line_position
-range::rightmost(void) const {
-        if (upper)      return upper->rightmost();
-        else if (op)    return op->rightmost();
-        else            return lower->rightmost();
-}
-
-/**
-	Both expressions of the range should be of type pint.  
-	No collective expressions, only single pints.  
-	Do we check for constant cases?
-	TO DO: finish me
-	How do we interpret x[i]?
-	\param c the context where to start resolving identifiers.  
-	\return I don't know.
- */
-never_ptr<const object>
-range::check_build(context& c) const {
-//	cerr << "range::check_build(): INCOMPLETE, FINISH ME!" << endl;
-
-//	never_ptr<const param_type_reference> pint_type = c.global_namespace->
-//		lookup_object("pint").is_a<param_type_reference>();
-//	assert(pint_type);
-
-	never_ptr<const object>
-		o(lower->check_build(c));	// useless return value
-	// puts param_expr on stack
-	const count_ptr<object> l(c.pop_top_object_stack());
-	const count_ptr<pint_expr> lp(l.is_a<pint_expr>());
-	if (l) {
-		if (!lp) {
-			cerr << "Expression is not a pint-type, ERROR!  " <<
-				lower->where() << endl;
-			THROW_EXIT;
-		}
-		// check if expression is initialized
-	} else {
-		cerr << endl;
-		cerr << "Error resolving expression " << lower->where()
-			<< endl;
-		THROW_EXIT;
-	}
-
-	if (upper) {
-		o = upper->check_build(c);
-		// puts param_expr on stack
-		// grab the last two expressions, 
-		// check that they are both pints, 
-		// and make a range object
-		const count_ptr<object> u(c.pop_top_object_stack());
-		const count_ptr<pint_expr> up(u.is_a<pint_expr>());
-		if (u) {
-			if (!up) {
-				cerr << "Expression is not a pint-type, "
-					"ERROR!  " << upper->where() << endl;
-				THROW_EXIT;
-			}
-			// check if expression is initialized
-		} else {
-			cerr << "Error resolving expression " << upper->where()
-				<< endl;
-			THROW_EXIT;
-		}
-		// at this point, is ok
-
-		// later: resolve constant if possible...
-		// modularize this into a method in art_object_expr
-		if (lp->is_static_constant() && up->is_static_constant()) {
-			const int lb = lp->static_constant_int();
-			const int ub = up->static_constant_int();
-			if (lb > ub) {
-				// error!  can't construct invalid const_range
-				cerr << "Lower bound of range " <<
-					lower->where() << " is greater than "
-					"upper bound " << upper->where() <<
-					".  ERROR!" << endl;
-				c.push_object_stack(
-					count_ptr<const_range>(NULL));
-				// THROW_EXIT;
-				// or let error get caught elsewhere?
-			} else {
-				// make valid constant range
-				c.push_object_stack(count_ptr<const_range>(
-					new const_range(lb, ub)));
-			}
-		} else {
-			// can't determine validity of bounds statically
-			c.push_object_stack(count_ptr<pint_range>(
-				new pint_range(lp, up)));
-		}
-	} else {
-		// but check that it is of type pint
-		// and push it back onto stack
-		// the caller will interpret it
-		c.push_object_stack(l);
-		// passing lp: ART::entity::object ambiguous base class
-		//	of pint_expr :S
-	}
-	// not done yet
-	return o;
-}
-
-//=============================================================================
-// class range_list method definitions
-
-range_list::range_list(const range* r) : parent(r) {
-}
-
-range_list::~range_list() { }
-
-/**
-	Note: limited to 4 dimensions.  
-
-	Parent's check_build will result in each index dimension
-	being pushed onto the context's object stack.  
-	Grab them off the stack to form an object list.  
-
-	Or just convert directly to a range list?
-	No range list has two different semantics
-	(depending on instantiation vs. reference),
-	so just leave as object_list.  
-
-	Should we take this opportunity to const-ify as much as possible?
-
-	IMPORTANT:
-	Only puts an object_list onto object_stack.  
-	It is up to caller to interpret either as a sparse_range list
-	in the case of an array declaration or as an index_list in the
-	case of an indexed instance reference.  
-
-	This is called by instance_array::check_build and 
-	index_expr::check_build.  
-
-	\return NULL, useless.
- */
-never_ptr<const object>
-range_list::check_build(context& c) const {
-	parent::check_build(c);
-	const count_ptr<object_list> ol(new object_list);
-	size_t i = 0;
-	for ( ; i<size(); i++) {
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "Problem with dimension " << i+1 <<
-				" of sparse_range_list between "
-				<< where() << endl;
-			THROW_EXIT;		// terminate?
-		} else if (!o.is_a<ART::entity::index_expr>()) {
-			// pint_const *should* => index_expr ...
-			// make sure each item is a range expression
-			cerr << "Expression in dimension " << i+1 <<
-				" of sparse_range_list is not valid!  "
-				<< where() << endl;
-//			o->what(cerr << "object is a ") << endl;
-//			o->dump(cerr << "object dump: ") << endl;
-			THROW_EXIT;
-		}
-		// else o is an index_expr
-		ol->push_front(o);
-	}
-	if (size() > 4) {		// define constant somewhere
-		cerr << "ERROR!  Exceeded dimension limit of 4.  "
-			<< where() << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
-	} else {
-//		c.push_object_stack(ol->make_sparse_range_list());
-		// don't necessarily want to interpret as sparse_range
-		// may want it as an index!
-		c.push_object_stack(ol);
-	}
-	return never_ptr<const object>(NULL);
-}
-
-//=============================================================================
-// class dense_range_list method definitions
-
-dense_range_list::dense_range_list(const expr* r) : parent(r) {
-}
-
-dense_range_list::~dense_range_list() {
-}
-
-/**
-	Dense range lists are reserved for formal parameters and ports, 
-	which must be dense arrays, cannot be sparse.  
-	Limited to 4 dimensions.  
- */
-never_ptr<const object>
-dense_range_list::check_build(context& c) const {
-	parent::check_build(c);
-	const count_ptr<object_list> ol(new object_list);
-	size_t i = 0;
-	for ( ; i<size(); i++) {
-		const count_ptr<object> o(c.pop_top_object_stack());
-		if (!o) {
-			cerr << "Problem with dimension " << i+1 <<
-				" of dense_range_list between "
-				<< where() << endl;
-			THROW_EXIT;		// terminate?
-		} else if (!o.is_a<pint_expr>()) {
-			// make sure that each item is an integer expr
-			cerr << "Expression in dimension " << i+1 <<
-				" of dense_range_list is not integer!  "
-				<< where() << endl;
-			THROW_EXIT;
-		}
-		ol->push_front(o);
-	}
-	if (size() > 4) {		// define constant somewhere
-		cerr << "ERROR!  Exceeded dimension limit of 4.  "
-			<< where() << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
-	} else {
-		c.push_object_stack(ol->make_formal_dense_range_list());
-	}
-	return never_ptr<const object>(NULL);
 }
 
 //=============================================================================
@@ -673,8 +642,10 @@ dense_range_list::check_build(context& c) const {
 	that the arguments exclusively "owned" their memory locations.
  */
 CONSTRUCTOR_INLINE
-unary_expr::unary_expr(const expr* n, const terminal* o) : expr(), 
-		e(n), op(o) {
+unary_expr::unary_expr(const expr* n, const char_punctuation_type* o) :
+		expr(), e(n), op(o) {
+	NEVER_NULL(e);
+	NEVER_NULL(op);
 }
 
 DESTRUCTOR_INLINE
@@ -685,21 +656,14 @@ unary_expr::~unary_expr() {
 // class prefix_expr method definitions
 
 CONSTRUCTOR_INLINE
-prefix_expr::prefix_expr(const terminal* o, const expr* n) :
+prefix_expr::prefix_expr(const char_punctuation_type* o, const expr* n) :
 		unary_expr(n,o) {
 }
 
 DESTRUCTOR_INLINE
 prefix_expr::~prefix_expr() { }
 
-#if 0
-ostream&
-prefix_expr::what(ostream& o) const {
-	return o << "(prefix-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(prefix_expr)
-#endif
 
 line_position
 prefix_expr::leftmost(void) const {
@@ -711,28 +675,25 @@ prefix_expr::rightmost(void) const {
 	return e->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Does basic checking on expression.  
-	Grabs last expression off top of stack and replaces it.  
-	Always returns NULL, rather useless.  
+	\param c parse context.
+	\return pointer to type-checked expression if successfull, else null.  
  */
-never_ptr<const object>
-prefix_expr::check_build(context& c) const {
-	typedef	never_ptr<const object>		return_type;
-	e->check_build(c);	// useless return value
-	const count_ptr<object> o(c.pop_top_object_stack());
-	if (!o) {
+expr::meta_return_type
+prefix_expr::check_meta_expr(context& c) const {
+	typedef	expr::meta_return_type		return_type;
+	const return_type pe(e->check_meta_expr(c));
+	if (!pe) {
 		// error propagates up the stack
-		cerr << "ERROR building expression at " << e->where() << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
+		cerr << "ERROR building expression at " << where(*e) << endl;
 		return return_type(NULL);
 	}
-	const count_ptr<param_expr> pe(o.is_a<param_expr>());
-	NEVER_NULL(pe);	// must be a param expression!
+	// we have a valid param_expr
 	const count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
 	const count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
 
-	const int ch = op.is_a<const token_char>()->get_char();
+	const int ch = op->text[0];
 	switch(ch) {
 		case '-':
 			// integer negation
@@ -740,163 +701,213 @@ prefix_expr::check_build(context& c) const {
 				cerr << "Unary \'-\' operator requires a "
 					"pint argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
-					<< e->where() << endl;
-				c.push_object_stack(count_ptr<object>(NULL));
-				break;
-			}
-			if (ie->is_static_constant()) {
+					<< where(*e) << endl;
+				return return_type(NULL);
+			} else if (ie->is_static_constant()) {
 				// constant simplification
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(
-						- ie->static_constant_int())));
+				return return_type(new pint_const(
+					- ie->static_constant_value()));
 			} else {
-				c.push_object_stack(count_ptr<pint_unary_expr>(
-					new pint_unary_expr(ch, ie)));
+				return return_type(new pint_unary_expr(ch, ie));
 			}
-			break;
 		case '!':
 			// integer logical negation
 			if (!ie) {
 				cerr << "Unary \'!\' operator requires a "
 					"pint argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
-					<< e->where() << endl;
-				c.push_object_stack(count_ptr<object>(NULL));
-				break;
-			}
-			if (ie->is_static_constant()) {
+					<< where(*e) << endl;
+				return return_type(NULL);
+			} else if (ie->is_static_constant()) {
 				// constant simplification
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(
-						! ie->static_constant_int())));
+				return return_type(new pint_const(
+					!ie->static_constant_value()));
 			} else {
-				c.push_object_stack(count_ptr<pint_unary_expr>(
-					new pint_unary_expr(ch, ie)));
+				return return_type(new pint_unary_expr(ch, ie));
 			}
-			break;
 		case '~':
+			// is this valid in the meta-language?
 			// context-dependent? in PRS or not?
 			// is bit-wise negation for ints, 
 			// logical negation for bools?
 			// for now, restrict to bools only...
 			if (!be) {
 				cerr << "Unary \'~\' operator requires a "
-					"pint argument, but got a ";
+					"pbool argument, but got a ";
 				pe->what(cerr) << ".  ERROR!  "
-					<< e->where() << endl;
-				c.push_object_stack(count_ptr<object>(NULL));
-				break;
+					<< where(*e) << endl;
+				return return_type(NULL);
 			}
 			if (be->is_static_constant()) {
 				// constant simplification
-				c.push_object_stack(count_ptr<pbool_const>(
-					new pbool_const(
-						!be->static_constant_bool())));
+				return return_type(new pbool_const(
+					!be->static_constant_value()));
 			} else {
-				c.push_object_stack(
-					count_ptr<pbool_unary_expr>(
-						new pbool_unary_expr(be, ch)));
+				return return_type(
+					new pbool_unary_expr(be, ch));
 			}
-			break;
 		default:
 			cerr << "Bad operator char \'" << ch << "\' in "
-				"prefix_expr::check_build()!" << endl;
+				"prefix_expr::check_meta_expr()!" << endl;
 			DIE;
 	}
 	return return_type(NULL);
 }
 
-//=============================================================================
-// class postfix_expr method definitions
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+prefix_expr::check_nonmeta_expr(context& c) const {
+	typedef	nonmeta_expr_return_type		return_type;
+	const return_type pe(e->check_nonmeta_expr(c));
+	if (!pe) {
+		// error propagates up the stack
+		cerr << "ERROR building expression at " << where(*e) << endl;
+		return return_type(NULL);
+	}
+	// we have a valid param_expr
+	const count_ptr<int_expr> ie(pe.is_a<int_expr>());
+	const count_ptr<bool_expr> be(pe.is_a<bool_expr>());
 
-CONSTRUCTOR_INLINE
-postfix_expr::postfix_expr(const expr* n, const terminal* o) :
-		unary_expr(n,o) {
+	const int ch = op->text[0];
+	switch(ch) {
+		case '-':
+			// integer negation
+			if (!ie) {
+				cerr << "Unary \'-\' operator requires an "
+					"int argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< where(*e) << endl;
+				return return_type(NULL);
+			} else {
+				return return_type(new int_negation_expr(ie));
+			}
+		case '!':
+			// integer logical negation
+#if 0
+			if (!ie) {
+				cerr << "Unary \'!\' operator requires a "
+					"pint argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< where(*e) << endl;
+				return return_type(NULL);
+			} else {
+				return return_type(new something(ie));
+			}
+#else
+			cerr << "DOH.  !(int) -> bool operation "
+				"not yet supported... bug Fang." << endl;
+			return return_type(NULL);
+#endif
+		case '~':
+			// C-style ones-complement?
+			// is this valid in the meta-language?
+			// context-dependent? in PRS or not?
+			// is bit-wise negation for ints, 
+			// logical negation for bools?
+			// for now, restrict to bools only...
+			if (!be) {
+				cerr << "Unary \'~\' operator requires a "
+					"bool argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< where(*e) << endl;
+				return return_type(NULL);
+			} else {
+				return return_type(new bool_negation_expr(be));
+			}
+		default:
+			cerr << "Bad operator char \'" << ch << "\' in "
+				"prefix_expr::check_nonmeta_expr()!" << endl;
+			DIE;
+	}
+	return return_type(NULL);
 }
 
-DESTRUCTOR_INLINE
-postfix_expr::~postfix_expr() { }
-
-line_position
-postfix_expr::leftmost(void) const {
-	return e->leftmost();
-}
-
-line_position
-postfix_expr::rightmost(void) const {
-	return op->rightmost();
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for logical-NOT for PRS.  
+ */
+prs_expr_return_type
+prefix_expr::check_prs_expr(context& c) const {
+	prs_expr_return_type pe(e->check_prs_expr(c));
+	if (!pe) {
+		cerr << "ERROR resolving PRS-expr at " << where(*e) <<
+			"." << endl;
+		THROW_EXIT;		// for now
+	}
+	if (op->text[0] != '~') {
+		cerr << "FATAL: Invalid unary operator: \'" << op->text[0] <<
+			"\' at " << where(*op) <<
+			".  Aborting... have a nice day." << endl;
+		DIE;
+	}
+	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
 
 //=============================================================================
 // class member_expr method definitions
 
 CONSTRUCTOR_INLINE
-member_expr::member_expr(const expr* l, const terminal* op, 
+member_expr::member_expr(const inst_ref_expr* l,
 		const token_identifier* m) :
-		postfix_expr(l,op), member(m) {
+		parent_type(), owner(l), member(m) {
+	NEVER_NULL(owner);
 	NEVER_NULL(member);
 }
 
 DESTRUCTOR_INLINE
 member_expr::~member_expr() { }
 
-#if 0
-ostream&
-member_expr::what(ostream& o) const {
-	return o << "(member-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(member_expr)
-#endif
 
+line_position
+member_expr::leftmost(void) const {
+	return owner->leftmost();
+}
 line_position
 member_expr::rightmost(void) const {
 	return member->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Type-check of member reference.  
 	Current restriction: left expression must be scalar 0-dimensional.
-	\return NULL, but places an instance_reference object on the
-		context's object stack.  
+	\return type-checked meta_instance_reference or null.  
+	Really, should never be able to refer to param_expr
+	member of an instance.
  */
-never_ptr<const object>
-member_expr::check_build(context& c) const {
-	e->check_build(c);
+inst_ref_expr::meta_return_type
+member_expr::check_meta_reference(context& c) const {
+	typedef	inst_ref_expr::meta_return_type	return_type;
+	const return_type o(owner->check_meta_reference(c));
 	// useless return value
-	// expect: simple_instance_reference on object stack
-	const count_ptr<const object> o(c.pop_top_object_stack());
+	// expect: simple_meta_instance_reference_base on object stack
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
-			<< e->where() << endl;
+			<< where(*owner) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<const simple_instance_reference>
-		inst_ref(o.is_a<const simple_instance_reference>());
-	assert(inst_ref);
+	const count_ptr<const simple_meta_instance_reference_base>
+		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
+	INVARIANT(inst_ref);
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
 			inst_ref->dimensions() << "-dimension array, "
 			"must be scalar!  (for now...)  " <<
-			e->where() << endl;
+			where(*owner) << endl;
 		THROW_EXIT;
 	}
 
 	const never_ptr<const definition_base>
 		base_def(inst_ref->get_base_def());
 	NEVER_NULL(base_def);
-	c.push_current_definition_reference(*base_def);
-	// this should return a reference to an instance
-	// of some type that has members, such as data, channel, process.  
-	// should resolve to a *single* instance of something, 
-	// cannot be an array.  
 
-	// use that instance_reference, get its referenced definition_base, 
+	// use that meta_instance_reference, get its referenced definition_base, 
 	// and make sure it has a member m, lookup ports only in the 
 	// current_definition_reference, don't lookup anywhere else!
 
 	// don't use context's general lookup
-	never_ptr<const instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		member_inst(base_def->lookup_port_formal(*member));
 	// LATER: check and make sure definition is signed, 
 	//	after we introduce forward template declarations
@@ -904,17 +915,14 @@ member_expr::check_build(context& c) const {
 		base_def->what(cerr << "ERROR: ") << " " <<
 			base_def->get_qualified_name() << 
 			" has no public member named \"" << *member <<
-			"\" at " << member->where() << endl;
+			"\" at " << where(*member) << endl;
 		THROW_EXIT;
 	}
-	c.push_object_stack(
-		member_inst->make_member_instance_reference(inst_ref));
-	// useless return value: NULL
-	// will result in member_instance_reference on object_stack
 
-	// reset definition reference in context
-	c.pop_current_definition_reference();
+	const meta_return_type
+	ret_inst_ref(member_inst->make_member_meta_instance_reference(inst_ref));
 
+	// old comments:
 	// what should this return?  the same thing it expects:
 	// a reference to an instance of some type.  
 	// Problem: instances aren't concrete until they are unrolled.
@@ -923,98 +931,237 @@ member_expr::check_build(context& c) const {
 	// rather the *type* returned.  
 	// after all this is type-checking, not range checking.  
 
-	return never_ptr<const object>(NULL);
+	return ret_inst_ref;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type-check of member reference.  
+	Current restriction: left expression must be scalar 0-dimensional.
+	\return type-checked meta_instance_reference or null.  
+	Really, should never be able to refer to param_expr
+	member of an instance.
+ */
+inst_ref_expr::nonmeta_return_type
+member_expr::check_nonmeta_reference(context& c) const {
+	typedef	inst_ref_expr::nonmeta_return_type	return_type;
+#if 0
+	const return_type o(owner->check_nonmeta_reference(c));
+	// expect simple_nonmeta_instance_reference_base returned
+	if (!o) {
+		cerr << "ERROR in base nonmeta instance reference of "
+			"member expr at " << where(*owner) << endl;
+		THROW_EXIT;
+	}
+	const count_ptr<const simple_nonmeta_instance_reference_base>
+		inst_ref(o.is_a<const simple_nonmeta_instance_reference_base>());
+	INVARIANT(inst_ref);
+	if (inst_ref->dimensions()) {
+		cerr << "ERROR: cannot take the member of a " <<
+			inst_ref->dimensions() << "-dimension array, "
+			"must be scalar!  (for now...)  " <<
+			where(*owner) << endl;
+		THROW_EXIT;
+	}
+
+	const never_ptr<const definition_base>
+		base_def(inst_ref->get_base_def());
+	NEVER_NULL(base_def);
+
+	// use that meta_instance_reference, get its referenced definition_base, 
+	// and make sure it has a member m, lookup ports only in the 
+	// current_definition_reference, don't lookup anywhere else!
+
+	// don't use context's general lookup
+	const never_ptr<const instance_collection_base>
+		member_inst(base_def->lookup_port_formal(*member));
+	// LATER: check and make sure definition is signed, 
+	//	after we introduce forward template declarations
+	if (!member_inst) {
+		base_def->what(cerr << "ERROR: ") << " " <<
+			base_def->get_qualified_name() << 
+			" has no public member named \"" << *member <<
+			"\" at " << where(*member) << endl;
+		THROW_EXIT;
+	}
+
+	const nonmeta_return_type
+	ret_inst_ref(member_inst->make_member_nonmeta_instance_reference(
+		inst_ref));
+	return ret_inst_ref;
+#else
+	cerr << "Not enabled yet: member_nonmeta_instance_references, "
+		"bug Fang about it." << endl;
+	return return_type(NULL);
+#endif
 }
 
 //=============================================================================
 // class index_expr method definitions
 
 CONSTRUCTOR_INLINE
-index_expr::index_expr(const expr* l, const range_list* i) :
-		postfix_expr(l, NULL),
-		ranges(i) {
+index_expr::index_expr(const inst_ref_expr* l, const range_list* i) :
+		parent_type(), base(l), ranges(i) {
+	NEVER_NULL(base);
 	NEVER_NULL(ranges);
 }
 
 DESTRUCTOR_INLINE
 index_expr::~index_expr() { }
 
-#if 0
-ostream&
-index_expr::what(ostream& o) const {
-	return o << "(index-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(index_expr)
-#endif
+
+line_position
+index_expr::leftmost(void) const {
+	return base->leftmost();
+}
 
 line_position
 index_expr::rightmost(void) const {
 	return ranges->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: FINISH ME
-	Check index expression first, must be an integer type.  
-	Checking identifier should place an instance_reference 
-	on the context's object stack.  
-	For an indexed instance reference, we need to take it off the 
-	stack, modify it, and replace it back onto the stack.  
+	For convenience, intercept type-checked indices first, exit on error.
  */
-never_ptr<const object>
-index_expr::check_build(context& c) const {
-	ranges->check_build(c);		// useless return value
-	// should result in a ART::entity::index_list on the stack
-	const count_ptr<object>
-		index_obj(c.pop_top_object_stack());
-	// see range_list::check_build()
-	if (!index_obj) {
-		cerr << "ERROR in indices!  " << ranges->where() << endl;
+range_list::checked_meta_indices_type
+index_expr::intercept_meta_indices_error(context& c) const {
+	const range_list::checked_meta_indices_type
+		checked_indices(ranges->check_meta_indices(c));
+	// should result in a ART::entity::meta_index_list
+	// what happened to object_list::make_index_list() ?
+	if (!checked_indices) {
+		cerr << "ERROR in index list!  " << where(*ranges) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<object_list>
-		ol(index_obj.is_a<object_list>());
-	NEVER_NULL(ol);
-	// would rather have excl_ptr...
-	excl_ptr<index_list> index_list_obj = ol->make_index_list();
-	if (!index_list_obj) {
-		cerr << "ERROR in index list!  "
-			<< ranges->where() << endl;
-		THROW_EXIT;
-	}
-	NEVER_NULL(index_list_obj);
+	return checked_indices;
+}
 
-	e->check_build(c);
-	// should result in an instance_reference on the stack.  
-	const count_ptr<object> base_obj(c.pop_top_object_stack());
-	if (!base_obj) {
-		cerr << "ERROR in base instance_reference!  "
-			<< e->where() << endl;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For convenience, intercept type-checked indices first, exit on error.
+ */
+range_list::checked_nonmeta_indices_type
+index_expr::intercept_nonmeta_indices_error(context& c) const {
+	const range_list::checked_nonmeta_indices_type
+		checked_indices(ranges->check_nonmeta_indices(c));
+	// should result in a ART::entity::meta_index_list
+	// what happened to object_list::make_index_list() ?
+	if (!checked_indices) {
+		cerr << "ERROR in nonmeta index list!  " <<
+			where(*ranges) << endl;
+		return range_list::checked_nonmeta_indices_type(NULL);
+	}
+	return checked_indices;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For convenience, exit upon error.  
+ */
+inst_ref_expr::meta_return_type
+index_expr::intercept_base_meta_ref_error(context& c) const {
+	// should result in an meta_instance_reference
+	const inst_ref_expr::meta_return_type
+		base_expr(base->check_meta_reference(c));
+	if (!base_expr) {
+		cerr << "ERROR in base meta_instance_reference!  "
+			<< where(*base) << endl;
 		THROW_EXIT;
 	}
+	return base_expr;
+}
 
-	// later this may be a member_instance_reference...
-	// should cast to instance_reference_base instead, 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For convenience, exit upon error.  
+ */
+inst_ref_expr::nonmeta_return_type
+index_expr::intercept_base_nonmeta_ref_error(context& c) const {
+	// should result in an meta_instance_reference
+	const inst_ref_expr::nonmeta_return_type
+		base_expr(base->check_nonmeta_reference(c));
+	if (!base_expr) {
+		cerr << "ERROR in base nonmeta_instance_reference!  "
+			<< where(*base) << endl;
+		THROW_EXIT;
+	}
+	return base_expr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Build's an indexed reference from base and index.  
+	Check index expression first, must be an integer type.  
+	\return pointer to meta_instance_reference_base.  
+ */
+inst_ref_expr::meta_return_type
+index_expr::check_meta_reference(context& c) const {
+	range_list::checked_meta_indices_type
+		checked_indices(intercept_meta_indices_error(c));
+	const inst_ref_expr::meta_return_type
+		base_expr(intercept_base_meta_ref_error(c));
+
+	// later this may be a member_meta_instance_reference...
+	// should cast to meta_instance_reference_base instead, 
 	// abstract attach_indices
-	const count_ptr<simple_instance_reference>
-		base_inst(base_obj.is_a<simple_instance_reference>());
+	const count_ptr<simple_meta_instance_reference_base>
+		base_inst(base_expr.is_a<simple_meta_instance_reference_base>());
 	NEVER_NULL(base_inst);
 
-	const bool ai = base_inst->attach_indices(index_list_obj);
-	if (!ai) {
-		cerr << ranges->where() << endl;
+	excl_ptr<range_list::checked_meta_indices_type::element_type>
+		passing_indices(checked_indices.exclusive_release());
+	const bad_bool ai(base_inst->attach_indices(passing_indices));
+	if (ai.bad) {
+		cerr << where(*ranges) << endl;
 		THROW_EXIT;
 	}
-	// push indexed instance reference back onto stack
-	c.push_object_stack(base_inst);
-	return never_ptr<const object>(NULL);
+	// return indexed instance reference
+	return base_inst;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Build's an indexed reference from base and index.  
+	Check index expression first, must be an integer type.  
+	\return pointer to meta_instance_reference_base.  
+ */
+inst_ref_expr::nonmeta_return_type
+index_expr::check_nonmeta_reference(context& c) const {
+	typedef	inst_ref_expr::nonmeta_return_type	return_type;
+	range_list::checked_nonmeta_indices_type
+		checked_indices(intercept_nonmeta_indices_error(c));
+	if (!checked_indices) {
+		// already printed error message
+		return return_type(NULL);
+	}
+	const inst_ref_expr::nonmeta_return_type
+		base_expr(intercept_base_nonmeta_ref_error(c));
+
+	// later this may be a member_meta_instance_reference...
+	// should cast to meta_instance_reference_base instead, 
+	// abstract attach_indices
+	const count_ptr<simple_nonmeta_instance_reference_base>
+		base_inst(base_expr.is_a<simple_nonmeta_instance_reference_base>());
+	NEVER_NULL(base_inst);
+
+	excl_ptr<range_list::checked_nonmeta_indices_type::element_type>
+		passing_indices(checked_indices.exclusive_release());
+	const bad_bool ai(base_inst->attach_indices(passing_indices));
+	if (ai.bad) {
+		cerr << where(*ranges) << endl;
+		return return_type(NULL);
+	}
+	// return indexed instance reference
+	return base_inst;
 }
 
 //=============================================================================
 // class binary_expr method definitions
 
 CONSTRUCTOR_INLINE
-binary_expr::binary_expr(const expr* left, const terminal* o, 
+binary_expr::binary_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		expr(), l(left), op(o), r(right) {
 	NEVER_NULL(l); NEVER_NULL(op); NEVER_NULL(r);
@@ -1034,27 +1181,11 @@ binary_expr::rightmost(void) const {
 	return r->rightmost();
 }
 
-#if 0
-/** this should be abstract, not exist */
-never_ptr<const object>
-binary_expr::check_build(context& c) const {
-	never_ptr<const object> lo, ro;
-	cerr << "binary_expr::check_build(): FINISH ME!";
-	lo = l->check_build(c);		// expect some object expression
-	assert(lo);			// temporary
-	ro = r->check_build(c);		// expect some object expression
-	assert(ro);			// temporary
-	// pop them off object stack
-	// switch on operation
-	return never_ptr<const object>(NULL);
-}
-#endif
-
 //=============================================================================
 // class arith_expr method definitions
 
 CONSTRUCTOR_INLINE
-arith_expr::arith_expr(const expr* left, const terminal* o, 
+arith_expr::arith_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
 }
@@ -1062,116 +1193,206 @@ arith_expr::arith_expr(const expr* left, const terminal* o,
 DESTRUCTOR_INLINE
 arith_expr::~arith_expr() { }
 
-#if 0
-ostream&
-arith_expr::what(ostream& o) const {
-	return o << "(arith-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
-#endif
 
-never_ptr<const object>
-arith_expr::check_build(context& c) const {
-	typedef	never_ptr<const object>		return_type;
-	l->check_build(c);	// useless return value
-	r->check_build(c);	// useless return value
-	const count_ptr<object> ro(c.pop_top_object_stack());
-	const count_ptr<object> lo(c.pop_top_object_stack());
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+arith_expr::check_meta_expr(context& c) const {
+	typedef	expr::meta_return_type	return_type;
+	const return_type lo(l->check_meta_expr(c));
+	const return_type ro(r->check_meta_expr(c));
 	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
 		if (!lo)
-			cerr << "ERROR building expression at " << 
-				l->where() << endl;
+			cerr << err_str << where(*l) << endl;
 		if (!ro)
-			cerr << "ERROR building expression at " << 
-				r->where() << endl;
-		c.push_object_stack(count_ptr<object>(NULL));
+			cerr << err_str << where(*r) << endl;
 		return return_type(NULL);
 	}
 	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
 	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
 	if (!li || !ri) {
+		static const char err_str[] =
+			"ERROR arith_expr expected a pint, but got a ";
 		if (!li) {
-			cerr << "ERROR arith_expr expected a pint, but got a ";
-			lo->what(cerr) << " at " << l->where() << endl;;
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
 		}
 		if (!ri) {
-			cerr << "ERROR arith_expr expected a pint, but got a ";
-			ro->what(cerr) << " at " << r->where() << endl;;
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
 		}
-		c.push_object_stack(count_ptr<object>(NULL));
 		return return_type(NULL);
 	}
 	// else is safe to make arith_expr object
-	const char ch = op.is_a<const token_char>()->get_char();
+	const char ch = op->text[0];
 	if (li->is_static_constant() && ri->is_static_constant()) {
-		const int lc = li->static_constant_int();
-		const int rc = ri->static_constant_int();
+		const int lc = li->static_constant_value();
+		const int rc = ri->static_constant_value();
 		switch(ch) {
-			case '+':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc +rc)));
-				break;
-			case '-':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc -rc)));
-				break;
-			case '*':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc *rc)));
-				break;
+			case '+': return return_type(new pint_const(lc +rc));
+			case '-': return return_type(new pint_const(lc -rc));
+			case '*': return return_type(new pint_const(lc *rc));
 			case '/':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc /rc)));
-				break;
+				if (!rc) {
+					cerr << "Detected divide by 0 at " <<
+						where(*this) << endl;
+					THROW_EXIT;
+				}
+				return return_type(new pint_const(lc /rc));
 			case '%':
-				c.push_object_stack(count_ptr<pint_const>(
-					new pint_const(lc %rc)));
-				break;
+				if (!rc) {
+					cerr << "Detected divide by 0 at " <<
+						where(*this) << endl;
+					THROW_EXIT;
+				}
+				return return_type(new pint_const(lc %rc));
 			default:
 				cerr << "Bad operator char \'" << ch << "\' in "
 					"arith_expr::check_build()!" << endl;
 				DIE;
 		}
+		return return_type(NULL);	// never reached
 	} else {
-		c.push_object_stack(count_ptr<entity::arith_expr>(
-			new entity::arith_expr(li, ch, ri)));
+		return return_type(new entity::arith_expr(li, ch, ri));
 	}
-	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+arith_expr::check_nonmeta_expr(context& c) const {
+	typedef	nonmeta_expr_return_type	return_type;
+	const return_type lo(l->check_nonmeta_expr(c));
+	const return_type ro(r->check_nonmeta_expr(c));
+	if (!ro || !lo) {
+		static const char
+			err_str[] = "ERROR building non-meta expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	// for now, only operate integer arithmetic on int_exprs
+	// TODO: operator overloading on user-defined types, YEAH RIGHT!
+	const count_ptr<int_expr> li(lo.is_a<int_expr>());
+	const count_ptr<int_expr> ri(ro.is_a<int_expr>());
+	if (!li || !ri) {
+		static const char err_str[] =
+			"ERROR: int_arith_expr expected an int, but got a ";
+		if (!li) {
+			lo->what(cerr << err_str) <<
+				" at " << where(*l) << endl;
+		}
+		if (!ri) {
+			ro->what(cerr << err_str) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	const char ch = op->text[0];
+	return return_type(new entity::int_arith_expr(li, ch, ri));
 }
 
 //=============================================================================
 // class relational_expr method definitions
 
 CONSTRUCTOR_INLINE
-relational_expr::relational_expr(const expr* left, const terminal* o, 
-		const expr* right) :
+relational_expr::relational_expr(const expr* left, 
+		const char_punctuation_type* o, const expr* right) :
 		binary_expr(left, o, right) {
 }
 
 DESTRUCTOR_INLINE
 relational_expr::~relational_expr() { }
 
-#if 0
-ostream&
-relational_expr::what(ostream& o) const {
-	return o << "(relational-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
-#endif
 
-never_ptr<const object>
-relational_expr::check_build(context& c) const {
-	// temporary
-	return node::check_build(c);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+relational_expr::check_meta_expr(context& c) const {
+	typedef	expr::meta_return_type	return_type;
+	const return_type lo(l->check_meta_expr(c));
+	const return_type ro(r->check_meta_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
+	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
+	if (!li || !ri) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a pint, but got a ";
+		if (!li) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!ri) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	const entity::relational_expr::op_type*
+		o(entity::relational_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (li->is_static_constant() && ri->is_static_constant()) {
+		const int lc = li->static_constant_value();
+		const int rc = ri->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::relational_expr(li, o, ri));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+relational_expr::check_nonmeta_expr(context& c) const {
+	typedef	nonmeta_expr_return_type	return_type;
+	const return_type lo(l->check_nonmeta_expr(c));
+	const return_type ro(r->check_nonmeta_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<int_expr> li(lo.is_a<int_expr>());
+	const count_ptr<int_expr> ri(ro.is_a<int_expr>());
+	if (!li || !ri) {
+		static const char err_str[] =
+			"ERROR relational_expr expected an int, but got a ";
+		if (!li) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!ri) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	const entity::int_relational_expr::op_type*
+		o(entity::int_relational_expr::op_map[op_str]);
+	INVARIANT(o);
+	return return_type(new entity::int_relational_expr(li, o, ri));
 }
 
 //=============================================================================
 // class logical_expr method definitions
 
 CONSTRUCTOR_INLINE
-logical_expr::logical_expr(const expr* left, const terminal* o, 
+logical_expr::logical_expr(const expr* left, const char_punctuation_type* o, 
 		const expr* right) :
 		binary_expr(left, o, right) {
 }
@@ -1179,19 +1400,166 @@ logical_expr::logical_expr(const expr* left, const terminal* o,
 DESTRUCTOR_INLINE
 logical_expr::~logical_expr() { }
 
-#if 0
-ostream&
-logical_expr::what(ostream& o) const {
-	return o << "(logical-expr)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
-#endif
 
-never_ptr<const object>
-logical_expr::check_build(context& c) const {
-	// temporary
-	return node::check_build(c);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+logical_expr::check_meta_expr(context& c) const {
+	typedef	expr::meta_return_type	return_type;
+	const return_type lo(l->check_meta_expr(c));
+	const return_type ro(r->check_meta_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<pbool_expr> lb(lo.is_a<pbool_expr>());
+	const count_ptr<pbool_expr> rb(ro.is_a<pbool_expr>());
+	if (!lb || !rb) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a pbool, but got a ";
+		if (!lb) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!rb) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::relational_expr object
+	const string op_str(op->text);
+	entity::logical_expr::op_type const* const
+		o(entity::logical_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (lb->is_static_constant() && rb->is_static_constant()) {
+		const bool lc = lb->static_constant_value();
+		const bool rc = rb->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::logical_expr(lb, o, rb));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+logical_expr::check_nonmeta_expr(context& c) const {
+	typedef	nonmeta_expr_return_type	return_type;
+	const return_type lo(l->check_nonmeta_expr(c));
+	const return_type ro(r->check_nonmeta_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building expression at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<bool_expr> lb(lo.is_a<bool_expr>());
+	const count_ptr<bool_expr> rb(ro.is_a<bool_expr>());
+	if (!lb || !rb) {
+		static const char err_str[] =
+			"ERROR relational_expr expected a bool, but got a ";
+		if (!lb) {
+			cerr << err_str << lo->what(cerr) <<
+				" at " << where(*l) << endl;
+		}
+		if (!rb) {
+			cerr << err_str << ro->what(cerr) <<
+				" at " << where(*r) << endl;
+		}
+		return return_type(NULL);
+	}
+	// else is safe to make entity::bool_logical_expr object
+	const string op_str(op->text);
+	entity::bool_logical_expr::op_type const* const
+		o(entity::bool_logical_expr::op_map[op_str]);
+	INVARIANT(o);
+	return return_type(new entity::bool_logical_expr(lb, o, rb));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+logical_expr::check_prs_expr(context& c) const {
+	STACKTRACE("parser::PRS::logical_expr::check_prs_expr()");
+	const prs_expr_return_type lo(l->check_prs_expr(c));
+	const prs_expr_return_type ro(r->check_prs_expr(c));
+	if (!ro || !lo) {
+		static const char err_str[] = "ERROR building PRS-expr at ";
+		if (!lo)
+			cerr << err_str << where(*l) << endl;
+		if (!ro)
+			cerr << err_str << where(*r) << endl;
+		THROW_EXIT;		// for now
+		return prs_expr_return_type(NULL);
+	}
+#if 0
+	lo->check();
+	ro->check();
+#endif
+	const char op_char = op->text[0];
+	if (op_char == '&') {
+		typedef	entity::PRS::and_expr::iterator		iterator;
+		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
+		count_ptr<entity::PRS::and_expr>
+			l_and(lo.is_a<entity::PRS::and_expr>());
+		count_ptr<entity::PRS::and_expr>
+			r_and(ro.is_a<entity::PRS::and_expr>());
+		if (l_and) {
+			if (r_and) {
+				copy(r_and->begin(), r_and->end(), 
+					back_inserter(*l_and));
+			} else {
+				l_and->push_back(ro);
+			}
+			return l_and;
+		} else if (r_and) {
+			r_and->push_front(lo);
+			return r_and;
+		} else {
+			count_ptr<entity::PRS::and_expr>
+				ret(new entity::PRS::and_expr);
+			ret->push_back(lo);
+			ret->push_back(ro);
+//			ret->check();	// paranoia
+			return ret;
+		}
+	} else if (op_char == '|') {
+		typedef	entity::PRS::or_expr::iterator		iterator;
+		typedef	entity::PRS::or_expr::const_iterator	const_iterator;
+		count_ptr<entity::PRS::or_expr>
+			l_or(lo.is_a<entity::PRS::or_expr>());
+		count_ptr<entity::PRS::or_expr>
+			r_or(ro.is_a<entity::PRS::or_expr>());
+		if (l_or) {
+			if (r_or) {
+				copy(r_or->begin(), r_or->end(), 
+					back_inserter(*l_or));
+			} else {
+				l_or->push_back(ro);
+			}
+			return l_or;
+		} else if (r_or) {
+			r_or->push_front(lo);
+			return r_or;
+		} else {
+			count_ptr<entity::PRS::or_expr>
+				ret(new entity::PRS::or_expr);
+			ret->push_back(lo);
+			ret->push_back(ro);
+			return ret;
+		}
+	} else {
+		cerr << "FATAL: Invalid PRS operor: \'" << op_char << "\' at "
+			<< where(*op) << ".  Aborting... have a nice day."
+			<< endl;
+		DIE;
+		return prs_expr_return_type(NULL);
+	}
 }
 
 //=============================================================================
@@ -1204,14 +1572,7 @@ array_concatenation::array_concatenation(const expr* e) : expr(), parent(e) {
 array_concatenation::~array_concatenation() {
 }
 
-#if 0
-ostream&
-array_concatenation::what(ostream& o) const {
-	return o << "(array-concatenation)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_concatenation)
-#endif
 
 line_position
 array_concatenation::leftmost(void) const {
@@ -1223,18 +1584,48 @@ array_concatenation::rightmost(void) const {
 	return parent::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	If list contains only a single element, don't bother 
 	constructing an aggregate object on the stack, 
 	just do the check_build of the lone object.  
  */
-never_ptr<const object>
-array_concatenation::check_build(context& c) const {
+expr::meta_return_type
+array_concatenation::check_meta_expr(context& c) const {
 	if (size() == 1) {
 		const const_iterator only = begin();
-		return (*only)->check_build(c);
+		return (*only)->check_meta_expr(c);
 	} else {
-		return node::check_build(c);
+		cerr << "Fang, finish array_concatenation::check_meta_expr()!"
+			<< endl;
+		return expr::meta_return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+array_concatenation::check_nonmeta_expr(context& c) const {
+	if (size() == 1) {
+		const const_iterator only = begin();
+		return (*only)->check_nonmeta_expr(c);
+	} else {
+		cerr << "Fang, finish array_concatenation::check_nonmeta_expr()!"
+			<< endl;
+		return nonmeta_expr_return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_meta_return_type
+array_concatenation::check_meta_generic(context& c) const {
+	STACKTRACE("array_concatenation::check_meta_generic()");
+	if (size() == 1) {
+		const const_iterator only = begin();
+		return (*only)->check_meta_generic(c);
+	} else {
+		cerr << "Fang, finish array_concatenation::check_meta_generic()!" <<
+			endl;
+		return expr::generic_meta_return_type();
 	}
 }
 
@@ -1242,33 +1633,23 @@ array_concatenation::check_build(context& c) const {
 // class loop_concatenation method definitions
 
 loop_concatenation::loop_concatenation(
-		const token_char* l, const token_char* h,
-		const token_char* c1, const token_identifier* i,   
-		const token_char* c2, const range* rng,
-		const token_char* c3, const expr* e,
-		const token_char* r) :
-		lp(l), pd(h), col1(c1), id(i), col2(c2),
-		bounds(rng), col3(c3), ex(e), rp(r) {
+		const char_punctuation_type* l, 
+		const token_identifier* i,   
+		const range* rng,
+		const expr* e,
+		const char_punctuation_type* r) :
+		lp(l), id(i), bounds(rng), ex(e), rp(r) {
 	NEVER_NULL(id); NEVER_NULL(bounds); NEVER_NULL(ex);
 }
 		
 loop_concatenation::~loop_concatenation() {
 }
 
-#if 0
-ostream&
-loop_concatenation::what(ostream& o) const {
-	return o << "(loop-concatenation)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(loop_concatenation)
-#endif
 
 line_position
 loop_concatenation::leftmost(void) const {
 	if (lp)		return lp->leftmost();
-	else if (pd)	return pd->leftmost();
-	else if (col1)	return col1->leftmost();
 	else		return id->leftmost();
 }
 
@@ -1278,16 +1659,33 @@ loop_concatenation::rightmost(void) const {
 	else 		return ex->rightmost();
 }
 
-never_ptr<const object>
-loop_concatenation::check_build(context& c) const {
-	return node::check_build(c);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+loop_concatenation::check_meta_expr(context& c) const {
+	cerr << "Fang, finish loop_concatenation::check_meta_expr()!" << endl;
+	return expr::meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+loop_concatenation::check_nonmeta_expr(context& c) const {
+	cerr << "Fang, finish loop_concatenation::check_nonmeta_expr()!"
+		<< endl;
+	return nonmeta_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_meta_return_type
+loop_concatenation::check_meta_generic(context& c) const {
+	cerr << "Fang, finish loop_concatenation::check_meta_generic()!" << endl;
+	return expr::generic_meta_return_type();
 }
 
 //=============================================================================
 // class array_construction method definitions
 
-array_construction::array_construction(const token_char* l,
-		const expr* e, const token_char* r) : 
+array_construction::array_construction(const char_punctuation_type* l,
+		const expr* e, const char_punctuation_type* r) : 
 		expr(), lb(l), ex(e), rb(r) {
 	NEVER_NULL(ex);
 }
@@ -1295,14 +1693,7 @@ array_construction::array_construction(const token_char* l,
 array_construction::~array_construction() {
 }
 
-#if 0
-ostream&
-array_construction::what(ostream& o) const {
-	return o << "(array-construction)";
-}
-#else
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_construction)
-#endif
 
 line_position
 array_construction::leftmost(void) const {
@@ -1316,25 +1707,49 @@ array_construction::rightmost(void) const {
 	else		return ex->rightmost();
 }
 
-never_ptr<const object>
-array_construction::check_build(context& c) const {
-	return node::check_build(c);
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+array_construction::check_meta_expr(context& c) const {
+	cerr << "Fang, finish array_construction::check_meta_expr()!" << endl;
+	return expr::meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_expr_return_type
+array_construction::check_nonmeta_expr(context& c) const {
+	cerr << "Fang, finish array_construction::check_nonmeta_expr()!"
+		<< endl;
+	return nonmeta_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_meta_return_type
+array_construction::check_meta_generic(context& c) const {
+	cerr << "Fang, finish array_construction::check_meta_generic()!" << endl;
+	return expr::generic_meta_return_type();
 }
 
 //=============================================================================
-// EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
-							// also known as...
-template class node_list<const expr,comma>;			// expr_list
-template class node_list<const token_identifier,scope>;	// qualified_id_base
-template class node_list<const range,comma>;			// range_list
+// EXPLICIT TEMPLATE INSTANTIATIONS
 
+template
+ostream&
+node_list<const token_identifier>::what(ostream&) const;
+
+template
+ostream&
+node_list<const inst_ref_expr>::what(ostream&) const;
+
+template
+line_position
+node_list<const inst_ref_expr>::leftmost(void) const;
 
 //=============================================================================
-};	// end namespace parser
-};	// end namespace ART
+}	// end namespace parser
+}	// end namespace ART
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_EXPR_CC__
+#endif	// __AST_ART_PARSER_EXPR_CC__
 

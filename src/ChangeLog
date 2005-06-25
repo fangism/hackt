@@ -2,6 +2,17 @@
 
 2005-06-25	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-06:
+	  Minor cosmetic re-organization of files in preparation for 
+		some more drastic revisions.  Chopped up 
+		"Object/art_object_classification_details.h" into 
+		pieces named "Object/art_object_*_traits.h".
+		Modularity will speed up recompilations.  
+		Headers updated to include their appropriate traits.  
+	  Added "Object/art_object_inst_stmt_type_ref_default.h" 
+		for convenience.
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-05:
 	  In unrolling call-graph, now favoring returning error status
 		instead of throwing exception upon error.  

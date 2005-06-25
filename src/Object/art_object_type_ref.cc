@@ -1,48 +1,81 @@
 /**
-	\file "art_object_type_ref.cc"
+	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.23 2005/01/28 19:58:45 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.1 2005/06/25 21:07:26 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_REF_CC__
-#define	__ART_OBJECT_TYPE_REF_CC__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
+#define	__OBJECT_ART_OBJECT_TYPE_REF_CC__
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
-#include "art_parser_base.h"	// so token_identifier : string
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance.h"
-#include "art_object_instance_bool.h"
-#include "art_object_instance_int.h"
-#include "art_object_instance_enum.h"
-#include "art_object_instance_struct.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_stmt.h"
-#include "art_object_expr_base.h"
-#include "art_object_type_hash.h"
-#include "persistent_object_manager.tcc"
-#include "art_built_ins.h"
+#include "AST/art_parser_token_string.h"	// so token_identifier : string
+#include "Object/art_object_definition_chan.h"
+#include "Object/art_object_definition_data.h"
+#include "Object/art_object_definition_proc.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance_bool.h"
+#include "Object/art_object_instance_int.h"
+#include "Object/art_object_instance_enum.h"
+#include "Object/art_object_instance_struct.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_value_collection.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_expr_base.h"
+#include "Object/art_object_type_hash.h"
+#include "util/persistent_object_manager.tcc"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_int_traits.h"
+#include "Object/art_object_bool_traits.h"
+#include "Object/art_object_enum_traits.h"
+#include "Object/art_object_struct_traits.h"
+#include "Object/art_object_chan_traits.h"
+#include "Object/art_object_proc_traits.h"
 
-#include "sstream.h"
-#include "stacktrace.h"
+#include "Object/art_object_inst_stmt_param.h"
+#include "Object/art_object_inst_stmt_data.h"
+#include "Object/art_object_inst_stmt_chan.h"
+#include "Object/art_object_inst_stmt_proc.h"
+
+#include "util/sstream.h"
+#include "util/indent.h"
+#include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+// specializations
 
-//=============================================================================
+namespace util {
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::builtin_channel_type_reference,
+		BLTIN_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_type_reference,
+		USER_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY, 0)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 using std::ostringstream;
+#include "util/using_ostream.h"
 USING_STACKTRACE
+using util::indent;
+using util::auto_indent;
+using util::persistent_traits;
+using util::read_value;
+using util::write_value;
 
 //=============================================================================
 // class fundamental_type_reference method definitions
 
 fundamental_type_reference::fundamental_type_reference(
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		type_reference_base(), template_params(pl) {
 }
 
@@ -60,24 +93,7 @@ fundamental_type_reference::~fundamental_type_reference() {
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
 //	STACKTRACE("fundamental_type_reference::dump()");
-	return o << hash_string();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Evaluates type reference as a flat string, for caching purposes.  
-	We unconditionally add the <> to the key even if there is no template
-	specifier to guarantee that hash_string for a type-reference 
-	cannot collide with the hash string for the non-templated definition.  
-	Should we use fully qualified names for hashing?
-	\return string to be used for hashing.  
- */
-string
-fundamental_type_reference::hash_string(void) const {
-//	STACKTRACE("fundamental_type_reference::hash_string()");
-	// use fully qualified?  for hashing, no.
-	// possible collision case?
-	return get_base_def()->get_name() +template_param_string();
+	return o << get_base_def()->get_name() +template_param_string();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,7 +174,7 @@ if (base_def.is_a<typedef_base>()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) {
@@ -175,7 +191,7 @@ fundamental_type_reference::make_instantiation_statement(
 	TO DO: resolve typedefs!
  */
 bool
-fundamental_type_reference::may_be_equivalent(
+fundamental_type_reference::may_be_type_equivalent(
 		const fundamental_type_reference& t) const {
 	never_ptr<const definition_base> left(get_base_def());
 	never_ptr<const definition_base> right(t.get_base_def());
@@ -247,13 +263,16 @@ fundamental_type_reference::may_be_equivalent(
 /**
 	Must be equivalent.  
 	Conservatively returns false.  
+	TODO: special case when comparing built-in channel types.  (2005-05-28)
  */
 bool
-fundamental_type_reference::must_be_equivalent(
+fundamental_type_reference::must_be_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const never_ptr<const definition_base> left(get_base_def());
 	const never_ptr<const definition_base> right(t.get_base_def());
-	// may need to resolve alias? TO DO
+	NEVER_NULL(left);
+	NEVER_NULL(right);
+	// TO DO: may need to resolve alias? unrolling context?
 	if (left != right) {
 #if 0
 		left->dump(cerr << "left: ") << endl;
@@ -318,11 +337,12 @@ fundamental_type_reference::write_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 fundamental_type_reference::load_object_base(
-		persistent_object_manager& m, istream& i) {
+		const persistent_object_manager& m, istream& i) {
 	STACKTRACE("fund_type_ref::load_object_base()");
 	m.read_pointer(i, template_params);
 	if (template_params)
-		const_cast<param_expr_list&>(*template_params).load_object(m);
+		m.load_object_once(
+			const_cast<param_expr_list*>(&*template_params));
 }
 
 
@@ -355,9 +375,6 @@ collective_type_reference::dump(ostream& o) const {
 //=============================================================================
 // class data_type_reference method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(data_type_reference, 
-	DATA_TYPE_REFERENCE_TYPE_KEY)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
@@ -379,7 +396,7 @@ data_type_reference::data_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
 		const definition_ptr_type td, 
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
 	NEVER_NULL(base_type_def);
@@ -413,27 +430,29 @@ data_type_reference::get_base_datatype_def(void) const {
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
+	\todo resolve data-type aliases.  
 	\return a copy of itself, but with type parameters resolved, 
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const data_type_reference>
 data_type_reference::unroll_resolve(unroll_context& c) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
-	typedef	count_ptr<const data_type_reference>	return_type;
-	// eventually pass a context argument
+	typedef	count_ptr<const this_type>	return_type;
+	// can this code be factored out to type_ref_base?
 	if (template_params) {
-		excl_ptr<const param_expr_list>
+		template_args_ptr_type
 			actuals = template_params->unroll_resolve(c)
 				.as_a_xfer<const param_expr_list>();
 		if (actuals) {
-			return return_type(new data_type_reference(
-				base_type_def, actuals));
+			// TODO: resolve aliases!
+			return return_type(
+				new this_type(base_type_def, actuals));
 		} else {
 			cerr << "ERROR resolving template arguments." << endl;
 			return return_type(NULL);
 		}
 	} else {
-		return return_type(new data_type_reference(base_type_def));
+		return return_type(new this_type(base_type_def));
 	}
 }
 
@@ -441,11 +460,11 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 /**
 	Returns a newly constructed data instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new data_instantiation_statement(
 			t.is_a<const data_type_reference>(), d));
 }
@@ -475,21 +494,21 @@ data_type_reference::make_instance_collection(
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
-		return return_type(struct_instance_collection
-			::make_struct_array(*s, id, d));
+		return return_type(
+			struct_instance_collection::make_array(*s, id, d));
 	} else if (alias.is_a<const enum_datatype_def>()) {
-		return return_type(enum_instance_collection
-			::make_enum_array(*s, id, d));
+		return return_type(
+			enum_instance_collection::make_array(*s, id, d));
 	} else {
 		// what about typedefs/aliases of built-in types? Ahhhh....
 		INVARIANT(alias.is_a<const built_in_datatype_def>());
 		// just compare pointers
 		if (alias == &bool_def) {
-			return return_type(bool_instance_collection
-				::make_bool_array(*s, id, d));
+			return return_type(
+				bool_instance_collection::make_array(*s, id, d));
 		} else if (alias == &int_def) {
-			return return_type(int_instance_collection
-				::make_int_array(*s, id, d));
+			return return_type(
+				int_instance_collection::make_array(*s, id, d));
 		} else {
 			DIE;	// WTF!?
 			return return_type(NULL);
@@ -498,10 +517,26 @@ data_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenience function for creating data int type-references.
+ */
+data_type_reference*
+data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
+	// is an excl_ptr, incidentally
+	fundamental_type_reference::template_args_ptr_type
+	width_params(new const_param_expr_list(
+		count_ptr<const pint_const>(new pint_const(w))));
+	return new data_type_reference(
+		never_ptr<const built_in_datatype_def>(&int_def), 
+		width_params);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	STACKTRACE("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
@@ -509,63 +544,251 @@ if (!m.register_transient_object(this, DATA_TYPE_REFERENCE_TYPE_KEY)) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-data_type_reference::construct_empty(const int i) {
-	return new data_type_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-data_type_reference::write_object(const persistent_object_manager& m) const {
+data_type_reference::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	STACKTRACE("data_type_ref::write_object()");
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);		// sanity check
 	m.write_pointer(f, base_type_def);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	May need special case handling for built-in definitions!
+	Call the HACK POLICE!!!
  */
 void
-data_type_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
+data_type_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	STACKTRACE("data_type_ref::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);		// sanity check
 	m.read_pointer(f, base_type_def);
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);			// sanity check
 
-	// MINOR HACK: recursion and intercept built-in types
+	// MINOR HACK: shallow recursion and intercept built-in types
 	// TODO: ALERT!!! case where base_type_def is a typedef alias?
-	const_cast<datatype_definition_base&>(*base_type_def).load_object(m);
-	if (base_type_def->get_key() == "bool")
+	m.load_object_once(
+		const_cast<datatype_definition_base*>(&*base_type_def));
+	if (base_type_def->get_key() == "bool") {
+		m.please_delete(&*base_type_def);	// HACKERY
 		base_type_def =
 			never_ptr<const datatype_definition_base>(&bool_def);
-	else if (base_type_def->get_key() == "int")
+		// must flag visit specially
+	} else if (base_type_def->get_key() == "int") {
+		m.please_delete(&*base_type_def);	// HACKERY
 		base_type_def =
 			never_ptr<const datatype_definition_base>(&int_def);
+		// must flag visit specially
+	}
 	// else leave the base definition as is
 	// reference count will take care of discarded memory :)
 }
-// else already visited
+
+//=============================================================================
+// class channel_type_reference_base method definitions
+
+// inline
+channel_type_reference_base::channel_type_reference_base(
+		template_args_ptr_type& pl) :
+		parent_type(pl), direction('\0') {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_type_reference_base::dump_direction(ostream& o) const {
+	if (direction == '!' || direction == '?')
+		o << direction;
+	// else no direction
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference_base::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	parent_type::write_object_base(m, o);
+	write_value(o, direction);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference_base::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	parent_type::load_object_base(m, i);
+	read_value(i, direction);
+}
+
+//=============================================================================
+// class builtin_channel_type_reference method definitions
+
+builtin_channel_type_reference::builtin_channel_type_reference() :
+		parent_type(), datatype_list() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+builtin_channel_type_reference::~builtin_channel_type_reference() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+builtin_channel_type_reference::what(ostream& o) const {
+	return o << "builtin-channel-type-reference";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Single-line compact dump of built-in channel type reference.  
+	No newline at the end.  
+ */
+ostream&
+builtin_channel_type_reference::dump(ostream& o) const {
+//	STACKTRACE_VERBOSE;
+	o << "chan";
+	dump_direction(o);
+	o << '(';
+	datatype_list_type::const_iterator i(datatype_list.begin());
+	const datatype_list_type::const_iterator e(datatype_list.end());
+	(*i)->dump(o);
+	for (i++; i!=e; i++) {
+		(*i)->dump(o << ", ");
+	}
+	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Indented, one-type-per-line-formatted dump of built-in channel 
+	type reference, called from at least user_def_chan::dump.
+ */
+ostream&
+builtin_channel_type_reference::dump_long(ostream& o) const {
+//	STACKTRACE_VERBOSE;
+	o << "chan";
+	if (direction == '!' || direction == '?')
+		o << direction;
+	o << '(' << endl;
+	{
+	const indent __indent__(o); 
+	datatype_list_type::const_iterator i(datatype_list.begin());
+	const datatype_list_type::const_iterator e(datatype_list.end());
+	for ( ; i!=e; i++) {
+		(*i)->dump(o << auto_indent) << endl;
+	}
+	}
+	return o << auto_indent << ')' << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Built-in channel types have no base definition... yet.
+	Perhaps a singleton global static definition should exist 
+	for this purpose.  
+	For now this returns NULL.  
+ */
+never_ptr<const definition_base>
+builtin_channel_type_reference::get_base_def(void) const {
+	cerr << "Got: builtin_chanel_type_reference::get_base_def(), "
+		"did you really mean this?" << endl;
+	return never_ptr<const built_in_channel_def>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Only applicable if datatype_list_type is a vector.  
+ */
+void
+builtin_channel_type_reference::reserve_datatypes(const size_t s) {
+	datatype_list.reserve(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::add_datatype(
+		const datatype_list_type::value_type& t) {
+	NEVER_NULL(t);
+	datatype_list.push_back(t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+builtin_channel_type_reference::datatype_ptr_type
+builtin_channel_type_reference::index_datatype(const size_t i) const {
+	return datatype_list[i];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const builtin_channel_type_reference>
+builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
+	typedef	never_ptr<const builtin_channel_type_reference>	return_type;
+	return return_type(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns a newly constructed channel instantiation statement object.
+	Currently same as (user-defined) channel_type_reference.  
+	Perhaps fold into parent class?
+	Q: Is there a need to distinguish between channel types
+		for making instantiation statements?
+	(2005-05-28: decide later)
+ */
+excl_ptr<instantiation_statement_base>
+builtin_channel_type_reference::make_instantiation_statement_private(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const {
+	return excl_ptr<instantiation_statement_base>(
+		new channel_instantiation_statement(
+			t.is_a<const this_type>(), d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns a newly constructed channel instance object.  
+	Q: Is there a need to distinguish between channel types
+		for making instantiation collections?
+	(2005-05-28: decide later)
+ */
+excl_ptr<instance_collection_base>
+builtin_channel_type_reference::make_instance_collection(
+		const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const {
+	return excl_ptr<instance_collection_base>(
+		channel_instance_collection::make_array(*s, id, d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	parent_type::collect_transient_info_base(m);
+	m.collect_pointer_list(datatype_list);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::write_object(
+		const persistent_object_manager& m, ostream& o) const {
+	parent_type::write_object_base(m, o);
+	m.write_pointer_list(o, datatype_list);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::load_object(
+		const persistent_object_manager& m, istream& i) {
+	parent_type::load_object_base(m, i);
+	m.read_pointer_list(i, datatype_list);
 }
 
 //=============================================================================
 // class channel_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_type_reference, 
-	CHANNEL_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.  
  */
 channel_type_reference::channel_type_reference() :
-		fundamental_type_reference(), 
+		parent_type(), 
 		base_chan_def(NULL) {
 	// no assert
 }
@@ -578,8 +801,8 @@ channel_type_reference::channel_type_reference() :
  */
 channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd, 
-		excl_ptr<const param_expr_list>& pl) :
-		fundamental_type_reference(pl), 
+		template_args_ptr_type& pl) :
+		parent_type(pl), 
 		base_chan_def(cd) {
 	NEVER_NULL(base_chan_def);
 }
@@ -587,7 +810,7 @@ channel_type_reference::channel_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd) :
-		fundamental_type_reference(), 	// NULL
+		parent_type(), 	// NULL
 		base_chan_def(cd) {
 	NEVER_NULL(base_chan_def);
 }
@@ -599,7 +822,13 @@ channel_type_reference::~channel_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_type_reference::what(ostream& o) const {
-	return o << "channel-type-reference";
+	return o << "user-channel-type-reference";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+channel_type_reference::dump(ostream& o) const {
+	return dump_direction(fundamental_type_reference::dump(o));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -610,15 +839,37 @@ channel_type_reference::get_base_def(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return what does it mean to return NULL?
+	TODO: handles cases for resolving typedefs.  
+ */
+never_ptr<const builtin_channel_type_reference>
+channel_type_reference::resolve_builtin_channel_type(void) const {
+	typedef	never_ptr<const builtin_channel_type_reference>	return_type;
+	const never_ptr<const user_def_chan>
+		udc(base_chan_def.is_a<const user_def_chan>());
+	if (!udc) {
+		cerr << "Fang, finish channel_type_reference::resolve_builtin_channel_type(): "
+			"case where base_chan_def is not user_def_chan."
+			<< endl;
+		return return_type(NULL);
+	}
+	// KLUDGE: count_ptr coerced to never_ptr!
+	// the consumer of this pointer better not hold onto it!
+	// see entity::CHP::channel_send::push_back().
+	return return_type(&udc->get_builtin_channel_type());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Returns a newly constructed channel instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new channel_instantiation_statement(
-			t.is_a<const channel_type_reference>(), d));
+			t.is_a<const this_type>(), d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -630,53 +881,38 @@ channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		channel_instance_collection::make_chan_array(*s, id, d));
+		channel_instance_collection::make_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, CHANNEL_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_chan_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-channel_type_reference::construct_empty(const int i) {
-	return new channel_type_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_type_reference::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);		// sanity check
+channel_type_reference::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	m.write_pointer(f, base_chan_def);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-channel_type_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);		// sanity check
+channel_type_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, base_chan_def);
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);			// sanity check
-}
-// else already visited
 }
 
 //=============================================================================
 // class process_type_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_type_reference, 
-	PROCESS_TYPE_REFERENCE_TYPE_KEY)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -700,7 +936,7 @@ process_type_reference::process_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
 		const never_ptr<const process_definition_base> pd, 
-		excl_ptr<const param_expr_list>& pl) :
+		template_args_ptr_type& pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	NEVER_NULL(base_proc_def);
@@ -724,13 +960,43 @@ process_type_reference::get_base_def(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Makes a copy of this type reference, but with strictly resolved
+	constant parameter arguments.  
+	\todo resolve data-type aliases.  
+	\return a copy of itself, but with type parameters resolved, 
+		if applicable.  Returns NULL if there is error in resolution.  
+ */
+count_ptr<const process_type_reference>
+process_type_reference::unroll_resolve(unroll_context& c) const {
+	STACKTRACE("data_type_reference::unroll_resolve()");
+	typedef	count_ptr<const this_type>	return_type;
+	// can this code be factored out to type_ref_base?
+	if (template_params) {
+		template_args_ptr_type
+			actuals = template_params->unroll_resolve(c)
+				.as_a_xfer<const param_expr_list>();
+		if (actuals) {
+			// TODO: resolve aliases!
+			return return_type(
+				new this_type(base_proc_def, actuals));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		return return_type(new this_type(base_proc_def));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Returns a newly constructed process instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	return excl_ptr<instantiation_statement>(
+	return excl_ptr<instantiation_statement_base>(
 		new process_instantiation_statement(
 			t.is_a<const process_type_reference>(), d));
 }
@@ -747,46 +1013,34 @@ process_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
-		process_instance_collection::make_proc_array(*s, id, d));
+		process_instance_collection::make_array(*s, id, d));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, PROCESS_TYPE_REFERENCE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
 	base_proc_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-process_type_reference::construct_empty(const int i) {
-	return new process_type_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_type_reference::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);		// sanity check
+process_type_reference::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
 	m.write_pointer(f, base_proc_def);
 	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);			// sanity check
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_type_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);		// sanity check
+process_type_reference::load_object(const persistent_object_manager& m, 
+		istream& f) {
 	m.read_pointer(f, base_proc_def);
 	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);			// sanity check
-}
-// else already visited
 }
 
 //=============================================================================
@@ -822,17 +1076,23 @@ param_type_reference::get_base_def(void) const {
 /**
 	Returns a newly constructed param instantiation statement object.
  */
-excl_ptr<instantiation_statement>
+excl_ptr<instantiation_statement_base>
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const {
-	typedef	excl_ptr<instantiation_statement>	return_type;
+	typedef	excl_ptr<instantiation_statement_base>	return_type;
+	static const class_traits<pbool_tag>::type_ref_ptr_type&
+		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
+	static const class_traits<pint_tag>::type_ref_ptr_type&
+		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
 	INVARIANT(t == this);
-	if (this->must_be_equivalent(*pbool_type_ptr))
-		return return_type(new pbool_instantiation_statement(d));
-	else if (this->must_be_equivalent(*pint_type_ptr))
-		return return_type(new pint_instantiation_statement(d));
-	else {
+	if (this->must_be_type_equivalent(*pbool_type_ptr)) {
+		return return_type(new pbool_instantiation_statement(
+			pbool_type_ptr, d));
+	} else if (this->must_be_type_equivalent(*pint_type_ptr)) {
+		return return_type(new pint_instantiation_statement(
+			pint_type_ptr, d));
+	} else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
 		dump(cerr) << " at " << this << endl;
@@ -854,12 +1114,16 @@ param_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
-	if (this->must_be_equivalent(*pbool_type_ptr))
+	static const class_traits<pbool_tag>::type_ref_ptr_type&
+		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
+	static const class_traits<pint_tag>::type_ref_ptr_type&
+		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
+	if (this->must_be_type_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
-			pbool_instance_collection::make_pbool_array(*s, id, d));
-	else if (this->must_be_equivalent(*pint_type_ptr))
+			pbool_instance_collection::make_array(*s, id, d));
+	else if (this->must_be_type_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
-			pint_instance_collection::make_pint_array(*s, id, d));
+			pint_instance_collection::make_array(*s, id, d));
 	else {
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
@@ -877,5 +1141,5 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_TYPE_REF_CC__
+#endif	// __OBJECT_ART_OBJECT_TYPE_REF_CC__
 

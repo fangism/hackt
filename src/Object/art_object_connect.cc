@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.24.4.1 2005/06/24 22:51:11 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.24.4.2 2005/06/25 21:07:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_CC__
@@ -25,6 +25,12 @@
 #include "Object/art_object_instance_struct.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/art_object_chan_traits.h"
+#include "Object/art_object_proc_traits.h"
+#include "Object/art_object_int_traits.h"
+#include "Object/art_object_bool_traits.h"
+#include "Object/art_object_enum_traits.h"
+#include "Object/art_object_struct_traits.h"
 
 #include "util/what.tcc"
 #include "util/STL/list.tcc"

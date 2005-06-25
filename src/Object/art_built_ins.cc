@@ -1,29 +1,33 @@
 /**
-	\file "art_built_ins.cc"
+	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.16 2005/01/28 19:58:39 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.24.2.1 2005/06/25 21:07:16 fang Exp $
  */
 
-#ifndef	__ART_BUILT_INS_CC__
-#define	__ART_BUILT_INS_CC__
+#ifndef	__OBJECT_ART_BUILT_INS_CC__
+#define	__OBJECT_ART_BUILT_INS_CC__
 
 #define	DEBUG_ART_BUILT_INS			0
 
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool.h"
-#include "art_built_ins.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_instance_param.h"
-#include "art_object_expr_const.h"
-#include "static_trace.h"
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
-STATIC_TRACE_BEGIN("built-ins");
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.tcc"
+#include "util/memory/list_vector_pool.h"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_definition_data.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_object_value_collection.h"
+#include "Object/art_object_pint_traits.h"
+#include "Object/art_object_pbool_traits.h"
 
 #if DEBUG_ART_BUILT_INS
 	#define	ENABLE_STACKTRACE			1
-	#include "stacktrace.h"
+	#include "util/stacktrace.h"
 
 USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
@@ -38,7 +42,10 @@ namespace entity {
 // discarded AFTER subsequent static objects are deallocated in this module
 // becaused of reverse-order static destruction.
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
+#if 0
+// re-enable this when it switches back to pooled...
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_scalar)
+#endif
 // this early because int_def contains a pint_scalar, 
 // and built_in_namespace contains the int_def.
 
@@ -66,12 +73,14 @@ pint_def = built_in_param_def(
 // will need to pool param_type_reference?
 
 /** built-in parameter pbool type reference */
-const count_ptr<const param_type_reference> pbool_type_ptr =
+const class_traits<pbool_tag>::type_ref_ptr_type
+class_traits<pbool_tag>::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
 		never_ptr<const built_in_param_def>(&pbool_def)));
 
 /** built-in parameter pint type reference */
-const count_ptr<const param_type_reference> pint_type_ptr =
+const class_traits<pint_tag>::type_ref_ptr_type
+class_traits<pint_tag>::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
 	never_ptr<const built_in_param_def>(&pint_def)));
 
@@ -110,12 +119,24 @@ dummy_bool(new pbool_const(true));
 ***/
 
 // will transfer ownership to definition
+static excl_ptr<pint_scalar>
+int_def_width(
+//	new pint_scalar(int_def, "width", int_def_width_default) // was this
+	new pint_scalar(int_def, "width")
+);
+
+static const good_bool
+__good_int_width(int_def_width->assign_default_value(int_def_width_default));
+
+// INVARIANT(__good_int_width.good);
+
 static excl_ptr<instance_collection_base>
-int_def_width(new pint_scalar(int_def, "width", int_def_width_default));
+int_def_width_base(int_def_width);
 
 static const never_ptr<const instance_collection_base>
 int_def_width_ref =
-const_cast<built_in_datatype_def&>(int_def).add_template_formal(int_def_width);
+const_cast<built_in_datatype_def&>(int_def)
+	.add_template_formal(int_def_width_base);
 
 #if 0
 // can't hurt to keep this initialization check...
@@ -138,13 +159,33 @@ bool_type = data_type_reference(
 	never_ptr<const built_in_datatype_def>(&bool_def));
 #endif
 
+const count_ptr<const data_type_reference>
+bool_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&bool_def)));
+
+#if 0
+// is an excl_ptr...
+static fundamental_type_reference::template_args_ptr_type
+__thirty_two__(new const_param_expr_list(
+	count_ptr<const pint_const>(new pint_const(32))));
+
+const count_ptr<const data_type_reference>
+int32_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&int_def), __thirty_two__));
+#else
+// be careful once type references are memory-pooled!
+// the following function call calls a bunch of allocators (new)
+const count_ptr<const data_type_reference>
+int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
+#endif
+
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
 #undef	DEBUG_ART_BUILT_INS
 
-STATIC_TRACE_END("built-ins");
+DEFAULT_STATIC_TRACE_END
 
-#endif	// __ART_BUILT_INS_CC__
+#endif	// __OBJECT_ART_BUILT_INS_CC__
 

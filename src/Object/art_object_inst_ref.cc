@@ -1,50 +1,228 @@
 /**
-	\file "art_object_inst_ref.cc"
-	Method definitions for the instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.21 2005/01/28 19:58:42 fang Exp $
+	\file "Object/art_object_inst_ref.cc"
+	Method definitions for the meta_instance_reference family of objects.
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.1 2005/06/25 21:07:22 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_CC__
-#define	__ART_OBJECT_INST_REF_CC__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
+#define	__OBJECT_ART_OBJECT_INST_REF_CC__
 
 #include <iostream>
 
-#include "STL/list.tcc"
-#include "multidimensional_sparse_set.tcc"
+#include "util/STL/list.tcc"
+#include "util/multidimensional_sparse_set.tcc"
 
-#include "art_object_type_ref_base.h"
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_namespace.h"
-#include "art_object_inst_ref.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr.h"		// for dynamic_range_list
-#include "art_object_control.h"
-#include "persistent_object_manager.tcc"
-#include "art_built_ins.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_inst_ref.tcc"
+#include "Object/art_object_nonmeta_inst_ref.tcc"
+#include "Object/art_object_member_inst_ref.tcc"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_expr.h"		// for dynamic_meta_range_list
+#include "Object/art_object_data_expr.h"	// for nonmeta_index_list
+#include "Object/art_object_control.h"
+#include "Object/art_object_connect.h"		// for aliases_connection_base
+#include "util/persistent_object_manager.tcc"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_hash.h"
+#include "Object/art_object_proc_traits.h"
+#include "Object/art_object_chan_traits.h"
+#include "Object/art_object_instance_collection.h"
 
 //=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+// specializations
+
+namespace util {
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_meta_instance_reference, 
+		"process-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_meta_instance_reference, 
+		"channel-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_nonmeta_instance_reference, 
+		"process-nonmeta-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_nonmeta_instance_reference, 
+		"channel-nonmeta-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::process_member_meta_instance_reference, 
+		"process-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_meta_instance_reference, 
+		"channel-member-inst-ref")
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_process_meta_instance_reference, 
+		SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_channel_meta_instance_reference, 
+		SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_process_nonmeta_instance_reference, 
+		SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::simple_channel_nonmeta_instance_reference, 
+		SIMPLE_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::process_member_meta_instance_reference, 
+		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::channel_member_meta_instance_reference, 
+		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY, 0)
+}	// end namespace util
 
 //=============================================================================
 namespace ART {
 namespace entity {
-using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
+#include "util/using_ostream.h"
+using util::multidimensional_sparse_set_traits;
+using util::multidimensional_sparse_set;
+using util::write_value;
+using util::read_value;
+using util::persistent_traits;
 
 //=============================================================================
-// class simple_instance_reference method definitions
+// class meta_instance_reference_base method definitions
+
+/**
+	Wrapped interface to constructing type-specific alias connections.  
+ */
+excl_ptr<aliases_connection_base>
+meta_instance_reference_base::make_aliases_connection(
+		const count_ptr<const meta_instance_reference_base>& i) {
+	NEVER_NULL(i);
+	return i->make_aliases_connection_private();
+	// have the option of adding first instance here...
+	// ret->append_meta_instance_reference(i);
+}
+
+//=============================================================================
+// class simple_meta_instance_reference_base::mset_base definition
+
+class simple_meta_instance_reference_base::mset_base {
+public:
+	typedef	multidimensional_sparse_set_traits<
+			pint_value_type, const_range, list>
+						traits_type;
+	typedef	traits_type::range_type		range_type;
+	typedef	traits_type::range_list_type	range_list_type;
+
+	/// dimensions limit
+	enum { LIMIT = 4 };
+
+virtual	~mset_base() { }
+
+virtual	range_list_type
+	compact_dimensions(void) const = 0;
+
+virtual	range_list_type
+	query_compact_dimensions(const range_list_type& r) const = 0;
+
+virtual	bool
+	add_ranges(const range_list_type& r) = 0;
+
+virtual	bool
+	subtract_sparse_set(const mset_base& s) = 0;
+
+virtual	void
+	clear(void) = 0;
+
+virtual	bool
+	empty(void) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
+
+	static
+	mset_base*
+	make_multidimensional_sparse_set(const size_t d);
+
+};	// end class simple_meta_instance_reference_base::mset_base
+
+//=============================================================================
+/**
+	Wrapper class to sparse set implementation, 
+	implements a limited interface for use in this module.  
+ */
+template <size_t D>
+class simple_meta_instance_reference_base::mset :
+		public simple_meta_instance_reference_base::mset_base {
+protected:
+	typedef	multidimensional_sparse_set<D, pint_value_type, const_range>
+							impl_type;
+	typedef	simple_meta_instance_reference_base::mset_base	base_type;
+	typedef	mset<D>					this_type;
+public:
+	typedef base_type::range_type			range_type;
+	typedef base_type::range_list_type		range_list_type;
+protected:
+	impl_type			sset;
+public:
+
+	// standard destructor
+
+	range_list_type
+	compact_dimensions(void) const {
+		return sset.compact_dimensions();
+	}
+
+	range_list_type
+	query_compact_dimensions(const range_list_type& r) const {
+		return sset.query_compact_dimensions(r);
+	}
+
+	bool
+	add_ranges(const range_list_type& r) {
+		return sset.add_ranges(r);
+	}
+
+	bool
+	subtract_sparse_set(const mset_base& s) {
+		const this_type* t = IS_A(const this_type*, &s);
+		INVARIANT(t);
+		return sset.subtract(t->sset);
+	}
+
+	void
+	clear(void) { sset.clear(); }
+
+	bool
+	empty(void) const { return sset.empty(); }
+
+	ostream&
+	dump(ostream& o) const {
+		return sset.dump(o);
+	}
+
+
+};	// end class simple_meta_instance_reference_base::mset
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_meta_instance_reference_base::mset_base*
+simple_meta_instance_reference_base::mset_base::make_multidimensional_sparse_set(
+		const size_t d) {
+	INVARIANT(d > 0 && d <= LIMIT);
+	switch(d) {
+		case 1: return new simple_meta_instance_reference_base::mset<1>();
+		case 2: return new simple_meta_instance_reference_base::mset<2>();
+		case 3: return new simple_meta_instance_reference_base::mset<3>();
+		case 4: return new simple_meta_instance_reference_base::mset<4>();
+		// add more cases if LIMIT is ever extended.
+		default: return NULL;
+	}
+}
+
+//=============================================================================
+// class simple_meta_instance_reference_base method definitions
 
 /**
 	Private empty constructor.
  */
-simple_instance_reference::simple_instance_reference() :
+simple_meta_instance_reference_base::simple_meta_instance_reference_base() :
 		array_indices(NULL), inst_state() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_instance_reference::simple_instance_reference(
+simple_meta_instance_reference_base::simple_meta_instance_reference_base(
 		const instantiation_state& st) :
 		array_indices(NULL), 
 		inst_state(st) {
@@ -55,8 +233,8 @@ simple_instance_reference::simple_instance_reference(
 /**
 	May be obsolete...
  */
-simple_instance_reference::simple_instance_reference(
-		excl_ptr<index_list>& i, 
+simple_meta_instance_reference_base::simple_meta_instance_reference_base(
+		excl_ptr<index_list_type>& i, 
 		const instantiation_state& st) :
 		array_indices(i), 
 		inst_state(st) {
@@ -66,7 +244,7 @@ simple_instance_reference::simple_instance_reference(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_instance_reference::~simple_instance_reference() {
+simple_meta_instance_reference_base::~simple_meta_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,7 +259,7 @@ simple_instance_reference::~simple_instance_reference() {
 	\return the dimensions of the referenced array.  
  */
 size_t
-simple_instance_reference::dimensions(void) const {
+simple_meta_instance_reference_base::dimensions(void) const {
 	size_t dim = get_inst_base()->get_dimensions();
 	if (array_indices) {
 		const size_t c = array_indices->dimensions_collapsed();
@@ -93,13 +271,13 @@ simple_instance_reference::dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const fundamental_type_reference>
-simple_instance_reference::get_type_ref(void) const {
+simple_meta_instance_reference_base::get_type_ref(void) const {
 	return get_inst_base()->get_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const definition_base>
-simple_instance_reference::get_base_def(void) const {
+simple_meta_instance_reference_base::get_base_def(void) const {
 	return get_inst_base()->get_base_def();
 }
 
@@ -113,13 +291,13 @@ simple_instance_reference::get_base_def(void) const {
 		were static constant (sparse or dense) indices.  
  */
 bool
-simple_instance_reference::is_static_constant_collection(void) const {
+simple_meta_instance_reference_base::is_static_constant_collection(void) const {
 	instantiation_state iter = inst_state;
 	const instantiation_state
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {
-		const count_ptr<const dynamic_range_list>
-			drl((*iter)->get_indices().is_a<const dynamic_range_list>());
+		const count_ptr<const dynamic_meta_range_list>
+			drl((*iter)->get_indices().is_a<const dynamic_meta_range_list>());
 		if (drl) {
 			if (!drl->is_static_constant())
 				return false;
@@ -151,7 +329,7 @@ simple_instance_reference::is_static_constant_collection(void) const {
 		can conservatively return false.  
  */
 bool
-simple_instance_reference::has_static_constant_dimensions(void) const {
+simple_meta_instance_reference_base::has_static_constant_dimensions(void) const {
 	// case 1: instance collection is not collective. 
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	if (base_dim == 0)
@@ -183,14 +361,14 @@ simple_instance_reference::has_static_constant_dimensions(void) const {
 	In the conservative case, return true.  
  */
 bool
-simple_instance_reference::may_be_densely_packed(void) const {
+simple_meta_instance_reference_base::may_be_densely_packed(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
 		return true;
 	// else is collective
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const index_list_type> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		if (!cil)
@@ -232,14 +410,14 @@ simple_instance_reference::may_be_densely_packed(void) const {
 	Much like may_be_densely_packed, but conservatively returns false.  
  */
 bool
-simple_instance_reference::must_be_densely_packed(void) const {
+simple_meta_instance_reference_base::must_be_densely_packed(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
 		return true;
 	// else is collective
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const index_list_type> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		if (!cil)
@@ -291,11 +469,11 @@ simple_instance_reference::must_be_densely_packed(void) const {
 	\sa implicit_static_constant_indices
  */
 const_range_list
-simple_instance_reference::static_constant_dimensions(void) const {
+simple_meta_instance_reference_base::static_constant_dimensions(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	INVARIANT(base_dim);		// must have no-zero dimensions
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const index_list_type> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		if (!cil)	// is dynamic
@@ -337,18 +515,18 @@ simple_instance_reference::static_constant_dimensions(void) const {
 		else will assert fail if anything goes wrong.  
  */
 const_index_list
-simple_instance_reference::implicit_static_constant_indices(void) const {
+simple_meta_instance_reference_base::implicit_static_constant_indices(void) const {
 	const size_t base_dim = get_inst_base()->get_dimensions();
 	// if not collective, then return true (not really applicable)
 	INVARIANT(base_dim);		// non-zero dimension only!
 	// else is collective
 	if (array_indices) {
-		const never_ptr<const index_list> il(array_indices);
+		const never_ptr<const index_list_type> il(array_indices);
 		const never_ptr<const const_index_list>
 			cil(il.is_a<const const_index_list>());
 		NEVER_NULL(cil);
 		const size_t a_size = array_indices->size();
-		// or compute equivalent from a const dynamic_index_list?
+		// or compute equivalent from a const dynamic_meta_index_list?
 		if (a_size < base_dim) {
 			// array indices are underspecified
 			// TO DO: unpack instance collection into
@@ -361,7 +539,7 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 			const const_range_list crl(*cil);
 			const mset_base::range_list_type
 				rl(fui->query_compact_dimensions(crl));
-			// is a list<const_range>, must convert to index_list
+			// is a list<const_range>, must convert to meta_index_list
 			INVARIANT(!rl.empty());
 
 			// add implied indices (ranges) back to original
@@ -406,9 +584,18 @@ simple_instance_reference::implicit_static_constant_indices(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as dump, but without type information.  
+	This is used primarily for printing value-reference expressions, 
+	to reduce information clutter.  
+	We dump the full qualified name to disambiguate potentially 
+	conflicting identifiers.  
+	\param o the output stream.
+	\return the output stream.
+ */
 ostream&
-simple_instance_reference::dump(ostream& o) const {
-	what(o) << " " << get_inst_base()->get_name();
+simple_meta_instance_reference_base::dump_brief(ostream& o) const {
+	o << get_inst_base()->get_qualified_name();
 	if (array_indices) {
 		array_indices->dump(o);
 	}
@@ -417,10 +604,44 @@ simple_instance_reference::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Even briefer, without fully-qualified name.  
+	Make it smart, use qualiied name if referring outside of
+	a particular definition or scope (another argument).  
+	\param loc the local scope, used to determine whether or not
+		to print the qualified or abbreviated name.  
+		If null, then always used short name.  
+ */
+ostream&
+simple_meta_instance_reference_base::dump_briefer(ostream& o, 
+		const never_ptr<const scopespace> loc) const {
+	never_ptr<const instance_collection_base>
+		ib(get_inst_base());
+	if (loc && loc == ib->get_owner()) {
+		o << ib->get_qualified_name();
+	} else {
+		o << ib->get_name();
+	}
+	if (array_indices) {
+		array_indices->dump(o);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as dump_brief, but with type information.  
+ */
+ostream&
+simple_meta_instance_reference_base::dump(ostream& o) const {
+	return dump_brief(what(o) << " ");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints out the type and size (if known).  
  */
 ostream&
-simple_instance_reference::dump_type_size(ostream& o) const {
+simple_meta_instance_reference_base::dump_type_size(ostream& o) const {
 	get_type_ref()->dump(o);
 	if (!dimensions()) {
 		return o;
@@ -447,16 +668,6 @@ simple_instance_reference::dump_type_size(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-simple_instance_reference::hash_string(void) const {
-	string ret(get_inst_base()->get_qualified_name());
-	if (array_indices) {
-		ret += array_indices->hash_string();
-	}
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds indices to instance reference.  
 	Must check with number of number of dimensions.  
@@ -470,15 +681,17 @@ simple_instance_reference::hash_string(void) const {
 	
 	\return true if successful, else false.  
  */
-bool
-simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
+good_bool
+simple_meta_instance_reference_base::attach_indices(
+		excl_ptr<index_list_type>& i) {
 	// make sure not already indexed
 	// side note: if indexing were truly recursive and not list-based, 
 	//	we'd be able to append indices one-by-one.  
 	INVARIANT(!array_indices);
 	NEVER_NULL(i);
 	// dimension-check:
-	const never_ptr<const instance_collection_base> inst_base(get_inst_base());
+	const never_ptr<const instance_collection_base>
+		inst_base(get_inst_base());
 	// number of indices must be <= dimension of instance collection.  
 	const size_t max_dim = dimensions();	// depends on indices
 	if (i->size() > max_dim) {
@@ -487,7 +700,7 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 			"cannot be indexed " << i->size() <<
 			"-dimensionally!  ";
 			// caller will say where
-		return false;
+		return good_bool(false);
 	} 
 	// else proceed...
 
@@ -498,22 +711,22 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	// mset_base typedef'd privately
 	// overriding default implementation with pair<int, int>
 	INVARIANT(max_dim <= mset_base::LIMIT);
-	never_ptr<const index_list> il(i);
-	never_ptr<const const_index_list>
+	const never_ptr<const index_list_type> il(i);
+	const never_ptr<const const_index_list>
 		cil(il.is_a<const const_index_list>());
 	if (!cil) {	// is dynamic, conservatively covers anything
-		never_ptr<const dynamic_index_list>
-			dil(il.is_a<const dynamic_index_list>());
+		const never_ptr<const dynamic_meta_index_list>
+			dil(il.is_a<const dynamic_meta_index_list>());
 		NEVER_NULL(dil);
 		array_indices = i;
-		return true;
+		return good_bool(true);
 	}
 	// else is constant index list, can compute coverage
 	//	using multidimensional_sparse_set
 
 	// eventually replace the following loop with unroll_static_instances
 	const size_t cil_size = cil->size();
-	excl_ptr<mset_base>
+	const excl_ptr<mset_base>
 		cov(mset_base::make_multidimensional_sparse_set(cil_size));
 	NEVER_NULL(cov);
 	{
@@ -522,13 +735,14 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 		// we need to trim the lower dimension indices.
 		cov->add_ranges(cirl);
 	}
-	excl_ptr<mset_base> inst = unroll_static_instances(cil_size);
+	const excl_ptr<mset_base> inst = unroll_static_instances(cil_size);
 	if (inst) {
 		cov->subtract_sparse_set(*inst);
 		// make sure to clean if empty in subtract() method
-	}
-	else	// was dynamic, potentially covering all indices
+	} else {
+		// was dynamic, potentially covering all indices
 		cov->clear();
+	}
 
 	// if this point reached, then all instance additions
 	// were static constants.
@@ -541,10 +755,10 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 		cov->dump(cerr << endl) << "} ";
 		// cerr << where() << endl;	// caller
 		// fancy: list indices not instantiated?
-		return false;
+		return good_bool(false);
 	}
 	array_indices = i;
-	return true;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -556,17 +770,26 @@ simple_instance_reference::attach_indices(excl_ptr<index_list> i) {
 	\return true if referenced instances' types may be equivalent.  
  */
 bool
-simple_instance_reference::may_be_type_equivalent(
-		const instance_reference_base& i) const {
+simple_meta_instance_reference_base::may_be_type_equivalent(
+		const meta_instance_reference_base& i) const {
 	const never_ptr<const instance_collection_base>
 		lib(get_inst_base());
+	const this_type* const smir = IS_A(const this_type*, &i);
+	if (!smir) {
+		cerr << "Unhandled case in simple_meta_instance_reference_base"
+			"::may_be_type_equivalent(): "
+			"comparing to non-simple_meta_instance_reference_base, "
+			"probably intended for complex-aggregate instance "
+			"references *grin*... returning false." << endl;
+		return false;
+	}
 	const never_ptr<const instance_collection_base>
-		rib(i.get_inst_base());
+		rib(smir->get_inst_base());
 	const count_ptr<const fundamental_type_reference>
 		ltr(lib->get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		rtr(rib->get_type_ref());
-	const bool type_eq = ltr->may_be_equivalent(*rtr);
+	const bool type_eq = ltr->may_be_type_equivalent(*rtr);
 	// if base types differ, then cannot be equivalent
 	if (!type_eq) {
 		ltr->dump(cerr << "Types do not match! got: ") << " and: ";
@@ -617,10 +840,10 @@ simple_instance_reference::may_be_type_equivalent(
 	// Here, we know we can obtain the implicit packed indices, 
 	// and then compare them.  
 
-	const simple_instance_reference*
-		sir = IS_A(const simple_instance_reference*, &i);
+	const simple_meta_instance_reference_base*
+		sir = IS_A(const simple_meta_instance_reference_base*, &i);
 	if (!sir) {
-		// then is not a simple_instance_reference, 
+		// then is not a simple_meta_instance_reference_base, 
 		// is complex-aggregate, which is not handled yet
 		// eventually get around to this
 		return true;
@@ -647,8 +870,8 @@ simple_instance_reference::may_be_type_equivalent(
 	"must" type-equivalence.  
  */
 bool
-simple_instance_reference::must_be_type_equivalent(
-		const instance_reference_base& i) const {
+simple_meta_instance_reference_base::must_be_type_equivalent(
+		const meta_instance_reference_base& i) const {
 	// fix me...
 	return false;
 }
@@ -665,8 +888,8 @@ simple_instance_reference::must_be_type_equivalent(
 		if everything is constant, else returns null, 
 		if there is even a single non-const range_list.  
  */
-excl_ptr<simple_instance_reference::mset_base>
-simple_instance_reference::unroll_static_instances(const size_t dim) const {
+excl_ptr<simple_meta_instance_reference_base::mset_base>
+simple_meta_instance_reference_base::unroll_static_instances(const size_t dim) const {
 	INVARIANT(dim <= get_inst_base()->get_dimensions());
 	instantiation_state iter = inst_state;
 	const instantiation_state end(get_inst_base()->collection_state_end());
@@ -674,7 +897,7 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 		cov(mset_base::make_multidimensional_sparse_set(dim));
 	NEVER_NULL(cov);
 	for ( ; iter!=end; iter++) {
-		if ((*iter)->get_indices().is_a<const dynamic_range_list>())
+		if ((*iter)->get_indices().is_a<const dynamic_meta_range_list>())
 		{
 			// all we can do conservatively...
 			return excl_ptr<mset_base>(NULL);
@@ -698,7 +921,7 @@ simple_instance_reference::unroll_static_instances(const size_t dim) const {
 	Common persistence visitor for all subclasses.  
  */
 void
-simple_instance_reference::collect_transient_info_base(
+simple_meta_instance_reference_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
@@ -711,7 +934,7 @@ simple_instance_reference::collect_transient_info_base(
 	\pre o MUST BE the stream corresponding to this object.
  */
 void
-simple_instance_reference::write_object_base(
+simple_meta_instance_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	write_instance_collection_state(o);
 	m.write_pointer(o, array_indices);
@@ -727,13 +950,13 @@ simple_instance_reference::write_object_base(
 	\pre i MUST BE the stream corresponding to this object.
  */
 void
-simple_instance_reference::load_object_base(
-		persistent_object_manager& m, istream& i) {
+simple_meta_instance_reference_base::load_object_base(
+		const persistent_object_manager& m, istream& i) {
 	load_instance_collection_state(i);
 	m.read_pointer(i, array_indices);
 	// must load the 
 	if (array_indices)
-		array_indices->load_object(m);
+		m.load_object_once(array_indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -743,7 +966,7 @@ simple_instance_reference::load_object_base(
 	To do this we just use the distance from inst_state to the "end".
  */
 void
-simple_instance_reference::write_instance_collection_state(ostream& f) const {
+simple_meta_instance_reference_base::write_instance_collection_state(ostream& f) const {
 	const instantiation_state end =
 		get_inst_base()->collection_state_end();
 	// assuming this is safe, of course...
@@ -757,7 +980,7 @@ simple_instance_reference::write_instance_collection_state(ostream& f) const {
 	based on an index from the end, counting backwards.  
  */
 void
-simple_instance_reference::load_instance_collection_state(istream& f) {
+simple_meta_instance_reference_base::load_instance_collection_state(istream& f) {
 	instantiation_state iter =
 		get_inst_base()->collection_state_end();
 	size_t i = 0;
@@ -769,88 +992,183 @@ simple_instance_reference::load_instance_collection_state(istream& f) {
 }
 
 //=============================================================================
-// class member_instance_reference_base method definitions
+// class simple_nonmeta_instance_reference_base method definitions
 
+simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
+		) : parent_type(), array_indices() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
+		excl_ptr<index_list_type>& i) :
+		parent_type(), array_indices(i) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_nonmeta_instance_reference_base::~simple_nonmeta_instance_reference_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+simple_nonmeta_instance_reference_base::dimensions(void) const {
+	size_t dim = get_inst_base()->get_dimensions();
+	if (array_indices) {
+		const size_t c = array_indices->dimensions_collapsed();
+		INVARIANT(c <= dim);
+		return dim -c;
+	}
+	else return dim;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Private empty constructor.  
+	Temporary: un meta-checked.  
  */
-member_instance_reference_base::member_instance_reference_base() :
-		base_inst_ref(NULL) {
-	// no assert
+good_bool
+simple_nonmeta_instance_reference_base::attach_indices(
+		excl_ptr<index_list_type>& i) {
+	INVARIANT(!array_indices);
+	NEVER_NULL(i);
+
+	// dimension-check:
+	const never_ptr<const instance_collection_base>
+		inst_base(get_inst_base());
+	// number of indices must be <= dimension of instance collection.  
+	const size_t max_dim = dimensions();    // depends on indices
+	if (i->size() > max_dim) {
+		cerr << "ERROR: instance collection " << inst_base->get_name()
+			<< " is " << max_dim << "-dimensional, and thus, "
+			"cannot be indexed " << i->size() <<
+			"-dimensionally!  ";
+			// caller will say where
+		return good_bool(false);
+	} 
+	// else proceed...
+
+	// allow under-specified dimensions?  
+	// NOT for nonmeta instance references, or ALL or NONE
+	// TODO: enforce this, modifying the above check
+
+	// TODO: limited static range checking?
+	// only if indices are ALL meta values
+
+	array_indices = i;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-member_instance_reference_base::member_instance_reference_base(
-		const count_ptr<const simple_instance_reference>& b) :
-		base_inst_ref(b) {
-	NEVER_NULL(base_inst_ref);
-	INVARIANT(!base_inst_ref->dimensions());	// must be scalar! (for now)
+ostream&
+simple_nonmeta_instance_reference_base::dump(ostream& o) const {
+#if 0
+	// sometimes seeing the type prefix is annoying
+	return dump_brief(what(o) << ' ');
+#else
+	return dump_briefer(o, never_ptr<const scopespace>());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-member_instance_reference_base::~member_instance_reference_base() {
+ostream&
+simple_nonmeta_instance_reference_base::dump_briefer(ostream& o, 
+		const never_ptr<const scopespace> loc) const {
+	never_ptr<const instance_collection_base>
+		ib(get_inst_base());
+	if (loc && loc == ib->get_owner()) {
+		o << ib->get_qualified_name();
+	} else {
+		o << ib->get_name();
+	}
+	if (array_indices) {
+		array_indices->dump(o);
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as dump, but without type information.  
+	This is used primarily for printing value-reference expressions, 
+	to reduce information clutter.  
+	We dump the full qualified name to disambiguate potentially 
+	conflicting identifiers.  
+	\param o the output stream.
+	\return the output stream.
+ */
+ostream&
+simple_nonmeta_instance_reference_base::dump_brief(ostream& o) const {
+	o << get_inst_base()->get_qualified_name();
+	if (array_indices) {
+		array_indices->dump(o);
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Common persistence visitor for all subclasses.  
+ */
 void
-member_instance_reference_base::collect_transient_info_base(
+simple_nonmeta_instance_reference_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	base_inst_ref->collect_transient_info(m);
+	if (array_indices)
+		array_indices->collect_transient_info(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param m the persistent object manager for pointer translation.
+	\param m the persistent object manager for pointer translation. 
 	\param o the output stream to write binary.
-	\pre o must be the output stream corresponding to this object.
+	\pre o MUST BE the stream corresponding to this object.
  */
 void
-member_instance_reference_base::write_object_base(
+simple_nonmeta_instance_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, base_inst_ref);
+	m.write_pointer(o, array_indices);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param m the persistent object manager for pointer translation.
+	Note: the instantiation base must be loaded before the
+		state information, because the instantiation state
+		depends on the instantiation base being complete.
+	\param m the persistent object manager for pointer translation. 
 	\param i the input stream to read binary.
-	\pre i must be the input stream corresponding to this object.
+	\pre i MUST BE the stream corresponding to this object.
  */
 void
-member_instance_reference_base::load_object_base(
-		persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, base_inst_ref);
-	NEVER_NULL(base_inst_ref);
+simple_nonmeta_instance_reference_base::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, array_indices);
+	// must load the 
+	if (array_indices)
+		m.load_object_once(array_indices);
 }
 
 //=============================================================================
 #if 0
 PHASE IN later...
-// class collective_instance_reference method definitions
+// class collective_meta_instance_reference method definitions
 
-collective_instance_reference::collective_instance_reference(
-		never_ptr<const instance_reference_base> b, 
+collective_meta_instance_reference::collective_meta_instance_reference(
+		never_ptr<const meta_instance_reference_base> b, 
 		const param_expr* l, const param_expr* r) :
-		instance_reference_base(), 
+		meta_instance_reference_base(), 
 		lower_index(never_ptr<const param_expr>(l)),
 		upper_index(never_ptr<const param_expr>(r)) {
 }
 
-collective_instance_reference::~collective_instance_reference() {
+collective_meta_instance_reference::~collective_meta_instance_reference() {
 }
 
 ostream&
-collective_instance_reference::what(ostream& o) const {
+collective_meta_instance_reference::what(ostream& o) const {
 	return o << "collective-inst-ref";
 }
 
 ostream&
-collective_instance_reference::dump(ostream& o) const {
+collective_meta_instance_reference::dump(ostream& o) const {
 	return what(o);
 }
 
 string
-collective_instance_reference::hash_string(void) const {
+collective_meta_instance_reference::hash_string(void) const {
 	string ret(base_array->hash_string());
 	ret += "[";
 	ret += lower_index->hash_string();
@@ -864,13 +1182,13 @@ collective_instance_reference::hash_string(void) const {
 #endif
 
 //=============================================================================
-// class param_instance_reference method definitions
+// class simple_param_meta_value_reference method definitions
 
 /**
 	Private empty constructor.
  */
-param_instance_reference::param_instance_reference() :
-		simple_instance_reference() {
+simple_param_meta_value_reference::simple_param_meta_value_reference() :
+		parent_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -879,9 +1197,9 @@ param_instance_reference::param_instance_reference() :
 	\param st the current state of the instance collection
 		at the time of reference.  
  */
-param_instance_reference::param_instance_reference(
+simple_param_meta_value_reference::simple_param_meta_value_reference(
 		const instantiation_state& st) :
-		simple_instance_reference(st) {
+		parent_type(st) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -891,25 +1209,25 @@ param_instance_reference::param_instance_reference(
 	\param st the current state of the instance collection
 		at the time of reference.  
  */
-param_instance_reference::param_instance_reference(
-		excl_ptr<index_list>& i, 
+simple_param_meta_value_reference::simple_param_meta_value_reference(
+		excl_ptr<index_list_type>& i, 
 		const instantiation_state& st) :
-		simple_instance_reference(i, st) {
+		simple_meta_instance_reference_base(i, st) {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-param_instance_reference::may_be_initialized(void) const {
-	never_ptr<const instance_collection_base> i(get_inst_base());
+simple_param_meta_value_reference::may_be_initialized(void) const {
+	const never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
 	return i.is_a<const param_instance_collection>()->may_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-param_instance_reference::must_be_initialized(void) const {
-	never_ptr<const instance_collection_base> i(get_inst_base());
+simple_param_meta_value_reference::must_be_initialized(void) const {
+	const never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
 	return i.is_a<const param_instance_collection>()->must_be_initialized();
 }
@@ -927,7 +1245,7 @@ param_instance_reference::must_be_initialized(void) const {
 	We may need some assignment stack.... PUNT!
  */
 bool
-param_instance_reference::is_static_constant(void) const {
+simple_param_meta_value_reference::is_static_constant(void) const {
 	// "collective": if either reference is indexed, 
 	// 	(mind, this is conservative and not precise because
 	//	we don't track values of arrays at compile-time)
@@ -956,13 +1274,13 @@ param_instance_reference::is_static_constant(void) const {
 	(Of course, we need to actually use the instance_collection stack...)
  */
 bool
-param_instance_reference::is_loop_independent(void) const {
+simple_param_meta_value_reference::is_loop_independent(void) const {
 	if (array_indices)
 		return array_indices->is_loop_independent();
 	else 
 		// no array indices, see if instance_collection_base is collective
 	if (get_inst_base()->get_dimensions()) {
-		// if collective, check if the instance_reference itself 
+		// if collective, check if the meta_instance_reference itself 
 		// is found within a loop that adds to the collection...
 		// ... but I'm too lazy to do this entirely now
 		return false;
@@ -988,12 +1306,12 @@ param_instance_reference::is_loop_independent(void) const {
 	What about the indices themselves?  (shouldn't need to check?)
  */
 bool
-param_instance_reference::is_unconditional(void) const {
+simple_param_meta_value_reference::is_unconditional(void) const {
 	if (array_indices)
 		return array_indices->is_unconditional();
 	// else see if point of reference is within some conditional scope
 	else if (get_inst_base()->get_dimensions()) {
-		// if collective, see if the instance_reference itself
+		// if collective, see if the meta_instance_reference itself
 		// is found within a conditional body, by walking the 
 		// collection_state_iterator forward.
 		// ... but I'm too lazy to do this now, FIX ME later
@@ -1007,185 +1325,49 @@ param_instance_reference::is_unconditional(void) const {
 }
 
 //=============================================================================
-// class process_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_instance_reference, 
-	SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.  
- */
-process_instance_reference::process_instance_reference() :
-		simple_instance_reference(), process_inst_ref() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance_reference::process_instance_reference(
-		const never_ptr<const process_instance_collection> pi) :
-		simple_instance_reference(pi->current_collection_state()),
-		process_inst_ref(pi) {
-	NEVER_NULL(process_inst_ref);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-process_instance_reference::process_instance_reference(
-		const never_ptr<const process_instance_collection> pi,
-		excl_ptr<index_list>& i) :
-		simple_instance_reference(i, pi->current_collection_state()),
-		process_inst_ref(pi) {
-	NEVER_NULL(process_inst_ref);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance_reference::~process_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_ptr<const instance_collection_base>
-process_instance_reference::get_inst_base(void) const {
-	return process_inst_ref;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-process_instance_reference::what(ostream& o) const {
-	return o << "process-inst-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-process_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	process_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-process_instance_reference::construct_empty(const int i) {
-	return new process_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Common functionality for this->write_object and 
-	process_member_instance_reference::write_object.
- */
-void
-process_instance_reference::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, process_inst_ref);
-	parent_type::write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-process_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	this->write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Common functionality for this->load_object and
-	process_member_instance_reference::load_object.
- */
-void
-process_instance_reference::load_object_base(
-		persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, process_inst_ref);
-	NEVER_NULL(process_inst_ref);
-	const_cast<process_instance_collection&>(*process_inst_ref).load_object(m);
-	parent_type::load_object_base(m, i);
-}
-// else already visited
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-process_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	this->load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
+// class process_meta_instance_reference method definitions
+// replaced with meta_instance_reference template
 
 //=============================================================================
-// class datatype_instance_reference method definitions
+// class simple_datatype_meta_instance_reference_base method definitions
 
 /**
 	Private empty constructor.  
  */
-datatype_instance_reference::datatype_instance_reference() :
-		simple_instance_reference() {
+simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base() :
+		simple_meta_instance_reference_base() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_reference::datatype_instance_reference(
+simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base(
 		const instantiation_state& s) :
-		simple_instance_reference(s) {
+		simple_meta_instance_reference_base(s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-datatype_instance_reference::datatype_instance_reference(
-		excl_ptr<index_list>& i, const instantiation_state& s) :
-		simple_instance_reference(i, s) {
+simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base(
+		excl_ptr<index_list_type>& i, const instantiation_state& s) :
+		simple_meta_instance_reference_base(i, s) {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_instance_reference::~datatype_instance_reference() {
+simple_datatype_meta_instance_reference_base::~simple_datatype_meta_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-datatype_instance_reference::what(ostream& o) const {
+simple_datatype_meta_instance_reference_base::what(ostream& o) const {
 	return o << "datatype-inst-ref";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-USE simple_instance_reference::dump
+USE simple_meta_instance_reference_base::dump
 ostream&
-datatype_instance_reference::dump(ostream& o) const {
+simple_datatype_meta_instance_reference_base::dump(ostream& o) const {
 	what(o) << ": ";
 	data_inst_ref->dump(o);
 	if (array_indices)
@@ -1195,472 +1377,22 @@ datatype_instance_reference::dump(ostream& o) const {
 #endif
 
 //=============================================================================
-// class channel_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_instance_reference, 
-	SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-channel_instance_reference::channel_instance_reference() :
-		simple_instance_reference(), channel_inst_ref() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance_reference::channel_instance_reference(
-		const never_ptr<const channel_instance_collection> ci) :
-		simple_instance_reference(ci->current_collection_state()),
-		channel_inst_ref(ci) {
-	NEVER_NULL(channel_inst_ref);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-channel_instance_reference::channel_instance_reference(
-		const never_ptr<const channel_instance_collection> ci,
-		excl_ptr<index_list>& i) :
-		simple_instance_reference(i, ci->current_collection_state()),
-		channel_inst_ref(ci) {
-	NEVER_NULL(channel_inst_ref);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance_reference::~channel_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_ptr<const instance_collection_base>
-channel_instance_reference::get_inst_base(void) const {
-	return channel_inst_ref;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-channel_instance_reference::what(ostream& o) const {
-	return o << "channel-inst-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-channel_instance_reference::dump(ostream& o) const {
-	return what(o);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-channel_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, SIMPLE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	channel_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-channel_instance_reference::construct_empty(const int i) {
-	return new channel_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Common functionality for this->write_object and 
-	channel_member_instance_reference::write_object.
- */
-void
-channel_instance_reference::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, channel_inst_ref);
-	parent_type::write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-channel_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	this->write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Common functionality for this->load_object and
-	channel_member_instance_reference::load_object.
- */
-void
-channel_instance_reference::load_object_base(
-		persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, channel_inst_ref);
-	NEVER_NULL(channel_inst_ref);
-	const_cast<channel_instance_collection&>(*channel_inst_ref).load_object(m);
-	parent_type::load_object_base(m, i);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-channel_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	this->load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
+// class channel_meta_instance_reference method definitions
+// replaced with meta_instance_reference template
 
 //=============================================================================
-// class process_member_instance_reference method definitions
+// explicit template instantiations
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(process_member_instance_reference, 
-	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-process_member_instance_reference::process_member_instance_reference() :
-		member_instance_reference_base(), 
-		process_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_member_instance_reference::process_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const process_instance_collection> m) :
-		member_instance_reference_base(b), 
-		process_instance_reference(m) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_member_instance_reference::~process_member_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-process_member_instance_reference::what(ostream& o) const {
-	return o << "process-member-instance-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-process_member_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	interface_type::collect_transient_info_base(m);
-	process_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-process_member_instance_reference::construct_empty(const int i) {
-	return new process_member_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-process_member_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	interface_type::write_object_base(m, f);
-	m.write_pointer(f, process_inst_ref);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-process_member_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	interface_type::load_object_base(m, f);
-	m.read_pointer(f, process_inst_ref);
-	NEVER_NULL(process_inst_ref);
-	const_cast<process_instance_collection&>(*process_inst_ref).load_object(m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-
-//=============================================================================
-// class datatype_member_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(datatype_member_instance_reference, 
-	MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-datatype_member_instance_reference::datatype_member_instance_reference() :
-		member_instance_reference_base(), 
-		datatype_instance_reference(), 
-		data_inst_ref(NULL) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_member_instance_reference::datatype_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const datatype_instance_collection> m) :
-		member_instance_reference_base(b), 
-		datatype_instance_reference(m->current_collection_state()), 
-		data_inst_ref(m) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-datatype_member_instance_reference::~datatype_member_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-datatype_member_instance_reference::what(ostream& o) const {
-	return o << "datatype-member-instance-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-never_ptr<const instance_collection_base>
-datatype_member_instance_reference::get_inst_base(void) const {
-	return data_inst_ref;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-datatype_member_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_DATA_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	interface_type::collect_transient_info_base(m);
-	data_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-datatype_member_instance_reference::construct_empty(const int i) {
-	return new datatype_member_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-datatype_member_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	interface_type::write_object_base(m, f);
-	m.write_pointer(f, data_inst_ref);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-datatype_member_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	interface_type::load_object_base(m, f);
-	m.read_pointer(f, data_inst_ref);
-	NEVER_NULL(data_inst_ref);
-	const_cast<datatype_instance_collection&>(*data_inst_ref).load_object(m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
-
-//=============================================================================
-// class channel_member_instance_reference method definitions
-
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(channel_member_instance_reference, 
-	MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY)
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.  
- */
-channel_member_instance_reference::channel_member_instance_reference() :
-		member_instance_reference_base(), 
-		channel_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_member_instance_reference::channel_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const channel_instance_collection> m) :
-		member_instance_reference_base(b), 
-		channel_instance_reference(m) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_member_instance_reference::~channel_member_instance_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-channel_member_instance_reference::what(ostream& o) const {
-	return o << "channel-member-instance-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Visits children nodes and register pointers to object manager
-	for serialization.  
-	\param m the persistent object manager.
- */
-void
-channel_member_instance_reference::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY)) {
-	parent_type::collect_transient_info_base(m);
-	interface_type::collect_transient_info_base(m);
-	channel_inst_ref->collect_transient_info(m);
-	// instantiation_state has no pointers
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Just allocates with bogus contents, first pass of reconstruction.  
- */
-persistent*
-channel_member_instance_reference::construct_empty(const int i) {
-	return new channel_member_instance_reference();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Writes the instance reference to output stream, translating
-	pointers to indices as it goes along.  
-	Note: the instantiation base must be written before the
-		state information, for reconstruction purposes.  
-	\param m the persistent object manager.  
- */
-void
-channel_member_instance_reference::write_object(
-		const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	WRITE_POINTER_INDEX(f, m);
-	interface_type::write_object_base(m, f);
-	m.write_pointer(f, channel_inst_ref);
-	parent_type::write_object_base(m, f);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads the instance reference from an input stream, translating
-	indices to pointers.  
-	Note: the instantiation base must be loaded before the
-		state information, because the instantiation state
-		depends on the instantiation base being complete.  
-	\param m the persistent object manager.  
- */
-void
-channel_member_instance_reference::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	STRIP_POINTER_INDEX(f, m);
-	interface_type::load_object_base(m, f);
-	m.read_pointer(f, channel_inst_ref);
-	NEVER_NULL(channel_inst_ref);
-	const_cast<channel_instance_collection&>(*channel_inst_ref).load_object(m);
-	parent_type::load_object_base(m, f);
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited
-}
+template class simple_meta_instance_reference<channel_tag>;
+template class simple_meta_instance_reference<process_tag>;
+template class simple_nonmeta_instance_reference<channel_tag>;
+template class simple_nonmeta_instance_reference<process_tag>;
+template class member_meta_instance_reference<channel_tag>;
+template class member_meta_instance_reference<process_tag>;
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_CC__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_CC__
 

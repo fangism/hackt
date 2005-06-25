@@ -1,14 +1,15 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.2 2005/06/24 22:51:13 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.3 2005/06/25 21:07:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
 
 #include "Object/art_object_inst_stmt_param_base.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/art_object_pint_traits.h"
+#include "Object/art_object_pbool_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_built_ins.h"
 
@@ -16,6 +17,9 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+/**
+	Specialization of type-reference for parameter integers.  
+ */
 class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
 	// has no type member!
@@ -50,6 +54,9 @@ protected:
 };      // end class instantiation_statement_type_ref_base
 
 //=============================================================================
+/**
+	Specialization of type-reference for parameter booleans.  
+ */
 class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
 	// has no type member!

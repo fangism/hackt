@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.1 2005/06/24 19:02:50 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.2 2005/06/25 21:07:12 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -206,6 +206,16 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object.h \
 	Object/art_object_classification_fwd.h \
 	Object/art_object_classification_tags.h \
+	Object/art_object_chan_traits.h \
+	Object/art_object_data_traits.h \
+	Object/art_object_proc_traits.h \
+	Object/art_object_param_traits.h \
+	Object/art_object_pint_traits.h \
+	Object/art_object_pbool_traits.h \
+	Object/art_object_int_traits.h \
+	Object/art_object_bool_traits.h \
+	Object/art_object_enum_traits.h \
+	Object/art_object_struct_traits.h \
 	Object/art_object_const_collection.h \
 	Object/art_object_definition_base.h \
 	Object/art_object_definition_chan.h \
@@ -227,6 +237,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_inst_stmt_data.h \
 	Object/art_object_inst_stmt_chan.h \
 	Object/art_object_inst_stmt_proc.h \
+	Object/art_object_inst_stmt_type_ref_default.h \
 	Object/art_object_inst_ref_base.h \
 	Object/art_object_inst_ref_subtypes.h \
 	Object/art_object_nonmeta_inst_ref_base.h \
