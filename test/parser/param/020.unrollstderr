@@ -1,3 +1,4 @@
-ERROR: assigning index [0] of pint collection ::foo.
+ERROR: assigning index [2] of pint collection ::foo.
 ERROR: something went wrong in pint assignment.
+Error during unroll_meta_evaluate.
 ERROR in unrolling.  Aborting.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.5.4.1 2005/06/24 22:51:11 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.5.4.2 2005/06/25 18:40:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
@@ -202,17 +202,22 @@ good_bool
 EXPRESSION_ASSIGNMENT_CLASS::unroll(unroll_context& c) const {
 	INVARIANT(!dests.empty());		// sanity check
 	// works for scalars and multidimensional arrays alike
+try {
 	typename value_reference_type::assigner the_assigner(*this->src);
-	// will exit upon error
+	// throws exception upon error in constructor
 	bad_bool assign_err = 
 		accumulate(this->dests.begin(), this->dests.end(), 
 			bad_bool(false), the_assigner);
 	if (assign_err.bad) {
 		cerr << "ERROR: something went wrong in " <<
 			class_traits<Tag>::tag_name << " assignment." << endl;
-		THROW_EXIT;
 		return good_bool(false);
 	}
+} catch (...) {
+	cerr << "ERROR: something went wrong in " <<
+		class_traits<Tag>::tag_name << " assignment." << endl;
+	return good_bool(false);
+}
 	return good_bool(true);
 }
 

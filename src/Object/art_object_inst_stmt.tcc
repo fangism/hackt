@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.2 2005/06/24 22:51:13 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.3 2005/06/25 18:40:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -156,7 +156,11 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	this will require some serious specialization
+	Interprets a physical instantiation statement and instantiates
+	the members of the collection specified.  
+	(this will require some serious specialization)
+	\param c the unroll context.  
+	\return good if successful, else false.
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
@@ -168,7 +172,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	if (!final_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
-		THROW_EXIT;
 		return good_bool(false);
 	}
 	const good_bool
@@ -179,7 +182,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		cerr << "ERROR: type-mismatch during " <<
 			util::what<this_type>::name() <<
 			"::unroll." << endl;
-		THROW_EXIT;
 		return good_bool(false);
 	}
 	// indices can be resolved to constants with unroll context.  
@@ -191,7 +193,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
-		THROW_EXIT;
 		return good_bool(false);
 	}
 	return good_bool(true);

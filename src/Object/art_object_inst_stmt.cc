@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.21.10.3 2005/06/24 22:51:12 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.21.10.4 2005/06/25 18:40:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -186,7 +186,6 @@ if (indices) {
 			get_inst_base()->get_qualified_name() <<
 			" for instantiation: ";
 		indices->dump(cerr) << endl;
-		THROW_EXIT;	// temporary non-error-handling
 	}
 	return ret;
 } else {

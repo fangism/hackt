@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.22.10.1 2005/06/25 01:13:53 fang Exp $
+ 	$Id: art_object_module.cc,v 1.22.10.2 2005/06/25 18:40:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
@@ -144,6 +144,10 @@ module::unroll_module(void) {
 			cerr << "Error during unroll_meta_instantiate." << endl;
 			return good_bool(false);
 		}
+		// this would be a good point to finalize sparse and dense
+		// array collections into index maps
+		// Top-level finalization would bind indexed instances
+		// to fixed offsets.  
 		if (!sequential_scope::unroll_meta_connect(c).good) {
 			cerr << "Error during unroll_meta_connect." << endl;
 			return good_bool(false);

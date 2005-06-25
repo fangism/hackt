@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-06-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-05:
+	  In unrolling call-graph, now favoring returning error status
+		instead of throwing exception upon error.  
+	  Updated some comments.
+	  Updated some tests (unroll test stderr expect).
+
+
 2005-06-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-04:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.8.4.1 2005/06/24 22:51:12 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.8.4.2 2005/06/25 18:40:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -149,7 +149,6 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	if (err) {
 		what(cerr << "ERROR: unrolling instance references in ") <<
 			"::unroll()." << endl;
-		// or THROW_EXIT?
 		return good_bool(false);
 	}
 /***
@@ -175,7 +174,6 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	}
 	// to be continued...
 	if (err) {
-		THROW_EXIT;
 		return good_bool(false);
 	}
 /***
