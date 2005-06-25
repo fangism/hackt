@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.8.14.2 2005/06/24 22:51:13 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.8.14.3 2005/06/25 01:13:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -123,22 +123,6 @@ public:
 	void
 	append_instance_management(
 		excl_ptr<const instance_management_base>& i);
-
-#if 0
-private:
-	void
-	collect_object_pointer_list(persistent_object_manager& m) const;
-
-
-	// why even have these at all?
-	void
-	write_object_pointer_list(const persistent_object_manager& m, 
-		ostream&) const;
-
-	void
-	load_object_pointer_list(const persistent_object_manager& m, 
-		istream&);
-#endif
 
 protected:
 	void

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.13.10.2 2005/06/24 22:51:13 fang Exp $
+ 	$Id: art_object_instance_management_base.cc,v 1.13.10.3 2005/06/25 01:13:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
@@ -180,39 +180,32 @@ sequential_scope::unroll_meta_evaluate(unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-inline
-void
-sequential_scope::collect_object_pointer_list(
-		persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT(
-		"sequential_scope::collect_object_pointer_list()");
-#if 0
-	// for debugging purposes...
-	instance_management_list_type::const_iterator
-		i = instance_management_list.begin();
-	const instance_management_list_type::const_iterator
-		e = instance_management_list.end();
+good_bool
+sequential_scope::unroll_meta_instantiate(unroll_context& c) const {
+	STACKTRACE("sequential_scope::unroll_meta_instantiate()");
+	const_iterator i(instance_management_list.begin());
+	const const_iterator e(instance_management_list.end());
 	for ( ; i!=e; i++) {
-#if 0
-		STACKTRACE_PERSISTENT("for all instance_management_list:");
-		NEVER_NULL(*i);
-		(*i)->what(cerr << "at " << &**i << ", ") << endl;
-#endif
-		(*i)->collect_transient_info(m);
+		if (!(*i)->unroll_meta_instantiate(c).good) {
+			return good_bool(false);
+		}
 	}
-#else
-	for_each(instance_management_list.begin(), 
-		instance_management_list.end(), 
-	unary_compose_void(
-		bind2nd_argval_void(mem_fun_ref(
-			&instance_management_base::collect_transient_info), m), 
-		dereference<sticky_ptr<const instance_management_base> >()
-	)
-	);
-#endif
+	return good_bool(true);
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+sequential_scope::unroll_meta_connect(unroll_context& c) const {
+	STACKTRACE("sequential_scope::unroll_meta_connect()");
+	const_iterator i(instance_management_list.begin());
+	const const_iterator e(instance_management_list.end());
+	for ( ; i!=e; i++) {
+		if (!(*i)->unroll_meta_connect(c).good) {
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -223,17 +216,6 @@ sequential_scope::collect_transient_info_base(
 //	collect_object_pointer_list(m);
 	m.collect_pointer_list(instance_management_list);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-inline
-void
-sequential_scope::write_object_pointer_list(
-		const persistent_object_manager& m, ostream& f) const {
-	STACKTRACE_PERSISTENT("sequential_scope::write_object_pointer_list()");
-	m.write_pointer_list(f, instance_management_list);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -252,17 +234,6 @@ sequential_scope::write_object_base(
 //	write_object_pointer_list(m, f);
 	m.write_pointer_list(f, instance_management_list);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-inline
-void
-sequential_scope::load_object_pointer_list(
-		const persistent_object_manager& m, istream& f) {
-	STACKTRACE_PERSISTENT("sequential_scope::load_object_pointer_list()");
-	m.read_pointer_list(f, instance_management_list);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

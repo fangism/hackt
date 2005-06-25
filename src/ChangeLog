@@ -2,6 +2,17 @@
 
 2005-06-24	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-04:
+	  Micro-patch:
+	  In a miraculous turn of events, switching to 3-phase unrolling
+		didn't break a single test in the testsuite.  
+		I am either THAT good, or that bad at writing stress tests.  
+	  module::unroll_module currently set to 3-phase unroll,
+		effective at least for the remainder of this branch.
+	  Should do: devise test cases where the behavior is different, 
+		some accept-invalid or reject-valid cases.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-03:
 	  Fleshed out 3 phases of unrolling, re-using old unified-unroll code.
 		Implemented unroll_meta_instantiate and unroll_meta_connect.  
