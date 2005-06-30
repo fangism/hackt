@@ -1,0 +1,85 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43057a0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43057c0	procdefn	0	53	142
+	4	 0x4305744	chancoll	0	142	180
+	5	 0x4305850	chaninst	0	180	200
+	6	 0x4305870	bchntprf	0	200	225
+	7	 0x43058a0	datatprf	0	225	245
+	8	 0x43058c0	datadefn	0	245	298
+	9	 0x4305964	chancoll	0	298	336
+	10	 0x43059c0	chaninst	0	336	356
+	11	 0x43059e0	bchntprf	0	356	381
+	12	 0x4305a10	datatprf	0	381	401
+	13	 0x4305a34	dintcoll	0	401	439
+	14	 0x4305a90	datainst	0	439	459
+	15	 0x4305ab0	datatprf	0	459	479
+	16	 0x4305ad0	datadefn	0	479	531
+	17	 0x4305b70	dprmlst_	0	531	547
+	18	 0x37a4028	cnstpi__	0	547	559
+	19	 0x4305b80	CHPseqnc	0	559	595
+	20	 0x4305b90	CHPsend_	0	595	615
+	21	 0x4305bb0	schnnref	0	615	631
+	22	 0x4305bc0	nrelatex	0	631	653
+	23	 0x37a4038	cnstpi__	0	653	665
+	24	 0x37a4048	cnstpi__	0	665	677
+	25	 0x4305be0	CHPsend_	0	677	697
+	26	 0x4305c00	schnnref	0	697	713
+	27	 0x4305c10	nrelatex	0	713	735
+	28	 0x37a4058	cnstpi__	0	735	747
+	29	 0x37a4068	cnstpi__	0	747	759
+	30	 0x4305c30	CHPsend_	0	759	779
+	31	 0x4305c50	schnnref	0	779	795
+	32	 0x4305c60	nrelatex	0	795	817
+	33	 0x37a4078	cnstpi__	0	817	829
+	34	 0x37a4088	cnstpi__	0	829	841
+	35	 0x4305c80	CHPsend_	0	841	861
+	36	 0x4305ca0	schnnref	0	861	877
+	37	 0x4305cb0	nrelatex	0	877	899
+	38	 0x37a4098	cnstpi__	0	899	911
+	39	 0x37a40a8	cnstpi__	0	911	923
+	40	 0x4305cd0	CHPsend_	0	923	943
+	41	 0x4305cf0	schnnref	0	943	959
+	42	 0x4305d00	nrelatex	0	959	980
+	43	 0x37a40b8	cnstpi__	0	980	992
+	44	 0x37a40c8	cnstpi__	0	992	1004
+	45	 0x4305d20	CHPsend_	0	1004	1024
+	46	 0x4305d40	schnnref	0	1024	1040
+	47	 0x4305d50	nrelatex	0	1040	1061
+	48	 0x37a40d8	cnstpi__	0	1061	1073
+	49	 0x37a40e8	cnstpi__	0	1073	1085
+
+In module created from: ./020.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    one_shot = process-definition (defined) one_shot(
+        chan?(bool<>) L
+        chan!(bool<>) R
+      )
+      In definition "one_shot", we have: {
+        L = chan?(bool<>) L
+        R = chan!(bool<>) R
+        z = int<32> z
+        chp:
+        concurrent: {
+          sequential: {
+            R!(1==0)
+            R!(1!=0)
+            R!(1<=0)
+            R!(1>=0)
+            R!(1<0)
+            R!(1>0)
+          }
+        }
+      }
+
+}
+

@@ -1,13 +1,18 @@
 /**
-	\file "art_object_namespace.cc"
+	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.12 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.28.4.1 2005/06/30 23:22:24 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_NAMESPACE_CC__
-#define	__ART_OBJECT_NAMESPACE_CC__
+#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
+#define	__OBJECT_ART_OBJECT_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <fstream>
@@ -15,10 +20,10 @@
 #include <numeric>
 #include <string>
 
-#include "ptrs_functional.h"
-#include "compose.h"
-#include "binders.h"
-#include "conditional.h"
+#include "util/ptrs_functional.h"
+#include "util/compose.h"
+#include "util/binders.h"
+#include "util/conditional.h"
 
 // CAUTION on ordering of the following two include files!
 // including "art_object.h" first will cause compiler to complain
@@ -26,67 +31,42 @@
 // hash<string>.  
 
 // include this as early as possible
-#include "hash_specializations.h"		// substitute for the following
-#include "hash_qmap.tcc"
-#include "qmap.tcc"
-#include "STL/list.tcc"
+#include "util/hash_specializations.h"		// substitute for the following
+#include "util/hash_qmap.tcc"
+#include "util/qmap.tcc"
+#include "util/STL/list.tcc"
 
-#include "art_parser_debug.h"
-#include "art_parser_base.h"
+#include "AST/art_parser_token_string.h"
+#include "AST/art_parser_identifier.h"
 
-#include "art_object_namespace.h"
-#include "art_object_definition.h"		// for typedef
-#include "art_object_instance.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr_const.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_type_hash.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_definition.h"	// for typedef
+#include "Object/art_object_instance.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_type_hash.h"
 
-#include "memory/list_vector_pool.tcc"
-#include "indent.h"
-#include "stacktrace.h"
-#include "persistent_object_manager.tcc"
+#include "util/memory/count_ptr.tcc"
+#include "util/memory/list_vector_pool.tcc"
+#include "util/indent.h"
+#include "util/stacktrace.h"
+#include "util/persistent_object_manager.tcc"
 
 //=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
-
-#define		DEBUG_NAMESPACE			1 && DEBUG_CHECK_BUILD
-#define		TRACE_QUERY			0	// bool, ok to change
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if		DEBUG_NAMESPACE
-// ok to change these values, but should be > TRACE_CHECK_BUILD (5)
-  #define	TRACE_NAMESPACE_NEW		8
-  #define	TRACE_NAMESPACE_USING		8
-  #define	TRACE_NAMESPACE_ALIAS		8
-  #if		TRACE_QUERY
-    #define	TRACE_NAMESPACE_QUERY		10
-    #define	TRACE_NAMESPACE_SEARCH		TRACE_NAMESPACE_QUERY+5
-  #else
-    #define	TRACE_NAMESPACE_QUERY		MASTER_DEBUG_LEVEL
-    #define	TRACE_NAMESPACE_SEARCH		MASTER_DEBUG_LEVEL
-  #endif
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
 #else
-// defining as >= MASTER_DEBUG_LEVEL will turn it off
-  #define	TRACE_NAMESPACE_QUERY		MASTER_DEBUG_LEVEL
-  #define	TRACE_NAMESPACE_SEARCH		MASTER_DEBUG_LEVEL
-  #define	TRACE_NAMESPACE_USING		MASTER_DEBUG_LEVEL
-  #define	TRACE_NAMESPACE_ALIAS		MASTER_DEBUG_LEVEL
+	#define	STACKTRACE_DTOR(x)
 #endif
 
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if		DEBUG_DATATYPE && TRACE_QUERY
-// ok to change these values
-  #define	TRACE_DATATYPE_QUERY		10
-  #define	TRACE_DATATYPE_SEARCH		TRACE_DATATYPE_QUERY+5
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
 #else
-// defining as >= MASTER_DEBUG_LEVEL will turn it off
-  #define	TRACE_DATATYPE_QUERY		MASTER_DEBUG_LEVEL
-  #define	TRACE_DATATYPE_SEARCH		MASTER_DEBUG_LEVEL
+	#define	STACKTRACE_PERSISTENT(x)
 #endif
-
 
 //=============================================================================
 
@@ -94,20 +74,34 @@
 // #define	USE_UNDEFINED_OBJECTS		1
 
 //=============================================================================
+namespace util {
+#if 0
+SPECIALIZE_UTIL_WHAT_DEFINITION(ART::entity::name_space, "namespace")
+#endif
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::name_space, NAMESPACE_TYPE_KEY, 0)
+}	// end namespace util
+
 namespace ART {
 namespace entity {
 
-#include "using_ostream.h"
-using HASH_QMAP_NAMESPACE::hash_map;
-using QMAP_NAMESPACE::qmap;
+#include "util/using_ostream.h"
+using util::hash_map;
+using util::qmap;
 using parser::scope;
 using std::_Select2nd;
-using namespace util::memory;
-using namespace ADS;		// for function compositions
+using util::mem_fun;
+USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
 USING_STACKTRACE
+using util::write_value;
+using util::read_value;
+using util::write_string;
+using util::read_string;
+using util::persistent_traits;
 
 //=============================================================================
 // general non-member function definitions
@@ -115,7 +109,8 @@ USING_STACKTRACE
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : 
-		object(), persistent(), used_id_map() {
+//		object(), 
+		persistent(), used_id_map() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -245,7 +240,7 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
  */
 never_ptr<const instance_collection_base>
 scopespace::add_instance(
-		never_ptr<instantiation_statement> inst_stmt, 
+		const never_ptr<instantiation_statement_base> inst_stmt, 
 		const token_identifier& id) {
 	STACKTRACE("scopespace::add_instance(never_ptr<inst_stmt>, id)");
 	typedef never_ptr<const instance_collection_base>	return_type;
@@ -258,7 +253,7 @@ scopespace::add_instance(
 	// DEBUG
 	cerr << "In scopespace::add_instance with this = " << this << endl;
 //	i->dump(cerr << "excl_ptr<instance_collection_base> i = ") << endl;
-	inst_stmt->dump(cerr << "never_ptr<instantiation_statement> inst_stmt = ") << endl;
+	inst_stmt->dump(cerr << "never_ptr<instantiation_statement_base> inst_stmt = ") << endl;
 	dump(cerr);	// dump the entire namespace
 #endif
 	const never_ptr<object> probe(lookup_object_here_with_modify(id));
@@ -286,7 +281,7 @@ scopespace::add_instance(
 				new_type(inst_stmt->get_type_ref());
 			// type comparison is conservative, in the 
 			// case of dynamic template parameters.  
-			if (!old_type->may_be_equivalent(*new_type)) {
+			if (!old_type->may_be_collectibly_type_equivalent(*new_type)) {
 				cerr << "ERROR: type of redeclaration of "
 					<< id << " does not match "
 					"previous declaration: " << endl <<
@@ -387,7 +382,7 @@ scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
 /**
 	Adds a definition name alias to this scope.  
  */
-bool
+good_bool
 scopespace::add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a) {
 	const never_ptr<const object> probe(lookup_object_here(a));
@@ -395,7 +390,7 @@ scopespace::add_definition_alias(const never_ptr<const definition_base> d,
 		cerr << "Identifier \"" << a << "\" already taken by a ";
 		probe->what(cerr) << " in ";
 		what(cerr) << " " << get_qualified_name() << ".  ERROR!  ";
-		return false;
+		return good_bool(false);
 	} else {
 #if 0
 		// gcc-3.4.0 rejects, thinking that excl_ptr is const!
@@ -405,7 +400,7 @@ scopespace::add_definition_alias(const never_ptr<const definition_base> d,
 		used_id_map[a] = handle_ptr;
 		INVARIANT(!handle_ptr);
 #endif
-		return true;
+		return good_bool(true);
 	}
 }
 
@@ -448,6 +443,7 @@ scopespace::exclude_population(void) const {
 inline
 void
 scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("scopespace::collect_used_id_map_pointers()");
 	used_id_map_type::const_iterator m_iter = used_id_map.begin();
 	const used_id_map_type::const_iterator m_end = used_id_map.end();
 	for ( ; m_iter!=m_end; m_iter++) {
@@ -480,7 +476,7 @@ inline
 void
 scopespace::write_object_used_id_map(const persistent_object_manager& m, 
 		ostream& f) const {
-	STACKTRACE("scopespace::write_object_used_id_map()");
+	STACKTRACE_PERSISTENT("scopespace::write_object_used_id_map()");
 	MUST_BE_A(const persistent*, this);
 	// filter any objects out? yes
 	// how many objects to exclude? need to subtract
@@ -530,23 +526,33 @@ scopespace::write_object_base_fake(const persistent_object_manager& m,
 	That is intentional since we don't intend to keep around aliases.  
  */
 void
-scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
-	STACKTRACE("scopespace::load_object_used_id_map()");
+scopespace::load_object_used_id_map(
+		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("scopespace::load_object_used_id_map()");
 	size_t s, i=0;
 	read_value(f, s);
 	for ( ; i<s; i++) {
+#if 0
 		long index;
 		read_value(f, index);
 		excl_ptr<persistent> m_obj(m.lookup_obj_ptr(index));
-//		m.read_pointer(f, m_obj);	// replaced, b/c need index
+#else
+		excl_ptr<persistent> m_obj;
+		m.read_pointer(f, m_obj);	// replaced, b/c need index
+#endif
 		// need to add it back through hash_map.  
 		if (!m_obj) {
+			// this really should never happen...
 			if (warn_unimplemented) {
 				cerr << "Skipping a NULL object at index "
+#if 0
 					<< index << endl;
+#else
+					<< "???" << endl;
+#endif
 			}
 		} else {
-			m_obj->load_object(m);	// recursion!!!
+			m.load_object_once(m_obj);	// recursion!!!
 			// need to reconstruct it to get its key, 
 			// then add this object to the used_id_map
 			load_used_id_map_object(m_obj);	// pure virtual
@@ -556,7 +562,7 @@ scopespace::load_object_used_id_map(persistent_object_manager& m, istream& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-scopespace::load_object_base(persistent_object_manager& m, istream& f) {
+scopespace::load_object_base(const persistent_object_manager& m, istream& f) {
 	load_object_used_id_map(m, f);
 }
 
@@ -667,8 +673,6 @@ scopespace::const_bin_sort::stats(ostream& o) const {
 //=============================================================================
 // class name_space method definitions
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(name_space, NAMESPACE_TYPE_KEY)
-
 LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(name_space, 8)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -680,6 +684,7 @@ name_space::null(NULL);
 	Private empty constructor, just allocate with bogus fields.
  */
 name_space::name_space() :
+		object(), 
 		scopespace(), key(), parent(),
 		open_spaces(), open_aliases() {
 }
@@ -693,9 +698,8 @@ name_space::name_space() :
 	\param p pointer to the parent namespace.  
  */
 name_space::name_space(const string& n, never_ptr<const name_space> p) : 
-		scopespace(), 
-		key(n), 
-		parent(p), 
+		object(), 
+		scopespace(), key(n), parent(p), 
 		open_spaces(), open_aliases() {
 }
 
@@ -708,6 +712,7 @@ name_space::name_space(const string& n, never_ptr<const name_space> p) :
 	default arguments (NULL) for class object formals.  
  */
 name_space::name_space(const string& n) :
+		object(), 
 		scopespace(), 
 		key(n), 
 		parent(NULL), 
@@ -770,7 +775,11 @@ name_space::get_global_namespace(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 name_space::what(ostream& o) const {
+#if 0
+	return util::what<this_type>::name();
+#else
 	return o << "entity::namespace";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -794,13 +803,13 @@ name_space::dump(ostream& o) const {
 		"In namespace \"" << key << "\", we have: {" << endl;
 {
 	// indentation scope
-	indent ns_ind(o);
+	INDENT_SECTION(o);
 	bins.stats(o);
 
 	// maps are already sorted by key
 	if (!bins.param_bin.empty()) {
 		o << auto_indent << "Parameters:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -814,7 +823,7 @@ name_space::dump(ostream& o) const {
 
 	if (!bins.ns_bin.empty()) {
 		o << auto_indent << "Namespaces:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -831,7 +840,7 @@ name_space::dump(ostream& o) const {
 	
 	if (!bins.def_bin.empty()) {
 		o << auto_indent << "Definitions:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.def_bin.begin(), bins.def_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -845,7 +854,7 @@ name_space::dump(ostream& o) const {
 	
 	if (!bins.alias_bin.empty()) {
 		o << auto_indent << "Typedefs:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -859,7 +868,7 @@ name_space::dump(ostream& o) const {
 	
 	if (!bins.inst_bin.empty()) {
 		o << auto_indent << "Instances:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -919,9 +928,10 @@ name_space::add_open_namespace(const string& n) {
 			return never_ptr<name_space>(NULL);
 		} else {
 		// therefore, probe_ns is a pointer to a valid sub-namespace
-			DEBUG(TRACE_NAMESPACE_NEW, 
-				cerr << n << " is already exists as subspace, "
-					"re-opening")
+#if 0
+			cerr << n << " is already exists as subspace, "
+					"re-opening";
+#endif
 			ret = lookup_object_here_with_modify(n)
 				.is_a<name_space>();
 //			INVARIANT(lookup_object_here(n).is_a<name_space>());
@@ -930,7 +940,7 @@ name_space::add_open_namespace(const string& n) {
 		INVARIANT(ret);
 	} else {
 		// create it, linking this as its parent
-		DEBUG(TRACE_NAMESPACE_NEW, cerr << " ... creating new")
+//		cerr << " ... creating new";
 		excl_ptr<name_space>
 			new_ns(new name_space(
 				n, never_ptr<const name_space>(this)));
@@ -942,8 +952,7 @@ name_space::add_open_namespace(const string& n) {
 	// silly sanity checks
 	INVARIANT(ret->parent == this);
 	INVARIANT(ret->key == n);
-	DEBUG(TRACE_NAMESPACE_NEW, 
-		cerr << " with parent: " << ret->parent->key)
+//	cerr << " with parent: " << ret->parent->key;
 	return ret;
 }
 
@@ -1017,9 +1026,10 @@ name_space::add_using_directive(const qualified_id& n) {
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
-	DEBUG(TRACE_NAMESPACE_USING, 
-		cerr << endl << "adding using-directive in space: " 
-			<< get_qualified_name())
+#if 0
+	cerr << endl << "adding using-directive in space: " 
+		<< get_qualified_name();
+#endif
 	// see if namespace has already been declared within scope of search
 	// remember: the qualified_id is a suffix to be appended onto root
 	// find it/them, record to list
@@ -1079,9 +1089,10 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
-	DEBUG(TRACE_NAMESPACE_ALIAS, 
-		cerr << endl << "adding using-alias in space: " 
-			<< get_qualified_name() << " as " << a)
+#if 0
+	cerr << endl << "adding using-alias in space: " 
+		<< get_qualified_name() << " as " << a;
+#endif
 
 	// need to force use of the constant version of the lookup
 	// because this method is non-const.  
@@ -1181,9 +1192,10 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 	// qualified_id_slice is a wrapper around qualified_id
 	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << "query_namespace_match: " << id 
-			<< " in " << get_qualified_name() << endl)
+#if 0
+	cerr << "query_namespace_match: " << id 
+		<< " in " << get_qualified_name() << endl;
+#endif
 
 	if (id.empty())	{	// what if it's absolute and empty?
 		return (id.is_absolute()) ? get_global_namespace() : 
@@ -1194,7 +1206,6 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 	const count_ptr<const token_identifier>& tidp(*i);
 	NEVER_NULL(tidp);
 	const token_identifier& tid(*tidp);
-	DEBUG(TRACE_NAMESPACE_SEARCH, cerr << "\ttesting: " << tid)
 	never_ptr<const name_space>
 		ns = (id.is_absolute()) ? get_global_namespace()
 		: never_ptr<const name_space>(this);
@@ -1208,7 +1219,6 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 				tidp2(i->is_a<const token_identifier>());
 			NEVER_NULL(tidp2);
 			const token_identifier& tid2(*tidp2);
-			DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			const never_ptr<const name_space>
@@ -1243,9 +1253,10 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	// qualified_id_slice is just a wrapper around qualified_id
 	// recall that qualified_id is a node_list<token_identifier,scope>
 	// and that token_identifier is a sub-type of string
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << endl << "query_subnamespace_match: " << id 
-			<< " in " << get_qualified_name() << endl)
+#if 0
+	cerr << endl << "query_subnamespace_match: " << id 
+		<< " in " << get_qualified_name() << endl;
+#endif
 
 	// here, does NOT check for global-absoluteness
 	if (id.empty())	{	// what if it's absolute and empty?
@@ -1272,8 +1283,6 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	for (i++; ns && i!=id.end(); i++) {
 		NEVER_NULL(*i);
 		const token_identifier& tid2(**i);
-		// tid = i->is_a<const token_identifier>();
-		DEBUG(TRACE_NAMESPACE_SEARCH, cerr << scope << tid2)
 		const never_ptr<const name_space>
 			next = ns->lookup_object_here(tid2).is_a<const name_space>();
 		// if not found in subspaces, check aliases list
@@ -1303,9 +1312,10 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 void
 name_space::
 query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
-	DEBUG(TRACE_NAMESPACE_QUERY, 
-		cerr << endl << "query_import_namespace_match: " << id 
-			<< " in " << get_qualified_name())
+#if 0
+	cerr << endl << "query_import_namespace_match: " << id 
+		<< " in " << get_qualified_name();
+#endif
 	{
 		const never_ptr<const name_space>
 			ret(query_subnamespace_match(id));
@@ -1384,19 +1394,19 @@ never_ptr<definition_base>
 name_space::add_definition(excl_ptr<definition_base>& db) {
 	typedef	never_ptr<definition_base>	return_type;
 	NEVER_NULL(db);
-	string k = db->get_name();
+	const string k = db->get_name();
 	const never_ptr<const object> probe(lookup_object_here(k));
 	if (probe) {
 		const never_ptr<const definition_base>
 			probe_def(probe.is_a<const definition_base>());
 		if (probe_def) {
 			INVARIANT(k == probe_def->get_name());	// consistency
-			if (probe_def->require_signature_match(db)) {
+			if (probe_def->require_signature_match(db).good) {
 				// definition signatures match
 				// can discard new declaration
 				// to delete db, we steal ownership, 
 				// and deallocate it with a local excl_ptr
-				excl_ptr<definition_base>
+				const excl_ptr<definition_base>
 					release_db(db);
 				return return_type(release_db);
 			} else {
@@ -1447,11 +1457,34 @@ name_space::lookup_open_alias(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Recursive collection of all namespaces into a flat list
+	of namespace pointers.  
+	\param l the list in which to accumulate namespace pointers.  
+ */
+void
+name_space::collect_namespaces(namespace_collection_type& l) const {
+	used_id_map_type::const_iterator i = used_id_map.begin();
+	const used_id_map_type::const_iterator e = used_id_map.end();
+	// consider transform_if
+	for ( ; i!=e; i++) {
+		const namespace_collection_type::value_type
+			p(i->second.is_a<name_space>());
+		if (p) {
+			l.push_back(p);
+			p->collect_namespaces(l);	// recursion
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursively collect pointer information about contituents.  
  */
 void
 name_space::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	STACKTRACE_PERSISTENT("namespace::collect_transients()");
 #if 0
 	cerr << "Found namespace \"" << get_key() << "\" whose address is: "
 		<< this << endl;
@@ -1459,19 +1492,6 @@ if (!m.register_transient_object(this, NAMESPACE_TYPE_KEY)) {
 	scopespace::collect_transient_info_base(m);
 }
 // else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Only allocates and initializes non-transient members
-	(non-members) of the namespace object.  
-	Constructs with bogus arguments temporarily, if necessary.  
-	After this, namespace won't be usable until load_object is called.  
-	\param i is not used, just ignored.
- */
-persistent*
-name_space::construct_empty(const int i) {
-	return new name_space();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1486,23 +1506,16 @@ name_space::construct_empty(const int i) {
 		only modifies the flagged state of the entries.  
  */
 void
-name_space::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-
-	// First, write out the index number associated with this address.  
-	WRITE_POINTER_INDEX(f, m);
-
+name_space::write_object(const persistent_object_manager& m, ostream& f) const {
 	// Second, write out the name of this namespace.
 	// name MUST be available for use by other visitors right away
+	STACKTRACE_PERSISTENT("namespace::write_object()");
 	write_string(f, key);
 
 	m.write_pointer(f, parent);
 
 	// do we need to sort objects into bins?
 	scopespace::write_object_base(m, f);
-
-	WRITE_OBJECT_FOOTER(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1512,15 +1525,8 @@ name_space::write_object(const persistent_object_manager& m) const {
 	was only partially initialized on allocation.  
  */
 void
-name_space::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	STACKTRACE("namespace::load_object()");
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-
-	// First, strip away the index number associated with this address.
-	STRIP_POINTER_INDEX(f, m);
-
+name_space::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("namespace::load_object()");
 	// Second, read in the name of the namespace.  
 	read_string(f, const_cast<string&>(key));	// coercive cast
 
@@ -1528,10 +1534,6 @@ if (!m.flag_visit(this)) {
 	m.read_pointer(f, parent);
 
 	scopespace::load_object_base(m, f);
-
-	STRIP_OBJECT_FOOTER(f);
-}
-// else already visited, don't reload
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1578,5 +1580,7 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_NAMESPACE_CC__
+DEFAULT_STATIC_TRACE_END
+
+#endif	// __OBJECT_ART_OBJECT_NAMESPACE_CC__
 

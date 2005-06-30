@@ -1,0 +1,84 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4304ae0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4304b00	chandefn	0	53	190
+	4	 0x4304ba4	dboolcol	0	190	224
+	5	 0x4304c00	datainst	0	224	244
+	6	 0x4304c20	datatprf	0	244	264
+	7	 0x4304c40	datadefn	0	264	317
+	8	 0x4304ce4	dboolcol	0	317	351
+	9	 0x4304d40	datainst	0	351	371
+	10	 0x4304d64	dboolcol	0	371	405
+	11	 0x4304dc0	datainst	0	405	425
+	12	 0x4304de0	bchntprf	0	425	450
+	13	 0x4304e10	datatprf	0	450	470
+	14	 0x4304e30	CHPwait_	0	470	482
+	15	 0x4304e40	sdbnref_	0	482	498
+	16	 0x4304e60	CHPassgn	0	498	514
+	17	 0x4304e80	sdbnref_	0	514	530
+	18	 0x4804404	cnstpb__	0	530	539
+	19	 0x4304ea0	CHPwait_	0	539	551
+	20	 0x4304eb0	nbnotex_	0	551	563
+	21	 0x4304ec0	sdbnref_	0	563	579
+	22	 0x4304ee0	CHPassgn	0	579	595
+	23	 0x4304f00	sdbnref_	0	595	611
+	24	 0x4804410	cnstpb__	0	611	620
+	25	 0x4304f20	CHPwait_	0	620	632
+	26	 0x4304f30	nlogicex	0	632	653
+	27	 0x4304f50	sdbnref_	0	653	669
+	28	 0x4304f70	sdbnref_	0	669	685
+	29	 0x4304f90	CHPassgn	0	685	701
+	30	 0x4304fb0	sdbnref_	0	701	717
+	31	 0x480441c	cnstpb__	0	717	726
+	32	 0x4304fd0	CHPwait_	0	726	738
+	33	 0x4304fe0	nlogicex	0	738	759
+	34	 0x4305000	nbnotex_	0	759	771
+	35	 0x4305010	sdbnref_	0	771	787
+	36	 0x4305030	nbnotex_	0	787	799
+	37	 0x4305040	sdbnref_	0	799	815
+	38	 0x4305060	CHPassgn	0	815	831
+	39	 0x4305080	sdbnref_	0	831	847
+	40	 0x4804428	cnstpb__	0	847	856
+
+In module created from: ./017.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    my_vewwy_first_e1of2 = user-def-chan (defined) my_vewwy_first_e1of2
+      chan(
+        bool<>
+      )
+      (
+        bool<> t
+        bool<> f
+        bool<> e
+      )
+      In channel definition "my_vewwy_first_e1of2", we have: {
+        e = bool<> e
+        f = bool<> f
+        t = bool<> t
+        send-CHP:
+        sequential: {
+          [e]
+          t := true
+          [~e]
+          t := false
+        }
+        recv-CHP:
+        sequential: {
+          [t|f]
+          e := false
+          [~t&~f]
+          e := true
+        }
+      }
+
+}
+

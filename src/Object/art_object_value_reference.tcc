@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.1 2005/06/25 18:40:17 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.2 2005/06/30 23:22:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -39,10 +39,12 @@
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/art_object_unroll_context.tcc"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/art_object_extern_templates.h"
 
+#include "util/macros.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
@@ -287,6 +289,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) c
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
 	This code is grossly replicated... damn copy-paste...
+	TODO: need to handle passing template actuals in context?
 	\return true if resolution succeeds, else false.
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
@@ -421,15 +424,20 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 /**
 	Resolves a scalar or collective instance reference into a 
 	packed array of values.  
-	\param c unrolling context.
+	\param c unrolling context, may contain template actuals.
 	\return dense array of values, NULL if error.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const_param>
-SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
+		const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	STACKTRACE("simple_meta_value_reference<>::unroll_resolve()");
-	if (value_collection_ref->get_dimensions()) {
+	// this replaces template formal references with template
+	// actuals from the context where necessary (2005-06-30)
+	const value_collection_type&
+		vcref(c.resolve_meta_value_reference(*value_collection_ref));
+	if (vcref.get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
 		// from compile phase.
@@ -461,12 +469,12 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const
 			// using local value is necessary because bool's 
 			// reference is std::_Bit_reference.
 			value_type val;
-			if (!value_collection_ref->lookup_value(val, key_gen).good) {
+			if (!vcref.lookup_value(val, key_gen).good) {
 				cerr << "ERROR: looking up index " <<
 					key_gen << " of " <<
 					class_traits<Tag>::tag_name <<
 					" collection " <<
-					value_collection_ref->get_qualified_name() <<
+					vcref.get_qualified_name() <<
 					"." << endl;
 				lookup_err.bad = true;
 			}
@@ -487,8 +495,12 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(const unroll_context& c) const
 	} else {
 		// is 0-dimensional, scalar
 		value_type _val;
-		const never_ptr<value_scalar_type>
+		const never_ptr<const value_scalar_type>
+#if 0
 			ps(value_collection_ref.template is_a<value_scalar_type>());
+#else
+			ps(IS_A(const value_scalar_type*, &vcref));
+#endif
 		INVARIANT(ps);
 		const bad_bool valid(ps->lookup_value(_val));
 		if (valid.bad) {

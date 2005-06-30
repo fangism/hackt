@@ -1,29 +1,34 @@
 /**
-	\file "art_object_expr_const.h"
+	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.7 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr_const.h,v 1.16.4.1 2005/06/30 23:22:18 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_CONST_H__
-#define __ART_OBJECT_EXPR_CONST_H__
+#ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
+#define __OBJECT_ART_OBJECT_EXPR_CONST_H__
 
-#include "STL/pair_fwd.h"
-#include "art_object_expr_base.h"
-#include "multikey_fwd.h"
-#include "packed_array.h"
-#include "persistent.h"
-#include "memory/list_vector_pool_fwd.h"
+#include "util/STL/pair_fwd.h"
+#include <vector>
+#include "Object/art_object_expr_base.h"
+#include "Object/art_object_index.h"
+#include "util/multikey_fwd.h"
+#include "util/packed_array.h"
+#include "util/persistent.h"
+#include "util/memory/list_vector_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
 
-using namespace MULTIKEY_NAMESPACE;
 USING_LIST
 USING_CONSTRUCT
+using std::vector;
 using std::pair;
 using std::string;
 using std::ostream;
+using std::istream;
+using util::multikey_generic;
+using util::multikey_generator;
 using util::persistent;
 using util::persistent_object_manager;	// forward declared
 
@@ -47,9 +52,6 @@ virtual	ostream&
 virtual	ostream&
 	dump(ostream& o) const = 0;
 
-virtual	string
-	hash_string(void) const = 0;
-
 virtual	size_t
 	dimensions(void) const = 0;
 
@@ -68,11 +70,13 @@ virtual	const_range_list
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 virtual bool
 	may_be_equivalent(const param_expr& p) const = 0;
 
 virtual bool
 	must_be_equivalent(const param_expr& p) const = 0;
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -96,10 +100,11 @@ virtual	count_ptr<const_param>
 	Only scalar expressions allowed, no array indirections or collections.  
  */
 class const_param_expr_list : public param_expr_list, 
-		public list<count_ptr<const const_param> > {
+		public vector<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
+	typedef	const_param_expr_list			this_type;
 protected:
-	typedef	list<count_ptr<const const_param> >	parent_type;
+	typedef	vector<count_ptr<const const_param> >	parent_type;
 public:
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
@@ -107,6 +112,9 @@ public:
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_param_expr_list();
+
+	explicit
+	const_param_expr_list(const parent_type::value_type&);
 // lazy: use default copy constructor
 //	const_param_expr_list(const const_param_expr_list& pl);
 	~const_param_expr_list();
@@ -123,64 +131,52 @@ public:
 	excl_ptr<param_expr_list>
 	make_copy(void) const;
 
+	count_ptr<const param_expr>
+	operator [] (const size_t) const;
+
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
 
-#if 0
-	list<const param_expr&>
-	get_const_ref_list(void) const;
-#else
 	bool
 	may_be_equivalent(const param_expr_list& p) const;
 
 	bool
 	must_be_equivalent(const param_expr_list& p) const;
-#endif
 
 	bool
 	is_static_constant(void) const { return true; }
 
 	bool
 	is_loop_independent(void) const { return true; }
-#if 0
-private:
-	bool
-	may_be_equivalent_const(const const_param_expr_list& p) const;
 
-	bool
-	may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_const(const const_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-#endif
-
-	excl_ptr<const_param_expr_list>
+	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_param_expr_list
 
 //-----------------------------------------------------------------------------
 /**
 	Abstract interface for constant indices and index ranges.  
  */
-class const_index : virtual public index_expr {
+class const_index : virtual public meta_index_expr {
+	typedef	meta_index_expr			parent_type;
 protected:
-public:
-	const_index() : index_expr() { }
+	const_index() : parent_type() { }
 
+public:
 virtual	~const_index() { }
 
 // same pure virtual functions, and more...
 
 virtual	count_ptr<const_index>
 	resolve_index(void) const = 0;
+
+virtual	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const = 0;
 
 virtual	pint_value_type
 	lower_bound(void) const = 0;
@@ -203,8 +199,9 @@ virtual	bool
 	Because of arbitrary pointer copying,
 	members must be reference counted.  
  */
-class const_index_list : public index_list, 
+class const_index_list : public meta_index_list, 
 		private list<count_ptr<const_index> > {
+	typedef	const_index_list		this_type;
 public:
 	typedef	count_ptr<const_index>		const_index_ptr_type;
 	typedef	const_index_ptr_type		value_type;
@@ -229,9 +226,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;
 
 /** NOT THE SAME **/
 	size_t
@@ -270,21 +264,29 @@ public:
 
 	const_index_list
 	resolve_index_list(void) const;
+
+	const_index_list
+	unroll_resolve(const unroll_context&) const;
+
 #if 0
 	bool
-	resolve_multikey(excl_ptr<multikey_base<pint_value_type> >& k) const;
+	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
-	excl_ptr<multikey_base<pint_value_type> >
+
+	multikey_index_type
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_base<pint_value_type> >
+	multikey_index_type
 	lower_multikey(void) const;
 
 	bool
 	equal_dimensions(const const_index_list& ) const;
 
+	bool
+	must_be_equivalent_indices(const meta_index_list& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_index_list
 
 //=============================================================================
@@ -292,7 +294,8 @@ public:
 	List of constant range expressions.  
 	Would a vector be more appropriate?   consider changing later...
  */
-class const_range_list : public range_expr_list, public list<const_range> {
+class const_range_list : public meta_range_list, public list<const_range> {
+	typedef	const_range_list			this_type;
 protected:
 	// no need for pointers here
 	typedef	list<const_range>			list_type;
@@ -325,21 +328,23 @@ public:
 	is_static_constant(void) const { return true; }
 
 	const_range_list
-	static_overlap(const range_expr_list& r) const;
+	static_overlap(const meta_range_list& r) const;
 
 	bool
 	is_size_equivalent(const const_range_list& il) const;
+	// see also must_be_formal_size_equivalent, declared below
 
+	// may be obsolete by must_be_formal_size_equivalent...
 	bool
 	operator == (const const_range_list& c) const;
 
-	bool
+	good_bool
 	resolve_ranges(const_range_list& r) const;
 
-	excl_ptr<multikey_base<pint_value_type> >
+	multikey_index_type
 	upper_multikey(void) const;
 
-	excl_ptr<multikey_base<pint_value_type> >
+	multikey_index_type
 	lower_multikey(void) const;
 
 	template <size_t D>
@@ -348,11 +353,17 @@ public:
 		multikey_generator<D, pint_value_type>& k) const;
 
 	// is a pint_const_collection::array_type::key_type
-	multikey_generic<size_t>
+	multikey_index_type
 	resolve_sizes(void) const;
 
+	good_bool
+	unroll_resolve(const_range_list&, const unroll_context&) const;
+
+	bool
+	must_be_formal_size_equivalent(const meta_range_list& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_range_list
 
 //=============================================================================
@@ -383,10 +394,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -404,13 +415,15 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pint_expr::may_be_equivalent(e); }
+		{ return pint_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pint_expr::must_be_equivalent(e); }
+		{ return pint_expr::must_be_equivalent_generic(e); }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -420,7 +433,10 @@ public:
 
 	// may chop '_int' off for templating
 	value_type
-	static_constant_int(void) const { return val; }
+	static_constant_value(void) const { return val; }
+
+	bool
+	must_be_equivalent(const pint_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -440,8 +456,11 @@ public:
 	value_type
 	upper_bound(void) const;
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	count_ptr<const_index>
 	resolve_index(void) const;
@@ -449,123 +468,26 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
+
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
 
 private:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
 };	// end class pint_const
-
-//-----------------------------------------------------------------------------
-/**
-	Packed collection of constant integer values, arbitrary dimension.  
-	Note: this is only usable for aggregates of constants.  
-	Complex aggregates of non-const expressions will require
-	a more advanced structure (dynamic_pint_collection?).  
- */
-class pint_const_collection : public pint_expr, public const_param {
-public:
-	typedef	pint_value_type				value_type;
-	typedef	util::packed_array_generic<value_type>	array_type;
-	typedef	array_type::iterator			iterator;
-	typedef	array_type::const_iterator		const_iterator;
-protected:
-	array_type					values;
-public:
-	explicit
-	pint_const_collection(const size_t d);
-
-	explicit
-	pint_const_collection(const array_type::key_type&);
-
-	~pint_const_collection();
-
-	iterator
-	begin(void) { return values.begin(); }
-
-	const_iterator
-	begin(void) const { return values.begin(); }
-
-	iterator
-	end(void) { return values.end(); }
-
-	const_iterator
-	end(void) const { return values.end(); }
-
-	ostream&
-	what(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;
-
-	size_t
-	dimensions(void) const;
-
-	bool
-	is_static_constant(void) const { return true; }
-
-	count_ptr<const const_param>
-	static_constant_param(void) const;
-
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	bool
-	may_be_initialized(void) const { return true; }
-
-	bool
-	must_be_initialized(void) const { return true; }
-
-	bool
-	may_be_equivalent(const param_expr& ) const;
-
-	bool
-	must_be_equivalent(const param_expr& ) const;
-
-	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
-
-	// only makes sense for scalars
-	value_type
-	static_constant_int(void) const;
-
-	// only makes sense for scalars
-	bool
-	resolve_value(value_type& ) const;
-
-	const_index_list
-	resolve_dimensions(void) const;
-
-	// flat-list needs to be replaced
-	bool
-	resolve_values_into_flat_list(list<value_type>& ) const;
-
-	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
-
-public:
-	PERSISTENT_METHODS
-
-};	// end class pint_const_collection
 
 //-----------------------------------------------------------------------------
 /**
@@ -593,10 +515,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -614,13 +536,15 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
+#if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::may_be_equivalent(e); }
+		{ return pbool_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::must_be_equivalent(e); }
+		{ return pbool_expr::must_be_equivalent_generic(e); }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -629,7 +553,10 @@ public:
 	static_constant_param(void) const;
 
 	bool
-	static_constant_bool(void) const { return val; }
+	static_constant_value(void) const { return val; }
+
+	bool
+	must_be_equivalent(const pbool_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -637,13 +564,16 @@ public:
 	bool
 	is_unconditional(void) const { return true; }
 
-	bool
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
@@ -654,7 +584,8 @@ private:
 	make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const;
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
@@ -665,16 +596,21 @@ public:
 	Constant version of range expression.  
 	Deriving from pair to inherit its interface with first and second.  
  */
-class const_range : public range_expr, public const_index,
+class const_range : public meta_range_expr, public const_index,
 		public pair<pint_value_type, pint_value_type> {
 friend class const_range_list;
 private:
+	typedef	const_range				this_type;
 	typedef	pair<pint_value_type,pint_value_type>	parent_type;
 	// typedef for interval_type (needs discrete_interval_set)
 	// relocated to source file
 public:
 	// dispense with pint_const objects here
-	const_range();
+	/**
+		Default constructor initializes with invalid range.  
+	 */
+	const_range() :
+		meta_range_expr(), const_index(), parent_type(0, -1) { }
 
 	/** explicit conversion from x[N] to x[0..N-1] */
 	explicit
@@ -688,7 +624,9 @@ public:
 
 	const_range(const pint_value_type l, const pint_value_type u);
 
+#if 0
 	const_range(const const_range& r);
+#endif
 
 private:
 	const_range(const pint_value_type l, const pint_value_type u,
@@ -727,9 +665,6 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-	string
-	hash_string(void) const;
-
 	const_range
 	static_overlap(const const_range& r) const;
 
@@ -763,18 +698,32 @@ public:
 	pint_value_type
 	upper_bound(void) const;
 
-	bool
+	good_bool
 	resolve_range(const_range& r) const;
+
+	good_bool
+	unroll_resolve_range(const unroll_context&, const_range& r) const;
 
 	count_ptr<const_index>
 	resolve_index(void) const;
+
+	count_ptr<const_index>
+	unroll_resolve_index(const unroll_context&) const;
+
+	bool
+	must_be_formal_size_equivalent(const meta_range_expr& ) const;
+
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
+	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
+	// don't need robust declarations, unless dynamically allocating
+	// during global static initialization.
 };	// end class const_range
 
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_CONST_H__
+#endif	// __OBJECT_ART_OBJECT_EXPR_CONST_H__
 

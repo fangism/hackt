@@ -1,32 +1,38 @@
 /**
-	\file "art_parser_token.cc"
+	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.19 2005/01/28 19:58:39 fang Exp $
+	$Id: art_parser_token.cc,v 1.32.2.1 2005/06/30 23:22:13 fang Exp $
  */
 
-#ifndef	__ART_PARSER_TOKEN_CC__
-#define	__ART_PARSER_TOKEN_CC__
+#ifndef	__AST_ART_PARSER_TOKEN_CC__
+#define	__AST_ART_PARSER_TOKEN_CC__
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <ostream>
 #include <cstdio>		// for sprintf
 #include <cstring>		// for a few C-string functions
 #include <exception>
 
-#include "art_switches.h"
-#include "art_parser_debug.h"
+#include "AST/art_parser_token.h"
+#include "AST/art_parser_token_char.h"
+#include "AST/art_parser_token_string.h"
 
-#include "art_parser_token.h"
+#include "Object/art_context.h"
+#include "Object/art_object_definition_data.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_expr_const.h"
+#include "Object/art_built_ins.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_pint_traits.h"
+#include "Object/art_object_pbool_traits.h"
 
-#include "art_context.h"
-#include "art_object_definition.h"
-#include "art_object_instance_base.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_expr_const.h"
-#include "art_built_ins.h"
-
-#include "what.h"
-#include "stacktrace.h"
-#include "memory/list_vector_pool.tcc"
+#include "util/what.h"
+#include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
+#include "util/memory/chunk_map_pool.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -52,16 +58,32 @@ SPECIALIZE_UTIL_WHAT(ART::parser::token_paramtype, "paramtype")
 }
 #endif
 
+#if 0
 namespace util {
 namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::parser::token_char)
 }
 }
+#endif
 
 namespace ART {
 namespace parser {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_STACKTRACE
+using entity::pint_const;
+using entity::pbool_const;
+
+// these are built-in instance references, not types.  
+#if 0
+using entity::pbool_def;
+using entity::pint_def;
+#else
+using entity::class_traits;
+using entity::pint_tag;
+using entity::pbool_tag;
+#endif
+using entity::bool_def;
+using entity::int_def;
 
 //=============================================================================
 // class terminal definitions
@@ -75,6 +97,9 @@ terminal::terminal() : node(), pos(current) {
 DESTRUCTOR_INLINE
 terminal::~terminal() { }
 #endif
+
+void
+terminal::bogus(void) const { }
 
 /// returns the position in file where this node starts
 inline
@@ -128,7 +153,7 @@ token_char::~token_char() { }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(token_char, 1024)
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_char)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -144,7 +169,7 @@ token_char::string_compare(const char* d) const {
 
 ostream&
 token_char::what(ostream& o) const {
-	return o << (char) c;
+	return o << char(c);
 }
 
 //=============================================================================
@@ -157,6 +182,8 @@ token_int::token_int(const long v) : terminal(), expr(), val(v) { }
 DESTRUCTOR_INLINE
 token_int::~token_int() { }
 #endif
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int)
 
 /**
 	Performs string comparison for an integer token.
@@ -186,17 +213,13 @@ token_int::rightmost(void) const {
 	return terminal::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Pushes a parameter expression (constant int) onto the 
-	context's expression stack.  
-	\return NULL, useless.  
+	\return newly created constant integer value.  
  */
-never_ptr<const object>
-token_int::check_build(context& c) const {
-	const count_ptr<pint_const> pe(new pint_const(val));
-	NEVER_NULL(pe);
-	c.push_object_stack(pe);
-	return never_ptr<const object>(NULL);
+expr::meta_return_type
+token_int::check_meta_expr(context& c) const {
+	return expr::meta_return_type(new pint_const(val));
 }
 
 //=============================================================================
@@ -209,6 +232,8 @@ token_float::token_float(const double v) : terminal(), expr(), val(v) { }
 DESTRUCTOR_INLINE
 token_float::~token_float() { }
 #endif
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_float)
 
 /**
 	Performs string comparison for a floating-point token.
@@ -241,10 +266,10 @@ token_float::rightmost(void) const {
 /**
 	Need built-in float type first.  
  */
-never_ptr<const object>
-token_float::check_build(context& c) const {
-	cerr << "token_float::check_build(): not quite done yet!" << endl;
-	return never_ptr<const object>(NULL);
+expr::meta_return_type
+token_float::check_meta_expr(context& c) const {
+	cerr << "token_float::check_meta_expr(): not quite done yet!" << endl;
+	return expr::meta_return_type(NULL);
 }
 
 //=============================================================================
@@ -280,16 +305,19 @@ token_string::rightmost(void) const {
 
 #if 0
 CONSTRUCTOR_INLINE
-token_identifier::token_identifier(const char* s) : token_string(s), expr() { }
+token_identifier::token_identifier(const char* s) :
+		token_string(s), inst_ref_expr() { }
 
 /** default copy constructor */
 token_identifier::token_identifier(const token_identifier& i) :
-		node(), token_string(i), expr() {
+		token_string(i), inst_ref_expr() {
 }
 
 DESTRUCTOR_INLINE
 token_identifier::~token_identifier() { }
 #endif
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_identifier)
 
 ostream&
 token_identifier::what(ostream& o) const {
@@ -306,47 +334,56 @@ token_identifier::rightmost(void) const {
 	return token_string::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	MESS ALERT:
-	Type-checking for expression literals and instance references, 
-	not to be called from declarations.  
-
-	(Later use "new_identifier" for declarations and definitions.)
-	The identifier must have been instantiated or declared formally
-	to pass type-check.  
-	Not intended for use of user-defined type identifiers... yet.
-	SOLUTION: reserve token_identifier for ONLY instantiations
-		and definitions, whereas
-		relative and absolute (qualified) identifiers
-		should be used in the grammar for all *references*
-		to instances.  
+	This is used specifically to return param_expr.  
+	Another version will return meta_instance_references.  
 	\param c the context of the current position in the syntax tree.  
 	\return pointer to the instance named if found, else NULL.  
  */
-never_ptr<const object>
-token_identifier::check_build(context& c) const {
-	STACKTRACE("token_identifier::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_identifier::check_build(...)";
-	)
+inst_ref_expr::meta_return_type
+token_identifier::check_meta_reference(context& c) const {
+	typedef	inst_ref_expr::meta_return_type		return_type;
+	STACKTRACE("token_identifier::check_meta_expr()");
 
 	// don't look up, instantiate (checked) in the context's current scope!
 	const never_ptr<const instance_collection_base>
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
-		// we will then make an instance_reference
-		// what about indexed instance references?
-		c.push_object_stack(inst->make_instance_reference());
+		return inst->make_meta_instance_reference();
 	} else {
-		// push a NULL placeholder
-		c.push_object_stack(count_ptr<object>(NULL));
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;
 		THROW_EXIT;		// temporary termination
+		return return_type(NULL);
 	}
-	return inst;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is used specifically to return a data_expr.  
+	Another version will return meta_instance_references.  
+	\param c the context of the current position in the syntax tree.  
+	\return pointer to the instance named if found, else NULL.  
+ */
+inst_ref_expr::nonmeta_return_type
+token_identifier::check_nonmeta_reference(context& c) const {
+	typedef	inst_ref_expr::nonmeta_return_type	return_type;
+	STACKTRACE("token_identifier::check_nonmeta_expr()");
+
+	// don't look up, instantiate (checked) in the context's current scope!
+	const never_ptr<const instance_collection_base>
+		inst(c.lookup_instance(*this));
+	// problem: stack is count_ptr, incompatible with never_ptr
+	if (inst) {
+		return inst->make_nonmeta_instance_reference();
+	} else {
+		// better error handling later...
+		what(cerr << "failed to find ") << endl;
+		THROW_EXIT;		// temporary termination
+		return return_type(NULL);
+	}
 }
 
 //=============================================================================
@@ -381,6 +418,8 @@ token_bool(const char* tf) : token_keyword(tf), expr() {
 DESTRUCTOR_INLINE
 token_bool:: ~token_bool() { }
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool)
+
 ostream&
 token_bool::what(ostream& o) const {
 	return o << "bool: " << AS_A(const string&, *this);
@@ -396,14 +435,10 @@ token_bool::rightmost(void) const {
 	return token_string::rightmost();
 }
 
-never_ptr<const object>
-token_bool::check_build(context& c) const {
-	const count_ptr<param_expr>
-		pe(new pbool_const(strcmp(c_str(),"true") == 0));
-	c.push_object_stack(pe);
-	return never_ptr<const object>(NULL);
+expr::meta_return_type
+token_bool::check_meta_expr(context& c) const {
+	return expr::meta_return_type(new pbool_const(strcmp(c_str(),"true") == 0));
 }
-
 
 //=============================================================================
 // class token_else method definitions
@@ -413,13 +448,14 @@ token_bool::check_build(context& c) const {
 	\param e is either "true" or "false"
  */
 CONSTRUCTOR_INLINE
-token_else::
-token_else(const char* e) : token_keyword(e), expr() {
+token_else::token_else(const char* e) : token_keyword(e), expr() {
 	INVARIANT(!strcmp(e,"else"));
 } 
 
 DESTRUCTOR_INLINE
 token_else:: ~token_else() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_else)
 
 ostream&
 token_else::what(ostream& o) const {
@@ -442,6 +478,12 @@ token_else::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+expr::meta_return_type
+token_else::check_meta_expr(context& c) const {
+	cerr << "token_else::check_build(): Don't call me!";
+	return expr::meta_return_type(NULL);
+}
+
 //=============================================================================
 // class token_quoted_string method definitions
 
@@ -455,8 +497,8 @@ token_quoted_string::~token_quoted_string() { }
 ostream&
 token_quoted_string::what(ostream& o) const {
 	// punt: handle special characters later...
-	return ((const token_string*) this)->what(o << "string: \"")
-		<< "\"";
+	return static_cast<const token_string*>(this)->what(o << "string: \"") << "\"";
+//	return token_string::what(o << "string: \"") << "\"";
 }
 
 line_position
@@ -478,11 +520,17 @@ token_quoted_string::check_build(context& c) const {
 	return never_ptr<const object>(NULL);
 }
 
+expr::meta_return_type
+token_quoted_string::check_meta_expr(context& c) const {
+	cerr << "token_quoted_string::check_meta_expr(): FINISH ME!" << endl;
+	return expr::meta_return_type(NULL);
+}
+
 //=============================================================================
 // class token_type method definitions
 
 CONSTRUCTOR_INLINE
-token_type::token_type(const char* tf) : token_keyword(tf), type_base() { }
+token_type::token_type(const char* tf) : token_keyword(tf) { }
 
 DESTRUCTOR_INLINE
 token_type::~token_type() { }
@@ -501,7 +549,8 @@ token_type::rightmost(void) const {
 // class token_datatype method definitions
 
 CONSTRUCTOR_INLINE
-token_datatype::token_datatype(const char* dt) : token_type(dt) { }
+token_datatype::token_datatype(const char* dt) :
+		token_type(dt), type_base() { }
 
 DESTRUCTOR_INLINE
 token_datatype::~token_datatype() { }
@@ -511,22 +560,12 @@ token_datatype::what(ostream& o) const {
 	return o << "datatype: " << AS_A(const string&, *this);
 }
 
-#if 0
-never_ptr<const object>
-token_datatype::check_build(context& c) const {
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_datatype::check_build(...): ";
-	)
-	return c.set_datatype_def(*this);
-}
-#endif
-
 //=============================================================================
 // class token_paramtype method definitions
 
 CONSTRUCTOR_INLINE
-token_paramtype::token_paramtype(const char* dt) : token_type(dt) { }
+token_paramtype::token_paramtype(const char* dt) :
+		token_type(dt), concrete_type_ref() { }
 
 DESTRUCTOR_INLINE
 token_paramtype::~token_paramtype() { }
@@ -535,17 +574,6 @@ ostream&
 token_paramtype::what(ostream& o) const {
 	return o << "paramtype: " << AS_A(const string&, *this);
 }
-
-#if 0
-never_ptr<const object>
-token_paramtype::check_build(context& c) const {
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_paramtype::check_build(...): ";
-	)
-	return c.set_param_def(*this);
-}
-#endif
 
 //=============================================================================
 // class token_bool_type method definitions
@@ -556,15 +584,15 @@ token_bool_type::token_bool_type(const char* dt) : token_datatype(dt) { }
 DESTRUCTOR_INLINE
 token_bool_type::~token_bool_type() { }
 
-never_ptr<const object>
-token_bool_type::check_build(context& c) const {
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+type_base::return_type
+token_bool_type::check_definition(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_bool_type::check_build(...): ";
-	)
 	// bool_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(bool_def);
+	// safe to use never_ptr on address of statically allocated definition
+	return type_base::return_type(&bool_def);
 }
 
 //=============================================================================
@@ -576,15 +604,15 @@ token_int_type::token_int_type(const char* dt) : token_datatype(dt) { }
 DESTRUCTOR_INLINE
 token_int_type::~token_int_type() { }
 
-never_ptr<const object>
-token_int_type::check_build(context& c) const {
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+type_base::return_type
+token_int_type::check_definition(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_int_type::check_build(...): ";
-	)
 	// int_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(int_def);
+	// safe to use never_ptr on address of statically allocated definition
+	return type_base::return_type(&int_def);
 }
 
 //=============================================================================
@@ -596,6 +624,10 @@ token_pbool_type::token_pbool_type(const char* dt) : token_paramtype(dt) { }
 DESTRUCTOR_INLINE
 token_pbool_type::~token_pbool_type() { }
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Return pointer to the definition, 
 	the caller (concrete_type_ref) should convert it to the appropriate
@@ -603,16 +635,22 @@ token_pbool_type::~token_pbool_type() { }
 	"pbool" is always used as a type_reference, and never refers
 	to the definition.  
  */
-never_ptr<const object>
-token_pbool_type::check_build(context& c) const {
+type_base::return_type
+token_pbool_type::check_definition(context& c) const {
 	STACKTRACE("token_pbool_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_pbool_type::check_build(...): ";
-	)
 	// pbool_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(pbool_def);
+	return type_base::return_type(&pbool_def);
 }
+#else
+
+concrete_type_ref::return_type
+token_pbool_type::check_type(context&) const {
+	static const class_traits<pbool_tag>::type_ref_ptr_type&
+		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
+	return pbool_type_ptr;
+}
+
+#endif
 
 //=============================================================================
 // class token_pint_type method definitions
@@ -623,21 +661,31 @@ token_pint_type::token_pint_type(const char* dt) : token_paramtype(dt) { }
 DESTRUCTOR_INLINE
 token_pint_type::~token_pint_type() { }
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Let caller resolve to concrete type reference with the definition.  
 //	"pint" is always used as a type_reference, and never refers
 //	to the definition.  
  */
-never_ptr<const object>
-token_pint_type::check_build(context& c) const {
+type_base::return_type
+token_pint_type::check_definition(context& c) const {
 	STACKTRACE("token_pint_type::check_build()");
-	TRACE_CHECK_BUILD(
-		what(cerr << c.auto_indent())
-			<< "token_pint_type::check_build(...): ";
-	)
 	// pint_def declared in "art_built_ins.h"
-	return c.push_current_definition_reference(pint_def);
+	return type_base::return_type(&pint_def);
 }
+#else
+
+concrete_type_ref::return_type
+token_pint_type::check_type(context&) const {
+	static const class_traits<pint_tag>::type_ref_ptr_type&
+		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
+	return pint_type_ptr;
+}
+
+#endif
 
 //=============================================================================
 }	// end namespace parser
@@ -646,5 +694,7 @@ token_pint_type::check_build(context& c) const {
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __ART_PARSER_TOKEN_CC__
+DEFAULT_STATIC_TRACE_END
+
+#endif	// __AST_ART_PARSER_TOKEN_CC__
 

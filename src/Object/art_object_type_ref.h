@@ -1,13 +1,15 @@
 /**
-	\file "art_object_type_ref.h"
+	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.18 2005/01/28 19:58:45 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.1 2005/06/30 23:22:26 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_REF_H__
-#define	__ART_OBJECT_TYPE_REF_H__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
+#define	__OBJECT_ART_OBJECT_TYPE_REF_H__
 
-#include "art_object_type_ref_base.h"
+#include <vector>
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_expr_types.h"
 
 namespace ART {
 namespace parser {
@@ -15,52 +17,35 @@ namespace parser {
 }
 
 namespace entity {
-
+class datatype_definition_base;
+class unroll_context;
+class builtin_channel_type_reference;
+class channel_definition_base;
+class process_definition_base;
+class built_in_param_def;
 USING_LIST
+using std::vector;
 using std::ostream;
 using parser::token_identifier;
-using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 // class type_reference_base declared in "art_object_base.h"
 // class fundamental_type_reference declared in "art_object_base.h"
 
 //=============================================================================
-#if 0
-MAY BE OBSOLETE
-/**
-	Class for reference to a collection or array of fundamental types.
-	Or should we allow collective_types to contain collective_types?
-	Depends on whether or not gramma allows both styles of arrays:
-	x[i][j] vs. x[i,j], and whether or not they are equivalent.  
- */
-class collective_type_reference : public type_reference_base {
-protected:
-	// don't own these members
-	never_ptr<const type_reference_base>	base;
-	never_ptr<const array_index_list>		dim;
-public:
-	collective_type_reference(const type_reference_base& b, 
-		never_ptr<const array_index_list> d);
-	~collective_type_reference();
-
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-};	// end class collective_type_reference
-#endif
-
-//-----------------------------------------------------------------------------
 /**
 	Reference to a data-type definition.  
 	Includes optional template parameters.  
+	TODO: consider sub-typing, and also keeping a generic type like this.
  */
 class data_type_reference : public fundamental_type_reference {
 private:
 	typedef	fundamental_type_reference		parent_type;
+	typedef	data_type_reference			this_type;
 	typedef	datatype_definition_base		definition_type;
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
-//	excl_ptr<const param_expr_list>	template_params;	// inherited
+	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
 	/**
 		Reference to data type definition, which may be a 
 		built-in type, enumeration, struct, or another typedef.  
@@ -78,10 +63,10 @@ public:
 	data_type_reference(const definition_ptr_type td);
 
 	data_type_reference(const definition_ptr_type td, 
-		excl_ptr<const param_expr_list>& pl);
-		// not gcc-2.95.3 friendly default argument = NULL
+		const template_actuals&);
 
-virtual	~data_type_reference();
+	// virtualize if something derives from this
+	~data_type_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -94,11 +79,17 @@ virtual	~data_type_reference();
 
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...
-	count_ptr<const data_type_reference>
+	count_ptr<const this_type>
 	unroll_resolve(unroll_context&) const;
 
+	static
+	data_type_reference*
+	make_quick_int_type_ref(const pint_value_type);
+
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
 private:
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -107,18 +98,144 @@ private:
 	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class data_type_reference
+
+//=============================================================================
+/**
+	Abstract parent class for all channel types.  
+ */
+class channel_type_reference_base : public fundamental_type_reference {
+protected:
+	typedef	fundamental_type_reference		parent_type;
+public:
+#if 0
+	typedef	enum {
+		BIDIRECTIONAL, 
+		SEND, 
+		RECEIVE
+	}	direction_type;
+#endif
+protected:
+	/**
+		Three possible values: '\0' means bidirections (unspecified), 
+		'!' means send-only, '?' means receive-only.
+	 */
+	char						direction;
+protected:
+	channel_type_reference_base() : parent_type(), direction('\0') { }
+
+	explicit
+	channel_type_reference_base(const template_actuals&);
+
+public:
+virtual	~channel_type_reference_base() { }
+
+virtual	ostream&
+	dump(ostream&) const = 0;
+
+	void
+	set_direction(const char c) { direction = c; }
+
+	char
+	get_direction(void) const { return direction; }
+
+	ostream&
+	dump_direction(ostream&) const;
+
+virtual	never_ptr<const builtin_channel_type_reference>
+	resolve_builtin_channel_type(void) const = 0;
+
+protected:
+	using parent_type::collect_transient_info_base;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+};	// end class channel_type_reference_base
+
+//-----------------------------------------------------------------------------
+/**
+	Reference to an intrinsic channel type, chan(...).
+	There is no built-in channel definition, which is why we need
+	this channel type split off.  
+ */
+class builtin_channel_type_reference : public channel_type_reference_base {
+	typedef	builtin_channel_type_reference		this_type;
+	typedef	channel_type_reference_base		parent_type;
+public:
+	typedef	count_ptr<const data_type_reference>	datatype_ptr_type;
+	typedef	vector<datatype_ptr_type>		datatype_list_type;
+private:
+	datatype_list_type				datatype_list;
+public:
+	builtin_channel_type_reference();
+	~builtin_channel_type_reference();
+
+	ostream&
+	what(ostream& o) const;
+
+	// overrides grandparent's
+	ostream&
+	dump(ostream&) const;
+
+	ostream&
+	dump_long(ostream&) const;
+
+	never_ptr<const definition_base>
+	get_base_def(void) const;
+
+	void
+	reserve_datatypes(const size_t);
+
+	void
+	add_datatype(const datatype_list_type::value_type&);
+
+	size_t
+	num_datatypes(void) const { return datatype_list.size(); }
+
+	// for convenience...
+	const datatype_list_type&
+	get_datatype_list(void) const { return datatype_list; }
+
+	datatype_ptr_type
+	index_datatype(const size_t) const;
+
+	never_ptr<const builtin_channel_type_reference>
+	resolve_builtin_channel_type(void) const;
+
+private:
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+private:
+	excl_ptr<instantiation_statement_base>
+	make_instantiation_statement_private(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) const;
+			
+	excl_ptr<instance_collection_base>
+	make_instance_collection(const never_ptr<const scopespace> s, 
+		const token_identifier& id, const size_t d) const;
+
+public:
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class builtin_channel_type_reference
 
 //-----------------------------------------------------------------------------
 /**
 	Reference to a channel-type definition.  
 	Includes optional template parameters.  
  */
-class channel_type_reference : public fundamental_type_reference {
+class channel_type_reference : public channel_type_reference_base {
 private:
-	typedef	fundamental_type_reference		parent_type;
+	typedef	channel_type_reference			this_type;
+	typedef	channel_type_reference_base		parent_type;
 protected:
+	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 	never_ptr<const channel_definition_base>	base_chan_def;
 private:
@@ -130,17 +247,28 @@ public:
 
 	channel_type_reference(
 		const never_ptr<const channel_definition_base> td, 
-		excl_ptr<const param_expr_list>& pl);
+		const template_actuals& pl);
 
-virtual	~channel_type_reference();
+	~channel_type_reference();
 
 	ostream&
 	what(ostream& o) const;
 
+	// override grandparent's
+	ostream&
+	dump(ostream& o) const;
+
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+
+	never_ptr<const builtin_channel_type_reference>
+	resolve_builtin_channel_type(void) const;
+
 private:
-	excl_ptr<instantiation_statement>
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+private:
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -148,8 +276,10 @@ private:
 	excl_ptr<instance_collection_base>
 	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
+
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class channel_type_reference
 
 //-----------------------------------------------------------------------------
@@ -160,9 +290,14 @@ public:
 class process_type_reference : public fundamental_type_reference {
 private:
 	typedef	fundamental_type_reference		parent_type;
+	typedef	process_type_reference			this_type;
+	typedef	process_definition_base			definition_type;
+	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
+	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
 //	excl_ptr<const param_expr_list>	template_params;	// inherited
 // should be const?  reference to base definition shouldn't change...
+	typedef	never_ptr<const definition_type>	base_definition_ptr_type;
 	never_ptr<const process_definition_base>	base_proc_def;
 private:
 	process_type_reference();
@@ -173,10 +308,9 @@ public:
 
 	process_type_reference(
 		const never_ptr<const process_definition_base> td, 
-		excl_ptr<const param_expr_list>& pl);
-		// not gcc-2.95.3 friendly default argument = NULL
+		const template_actuals&);
 
-virtual	~process_type_reference();
+	~process_type_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -184,8 +318,18 @@ virtual	~process_type_reference();
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	// just resolves template actuals to constants
+	count_ptr<const this_type>
+	unroll_resolve(unroll_context& ) const;
+
+	good_bool
+	unroll_register_complete_type(void) const;
+
 private:
-	excl_ptr<instantiation_statement>
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+private:
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -194,8 +338,8 @@ private:
 	make_instance_collection(const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const;
 public:
-	// macro expand to method prototypes
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class process_type_reference
 
 //-----------------------------------------------------------------------------
@@ -206,10 +350,11 @@ public:
 	parameter instances to refer directly to the built-in definitions, 
 	but we rather than make a special-case exception, we use this class.  
 	The template_params member is inherited but not used.  
-	Built-in implementation: only will ever be two instance of this class. 
+	Built-in implementation: only will ever be two instances of this class. 
  */
 class param_type_reference : public fundamental_type_reference {
 private:
+	typedef	param_type_reference		this_type;
 	typedef	fundamental_type_reference	parent_type;	// not used
 protected:
 //	excl_ptr<const param_expr_list>	template_params;	// inherited, unused
@@ -218,7 +363,8 @@ public:
 	explicit
 	param_type_reference(const never_ptr<const built_in_param_def> td);
 
-virtual	~param_type_reference();
+	// no need to virtual, unless something derives from this
+	~param_type_reference();
 
 	ostream&
 	what(ostream& o) const;
@@ -227,7 +373,10 @@ virtual	~param_type_reference();
 	get_base_def(void) const;
 
 private:
-	excl_ptr<instantiation_statement>
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+private:
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const;
@@ -238,7 +387,7 @@ private:
 
 private:
 	// dummy implementation, never called
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 
 };	// end class param_type_reference
 
@@ -246,5 +395,5 @@ private:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_TYPE_REF_H__
+#endif	// __OBJECT_ART_OBJECT_TYPE_REF_H__
 

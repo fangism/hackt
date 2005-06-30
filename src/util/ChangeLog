@@ -1,0 +1,108 @@
+# "src/util/ChangeLog"
+
+2005-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-07:
+	  Added explicit instantiation macros to "util/multikey.tcc".
+
+
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-02:
+	  Figured out how to automatically generate unique identifiers
+		using cpp, after discovering macro tricks on the web.  
+	  "util/indent.h" and "util/stacktrace.h" now use these macros.
+	  No more shadowing identifier conflicts!  Hallelujah!
+
+
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-45-merged-anal-04:
+	  Merge to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-44-anal-04:
+	  Tiny patches after cross-checking against different gcc versions
+		on different platforms.  
+
+	* ARTXX-00-01-04-main-00-44-anal-03:
+	  Updated a bunch of files to conform to new warning strictness, 
+		describe in src/ChangeLog (same entry).
+	  persistent_object_manager's indices have been updated to
+		size_t (unsigned int) type.  
+
+
+2005-06-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44-anal-02:
+	  Every util/.tcc file has been updated with the following
+		macros for controlling template instantiation:
+		EXTERN_TEMPLATE_<file-name>
+			predefine to suppress template method definitions
+			and only include the .h header of the same class(es).
+		EXCLUDE_DEPENDENT_TEMPLATES_<file-name>
+			predefine to exclude the template definitions
+			that this file/class depends on.  
+	  By default, when the user does nothing different, all dependent
+		definitions are included recursively in .tcc files.  
+		So If you don't even think about it, it just works.  
+	  We now explicitly suppress template instantiation by *hiding*
+		the complete template definition when the above macros
+		are used.  Since -pendantic was added to the compiler 
+		dialiect flags, replace "extern template" with these
+		macros.  
+	  Caveat: There can be cross-interactive effects between 
+		multiple .tcc files that share the same dependencies, 
+		so be warned.  You can always diagnose a problem
+		by using -save-temps and examining the .ii files.  
+
+
+2005-06-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-19:
+	  Provided INDENT_SOURCE() macro in "util/indent.h".
+
+
+2005-06-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-10:
+	  Adding -Wundef to CFLAGS caught an unremoved obsolete conditional
+		in "util/packed_array_fwd.h", harmless, but fixed.  
+
+
+2005-06-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  util/memory/ref_count_pool.h:
+		removed cyclic header dependence on count_ptr.h, 
+		replacing with forward declarations.  
+
+
+2005-05-23	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42:
+	  ptrs_functional.h: relocated to util namespace, not std anymore.  
+
+
+2005-05-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-39:
+	  Modified and verified that all headers properly standalone.
+		(except using{i,o}stream.h, which aren't supposed to be.)
+	  Anything that directly depends on the definition of size_t
+		now includes configure-dependent "util/sizet.h".
+	  Split out forward declarations of persistent.h into separate file.  
+
+
+2005-05-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-38:
+	  Started this ChangeLog.
+	  From now on, util-library related changes should be noted here.  
+	  getopt_portable.h:
+		now uses conditional results of configure script in config.h.  
+	  static_trace.h:
+		added DEFAULT macros for convenience, now don't have to
+		pass in string argument for BEGIN and END, 
+		defaults to using built-in __FILE__.
+

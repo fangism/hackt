@@ -1,0 +1,84 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4304c40	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4304c60	procdefn	0	53	181
+	4	 0x4304cf4	chancoll	0	181	219
+	5	 0x4304d50	chaninst	0	219	239
+	6	 0x4304d70	bchntprf	0	239	264
+	7	 0x4304da0	datatprf	0	264	284
+	8	 0x4304dc0	datadefn	0	284	337
+	9	 0x4304e64	chancoll	0	337	375
+	10	 0x4304ec0	chaninst	0	375	395
+	11	 0x4304ee4	chancoll	0	395	433
+	12	 0x4304f40	chaninst	0	433	453
+	13	 0x4304f64	chancoll	0	453	491
+	14	 0x4304fc0	chaninst	0	491	511
+	15	 0x4304fe0	bchntprf	0	511	536
+	16	 0x4305010	datatprf	0	536	556
+	17	 0x4305034	dboolcol	0	556	590
+	18	 0x4305090	datainst	0	590	610
+	19	 0x43050b0	datatprf	0	610	630
+	20	 0x43050d4	dboolcol	0	630	664
+	21	 0x4305130	datainst	0	664	684
+	22	 0x4305150	CHPloop_	0	684	696
+	23	 0x4305160	CHPseqnc	0	696	720
+	24	 0x4305170	CHPrecv_	0	720	740
+	25	 0x4305190	schnnref	0	740	756
+	26	 0x43051a0	sdbnref_	0	756	772
+	27	 0x43051c0	CHPdetsl	0	772	792
+	28	 0x43051d0	CHPguard	0	792	808
+	29	 0x43051f0	sdbnref_	0	808	824
+	30	 0x4305210	CHPrecv_	0	824	844
+	31	 0x4305230	schnnref	0	844	860
+	32	 0x4305240	sdbnref_	0	860	876
+	33	 0x4305260	CHPguard	0	876	892
+	34	 0x4305280	nbnotex_	0	892	904
+	35	 0x4305290	sdbnref_	0	904	920
+	36	 0x43052b0	CHPrecv_	0	920	940
+	37	 0x43052d0	schnnref	0	940	956
+	38	 0x43052e0	sdbnref_	0	956	972
+	39	 0x4305300	CHPsend_	0	972	992
+	40	 0x4305320	schnnref	0	992	1008
+	41	 0x4305330	sdbnref_	0	1008	1024
+
+In module created from: ./053.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    split_bool_soup = process-definition (defined) split_bool_soup(
+        chan?(bool<>) A
+        chan?(bool<>) B
+        chan?(bool<>) G
+        chan!(bool<>) Z
+      )
+      In definition "split_bool_soup", we have: {
+        A = chan?(bool<>) A
+        B = chan?(bool<>) B
+        G = chan?(bool<>) G
+        Z = chan!(bool<>) Z
+        g = bool<> g
+        x = bool<> x
+        chp:
+        concurrent: {
+          *[
+            sequential: {
+              G?(g)
+              deterministic: {
+                g -> A?(x)
+                ~g -> B?(x)
+              }
+              Z!(x)
+            }
+          ]
+        }
+      }
+
+}
+

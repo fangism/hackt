@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.6 2005/01/28 19:59:00 fang Exp $
+#	$Id: Make.test,v 1.11.10.1 2005/06/30 23:22:30 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -14,7 +14,9 @@ ARTOBJ_TEST_SH = $(top_srcdir)/test/artobj-diff.sh
 ARTOBJUNROLL_TEST_SH = $(top_srcdir)/test/artobjunroll-expect.sh
 
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
-ARTOBJ_DIFF_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
+POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
+HEX_ADDRESS_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
+ARTOBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 
 TEST_REPORT = $(top_builddir)/test/test-report.txt
 
@@ -68,7 +70,7 @@ CLEANFILES += $(TESTS) \
 	$(ARTC_TEST_SUBJECTS:=.stderr.filter) \
 	$(ARTC_TEST_PASSES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison.filter) \
-	$(BISON_OUTPUTS:=.stderr.bison.diff) \
+	$(BISON_OUTPUTS:=.bison.diff) \
 	$(ARTOBJ_TEST_SUBJECTS:=.outdump) \
 	$(ARTOBJ_TEST_SUBJECTS:=.indump) \
 	$(ARTOBJ_TEST_SUBJECTS:=.outdump.filter) \
@@ -87,7 +89,8 @@ all-local: .cvsignore subdir.not_a_test \
 	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
 
 # consider using CLEANFILES
-AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr)
+AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 
@@ -98,13 +101,32 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
-#	$(LN_S) $< $@
 
 .cvsignore: Makefile.am Makefile.in $(top_srcdir)/test/Make.test
+
+# extra prefix ". " needed for shell script interpretation
+# note: cd $$d; make ... will not work!
+clean-cvsignore:
+	-$(RM) .cvsignore
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d clean-cvsignore ; \
+			fi ; \
+		fi ; \
+	done
+
 
 # automatically removes $(CLEANFILES)
 clean-local:
 	-$(RM) *.core core.*
+
+# really remove these files!
+cleaner: clean
+	-$(RM) *.filter *.diff *.artobj
+	-$(RM) *.artctest *.artobjtest *.artobjunrolltest
+	-$(RM) *.indump *.outdump *.objdiff
+	-$(RM) *.artobjunroll *.unrolldump *.unrolldiff
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...

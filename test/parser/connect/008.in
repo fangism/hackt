@@ -1,6 +1,6 @@
-// should pass: types are equivalent
-// actually type-checker is lazy and won't check param actuals
-// of typedef'd types until unroll time.
+// "008.in" should fail on bad connection through mismatched typedef
+// used to pass because typedefs' param actuals checking was 
+// deferred until unroll, but now fails.
 
 int fe;
 int<> fi;
@@ -8,8 +8,6 @@ int<16> fo;		// different from the rest
 
 typedef	int<32>		int32;
 
-int32 fum = fe = fi = fo;
-	// type-checker won't catch type mismatch through 
-	// static constant parameter differences... yet
+int32 fum = fe = fi = fo;	// fo mismatches
 
 

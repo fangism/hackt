@@ -1,0 +1,48 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302910	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302930	chandefn	0	53	144
+	4	 0x43029d4	pintcoll	0	144	181
+	5	 0x4302a20	pintinst	0	181	197
+	6	 0x4302a34	pintcoll	0	197	234
+	7	 0x4302a80	pintinst	0	234	250
+	8	 0x43028b4	dintcoll	0	250	288
+	9	 0x4302a90	datainst	0	288	308
+	10	 0x4302ab0	datatprf	0	308	328
+	11	 0x4302ad0	datadefn	0	328	380
+	12	 0x4302b70	dprmlst_	0	380	396
+	13	 0x4302b80	spimref_	0	396	416
+	14	 0x4302bb0	bchntprf	0	416	441
+	15	 0x4302be0	datatprf	0	441	461
+	16	 0x4302c00	dprmlst_	0	461	477
+	17	 0x4302c10	spimref_	0	477	497
+
+In module created from: ./011.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    mychan = user-def-chan (declared) mychan<
+      pint<> J
+      pint<> K
+      >
+      chan(
+        int<pint-inst-ref ::mychan::J>
+      )
+      (
+        int<pint-inst-ref ::mychan::K> i
+      )
+      In channel definition "mychan", we have: {
+        J = pint<> J
+        K = pint<> K
+        i = int<pint-inst-ref ::mychan::K> i
+      }
+
+}
+

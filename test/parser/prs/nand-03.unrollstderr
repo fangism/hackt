@@ -1,0 +1,51 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43030d0	module__	0	0	33
+	2	 0x4300144	namespc_	0	33	57
+	3	 0x43030f0	procdefn	0	57	151
+	4	 0x4303074	dboolcol	0	151	185
+	5	 0x4303180	datainst	0	185	205
+	6	 0x43031a0	datatprf	0	205	225
+	7	 0x43031c0	datadefn	0	225	278
+	8	 0x4303264	dboolcol	0	278	312
+	9	 0x43032c0	datainst	0	312	332
+	10	 0x43032e4	dboolcol	0	332	366
+	11	 0x4303340	datainst	0	366	386
+	12	 0x4818408	PRSpulup	0	386	403
+	13	 0x4303368	PRSor___	0	403	423
+	14	 0x4303478	PRSnot__	0	423	435
+	15	 0x4303608	PRSlitrl	0	435	447
+	16	 0x4303790	sdbmref_	0	447	467
+	17	 0x4303484	PRSnot__	0	467	479
+	18	 0x4303614	PRSlitrl	0	479	491
+	19	 0x43037c0	sdbmref_	0	491	511
+	20	 0x43037f0	sdbmref_	0	511	531
+	21	 0x4818808	PRSpuldn	0	531	548
+	22	 0x4303828	PRSand__	0	548	568
+
+In module created from: ./nand-03.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    nand2 = process-definition (defined) nand2(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "nand2", we have: {
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        ~a | ~b -> c+
+        a & b -> c-
+      }
+
+}
+

@@ -1,0 +1,72 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303710	module__	0	0	57
+	2	 0x4300144	namespc_	0	57	97
+	3	 0x4303730	procdefn	0	97	146
+	4	 0x43037c4	pintcoll	0	146	183
+	5	 0x4303810	pintinst	0	183	199
+	6	 0x37a4028	cnstpi__	0	199	211
+	7	 0x4303824	pintcoll	0	211	248
+	8	 0x4303870	pintinst	0	248	264
+	9	 0x37a4038	cnstpi__	0	264	276
+	10	 0x4303884	proccoll	2	276	486
+	11	 0x43038d0	procinst	0	486	506
+	12	 0x43038f0	proctprf	0	506	526
+	13	 0x4303910	crnglst_	0	526	554
+	14	 0x4303920	proctprf	0	554	574
+	15	 0x4303944	proccoll	2	574	784
+	16	 0x4303990	procinst	0	784	804
+	17	 0x43039b0	proctprf	0	804	824
+	18	 0x43039d0	crnglst_	0	824	852
+	19	 0x43039e0	proctprf	0	852	872
+	20	 0x4800c00	piassign	0	872	892
+	21	 0x4303a00	spimref_	0	892	912
+	22	 0x4800c10	piassign	0	912	932
+	23	 0x4303a30	spimref_	0	932	952
+	24	 0x4303a60	prcalias	0	952	972
+	25	 0x4303a70	sprcmref	0	972	992
+	26	 0x4303aa0	sprcmref	0	992	1012
+
+In module created from: ./019.in (unrolled)
+In namespace "", we have: {
+  2 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    M = pint^0 M (init = 3) value: 3
+    N = pint^0 N (init = 2) value: 2
+  Definitions:
+    fang = process-definition (declared) fang(
+      )
+      In definition "fang", we have: {
+      }
+
+  Instances:
+    that = process fang<>^2 that with indices: {
+      [0..1][0..2]
+    }
+      unrolled indices: {
+        [0][0] = ::this[0][0]
+        [0][1] = ::this[0][1]
+        [0][2] = ::this[0][2]
+        [1][0] = ::this[1][0]
+        [1][1] = ::this[1][1]
+        [1][2] = ::this[1][2]
+      }
+    this = process fang<>^2 this with indices: {
+      [0..1][0..2]
+    }
+      unrolled indices: {
+        [0][0] = ::that[0][0]
+        [0][1] = ::that[0][1]
+        [0][2] = ::that[0][2]
+        [1][0] = ::that[1][0]
+        [1][1] = ::that[1][1]
+        [1][2] = ::that[1][2]
+      }
+}
+

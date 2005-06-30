@@ -1,0 +1,38 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302740	module__	0	0	45
+	2	 0x4300144	namespc_	0	45	85
+	3	 0x4302764	dintcoll	0	85	124
+	4	 0x43027c0	datainst	0	124	144
+	5	 0x43027e0	datatprf	0	144	164
+	6	 0x4302800	datatpdf	0	164	206
+	7	 0x4302870	datatprf	0	206	226
+	8	 0x4302890	datadefn	0	226	278
+	9	 0x4302930	dprmlst_	0	278	294
+	10	 0x371c028	cnstpi__	0	294	306
+	11	 0x4302944	dintcoll	0	306	345
+	12	 0x43029a0	datainst	0	345	365
+	13	 0x43029c4	dintcoll	0	365	404
+	14	 0x4302a20	datainst	0	404	424
+	15	 0x4302a44	dintcoll	0	424	464
+	16	 0x4302aa0	datainst	0	464	484
+
+In module created from: ./003.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  1 typedefs
+  Typedefs:
+    int32 = datatype-definition-alias: int32
+      = int<32>
+  Instances:
+    fe = int<32>^0 fe (instantiated) = ::fe
+    fi = int<32>^0 fi (instantiated) = ::fi
+    fo = int<32>^0 fo (instantiated) = ::fo
+    fum = int<32>^0 fum (instantiated) = ::fum
+}
+

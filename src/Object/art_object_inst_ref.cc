@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31.4.1 2005/06/25 21:07:22 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.2 2005/06/30 23:22:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -789,7 +789,7 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 		ltr(lib->get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		rtr(rib->get_type_ref());
-	const bool type_eq = ltr->may_be_type_equivalent(*rtr);
+	const bool type_eq = ltr->may_be_connectibly_type_equivalent(*rtr);
 	// if base types differ, then cannot be equivalent
 	if (!type_eq) {
 		ltr->dump(cerr << "Types do not match! got: ") << " and: ";

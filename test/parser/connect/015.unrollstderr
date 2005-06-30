@@ -1,0 +1,63 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43033c0	module__	0	0	49
+	2	 0x4300144	namespc_	0	49	81
+	3	 0x43033e4	proccoll	1	81	180
+	4	 0x4303430	procinst	0	180	200
+	5	 0x4303450	proctprf	0	200	220
+	6	 0x4303470	procdefn	0	220	268
+	7	 0x4303500	crnglst_	0	268	288
+	8	 0x4303510	proctprf	0	288	308
+	9	 0x4303534	proccoll	1	308	414
+	10	 0x4303580	procinst	0	414	434
+	11	 0x43035a0	proctprf	0	434	454
+	12	 0x43035c0	crnglst_	0	454	474
+	13	 0x43035d0	procinst	0	474	494
+	14	 0x43035f0	proctprf	0	494	514
+	15	 0x4303610	crnglst_	0	514	534
+	16	 0x4303620	procinst	0	534	554
+	17	 0x4303640	proctprf	0	554	574
+	18	 0x4303660	crnglst_	0	574	594
+	19	 0x4303670	proctprf	0	594	614
+	20	 0x4303690	prcalias	0	614	634
+	21	 0x43036a0	sprcmref	0	634	654
+	22	 0x43036d0	sprcmref	0	654	674
+	23	 0x4303700	cindlst_	0	674	690
+	24	 0x4807c04	cnstrng_	0	690	706
+
+In module created from: ./015.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo(
+      )
+      In definition "foo", we have: {
+      }
+
+  Instances:
+    bar = process foo<>^1 bar with indices: {
+      [0..0]
+      [1..1]
+      [2..2]
+    }
+      unrolled indices: {
+        0 = ::blah[0]
+        1 = ::blah[1]
+        2 = ::blah[2]
+      }
+    blah = process foo<>^1 blah with indices: {
+      [0..2]
+    }
+      unrolled indices: {
+        0 = ::bar[0]
+        1 = ::bar[1]
+        2 = ::bar[2]
+      }
+}
+

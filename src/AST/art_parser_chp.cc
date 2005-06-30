@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.18.2.1 2005/06/25 21:07:15 fang Exp $
+	$Id: art_parser_chp.cc,v 1.18.2.2 2005/06/30 23:22:10 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -404,7 +404,7 @@ guarded_command::check_guarded_action(context& c) const {
 			<< endl;
 		return return_type(NULL);
 	}
-	if (!gtype->may_be_type_equivalent(*entity::bool_type_ptr)) {
+	if (!gtype->may_be_connectibly_type_equivalent(*entity::bool_type_ptr)) {
 		cerr << "Error: guard expression at " << where(*guard) <<
 			" expected bool, but got: ";
 		gtype->dump(cerr) << endl;
@@ -581,7 +581,7 @@ binary_assignment::check_action(context& c) const {
 			where(*rval) << endl;
 		return statement::return_type(NULL);
 	}
-	if (!ltype->may_be_type_equivalent(*rtype)) {
+	if (!ltype->may_be_connectibly_type_equivalent(*rtype)) {
 		cerr << "Type mismatch in assignment at " <<
 			where(*this) << ':' << endl;
 		ltype->dump(cerr << "\tleft: ") << endl;
@@ -651,7 +651,7 @@ bool_assignment::check_action(context& c) const {
 			where(*bool_var) << endl;
 		return statement::return_type(NULL);
 	}
-	if (!ltype->may_be_type_equivalent(*entity::bool_type_ptr)) {
+	if (!ltype->may_be_connectibly_type_equivalent(*entity::bool_type_ptr)) {
 		cerr << "Type mismatch in boolean assignment at " <<
 			where(*this) << ':' << endl;
 		ltype->dump(cerr << "\tgot: ") << endl;

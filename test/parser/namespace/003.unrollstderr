@@ -2,26 +2,26 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3300714	module__	0	0	40
-	2	 0x3300170	namespc_	0	40	68
-	3	 0x33001a4	namespc_	0	68	99
-	4	 0x3302124	dintcoll	0	99	146
-	5	 0x3804604	datainst	0	146	166
-	6	 0x3302174	datatprf	0	166	182
-	7	 0x3302180	datadefn	0	182	213
-	8	 0x33021d4	dprmlst_	0	213	229
-	9	 0x263f024	cnstpi__	0	229	241
-	10	 0x33021e4	dintcoll	0	241	289
-	11	 0x3804620	datainst	0	289	309
-	12	 0x3302234	datatprf	0	309	325
-	13	 0x3302244	dprmlst_	0	325	341
-	14	 0x33001d8	namespc_	0	341	368
-	15	 0x3302254	dintcoll	0	368	416
-	16	 0x380463c	datainst	0	416	436
-	17	 0x33022a4	datatprf	0	436	452
-	18	 0x33022b4	dprmlst_	0	452	468
+	1	 0x4302a20	module__	0	0	41
+	2	 0x4300144	namespc_	0	41	69
+	3	 0x4300178	namespc_	0	69	100
+	4	 0x4302a44	dintcoll	0	100	140
+	5	 0x4302aa0	datainst	0	140	160
+	6	 0x4302ac0	datatprf	0	160	180
+	7	 0x4302ae0	datadefn	0	180	232
+	8	 0x4302b80	dprmlst_	0	232	248
+	9	 0x3777028	cnstpi__	0	248	260
+	10	 0x4302b94	dintcoll	0	260	301
+	11	 0x4302bf0	datainst	0	301	321
+	12	 0x4302c10	datatprf	0	321	341
+	13	 0x4302c30	dprmlst_	0	341	357
+	14	 0x43001ac	namespc_	0	357	384
+	15	 0x4302c44	dintcoll	0	384	425
+	16	 0x4302ca0	datainst	0	425	445
+	17	 0x4302cc0	datatprf	0	445	465
+	18	 0x4302ce0	dprmlst_	0	465	481
 
-In module created from: -stdin- (unrolled)
+In module created from: ./003.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -36,7 +36,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        meow = int<32> meow
+        meow = int<32>^0 meow (instantiated) = ::cat::meow
     }
     dog =     In namespace "dog", we have: {
       0 parameter-collections
@@ -45,8 +45,8 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        moo = int<32> moo
-        woof = int<32> woof
+        moo = int<32>^0 moo (instantiated) = ::dog::moo
+        woof = int<32>^0 woof (instantiated) = ::dog::woof
     }
 }
 

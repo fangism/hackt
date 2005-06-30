@@ -1,6 +1,147 @@
 "ChangeLog"
 
+2005-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-07-merged-actuals-08:
+	  Merged in revisions from actuals (-08) child branch.  
+	  Summary: implemented strict and relaxed template actuals.  
+	  However, rest of code base needs to make use of it
+		during instantiation and connection.  
+
+
+2005-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-08:
+	  Final branch revision before merging to parent.  
+	  Some comments updated, mostly regarding done TODOs, 
+		and doxygen comments.  
+	  Branch summary: properly implemented strict and relaxed 
+		template actuals.  
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-07:
+	  Implemented template formal to actual reference resolution
+		in template_formals_manager::resolve_template_actual
+		and unroll_context::resolve_meta_value_reference.  
+		The latter is called by unroll_resolve in
+		"Object/art_object_value_reference.tcc".  
+	  Reformatted pretty-print dumps of definitions and typedefs.  
+		(Updated tests)
+	  Enabled object unroll tests in test/parser/template, 
+		and they all work, whoa.  
+	  entity:: expression lists implemented with vector (replaced list)
+		and added indexing operators.  
+	  Slightly better control of explicit template instantiation 
+		using "Object/art_object_extern_template.{h,cc}".
+		NOTE: sequence of including the header file matters.
+	  Branch nearing maturity.  
+
+
+2005-06-29	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-06:
+	  Clean-up revision: committed USE_NEW_TEMPLATE_ACTUALS(1)
+		and removed conditional wrappings.  
+	  Few more things TODO (already noted) before this branch matures.  
+
+
+2005-06-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-05:
+	  Massive and revolutionary revision (-1000, +2000 LOC).
+	  Summary: enabled proper implementation of template actuals
+		in type-references, and applied them to ... everything.  
+	  Code differences are wrapped in the condition macro
+		USE_NEW_TEMPLATE_ACTUALS, defined in 
+		"Object/art_object_template_formals_manager.h"
+	  All fundamental_type_references now replaced the old 
+		template_params param_expr_list with a proper
+		template_actuals, which basically contains two
+		pointers to param expr lists (strict, relaxed).  
+	  Parser/grammar: updated to include strict and relaxed template
+		arguments at declaration time, and optional relaxed template
+		arguments at instantiation time. 
+		(AST::parser::template_argument_list_pair)
+	  Semantic type-equivalence: refined and (partially) implemented
+		{strict, relaxed} x {may, must} equivalence checking.  
+		Strict checking is employed for connections and 
+		non-meta assignments.  Relaxed checking is used for
+		array/sparse collection member checking.  
+	  Partially implemented definition_base::make_canonical_type_reference,
+		and fundamental_type_reference::make_canonical_type_reference, 
+		which in combination, creates canonical types by substituting
+		template actual parameters into the base definition
+		using transformed template actuals.  
+	  Parser: PINT_TYPE and PBOOL_TYPE now return token param types
+		that act as *complete* types (concrete_type_ref) instead of 
+		just a plain type_base (representing base definition).
+		Greatly simplifies type-generation of params.  
+		(Slight shift in class hierarchies.)
+	  Actually added members and methods to entity::unroll_context:
+		TODO: make use of formals/actuals mapping in 
+		meta parameter substitution for type canonicalization.  
+	  More TODO notes in "Object/art_object_value_reference.tcc".
+	  TODO: make sure grammar file semantic actions actually make 
+		use of relaxed template arguments (see instance_id_item)
+	  Nearly EVERY artobj unroll test updated to reflect the 
+		size change of type-reference objects.  
+	  Minor aesthetics, using construction-style (not assignment)
+		for iterator initializations in several source files.  
+	  parser::concrete_type_ref class definition relocated to
+		"AST/art_parser_type_base.h"
+	  Next (few) revisions: cleanup and commit conditional patched code.  
+
+
+2005-06-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-04:
+	  Cleaned up COUNT_TEMPLATE_ARGS dependence (committed as if = 1)
+		as promised.
+	  TODO: Resume enabling template_actuals use.  
+
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-03:
+	  Replaced excl_ptr<param_expr_list> with count_ptr<...>, 
+		affecting the expr, definition, type_ref Object modules.  
+		(also template_formals_manager, and AST/art_parser_base.cc")
+	  Also took the time to replace iterator initializations
+		with copy-constructors in "Object/art_object_expr.cc".
+	  Code is transiently a mess with conditionals all over, 
+		dependent on COUNT_TEPMLATE_ARGS in 
+		"Object/art_object_definnition_base.h".  
+	  Next micro-revision will be a clean up.  
+
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-02:
+	  Got sidetracked in this revision:
+		Figured out how to automatically generate unique identifiers
+		using cpp, after discovering macro tricks on the web.  
+		See corresponding "src/util/ChangeLog" entry for details.
+	  Currently USE_NEW_TEMPLATE_ACTUALS is disabled in
+		"Object/art_object_type_ref_base.h".  This revision did
+		partially fill-in-the-blanks w.r.t. the 'template_actuals'
+		class.  Needs more massaging before will compile.  
+	  Outlined: new type-checking primitives, two flavors:
+		relaxed (collectible), and strict (connectible) equivalence.
+	  TODO: replace excl_ptr<param_expr_list> with count_ptr<...>
+		This will enable us to switch between old-wrong and
+		new template-actuals implementation for the duration
+		of this branch.  
+
+
 2005-06-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-01:
+	  Once and for all, we're going to do template actuals the CORRECT
+		way, using strict and relaxed template arguments.  
+		This has been waiting in the wings for the last several
+		months... now its time has come.  
+	  Rise my young apprentice... and henceforth shalt thou be known
+		as... Darth Template.  
+	  Once this branch matures, we will use it properly unroll 
+		complete definitions (types) and keep per-definition
+		repositories of substructure maps.  
+	  Added (disabled) "Object/art_object_template_actuals.{h,cc}".
+
 
 	* ARTXX-00-01-04-main-00-48-connect-01-06:
 	  Minor cosmetic re-organization of files in preparation for 

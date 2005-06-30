@@ -1,0 +1,55 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302ec0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	61
+	3	 0x4302ee0	proctpdf	0	61	113
+	4	 0x4302f50	proctprf	0	113	133
+	5	 0x4302f70	procdefn	0	133	209
+	6	 0x4302e74	pintcoll	0	209	246
+	7	 0x4303000	pintinst	0	246	262
+	8	 0x4303014	pintcoll	0	262	299
+	9	 0x4303060	pintinst	0	299	315
+	10	 0x4303070	dprmlst_	0	315	335
+	11	 0x371c028	cnstpi__	0	335	347
+	12	 0x4303080	spimref_	0	347	367
+	13	 0x43030b4	pintcoll	0	367	404
+	14	 0x4303100	pintinst	0	404	420
+	15	 0x4303110	proctpdf	0	420	472
+	16	 0x4303180	proctprf	0	472	492
+	17	 0x43031a0	dprmlst_	0	492	512
+	18	 0x43031b0	spimref_	0	512	532
+	19	 0x43031e4	pintcoll	0	532	569
+	20	 0x4303230	pintinst	0	569	585
+	21	 0x371c038	cnstpi__	0	585	597
+
+In module created from: ./011.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  2 typedefs
+  Definitions:
+    array2d = process-definition (declared) array2d<
+      pint<> N
+      pint<> M
+      >(
+      )
+      In definition "array2d", we have: {
+        M = pint<> M
+        N = pint<> N
+      }
+
+  Typedefs:
+    col = process-definition-alias: col<
+      pint<> K
+      >
+      = array2d<pint-inst-ref ::col::K, 1>
+    row = process-definition-alias: row<
+      pint<> Q
+      >
+      = array2d<1, pint-inst-ref ::row::Q>
+}
+

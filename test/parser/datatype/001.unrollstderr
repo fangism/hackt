@@ -1,0 +1,29 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302180	module__	0	0	37
+	2	 0x4300144	namespc_	0	37	65
+	3	 0x43021a4	dintcoll	0	65	103
+	4	 0x4302200	datainst	0	103	123
+	5	 0x4302220	datatprf	0	123	143
+	6	 0x4302240	datadefn	0	143	195
+	7	 0x43022e0	dprmlst_	0	195	211
+	8	 0x377e028	cnstpi__	0	211	223
+	9	 0x43022f4	dboolcol	0	223	257
+	10	 0x4302350	datainst	0	257	277
+	11	 0x4302370	datatprf	0	277	297
+	12	 0x4302390	datadefn	0	297	350
+
+In module created from: ./001.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    x = int<32>^0 x (instantiated) = ::x
+    y = bool^0 y (instantiated) = ::y
+}
+

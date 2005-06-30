@@ -1,15 +1,16 @@
 /**
-	\file "art_object_expr.h"
+	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.19 2005/01/28 19:58:41 fang Exp $
+	$Id: art_object_expr.h,v 1.29.4.1 2005/06/30 23:22:18 fang Exp $
  */
 
-#ifndef __ART_OBJECT_EXPR_H__
-#define __ART_OBJECT_EXPR_H__
+#ifndef __OBJECT_ART_OBJECT_EXPR_H__
+#define __OBJECT_ART_OBJECT_EXPR_H__
 
-#include "art_object_expr_const.h"	// include "art_object_expr_base.h"
-#include "qmap.h"
-#include "operators.h"
+#include "Object/art_object_expr_const.h"	// include "art_object_expr_base.h"
+#include "util/memory/count_ptr.h"
+#include "util/qmap.h"
+#include "util/operators.h"
 
 //=============================================================================
 // note: need some way of hashing expression? 
@@ -26,23 +27,24 @@
 //=============================================================================
 namespace ART {
 namespace entity {
-
+class pint_range;
 USING_LIST
 using std::string;
 using std::ostream;
 USING_UTIL_OPERATIONS
-using QMAP_NAMESPACE::qmap;
-using namespace MULTIKEY_NAMESPACE;
+using util::qmap;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**
 	Generalized list of parameter expressions, can be dynamic.  
  */
 class dynamic_param_expr_list : public param_expr_list, 
-		public list<count_ptr<const param_expr> > {
+		public vector<count_ptr<const param_expr> > {
 friend class const_param_expr_list;
+	typedef	dynamic_param_expr_list			this_type;
 protected:
-	typedef	list<count_ptr<const param_expr> >	parent_type;
+	typedef	vector<count_ptr<const param_expr> >	parent_type;
 public:
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
@@ -66,64 +68,50 @@ public:
 	excl_ptr<param_expr_list>
 	make_copy(void) const;
 
+	count_ptr<const param_expr>
+	operator [] (const size_t) const;
+
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
 
-#if 0
-	list<const param_expr&>
-	get_const_ref_list(void) const;
-#else
 	bool
 	may_be_equivalent(const param_expr_list& p) const;
 
 	bool
 	must_be_equivalent(const param_expr_list& p) const;
-#endif
 
 	bool
 	is_static_constant(void) const;
 
 	bool
 	is_loop_independent(void) const;
-#if 0
-private:
-	bool
-	may_be_equivalent_const(const const_param_expr_list& p) const;
 
-	bool
-	may_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_const(const const_param_expr_list& p) const;
-
-	bool
-	must_be_equivalent_dynamic(const dynamic_param_expr_list& p) const;
-#endif
-	excl_ptr<const_param_expr_list>
+	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const;
 public:
-	PERSISTENT_METHODS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_param_expr_list
 
 //-----------------------------------------------------------------------------
 /**
 	Elements of this index list are no necessarily static constants.  
  */
-class dynamic_index_list : public index_list, 
-		private list<count_ptr<index_expr> > {
+class dynamic_meta_index_list : public meta_index_list, 
+		private list<count_ptr<meta_index_expr> > {
+	typedef	dynamic_meta_index_list			this_type;
 protected:
-	typedef	list<count_ptr<index_expr> >	parent_type;
+	typedef	list<count_ptr<meta_index_expr> >	parent_type;
 public:
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
-	dynamic_index_list();
-	~dynamic_index_list();
+	dynamic_meta_index_list();
+	~dynamic_meta_index_list();
 
 	ostream&
 	what(ostream& o) const;
@@ -131,16 +119,13 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-	string
-	hash_string(void) const;
-
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::rbegin;
 	using parent_type::rend;
 
 	void
-	push_back(const count_ptr<index_expr>& i);
+	push_back(const count_ptr<meta_index_expr>& i);
 
 /** NOT THE SAME **/
 	size_t
@@ -169,11 +154,18 @@ public:
 
 #if 0
 	bool
-	resolve_multikey(excl_ptr<multikey_base<int> >& k) const;
+	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
 #endif
+
+	const_index_list
+	unroll_resolve(const unroll_context&) const;
+
+	bool
+	must_be_equivalent_indices(const meta_index_list& ) const;
+
 public:
-	PERSISTENT_METHODS
-};	// end class dynamic_index_list
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class dynamic_meta_index_list
 
 //=============================================================================
 /**
@@ -188,8 +180,9 @@ public:
 		is_loop_independent
 	also cache these results...?
  */
-class dynamic_range_list : public range_expr_list,
+class dynamic_meta_range_list : public meta_range_list,
 		public list<count_ptr<pint_range> > {
+	typedef	dynamic_meta_range_list			this_type;
 protected:
 	// list of pointers to pint_ranges?  or just copy construct?
 	// can't copy construct, is abstract
@@ -200,8 +193,9 @@ public:
 	typedef	list_type::reverse_iterator		reverse_iterator;
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
-	dynamic_range_list();
-virtual	~dynamic_range_list();
+	dynamic_meta_range_list();
+
+	~dynamic_meta_range_list();
 
 	ostream&
 	what(ostream& o) const;
@@ -216,19 +210,27 @@ virtual	~dynamic_range_list();
 	is_static_constant(void) const;
 
 	const_range_list
-	static_overlap(const range_expr_list& r) const;
+	static_overlap(const meta_range_list& r) const;
 		// false, will be empty
-	bool
+	good_bool
 	resolve_ranges(const_range_list& r) const;
+
+	good_bool
+	unroll_resolve(const_range_list&, const unroll_context&) const;
+
+	bool
+	must_be_formal_size_equivalent(const meta_range_list& ) const;
+
 public:
-	PERSISTENT_METHODS
-};	// end class dynamic_range_list
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class dynamic_meta_range_list
 
 //=============================================================================
 /**
 	Only possibilities, unary negation, bit-wise negation.  
  */
 class pint_unary_expr : public pint_expr {
+	typedef	pint_unary_expr			this_type;
 public:
 	typedef	pint_value_type		value_type;
 	typedef	char			op_type;
@@ -248,10 +250,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -279,22 +281,29 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_int(void) const;
+	static_constant_value(void) const;
 
 	bool
+	must_be_equivalent(const pint_expr& ) const;
+
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -303,6 +312,7 @@ public:
 	Character may be '~' or '!'.  
  */
 class pbool_unary_expr : public pbool_expr {
+	typedef	pbool_unary_expr		this_type;
 public:
 	typedef	pbool_value_type	value_type;
 	typedef	char			op_type;
@@ -320,10 +330,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -351,22 +361,29 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_bool(void) const;
+	static_constant_value(void) const;
 
 	bool
+	must_be_equivalent(const pbool_expr& ) const;
+
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pbool_unary_expr
 
 //-----------------------------------------------------------------------------
@@ -374,9 +391,11 @@ public:
 	Binary arithmetic expression accepts ints and returns an int.  
  */
 class arith_expr : public pint_expr {
+	typedef	arith_expr			this_type;
 public:
 	typedef	pint_value_type			arg_type;
 	typedef	pint_value_type			value_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 	typedef	binary_arithmetic_operation<value_type, arg_type>
 						op_type;
 	static const plus<value_type, arg_type>		adder;
@@ -395,8 +414,8 @@ private:
 	static void op_map_register(const char, const op_type* );
 	static size_t op_map_init(void);
 protected:
-	count_ptr<const pint_expr>	lx;
-	count_ptr<const pint_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 
 	/**
 		Safe to use a naked pointer, b/c/ refers to a static object.  
@@ -406,8 +425,8 @@ private:
 	arith_expr();
 public:
 	// change: const ptr& arguments
-	arith_expr(const count_ptr<const pint_expr>& l, const char o, 
-		const count_ptr<const pint_expr>& r);
+	arith_expr(const operand_ptr_type& l, const char o, 
+		const operand_ptr_type& r);
 
 	~arith_expr();
 
@@ -415,10 +434,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -449,22 +468,29 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_int(void) const;
+	static_constant_value(void) const;
 
 	bool
+	must_be_equivalent(const pint_expr& ) const;
+
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class arith_expr
 
 //-----------------------------------------------------------------------------
@@ -472,9 +498,11 @@ public:
 	Binary relational expression accepts ints and returns a bool.  
  */
 class relational_expr : public pbool_expr {
+	typedef	relational_expr			this_type;
 public:
 	typedef	pbool_value_type		value_type;
 	typedef	pint_value_type			arg_type;
+	typedef	count_ptr<const pint_expr>	operand_ptr_type;
 	typedef	binary_relational_operation<value_type, arg_type>
 							op_type;
 	static const equal_to<value_type, arg_type>	op_equal_to;
@@ -488,15 +516,17 @@ private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	qmap<string, const op_type*>	op_map_type;
 	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+public:
 	static const op_map_type		op_map;
+private:
 	static const reverse_op_map_type	reverse_op_map;
 	static const size_t			op_map_size;
 	static void op_map_register(const string&, const op_type* );
 	static size_t op_map_init(void);
 
 protected:
-	count_ptr<const pint_expr>	lx;
-	count_ptr<const pint_expr>	rx;
+	operand_ptr_type		lx;
+	operand_ptr_type		rx;
 	/**
 		Points to the operator functor.  
 	 */
@@ -505,8 +535,10 @@ protected:
 private:
 	relational_expr();
 public:
-	relational_expr(const count_ptr<const pint_expr>& l, const string& o, 
-		const count_ptr<const pint_expr>& r);
+	relational_expr(const operand_ptr_type& l, const string& o, 
+		const operand_ptr_type& r);
+	relational_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
 
 	~relational_expr();
 
@@ -514,10 +546,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -548,22 +580,29 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_bool(void) const;
+	static_constant_value(void) const;
 
 	bool
+	must_be_equivalent(const pbool_expr& ) const;
+
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class relational_expr
 
 //-----------------------------------------------------------------------------
@@ -571,9 +610,11 @@ public:
 	Binary logical expression accepts bools and returns a bool.  
  */
 class logical_expr : public pbool_expr {
+	typedef	logical_expr				this_type;
 public:
 	typedef	pbool_value_type			value_type;
 	typedef	pbool_value_type			arg_type;
+	typedef	count_ptr<const pbool_expr>		operand_ptr_type;
 	typedef	binary_logical_operation<value_type, arg_type>	op_type;
 	static const util::logical_and<value_type, arg_type>	op_and;
 	static const util::logical_or<value_type, arg_type>	op_or;
@@ -582,7 +623,9 @@ private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	qmap<string, const op_type*>	op_map_type;
 	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+public:
 	static const op_map_type		op_map;
+private:
 	static const reverse_op_map_type	reverse_op_map;
 	static const size_t			op_map_size;
 	static void op_map_register(const string&, const op_type* );
@@ -599,8 +642,10 @@ protected:
 private:
 	logical_expr();
 public:
-	logical_expr(const count_ptr<const pbool_expr>& l, const string& o, 
-		const count_ptr<const pbool_expr>& r);
+	logical_expr(const operand_ptr_type& l, const string& o, 
+		const operand_ptr_type& r);
+	logical_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
 
 	~logical_expr();
 
@@ -608,10 +653,10 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump_brief(ostream& o) const;
 
-	string
-	hash_string(void) const;
+	ostream&
+	dump(ostream& o) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -642,22 +687,29 @@ public:
 	is_unconditional(void) const;
 
 	value_type
-	static_constant_bool(void) const;
+	static_constant_value(void) const;
 
 	bool
+	must_be_equivalent(const pbool_expr& ) const;
+
+	good_bool
 	resolve_value(value_type& i) const;
+
+	good_bool
+	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
 	const_index_list
 	resolve_dimensions(void) const;
 
-	bool
+	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class logical_expr
 
 //=============================================================================
@@ -666,7 +718,9 @@ public:
 	Must contain pint_expr's.
 	Derive from object or param_expr?
  */
-class pint_range : public range_expr {
+class pint_range : public meta_range_expr {
+	typedef	meta_range_expr				parent_type;
+	typedef	pint_range				this_type;
 protected:
 	// need to be const, or modifiable?
 	count_ptr<const pint_expr>	lower;
@@ -681,7 +735,9 @@ public:
 	pint_range(const count_ptr<const pint_expr>& l,
 		const count_ptr<const pint_expr>& u);
 
+#if 0
 	pint_range(const pint_range& pr);
+#endif
 
 	~pint_range();
 
@@ -692,9 +748,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
-
-	string
-	hash_string(void) const;		// unused?
 
 	bool
 	may_be_initialized(void) const {
@@ -724,16 +777,23 @@ public:
 	const_range
 	static_constant_range(void) const;
 
-	bool
+	good_bool
 	resolve_range(const_range& r) const;
 
+	good_bool
+	unroll_resolve_range(const unroll_context&, const_range& r) const;
+
+	bool
+	must_be_formal_size_equivalent(const meta_range_expr& ) const;
+
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 };	// end class pint_range
 
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __ART_OBJECT_EXPR_H__
+#endif	// __OBJECT_ART_OBJECT_EXPR_H__
 

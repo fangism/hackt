@@ -1,0 +1,41 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303070	module__	0	0	45
+	2	 0x4300144	namespc_	0	45	81
+	3	 0x4303094	dintcoll	0	81	120
+	4	 0x43030f0	datainst	0	120	140
+	5	 0x4303110	datatprf	0	140	160
+	6	 0x4303130	datadefn	0	160	212
+	7	 0x43031d0	dprmlst_	0	212	228
+	8	 0x371b028	cnstpi__	0	228	240
+	9	 0x43031e4	dintcoll	0	240	279
+	10	 0x4303240	datainst	0	279	299
+	11	 0x4303260	datatprf	0	299	319
+	12	 0x4303280	dprmlst_	0	319	335
+	13	 0x4303294	dintcoll	0	335	374
+	14	 0x43032f0	datainst	0	374	394
+	15	 0x4303310	datatprf	0	394	414
+	16	 0x4303330	dprmlst_	0	414	430
+	17	 0x371b038	cnstpi__	0	430	442
+	18	 0x4303344	dintcoll	0	442	482
+	19	 0x43033a0	datainst	0	482	502
+	20	 0x43033c0	datatprf	0	502	522
+	21	 0x43033e0	dprmlst_	0	522	538
+	22	 0x371b048	cnstpi__	0	538	550
+
+In module created from: ./002.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    fe = int<32>^0 fe (instantiated) = ::fe
+    fi = int<32>^0 fi (instantiated) = ::fi
+    fo = int<13>^0 fo (instantiated) = ::fo
+    fum = int<128>^0 fum (instantiated) = ::fum
+}
+

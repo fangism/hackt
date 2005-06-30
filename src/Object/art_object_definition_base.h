@@ -1,21 +1,27 @@
 /**
-	\file "art_object_definition_base.h"
+	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.9 2005/01/28 19:58:40 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23.2.1 2005/06/30 23:22:15 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_DEFINITION_BASE_H__
-#define	__ART_OBJECT_DEFINITION_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
+#define	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
 
-#include "STL/list.h"
+#include <vector>
+#include <string>		// needed by gcc-3.2 :S
 
-#include "macros.h"
-#include "art_object_base.h"
+#include "util/macros.h"
+#include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
 
-#include "persistent.h"		// for persistent object interface
-#include "hash_qmap.h"		// need complete definition
-#include "memory/pointer_classes.h"
-				// need complete definition (never_ptr members)
+#include "util/boolean_types.h"
+#include "util/persistent.h"		// for persistent object interface
+#include "util/hash_qmap.h"		// need complete definition
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
+#include "util/STL/vector_fwd.h"
+
+#include "Object/art_object_template_formals_manager.h"
 
 namespace ART {
 // forward declarations from outside namespaces
@@ -28,20 +34,24 @@ namespace parser {
 using parser::token_identifier;
 
 //=============================================================================
-/**
-	The namespace of objects that will be returned by the type-checker, 
-	and includes the various hierarchical symbol tables in their 
-	respective scopes.  
- */
 namespace entity {
-//=============================================================================
-USING_LIST
+class param_expr;
+class param_expr_list;
+class scopespace;
+class instance_collection_base;
+class fundamental_type_reference;
+class template_actuals;
 using std::string;
 using std::istream;
+using std::vector;
+using util::bad_bool;
+using util::good_bool;
+using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
-using namespace util::memory;
-using HASH_QMAP_NAMESPACE::hash_qmap;
+using util::memory::count_ptr;
+using util::memory::never_ptr;
+using util::memory::excl_ptr;
 
 //=============================================================================
 /**
@@ -50,46 +60,28 @@ using HASH_QMAP_NAMESPACE::hash_qmap;
 	name-resolving functionality.  
 	All definitions are potentially templatable.  
  */
-class definition_base : virtual public object, virtual public persistent {
+class definition_base :
+		virtual public persistent, 
+		public object {
 public:
-	/**
-		Table of template formals.  
-		Needs to be ordered for argument checking, 
-		and have fast lookup, thus hashlist.  
-		Remember: template formals are accessible to the rest 
-		of the body and to the port formals as well.  
-		For now, the contained type is datatype_instance_collection
-			which is generalized to include the paramater types
-			pbool and pint, not to be confused with the data 
-			types bool and int.  
-		In the far future, prepare to extend template formals to 
-			include abstract types of processes, channels and 
-			data types in template argument list.  
-			*shudder*
-			It'd be nice to be able to swap instance arguments
-			that preserve specified interfaces...
-		May need hashqlist, for const-queryable hash structure!!!
-	**/
-	typedef	never_ptr<const param_instance_collection>
+	typedef	template_formals_manager::template_formals_value_type
 					template_formals_value_type;
-	// double-maintenance...
-	typedef	hash_qmap<string, template_formals_value_type>
+	typedef	template_formals_manager::template_formals_map_type
 					template_formals_map_type;
-	typedef	list<template_formals_value_type>
+	typedef	template_formals_manager::template_formals_list_type
 					template_formals_list_type;
+
 	/** map from param_instance_collection to actual value passed */
 	typedef	hash_qmap<string, count_ptr<const param_expr> >
 					template_actuals_map_type;
+	typedef	count_ptr<fundamental_type_reference>
+					type_ref_ptr_type;
+
+	typedef	template_actuals	make_type_ptr_type;
+	typedef	template_actuals	make_type_arg_type;
 
 protected:
-//	const string			key;
-//	const never_ptr<const name_space>	parent;
-
-protected:
-	/** subset of used_id_map, must be coherent with list */
-	template_formals_map_type	template_formals_map;
-	/** subset of used_id_map, must be coherent with map */
-	template_formals_list_type	template_formals_list;
+	template_formals_manager	template_formals;
 
 	/**
 		Whether or not this definition is complete or only declared.  
@@ -97,8 +89,9 @@ protected:
 		to allow self-recursive template definitions.  
 	 */
 	bool				defined;
-public:
+protected:
 	definition_base();
+public:
 
 virtual	~definition_base();
 
@@ -113,8 +106,6 @@ virtual	ostream&
 
 	ostream&
 	pair_dump(ostream& o) const;
-
-//	bool dump_cerr(void) const;		// historical artifact
 
 virtual	const string&
 	get_key(void) const = 0;
@@ -135,6 +126,9 @@ virtual	never_ptr<const scopespace>
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;
 
+	size_t
+	lookup_template_formal_position(const string& id) const;
+
 /** should be pure virtual, but let's default to NULL */
 virtual	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
@@ -142,7 +136,8 @@ virtual	never_ptr<const instance_collection_base>
 virtual	never_ptr<const object>
 	lookup_object_here(const string& id) const;
 
-virtual	bool
+	// incidentally, this is never overridden, need not be virtual
+virtual	good_bool
 	check_null_template_argument(void) const;
 
 
@@ -157,27 +152,28 @@ protected:
 		const never_ptr<const definition_base> d) const;
 
 protected:
-	bool
-	certify_template_arguments(
-		const never_ptr<dynamic_param_expr_list> ta) const;
+	good_bool
+	certify_template_arguments(template_actuals& ta) const;
 
 public:
-	excl_ptr<dynamic_param_expr_list>
+	make_type_ptr_type
 	make_default_template_arguments(void) const;
 
 	/** by default returns false */
-virtual	bool
-	certify_port_actuals(const object_list& ol) const;
+virtual	good_bool
+	certify_port_actuals(const checked_refs_type&) const;
 
 public:
+#define	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO				\
+	definition_base::type_ref_ptr_type				\
+	make_fundamental_type_reference(make_type_arg_type ta) const
+
 // proposing to replace set_context_fundamental_type with the following:
-virtual count_ptr<const fundamental_type_reference>
-	make_fundamental_type_reference(
-		excl_ptr<dynamic_param_expr_list>& ta) const = 0;
+virtual MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
-	count_ptr<const fundamental_type_reference>
+	definition_base::type_ref_ptr_type
 	make_fundamental_type_reference(void) const;
 // why virtual? special cases for built-in types?
 
@@ -198,9 +194,9 @@ virtual	string
 	get_qualified_name(void) const;
 
 /** definition signature comparison, true if equal */
-virtual	bool
+virtual	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
-		{ return false; }	// temporary, should be pure
+		{ return good_bool(false); }	// temporary, should be pure
 
 /**
 	f should be const and owned -- pointer type conflict...  
@@ -209,32 +205,24 @@ virtual	bool
 		to a different interface!
  */
 virtual	never_ptr<const instance_collection_base>
-	add_template_formal(const never_ptr<instantiation_statement> f, 
+	add_strict_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
+
+virtual	never_ptr<const instance_collection_base>
+	add_relaxed_template_formal(
+		const never_ptr<instantiation_statement_base> f, 
+		const token_identifier& id);
+
+#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
+	never_ptr<const instance_collection_base>			\
+	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
+		const token_identifier&)
 
 /**
 	Really, only some definitions should have ports...
  */
-virtual	never_ptr<const instance_collection_base>
-	add_port_formal(const never_ptr<instantiation_statement> f, 
-		const token_identifier& id);
-
-#if 0
-virtual	bool
-	exclude_object(const used_id_map_type::value_type& i) const;
-#endif
-
-private:
-	void
-	collect_template_formal_pointers(persistent_object_manager& m) const;
-
-	void
-	write_object_template_formals(const persistent_object_manager& m, 
-		ostream&) const;
-
-	void
-	load_object_template_formals(persistent_object_manager& m, 
-		istream&);
+virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
 protected:
 	void
@@ -248,14 +236,19 @@ protected:
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 public:
 	static const never_ptr<const definition_base>	null;
 };	// end class definition_base
 
 //=============================================================================
-/// actual values passed
+/**
+	actual values passed
+	This needs to be updated to include a pair of paramater lists.
+	For strict and relaxed template arguments.  
+	(Although an argument is an argument.)
+ */
 typedef	definition_base::template_actuals_map_type
 		template_actuals_map_type;
 
@@ -263,5 +256,5 @@ typedef	definition_base::template_actuals_map_type
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_DEFINITION_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_DEFINITION_BASE_H__
 

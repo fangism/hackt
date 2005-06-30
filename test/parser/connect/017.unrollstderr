@@ -1,0 +1,54 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43030f0	module__	0	0	45
+	2	 0x4300144	namespc_	0	45	77
+	3	 0x4303114	proccoll	1	77	190
+	4	 0x4303160	procinst	0	190	210
+	5	 0x4303180	proctprf	0	210	230
+	6	 0x43031a0	procdefn	0	230	279
+	7	 0x4303230	crnglst_	0	279	299
+	8	 0x4303240	proctprf	0	299	319
+	9	 0x4303264	proccoll	0	319	367
+	10	 0x43032c0	procinst	0	367	387
+	11	 0x43032e0	proctprf	0	387	407
+	12	 0x4303300	proctprf	0	407	427
+	13	 0x4303320	prcalias	0	427	447
+	14	 0x4303330	sprcmref	0	447	467
+	15	 0x4303360	sprcmref	0	467	487
+	16	 0x4303390	cindlst_	0	487	503
+	17	 0x37a4028	cnstpi__	0	503	515
+	18	 0x43033a0	prcalias	0	515	535
+	19	 0x43033b0	sprcmref	0	535	555
+	20	 0x43033e0	cindlst_	0	555	571
+	21	 0x37a4038	cnstpi__	0	571	583
+	22	 0x43033f0	sprcmref	0	583	603
+
+In module created from: ./017.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    barf = process-definition (declared) barf(
+      )
+      In definition "barf", we have: {
+      }
+
+  Instances:
+    bag = process barf<>^0 bag (instantiated) = ::sack[4]
+    sack = process barf<>^1 sack with indices: {
+      [0..4]
+    }
+      unrolled indices: {
+        0 = ::bag
+        1 = ::sack[1]
+        2 = ::sack[2]
+        3 = ::sack[3]
+        4 = ::sack[0]
+      }
+}
+

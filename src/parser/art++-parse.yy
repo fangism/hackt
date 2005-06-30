@@ -1,5 +1,5 @@
 /**
-	\file "art++-parse.yy"
+	\file "parser/art++-parse.yy"
 	Yacc-generated parser source for the ART++ language.  
 
 	note: this is not the same language as that found in lib/art.cy
@@ -7,25 +7,27 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.11 2005/01/28 19:58:45 fang Exp $
+	$Id: art++-parse.yy,v 1.24.2.1 2005/06/30 23:22:28 fang Exp $
  */
 
 %{
 #include <iostream>
 
-#include "art_parser.h"			// should be first
-#include "art++-parse.output.h"		// auto-generated state strings! :)
+#include "AST/art_parser.h"		// should be first
+#include "parser/art++-parse.output.h"	// auto-generated state strings! :)
+#include "parser/art++-parse-options.h"
+#include "util/using_ostream.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
 #if defined (__GNUC__) && (3 <= __GNUC__)
 #define __attribute__(arglist)		/* empty */
 #endif
 
-using namespace std;
+using namespace ART::lexer;
 using namespace ART::parser;
 
 #if YYBISON
-#include "memory/pointer_classes.h"
+#include "util/memory/excl_ptr.h"
 /**
 	Work-around for bison.
 	Bison doesn't give public access to yyval, so we are forced to
@@ -37,10 +39,12 @@ using namespace ART::parser;
 util::memory::excl_ptr<root_body> AST_root;
 #endif
 
-/*
-useful typedefs are defined in art_parser.h
-macros: d = delimiter, n = node, b = begin, e = end, l = list
-*/
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+
+#define	DELETE_TOKEN(tok)		delete tok
+
+#define	APPEND_LIST(list, delim, item)					\
+	DELETE_TOKEN(delim); list->push_back(item)
 
 /**
 	Bogus namespace for documenting yacc's internal tables:
@@ -134,12 +138,20 @@ extern const char* const yyname[];
  */
 extern const char* const yyrule[];
 
-};	// end namespace yacc
+}	// end namespace yacc
 
 %}
 
-%union {
 /**
+	NOTE: to use the following union definition, which will be
+	summarized in "art++-parse-prefix.h" (generated), 
+	you will need to include "art_parser_fwd.h" first
+	(with using namespace ART::parser;) to provide forward
+	declarations of the union-members' types.  
+ */
+%union {
+/***
+	THIS COMMENT IS OBSOLETE, but is kept here for historical reasons.
 	Use this universal symbol type for both lexer and parser.  
 	The reason we stick to a single abstract type as opposed to 
 	a union is so that in error handling, we don't have to keep track
@@ -152,9 +164,10 @@ extern const char* const yyrule[];
 	sanity type checks in the constructors for the various classes.  
 	This keeps the art.yy grammar file as clean as possible.  
 	Let the constructors bear the burden.  
- */
-	ART::parser::node*	n;
+***/
+
 /***
+	THIS COMMENT IS OBSOLETE, but is kept here for historical reasons.
 	It is not safe to refer to the node* n member of the union
 	even if all of the below members of the union are 
 	somehow derived from node, because their virtual tables differ.  
@@ -165,9 +178,11 @@ extern const char* const yyrule[];
 	This is done using yacc-union-type.awk.  
 ***/
 	terminal*		_terminal;
+	node_position*		_node_position;
+	keyword_position*	_keyword_position;
 	token_keyword*		_token_keyword;
-	token_string*		_token_string;
-	token_char*		_token_char;
+/*	token_string*		_token_string;	*/
+/*	token_char*		_token_char;	*/
 	token_int*		_token_int;
 	token_bool*		_token_bool;
 	token_float*		_token_float;
@@ -195,11 +210,13 @@ extern const char* const yyrule[];
 	process_def*		_process_def;
 	type_base*		_type_base;
 	concrete_type_ref*	_concrete_type_ref;
+	generic_type_ref*	_generic_type_ref;
 	type_id*		_type_id;
 	port_formal_decl_list*	_port_formal_decl_list;
 	port_formal_decl*	_port_formal_decl;
 	port_formal_id_list*	_port_formal_id_list;
 	port_formal_id*		_port_formal_id;
+	template_formal_decl_list_pair*	_template_formal_decl_list_pair;
 	template_formal_decl_list*	_template_formal_decl_list;
 	template_formal_decl*	_template_formal_decl;
 	template_formal_id_list*	_template_formal_id_list;
@@ -220,7 +237,7 @@ extern const char* const yyrule[];
 	data_param_decl_list*	_data_param_decl_list;
 	instance_management*	_instance_management;
 	instance_base*		_instance_base;
-	instance_array*		_instance_array;
+	ART::parser::instance_array*	_instance_array;
 	instance_declaration*	_instance_declaration;
 	instance_id_list*	_instance_id_list;
 	definition_body*	_definition_body;
@@ -231,11 +248,12 @@ extern const char* const yyrule[];
 	instance_connection*	_instance_connection;
 	connection_statement*	_connection_statement;
 	statement*		_statement;
-	instance_alias*		_instance_alias;
+	ART::parser::instance_alias*	_instance_alias;
 	alias_list*		_alias_list;
 
 	expr*			_expr;
-	paren_expr*		_paren_expr;
+	inst_ref_expr*		_inst_ref_expr;
+/*	paren_expr*		_paren_expr;	*/
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
@@ -250,6 +268,8 @@ extern const char* const yyrule[];
 	assign_stmt*		_assign_stmt;
 	incdec_stmt*		_incdec_stmt;
 	expr_list*		_expr_list;
+	inst_ref_expr_list*	_inst_ref_expr_list;
+	template_argument_list_pair*	_template_argument_list_pair;
 /** not used
 	template_argument_list*	_template_argument_list;
 	connection_argument_list*	_connection_argument_list;
@@ -260,6 +280,8 @@ extern const char* const yyrule[];
 	array_concatenation*	_array_concatenation;
 	loop_concatenation*	_loop_concatenation;
 	array_construction*	_array_construction;
+	type_completion_statement*	_type_completion_statement;
+	type_completion_connection_statement*	_type_completion_connection_statement;
 
 	CHP::body*		_chp_body;
 	CHP::stmt_list*		_chp_stmt_list;
@@ -278,8 +300,8 @@ extern const char* const yyrule[];
 	CHP::communication*	_chp_communication;
 	CHP::send*		_chp_send;
 	CHP::receive*		_chp_receive;
-	CHP::assignment*	_chp_assignment;
-	CHP::incdec_stmt*	_chp_incdec_stmt;
+	CHP::binary_assignment*	_chp_binary_assignment;
+	CHP::bool_assignment*	_chp_bool_assignment;
 
 	HSE::body*		_hse_body;
 	HSE::statement*		_hse_stmt;
@@ -316,17 +338,21 @@ extern	int at_eof(void);		// from "art++-lex.ll"
 }
 using ART::lexer::at_eof;
 
-extern "C" {
-	int yyparse(void);		// parser routine to call
-	void yyerror(const char* msg);	// ancient compiler rejects
-//	void yyerror(char* msg);	// replace with this if necessary
-}
+static void yyerror(const char* msg);	// ancient compiler rejects
 
 /* automatically generated function to resolve parser symbol type
 	on the yy value stack, base on yy state stack transitions
  */
-extern	node* yy_union_resolve(const YYSTYPE& u, const short i, const short j);
-extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp, 
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
+		const YYSTYPE yylval);
 %}
 
 /*
@@ -365,12 +391,16 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_char>	BANG QUERY
 %token	<_token_char>	TILDE AND PIPE XOR
 */
-/* change these to _token_char */
-%type	<_token_char>	'{' '}' '[' ']' '(' ')' '<' '>'
-%type	<_token_char>	',' '.' ';' ':'
-%type	<_token_char>	'=' '+' '-' '*' '/' '%'
-%type	<_token_char>	'!' '?' '~' '&' '|' '^'
-%type	<_token_char>	'#'
+/* change these to _node_position (was _token_char) */
+%type	<_node_position>	'{' '}' '[' ']' '(' ')'
+%type	<_node_position>	'<' '>'
+/* glue tokens: should never need their positions, consider no return type */
+%type	<_node_position>	',' '.' ';'
+%type	<_node_position>	':' '=' '#'
+	/* used as template list wrappers and as comparators */
+%type	<_node_position>	'+' '-' '*' '/' '%'
+%type	<_node_position>	'~' '&' '|' '^'
+%type	<_node_position>	'!' '?'
 
 /*
 	the following tokens are defined below because they consist of
@@ -382,27 +412,33 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %token	<_token_int>		INT
 %token	<_token_quoted_string>	STRING
 
-/* _token_string */
-%token	<_token_string>		LE GE EQUAL NOTEQUAL
-%token	<_token_string>		THICKBAR SCOPE RANGE
-%token	<_token_string>		IMPLIES RARROW
-%token	<_token_string>		BEGINLOOP BEGINPROB ENDPROB
-%token	<_token_string>		DEFINEOP
-%token	<_token_string>		LOGICAL_AND LOGICAL_OR
-%token	<_token_string>		INSERT EXTRACT
-%token	<_token_string>		PLUSPLUS MINUSMINUS
+/* range and scope separators should never need position information... */
+%token	<_node_position>	SCOPE RANGE
+%token	<_node_position>	THICKBAR
+%token	<_node_position>	BEGINLOOP BEGINPROB ENDPROB
+%token	<_node_position>	DEFINEOP
 
-/* _token_keyword */
-%token	<_token_keyword>	NAMESPACE
-%token	<_token_keyword>	OPEN AS
-%token	<_token_keyword>	CHP_LANG HSE_LANG PRS_LANG
-%token	<_token_keyword>	SKIP LOG
-%token	<_token_keyword>	DEFINE DEFPROC DEFCHAN DEFTYPE
-%token	<_token_keyword>	TYPEDEF
-%token	<_token_keyword>	SET GET SEND RECV
-%token	<_token_keyword>	CHANNEL
-%token	<_token_keyword>	TEMPLATE
-%token	<_token_keyword>	ENUM
+/* _token_string */
+%token	<_node_position>	LE GE EQUAL NOTEQUAL
+%token	<_node_position>	IMPLIES RARROW
+%token	<_node_position>	LOGICAL_AND LOGICAL_OR
+%token	<_node_position>	INSERT EXTRACT
+%token	<_node_position>	PLUSPLUS MINUSMINUS
+%token	<_node_position>	ASSIGN
+
+/* _token_keyword: covert most of these to _keyword_position */
+%token	<_keyword_position>	NAMESPACE
+%token	<_keyword_position>	OPEN AS
+%token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG
+%token	<_keyword_position>	SKIP LOG
+%token	<_keyword_position>	DEFINE DEFPROC DEFCHAN DEFTYPE
+%token	<_keyword_position>	TYPEDEF
+%token	<_keyword_position>	SET GET SEND RECV
+%token	<_keyword_position>	CHANNEL
+%token	<_keyword_position>	TEMPLATE
+%token	<_keyword_position>	ENUM
+
+/* linkage modifiers */
 %token	<_token_keyword>	EXTERN STATIC EXPORT
 
 %token	<_token_else>		ELSE
@@ -432,13 +468,14 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_typedef_alias>	type_alias
 %type	<_definition>	definition
 %type	<_process_def>	defproc
-%type	<_token_keyword>	def_or_proc
+%type	<_keyword_position>	def_or_proc
 %type	<_prototype>	prototype_declaration
 %type	<_process_prototype>	declare_proc_proto
 %type	<_user_data_type_prototype>	declare_datatype_proto
 %type	<_user_chan_type_prototype>	declare_chan_proto
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
-%type	<_template_formal_decl_list>	template_specification optional_template_specification
+%type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
+%type	<_template_formal_decl_list_pair>	template_specification optional_template_specification
 %type	<_template_formal_decl>	template_formal_decl
 %type	<_template_formal_id_list>	template_formal_id_list
 %type	<_template_formal_id>	template_formal_id
@@ -447,12 +484,13 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_port_formal_id_list>	port_formal_id_list
 %type	<_port_formal_id>	port_formal_id
 %type	<_concrete_type_ref>	physical_type_ref
-%type	<_concrete_type_ref>	data_type_ref
+%type	<_generic_type_ref>	generic_type_ref
+%type	<_concrete_type_ref>	data_type_ref base_data_type_ref
 %type	<_concrete_type_ref>	type_id
 /* %type	<_data_type_base>	base_param_type */
 %type	<_token_paramtype>	base_param_type
-/* %type	<n>	formal_id */
 %type	<_chan_type>	base_chan_type chan_or_port
+%type	<_node_position>	optional_chan_dir
 %type	<_data_type_ref_list>	data_type_ref_list_in_parens data_type_ref_list
 %type	<_token_datatype>	base_data_type
 %type	<_enum_prototype>	declare_enum
@@ -475,6 +513,8 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_instance_id_list>	instance_id_list
 %type	<_instance_base>	instance_id_item
 %type	<_connection_statement>	connection_statement
+%type	<_type_completion_statement>	instance_type_completion_statement
+%type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
 /* %type	<_instance_alias>	instance_alias	*/
 %type	<_alias_list>	rvalue_optional_alias_list
 %type	<_alias_list>	alias_list
@@ -482,9 +522,10 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
 %type	<_guarded_definition_body>	guarded_definition_body
 %type	<_language_body>	language_body
-%type	<_chp_stmt_list>	chp_body
+%type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
+%type	<_chp_stmt>	chp_body_or_skip
 %type	<_chp_loop>	chp_loop
 %type	<_chp_do_until>	chp_do_until
 %type	<_chp_selection>	chp_selection
@@ -494,11 +535,17 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_chp_det_selection>	chp_matched_det_guarded_command_list
 %type	<_chp_guarded_command>	chp_guarded_command
 %type	<_chp_else_clause>	chp_else_clause
-/* %type	<_chp_assignment>	chp_assignment */
+%type	<_chp_binary_assignment>	chp_binary_assignment
+%type	<_chp_bool_assignment>	chp_bool_assignment
 %type	<_chp_comm_list>	chp_comm_list
 %type	<_chp_communication>	chp_comm_action
 %type	<_chp_send>	chp_send
 %type	<_chp_receive>	chp_recv
+%type	<_expr>		chp_guard_expr
+%type	<_expr>		chp_unary_bool_expr chp_simple_bool_expr chp_unary_expr
+%type	<_expr>		chp_mult_expr chp_add_expr chp_add_expr_only
+%type	<_expr>		chp_paren_add_expr chp_shift_expr chp_relational_expr
+%type	<_expr>		chp_and_expr chp_xor_expr chp_or_expr chp_not_expr
 %type	<_hse_stmt_list>	hse_body
 %type	<_hse_stmt_list>	full_hse_body_item_list
 %type	<_hse_stmt>	full_hse_body_item hse_body_item
@@ -519,32 +566,32 @@ extern	node* yy_union_lookup(const YYSTYPE& u, const int c);
 %type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
 %type	<_expr> prs_not prs_and prs_or
 %type	<_expr> prs_and_loop prs_or_loop
-%type	<_token_string>	prs_arrow
-%type	<_token_char>	dir
+%type	<_node_position>	prs_arrow
+%type	<_node_position>	dir
 %type	<_expr>	paren_expr expr
 /* %type	<n>	primary_expr */
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
-%type	<_expr_list>	member_index_expr_list
+%type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
-%type	<_expr>	optional_member_index_expr
+%type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_expr> simple_expr
-%type	<_expr>	member_index_expr unary_expr
+%type	<_expr>	unary_expr
 %type	<_member_expr>	member_expr
 %type	<_index_expr>	index_expr
 %type	<_expr>	multiplicative_expr additive_expr
 %type	<_expr> shift_expr optional_shift_expr
 %type	<_expr>	relational_equality_expr and_expr
+%type	<_node_position>	relational_op
+%type	<_node_position>	muldiv_op
 %type	<_expr>	exclusive_or_expr inclusive_or_expr
 %type	<_expr>	logical_and_expr logical_or_expr
 /* %type	<_statement>	assignment_stmt */
-%type	<_assign_stmt>	binary_assignment
+/* %type	<_assign_stmt>	binary_assignment */
 %type	<_incdec_stmt>	unary_assignment
-/* %type	<n>	conditional_expr optional_expr_in_braces */
 %type	<_expr_list>	optional_template_arguments_in_angles
-/* %type	<_expr_list>	member_index_expr_list_in_angles */
-%type	<_expr_list>	member_index_expr_list_in_parens
+%type	<_template_argument_list_pair>	strict_relaxed_template_arguments
 %type	<_expr_list>	expr_list_in_parens expr_list
 /* %type	<_range_list>	optional_range_list_in_brackets */
 /* %type	<_range_list>	range_list_in_brackets */
@@ -586,12 +633,14 @@ top_root
 	: body
 	/* allow empty file */
 	| 
-		{ $$ = NULL; }
+		{ $$ = new root_body(); }
 	;
 
 body
-	: body body_item { $$ = root_body_append($1, NULL, $2); }
-	| body_item { $$ = new root_body($1); }
+	: body body_item
+		{ $$ = $1; $1->push_back($2); }
+	| body_item
+		{ $$ = new root_body($1); }
 	;
 
 body_item
@@ -610,14 +659,20 @@ namespace_item
 	;
 
 namespace_management
-	/* C++ style classes/namespaces require semicolon */
-	: NAMESPACE ID '{' top_root '}' ';'
-		{ $$ = new namespace_body($1, $2, $3, $4, $5, $6); }
+	/* C++ style classes require semicolon, but not afer namespace */
+	/* really the NAMESPACE and OPEN keyword tokens may be discarded */
+	: NAMESPACE ID '{' top_root '}'
+		{ if (!$4)
+			$4 = new root_body(NULL);
+		  WRAP_LIST($3, $4, $5);
+		  $$ = new namespace_body($1, $2, $4); }
 	/* or C++ style: using namespace blah; */
 	| OPEN namespace_id AS ID ';'
-		{ $$ = new using_namespace($1, $2, $3, $4, $5); }
+		{ $$ = new using_namespace($1, $2, $4);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); }
 	| OPEN namespace_id ';'
-		{ $$ = new using_namespace($1, $2, $3); }
+		{ $$ = new using_namespace($1, $2);
+		  DELETE_TOKEN($3); }
 	/* ever close namespace? */
 	;
 
@@ -646,14 +701,21 @@ prototype_declaration
 type_alias
 /* C-style typedef, but allowing templates */
 	: optional_template_specification TYPEDEF physical_type_ref ID ';'
-		{ $$ = new typedef_alias($1, $2, $3, $4, $5); }
+		{ $$ = new typedef_alias($1, $2, $3, $4);
+		  DELETE_TOKEN($5); }
 /*	other proposal, use {deftype,defchan,defproc} new<> = old<> */
 	;
 
 template_specification
 	: TEMPLATE template_formal_decl_list_in_angles
 		/* too damn lazy to keep around keyword... */
-		{ delete $1; $$ = $2; }
+		{ DELETE_TOKEN($1);
+		  $$ = new template_formal_decl_list_pair($2, NULL); }
+	| TEMPLATE template_formal_decl_list_optional_in_angles
+	  template_formal_decl_list_in_angles
+		/* second set of formals is for relaxed parameters */
+		{ DELETE_TOKEN($1);
+		  $$ = new template_formal_decl_list_pair($2, $3); }
 	;
 
 optional_template_specification
@@ -682,7 +744,8 @@ def_or_proc
 declare_proc_proto
 	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens ';'
-		{ $$ = new process_prototype($1, $2, $3, $4, $5); }
+		{ $$ = new process_prototype($1, $2, $3, $4);
+		  DELETE_TOKEN($5); }
 	;
 
 defproc
@@ -690,18 +753,18 @@ defproc
 	: optional_template_specification def_or_proc ID
 	  optional_port_formal_decl_list_in_parens
 	  '{' optional_definition_body '}'
-		{ $$ = new process_def($1, $2, $3, $4, 
-			definition_body_wrap($5, $6, $7));
+	/* optional_definition_body will always be valid, sometimes empty */
+		{ WRAP_LIST($5, $6, $7);
+		  $$ = new process_def($1, $2, $3, $4, $6);
 		}
 	;
 
 optional_port_formal_decl_list_in_parens
 	/* note: the parens are NOT optional! */
 	: '(' port_formal_decl_list ')'
-		{ $$ = port_formal_decl_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	| '(' ')'
-		{ $$ = port_formal_decl_list_wrap($1, 
-			(new port_formal_decl_list()), $2); }
+		{ $$ = new port_formal_decl_list(); WRAP_LIST($1, $$, $2); }
 		/* empty, but wrapped */
 	;
 
@@ -717,19 +780,20 @@ concrete_type_ref
 
 template_formal_decl_list_in_angles
 	: '<' template_formal_decl_list '>'
-		{ $$ = template_formal_decl_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-/** OBSOLETE
-optional_template_formal_decl_list_in_angles
+template_formal_decl_list_optional_in_angles
 	: template_formal_decl_list_in_angles
-	| { $$ = NULL; }
+		{ $$ = $1; }
+	| '<' '>'
+		{ $$ = new template_formal_decl_list();
+		  WRAP_LIST($1, $$, $2); }
 	;
-**/
 
 template_formal_decl_list
 	: template_formal_decl_list ';' template_formal_decl
-		{ $$ = template_formal_decl_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| template_formal_decl
 		{ $$ = new template_formal_decl_list($1); }
 	;
@@ -743,13 +807,14 @@ template_formal_decl
 
 template_formal_id_list
 	: template_formal_id_list ',' template_formal_id
-		{ $$ = template_formal_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| template_formal_id
 		{ $$ = new template_formal_id_list($1); }
 	;
 
 template_formal_id
-	/** update formal declarations: only allow dense arrays, no ranges */
+	/** update formal declarations: only allow dense arrays, no ranges **/
+	/** no relaxed parameters: never used in template formals **/
 	: ID optional_dense_range_list
 		{ $$ = new template_formal_id($1, $2); }
 /**
@@ -771,7 +836,7 @@ template_formal_id
 port_formal_decl_list
 	/* would rather use ','-delimiter, but wth... */
 	: port_formal_decl_list ';' port_formal_decl
-		{ $$ = port_formal_decl_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| port_formal_decl
 		{ $$ = new port_formal_decl_list($1); }
 	;
@@ -784,40 +849,60 @@ port_formal_decl
 
 port_formal_id_list
 	: port_formal_id_list ',' port_formal_id
-		{ $$ = port_formal_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| port_formal_id
 		{ $$ = new port_formal_id_list($1); }
 	;
 
 port_formal_id
 	/** update port formals: only dense arrays allowed, no sparse ranges */
+	/** forbid use of relaxed template arguments in port formals list? **/
 	: ID optional_dense_range_list
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
+generic_type_ref
+	: relative_id strict_relaxed_template_arguments optional_chan_dir
+		/* for userdef or chan type, and templating */
+		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
+	| absolute_id strict_relaxed_template_arguments optional_chan_dir
+		/* for userdef or chan type, and templating */
+		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
+	;
+
+optional_chan_dir
+	: '?'
+	| '!'
+	| { $$ = NULL; }
+	;
+
 physical_type_ref
-	: relative_id optional_template_arguments_in_angles
-		/* for userdef or chan type, and templating */
-		{ $$ = new concrete_type_ref(new type_id($1), $2); }
-	| absolute_id optional_template_arguments_in_angles
-		/* for userdef or chan type, and templating */
-		{ $$ = new concrete_type_ref(new type_id($1), $2); }
+	: generic_type_ref { $$ = $1; }
 	| base_chan_type
-		/* what would template channel type ref look like? */
-		{ $$ = new concrete_type_ref($1, NULL); }
-	| data_type_ref
+		/* what would template (base) channel type ref look like? */
+		/* { $$ = new concrete_type_ref($1, NULL); } */
+		{ $$ = $1; }
+	| base_data_type_ref
 		{ $$ = $1; }
 	;
 
+base_data_type_ref
+	: base_data_type strict_relaxed_template_arguments
+		{ $$ = new generic_type_ref($1, $2); }
+		/* 3rd argument is channel direction, doesn't apply here */
+	;
+
+/** because general data types may be user-defined **/
 data_type_ref
-	: base_data_type optional_template_arguments_in_angles
-		{ $$ = new concrete_type_ref($1, $2); }
+	: base_data_type_ref { $$ = $1; }
+	| generic_type_ref { $$ = $1; }
 	;
 
 type_id
 	: physical_type_ref { $$ = $1; }
 	| base_param_type
-		{ $$ = new concrete_type_ref($1, NULL); }
+		{ $$ = $1; }
+		/* { $$ = new generic_type_ref($1); } */
 		/* should parameter declarations be allowed 
 			in loops and conditionals? rather not */
 	;
@@ -837,28 +922,24 @@ base_param_type
 base_chan_type
 	/* eliminate defaulting? (to int?), use <template> style? */
 	: chan_or_port data_type_ref_list_in_parens
-		{ $$ = chan_type_attach_data_types($1, $2); }
+		{ $$ = $1; $$->attach_data_types($2); }
 	;
 
 chan_or_port
-	: CHANNEL		/* a channel */
-		{ $$ = new chan_type($1); }
-	| CHANNEL '!'		/* an output port */
-		{ $$ = new chan_type($1, $2); }
-	| CHANNEL '?'		/* an input port */
+	: CHANNEL optional_chan_dir		/* a channel, input or output */
 		{ $$ = new chan_type($1, $2); }
 	;
 
 data_type_ref_list_in_parens
 	: '(' data_type_ref_list ')'
-		{ $$ = data_type_ref_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 /* why only base data types? why not user-defined ones? */
 data_type_ref_list
 /*	: data_type_ref_list ',' base_data_type	*/
 	: data_type_ref_list ',' data_type_ref
-		{ $$ = data_type_ref_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 /*	| base_data_type	*/
 	| data_type_ref
 		{ $$ = new data_type_ref_list($1); }
@@ -888,8 +969,8 @@ declare_datatype_proto
 /*	  base_data_type */
 	  data_type_ref		/* base? */
           data_param_decl_list_in_parens ';'
-		{ $$ = new user_data_type_prototype(
-			$1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new user_data_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7); }
 	;
 
 defdatatype
@@ -903,29 +984,31 @@ defdatatype
 	;
 
 set_body
-	: SET '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+	: SET '{' chp_body_optional '}'
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 get_body
-	: GET '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+	: GET '{' chp_body_optional '}'
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 declare_enum
 	: ENUM ID ';'
-		{ $$ = new enum_prototype($1, $2, $3); }
+		{ $$ = new enum_prototype($1, $2); DELETE_TOKEN($3); }
 	;
 
 defenum
 	: ENUM ID '{' enum_member_list '}'
-		{ $$ = new enum_def($1, $2,
-			enum_member_list_wrap($3, $4, $5)); }
+		{ WRAP_LIST($3, $4, $5);
+		  $$ = new enum_def($1, $2, $4); }
 	;
 
 enum_member_list
 	: enum_member_list ',' ID
-		{ $$ = enum_member_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| ID
 		{ $$ = new enum_member_list($1); }
 	;
@@ -937,8 +1020,8 @@ enum_member_list
 declare_chan_proto
 	: optional_template_specification DEFCHAN ID DEFINEOP base_chan_type 
 	  data_param_decl_list_in_parens ';'
-		{ $$ = new user_chan_type_prototype(
-			$1, $2, $3, $4, $5, $6, $7); }
+		{ $$ = new user_chan_type_prototype($1, $2, $3, $4, $5, $6);
+		  DELETE_TOKEN($7); }
 	;
 	
 defchan
@@ -950,25 +1033,27 @@ defchan
 	;
 
 send_body
-	: SEND '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+	: SEND '{' chp_body_optional '}'
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 recv_body
-	: RECV '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+	: RECV '{' chp_body_optional '}'
+		{ WRAP_LIST($2, $3, $4);
+		  $$ = new CHP::body($1, $3); }
 	;
 
 data_param_decl_list_in_parens
 	: '(' data_param_decl_list ')'
-		{ $$ = data_param_decl_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 data_param_decl_list
 /* like declarations in formals list
 	consider using ';', similar to C-style... */
 	: data_param_decl_list ';' data_param_decl
-		{ $$ = data_param_decl_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| data_param_decl
 		{ $$ = new data_param_decl_list($1); }
 	;
@@ -986,7 +1071,7 @@ data_param_decl
 
 data_param_id_list
 	: data_param_id_list ',' data_param_id
-		{ $$ = data_param_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| data_param_id
 		{ $$ = new data_param_id_list($1); }
 	;
@@ -1005,7 +1090,7 @@ data_param_id
 /* --- definition_body --- */
 definition_body
 	: definition_body definition_body_item
-		{ $$ = definition_body_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| definition_body_item
 		{ $$ = new definition_body($1); }
 	;
@@ -1038,8 +1123,10 @@ optional_definition_body
 instance_item
 	: type_instance_declaration { $$ = $1; }	/* single or array */
 	| connection_statement { $$ = $1; }	/* connection of ports */
+	| instance_type_completion_statement { $$ = $1; }
+	| instance_type_completion_connection_statement { $$ = $1; }
 	| alias_list '=' expr ';'
-		{ $$ = alias_list_append($1, $2, $3); delete $4; }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); DELETE_TOKEN($4); }
 			/* alias connection */
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
@@ -1047,42 +1134,47 @@ instance_item
 
 loop_instantiation
 	: '(' ';' ID ':' range ':' definition_body ')'
-		{ $$ = new loop_instantiation($1, $2, $3, $4, $5, $6, $7, $8); }
+		{ $$ = new loop_instantiation($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
 	;
 
 conditional_instantiation
 	: '[' guarded_definition_body_list ']'
-		{ $$ = new conditional_instantiation(
-			guarded_definition_body_list_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3);
+		  $$ = new conditional_instantiation($2); }
 	;
 
 type_instance_declaration
 	/* type template is included in type_id, and is part of the type */
 	: type_id instance_id_list ';'
-		{ $$ = new instance_declaration($1, $2, $3); }
+		{ $$ = new instance_declaration($1, $2);
+		  DELETE_TOKEN($3); }
 	;
 
 instance_id_list
 	: instance_id_list ',' instance_id_item
-		{ $$ = instance_id_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| instance_id_item
 		{ $$ = new instance_id_list($1); }
 	;
 
 instance_id_item
+	/** NEW: relaxed template arguments */
 	/* array declaration: forbid connection, must connect later */
-	: ID sparse_range_list
-		{ $$ = new instance_array($1, $2); }
+	: ID optional_template_arguments_in_angles sparse_range_list
+		{ $$ = new instance_array($1, $3); DELETE_TOKEN($2); }
 	/* single instance declaration without connection */
-	| ID
-		{ $$ = new instance_base($1); }
+	| ID optional_template_arguments_in_angles
+		{ $$ = new instance_base($1); DELETE_TOKEN($2); }
 	/* single instance declaration with connection */
-	| ID connection_actuals_list
-		{ $$ = new instance_connection($1, $2); }
+	| ID optional_template_arguments_in_angles connection_actuals_list
+		{ $$ = new instance_connection($1, $3); DELETE_TOKEN($2); }
 	/* instance alias or parameter assignment */
-	| ID '=' rvalue_optional_alias_list
-		{ $$ = new instance_alias($1, 
-			alias_list_wrap($2, $3, NULL)); }
+	| ID optional_template_arguments_in_angles
+	  '=' rvalue_optional_alias_list
+		{ WRAP_LIST($3, $4, NULL);
+		  DELETE_TOKEN($2);
+		  $$ = new instance_alias($1, $4); }
 	;
 
 connection_statement
@@ -1090,13 +1182,28 @@ connection_statement
 	are brackets part of the array/membership chain? */
 	: member_index_expr connection_actuals_list ';'
 		/* can this first id be scoped and/or membered? */
-		{ $$ = new connection_statement($1, $2, $3); }
+		{ $$ = new connection_statement($1, $2);
+		  DELETE_TOKEN($3); }
+	;
+
+/* completing the relaxed template arguments of an instance */
+instance_type_completion_statement
+	: index_expr shift_expr_optional_list_in_angles ';'
+		{ $$ = new type_completion_statement($1, $2);
+		  DELETE_TOKEN($3); }
+	;
+
+instance_type_completion_connection_statement
+	: index_expr shift_expr_optional_list_in_angles 
+		connection_actuals_list ';'
+		{ $$ = new type_completion_connection_statement($1, $2, $3);
+		  DELETE_TOKEN($4); }
 	;
 
 rvalue_optional_alias_list
 /* note that expr can be just another member_index_expr */
 	: alias_list '=' expr
-		{ $$ = alias_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| expr
 		{ $$ = new alias_list($1); }
 	;
@@ -1105,7 +1212,7 @@ rvalue_optional_alias_list
 	type check this, of course */
 alias_list
 	: alias_list '=' complex_aggregate_reference
-		{ $$ = alias_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	/* to type-check: first term must contain only rvalues */
 	| complex_aggregate_reference
 		{ $$ = new alias_list($1); }
@@ -1116,12 +1223,12 @@ connection_actuals_list
 	/* down-cast to more specific type?  internal to consumer */
 /*	: member_index_expr_list_in_parens	*/
 	: '(' complex_aggregate_reference_list ')'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 guarded_definition_body_list
 	: guarded_definition_body_list THICKBAR guarded_definition_body
-		{ $$ = guarded_definition_body_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| guarded_definition_body
 		{ $$ = new guarded_definition_body_list($1); }
 	;
@@ -1140,16 +1247,11 @@ guarded_definition_body
 
 language_body
 	: CHP_LANG '{' chp_body '}'
-		{ $$ = new CHP::body($1, chp_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4); $$ = new CHP::body($1, $3); }
 	| HSE_LANG '{' hse_body '}'
-		{ $$ = new HSE::body($1, hse_stmt_list_wrap($2, $3, $4)); }
+		{ WRAP_LIST($2, $3, $4); $$ = new HSE::body($1, $3); }
 	| PRS_LANG '{' prs_body '}'
-		{ $$ = new PRS::body($1, prs_rule_list_wrap($2, $3, $4)); }
-/*
-//	| STACK_LANG '{' stack_body '}'
-//		{ $$ = new stack::body($1, stack_rule_list_wrap($2, $3, $4)); }
-//	and more...
-*/
+		{ WRAP_LIST($2, $3, $4); $$ = new PRS::body($1, $3); }
 	;
 
 /* --- Language: CHP --- */
@@ -1158,9 +1260,19 @@ chp_body
 	: full_chp_body_item_list { $$ = $1; }
 	;
 
+chp_body_optional
+	: chp_body { $$ = $1; }
+	| { $$ = new CHP::stmt_list(); }
+	;
+
+chp_body_or_skip
+	: chp_body { $$ = $1; }
+	| SKIP { $$ = new CHP::skip($1); }
+	;
+
 full_chp_body_item_list
 	: full_chp_body_item_list ';' full_chp_body_item
-		{ $$ = chp_stmt_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| full_chp_body_item
 		{ $$ = new CHP::stmt_list($1); }
 	;
@@ -1185,11 +1297,12 @@ chp_body_item
 	| chp_do_until { $$ = $1; }
 	| chp_selection { $$ = $1; }
 	| chp_wait { $$ = $1; }
-/*	| chp_assignment { $$ = $1; }	-- expanded */
-	| binary_assignment { $$ = new CHP::assignment($1); }
-	| unary_assignment { $$ = new CHP::incdec_stmt($1); }
+	| chp_binary_assignment { $$ = $1; }
+	| chp_bool_assignment { $$ = $1; }
+/*	| binary_assignment { $$ = new CHP::assignment($1); } 	*/
+/*	| unary_assignment { $$ = new CHP::incdec_stmt($1); }	*/
 	| chp_comm_list { $$ = $1; }
-	| SKIP { $$ = new CHP::skip($1); }
+/*	| SKIP { $$ = new CHP::skip($1); }		*/
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
 	;
@@ -1197,26 +1310,28 @@ chp_body_item
 chp_loop
 	/* do-forever loop */
 	: BEGINLOOP chp_body ']'
-		{ $$ = new CHP::loop(chp_stmt_list_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new CHP::loop($2); }
 	;
 
 chp_do_until
 	/* do-until-all-guards-false */
-	: BEGINLOOP chp_matched_det_guarded_command_list ']'
-		{ $$ = new CHP::do_until(chp_det_selection_wrap($1, $2, $3)); }
+	/* else-clause not allowed in do-until, hence unmatched list */
+	: BEGINLOOP chp_unmatched_det_guarded_command_list ']'
+		{ WRAP_LIST($1, $2, $3); $$ = new CHP::do_until($2); }
 	;
 
 chp_wait
 	/* wait for expr to become true */
-	: '[' expr ']'
-		{ $$ = new CHP::wait($1, $2, $3); }
+	: '[' chp_guard_expr ']'
+		{ $$ = new CHP::wait($2);
+		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 chp_selection
 	: '[' chp_matched_det_guarded_command_list ']'
-		{ $$ = chp_det_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	| '[' chp_nondet_guarded_command_list ']'
-		{ $$ = chp_nondet_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 /*
 // wtf is this?... probalistic selection for FT
 //	| "%[" { chp_guarded_command ":" }** "]%"
@@ -1229,51 +1344,155 @@ note: these lists must have at least 2 clauses, will have to fix with "else"
 */
 chp_nondet_guarded_command_list
 	: chp_nondet_guarded_command_list ':' chp_guarded_command
-		{ $$ = chp_nondet_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_guarded_command ':' chp_guarded_command
 	/* can't have else clause in non-deterministic selection? */
-		{ $$ = IS_A(CHP::nondet_selection*,
-			(new CHP::nondet_selection($1))->append($2, $3)); }
+		{ $$ = new CHP::nondet_selection($1);
+		  APPEND_LIST($$, $2, $3); }
 	;
 
 chp_matched_det_guarded_command_list
 	: chp_unmatched_det_guarded_command_list THICKBAR chp_else_clause
-		{ $$ = chp_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_unmatched_det_guarded_command_list
 	;
 
 chp_unmatched_det_guarded_command_list
 	: chp_unmatched_det_guarded_command_list THICKBAR chp_guarded_command
-		{ $$ = chp_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_guarded_command
 		{ $$ = new CHP::det_selection($1); }
 	;
 
 chp_guarded_command
-	: expr RARROW chp_body
+	: chp_guard_expr RARROW chp_body_or_skip
 		{ $$ = new CHP::guarded_command($1, $2, $3); }
 	;
 
+/* must be boolean, literals must not be aggregates */
+chp_guard_expr
+	: chp_or_expr
+	;
+
+chp_unary_bool_expr
+	: chp_simple_bool_expr
+	| chp_not_expr
+	| '(' chp_or_expr ')'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
+	;
+
+chp_simple_bool_expr
+	: member_index_expr { $$ = $1; }
+	| BOOL_TRUE { $$ = $1; }
+	| BOOL_FALSE { $$ = $1; }
+	;
+
+chp_unary_expr
+	: '-' chp_unary_expr
+		{ $$ = new prefix_expr($1, $2); }
+	| chp_unary_bool_expr	/* include all paren exprs */
+	| INT	{ $$ = $1; }
+	| FLOAT	{ $$ = $1; }
+	;
+
+chp_mult_expr
+	: chp_unary_expr
+	| chp_mult_expr muldiv_op chp_unary_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+chp_add_expr
+	: chp_mult_expr
+	| chp_add_expr_only
+	;
+
+chp_add_expr_only
+	: chp_add_expr '+' chp_mult_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	| chp_add_expr '-' chp_mult_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+/* requiring parens around add/sub expressions to eliminate
+	shift-reduce conflict with boolean assignment using '+' '-' */
+chp_paren_add_expr
+	: '(' chp_add_expr_only ')'
+		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
+	| chp_mult_expr
+	;
+
+/* reduction must not have unparenthesized +/- */
+chp_shift_expr
+	: chp_paren_add_expr	/* reduction */
+	| chp_shift_expr EXTRACT chp_add_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	| chp_shift_expr INSERT chp_add_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+chp_relational_expr
+	: chp_shift_expr relational_op chp_shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
+/*	| chp_shift_expr	*/
+	| chp_unary_bool_expr
+	;
+
+/* uses '&' and '|' for logical operations (not C-style) */
+chp_and_expr
+	: chp_relational_expr
+	| chp_and_expr '&' chp_relational_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+
+chp_xor_expr
+	: chp_and_expr
+	| chp_xor_expr '^' chp_and_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+
+chp_or_expr
+	: chp_xor_expr
+	| chp_or_expr '|' chp_xor_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+
+chp_not_expr
+	: '~' chp_unary_bool_expr
+		{ $$ = new prefix_expr($1, $2); }
+	;
+
 chp_else_clause
-	: ELSE RARROW chp_body
+	: ELSE RARROW chp_body_or_skip
 		{ $$ = new CHP::else_clause($1, $2, $3); }
 	;
 
 /*
 // consider replacing with c-style statements and type-checking for chp
 // if top-of-language-stack == chp, forbid x-type of statement/expression
-chp_assignment
-// allow binary and unary assignments
-// constructors re-wrap with transfer of ownership
-	: binary_assignment { $$ = new CHP::assignment($1); }
-	| unary_assignment { $$ = new CHP::bool_assign($1); }
-	;
 */
+chp_binary_assignment
+	: member_index_expr ASSIGN expr
+		{ DELETE_TOKEN($2);
+		  $$ = new CHP::binary_assignment($1, $3); }
+	;
+
+chp_bool_assignment
+	/* using '+' '-' creates shift-reduce conflicts on:
+		member_index_expr . ['+']
+		between assignment and guard_expr
+		To eliminate: require parens around add_expr
+	 */
+	: member_index_expr '+'
+		{ $$ = new CHP::bool_assignment($1, $2); }
+	| member_index_expr '-'
+		{ $$ = new CHP::bool_assignment($1, $2); }
+	/* could borrow from prs: dir */
+	;
 
 chp_comm_list
 	/* gives comma-separated communications precedence */
 	: chp_comm_list ',' chp_comm_action
-		{ $$ = chp_comm_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_comm_action
 		{ $$ = new CHP::comm_list($1); }
 	;
@@ -1306,7 +1525,7 @@ hse_body
 
 full_hse_body_item_list
 	: full_hse_body_item_list ';' full_hse_body_item
-		{ $$ = hse_stmt_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| full_hse_body_item
 		{ $$ = new HSE::stmt_list($1); }
 	;
@@ -1332,25 +1551,26 @@ hse_body_item
 
 hse_loop
 	: BEGINLOOP hse_body ']'
-		{ $$ = new HSE::loop(hse_stmt_list_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new HSE::loop($2); }
 	;
 
 hse_do_until
 	/* keep entering loop until all guards false */
 	: BEGINLOOP hse_matched_det_guarded_command_list ']'
-		{ $$ = new HSE::do_until(hse_det_selection_wrap($1, $2, $3)); }
+		{ WRAP_LIST($1, $2, $3); $$ = new HSE::do_until($2); }
 	;
 
 hse_wait
 	: '[' expr ']'
-		{ $$ = new HSE::wait($1, $2, $3); }
+		{ $$ = new HSE::wait($2);
+		  DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 hse_selection
 	: '[' hse_matched_det_guarded_command_list ']'
-		{ $$ = hse_nondet_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	| '[' hse_nondet_guarded_command_list ']'
-		{ $$ = hse_det_selection_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 hse_guarded_command
@@ -1365,21 +1585,21 @@ hse_else_clause
 
 hse_nondet_guarded_command_list
 	: hse_nondet_guarded_command_list ':' hse_guarded_command
-		{ $$ = hse_nondet_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| hse_guarded_command ':' hse_guarded_command
-		{ $$ = IS_A(HSE::nondet_selection*, 
-			(new HSE::nondet_selection($1))->append($2, $3)); }
+		{ $$ = new HSE::nondet_selection($1);
+			APPEND_LIST($$, $2, $3); }
 	;
 
 hse_matched_det_guarded_command_list
 	: hse_unmatched_det_guarded_command_list THICKBAR hse_else_clause
-		{ $$ = hse_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| hse_unmatched_det_guarded_command_list
 	;
 
 hse_unmatched_det_guarded_command_list
 	: hse_unmatched_det_guarded_command_list THICKBAR hse_guarded_command
-		{ $$ = hse_det_selection_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| hse_guarded_command
 		{ $$ = new HSE::det_selection($1); }
 	;
@@ -1393,6 +1613,7 @@ hse_assignment
 		{ $$ = new HSE::assignment(
 			IS_A(ART::parser::incdec_stmt*, $1)); }
 	;
+/* will there be a leak if dynamic cast fails? */
 
 /*
 //--- Language: PRS ---
@@ -1402,7 +1623,7 @@ hse_assignment
 
 prs_body
 	: prs_body prs_body_item
-		{ $$ = prs_rule_list_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| prs_body_item
 		{ $$ = new PRS::rule_list($1); }
 	;
@@ -1414,7 +1635,8 @@ prs_body_item
 
 prs_loop
 	: '(' ':' ID ':' range ':' prs_body ')'
-		{ $$ = new PRS::loop($1, $2, $3, $4, $5, $6, $7, $8); }
+		{ $$ = new PRS::loop($1, $3, $5, $7, $8);
+		  DELETE_TOKEN($2); DELETE_TOKEN($4); DELETE_TOKEN($6); }
 	;
 
 single_prs
@@ -1444,7 +1666,7 @@ prs_expr
 
 prs_paren_expr
 	: '(' prs_expr ')'
-		{ $$ = new paren_expr($1, $2, $3); }
+		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 prs_unary_expr
@@ -1474,13 +1696,15 @@ prs_or
 /* non-short-circuit AND */
 prs_and_loop
 	: '(' '&' ':' ID ':' range ':' prs_expr ')'
-		{ $$ = new PRS::op_loop($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new PRS::op_loop($1, $2, $4, $6, $8, $9);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); DELETE_TOKEN($7); }
 	;
 
 /* non-short-circuit OR */
 prs_or_loop
 	: '(' '|' ':' ID ':' range ':' prs_expr ')'
-		{ $$ = new PRS::op_loop($1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new PRS::op_loop($1, $2, $4, $6, $8, $9);
+		  DELETE_TOKEN($3); DELETE_TOKEN($5); DELETE_TOKEN($7); }
 	;
 
 /* end of PRS language */
@@ -1491,7 +1715,7 @@ prs_or_loop
 ******************************************************************************/
 paren_expr
 	: '(' expr ')'
-		{ $$ = new paren_expr($1, $2, $3); }
+		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
 /***
@@ -1525,7 +1749,7 @@ id_expr
 
 absolute_id
 	: SCOPE relative_id
-		{ $$ = ($2)->force_absolute($1); }
+		{ $$ = $2->force_absolute($1); }
 	;
 
 relative_id
@@ -1537,16 +1761,17 @@ relative_id
 
 qualified_id
 	: qualified_id SCOPE ID
-		{ $$ = qualified_id_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| ID SCOPE ID
-		{ $$ = (new qualified_id($1))->append($2, $3); }
+		{ $$ = new qualified_id($1);
+		  APPEND_LIST($$, $2, $3); }
 	;
 
 /** was mandatory, but is now optional, blank items are allowed! */
 member_index_expr_list
 	: member_index_expr_list ',' optional_member_index_expr
-		{ $$ = expr_list_append($1, $2, $3); }
-	| optional_member_index_expr { $$ = new expr_list($1); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| optional_member_index_expr { $$ = new inst_ref_expr_list($1); }
 	;
 
 optional_member_index_expr
@@ -1575,11 +1800,11 @@ index_expr
 
 member_expr
 	: index_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	| member_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	| id_expr '.' ID
-		{ $$ = new member_expr($1, $2, $3); }
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	;
 
 /* single term */
@@ -1602,12 +1827,14 @@ unary_expr
 
 multiplicative_expr
 	: unary_expr
-	| multiplicative_expr '*' unary_expr
+	| multiplicative_expr muldiv_op unary_expr
 		{ $$ = new arith_expr($1, $2, $3); }
-	| multiplicative_expr '/' unary_expr
-		{ $$ = new arith_expr($1, $2, $3); }
-	| multiplicative_expr '%' unary_expr
-		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+muldiv_op
+	: '*'
+	| '/'
+	| '%'
 	;
 
 additive_expr
@@ -1629,22 +1856,21 @@ shift_expr
 
 relational_equality_expr
 	: shift_expr
-	| shift_expr '<' shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr '>' shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr LE shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr GE shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr EQUAL shift_expr
-		{ $$ = new relational_expr($1, $2, $3); }
-	| shift_expr NOTEQUAL shift_expr
+	| shift_expr relational_op shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 /*
 // can't cascade relational_expr
 //	| relational_expr GE shift_expr
 */
+	;
+
+relational_op
+	: '<'
+	| '>'
+	| LE
+	| GE
+	| EQUAL
+	| NOTEQUAL
 	;
 
 and_expr
@@ -1693,13 +1919,14 @@ assignment_stmt
 	;
 **/
 
-binary_assignment
 /*
+binary_assignment
 //	: conditional_expr		// not supported
 //	: logical_or_expr		// not supported
-*/
 	: member_index_expr '=' expr
 		{ $$ = new assign_stmt($1, $2, $3); }
+*/
+
 /*
 //	| member_index_expr STARASSIGN expr
 //	| member_index_expr DIVIDEASSIGN expr
@@ -1742,23 +1969,30 @@ optional_expr_in_braces
 	;
 **/
 
+strict_relaxed_template_arguments
+	: shift_expr_optional_list_in_angles
+	  optional_template_arguments_in_angles
+/*		{ $$ = $1; DELETE_TOKEN($2); }	*/
+		{ $$ = new template_argument_list_pair($1, $2); }
+	|	{ $$ = NULL; }
+	;
+
 optional_template_arguments_in_angles
 /*	: member_index_expr_list_in_angles	*/
 /*	replaced with shift_expr_optional_list to eliminate S/R on '>' */
 	: shift_expr_optional_list_in_angles
 		{ $$ = $1; }
-/*		{ $$ = new template_argument_list($1); }	*/
 	| { $$ = NULL; }
 	;
 
 shift_expr_optional_list_in_angles
 	: '<' shift_expr_optional_list '>'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 shift_expr_optional_list
 	: shift_expr_optional_list ',' optional_shift_expr 
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| optional_shift_expr { $$ = new expr_list($1); }
 	;
 
@@ -1767,55 +2001,28 @@ optional_shift_expr
 	| { $$ = NULL; }
 	;
 
-/** OBSOLETE
-member_index_expr_list_in_angles
-	: '<' member_index_expr_list '>'
-		{ $$ = expr_list_wrap($1, $2, $3); }
-	;
-**/
-
 member_index_expr_list_in_parens
 	: '(' member_index_expr_list ')'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 expr_list_in_parens
 	: '(' expr_list ')'
-		{ $$ = expr_list_wrap($1, $2, $3); }
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 expr_list
 	: expr_list ',' expr 
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| expr { $$ = new expr_list($1); }
 	;
 
 /* --- array declaration syntax ------------------------------------------- */
 /** giving up CAST-style for C-style arrays */
 
-/**
-OBSOLETE
-optional_range_list_in_brackets
-	: range_list_in_brackets { $$ = $1; }
-	| { $$ = NULL; }
-	;
-
-range_list_in_brackets
-	// old-CAST style
-	: '[' range_list ']'
-		{ $$ = range_list_wrap($1, $2, $3); }
-	;
-
-range_list
-	: range_list ',' range 
-		{ $$ = range_list_append($1, $2, $3); }
-	| range { $$ = new range_list($1); }
-	;
-**/
-
 range
 	: expr RANGE expr 
-		{ $$ = new range($1, $2, $3); }
+		{ $$ = new range($1, $3); DELETE_TOKEN($2); }
 	| expr { $$ = new range($1); }
 	;
 
@@ -1835,14 +2042,14 @@ optional_sparse_range_list
 
 dense_range_list
 	: dense_range_list bracketed_dense_range
-		{ $$ = dense_range_list_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| bracketed_dense_range
 		{ $$ = new dense_range_list($1); }
 	;
 
 sparse_range_list
 	: sparse_range_list bracketed_sparse_range
-		{ $$ = range_list_append($1, NULL, $2); }
+		{ $$ = $1; $$->push_back($2); }
 	| bracketed_sparse_range
 		{ $$ = new range_list($1); }
 	;
@@ -1850,13 +2057,13 @@ sparse_range_list
 /** array declarations in template and port formals can only be dense */
 bracketed_dense_range
 	: '[' expr ']'
-		{ delete $1; $$ = $2; delete $3; }
+		{ DELETE_TOKEN($1); $$ = $2; DELETE_TOKEN($3); }
 	;
 
 /** array instantiations and references elsewhere may be sparse */
 bracketed_sparse_range
 	: '[' range ']'
-		{ delete $1; $$ = $2; delete $3; }
+		{ DELETE_TOKEN($1); $$ = $2; DELETE_TOKEN($3); }
 	;
 
 /* ----end array ---------------------------------------------------------- */
@@ -1869,7 +2076,7 @@ complex_aggregate_reference
 /* pasting arrays together */
 array_concatenation
 	: array_concatenation '#' complex_expr_term
-		{ $$ = array_concatenation_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| complex_expr_term
 		{ $$ = new array_concatenation($1); }
 	;
@@ -1893,8 +2100,10 @@ array_construction
 **/
 loop_concatenation
 	: '(' '#' ':' ID ':' range ':' complex_expr_term ')'
-		{ $$ = new loop_concatenation(
-			$1, $2, $3, $4, $5, $6, $7, $8, $9); }
+		{ $$ = new loop_concatenation($1, $4, $6, $8, $9);
+		  DELETE_TOKEN($2); DELETE_TOKEN($3);
+		  DELETE_TOKEN($5); DELETE_TOKEN($7);
+		}
 	;
 
 optional_complex_aggregate_reference
@@ -1905,13 +2114,47 @@ optional_complex_aggregate_reference
 /** items are optional! */
 complex_aggregate_reference_list
 	: complex_aggregate_reference_list ',' optional_complex_aggregate_reference
-		{ $$ = expr_list_append($1, $2, $3); }
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| optional_complex_aggregate_reference
 		{ $$ = new expr_list($1); }
 	;
 
 /* ---- end complex expressions ------------------------------------------- */
 %%
+/**
+	Upon error or exception, must clean up stacks!
+	Now clean-up the symbol stack by calling destructors.
+	Technically, this is not needed, as bulk memory is 
+	reclaimed upon exit().  (This is a good exercise anyhow.)
+	We are currently assuming that no other handler will
+	take care of deleting the pointers on the stack.  
+
+	OBSOLETE COMMENT, after removing mother-node type.  
+	Because the union-pointer resolution can only return
+	one type, the base type, the mother destructor, 
+	ART::parser::node::~node(), must be virtual.  
+ */
+static
+void
+yyfreestacks(const short* _yyss_, const short* _yyssp_, 
+		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
+		const YYSTYPE _yylval_) {
+	const short* s;
+	const YYSTYPE* v;
+	s=_yyss_+1;
+	v=_yyvs_+1;
+	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
+		if (v) {
+			yy_union_resolve_delete(*v, *(s-1), *s);
+		}
+	}
+	if (!at_eof()) {
+		// free the last token (if not EOF)
+		yy_union_lookup_delete(_yylval_, yychar);
+	}
+}
+
+/*---------------------------------------------------------------------------*/
 /**
 	The goal is to keep the grammar in this "art.yy" clean, and not
 	litter the various productions with error handling cases.  
@@ -1958,11 +2201,11 @@ complex_aggregate_reference_list
 #define	YYTABLESIZE	YYLAST
 #endif
 
-// void yyerror(char* msg)		// replace with this if necessary
+// following prototype MUST appear as is (after "static") for awk hack...
+static
 void yyerror(const char* msg) { 	// ancient compiler rejects
 	const short* s;
 	const YYSTYPE* v;
-	node* resolved_node = NULL;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
 	cerr << "parse error: " << msg << endl;
@@ -1988,12 +2231,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		// from the previous state
 		/* assert(v); can have NULL on stack? yes. */
 		if (v) {
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				resolved_node->what(cerr << '\t') << " "
-					<< resolved_node->where();
-			else
-				cerr << "\t(null) ";
+			yy_union_resolve_dump(*v, *(s-1), *s, cerr << '\t');
 		} else {
 			cerr << "\t(null) ";
 		}
@@ -2001,19 +2239,14 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	}
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
-//	assert(resolved_node);
 //	NULL check not necessarily valid if last token normally returned NULL
 	if (at_eof()) {
 		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
 //		token type returned.  
-//		can't use: yy_union_resolve(yylval, *(s-1), *s);
-
-		resolved_node = yy_union_lookup(yylval, yychar);
-		assert(resolved_node);
-		(resolved_node->what(cerr << "\t") << " ")
-			<< resolved_node->where();
+//		can't use: yy_union_resolve_dump(yylval, *(s-1), *s, ...);
+		yy_union_lookup_dump(yylval, yychar, cerr << '\t');
 	}
 	cerr << endl;
 
@@ -2032,52 +2265,29 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	cerr << "acceptable tokens are: " << endl;
 	int accept_count = 0;
 	{
-		int yychar;
+		int _yychar_ = 0;
 		int yyn;
-		for (yychar = 0; yychar <= MAXIMUM_BOGOSITY; yychar++) {
+		for ( ; _yychar_ <= MAXIMUM_BOGOSITY; _yychar_++) {
 			// try all terminal tokens
 			if ((yyn = yysindex[*yyssp]) && 
-					(yyn += yychar) >= 0 && 
+					(yyn += _yychar_) >= 0 && 
 					yyn <= YYTABLESIZE && 
-					yycheck[yyn] == yychar) {
-				cerr << '\t' << yyname[yychar]
+					yycheck[yyn] == _yychar_) {
+				cerr << '\t' << yyname[_yychar_]
 					<< " (shift)" << endl;
 				accept_count++;
 			} else if ((yyn = yyrindex[*yyssp]) && 
-					(yyn += yychar) >= 0 && 
+					(yyn += _yychar_) >= 0 && 
 					yyn <= YYTABLESIZE && 
-					yycheck[yyn] == yychar) {
-				cerr << '\t' << yyname[yychar]
+					yycheck[yyn] == _yychar_) {
+				cerr << '\t' << yyname[_yychar_]
 					<< " (reduce)" << endl;
 				accept_count++;
 			}
 		}
 	}
 
-	/*
-	 *	Now clean-up the symbol stack by calling destructors.
-	 *	Technically, this is not needed, as bulk memory is 
-	 *	reclaimed upon exit().  (This is a good exercise anyhow.)
-	 *	We are currently assuming that no other handler will
-	 *	take care of deleting the pointers on the stack.  
-	 *	Because the union-pointer resolution can only return
-	 *	one type, the base type, the mother destructor, 
-	 * 	ART::parser::node::~node(), must be virtual.  
-	 */
-	s=yyss+1;
-	v=yyvs+1;
-	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
-		if (v) {
-			resolved_node = yy_union_resolve(*v, *(s-1), *s);
-			if (resolved_node)
-				delete resolved_node;
-		}
-	}
-	if (!at_eof()) {
-		// free the last token (if not EOF)
-		resolved_node = yy_union_lookup(yylval, yychar);
-		delete resolved_node;
-	}
+	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
 
 #endif	// NO_FAKE_PREFIX
 

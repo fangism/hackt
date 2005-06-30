@@ -1,0 +1,43 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302360	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302380	chandefn	0	53	158
+	4	 0x4302424	dboolcol	0	158	192
+	5	 0x4302480	datainst	0	192	212
+	6	 0x43024a0	datatprf	0	212	232
+	7	 0x43024c0	datadefn	0	232	285
+	8	 0x4302564	dboolcol	0	285	319
+	9	 0x43025c0	datainst	0	319	339
+	10	 0x43025e4	dboolcol	0	339	373
+	11	 0x4302640	datainst	0	373	393
+	12	 0x4302660	bchntprf	0	393	418
+	13	 0x4302690	datatprf	0	418	438
+
+In module created from: ./016.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    my_vewwy_first_e1of2 = user-def-chan (defined) my_vewwy_first_e1of2
+      chan(
+        bool<>
+      )
+      (
+        bool<> t
+        bool<> f
+        bool<> e
+      )
+      In channel definition "my_vewwy_first_e1of2", we have: {
+        e = bool<> e
+        f = bool<> f
+        t = bool<> t
+      }
+
+}
+

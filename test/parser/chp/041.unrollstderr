@@ -1,0 +1,57 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303240	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4303260	procdefn	0	53	149
+	4	 0x43031e4	chancoll	0	149	187
+	5	 0x43032f0	chaninst	0	187	207
+	6	 0x4303310	bchntprf	0	207	232
+	7	 0x4303340	datatprf	0	232	252
+	8	 0x4303360	datadefn	0	252	305
+	9	 0x4303404	chancoll	0	305	343
+	10	 0x4303460	chaninst	0	343	363
+	11	 0x4303480	bchntprf	0	363	388
+	12	 0x43034b0	datatprf	0	388	408
+	13	 0x43034d4	dboolcol	0	408	442
+	14	 0x4303530	datainst	0	442	462
+	15	 0x4303550	datatprf	0	462	482
+	16	 0x4303570	CHPloop_	0	482	494
+	17	 0x4303580	CHPrecv_	0	494	514
+	18	 0x43035a0	schnnref	0	514	530
+	19	 0x43035b0	sdbnref_	0	530	546
+	20	 0x43035d0	CHPloop_	0	546	558
+	21	 0x43035e0	CHPsend_	0	558	578
+	22	 0x4303600	schnnref	0	578	594
+	23	 0x4804404	cnstpb__	0	594	603
+
+In module created from: ./041.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    sink_source = process-definition (defined) sink_source(
+        chan?(bool<>) S
+        chan!(bool<>) T
+      )
+      In definition "sink_source", we have: {
+        S = chan?(bool<>) S
+        T = chan!(bool<>) T
+        b = bool<> b
+        chp:
+        concurrent: {
+          *[
+            S?(b)
+          ]
+          *[
+            T!(false)
+          ]
+        }
+      }
+
+}
+

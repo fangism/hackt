@@ -1,0 +1,124 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4307220	module__	0	0	32
+	2	 0x4300144	namespc_	0	32	64
+	3	 0x4307240	procdefn	0	64	162
+	4	 0x43072d4	dboolcol	0	162	196
+	5	 0x4307330	datainst	0	196	216
+	6	 0x4307350	datatprf	0	216	236
+	7	 0x4307370	datadefn	0	236	289
+	8	 0x4307414	dboolcol	0	289	323
+	9	 0x4307470	datainst	0	323	343
+	10	 0x4307494	dboolcol	0	343	377
+	11	 0x43074f0	datainst	0	377	397
+	12	 0x4829208	PRSpuldn	0	397	414
+	13	 0x4307518	PRSor___	0	414	434
+	14	 0x4307628	PRSlitrl	0	434	446
+	15	 0x43077b0	sdbmref_	0	446	466
+	16	 0x4307634	PRSlitrl	0	466	478
+	17	 0x43077e0	sdbmref_	0	478	498
+	18	 0x4307810	sdbmref_	0	498	518
+	19	 0x4829608	PRSpulup	0	518	535
+	20	 0x4307848	PRSand__	0	535	555
+	21	 0x4307958	PRSnot__	0	555	567
+	22	 0x4307640	PRSlitrl	0	567	579
+	23	 0x4307ae0	sdbmref_	0	579	599
+	24	 0x4307964	PRSnot__	0	599	611
+	25	 0x430764c	PRSlitrl	0	611	623
+	26	 0x4307b10	sdbmref_	0	623	643
+	27	 0x4307b40	sdbmref_	0	643	663
+	28	 0x4307b70	procdefn	0	663	761
+	29	 0x4307c04	dboolcol	0	761	795
+	30	 0x4307c60	datainst	0	795	815
+	31	 0x4307c80	datatprf	0	815	835
+	32	 0x4307ca4	dboolcol	0	835	869
+	33	 0x4307d00	datainst	0	869	889
+	34	 0x4307d24	dboolcol	0	889	923
+	35	 0x4307d80	datainst	0	923	943
+	36	 0x4829224	PRSpuldn	0	943	960
+	37	 0x4307520	PRSor___	0	960	980
+	38	 0x4307658	PRSlitrl	0	980	992
+	39	 0x4307da0	sdbmref_	0	992	1012
+	40	 0x4307664	PRSlitrl	0	1012	1024
+	41	 0x4307dd0	sdbmref_	0	1024	1044
+	42	 0x4307e00	sdbmref_	0	1044	1064
+	43	 0x4829624	PRSpulup	0	1064	1081
+	44	 0x4307850	PRSand__	0	1081	1101
+	45	 0x4307970	PRSnot__	0	1101	1113
+	46	 0x4307670	PRSlitrl	0	1113	1125
+	47	 0x430797c	PRSnot__	0	1125	1137
+	48	 0x430767c	PRSlitrl	0	1137	1149
+	49	 0x4307e30	procdefn	0	1149	1247
+	50	 0x4307ec4	dboolcol	0	1247	1281
+	51	 0x4307f20	datainst	0	1281	1301
+	52	 0x4307f40	datatprf	0	1301	1321
+	53	 0x4307f64	dboolcol	0	1321	1355
+	54	 0x4307fc0	datainst	0	1355	1375
+	55	 0x4307fe4	dboolcol	0	1375	1409
+	56	 0x4308040	datainst	0	1409	1429
+	57	 0x4829640	PRSpulup	0	1429	1446
+	58	 0x4307858	PRSand__	0	1446	1466
+	59	 0x4307988	PRSnot__	0	1466	1478
+	60	 0x4307688	PRSlitrl	0	1478	1490
+	61	 0x4308060	sdbmref_	0	1490	1510
+	62	 0x4307994	PRSnot__	0	1510	1522
+	63	 0x4307694	PRSlitrl	0	1522	1534
+	64	 0x4308090	sdbmref_	0	1534	1554
+	65	 0x43080c0	sdbmref_	0	1554	1574
+	66	 0x4829240	PRSpuldn	0	1574	1591
+	67	 0x4307528	PRSor___	0	1591	1611
+
+In module created from: ./nor-01.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    nor2_ver1 = process-definition (defined) nor2_ver1(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "nor2_ver1", we have: {
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        a | b -> c-
+        ~a & ~b -> c+
+      }
+
+    nor2_ver2 = process-definition (defined) nor2_ver2(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "nor2_ver2", we have: {
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        a | b -> c-
+        ~a & ~b -> c+
+      }
+
+    nor2_ver3 = process-definition (defined) nor2_ver3(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "nor2_ver3", we have: {
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        ~a & ~b -> c+
+        a | b -> c-
+      }
+
+}
+

@@ -2,19 +2,19 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x33006a4	module__	0	0	32
-	2	 0x3300170	namespc_	0	32	56
-	3	 0x33001a4	namespc_	0	56	82
-	4	 0x33001d8	namespc_	0	82	108
-	5	 0x330020c	namespc_	0	108	134
-	6	 0x33006c4	dintcoll	0	134	185
-	7	 0x3804604	datainst	0	185	205
-	8	 0x3300714	datatprf	0	205	221
-	9	 0x3301710	datadefn	0	221	252
-	10	 0x3300724	dprmlst_	0	252	268
-	11	 0x263f024	cnstpi__	0	268	280
+	1	 0x4302010	module__	0	0	33
+	2	 0x4300144	namespc_	0	33	57
+	3	 0x4300178	namespc_	0	57	83
+	4	 0x43001ac	namespc_	0	83	109
+	5	 0x43001e0	namespc_	0	109	135
+	6	 0x4302034	dintcoll	0	135	179
+	7	 0x4302090	datainst	0	179	199
+	8	 0x43020b0	datatprf	0	199	219
+	9	 0x43020d0	datadefn	0	219	271
+	10	 0x4302170	dprmlst_	0	271	287
+	11	 0x3777028	cnstpi__	0	287	299
 
-In module created from: -stdin- (unrolled)
+In module created from: ./005.in (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -43,7 +43,7 @@ In namespace "", we have: {
               0 definitions
               0 typedefs
               Instances:
-                whazzup = int<32> whazzup
+                whazzup = int<32>^0 whazzup (instantiated) = ::yo::yo::yo::whazzup
             }
         }
     }

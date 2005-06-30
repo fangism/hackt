@@ -1,0 +1,76 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4304210	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	61
+	3	 0x4304230	procdefn	0	61	149
+	4	 0x43042c4	pintcoll	0	149	186
+	5	 0x4304310	pintinst	0	186	202
+	6	 0x4304324	pintcoll	0	202	239
+	7	 0x4304370	pintinst	0	239	255
+	8	 0x4304384	dintcoll	1	255	290
+	9	 0x43043d0	datainst	0	290	310
+	10	 0x43043f0	datatprf	0	310	330
+	11	 0x4304410	datadefn	0	330	382
+	12	 0x43044b0	dprmlst_	0	382	398
+	13	 0x43044c0	spimref_	0	398	418
+	14	 0x43044f0	drnglst_	0	418	434
+	15	 0x4304514	dynrng__	0	434	450
+	16	 0x371c028	cnstpi__	0	450	462
+	17	 0x4304538	arithexp	0	462	479
+	18	 0x4304540	spimref_	0	479	499
+	19	 0x371c038	cnstpi__	0	499	511
+	20	 0x4304570	proctpdf	0	511	569
+	21	 0x43045e0	proctprf	0	569	589
+	22	 0x4304600	dprmlst_	0	589	609
+	23	 0x371c048	cnstpi__	0	609	621
+	24	 0x4304610	spimref_	0	621	641
+	25	 0x4304644	pintcoll	0	641	678
+	26	 0x4304690	pintinst	0	678	694
+	27	 0x43046a0	datatpdf	0	694	753
+	28	 0x4304710	datatprf	0	753	773
+	29	 0x4304730	dprmlst_	0	773	789
+	30	 0x4304758	arithexp	0	789	806
+	31	 0x371c058	cnstpi__	0	806	818
+	32	 0x4304760	spimref_	0	818	838
+	33	 0x4304794	pintcoll	0	838	875
+	34	 0x43047e0	pintinst	0	875	891
+
+In module created from: ./013.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  2 typedefs
+  Definitions:
+    fangism = process-definition (declared) fangism<
+      pint<> N
+      pint<> K
+      >(
+        int<pint-inst-ref ::fangism::K> ick with indices: {
+          [0..::fangism::N-1]
+        }
+
+      )
+      In definition "fangism", we have: {
+        K = pint<> K
+        N = pint<> N
+        ick = int<pint-inst-ref ::fangism::K> ick with indices: {
+          [0..::fangism::N-1]
+        }
+
+      }
+
+  Typedefs:
+    double_int = datatype-definition-alias: double_int<
+      pint<> W
+      >
+      = int<2*pint-inst-ref ::double_int::W>
+    fangism_0 = process-definition-alias: fangism_0<
+      pint<> K
+      >
+      = fangism<0, pint-inst-ref ::fangism_0::K>
+}
+

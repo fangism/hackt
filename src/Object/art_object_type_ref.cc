@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.1 2005/06/25 21:07:26 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.2 2005/06/30 23:22:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -74,14 +74,15 @@ using util::write_value;
 //=============================================================================
 // class fundamental_type_reference method definitions
 
-fundamental_type_reference::fundamental_type_reference(
-		template_args_ptr_type& pl) :
-		type_reference_base(), template_params(pl) {
+fundamental_type_reference::fundamental_type_reference() :
+		type_reference_base(), 
+		template_args() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fundamental_type_reference::fundamental_type_reference(void) :
-		type_reference_base(), template_params() {
+fundamental_type_reference::fundamental_type_reference(
+		const template_actuals& a) :
+		type_reference_base(), template_args(a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,35 +93,17 @@ fundamental_type_reference::~fundamental_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
-//	STACKTRACE("fundamental_type_reference::dump()");
-	return o << get_base_def()->get_name() +template_param_string();
+	return template_args.dump(o << get_base_def()->get_name());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-fundamental_type_reference::template_param_string(void) const {
-	string ret("<");
-	if (template_params) {
-		ostringstream o;
-		template_params->dump(o);
-		ret += o.str();
-	}
-	ret += ">";
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-string
-fundamental_type_reference::get_qualified_name(void) const {
-	return get_base_def()->get_qualified_name() +template_param_string();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<param_expr_list>
-fundamental_type_reference::get_copy_template_params(void) const {
-	if (template_params)
-		return template_params->make_copy();
-	else	return excl_ptr<param_expr_list>(NULL);
+/**
+	\return non-modifiable copy of the template argument list.  
+	So far only called by int_instance_collection.  
+ */
+const template_actuals&
+fundamental_type_reference::get_template_params(void) const {
+	return template_args;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -130,7 +113,7 @@ UNVEIL LATER
 	Resolve canonical type.  Flattens the type through typedefs.  
 	Precondition: all template parameters must have been resolved to 
 	constants.  Other formals acceptable, as non-constants?
-	Passes its template_params top-down.  
+	Passes its template_args top-down.  
 	Implementation: converts list of template parameters into 
 	a hash_map from param_instance_collection (identifier) to 
 	actual parameter expression.  Effectively does substitution.  
@@ -149,9 +132,9 @@ if (base_def.is_a<typedef_base>()) {
 	// precondition: actuals' and formals' types already checked
 	// first, construct the actuals map (yes, on the stack)
 	template_actuals_map_type actuals_map;
-	if (template_params) {
+	if (template_args) {
 		base_def->fill_template_actuals_map(
-			actuals_map, *template_params);
+			actuals_map, *template_args);
 		// Make a deep copy of the typedef's template parameters, 
 		// substituting appropriately in the parameter expressions.
 
@@ -163,9 +146,9 @@ if (base_def.is_a<typedef_base>()) {
 	// FINISH ME
 } else {
 	// is not a typedef, just return a deep-copy of itself.
-	if (template_params)
+	if (template_args)
 		return return_type(base_def->make_fundamental_type_reference(
-			template_params->make_copy()));
+			template_args->make_copy()));
 	else
 		return return_type(base_def->make_fundamental_type_reference());
 }
@@ -183,147 +166,144 @@ fundamental_type_reference::make_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Returns true if the types *may* be equivalent.  
-	Easy for non-template types, but for template types, 
-	sometimes parameters may be determined by other parameters
-	and thus are not statically constant for comparison.  
-	\return false if there is definite mismatch in type.  
-	TO DO: resolve typedefs!
+	TODO: channel type references may have no base definition!
  */
 bool
-fundamental_type_reference::may_be_type_equivalent(
+fundamental_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
-	never_ptr<const definition_base> left(get_base_def());
-	never_ptr<const definition_base> right(t.get_base_def());
-
-	bool have_typedef = false;
-
-	// TO resolve typedefs and aliases
-	// self-recursive call to expand parameters...
-	// or PUNT unrolling actual parameters until later...
-	never_ptr<const typedef_base>
-		ltdb(left.is_a<const typedef_base>());
-	never_ptr<const typedef_base>
-		rtdb(right.is_a<const typedef_base>());
-	while (ltdb) {
-		have_typedef = true;
-		left = ltdb->get_base_type_ref()->get_base_def();
-		ltdb = left.is_a<const typedef_base>();
+	const count_ptr<const fundamental_type_reference>
+		lt(make_canonical_type_reference());
+	const count_ptr<const fundamental_type_reference>
+		rt(t.make_canonical_type_reference());
+	if (!lt || !rt) {
+		cerr << "Internal compiler error: "
+			"In fundamental_type_reference::may_be_collectibly_type_equivalent(), "
+			"got null left-type or right-type after canonicalization.  "
+			"FAAAAANNNNG!" << endl;
+		THROW_EXIT;
 	}
-	while (rtdb) {
-		have_typedef = true;
-		right = rtdb->get_base_type_ref()->get_base_def();
-		rtdb = right.is_a<const typedef_base>();
-	}
-#if 0
-	if (ltdb) {
-		ltdb->resolve_complete_type(template_params);
-	}
-	if (rtdb) {
-		rtdb->resolve_complete_type(t.template_params);
-	}
-	INVARIANT(!ltdb && !rtdb);		// down to canonical definitions
-#endif
-	if (have_typedef) {
-		if (left != right)
-			return false;
-		// overly conservative: doesn't even examine template params
-		// unrolling of actual template param actuals will
-		// eventually be checked.  
-		// In other words, I'm punting this for now.  
-		else	return true;
-		// should compare flattened unrolled param lists
-		// after substitutions (ideally)
-	}
-	// else continue normal type-check comparison
-
-	if (left != right) {
-#if 0
-		left->dump(cerr << "left: ") << endl;
-		right->dump(cerr << "right: ") << endl;
-#endif
+	// NOTE: this will not work on built-in channels!
+	// NOTE: will require more re-work with nested template types.
+	const never_ptr<const definition_base>
+		ld(lt->get_base_def());
+	const never_ptr<const definition_base>
+		rd(rt->get_base_def());
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	if (ld != rd)
 		return false;
+	else	return lt->template_args.may_be_relaxed_equivalent(
+			rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+fundamental_type_reference::must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const count_ptr<const fundamental_type_reference>
+		lt(make_canonical_type_reference());
+	const count_ptr<const fundamental_type_reference>
+		rt(t.make_canonical_type_reference());
+	if (!lt || !rt) {
+		cerr << "Internal compiler error: "
+			"In fundamental_type_reference::must_be_collectibly_type_equivalent(), "
+			"got null left-type or right-type after canonicalization.  "
+			"FAAAAANNNNG!" << endl;
+		THROW_EXIT;
 	}
-	// else base definitions are equal
-	if (template_params) {
-		if (!t.template_params) {
-			// template params should be filled in with defaults
-			// as necessary.  
-			return false;
-		} else {
-			return template_params->may_be_equivalent(
-				*t.template_params);
-		}
-	} else {
-		return (!t.template_params);
+	// NOTE: this will not work on built-in channels!
+	// NOTE: will require more re-work with nested template types.
+	const never_ptr<const definition_base>
+		ld(lt->get_base_def());
+	const never_ptr<const definition_base>
+		rd(rt->get_base_def());
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	if (ld != rd)
+		return false;
+	else	return lt->template_args.must_be_relaxed_equivalent(
+			rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+fundamental_type_reference::may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const count_ptr<const fundamental_type_reference>
+		lt(make_canonical_type_reference());
+	const count_ptr<const fundamental_type_reference>
+		rt(t.make_canonical_type_reference());
+	if (!lt || !rt) {
+		cerr << "Internal compiler error: "
+			"In fundamental_type_reference::may_be_connectibly_type_equivalent(), "
+			"got null left-type or right-type after canonicalization.  "
+			"FAAAAANNNNG!" << endl;
+		THROW_EXIT;
 	}
+	// NOTE: this will not work on built-in channels!
+	// NOTE: will require more re-work with nested template types.
+	const never_ptr<const definition_base>
+		ld(lt->get_base_def());
+	const never_ptr<const definition_base>
+		rd(rt->get_base_def());
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	if (ld != rd)
+		return false;
+	else	return lt->template_args.may_be_strict_equivalent(
+			rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+fundamental_type_reference::must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const count_ptr<const fundamental_type_reference>
+		lt(make_canonical_type_reference());
+	const count_ptr<const fundamental_type_reference>
+		rt(t.make_canonical_type_reference());
+	if (!lt || !rt) {
+		cerr << "Internal compiler error: "
+			"In fundamental_type_reference::must_be_connectibly_type_equivalent(), "
+			"got null left-type or right-type after canonicalization.  "
+			"FAAAAANNNNG!" << endl;
+		THROW_EXIT;
+	}
+	// NOTE: this will not work on built-in channels!
+	// NOTE: will require more re-work with nested template types.
+	const never_ptr<const definition_base>
+		ld(lt->get_base_def());
+	const never_ptr<const definition_base>
+		rd(rt->get_base_def());
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	if (ld != rd)
+		return false;
+	else	return lt->template_args.must_be_strict_equivalent(
+			rt->template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Must be equivalent.  
-	Conservatively returns false.  
-	TODO: special case when comparing built-in channel types.  (2005-05-28)
+	Should be pure virtual, but providing a temporary default-catch
+	null implementation.  
  */
-bool
-fundamental_type_reference::must_be_type_equivalent(
-		const fundamental_type_reference& t) const {
-	const never_ptr<const definition_base> left(get_base_def());
-	const never_ptr<const definition_base> right(t.get_base_def());
-	NEVER_NULL(left);
-	NEVER_NULL(right);
-	// TO DO: may need to resolve alias? unrolling context?
-	if (left != right) {
-#if 0
-		left->dump(cerr << "left: ") << endl;
-		right->dump(cerr << "right: ") << endl;
-#endif
-		return false;
-	}
-	// else base definitions are equal
-	// TO DO: compare template arguments
-	// if values are default, do we fill in template args?  we should
-	if (template_params) {
-		cerr << "TO DO: finish static parameter comparison!" << endl;
-		if (!t.template_params) {
-			// template params should be filled in with defaults
-			// as necessary.  
-			return false;
-		} else {
-			return template_params->must_be_equivalent(
-				*t.template_params);
-		}
-	} else {
-		// both must be NULL
-		return (!t.template_params);
-	}
-	return false;
+good_bool
+fundamental_type_reference::unroll_register_complete_type(void) const {
+	cerr << "WARNING: unimplemented fundamental_type_reference"
+		"::unroll_register_complete_type() returns \'bad\'." << endl;
+	return good_bool(false);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-declared now, 
-UNVEIL LATER
-/**
-	Takes a type reference with a typedef and resolves it to 
-	its canonical definition, with parameters substituted
-	appropriately.  
-	We need a method for substituting parameters.  
-	What should this method do if this is already canonical?
-	Preconditions: parameters must be initialized?
- */
-excl_ptr<const fundamental_type_reference>
-	make_canonical_type_reference(void) const {
-
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 fundamental_type_reference::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	if (template_params)
-		template_params->collect_transient_info(m);
+	template_args.collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -331,7 +311,7 @@ void
 fundamental_type_reference::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE("fund_type_ref::write_object_base()");
-	m.write_pointer(o, template_params);
+	template_args.write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -339,10 +319,7 @@ void
 fundamental_type_reference::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE("fund_type_ref::load_object_base()");
-	m.read_pointer(i, template_params);
-	if (template_params)
-		m.load_object_once(
-			const_cast<param_expr_list*>(&*template_params));
+	template_args.load_object_base(m, i);
 }
 
 
@@ -396,7 +373,7 @@ data_type_reference::data_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::data_type_reference(
 		const definition_ptr_type td, 
-		template_args_ptr_type& pl) :
+		const template_actuals& pl) :
 		fundamental_type_reference(pl), 
 		base_type_def(td) {
 	NEVER_NULL(base_type_def);
@@ -439,10 +416,10 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
-	if (template_params) {
-		template_args_ptr_type
-			actuals = template_params->unroll_resolve(c)
-				.as_a_xfer<const param_expr_list>();
+	if (template_args) {
+		const template_actuals
+			actuals(template_args.unroll_resolve(c));
+		// check for errors??? at least try-catch
 		if (actuals) {
 			// TODO: resolve aliases!
 			return return_type(
@@ -519,16 +496,28 @@ data_type_reference::make_instance_collection(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Convenience function for creating data int type-references.
+	\returns newly allocated integer type reference.
  */
 data_type_reference*
 data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 	// is an excl_ptr, incidentally
-	fundamental_type_reference::template_args_ptr_type
-	width_params(new const_param_expr_list(
-		count_ptr<const pint_const>(new pint_const(w))));
+	const fundamental_type_reference::template_args_ptr_type
+		width_params(new const_param_expr_list(
+			count_ptr<const pint_const>(new pint_const(w))));
+	const template_actuals tpl(width_params, 
+		template_actuals::arg_list_ptr_type());
 	return new data_type_reference(
-		never_ptr<const built_in_datatype_def>(&int_def), 
-		width_params);
+		never_ptr<const built_in_datatype_def>(&int_def), tpl);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a type reference to a non-typedef data type.  
+ */
+count_ptr<const fundamental_type_reference>
+data_type_reference::make_canonical_type_reference(void) const {
+	// INVARIANT(template_args.is_constant());		// NOT true
+	return base_type_def->make_canonical_type_reference(template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -588,7 +577,7 @@ data_type_reference::load_object(const persistent_object_manager& m,
 
 // inline
 channel_type_reference_base::channel_type_reference_base(
-		template_args_ptr_type& pl) :
+		const template_actuals& pl) :
 		parent_type(pl), direction('\0') {
 }
 
@@ -666,14 +655,14 @@ builtin_channel_type_reference::dump_long(ostream& o) const {
 		o << direction;
 	o << '(' << endl;
 	{
-	const indent __indent__(o); 
+	INDENT_SECTION(o); 
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
 	for ( ; i!=e; i++) {
 		(*i)->dump(o << auto_indent) << endl;
 	}
 	}
-	return o << auto_indent << ')' << endl;
+	return o << auto_indent << ')';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -754,6 +743,26 @@ builtin_channel_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: built-in channel types don't have their own template
+	signatures (template_formals_manager) or home-base definitions, 
+	however the data-types carried in the ports may be dependent
+	on template parameters.  
+	e.g. (implicitly) template <pint W> chan(int<W>) ...
+	So really the canonical types of the data members should be
+	resolved using the channel-definition's template signature.  
+	How can that be passed down?
+	Use a different signature context?
+ */
+count_ptr<const fundamental_type_reference>
+builtin_channel_type_reference::make_canonical_type_reference(void) const {
+	typedef count_ptr<const fundamental_type_reference>	return_type;
+	cerr << "Fang, finish builtin_channel_type_reference::"
+		"make_canonical_type_reference()!" << endl;
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 builtin_channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -801,7 +810,7 @@ channel_type_reference::channel_type_reference() :
  */
 channel_type_reference::channel_type_reference(
 		const never_ptr<const channel_definition_base> cd, 
-		template_args_ptr_type& pl) :
+		const template_actuals& pl) :
 		parent_type(pl), 
 		base_chan_def(cd) {
 	NEVER_NULL(base_chan_def);
@@ -885,6 +894,18 @@ channel_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: recursively canonicalize types for data-parameters and ports?
+ */
+count_ptr<const fundamental_type_reference>
+channel_type_reference::make_canonical_type_reference(void) const {
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
+	cerr << "Fang, finish channel_type_reference::"
+		"make_canonical_type_reference()!" << endl;
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -914,7 +935,6 @@ channel_type_reference::load_object(const persistent_object_manager& m,
 //=============================================================================
 // class process_type_reference method definitions
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor only accessible to the construct_empty
 	method called during object allocation and de-serialization.  
@@ -936,7 +956,7 @@ process_type_reference::process_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 process_type_reference::process_type_reference(
 		const never_ptr<const process_definition_base> pd, 
-		template_args_ptr_type& pl) :
+		const template_actuals& pl) :
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	NEVER_NULL(base_proc_def);
@@ -971,10 +991,9 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
-	if (template_params) {
-		template_args_ptr_type
-			actuals = template_params->unroll_resolve(c)
-				.as_a_xfer<const param_expr_list>();
+	if (template_args) {
+		const template_actuals
+			actuals(template_args.unroll_resolve(c));
 		if (actuals) {
 			// TODO: resolve aliases!
 			return return_type(
@@ -986,6 +1005,22 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 	} else {
 		return return_type(new this_type(base_proc_def));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prototype implementation of unrolling a complete type with
+	template actuals specified.  
+	TODO: template actuals need to be done for real...
+	TODO: this will modify the base definition!
+ */
+good_bool
+process_type_reference::unroll_register_complete_type(void) const {
+	cerr << "process_type_reference::unroll_register_complete_type() "
+		"in progress..." << endl;
+	// base_proc_def is abstract, may be a typedef
+	// base_proc_def->instantiate_public_structure(actuals);
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1014,6 +1049,13 @@ process_type_reference::make_instance_collection(
 		const token_identifier& id, const size_t d) const {
 	return excl_ptr<instance_collection_base>(
 		process_instance_collection::make_array(*s, id, d));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const fundamental_type_reference>
+process_type_reference::make_canonical_type_reference(void) const {
+	INVARIANT(template_args.is_constant());
+	return base_proc_def->make_canonical_type_reference(template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1086,10 +1128,10 @@ param_type_reference::make_instantiation_statement_private(
 	static const class_traits<pint_tag>::type_ref_ptr_type&
 		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
 	INVARIANT(t == this);
-	if (this->must_be_type_equivalent(*pbool_type_ptr)) {
+	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
 			pbool_type_ptr, d));
-	} else if (this->must_be_type_equivalent(*pint_type_ptr)) {
+	} else if (this->must_be_connectibly_type_equivalent(*pint_type_ptr)) {
 		return return_type(new pint_instantiation_statement(
 			pint_type_ptr, d));
 	} else {
@@ -1118,10 +1160,10 @@ param_type_reference::make_instance_collection(
 		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
 	static const class_traits<pint_tag>::type_ref_ptr_type&
 		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
-	if (this->must_be_type_equivalent(*pbool_type_ptr))
+	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pbool_instance_collection::make_array(*s, id, d));
-	else if (this->must_be_type_equivalent(*pint_type_ptr))
+	else if (this->must_be_connectibly_type_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pint_instance_collection::make_array(*s, id, d));
 	else {
@@ -1134,7 +1176,29 @@ param_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre template actuals have beeen resolved to constants.  
+ */
+count_ptr<const fundamental_type_reference>
+param_type_reference::make_canonical_type_reference(void) const {
+	static const class_traits<pbool_tag>::type_ref_ptr_type&
+		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
+	static const class_traits<pint_tag>::type_ref_ptr_type&
+		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
+	INVARIANT(!template_args);
+	// don't return copy-construction, use built-in type refs
+	return count_ptr<const fundamental_type_reference>(
+		new this_type(*this));	// copy-constructor
+	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr))
+		return pbool_type_ptr;
+	else if (this->must_be_connectibly_type_equivalent(*pint_type_ptr))
+		return pint_type_ptr;
+	else	DIE;
+	return return_type(NULL);
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 
 //=============================================================================

@@ -1,0 +1,254 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43108e0	module__	0	0	32
+	2	 0x4300144	namespc_	0	32	68
+	3	 0x4310930	procdefn	0	68	148
+	4	 0x43109c4	dboolcol	0	148	182
+	5	 0x4310900	datainst	0	182	202
+	6	 0x4310a20	datatprf	0	202	222
+	7	 0x4310a40	datadefn	0	222	275
+	8	 0x4310ae4	dboolcol	0	275	309
+	9	 0x4310b40	datainst	0	309	329
+	10	 0x4850008	PRSpuldn	0	329	346
+	11	 0x4310b68	PRSlitrl	0	346	358
+	12	 0x4310cf0	sdbmref_	0	358	378
+	13	 0x4310d20	sdbmref_	0	378	398
+	14	 0x4850408	PRSpulup	0	398	415
+	15	 0x4310d58	PRSnot__	0	415	427
+	16	 0x4310b74	PRSlitrl	0	427	439
+	17	 0x4310ee0	procdefn	0	439	569
+	18	 0x4310f74	dboolcol	0	569	604
+	19	 0x4310fd0	datainst	0	604	624
+	20	 0x4310ff0	datatprf	0	624	644
+	21	 0x4311014	dboolcol	0	644	679
+	22	 0x4311070	datainst	0	679	699
+	23	 0x4311094	dboolcol	0	699	733
+	24	 0x43110f0	datainst	0	733	753
+	25	 0x4311110	datatprf	0	753	773
+	26	 0x4311134	dboolcol	0	773	807
+	27	 0x4311190	datainst	0	807	827
+	28	 0x43111b4	dboolcol	0	827	861
+	29	 0x4311210	datainst	0	861	881
+	30	 0x4850024	PRSpuldn	0	881	898
+	31	 0x4310b80	PRSlitrl	0	898	910
+	32	 0x4311230	sdbmref_	0	910	930
+	33	 0x4311260	sdbmref_	0	930	950
+	34	 0x4850424	PRSpulup	0	950	967
+	35	 0x4310d64	PRSnot__	0	967	979
+	36	 0x4310b8c	PRSlitrl	0	979	991
+	37	 0x4850040	PRSpuldn	0	991	1008
+	38	 0x4310b98	PRSlitrl	0	1008	1020
+	39	 0x4311290	sdbmref_	0	1020	1040
+	40	 0x43112c0	sdbmref_	0	1040	1060
+	41	 0x4850440	PRSpulup	0	1060	1077
+	42	 0x4310d70	PRSnot__	0	1077	1089
+	43	 0x4310ba4	PRSlitrl	0	1089	1101
+	44	 0x485005c	PRSpuldn	0	1101	1118
+	45	 0x43112f8	PRSor___	0	1118	1138
+	46	 0x4311408	PRSand__	0	1138	1158
+	47	 0x4310bb0	PRSlitrl	0	1158	1170
+	48	 0x4311510	sdbmref_	0	1170	1190
+	49	 0x4310bbc	PRSlitrl	0	1190	1202
+	50	 0x4311540	sdbmref_	0	1202	1222
+	51	 0x4311410	PRSand__	0	1222	1242
+	52	 0x4310bc8	PRSlitrl	0	1242	1254
+	53	 0x4311570	sdbmref_	0	1254	1274
+	54	 0x4310bd4	PRSlitrl	0	1274	1286
+	55	 0x43115a0	sdbmref_	0	1286	1306
+	56	 0x43115d0	sdbmref_	0	1306	1326
+	57	 0x485045c	PRSpulup	0	1326	1343
+	58	 0x4311300	PRSor___	0	1343	1363
+	59	 0x4311418	PRSand__	0	1363	1383
+	60	 0x4310d7c	PRSnot__	0	1383	1395
+	61	 0x4310be0	PRSlitrl	0	1395	1407
+	62	 0x4311600	sdbmref_	0	1407	1427
+	63	 0x4310d88	PRSnot__	0	1427	1439
+	64	 0x4310bec	PRSlitrl	0	1439	1451
+	65	 0x4311630	sdbmref_	0	1451	1471
+	66	 0x4311420	PRSand__	0	1471	1491
+	67	 0x4310d94	PRSnot__	0	1491	1503
+	68	 0x4310bf8	PRSlitrl	0	1503	1515
+	69	 0x4311660	sdbmref_	0	1515	1535
+	70	 0x4310da0	PRSnot__	0	1535	1547
+	71	 0x4310c04	PRSlitrl	0	1547	1559
+	72	 0x4311690	sdbmref_	0	1559	1579
+	73	 0x43116c0	sdbmref_	0	1579	1599
+	74	 0x43116f0	procdefn	0	1599	1737
+	75	 0x4311784	dboolcol	0	1737	1772
+	76	 0x43117e0	datainst	0	1772	1792
+	77	 0x4311800	datatprf	0	1792	1812
+	78	 0x4311824	dboolcol	0	1812	1847
+	79	 0x4311880	datainst	0	1847	1867
+	80	 0x43118a4	proccoll	0	1867	1906
+	81	 0x4311900	procinst	0	1906	1926
+	82	 0x4311920	proctprf	0	1926	1946
+	83	 0x4311944	proccoll	0	1946	1985
+	84	 0x43119a0	procinst	0	1985	2005
+	85	 0x43119c4	dboolcol	0	2005	2039
+	86	 0x4311a20	datainst	0	2039	2059
+	87	 0x4311a40	datatprf	0	2059	2079
+	88	 0x4311a64	dboolcol	0	2079	2113
+	89	 0x4311ac0	datainst	0	2113	2133
+	90	 0x4311ae4	dboolcol	0	2133	2167
+	91	 0x4311b40	datainst	0	2167	2187
+	92	 0x4310920	portconn	0	2187	2211
+	93	 0x4311b60	sprcmref	0	2211	2231
+	94	 0x4311b90	sdbmref_	0	2231	2251
+	95	 0x4311bc0	sdbmref_	0	2251	2271
+	96	 0x4311bf0	portconn	0	2271	2295
+	97	 0x4311c00	sprcmref	0	2295	2315
+	98	 0x4311c30	sdbmref_	0	2315	2335
+	99	 0x4311c60	sdbmref_	0	2335	2355
+	100	 0x4850078	PRSpuldn	0	2355	2372
+	101	 0x4311308	PRSor___	0	2372	2392
+	102	 0x4311428	PRSand__	0	2392	2412
+	103	 0x4310c10	PRSlitrl	0	2412	2424
+	104	 0x4311c90	sdbmref_	0	2424	2444
+	105	 0x4310c1c	PRSlitrl	0	2444	2456
+	106	 0x4311cc0	sdbmref_	0	2456	2476
+	107	 0x4311430	PRSand__	0	2476	2496
+	108	 0x4310c28	PRSlitrl	0	2496	2508
+	109	 0x4311cf0	sdbmref_	0	2508	2528
+	110	 0x4310c34	PRSlitrl	0	2528	2540
+	111	 0x4311d20	sdbmref_	0	2540	2560
+	112	 0x4311d50	sdbmref_	0	2560	2580
+	113	 0x4850478	PRSpulup	0	2580	2597
+	114	 0x4311438	PRSand__	0	2597	2617
+	115	 0x4311310	PRSor___	0	2617	2637
+	116	 0x4310dac	PRSnot__	0	2637	2649
+	117	 0x4310c40	PRSlitrl	0	2649	2661
+	118	 0x4310db8	PRSnot__	0	2661	2673
+	119	 0x4310c4c	PRSlitrl	0	2673	2685
+	120	 0x4311318	PRSor___	0	2685	2705
+	121	 0x4310dc4	PRSnot__	0	2705	2717
+	122	 0x4310c58	PRSlitrl	0	2717	2729
+	123	 0x4310dd0	PRSnot__	0	2729	2741
+	124	 0x4310c64	PRSlitrl	0	2741	2753
+	125	 0x4311d80	procdefn	0	2753	2891
+	126	 0x4311e14	dboolcol	0	2891	2926
+	127	 0x4311e70	datainst	0	2926	2946
+	128	 0x4311e90	datatprf	0	2946	2966
+	129	 0x4311eb4	dboolcol	0	2966	3001
+	130	 0x4311f10	datainst	0	3001	3021
+	131	 0x4311f34	proccoll	0	3021	3060
+	132	 0x4311f90	procinst	0	3060	3080
+	133	 0x4311fb0	proctprf	0	3080	3100
+	134	 0x4311fd4	proccoll	0	3100	3139
+	135	 0x4312030	procinst	0	3139	3159
+	136	 0x4312054	dboolcol	0	3159	3193
+	137	 0x43120b0	datainst	0	3193	3213
+	138	 0x43120d0	datatprf	0	3213	3233
+	139	 0x43120f4	dboolcol	0	3233	3267
+	140	 0x4312150	datainst	0	3267	3287
+	141	 0x4312174	dboolcol	0	3287	3321
+	142	 0x43121d0	datainst	0	3321	3341
+	143	 0x43121f0	portconn	0	3341	3365
+	144	 0x4312200	sprcmref	0	3365	3385
+	145	 0x4312230	sdbmref_	0	3385	3405
+	146	 0x4312260	sdbmref_	0	3405	3425
+	147	 0x4312290	portconn	0	3425	3449
+	148	 0x43122a0	sprcmref	0	3449	3469
+	149	 0x43122d0	sdbmref_	0	3469	3489
+	150	 0x4312300	sdbmref_	0	3489	3509
+	151	 0x4850494	PRSpulup	0	3509	3526
+	152	 0x4311320	PRSor___	0	3526	3546
+	153	 0x4311440	PRSand__	0	3546	3566
+	154	 0x4310ddc	PRSnot__	0	3566	3578
+	155	 0x4310c70	PRSlitrl	0	3578	3590
+	156	 0x4312330	sdbmref_	0	3590	3610
+	157	 0x4310de8	PRSnot__	0	3610	3622
+	158	 0x4310c7c	PRSlitrl	0	3622	3634
+	159	 0x4312360	sdbmref_	0	3634	3654
+	160	 0x4311448	PRSand__	0	3654	3674
+	161	 0x4310df4	PRSnot__	0	3674	3686
+	162	 0x4310c88	PRSlitrl	0	3686	3698
+	163	 0x4312390	sdbmref_	0	3698	3718
+	164	 0x4310e00	PRSnot__	0	3718	3730
+	165	 0x4310c94	PRSlitrl	0	3730	3742
+	166	 0x43123c0	sdbmref_	0	3742	3762
+	167	 0x43123f0	sdbmref_	0	3762	3782
+	168	 0x4850094	PRSpuldn	0	3782	3799
+	169	 0x4311450	PRSand__	0	3799	3819
+	170	 0x4311328	PRSor___	0	3819	3839
+	171	 0x4311330	PRSor___	0	3839	3859
+
+In module created from: ./xor-01.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+        a = bool<> a
+        b = bool<> b
+        prs:
+        a -> b-
+        ~a -> b+
+      }
+
+    xor2_ver1 = process-definition (defined) xor2_ver1(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "xor2_ver1", we have: {
+        a_ = bool<> a_
+        b_ = bool<> b_
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        a -> a_-
+        ~a -> a_+
+        b -> b_-
+        ~b -> b_+
+        (a & b) | (b_ & a_) -> c-
+        (~a & ~b_) | (~a_ & ~b) -> c+
+      }
+
+    xor2_ver2 = process-definition (defined) xor2_ver2(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "xor2_ver2", we have: {
+        a_ = bool<> a_
+        b_ = bool<> b_
+        ai = inv<> ai
+        bi = inv<> bi
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        (a & b) | (b_ & a_) -> c-
+        (~a | ~b) & (~b_ | ~a_) -> c+
+      }
+
+    xor2_ver3 = process-definition (defined) xor2_ver3(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "xor2_ver3", we have: {
+        a_ = bool<> a_
+        b_ = bool<> b_
+        ai = inv<> ai
+        bi = inv<> bi
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+        prs:
+        (~a & ~b_) | (~a_ & ~b) -> c+
+        (a | b_) & (a_ | b) -> c-
+      }
+
+}
+

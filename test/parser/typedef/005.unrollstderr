@@ -1,0 +1,57 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302bf0	module__	0	0	37
+	2	 0x4300144	namespc_	0	37	65
+	3	 0x4300178	namespc_	0	65	97
+	4	 0x4302c10	procdefn	0	97	181
+	5	 0x4302b94	dboolcol	0	181	215
+	6	 0x4302ca0	datainst	0	215	235
+	7	 0x4302cc0	datatprf	0	235	255
+	8	 0x4302ce0	datadefn	0	255	308
+	9	 0x4302d84	dboolcol	0	308	342
+	10	 0x4302de0	datainst	0	342	362
+	11	 0x4302e04	dboolcol	0	362	396
+	12	 0x4302e60	datainst	0	396	416
+	13	 0x4302e80	datatprf	0	416	436
+	14	 0x4302ea4	dboolcol	0	436	474
+	15	 0x4302f00	datainst	0	474	494
+	16	 0x4302f20	datatprf	0	494	514
+	17	 0x4302f44	dboolcol	0	514	551
+	18	 0x4302fa0	datainst	0	551	571
+	19	 0x4302fc0	datatprf	0	571	591
+
+In module created from: ./005.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    fang =     In namespace "fang", we have: {
+      0 parameter-collections
+      1 instantiation-collections
+      0 sub-namespaces
+      1 definitions
+      0 typedefs
+      Definitions:
+        foo = process-definition (declared) foo(
+            bool<> a
+            bool<> b
+            bool<> c
+          )
+          In definition "foo", we have: {
+            a = bool<> a
+            b = bool<> b
+            c = bool<> c
+          }
+
+      Instances:
+        crazy = bool^0 crazy (instantiated) = ::fang::crazy
+    }
+  Instances:
+    tada = bool^0 tada (instantiated) = ::tada
+}
+

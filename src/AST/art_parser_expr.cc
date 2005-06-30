@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24.4.1 2005/06/25 21:07:15 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.2 2005/06/30 23:22:11 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -30,6 +30,7 @@
 #include "Object/art_object_data_expr.h"
 #include "Object/art_object_PRS.h"
 // to dynamic_cast bool_meta_instance_reference
+#include "Object/art_object_template_actuals.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_bool_traits.h"
 #include "Object/art_object_int_traits.h"
@@ -64,6 +65,8 @@ SPECIALIZE_UTIL_WHAT(ART::parser::logical_expr, "(logical-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::array_concatenation, "(array-concatenation)")
 SPECIALIZE_UTIL_WHAT(ART::parser::loop_concatenation, "(loop-concatenation)")
 SPECIALIZE_UTIL_WHAT(ART::parser::array_construction, "(array-construction)")
+SPECIALIZE_UTIL_WHAT(ART::parser::template_argument_list_pair,
+		"(expr-list-pair)")
 }
 
 //=============================================================================
@@ -267,8 +270,8 @@ expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
 		context& c) const {
 	STACKTRACE("expr_list::postorder_check_meta_generic()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_meta_generic(c) :
 			checked_meta_generic_type::value_type());
@@ -279,6 +282,9 @@ expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just collects the result of type-checking of items in list.
+	Expressions are allowed to be NULL or empty, 
+	so don't catch NULLs for errors.  
+	(To catch errors, will need to check against original list...)
 	\param temp the type-checked result list.
 	\param c the context.
  */
@@ -287,8 +293,8 @@ expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
 		context& c) const {
 	STACKTRACE("expr_list::postorder_check_meta_exprs()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_meta_expr(c) :
 			checked_meta_exprs_type::value_type(NULL));
@@ -308,8 +314,8 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 		context& c) const {
 	STACKTRACE("expr_list::postorder_check_nonmeta_exprs()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i)->check_nonmeta_expr(c));
 	}
@@ -350,11 +356,71 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 		checked_nonmeta_data_refs_type& temp, context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_nonmeta_data_refs()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i)->check_nonmeta_data_reference(c));
 	}
+}
+
+//=============================================================================
+// class template_argument_list_pair method definitions
+
+template_argument_list_pair::template_argument_list_pair(
+		const list_type* s, const list_type* r) :
+		strict_args(s), relaxed_args(r) {
+	if (relaxed_args)
+		NEVER_NULL(strict_args);
+		// though strict args is allowed to be empty
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template_argument_list_pair::~template_argument_list_pair() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(template_argument_list_pair)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_argument_list_pair::leftmost(void) const {
+	if (strict_args)
+		return strict_args->leftmost();
+	else	return line_position();	// NONE
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_argument_list_pair::rightmost(void) const {
+	if (relaxed_args)
+		return relaxed_args->rightmost();
+	else	return strict_args->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks template expressions.  
+	TODO: how to signal error?
+	TODO: upgrade expressions to generalized template arguments.  
+ */
+template_argument_list_pair::return_type
+template_argument_list_pair::check_template_args(context& c) const {
+	const count_ptr<dynamic_param_expr_list>
+		strict(strict_args ? new dynamic_param_expr_list : NULL);
+	if (strict_args) {
+		expr_list::checked_meta_exprs_type temp;
+		strict_args->postorder_check_meta_exprs(temp, c);
+		// NULL are allowed, where should we check?
+		copy(temp.begin(), temp.end(), back_inserter(*strict));
+	}
+	const count_ptr<dynamic_param_expr_list>
+		relaxed(relaxed_args ? new dynamic_param_expr_list : NULL);
+	if (relaxed_args) {
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		// NULL are allowed, where should we check?
+		copy(temp.begin(), temp.end(), back_inserter(*relaxed));
+	}
+	return return_type(strict, relaxed);
 }
 
 //=============================================================================
@@ -459,7 +525,7 @@ operator << (ostream& o, const qualified_id& id) {
 	if (id.empty()) {
 		return o << "<null qualified_id>";
 	} else {
-		qualified_id::const_iterator i = id.begin();
+		qualified_id::const_iterator i(id.begin());
 		if (id.is_absolute())
 			o << scope;
 		count_ptr<const token_identifier> tid(*i);
@@ -481,7 +547,7 @@ operator << (ostream& o, const qualified_id_slice& id) {
 	if (id.empty()) {
 		return o << "<null qualified_id_slice>";
 	} else {
-		qualified_id_slice::const_iterator i = id.begin();
+		qualified_id_slice::const_iterator i(id.begin());
 		if (id.is_absolute())
 			o << scope;
 //		count_ptr<const token_identifier> tid(*i);
@@ -1593,7 +1659,7 @@ array_concatenation::rightmost(void) const {
 expr::meta_return_type
 array_concatenation::check_meta_expr(context& c) const {
 	if (size() == 1) {
-		const const_iterator only = begin();
+		const const_iterator only(begin());
 		return (*only)->check_meta_expr(c);
 	} else {
 		cerr << "Fang, finish array_concatenation::check_meta_expr()!"
@@ -1606,7 +1672,7 @@ array_concatenation::check_meta_expr(context& c) const {
 nonmeta_expr_return_type
 array_concatenation::check_nonmeta_expr(context& c) const {
 	if (size() == 1) {
-		const const_iterator only = begin();
+		const const_iterator only(begin());
 		return (*only)->check_nonmeta_expr(c);
 	} else {
 		cerr << "Fang, finish array_concatenation::check_nonmeta_expr()!"
@@ -1620,7 +1686,7 @@ expr::generic_meta_return_type
 array_concatenation::check_meta_generic(context& c) const {
 	STACKTRACE("array_concatenation::check_meta_generic()");
 	if (size() == 1) {
-		const const_iterator only = begin();
+		const const_iterator only(begin());
 		return (*only)->check_meta_generic(c);
 	} else {
 		cerr << "Fang, finish array_concatenation::check_meta_generic()!" <<

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.1 2005/06/25 21:07:23 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.2 2005/06/30 23:22:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
@@ -19,6 +19,8 @@ using util::persistent_object_manager;
 /**
 	The default way of handling user-defined types
 	in instantiation statements and instance collections.  
+	All methods and members are declared protected;
+		they're intended for children classes only.  
 	\param Tag the meta-type tag.  
  */
 template <class Tag>

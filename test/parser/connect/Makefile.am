@@ -1,12 +1,12 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:14 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.1 2005/06/30 23:22:42 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 ARTC_TEST_FAILURES = \
-	    002 003 004 005 009 \
+	    002 003 004 005 008 009 \
 	016 \
 	020 023 024 026 028 029 \
 	032 033 034 035 036 037 038 039 \
@@ -17,7 +17,7 @@ ARTC_TEST_FAILURES = \
 	080 081 082
 
 ARTC_TEST_PASSES = \
-	001 006 007 008 \
+	001 006 007 \
 	010 011 012 013 014 015 017 018 019 \
 	021 022 025 027 \
 	030 031 \
@@ -25,14 +25,20 @@ ARTC_TEST_PASSES = \
 	051 057 058 \
 	062 063 064 065 067 069 \
 	078 \
-	083 084 085
+	083 084 085 086 087
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
 ARTOBJ_TEST_SUBJECTS = \
 	$(ARTC_TEST_PASSES)
 
-ARTOBJUNROLL_TEST_SUBJECTS =
+# some are intentionally left out for now because they require more features
+# 025, 027, 030, 031: require member instance reference unrolling
+# 04{6,7,9}, 05{1,7,8}, 06{2,3,4,5,7,9}, 078, 08{3,4,5}: need port connections
+ARTOBJUNROLL_TEST_SUBJECTS = \
+	001 006 007 \
+	010 011 012 013 014 015 017 018 019 \
+	021 022
 
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \

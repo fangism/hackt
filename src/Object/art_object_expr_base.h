@@ -2,7 +2,7 @@
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
 	TODO: rename to meta_expr_base.h
-	$Id: art_object_expr_base.h,v 1.14.4.1 2005/06/24 19:02:55 fang Exp $
+	$Id: art_object_expr_base.h,v 1.14.4.2 2005/06/30 23:22:18 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
@@ -124,6 +124,9 @@ virtual	ostream&
 virtual	excl_ptr<param_expr_list>
 	make_copy(void) const = 0;
 
+virtual	count_ptr<const param_expr>
+	operator [] (const size_t) const = 0;
+
 virtual	bool
 	may_be_initialized(void) const = 0;
 
@@ -142,7 +145,11 @@ virtual	bool
 virtual	bool
 	is_loop_independent(void) const = 0;
 
-virtual	excl_ptr<const_param_expr_list>
+// coorrdinate with COUNT_TEMPLATE_ARGS in "Object/art_object_definition_base.h"
+	typedef	count_ptr<const_param_expr_list>
+					unroll_resolve_return_type;
+
+virtual	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const = 0;
 
 };	// end class param_expr_list

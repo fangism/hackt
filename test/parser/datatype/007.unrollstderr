@@ -1,0 +1,53 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302a20	module__	0	0	41
+	2	 0x4300144	namespc_	0	41	73
+	3	 0x4302a44	dintcoll	0	73	113
+	4	 0x4302aa0	datainst	0	113	133
+	5	 0x4302ac0	datatprf	0	133	153
+	6	 0x4302ae0	datadefn	0	153	205
+	7	 0x4302b80	dprmlst_	0	205	221
+	8	 0x377e028	cnstpi__	0	221	233
+	9	 0x4300178	namespc_	0	233	260
+	10	 0x4302b94	dintcoll	0	260	300
+	11	 0x4302bf0	datainst	0	300	320
+	12	 0x4302c10	datatprf	0	320	340
+	13	 0x4302c30	dprmlst_	0	340	356
+	14	 0x43001ac	namespc_	0	356	383
+	15	 0x4302c44	dintcoll	0	383	423
+	16	 0x4302ca0	datainst	0	423	443
+	17	 0x4302cc0	datatprf	0	443	463
+	18	 0x4302ce0	dprmlst_	0	463	479
+
+In module created from: ./007.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  2 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    bar =     In namespace "bar", we have: {
+      0 parameter-collections
+      1 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+      Instances:
+        foo = int<32>^0 foo (instantiated) = ::bar::foo
+    }
+    ick =     In namespace "ick", we have: {
+      0 parameter-collections
+      1 instantiation-collections
+      0 sub-namespaces
+      0 definitions
+      0 typedefs
+      Instances:
+        foo = int<32>^0 foo (instantiated) = ::ick::foo
+    }
+  Instances:
+    foo = int<32>^0 foo (instantiated) = ::foo
+}
+

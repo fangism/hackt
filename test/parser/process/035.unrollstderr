@@ -1,0 +1,35 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x43018a0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x43018c0	procdefn	0	53	113
+	4	 0x4301954	pintcoll	1	113	148
+	5	 0x43019a0	pintinst	0	148	164
+	6	 0x43019b0	crnglst_	0	164	184
+
+In module created from: ./035.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> bar with indices: {
+        [0..4]
+      }
+
+      >(
+      )
+      In definition "foo", we have: {
+        bar = pint<> bar with indices: {
+          [0..4]
+        }
+
+      }
+
+}
+

@@ -1,0 +1,60 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303ad0	module__	0	0	32
+	2	 0x4300144	namespc_	0	32	56
+	3	 0x4303af0	procdefn	0	56	124
+	4	 0x4303a84	dboolcol	2	124	153
+	5	 0x4303b80	datainst	0	153	173
+	6	 0x4303ba0	datatprf	0	173	193
+	7	 0x4303bc0	datadefn	0	193	246
+	8	 0x4303c60	crnglst_	0	246	274
+	9	 0x481b008	PRSpuldn	0	274	291
+	10	 0x4303c78	PRSlitrl	0	291	303
+	11	 0x4303e00	sdbmref_	0	303	323
+	12	 0x4303e30	cindlst_	0	323	343
+	13	 0x37a4028	cnstpi__	0	343	355
+	14	 0x37a4038	cnstpi__	0	355	367
+	15	 0x4303e40	sdbmref_	0	367	387
+	16	 0x4303e70	cindlst_	0	387	407
+	17	 0x37a4048	cnstpi__	0	407	419
+	18	 0x37a4058	cnstpi__	0	419	431
+	19	 0x481b408	PRSpulup	0	431	448
+	20	 0x4303e88	PRSnot__	0	448	460
+	21	 0x4303c84	PRSlitrl	0	460	472
+	22	 0x4304010	sdbmref_	0	472	492
+	23	 0x4304040	cindlst_	0	492	512
+	24	 0x37a4068	cnstpi__	0	512	524
+	25	 0x37a4078	cnstpi__	0	524	536
+	26	 0x4304050	sdbmref_	0	536	556
+	27	 0x4304080	cindlst_	0	556	576
+	28	 0x37a4088	cnstpi__	0	576	588
+	29	 0x37a4098	cnstpi__	0	588	600
+
+In module created from: ./inv-07.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a with indices: {
+          [0..0][0..1]
+        }
+
+      )
+      In definition "inv", we have: {
+        a = bool<> a with indices: {
+          [0..0][0..1]
+        }
+
+        prs:
+        a[0][0] -> a[0][1]-
+        ~a[0][0] -> a[0][1]+
+      }
+
+}
+

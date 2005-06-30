@@ -1,0 +1,37 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302460	module__	0	0	41
+	2	 0x4300144	namespc_	0	41	73
+	3	 0x4302484	proccoll	0	73	118
+	4	 0x43024e0	procinst	0	118	138
+	5	 0x4302500	proctprf	0	138	158
+	6	 0x4302520	procdefn	0	158	206
+	7	 0x43025b0	proctprf	0	206	226
+	8	 0x43025d4	proccoll	0	226	270
+	9	 0x4302630	procinst	0	270	290
+	10	 0x4302650	proctprf	0	290	310
+	11	 0x4302670	proctprf	0	310	330
+	12	 0x4302690	prcalias	0	330	350
+	13	 0x43026a0	sprcmref	0	350	370
+	14	 0x43026d0	sprcmref	0	370	390
+
+In module created from: ./010.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo(
+      )
+      In definition "foo", we have: {
+      }
+
+  Instances:
+    bar = process foo<>^0 bar (instantiated) = ::blah
+    blah = process foo<>^0 blah (instantiated) = ::bar
+}
+

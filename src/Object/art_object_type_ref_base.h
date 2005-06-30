@@ -1,31 +1,48 @@
 /**
-	\file "art_object_type_ref_base.h"
+	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.5 2005/01/28 19:58:45 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.1 2005/06/30 23:22:26 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_TYPE_REF_BASE_H__
-#define	__ART_OBJECT_TYPE_REF_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
+#define	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
 
-#include "macros.h"
-#include "memory/pointer_classes.h"
-#include "persistent.h"		// for persistent object interface
+#include "util/macros.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
+#include "util/persistent.h"		// for persistent object interface
+#include "util/boolean_types.h"
 
-#include "art_object_definition_base.h"
+#include "Object/art_object_util_types.h"
+#include "Object/art_object_template_actuals.h"
 
 namespace ART {
-namespace entity {
+namespace parser {
+class token_identifier;
+}
 
+namespace entity {
+class definition_base;
+class instance_collection_base;
+class scopespace;
+using parser::token_identifier;
 using std::istream;
 using util::persistent;
 using util::persistent_object_manager;
-using namespace util::memory;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
+using util::good_bool;
 
 //=============================================================================
-class type_reference_base : public object, public persistent {
+/**
+	Ultimate base class of all type-references, don't know if this
+	is actually useful...
+ */
+class type_reference_base : public persistent {
 protected:
 public:
-	type_reference_base() : object(), persistent() { }
+	type_reference_base() : persistent() { }
 virtual	~type_reference_base() { }
 
 };	// end class type_reference_base
@@ -52,24 +69,19 @@ virtual	~type_reference_base() { }
 	instance_collection family of classes...
  */
 class fundamental_type_reference : public type_reference_base {
+public:
+	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
 protected:
-	/**
-		Optional set of template parameters with which a
-		type is instantiated.  
-		Types must match that of template signature.  
-		Hmmm... maybe need a concrete_type class...
-		distinguish type_reference from type_instance.  
-		This is owned, and thus must be deleted.  
-		Const?
-	 */
-	excl_ptr<const param_expr_list>		template_params;
+	/// set of template parameters passed to this type
+	template_actuals			template_args;
 
 protected:
 	fundamental_type_reference();
-public:
-	explicit
-	fundamental_type_reference(excl_ptr<const param_expr_list>& pl);
 
+	explicit
+	fundamental_type_reference(const template_actuals&);
+
+public:
 virtual	~fundamental_type_reference();
 
 virtual	ostream&
@@ -84,21 +96,12 @@ virtual never_ptr<const definition_base>
 	string
 	template_param_string(void) const;
 
-	string
-	get_qualified_name(void) const;
-
-	string
-	hash_string(void) const;
-
-	excl_ptr<param_expr_list>
-	get_copy_template_params(void) const;
-
 	/**
 		Returns a shallow (pointer) copy or reference to
 		the template parameter list.  
 	 */
-	never_ptr<const param_expr_list>
-	get_template_params(void) const { return template_params; }
+	const template_actuals&
+	get_template_params(void) const;
 
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal
@@ -107,17 +110,19 @@ virtual never_ptr<const definition_base>
 
 	// later add dimensions and indices?
 
+#if 0
 	excl_ptr<const fundamental_type_reference>
 	resolve_canonical_type(void) const;
+#endif
 
 	static	
-	excl_ptr<instantiation_statement>
+	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d);
 
 private:
-virtual	excl_ptr<instantiation_statement>
+virtual	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) const = 0;
@@ -129,16 +134,38 @@ virtual	excl_ptr<instance_collection_base>
 
 public:
 	bool
-	may_be_equivalent(const fundamental_type_reference& t) const;
+	may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const;
 
 	bool
-	must_be_equivalent(const fundamental_type_reference& t) const;
+	must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const;
+
+	bool
+	may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const;
+
+	bool
+	must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const;
 
 	// something for resolving typedefs
 	// or return by value? statically would require copy constructor
 	// wth, just allocate one...
-	excl_ptr<const fundamental_type_reference>
-	make_canonical_type_reference(void) const;
+/**
+	NOTE: this requires that template arguments have been resolved
+	to constants!!!
+ */
+#define	MAKE_CANONICAL_TYPE_REFERENCE_PROTO				\
+	count_ptr<const fundamental_type_reference>			\
+	make_canonical_type_reference(void) const
+
+protected:
+virtual	MAKE_CANONICAL_TYPE_REFERENCE_PROTO = 0;
+
+public:
+virtual	good_bool
+	unroll_register_complete_type(void) const;
 
 protected:
 	void
@@ -148,7 +175,7 @@ protected:
 	write_object_base(const persistent_object_manager&, ostream&) const;
 
 	void
-	load_object_base(persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class fundamental_type_reference
 
@@ -156,5 +183,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_TYPE_REF_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
 

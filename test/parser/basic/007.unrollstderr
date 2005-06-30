@@ -1,0 +1,46 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4302bf0	module__	0	0	29
+	2	 0x4300144	namespc_	0	29	53
+	3	 0x4302c10	procdefn	0	53	140
+	4	 0x4302b94	dboolcol	0	140	174
+	5	 0x4302ca0	datainst	0	174	194
+	6	 0x4302cc0	datatprf	0	194	214
+	7	 0x4302ce0	datadefn	0	214	267
+	8	 0x4302d84	dboolcol	0	267	301
+	9	 0x4302de0	datainst	0	301	321
+	10	 0x4302e00	datatprf	0	321	341
+	11	 0x4816a08	PRSpuldn	0	341	358
+	12	 0x4302e28	PRSlitrl	0	358	370
+	13	 0x4302fb0	sdbmref_	0	370	390
+	14	 0x4302fe0	sdbmref_	0	390	410
+	15	 0x4817408	PRSpulup	0	410	427
+	16	 0x4303018	PRSnot__	0	427	439
+	17	 0x4302e34	PRSlitrl	0	439	451
+	18	 0x43031a0	sdbmref_	0	451	471
+	19	 0x43031d0	sdbmref_	0	471	491
+
+In module created from: ./007.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    myinverter = process-definition (defined) myinverter(
+        bool<> a
+        bool<> b
+      )
+      In definition "myinverter", we have: {
+        a = bool<> a
+        b = bool<> b
+        prs:
+        a -> b-
+        ~a -> b+
+      }
+
+}
+

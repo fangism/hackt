@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.2 2005/06/25 21:07:12 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.3 2005/06/30 23:22:08 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -168,6 +168,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
+	Object/art_object_template_actuals.cc \
 	Object/art_object_template_formals_manager.cc \
 	Object/art_object_port_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
@@ -196,6 +197,7 @@ OBJECT_TCC_FILES = \
 	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
+	Object/art_object_unroll_context.tcc \
 	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.tcc \
 	Object/art_object_nonmeta_value_reference.tcc \
@@ -307,6 +309,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_traits.h \
 	util/boolean_types.h \
 	util/const_traits.h \
+	util/cppcat.h \
 	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \

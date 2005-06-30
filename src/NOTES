@@ -3,6 +3,18 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-06-27:
+	TODO: clearly define standard lookup and name resolution rules.  
+	Shadow warnings:
+		If a template/port/loop parameter shadows another
+		available identifier, issue warning (compiler option)?
+	What about enum member names?  need special lookup rules?
+		(application: CHP enum equality comparison)
+		If id_expr used as an expression, then look-up as
+		an expression or enum...
+
+
+//=============================================================================
 2005-06-23:
 	Major goal: port and member instance connections (unroll-time)
 	requires (meta) member_instance_reference unrolling, which
@@ -19,6 +31,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		This is especially important for checking partial-order
 		specialization consistency.)
 	Substructure_manager / offset_map:
+		(see also 2005-04-28 entry)
 		map of member name to some index/offset.
 		mapped type is some pointer to what?
 		e.g.: how should "x.y.z" be resolved?

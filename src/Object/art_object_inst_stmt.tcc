@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.3 2005/06/25 18:40:16 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.4 2005/06/30 23:22:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -174,6 +174,13 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			" during unroll." << endl;
 		return good_bool(false);
 	}
+	// this would be a good time to "unroll" a complete definition's
+	// substructure map, before comitting it to the collection.  
+	// Details: register the type with the principle base definition.
+#if 0
+	final_type_ref->unroll_register_complete_type();
+#endif
+	// TODO: decide what do to about relaxed type parameters
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			*this->inst_base, final_type_ref));

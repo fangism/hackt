@@ -1,34 +1,32 @@
 /**
-	\file "art_object_instance_param.cc"
+	\file "Object/art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.9 2005/01/28 19:58:44 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.15.2.1 2005/06/30 23:22:23 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_PARAM_CC__
-#define	__ART_OBJECT_INSTANCE_PARAM_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 
-#include "art_object_definition_base.h"
-#include "art_object_namespace.h"
-#include "art_object_type_ref_base.h"
-#include "art_object_instance_param.h"
-#include "art_object_inst_ref_base.h"
-#include "art_object_inst_stmt_base.h"
-#include "art_object_expr_base.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_type_ref_base.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/art_object_expr_base.h"
 
-#include "indent.h"
-#include "stacktrace.h"
-
-//=============================================================================
-// DEBUG OPTIONS -- compare to MASTER_DEBUG_LEVEL from "art_debug.h"
+#include "util/indent.h"
+#include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
@@ -61,21 +59,7 @@ param_instance_collection::dump(ostream& o) const {
 #if 0
 	STACKTRACE("param_instance_collection::dump()");
 #endif
-#if 0
-	get_type_ref()->dump(o) << " " << key;
-	// collection of indices to instantiate sequentially during unroll
-	index_collection_type::const_iterator i = index_collection.begin();
-	const index_collection_type::const_iterator e = index_collection.end();
-	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		const index_collection_item_ptr_type
-			ind((*i)->get_indices());
-		if (ind)
-			ind->dump(o) << endl;
-	}
-#else
 	parent_type::dump(o);
-#endif
 	const count_ptr<const param_expr>
 		init_def(default_value());
 	if (init_def) {
@@ -86,11 +70,11 @@ param_instance_collection::dump(ostream& o) const {
 	// print out the values of instances that have been unrolled
 	if (is_partially_unrolled()) {
 		if (dimensions) {
-			indent indenter(o);
+			INDENT_SECTION(o);
 			o << auto_indent <<
 				"unrolled index-value pairs: {" << endl;
 			{
-				indent indenter(o);
+				INDENT_SECTION(o);
 				dump_unrolled_values(o);
 			}
 			o << auto_indent << "}";	// << endl;
@@ -105,6 +89,8 @@ param_instance_collection::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE, using parent_type's definition
 /**
 	To determine whether or not this is a formal parameter, 
 	look itself up in the owning namespace.  
@@ -123,6 +109,7 @@ param_instance_collection::is_template_formal(void) const {
 		return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -205,7 +192,7 @@ param_instance_collection::is_static_constant(void) const {
 	One should be able to statically determine whether or not
 	something is loop-dependent.  
 	Wait, does it even make sense for an "instantiation"?
-	This should only be applicable to instance_references...
+	This should only be applicable to meta_instance_references...
 	put this on hold...
  */
 bool
@@ -220,10 +207,10 @@ param_instance_collection::is_loop_independent(void) const {
 	2) Thus they cannot even be referenced.  
 	3) This is just a placeholder that should never be called.  
  */
-count_ptr<member_instance_reference_base>
-param_instance_collection::make_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b) const {
-	typedef	count_ptr<member_instance_reference_base>	return_type;
+param_instance_collection::member_inst_ref_ptr_type
+param_instance_collection::make_member_meta_instance_reference(
+		const inst_ref_ptr_type& b) const {
+	typedef	member_inst_ref_ptr_type	return_type;
 	NEVER_NULL(b);
 	cerr << "Referencing parameter members is strictly forbidden!" << endl;
 	DIE;
@@ -234,5 +221,5 @@ param_instance_collection::make_member_instance_reference(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_PARAM_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
 

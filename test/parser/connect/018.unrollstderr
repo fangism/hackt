@@ -1,0 +1,84 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303530	module__	0	0	45
+	2	 0x4300144	namespc_	0	45	77
+	3	 0x4303554	proccoll	2	77	598
+	4	 0x43035a0	procinst	0	598	618
+	5	 0x43035c0	proctprf	0	618	638
+	6	 0x43035e0	procdefn	0	638	687
+	7	 0x4303670	crnglst_	0	687	715
+	8	 0x4303680	proctprf	0	715	735
+	9	 0x43036a4	proccoll	1	735	845
+	10	 0x43036f0	procinst	0	845	865
+	11	 0x4303710	proctprf	0	865	885
+	12	 0x4303730	crnglst_	0	885	905
+	13	 0x4303740	proctprf	0	905	925
+	14	 0x4303760	prcalias	0	925	945
+	15	 0x4303770	sprcmref	0	945	965
+	16	 0x43037a0	sprcmref	0	965	985
+	17	 0x43037d0	cindlst_	0	985	1005
+	18	 0x37a4028	cnstpi__	0	1005	1017
+	19	 0x4807c04	cnstrng_	0	1017	1033
+	20	 0x43037e0	prcalias	0	1033	1053
+	21	 0x43037f0	sprcmref	0	1053	1073
+	22	 0x4303820	cindlst_	0	1073	1093
+	23	 0x4807c14	cnstrng_	0	1093	1109
+	24	 0x37a4038	cnstpi__	0	1109	1121
+	25	 0x4303830	sprcmref	0	1121	1141
+
+In module created from: ./018.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    barf = process-definition (declared) barf(
+      )
+      In definition "barf", we have: {
+      }
+
+  Instances:
+    bag = process barf<>^1 bag with indices: {
+      [2..4]
+    }
+      unrolled indices: {
+        2 = ::sack[4][0]
+        3 = ::sack[4][1]
+        4 = ::sack[4][2]
+      }
+    sack = process barf<>^2 sack with indices: {
+      [0..4][0..4]
+    }
+      unrolled indices: {
+        [0][0] = ::sack[0][0]
+        [0][1] = ::sack[0][1]
+        [0][2] = ::sack[0][2]
+        [0][3] = ::sack[0][3]
+        [0][4] = ::sack[0][4]
+        [1][0] = ::bag[2]
+        [1][1] = ::sack[1][1]
+        [1][2] = ::sack[1][2]
+        [1][3] = ::sack[1][3]
+        [1][4] = ::sack[1][4]
+        [2][0] = ::bag[3]
+        [2][1] = ::sack[2][1]
+        [2][2] = ::sack[2][2]
+        [2][3] = ::sack[2][3]
+        [2][4] = ::sack[2][4]
+        [3][0] = ::bag[4]
+        [3][1] = ::sack[3][1]
+        [3][2] = ::sack[3][2]
+        [3][3] = ::sack[3][3]
+        [3][4] = ::sack[3][4]
+        [4][0] = ::sack[1][0]
+        [4][1] = ::sack[2][0]
+        [4][2] = ::sack[3][0]
+        [4][3] = ::sack[4][3]
+        [4][4] = ::sack[4][4]
+      }
+}
+

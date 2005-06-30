@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.48.4.1 2005/06/25 21:07:20 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.48.4.2 2005/06/30 23:22:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -21,10 +21,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <exception>
 #include <algorithm>
-
-// consider: (for reducing expression storage overhead)
-// #define NO_OBJECT_SANITY	1
-// this will override the definition in "art_object_base.h"
 
 #include "Object/art_object_index.h"
 #include "Object/art_object_expr.h"	// includes "art_object_expr_const.h"
@@ -46,11 +42,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_type_hash.h"
 
 #if 0
+#if 0
 #include "util/multikey.h"		// extern template instantiations
 #include "util/packed_array.h"		// extern template instantiations
 #else
 // experimental: suppressing automatic instantiation of template code
 #include "Object/art_object_extern_templates.h"
+#endif
 #endif
 
 #include "util/what.tcc"
@@ -492,7 +490,7 @@ const_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
 	// else at least 1 item in list
 	// hint: ostream_iterator
-	const_iterator i = begin();
+	const_iterator i(begin());
 	NEVER_NULL(*i);
 	(*i)->dump(o);
 	for (i++; i!=end(); i++) {
@@ -518,6 +516,13 @@ const_param_expr_list::make_copy(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const param_expr>
+const_param_expr_list::operator [] (const size_t i) const {
+	INVARIANT(i < size());
+	return parent_type::operator[](i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_param_expr_list::may_be_initialized(void) const {
 	return true;
@@ -537,7 +542,7 @@ const_param_expr_list::must_be_initialized(void) const {
 list<const param_expr&>
 const_param_expr_list::get_const_ref_list(void) const {
 	list<const param_expr&> ret;
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		ret.push_back(**i);
@@ -554,8 +559,8 @@ const_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
 if (cpl) {
 	if (size() != cpl->size())
 		return false;
-	const_iterator i = begin();
-	const_iterator j = cpl->begin();
+	const_iterator i(begin());
+	const_iterator j(cpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const const_param> jp(*j);
@@ -572,8 +577,8 @@ if (cpl) {
 	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
-	const_iterator i = begin();
-	dynamic_param_expr_list::const_iterator j = dpl->begin();
+	const_iterator i(begin());
+	dynamic_param_expr_list::const_iterator j(dpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
@@ -595,8 +600,8 @@ const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 if (cpl) {
 	if (size() != cpl->size())
 		return false;
-	const_iterator i = begin();
-	const_iterator j = cpl->begin();
+	const_iterator i(begin());
+	const_iterator j(cpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const const_param> jp(*j);
@@ -613,8 +618,8 @@ if (cpl) {
 	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
-	const_iterator i = begin();
-	dynamic_param_expr_list::const_iterator j = dpl->begin();
+	const_iterator i(begin());
+	dynamic_param_expr_list::const_iterator j(dpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const const_param> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
@@ -634,12 +639,11 @@ if (cpl) {
 	Eventually will add some context argument, though it is not needed
 	because this is already constant.  
  */
-excl_ptr<const_param_expr_list>
+param_expr_list::unroll_resolve_return_type
 const_param_expr_list::unroll_resolve(const unroll_context& c) const {
 	// safe to use default copy construction because
 	// count_ptr's are copy-constructible
-	return excl_ptr<const_param_expr_list>(
-		new const_param_expr_list(*this));
+	return unroll_resolve_return_type(new const_param_expr_list(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -652,8 +656,8 @@ const_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_param> ip(*i);
 		ip->collect_transient_info(m);
@@ -671,8 +675,8 @@ void
 const_param_expr_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_param> ip(*i);
 		m.write_pointer(f, ip);
@@ -715,8 +719,8 @@ dynamic_param_expr_list::~dynamic_param_expr_list() {
 	cerr << "list contains " << size() << " pointers." << endl;
 	dump(cerr) << endl;
 	cerr << "reference counts in list:" << endl;
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		cerr << "\t" << i->refs() << " @ " << 
 			((*i) ? &**i : NULL) << endl;
@@ -732,8 +736,8 @@ ostream&
 dynamic_param_expr_list::dump(ostream& o) const {
 	if (empty()) return o;
 	// else at least 1 item in list
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	if (*i)	(*i)->dump(o);
 	else	o << "(null)";
 	for (i++; i!=e; i++) {
@@ -759,9 +763,16 @@ dynamic_param_expr_list::make_copy(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const param_expr>
+dynamic_param_expr_list::operator [] (const size_t i) const {
+	INVARIANT(i < size());
+	return parent_type::operator[](i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::is_static_constant(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
@@ -775,7 +786,7 @@ dynamic_param_expr_list::is_static_constant(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::is_loop_independent(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
@@ -789,7 +800,7 @@ dynamic_param_expr_list::is_loop_independent(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::may_be_initialized(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
@@ -803,7 +814,7 @@ dynamic_param_expr_list::may_be_initialized(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_param_expr_list::must_be_initialized(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		const count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);	// nothing may be NULL at this point!
@@ -822,7 +833,7 @@ dynamic_param_expr_list::must_be_initialized(void) const {
 list<const param_expr&>
 dynamic_param_expr_list::get_const_ref_list(void) const {
 	list<const param_expr&> ret;
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++, j++) {
 		count_ptr<const param_expr> ip(*i);
 		NEVER_NULL(ip);
@@ -840,8 +851,8 @@ dynamic_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
 if (cpl) {
 	if (size() != cpl->size())
 		return false;
-	const_iterator i = begin();
-	const_param_expr_list::const_iterator j = cpl->begin();
+	const_iterator i(begin());
+	const_param_expr_list::const_iterator j(cpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param> jp(*j);
@@ -858,8 +869,8 @@ if (cpl) {
 	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
-	const_iterator i = begin();
-	const_iterator j = dpl->begin();
+	const_iterator i(begin());
+	const_iterator j(dpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
@@ -881,8 +892,8 @@ dynamic_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 if (cpl) {
 	if (size() != cpl->size())
 		return false;
-	const_iterator i = begin();
-	const_param_expr_list::const_iterator j = cpl->begin();
+	const_iterator i(begin());
+	const_param_expr_list::const_iterator j(cpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param> jp(*j);
@@ -899,8 +910,8 @@ if (cpl) {
 	NEVER_NULL(dpl);
 	if (size() != dpl->size())
 		return false;
-	const_iterator i = begin();
-	const_iterator j = dpl->begin();
+	const_iterator i(begin());
+	const_iterator j(dpl->begin());
 	for ( ; i!=end(); i++, j++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const param_expr> jp(*j);
@@ -920,13 +931,13 @@ if (cpl) {
 		else NULL if resolution failed.
 	TODO: add context argument for resolution.  
  */
-excl_ptr<const_param_expr_list>
+param_expr_list::unroll_resolve_return_type
 dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
-	typedef	excl_ptr<const_param_expr_list>		return_type;
-	return_type ret(new const_param_expr_list);
+	typedef	unroll_resolve_return_type		return_type;
+	const return_type ret(new const_param_expr_list);
 	NEVER_NULL(ret);
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const param_expr> ip(*i);
 		count_ptr<const_param> pc(ip->unroll_resolve(c));
@@ -950,8 +961,8 @@ dynamic_param_expr_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const param_expr> ip(*i);
 		ip->collect_transient_info(m);
@@ -969,8 +980,8 @@ void
 dynamic_param_expr_list::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const param_expr> ip(*i);
 		m.write_pointer(f, ip);
@@ -1040,7 +1051,7 @@ param_expr_collective::what(ostream& o) const {
 string
 param_expr_collective::hash_string(void) const {
 	string ret("{");
-	list<excl_ptr<param_expr> >::const_iterator i = elist.begin();
+	list<excl_ptr<param_expr> >::const_iterator i(elist.begin());
 	for ( ; i!=elist.end(); i++) {
 		const never_ptr<const param_expr> p(*i);
 		NEVER_NULL(p);
@@ -2897,7 +2908,7 @@ const_range_list::const_range_list(const list_type& l) :
  */
 const_range_list::const_range_list(const const_index_list& i) :
 		meta_range_list(), list_type() {
-	const_index_list::const_iterator j = i.begin();
+	const_index_list::const_iterator j(i.begin());
 	for ( ; j!=i.end(); j++) {
 		const count_ptr<const_index> k(*j);
 		NEVER_NULL(k);
@@ -2923,7 +2934,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range_list::dump(ostream& o) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++)
 		i->dump(o);
 	return o;
@@ -2955,8 +2966,8 @@ const_range_list::static_overlap(const meta_range_list& r) const {
 	if (s) {
 		// dimensionality should match, or else!
 		INVARIANT(size() == s->size());    
-		const_iterator i = begin();
-		const_iterator j = s->begin();
+		const_iterator i(begin());
+		const_iterator j(s->begin());
 		for ( ; i!=end(); i++, j++) {
 			// check for index overlap in ALL dimensions
 			const const_range& ir = *i;
@@ -3007,8 +3018,8 @@ const_range_list::collapsed_dimension_ranges(
 		const const_index_list& il) const {
 	const_index_list ret;
 	INVARIANT(size() == il.size());
-	const_iterator i = begin();
-	const_index_list::const_iterator j = il.begin();
+	const_iterator i(begin());
+	const_index_list::const_iterator j(il.begin());
 	for ( ; j!=il.end(); i++, j++) {
 		const count_ptr<const pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
@@ -3046,8 +3057,8 @@ ABANDONING, see comments within
 void
 const_range_list::collapse_dimensions_wrt_indices(const const_index_list& il) {
 	INVARIANT(size() >= il.size());
-	iterator i = begin();
-	const_index_list::const_iterator j = il.begin();
+	iterator i(begin());
+	const_index_list::const_iterator j(il.begin());
 	for ( ; j!=il.end(); i++, j++) {
 		const count_ptr<const pint_const>	// or pint_const
 			pi(j->is_a<pint_const>());
@@ -3104,8 +3115,8 @@ const_range_list::is_size_equivalent(const const_range_list& c) const {
 		return false;
 	// else check
 	int dim = 1;
-	const_iterator i = begin();
-	const_iterator j = c.begin();
+	const_iterator i(begin());
+	const_iterator j(c.begin());
 	for ( ; i!=end(); i++, j++, dim++) {
 		const int ldiff = i->second -i->first;
 		const int rdiff = j->second -j->first;
@@ -3130,8 +3141,8 @@ const_range_list::operator == (const const_range_list& c) const {
 	if (size() != c.size())
 		return false;
 	// else check
-	const_iterator i = begin();
-	const_iterator j = c.begin();
+	const_iterator i(begin());
+	const_iterator j(c.begin());
 	for ( ; i!=end(); i++, j++) {
 		if (*i != *j)
 			return false;
@@ -3220,10 +3231,10 @@ const_range_list::make_multikey_generator(
 		multikey_generator<D, pint_value_type>& k) const {
 	typedef multikey_generator<D, pint_value_type>	arg_type;
 	INVARIANT(size() <= D);  // else error on user!
-	typename arg_type::base_type::iterator li = k.lower_corner.begin();
-	typename arg_type::base_type::iterator ui = k.upper_corner.begin();
-	const_iterator i = begin();
-	const const_iterator e = end();
+	typename arg_type::base_type::iterator li(k.lower_corner.begin());
+	typename arg_type::base_type::iterator ui(k.upper_corner.begin());
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i != e; i++, li++, ui++) {
 		*li = i->first;
 		*ui = i->second;
@@ -3254,8 +3265,8 @@ INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(4)
 multikey_index_type
 const_range_list::resolve_sizes(void) const {
 	multikey_index_type ret(size());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
 		ret[j] = i->size();
@@ -3279,8 +3290,8 @@ void
 const_range_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const const_range& cr(*i);
 		write_value(f, cr.first);
@@ -3322,7 +3333,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_range_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_meta_range_list::dump(ostream& o) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		(*i)->dump(o);
@@ -3339,7 +3350,7 @@ dynamic_meta_range_list::size(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_meta_range_list::is_static_constant(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		const count_ptr<const pint_range> pr(*i);
 		NEVER_NULL(pr);
@@ -3369,8 +3380,8 @@ good_bool
 dynamic_meta_range_list::resolve_ranges(const_range_list& r) const {
 	// resolve ranges each step, each dynamic_range
 	r.clear();
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const_range c;
 		const count_ptr<const pint_range> ip(*i);
@@ -3389,8 +3400,8 @@ dynamic_meta_range_list::unroll_resolve(const_range_list& r,
 		const unroll_context& c) const {
 	INVARIANT(r.empty());
 	// write as transform?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const_range cr;
 		const count_ptr<const pint_range> ip(*i);
@@ -3410,9 +3421,9 @@ dynamic_meta_range_list::must_be_formal_size_equivalent(
 	const const_range_list* const crl = IS_A(const const_range_list*, &rl);
 	if (crl) {
 		INVARIANT(size() == crl->size());
-		const_iterator i = begin();
-		const const_iterator e = end();
-		const_range_list::const_iterator j = crl->begin();
+		const_iterator i(begin());
+		const const_iterator e(end());
+		const_range_list::const_iterator j(crl->begin());
 		// use some std:: algorithm ... later
 		for ( ; i!=e; i++, j++) {
 			// NEVER_NULL(...)
@@ -3424,9 +3435,9 @@ dynamic_meta_range_list::must_be_formal_size_equivalent(
 			drl = IS_A(const dynamic_meta_range_list*, &rl);
 		INVARIANT(drl);
 		INVARIANT(size() == drl->size());
-		const_iterator i = begin();
-		const const_iterator e = end();
-		const_iterator j = drl->begin();
+		const_iterator i(begin());
+		const const_iterator e(end());
+		const_iterator j(drl->begin());
 		// use some std:: algorithm ... later
 		for ( ; i!=e; i++, j++) {
 			// NEVER_NULL(...)
@@ -3448,8 +3459,8 @@ dynamic_meta_range_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const pint_range> ip(*i);
 		ip->collect_transient_info(m);
@@ -3467,8 +3478,8 @@ void
 dynamic_meta_range_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const pint_range> ip(*i);
 		m.write_pointer(f, ip);
@@ -3537,9 +3548,9 @@ const_index_list::const_index_list(const const_index_list& l,
 		const size_t skip = size();
 		INVARIANT(skip <= f_size);
 		size_t i = 0;
-		const_iterator this_iter = begin();
-		list<pint_value_type>::const_iterator f_iter = f.first.begin();
-		list<pint_value_type>::const_iterator s_iter = f.second.begin();
+		const_iterator this_iter(begin());
+		list<pint_value_type>::const_iterator f_iter(f.first.begin());
+		list<pint_value_type>::const_iterator s_iter(f.second.begin());
 		for ( ; i<skip; i++, this_iter++, f_iter++, s_iter++) {
 			// sanity check against arguments
 			NEVER_NULL(*this_iter);
@@ -3564,8 +3575,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_index_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_index_list::dump(ostream& o) const {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		const count_ptr<const pint_expr>
@@ -3594,8 +3605,8 @@ const_index_list::size(void) const {
 size_t
 const_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		if (i->is_a<const pint_const>())
 			ret++;
@@ -3615,8 +3626,8 @@ const_index_list::dimensions_collapsed(void) const {
 const_range_list
 const_index_list::collapsed_dimension_ranges(void) const {
 	const_range_list ret;
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_range>
 			cr(i->is_a<const const_range>());
@@ -3697,8 +3708,8 @@ const_index_list::resolve_multikey(
 	k = excl_ptr<multikey_index_type>(
 		multikey_index_type::make_multikey(size()));
 	NEVER_NULL(k);
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j=0;
 	for ( ; i!=e; i++, j++) {
 		const count_ptr<const const_index> ip(*i);
@@ -3822,8 +3833,8 @@ const_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_index> ip(*i);
 		ip->collect_transient_info(m);
@@ -3841,8 +3852,8 @@ void
 const_index_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_index> ip(*i);
 		m.write_pointer(f, ip);
@@ -3886,8 +3897,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_index_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_meta_index_list::dump(ostream& o) const {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		const count_ptr<const pint_expr>
@@ -3924,7 +3935,7 @@ dynamic_meta_index_list::size(void) const {
 size_t
 dynamic_meta_index_list::dimensions_collapsed(void) const {
 	size_t ret = 0;
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		if (i->is_a<const pint_expr>())
 			ret++;
@@ -3937,7 +3948,7 @@ dynamic_meta_index_list::dimensions_collapsed(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_meta_index_list::may_be_initialized(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		if (!(*i)->may_be_initialized())
@@ -3949,7 +3960,7 @@ dynamic_meta_index_list::may_be_initialized(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_meta_index_list::must_be_initialized(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		if (!(*i)->must_be_initialized())
@@ -3961,7 +3972,7 @@ dynamic_meta_index_list::must_be_initialized(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_meta_index_list::is_static_constant(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		if (!(*i)->is_static_constant())
@@ -3973,7 +3984,7 @@ dynamic_meta_index_list::is_static_constant(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_meta_index_list::is_loop_independent(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		if (!(*i)->is_loop_independent())
@@ -3985,7 +3996,7 @@ dynamic_meta_index_list::is_loop_independent(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 dynamic_meta_index_list::is_unconditional(void) const {
-	const_iterator i = begin();
+	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
 		if (!(*i)->is_unconditional())
@@ -4005,8 +4016,8 @@ dynamic_meta_index_list::is_unconditional(void) const {
 const_index_list
 dynamic_meta_index_list::resolve_index_list(void) const {
 	const_index_list ret;
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
 		const count_ptr<meta_index_expr> ind(*i);
@@ -4067,8 +4078,8 @@ dynamic_meta_index_list::must_be_equivalent_indices(
 const_index_list
 dynamic_meta_index_list::unroll_resolve(const unroll_context& c) const {
 	const_index_list ret;
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
 		const count_ptr<meta_index_expr> ind(*i);
@@ -4098,8 +4109,8 @@ dynamic_meta_index_list::resolve_multikey(
 	k = excl_ptr<multikey_index_type>(
 		multikey_index_type::make_multikey(size()));
 	NEVER_NULL(k);
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
 		const count_ptr<const meta_index_expr> ip(*i);
@@ -4132,8 +4143,8 @@ dynamic_meta_index_list::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const meta_index_expr> ip(*i);
 		ip->collect_transient_info(m);
@@ -4151,8 +4162,8 @@ void
 dynamic_meta_index_list::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, size());		// how many exprs to expect?
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const meta_index_expr> ip(*i);
 		m.write_pointer(f, ip);
