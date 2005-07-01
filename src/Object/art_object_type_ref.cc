@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.2 2005/06/30 23:22:25 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.3 2005/07/01 20:34:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -105,55 +105,6 @@ const template_actuals&
 fundamental_type_reference::get_template_params(void) const {
 	return template_args;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-UNVEIL LATER
-/**
-	Resolve canonical type.  Flattens the type through typedefs.  
-	Precondition: all template parameters must have been resolved to 
-	constants.  Other formals acceptable, as non-constants?
-	Passes its template_args top-down.  
-	Implementation: converts list of template parameters into 
-	a hash_map from param_instance_collection (identifier) to 
-	actual parameter expression.  Effectively does substitution.  
-	\return the base equivalent type, unraveling parameters
-		through typedefs.  If base definition is not a typedef, 
-		simply returns a deep copy of itself.  
- */
-excl_ptr<const fundamental_type_reference>
-fundamental_type_reference::resolve_canonical_type(void) const {
-	typedef	excl_ptr<const fundamental_type_reference>	return_type;
-	never_ptr<const definition_base>
-		base_def(get_base_def());
-	NEVER_NULL(base_def);
-if (base_def.is_a<typedef_base>()) {
-	// then we need to resolve it recursively
-	// precondition: actuals' and formals' types already checked
-	// first, construct the actuals map (yes, on the stack)
-	template_actuals_map_type actuals_map;
-	if (template_args) {
-		base_def->fill_template_actuals_map(
-			actuals_map, *template_args);
-		// Make a deep copy of the typedef's template parameters, 
-		// substituting appropriately in the parameter expressions.
-
-		// How shall we substitute?  major dilemma... PUNT
-	} else {
-		// else leave it empty, no further context should be required 
-		// for the referenced type.  
-	}
-	// FINISH ME
-} else {
-	// is not a typedef, just return a deep-copy of itself.
-	if (template_args)
-		return return_type(base_def->make_fundamental_type_reference(
-			template_args->make_copy()));
-	else
-		return return_type(base_def->make_fundamental_type_reference());
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static

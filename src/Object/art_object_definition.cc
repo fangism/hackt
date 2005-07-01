@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.2 2005/06/30 23:22:14 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.3 2005/07/01 20:34:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -131,55 +131,6 @@ definition_base::pair_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-UNVEIL LATER
-/**
-	Creates a map from template formals to actual values.  
-	Precondition: list passed by reference must be initially empty.
-	Considering making appropriate virtual call interface in 
-		param_expr_list?
- */
-void
-definition_base::fill_template_actuals_map(
-		template_actuals_map_type& am, 
-		const param_expr_list& al) const {
-	INVARIANT(am.empty());
-	INVARIANT(template_formals_list.size() == al.size());
-	// convert to virtual call interface to param_expr_list?
-	const const_param_expr_list* cpl =
-		IS_A(const const_param_expr_list*, &al);
-	const dynamic_param_expr_list* dpl =
-		IS_A(const dynamic_param_expr_list*, &al);
-	template_formals_list_type::const_iterator f_iter =
-		template_formals_list.begin();
-if (cpl) {
-	const_param_expr_list::const_iterator i = cpl->begin();
-	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
-		// const-reference saves unnecessary copying
-		const template_formals_value_type& tf(*f_iter);
-		// reminder: value type is pointer to param_instance_collection
-		NEVER_NULL(tf);
-		// reminder: actuals map is of count_ptr
-		NEVER_NULL(*i);
-		am[tf->get_name()] = *i;
-	}
-} else {
-	NEVER_NULL(dpl);
-	dynamic_param_expr_list::const_iterator i = dpl->begin();
-	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
-		// const-reference saves unnecessary copying
-		const template_formals_value_type& tf(*f_iter);
-		// reminder: value type is pointer to param_instance_collection
-		NEVER_NULL(tf);
-		// reminder: actuals map is of count_ptr
-		NEVER_NULL(*i);
-		am[tf->get_name()] = *i;
-	}
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Only looks up the identifier in the set of template formals.  
  */
@@ -246,15 +197,17 @@ definition_base::equivalent_template_formals(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 string
 definition_base::get_name(void) const {
 	return get_key();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 definition_base::get_qualified_name(void) const {
-	const string key = get_key();
+	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
 		return parent->get_qualified_name() +scope +key;

@@ -1,14 +1,13 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.23.2.1 2005/06/30 23:22:15 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23.2.2 2005/07/01 20:34:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
 #define	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
 
-#include <vector>
-#include <string>		// needed by gcc-3.2 :S
+#include "util/string_fwd.h"
 
 #include "util/macros.h"
 #include "Object/art_object_base.h"
@@ -16,10 +15,8 @@
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
-#include "util/hash_qmap.h"		// need complete definition
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "util/STL/vector_fwd.h"
 
 #include "Object/art_object_template_formals_manager.h"
 
@@ -35,18 +32,14 @@ using parser::token_identifier;
 
 //=============================================================================
 namespace entity {
-class param_expr;
-class param_expr_list;
 class scopespace;
 class instance_collection_base;
 class fundamental_type_reference;
 class template_actuals;
 using std::string;
 using std::istream;
-using std::vector;
 using util::bad_bool;
 using util::good_bool;
-using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::count_ptr;
@@ -71,9 +64,6 @@ public:
 	typedef	template_formals_manager::template_formals_list_type
 					template_formals_list_type;
 
-	/** map from param_instance_collection to actual value passed */
-	typedef	hash_qmap<string, count_ptr<const param_expr> >
-					template_actuals_map_type;
 	typedef	count_ptr<fundamental_type_reference>
 					type_ref_ptr_type;
 
@@ -118,10 +108,6 @@ virtual	never_ptr<const scopespace>
 
 	void
 	mark_defined(void) { assert(!defined); defined = true; }
-
-	void
-	fill_template_actuals_map(template_actuals_map_type& am, 
-		const param_expr_list& al) const;
 
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;
@@ -185,9 +171,8 @@ virtual	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const = 0;
 
-// need not be virtual?
-virtual	string
-	get_name(void) const;
+	const string&
+	get_name(void) const { return get_key(); }
 
 // need not be virtual?
 virtual	string
@@ -201,8 +186,9 @@ virtual	good_bool
 /**
 	f should be const and owned -- pointer type conflict...  
 	virtual so that types without templates can assert NULL.  
-	TO DO: This function should be pure virtual and belong 
+	TODO: This function should be pure virtual and belong 
 		to a different interface!
+	TODO: shouldn't argument be a param_instantiation_statement?
  */
 virtual	never_ptr<const instance_collection_base>
 	add_strict_template_formal(
@@ -241,16 +227,6 @@ protected:
 public:
 	static const never_ptr<const definition_base>	null;
 };	// end class definition_base
-
-//=============================================================================
-/**
-	actual values passed
-	This needs to be updated to include a pair of paramater lists.
-	For strict and relaxed template arguments.  
-	(Although an argument is an argument.)
- */
-typedef	definition_base::template_actuals_map_type
-		template_actuals_map_type;
 
 //=============================================================================
 }	// end namespace entity

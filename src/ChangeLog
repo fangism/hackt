@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-07-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-08:
+	  Clean-up revision.  
+		Removed obsolete (some still-born) code in definition
+		and type-reference source files.  
+
+
 2005-06-30	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-07-merged-actuals-08:

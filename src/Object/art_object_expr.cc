@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.48.4.2 2005/06/30 23:22:16 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.48.4.3 2005/07/01 20:34:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -25,7 +25,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_index.h"
 #include "Object/art_object_expr.h"	// includes "art_object_expr_const.h"
 #include "Object/art_built_ins.h"
-// #include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_int_traits.h"
 #include "Object/art_object_bool_traits.h"
@@ -40,16 +39,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"	// for ~aliases_connection_base
 #include "Object/art_object_type_hash.h"
-
-#if 0
-#if 0
-#include "util/multikey.h"		// extern template instantiations
-#include "util/packed_array.h"		// extern template instantiations
-#else
-// experimental: suppressing automatic instantiation of template code
-#include "Object/art_object_extern_templates.h"
-#endif
-#endif
 
 #include "util/what.tcc"
 #include "util/STL/list.tcc"
@@ -200,8 +189,6 @@ namespace memory {
 namespace ART {
 namespace entity {
 //=============================================================================
-// #include "util/using_ostream.h"
-using namespace util::memory;
 USING_UTIL_COMPOSE
 USING_UTIL_OPERATIONS
 using util::discrete_interval_set;

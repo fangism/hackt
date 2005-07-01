@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.27.2.1 2005/06/30 23:22:26 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.2 2005/07/01 20:34:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -52,10 +52,6 @@ protected:
 	 */
 	definition_ptr_type				base_type_def;
 
-	// NEW: resolved type
-	// resolve const_param_expr_list...
-	// but needs to be able to take arrays of constants.  
-	
 private:
 	data_type_reference();
 public:
@@ -236,7 +232,6 @@ private:
 	typedef	channel_type_reference_base		parent_type;
 protected:
 	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
-//	excl_ptr<const param_expr_list>	template_params;	// inherited
 	never_ptr<const channel_definition_base>	base_chan_def;
 private:
 	channel_type_reference();
@@ -295,7 +290,6 @@ private:
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
 	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
-//	excl_ptr<const param_expr_list>	template_params;	// inherited
 // should be const?  reference to base definition shouldn't change...
 	typedef	never_ptr<const definition_type>	base_definition_ptr_type;
 	never_ptr<const process_definition_base>	base_proc_def;
@@ -357,7 +351,6 @@ private:
 	typedef	param_type_reference		this_type;
 	typedef	fundamental_type_reference	parent_type;	// not used
 protected:
-//	excl_ptr<const param_expr_list>	template_params;	// inherited, unused
 	never_ptr<const built_in_param_def>	base_param_def;
 public:
 	explicit
