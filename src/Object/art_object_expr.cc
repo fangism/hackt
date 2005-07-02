@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.48.4.3 2005/07/01 20:34:13 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.48.4.4 2005/07/02 01:30:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -634,6 +634,78 @@ const_param_expr_list::unroll_resolve(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+const_param_expr_list::certify_template_arguments(
+		const template_formals_list_type& tfl) {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	template_formals_list_type::const_iterator f_iter(tfl.begin());
+	const template_formals_list_type::const_iterator f_end(tfl.end());
+if (a_size != f_size) {
+	if (a_size)
+		return good_bool(false);
+	// else a_size == 0, passed actuals list is empty, 
+	// try to fill in all default arguments
+	for ( ; f_iter!=f_end; f_iter++) {
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		// does default expression have to be constant to be
+		// valid?  it should be allowed to
+		// depend on other parameters.  
+		const count_ptr<const const_param>
+			default_expr(pinst->default_value()
+				.is_a<const const_param>());
+		if (!default_expr) {
+			// no default value to supply
+			return good_bool(false);
+		} else {
+			push_back(default_expr);
+		}
+	}
+	// if it fails, then list will be incomplete.  
+	// if this point is reached, then fill-in was successfull
+	return good_bool(true);
+} else {
+	iterator p_iter(begin());
+	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
+		// need method to check param_instance_collection against param_expr
+		// eventually also work for complex aggregate types!
+		// "I promise this pointer is only local."  
+		const count_ptr<const const_param> pex(*p_iter);
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		if (pex) {
+			// type-check assignment, conservative w.r.t. arrays
+			if (!pinst->type_check_actual_param_expr(*pex).good) {
+				// error message?
+				return good_bool(false);
+			}
+			// else continue checking successive arguments
+		} else {
+			// no parameter expression given, 
+			// check for default -- if exists, use it, 
+			// else is error
+			// TODO: catch case where default is non-const
+			// but this method is called.  
+			const count_ptr<const const_param>
+				default_expr(pinst->default_value()
+					.is_a<const const_param>());
+			if (!default_expr) {
+				// error message?
+				return good_bool(false);
+			} else {
+				// else, actually assign it a copy in the list
+				*p_iter = default_expr;
+			}
+		}
+	}
+	return good_bool(true);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively visits pointer list to register expression
 	objects with the persistent object manager.
@@ -936,6 +1008,72 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 		}
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+dynamic_param_expr_list::certify_template_arguments(
+		const template_formals_list_type& tfl) {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	template_formals_list_type::const_iterator f_iter(tfl.begin());
+	const template_formals_list_type::const_iterator f_end(tfl.end());
+if (a_size != f_size) {
+	if (a_size)
+		return good_bool(false);
+	// else a_size == 0, passed actuals list is empty, 
+	// try to fill in all default arguments
+	for ( ; f_iter!=f_end; f_iter++) {
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		const count_ptr<const param_expr>
+			default_expr(pinst->default_value());
+		if (!default_expr) {
+			// no default value to supply
+			return good_bool(false);
+		} else {
+			push_back(default_expr);
+		}
+	}
+	// if it fails, then list will be incomplete.  
+	// if this point is reached, then fill-in was successfull
+	return good_bool(true);
+} else {
+	iterator p_iter(begin());
+	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
+		// need method to check param_instance_collection against param_expr
+		// eventually also work for complex aggregate types!
+		// "I promise this pointer is only local."  
+		const count_ptr<const param_expr> pex(*p_iter);
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		if (pex) {
+			// type-check assignment, conservative w.r.t. arrays
+			if (!pinst->type_check_actual_param_expr(*pex).good) {
+				// error message?
+				return good_bool(false);
+			}
+			// else continue checking successive arguments
+		} else {
+			// no parameter expression given, 
+			// check for default -- if exists, use it, 
+			// else is error
+			const count_ptr<const param_expr>
+				default_expr(pinst->default_value());
+			if (!default_expr) {
+				// error message?
+				return good_bool(false);
+			} else {
+				// else, actually assign it a copy in the list
+				*p_iter = default_expr;
+			}
+		}
+	}
+	// end of checking reached, everything passed
+	return good_bool(true);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

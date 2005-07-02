@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.29.4.1 2005/06/30 23:22:18 fang Exp $
+	$Id: art_object_expr.h,v 1.29.4.2 2005/07/02 01:30:37 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
@@ -43,6 +43,7 @@ class dynamic_param_expr_list : public param_expr_list,
 		public vector<count_ptr<const param_expr> > {
 friend class const_param_expr_list;
 	typedef	dynamic_param_expr_list			this_type;
+	typedef	param_expr_list				interface_type;
 protected:
 	typedef	vector<count_ptr<const param_expr> >	parent_type;
 public:
@@ -91,6 +92,10 @@ public:
 
 	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const;
+
+	good_bool
+	certify_template_arguments(const template_formals_list_type&);
+
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class dynamic_param_expr_list

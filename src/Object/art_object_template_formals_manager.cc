@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.1 2005/06/30 23:22:25 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.2 2005/07/02 01:30:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -89,55 +89,6 @@ template_formals_manager::dump(ostream& o) const {
 	}
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-UNVEIL LATER
-/**
-	Creates a map from template formals to actual values.  
-	Precondition: list passed by reference must be initially empty.
-	Considering making appropriate virtual call interface in 
-		param_expr_list?
- */
-void
-definition_base::fill_template_actuals_map(
-		template_actuals_map_type& am, 
-		const param_expr_list& al) const {
-	INVARIANT(am.empty());
-	INVARIANT(template_formals_list.size() == al.size());
-	// convert to virtual call interface to param_expr_list?
-	const const_param_expr_list* cpl =
-		IS_A(const const_param_expr_list*, &al);
-	const dynamic_param_expr_list* dpl =
-		IS_A(const dynamic_param_expr_list*, &al);
-	template_formals_list_type::const_iterator f_iter =
-		template_formals_list.begin();
-if (cpl) {
-	const_param_expr_list::const_iterator i = cpl->begin();
-	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
-		// const-reference saves unnecessary copying
-		const template_formals_value_type& tf(*f_iter);
-		// reminder: value type is pointer to param_instance_collection
-		NEVER_NULL(tf);
-		// reminder: actuals map is of count_ptr
-		NEVER_NULL(*i);
-		am[tf->get_name()] = *i;
-	}
-} else {
-	NEVER_NULL(dpl);
-	dynamic_param_expr_list::const_iterator i = dpl->begin();
-	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
-		// const-reference saves unnecessary copying
-		const template_formals_value_type& tf(*f_iter);
-		// reminder: value type is pointer to param_instance_collection
-		NEVER_NULL(tf);
-		// reminder: actuals map is of count_ptr
-		NEVER_NULL(*i);
-		am[tf->get_name()] = *i;
-	}
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -342,9 +293,6 @@ template_formals_manager::equivalent_template_formals(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TEMPORARY (wrong):
-		Just check strict formal parameter list only.  
-	TODO: also check relaxed parameter list.
 	Certifies the template arguments against this definition's
 	template signature.  
 	This also replaces NULL arguments in the list with defaults
@@ -358,152 +306,24 @@ template_formals_manager::equivalent_template_formals(
 good_bool
 template_formals_manager::certify_template_arguments(
 		template_actuals& t) const {
+	const count_ptr<param_expr_list> spl(t.get_strict_args());
+	const good_bool sg(spl ?
+		spl->certify_template_arguments(
+			strict_template_formals_list) :
+		partial_check_null_template_argument(
+			strict_template_formals_list));
 #if 1
-	// temporary patch, later convert to virtual function if possible
-	const count_ptr<param_expr_list>
-		spl(t.get_strict_args());
-	const count_ptr<dynamic_param_expr_list>
-		ta(spl.is_a<dynamic_param_expr_list>());
-if (spl && !ta) {
-	const count_ptr<const_param_expr_list>
-		ca(spl.is_a<const_param_expr_list>());
-	NEVER_NULL(ca);
-	// first, number of arguments must match
-	const size_t a_size = ca->size();
-	const size_t f_size = strict_template_formals_list.size();
-	const template_formals_list_type::const_iterator
-		f_end(strict_template_formals_list.end());
-	template_formals_list_type::const_iterator
-		f_iter(strict_template_formals_list.begin());
-	if (a_size != f_size) {
-		if (a_size)
-			return good_bool(false);
-		// else a_size == 0, passed actuals list is empty, 
-		// try to fill in all default arguments
-		for ( ; f_iter!=f_end; f_iter++) {
-			const never_ptr<const param_instance_collection>
-				pinst(*f_iter);
-			NEVER_NULL(pinst);
-			// does default expression have to be constant to be
-			// valid?  it should be allowed to
-			// depend on other parameters.  
-			const count_ptr<const const_param>
-				default_expr(pinst->default_value()
-					.is_a<const const_param>());
-			if (!default_expr) {
-				// no default value to supply
-				return good_bool(false);
-			} else {
-				ca->push_back(default_expr);
-			}
-		}
-		// if it fails, then list will be incomplete.  
-		// if this point is reached, then fill-in was successfull
-		return good_bool(true);
-	}
-	const_param_expr_list::iterator p_iter(ca->begin());
-	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
-		// eventually also work for complex aggregate types!
-		// "I promise this pointer is only local."  
-		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
-			pinst(*f_iter);
-		NEVER_NULL(pinst);
-		if (pex) {
-			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex).good) {
-				// error message?
-				return good_bool(false);
-			}
-			// else continue checking successive arguments
-		} else {
-			// no parameter expression given, 
-			// check for default -- if exists, use it, 
-			// else is error
-			const count_ptr<const const_param>
-				default_expr(pinst->default_value()
-					.is_a<const const_param>());
-			if (!default_expr) {
-				// error message?
-				return good_bool(false);
-			} else {
-				// else, actually assign it a copy in the list
-				*p_iter = default_expr;
-			}
-		}
-	}
-	return good_bool(true);
-}
+	// doesn't break anything so far
+	const count_ptr<param_expr_list> rpl(t.get_relaxed_args());
+	const good_bool rg(rpl ?
+		rpl->certify_template_arguments(
+			relaxed_template_formals_list) :
+		partial_check_null_template_argument(
+			relaxed_template_formals_list));
+	return sg && rg;
+#else
+	return sg;
 #endif
-if (ta) {
-	// first, number of arguments must match
-	const size_t a_size = ta->size();
-	const size_t f_size = strict_template_formals_list.size();
-	const template_formals_list_type::const_iterator
-		f_end(strict_template_formals_list.end());
-	template_formals_list_type::const_iterator
-		f_iter(strict_template_formals_list.begin());
-	if (a_size != f_size) {
-		if (a_size)
-			return good_bool(false);
-		// else a_size == 0, passed actuals list is empty, 
-		// try to fill in all default arguments
-		for ( ; f_iter!=f_end; f_iter++) {
-			const never_ptr<const param_instance_collection>
-				pinst(*f_iter);
-			NEVER_NULL(pinst);
-			const count_ptr<const param_expr>
-				default_expr(pinst->default_value());
-			if (!default_expr) {
-				// no default value to supply
-				return good_bool(false);
-			} else {
-				ta->push_back(default_expr);
-			}
-		}
-		// if it fails, then list will be incomplete.  
-		// if this point is reached, then fill-in was successfull
-		return good_bool(true);
-	}
-	dynamic_param_expr_list::iterator p_iter(ta->begin());
-	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
-		// eventually also work for complex aggregate types!
-		// "I promise this pointer is only local."  
-		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
-			pinst(*f_iter);
-		NEVER_NULL(pinst);
-		if (pex) {
-			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex).good) {
-				// error message?
-				return good_bool(false);
-			}
-			// else continue checking successive arguments
-		} else {
-			// no parameter expression given, 
-			// check for default -- if exists, use it, 
-			// else is error
-			const count_ptr<const param_expr>
-				default_expr(pinst->default_value());
-			if (!default_expr) {
-				// error message?
-				return good_bool(false);
-			} else {
-				// else, actually assign it a copy in the list
-				*p_iter = default_expr;
-			}
-		}
-	}
-	// end of checking reached, everything passed
-	return good_bool(true);
-} else {
-	// no arguments supplied, make sure template specification is
-	// null, or every formal has default values.  
-	return check_null_template_argument();
-}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

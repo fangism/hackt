@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.tcc"
 	Template method implementation for unroll_context class.  
-	$Id: art_object_unroll_context.tcc,v 1.1.4.2 2005/06/30 23:22:27 fang Exp $
+	$Id: art_object_unroll_context.tcc,v 1.1.4.3 2005/07/02 01:30:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_TCC__
@@ -25,6 +25,8 @@ template <class C>
 const C&
 unroll_context::resolve_meta_value_reference(const C& c) const {
 	if (c.is_template_formal()) {
+		// TODO: this is not true
+		// when template parameter depends on another parameter.  
 		INVARIANT(this->have_template_actuals());
 		const param_instance_collection&
 			ret(template_formals->resolve_template_actual(

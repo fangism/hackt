@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.16.4.1 2005/06/30 23:22:18 fang Exp $
+	$Id: art_object_expr_const.h,v 1.16.4.2 2005/07/02 01:30:37 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
@@ -103,6 +103,7 @@ class const_param_expr_list : public param_expr_list,
 		public vector<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 	typedef	const_param_expr_list			this_type;
+	typedef	param_expr_list				interface_type;
 protected:
 	typedef	vector<count_ptr<const const_param> >	parent_type;
 public:
@@ -154,6 +155,10 @@ public:
 
 	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const;
+
+	good_bool
+	certify_template_arguments(const template_formals_list_type&);
+
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_param_expr_list

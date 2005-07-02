@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.5.4.1 2005/06/30 23:22:25 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.5.4.2 2005/07/02 01:30:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -98,16 +98,6 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
-
-#if 0
-	/**
-		OR pair of lists to distinguish between strict and relaxed
-		template parameters.  
-	 */
-	void
-	fill_template_actuals_map(template_actuals_map_type&, 
-		const param_expr_list& al) const;
-#endif
 
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;

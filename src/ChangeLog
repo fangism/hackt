@@ -2,6 +2,16 @@
 
 2005-07-01	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-09:
+	  NOTES: resolved many outstanding issues about CHP language
+		semantics and type constraints.  (not related to this branch)
+	  Moved body of template_formals_manager::check_template_arguments()
+		into (virtual) methods of param_expr_list.
+		Also enabled checking and processing of relaxed template
+			arguments.  
+		Implemented, and no tests broke.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-08:
 	  Clean-up revision.  
 		Removed obsolete (some still-born) code in definition

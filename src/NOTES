@@ -3,6 +3,10 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-01:
+	resolved CHP questions, answers inlined in the 2005-06-11 entry.
+
+//=============================================================================
 2005-06-27:
 	TODO: clearly define standard lookup and name resolution rules.  
 	Shadow warnings:
@@ -17,6 +21,10 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 //=============================================================================
 2005-06-23:
 	Major goal: port and member instance connections (unroll-time)
+	RESOLUTION (205-07-01):
+		use single unified pass, 
+		don't worry about multifile instance linking, 
+			we may drop support for that idea completely
 	requires (meta) member_instance_reference unrolling, which
 	requires complete-type reference/definition unrolling, which
 	requires principle definitions to keep track of what template
@@ -94,37 +102,61 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
 2005-06-11:
+	Integer types: implicitly UNSIGNED.  
+	Assignment semantics: x := y;
+		impose the lvalue's type on y, i.e. infer what y's type
+		should be.  
+		This should take care of widths of integer constants
+		in rvalues.  
+		(What about constant indices?)
 	Need well-defined semantics of data (int, bool) operators
 		in the CHP context.  
 		e.g. what does int<X> + int<X> return?
+			whatever is being expected on the left.  
+			TODO: optional warnings of truncation.  
 		what does int<X> + int<Y> return?
+			the max width, implicitly 0-padded because unsigned.  
 		what does int<X> * int<X> return?
 		Gut feeling: for now types must match, and return same type
 			for arithmetic operators.
-		What about comparisons?  operands must match.  
+		What about comparisons?  operands must match?
+			No, just pad to the wider.  
 		Provide sign-extensions definition?  built-in?
+			Since ints are unsigned, pad with 0's.
 		Truncation operations?
+			Possible warning.  
 	Do pints implicitly have width 32?  (For now assume yes.)
+		Moot.  Width is inferred from lvalue.  
 		How is it possible for them to mix with other widths?
 	"bits" type, bit fields of integers (not the same as bool).  
 		Proposal: implement as public ports of the int built-in
 			intrinsic definition, like:
 			deftype int <: (bits b[W]);
+		Resolution: Accepted.
+	Logical and bitwise operations:
+		overload '&' and '|' for both bools (logical) and 
+		ints (bitwise) operations.  
 	For data-ranges [x..y] where x,y are run-time values, 
 		do we place any restrictions on the type (width) of x,y?
 		must x <= y?
-		Don't fee good about have size of expression be unknown...
+		Don't feel good about have size of expression be unknown...
 			very ugly semantics, tons of run-time checks...
+		Resolution: Reject range expressions in CHP.  
 	Non-scalar data/expression references in CHP context?
 		Currently, not allowed.  
+		Resolution: agreed, not allowed.  
 		Need to extend type-references (of built-in channel type)
 			to include (unnamed) packed arrays.
 		Not difficult, just low priority for now.  
 	Support for dataless communications?  X!, Y? ?  just 'X'?
+		Resolution: accepted, also be able to declare
+			empty chan() types, allow dropping parens? ()
 	CHP language:
 		',' and ';'
 		Can we allow ',' between actions other than communications?
 			Currently grammar doesn't support it.  
+		Resolution: accept generalized compositions, 
+			and parenthesize precedence.  
 	Grammar:
 		dark corner: guard expressions starting with a + or - b
 			must be wrapped in parens, after a transformation
