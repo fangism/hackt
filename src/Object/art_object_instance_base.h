@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17.4.1 2005/06/24 19:02:57 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.2 2005/07/04 19:13:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -210,9 +210,15 @@ public:
 	port_formal_equivalent(
 		const never_ptr<const instance_collection_base> b) const;
 
+#if 0
+// relocated to param_instance_collection
 protected:
 	good_bool
-	check_expression_dimensions(const param_expr& pr) const;
+	may_check_expression_dimensions(const param_expr& pr) const;
+
+	good_bool
+	must_check_expression_dimensions(const const_param& pr) const;
+#endif
 
 public:
 virtual	count_ptr<meta_instance_reference_base>

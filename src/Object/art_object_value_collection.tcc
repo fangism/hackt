@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.2 2005/07/04 01:54:06 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.3 2005/07/04 19:13:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -113,7 +113,7 @@ VALUE_COLLECTION_CLASS::value_collection(const scopespace& o,
 	This is a special case used by built-in definition construction, 
 	so we restrict the default argument to constant scalar integer.  
 	This way, we can safely omit the call to
-	type_check_actual_param_expr(*i).
+	may_type_check_actual_param_expr(*i).
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS::value_collection(const scopespace& o, 
@@ -122,13 +122,13 @@ VALUE_COLLECTION_CLASS::value_collection(const scopespace& o,
 		parent_type(o, n, d), 
 		ival(i) {
 	/***
-		INVARIANT(type_check_actual_param_expr(*i));
+		INVARIANT(may_type_check_actual_param_expr(*i));
 		This causes problem... calls pure virtual dimensions()
 		during construction phase, resulting in a run-time
 		"pure virtual method called" abort trap.  
 	***/
 #if 0
-	INVARIANT(type_check_actual_param_expr(*i));
+	INVARIANT(may_type_check_actual_param_expr(*i));
 #endif
 }
 #endif
@@ -196,7 +196,7 @@ VALUE_COLLECTION_CLASS::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (this->dimensions == 0) {
-		if (type_check_actual_param_expr(*e).good) {
+		if (may_type_check_actual_param_expr(*e).good) {
 			ival = e;
 			return good_bool(true);
 		} else {
@@ -216,7 +216,7 @@ good_bool
 VALUE_COLLECTION_CLASS::assign_default_value(
 		const count_ptr<const param_expr>& p) {
 	const count_ptr<const expr_type> i(p.template is_a<const expr_type>());
-	if (i && type_check_actual_param_expr(*i).good) {
+	if (i && may_type_check_actual_param_expr(*i).good) {
 		ival = i;
 		return good_bool(true);
 	}
@@ -296,17 +296,53 @@ VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-VALUE_COLLECTION_CLASS::type_check_actual_param_expr(
+VALUE_COLLECTION_CLASS::may_type_check_actual_param_expr(
 		const param_expr& pe) const {
 	const never_ptr<const expr_type> pi(IS_A(const expr_type*, &pe));
 	if (!pi) {
 		// useful error message?
 		return good_bool(false);
 	}
+	// this says that the only instantiation statement for this parameter
+	// in the original declaration, which in this case was in the ports.  
 	// only for formal parameters is this assertion valid.  
 	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
-	return check_expression_dimensions(*pi);
+	return may_check_expression_dimensions(*pi);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks whether or not a param was passed to a formal 
+	parameter in a template.  
+	Should also check dimensionality and size.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+good_bool
+VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
+		const const_param& pe) const {
+#if 0
+	const never_ptr<const const_collection_type>
+		pi(IS_A(const const_collection_type*, &pe));
+	// can it be scalar?
+	const never_ptr<const const_expr_type>
+		ps(IS_A(const const_expr_type*, &pe));
+	if (ps) {
+		cerr << "Fang, don\'t forget scalar const case in "
+			"value_collection<>::must_type_check_actual_param()"
+			<< endl;
+	}
+	if (!pi) {
+		// useful error message?
+		return good_bool(false);
+	}
+#endif
+	// only for formal parameters is this assertion valid.  
+	// this says that the only instantiation statement for this parameter
+	// in the original declaration, which in this case was in the ports.  
+	INVARIANT(this->index_collection.size() <= 1);
+	// check dimensions (is conservative with dynamic sizes)
+	return must_check_expression_dimensions(pe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

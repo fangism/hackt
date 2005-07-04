@@ -4,5 +4,5 @@ ERROR: reference to uninitialized pint ::foo at index [0][0][2]
 ERROR: reference to uninitialized pint ::foo at index [0][0][3]
 ERROR: in flattening integer values.
 ERROR: something went wrong in pint assignment.
-Error during unroll_meta_evaluate.
+Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

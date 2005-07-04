@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6.4.2 2005/07/04 01:54:06 fang Exp $
+	$Id: art_object_value_collection.h,v 1.6.4.3 2005/07/04 19:13:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -28,6 +28,7 @@ class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class param_expr;
+class const_param;
 class const_range_list;
 class const_index_list;
 USING_LIST
@@ -71,6 +72,8 @@ public:
 					simple_nonmeta_instance_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 						expr_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+						const_expr_type;
 	typedef	typename class_traits<Tag>::const_collection_type
 						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
@@ -133,7 +136,10 @@ virtual	ostream&
 	initial_value(void) const;
 
 	good_bool
-	type_check_actual_param_expr(const param_expr& pe) const;
+	may_type_check_actual_param_expr(const param_expr& pe) const;
+
+	good_bool
+	must_type_check_actual_param_expr(const const_param& pe) const;
 
 virtual	void
 	instantiate_indices(const const_range_list& i) = 0;

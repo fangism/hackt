@@ -1,5 +1,29 @@
 "ChangeLog"
 
+2005-07-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-11:
+	  Unroll-time template formal vs. actual checking in final types.  
+		So far applied to process-type-references, but
+		can be copied to the other types.  
+	  REVERTED back to single-phase unrolling for top-level
+		module::unroll().  (single line change)
+	  Renamed old "type_check_actual_param_expr" to "may_..."
+		and added a "must_..." version for const_params only.  
+	  Implemented const_param_expr_list::must_validate_template_arguments().
+	  Completed template_formals_manager::must_validate_actuals().
+	  Moved instance_collection_base::check_expression_dimensions to
+		param_instance_collection::may_check_expression_dimensions,
+		and added analogous must_check_expression_dimensions
+		for const_params only.  
+	  Implemented value_collection<>::must_type_check_actual_param_expr().
+	  New test cases added:
+		notably parser/template/039.in checks for unroll-time
+		type resolution checking (process).
+		and parser/template/041.in will exhibit different
+		result between 1-pass and 3-pass module::unroll().  
+
+
 2005-07-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-10:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.3 2005/07/04 01:54:04 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.4 2005/07/04 19:13:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -141,7 +141,6 @@ template_formals_manager::lookup_template_formal_position(
 /**
 	Replaces a formal parameter reference with the actual value.  
 	\pre p.is_template_formal() true.
-	TODO: check whether or not actual refers to formal param...
 	\param p the template formal collection to lookup.
 	\param a the set of actual parameters.  
 	\return pointer to resolved parameter collection.  
@@ -152,7 +151,6 @@ count_ptr<const const_param>
 template_formals_manager::resolve_template_actual(
 		const param_instance_collection& p, 
 		const template_actuals& a) const {
-//	typedef	param_instance_collection	local_return_type;
 	typedef	const_param			local_return_type;
 	INVARIANT(p.is_template_formal());
 	const size_t i = lookup_template_formal_position(p.get_name());
@@ -164,18 +162,6 @@ template_formals_manager::resolve_template_actual(
 	INVARIANT(e);
 	const count_ptr<const local_return_type>
 		ret(e.is_a<const local_return_type>());
-#if 0
-	if (!ret) {
-		cerr << "Internal compiler error: "
-//			"expected param_instance_collection, but got ";
-			"expected const_param, but got ";
-		e->what(cerr) << ": ";
-		e->dump(cerr) << endl;
-		THROW_EXIT;
-	}
-	INVARIANT(ret);	// not true, can still be param-expression
-	return *ret;
-#endif
 	if (ret) {
 		return ret;
 	} else {
@@ -183,24 +169,6 @@ template_formals_manager::resolve_template_actual(
 		const template_actuals_transformer uc(c, a, *this);
 		return e->unroll_resolve(c);
 	}
-#if 0
-} else {
-#if 1
-	if (!IS_A(const local_return_type*, &p)) {
-		cerr << "Internal compiler error: "
-			"expected const_param, but got ";
-		p.what(cerr) << ": ";
-		p.dump(cerr) << endl;
-		THROW_EXIT;
-	}
-#endif
-	// can be a pint_scalar or pint_array, (pbool)
-	// in which case, we need to pack it into some const_param
-	// TODO: update value_collection::resolve_const_collection.  
-	// IDEA: construct a temporary reference and resolve it?
-	return IS_A(const local_return_type&, p);	// cross-cast assert
-}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -365,13 +333,14 @@ template_formals_manager::certify_template_arguments(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Validating finally resolved (constant) template actuals
 	against template formal parameters.
+	\param t the template actuals must contain only constants.  
  */
 good_bool
-template_formals_manager::must_validate_actuals(void) const {
+template_formals_manager::must_validate_actuals(
+		const template_actuals& t) const {
 	const count_ptr<const param_expr_list> spl(t.get_strict_args());
 	const count_ptr<const const_param_expr_list>
 		cspl(spl.is_a<const const_param_expr_list>());
@@ -381,9 +350,22 @@ template_formals_manager::must_validate_actuals(void) const {
 			strict_template_formals_list) :
 		partial_check_null_template_argument(
 			strict_template_formals_list));
-	// TODO: copy-modify for relaxed template actuals
+	const count_ptr<const param_expr_list> rpl(t.get_relaxed_args());
+	const count_ptr<const const_param_expr_list>
+		crpl(rpl.is_a<const const_param_expr_list>());
+	if (rpl) NEVER_NULL(crpl);
+	const good_bool rg(crpl ?
+		crpl->must_validate_template_arguments(
+			relaxed_template_formals_list) :
+		partial_check_null_template_argument(
+			relaxed_template_formals_list));
+	const good_bool ret(sg && rg);
+	if (!ret.good) {
+		cerr << "ERROR: actual parameter types do not "
+			"completely match up against formals." << endl;
+	}
+	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.16.4.3 2005/07/04 01:54:03 fang Exp $
+	$Id: art_object_expr_const.h,v 1.16.4.4 2005/07/04 19:13:26 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
@@ -158,6 +158,10 @@ public:
 
 	good_bool
 	certify_template_arguments(const template_formals_list_type&);
+
+	good_bool
+	must_validate_template_arguments(
+		const template_formals_list_type&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

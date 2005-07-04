@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.1 2005/06/30 23:22:20 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.2 2005/07/04 19:13:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -429,68 +429,6 @@ instance_collection_base::formal_size_equivalent(
 	} else {
 		// both are scalar, single instances
 		return true;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Checks for dimension and size equality between expression and 
-	instantiation.  
-	So far, only used by param_instance_collection derivatives, 
-		in the context of checking template formals.  
-	May be useful else where for connections.  
-	\return true if dimensions *may* match.  
- */
-good_bool
-instance_collection_base::check_expression_dimensions(
-		const param_expr& pe) const {
-	MUST_BE_A(const param_instance_collection*, this);
-	// else is not an expression class!
-
-	// dimensions() used to be a pure virtual method
-	// problem when dimensions() is called during construction:
-	// error: pure virtual method called (during construction)
-	// this occurs during static construction of the global 
-	// built in definition object: ind_def, which is templated
-	// with int width.  
-	// Solutions: 
-	// 1) make an unsafe/unchecked constructor for this special case.
-	// 2) add the template parameter after contruction is complete, 
-	//	which is safe as long as no other global (outside of
-	//	art_built_ins.cc) depends on it.
-	// we choose 2 because it is a general solution.  
-
-	if (dimensions != pe.dimensions()) {
-		// number of dimensions doesn't even match!
-		// useful error message?
-		return good_bool(false);
-	}
-	// dimensions match
-	if (dimensions != 0) {
-		INVARIANT(index_collection.size() == 1);	// huh? true?
-		// make sure sizes in each dimension
-		index_collection_type::const_iterator i =
-			index_collection.begin();
-		const count_ptr<const const_range_list>
-			crl((*i)->get_indices().is_a<const const_range_list>());
-		if (crl) {
-			if (pe.has_static_constant_dimensions()) {
-				const const_range_list
-					d(pe.static_constant_dimensions());
-				return good_bool(*crl == d);
-			} else {
-				// is dynamic, conservatively return true
-				return good_bool(true);
-			}
-		} else {
-			// is dynamic, conservatively return true
-			return good_bool(true);
-		}
-	} else {
-		// dimensions == 0 means instantiation is a single instance.  
-		// size may be zero b/c first statement hasn't been added yet
-		INVARIANT(index_collection.size() <= 1);
-		return good_bool(pe.dimensions() == 0);
 	}
 }
 

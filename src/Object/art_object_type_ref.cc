@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.4 2005/07/04 01:54:05 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.5 2005/07/04 19:13:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -930,7 +930,6 @@ process_type_reference::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	The final blessing from the compiler that the template actuals
 	meet the requirements specified by the base definition's 
@@ -940,9 +939,9 @@ process_type_reference::get_base_def(void) const {
  */
 good_bool
 process_type_reference::must_be_valid(void) const {
-	return base_proc_def->must_validate_actuals(*template_args);
+	return base_proc_def->get_template_formals_manager()
+		.must_validate_actuals(template_args);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -960,26 +959,24 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
-#if 1
-		// TODO: FANG!!!
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
 		const template_actuals_transformer
 			uc(c, template_args, 
 				base_proc_def->get_template_formals_manager());
-#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(c));
 		if (actuals) {
-			// TODO: check template actuals against formals!
+#if 1
+			// the final type-check:
 			// now they MUST size-type check
-#if 0
 			const return_type ret(new this_type(
 				base_proc_def, actuals));
 			NEVER_NULL(ret);
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
 #else
+			// TODO: check template actuals against formals!
 			return return_type(
 				new this_type(base_proc_def, actuals));
 #endif

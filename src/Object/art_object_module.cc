@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.22.10.2 2005/06/25 18:40:17 fang Exp $
+ 	$Id: art_object_module.cc,v 1.22.10.3 2005/07/04 19:13:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
@@ -132,8 +132,12 @@ module::unroll_module(void) {
 		STACKTRACE("not already unrolled, unrolling...");
 		// start with blank context
 		unroll_context c;
-#if 0
-		sequential_scope::unroll(c);
+#if 1
+		if (!sequential_scope::unroll(c).good) {
+			cerr << "Error encountered during module::unroll."
+				<< endl;
+			return good_bool(false);
+		}
 #else
 		// three-phase unrolling
 		if (!sequential_scope::unroll_meta_evaluate(c).good) {

@@ -2,5 +2,5 @@ ERROR: reference to uninitialized pint ::milk at index: [3]
 Unable to resolve array_indices!
 ERROR: resolving scalar integer value!
 ERROR: something went wrong in pint assignment.
-Error during unroll_meta_evaluate.
+Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

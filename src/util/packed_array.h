@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.10.14.1 2005/07/04 01:54:09 fang Exp $
+	$Id: packed_array.h,v 1.10.14.2 2005/07/04 19:13:30 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -77,12 +77,8 @@ struct packed_array_implementation<bool> {
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 class packed_array {
 private:
-#if 0
-	typedef	std::valarray<T>			impl_type;
-#else
 	typedef	packed_array_implementation<T>		impl_policy;
 	typedef	typename impl_policy::type		impl_type;
-#endif
 	typedef	PACKED_ARRAY_CLASS			this_type;
 public:
 	typedef	K					index_type;
@@ -220,155 +216,6 @@ private:
 	dump_slice(ostream&, const size_type d, const size_type s) const;
 
 };	// end class packed_array
-
-//=============================================================================
-#if 0
-OBSOLETE, after we introduced specialized implementation policy
-/**
-	Specialized for bool, implemented with vector<bool>, 
-	which, itself, is specialized.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-class packed_array<D, K, bool> {
-private:
-	typedef	std::vector<bool>			impl_type;
-	typedef	PACKED_BOOL_ARRAY_CLASS			this_type;
-public:
-	typedef	K					index_type;
-	typedef	bool					value_type;
-	typedef	multikey<D,K>				key_type;
-	typedef	key_type				ones_type;
-	typedef	key_type				zeros_type;
-	typedef	multikey_generator<D,K>			key_generator_type;
-	typedef	typename impl_type::pointer		pointer;
-	typedef	typename impl_type::const_pointer	const_pointer;
-	typedef	typename impl_type::reference		reference;
-	typedef	typename impl_type::const_reference	const_reference;
-	typedef	typename impl_type::iterator		iterator;
-	typedef	typename impl_type::const_iterator	const_iterator;
-	typedef	typename impl_type::reverse_iterator	reverse_iterator;
-	typedef	typename impl_type::const_reverse_iterator
-							const_reverse_iterator;
-	typedef	size_t					size_type;
-public:
-	/// convenient array of all 1's
-	static const ones_type				ones;
-
-protected:
-	/**
-		Coefficient default to 1, because used for multiplication.  
-	 */
-	typedef	multikey<D-1,K>				coeffs_type;
-protected:
-	key_type					sizes;
-	impl_type					values;
-	key_type					offset;
-	/**
-		Cached array of transformation coefficients
-		for computing flat index.  
-	 */
-	coeffs_type					coeffs;
-public:
-	packed_array() : sizes(), values(), offset(), coeffs(1) { }
-
-	explicit
-	packed_array(const key_type& s);
-
-	packed_array(const key_type& s, const key_type& o);
-
-	// default copy constructor is fine
-
-	/// ranged copy-constructor
-	packed_array(const packed_array& a, 
-		const key_type& l, const key_type& u);
-
-	~packed_array();
-
-	iterator
-	begin(void) { return values.begin(); }
-
-	iterator
-	end(void) { return values.end(); }
-
-	const_iterator
-	begin(void) const { return values.begin(); }
-
-	const_iterator
-	end(void) const { return values.end(); }
-
-	reverse_iterator
-	rbegin(void) { return values.rbegin(); }
-
-	reverse_iterator
-	rend(void) { return values.rend(); }
-
-	const_reverse_iterator
-	rbegin(void) const { return values.rbegin(); }
-
-	const_reverse_iterator
-	rend(void) const { return values.rend(); }
-
-	key_type
-	first_key(void) const;
-
-	key_type
-	last_key(void) const;
-
-	static
-	index_type
-	sizes_product(const key_type& k);
-
-	void
-	resize(const key_type& s);
-
-	bool
-	range_check(const key_type& k) const;
-
-protected:
-	void
-	reset_coeffs(void);
-
-	index_type
-	key_to_index(const key_type& k) const;
-
-public:
-
-	key_type
-	size(void) const { return sizes; }
-
-	bool
-	empty(void) const { return !values.size(); }
-
-	reference
-	operator [] (const key_type& k);
-
-	const_reference
-	operator [] (const key_type& k) const;
-
-	reference
-	at(const key_type& k) {
-		INVARIANT(range_check(k));
-		return (*this)[k];
-	}
-
-	const_reference
-	at(const key_type& k) const {
-		INVARIANT(range_check(k));
-		return (*this)[k];
-	}
-
-	ostream&
-	dump(ostream& o) const;
-
-	ostream&
-	dump_values(ostream& o) const;
-
-private:
-	void
-	dump_slice(ostream&, const size_type d, const size_type s) const;
-
-};	// end class packed_array (specialized)
-#endif
 
 //=============================================================================
 /**

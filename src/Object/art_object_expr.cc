@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.48.4.5 2005/07/04 01:54:02 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.48.4.6 2005/07/04 19:13:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -678,7 +678,7 @@ if (a_size != f_size) {
 		NEVER_NULL(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex).good) {
+			if (!pinst->may_type_check_actual_param_expr(*pex).good) {
 				// error message?
 				return good_bool(false);
 			}
@@ -700,6 +700,46 @@ if (a_size != f_size) {
 				*p_iter = default_expr;
 			}
 		}
+	}
+	return good_bool(true);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unlike certify_template_arguments, this only checks
+	and doesn't fill in default arguments, hance const.  
+ */
+good_bool
+const_param_expr_list::must_validate_template_arguments(
+		const template_formals_list_type& tfl) const {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	template_formals_list_type::const_iterator f_iter(tfl.begin());
+	const template_formals_list_type::const_iterator f_end(tfl.end());
+if (a_size != f_size) {
+	// error message?
+	return good_bool(false);
+} else {
+	const_iterator p_iter(begin());
+	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
+		// need method to check param_instance_collection against param_expr
+		// eventually also work for complex aggregate types!
+		// "I promise this pointer is only local."  
+		const count_ptr<const const_param>& pex(*p_iter);
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		NEVER_NULL(pex);
+		// type-check assignment, conservative w.r.t. arrays
+		if (!pinst->must_type_check_actual_param_expr(*pex).good) {
+			cerr << "ERROR: type/size mismatch between "
+				"template formal and actual." << endl;
+			pex->dump(cerr << "\tgot: ") << endl;
+			pinst->dump(cerr << "\texpected: ") << endl;
+			return good_bool(false);
+		}
+		// else continue checking successive arguments
 	}
 	return good_bool(true);
 }
@@ -1055,7 +1095,7 @@ if (a_size != f_size) {
 		NEVER_NULL(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex).good) {
+			if (!pinst->may_type_check_actual_param_expr(*pex).good) {
 				// error message?
 				return good_bool(false);
 			}

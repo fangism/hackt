@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.12.2.1 2005/07/04 01:54:09 fang Exp $
+	$Id: packed_array.tcc,v 1.12.2.2 2005/07/04 19:13:30 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include <numeric>
-#include <iterator>
 #include "util/macros.h"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_PACKED_ARRAY
@@ -24,7 +23,6 @@
 namespace util {
 #include "util/using_ostream.h"
 using std::accumulate;
-using std::ostream_iterator;
 using util::multikey_generator;
 
 //=============================================================================
@@ -197,19 +195,9 @@ PACKED_ARRAY_CLASS::resize(const key_type& s) {
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PACKED_ARRAY_CLASS::dump(ostream& o) const {
-#if 0
-	o << "packed_array: ";
-#endif
 	o << "size = " << sizes <<
 		", offset = " << offset << ", coeffs = " << coeffs << endl;
-#if 0
-	o << "{ ";
-	ostream_iterator<T> osi(o, ", ");
-	copy(begin(), end(), osi);
-	return o << " }" << endl;
-#else
 	return dump_values(o << "values = ") << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -269,243 +257,6 @@ if (d > 1) {
 	o << values[0];
 }
 }
-
-//=============================================================================
-#if 0
-// class packed_array method definitions (specialized for bool)
-
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-const
-typename PACKED_BOOL_ARRAY_CLASS::ones_type
-PACKED_BOOL_ARRAY_CLASS::ones(1);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-/**
-	Constructs a packed array given an array of dimensions.
-	\param s the dimensions of the new array.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-PACKED_BOOL_ARRAY_CLASS::packed_array(const key_type& s) :
-		sizes(s), values(sizes_product(s)), offset(), coeffs(1) {
-	reset_coeffs();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Constructs a packed array with index offsets in each dimension.
-	\param s dimensions of the new array.
-	\oaram o the offset of the new array.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-PACKED_BOOL_ARRAY_CLASS::packed_array(const key_type& s, const key_type& o) :
-		sizes(s), values(sizes_product(s)), offset(o), coeffs(1) {
-	reset_coeffs();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param a the array from which to copy values.
-	\param l the lower bound of indices used to copy from a.
-	\param u the upper bound of indices used to copy from a.
-	\pre element-for-element, each index of l <= corresponding index in u.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-PACKED_BOOL_ARRAY_CLASS::packed_array(const packed_array& a, 
-		const key_type& l, const key_type& u) :
-		sizes((INVARIANT(l <= u), u - l + ones)), 
-		values(sizes_product(sizes)), offset(), coeffs(1) {
-	// offset remains 0
-	reset_coeffs();
-	key_generator_type key_gen(l, u);
-	key_gen.initialize();
-	INVARIANT(values.size() == sizes_product(sizes));
-	register index_type i = 0;
-	do {
-		// write valarray directly
-		values[i++] = a[key_gen++];
-	} while (key_gen != key_gen.lower_corner);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Default destructor.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-PACKED_BOOL_ARRAY_CLASS::~packed_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return the index of the first entry, which is the offset. 
-	Useful for constructing the multikey_generator.  
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-typename PACKED_BOOL_ARRAY_CLASS::key_type
-PACKED_BOOL_ARRAY_CLASS::first_key(void) const {
-	return offset;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-typename PACKED_BOOL_ARRAY_CLASS::key_type
-PACKED_BOOL_ARRAY_CLASS::last_key(void) const {
-	return sizes +offset -ones;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Helper function to compute the size based on dimensions.  
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-typename PACKED_BOOL_ARRAY_CLASS::index_type
-PACKED_BOOL_ARRAY_CLASS::sizes_product(const key_type& k) {
-	return accumulate(k.begin(), k.end(), 1, std::multiplies<index_type>());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Caches the coefficients used in computing the internal index.  
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-void
-PACKED_BOOL_ARRAY_CLASS::reset_coeffs(void) {
-	coeffs = ones;
-	index_type i = 1;	// skip first
-	for ( ; i < D; i++) {
-		index_type j = 0;
-		for ( ; j < i; j++)
-			coeffs[j] *= sizes[i];
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Since key_type uses size_t (unsigned) we only need to check
-	upper bound.  
-	\return true if index key is valid.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-bool
-PACKED_BOOL_ARRAY_CLASS::range_check(const key_type& k) const {
-	index_type i = 0;
-	for ( ; i < D; i++)
-		if (k[i] -offset[i] >= sizes[i])
-			return false;
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Does not range-check.
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-typename PACKED_BOOL_ARRAY_CLASS::index_type
-PACKED_BOOL_ARRAY_CLASS::key_to_index(const key_type& k) const {
-	const key_type diff(k -offset);
-	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
-		diff.back());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-typename PACKED_BOOL_ARRAY_CLASS::reference
-PACKED_BOOL_ARRAY_CLASS::operator [] (const key_type& k) {
-	return values[key_to_index(k)];
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-typename PACKED_BOOL_ARRAY_CLASS::const_reference
-PACKED_BOOL_ARRAY_CLASS::operator [] (const key_type& k) const {
-	return values[key_to_index(k)];
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-void
-PACKED_BOOL_ARRAY_CLASS::resize(const key_type& s) {
-	values.resize(sizes_product(s));
-	sizes = s;
-	reset_coeffs();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-ostream&
-PACKED_BOOL_ARRAY_CLASS::dump(ostream& o) const {
-#if 0
-	o << "packed_array: ";
-#endif
-	o << "size = " << sizes <<
-		", offset = " << offset << ", coeffs = " << coeffs << endl;
-#if 0
-	o << "{ ";
-	ostream_iterator<bool> osi(o, ", ");
-	copy(begin(), end(), osi);
-	return o << " }" << endl;
-#else
-	return dump_values(o << "values = ") << endl;
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-ostream&
-PACKED_BOOL_ARRAY_CLASS::dump_values(ostream& o) const {
-	dump_slice(o, D, 0);
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Recursive multidimensional value pretty-printer.  
-	This ignores the offset(s) of the packed array entirely.  
-	\param o the output stream.
-	\param d the dimension of the slice:
-		0 means the smallest (or scalar) slice, 
-		d == dim means the highest slice, the entire array.
-	\param s the offset of the first entry to print.  
- */
-PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE
-void
-PACKED_BOOL_ARRAY_CLASS::dump_slice(ostream& o, const size_type d, 
-		const size_type s) const {
-	INVARIANT(d <= D);
-#if 0
-	cerr << "In dump_slice(o, " << d << ", " << s << "):" << endl;
-#endif
-if (d > 1) {
-	o << '{';
-	const size_type sub_count = sizes[D -d];
-	if (sub_count) {
-		const size_type slice_size = coeffs[D -d];
-		const size_type e = s +sub_count *slice_size;
-		size_type slice_start = s +slice_size;
-		dump_slice(o, d-1, s);
-		for ( ; slice_start < e; slice_start += slice_size) {
-			dump_slice(o << ',', d-1, slice_start);
-		}
-	} // else slice is thin!
-	o << '}';
-} else if (d == 1) {
-	// optimizing the 1-dimensional case
-	o << '{';
-	const size_type sub_count = sizes[D -1];
-	if (sub_count) {
-		o << values[s];
-		const size_type e = s +sub_count;
-		size_type slice_start = s+1;
-		for ( ; slice_start < e; slice_start++) {
-			o << ',' << values[slice_start];
-		}
-	}
-	o << '}';
-} else {
-	// d == 0, always at least one element, even for 0-dimensional scalar
-	o << values[0];
-}
-}
-#endif
 
 //=============================================================================
 // class packed_array_generic method definitions
@@ -748,19 +499,9 @@ PACKED_ARRAY_GENERIC_CLASS::resize(const key_type& s) {
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 ostream&
 PACKED_ARRAY_GENERIC_CLASS::dump(ostream& o) const {
-#if 0
-	o << "packed_array_generic: ";
-#endif
 	o << "size = " << sizes <<
 		", offset = " << offset << ", coeffs = " << coeffs << endl;
-#if 0
-	o << "{ ";
-	ostream_iterator<T> osi(o, ", ");
-	copy(begin(), end(), osi);
-	return o << " }" << endl;
-#else
 	return dump_values(o << "values = ") << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

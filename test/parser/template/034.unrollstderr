@@ -5,5 +5,5 @@ ERROR in expression 1 of param expr list: pint-inst-ref ::W[::W[0]]
 ERROR in dynamic_param_expr_list::unroll_resolve()
 ERROR resolving template arguments.
 ERROR: unable to resolve process-type-reference during unroll.
-Error during unroll_meta_instantiate.
+Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.
