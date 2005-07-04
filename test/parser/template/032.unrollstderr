@@ -1,0 +1,61 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4303920	module__	0	0	45
+	2	 0x4300144	namespc_	0	45	77
+	3	 0x4303944	pintcoll	1	77	134
+	4	 0x4303a00	pintinst	0	134	150
+	5	 0x4303a10	crnglst_	0	150	170
+	6	 0x4303a20	procdefn	0	170	230
+	7	 0x4303ab4	pintcoll	0	230	267
+	8	 0x4303b10	pintinst	0	267	283
+	9	 0x4303b24	proccoll	0	283	323
+	10	 0x4303b80	procinst	0	323	343
+	11	 0x4303ba0	proctprf	0	343	363
+	12	 0x4303bc0	dprmlst_	0	363	379
+	13	 0x4303bd0	spimref_	0	379	399
+	14	 0x4303c00	cindlst_	0	399	415
+	15	 0x3729028	cnstpi__	0	415	427
+	16	 0x4303c10	proctprf	0	427	447
+	17	 0x4303c30	cprmlst_	0	447	463
+	18	 0x4303c44	cnstpic_	0	463	491
+	19	 0x4800c00	piassign	0	491	511
+	20	 0x3729038	cnstpi__	0	511	523
+	21	 0x4303cb0	spimref_	0	523	543
+	22	 0x4303ce0	cindlst_	0	543	559
+	23	 0x3729048	cnstpi__	0	559	571
+	24	 0x4800c10	piassign	0	571	591
+	25	 0x3729058	cnstpi__	0	591	603
+	26	 0x4303cf0	spimref_	0	603	623
+	27	 0x4303d20	cindlst_	0	623	639
+	28	 0x3729068	cnstpi__	0	639	651
+
+In module created from: ./032.in (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    W = pint^1 W with indices: {
+      [0..1]
+    }
+      unrolled index-value pairs: {
+        0 = 0
+        1 = 1
+      }
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> N
+      >(
+      )
+      In definition "foo", we have: {
+        N = pint<> N
+      }
+
+  Instances:
+    bar = process foo<1>^0 bar (instantiated) = ::bar
+}
+

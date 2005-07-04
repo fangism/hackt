@@ -1,21 +1,23 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.3.14.1 2005/06/30 23:22:27 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.3.14.2 2005/07/04 01:54:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
 #define	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
 
+#include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace entity {
 // forward declarations
-
+class const_param;
 class template_actuals;
 class template_formals_manager;
 using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**
@@ -43,7 +45,7 @@ public:
 	have_template_actuals(void) const { return template_args; }
 
 	template <class C>
-	const C&
+	count_ptr<const const_param>
 	resolve_meta_value_reference(const C&) const;
 
 };	// end class unroll_context

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.1 2005/06/30 23:22:27 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.2 2005/07/04 01:54:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -27,6 +27,7 @@
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
 #include "Object/art_object_value_collection.h"
+#include "Object/art_object_const_collection.h"
 #include "Object/art_object_expr_const.h"	// for const_index_list
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
@@ -43,9 +44,6 @@
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
-
-// experimental: suppressing automatic template instantiation
-// #include "Object/art_object_extern_templates.h"
 
 //=============================================================================
 namespace ART {
@@ -375,13 +373,14 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
-VALUE_ARRAY_CLASS::value_array() : parent_type(D), collection() {
+VALUE_ARRAY_CLASS::value_array() :
+		parent_type(D), collection(), cached_values(D) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
-		parent_type(o, n, D), collection() {
+		parent_type(o, n, D), collection(), cached_values(D) {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -471,10 +470,12 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 		// already fully specified
 		return l;
 	}
+#if 1
 	// convert indices to pair of list of multikeys
 	if (!l_size) {
 		return const_index_list(l, collection.is_compact());
 	}
+#endif
 	// else construct slice
 	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
@@ -608,13 +609,18 @@ LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_scalar, 64);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-VALUE_SCALAR_CLASS::value_array() : parent_type(0), the_instance() {
+VALUE_SCALAR_CLASS::value_array() :
+		parent_type(0), the_instance(),
+		cached_value(const_expr_type::default_value), 
+		cache_validity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n) :
-		parent_type(o, n, 0), the_instance() {
+		parent_type(o, n, 0), the_instance(),
+		cached_value(const_expr_type::default_value), 
+		cache_validity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

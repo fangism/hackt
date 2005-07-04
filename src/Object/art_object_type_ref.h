@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.27.2.2 2005/07/01 20:34:16 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.3 2005/07/04 01:54:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -318,6 +318,9 @@ public:
 
 	good_bool
 	unroll_register_complete_type(void) const;
+
+	good_bool
+	must_be_valid(void) const;
 
 private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;

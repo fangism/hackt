@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.23.2.2 2005/07/01 20:34:13 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23.2.3 2005/07/04 01:54:01 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -90,6 +90,9 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& o) const;	// temporary
+
+	const template_formals_manager&
+	get_template_formals_manager(void) const { return template_formals; }
 
 	ostream&
 	dump_template_formals(ostream& o) const;

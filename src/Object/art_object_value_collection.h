@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6.4.1 2005/06/30 23:22:27 fang Exp $
+	$Id: art_object_value_collection.h,v 1.6.4.2 2005/07/04 01:54:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -71,6 +71,8 @@ public:
 					simple_nonmeta_instance_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 						expr_type;
+	typedef	typename class_traits<Tag>::const_collection_type
+						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
 protected:
 	/**
@@ -184,7 +186,7 @@ template <class Tag, size_t D>
 value_array<Tag,D>
 
 /**
-	Dimension-specific array of boolean parameters.
+	Dimension-specific array of parameters.
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 class value_array : public value_collection<Tag> {
@@ -202,9 +204,14 @@ public:
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
+	typedef	typename class_traits<Tag>::const_collection_type
+							const_collection_type;
 private:
 	/// the collection of boolean instances
 	collection_type					collection;
+	// value cache is not persistent
+	const_collection_type				cached_values;
+	// tracking validity and density of the value cache?
 
 	value_array();
 
@@ -262,7 +269,7 @@ template <class Tag>
 value_array<Tag,0>
 
 /**
-	Specialization of scalar boolean parameter.
+	Specialization of scalar parameter.
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 class VALUE_SCALAR_CLASS : public value_collection<Tag> {
@@ -274,8 +281,12 @@ public:
 							instance_type;
 	typedef	instance_type				element_type;
 	typedef	typename class_traits<Tag>::value_type	value_type;
-protected:
+	typedef	typename class_traits<Tag>::const_expr_type
+							const_expr_type;
+private:
 	instance_type					the_instance;
+	const_expr_type					cached_value;
+	bool						cache_validity;
 public:
 	value_array();
 

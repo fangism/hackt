@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.2 2005/06/30 23:22:24 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.3 2005/07/04 01:54:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -121,6 +121,10 @@ template_actuals::get_relaxed_args(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: clarify when template actuals are resolved.  
+	TODO: handle when template parameters depend on other 
+		defaulting template parameters.  
+		Template formals are NOT available here, 
+		so we must require the caller to provide them in context.  
  */
 template_actuals
 template_actuals::unroll_resolve(unroll_context& c) const {

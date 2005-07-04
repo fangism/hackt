@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.48.4.4 2005/07/02 01:30:34 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.48.4.5 2005/07/04 01:54:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -1003,6 +1003,10 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 		if (pc) {
 			ret->push_back(pc);
 		} else {
+			cerr << "ERROR in expression " <<
+				distance(begin(), i)+1 <<
+				" of param expr list: ";
+			ip->dump(cerr) << endl;
 			cerr << "ERROR in dynamic_param_expr_list::unroll_resolve()" << endl;
 			return return_type(NULL);
 		}
@@ -2823,7 +2827,16 @@ const_range::dump(ostream& o) const {
 	if (empty())
 		return o << "[]";
 	else
-		return o << "[" << lower() << ".." << upper() << "]";
+		return dump_force(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps the range, whether or not it is valid.  
+ */
+ostream&
+const_range::dump_force(ostream& o) const {
+	return o << "[" << first << ".." << second << "]";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3062,6 +3075,15 @@ const_range_list::dump(ostream& o) const {
 	const_iterator i(begin());
 	for ( ; i!=end(); i++)
 		i->dump(o);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+const_range_list::dump_force(ostream& o) const {
+	const_iterator i(begin());
+	for ( ; i!=end(); i++)
+		i->dump_force(o);
 	return o;
 }
 
@@ -3386,6 +3408,7 @@ INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(4)
 /**
 	\return the sizes of the ranges spanned.  
 	Return type should be pint_const_collection::array_type::key_type
+	\pre this->size() must be valid.
  */
 multikey_index_type
 const_range_list::resolve_sizes(void) const {
@@ -3394,6 +3417,10 @@ const_range_list::resolve_sizes(void) const {
 	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
+		if (i->empty()) {
+			// then we have a bad range
+			THROW_EXIT;
+		}
 		ret[j] = i->size();
 	}
 	return ret;

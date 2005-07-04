@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.22.4.1 2005/06/25 21:07:24 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.22.4.2 2005/07/04 01:54:04 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -122,12 +122,19 @@ using util::persistent_traits;
 // struct pbool_instance method definitions
 // not really methods...
 
+/**
+	Note: when both are uninstantiated, consider them equal.  
+ */
 bool
 operator == (const pbool_instance& p, const pbool_instance& q) {
-	INVARIANT(p.instantiated && q.instantiated);
+//	INVARIANT(p.instantiated && q.instantiated);
+if (p.instantiated && q.instantiated) {
 	if (p.valid && q.valid) {
 		return p.value == q.value;
 	} else return (p.valid == q.valid); 
+} else {
+	return p.instantiated == q.instantiated;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

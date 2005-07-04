@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.16.4.2 2005/07/02 01:30:37 fang Exp $
+	$Id: art_object_expr_const.h,v 1.16.4.3 2005/07/04 01:54:03 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
@@ -326,6 +326,9 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+	ostream&
+	dump_force(ostream& o) const;
+
 	size_t
 	size(void) const;
 
@@ -382,6 +385,7 @@ private:
 	typedef	pint_const		this_type;
 public:
 	typedef pint_expr::value_type	value_type;
+	static const value_type		default_value = 0;
 protected:
 	// removed constness for assignability
 	value_type			val;
@@ -389,7 +393,7 @@ private:
 	pint_const();
 public:
 	explicit
-	pint_const(const long v) :
+	pint_const(const value_type v) :
 		pint_expr(), const_index(), const_param(), val(v) { }
 
 	// change back to inline later
@@ -503,6 +507,7 @@ private:
 	typedef	pbool_const		this_type;
 public:
 	typedef	pbool_value_type	value_type;
+	static const value_type		default_value = false;
 protected:
 	// removed const-ness for assignability
 	value_type		val;
@@ -511,7 +516,7 @@ private:
 
 public:
 	explicit
-	pbool_const(const pbool_value_type v) :
+	pbool_const(const value_type v) :
 		pbool_expr(), const_param(), val(v) { }
 
 	~pbool_const() { }
@@ -669,6 +674,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	ostream&
+	dump_force(ostream& o) const;
 
 	const_range
 	static_overlap(const const_range& r) const;

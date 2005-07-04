@@ -1,0 +1,79 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4305640	module__	0	0	41
+	2	 0x4300144	namespc_	0	41	77
+	3	 0x43055e4	proccoll	0	77	115
+	4	 0x4305660	procinst	0	115	135
+	5	 0x4305680	proctprf	0	135	155
+	6	 0x43056a0	procdefn	0	155	239
+	7	 0x4305734	pintcoll	0	239	276
+	8	 0x4305790	pintinst	0	276	292
+	9	 0x43057a4	pintcoll	0	292	329
+	10	 0x4305800	pintinst	0	329	345
+	11	 0x4305828	arithexp	0	345	362
+	12	 0x4305830	spimref_	0	362	382
+	13	 0x3728028	cnstpi__	0	382	394
+	14	 0x4305864	pintcoll	0	394	431
+	15	 0x43058c0	pintinst	0	431	447
+	16	 0x43058e8	arithexp	0	447	464
+	17	 0x43058f0	spimref_	0	464	484
+	18	 0x3728038	cnstpi__	0	484	496
+	19	 0x4305920	dprmlst_	0	496	520
+	20	 0x3728048	cnstpi__	0	520	532
+	21	 0x3728058	cnstpi__	0	532	544
+	22	 0x4305930	proctprf	0	544	564
+	23	 0x4305950	cprmlst_	0	564	588
+	24	 0x3728068	cnstpi__	0	588	600
+	25	 0x3728078	cnstpi__	0	600	612
+	26	 0x3728088	cnstpi__	0	612	624
+	27	 0x4305964	proccoll	0	624	662
+	28	 0x43059c0	procinst	0	662	682
+	29	 0x43059e0	proctprf	0	682	702
+	30	 0x4305a00	dprmlst_	0	702	726
+	31	 0x3728098	cnstpi__	0	726	738
+	32	 0x4305a10	proctprf	0	738	758
+	33	 0x4305a30	cprmlst_	0	758	782
+	34	 0x37280a8	cnstpi__	0	782	794
+	35	 0x37280b8	cnstpi__	0	794	806
+	36	 0x37280c8	cnstpi__	0	806	818
+	37	 0x4305a44	proccoll	0	818	856
+	38	 0x4305aa0	procinst	0	856	876
+	39	 0x4305ac0	proctprf	0	876	896
+	40	 0x4305ae0	dprmlst_	0	896	920
+	41	 0x37280d8	cnstpi__	0	920	932
+	42	 0x37280e8	cnstpi__	0	932	944
+	43	 0x37280f8	cnstpi__	0	944	956
+	44	 0x4305af0	proctprf	0	956	976
+	45	 0x4305b10	cprmlst_	0	976	1000
+	46	 0x3728108	cnstpi__	0	1000	1012
+	47	 0x3728118	cnstpi__	0	1012	1024
+	48	 0x3728128	cnstpi__	0	1024	1036
+
+In module created from: ./038.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> X
+      pint<> Y (default = pint-inst-ref ::foo::X+1)
+      pint<> Z (default = pint-inst-ref ::foo::Y*2)
+      >(
+      )
+      In definition "foo", we have: {
+        X = pint<> X
+        Y = pint<> Y (default = pint-inst-ref ::foo::X+1)
+        Z = pint<> Z (default = pint-inst-ref ::foo::Y*2)
+      }
+
+  Instances:
+    p = process foo<12, 34, 68>^0 p (instantiated) = ::p
+    q = process foo<12, 13, 26>^0 q (instantiated) = ::q
+    r = process foo<12, 34, 56>^0 r (instantiated) = ::r
+}
+

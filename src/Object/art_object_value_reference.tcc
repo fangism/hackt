@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.2 2005/06/30 23:22:28 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.3 2005/07/04 01:54:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -422,6 +422,52 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Resolves a list of indices during the unroll phase.  
+
+	Source: copied from above ::resolve_dimensions (2005-07-02) and 
+		substituted the call to resolve_index_list().
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+const_index_list
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
+		const unroll_context& c) const {
+	// criterion 1: indices (if any) must be resolved to constant values.  
+	if (this->array_indices) {
+		const const_index_list
+			c_i(this->array_indices->unroll_resolve(c));
+		if (c_i.empty()) {
+			cerr << "ERROR: failed to unroll-resolve index list." << endl;
+			return c_i;
+		}
+		// else let c_i remain empty, underspecified
+		// check for implicit indices, that sub-arrays are
+		// densely packed with the same dimensions.  
+		const const_index_list
+			r_i(value_collection_ref->resolve_indices(c_i));
+		if (r_i.empty()) {
+			cerr << "ERROR: implicitly unroll-resolving index list."
+				<< endl;
+		}
+		return r_i;
+		// Elsewhere (during assign) check for initialization.
+	} else {
+		// TODO: factor out common code above
+		// should try to form dense index list 
+		// for entire collection
+		const const_index_list
+			r_i(value_collection_ref->resolve_indices(
+				const_index_list()));
+		if (r_i.empty()) {
+			cerr << "ERROR: implicitly unroll-resolving index list."
+				<< endl;
+		}
+		return r_i;
+	}
+	// Elsewhere (during assign) check for initialization.  
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Resolves a scalar or collective instance reference into a 
 	packed array of values.  
 	\param c unrolling context, may contain template actuals.
@@ -435,23 +481,88 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 	STACKTRACE("simple_meta_value_reference<>::unroll_resolve()");
 	// this replaces template formal references with template
 	// actuals from the context where necessary (2005-06-30)
-	const value_collection_type&
-		vcref(c.resolve_meta_value_reference(*value_collection_ref));
+if (value_collection_ref->is_template_formal()) {
+	const count_ptr<const const_param>
+		cpptr(c.resolve_meta_value_reference(*value_collection_ref));
+	if (!cpptr) {
+		cerr << "Error unroll-resolving parameter values." << endl;
+		return return_type(NULL);
+	} else if (value_collection_ref->get_dimensions()) {
+		const const_collection_type&
+			ce(IS_A(const const_collection_type&, *cpptr));
+		// NOTE: not reached yet by any test cases
+		// TODO: resolve dimensions using unroll-context!!!
+		const const_index_list rdim(unroll_resolve_dimensions(c));
+		if (rdim.empty()) {		// error, failed to resolve
+			cerr << "Error: failed to resolve dimensions of "
+				"collection referenced: ";
+			this->dump(cerr) << endl;
+			return return_type(NULL);
+		}
+		// TODO: extract ranges of values from specified dimensions
+		return return_type(
+			new const_collection_type(ce.make_value_slice(rdim)));
+		// TODO: error handling necessary
+		// hope the above elides constructor
+	} else {
+		// is scalar
+		const const_expr_type&
+			ce(IS_A(const const_expr_type&, *cpptr));
+		return return_type(new const_expr_type(ce));
+	}
+} else {
+	// non template formal, normal param collection referenced
+	const value_collection_type& vcref(*value_collection_ref);
 	if (vcref.get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
 		// from compile phase.
-		const const_index_list rdim(resolve_dimensions(/*c*/));
-		if (rdim.empty())
+		// TODO: resolve dimensions using unroll-context!!!
+		const const_index_list rdim(unroll_resolve_dimensions(c));
+		if (rdim.empty()) {
+			cerr << "ERROR: failed to resolve dimensions of "
+				"collection referenced: ";
+			vcref.dump(cerr) << endl;
 			return return_type(NULL);
+		}
 		// else we have fully specified dimensions
 
 		const const_range_list crl(rdim.collapsed_dimension_ranges());
+#if 0
+		// NOT TRUE: instance reference may be scalar, 
+		// which results in a 0-dimensional reference when collapsed.
+		if (crl.empty()) {
+			cerr << "Internal compiler error: " 
+				"got an empty range list after "
+				"collapsing dimension ranges, from: " << endl;
+			rdim.dump(cerr << "const_index_list = ") << endl;
+		}
 		INVARIANT(!crl.empty());
+#endif
 		// pint_const_collection::array_type::key_type
 		// is a multikey_generic<size_t>
+		// NOTE: possible to have a bad dynamic range (e.g. backwards)
+		// thus we need to catch it
+#if 1
+		multikey_index_type collection_dimensions;
+		try {
+			collection_dimensions = crl.resolve_sizes();
+			// requires custom definition of 
+			// multikey_generic assignment, due to valarray-ness.
+			// ACK! this doesn't to the same thing as 
+			// passing resolve_size() directly into 
+			// const_collection_type's constructor, WTF!?!?
+		} catch (...) {
+			crl.dump_force(cerr << "ERROR: bad range in "
+				"const_range_list, got: ") << endl;
+			return return_type(NULL);
+		}
+		const count_ptr<const_collection_type>
+			ret(new const_collection_type(collection_dimensions));
+#else
 		const count_ptr<const_collection_type>
 			ret(new const_collection_type(crl.resolve_sizes()));
+#endif
 			// no index offset
 		NEVER_NULL(ret);
 
@@ -460,10 +571,16 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 		key_gen.get_lower_corner() = rdim.lower_multikey();
 		key_gen.get_upper_corner() = rdim.upper_multikey();
 		key_gen.initialize();
+#if 0
+		ret->dump(cerr << "ret = ") << endl;
+#endif
 		bad_bool lookup_err(false);
 		typename const_collection_type::iterator
 			coll_iter(ret->begin());
 		do {
+#if 0
+			cerr << "key_gen = " << key_gen << endl;
+#endif
 			// populate the collection with values
 			// lookup_value returns true on success, false on error
 			// using local value is necessary because bool's 
@@ -481,7 +598,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 			*coll_iter = val;
 			coll_iter++;			// unsafe, but checked
 			key_gen++;
-		} while (key_gen != key_gen.get_upper_corner());
+		} while (key_gen != key_gen.get_lower_corner());
 		INVARIANT(coll_iter == ret->end());	// sanity check
 		if (lookup_err.bad) {
 			// discard incomplete results
@@ -511,6 +628,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 		} else
 			return return_type(new const_expr_type(_val));
 	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

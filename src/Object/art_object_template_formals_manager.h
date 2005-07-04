@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.5.4.2 2005/07/02 01:30:38 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.5.4.3 2005/07/04 01:54:05 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -21,6 +21,7 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+class const_param;
 class param_instance_collection;
 class dynamic_param_expr_list;
 class template_actuals;
@@ -114,6 +115,9 @@ public:
 	good_bool
 	certify_template_arguments(template_actuals&) const;
 
+	good_bool
+	must_validate_actuals(const template_actuals&) const;
+
 	template_actuals
 	make_default_template_arguments(void) const;
 
@@ -128,7 +132,8 @@ public:
 		const never_ptr<const param_instance_collection>);
 
 	// called by unroll-context
-	const param_instance_collection&
+	// was const param_instance_collection&
+	count_ptr<const const_param>
 	resolve_template_actual(const param_instance_collection&, 
 		const template_actuals&) const;
 

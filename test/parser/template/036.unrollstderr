@@ -1,0 +1,74 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x4304330	module__	0	0	45
+	2	 0x4300144	namespc_	0	45	77
+	3	 0x4304354	pintcoll	1	77	134
+	4	 0x4304410	pintinst	0	134	150
+	5	 0x4304420	crnglst_	0	150	170
+	6	 0x4304430	procdefn	0	170	230
+	7	 0x43044c4	pintcoll	1	230	263
+	8	 0x4304580	pintinst	0	263	279
+	9	 0x4304590	crnglst_	0	279	299
+	10	 0x43045a4	proccoll	0	299	339
+	11	 0x4304600	procinst	0	339	359
+	12	 0x4304620	proctprf	0	359	379
+	13	 0x4304640	dprmlst_	0	379	395
+	14	 0x4304650	spimref_	0	395	415
+	15	 0x4304680	dindlst_	0	415	431
+	16	 0x43046a4	dynrng__	0	431	447
+	17	 0x43046b0	spimref_	0	447	467
+	18	 0x43046e0	cindlst_	0	467	483
+	19	 0x3729028	cnstpi__	0	483	495
+	20	 0x43046f0	spimref_	0	495	515
+	21	 0x4304720	cindlst_	0	515	531
+	22	 0x3729038	cnstpi__	0	531	543
+	23	 0x4304730	proctprf	0	543	563
+	24	 0x4304750	cprmlst_	0	563	579
+	25	 0x4304764	cnstpic_	1	579	619
+	26	 0x4800c00	piassign	0	619	639
+	27	 0x3729048	cnstpi__	0	639	651
+	28	 0x43047d0	spimref_	0	651	671
+	29	 0x4304800	cindlst_	0	671	687
+	30	 0x3729058	cnstpi__	0	687	699
+	31	 0x4800c10	piassign	0	699	719
+	32	 0x3729068	cnstpi__	0	719	731
+	33	 0x4304810	spimref_	0	731	751
+	34	 0x4304840	cindlst_	0	751	767
+	35	 0x3729078	cnstpi__	0	767	779
+
+In module created from: ./036.in (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    W = pint^1 W with indices: {
+      [0..1]
+    }
+      unrolled index-value pairs: {
+        0 = 1
+        1 = 0
+      }
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> N with indices: {
+        [0..1]
+      }
+
+      >(
+      )
+      In definition "foo", we have: {
+        N = pint<> N with indices: {
+          [0..1]
+        }
+
+      }
+
+  Instances:
+    bar = process foo<{1,0}>^0 bar (instantiated) = ::bar
+}
+

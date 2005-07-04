@@ -1,0 +1,9 @@
+ERROR: reference to uninitialized pint ::W at index: [1]
+ERROR: looking up index [1] of pint collection ::W.
+ERROR: in unroll_resolve-ing simple_meta_instance_reference.
+ERROR in expression 1 of param expr list: pint-inst-ref ::W[::W[0]]
+ERROR in dynamic_param_expr_list::unroll_resolve()
+ERROR resolving template arguments.
+ERROR: unable to resolve process-type-reference during unroll.
+Error during unroll_meta_instantiate.
+ERROR in unrolling.  Aborting.

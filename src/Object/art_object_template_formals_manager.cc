@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.2 2005/07/02 01:30:38 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.3 2005/07/04 01:54:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,6 +13,7 @@
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_expr.h"
 #include "Object/art_object_template_actuals.h"
+#include "Object/art_object_unroll_context.h"
 
 #include "util/hash_qmap.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -139,14 +140,21 @@ template_formals_manager::lookup_template_formal_position(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Replaces a formal parameter reference with the actual value.  
+	\pre p.is_template_formal() true.
+	TODO: check whether or not actual refers to formal param...
 	\param p the template formal collection to lookup.
 	\param a the set of actual parameters.  
+	\return pointer to resolved parameter collection.  
 	TODO: safety sanity and consistency checks.  
  */
-const param_instance_collection&
+// const param_instance_collection&
+count_ptr<const const_param>
 template_formals_manager::resolve_template_actual(
 		const param_instance_collection& p, 
 		const template_actuals& a) const {
+//	typedef	param_instance_collection	local_return_type;
+	typedef	const_param			local_return_type;
+	INVARIANT(p.is_template_formal());
 	const size_t i = lookup_template_formal_position(p.get_name());
 	// this value is 1-indexed
 	// but actuals are 0-indexed
@@ -154,10 +162,45 @@ template_formals_manager::resolve_template_actual(
 	const count_ptr<const param_expr>
 		e(a[i-1]);
 	INVARIANT(e);
-	const param_instance_collection*
-		ret(IS_A(const param_instance_collection*, &*e));
-	INVARIANT(ret);
+	const count_ptr<const local_return_type>
+		ret(e.is_a<const local_return_type>());
+#if 0
+	if (!ret) {
+		cerr << "Internal compiler error: "
+//			"expected param_instance_collection, but got ";
+			"expected const_param, but got ";
+		e->what(cerr) << ": ";
+		e->dump(cerr) << endl;
+		THROW_EXIT;
+	}
+	INVARIANT(ret);	// not true, can still be param-expression
 	return *ret;
+#endif
+	if (ret) {
+		return ret;
+	} else {
+		unroll_context c;
+		const template_actuals_transformer uc(c, a, *this);
+		return e->unroll_resolve(c);
+	}
+#if 0
+} else {
+#if 1
+	if (!IS_A(const local_return_type*, &p)) {
+		cerr << "Internal compiler error: "
+			"expected const_param, but got ";
+		p.what(cerr) << ": ";
+		p.dump(cerr) << endl;
+		THROW_EXIT;
+	}
+#endif
+	// can be a pint_scalar or pint_array, (pbool)
+	// in which case, we need to pack it into some const_param
+	// TODO: update value_collection::resolve_const_collection.  
+	// IDEA: construct a temporary reference and resolve it?
+	return IS_A(const local_return_type&, p);	// cross-cast assert
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -312,8 +355,6 @@ template_formals_manager::certify_template_arguments(
 			strict_template_formals_list) :
 		partial_check_null_template_argument(
 			strict_template_formals_list));
-#if 1
-	// doesn't break anything so far
 	const count_ptr<param_expr_list> rpl(t.get_relaxed_args());
 	const good_bool rg(rpl ?
 		rpl->certify_template_arguments(
@@ -321,10 +362,28 @@ template_formals_manager::certify_template_arguments(
 		partial_check_null_template_argument(
 			relaxed_template_formals_list));
 	return sg && rg;
-#else
-	return sg;
-#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Validating finally resolved (constant) template actuals
+	against template formal parameters.
+ */
+good_bool
+template_formals_manager::must_validate_actuals(void) const {
+	const count_ptr<const param_expr_list> spl(t.get_strict_args());
+	const count_ptr<const const_param_expr_list>
+		cspl(spl.is_a<const const_param_expr_list>());
+	if (spl) NEVER_NULL(cspl);
+	const good_bool sg(cspl ?
+		cspl->must_validate_template_arguments(
+			strict_template_formals_list) :
+		partial_check_null_template_argument(
+			strict_template_formals_list));
+	// TODO: copy-modify for relaxed template actuals
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

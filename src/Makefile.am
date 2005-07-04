@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.3 2005/06/30 23:22:08 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.4 2005/07/04 01:53:59 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -8,7 +8,7 @@ SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .hchk .tccchk
+SUFFIXES = .yy .ll .hchk .tccchk .ii
 
 include $(top_srcdir)/Make.stddef
 
@@ -536,6 +536,11 @@ AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
+
+# for occasional debugging
+SAVETEMP = $(CXXCOMPILE) -v -save-temps
+.cc.ii:
+	$(SAVETEMP) -c $< -o $*.o
 
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=artxx_yy

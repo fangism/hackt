@@ -1,5 +1,31 @@
 # "src/util/ChangeLog"
 
+2005-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-10:
+	  Fixed scalar initialization bug in util::multikey_generic, 
+		where passing in 0 dimension would result in
+		allocating size_t(-1) size array in constructor. 
+		Moral of lesson: look before you subtract one.  
+		(Updated bunch of multikey_generic's constructors)
+	  Fixed multikey_generic assignment (=) bug:
+		default assignment semantics for valarray (implementation type)
+		are insufficient: defaults to truncated copy.
+		We replaced with proper reallocation (vector-style)
+		assignment, with explicit destruction and placement
+		copy-construction.  
+	  Eliminated copy-modified specialization of packed_array<bool>
+		and replaced it with a packed_array_implementation
+		policy class, with specialized types for bool case.  
+		Result: much code reduction for equivalent functionality.
+	  Updated pretty-print dump for all packed_array*.
+		Includes a nice multidimensional array dump.  
+	  Also added a test to packed_array_test to check for this.  
+	  While I was at it, replaced iterator initialization
+		with construction where possible in util::multikey*
+		and util::packed_array*.
+
+
 2005-06-30	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-07:

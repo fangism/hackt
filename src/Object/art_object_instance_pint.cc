@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.24.4.1 2005/06/25 21:07:24 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.24.4.2 2005/07/04 01:54:04 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
@@ -84,12 +84,22 @@ REQUIRES_STACKTRACE_STATIC_INIT
 // struct pint_instance method definitions
 // not really methods...
 
+/**
+	Compares a pair of pint instances.  
+	If neither party is instantiated, consider them equal.
+ */
 bool
 operator == (const pint_instance& p, const pint_instance& q) {
-	INVARIANT(p.instantiated && q.instantiated);
+	// INVARIANT(p.instantiated && q.instantiated);
+	// multikey_assoc will need to compare against a default
+	// uninstantiated value, so we can't assert.  
+if (p.instantiated && q.instantiated) {
 	if (p.valid && q.valid) {
 		return p.value == q.value;
 	} else return (p.valid == q.valid); 
+} else {
+	return p.instantiated == q.instantiated;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

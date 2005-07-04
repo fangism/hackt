@@ -1,5 +1,43 @@
 "ChangeLog"
 
+2005-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-10:
+	  TONS of functional addition, upgrades, and fixes in this revision.  
+	  process_type_reference::unroll_resolve():
+		invoke the template_actuals_transformer (unroll_context)
+		on template actuals before unroll-resolving.  
+		TODO: validate the created type.  
+	  simplified unroll_context::resolve_meta_value_reference.
+	  Added (non-persistent) value cache to const_collection, 
+		currently unused, but will come in handy later.  
+		TODO: should be mutable.  
+	  Implemented meta_value_reference::unroll_resolve_dimensions().
+	  meta_value_reference::unroll_resolve() now properly
+		handles normal and template-dependent actuals, 
+		better error reporting in case of bad dimensions, 
+		try-catch around const_range_list::resolve_sizes(), 
+		fixed bug in loop termination condition of do-while.  
+	  entity::const_collection<>::make_value_slice()
+		creates const_collection with slice of values
+		specified by the indices.
+	  entity::const_range[_list]: now catches error
+		when range is invalid, for now throws an exception
+		for error handling, but may rewrite later.  
+	  {pbool,pint}_instance operator == updated to allow comparison
+		between "uninstantiated" values.  If both are uninstantiated, 
+		consider them equal, so default values are equal.  
+	  template_formals_manager::resolve_template_actual updated
+		to recursively resolve parameter-dependent parameters.  
+	  const_collection iterator uses: replaced assignments w/ construction
+	  Makefile.am: added .ii suffix rule for -save-temps debugging.
+	  TODO: template_formals_manager::must_validate_actuals()
+	  More critical fixes and improvements in the util/ library, 
+		see src/util/ChangeLog for details.  
+	  Several new tests to validate this revision added to
+		test/parser/template, and more coming...
+
+
 2005-07-01	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-09:
