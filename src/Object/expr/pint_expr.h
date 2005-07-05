@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.1.2.1 2005/07/05 01:16:32 fang Exp $
+	$Id: pint_expr.h,v 1.1.2.2 2005/07/05 07:59:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_EXPR_H__
@@ -12,7 +12,7 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/meta_index_expr.h"
 #include "Object/expr/int_expr.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 
@@ -36,7 +36,7 @@ class pint_expr : virtual public param_expr, virtual public meta_index_expr,
 		public int_expr {
 public:
 	/**
-		The internal storage type, set in "art_object_expr_types.h".
+		The internal storage type, set in "expr/types.h".
 		We bother with this typedef for the future potential of 
 		using templates to extend to other parameter types.  
 	 */
@@ -46,7 +46,7 @@ protected:
 
 public:
 	// temporary de-inline for debugging purposes
-virtual	~pint_expr();
+virtual	~pint_expr() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;

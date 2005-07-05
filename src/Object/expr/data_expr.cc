@@ -1,15 +1,25 @@
 /**
-	\file "Object/art_object_data_expr.cc"
+	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
-	$Id: art_object_data_expr.cc,v 1.2.4.1 2005/06/30 23:22:14 fang Exp $
+	NOTE: file was moved from "Object/art_objec_data_expr.cc"
+	$Id: data_expr.cc,v 1.1.2.1 2005/07/05 07:59:52 fang Exp $
  */
 
 #include <iostream>
-#include "Object/art_object_data_expr.h"
+#include "Object/expr/int_arith_expr.h"
+#include "Object/expr/int_relational_expr.h"
+#include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/int_negation_expr.h"
+#include "Object/expr/bool_negation_expr.h"
+#include "Object/expr/int_range_expr.h"
+#include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/int_range_list.h"
+
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_nonmeta_value_reference.tcc"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_built_ins.h"
+
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
@@ -786,7 +796,8 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 //=============================================================================
 // explicit template instantiations
 
-// steal nonmeta_value_references from "Object/art_object_expr.cc"?
+// steal nonmeta_value_references from 
+// "Object/expr/nonmeta_param_value_reference.cc"?
 
 //=============================================================================
 }	// end namespace entity

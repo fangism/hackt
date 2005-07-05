@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.1 2005/07/04 01:54:07 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.2 2005/07/05 07:59:51 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -11,7 +11,6 @@
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_index.h"
-#include "Object/art_object_expr_const.h"	// for const_index_list
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_classification_fwd.h"
 #include "util/persistent.h"
@@ -21,6 +20,10 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+class const_param;
+class const_index_list;
+class const_range_list;
+class unroll_context;
 USING_LIST
 using std::ostream;
 using util::good_bool;

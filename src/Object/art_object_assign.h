@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.20.4.1 2005/06/24 22:51:10 fang Exp $
+	$Id: art_object_assign.h,v 1.20.4.2 2005/07/05 07:59:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -10,7 +10,7 @@
 
 #include "util/boolean_types.h"
 #include "Object/art_object_instance_management_base.h"
-#include "Object/art_object_expr_base.h"
+// #include "Object/art_object_expr_base.h"
 #include "Object/art_object_classification_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
@@ -24,6 +24,7 @@ using std::ostream;
 using util::memory::count_ptr;	// for experimental pointer classes
 using util::bad_bool;
 using util::good_bool;
+class param_expr;
 class unroll_context;
 
 //=============================================================================

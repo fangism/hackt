@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.5 2005/07/05 01:16:19 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.6 2005/07/05 07:59:26 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -146,8 +146,6 @@ OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
 	Object/art_object_classification_details.cc \
-	Object/art_object_data_expr.cc \
-	Object/art_object_expr.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance.cc \
@@ -179,6 +177,16 @@ OBJECT_CC_FILES = \
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
+	Object/expr/basic_param.cc \
+	Object/expr/param_const_collection.cc \
+	Object/expr/meta_index_expr_list.cc \
+	Object/expr/meta_param_expr_list.cc \
+	Object/expr/meta_range.cc \
+	Object/expr/meta_range_list.cc \
+	Object/expr/meta_param_value_reference.cc \
+	Object/expr/nonmeta_param_value_reference.cc \
+	Object/expr/operators.cc \
+	Object/expr/data_expr.cc \
 	Object/art_object_instance_pint.cc \
 	Object/art_object_instance_pbool.cc \
 	Object/art_object_IO.cc
@@ -263,11 +271,11 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/pint_relational_expr.h \
 	Object/expr/pint_unary_expr.h \
 	Object/expr/struct_expr.h \
+	Object/expr/types.h \
 	Object/art_object_data_expr_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
-	Object/art_object_expr_types.h \
 	Object/art_object_index.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_alias.h \
@@ -654,6 +662,22 @@ util/using_ostream.hchk:
 	@$(TOUCH) $@
 
 ../config.hchk:
+	@$(TOUCH) $@
+
+# The following exceptions are temporary due to deprecation of headers. 
+Object/art_object_data_expr_base.hchk:
+	@$(TOUCH) $@
+
+Object/art_object_data_expr.hchk:
+	@$(TOUCH) $@
+
+Object/art_object_expr_base.hchk:
+	@$(TOUCH) $@
+
+Object/art_object_expr_const.hchk:
+	@$(TOUCH) $@
+
+Object/art_object_expr.hchk:
 	@$(TOUCH) $@
 
 EXTRA_DIST = \

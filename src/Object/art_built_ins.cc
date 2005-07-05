@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.24.2.1 2005/06/25 21:07:16 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.24.2.2 2005/07/05 07:59:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
@@ -20,7 +20,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_param.h"
-#include "Object/art_object_expr_const.h"
+#include "Object/expr/pint_const.h"
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_pint_traits.h"
 #include "Object/art_object_pbool_traits.h"

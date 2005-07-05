@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.35.2.2 2005/06/30 23:22:13 fang Exp $
+ 	$Id: art_context.cc,v 1.35.2.3 2005/07/05 07:59:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -17,6 +17,7 @@
 #include "Object/art_context.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
+#include "Object/expr/meta_range_list.h"
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"

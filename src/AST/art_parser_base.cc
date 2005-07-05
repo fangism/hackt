@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.26.2.1 2005/06/30 23:22:10 fang Exp $
+	$Id: art_parser_base.cc,v 1.26.2.2 2005/07/05 07:59:28 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -33,7 +33,7 @@
 #include "Object/art_object_definition_chan.h"	// for user_def_chan
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_type_ref.h"		// for data_type_reference
-#include "Object/art_object_expr.h"		// for dynamic_param_expr_list
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/art_object_namespace.h"
 
 #include "util/indent.h"

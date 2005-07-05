@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.14.4.2 2005/07/05 01:16:25 fang Exp $
+	$Id: art_object_fwd.h,v 1.14.4.3 2005/07/05 07:59:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -10,7 +10,7 @@
 #include "util/size_t.h"
 #include "Object/art_object_classification_tags.h"
 #include "Object/art_object_classification_fwd.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 
 namespace ART {
 namespace entity {

@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.1.2.1 2005/07/05 01:16:31 fang Exp $
+	$Id: pbool_expr.h,v 1.1.2.2 2005/07/05 07:59:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_EXPR_H__
@@ -11,7 +11,7 @@
 
 #include "Object/expr/param_expr.h"
 #include "Object/expr/bool_expr.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 
@@ -35,7 +35,7 @@ using util::memory::never_ptr;
 class pbool_expr : virtual public param_expr, public bool_expr {
 public:
 	/**
-		The global boolean value type, set in "art_object_expr_types.h".
+		The global boolean value type, set in "expr/types.h".
 		We bother with this typedef for the future potential of 
 		using templates to extend to other parameter types.  
 	 */
@@ -44,7 +44,7 @@ public:
 	pbool_expr() : param_expr(), bool_expr() { }
 
 	// temporary de-inline for debugging
-virtual	~pbool_expr();
+virtual	~pbool_expr() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.4 2005/07/04 19:13:28 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.5 2005/07/05 07:59:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,7 +11,9 @@
 
 #include "Object/art_object_template_formals_manager.h"
 #include "Object/art_object_instance_param.h"
-#include "Object/art_object_expr.h"
+#include "Object/expr/const_param.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_unroll_context.h"
 
@@ -54,8 +56,8 @@ ostream&
 template_formals_manager::dump_formals_list(ostream& o, 
 		const template_formals_list_type& l) {
 	o << '<' << endl;	// continued from last print
-	template_formals_list_type::const_iterator i = l.begin();
-	const template_formals_list_type::const_iterator e = l.end();
+	template_formals_list_type::const_iterator i(l.begin());
+	const template_formals_list_type::const_iterator e(l.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		// sanity check
@@ -120,7 +122,7 @@ template_formals_manager::lookup_template_formal_position(
 	// default, uses pointer comparison
 	if (pp) {
 		template_formals_list_type::const_iterator
-			pb = strict_template_formals_list.begin();
+			pb(strict_template_formals_list.begin());
 		// find the position in the list/array
 		size_t ret = 1 +distance(pb,
 			std::find(pb, strict_template_formals_list.end(), pp));
@@ -186,7 +188,7 @@ template_formals_manager::partial_check_null_template_argument(
 	if (!l.empty()) {
 		// make sure each formal has a default parameter value
 		// starting with strict formal parameters
-		template_formals_list_type::const_iterator i = l.begin();
+		template_formals_list_type::const_iterator i(l.begin());
 		for ( ; i!=l.end(); i++) {
 			const never_ptr<const param_instance_collection> p(*i);
 			NEVER_NULL(p);
@@ -237,8 +239,8 @@ template_formals_manager::equivalent_template_formals_lists(
 		const template_formals_list_type& l, 
 		const template_formals_list_type& r, 
 		const string& err_msg) {
-	template_formals_list_type::const_iterator i = l.begin();
-	template_formals_list_type::const_iterator j = r.begin();
+	template_formals_list_type::const_iterator i(l.begin());
+	template_formals_list_type::const_iterator j(r.begin());
 	for ( ; i!=l.end() && j!=r.end(); i++, j++) {
 		const never_ptr<const param_instance_collection> itf(*i);
 		const never_ptr<const param_instance_collection> jtf(*j);
@@ -381,7 +383,7 @@ template_formals_manager::make_default_template_arguments(void) const {
 		return template_actuals();
 	const return_type ret(new dynamic_param_expr_list);
 	template_formals_list_type::const_iterator
-		i = strict_template_formals_list.begin();
+		i(strict_template_formals_list.begin());
 	for ( ; i!=strict_template_formals_list.end(); i++) {
 		const count_ptr<const param_expr> d((*i)->default_value());
 		NEVER_NULL(d);  // everything must have default
@@ -430,9 +432,9 @@ template_formals_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE("template_formals_manager::collect_transients()");
 	template_formals_list_type::const_iterator
-		iter = strict_template_formals_list.begin();
+		iter(strict_template_formals_list.begin());
 	template_formals_list_type::const_iterator
-		end = strict_template_formals_list.end();
+		end(strict_template_formals_list.end());
 	for ( ; iter!=end; iter++) {
 		(*iter)->collect_transient_info(m);
 	}
@@ -481,8 +483,8 @@ template_formals_manager::load_template_formals_list(
 		const persistent_object_manager& m, 
 		template_formals_map_type& the_map, 
 		template_formals_list_type& l) {
-	template_formals_list_type::const_iterator iter = l.begin();
-	const template_formals_list_type::const_iterator end = l.end();
+	template_formals_list_type::const_iterator iter(l.begin());
+	const template_formals_list_type::const_iterator end(l.end());
 	for ( ; iter!=end; iter++) {
 		STACKTRACE("for-loop: load a map entry");
 		const template_formals_value_type inst_ptr = *iter;

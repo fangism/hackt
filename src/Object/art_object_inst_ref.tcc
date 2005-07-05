@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.8.4.1 2005/06/30 23:22:20 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.8.4.2 2005/07/05 07:59:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -10,7 +10,8 @@
 #include <iostream>
 
 #include "Object/art_object_inst_ref.h"
-#include "Object/art_object_expr_const.h"	// for const_index_list
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range_list.h"
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 	// will explicitly instantiate

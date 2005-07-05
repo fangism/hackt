@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.27.2.3 2005/07/04 01:54:06 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.4 2005/07/05 07:59:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -9,7 +9,7 @@
 
 #include <vector>
 #include "Object/art_object_type_ref_base.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 
 namespace ART {
 namespace parser {

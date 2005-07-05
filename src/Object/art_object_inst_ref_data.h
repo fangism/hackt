@@ -1,186 +1,63 @@
 /**
-	\file "art_object_inst_ref_data.h"
+	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.4 2005/01/13 05:28:30 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.8.4.1 2005/07/05 07:59:42 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_DATA_H__
-#define	__ART_OBJECT_INST_REF_DATA_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
+#define	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
 
-#include "art_object_inst_ref.h"
-#include "memory/pointer_classes.h"
+#include "Object/art_object_inst_ref_base.h"
+// #include "Object/art_object_inst_ref.h"
+// might as well include this here because data_reference<Tag>::interface_type
+// is going to be int_expr or bool_expr from the base class header file.  
+// #include "Object/art_object_data_expr_base.h"
 
 namespace ART {
 namespace entity {
-
-using std::ostream;
-using namespace util::memory;
-
-//=============================================================================
-// consider moving datatype_instance_reference here...
-// consider moving datatype_member_instance_reference here...
-
 //=============================================================================
 /**
-	Instance reference to built-in int type.
+	A reference to a simple instance of datatype.  
+	Consider sub-typing into user-defined and built-in, 
+	making this an abstract base.
  */
-class int_instance_reference : public datatype_instance_reference {
+class simple_datatype_meta_instance_reference_base :
+		public simple_meta_instance_reference_base {
 private:
-	typedef	datatype_instance_reference		parent_type;
-	typedef	int_instance_collection		instance_collection_type;
-private:
-	// excl_ptr<index_list>		array_indices;	// inherited
+	typedef simple_meta_instance_reference_base               parent_type;
+protected:
+//      excl_ptr<meta_index_list>                   array_indices;  // inherited
 
-	const never_ptr<const instance_collection_type>	int_inst_ref;
-private:
-	int_instance_reference();
-public:
+protected:
+	simple_datatype_meta_instance_reference_base();
+
 	explicit
-	int_instance_reference(
-		const never_ptr<const instance_collection_type> iic);
+	simple_datatype_meta_instance_reference_base(const instantiation_state& s);
 
-	~int_instance_reference();
+public:
+virtual ~simple_datatype_meta_instance_reference_base();
 
-	ostream&
-	what(ostream& o) const;
+virtual ostream&
+	what(ostream& o) const = 0;
 
-#if 0
-	// use simple_instance_reference's
-	ostream&
-	dump(ostream& o) const;
-#endif
+//      ostream& dump(ostream& o) const;
 
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
+virtual never_ptr<const instance_collection_base>
+	get_inst_base(void) const = 0;
+
+private:
+virtual excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
-
-public:
-	PERSISTENT_METHODS
-};	// end class int_instance_reference
-
-//=============================================================================
-/**
-	Instance reference to built-in bool (node) type.
- */
-class bool_instance_reference : public datatype_instance_reference {
-private:
-	typedef	datatype_instance_reference		parent_type;
-	typedef	bool_instance_collection	instance_collection_type;
-private:
-	// excl_ptr<index_list>		array_indices;	// inherited
-
-	const never_ptr<const instance_collection_type>	bool_inst_ref;
-
-private:
-	bool_instance_reference();
-public:
-	explicit
-	bool_instance_reference(
-		const never_ptr<const instance_collection_type> bic);
-
-	~bool_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-
-#if 0
-	// use simple_instance_reference's
-	ostream&
-	dump(ostream& o) const;
-#endif
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
-public:
-	PERSISTENT_METHODS
-};	// end class bool_instance_reference
-
-//=============================================================================
-/**
-	Instance reference to a user-defined struct.  
- */
-class datastruct_instance_reference : public datatype_instance_reference {
-private:
-	typedef	datatype_instance_reference		parent_type;
-	typedef	struct_instance_collection	instance_collection_type;
-private:
-	// excl_ptr<index_list>		array_indices;	// inherited
-
-	const never_ptr<const instance_collection_type>
-					struct_inst_ref;
-
-private:
-	datastruct_instance_reference();
-public:
-	explicit
-	datastruct_instance_reference(
-		const never_ptr<const instance_collection_type> sic);
-
-	~datastruct_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-
-#if 0
-	// use simple_instance_reference's
-	ostream&
-	dump(ostream& o) const;
-#endif
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
-public:
-	PERSISTENT_METHODS
-};	// end class datastruct_instance_reference
-
-//=============================================================================
-/**
-	Instance reference to a user-defined enum.  
- */
-class enum_instance_reference : public datatype_instance_reference {
-private:
-	typedef	datatype_instance_reference		parent_type;
-	typedef	enum_instance_collection	instance_collection_type;
-private:
-	// excl_ptr<index_list>		array_indices;	// inherited
-
-	const never_ptr<const instance_collection_type>
-					enum_inst_ref;
-
-private:
-	enum_instance_reference();
-public:
-	explicit
-	enum_instance_reference(
-		const never_ptr<const instance_collection_type> eic);
-
-	~enum_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-
-#if 0
-	// use simple_instance_reference's
-	ostream&
-	dump(ostream& o) const;
-#endif
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
-public:
-	PERSISTENT_METHODS
-};	// end class enum_instance_reference
+};      // end class simple_datatype_meta_instance_reference_base
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_DATA_H__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_DATA_H__
 

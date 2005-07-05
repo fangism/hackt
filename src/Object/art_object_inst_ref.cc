@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31.4.2 2005/06/30 23:22:19 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.3 2005/07/05 07:59:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -21,8 +21,10 @@
 #include "Object/art_object_nonmeta_inst_ref.tcc"
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_inst_stmt_base.h"
-#include "Object/art_object_expr.h"		// for dynamic_meta_range_list
-#include "Object/art_object_data_expr.h"	// for nonmeta_index_list
+#include "Object/expr/const_range.h"
+#include "Object/expr/dynamic_meta_index_list.h"
+#include "Object/expr/dynamic_meta_range_list.h"
+#include "Object/expr/nonmeta_index_list.h"
 #include "Object/art_object_control.h"
 #include "Object/art_object_connect.h"		// for aliases_connection_base
 #include "util/persistent_object_manager.tcc"

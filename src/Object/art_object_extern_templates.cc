@@ -2,14 +2,14 @@
 	\file "Object/art_object_extern_templates.cc"
 	Repository of explici template instantiations needed 
 	by the object-related library.  
-	$Id: art_object_extern_templates.cc,v 1.5.14.2 2005/06/30 23:22:19 fang Exp $
+	$Id: art_object_extern_templates.cc,v 1.5.14.3 2005/07/05 07:59:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
 #define	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
 
 #include "util/STL/list_fwd.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 #include "util/multikey.tcc"
 #include "util/packed_array.tcc"
 

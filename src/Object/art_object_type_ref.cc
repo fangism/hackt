@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.5 2005/07/04 19:13:29 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.6 2005/07/05 07:59:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -23,7 +23,9 @@
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/meta_range_list.h"
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/art_built_ins.h"

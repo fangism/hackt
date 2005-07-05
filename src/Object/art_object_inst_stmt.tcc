@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.4 2005/06/30 23:22:20 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.5 2005/07/05 07:59:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -32,7 +32,7 @@
 #include <algorithm>
 
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/meta_range_list.h"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"

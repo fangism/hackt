@@ -1,15 +1,16 @@
 /**
 	\file "Object/art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.20.4.1 2005/07/04 19:13:28 fang Exp $
+	$Id: art_object_instance_param.h,v 1.20.4.2 2005/07/05 07:59:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
 
-#include "util/boolean_types.h"
 #include "Object/art_object_instance_base.h"
+#include "Object/expr/types.h"
 #include "Object/art_object_expr_param_ref.h"	// for typedef init_arg_type
+#include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
 
 #include "util/multikey_fwd.h"
@@ -19,6 +20,7 @@ namespace ART {
 namespace entity {
 struct pbool_tag;
 struct pint_tag;
+class const_param;
 USING_LIST
 using util::memory::count_ptr;
 using util::qmap;

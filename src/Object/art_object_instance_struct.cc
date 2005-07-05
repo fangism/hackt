@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.16.2.1 2005/06/30 23:22:23 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.16.2.2 2005/07/05 07:59:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -15,7 +15,7 @@
 #include "Object/art_object_instance_struct.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
-#include "Object/art_object_expr_const.h"
+#include "Object/expr/struct_expr.h"
 #include "Object/art_object_connect.h"
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_type_ref.h"

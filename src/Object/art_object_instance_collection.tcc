@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.1 2005/06/30 23:22:22 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.2 2005/07/05 07:59:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -38,9 +38,13 @@
 
 #include "Object/art_object_instance_alias.h"
 #include "Object/art_object_instance_collection.h"
-#include "Object/art_object_expr_const.h"
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
+#include "Object/art_object_inst_ref.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"

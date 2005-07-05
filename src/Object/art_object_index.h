@@ -1,14 +1,14 @@
 /**
-	\file "art_object_index.h"
+	\file "Object/art_object_index.h"
 	Typedef for index types.  
-	$Id: art_object_index.h,v 1.2 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_index.h,v 1.6.10.1 2005/07/05 07:59:40 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INDEX_H__
-#define	__ART_OBJECT_INDEX_H__
+#ifndef	__OBJECT_ART_OBJECT_INDEX_H__
+#define	__OBJECT_ART_OBJECT_INDEX_H__
 
-#include "multikey_fwd.h"
-#include "art_object_fwd.h"	// for pint/pbool_value_type
+#include "util/multikey_fwd.h"
+#include "Object/expr/types.h"	// for pint/pbool_value_type
 
 namespace ART {
 namespace entity {
@@ -18,22 +18,12 @@ namespace entity {
 	espeicially in instance references.  
 	This is actually an abstract type with a static generator function.  
 	Used in "art_object_expr.cc".
- */
-typedef	util::multikey_base<pint_value_type>		multikey_index_type;
 
-/**
-	Base type for multidimensional key ranged iterators, used to 
-	walk subslices of multidimensional structures.  
-	This is actually an abstract type with a static generator function.  
-	Used in "art_object_expr.cc".
- */
-typedef	util::multikey_generator_base<pint_value_type>	index_generator_type;
-
-/**
 	Index type used for referencing unrolling instance collections.  
 	Used in virtually all instance_collection_base children classes.  
  */
-typedef	util::multikey_base<pint_value_type>		unroll_index_type;
+typedef	util::multikey_generic<pint_value_type>		multikey_index_type;
+
 
 /**
 	Generic (concrete) multidimensional key generator.
@@ -47,5 +37,5 @@ typedef	util::multikey_generator_generic<pint_value_type>
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INDEX_H__
+#endif	// __OBJECT_ART_OBJECT_INDEX_H__
 

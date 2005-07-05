@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.3 2005/07/04 19:13:29 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.4 2005/07/05 07:59:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -28,7 +28,10 @@
 
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_const_collection.h"
-#include "Object/art_object_expr_const.h"	// for const_index_list
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 

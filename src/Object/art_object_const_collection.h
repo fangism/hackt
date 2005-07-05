@@ -1,29 +1,35 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.1 2005/07/04 01:54:01 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.2 2005/07/05 07:59:34 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 #define __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 
 #include <iosfwd>
-#include "util/STL/construct_fwd.h"
-#include "Object/art_object_expr_const.h"	// for const_range_list
-#include "Object/art_object_expr_types.h"
+// #include "Object/art_object_expr_const.h"	// for const_range_list
+#include "Object/expr/types.h"
 #include "Object/art_object_classification_fwd.h"
+#include "util/STL/construct_fwd.h"
+#include "util/STL/list_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-
+class const_index_list;
+class const_range_list;
+class unroll_context;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
+using std::list;
+using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent;
 using util::persistent_object_manager;	// forward declared

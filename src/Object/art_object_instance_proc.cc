@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.14.4.1 2005/06/30 23:22:23 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.14.4.2 2005/07/05 07:59:47 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -20,7 +20,6 @@
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_connect.h"
-#include "Object/art_object_expr_const.h"
 #include "Object/art_object_type_hash.h"
 
 #include "Object/art_object_classification_details.h"

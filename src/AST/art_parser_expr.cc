@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24.4.3 2005/07/05 01:16:21 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.4 2005/07/05 07:59:30 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -12,6 +12,8 @@
 #include <algorithm>
 
 #define	ENABLE_STACKTRACE		0
+
+#include <iterator>
 
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_token_char.h"
@@ -26,10 +28,22 @@
 #include "Object/art_object_definition_base.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_inst_ref_subtypes.h"
-#include "Object/art_object_expr.h"
-#include "Object/art_object_data_expr.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/meta_index_list.h"
+#include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/pbool_unary_expr.h"
+#include "Object/expr/pint_unary_expr.h"
+#include "Object/expr/pint_arith_expr.h"
+#include "Object/expr/pint_relational_expr.h"
+#include "Object/expr/pbool_logical_expr.h"
+#include "Object/expr/bool_negation_expr.h"
+#include "Object/expr/int_negation_expr.h"
+#include "Object/expr/int_arith_expr.h"
+#include "Object/expr/int_relational_expr.h"
+#include "Object/expr/bool_logical_expr.h"
 #include "Object/art_object_PRS.h"
-// to dynamic_cast bool_meta_instance_reference
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_bool_traits.h"
@@ -76,6 +90,7 @@ using namespace entity;
 namespace parser {
 #include "util/using_ostream.h"
 using std::copy;
+using std::back_inserter;
 using std::transform;
 using std::_Select1st;
 using std::_Select2nd;

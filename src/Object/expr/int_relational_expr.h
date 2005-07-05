@@ -3,14 +3,14 @@
 	Class definitions for relational int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_relational_expr.h,v 1.1.2.1 2005/07/05 01:16:29 fang Exp $
+	$Id: int_relational_expr.h,v 1.1.2.2 2005/07/05 07:59:52 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
 #define	__OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
 
 #include "Object/expr/bool_expr.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 #include "util/string_fwd.h"
 #include "util/qmap_fwd.h"
 #include "util/operators.h"

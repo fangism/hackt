@@ -1,39 +1,54 @@
 /**
-	\file "art_object_inst_ref_base.h"
+	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.6 2005/01/28 19:58:42 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.13.4.1 2005/07/05 07:59:41 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_BASE_H__
-#define	__ART_OBJECT_INST_REF_BASE_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
+#define	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
 
-#include "art_object_base.h"
-#include "persistent.h"
-#include "art_object_instance_base.h"
-#include "memory/pointer_classes.h"
-#include "multidimensional_sparse_set.h"
+#include "util/persistent.h"
+#include "Object/art_object_nonmeta_inst_ref_base.h"
+// #include "Object/art_object_expr_const.h"	// for const_range_list
+#include "Object/art_object_util_types.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
-
-using std::ostream;
+class scopespace;
+class definition_base;
+class fundamental_type_reference;
+class instance_collection_base;
+class param_instance_collection;
+class aliases_connection_base;
+class meta_index_list;
+class const_index_list;
+class const_range_list;
 using std::istream;
-USING_LIST
-using namespace util::memory;
-using namespace MULTIDIMENSIONAL_SPARSE_SET_NAMESPACE;
+using std::ostream;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**
-	PHASE this back into what is currently simple_instance_reference.  
+	PHASE this back into what is currently simple_meta_instance_reference_base.  
 	Base class for anything that *refers* to an instance, 
 	or collection thereof.  
 	Instance reference should be cacheable?
+
+	Why derived from object? to be pushable onto an object stack... arg!
+	We need separate stacks...
+	See NOTES.
  */
-class instance_reference_base : virtual public object, 
-		virtual public persistent {
+class meta_instance_reference_base : 
+		virtual public nonmeta_instance_reference_base {
+	typedef	nonmeta_instance_reference_base		parent_type;
 public:
-	instance_reference_base() : object(), persistent() { }
-virtual	~instance_reference_base() { }
+	meta_instance_reference_base() : parent_type() { }
+
+virtual	~meta_instance_reference_base() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -44,11 +59,11 @@ virtual	ostream&
 virtual	ostream&
 	dump_type_size(ostream& o) const = 0;
 
+#if 0
+// only simple instance reference have a single base collection
 virtual never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
-
-virtual	string
-	hash_string(void) const = 0;
+#endif
 
 virtual	size_t
 	dimensions(void) const = 0;
@@ -72,16 +87,30 @@ virtual	const_range_list
 	static_constant_dimensions(void) const = 0;
 
 virtual	bool
-	may_be_type_equivalent(const instance_reference_base& i) const = 0;
+	may_be_type_equivalent(const meta_instance_reference_base& i) const = 0;
 
 virtual	bool
-	must_be_type_equivalent(const instance_reference_base& i) const = 0;
-};	// end class instance_reference_base
+	must_be_type_equivalent(const meta_instance_reference_base& i) const = 0;
+
+	/**
+		Start an aliases connection list based on the referenced type.  
+		We have the option of adding the first element to the list...
+		NOTE: connections are only made in the meta-language.  
+	 */
+	static
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection(
+		const count_ptr<const meta_instance_reference_base>&);
+
+private:
+virtual	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const = 0;
+};	// end class meta_instance_reference_base
 
 //=============================================================================
 #if 0
 PHASE OUT, or needs a facelift
-	EVOLVE INTO: complex_aggregate_instance_reference, muhahahaha!
+	EVOLVE INTO: complex_aggregate_meta_instance_reference, muhahahaha!
 /// in favor of using generic (simple/complex_aggregate) instance references
 //	all have potential indices, forget hierarchy
 // scheme has much changed since this idea was proposed...
@@ -90,19 +119,19 @@ PHASE OUT, or needs a facelift
 	Self-reference is acceptable and intended for multidimensional
 	array element references.  
  */
-class collective_instance_reference : public instance_reference_base {
+class collective_meta_instance_reference : public meta_instance_reference_base {
 protected:
 	// owned? no belongs to cache, even if multidimensional
 	// may also be collective
-	never_ptr<const instance_reference_base>	base_array;
+	never_ptr<const meta_instance_reference_base>	base_array;
 	never_ptr<const param_expr>			lower_index;
 	never_ptr<const param_expr>			upper_index;
 public:
-	collective_instance_reference(
-		never_ptr<const instance_reference_base> b, 
+	collective_meta_instance_reference(
+		never_ptr<const meta_instance_reference_base> b, 
 		const param_expr* l = NULL, const param_expr* r = NULL);
 
-virtual	~collective_instance_reference();
+virtual	~collective_meta_instance_reference();
 
 virtual	ostream&
 	what(ostream& o) const;
@@ -112,32 +141,32 @@ virtual	ostream&
 
 virtual	string
 	hash_string(void) const;
-};	// end class collective_instance_reference
+};	// end class collective_meta_instance_reference
 #endif
 
 //=============================================================================
 #if 0
 // EXPERIMENTAL
 
-class indexable_instance_reference : virtual public instance_reference_base {
+class indexable_meta_instance_reference : virtual public meta_instance_reference_base {
 
-};	// end class indexable_instance_reference
+};	// end class indexable_meta_instance_reference
 
 //=============================================================================
-class process_instance_reference_base : virtual public instance_reference_base {
+class process_meta_instance_reference_base : virtual public meta_instance_reference_base {
 protected:
 	never_ptr<const process_instance_collection>	proc_inst;
 public:
 
-};	// end class process_instance_reference_base
+};	// end class process_meta_instance_reference_base
 #endif
 
 //=============================================================================
 /**
-	PHASE THIS back into instance_reference_base.
-	OR... call this "simple_instance_reference" instead.  
-		and replace collective_instance_reference with
-		complex_aggregate_instance_reference...
+	PHASE THIS back into meta_instance_reference_base.
+	OR... call this "simple_meta_instance_reference_base" instead.  
+		and replace collective_meta_instance_reference with
+		complex_aggregate_meta_instance_reference...
 	Base class for a reference to a particular instance.  
 	Where a particular instance, either array or single, is 
 	connected or aliased, this object refers to a simple instance
@@ -150,14 +179,21 @@ public:
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class simple_instance_reference : virtual public instance_reference_base {
+class simple_meta_instance_reference_base :
+		virtual public meta_instance_reference_base {
 private:
+	typedef	simple_meta_instance_reference_base		this_type;
 	/**
 		Helper class for evaluating sparse, multidimensional
 		collections.  
+		Virtual base class wrapper around sparse set.  
 	 */
-	typedef	base_multidimensional_sparse_set<pint_value_type, const_range>
-						mset_base;
+	class mset_base;
+
+	template <size_t>
+	class mset;
+protected:
+	typedef	meta_index_list			index_list_type;
 protected:
 	/**
 		The indices (optional) for this particular reference.
@@ -169,7 +205,7 @@ protected:
 		not necessarily zero-dimensional (scalar).
 		Could be implicit reference to entire collection.  
 	 */
-	excl_ptr<index_list>			array_indices;
+	excl_ptr<index_list_type>		array_indices;
 
 	/**
 		The current state of the instantiation collection
@@ -185,15 +221,17 @@ protected:
 //	never_ptr<const instance_collection_base>	inst_ref;
 
 protected:
-	simple_instance_reference();
-public:
+	// constructors for children only
+	simple_meta_instance_reference_base();
+
 	explicit
-	simple_instance_reference(const instantiation_state& st);
+	simple_meta_instance_reference_base(const instantiation_state& st);
 
-	simple_instance_reference(excl_ptr<index_list>& i, 
+	simple_meta_instance_reference_base(excl_ptr<index_list_type>& i, 
 		const instantiation_state& st);
+public:
 
-virtual	~simple_instance_reference();
+virtual	~simple_meta_instance_reference_base();
 
 	size_t
 	dimensions(void) const;
@@ -216,11 +254,17 @@ virtual	~simple_instance_reference();
 	const_index_list
 	implicit_static_constant_indices(void) const;
 
-	bool
-	attach_indices(excl_ptr<index_list> i);
+	good_bool
+	attach_indices(excl_ptr<index_list_type>& i);
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+	ostream&
+	dump_briefer(ostream& o, const never_ptr<const scopespace>) const;
+
+	ostream&
+	dump_brief(ostream& o) const;
 
 	ostream&
 	dump(ostream& o) const;
@@ -237,15 +281,12 @@ virtual never_ptr<const instance_collection_base>
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
-virtual	string
-	hash_string(void) const;
-
 	// need not be virtual
 	bool
-	may_be_type_equivalent(const instance_reference_base& i) const;
+	may_be_type_equivalent(const meta_instance_reference_base& i) const;
 
 	bool
-	must_be_type_equivalent(const instance_reference_base& i) const;
+	must_be_type_equivalent(const meta_instance_reference_base& i) const;
 
 private:
 	// compute static index coverage
@@ -261,75 +302,35 @@ protected:		// for children only
 	write_object_base(const persistent_object_manager& m, ostream& o) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream& i);
+	load_object_base(const persistent_object_manager& m, istream& i);
 
 private:
 	// need help with instantiation state, count?
-	void write_instance_collection_state(ostream& f) const;
-	void load_instance_collection_state(istream& f);
-};	// end class simple_instance_reference
-
-//=============================================================================
-/**
-	Abstract interface class for member instance references.  
-	Make type-specific {process,data,channel}?
-	Don't need instantiation_state because members, can only
-	refer to ports, which cannot be appended with more instances
-	and indices.  
- */
-class member_instance_reference_base : virtual public instance_reference_base {
-protected:
-	/**
-		The owning base instance reference, 
-		must have dimension-0, scalar... for now
-		Is type limiter to simple? or can it be nested member?
-	 */
-	const count_ptr<const simple_instance_reference>	base_inst_ref;
-protected:
-	member_instance_reference_base();
-public:
-	explicit
-	member_instance_reference_base(
-		const count_ptr<const simple_instance_reference>& b);
-
-virtual	~member_instance_reference_base();
-
-protected:	// for children only
 	void
-	collect_transient_info_base(persistent_object_manager&) const;
+	write_instance_collection_state(ostream& f) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(persistent_object_manager&, istream&);
-
-};	// end class member_instance_reference_base
+	load_instance_collection_state(istream& f);
+};	// end class simple_meta_instance_reference_base
 
 //=============================================================================
 /**
 	A reference to a simple instance of parameter.  
 	Abstract base class.  
  */
-class param_instance_reference : public simple_instance_reference {
+class simple_param_meta_value_reference :
+		public simple_meta_instance_reference_base {
 protected:
-	typedef	simple_instance_reference	parent_type;
-//	excl_ptr<index_list>			array_indices;	// inherited
+	typedef	simple_meta_instance_reference_base	parent_type;
+//	excl_ptr<meta_index_list>		array_indices;	// inherited
 
-// virtualized
-//	never_ptr<param_instance_collection>		param_inst_ref;
 protected:
-	param_instance_reference();
+	simple_param_meta_value_reference();
 public:
 	explicit
-	param_instance_reference(const instantiation_state& st);
+	simple_param_meta_value_reference(const instantiation_state& st);
 
-#if 0
-	param_instance_reference(excl_ptr<index_list>& i, 
-		const instantiation_state& st);
-#endif
-
-virtual	~param_instance_reference() { }
+virtual	~simple_param_meta_value_reference() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -340,7 +341,7 @@ virtual	never_ptr<const instance_collection_base>
 virtual	never_ptr<const param_instance_collection>
 	get_param_inst_base(void) const = 0;
 
-	// consider moving these functions into instance_reference_base
+	// consider moving these functions into meta_instance_reference_base
 	//	where array_indices are inherited from.  
 	bool
 	may_be_initialized(void) const;
@@ -362,15 +363,15 @@ protected:
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 
-};	// end class param_instance_reference
+};	// end class simple_param_meta_value_reference
 
 //=============================================================================
-// classes pint_instance_reference and pbool_instance_reference
+// classes pint_meta_instance_reference and pbool_meta_instance_reference
 //	are in "art_object_expr_param_ref.*"
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_BASE_H__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_BASE_H__
 

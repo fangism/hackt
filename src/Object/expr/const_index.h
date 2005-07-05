@@ -3,14 +3,14 @@
 	Classes related to constant index expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index.h,v 1.1.2.1 2005/07/05 01:16:26 fang Exp $
+	$Id: const_index.h,v 1.1.2.2 2005/07/05 07:59:52 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_H__
 #define __OBJECT_EXPR_CONST_INDEX_H__
 
 #include "Object/expr/meta_index_expr.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 
 namespace ART {
 namespace entity {

@@ -3,13 +3,13 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.1.2.1 2005/07/05 01:16:26 fang Exp $
+	$Id: bool_logical_expr.h,v 1.1.2.2 2005/07/05 07:59:52 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
 #define	__OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
 
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 #include "Object/expr/bool_expr.h"
 #include "util/string_fwd.h"
 #include "util/qmap_fwd.h"

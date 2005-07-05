@@ -1,488 +1,183 @@
 /**
-	\file "art_object_instance_enum.cc"
+	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	TODO: replace duplicate managed code with templates.
-	$Id: art_object_instance_enum.cc,v 1.9 2005/01/28 19:58:43 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.1 2005/07/05 07:59:45 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INSTANCE_ENUM_CC__
-#define	__ART_OBJECT_INSTANCE_ENUM_CC__
+#ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
+#define	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-#include "art_object_instance_enum.h"
-#include "art_object_inst_ref_data.h"
-#include "art_object_expr_const.h"
-#include "art_object_definition.h"
-#include "art_object_type_ref.h"
-#include "art_object_type_hash.h"
-#include "art_object_definition.h"
+#include "Object/art_object_instance_enum.h"
+#include "Object/art_object_inst_ref_data.h"
+#include "Object/art_object_member_inst_ref.h"
+#include "Object/expr/enum_expr.h"
+#include "Object/art_object_connect.h"
+#include "Object/art_object_definition_data.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_type_hash.h"
+#include "Object/art_object_definition.h"
+#include "Object/art_object_nonmeta_value_reference.h"
+#include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic template instantiation
-#include "art_object_extern_templates.h"
+#include "Object/art_object_extern_templates.h"
 
-#include "multikey_qmap.tcc"
-#include "persistent_object_manager.tcc"
-#include "indent.h"
+#include "Object/art_object_instance_collection.tcc"
 
-#include "ptrs_functional.h"
-#include "compose.h"
-#include "binders.h"
+namespace util {
+
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_instance_collection,
+		"enum_instance_collection")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_scalar, "enum_scalar")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_1D, "enum_array_1D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_2D, "enum_array_2D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_3D, "enum_array_3D")
+	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_4D, "enum_array_4D")
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_scalar, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_1D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 1)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_2D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 2)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_3D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 3)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::enum_array_4D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 4)
+}	// end namespace util
 
 namespace ART {
 namespace entity {
-using std::string;
-using namespace MULTIKEY_NAMESPACE;
-using namespace ADS;
-using std::dereference;
-using std::mem_fun_ref;
 
 //=============================================================================
-// class enum_instance_collection method definitions
+template <>
+struct collection_type_manager<enum_tag> {
+	typedef class_traits<enum_tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	typedef class_traits<enum_tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
+	typedef class_traits<enum_tag>::type_ref_ptr_type
+					type_ref_ptr_type;
 
-DEFAULT_PERSISTENT_TYPE_REGISTRATION(enum_instance_collection,
-	ENUM_INSTANCE_COLLECTION_TYPE_KEY)
+	struct dumper {
+		ostream& os;
+		dumper(ostream& o) : os(o) { }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-enum_instance_collection::enum_instance_collection(const scopespace& o, 
-		const string& n, const size_t d) : parent_type(o, n, d) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-enum_instance_collection::~enum_instance_collection() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This determines the type during the unroll phase.  
-	Enums are never templated, and thus require no template parameters.  
-	The only information needed is the reference to the
-	enumeration definition.  
-	\return false, signaling no error.  
- */
-bool
-enum_instance_collection::commit_type(const type_ref_ptr_type& t) {
-	// INVARIANT(!is_partially_unrolled());
-	INVARIANT(t->get_base_def().is_a<const enum_datatype_def>());
-	// do something with the definition base?
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create an enum data reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
- */
-count_ptr<instance_reference_base>
-enum_instance_collection::make_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//      check array dimensions -- when attach_indices() invoked
-	return count_ptr<datatype_instance_reference>(
-		new enum_instance_reference(
-			never_ptr<const enum_instance_collection>(this)
-//			, excl_ptr<index_list>(NULL)
-	));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-enum_instance_collection::collect_transient_info(
-		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		ENUM_INSTANCE_COLLECTION_TYPE_KEY, dimensions)) {
-	parent_type::collect_transient_info_base(m);
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-enum_instance_collection*
-enum_instance_collection::make_enum_array(
-		const scopespace& o, const string& n, const size_t d) {
-	switch(d) {
-		case 0: return new enum_array<0>(o, n);
-		case 1: return new enum_array<1>(o, n);
-		case 2: return new enum_array<2>(o, n);
-		case 3: return new enum_array<3>(o, n);
-		case 4: return new enum_array<4>(o, n);
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-persistent*
-enum_instance_collection::construct_empty(const int i) {
-	switch(i) {
-		case 0: return new enum_array<0>();
-		case 1: return new enum_array<1>();
-		case 2: return new enum_array<2>();
-		case 3: return new enum_array<3>();
-		case 4: return new enum_array<4>();
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
-}
-
-//=============================================================================
-// class enum_instance_alias method definitions
-
-ostream&
-operator << (ostream& o, const enum_instance_alias& b) {
-	INVARIANT(b.valid());
-	return o << "(enum-alias)";
-}
-
-//=============================================================================
-// class enum_array method definitions
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-enum_array<D>::enum_array() : parent_type(D), collection() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-enum_array<D>::enum_array(const scopespace& o, const string& n) :
-		parent_type(o, n, D), collection() {
-	// until we eliminate that field from instance_collection_base
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-enum_array<D>::~enum_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-bool
-enum_array<D>::is_partially_unrolled(void) const {
-	return !collection.empty();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-ostream&
-enum_array<D>::what(ostream& o) const {
-	return o << "enum-array<" << D << ">";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-ostream&
-enum_array<D>::dump_unrolled_instances(ostream& o) const {
-	for_each(collection.begin(), collection.end(), key_dumper(o));
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE 
-ostream&
-enum_array<D>::key_dumper::operator () (
-		const typename collection_type::value_type& p) {
-	return os << auto_indent << p.first << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Instantiates enum instances at the specified indices.
-	\param i fully-specified range of indices to instantiate.
- */
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-void
-enum_array<D>::instantiate_indices(const index_collection_item_ptr_type& i) {
-	NEVER_NULL(i);
-	// indices is a range_expr_list (base class)
-	// resolve into constants now using const_range_list
-	// if unable, (b/c uninitialized) then report error
-	const_range_list ranges;        // initially empty
-	if (!i->resolve_ranges(ranges)) {
-		// ranges is passed and returned by reference
-		// fail
-		cerr << "ERROR: unable to resolve indices "
-			"for instantiation: ";
-		i->dump(cerr) << endl;
-		THROW_EXIT;
-	}
-	// else success
-	// now iterate through, unrolling one at a time...
-	// stop as soon as there is a conflict
-	// later: factor this out into common helper class
-	multikey_generator<D, pint_value_type> key_gen;
-	ranges.make_multikey_generator(key_gen);
-	key_gen.initialize();
-	do {
-		// will create if necessary
-		enum_instance_alias& pi(collection[key_gen]);
-		if (pi.valid()) {
-			// more detailed message, please!
-			cerr << "ERROR: Index " << key_gen <<
-				" already instantiated!" << endl;
-			THROW_EXIT;
+		ostream&
+		operator () (const instance_collection_generic_type& c) {
+			return os << "enum " <<
+				c.get_base_def()->get_qualified_name() <<
+				'^' << c.get_dimensions();
 		}
-		pi.instantiate();
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-}
+	};	// end struct dumper
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-        Expands indices which may be under-specified into explicit
-        indices for the implicit subslice, if it is densely packed.
-        Depends on the current state of the collection.
-        \param l is list of indices, which may be under-specified,
-                or even empty.
-        \return fully-specified index list, or empty list if there is error.
- */
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-const_index_list
-enum_array<D>::resolve_indices(const const_index_list& l) const {
-	const size_t l_size = l.size();
-	if (D == l_size) {
-		// already fully specified
-		return l;
+	static
+	void
+	collect(persistent_object_manager& m, 
+		const instance_collection_generic_type& c) {
+		if (c.type_parameter)
+			c.type_parameter->collect_transient_info(m);
 	}
-	// convert indices to pair of list of multikeys
-	if (!l_size) {
-		return const_index_list(l, collection.is_compact());
+
+	static
+	void
+	write(const persistent_object_manager& m, ostream& o,
+		const instance_collection_generic_type& c) {
+		m.write_pointer(o, c.type_parameter);
 	}
-	// else construct slice
-	list<pint_value_type> lower_list, upper_list;
-	transform(l.begin(), l.end(), back_inserter(lower_list),
-		unary_compose(
-			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr, const const_index>()
-		)
-	);
-	transform(l.begin(), l.end(), back_inserter(upper_list),
-		unary_compose(
-			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr, const const_index>()
-		)
-	);
-	return const_index_list(l,
-		collection.is_compact_slice(lower_list, upper_list));
-}
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return valid enum_instance_alias if found, else an invalid one.  
-	Caller is responsible for checking return.  
- */
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-typename enum_array<D>::instance_ptr_type
-enum_array<D>::lookup_instance(const unroll_index_type& i) const {
-	INVARIANT(D == i.dimensions());
-	// will create and return an "uninstantiated" instance if not found
-	const enum_instance_alias&
-		b(collection[i]);
-//		b(AS_A(const collection_type&, collection)[i]);
-	if (b.valid()) {
-		// unfortunately, this cast is necessary
-		// safe because we know b is not a reference to a temporary
-		return instance_ptr_type(const_cast<enum_instance_alias*>(&b));
-	} else {
-		// remove the blank we added?
-		// not necessary, but could keep the collection "clean"
-		cerr << "ERROR: reference to uninstantiated enum " <<
-			// enum type name, please?
-			get_qualified_name() << " at index: " << i << endl;
-		return instance_ptr_type(NULL);
+	static
+	void
+	load(const persistent_object_manager& m, istream& i,
+		instance_collection_generic_type& c) {
+		m.read_pointer(i, c.type_parameter);
 	}
-}
+
+	/**
+		TODO: what if type_parameter is not already set
+			because it is template-dependent and unresolved?
+		Then return the template-dependent type.  
+		Consumer is responsible to testing template-dependence. 
+	 */
+	static
+	type_ref_ptr_type
+	get_type(const instance_collection_generic_type& e) {
+		return type_ref_ptr_type(new data_type_reference(
+			// want get_base_def_subtype!!!
+			e.get_base_def()
+			.is_a<const datatype_definition_base>()));
+	}
+
+	/**
+		During unroll phase, this commits the type of the collection.  
+		\param t the data integer type reference, containing width, 
+			must already be resolved to a const_param_expr_list.  
+		\return false on success, true on error.  
+		\post the integer width is fixed for the rest of the program.  
+	 */
+	static
+	bad_bool
+	commit_type(instance_collection_generic_type& c,
+		const type_ref_ptr_type& t) {
+		// make sure this is the canonical definition
+		//	in case type is typedef!
+		// this really should be statically type-checked
+		// until we allow templates to include type parameters.  
+		if (c.type_parameter)
+			INVARIANT(t->get_base_def() == c.type_parameter);
+		else
+			c.type_parameter = t->get_base_def()
+				.is_a<const enum_datatype_def>();
+		return bad_bool(false);
+	}
+};	// end struct collection_type_manager
+
+//=============================================================================
+// class enum_instance method definitions
+
+enum_instance::enum_instance() : back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param l list in which to accumulate instance references.
-	\param r the ranges, must be valid, and fully resolved.
-	\return false on error, e.g. if value doesn't exist or
-		is uninitialized; true on success.
- */
-ENUM_ARRAY_TEMPLATE_SIGNATURE
-bool
-enum_array<D>::lookup_instance_collection(
-		list<instance_ptr_type>& l, const const_range_list& r) const {
-	INVARIANT(!r.empty());
-	multikey_generator<D, pint_value_type> key_gen;
-	r.make_multikey_generator(key_gen);
-	key_gen.initialize();
-	bool ret = true;
-	do {
-		const enum_instance_alias& pi(collection[key_gen]);
-		if (pi.valid()) {
-			l.push_back(instance_ptr_type(
-				const_cast<enum_instance_alias*>(&pi)));
-		} else {
-			cerr << "FATAL: reference to uninstantiated enum index "
-				<< key_gen << endl;
-			// enum type name, please?
-			l.push_back(instance_ptr_type(NULL));
-		}
-		ret &= pi.valid();
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-	return ret;
-}
+enum_instance::~enum_instance() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
 void
-enum_array<D>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
-	parent_type::write_object_base(m, f);
-	collection.write(f);
-	WRITE_OBJECT_FOOTER(f);
+enum_instance::collect_transient_info(persistent_object_manager& m) const {
+	// collect pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ENUM_ARRAY_TEMPLATE_SIGNATURE
 void
-enum_array<D>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
-	parent_type::load_object_base(m, f);
-	collection.read(f);
-	STRIP_OBJECT_FOOTER(f);
+enum_instance::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	// write me!
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_instance::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	// write me!
 }
 
 //=============================================================================
-// class enum_array method definitions (specialized)
+// explicit class instantiations
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-enum_array<0>::enum_array() : parent_type(0), the_instance() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-enum_array<0>::enum_array(const scopespace& o, const string& n) :
-		parent_type(o, n, 0), the_instance() {
-	// until we eliminate that field from instance_collection_base
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-enum_array<0>::~enum_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-enum_array<0>::is_partially_unrolled(void) const {
-	return the_instance.valid();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-enum_array<0>::what(ostream& o) const {
-	return o << "enum-scalar";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-enum_array<0>::dump_unrolled_instances(ostream& o) const {
-	return o << auto_indent << the_instance << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Instantiates the_instance of enum datatype.
-	Ideally, the error should never trigger because
-	re-instantiation / redeclaration of a scalar instance
-	is easily detected (and actually detected) during the compile phase.
-	\param i indices must be NULL because this is not an array.
- */
-void
-enum_array<0>::instantiate_indices(const index_collection_item_ptr_type& i) {
-	INVARIANT(!i);
-	if (the_instance.valid()) {
-		// should never happen, but just in case...
-		cerr << "ERROR: Scalar enum already instantiated!" << endl;
-		THROW_EXIT;
-	}
-	the_instance.instantiate();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This specialization isn't ever supposed to be called.
-	\param l is list of indices, which may be under-specified,
-		or even empty.
-	\return empty index list, always.
- */
-const_index_list
-enum_array<0>::resolve_indices(const const_index_list& l) const {
-	cerr << "WARNING: enum_array<0>::resolve_indices(const_index_list) "
-		"always returns an empty list!" << endl;
-	return const_index_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return valid enum_instance_alias if found, else an invalid one.  
-	Caller is responsible for checking return.  
- */
-enum_array<0>::instance_ptr_type
-enum_array<0>::lookup_instance(const unroll_index_type& i) const {
-	if (!the_instance.valid()) {
-		cerr << "ERROR: Reference to uninstantiated enum!" << endl;
-		return instance_ptr_type(NULL);
-	} else	return instance_ptr_type(
-		const_cast<enum_instance_alias*>(&the_instance));
-	// ok to return non-const reference to the type, 
-	// perhaps it should be declared mutable?
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This should never be called.  
-	\return false to signal error.  
- */
-bool
-enum_array<0>::lookup_instance_collection(
-		list<instance_ptr_type>& l, const const_range_list& r) const {
-	cerr << "WARNING: enum_array<0>::lookup_instance_collection(...) "
-		"should never be called." << endl;
-	INVARIANT(r.empty());
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-enum_array<0>::write_object(const persistent_object_manager& m) const {
-	ostream& f = m.lookup_write_buffer(this);
-	INVARIANT(f.good());
-	WRITE_POINTER_INDEX(f, m);
-	parent_type::write_object_base(m, f);
-	write_value(f, the_instance);
-	WRITE_OBJECT_FOOTER(f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-enum_array<0>::load_object(persistent_object_manager& m) {
-if (!m.flag_visit(this)) {
-	istream& f = m.lookup_read_buffer(this);
-	INVARIANT(f.good());
-	STRIP_POINTER_INDEX(f, m);
-	parent_type::load_object_base(m, f);
-	read_value(f, the_instance);
-	STRIP_OBJECT_FOOTER(f);
-}
-}
+template class instance_collection<enum_tag>;
+template class instance_array<enum_tag, 0>;
+template class instance_array<enum_tag, 1>;
+template class instance_array<enum_tag, 2>;
+template class instance_array<enum_tag, 3>;
+template class instance_array<enum_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INSTANCE_ENUM_CC__
+#endif	// __OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
 

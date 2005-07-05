@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.5.10.1 2005/07/04 01:54:01 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.5.10.2 2005/07/05 07:59:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -35,6 +35,9 @@
 
 #include "Object/art_object_const_collection.h"
 #include "Object/art_object_classification_details.h"
+#include "Object/art_object_index.h"
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_index_list.h"
 
 #include "util/persistent_object_manager.h"
 #include "util/multikey.h"

@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-07-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-13:
+	  Completed major reorganization of expression Object sources.
+	  Object/art_object_data_expr.cc -> Object/expr/data_expr.cc
+	  Object/art_object_expr_types.h -> Object/expr/types.h
+	  Object/art_object_expr.cc -> Object/expr/[everything-else].cc (9)
+	  Object/art_object_*expr*.h have been deprecated,
+		giving a preprocessor error if you attempt to use it.  
+		We will keep it until the end of branch for reference, 
+		then discard on the main trunk.  
+	  ALL affected source files (and headers) have been updated to 
+		include the minimum expr headers as replacements for the
+		old headers.  This will also speed up compile time, 
+		as there is less to proprocess and parse.  
+	  Clean-up is done, now back to real work...
+
+
 2005-07-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-12:
