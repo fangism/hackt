@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.6 2005/07/05 07:59:26 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.7 2005/07/05 17:25:42 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -665,6 +665,9 @@ util/using_ostream.hchk:
 	@$(TOUCH) $@
 
 # The following exceptions are temporary due to deprecation of headers. 
+Object/art_object_expr_types.hchk:
+	@$(TOUCH) $@
+
 Object/art_object_data_expr_base.hchk:
 	@$(TOUCH) $@
 

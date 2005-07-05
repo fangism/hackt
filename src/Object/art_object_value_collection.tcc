@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.4 2005/07/05 07:59:50 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.5 2005/07/05 17:25:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -311,7 +311,7 @@ VALUE_COLLECTION_CLASS::may_type_check_actual_param_expr(
 	// only for formal parameters is this assertion valid.  
 	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
-	return may_check_expression_dimensions(*pi);
+	return this->may_check_expression_dimensions(*pi);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -345,7 +345,7 @@ VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
 	// in the original declaration, which in this case was in the ports.  
 	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
-	return must_check_expression_dimensions(pe);
+	return this->must_check_expression_dimensions(pe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

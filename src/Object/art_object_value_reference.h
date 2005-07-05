@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.2 2005/07/05 07:59:51 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.3 2005/07/05 17:25:44 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/art_object_index.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_classification_fwd.h"
