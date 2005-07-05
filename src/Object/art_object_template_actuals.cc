@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.4 2005/07/05 07:59:49 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.5 2005/07/05 21:02:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 //=============================================================================
 // class template_actuals method definitions
 //=============================================================================
@@ -129,16 +130,30 @@ template_actuals::get_relaxed_args(void) {
  */
 template_actuals
 template_actuals::unroll_resolve(unroll_context& c) const {
+	bool err = false;
 	arg_list_ptr_type sr, rr;
-	if (strict_template_args)
+	if (strict_template_args) {
 		sr = strict_template_args->unroll_resolve(c);
-	if (relaxed_template_args)
+		if (!sr) {
+			cerr << "ERROR in resolving strict template actuals."
+				<< endl;
+			strict_template_args->dump(cerr << '\t') << endl;
+			err = true;
+		}
+	}
+	if (relaxed_template_args) {
 		rr = relaxed_template_args->unroll_resolve(c);
-	return this_type(sr, rr);
+		if (!rr) {
+			cerr << "ERROR in resolving relaxed template actuals."
+				<< endl;
+			relaxed_template_args->dump(cerr << '\t') << endl;
+			err = true;
+		}
+	}
+	return err ? this_type() : this_type(sr, rr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	\param a set of resolved, constant template parameters.
 	\param m the map from instance reference to template actuals.  
@@ -154,7 +169,6 @@ template_actuals::transform_template_actuals(const this_type& a,
 	const template_actuals_transformer tx(c, a, m);
 	return unroll_resolve(c);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

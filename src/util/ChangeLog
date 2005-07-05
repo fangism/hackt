@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2005-07-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-14:
+	  Added "util/reserve.h" policy for vector-like memory reserve
+		when possible -- for other non-vectors, it no-ops.
+
+
 2005-07-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-10:

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.24.2.1 2005/06/30 23:22:28 fang Exp $
+	$Id: art++-parse.yy,v 1.24.2.2 2005/07/05 21:02:20 fang Exp $
  */
 
 %{
@@ -475,10 +475,13 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_user_chan_type_prototype>	declare_chan_proto
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
 %type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
+%type	<_template_formal_decl_list>	template_formal_decl_nodefault_list_in_angles template_formal_decl_nodefault_list
 %type	<_template_formal_decl_list_pair>	template_specification optional_template_specification
-%type	<_template_formal_decl>	template_formal_decl
-%type	<_template_formal_id_list>	template_formal_id_list
+%type	<_template_formal_decl>	template_formal_decl template_formal_decl_nodefault
+%type	<_template_formal_id_list>	template_formal_id_list template_formal_id_nodefault_list
 %type	<_template_formal_id>	template_formal_id
+%type	<_template_formal_id>	template_formal_id_default
+%type	<_template_formal_id>	template_formal_id_nodefault
 %type	<_port_formal_decl_list>	optional_port_formal_decl_list_in_parens port_formal_decl_list
 %type	<_port_formal_decl>	port_formal_decl
 %type	<_port_formal_id_list>	port_formal_id_list
@@ -712,7 +715,7 @@ template_specification
 		{ DELETE_TOKEN($1);
 		  $$ = new template_formal_decl_list_pair($2, NULL); }
 	| TEMPLATE template_formal_decl_list_optional_in_angles
-	  template_formal_decl_list_in_angles
+	  template_formal_decl_nodefault_list_in_angles
 		/* second set of formals is for relaxed parameters */
 		{ DELETE_TOKEN($1);
 		  $$ = new template_formal_decl_list_pair($2, $3); }
@@ -783,6 +786,11 @@ template_formal_decl_list_in_angles
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
+template_formal_decl_nodefault_list_in_angles
+	: '<' template_formal_decl_nodefault_list '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
 template_formal_decl_list_optional_in_angles
 	: template_formal_decl_list_in_angles
 		{ $$ = $1; }
@@ -791,10 +799,27 @@ template_formal_decl_list_optional_in_angles
 		  WRAP_LIST($1, $$, $2); }
 	;
 
+/**
+template_formal_decl_nodefault_list_optional_in_angles
+	: template_formal_decl_nodefault_list_in_angles
+		{ $$ = $1; }
+	| '<' '>'
+		{ $$ = new template_formal_decl_list();
+		  WRAP_LIST($1, $$, $2); }
+	;
+**/
+
 template_formal_decl_list
 	: template_formal_decl_list ';' template_formal_decl
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| template_formal_decl
+		{ $$ = new template_formal_decl_list($1); }
+	;
+
+template_formal_decl_nodefault_list
+	: template_formal_decl_nodefault_list ';' template_formal_decl_nodefault
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| template_formal_decl_nodefault
 		{ $$ = new template_formal_decl_list($1); }
 	;
 
@@ -805,6 +830,11 @@ template_formal_decl
 		{ $$ = new template_formal_decl($1, $2); }
 	;
 
+template_formal_decl_nodefault
+	: base_param_type template_formal_id_nodefault_list
+		{ $$ = new template_formal_decl($1, $2); }
+	;
+
 template_formal_id_list
 	: template_formal_id_list ',' template_formal_id
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
@@ -812,25 +842,38 @@ template_formal_id_list
 		{ $$ = new template_formal_id_list($1); }
 	;
 
-template_formal_id
-	/** update formal declarations: only allow dense arrays, no ranges **/
-	/** no relaxed parameters: never used in template formals **/
-	: ID optional_dense_range_list
-		{ $$ = new template_formal_id($1, $2); }
+template_formal_id_nodefault_list
+	: template_formal_id_nodefault_list ',' template_formal_id_nodefault
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| template_formal_id_nodefault
+		{ $$ = new template_formal_id_list($1); }
+	;
+
+template_formal_id_default
 /**
 	from http://www.computing.surrey.ac.uk/research/dsrg/fog/CxxGrammar.y:
 	The potential shift-reduce conflict on > is resolved by
 	flattening part of the expression grammar to know when the 
 	next > is template end or arithmetic >.
-**/
-	| ID optional_dense_range_list '=' shift_expr
-		{ $$ = new template_formal_id($1, $2, $3, $4); }
-/**
 	We choose to force the user to disambiguate by placing parentheses
 	around relational expressions, which covers arithmetic use of '>'.
 	Notice that below, shift_expr is the highest expression
 	before relational_expr.  
 **/
+	: ID optional_dense_range_list '=' shift_expr
+		{ $$ = new template_formal_id($1, $2, $3, $4); }
+	;
+
+template_formal_id_nodefault
+	: ID optional_dense_range_list
+		{ $$ = new template_formal_id($1, $2); }
+	;
+
+template_formal_id
+	/** update formal declarations: only allow dense arrays, no ranges **/
+	/** no relaxed parameters: never used in template formals **/
+	: template_formal_id_default { $$ = $1; }
+	| template_formal_id_nodefault { $$ = $1; }
 	;
 
 port_formal_decl_list

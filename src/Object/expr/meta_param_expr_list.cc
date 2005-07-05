@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.1.2.1 2005/07/05 07:59:53 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.1.2.2 2005/07/05 21:02:20 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -287,7 +287,9 @@ if (a_size != f_size) {
 			default_expr(pinst->default_value()
 				.is_a<const const_param>());
 		if (!default_expr) {
-			// no default value to supply
+			cerr << "ERROR: missing template actual at position "
+				<< distance(tfl.begin(), f_iter)+1 <<
+				" where no default value is given." << endl;
 			return good_bool(false);
 		} else {
 			push_back(default_expr);
@@ -309,7 +311,10 @@ if (a_size != f_size) {
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
 			if (!pinst->may_type_check_actual_param_expr(*pex).good) {
-				// error message?
+				cerr << "ERROR: template formal and actual "
+					"types mismatch at position " <<
+					distance(tfl.begin(), f_iter)+1
+					<< ". " << endl;
 				return good_bool(false);
 			}
 			// else continue checking successive arguments
@@ -323,7 +328,9 @@ if (a_size != f_size) {
 				default_expr(pinst->default_value()
 					.is_a<const const_param>());
 			if (!default_expr) {
-				// error message?
+				cerr << "ERROR: missing template actual at position "
+					<< distance(tfl.begin(), f_iter)+1 <<
+				" where no default value is given." << endl;
 				return good_bool(false);
 			} else {
 				// else, actually assign it a copy in the list
@@ -669,7 +676,7 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const param_expr> ip(*i);
-		count_ptr<const_param> pc(ip->unroll_resolve(c));
+		const count_ptr<const_param> pc(ip->unroll_resolve(c));
 		if (pc) {
 			ret->push_back(pc);
 		} else {
@@ -704,7 +711,9 @@ if (a_size != f_size) {
 		const count_ptr<const param_expr>
 			default_expr(pinst->default_value());
 		if (!default_expr) {
-			// no default value to supply
+			cerr << "ERROR: missing template actual at position "
+				<< distance(tfl.begin(), f_iter)+1 <<
+				" where no default value is given." << endl;
 			return good_bool(false);
 		} else {
 			push_back(default_expr);
@@ -726,7 +735,10 @@ if (a_size != f_size) {
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
 			if (!pinst->may_type_check_actual_param_expr(*pex).good) {
-				// error message?
+				cerr << "ERROR: template formal and actual "
+					"types mismatch at position " <<
+					distance(tfl.begin(), f_iter)+1
+					<< ". " << endl;
 				return good_bool(false);
 			}
 			// else continue checking successive arguments
@@ -737,7 +749,9 @@ if (a_size != f_size) {
 			const count_ptr<const param_expr>
 				default_expr(pinst->default_value());
 			if (!default_expr) {
-				// error message?
+				cerr << "ERROR: missing template actual at position "
+					<< distance(tfl.begin(), f_iter)+1 <<
+					" where no default value is given." << endl;
 				return good_bool(false);
 			} else {
 				// else, actually assign it a copy in the list

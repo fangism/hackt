@@ -1,0 +1,10 @@
+parse error: syntax error
+parser stacks:
+state	value
+0	keyword: template [3:1..8]
+12	list<(template-formal-decl)>: ... [3:10..11]
+106	keyword: defproc [4:1..7]
+in state 106, possible rules are:
+	template_specification: TEMPLATE template_formal_decl_list_optional_in_angles . template_formal_decl_nodefault_list_in_angles  (26)
+acceptable tokens are: 
+	'<' (shift)

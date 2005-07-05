@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.1.2.1 2005/07/05 01:16:26 fang Exp $
+	$Id: const_index_list.h,v 1.1.2.2 2005/07/05 21:02:20 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -52,6 +52,9 @@ public:
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	const_index_list();
+
+	explicit
+	const_index_list(const size_t);
 
 	const_index_list(const const_index_list& l, 
 		const pair<list<pint_value_type>, list<pint_value_type> >& f);

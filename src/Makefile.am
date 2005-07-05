@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.7 2005/07/05 17:25:42 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.8 2005/07/05 21:02:16 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -398,6 +398,7 @@ UTIL_HEADER_FILES = \
 	util/persistent_fwd.h \
 	util/persistent.h \
 	util/qmap_fwd.h \
+	util/reserve.h \
 	util/ring_node_fwd.h \
 	util/size_t.h \
 	util/sstream.h \

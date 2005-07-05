@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.27.2.4 2005/07/05 07:59:50 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.5 2005/07/05 21:02:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -72,6 +72,9 @@ public:
 
 	never_ptr<const datatype_definition_base>
 	get_base_datatype_def(void) const;
+
+	good_bool
+	must_be_valid(void) const;
 
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...

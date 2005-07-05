@@ -2,6 +2,18 @@
 
 2005-07-05	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-14:
+	  Grammar: forbid default template formals in relaxed parameter lists.  
+		Few tests (artc-stderr) updated to reflect change.  
+	  Useful error messages added when template formals/actuals 
+		certification fails.  
+	  Ported final unroll type-check from process to data type references.  
+	  More test cases (042-049) added regarding relaxed parameters in
+		test/parser/template.  
+
+
+2005-07-05	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-48-connect-01-13:
 	  Completed major reorganization of expression Object sources.
 	  Object/art_object_data_expr.cc -> Object/expr/data_expr.cc

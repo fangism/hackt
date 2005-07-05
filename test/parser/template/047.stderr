@@ -1,0 +1,3 @@
+ERROR: missing template actual at position 1 where no default value is given.
+ERROR: failed to make process_type_reference because template argument types do not match.
+ERROR making complete type reference.  [7:1..7]

@@ -1,0 +1,8 @@
+// "047.in" should fail, no default relaxed parameters
+// copy-modified from "044.in"
+
+template <pint Q=5><pint R>
+defproc foo();
+
+foo<><> bar;	// should die, insufficient default parameters
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.5 2005/07/05 07:59:49 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.6 2005/07/05 21:02:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -196,6 +196,12 @@ template_formals_manager::partial_check_null_template_argument(
 			// if any formal is missing a default value, then this 
 			// definition cannot have null template arguments
 			if (!(*p).default_value()) {
+				// gives relative position in the partial
+				// list, not the combined lists.  
+				cerr << "ERROR: missing template actual at position "
+					<< distance(l.begin(), i)+1 <<
+					" where no default value is given." << endl;
+
 				return good_bool(false);
 			}
 			// else continue;       // keep checking

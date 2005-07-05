@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.1.2.1 2005/07/05 07:59:52 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.1.2.2 2005/07/05 21:02:20 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -31,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_type_hash.h"
 
 #include "util/stacktrace.h"
+#include "util/reserve.h"
 #include "util/multikey.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -80,6 +81,7 @@ using util::dereference;
 USING_UTIL_COMPOSE
 using util::write_value;
 using util::read_value;
+using util::reserve;
 
 //=============================================================================
 // class meta_index_list method definitions
@@ -89,6 +91,17 @@ using util::read_value;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list::const_index_list() : meta_index_list(), parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Depending on implementation type, this will reserve space in 
+	advance in a vector-like fashion.  
+	\param s the expecte size of the sequence.  
+ */
+const_index_list::const_index_list(const size_t s) :
+		meta_index_list(), parent_type() {
+	reserve(static_cast<parent_type&>(*this), s);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

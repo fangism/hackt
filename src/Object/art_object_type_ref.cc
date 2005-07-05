@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.6 2005/07/05 07:59:50 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.7 2005/07/05 21:02:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -357,6 +357,20 @@ data_type_reference::get_base_datatype_def(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	The final blessing from the compiler that the template actuals
+	meet the requirements specified by the base definition's 
+	template formals.  
+	Called from unroll_resolve().
+	\return good if good.
+ */
+good_bool
+data_type_reference::must_be_valid(void) const {
+	return base_type_def->get_template_formals_manager()
+		.must_validate_actuals(template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
@@ -370,19 +384,31 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
+		// if template actuals depends on other template parameters, 
+		// then we need to pass actuals into its own context!
+		const template_actuals_transformer
+			uc(c, template_args, 
+				base_type_def->get_template_formals_manager());
 		const template_actuals
 			actuals(template_args.unroll_resolve(c));
 		// check for errors??? at least try-catch
 		if (actuals) {
-			// TODO: resolve aliases!
-			return return_type(
-				new this_type(base_type_def, actuals));
+			// the final type-check:
+			// now they MUST size-type check
+			const return_type
+				ret(new this_type(base_type_def, actuals));
+			NEVER_NULL(ret);
+			return (ret->must_be_valid().good ?
+				ret : return_type(NULL));
 		} else {
 			cerr << "ERROR resolving template arguments." << endl;
 			return return_type(NULL);
 		}
 	} else {
-		return return_type(new this_type(base_type_def));
+		// need to check must_be_valid?
+		const return_type ret(new this_type(base_type_def));
+		INVARIANT(ret->must_be_valid().good);
+		return ret;
 	}
 }
 
@@ -957,7 +983,7 @@ process_type_reference::must_be_valid(void) const {
  */
 count_ptr<const process_type_reference>
 process_type_reference::unroll_resolve(unroll_context& c) const {
-	STACKTRACE("data_type_reference::unroll_resolve()");
+	STACKTRACE("process_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
@@ -969,25 +995,22 @@ process_type_reference::unroll_resolve(unroll_context& c) const {
 		const template_actuals
 			actuals(template_args.unroll_resolve(c));
 		if (actuals) {
-#if 1
 			// the final type-check:
 			// now they MUST size-type check
-			const return_type ret(new this_type(
-				base_proc_def, actuals));
+			const return_type
+				ret(new this_type(base_proc_def, actuals));
 			NEVER_NULL(ret);
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
-#else
-			// TODO: check template actuals against formals!
-			return return_type(
-				new this_type(base_proc_def, actuals));
-#endif
 		} else {
 			cerr << "ERROR resolving template arguments." << endl;
 			return return_type(NULL);
 		}
 	} else {
-		return return_type(new this_type(base_proc_def));
+		// need to check must_be_valid?
+		const return_type ret(new this_type(base_proc_def));
+		INVARIANT(ret->must_be_valid().good);
+		return ret;
 	}
 }
 
