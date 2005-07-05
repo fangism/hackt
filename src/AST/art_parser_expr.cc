@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24.4.2 2005/06/30 23:22:11 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.3 2005/07/05 01:16:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -1320,7 +1320,7 @@ arith_expr::check_meta_expr(context& c) const {
 		}
 		return return_type(NULL);	// never reached
 	} else {
-		return return_type(new entity::arith_expr(li, ch, ri));
+		return return_type(new entity::pint_arith_expr(li, ch, ri));
 	}
 }
 
@@ -1405,15 +1405,15 @@ relational_expr::check_meta_expr(context& c) const {
 	}
 	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
-	const entity::relational_expr::op_type*
-		o(entity::relational_expr::op_map[op_str]);
+	const entity::pint_relational_expr::op_type*
+		o(entity::pint_relational_expr::op_map[op_str]);
 	INVARIANT(o);
 	if (li->is_static_constant() && ri->is_static_constant()) {
 		const int lc = li->static_constant_value();
 		const int rc = ri->static_constant_value();
 		return return_type(new pbool_const((*o)(lc,rc)));
 	} else {
-		return return_type(new entity::relational_expr(li, o, ri));
+		return return_type(new entity::pint_relational_expr(li, o, ri));
 	}
 }
 
@@ -1499,15 +1499,15 @@ logical_expr::check_meta_expr(context& c) const {
 	}
 	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
-	entity::logical_expr::op_type const* const
-		o(entity::logical_expr::op_map[op_str]);
+	entity::pbool_logical_expr::op_type const* const
+		o(entity::pbool_logical_expr::op_map[op_str]);
 	INVARIANT(o);
 	if (lb->is_static_constant() && rb->is_static_constant()) {
 		const bool lc = lb->static_constant_value();
 		const bool rc = rb->static_constant_value();
 		return return_type(new pbool_const((*o)(lc,rc)));
 	} else {
-		return return_type(new entity::logical_expr(lb, o, rb));
+		return return_type(new entity::pbool_logical_expr(lb, o, rb));
 	}
 }
 

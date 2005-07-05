@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_expr_const.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_expr_const.h,v 1.16.4.4 2005/07/04 19:13:26 fang Exp $
+	$Id: art_object_expr_const.h,v 1.16.4.5 2005/07/05 01:16:24 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_CONST_H__
 #define __OBJECT_ART_OBJECT_EXPR_CONST_H__
 
+#if 0
 #include "util/STL/pair_fwd.h"
 #include <vector>
 #include "Object/art_object_expr_base.h"
@@ -741,6 +742,18 @@ public:
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
+#else
+
+#include "Object/expr/const_param.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+
+#endif
 
 #endif	// __OBJECT_ART_OBJECT_EXPR_CONST_H__
 

@@ -2,6 +2,18 @@
 
 2005-07-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-12:
+	  That's it, I've had it with the monstrosity of 
+		"Object/art_object_*expr*"... it's time we give it the axe.
+		Sliced and diced the header files into ONE class per file
+		in the Object/expr subdirectory.  
+		We need this to speed up rebuilds, my patience grows thin...
+	  Not over yet: next revision will phase out these old headers
+		and also splice "Object/art_object_expr.cc".
+
+
+2005-07-04	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-48-connect-01-11:
 	  Unroll-time template formal vs. actual checking in final types.  
 		So far applied to process-type-references, but

@@ -2,12 +2,13 @@
 	\file "Object/art_object_expr_base.h"
 	Base classes related to program expressions, symbolic and parameters.  
 	TODO: rename to meta_expr_base.h
-	$Id: art_object_expr_base.h,v 1.14.4.3 2005/07/02 01:30:37 fang Exp $
+	$Id: art_object_expr_base.h,v 1.14.4.4 2005/07/05 01:16:24 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_BASE_H__
 #define __OBJECT_ART_OBJECT_EXPR_BASE_H__
 
+#if 0
 #include "util/STL/list_fwd.h"
 #include "util/STL/vector_fwd.h"
 #include "Object/art_object_data_expr_base.h"
@@ -588,6 +589,18 @@ virtual	bool
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
+#else
+
+#include "Object/expr/param_expr.h"
+#include "Object/expr/param_expr_list.h"
+#include "Object/expr/meta_index_expr.h"
+#include "Object/expr/meta_index_list.h"
+#include "Object/expr/meta_range_expr.h"
+#include "Object/expr/meta_range_list.h"
+#include "Object/expr/pint_expr.h"
+#include "Object/expr/pbool_expr.h"
+
+#endif
 
 #endif	// __OBJECT_ART_OBJECT_EXPR_BASE_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.14.4.1 2005/06/24 19:02:56 fang Exp $
+	$Id: art_object_fwd.h,v 1.14.4.2 2005/07/05 01:16:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -285,9 +285,9 @@ namespace entity {
 	class pint_unary_expr;
 	class pbool_unary_expr;
 	class param_binary_expr;
-	class arith_expr;
-	class relational_expr;
-	class logical_expr;
+	class pint_arith_expr;
+	class pint_relational_expr;
+	class pbool_logical_expr;
 	class meta_range_expr;
 	class pint_range;
 	class const_range;

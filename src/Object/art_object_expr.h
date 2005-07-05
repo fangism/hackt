@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_expr.h"
 	Classes related to program expressions, symbolic and parameters.  
-	$Id: art_object_expr.h,v 1.29.4.2 2005/07/02 01:30:37 fang Exp $
+	$Id: art_object_expr.h,v 1.29.4.3 2005/07/05 01:16:24 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_EXPR_H__
 #define __OBJECT_ART_OBJECT_EXPR_H__
 
+#if 0
 #include "Object/art_object_expr_const.h"	// include "art_object_expr_base.h"
 #include "util/memory/count_ptr.h"
 #include "util/qmap.h"
@@ -395,8 +396,8 @@ public:
 /**
 	Binary arithmetic expression accepts ints and returns an int.  
  */
-class arith_expr : public pint_expr {
-	typedef	arith_expr			this_type;
+class pint_arith_expr : public pint_expr {
+	typedef	pint_arith_expr			this_type;
 public:
 	typedef	pint_value_type			arg_type;
 	typedef	pint_value_type			value_type;
@@ -427,13 +428,13 @@ protected:
 	 */
 	const op_type*			op;
 private:
-	arith_expr();
+	pint_arith_expr();
 public:
 	// change: const ptr& arguments
-	arith_expr(const operand_ptr_type& l, const char o, 
+	pint_arith_expr(const operand_ptr_type& l, const char o, 
 		const operand_ptr_type& r);
 
-	~arith_expr();
+	~pint_arith_expr();
 
 	ostream&
 	what(ostream& o) const;
@@ -496,14 +497,14 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class arith_expr
+};	// end class pint_arith_expr
 
 //-----------------------------------------------------------------------------
 /**
 	Binary relational expression accepts ints and returns a bool.  
  */
-class relational_expr : public pbool_expr {
-	typedef	relational_expr			this_type;
+class pint_relational_expr : public pbool_expr {
+	typedef	pint_relational_expr			this_type;
 public:
 	typedef	pbool_value_type		value_type;
 	typedef	pint_value_type			arg_type;
@@ -538,14 +539,14 @@ protected:
 	const op_type*			op;
 
 private:
-	relational_expr();
+	pint_relational_expr();
 public:
-	relational_expr(const operand_ptr_type& l, const string& o, 
+	pint_relational_expr(const operand_ptr_type& l, const string& o, 
 		const operand_ptr_type& r);
-	relational_expr(const operand_ptr_type& l, const op_type* o, 
+	pint_relational_expr(const operand_ptr_type& l, const op_type* o, 
 		const operand_ptr_type& r);
 
-	~relational_expr();
+	~pint_relational_expr();
 
 	ostream&
 	what(ostream& o) const;
@@ -608,14 +609,14 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class relational_expr
+};	// end class pint_relational_expr
 
 //-----------------------------------------------------------------------------
 /**
 	Binary logical expression accepts bools and returns a bool.  
  */
-class logical_expr : public pbool_expr {
-	typedef	logical_expr				this_type;
+class pbool_logical_expr : public pbool_expr {
+	typedef	pbool_logical_expr			this_type;
 public:
 	typedef	pbool_value_type			value_type;
 	typedef	pbool_value_type			arg_type;
@@ -645,14 +646,14 @@ protected:
 	const op_type*			op;
 
 private:
-	logical_expr();
+	pbool_logical_expr();
 public:
-	logical_expr(const operand_ptr_type& l, const string& o, 
+	pbool_logical_expr(const operand_ptr_type& l, const string& o, 
 		const operand_ptr_type& r);
-	logical_expr(const operand_ptr_type& l, const op_type* o, 
+	pbool_logical_expr(const operand_ptr_type& l, const op_type* o, 
 		const operand_ptr_type& r);
 
-	~logical_expr();
+	~pbool_logical_expr();
 
 	ostream&
 	what(ostream& o) const;
@@ -715,7 +716,7 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
-};	// end class logical_expr
+};	// end class pbool_logical_expr
 
 //=============================================================================
 /**
@@ -799,6 +800,19 @@ public:
 //=============================================================================
 }	// end namespace ART
 }	// end namespace entity
+#else
+
+#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/dynamic_meta_index_list.h"
+#include "Object/expr/dynamic_meta_range_list.h"
+#include "Object/expr/pint_unary_expr.h"
+#include "Object/expr/pbool_unary_expr.h"
+#include "Object/expr/pint_arith_expr.h"
+#include "Object/expr/pint_relational_expr.h"
+#include "Object/expr/pbool_logical_expr.h"
+#include "Object/expr/pint_range.h"
+
+#endif
 
 #endif	// __OBJECT_ART_OBJECT_EXPR_H__
 

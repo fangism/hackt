@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.4 2005/07/04 01:53:59 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.5 2005/07/05 01:16:19 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -223,6 +223,46 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_definition_chan.h \
 	Object/art_object_definition_data.h \
 	Object/art_object_definition_proc.h \
+	Object/expr/bool_expr.h \
+	Object/expr/bool_logical_expr.h \
+	Object/expr/bool_negation_expr.h \
+	Object/expr/const_index.h \
+	Object/expr/const_index_list.h \
+	Object/expr/const_param.h \
+	Object/expr/const_param_expr_list.h \
+	Object/expr/const_range.h \
+	Object/expr/const_range_list.h \
+	Object/expr/data_expr.h \
+	Object/expr/dynamic_meta_index_list.h \
+	Object/expr/dynamic_meta_range_list.h \
+	Object/expr/dynamic_param_expr_list.h \
+	Object/expr/enum_expr.h \
+	Object/expr/int_arith_expr.h \
+	Object/expr/int_expr.h \
+	Object/expr/int_negation_expr.h \
+	Object/expr/int_range_expr.h \
+	Object/expr/int_range_list.h \
+	Object/expr/int_relational_expr.h \
+	Object/expr/meta_index_expr.h \
+	Object/expr/meta_index_list.h \
+	Object/expr/meta_range_expr.h \
+	Object/expr/meta_range_list.h \
+	Object/expr/nonmeta_index_expr_base.h \
+	Object/expr/nonmeta_index_list.h \
+	Object/expr/nonmeta_range_expr_base.h \
+	Object/expr/param_expr.h \
+	Object/expr/param_expr_list.h \
+	Object/expr/pbool_const.h \
+	Object/expr/pbool_expr.h \
+	Object/expr/pbool_logical_expr.h \
+	Object/expr/pbool_unary_expr.h \
+	Object/expr/pint_arith_expr.h \
+	Object/expr/pint_const.h \
+	Object/expr/pint_expr.h \
+	Object/expr/pint_range.h \
+	Object/expr/pint_relational_expr.h \
+	Object/expr/pint_unary_expr.h \
+	Object/expr/struct_expr.h \
 	Object/art_object_data_expr_base.h \
 	Object/art_object_expr_base.h \
 	Object/art_object_expr_const.h \
@@ -687,7 +727,7 @@ CLEANFILES =
 
 DISTCLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 
-CLEANSUBDIRS = lexer parser AST Object \
+CLEANSUBDIRS = lexer parser AST Object Object/expr \
 	util util/numeric util/memory util/obsolete util/STL
 
 clean-parser:
@@ -726,6 +766,8 @@ clean-AST:
 clean-Object:
 	-$(RM) Object/*.$(OBJEXT)
 	-$(RM) Object/*.lo
+	-$(RM) Object/expr/*.$(OBJEXT)
+	-$(RM) Object/expr/*.lo
 
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests

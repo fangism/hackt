@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_expr.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_expr.cc,v 1.48.4.6 2005/07/04 19:13:24 fang Exp $
+ 	$Id: art_object_expr.cc,v 1.48.4.7 2005/07/05 01:16:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXPR_CC__
@@ -101,11 +101,11 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pint_unary_expr,
 		"pint-unary-expr")
 SPECIALIZE_UTIL_WHAT(ART::entity::pbool_unary_expr,
 		"pbool-unary-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::arith_expr, 
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_arith_expr, 
 		"arith-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::relational_expr, 
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_relational_expr, 
 		"relational-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::logical_expr, 
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_logical_expr, 
 		"logical-expr")
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_range, 
 		"pint-range")
@@ -159,11 +159,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::arith_expr, META_ARITH_EXPR_TYPE_KEY, 0)
+	ART::entity::pint_arith_expr, META_ARITH_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::relational_expr, META_RELATIONAL_EXPR_TYPE_KEY, 0)
+	ART::entity::pint_relational_expr, META_RELATIONAL_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::logical_expr, META_LOGICAL_EXPR_TYPE_KEY, 0)
+	ART::entity::pbool_logical_expr, META_LOGICAL_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -1272,6 +1272,15 @@ pint_const::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	A pint const is scalar, thus dimension list is empty.
+ */
+const_range_list
+pint_const::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
 	Just copy-constructs.  
@@ -1437,6 +1446,15 @@ pbool_const::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A pbool const is scalar, thus dimension list is empty.
+ */
+const_range_list
+pbool_const::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pbool_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
@@ -1535,6 +1553,12 @@ ostream&
 pint_unary_expr::dump(ostream& o) const {
 	// parentheses? check operator precedence
 	return ex->dump(o << op);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+pint_unary_expr::static_constant_dimensions(void) const {
+	return const_range_list();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1718,6 +1742,12 @@ pbool_unary_expr::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+pbool_unary_expr::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
@@ -1828,21 +1858,21 @@ pbool_unary_expr::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
-// class arith_expr method definitions
+// class pint_arith_expr method definitions
 
 // static member initializations (order matters!)
 
-const plus<pint_value_type, pint_value_type>		arith_expr::adder;
-const minus<pint_value_type, pint_value_type>		arith_expr::subtractor;
-const multiplies<pint_value_type, pint_value_type>	arith_expr::multiplier;
-const divides<pint_value_type, pint_value_type>		arith_expr::divider;
-const modulus<pint_value_type, pint_value_type>		arith_expr::remainder;
+const plus<pint_value_type, pint_value_type>		pint_arith_expr::adder;
+const minus<pint_value_type, pint_value_type>		pint_arith_expr::subtractor;
+const multiplies<pint_value_type, pint_value_type>	pint_arith_expr::multiplier;
+const divides<pint_value_type, pint_value_type>		pint_arith_expr::divider;
+const modulus<pint_value_type, pint_value_type>		pint_arith_expr::remainder;
 
-const arith_expr::op_map_type
-arith_expr::op_map;
+const pint_arith_expr::op_map_type
+pint_arith_expr::op_map;
 
-const arith_expr::reverse_op_map_type
-arith_expr::reverse_op_map;
+const pint_arith_expr::reverse_op_map_type
+pint_arith_expr::reverse_op_map;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1853,14 +1883,14 @@ arith_expr::reverse_op_map;
 		of op_map and reverse_op_map.  
  */
 const size_t
-arith_expr::op_map_size = arith_expr::op_map_init();
+pint_arith_expr::op_map_size = pint_arith_expr::op_map_init();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Static initialization of operator map.  
  */
 void
-arith_expr::op_map_register(const char c, const op_type* o) {
+pint_arith_expr::op_map_register(const char c, const op_type* o) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
@@ -1871,7 +1901,7 @@ arith_expr::op_map_register(const char c, const op_type* o) {
 	Static initialization of registered arithmetic operators.  
  */
 size_t
-arith_expr::op_map_init(void) {
+pint_arith_expr::op_map_init(void) {
 	op_map_register('+', &adder);
 	op_map_register('-', &subtractor);
 	op_map_register('*', &multiplier);
@@ -1886,16 +1916,16 @@ arith_expr::op_map_init(void) {
 	Private empty constructor.  
 	Default to adder (bogus), set op later during load.
  */
-arith_expr::arith_expr() :
+pint_arith_expr::pint_arith_expr() :
 		lx(NULL), rx(NULL), op(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arith_expr::~arith_expr() {
+pint_arith_expr::~pint_arith_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arith_expr::arith_expr(const operand_ptr_type& l, const char o,
+pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const char o,
 		const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
@@ -1906,41 +1936,47 @@ arith_expr::arith_expr(const operand_ptr_type& l, const char o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-arith_expr::dump(ostream& o) const {
+pint_arith_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-arith_expr::dump_brief(ostream& o) const {
+pint_arith_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+pint_arith_expr::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-arith_expr::is_static_constant(void) const {
+pint_arith_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-arith_expr::is_loop_independent(void) const {
+pint_arith_expr::is_loop_independent(void) const {
 	return lx->is_loop_independent() && rx->is_loop_independent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-arith_expr::is_unconditional(void) const {
+pint_arith_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arith_expr::value_type
-arith_expr::static_constant_value(void) const {
+pint_arith_expr::value_type
+pint_arith_expr::static_constant_value(void) const {
 	const arg_type a = lx->static_constant_value();
 	const arg_type b = rx->static_constant_value();
 	// Oooooh, virtual operator dispatch!
@@ -1949,8 +1985,8 @@ arith_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-arith_expr::must_be_equivalent(const pint_expr& p) const {
-	const arith_expr* const ae = IS_A(const arith_expr*, &p);
+pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
+	const pint_arith_expr* const ae = IS_A(const pint_arith_expr*, &p);
 	if (ae) {
 		// for now structural equivalence only,
 		return (op == ae->op) &&
@@ -1965,7 +2001,7 @@ arith_expr::must_be_equivalent(const pint_expr& p) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-arith_expr::resolve_value(value_type& i) const {
+pint_arith_expr::resolve_value(value_type& i) const {
 	arg_type a, b;
 	NEVER_NULL(lx);	NEVER_NULL(rx);
 	const good_bool lret(lx->resolve_value(a));
@@ -1990,7 +2026,7 @@ arith_expr::resolve_value(value_type& i) const {
 	\return false if there is error in resolving.
  */
 good_bool
-arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+pint_arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type i = 0;
 	const good_bool ret(resolve_value(i));
 	l.push_back(i);		// regardless of validity
@@ -2003,7 +2039,7 @@ arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 		expressions operations only work on scalars.  
  */
 const_index_list
-arith_expr::resolve_dimensions(void) const {
+pint_arith_expr::resolve_dimensions(void) const {
 	return const_index_list();
 }
 
@@ -2012,7 +2048,7 @@ arith_expr::resolve_dimensions(void) const {
 	\return true if resolved.
  */
 good_bool
-arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
+pint_arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	value_type lval, rval;
@@ -2037,7 +2073,7 @@ arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
 	\return pint_const of the resolved value.
  */
 count_ptr<const_param>
-arith_expr::unroll_resolve(const unroll_context& c) const {
+pint_arith_expr::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
@@ -2062,7 +2098,7 @@ arith_expr::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-arith_expr::collect_transient_info(
+pint_arith_expr::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -2073,7 +2109,7 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-arith_expr::write_object(const persistent_object_manager& m, ostream& f) const {
+pint_arith_expr::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_value(f, reverse_op_map[op]);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
@@ -2081,7 +2117,7 @@ arith_expr::write_object(const persistent_object_manager& m, ostream& f) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-arith_expr::load_object(const persistent_object_manager& m, istream& f) {
+pint_arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	char o;
 	read_value(f, o);
@@ -2092,33 +2128,33 @@ arith_expr::load_object(const persistent_object_manager& m, istream& f) {
 }
 
 //=============================================================================
-// class relational_expr method definitions
+// class pint_relational_expr method definitions
 
 // static member initializations (order matters!)
 
 const equal_to<pbool_value_type, pint_value_type>
-relational_expr::op_equal_to;
+pint_relational_expr::op_equal_to;
 
 const not_equal_to<pbool_value_type, pint_value_type>
-relational_expr::op_not_equal_to;
+pint_relational_expr::op_not_equal_to;
 
 const less<pbool_value_type, pint_value_type>
-relational_expr::op_less;
+pint_relational_expr::op_less;
 
 const greater<pbool_value_type, pint_value_type>
-relational_expr::op_greater;
+pint_relational_expr::op_greater;
 
 const less_equal<pbool_value_type, pint_value_type>
-relational_expr::op_less_equal;
+pint_relational_expr::op_less_equal;
 
 const greater_equal<pbool_value_type, pint_value_type>
-relational_expr::op_greater_equal;
+pint_relational_expr::op_greater_equal;
 
-const relational_expr::op_map_type
-relational_expr::op_map;
+const pint_relational_expr::op_map_type
+pint_relational_expr::op_map;
 
-const relational_expr::reverse_op_map_type
-relational_expr::reverse_op_map;
+const pint_relational_expr::reverse_op_map_type
+pint_relational_expr::reverse_op_map;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2129,14 +2165,14 @@ relational_expr::reverse_op_map;
 		of op_map and reverse_op_map.  
  */
 const size_t
-relational_expr::op_map_size = relational_expr::op_map_init();
+pint_relational_expr::op_map_size = pint_relational_expr::op_map_init();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Static initialization of operator map.  
  */
 void
-relational_expr::op_map_register(const string& s, const op_type* o) {
+pint_relational_expr::op_map_register(const string& s, const op_type* o) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[s] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
@@ -2147,7 +2183,7 @@ relational_expr::op_map_register(const string& s, const op_type* o) {
 	Static initialization of registered relationalmetic operators.  
  */
 size_t
-relational_expr::op_map_init(void) {
+pint_relational_expr::op_map_init(void) {
 	op_map_register("==", &op_equal_to);
 	op_map_register("!=", &op_not_equal_to);
 	op_map_register("<", &op_less);
@@ -2163,16 +2199,16 @@ relational_expr::op_map_init(void) {
 	Private empty constructor.  
 	Note: pass string, not null char.  
  */
-relational_expr::relational_expr() :
+pint_relational_expr::pint_relational_expr() :
 		lx(NULL), rx(NULL), op(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::~relational_expr() {
+pint_relational_expr::~pint_relational_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::relational_expr(const operand_ptr_type& l,
+pint_relational_expr::pint_relational_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
@@ -2183,7 +2219,7 @@ relational_expr::relational_expr(const operand_ptr_type& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-relational_expr::relational_expr(const operand_ptr_type& l,
+pint_relational_expr::pint_relational_expr(const operand_ptr_type& l,
 		const op_type* o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
@@ -2194,35 +2230,53 @@ relational_expr::relational_expr(const operand_ptr_type& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-relational_expr::dump_brief(ostream& o) const {
+pint_relational_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-relational_expr::dump(ostream& o) const {
+pint_relational_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-relational_expr::is_static_constant(void) const {
+pint_relational_expr::may_be_initialized(void) const {
+	return lx->may_be_initialized() && rx->may_be_initialized();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_relational_expr::must_be_initialized(void) const {
+	return lx->must_be_initialized() && rx->must_be_initialized();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+pint_relational_expr::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-relational_expr::is_loop_independent(void) const {
+pint_relational_expr::is_loop_independent(void) const {
 	return lx->is_loop_independent() && rx->is_loop_independent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-relational_expr::is_unconditional(void) const {
+pint_relational_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
 
@@ -2230,8 +2284,8 @@ relational_expr::is_unconditional(void) const {
 /**
 	\return result of resolved comparison.  
  */
-relational_expr::value_type
-relational_expr::static_constant_value(void) const {
+pint_relational_expr::value_type
+pint_relational_expr::static_constant_value(void) const {
 	const arg_type a = lx->static_constant_value();
 	const arg_type b = rx->static_constant_value();
 	return (*op)(a,b);
@@ -2239,8 +2293,8 @@ relational_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-relational_expr::must_be_equivalent(const pbool_expr& b) const {
-	const relational_expr* const re = IS_A(const relational_expr*, &b);
+pint_relational_expr::must_be_equivalent(const pbool_expr& b) const {
+	const pint_relational_expr* const re = IS_A(const pint_relational_expr*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -2255,7 +2309,7 @@ relational_expr::must_be_equivalent(const pbool_expr& b) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
-relational_expr::resolve_dimensions(void) const {
+pint_relational_expr::resolve_dimensions(void) const {
 	return const_index_list();
 }
 
@@ -2264,7 +2318,7 @@ relational_expr::resolve_dimensions(void) const {
 	TO DO: switch on relational expression operator.  
  */
 good_bool
-relational_expr::resolve_value(value_type& i) const {
+pint_relational_expr::resolve_value(value_type& i) const {
 	arg_type li, ri;
 	const good_bool l_ret(lx->resolve_value(li));
 	const good_bool r_ret(rx->resolve_value(ri));
@@ -2280,7 +2334,7 @@ relational_expr::resolve_value(value_type& i) const {
 	\return error status
  */
 good_bool
-relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+pint_relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type b;
 	const good_bool ret(resolve_value(b));
 	l.push_back(b);
@@ -2292,7 +2346,7 @@ relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-relational_expr::unroll_resolve(const unroll_context& c) const {
+pint_relational_expr::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
@@ -2317,7 +2371,7 @@ relational_expr::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-relational_expr::collect_transient_info(
+pint_relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -2328,7 +2382,7 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-relational_expr::write_object(const persistent_object_manager& m, 
+pint_relational_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
@@ -2337,7 +2391,7 @@ relational_expr::write_object(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-relational_expr::load_object(const persistent_object_manager& m, istream& f) {
+pint_relational_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	string s;
 	read_value(f, s);
@@ -2349,24 +2403,24 @@ relational_expr::load_object(const persistent_object_manager& m, istream& f) {
 }
 
 //=============================================================================
-// class logical_expr method definitions
+// class pbool_logical_expr method definitions
 
 // static member initializations (order matters!)
 
 const util::logical_and<pbool_value_type, pbool_value_type>
-logical_expr::op_and;
+pbool_logical_expr::op_and;
 
 const util::logical_or<pbool_value_type, pbool_value_type>
-logical_expr::op_or;
+pbool_logical_expr::op_or;
 
 const util::logical_xor<pbool_value_type, pbool_value_type>
-logical_expr::op_xor;
+pbool_logical_expr::op_xor;
 
-const logical_expr::op_map_type
-logical_expr::op_map;
+const pbool_logical_expr::op_map_type
+pbool_logical_expr::op_map;
 
-const logical_expr::reverse_op_map_type
-logical_expr::reverse_op_map;
+const pbool_logical_expr::reverse_op_map_type
+pbool_logical_expr::reverse_op_map;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2377,14 +2431,14 @@ logical_expr::reverse_op_map;
 		of op_map and reverse_op_map.  
  */
 const size_t
-logical_expr::op_map_size = logical_expr::op_map_init();
+pbool_logical_expr::op_map_size = pbool_logical_expr::op_map_init();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Static initialization of operator map.  
  */
 void
-logical_expr::op_map_register(const string& s, const op_type* o) {
+pbool_logical_expr::op_map_register(const string& s, const op_type* o) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[s] = o;
 	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = s;
@@ -2395,7 +2449,7 @@ logical_expr::op_map_register(const string& s, const op_type* o) {
 	Static initialization of registered logicalmetic operators.  
  */
 size_t
-logical_expr::op_map_init(void) {
+pbool_logical_expr::op_map_init(void) {
 	op_map_register("&&", &op_and);
 	op_map_register("||", &op_or);
 	op_map_register("^", &op_xor);
@@ -2407,16 +2461,16 @@ logical_expr::op_map_init(void) {
 /**
 	Private empty constructor.
  */
-logical_expr::logical_expr() :
+pbool_logical_expr::pbool_logical_expr() :
 		lx(NULL), rx(NULL), op(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::~logical_expr() {
+pbool_logical_expr::~pbool_logical_expr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::logical_expr(const operand_ptr_type& l,
+pbool_logical_expr::pbool_logical_expr(const operand_ptr_type& l,
 		const string& o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
 	NEVER_NULL(op);
@@ -2427,7 +2481,7 @@ logical_expr::logical_expr(const operand_ptr_type& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-logical_expr::logical_expr(const operand_ptr_type& l,
+pbool_logical_expr::pbool_logical_expr(const operand_ptr_type& l,
 		const op_type* o, const operand_ptr_type& r) :
 		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
@@ -2438,35 +2492,41 @@ logical_expr::logical_expr(const operand_ptr_type& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-logical_expr::dump_brief(ostream& o) const {
+pbool_logical_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-logical_expr::dump(ostream& o) const {
+pbool_logical_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list
+pbool_logical_expr::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-logical_expr::is_static_constant(void) const {
+pbool_logical_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-logical_expr::is_loop_independent(void) const {
+pbool_logical_expr::is_loop_independent(void) const {
 	return lx->is_loop_independent() && rx->is_loop_independent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-logical_expr::is_unconditional(void) const {
+pbool_logical_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
 
@@ -2474,8 +2534,8 @@ logical_expr::is_unconditional(void) const {
 /**
 	Must be truly compile-time constant.
  */
-logical_expr::value_type
-logical_expr::static_constant_value(void) const {
+pbool_logical_expr::value_type
+pbool_logical_expr::static_constant_value(void) const {
 	const arg_type a = lx->static_constant_value();
 	const arg_type b = rx->static_constant_value();
 	return (*op)(a,b);
@@ -2483,8 +2543,8 @@ logical_expr::static_constant_value(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-logical_expr::must_be_equivalent(const pbool_expr& b) const {
-	const logical_expr* const re = IS_A(const logical_expr*, &b);
+pbool_logical_expr::must_be_equivalent(const pbool_expr& b) const {
+	const pbool_logical_expr* const re = IS_A(const pbool_logical_expr*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -2499,7 +2559,7 @@ logical_expr::must_be_equivalent(const pbool_expr& b) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
-logical_expr::resolve_dimensions(void) const {
+pbool_logical_expr::resolve_dimensions(void) const {
 	return const_index_list();
 }
 
@@ -2508,7 +2568,7 @@ logical_expr::resolve_dimensions(void) const {
 	TO DO: switch on logical expression operator.  
  */
 good_bool
-logical_expr::resolve_value(value_type& i) const {
+pbool_logical_expr::resolve_value(value_type& i) const {
 	arg_type lb, rb;
 	const good_bool l_ret(lx->resolve_value(lb));
 	const good_bool r_ret(rx->resolve_value(rb));
@@ -2518,7 +2578,7 @@ logical_expr::resolve_value(value_type& i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
+pbool_logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	arg_type b;
 	const good_bool ret(resolve_value(b));
 	l.push_back(b);
@@ -2530,7 +2590,7 @@ logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-logical_expr::unroll_resolve(const unroll_context& c) const {
+pbool_logical_expr::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
@@ -2555,7 +2615,7 @@ logical_expr::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-logical_expr::collect_transient_info(
+pbool_logical_expr::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -2566,7 +2626,7 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-logical_expr::write_object(const persistent_object_manager& m, 
+pbool_logical_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
 	write_value(f, reverse_op_map[op]);
 	m.write_pointer(f, lx);
@@ -2575,7 +2635,7 @@ logical_expr::write_object(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-logical_expr::load_object(const persistent_object_manager& m, istream& f) {
+pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 	{
 	string s;
 	read_value(f, s);
@@ -2610,7 +2670,7 @@ pint_range::~pint_range() {
 pint_range::pint_range(const count_ptr<const pint_expr>& n) :
 		meta_range_expr(),
 		lower(new pint_const(0)),
-		upper(new arith_expr(n, '-', 
+		upper(new pint_arith_expr(n, '-', 
 			count_ptr<const pint_expr>(new pint_const(1)))) {
 	NEVER_NULL(n);
 	NEVER_NULL(lower);
@@ -2651,6 +2711,18 @@ ostream&
 pint_range::dump(ostream& o) const {
 	return upper->dump_brief(
 		lower->dump_brief(o << '[') << "..") << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_range::may_be_initialized(void) const {
+	return lower->may_be_initialized() && upper->may_be_initialized();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_range::must_be_initialized(void) const {
+	return lower->must_be_initialized() && upper->must_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
