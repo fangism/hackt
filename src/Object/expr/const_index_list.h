@@ -3,15 +3,15 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.1.2.3 2005/07/06 00:59:30 fang Exp $
+	$Id: const_index_list.h,v 1.1.2.4 2005/07/06 04:44:41 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_LIST_H__
 #define __OBJECT_EXPR_CONST_INDEX_LIST_H__
 
-#include <list>
 #include "util/STL/pair_fwd.h"
-// #include <vector>
+#include <list>
+#include <vector>
 #include "Object/expr/meta_index_list.h"
 #include "Object/art_object_index.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -22,11 +22,10 @@ namespace entity {
 class const_index;
 class const_range_list;
 using std::list;
+using std::vector;
 using std::pair;
-// using std::vector;
 using util::multikey_generic;
 using util::multikey_generator;
-// using util::persistent_object_manager;	// forward declared
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -37,14 +36,14 @@ using util::memory::count_ptr;
 	members must be reference counted.  
  */
 class const_index_list : public meta_index_list, 
-		private list<count_ptr<const_index> > {
+		private vector<count_ptr<const_index> > {
 	typedef	const_index_list		this_type;
 public:
 	typedef	count_ptr<const_index>		const_index_ptr_type;
 	typedef	const_index_ptr_type		value_type;
 protected:
 	/** need list of pointers b/c const_index is abstract */
-	typedef	list<const_index_ptr_type>		parent_type;
+	typedef	vector<const_index_ptr_type>		parent_type;
 public:
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
@@ -56,6 +55,7 @@ public:
 	explicit
 	const_index_list(const size_t);
 
+	// consider templating this...
 	const_index_list(const const_index_list& l, 
 		const pair<list<pint_value_type>, list<pint_value_type> >& f);
 

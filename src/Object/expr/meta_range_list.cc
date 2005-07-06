@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.1.2.2 2005/07/06 00:59:31 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.1.2.3 2005/07/06 04:44:42 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -30,6 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/art_object_type_hash.h"
 
+#include "util/reserve.h"
 #include "util/stacktrace.h"
 #include "util/multikey.h"
 #include "util/memory/count_ptr.tcc"
@@ -83,7 +84,12 @@ using util::read_value;
 // class const_range_list method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list::const_range_list() : meta_range_list(), list_type() {
+const_range_list::const_range_list() : meta_range_list(), list_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_range_list::const_range_list(const size_t s) :
+		meta_range_list(), list_type() {
+	util::reserve(AS_A(list_type&, *this), s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,6 +98,14 @@ const_range_list::const_range_list() : meta_range_list(), list_type() {
  */
 const_range_list::const_range_list(const list_type& l) :
 		meta_range_list(), list_type(l) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implicit conversion.  
+ */
+const_range_list::const_range_list(const alt_list_type& l) :
+		meta_range_list(), list_type(l.begin(), l.end()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -529,12 +543,17 @@ const_range_list::load_object(const persistent_object_manager& m, istream& f) {
 // class dynamic_meta_range_list method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_meta_range_list::dynamic_meta_range_list() : meta_range_list(), list_type() {
+dynamic_meta_range_list::dynamic_meta_range_list() :
+		meta_range_list(), list_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dynamic_meta_range_list::dynamic_meta_range_list(const size_t s) :
+		meta_range_list(), list_type() {
+	util::reserve(AS_A(list_type&, *this), s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-dynamic_meta_range_list::~dynamic_meta_range_list() {
-}
+dynamic_meta_range_list::~dynamic_meta_range_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_range_list)

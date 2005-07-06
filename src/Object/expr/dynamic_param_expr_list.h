@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.1.2.3 2005/07/06 04:44:41 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -35,6 +35,10 @@ public:
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_param_expr_list();
+
+	explicit
+	dynamic_param_expr_list(const size_t);
+
 // lazy: use default copy constructor
 //	dynamic_param_expr_list(const dynamic_param_expr_list& pl);
 	~dynamic_param_expr_list();

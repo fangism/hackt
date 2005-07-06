@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-07-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-16:
+	  Replaced expression/index/range object lists with vector
+		implementations, also leveraging util::reserve
+		for up-front space allocation.  Everything "just works".
+	  Few more test cases added to test/parser/template/.  
+		Added note that 057, 058 are KNOWN BUGS to address
+		at a future time (as described in NOTES).  
+	  TODO: next, check proper declarations with relaxed template
+		actuals in the context of arrays.  
+
+
 2005-07-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-15:

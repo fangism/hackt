@@ -1,7 +1,7 @@
 /**
 	\file "util/reserve.h"
 	Utility for optionally reserving space in a sequence container.  
-	$Id: reserve.h,v 1.1.2.1 2005/07/05 21:02:21 fang Exp $
+	$Id: reserve.h,v 1.1.2.2 2005/07/06 04:44:43 fang Exp $
  */
 
 #ifndef	__UTIL_RESERVE_H__
@@ -19,15 +19,17 @@ namespace util {
 	Note: since we cannot partially specialize functions, 
 	we use this helper class.  
 	\param T a sequence container class.  
+	\param A the allocator type of T, T::allocator_type.
  */
-template <class T>
+template <class T, class A>
 struct reserver {
 	typedef	T			sequence_type;
 	/**
 		No-op.
 	 */
+	static
 	void
-	operator () (T&, const size_t) { }
+	reserve(T&, const size_t) { }
 };	// end struct reserver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -36,13 +38,14 @@ struct reserver {
 	This is appropriate for vectors.  
  */
 template <class T, class A>
-struct reserver<std::vector<T, A> > {
+struct reserver<std::vector<T, A>, A> {
 	typedef	std::vector<T, A>	sequence_type;
 	/**
 		Actually reserves memory in advance.  
 	 */
+	static
 	void
-	operator () (T& t, const size_t s) {
+	reserve(sequence_type& t, const size_t s) {
 		t.reserve(s);
 	}
 };	// end struct reserver
@@ -57,7 +60,9 @@ template <class T>
 inline
 void
 reserve(T& seq, const size_t sz) {
-	reserver<T>()(seq, sz);
+	typedef	typename T::allocator_type	allocator_type;
+	typedef	reserver<T, allocator_type>	reserver_type;
+	reserver_type::reserve(seq, sz);
 }
 
 //=============================================================================

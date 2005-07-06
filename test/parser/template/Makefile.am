@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.7.14.4 2005/07/06 00:59:35 fang Exp $
+#	$Id: Makefile.am,v 1.7.14.5 2005/07/06 04:44:44 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -18,7 +18,11 @@ ARTC_TEST_PASSES = \
 	021 022 026 029 \
 	030 031 032 033 034 035 036 037 038 039 \
 	040 041 043 049 \
-	055 056
+	055 056 057 058
+
+# KNOWN BUGS:
+# should fail at unroll-time:
+#	057 058 (not propagating relaxed formal dependence yet)
 
 BISON_OUTPUTS = 027 028 042 050
 

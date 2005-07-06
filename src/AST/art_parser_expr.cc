@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24.4.5 2005/07/06 00:59:21 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.6 2005/07/06 04:44:37 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -424,7 +424,9 @@ template_argument_list_pair::rightmost(void) const {
 template_argument_list_pair::return_type
 template_argument_list_pair::check_template_args(context& c) const {
 	const count_ptr<dynamic_param_expr_list>
-		strict(strict_args ? new dynamic_param_expr_list : NULL);
+		strict(strict_args ?
+			new dynamic_param_expr_list(strict_args->size()) :
+			NULL);
 	if (strict_args) {
 		expr_list::checked_meta_exprs_type temp;
 		strict_args->postorder_check_meta_exprs(temp, c);
@@ -461,7 +463,9 @@ template_argument_list_pair::check_template_args(context& c) const {
 		}
 	}
 	const count_ptr<dynamic_param_expr_list>
-		relaxed(relaxed_args ? new dynamic_param_expr_list : NULL);
+		relaxed(relaxed_args ?
+			new dynamic_param_expr_list(relaxed_args->size()) :
+			NULL);
 	if (relaxed_args) {
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);

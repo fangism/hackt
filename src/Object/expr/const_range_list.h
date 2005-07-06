@@ -3,14 +3,14 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
+	$Id: const_range_list.h,v 1.1.2.3 2005/07/06 04:44:41 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_RANGE_LIST_H__
 #define __OBJECT_EXPR_CONST_RANGE_LIST_H__
 
 #include <list>
-// #include <vector>
+#include <vector>
 #include "Object/expr/meta_range_list.h"
 #include "Object/art_object_index.h"
 #include "util/multikey_fwd.h"
@@ -21,22 +21,22 @@ namespace entity {
 class const_range;
 class const_index_list;
 using std::list;
-// using std::vector;
-// using util::multikey_generic;
+using std::vector;
 using util::multikey_generator;
-// using util::persistent_object_manager;	// forward declared
 
 //=============================================================================
 /**
 	List of constant range expressions.  
 	Would a vector be more appropriate?   consider changing later...
  */
-class const_range_list : public meta_range_list, public list<const_range> {
+class const_range_list : public meta_range_list, public vector<const_range> {
 	typedef	const_range_list			this_type;
 protected:
 	// no need for pointers here
-	typedef	list<const_range>			list_type;
+	typedef	vector<const_range>			list_type;
+	typedef	list<const_range>			alt_list_type;
 public:
+	typedef	list_type::value_type			value_type;
 	typedef	list_type::iterator			iterator;
 	typedef	list_type::const_iterator		const_iterator;
 	typedef	list_type::reverse_iterator		reverse_iterator;
@@ -45,7 +45,13 @@ public:
 	const_range_list();
 
 	explicit
+	const_range_list(const size_t);
+
+	explicit
 	const_range_list(const list_type& l);
+
+	explicit
+	const_range_list(const alt_list_type& l);
 
 	explicit
 	const_range_list(const const_index_list& i);

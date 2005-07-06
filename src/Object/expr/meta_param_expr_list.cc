@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.1.2.3 2005/07/06 00:59:31 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.1.2.4 2005/07/06 04:44:42 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_type_hash.h"
 
+#include "util/reserve.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -447,6 +448,12 @@ const_param_expr_list::load_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dynamic_param_expr_list::dynamic_param_expr_list(const size_t s) :
+		param_expr_list(), parent_type() {
+	util::reserve(AS_A(parent_type&, *this), s);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::~dynamic_param_expr_list() {

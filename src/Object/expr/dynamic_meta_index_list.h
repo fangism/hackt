@@ -3,20 +3,20 @@
 	Dynamic meta parameter index list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_index_list.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
+	$Id: dynamic_meta_index_list.h,v 1.1.2.3 2005/07/06 04:44:41 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_DYNAMIC_META_INDEX_LIST_H__
 #define __OBJECT_EXPR_DYNAMIC_META_INDEX_LIST_H__
 
-#include <list>
+#include <vector>
 #include "Object/expr/meta_index_list.h"
 #include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
 class meta_index_expr;
-using std::list;
+using std::vector;
 using std::string;
 using util::memory::count_ptr;
 
@@ -25,17 +25,22 @@ using util::memory::count_ptr;
 	Elements of this index list are no necessarily static constants.  
  */
 class dynamic_meta_index_list : public meta_index_list, 
-		private list<count_ptr<meta_index_expr> > {
+		private vector<count_ptr<meta_index_expr> > {
 	typedef	dynamic_meta_index_list			this_type;
 protected:
-	typedef	list<count_ptr<meta_index_expr> >	parent_type;
+	typedef	vector<count_ptr<meta_index_expr> >	parent_type;
 public:
+	typedef	parent_type::value_type			value_type;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_meta_index_list();
+
+	explicit
+	dynamic_meta_index_list(const size_t);
+
 	~dynamic_meta_index_list();
 
 	ostream&

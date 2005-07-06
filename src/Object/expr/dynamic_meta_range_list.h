@@ -3,20 +3,20 @@
 	Dynamic meta parameter range list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_range_list.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
+	$Id: dynamic_meta_range_list.h,v 1.1.2.3 2005/07/06 04:44:41 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_DYNAMIC_META_RANGE_LIST_H__
 #define __OBJECT_EXPR_DYNAMIC_META_RANGE_LIST_H__
 
-#include <list>
+#include <vector>
 #include "Object/expr/meta_range_list.h"
 #include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
 class pint_range;
-using std::list;
+using std::vector;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -33,19 +33,23 @@ using util::memory::count_ptr;
 	also cache these results...?
  */
 class dynamic_meta_range_list : public meta_range_list,
-		public list<count_ptr<pint_range> > {
+		public vector<count_ptr<pint_range> > {
 	typedef	dynamic_meta_range_list			this_type;
 protected:
 	// list of pointers to pint_ranges?  or just copy construct?
 	// can't copy construct, is abstract
-	typedef	list<count_ptr<pint_range> >	list_type;
+	typedef	vector<count_ptr<pint_range> >		list_type;
 public:
+	typedef	list_type::value_type			value_type;
 	typedef	list_type::iterator			iterator;
 	typedef	list_type::const_iterator		const_iterator;
 	typedef	list_type::reverse_iterator		reverse_iterator;
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
 public:
 	dynamic_meta_range_list();
+
+	explicit
+	dynamic_meta_range_list(const size_t);
 
 	~dynamic_meta_range_list();
 

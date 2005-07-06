@@ -1,0 +1,51 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3c032b0	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	53
+	3	 0x3c032d0	procdefn	0	53	133
+	4	 0x3c03264	dintcoll	1	133	171
+	5	 0x3c03360	datainst	0	171	191
+	6	 0x3c03380	datatprf	0	191	211
+	7	 0x3c033a0	datadefn	0	211	263
+	8	 0x3c03440	dprmlst_	0	263	279
+	9	 0x39a1028	cnstpi__	0	279	291
+	10	 0x3c03450	drnglst_	0	291	307
+	11	 0x3c03474	dynrng__	0	307	323
+	12	 0x39a1038	cnstpi__	0	323	335
+	13	 0x3c03498	arithexp	0	335	352
+	14	 0x3c034a0	spimref_	0	352	372
+	15	 0x3c034d4	pintcoll	0	372	409
+	16	 0x3c03530	pintinst	0	409	425
+	17	 0x3c03540	spimref_	0	425	445
+	18	 0x3c03574	pintcoll	0	445	482
+	19	 0x3c035d0	pintinst	0	482	498
+	20	 0x39a1048	cnstpi__	0	498	510
+	21	 0x5000c00	piassign	0	510	530
+	22	 0x3c035e0	spimref_	0	530	550
+
+In module created from: ./057.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo<>
+<
+      pint<> W
+      >(
+      )
+      In definition "foo", we have: {
+        my_int = int<32> my_int with indices: {
+          [0..::foo::Z-1]
+        }
+
+        W = pint<> W
+        Z = pint<> Z (init = pint-inst-ref ::foo::W)
+      }
+
+}
+

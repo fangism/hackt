@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.1.2.1 2005/07/05 07:59:52 fang Exp $
+	$Id: data_expr.cc,v 1.1.2.2 2005/07/06 04:44:41 fang Exp $
  */
 
 #include <iostream>
@@ -20,6 +20,7 @@
 #include "Object/art_object_type_ref.h"
 #include "Object/art_built_ins.h"
 
+#include "util/reserve.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
@@ -703,6 +704,12 @@ int_range_expr::load_object(const persistent_object_manager& m,
 // class nonmeta_index_list method definitions
 
 nonmeta_index_list::nonmeta_index_list() : persistent(), list_type() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+nonmeta_index_list::nonmeta_index_list(const size_t s) :
+		persistent(), list_type() {
+	util::reserve(AS_A(list_type&, *this), s);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_index_list::~nonmeta_index_list() { }

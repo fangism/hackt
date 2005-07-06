@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.7 2005/07/06 00:59:28 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.8 2005/07/06 04:44:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -399,7 +399,9 @@ template_formals_manager::make_default_template_arguments(void) const {
 	INVARIANT(check_null_template_argument().good);
 	if (strict_template_formals_list.empty())
 		return template_actuals();
-	const return_type ret(new dynamic_param_expr_list);
+	const return_type
+		ret(new dynamic_param_expr_list(
+			strict_template_formals_list.size()));
 	template_formals_list_type::const_iterator
 		i(strict_template_formals_list.begin());
 	for ( ; i!=strict_template_formals_list.end(); i++) {

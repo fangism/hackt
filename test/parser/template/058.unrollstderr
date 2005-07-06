@@ -1,0 +1,42 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3c02980	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	53
+	3	 0x3c029a0	procdefn	0	53	133
+	4	 0x3c02a34	dintcoll	0	133	176
+	5	 0x3c02a90	datainst	0	176	196
+	6	 0x3c02ab0	datatprf	0	196	216
+	7	 0x3c02ad0	datadefn	0	216	268
+	8	 0x3c02b70	dprmlst_	0	268	284
+	9	 0x3c02b80	spimref_	0	284	304
+	10	 0x3c02bb4	pintcoll	0	304	341
+	11	 0x3c02c10	pintinst	0	341	357
+	12	 0x3c02c20	spimref_	0	357	377
+	13	 0x3c02c54	pintcoll	0	377	414
+	14	 0x3c02cb0	pintinst	0	414	430
+	15	 0x5000c00	piassign	0	430	450
+	16	 0x3c02cc0	spimref_	0	450	470
+
+In module created from: ./058.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo<>
+<
+      pint<> W
+      >(
+      )
+      In definition "foo", we have: {
+        my_int = int<pint-inst-ref ::foo::Z> my_int
+        W = pint<> W
+        Z = pint<> Z (init = pint-inst-ref ::foo::W)
+      }
+
+}
+

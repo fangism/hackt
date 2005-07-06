@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31.4.4 2005/07/06 00:59:26 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.5 2005/07/06 04:44:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -104,6 +104,8 @@ public:
 	typedef	multidimensional_sparse_set_traits<
 			pint_value_type, const_range, list>
 						traits_type;
+	// happens to be const_range_list::list_type
+	typedef	vector<const_range>		alt_range_list_type;
 	typedef	traits_type::range_type		range_type;
 	typedef	traits_type::range_list_type	range_list_type;
 
@@ -118,8 +120,14 @@ virtual	range_list_type
 virtual	range_list_type
 	query_compact_dimensions(const range_list_type& r) const = 0;
 
+virtual	range_list_type
+	query_compact_dimensions(const alt_range_list_type& r) const = 0;
+
 virtual	bool
 	add_ranges(const range_list_type& r) = 0;
+
+virtual	bool
+	add_ranges(const alt_range_list_type& r) = 0;
 
 virtual	bool
 	subtract_sparse_set(const mset_base& s) = 0;
@@ -148,13 +156,15 @@ template <size_t D>
 class simple_meta_instance_reference_base::mset :
 		public simple_meta_instance_reference_base::mset_base {
 protected:
-	typedef	multidimensional_sparse_set<D, pint_value_type, const_range>
+	typedef	multidimensional_sparse_set<D, pint_value_type,
+			const_range, list>
 							impl_type;
 	typedef	simple_meta_instance_reference_base::mset_base	base_type;
 	typedef	mset<D>					this_type;
 public:
 	typedef base_type::range_type			range_type;
 	typedef base_type::range_list_type		range_list_type;
+	typedef base_type::alt_range_list_type		alt_range_list_type;
 protected:
 	impl_type			sset;
 public:
@@ -171,8 +181,18 @@ public:
 		return sset.query_compact_dimensions(r);
 	}
 
+	range_list_type
+	query_compact_dimensions(const alt_range_list_type& r) const {
+		return sset.query_compact_dimensions(r);
+	}
+
 	bool
 	add_ranges(const range_list_type& r) {
+		return sset.add_ranges(r);
+	}
+
+	bool
+	add_ranges(const alt_range_list_type& r) {
 		return sset.add_ranges(r);
 	}
 

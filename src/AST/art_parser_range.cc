@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.5.4.1 2005/07/05 07:59:31 fang Exp $
+	$Id: art_parser_range.cc,v 1.5.4.2 2005/07/06 04:44:38 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -240,8 +240,8 @@ range_list::~range_list() { }
  */
 good_bool
 range_list::postorder_check_meta(meta_check_type& temp, context& c) const {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
 		const range::meta_return_type o((*i)->check_meta_index(c));
@@ -276,8 +276,8 @@ range_list::postorder_check_meta(meta_check_type& temp, context& c) const {
 good_bool
 range_list::postorder_check_nonmeta(nonmeta_check_type& temp, 
 		context& c) const {
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
 		const range::nonmeta_return_type
@@ -318,12 +318,12 @@ range_list::check_meta_indices(context& c) const {
 		return return_type(NULL);
 	}
 
-	count_ptr<dynamic_meta_index_list>
-		dyn_ret(new dynamic_meta_index_list);
+	const count_ptr<dynamic_meta_index_list>
+		dyn_ret(new dynamic_meta_index_list(size()));
 	NEVER_NULL(dyn_ret);
 	bool is_const = true;
-	check_type::const_iterator i = temp.begin();
-	const check_type::const_iterator e = temp.end();
+	check_type::const_iterator i(temp.begin());
+	const check_type::const_iterator e(temp.end());
 	for ( ; is_const && i!=e; i++) {
 		dyn_ret->push_back(*i);
 		if (!i->is_a<entity::const_index>()) {
@@ -331,8 +331,9 @@ range_list::check_meta_indices(context& c) const {
 		}
 	}
 	if (is_const) {
-		count_ptr<const_index_list>
-			const_ret(new const_index_list);
+		const count_ptr<const_index_list>
+			const_ret(new const_index_list(size()));
+		// size is hint for reserving memory
 		NEVER_NULL(const_ret);
 		// const_ret->reserve(size());
 		for (i = temp.begin(); i!=e; i++) {
@@ -365,8 +366,8 @@ range_list::check_nonmeta_indices(context& c) const {
 		return return_type(NULL);
 	}
 
-	count_ptr<nonmeta_index_list>
-		ret(new nonmeta_index_list);
+	const count_ptr<nonmeta_index_list>
+		ret(new nonmeta_index_list(size()));
 	NEVER_NULL(ret);
 	copy(temp.begin(), temp.end(), back_inserter(*ret));
 	return ret;
@@ -401,7 +402,7 @@ range_list::check_meta_ranges(context& c) const {
 	bool is_valid_range = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
-	check_type::const_iterator i = temp.begin();
+	check_type::const_iterator i(temp.begin());
 	int k = 1;
 	for ( ; i!=temp.end(); i++, k++) {
 		if (!*i) {
@@ -481,9 +482,9 @@ range_list::check_meta_ranges(context& c) const {
 		cerr << "Failed to construct a sparse range list!  " << endl;
 		return return_type(NULL);
 	} else if (is_static_constant) {
-		check_type::const_iterator j = temp.begin();
+		check_type::const_iterator j(temp.begin());
 		const count_ptr<const_range_list>
-			ret(new const_range_list);
+			ret(new const_range_list(size()));
 		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
 			const count_ptr<pint_expr> p(j->is_a<pint_expr>());
@@ -524,9 +525,9 @@ range_list::check_meta_ranges(context& c) const {
 		}
 		return ret;
 	} else if (is_initialized) {
-		check_type::const_iterator j = temp.begin();
+		check_type::const_iterator j(temp.begin());
 		const count_ptr<dynamic_meta_range_list>
-			ret(new dynamic_meta_range_list);
+			ret(new dynamic_meta_range_list(size()));
 		for ( ; j!=temp.end(); j++) {
 			if (j->is_a<pint_expr>()) {
 				// convert N to 0..N-1
@@ -565,8 +566,8 @@ good_bool
 dense_range_list::postorder_check_meta(meta_check_type& temp, 
 		context& c) const {
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
 		const expr::meta_return_type o((*i)->check_meta_expr(c));
@@ -625,8 +626,8 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 	bool is_pint_expr = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
-	check_type::const_iterator i = temp.begin();
-	const check_type::const_iterator e = temp.end();
+	check_type::const_iterator i(temp.begin());
+	const check_type::const_iterator e(temp.end());
 	for ( ; i!=e; i++) {
 		STACKTRACE("for-loop");
 		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
@@ -670,9 +671,9 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 		return return_type(NULL);
 	} else if (is_static_constant) {
 		STACKTRACE("is-constant");
-		check_type::const_iterator j = temp.begin();
+		check_type::const_iterator j(temp.begin());
 		const count_ptr<const_range_list>
-			ret(new const_range_list);
+			ret(new const_range_list(size()));
 		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
 			INVARIANT(j->is_a<const pint_expr>());
@@ -690,9 +691,9 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 		return ret;
 	} else if (is_initialized) {
 		STACKTRACE("is-initialized");
-		check_type::const_iterator j = temp.begin();
+		check_type::const_iterator j(temp.begin());
 		const count_ptr<dynamic_meta_range_list>
-			ret(new dynamic_meta_range_list);
+			ret(new dynamic_meta_range_list(size()));
 		for ( ; j!=temp.end(); j++) {
 			// should be safe to do this, since we checked above
 			ret->push_back(count_ptr<pint_range>(
