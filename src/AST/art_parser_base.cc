@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.26.2.2 2005/07/05 07:59:28 fang Exp $
+	$Id: art_parser_base.cc,v 1.26.2.3 2005/07/06 00:59:20 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -242,40 +242,17 @@ chan_type::check_base_chan_type(context& c) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: guarantee that channels don't depend on relaxed template formals
+ */
 chan_type::return_type
 chan_type::check_type(context& c) const {
-//	STACKTRACE_VERBOSE;
-//	cerr << "Fang, finish chan_type::check_type()!" << endl;
-#if 0
-	need count_ptr<const built_in_chan_type_reference>...
-	constructed from dtypes
-	will phase out add_chan_member...
-#endif
 	const data_type_ref_list::return_type
 		ret(dtypes->check_builtin_channel_type(c));
 	if (dir)
 		ret->set_direction(dir->text[0]);
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Needs to return a channel definition reference.  
-	Here, direction matters.  
-	Problem, returns a never_ptr<definition_base>, 
-		but refers to implicit built-in chan type.  
-	Someone has to own it!
-	See comments in class entity::built_in_channel_def. 
-	\return channel definition reference.
- */
-type_base::return_type
-chan_type::check_definition(context& c) const {
-	STACKTRACE("chan_type::check_build()");
-	cerr << "chan_type::check_build(): FINISH ME!" << endl;
-	return type_base::return_type(NULL);
-}
-#endif
 
 //=============================================================================
 // class statement method definitions
@@ -699,7 +676,6 @@ generic_type_ref::get_temp_spec(void) const {
 	arguments.  The type reference is used for creating instantiations.  
 	\return valid type-checked type-reference if successful, 
 		else NULL (does not exit on failure).  
-	TODO: real handling of template_actuals
  */
 generic_type_ref::return_type
 generic_type_ref::check_type(context& c) const {

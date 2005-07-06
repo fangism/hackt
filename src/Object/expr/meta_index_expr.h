@@ -3,7 +3,7 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.1.2.1 2005/07/05 01:16:29 fang Exp $
+	$Id: meta_index_expr.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_INDEX_EXPR_H__
@@ -55,6 +55,9 @@ virtual bool
 
 virtual bool
 	is_static_constant(void) const = 0;
+
+virtual	bool
+	is_relaxed_formal_dependent(void) const = 0;
 
 virtual bool
 	is_loop_independent(void) const = 0;

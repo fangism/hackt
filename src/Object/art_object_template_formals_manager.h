@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.5.4.3 2005/07/04 01:54:05 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.5.4.4 2005/07/06 00:59:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -102,6 +102,9 @@ public:
 
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;
+
+	bool
+	probe_relaxed_template_formal(const string& id) const;
 
 	size_t
 	lookup_template_formal_position(const string& id) const;

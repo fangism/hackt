@@ -2,6 +2,24 @@
 
 2005-07-05	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-15:
+	  Semantics: forbid the use of relaxed template formal parameters
+		(in definition context) in strict template arguments, 
+		and in array sizes and references.  
+		(Later: also forbidden in loops and conditionals)
+		They are only allowed in other relaxed template arguments.  
+	  Added tests test/parser/template/05{1,2,3,4}.in to catch 
+		when relaxed parameters are misused.  
+	  Implemented expressions' is_relaxed_formal_dependent()
+		to check for relaxed formal dependence.  
+	  See important NOTES entry 2005-07-05 about complication with
+		checking dependence on relaxed formals that have been 
+		passed to other parameters through assignments.  
+		Next few revisions may addres that address this issue
+		at the cost of adding tracking bits to every
+		constant parameter value.  (or we may punt)
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-14:
 	  Grammar: forbid default template formals in relaxed parameter lists.  
 		Few tests (artc-stderr) updated to reflect change.  

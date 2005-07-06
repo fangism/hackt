@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.1.2.1 2005/07/05 01:16:33 fang Exp $
+	$Id: pint_unary_expr.h,v 1.1.2.2 2005/07/06 00:59:32 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -63,6 +63,9 @@ public:
 
 	bool
 	is_static_constant(void) const;
+
+	bool
+	is_relaxed_formal_dependent(void) const;
 
 	bool
 	is_loop_independent(void) const;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.23.2.2 2005/07/05 07:59:30 fang Exp $
+	$Id: art_parser_formal.cc,v 1.23.2.3 2005/07/06 00:59:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -106,6 +106,16 @@ data_param_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
+#if 1
+		// we must be in port formal context for some definition
+		INVARIANT(c.get_current_prototype());
+		if (d->is_relaxed_formal_dependent()) {
+			cerr << "ERROR in data-param-id at " << where(*dim) << 
+				": array sizes are not allowed to "
+				"depend on relaxed formal parameters." << endl;
+			THROW_EXIT;
+		}
+#endif
 		t = c.add_port_formal(*id, d);
 		// reuse generic definition_base::add_port (virtual)
 	} else {
@@ -255,6 +265,16 @@ port_formal_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
+#if 1
+		// we must be in port formal context for some definition
+		INVARIANT(c.get_current_prototype());
+		if (d->is_relaxed_formal_dependent()) {
+			cerr << "ERROR in port-formal-id at " << where(*dim) << 
+				": array sizes are not allowed to "
+				"depend on relaxed formal parameters." << endl;
+			THROW_EXIT;
+		}
+#endif
 		t = c.add_port_formal(*name, d);
 	} else {
 		t = c.add_port_formal(*name);
@@ -409,6 +429,10 @@ template_formal_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
+		// NOTE: no need to check for relaxed formal dependence
+		// is syntactically impossible for strict parameters to
+		// reference relaxed parameter and relaxed are allowed
+		// to reference earlier relaxed.  
 		t = c.add_template_formal(*name, d, default_val);
 	} else {
 		t = c.add_template_formal(*name, default_val);

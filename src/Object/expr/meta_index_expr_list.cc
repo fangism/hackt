@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.1.2.2 2005/07/05 21:02:20 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.1.2.3 2005/07/06 00:59:30 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -558,6 +558,22 @@ dynamic_meta_index_list::is_static_constant(void) const {
 			return false;
 	}
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
+	const_iterator i(begin());
+	for ( ; i!=end(); i++) {
+		NEVER_NULL(*i);
+		if ((*i)->is_relaxed_formal_dependent()) {
+			cerr << "ERROR: index at position " <<
+				distance(begin(), i)+1 << " is dependent "
+				"on a relaxed formal parameter." << endl;
+			return true;
+		}
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

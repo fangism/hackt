@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.3 2005/07/05 07:59:43 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.4 2005/07/06 00:59:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -286,12 +286,27 @@ instance_collection_base::add_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Checks whether or not this is a relaxed template formal parameter.  
+ */
+bool
+instance_collection_base::is_relaxed_template_formal(void) const {
+	const never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
+	if (def) {
+		return def->probe_relaxed_template_formal(key);
+	} else return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Queries whether or not this is a template formal, by 
 	checking its membership in the owner.  
 	\return 0 (false) if is not a template formal, 
 		otherwise returns the position (1-indexed)
 		of the instance referenced, 
 		useful for determining template parameter equivalence.  
+	TODO: is there potential confusion here if the key shadows
+		a declaration else where?
  */
 size_t
 instance_collection_base::is_template_formal(void) const {

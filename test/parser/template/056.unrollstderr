@@ -1,0 +1,53 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3c02af0	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	57
+	3	 0x3c02b10	procdefn	0	57	125
+	4	 0x3c02ba4	proccoll	0	125	168
+	5	 0x3c02c00	procinst	0	168	188
+	6	 0x3c02c20	proctprf	0	188	208
+	7	 0x3c02c40	procdefn	0	208	280
+	8	 0x3c02cd4	pintcoll	0	280	317
+	9	 0x3c02d30	pintinst	0	317	333
+	10	 0x39a1028	cnstpi__	0	333	345
+	11	 0x3c02d44	pintcoll	0	345	382
+	12	 0x3c02da0	pintinst	0	382	398
+	13	 0x3c02db0	dprmlst_	0	398	414
+	14	 0x3c02dc0	dprmlst_	0	414	430
+	15	 0x3c02dd0	spimref_	0	430	450
+	16	 0x3c02e04	pintcoll	0	450	487
+	17	 0x3c02e60	pintinst	0	487	503
+
+In module created from: ./056.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (declared) bar<
+      pint<> A (default = 6)
+      ><
+      pint<> B
+      >(
+      )
+      In definition "bar", we have: {
+        A = pint<> A (default = 6)
+        B = pint<> B
+      }
+
+    foo = process-definition (defined) foo<>
+<
+      pint<> W
+      >(
+      )
+      In definition "foo", we have: {
+        my_bar = bar<6><pint-inst-ref ::foo::W> my_bar
+        W = pint<> W
+      }
+
+}
+

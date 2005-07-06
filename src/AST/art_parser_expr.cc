@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24.4.4 2005/07/05 07:59:30 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.5 2005/07/06 00:59:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -92,6 +92,7 @@ namespace parser {
 using std::copy;
 using std::back_inserter;
 using std::transform;
+using std::distance;
 using std::_Select1st;
 using std::_Select2nd;
 using util::back_insert_assigner;
@@ -416,6 +417,9 @@ template_argument_list_pair::rightmost(void) const {
 	Checks template expressions.  
 	TODO: how to signal error?
 	TODO: upgrade expressions to generalized template arguments.  
+	TODO: make sure strict paramters do not depend on relaxed, 
+		relaxed parameters may depend on relaxed parameters.  
+	TODO: sugar: check for const_param expressions to make const list?
  */
 template_argument_list_pair::return_type
 template_argument_list_pair::check_template_args(context& c) const {
@@ -424,14 +428,45 @@ template_argument_list_pair::check_template_args(context& c) const {
 	if (strict_args) {
 		expr_list::checked_meta_exprs_type temp;
 		strict_args->postorder_check_meta_exprs(temp, c);
+#if 0
+		if (c.get_current_open_definition()) {
+			// no relaxed parameter dependence allowed!
+			typedef	expr_list::checked_meta_exprs_type::const_iterator
+					const_iterator;
+			const_iterator i(temp.begin());
+			const const_iterator e(temp.end());
+			for ( ; i!=e; i++) {
+			if (*i && (*i)->is_relaxed_formal_dependent()) {
+				cerr << "ERROR: strict template arguments may "
+					"not depend on relaxed formal "
+					"parameters, got: ";
+				(*i)->dump(cerr) << " at position " <<
+					distance<const_iterator>(
+						temp.begin(), i)+1 <<
+					" in list at " << where(*this) << endl;
+				THROW_EXIT;
+			} // else NULL, is ok
+			}
+		}
+		// else not in definition context, cannot possibly
+		// depend on formal parameters.  
+#endif
 		// NULL are allowed, where should we check?
 		copy(temp.begin(), temp.end(), back_inserter(*strict));
+		if (strict->is_relaxed_formal_dependent()) {
+			cerr << "ERROR at " << where(*this) <<
+				": strict template arguments may never "
+				"depend on relaxed formal parameters." << endl;
+			THROW_EXIT;
+		}
 	}
 	const count_ptr<dynamic_param_expr_list>
 		relaxed(relaxed_args ? new dynamic_param_expr_list : NULL);
 	if (relaxed_args) {
 		expr_list::checked_meta_exprs_type temp;
 		relaxed_args->postorder_check_meta_exprs(temp, c);
+		// relaxed arguments are allowed to depend on anything
+		// because they are relaxed
 		// NULL are allowed, where should we check?
 		copy(temp.begin(), temp.end(), back_inserter(*relaxed));
 	}

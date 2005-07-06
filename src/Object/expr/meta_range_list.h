@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.1.2.1 2005/07/05 01:16:30 fang Exp $
+	$Id: meta_range_list.h,v 1.1.2.2 2005/07/06 00:59:31 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_RANGE_LIST_H__
@@ -49,6 +49,9 @@ virtual	ostream&
 
 virtual	bool
 	is_static_constant(void) const = 0;
+
+virtual	bool
+	is_relaxed_formal_dependent(void) const = 0;
 
 virtual	const_range_list
 	static_overlap(const meta_range_list& r) const = 0;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.28.2.2 2005/07/05 07:59:30 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28.2.3 2005/07/06 00:59:22 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -473,6 +473,20 @@ instance_array::check_build(context& c) const {
 				where(*ranges) << endl;
 			THROW_EXIT;
 		}
+		// TODO: in definition context, array sizes may NOT 
+		// depend on relaxed template formals
+#if 1
+		if (c.get_current_open_definition()) {
+			if (d->is_relaxed_formal_dependent()) {
+				cerr << "ERROR in instance-array declaration "
+					"at " << where(*ranges) <<
+					": array sizes are not allowed to "
+					"depend on relaxed formal parameters."
+					<< endl;
+				THROW_EXIT;
+			}
+		}
+#endif
 		const never_ptr<const instance_collection_base>
 			t(c.add_instance(*id, d));
 		// if there was error, would've THROW_EXIT'd (temporary)
@@ -823,6 +837,11 @@ loop_instantiation::rightmost(void) const {
 	return rp->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: make sure loop bounds do not depend on relaxed formals, 
+		if in definition context.
+ */
 never_ptr<const object>
 loop_instantiation::check_build(context& c) const {
 	cerr << "Fang, write loop_instantiation::check_build()!" << endl;
@@ -896,13 +915,15 @@ conditional_instantiation::rightmost(void) const {
 	return gd->rightmost();
 }
 
-#if 1
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: make sure condition does NOT depend on relaxed formal parameter.  
+ */
 never_ptr<const object>
 conditional_instantiation::check_build(context& c) const {
 	cerr << "Fang, write conditional_instantiation::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
 }
-#endif
 
 //=============================================================================
 // class type_completion_statement method definitions

@@ -1,0 +1,6 @@
+// "050.in" should fail -- defaulting of relaxed parameters forbidden
+
+template <><pint W, X=W>
+defproc foo();
+
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.6 2005/07/05 21:02:18 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.7 2005/07/06 00:59:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -103,6 +103,18 @@ never_ptr<const param_instance_collection>
 template_formals_manager::lookup_template_formal(const string& id) const {
 	return static_cast<const template_formals_map_type&>
 		(template_formals_map)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks whether referenced instance is a relaxed template formal.
+ */
+bool
+template_formals_manager::probe_relaxed_template_formal(
+		const string& id) const {
+	const size_t ind = lookup_template_formal_position(id);
+	// remember: index is 1-indexed
+	return ind > strict_template_formals_list.size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

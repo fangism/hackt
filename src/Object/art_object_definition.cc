@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.4 2005/07/05 07:59:35 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.5 2005/07/06 00:59:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -138,6 +138,12 @@ definition_base::pair_dump(ostream& o) const {
 never_ptr<const param_instance_collection>
 definition_base::lookup_template_formal(const string& id) const {
 	return template_formals.lookup_template_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+definition_base::probe_relaxed_template_formal(const string& id) const {
+	return template_formals.probe_relaxed_template_formal(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.13.4.1 2005/07/05 07:59:41 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.13.4.2 2005/07/06 00:59:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -247,6 +247,9 @@ virtual	~simple_meta_instance_reference_base();
 
 	bool
 	has_static_constant_dimensions(void) const;
+
+	bool
+	is_relaxed_formal_dependent(void) const;
 
 	const_range_list
 	static_constant_dimensions(void) const;

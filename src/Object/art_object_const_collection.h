@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.2 2005/07/05 07:59:34 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.3 2005/07/06 00:59:23 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
@@ -99,6 +99,9 @@ public:
 
 	bool
 	is_static_constant(void) const { return true; }
+
+	bool
+	is_relaxed_formal_dependent(void) const { return false; }
 
 	count_ptr<const parent_const_type>
 	static_constant_param(void) const;

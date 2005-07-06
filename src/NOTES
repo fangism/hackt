@@ -3,6 +3,22 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-05:
+	Enforcing that things that shouldn't depend on relaxed formal
+		parameters... don't depend.  
+	Difficulty: what if dependence is established through
+		expression assignment? e.g. pint x = y, where y is relaxed.
+	Difficulty: what if is done through arrays and collectives?
+		(don't worry until complex aggregate expressions)
+	Proposal: need mechanism for tracking origin... for EVERY
+		value that may exist!  That could get expensive fast...
+		Store extra 'poison' bit with each const_param, yuck???
+		What about const-collection? pair<value_type, bool>?
+		That's going to f*** up the binary format once more...
+		But this will make room for more value attributes.  
+
+
+//=============================================================================
 2005-07-01:
 	resolved CHP questions, answers inlined in the 2005-06-11 entry.
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.23.2.3 2005/07/04 01:54:01 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23.2.4 2005/07/06 00:59:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -114,6 +114,9 @@ virtual	never_ptr<const scopespace>
 
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;
+
+	bool
+	probe_relaxed_template_formal(const string&) const;
 
 	size_t
 	lookup_template_formal_position(const string& id) const;

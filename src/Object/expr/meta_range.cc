@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.1.2.1 2005/07/05 07:59:53 fang Exp $
+ 	$Id: meta_range.cc,v 1.1.2.2 2005/07/06 00:59:31 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_CC__
@@ -196,6 +196,13 @@ pint_range::is_sane(void) const {
 bool
 pint_range::is_static_constant(void) const {
 	return lower->is_static_constant() && upper->is_static_constant();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_range::is_relaxed_formal_dependent(void) const {
+	return lower->is_relaxed_formal_dependent() ||
+		upper->is_relaxed_formal_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

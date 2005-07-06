@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31.4.3 2005/07/05 07:59:40 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.4 2005/07/06 00:59:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -285,6 +285,19 @@ simple_meta_instance_reference_base::get_base_def(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true as soon as it finds a member dependent on 
+		a relaxed template formal.  
+ */
+bool
+simple_meta_instance_reference_base::is_relaxed_formal_dependent(void) const {
+	return get_inst_base()->is_relaxed_template_formal() ||
+		(array_indices ?
+		array_indices->is_relaxed_formal_dependent()
+		: false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Queries whether or not there were any dynamic instances added
 	to the collection from the initial instantiation up to the
 	point of references of this instance reference.  
@@ -294,7 +307,7 @@ simple_meta_instance_reference_base::get_base_def(void) const {
  */
 bool
 simple_meta_instance_reference_base::is_static_constant_collection(void) const {
-	instantiation_state iter = inst_state;
+	instantiation_state iter(inst_state);
 	const instantiation_state
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {

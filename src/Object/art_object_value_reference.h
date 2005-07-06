@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.3 2005/07/05 17:25:44 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.4 2005/07/06 00:59:29 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -134,6 +134,9 @@ public:
 
 	bool
 	is_static_constant(void) const;
+
+	bool
+	is_relaxed_formal_dependent(void) const;
 
 	bool
 	is_unconditional(void) const;

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.1.2.1 2005/07/05 01:16:27 fang Exp $
+	$Id: const_range_list.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_RANGE_LIST_H__
@@ -66,6 +66,9 @@ public:
 
 	bool
 	is_static_constant(void) const { return true; }
+
+	bool
+	is_relaxed_formal_dependent(void) const { return false; }
 
 	const_range_list
 	static_overlap(const meta_range_list& r) const;

@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.1.2.1 2005/07/05 07:59:53 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.1.2.2 2005/07/06 00:59:31 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -554,6 +554,29 @@ dynamic_meta_range_list::dump(ostream& o) const {
 size_t
 dynamic_meta_range_list::size(void) const {
 	return list_type::size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if any of the range depend on a relaxed formal parameter
+		and also prints an error.  
+ */
+bool
+dynamic_meta_range_list::is_relaxed_formal_dependent(void) const {
+	const_iterator i(begin());
+	for ( ; i!=end(); i++) {
+		const count_ptr<const pint_range> pr(*i);
+		NEVER_NULL(pr);
+		if (pr->is_relaxed_formal_dependent()) {
+			cerr << "ERROR: range at position " <<
+				std::distance(begin(), i)+1 <<
+				" depends on a formal parameter (forbidden)."
+				<< endl;
+			return true;
+		}
+		// else continue checking
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

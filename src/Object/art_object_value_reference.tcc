@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.5 2005/07/05 17:25:45 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.6 2005/07/06 00:59:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -219,6 +219,13 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
 	return common_base_type::is_static_constant();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {
+	return common_base_type::is_relaxed_formal_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
