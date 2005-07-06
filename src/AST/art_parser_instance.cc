@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.28.2.4 2005/07/06 20:14:24 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28.2.5 2005/07/06 23:11:22 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -414,6 +414,8 @@ instance_base::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Type checks a scalar instance declaration, and registers
+		its instantiation statement.  
 	Eventually don't return top_namespace, 
 	but a pointer to the created instance_base
 	so that it may be used by instance_alias.  
@@ -424,11 +426,10 @@ instance_base::check_build(context& c) const {
 	STACKTRACE("instance_base::check_build()");
 
 	// uses c.current_fundamental_type
-#if 1
+	const count_ptr<const fundamental_type_reference>
+		type(c.get_current_fundamental_type());
+	INVARIANT(type);
 	if (relaxed_args) {
-		const count_ptr<const fundamental_type_reference>
-			type(c.get_current_fundamental_type());
-		INVARIANT(type);
 		if (type->is_strict()) {
 			type->dump(cerr << "ERROR: current type ") <<
 				" is already strict and hence, does not "
@@ -438,9 +439,14 @@ instance_base::check_build(context& c) const {
 			return never_ptr<const object>(NULL);
 		}
 		// TODO: not done yet... need to alter c.add_instance
+	} else if (type->is_relaxed()) {
+		// this is a scalar declaration, so the type MUST be strict
+		cerr << "ERROR: scalar declarations require relaxed actual "
+			"parameters for definitions that have them.  " <<
+			where(*this) << endl;
+		return never_ptr<const object>(NULL);
 	}
 	// otherwise do nothing different from before.  
-#endif
 	const never_ptr<const instance_collection_base>
 		inst(c.add_instance(*id));	// check return value?
 	if (!inst) {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.9 2005/07/06 20:14:27 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.10 2005/07/06 23:11:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -349,12 +349,23 @@ template_formals_manager::certify_template_arguments(
 			strict_template_formals_list) :
 		partial_check_null_template_argument(
 			strict_template_formals_list));
-	const count_ptr<param_expr_list> rpl(t.get_relaxed_args());
+	// NOTE: at this phase of certification, the relaxed actuals
+	// are allowed to be ommitted, and thus should not be filled in.  
+	// Also note: relaxed formals aren't allowed to have default values.
+	// we use the const variant which doesn't modify the list
+	const count_ptr<const param_expr_list> rpl(t.get_relaxed_args());
+#if 0
 	const good_bool rg(rpl ?
 		rpl->certify_template_arguments(
 			relaxed_template_formals_list) :
 		partial_check_null_template_argument(
 			relaxed_template_formals_list));
+#else
+	const good_bool rg(rpl ?
+		rpl->certify_template_arguments_without_defaults(
+			relaxed_template_formals_list) : good_bool(true));
+		// if relaxed is NULL, then accept for now
+#endif
 	return sg && rg;
 }
 

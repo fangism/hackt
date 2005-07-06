@@ -4,5 +4,5 @@
 template <pint Q=5><pint R>
 defproc foo();
 
-foo<13> bar;	// should die, insufficient default parameters
+foo<13> bar;	// should die: scalar instance requires strict type
 

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.24.2.3 2005/07/06 20:14:28 fang Exp $
+	$Id: art++-parse.yy,v 1.24.2.4 2005/07/06 23:11:24 fang Exp $
  */
 
 %{
@@ -578,6 +578,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
+%type	<_expr_list>	shift_expr_list shift_expr_list_in_angles
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
@@ -2022,14 +2023,30 @@ strict_relaxed_template_arguments
 optional_template_arguments_in_angles
 /*	: member_index_expr_list_in_angles	*/
 /*	replaced with shift_expr_optional_list to eliminate S/R on '>' */
-	: shift_expr_optional_list_in_angles
+/*	: shift_expr_optional_list_in_angles	*/
+	: shift_expr_list_in_angles
+/*
+	if angles are given, then expressions are required because
+	relaxed template formals are forbidden from having default values.  
+*/
 		{ $$ = $1; }
 	| { $$ = NULL; }
+	;
+
+shift_expr_list_in_angles
+	: '<' shift_expr_list '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 shift_expr_optional_list_in_angles
 	: '<' shift_expr_optional_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+shift_expr_list
+	: shift_expr_list ',' shift_expr
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| shift_expr { $$ = new expr_list($1); }
 	;
 
 shift_expr_optional_list

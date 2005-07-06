@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.1.2.2 2005/07/06 00:59:31 fang Exp $
+	$Id: param_expr_list.h,v 1.1.2.3 2005/07/06 23:11:24 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -94,6 +94,10 @@ protected:
 public:
 virtual	good_bool
 	certify_template_arguments(const template_formals_list_type&) = 0;
+
+virtual	good_bool
+	certify_template_arguments_without_defaults(
+		const template_formals_list_type&) const = 0;
 
 };	// end class param_expr_list
 

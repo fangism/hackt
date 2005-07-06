@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.26.2.3 2005/07/06 00:59:20 fang Exp $
+	$Id: art_parser_base.cc,v 1.26.2.4 2005/07/06 23:11:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -770,6 +770,11 @@ data_type_ref_list::~data_type_ref_list() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks the list of type references, which must be data types.  
+	NOTE: the data types used must be strict, so that we may infer
+		that all built-in channel types are strict.  
+	This was arbitrarily chosen as the policy (2005-07-06) for no
+		reason other than a simplfying constraint.  If you should
+		ever find a reason to change this, talk to fangism.  
  */
 data_type_ref_list::return_type
 data_type_ref_list::check_builtin_channel_type(context& c) const {
@@ -790,7 +795,7 @@ data_type_ref_list::check_builtin_channel_type(context& c) const {
 	} else {
 		// copy to user_def_chan
 		ret->reserve_datatypes(size());
-		const_iterator j = begin();
+		const_iterator j(begin());
 		for ( ; i!=e; i++, j++) {
 			const count_ptr<const data_type_reference>
 				dtr(i->is_a<const data_type_reference>());
@@ -798,6 +803,13 @@ data_type_ref_list::check_builtin_channel_type(context& c) const {
 				cerr << "Channels can only carry data-types, ";
 				(*i)->what(cerr << "but resolved a ") <<
 					" at " << where(**j) << endl;
+				return return_type(NULL);
+			} else if (dtr->is_relaxed()) {
+				cerr << "ERROR: data types used in "
+					"channel-specifications must be "
+					"strictly typed." << endl;
+				dtr->dump(cerr << "\tgot: ") <<
+					" in " << where(*this) << endl;
 				return return_type(NULL);
 			} else {
 				ret->add_datatype(dtr);

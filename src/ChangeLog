@@ -2,6 +2,31 @@
 
 2005-07-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-18:
+	  built-in channel-types, must now be composed of strict
+		data types, so we may deduce that their composition
+		is also strict.  Haven't decided about user-defined 
+		channel types yet.  Special case is made for 
+		built-in channel types in
+		fundamental_type_reference::is_strict().
+	  instance_base::check_build() now checks strict-relaxed 
+		appropriateness of the current fundamental type
+		against the optional relaxed template arguments.  
+		TODO: add bunch of test-cases for this.  
+		TODO: distinguish between scalar and array declarations.  
+	  template_formals_manager::certify_template_arguments():
+		Treats relaxed actuals differently, does NOT
+		automatically fill in default relaxed actuals, 
+		only check against them.  
+	  Grammar: relaxed template actual lists now mandate expressions
+		in every position, because relaxed template formals
+		are not allowed to have default values.  
+	  Uses new (pure virtual) param_expr_list::
+		certifty_template_arguments_without_defaults() const.
+	  Print ICE message in const_param_expr_list::certify...
+	  Updated some test cases to reflect the above changes.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-17:
 	  Added relaxed template arguments in instantiation statements
 		for the AST, also added field to instantiation statement

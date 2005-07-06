@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.1.2.3 2005/07/06 04:44:41 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.1.2.4 2005/07/06 23:11:23 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -84,6 +84,10 @@ public:
 
 	good_bool
 	certify_template_arguments(const template_formals_list_type&);
+
+	good_bool
+	certify_template_arguments_without_defaults(
+		const template_formals_list_type&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

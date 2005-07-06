@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.1.2.4 2005/07/06 04:44:42 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.1.2.5 2005/07/06 23:11:23 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -265,6 +265,12 @@ const_param_expr_list::unroll_resolve(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks template actuals against formal parameters, 
+	filling in the blanks with default values and expressions
+	where available.  
+	NOTE: non-constness.  
+ */
 good_bool
 const_param_expr_list::certify_template_arguments(
 		const template_formals_list_type& tfl) {
@@ -325,9 +331,19 @@ if (a_size != f_size) {
 			// else is error
 			// TODO: catch case where default is non-const
 			// but this method is called.  
+			const count_ptr<const param_expr>
+				ex(pinst->default_value());
 			const count_ptr<const const_param>
-				default_expr(pinst->default_value()
-					.is_a<const const_param>());
+				default_expr(ex.is_a<const const_param>());
+			if (ex && !default_expr) {
+				cerr << "Internal compiler error: (KNOWN BUG) "
+					"in const_param_expr_list::"
+					"certify_template_actuals(): " << endl;
+				cerr << "\tgot non-const param default "
+					"expression where const was expected."
+					<< endl;
+				THROW_EXIT;
+			}
 			if (!default_expr) {
 				cerr << "ERROR: missing template actual at position "
 					<< distance(tfl.begin(), f_iter)+1 <<
@@ -338,6 +354,49 @@ if (a_size != f_size) {
 				*p_iter = default_expr;
 			}
 		}
+	}
+	return good_bool(true);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks template actuals against formal parameters, 
+	expecting all non-NULL expressions.  
+	This variant remains const, and does not supply default expressions.  
+ */
+good_bool
+const_param_expr_list::certify_template_arguments_without_defaults(
+		const template_formals_list_type& tfl) const {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	template_formals_list_type::const_iterator f_iter(tfl.begin());
+	const template_formals_list_type::const_iterator f_end(tfl.end());
+if (a_size != f_size) {
+	cerr << "ERROR: number of relaxed template actuals doesn\'t match "
+		"the number of formal parameters." << endl;
+	cerr << "\tgot: " << a_size << ", expected: " << f_size << endl;
+	return good_bool(false);
+} else {
+	const_iterator p_iter(begin());
+	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
+		// need method to check param_instance_collection against param_expr
+		// eventually also work for complex aggregate types!
+		// "I promise this pointer is only local."  
+		const count_ptr<const const_param> pex(*p_iter);
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		NEVER_NULL(pex);
+		// type-check assignment, conservative w.r.t. arrays
+		if (!pinst->may_type_check_actual_param_expr(*pex).good) {
+			cerr << "ERROR: template formal and actual "
+				"types mismatch at position " <<
+				distance(tfl.begin(), f_iter)+1
+				<< ". " << endl;
+			return good_bool(false);
+		}
+		// else continue checking successive arguments
 	}
 	return good_bool(true);
 }
@@ -720,6 +779,11 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks template actuals against formals.  
+	If actual is missing, will use default value/expression from
+	the formal value parameter if available.  
+ */
 good_bool
 dynamic_param_expr_list::certify_template_arguments(
 		const template_formals_list_type& tfl) {
@@ -786,6 +850,50 @@ if (a_size != f_size) {
 				*p_iter = default_expr;
 			}
 		}
+	}
+	// end of checking reached, everything passed
+	return good_bool(true);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks template actuals against formals.  
+	Does not automatically use default values.  
+	\pre Actuals must be present in every position.  
+ */
+good_bool
+dynamic_param_expr_list::certify_template_arguments_without_defaults(
+		const template_formals_list_type& tfl) const {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	template_formals_list_type::const_iterator f_iter(tfl.begin());
+	const template_formals_list_type::const_iterator f_end(tfl.end());
+if (a_size != f_size) {
+	cerr << "ERROR: number of relaxed template actuals doesn\'t match "
+		"the number of formal parameters." << endl;
+	cerr << "\tgot: " << a_size << ", expected: " << f_size << endl;
+	return good_bool(false);
+} else {
+	const_iterator p_iter(begin());
+	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
+		// need method to check param_instance_collection against param_expr
+		// eventually also work for complex aggregate types!
+		// "I promise this pointer is only local."  
+		const count_ptr<const param_expr> pex(*p_iter);
+		const never_ptr<const param_instance_collection>
+			pinst(*f_iter);
+		NEVER_NULL(pinst);
+		NEVER_NULL(pex);
+		// type-check assignment, conservative w.r.t. arrays
+		if (!pinst->may_type_check_actual_param_expr(*pex).good) {
+			cerr << "ERROR: template formal and actual "
+				"types mismatch at position " <<
+				distance(tfl.begin(), f_iter)+1
+				<< ". " << endl;
+			return good_bool(false);
+		}
+		// else continue checking successive arguments
 	}
 	// end of checking reached, everything passed
 	return good_bool(true);

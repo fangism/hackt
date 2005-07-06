@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.8 2005/07/06 20:14:27 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.9 2005/07/06 23:11:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -112,11 +112,17 @@ fundamental_type_reference::get_template_params(void) const {
 /**
 	Whether or not this type is complete, i.e. with relaxed
 	actuals if the definitions template signature has any relaxed formals.  
-	NOTE: this doesn't work with built-in channel types!
+
+	We make an exception for built-in channel types, which, 
+	as of (2005-07-06) by construction, are only composed of
+	strict data types.  See Implementation note in:
+	AST::parser::data_type_ref_list::check_builtin_channel_type().
  */
 bool
 fundamental_type_reference::is_strict(void) const {
-	INVARIANT(!IS_A(const builtin_channel_type_reference*, this));
+if (IS_A(const builtin_channel_type_reference*, this)) {
+	return true;
+}
 	const bool expects =
 		get_base_def()->get_template_formals_manager()
 			.has_relaxed_formals();

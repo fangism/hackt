@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.1.2.2 2005/07/06 00:59:30 fang Exp $
+	$Id: const_param_expr_list.h,v 1.1.2.3 2005/07/06 23:11:23 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -87,6 +87,10 @@ public:
 
 	good_bool
 	certify_template_arguments(const template_formals_list_type&);
+
+	good_bool
+	certify_template_arguments_without_defaults(
+		const template_formals_list_type&) const;
 
 	good_bool
 	must_validate_template_arguments(

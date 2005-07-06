@@ -1,3 +1,1 @@
-ERROR: missing template actual at position 1 where no default value is given.
-ERROR: failed to make process_type_reference because template argument types do not match.
-ERROR making complete type reference.  [7:1..7]
+ERROR: scalar declarations require relaxed actual parameters for definitions that have them.  [7:9..11]
