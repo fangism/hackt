@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.1 2005/06/25 21:07:22 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.2 2005/07/06 20:14:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
@@ -15,11 +15,16 @@
 
 namespace ART {
 namespace entity {
+class param_expr_list;
 //=============================================================================
 #if 1
 class class_traits<channel_tag>::instantiation_statement_type_ref_base {
+public:
+	typedef	count_ptr<param_expr_list>		relaxed_args_type;
 protected:
 	type_ref_ptr_type				type;
+	// TODO: switch this bad boy over to the default, 
+	// also in chan_traits.h
 protected:
 	instantiation_statement_type_ref_base() : type(NULL) { }
 
@@ -38,6 +43,14 @@ protected:
 		// temporary
 		return type_ref_ptr_type(NULL);
 #endif
+	}
+
+	/**
+		Yeah, I know this is incomplete...
+	 */
+	relaxed_args_type
+	get_relaxed_actuals(void) const {
+		return relaxed_args_type(NULL);
 	}
 
 	static

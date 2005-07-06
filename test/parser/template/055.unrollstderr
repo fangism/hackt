@@ -6,19 +6,19 @@ Persistent Object Manager text dump:
 	2	 0x3c00144	namespc_	0	29	57
 	3	 0x3c02b10	procdefn	0	57	125
 	4	 0x3c02ba4	proccoll	0	125	168
-	5	 0x3c02c00	procinst	0	168	188
-	6	 0x3c02c20	proctprf	0	188	208
-	7	 0x3c02c40	procdefn	0	208	280
-	8	 0x3c02cd4	pintcoll	0	280	317
-	9	 0x3c02d30	pintinst	0	317	333
-	10	 0x3c02d44	pintcoll	0	333	370
-	11	 0x3c02da0	pintinst	0	370	386
-	12	 0x3c02db0	dprmlst_	0	386	402
-	13	 0x39a1028	cnstpi__	0	402	414
-	14	 0x3c02dc0	dprmlst_	0	414	430
-	15	 0x3c02dd0	spimref_	0	430	450
-	16	 0x3c02e04	pintcoll	0	450	487
-	17	 0x3c02e60	pintinst	0	487	503
+	5	 0x3c02c00	procinst	0	168	192
+	6	 0x3c02c20	proctprf	0	192	212
+	7	 0x3c02c40	procdefn	0	212	284
+	8	 0x3c02cd4	pintcoll	0	284	321
+	9	 0x3c02d30	pintinst	0	321	337
+	10	 0x3c02d44	pintcoll	0	337	374
+	11	 0x3c02da0	pintinst	0	374	390
+	12	 0x3c02db0	dprmlst_	0	390	406
+	13	 0x39f2028	cnstpi__	0	406	418
+	14	 0x3c02dc0	dprmlst_	0	418	434
+	15	 0x3c02dd0	spimref_	0	434	454
+	16	 0x3c02e04	pintcoll	0	454	491
+	17	 0x3c02e60	pintinst	0	491	507
 
 In module created from: ./055.in (unrolled)
 In namespace "", we have: {

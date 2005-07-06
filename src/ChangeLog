@@ -2,6 +2,26 @@
 
 2005-07-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-17:
+	  Added relaxed template arguments in instantiation statements
+		for the AST, also added field to instantiation statement
+		type reference base classes (all except params).
+		TODO: later, subclass data type instantiation statments, 
+			so int, bool, and enum don't need relaxed 
+			arguments (pointer to list).  
+	  paresr/art++-parse.yy: now store instead of discard
+		optional instance relaxed template actuals.  
+	  Enabled limited checking of argument collision, but
+		TODO: alter check_template_args to not require complete
+			strict type (with relaxed actuals) unless 
+			declaration is scalar?
+	  Nearly every objunroll test's stderr updated to reflect
+		increase in size of instantiation statement objects.  
+		Increased by 4B (size of pointer index). 
+
+
+2005-07-06	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-48-connect-01-16:
 	  Replaced expression/index/range object lists with vector
 		implementations, also leveraging util::reserve

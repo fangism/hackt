@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.28.2.3 2005/07/06 00:59:22 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28.2.4 2005/07/06 20:14:24 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -387,14 +387,13 @@ actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
 // class instance_base method definitions
 
 CONSTRUCTOR_INLINE
-instance_base::instance_base(const token_identifier* i) :
-		instance_management(), id(i) {
+instance_base::instance_base(const token_identifier* i, const expr_list* a) :
+		instance_management(), id(i), relaxed_args(a) {
 	NEVER_NULL(id);
 }
 
 DESTRUCTOR_INLINE
-instance_base::~instance_base() {
-}
+instance_base::~instance_base() { }
 
 ostream&
 instance_base::what(ostream& o) const {
@@ -408,19 +407,40 @@ instance_base::leftmost(void) const {
 
 line_position
 instance_base::rightmost(void) const {
-	return id->rightmost();
+	if (relaxed_args)
+		return relaxed_args->rightmost();
+	else	return id->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Eventually don't return top_namespace, 
 	but a pointer to the created instance_base
 	so that it may be used by instance_alias.  
+	TODO: actually handle the optional relaxed template arguments.  
  */
 never_ptr<const object>
 instance_base::check_build(context& c) const {
 	STACKTRACE("instance_base::check_build()");
 
 	// uses c.current_fundamental_type
+#if 1
+	if (relaxed_args) {
+		const count_ptr<const fundamental_type_reference>
+			type(c.get_current_fundamental_type());
+		INVARIANT(type);
+		if (type->is_strict()) {
+			type->dump(cerr << "ERROR: current type ") <<
+				" is already strict and hence, does not "
+				"require relaxed template actuals " <<
+				where(*relaxed_args) <<
+				" in this instance declaration.  " << endl;
+			return never_ptr<const object>(NULL);
+		}
+		// TODO: not done yet... need to alter c.add_instance
+	}
+	// otherwise do nothing different from before.  
+#endif
 	const never_ptr<const instance_collection_base>
 		inst(c.add_instance(*id));	// check return value?
 	if (!inst) {
@@ -437,13 +457,13 @@ instance_base::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 instance_array::instance_array(const token_identifier* i, 
-		const range_list* rl) : instance_base(i), ranges(rl) {
+		const expr_list* a, const range_list* rl) :
+		instance_base(i, a), ranges(rl) {
 	// ranges may be NULL, equivalent to declaration base
 }
 
 DESTRUCTOR_INLINE
-instance_array::~instance_array() {
-}
+instance_array::~instance_array() { }
 
 ostream&
 instance_array::what(ostream& o) const {
@@ -456,11 +476,13 @@ instance_array::rightmost(void) const {
 	return ranges->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates an array of instances.  
 	Dimensions may be dense or sparse.  
 	See also template_formal_id::check_build, 
 		port_formal_id::check_build.  
+	NOTE: does not call parent's check_build, nor should it. 
  */
 never_ptr<const object>
 instance_array::check_build(context& c) const {
@@ -475,7 +497,6 @@ instance_array::check_build(context& c) const {
 		}
 		// TODO: in definition context, array sizes may NOT 
 		// depend on relaxed template formals
-#if 1
 		if (c.get_current_open_definition()) {
 			if (d->is_relaxed_formal_dependent()) {
 				cerr << "ERROR in instance-array declaration "
@@ -486,7 +507,6 @@ instance_array::check_build(context& c) const {
 				THROW_EXIT;
 			}
 		}
-#endif
 		const never_ptr<const instance_collection_base>
 			t(c.add_instance(*id, d));
 		// if there was error, would've THROW_EXIT'd (temporary)
@@ -521,8 +541,7 @@ instance_declaration::instance_declaration(const concrete_type_ref* t,
 }
 
 DESTRUCTOR_INLINE
-instance_declaration::~instance_declaration() {
-}
+instance_declaration::~instance_declaration() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(instance_declaration)
 
@@ -559,8 +578,8 @@ instance_declaration::check_build(context& c) const {
 
 CONSTRUCTOR_INLINE
 instance_connection::instance_connection(const token_identifier* i, 
-		const expr_list* a) :
-		instance_base(i), actuals_base(a) {
+		const expr_list* ta, const expr_list* pa) :
+		instance_base(i, ta), actuals_base(pa) {
 }
 
 DESTRUCTOR_INLINE
@@ -751,8 +770,9 @@ connection_statement::check_build(context& c) const {
 	\param s optional semicolon.  
  */
 // CONSTRUCTOR_INLINE
-instance_alias::instance_alias(const token_identifier* i, alias_list* a) :
-		instance_base(i),
+instance_alias::instance_alias(const token_identifier* i, 
+		const expr_list* ta, alias_list* a) :
+		instance_base(i, ta),
 		aliases(
 			(NEVER_NULL(a),
 			// need deep copy of i as an expression, 
@@ -784,6 +804,7 @@ instance_alias::rightmost(void) const {
 	else return instance_base::rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Type-checking for an instance declaration with an 
 	expression assignment or alias-connection list.  

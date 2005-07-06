@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.7 2005/07/05 21:02:19 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.8 2005/07/06 20:14:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -106,6 +106,27 @@ fundamental_type_reference::dump(ostream& o) const {
 const template_actuals&
 fundamental_type_reference::get_template_params(void) const {
 	return template_args;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Whether or not this type is complete, i.e. with relaxed
+	actuals if the definitions template signature has any relaxed formals.  
+	NOTE: this doesn't work with built-in channel types!
+ */
+bool
+fundamental_type_reference::is_strict(void) const {
+	INVARIANT(!IS_A(const builtin_channel_type_reference*, this));
+	const bool expects =
+		get_base_def()->get_template_formals_manager()
+			.has_relaxed_formals();
+	const bool has = template_args.get_relaxed_args();
+	if (has) {
+		INVARIANT(expects);
+		return true;
+	} else {
+		return !expects;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24.4.6 2005/07/06 04:44:37 fang Exp $
+	$Id: art_parser_expr.cc,v 1.24.4.7 2005/07/06 20:14:23 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -430,29 +430,6 @@ template_argument_list_pair::check_template_args(context& c) const {
 	if (strict_args) {
 		expr_list::checked_meta_exprs_type temp;
 		strict_args->postorder_check_meta_exprs(temp, c);
-#if 0
-		if (c.get_current_open_definition()) {
-			// no relaxed parameter dependence allowed!
-			typedef	expr_list::checked_meta_exprs_type::const_iterator
-					const_iterator;
-			const_iterator i(temp.begin());
-			const const_iterator e(temp.end());
-			for ( ; i!=e; i++) {
-			if (*i && (*i)->is_relaxed_formal_dependent()) {
-				cerr << "ERROR: strict template arguments may "
-					"not depend on relaxed formal "
-					"parameters, got: ";
-				(*i)->dump(cerr) << " at position " <<
-					distance<const_iterator>(
-						temp.begin(), i)+1 <<
-					" in list at " << where(*this) << endl;
-				THROW_EXIT;
-			} // else NULL, is ok
-			}
-		}
-		// else not in definition context, cannot possibly
-		// depend on formal parameters.  
-#endif
 		// NULL are allowed, where should we check?
 		copy(temp.begin(), temp.end(), back_inserter(*strict));
 		if (strict->is_relaxed_formal_dependent()) {

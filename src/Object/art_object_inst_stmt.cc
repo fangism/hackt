@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.21.10.5 2005/07/05 07:59:42 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.21.10.6 2005/07/06 20:14:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -27,6 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/art_object_inst_ref_base.h"
+#include "Object/expr/param_expr_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/art_built_ins.h"
@@ -111,10 +112,13 @@ REQUIRES_STACKTRACE_STATIC_INIT
 // class instantiation_statement_base method definitions
 
 #if 0
-/**	Private empty constructor. */
-instantiation_statement_base::instantiation_statement_base(void) :
-//		inst_base(NULL), type_base(NULL),
-		indices(NULL) {
+/**
+	Private empty constructor.
+	Consider a separate inline-header with definitions for these.  
+ */
+instantiation_statement_base::instantiation_statement_base() :
+		instance_management_base(), 
+		indices(NULL), relaxed_args(NULL) {
 }
 #endif
 
@@ -243,6 +247,10 @@ instantiation_statement_base::collect_transient_info_base(
 		"instantiation_statement_base::collect_transient_info_base()");
 	if (indices)
 		indices->collect_transient_info(m);
+#if 0
+	if (relaxed_args)
+		relaxed_args->collect_transient_info(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -250,6 +258,7 @@ void
 instantiation_statement_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, indices);
+//	m.write_pointer(o, relaxed_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -257,6 +266,7 @@ void
 instantiation_statement_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, indices);
+//	m.read_pointer(i, relaxed_args);
 }
 
 //=============================================================================

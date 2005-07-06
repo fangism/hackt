@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.5.4.4 2005/07/06 00:59:29 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.5.4.5 2005/07/06 20:14:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -111,6 +111,9 @@ public:
 
 	good_bool
 	check_null_template_argument(void) const;
+
+	bool
+	has_relaxed_formals(void) const;
 
 	bool
 	equivalent_template_formals(const template_formals_manager&) const;

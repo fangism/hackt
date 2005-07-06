@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.8 2005/07/06 04:44:40 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.9 2005/07/06 20:14:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -115,6 +115,12 @@ template_formals_manager::probe_relaxed_template_formal(
 	const size_t ind = lookup_template_formal_position(id);
 	// remember: index is 1-indexed
 	return ind > strict_template_formals_list.size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+template_formals_manager::has_relaxed_formals(void) const {
+	return !relaxed_template_formals_list.empty();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

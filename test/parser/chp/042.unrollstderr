@@ -2,31 +2,31 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4303520	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4303540	procdefn	0	53	149
-	4	 0x43034c4	chancoll	0	149	187
-	5	 0x43035d0	chaninst	0	187	207
-	6	 0x43035f0	bchntprf	0	207	232
-	7	 0x4303620	datatprf	0	232	252
-	8	 0x4303640	datadefn	0	252	305
-	9	 0x43036e4	chancoll	0	305	343
-	10	 0x4303740	chaninst	0	343	363
-	11	 0x4303760	bchntprf	0	363	388
-	12	 0x4303790	datatprf	0	388	408
-	13	 0x43037b4	dboolcol	0	408	442
-	14	 0x4303810	datainst	0	442	462
-	15	 0x4303830	datatprf	0	462	482
-	16	 0x4303850	CHPloop_	0	482	494
-	17	 0x4303860	CHPloop_	0	494	506
-	18	 0x4303870	CHPrecv_	0	506	526
-	19	 0x4303890	schnnref	0	526	542
-	20	 0x43038a0	sdbnref_	0	542	558
-	21	 0x43038c0	CHPloop_	0	558	570
-	22	 0x43038d0	CHPloop_	0	570	582
-	23	 0x43038e0	CHPsend_	0	582	602
-	24	 0x4303900	schnnref	0	602	618
-	25	 0x4804404	cnstpb__	0	618	627
+	1	 0x3c03710	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	53
+	3	 0x3c03730	procdefn	0	53	149
+	4	 0x3c036b4	chancoll	0	149	187
+	5	 0x3c037c0	chaninst	0	187	207
+	6	 0x3c037e0	bchntprf	0	207	232
+	7	 0x3c03810	datatprf	0	232	252
+	8	 0x3c03830	datadefn	0	252	305
+	9	 0x3c038d4	chancoll	0	305	343
+	10	 0x3c03930	chaninst	0	343	363
+	11	 0x3c03950	bchntprf	0	363	388
+	12	 0x3c03980	datatprf	0	388	408
+	13	 0x3c039a4	dboolcol	0	408	442
+	14	 0x3c03a00	datainst	0	442	466
+	15	 0x3c03a20	datatprf	0	466	486
+	16	 0x3c03a40	CHPloop_	0	486	498
+	17	 0x3c03a50	CHPloop_	0	498	510
+	18	 0x3c03a60	CHPrecv_	0	510	530
+	19	 0x3c03a80	schnnref	0	530	546
+	20	 0x3c03a90	sdbnref_	0	546	562
+	21	 0x3c03ab0	CHPloop_	0	562	574
+	22	 0x3c03ac0	CHPloop_	0	574	586
+	23	 0x3c03ad0	CHPsend_	0	586	606
+	24	 0x3c03af0	schnnref	0	606	622
+	25	 0x5004004	cnstpb__	0	622	631
 
 In module created from: ./042.in (unrolled)
 In namespace "", we have: {

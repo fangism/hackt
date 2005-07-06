@@ -2,39 +2,39 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x43040b0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x43040d0	procdefn	0	53	155
-	4	 0x4304164	chancoll	0	155	193
-	5	 0x43041c0	chaninst	0	193	213
-	6	 0x43041e0	bchntprf	0	213	242
-	7	 0x4304210	datatprf	0	242	262
-	8	 0x4304230	datadefn	0	262	314
-	9	 0x43042d0	dprmlst_	0	314	330
-	10	 0x37a4028	cnstpi__	0	330	342
-	11	 0x43042e0	datatprf	0	342	362
-	12	 0x4304300	dprmlst_	0	362	378
-	13	 0x4304314	chancoll	0	378	416
-	14	 0x4304370	chaninst	0	416	436
-	15	 0x4304390	bchntprf	0	436	461
-	16	 0x43043c0	datatprf	0	461	481
-	17	 0x43043e0	dprmlst_	0	481	497
-	18	 0x43043f4	dintcoll	0	497	535
-	19	 0x4304450	datainst	0	535	555
-	20	 0x4304470	datatprf	0	555	575
-	21	 0x4304490	dprmlst_	0	575	591
-	22	 0x43044a4	dintcoll	0	591	629
-	23	 0x4304500	datainst	0	629	649
-	24	 0x4304520	CHPseqnc	0	649	669
-	25	 0x4304530	CHPrecv_	0	669	693
-	26	 0x4304550	schnnref	0	693	709
-	27	 0x4304560	sdinref_	0	709	725
-	28	 0x4304580	sdinref_	0	725	741
-	29	 0x43045a0	CHPsend_	0	741	761
-	30	 0x43045c0	schnnref	0	761	777
-	31	 0x43045e8	narithex	0	777	794
-	32	 0x43045f0	sdinref_	0	794	810
-	33	 0x4304610	sdinref_	0	810	826
+	1	 0x3c042a0	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	53
+	3	 0x3c042c0	procdefn	0	53	155
+	4	 0x3c04354	chancoll	0	155	193
+	5	 0x3c043b0	chaninst	0	193	213
+	6	 0x3c043d0	bchntprf	0	213	242
+	7	 0x3c04400	datatprf	0	242	262
+	8	 0x3c04420	datadefn	0	262	314
+	9	 0x3c044c0	dprmlst_	0	314	330
+	10	 0x39f2028	cnstpi__	0	330	342
+	11	 0x3c044d0	datatprf	0	342	362
+	12	 0x3c044f0	dprmlst_	0	362	378
+	13	 0x3c04504	chancoll	0	378	416
+	14	 0x3c04560	chaninst	0	416	436
+	15	 0x3c04580	bchntprf	0	436	461
+	16	 0x3c045b0	datatprf	0	461	481
+	17	 0x3c045d0	dprmlst_	0	481	497
+	18	 0x3c045e4	dintcoll	0	497	535
+	19	 0x3c04640	datainst	0	535	559
+	20	 0x3c04660	datatprf	0	559	579
+	21	 0x3c04680	dprmlst_	0	579	595
+	22	 0x3c04694	dintcoll	0	595	633
+	23	 0x3c046f0	datainst	0	633	657
+	24	 0x3c04710	CHPseqnc	0	657	677
+	25	 0x3c04720	CHPrecv_	0	677	701
+	26	 0x3c04740	schnnref	0	701	717
+	27	 0x3c04750	sdinref_	0	717	733
+	28	 0x3c04770	sdinref_	0	733	749
+	29	 0x3c04790	CHPsend_	0	749	769
+	30	 0x3c047b0	schnnref	0	769	785
+	31	 0x3c047d8	narithex	0	785	802
+	32	 0x3c047e0	sdinref_	0	802	818
+	33	 0x3c04800	sdinref_	0	818	834
 
 In module created from: ./033.in (unrolled)
 In namespace "", we have: {

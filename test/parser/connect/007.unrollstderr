@@ -2,35 +2,35 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4303a80	module__	0	0	49
-	2	 0x4300144	namespc_	0	49	89
-	3	 0x4303aa4	dintcoll	0	89	132
-	4	 0x4303b00	datainst	0	132	152
-	5	 0x4303b20	datatprf	0	152	172
-	6	 0x4303b40	datadefn	0	172	224
-	7	 0x4303be0	dprmlst_	0	224	240
-	8	 0x371c028	cnstpi__	0	240	252
-	9	 0x4303bf4	dintcoll	0	252	296
-	10	 0x4303c50	datainst	0	296	316
-	11	 0x4303c70	datatprf	0	316	336
-	12	 0x4303c90	datatpdf	0	336	378
-	13	 0x4303d00	datatprf	0	378	398
-	14	 0x4303d20	dprmlst_	0	398	414
-	15	 0x371c038	cnstpi__	0	414	426
-	16	 0x4303d34	dintcoll	0	426	469
-	17	 0x4303d90	datainst	0	469	489
-	18	 0x4303db0	datatprf	0	489	509
-	19	 0x4303dd0	dprmlst_	0	509	525
-	20	 0x371c048	cnstpi__	0	525	537
-	21	 0x4303de4	dintcoll	0	537	580
-	22	 0x4303e40	datainst	0	580	600
-	23	 0x4303e60	datatprf	0	600	620
-	24	 0x4303e80	dprmlst_	0	620	636
-	25	 0x4303e90	dialias_	0	636	664
-	26	 0x4303ea0	sdimref_	0	664	684
-	27	 0x4303ed0	sdimref_	0	684	704
-	28	 0x4303f00	sdimref_	0	704	724
-	29	 0x4303f30	sdimref_	0	724	744
+	1	 0x3c03c70	module__	0	0	49
+	2	 0x3c00144	namespc_	0	49	89
+	3	 0x3c03c94	dintcoll	0	89	132
+	4	 0x3c03cf0	datainst	0	132	156
+	5	 0x3c03d10	datatprf	0	156	176
+	6	 0x3c03d30	datadefn	0	176	228
+	7	 0x3c03dd0	dprmlst_	0	228	244
+	8	 0x39f2028	cnstpi__	0	244	256
+	9	 0x3c03de4	dintcoll	0	256	300
+	10	 0x3c03e40	datainst	0	300	324
+	11	 0x3c03e60	datatprf	0	324	344
+	12	 0x3c03e80	datatpdf	0	344	386
+	13	 0x3c03ef0	datatprf	0	386	406
+	14	 0x3c03f10	dprmlst_	0	406	422
+	15	 0x39f2038	cnstpi__	0	422	434
+	16	 0x3c03f24	dintcoll	0	434	477
+	17	 0x3c03f80	datainst	0	477	501
+	18	 0x3c03fa0	datatprf	0	501	521
+	19	 0x3c03fc0	dprmlst_	0	521	537
+	20	 0x39f2048	cnstpi__	0	537	549
+	21	 0x3c03fd4	dintcoll	0	549	592
+	22	 0x3c04030	datainst	0	592	616
+	23	 0x3c04050	datatprf	0	616	636
+	24	 0x3c04070	dprmlst_	0	636	652
+	25	 0x3c04080	dialias_	0	652	680
+	26	 0x3c04090	sdimref_	0	680	700
+	27	 0x3c040c0	sdimref_	0	700	720
+	28	 0x3c040f0	sdimref_	0	720	740
+	29	 0x3c04120	sdimref_	0	740	760
 
 In module created from: ./007.in (unrolled)
 In namespace "", we have: {

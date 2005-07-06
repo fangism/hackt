@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.11.4.3 2005/06/24 22:51:13 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.11.4.4 2005/07/06 20:14:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
@@ -17,6 +17,7 @@
 namespace ART {
 namespace entity {
 class const_range_list;
+class param_expr_list;
 class instance_collection_base;
 class fundamental_type_reference;
 using std::string;
@@ -36,14 +37,17 @@ using util::good_bool;
 	where the collection will be unrolled.  
 	Should this point to an unrolled instance?
 	No, it will be looked up.  
+	TODO: this is where optional relaxed template arguments go.  
  */
 class instantiation_statement_base : public instance_management_base {
+public:
+	typedef	count_ptr<const param_expr_list>	relaxed_args_type;
 protected:
 	index_collection_item_ptr_type		indices;
-
 protected:
 	instantiation_statement_base() : instance_management_base(), 
 		indices(NULL) { }
+
 	explicit
 	instantiation_statement_base(
 		const index_collection_item_ptr_type& i);
@@ -71,6 +75,9 @@ virtual	never_ptr<const instance_collection_base>
 
 	index_collection_item_ptr_type
 	get_indices(void) const;
+
+virtual	relaxed_args_type
+	get_relaxed_actuals(void) const = 0;
 
 	good_bool
 	resolve_instantiation_range(const_range_list&, 

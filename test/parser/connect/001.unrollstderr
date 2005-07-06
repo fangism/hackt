@@ -2,18 +2,18 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4302180	module__	0	0	41
-	2	 0x4300144	namespc_	0	41	69
-	3	 0x43021a4	dboolcol	0	69	111
-	4	 0x4302200	datainst	0	111	131
-	5	 0x4302220	datatprf	0	131	151
-	6	 0x4302240	datadefn	0	151	204
-	7	 0x43022e4	dboolcol	0	204	245
-	8	 0x4302340	datainst	0	245	265
-	9	 0x4302360	datatprf	0	265	285
-	10	 0x4302380	dbalias_	0	285	305
-	11	 0x4302390	sdbmref_	0	305	325
-	12	 0x43023c0	sdbmref_	0	325	345
+	1	 0x3c02370	module__	0	0	41
+	2	 0x3c00144	namespc_	0	41	69
+	3	 0x3c02394	dboolcol	0	69	111
+	4	 0x3c023f0	datainst	0	111	135
+	5	 0x3c02410	datatprf	0	135	155
+	6	 0x3c02430	datadefn	0	155	208
+	7	 0x3c024d4	dboolcol	0	208	249
+	8	 0x3c02530	datainst	0	249	273
+	9	 0x3c02550	datatprf	0	273	293
+	10	 0x3c02570	dbalias_	0	293	313
+	11	 0x3c02580	sdbmref_	0	313	333
+	12	 0x3c025b0	sdbmref_	0	333	353
 
 In module created from: ./001.in (unrolled)
 In namespace "", we have: {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.5 2005/07/05 07:59:43 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.6 2005/07/06 20:14:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -152,6 +152,13 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 	return type_ref_parent_type::get_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+instantiation_statement_base::relaxed_args_type
+INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
+	return type_ref_parent_type::get_relaxed_actuals();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

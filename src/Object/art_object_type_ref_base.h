@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.2 2005/07/01 20:34:17 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.3 2005/07/06 20:14:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -103,10 +103,18 @@ virtual never_ptr<const definition_base>
 	const template_actuals&
 	get_template_params(void) const;
 
+#if 0
 	// limits the extend to which it can be statically type-checked
 	// i.e. whether parameter is resolved to a scope's formal
 	bool
 	is_dynamically_parameter_dependent(void) const;
+#endif
+
+	bool
+	is_strict(void) const;
+
+	bool
+	is_relaxed(void) const { return !is_strict(); }
 
 	static	
 	excl_ptr<instantiation_statement_base>

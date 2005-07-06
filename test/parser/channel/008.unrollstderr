@@ -2,16 +2,16 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4301ef0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	57
-	3	 0x4301f10	chandefn	0	57	124
-	4	 0x4301fb4	enumcoll	0	124	162
-	5	 0x4302010	datainst	0	162	182
-	6	 0x4302030	datatprf	0	182	202
-	7	 0x4302050	enumdefn	0	202	260
-	8	 0x43020b0	bchntprf	0	260	285
-	9	 0x43020e0	datatprf	0	285	305
-	10	 0x4302100	datadefn	0	305	358
+	1	 0x3c020e0	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	57
+	3	 0x3c02100	chandefn	0	57	124
+	4	 0x3c021a4	enumcoll	0	124	162
+	5	 0x3c02200	datainst	0	162	186
+	6	 0x3c02220	datatprf	0	186	206
+	7	 0x3c02240	enumdefn	0	206	264
+	8	 0x3c022a0	bchntprf	0	264	289
+	9	 0x3c022d0	datatprf	0	289	309
+	10	 0x3c022f0	datadefn	0	309	362
 
 In module created from: ./008.in (unrolled)
 In namespace "", we have: {

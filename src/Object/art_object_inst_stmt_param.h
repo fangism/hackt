@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.3 2005/06/25 21:07:23 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.4 2005/07/06 20:14:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -12,6 +12,7 @@
 #include "Object/art_object_pbool_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_built_ins.h"
+#include "Object/expr/param_expr_list.h"
 
 namespace ART {
 namespace entity {
@@ -24,6 +25,8 @@ class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
 	// has no type member!
 	// consider importing built-in type ref as a static member
+public:
+	typedef	count_ptr<param_expr_list>	relaxed_args_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -36,6 +39,14 @@ protected:
 
 	count_ptr<const fundamental_type_reference>
 	get_type(void) const { return built_in_type_ptr; }
+
+	/**
+		Relaxed parameters to not apply to built-in parameter types.  
+	 */
+	relaxed_args_type
+	get_relaxed_actuals(void) const {
+		return relaxed_args_type(NULL);
+	}
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {
@@ -61,6 +72,8 @@ class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
 	// has no type member!
 	// consider importing built-in type ref as a static member
+public:
+	typedef	count_ptr<param_expr_list>	relaxed_args_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -73,6 +86,14 @@ protected:
 
 	count_ptr<const fundamental_type_reference>
 	get_type(void) const { return built_in_type_ptr; }
+
+	/**
+		Relaxed parameters to not apply to built-in parameter types.  
+	 */
+	relaxed_args_type
+	get_relaxed_actuals(void) const {
+		return relaxed_args_type(NULL);
+	}
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {

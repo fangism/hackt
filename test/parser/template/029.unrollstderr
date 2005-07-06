@@ -2,33 +2,33 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x43037f0	module__	0	0	37
-	2	 0x4300144	namespc_	0	37	69
-	3	 0x4303814	proccoll	0	69	107
-	4	 0x4303870	procinst	0	107	127
-	5	 0x4303890	proctprf	0	127	147
-	6	 0x43038b0	procdefn	0	147	219
-	7	 0x43037a4	pintcoll	0	219	256
-	8	 0x4303940	pintinst	0	256	272
-	9	 0x4303954	pintcoll	0	272	309
-	10	 0x43039a0	pintinst	0	309	325
-	11	 0x43039b0	spimref_	0	325	345
-	12	 0x43039e0	dprmlst_	0	345	365
-	13	 0x3734028	cnstpi__	0	365	377
-	14	 0x3734038	cnstpi__	0	377	389
-	15	 0x43039f0	proctprf	0	389	409
-	16	 0x4303a10	cprmlst_	0	409	429
-	17	 0x3734048	cnstpi__	0	429	441
-	18	 0x3734058	cnstpi__	0	441	453
-	19	 0x4303a24	proccoll	0	453	491
-	20	 0x4303a80	procinst	0	491	511
-	21	 0x4303aa0	proctprf	0	511	531
-	22	 0x4303ac0	dprmlst_	0	531	551
-	23	 0x3734068	cnstpi__	0	551	563
-	24	 0x4303ad0	proctprf	0	563	583
-	25	 0x4303af0	cprmlst_	0	583	603
-	26	 0x3734078	cnstpi__	0	603	615
-	27	 0x3734088	cnstpi__	0	615	627
+	1	 0x3c039e0	module__	0	0	37
+	2	 0x3c00144	namespc_	0	37	69
+	3	 0x3c03a04	proccoll	0	69	107
+	4	 0x3c03a60	procinst	0	107	131
+	5	 0x3c03a80	proctprf	0	131	151
+	6	 0x3c03aa0	procdefn	0	151	223
+	7	 0x3c03b34	pintcoll	0	223	260
+	8	 0x3c03b90	pintinst	0	260	276
+	9	 0x3c03ba4	pintcoll	0	276	313
+	10	 0x3c03c00	pintinst	0	313	329
+	11	 0x3c03c10	spimref_	0	329	349
+	12	 0x3c03c40	dprmlst_	0	349	369
+	13	 0x39f2028	cnstpi__	0	369	381
+	14	 0x39f2038	cnstpi__	0	381	393
+	15	 0x3c03c50	proctprf	0	393	413
+	16	 0x3c03c70	cprmlst_	0	413	433
+	17	 0x39f2048	cnstpi__	0	433	445
+	18	 0x39f2058	cnstpi__	0	445	457
+	19	 0x3c03c84	proccoll	0	457	495
+	20	 0x3c03ce0	procinst	0	495	519
+	21	 0x3c03d00	proctprf	0	519	539
+	22	 0x3c03d20	dprmlst_	0	539	559
+	23	 0x39f2068	cnstpi__	0	559	571
+	24	 0x3c03d30	proctprf	0	571	591
+	25	 0x3c03d50	cprmlst_	0	591	611
+	26	 0x39f2078	cnstpi__	0	611	623
+	27	 0x39f2088	cnstpi__	0	623	635
 
 In module created from: ./029.in (unrolled)
 In namespace "", we have: {

@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.35.2.3 2005/07/05 07:59:32 fang Exp $
+ 	$Id: art_context.cc,v 1.35.2.4 2005/07/06 20:14:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -763,7 +763,8 @@ context::add_instance(const token_identifier& id,
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
-	return_type inst_base(current_named_scope->add_instance(inst_stmt, id));
+	const return_type
+		inst_base(current_named_scope->add_instance(inst_stmt, id));
 	// adds non-const back-reference
 
 	if (!inst_base) {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.17.4.2 2005/06/24 22:51:12 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.17.4.3 2005/07/06 20:14:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
@@ -95,6 +95,9 @@ public:
 
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
+
+	instantiation_statement_base::relaxed_args_type
+	get_relaxed_actuals(void) const;
 
 	good_bool
 	unroll(unroll_context& ) const;

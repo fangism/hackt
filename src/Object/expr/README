@@ -1,0 +1,21 @@
+"src/Object/expr/README"
+
+This directory was established to contain al the files relevant to 
+meta-expressions and nonmeta (data) expressions in HACKT.  
+
+At one time in the revision history (ARTXX-00-01-04-main-00-48-connect-01), 
+everything in here was stored in a few gargantuan headers, and 2 big honking
+translation units.  fangism grew very weary of massive recompilations 
+from touch one of few definitions in these massive files, so he decided
+that it would be in his best interest to chop up the files into the smallest
+granularity possible, and this directory was born.  Dividing up source into 
+many pieces led to a dramatic speed up in recompilations during development, 
+at the cost of somewhat larger binaries and slightly slower one-time compiles.  
+That's the tradeoff...
+
+In the future, this allows controllable grouping and combining of translation
+units.  
+
+TODO:
+Make a quick and dirty class index, automatically for reference.  
+

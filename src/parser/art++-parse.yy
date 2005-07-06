@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.24.2.2 2005/07/05 21:02:20 fang Exp $
+	$Id: art++-parse.yy,v 1.24.2.3 2005/07/06 20:14:28 fang Exp $
  */
 
 %{
@@ -1205,19 +1205,18 @@ instance_id_item
 	/** NEW: relaxed template arguments */
 	/* array declaration: forbid connection, must connect later */
 	: ID optional_template_arguments_in_angles sparse_range_list
-		{ $$ = new instance_array($1, $3); DELETE_TOKEN($2); }
+		{ $$ = new instance_array($1, $2, $3); }
 	/* single instance declaration without connection */
 	| ID optional_template_arguments_in_angles
-		{ $$ = new instance_base($1); DELETE_TOKEN($2); }
+		{ $$ = new instance_base($1, $2); }
 	/* single instance declaration with connection */
 	| ID optional_template_arguments_in_angles connection_actuals_list
-		{ $$ = new instance_connection($1, $3); DELETE_TOKEN($2); }
+		{ $$ = new instance_connection($1, $2, $3); }
 	/* instance alias or parameter assignment */
 	| ID optional_template_arguments_in_angles
 	  '=' rvalue_optional_alias_list
 		{ WRAP_LIST($3, $4, NULL);
-		  DELETE_TOKEN($2);
-		  $$ = new instance_alias($1, $4); }
+		  $$ = new instance_alias($1, $2, $4); }
 	;
 
 connection_statement

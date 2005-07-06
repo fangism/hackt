@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.8 2005/07/05 21:02:16 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.9 2005/07/06 20:14:20 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -704,6 +704,7 @@ EXTRA_DIST = \
 	scripts/filter_namespaces.sed \
 	scripts/automake_include.awk \
 	scripts/promote_header_deps.awk \
+	Object/expr/README \
 	ChangeLog \
 	NOTES \
 	wc-l

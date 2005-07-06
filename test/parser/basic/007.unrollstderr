@@ -2,25 +2,25 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4302bf0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4302c10	procdefn	0	53	140
-	4	 0x4302b94	dboolcol	0	140	174
-	5	 0x4302ca0	datainst	0	174	194
-	6	 0x4302cc0	datatprf	0	194	214
-	7	 0x4302ce0	datadefn	0	214	267
-	8	 0x4302d84	dboolcol	0	267	301
-	9	 0x4302de0	datainst	0	301	321
-	10	 0x4302e00	datatprf	0	321	341
-	11	 0x4816a08	PRSpuldn	0	341	358
-	12	 0x4302e28	PRSlitrl	0	358	370
-	13	 0x4302fb0	sdbmref_	0	370	390
-	14	 0x4302fe0	sdbmref_	0	390	410
-	15	 0x4817408	PRSpulup	0	410	427
-	16	 0x4303018	PRSnot__	0	427	439
-	17	 0x4302e34	PRSlitrl	0	439	451
-	18	 0x43031a0	sdbmref_	0	451	471
-	19	 0x43031d0	sdbmref_	0	471	491
+	1	 0x3c02de0	module__	0	0	29
+	2	 0x3c00144	namespc_	0	29	53
+	3	 0x3c02e00	procdefn	0	53	140
+	4	 0x3c02d84	dboolcol	0	140	174
+	5	 0x3c02e90	datainst	0	174	198
+	6	 0x3c02eb0	datatprf	0	198	218
+	7	 0x3c02ed0	datadefn	0	218	271
+	8	 0x3c02f74	dboolcol	0	271	305
+	9	 0x3c02fd0	datainst	0	305	329
+	10	 0x3c02ff0	datatprf	0	329	349
+	11	 0x5016608	PRSpuldn	0	349	366
+	12	 0x3c03018	PRSlitrl	0	366	378
+	13	 0x3c031a0	sdbmref_	0	378	398
+	14	 0x3c031d0	sdbmref_	0	398	418
+	15	 0x5016a08	PRSpulup	0	418	435
+	16	 0x3c03208	PRSnot__	0	435	447
+	17	 0x3c03024	PRSlitrl	0	447	459
+	18	 0x3c03390	sdbmref_	0	459	479
+	19	 0x3c033c0	sdbmref_	0	479	499
 
 In module created from: ./007.in (unrolled)
 In namespace "", we have: {
