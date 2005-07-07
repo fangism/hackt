@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.14.4.2 2005/07/05 07:59:47 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.14.4.3 2005/07/07 23:48:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -117,11 +117,20 @@ struct collection_type_manager<process_tag> {
 			must already be resolved to a const_param_expr_list.  
 		\return false on success, true on error.  
 		\post the integer width is fixed for the rest of the program.  
+		2005-07-07:
+		TODO: given complete type t, can't distinguish between
+			establishing strict type for the entire array
+			vs. relaxed type with instance-specific 
+			relaxed actuals!!!
+			We choose to work around this in 
+			instantiation_statement<>::unroll().
+		NOW just type checks without committing.  
 	 */
 	static
 	bad_bool
-	commit_type(instance_collection_generic_type& c,
+	commit_type(const instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) {
+#if 0
 		// make sure this is the canonical definition
 		//      in case type is typedef!
 		// this really should be statically type-checked
@@ -134,9 +143,30 @@ struct collection_type_manager<process_tag> {
 				!c.type_parameter->must_be_collectibly_type_equivalent(*t)
 			);
 		else {
+			// TODO: need way to distinguish between
+			// strict and relaxed collection type.  
+			// If strictly declared, then type should already 
+			// be set!!!
 			c.type_parameter = t;
 			return bad_bool(false);
 		}
+#else
+		INVARIANT(c.type_parameter);
+		return bad_bool(
+			!c.type_parameter->must_be_collectibly_type_equivalent(*t)
+		);
+#endif
+	}
+
+	/**
+		\pre first time called for the collection.  
+	 */
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& c, 
+		const type_ref_ptr_type& t) {
+		INVARIANT(!c.type_parameter);
+		c.type_parameter = t;
 	}
 };	// end struct collection_type_manager
 

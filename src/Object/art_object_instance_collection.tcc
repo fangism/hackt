@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.2 2005/07/05 07:59:45 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.3 2005/07/07 23:48:11 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -464,6 +464,15 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
 	return collection_type_manager<Tag>::get_type(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+void
+INSTANCE_COLLECTION_CLASS::establish_collection_type(
+		const type_ref_ptr_type& t) {
+	NEVER_NULL(t);
+	collection_type_manager<Tag>::commit_type_first_time(*this, t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

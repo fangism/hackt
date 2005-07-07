@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.7 2005/07/07 06:02:20 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.8 2005/07/07 23:48:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -31,6 +31,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Object/art_object_type_ref.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/meta_range_list.h"
 
@@ -176,12 +177,44 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 	(this will require some serious specialization)
 	\param c the unroll context.  
 	\return good if successful, else false.
+	TODO: clean-up the hack in here
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
+#if 1
+	// 2005-07-07:
+	// HACK: detect that this is the first type commit to the 
+	// collection, because unroll_type_reference combines the
+	// strict and relaxed actuals of the instantiation_statement, 
+	// we can't tell from the unrolled type whether or not the 
+	// relaxed parameters were intended for the whole collection
+	// or just the specified indices.  
+	// Resolution: detect the first time, and do a first-time
+	// commit using the type_ref_parent_type's original type, 
+	// which will be distinguishably strict or relaxed.  
+	const bool first_time = !this->inst_base->is_partially_unrolled();
+	if (first_time) {
+		const type_ref_ptr_type
+			ft(type_ref_parent_type::get_resolved_type(c));
+		if (!ft) {
+			// already have error message
+#if 0
+			t->what(cerr << "ERROR: unable to resolve ") <<
+				" during unroll." << endl;
+#endif
+			return good_bool(false);
+		}
+		// ft will either be strict or relaxed.  
+		type_ref_parent_type::commit_type_first_time(
+			*this->inst_base, ft);
+		// this->inst_base->establish_collection_type(ft);
+	}
+#endif
 	// unroll_type_check is specialized for each tag type.  
+	// NOTE: this results in a "fused" type that combines
+	// the relaxed template actuals.  
 	const type_ref_ptr_type
 		final_type_ref(type_ref_parent_type::unroll_type_reference(c));
 	if (!final_type_ref) {
@@ -196,6 +229,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	final_type_ref->unroll_register_complete_type();
 #endif
 	// TODO: decide what do to about relaxed type parameters
+	// 2005-07-07: answer is above under "HACK"
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			*this->inst_base, final_type_ref));

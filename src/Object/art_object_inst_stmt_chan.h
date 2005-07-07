@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.3 2005/07/07 06:02:20 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.4 2005/07/07 23:48:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
 
+#include <iostream>
 #include "Object/art_object_chan_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_chan.h"
@@ -16,6 +17,8 @@
 namespace ART {
 namespace entity {
 class param_expr_list;
+#include "util/using_ostream.h"
+
 //=============================================================================
 #if 1
 class class_traits<channel_tag>::instantiation_statement_type_ref_base {
@@ -38,15 +41,35 @@ protected:
 			const const_relaxed_args_type& a) :
 			type(t), relaxed_args(a) { }
 
-	count_ptr<const fundamental_type_reference>
+	type_ref_ptr_type
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
+	get_resolved_type(unroll_context& c) const {
+		cerr << "FANG, finish channel_type_reference_base::unroll_resolve()!" << endl;
+#if 0
+		const type_ref_ptr_type ret(type->unroll_resolve(c));
+		if (!ret) {
+			type->what(cerr << "ERROR: unable to resolve ") <<
+				" during unroll." << endl;
+		} else {
+			const_cast<this_type*>(this)->type = ret;
+			// cache the equivalent resolved type
+		}
+		return ret;
+#endif
+		return type_ref_ptr_type(NULL);
+	}
+
+
+	type_ref_ptr_type
 	unroll_type_reference(unroll_context& c) const {
+		cerr << "FANG, finish channel_type_reference_base::unroll_resolve()!" << endl;
 #if 0
 		return type->unroll_resolve(c);
 #else
 		// temporary
+		// don't forget to merge relaxed actuals
 		return type_ref_ptr_type(NULL);
 #endif
 	}
@@ -57,6 +80,13 @@ protected:
 	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
 		return const_relaxed_args_type(NULL);
+	}
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& v,
+			const type_ref_ptr_type& t) {
+		v.establish_collection_type(t);
 	}
 
 	static

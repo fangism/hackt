@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.21.2.2 2005/07/05 07:59:46 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.21.2.3 2005/07/07 23:48:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -146,6 +146,39 @@ struct collection_type_manager<int_tag> {
 		}
 	}
 
+private:
+	/**
+		Can't we expect type to be resolved constants by now?
+	 */
+	static
+	pint_value_type
+	get_int_width(const type_ref_ptr_type& tp) {
+		// resolve type def?
+		const type_ref_ptr_type
+			t(tp->make_canonical_type_reference()
+				.is_a<const data_type_reference>());
+		INVARIANT(t->get_base_datatype_def()
+			->resolve_canonical_datatype_definition() == &int_def);
+
+		const count_ptr<const param_expr_list>
+			params(t->get_template_params().get_strict_args());
+		NEVER_NULL(params);
+		// extract first and only parameter, the integer width
+		const count_ptr<const const_param_expr_list>
+			cparams(params.is_a<const const_param_expr_list>());
+
+		NEVER_NULL(cparams);
+		INVARIANT(cparams->size() == 1); 
+		const count_ptr<const const_param>&
+			param1(cparams->front());
+		NEVER_NULL(param1);
+		const count_ptr<const pint_const>
+			pwidth(param1.is_a<const pint_const>());
+		NEVER_NULL(pwidth);
+		return pwidth->static_constant_value();
+	}
+
+public:
 	/**
 		During unroll phase, this commits the type of the collection.  
 		\param t the data integer type reference, containing width, 
@@ -155,9 +188,10 @@ struct collection_type_manager<int_tag> {
 	 */
 	static
 	bad_bool
-	commit_type(instance_collection_generic_type& c,
+	commit_type(const instance_collection_generic_type& c,
 		const type_ref_ptr_type& tp) {
 		// resolve type def?
+#if 0
 		const type_ref_ptr_type
 			t(tp->make_canonical_type_reference()
 				.is_a<const data_type_reference>());
@@ -189,7 +223,23 @@ struct collection_type_manager<int_tag> {
 			c.type_parameter = new_width;
 			return bad_bool(false);
 		}
+#else
+		const pint_value_type
+			new_width = get_int_width(tp);
+		INVARIANT(c.type_parameter);
+		return bad_bool(new_width != c.type_parameter);
+#endif
 	}
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& c,
+		const type_ref_ptr_type& tp) {
+		INVARIANT(!c.type_parameter);
+		c.type_parameter = get_int_width(tp);
+	}
+
+
 };      // end struct collection_type_manager
 
 //=============================================================================

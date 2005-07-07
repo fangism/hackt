@@ -1,0 +1,91 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail
+	0	         0	________	0	0	0
+	1	 0x3d04c90	module__	0	0	41
+	2	 0x3d00144	namespc_	0	41	77
+	3	 0x3d04c44	proccoll	1	77	151
+	4	 0x3d04cb0	procinst	0	151	175
+	5	 0x3d04cd0	proctprf	0	175	195
+	6	 0x3d04cf0	procdefn	0	195	267
+	7	 0x3d04d84	pintcoll	0	267	304
+	8	 0x3d04de0	pintinst	0	304	320
+	9	 0x3d04df4	pintcoll	0	320	357
+	10	 0x3d04e50	pintinst	0	357	373
+	11	 0x3d04e60	dprmlst_	0	373	389
+	12	 0x3a0a028	cnstpi__	0	389	401
+	13	 0x3d04e70	crnglst_	0	401	421
+	14	 0x3d04e80	proctprf	0	421	441
+	15	 0x3d04ea0	cprmlst_	0	441	457
+	16	 0x3a0a038	cnstpi__	0	457	469
+	17	 0x3d04eb4	proccoll	1	469	543
+	18	 0x3d04f00	procinst	0	543	567
+	19	 0x3d04f20	proctprf	0	567	587
+	20	 0x3d04f40	dprmlst_	0	587	603
+	21	 0x3a0a048	cnstpi__	0	603	615
+	22	 0x3d04f50	dprmlst_	0	615	631
+	23	 0x3a0a058	cnstpi__	0	631	643
+	24	 0x3d04f60	crnglst_	0	643	663
+	25	 0x3d04f70	proctprf	0	663	683
+	26	 0x3d04f90	cprmlst_	0	683	699
+	27	 0x3a0a068	cnstpi__	0	699	711
+	28	 0x3d04fa4	proccoll	1	711	785
+	29	 0x3d04ff0	procinst	0	785	809
+	30	 0x3d05010	proctprf	0	809	829
+	31	 0x3d05030	dprmlst_	0	829	845
+	32	 0x3a0a078	cnstpi__	0	845	857
+	33	 0x3d05040	dprmlst_	0	857	873
+	34	 0x3a0a088	cnstpi__	0	873	885
+	35	 0x3d05050	crnglst_	0	885	905
+	36	 0x3d05060	proctprf	0	905	925
+	37	 0x3d05080	cprmlst_	0	925	941
+	38	 0x3a0a098	cnstpi__	0	941	953
+	39	 0x3d05090	cprmlst_	0	953	969
+	40	 0x3a0a0a8	cnstpi__	0	969	981
+
+In module created from: ./061.in (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> Q
+      ><
+      pint<> R
+      >(
+      )
+      In definition "foo", we have: {
+        Q = pint<> Q
+        R = pint<> R
+      }
+
+  Instances:
+    bar = process foo<5>^1 bar with indices: {
+      [0..2]
+    }
+      unrolled indices: {
+        0 = ::bar[0]
+        1 = ::bar[1]
+        2 = ::bar[2]
+      }
+    car = process foo<5><4>^1 car with indices: {
+      [0..2]
+    }
+      unrolled indices: {
+        0 = ::car[0]
+        1 = ::car[1]
+        2 = ::car[2]
+      }
+    dar = process foo<5>^1 dar with indices: {
+      [0..2]
+    }
+      unrolled indices: {
+        0 = ::dar[0]
+        1 = ::dar[1]
+        2 = ::dar[2]
+      }
+}
+

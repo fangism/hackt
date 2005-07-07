@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.14.4.2 2005/07/05 07:59:44 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.14.4.3 2005/07/07 23:48:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CHAN_CC__
@@ -121,6 +121,7 @@ struct collection_type_manager<channel_tag> {
 
 		// only needs to be "collectibly" type equivalent, 
 		// not necessarily "connectible".
+#if 0
 		if (c.type_parameter)
 			return bad_bool(
 				!c.type_parameter->must_be_collectibly_type_equivalent(*t)
@@ -129,7 +130,22 @@ struct collection_type_manager<channel_tag> {
 			c.type_parameter = t;
 			return bad_bool(false);
 		}
+#else
+		INVARIANT(c.type_parameter);
+		return bad_bool(
+			!c.type_parameter->must_be_collectibly_type_equivalent(*t)
+		);
+#endif
 	}
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& c, 
+			const type_ref_ptr_type& t) {
+		INVARIANT(!c.type_parameter);
+		c.type_parameter = t;
+	}
+
 };
 
 //=============================================================================

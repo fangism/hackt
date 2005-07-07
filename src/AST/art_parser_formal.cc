@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.23.2.3 2005/07/06 00:59:21 fang Exp $
+	$Id: art_parser_formal.cc,v 1.23.2.4 2005/07/07 23:48:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -31,6 +31,7 @@
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_definition_chan.h"		// for user_def_chan
 #include "Object/expr/param_expr.h"
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 
 #include "util/what.h"
@@ -60,6 +61,7 @@ namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
 using entity::user_def_chan;
+using entity::dynamic_param_expr_list;
 
 //=============================================================================
 // class data_param_id method definitions
@@ -90,6 +92,8 @@ data_param_id::rightmost(void) const {
 /**
 	Resolves data-type formal, and adds it to a channel definition's
 	public port list.  
+	NOTE: data-types in the user-defined channel's ports are allowed
+	to have relaxed types.  
  */
 never_ptr<const object>
 data_param_id::check_build(context& c) const {
@@ -98,6 +102,13 @@ data_param_id::check_build(context& c) const {
 	// not true anymore!
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
+#if 0
+	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
+	const count_ptr<const fundamental_type_reference>
+		type(c.get_current_fundamental_type());
+	INVARIANT(type);
+	const relaxed_args_ptr_type checked_relaxed_actuals;
+#endif
 	if (dim) {
 		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
@@ -256,7 +267,17 @@ port_formal_id::check_build(context& c) const {
 	STACKTRACE("port_formal_id::check_build()");
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
-
+#if 0
+	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
+	const count_ptr<const fundamental_type_reference>
+		type(c.get_current_fundamental_type());
+	INVARIANT(type);
+	const relaxed_args_ptr_type checked_relaxed_actuals;
+	// Port formals cannot have instance-time relaxed actual parameters, 
+	// arrays must be declared with strict or relaxed parameters
+	// up front in the type.  
+	// Scalars declarations are allowed to be relaxed.  
+#endif
 	if (dim) {
 		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));

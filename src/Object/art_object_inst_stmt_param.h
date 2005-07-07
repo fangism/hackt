@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.5 2005/07/07 06:02:21 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.6 2005/07/07 23:48:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -37,8 +37,13 @@ protected:
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
-	count_ptr<const fundamental_type_reference>
+	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
+
+	const type_ref_ptr_type&
+	get_resolved_type(const unroll_context&) const {
+		return built_in_type_ptr;
+	}
 
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
@@ -56,10 +61,17 @@ protected:
 
 	static
 	good_bool
-	commit_type_check(value_collection_generic_type& v, 
+	commit_type_check(const value_collection_generic_type& v, 
 		const type_ref_ptr_type& t) {
 		// no need to type-check
 		return good_bool(true);
+	}
+
+	static
+	void
+	commit_type_first_time(value_collection_generic_type& v, 
+		const type_ref_ptr_type&) {
+		// no-op
 	}
 
 };      // end class instantiation_statement_type_ref_base
@@ -84,8 +96,13 @@ protected:
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
-	count_ptr<const fundamental_type_reference>
+	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
+
+	const type_ref_ptr_type&
+	get_resolved_type(const unroll_context&) const {
+		return built_in_type_ptr;
+	}
 
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
@@ -103,10 +120,17 @@ protected:
 
 	static
 	good_bool
-	commit_type_check(value_collection_generic_type& v, 
+	commit_type_check(const value_collection_generic_type& v, 
 		const type_ref_ptr_type& t) {
 		// no need to type-check
 		return good_bool(true);
+	}
+
+	static
+	void
+	commit_type_first_time(value_collection_generic_type&, 
+		const type_ref_ptr_type&) {
+		// no-op
 	}
 
 };      // end class instantiation_statement_type_ref_base

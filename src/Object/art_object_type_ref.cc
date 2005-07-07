@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.10 2005/07/07 06:02:22 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.11 2005/07/07 23:48:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -143,6 +143,16 @@ fundamental_type_reference::make_instantiation_statement(
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) {
 	return t->make_instantiation_statement_private(t, d, a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// is static
+excl_ptr<instantiation_statement_base>
+fundamental_type_reference::make_instantiation_statement(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d) {
+	const const_template_args_ptr_type null;
+	return t->make_instantiation_statement_private(t, d, null);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1195,6 +1205,8 @@ never_ptr<const definition_base>
 param_type_reference::get_base_def(void) const {
 	return base_param_def;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

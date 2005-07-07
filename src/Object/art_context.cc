@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.35.2.5 2005/07/07 06:02:19 fang Exp $
+ 	$Id: art_context.cc,v 1.35.2.6 2005/07/07 23:48:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -891,11 +891,9 @@ context::add_port_formal(const token_identifier& id,
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate
-	// TODO: TEMPORARY TO MAKE IT COMPILE, FIX FOR REAL!
-	const relaxed_args_ptr_type FIX_ME_NOW(NULL);
 	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim, FIX_ME_NOW);
+			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
 	const never_ptr<const instance_collection_base>

@@ -1,0 +1,15 @@
+// "061.in" should pass, ok to put relaxed actuals after identifier
+// copy-modified from "059.in"
+
+template <pint Q><pint R>
+defproc foo();
+
+// this means that relaxed parameters are only tied to these ranges.  
+foo<5> bar<4>[3];
+
+// this means the relaxed parameters must apply for the entire array, strictly
+foo<5><4> car[3];
+
+// this leaves the relaxed parameters unspecified until later
+foo<5> dar[3];
+

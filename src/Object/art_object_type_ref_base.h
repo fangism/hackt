@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.4 2005/07/07 06:02:23 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.5 2005/07/07 23:48:15 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -133,6 +133,12 @@ virtual	MERGE_RELAXED_ACTUALS_PROTO = 0;
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type&);
+
+	static	
+	excl_ptr<instantiation_statement_base>
+	make_instantiation_statement(
+		const count_ptr<const fundamental_type_reference>& t, 
+		const index_collection_item_ptr_type& d);
 
 private:
 #define	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO			\

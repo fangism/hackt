@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.1 2005/06/24 00:48:49 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.2 2005/07/07 23:48:11 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -91,7 +91,12 @@ struct collection_type_manager {
 	 */
 	static
 	bad_bool
-	commit_type(instance_collection_generic_type&, 
+	commit_type(const instance_collection_generic_type&, 
+		const type_ref_ptr_type&);
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type&, 
 		const type_ref_ptr_type&);
 
 };	// end struct type_manager
@@ -177,6 +182,15 @@ virtual	bool
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;
 
+#if 1
+	// 2005-07-07: intended for first-time type establishment, 
+	// which determines whether or not the collection is relaxed or 
+	// strictly typed.  
+	void
+	establish_collection_type(const type_ref_ptr_type&);
+#endif
+
+	// 2005-07-07: now intended for use AFTER collection type is established
 	bad_bool
 	commit_type(const type_ref_ptr_type& );
 

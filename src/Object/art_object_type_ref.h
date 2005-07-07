@@ -2,7 +2,7 @@
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
 	TODO: must pool-allocate these, they're created frequently!
- 	$Id: art_object_type_ref.h,v 1.27.2.6 2005/07/07 06:02:23 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.7 2005/07/07 23:48:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -105,6 +105,7 @@ public:
 	Abstract parent class for all channel types.  
  */
 class channel_type_reference_base : public fundamental_type_reference {
+	typedef	channel_type_reference_base		this_type;
 protected:
 	typedef	fundamental_type_reference		parent_type;
 public:
@@ -141,6 +142,11 @@ virtual	ostream&
 
 	ostream&
 	dump_direction(ostream&) const;
+
+#if 0
+virtual	count_ptr<const this_type>
+	unroll_resolve(unroll_context&) const = 0;
+#endif
 
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
@@ -203,6 +209,11 @@ public:
 	datatype_ptr_type
 	index_datatype(const size_t) const;
 
+#if 0
+	count_ptr<const channel_type_reference_base>
+	unroll_resolve(unroll_context&) const;
+#endif
+
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
@@ -252,6 +263,11 @@ public:
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+
+#if 0
+	count_ptr<const channel_type_reference_base>
+	unroll_resolve(unroll_context&) const;
+#endif
 
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
@@ -305,6 +321,9 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	never_ptr<const process_definition_base>
+	get_base_proc_def(void) const { return base_proc_def; }
+
 	// just resolves template actuals to constants
 	count_ptr<const this_type>
 	unroll_resolve(unroll_context& ) const;
@@ -357,6 +376,11 @@ public:
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+
+#if 0
+	count_ptr<const this_type>
+	unroll_resolve(unroll_context& ) const;
+#endif
 
 private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;

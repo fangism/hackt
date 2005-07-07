@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.28.2.6 2005/07/07 06:02:16 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28.2.7 2005/07/07 23:48:05 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -425,13 +425,11 @@ instance_base::rightmost(void) const {
 	Eventually don't return top_namespace, 
 	but a pointer to the created instance_base
 	so that it may be used by instance_alias.  
-	TODO: actually handle the optional relaxed template arguments.  
  */
 never_ptr<const object>
 instance_base::check_build(context& c) const {
 	STACKTRACE("instance_base::check_build()");
-	typedef	count_ptr<dynamic_param_expr_list>
-						relaxed_args_ptr_type;
+	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
 	// uses c.current_fundamental_type
 	const count_ptr<const fundamental_type_reference>
 		type(c.get_current_fundamental_type());
@@ -460,13 +458,19 @@ instance_base::check_build(context& c) const {
 		copy(temp.begin(), temp.end(),
 			back_inserter(*checked_relaxed_actuals));
 #endif
-	} else if (type->is_relaxed()) {
+	}
+#if 0
+	// change of mind:
+	// we allow scalar instance declarations to be relaxed
+	// for the sake of forming aliases with other instances.  
+	else if (type->is_relaxed()) {
 		// this is a scalar declaration, so the type MUST be strict
 		cerr << "ERROR: scalar declarations require relaxed actual "
 			"parameters for definitions that have them.  " <<
 			where(*this) << endl;
 		return never_ptr<const object>(NULL);
 	}
+#endif
 	// otherwise do nothing different from before.  
 	const never_ptr<const instance_collection_base>
 		inst(c.add_instance(*id, checked_relaxed_actuals));
@@ -514,36 +518,61 @@ instance_array::rightmost(void) const {
 never_ptr<const object>
 instance_array::check_build(context& c) const {
 	STACKTRACE("instance_array::check_build()");
-	if (ranges) {
-		const range_list::checked_meta_ranges_type
-			d(ranges->check_meta_ranges(c));
-		if (!d) {
-			cerr << "ERROR in building sparse range list!  " <<
-				where(*ranges) << endl;
+if (ranges) {
+	typedef	count_ptr<dynamic_param_expr_list>
+						relaxed_args_ptr_type;
+	const count_ptr<const fundamental_type_reference>
+		type(c.get_current_fundamental_type());
+	relaxed_args_ptr_type checked_relaxed_actuals;
+	INVARIANT(type);
+	if (relaxed_args) {
+		if (type->is_strict()) {
+			type->dump(cerr << "ERROR: current type ") <<
+				" is already strict and hence, does not "
+				"require relaxed template actuals " <<
+				where(*relaxed_args) <<
+				" in this instance declaration.  " << endl;
+			return never_ptr<const object>(NULL);
+		}
+		// TODO: not done yet... need to alter c.add_instance
+		// copied from template_argument_list_pair::check_template_args
+#if 1
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		// by syntactic construction, all expressions are non NULL
+		checked_relaxed_actuals =
+			relaxed_args_ptr_type(
+				new dynamic_param_expr_list(
+					relaxed_args->size()));
+		NEVER_NULL(checked_relaxed_actuals);
+		copy(temp.begin(), temp.end(),
+			back_inserter(*checked_relaxed_actuals));
+#endif
+	}
+	const range_list::checked_meta_ranges_type
+		d(ranges->check_meta_ranges(c));
+	if (!d) {
+		cerr << "ERROR in building sparse range list!  " <<
+			where(*ranges) << endl;
+		THROW_EXIT;
+	}
+	if (c.get_current_open_definition()) {
+		if (d->is_relaxed_formal_dependent()) {
+			cerr << "ERROR in instance-array declaration "
+				"at " << where(*ranges) <<
+				": array sizes are not allowed to "
+				"depend on relaxed formal parameters."
+				<< endl;
 			THROW_EXIT;
 		}
-		// TODO: in definition context, array sizes may NOT 
-		// depend on relaxed template formals
-		if (c.get_current_open_definition()) {
-			if (d->is_relaxed_formal_dependent()) {
-				cerr << "ERROR in instance-array declaration "
-					"at " << where(*ranges) <<
-					": array sizes are not allowed to "
-					"depend on relaxed formal parameters."
-					<< endl;
-				THROW_EXIT;
-			}
-		}
-#if 1
-		const count_ptr<dynamic_param_expr_list> bogus;
-#endif
-		const never_ptr<const instance_collection_base>
-			t(c.add_instance(*id, bogus, d));
-		// if there was error, would've THROW_EXIT'd (temporary)
-		return t;
-	} else {
-		return instance_base::check_build(c);
 	}
+	const never_ptr<const instance_collection_base>
+		t(c.add_instance(*id, checked_relaxed_actuals, d));
+	// if there was error, would've THROW_EXIT'd (temporary)
+	return t;
+} else {
+	return instance_base::check_build(c);
+}
 }
 
 //=============================================================================

@@ -1,1 +1,0 @@
-ERROR: scalar declarations require relaxed actual parameters for definitions that have them.  [7:9..11]

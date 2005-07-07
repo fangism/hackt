@@ -2,6 +2,44 @@
 
 2005-07-07	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-20:
+	  We now allow scalar instance declarations to have relaxed
+		types for the sake of being able to alias them
+		to other instances.  Unrolling will not catch it
+		as error until the creation phase, where creation
+		requires relaxed actuals (where relaxed formals exist).  
+	  Done: instance_array::check_build().
+		Checked that instance_collections acquire the
+		type specified by the original declaration.  
+		If the first declaration was relaxed, then the collection
+		remains relaxed, if the first declaration was strict...
+	  Resolved: port declarations will not have late-relaxed arguments.
+		Declare their types either strict or relaxed up-front.  
+		Thus, context::add_port_formal() remains as is.  
+	  instantiation_statement::unroll():
+		Temporary workaround to detect the first instantation
+		for the referenced collection.  The first time will
+		use the original type to establish the collection's type.
+		Subsequent instantiations that call commit_type will
+		only check collectibility without modifying the 
+		collection's type.  (Assertions in place.)
+		To instantiation_statement_type_ref_base<Tag>:
+			added commit_type_first_time(), and
+			get_resolved_type() (also to specializations
+			in "Object/art_object_inst_stmt_*.h")
+	  Some test outcomes were updated per the above changes.  
+	  TODO: propagate the below TODOs through each subsequent revision
+		of this branch until they disappear.  
+	  TODO: implement type-completion statements (already in AST/grammar)
+		in "AST/art_parser_instance.cc".  These statements
+		allow one to 'attach' relaxed template actuals to
+		instance-references, provided that they are already
+		instantiated.  
+	  TODO: store relaxed actuals in instance_alias_info classes.  
+	  TODO: (not important) rename instantiation_statement
+		functions to describe what they do more accurately.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-19:
 	  Now actually storing instance-time relaxed template actuals
 		with the individual instantiation statements.  
@@ -27,7 +65,6 @@
 		instance_array::check_build need to propagate to port_formals.  
 	  TODO: fix bogus argument "FIX_ME_NOW" in 
 		parser::context::add_port_formal(), copy from add_instance.
-	  TODO: store relaxed actuals in instance_alias_info classes.  
 
 
 2005-07-06	David Fang		<fangism@users.sourceforge.net>

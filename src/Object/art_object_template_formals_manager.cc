@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.11 2005/07/07 06:02:22 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.12 2005/07/07 23:48:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -236,10 +236,12 @@ template_formals_manager::partial_check_null_template_argument(
 	\return true if this definition is not templated, 
 		or the template formals signature is empty, 
 		or default parameters are available for all formals.  
+	NOTE: null argument checking doesn't apply to relaxed formals.  
  */
 good_bool
 template_formals_manager::check_null_template_argument(void) const {
 	STACKTRACE("template_formals_manager::check_null_template_argument()");
+#if 0
 	if (!partial_check_null_template_argument(
 			strict_template_formals_list).good) {
 		return good_bool(false);
@@ -247,6 +249,10 @@ template_formals_manager::check_null_template_argument(void) const {
 			relaxed_template_formals_list).good) {
 		return good_bool(false);
 	} else	return good_bool(true);
+#else
+	return partial_check_null_template_argument(
+		strict_template_formals_list);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

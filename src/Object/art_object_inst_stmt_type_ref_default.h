@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.4 2005/07/07 06:02:21 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.5 2005/07/07 23:48:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
 
+#include <iostream>
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/expr/param_expr_list.h"
@@ -16,6 +17,7 @@ namespace ART {
 namespace entity {
 class param_expr_list;
 using util::persistent_object_manager;
+#include "util/using_ostream.h"
 
 //=============================================================================
 /**
@@ -24,9 +26,13 @@ using util::persistent_object_manager;
 	All methods and members are declared protected;
 		they're intended for children classes only.  
 	\param Tag the meta-type tag.  
+	TODO: cache the partial results of type resolution, 
+		and re-use them in subsequent resolutions.  
  */
 template <class Tag>
 class instantiation_statement_type_ref_default {
+	typedef	instantiation_statement_type_ref_default<Tag>
+							this_type;
 public:
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
@@ -70,8 +76,25 @@ protected:
 	// default destructor
 	~instantiation_statement_type_ref_default() { }
 
-	count_ptr<const fundamental_type_reference>
+	type_ref_ptr_type
 	get_type(void) const { return type; }
+
+	type_ref_ptr_type
+	get_resolved_type(unroll_context& c) const {
+		const type_ref_ptr_type ret(type->unroll_resolve(c));
+		if (!ret) {
+			type->what(cerr << "ERROR: unable to resolve ") <<
+				" during unroll." << endl;
+		}
+#if 0
+		else {
+			// enable later when things are more stable
+			// cache the equivalent resolved type
+			const_cast<this_type*>(this)->type = ret;
+		}
+#endif
+		return ret;
+	}
 
 	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
@@ -82,30 +105,36 @@ protected:
 		TODO: combine type and relaxed_args.
 		relaxed_args is still allowed to be NULL.  
 		The resulting type is allowed to be relaxed, incomplete. 
+		TODO: rename to unroll_fused_type_reference
 	 */
 	type_ref_ptr_type
 	unroll_type_reference(unroll_context& c) const {
-#if 1
 		if (relaxed_args) {
 			// clumsy but effective, make a temporary deep-copy
 			const type_ref_ptr_type
 			merged_type(type->merge_relaxed_actuals(relaxed_args));
 			return merged_type->unroll_resolve(c);
 		} else	return type->unroll_resolve(c);
-#else
-		// doesn't require relaxed actuals
-		return type->unroll_resolve(c);
-#endif
+	}
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& v, 
+			const type_ref_ptr_type& t) {
+		v.establish_collection_type(t);
 	}
 
 	/**
 		TODO: make sure scalar has complete type, 
 		arrays are allowed to be relaxed.  
+		TODO: Rename this check_type (collectible)
+			and make it const.  
 	 */
 	static
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,
 			const type_ref_ptr_type& t) {
+		// note: automatic conversion from bad_bool to good_bool :)
 		return v.commit_type(t);
 	}
 

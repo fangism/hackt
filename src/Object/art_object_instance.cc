@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.5 2005/07/07 06:02:21 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.6 2005/07/07 23:48:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -250,12 +250,14 @@ instance_collection_base::detect_static_overlap(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: this can only be done with non-formals.  Check this.  
+	TODO: this can only be done with non-formals.  Check this.  
 	If this instance is a collection, add the new range of indices
 	which may be sparse or dense.  
 
-	TO DO: type-check here?
+	TODO: type-check here?
 	see scopespace::add_instance's definition body
+	2005-07-07: need to register type of the first declaration up-front, 
+		i.e. its strict parameters, and relaxed parameters if available
 
 	This is only applicable if this instantiation was initialized
 	as a collective.  

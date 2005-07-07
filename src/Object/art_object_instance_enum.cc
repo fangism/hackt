@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.16.2.1 2005/07/05 07:59:45 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.2 2005/07/07 23:48:12 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -122,8 +122,9 @@ struct collection_type_manager<enum_tag> {
 	 */
 	static
 	bad_bool
-	commit_type(instance_collection_generic_type& c,
+	commit_type(const instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) {
+#if 0
 		// make sure this is the canonical definition
 		//	in case type is typedef!
 		// this really should be statically type-checked
@@ -134,7 +135,22 @@ struct collection_type_manager<enum_tag> {
 			c.type_parameter = t->get_base_def()
 				.is_a<const enum_datatype_def>();
 		return bad_bool(false);
+#else
+		INVARIANT(c.type_parameter);
+		INVARIANT(t->get_base_def() == c.type_parameter);
+		return bad_bool(false);
+#endif
 	}
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& c, 
+			const type_ref_ptr_type& t) {
+		INVARIANT(!c.type_parameter);
+		c.type_parameter = t->get_base_def()
+			.is_a<const enum_datatype_def>();
+	}
+
 };	// end struct collection_type_manager
 
 //=============================================================================

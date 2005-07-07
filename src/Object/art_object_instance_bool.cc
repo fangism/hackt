@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.2 2005/07/05 07:59:44 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.3 2005/07/07 23:48:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -131,6 +131,13 @@ struct collection_type_manager<bool_tag> {
 			->resolve_canonical_datatype_definition() == &bool_def);
 		// shouldn't have any parameters, NULL or empty list
 		return bad_bool(false);
+	}
+
+	static
+	void
+	commit_type_first_time(instance_collection_generic_type& c, 
+		const type_ref_ptr_type&) {
+		// no-op
 	}
 };	// end struct collection_type_committer
 

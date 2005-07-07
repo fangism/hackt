@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.5 2005/07/06 00:59:24 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.6 2005/07/07 23:48:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2432,9 +2432,16 @@ process_definition_alias::make_fundamental_type_reference(
 count_ptr<const process_type_reference>
 process_definition_alias::make_canonical_type_reference(
 		const template_actuals& a) const {
+#if 0
 	typedef	count_ptr<const process_type_reference>	return_type;
 	cerr << "Fang. write process_definition_alias::make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+#else
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_proc_def()->make_canonical_type_reference(ta);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

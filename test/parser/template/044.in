@@ -1,7 +1,8 @@
-// "044.in" should fail, no default relaxed parameters
+// "044.in" should pass unrolling, die at creation time.  
 
 template <pint Q=5><pint R>
 defproc foo();
 
-foo bar;	// should die, insufficient default parameters
+foo bar;
+// unrolls fine, but will find relaxed actuals missing at creation phase
 

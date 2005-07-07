@@ -2,7 +2,7 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.20.4.1 2005/07/07 06:02:19 fang Exp $
+	$Id: art_context.h,v 1.20.4.2 2005/07/07 23:48:07 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
@@ -373,14 +373,6 @@ public:
 	never_ptr<const instance_collection_base>
 	lookup_instance(const qualified_id& id) const;
 
-#if 0
-	never_ptr<const instance_collection_base>
-	add_instance(const token_identifier& id);
-
-	never_ptr<const instance_collection_base>
-	add_instance(const token_identifier& id, 
-		index_collection_item_ptr_type dim);
-#else
 	never_ptr<const instance_collection_base>
 	add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type&);
@@ -389,7 +381,6 @@ public:
 	add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type&, 
 		index_collection_item_ptr_type dim);
-#endif
 
 	// should be param_instance_collection
 	never_ptr<const instance_collection_base>
@@ -402,9 +393,11 @@ public:
 		index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d);
 
+	// port formals are not allowed to have instance-relaxed actuals.  
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id);
 
+	// port formals are not allowed to have instance-relaxed actuals.  
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);

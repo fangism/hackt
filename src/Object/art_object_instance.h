@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.40.4.1 2005/07/04 19:13:27 fang Exp $
+	$Id: art_object_instance.h,v 1.40.4.2 2005/07/07 23:48:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -116,6 +116,9 @@ virtual bool
 
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
+
+virtual	void
+	establish_collection_type(const type_ref_ptr_type&) = 0;
 
 	// a better return type?
 virtual	bad_bool
