@@ -1,0 +1,9 @@
+// "059.in" should pass, ok to put relaxed actuals after identifier
+// copy-modified from "045.in"
+
+template <pint Q><pint R>
+defproc foo();
+
+foo<5> bar<4>;
+foo<5><4> car;	// should have the same effect for scalars
+

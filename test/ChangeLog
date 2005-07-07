@@ -1,0 +1,34 @@
+# "test/ChangeLog"
+
+2005-07-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-19:
+	  Enhanced Make.test to include a check.log target, which
+		saves the results of "make -k check" to log file, 
+		and dumps a quick failure summary.  This is usable
+		in the top test directory, and any of its subdirectories, 
+		thanks to automake.  Should've done this ages ago.  
+
+
+2005-06-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-22:
+	  "state_enum_filter.awk" handle case of bison grammar output
+		where a the LHS of a rule is abbreviated with just '|'
+		as a continuation of the previous line.  
+		(bison vs. yacc difference)
+
+
+2005-05-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-38:
+	  Added this ChangeLog.
+	  Added POM-header-filter.awk to reduces test expectation conflicts
+		due to trivial (insignificant) differences 
+		and path-related differences.
+	  artobj-diff.sh: added -d flag to art++2obj invocation
+		to cause textual dump.  
+	  	set up $filter command as pure pipe.
+	  artobjunroll-expect.sh: set up $filter command as pure pipe.
+
+

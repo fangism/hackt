@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.7.14.6 2005/07/06 23:11:26 fang Exp $
+#	$Id: Makefile.am,v 1.7.14.7 2005/07/07 06:03:04 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -10,7 +10,8 @@ ARTC_TEST_FAILURES = \
 	010 013 014 019 \
 	020 023 024 025 027 028 \
 	042 044 045 046 047 048 \
-	050 051 052 053 054
+	050 051 052 053 054 \
+	060
 
 ARTC_TEST_PASSES = \
 	001 002 004 006 007 008 009 \
@@ -18,7 +19,7 @@ ARTC_TEST_PASSES = \
 	021 022 026 029 \
 	030 031 032 033 034 035 036 037 038 039 \
 	040 041 043 049 \
-	055 056 057 058
+	055 056 057 058 059
 
 # KNOWN BUGS:
 # should fail at unroll-time:
