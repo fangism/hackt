@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.h"
 	Class for template arguments, a.k.a. actuals.  
-	$Id: art_object_template_actuals.h,v 1.1.4.2 2005/06/30 23:22:25 fang Exp $
+	$Id: art_object_template_actuals.h,v 1.1.4.3 2005/07/07 06:02:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_ACTUALS_H__
@@ -43,11 +43,16 @@ public:
 	typedef	count_ptr<const expr_list_type>	const_arg_list_ptr_type;
 protected:
 	arg_list_ptr_type			strict_template_args;
-	arg_list_ptr_type			relaxed_template_args;
+	const_arg_list_ptr_type			relaxed_template_args;
 public:
 	template_actuals();
 
-	template_actuals(const arg_list_ptr_type&, const arg_list_ptr_type&);
+	template_actuals(const arg_list_ptr_type&,
+		const const_arg_list_ptr_type&);
+
+	// special purpose constructor
+	template_actuals(const template_actuals& t, 
+		const const_arg_list_ptr_type&);
 
 	~template_actuals();
 
@@ -60,14 +65,21 @@ public:
 	const_arg_list_ptr_type
 	get_strict_args(void) const;
 
+#if 0
+	arg_list_ptr_type
+	get_strict_args_const(void) const;
+#endif
+
 	arg_list_ptr_type
 	get_strict_args(void);
 
 	const_arg_list_ptr_type
 	get_relaxed_args(void) const;
 
+#if 0
 	arg_list_ptr_type
 	get_relaxed_args(void);
+#endif
 
 	operator bool () const;
 

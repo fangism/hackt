@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.21.10.6 2005/07/06 20:14:25 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.21.10.7 2005/07/07 06:02:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -140,7 +140,13 @@ instantiation_statement_base::dump(ostream& o) const {
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	NEVER_NULL(type_base);
-	type_base->dump(o) << " ";
+	type_base->dump(o);
+	// is this ok: reference to automatic object?
+	const const_relaxed_args_type& ra(get_relaxed_actuals());
+	if (ra) {
+		ra->dump(o << '<') << '>';
+	}
+	o << " ";
 	never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
 	if(inst_base) {

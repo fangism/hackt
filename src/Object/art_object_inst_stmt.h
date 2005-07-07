@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.17.4.3 2005/07/06 20:14:26 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.17.4.4 2005/07/07 06:02:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
@@ -67,14 +67,26 @@ public:
 	typedef	never_ptr<collection_type>		collection_ptr_type;
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
+#if 0
+	typedef	instantiation_statement_base::relaxed_args_type
+							relaxed_args_type;
+#endif
+	typedef	instantiation_statement_base::const_relaxed_args_type
+							const_relaxed_args_type;
 protected:
 	never_ptr<collection_type>			inst_base;
 protected:
 	instantiation_statement();
-public:
 
+	// for param_instantiation_statement and others that don't use
+	// relaxed template parameters
 	instantiation_statement(const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
+
+public:
+	instantiation_statement(const type_ref_ptr_type& t, 
+		const index_collection_item_ptr_type& i, 
+		const const_relaxed_args_type&);
 
 	~instantiation_statement();
 
@@ -96,7 +108,7 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
-	instantiation_statement_base::relaxed_args_type
+	const_relaxed_args_type
 	get_relaxed_actuals(void) const;
 
 	good_bool

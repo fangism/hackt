@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.3 2005/07/06 20:14:28 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.4 2005/07/07 06:02:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -71,6 +71,8 @@ virtual	~type_reference_base() { }
 class fundamental_type_reference : public type_reference_base {
 public:
 	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
+	typedef	template_actuals::const_arg_list_ptr_type
+						const_template_args_ptr_type;
 protected:
 	/// set of template parameters passed to this type
 	template_actuals			template_args;
@@ -116,22 +118,40 @@ virtual never_ptr<const definition_base>
 	bool
 	is_relaxed(void) const { return !is_strict(); }
 
+#define	MERGE_RELAXED_ACTUALS_PROTO					\
+	count_ptr<const this_type>					\
+	merge_relaxed_actuals(const const_template_args_ptr_type&) const
+
+#if 0
+// on second thought, this need not be virtual base!
+virtual	MERGE_RELAXED_ACTUALS_PROTO = 0;
+#endif
+
 	static	
 	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d);
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type&);
 
 private:
-virtual	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const = 0;
+#define	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO			\
+	excl_ptr<instantiation_statement_base>				\
+	make_instantiation_statement_private(				\
+		const count_ptr<const fundamental_type_reference>& t, 	\
+		const index_collection_item_ptr_type& d, 		\
+		const const_template_args_ptr_type&) const
+
+virtual	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO = 0;
 
 public:
-virtual	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const = 0;
+
+#define	MAKE_INSTANCE_COLLECTION_PROTO					\
+	excl_ptr<instance_collection_base>				\
+	make_instance_collection(const never_ptr<const scopespace> s, 	\
+		const token_identifier& id, const size_t d) const
+
+virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 
 public:
 	bool

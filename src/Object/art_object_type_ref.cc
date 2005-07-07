@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.9 2005/07/06 23:11:23 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.10 2005/07/07 06:02:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -140,8 +140,9 @@ if (IS_A(const builtin_channel_type_reference*, this)) {
 excl_ptr<instantiation_statement_base>
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) {
-	return t->make_instantiation_statement_private(t, d);
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type& a) {
+	return t->make_instantiation_statement_private(t, d, a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -441,15 +442,30 @@ data_type_reference::unroll_resolve(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Combines relaxed template arguments to make a complete strict type.  
+	\param a non-NULL relaxed template actuals.
+	\pre this->template_args doesn't already have relaxed actuals, 
+		this is asserted in the template_actuals constructor.  
+ */
+count_ptr<const data_type_reference>
+data_type_reference::merge_relaxed_actuals(
+		const const_template_args_ptr_type& a) const {
+	return count_ptr<const this_type>(new this_type(base_type_def, 
+			template_actuals(template_args, a)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Returns a newly constructed data instantiation statement object.
  */
 excl_ptr<instantiation_statement_base>
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const {
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type& a) const {
 	return excl_ptr<instantiation_statement_base>(
 		new data_instantiation_statement(
-			t.is_a<const data_type_reference>(), d));
+			t.is_a<const data_type_reference>(), d, a));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -727,10 +743,12 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 excl_ptr<instantiation_statement_base>
 builtin_channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const {
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type& a) const {
+	// technically built-in channel types never have relaxed actuals...
 	return excl_ptr<instantiation_statement_base>(
 		new channel_instantiation_statement(
-			t.is_a<const this_type>(), d));
+			t.is_a<const this_type>(), d, a));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -876,15 +894,30 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Combines relaxed template arguments to make a complete strict type.  
+	\param a non-NULL relaxed template actuals.
+	\pre this->template_args doesn't already have relaxed actuals, 
+		this is asserted in the template_actuals constructor.  
+ */
+count_ptr<const channel_type_reference>
+channel_type_reference::merge_relaxed_actuals(
+		const const_template_args_ptr_type& a) const {
+	return count_ptr<const this_type>(new this_type(base_chan_def, 
+			template_actuals(template_args, a)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Returns a newly constructed channel instantiation statement object.
  */
 excl_ptr<instantiation_statement_base>
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const {
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type& a) const {
 	return excl_ptr<instantiation_statement_base>(
 		new channel_instantiation_statement(
-			t.is_a<const this_type>(), d));
+			t.is_a<const this_type>(), d, a));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1059,15 +1092,30 @@ process_type_reference::unroll_register_complete_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Combines relaxed template arguments to make a complete strict type.  
+	\param a non-NULL relaxed template actuals.
+	\pre this->template_args doesn't already have relaxed actuals, 
+		this is asserted in the template_actuals constructor.  
+ */
+count_ptr<const process_type_reference>
+process_type_reference::merge_relaxed_actuals(
+		const const_template_args_ptr_type& a) const {
+	return count_ptr<const this_type>(new this_type(base_proc_def, 
+			template_actuals(template_args, a)));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Returns a newly constructed process instantiation statement object.
  */
 excl_ptr<instantiation_statement_base>
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const {
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type& a) const {
 	return excl_ptr<instantiation_statement_base>(
 		new process_instantiation_statement(
-			t.is_a<const process_type_reference>(), d));
+			t.is_a<const process_type_reference>(), d, a));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1155,13 +1203,15 @@ param_type_reference::get_base_def(void) const {
 excl_ptr<instantiation_statement_base>
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const {
+		const index_collection_item_ptr_type& d, 
+		const const_template_args_ptr_type& a) const {
 	typedef	excl_ptr<instantiation_statement_base>	return_type;
 	static const class_traits<pbool_tag>::type_ref_ptr_type&
 		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
 	static const class_traits<pint_tag>::type_ref_ptr_type&
 		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
 	INVARIANT(t == this);
+	INVARIANT(!a);
 	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
 			pbool_type_ptr, d));

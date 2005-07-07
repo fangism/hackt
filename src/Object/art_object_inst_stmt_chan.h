@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.2 2005/07/06 20:14:26 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.3 2005/07/07 06:02:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
@@ -20,17 +20,23 @@ class param_expr_list;
 #if 1
 class class_traits<channel_tag>::instantiation_statement_type_ref_base {
 public:
-	typedef	count_ptr<param_expr_list>		relaxed_args_type;
+	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 protected:
 	type_ref_ptr_type				type;
 	// TODO: switch this bad boy over to the default, 
 	// also in chan_traits.h
+	const_relaxed_args_type				relaxed_args;
 protected:
-	instantiation_statement_type_ref_base() : type(NULL) { }
+	instantiation_statement_type_ref_base() :
+		type(NULL), relaxed_args() { }
 
 	explicit
-	instantiation_statement_type_ref_base(
-		const type_ref_ptr_type& t) : type(t) { }
+	instantiation_statement_type_ref_base(const type_ref_ptr_type& t) :
+			type(t), relaxed_args(NULL) { }
+
+	instantiation_statement_type_ref_base(const type_ref_ptr_type& t,
+			const const_relaxed_args_type& a) :
+			type(t), relaxed_args(a) { }
 
 	count_ptr<const fundamental_type_reference>
 	get_type(void) const { return type; }
@@ -48,9 +54,9 @@ protected:
 	/**
 		Yeah, I know this is incomplete...
 	 */
-	relaxed_args_type
+	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
-		return relaxed_args_type(NULL);
+		return const_relaxed_args_type(NULL);
 	}
 
 	static

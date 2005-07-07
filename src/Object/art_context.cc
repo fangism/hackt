@@ -2,7 +2,7 @@
 	\file "Object/art_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.35.2.4 2005/07/06 20:14:25 fang Exp $
+ 	$Id: art_context.cc,v 1.35.2.5 2005/07/07 06:02:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_CONTEXT_CC__
@@ -18,6 +18,7 @@
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
 #include "Object/expr/meta_range_list.h"
+#include "Object/expr/param_expr_list.h"
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
@@ -720,10 +721,11 @@ context::get_current_named_scope(void) {
 	Make overloaded version with dimensions.  
  */
 never_ptr<const instance_collection_base>
-context::add_instance(const token_identifier& id) {
+context::add_instance(const token_identifier& id, 
+		const relaxed_args_ptr_type& a) {
 	STACKTRACE("context::add_instance(id)");
 	// wrapper
-	return add_instance(id, index_collection_item_ptr_type(NULL));
+	return add_instance(id, a, index_collection_item_ptr_type(NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -751,6 +753,7 @@ context::add_instance(const token_identifier& id) {
  */
 never_ptr<const instance_collection_base>
 context::add_instance(const token_identifier& id, 
+		const relaxed_args_ptr_type& a, 
 		index_collection_item_ptr_type dim) {
 	typedef	never_ptr<const instance_collection_base>	return_type;
 	STACKTRACE("context::add_instance(id, dim)");
@@ -761,7 +764,7 @@ context::add_instance(const token_identifier& id,
 
 	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim);
+			current_fundamental_type, dim, a);
 	NEVER_NULL(inst_stmt);
 	const return_type
 		inst_base(current_named_scope->add_instance(inst_stmt, id));
@@ -810,9 +813,11 @@ context::add_template_formal(const token_identifier& id,
 		// valid parameter type to instantiate
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
+	const relaxed_args_ptr_type bogus(NULL);
 	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
-			ptype, dim);
+			ptype, dim, bogus);
+	// template formals cannot have relaxed types!
 	NEVER_NULL(inst_stmt);
 	// formal instance is constructed and added in add_instance
 	const never_ptr<const instance_collection_base>
@@ -871,7 +876,7 @@ context::add_template_formal(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: write it, finish it -- what about arrays?
+	TODO: write it, finish it -- what about arrays?
 	Using the current_type_reference, 
 	adds a port formal parameter.  
 	Is like add_instance, above.  
@@ -886,9 +891,11 @@ context::add_port_formal(const token_identifier& id,
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate
+	// TODO: TEMPORARY TO MAKE IT COMPILE, FIX FOR REAL!
+	const relaxed_args_ptr_type FIX_ME_NOW(NULL);
 	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim);
+			current_fundamental_type, dim, FIX_ME_NOW);
 	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
 	const never_ptr<const instance_collection_base>

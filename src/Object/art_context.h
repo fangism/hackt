@@ -1,32 +1,73 @@
 /**
-	\file "art_context.h"
+	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.12 2005/01/13 05:28:27 fang Exp $
+	$Id: art_context.h,v 1.20.4.1 2005/07/07 06:02:19 fang Exp $
  */
 
-#ifndef __ART_CONTEXT_H__
-#define __ART_CONTEXT_H__
+#ifndef __OBJECT_ART_CONTEXT_H__
+#define __OBJECT_ART_CONTEXT_H__
 
-#include <string>
+#include "util/string_fwd.h"
 #include <stack>
 
-#include "STL/list.h"
-#include "memory/pointer_classes.h"
-#include "art_object_fwd.h"
+#include "util/STL/list.h"
+#include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
+#include "Object/art_object_util_types.h"
+#include "util/boolean_types.h"
 
 namespace ART {
-
-//=============================================================================
-using namespace entity;
+namespace entity {
+	// forward declarations
+	class object;
+	class module;
+	class scopespace;
+	class name_space;
+	class definition_base;
+	class datatype_definition_base;
+	class channel_definition_base;
+	class process_definition_base;
+	class fundamental_type_reference;
+	class sequential_scope;
+	class instance_collection_base;
+	class instance_management_base;
+	class meta_instance_reference_connection;
+	class param_expr;
+	class param_expr_list;
+	class param_expression_assignment;
+}	// end namespace entity
 
 namespace parser {
 //=============================================================================
+// forward declarations outside this namespace
 using std::ostream;
 using std::stack;
 using std::string;
 USING_LIST
-using namespace util::memory;		// for pointer classes
+using util::good_bool;
+using util::bad_bool;
+using util::memory::count_ptr;
+using util::memory::never_ptr;
+using util::memory::excl_ptr;
+using util::memory::sticky_ptr;
+using entity::object;
+using entity::module;
+using entity::scopespace;
+using entity::name_space;
+using entity::definition_base;
+using entity::datatype_definition_base;
+using entity::channel_definition_base;
+using entity::process_definition_base;
+using entity::fundamental_type_reference;
+using entity::sequential_scope;
+using entity::instance_collection_base;
+using entity::instance_management_base;
+using entity::meta_instance_reference_connection;
+using entity::param_expr;
+using entity::param_expr_list;
+using entity::param_expression_assignment;
+using entity::index_collection_item_ptr_type;
 
 //=============================================================================
 // forward declarations
@@ -57,9 +98,13 @@ class token_paramtype;
 	upon construction and destruction.  
 
 	TODO: replace indent with util/indent implementation.  
+	TODO: rename this parse_context.
+	TODO: real error manager...
  */
 class context {
-protected:
+public:
+	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
+private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
 
@@ -100,17 +145,6 @@ protected:
 	excl_ptr<definition_base>	current_prototype;
 
 	/**
-		Pointer to the current definition referenced, usually
-		resolved by the last identifier.  
-		May point to any definition for a channel, data-type, 
-		process, or even the dummy built-in parameter and data-types.  
-		The definition will be combined with optional 
-		template parameters to form a type reference (below).  
-	 */
-	stack<never_ptr<const definition_base> >	definition_stack;
-#define	current_definition_reference		definition_stack.top()
-
-	/**
 		Pointer to the concrete type to instantiate.  
 		Use shared count_ptr until type-cache is implemented.  
 	 */
@@ -127,24 +161,6 @@ protected:
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
 #define	current_sequential_scope		sequential_scope_stack.top()
 
-#if 0
-// NOT YET
-	/**
-		Expressions need to be reference counted.  
-	 */
-	stack<count_ptr<param_expr> >		expr_stack;
-#endif
-
-	/**
-		UPDATE ME.
-		A unified stack intended for instance references and
-		parameter expressions.  
-		Items need to be modifiable.  
-		e.g. when we are initializing reference 
-			expressions on the stack.
-	 */
-	stack<count_ptr<object> >		object_stack;
-
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
 	static const long	type_error_limit = 3;
@@ -158,7 +174,8 @@ public:
 	const never_ptr<name_space>		global_namespace;
 //	const never_ptr<const name_space>	global_namespace;
 
-protected:
+
+private:
 	/**
 		Consider a stack of contexts for instance_management_lists.
 		Push/pop when entering/leaving definition or
@@ -176,6 +193,16 @@ protected:
 	// sequential_scope::instance_management_list_type&
 	list<sticky_ptr<const instance_management_base> >&
 						master_instance_list;
+
+	/**
+		Stupid implementation of switching between
+		strict and relaxed template parameters. 
+		This flag is manipulated by the methods:
+			strict_template_parameters(), 
+			relaxed_template_parameters().
+		This flag is read by add_template_formals().  
+	 */
+	bool					strict_template_mode;
 
 public:
 	context(module& m);
@@ -202,7 +229,18 @@ public:
 	never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base>& d);
 
+#define	USE_CONTEXT_TEMPLATE_METHODS	1
+
 // void	declare_process(const token_identifier& ps);
+#if USE_CONTEXT_TEMPLATE_METHODS
+	template <class D>
+	void
+	open_definition(const token_identifier& ps);
+
+	template <class D>
+	void
+	close_definition(void);
+#else
 	void
 	open_process_definition(const token_identifier& ps);
 
@@ -210,38 +248,49 @@ public:
 	close_process_definition(void);
 
 	void
-	declare_datatype(const token_identifier& ds);
-	void
-	open_datatype(const token_identifier& ds);
+	open_datatype_definition(const token_identifier& ds);
 
 	void
 	close_datatype_definition(void);
 
-// void	declare_enum(const token_identifier& en);
+	void
+	open_chantype_definition(const token_identifier& ds);
+
+	void
+	close_chantype_definition(void);
+#endif
+
+	// different: not sequential scopes
 	void
 	open_enum_definition(const token_identifier& en);
-
-	bool
-	add_enum_member(const token_identifier& em);
 
 	void
 	close_enum_definition(void);
 
+#if 0
+	void
+	open_channel_definition(const token_identifier& ps);
+
+	void
+	close_channel_definition(void);
+#endif
+
+	void
+	declare_datatype(const token_identifier& ds);
+
+// void	declare_enum(const token_identifier& en);
+	good_bool
+	add_enum_member(const token_identifier& em);
+
 	void
 	declare_chantype(const token_identifier& ds);
 
-	void
-	open_chantype(const token_identifier& ds);
-
-	void
-	close_chantype_definition(void);
-
-	bool
+	good_bool
 	alias_definition(const never_ptr<const definition_base> d, 
 		const token_identifier& id);
 
 	void
-	add_connection(excl_ptr<const instance_reference_connection>& c);
+	add_connection(excl_ptr<const meta_instance_reference_connection>& c);
 
 	void
 	add_assignment(excl_ptr<const param_expression_assignment>& a);
@@ -261,22 +310,6 @@ public:
 	get_current_namespace(void) const
 		{ return current_namespace; }
 
-// sets context's definition for instantiation, or for member lookup
-	never_ptr<const definition_base>	
-	get_current_definition_reference(void) const
-		{ return current_definition_reference; }
-
-// pointer instead of reference?
-	never_ptr<const definition_base>
-	push_current_definition_reference(const definition_base& d) {
-		definition_stack.push(never_ptr<const definition_base>(&d));
-		return current_definition_reference;
-	}
-
-// never_ptr<const fundamental_type_reference>
-	count_ptr<const fundamental_type_reference>
-	get_current_fundamental_type(void) const;
-
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
 // void	reset_current_prototype(void);
@@ -288,20 +321,13 @@ public:
 	never_ptr<const definition_base>
 	get_current_prototype(void) const;
 
+#if USE_CONTEXT_TEMPLATE_METHODS
+	template <class D>
+	never_ptr<const D>
+	get_current_definition(void) const;
+#else
 	never_ptr<const datatype_definition_base>
 	get_current_datatype_definition(void) const;
-
-// should be called by parser after done using definitions
-	void
-	pop_current_definition_reference(void);
-
-	void
-	reset_current_fundamental_type(void);
-
-#if 0
-	never_ptr<const built_in_param_def>
-	get_current_param_definition(void) const;
-#endif
 
 	never_ptr<const channel_definition_base>
 	get_current_channel_definition(void) const;
@@ -309,9 +335,28 @@ public:
 	never_ptr<const process_definition_base>
 	get_current_process_definition(void) const;
 
+#endif
+
+#if 0
+	never_ptr<const built_in_param_def>
+	get_current_param_definition(void) const;
+#endif
+
+	never_ptr<definition_base>
+	get_current_open_definition(void) const {
+		return current_open_definition;
+	}
+
 	void
 	set_current_fundamental_type(
-		const count_ptr<const fundamental_type_reference>& tr);
+		const count_ptr<const fundamental_type_reference>&);
+
+// never_ptr<const fundamental_type_reference>
+	count_ptr<const fundamental_type_reference>
+	get_current_fundamental_type(void) const;
+
+	void
+	reset_current_fundamental_type(void);
 
 	never_ptr<const object>
 	lookup_object(const qualified_id& id) const;
@@ -328,12 +373,23 @@ public:
 	never_ptr<const instance_collection_base>
 	lookup_instance(const qualified_id& id) const;
 
+#if 0
 	never_ptr<const instance_collection_base>
 	add_instance(const token_identifier& id);
 
 	never_ptr<const instance_collection_base>
 	add_instance(const token_identifier& id, 
 		index_collection_item_ptr_type dim);
+#else
+	never_ptr<const instance_collection_base>
+	add_instance(const token_identifier& id, 
+		const relaxed_args_ptr_type&);
+
+	never_ptr<const instance_collection_base>
+	add_instance(const token_identifier& id, 
+		const relaxed_args_ptr_type&, 
+		index_collection_item_ptr_type dim);
+#endif
 
 	// should be param_instance_collection
 	never_ptr<const instance_collection_base>
@@ -353,16 +409,16 @@ public:
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);
 
-	void
-	push_object_stack(const count_ptr<object>& i);
-
-	count_ptr<object>
-	pop_top_object_stack(void);
-
 // repeat for processes and channels...
 
 	string
 	auto_indent(void) const;
+
+	void
+	strict_template_parameters(void) { strict_template_mode = true; }
+
+	void
+	relaxed_template_parameters(void) { strict_template_mode = false; }
 
 private:
 	void
@@ -373,5 +429,5 @@ private:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __ART_CONTEXT_H__
+#endif	// __OBJECT_ART_CONTEXT_H__
 

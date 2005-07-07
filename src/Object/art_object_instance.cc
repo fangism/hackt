@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.4 2005/07/06 00:59:27 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.5 2005/07/07 06:02:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -133,9 +133,9 @@ instance_collection_base::dump(ostream& o) const {
 	{	// indentation scope
 		INDENT_SECTION(o);
 		index_collection_type::const_iterator
-			i = index_collection.begin();
+			i(index_collection.begin());
 		const index_collection_type::const_iterator
-			e = index_collection.end();
+			e(index_collection.end());
 		for ( ; i!=e; i++) {
 			NEVER_NULL(*i);
 			const index_collection_item_ptr_type
@@ -232,7 +232,7 @@ instance_collection_base::detect_static_overlap(
 	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
 #endif
 	if (r.is_a<const const_range_list>()) {
-	index_collection_type::const_iterator i = index_collection.begin();
+	index_collection_type::const_iterator i(index_collection.begin());
 	for ( ; i!=index_collection.end(); i++) {
 		// return upon first overlap error
 		// later accumulate all overlaps.  
@@ -423,9 +423,9 @@ instance_collection_base::formal_size_equivalent(
 	if (this_coll == 1) {
 		// compare their collections
 		const index_collection_type::const_iterator
-			i = index_collection.begin();
+			i(index_collection.begin());
 		const index_collection_type::const_iterator
-			j = b->index_collection.begin();
+			j(b->index_collection.begin());
 		// difficult: what if some dimensions are not static?
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
@@ -460,8 +460,8 @@ instance_collection_base::collect_index_collection_pointers(
 //	STACKTRACE_PERSISTENT("instance_collection_base::collect_index_collection_pointers()");
 #if 0
 	// keep this around for debugging, does same thing, but readable in gdb
-	index_collection_type::const_iterator i = index_collection.begin();
-	const index_collection_type::const_iterator e = index_collection.end();
+	index_collection_type::const_iterator i(index_collection.begin());
+	const index_collection_type::const_iterator e(index_collection.end());
 	for ( ; i!=e; i++) {
 		STACKTRACE_PERSISTENT("for all index_collection:");
 		NEVER_NULL(*i);

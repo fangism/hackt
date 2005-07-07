@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.26.2.4 2005/07/06 23:11:21 fang Exp $
+	$Id: art_parser_base.cc,v 1.26.2.5 2005/07/07 06:02:16 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -214,7 +214,7 @@ chan_type::rightmost(void) const {
  */
 chan_type*
 chan_type::attach_data_types(const data_type_ref_list* t) {
-	assert(t); assert(!dtypes);     // sanity check    
+	NEVER_NULL(t); INVARIANT(!dtypes);     // sanity check    
 	dtypes = excl_ptr<const data_type_ref_list>(t);
 	assert(dtypes);
 	return this;

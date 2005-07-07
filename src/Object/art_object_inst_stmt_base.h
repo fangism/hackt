@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.11.4.4 2005/07/06 20:14:26 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.11.4.5 2005/07/07 06:02:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
@@ -41,7 +41,8 @@ using util::good_bool;
  */
 class instantiation_statement_base : public instance_management_base {
 public:
-	typedef	count_ptr<const param_expr_list>	relaxed_args_type;
+	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+	typedef	count_ptr<param_expr_list>		relaxed_args_type;
 protected:
 	index_collection_item_ptr_type		indices;
 protected:
@@ -76,7 +77,7 @@ virtual	never_ptr<const instance_collection_base>
 	index_collection_item_ptr_type
 	get_indices(void) const;
 
-virtual	relaxed_args_type
+virtual	const_relaxed_args_type
 	get_relaxed_actuals(void) const = 0;
 
 	good_bool

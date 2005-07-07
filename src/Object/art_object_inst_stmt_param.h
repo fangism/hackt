@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.4 2005/07/06 20:14:26 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.5 2005/07/07 06:02:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -26,7 +26,7 @@ class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
-	typedef	count_ptr<param_expr_list>	relaxed_args_type;
+	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -43,9 +43,9 @@ protected:
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
 	 */
-	relaxed_args_type
+	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
-		return relaxed_args_type(NULL);
+		return const_relaxed_args_type(NULL);
 	}
 
 	const type_ref_ptr_type&
@@ -73,7 +73,7 @@ class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
-	typedef	count_ptr<param_expr_list>	relaxed_args_type;
+	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -90,9 +90,9 @@ protected:
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
 	 */
-	relaxed_args_type
+	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
-		return relaxed_args_type(NULL);
+		return const_relaxed_args_type(NULL);
 	}
 
 	const type_ref_ptr_type&

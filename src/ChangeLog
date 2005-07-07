@@ -1,5 +1,35 @@
 "ChangeLog"
 
+2005-07-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-19:
+	  Now actually storing instance-time relaxed template actuals
+		with the individual instantiation statements.  
+		parser::context::add_instance() was updated to accommodate
+		relaxed arguments in instantiation_statement creation.  
+		make_instantation_statement and company were updated justly.  
+	  template_actuals::relaxed_args was modified to always
+		be const (param_expr_list*).
+	  Temporary working of instantiation_statement_type_ref_default
+		to handle fusing of relaxed template arguments.  
+		Have the others (_data, _channel) model after this.  
+		See its unroll_type_reference() for reference.  
+	  No longer validating relaxed actuals list in
+		template_formals_manager::must_validate... because
+		the actuals are allowed to be incomplete, i.e. missing
+		the relaxed actuals.  (Don't fill them in auto.)
+	  TODO: propagate the below TODOs through each subsequent revision
+		of this branch until they disappear.  
+	  TODO: fix instance_array::check_build (has bogus argument now)
+	  TODO: front-end type check needs to handle scalar and array
+		declarations differently w.r.t. relaxed actuals. 
+		Revisions to instance_base::check_build and
+		instance_array::check_build need to propagate to port_formals.  
+	  TODO: fix bogus argument "FIX_ME_NOW" in 
+		parser::context::add_port_formal(), copy from add_instance.
+	  TODO: store relaxed actuals in instance_alias_info classes.  
+
+
 2005-07-06	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-18:

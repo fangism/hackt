@@ -1,7 +1,8 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.27.2.5 2005/07/05 21:02:19 fang Exp $
+	TODO: must pool-allocate these, they're created frequently!
+ 	$Id: art_object_type_ref.h,v 1.27.2.6 2005/07/07 06:02:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -87,15 +88,13 @@ public:
 
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	MERGE_RELAXED_ACTUALS_PROTO;
+
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -211,14 +210,9 @@ private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
@@ -262,18 +256,14 @@ public:
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
+	MERGE_RELAXED_ACTUALS_PROTO;
 private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS
@@ -325,18 +315,15 @@ public:
 	good_bool
 	must_be_valid(void) const;
 
+	MERGE_RELAXED_ACTUALS_PROTO;
 private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -375,14 +362,9 @@ private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s,
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
 
 private:
 	// dummy implementation, never called

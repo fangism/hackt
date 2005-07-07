@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.6 2005/07/06 20:14:26 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.7 2005/07/07 06:02:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -101,8 +101,16 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-INSTANTIATION_STATEMENT_CLASS::~instantiation_statement() {
+INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
+		const type_ref_ptr_type& t, 
+		const index_collection_item_ptr_type& i, 
+		const const_relaxed_args_type& a) :
+		parent_type(i), type_ref_parent_type(t, a), inst_base(NULL) {
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+INSTANTIATION_STATEMENT_CLASS::~instantiation_statement() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
@@ -156,7 +164,7 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-instantiation_statement_base::relaxed_args_type
+instantiation_statement_base::const_relaxed_args_type
 INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 	return type_ref_parent_type::get_relaxed_actuals();
 }

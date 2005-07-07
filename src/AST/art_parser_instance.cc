@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.28.2.5 2005/07/06 23:11:22 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28.2.6 2005/07/07 06:02:16 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -31,6 +31,7 @@
 #include "Object/art_object_inst_ref.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/meta_range_list.h"
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"
 
@@ -91,6 +92,7 @@ using entity::simple_meta_instance_reference_base;
 using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;
+using entity::dynamic_param_expr_list;
 
 //=============================================================================
 // class instance_management method definitions
@@ -185,8 +187,8 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 
 	entity::param_expression_assignment::meta_instance_reference_appender
 		append_it(*ret);
-	const checked_meta_exprs_type::const_iterator dest_end = --temp.end();
-	checked_meta_exprs_type::const_iterator dest_iter = temp.begin();
+	const checked_meta_exprs_type::const_iterator dest_end(--temp.end());
+	checked_meta_exprs_type::const_iterator dest_iter(temp.begin());
 	err = accumulate(dest_iter, dest_end, err, append_it);
 
 	// if there are any errors, discard everything?
@@ -209,9 +211,13 @@ excl_ptr<const entity::aliases_connection_base>
 alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	typedef excl_ptr<const aliases_connection_base> const_return_type;
 	typedef excl_ptr<aliases_connection_base> 	return_type;
-	checked_meta_refs_type::const_iterator i = temp.begin();
+	checked_meta_refs_type::const_iterator i(temp.begin());
 	INVARIANT(temp.size() > 1);          // else what are you connecting?
+#if 0
+	const count_ptr<const meta_instance_reference_base> fir;
+#else
 	const count_ptr<const meta_instance_reference_base> fir(*i);
+#endif
 //		fir(i->is_a<const meta_instance_reference_base>());
 	NEVER_NULL(fir);
 	return_type ret = 
@@ -264,8 +270,8 @@ if (size() > 0) {		// non-empty
 	checked_meta_generic_type temp;
 //	check_list(temp, &expr::check_generic, c);
 	postorder_check_meta_generic(temp, c);
-	const checked_meta_generic_type::const_iterator first_obj = temp.begin();
-	const checked_meta_generic_type::const_iterator end_obj = temp.end();
+	const checked_meta_generic_type::const_iterator first_obj(temp.begin());
+	const checked_meta_generic_type::const_iterator end_obj(temp.end());
 	if (!first_obj->first && !first_obj->second) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
@@ -368,9 +374,9 @@ actuals_base::check_actuals(expr_list::checked_meta_refs_type& ret,
 	actuals->postorder_check_meta_generic(temp, c);
 	expr_list::select_checked_meta_refs(temp, ret);
 	expr_list::checked_meta_generic_type::const_iterator
-		c_iter = temp.begin();
-	expr_list::const_iterator e_iter = actuals->begin();
-	const expr_list::const_iterator e_end = actuals->end();
+		c_iter(temp.begin());
+	expr_list::const_iterator e_iter(actuals->begin());
+	const expr_list::const_iterator e_end(actuals->end());
 	for ( ; e_iter != e_end; e_iter++, c_iter++) {
 		if (*e_iter) {
 			if (!c_iter->first && !c_iter->second)
@@ -424,10 +430,12 @@ instance_base::rightmost(void) const {
 never_ptr<const object>
 instance_base::check_build(context& c) const {
 	STACKTRACE("instance_base::check_build()");
-
+	typedef	count_ptr<dynamic_param_expr_list>
+						relaxed_args_ptr_type;
 	// uses c.current_fundamental_type
 	const count_ptr<const fundamental_type_reference>
 		type(c.get_current_fundamental_type());
+	relaxed_args_ptr_type checked_relaxed_actuals;
 	INVARIANT(type);
 	if (relaxed_args) {
 		if (type->is_strict()) {
@@ -439,6 +447,19 @@ instance_base::check_build(context& c) const {
 			return never_ptr<const object>(NULL);
 		}
 		// TODO: not done yet... need to alter c.add_instance
+		// copied from template_argument_list_pair::check_template_args
+#if 1
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		// by syntactic construction, all expressions are non NULL
+		checked_relaxed_actuals =
+			relaxed_args_ptr_type(
+				new dynamic_param_expr_list(
+					relaxed_args->size()));
+		NEVER_NULL(checked_relaxed_actuals);
+		copy(temp.begin(), temp.end(),
+			back_inserter(*checked_relaxed_actuals));
+#endif
 	} else if (type->is_relaxed()) {
 		// this is a scalar declaration, so the type MUST be strict
 		cerr << "ERROR: scalar declarations require relaxed actual "
@@ -448,7 +469,7 @@ instance_base::check_build(context& c) const {
 	}
 	// otherwise do nothing different from before.  
 	const never_ptr<const instance_collection_base>
-		inst(c.add_instance(*id));	// check return value?
+		inst(c.add_instance(*id, checked_relaxed_actuals));
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
 		return never_ptr<const object>(NULL);
@@ -513,8 +534,11 @@ instance_array::check_build(context& c) const {
 				THROW_EXIT;
 			}
 		}
+#if 1
+		const count_ptr<dynamic_param_expr_list> bogus;
+#endif
 		const never_ptr<const instance_collection_base>
-			t(c.add_instance(*id, d));
+			t(c.add_instance(*id, bogus, d));
 		// if there was error, would've THROW_EXIT'd (temporary)
 		return t;
 	} else {
@@ -705,8 +729,8 @@ connection_statement::make_port_connection(
 			"but got a " << ir_dim << "-dim reference!" << endl;
 		return return_type(NULL);
 	} else if (base_def->certify_port_actuals(temp).good) {
-		ref_list_type::const_iterator i = temp.begin();
-		const ref_list_type::const_iterator e = temp.end();
+		ref_list_type::const_iterator i(temp.begin());
+		const ref_list_type::const_iterator e(temp.end());
 		for ( ; i!=e; i++) {
 			const count_ptr<const meta_instance_reference_base>
 				mir(i->is_a<const meta_instance_reference_base>());

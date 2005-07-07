@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.3 2005/07/06 20:14:27 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.4 2005/07/07 06:02:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
@@ -32,7 +32,8 @@ public:
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef	count_ptr<param_expr_list>		relaxed_args_type;
+	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 protected:
 	/**
 		Note: this may be a partial or relaxed type, 
@@ -52,14 +53,19 @@ protected:
 			or this field contains the relaxed actuals, 
 			but NEVER BOTH.
 	 */
-	relaxed_args_type				relaxed_args;
+	const_relaxed_args_type				relaxed_args;
 
 protected:
 	instantiation_statement_type_ref_default() : type(NULL) { }
 
 	explicit
 	instantiation_statement_type_ref_default(
-		const type_ref_ptr_type& t) : type(t) { }
+		const type_ref_ptr_type& t) :
+		type(t), relaxed_args(NULL) { }
+
+	instantiation_statement_type_ref_default(
+		const type_ref_ptr_type& t, const const_relaxed_args_type& a) :
+		type(t), relaxed_args(a) { }
 
 	// default destructor
 	~instantiation_statement_type_ref_default() { }
@@ -67,16 +73,35 @@ protected:
 	count_ptr<const fundamental_type_reference>
 	get_type(void) const { return type; }
 
-	relaxed_args_type
+	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
 		return relaxed_args;
 	}
 
+	/**
+		TODO: combine type and relaxed_args.
+		relaxed_args is still allowed to be NULL.  
+		The resulting type is allowed to be relaxed, incomplete. 
+	 */
 	type_ref_ptr_type
 	unroll_type_reference(unroll_context& c) const {
+#if 1
+		if (relaxed_args) {
+			// clumsy but effective, make a temporary deep-copy
+			const type_ref_ptr_type
+			merged_type(type->merge_relaxed_actuals(relaxed_args));
+			return merged_type->unroll_resolve(c);
+		} else	return type->unroll_resolve(c);
+#else
+		// doesn't require relaxed actuals
 		return type->unroll_resolve(c);
+#endif
 	}
 
+	/**
+		TODO: make sure scalar has complete type, 
+		arrays are allowed to be relaxed.  
+	 */
 	static
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,

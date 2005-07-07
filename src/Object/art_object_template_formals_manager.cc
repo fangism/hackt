@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.10 2005/07/06 23:11:22 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.11 2005/07/07 06:02:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -391,11 +391,14 @@ template_formals_manager::must_validate_actuals(
 	const count_ptr<const const_param_expr_list>
 		crpl(rpl.is_a<const const_param_expr_list>());
 	if (rpl) NEVER_NULL(crpl);
+	// if relaxed actuals are NULL, don't check them for defaults
 	const good_bool rg(crpl ?
 		crpl->must_validate_template_arguments(
-			relaxed_template_formals_list) :
+			relaxed_template_formals_list) : good_bool(true));
+#if 0
 		partial_check_null_template_argument(
-			relaxed_template_formals_list));
+			relaxed_template_formals_list);
+#endif
 	const good_bool ret(sg && rg);
 	if (!ret.good) {
 		cerr << "ERROR: actual parameter types do not "
@@ -407,6 +410,8 @@ template_formals_manager::must_validate_actuals(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructs a set of default arguments based on prototype declaration.  
+	NOTE: relaxed template formals are not allowed to have
+		default values.  
 	\pre satisfies this->check_null_template_argument().
 	\returns a list of default parameter expressions.  
  */

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.5 2005/07/05 21:02:18 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.6 2005/07/07 06:02:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,8 +33,25 @@ template_actuals::template_actuals() :
 	\param r list of relaxed template actuals (may be NULL)
  */
 template_actuals::template_actuals(const arg_list_ptr_type& s, 
-		const arg_list_ptr_type& r) :
+		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Special purpose construct designated for fusing 
+	types actuals together to form a complete, strict type.  
+	See its uses in *_type_reference::merge_relaxed_actuals.
+	\param t to existing set of template actuals.  
+	\param a non-NULL pointer to relaxed template args.
+	\pre t must not already have relaxed actuals.  
+ */
+template_actuals::template_actuals(const template_actuals& t, 
+		const const_arg_list_ptr_type& a) :
+		strict_template_args(t.strict_template_args), 
+		relaxed_template_args(a) {
+	NEVER_NULL(a);
+	INVARIANT(!t.relaxed_template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,7 +109,7 @@ template_actuals::is_constant(void) const {
 			strict_template_args.is_a<const_param_expr_list>() ||
 			strict_template_args->is_static_constant()) &&
 		(!relaxed_template_args ||
-			relaxed_template_args.is_a<const_param_expr_list>() ||
+			relaxed_template_args.is_a<const const_param_expr_list>() ||
 			relaxed_template_args->is_static_constant());
 }
 
@@ -101,6 +118,14 @@ template_actuals::const_arg_list_ptr_type
 template_actuals::get_strict_args(void) const {
 	return strict_template_args;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+template_actuals::arg_list_ptr_type
+template_actuals::get_strict_args_const(void) const {
+	return strict_template_args;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::arg_list_ptr_type
@@ -115,10 +140,12 @@ template_actuals::get_relaxed_args(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template_actuals::arg_list_ptr_type
 template_actuals::get_relaxed_args(void) {
 	return relaxed_template_args;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -280,8 +307,7 @@ template_actuals::load_object_base(const persistent_object_manager& m,
 	m.read_pointer(i, strict_template_args);
 	m.read_pointer(i, relaxed_template_args);
 	if (strict_template_args)
-		m.load_object_once(
-			const_cast<expr_list_type*>(&*strict_template_args));
+		m.load_object_once(&*strict_template_args);
 	if (relaxed_template_args)
 		m.load_object_once(
 			const_cast<expr_list_type*>(&*relaxed_template_args));
