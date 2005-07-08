@@ -1,22 +1,22 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c02550	module__	0	0	29
-	2	 0x3c00144	namespc_	0	29	53
-	3	 0x3c02570	chandefn	0	53	158
-	4	 0x3c02614	dboolcol	0	158	192
-	5	 0x3c02670	datainst	0	192	216
-	6	 0x3c02690	datatprf	0	216	236
-	7	 0x3c026b0	datadefn	0	236	289
-	8	 0x3c02754	dboolcol	0	289	323
-	9	 0x3c027b0	datainst	0	323	347
-	10	 0x3c027d4	dboolcol	0	347	381
-	11	 0x3c02830	datainst	0	381	405
-	12	 0x3c02850	bchntprf	0	405	430
-	13	 0x3c02880	datatprf	0	430	450
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	chandefn	0	#HEAD#	#TAIL#	105
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 
-In module created from: ./016.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

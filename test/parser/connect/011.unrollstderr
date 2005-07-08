@@ -1,25 +1,25 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d029a0	module__	0	0	41
-	2	 0x3d00144	namespc_	0	41	73
-	3	 0x3d029c4	proccoll	1	73	184
-	4	 0x3d02a10	procinst	0	184	208
-	5	 0x3d02a30	proctprf	0	208	228
-	6	 0x3d02a50	procdefn	0	228	276
-	7	 0x3d02ae0	crnglst_	0	276	296
-	8	 0x3d02af0	proctprf	0	296	316
-	9	 0x3d02b14	proccoll	1	316	426
-	10	 0x3d02b60	procinst	0	426	450
-	11	 0x3d02b80	proctprf	0	450	470
-	12	 0x3d02ba0	crnglst_	0	470	490
-	13	 0x3d02bb0	proctprf	0	490	510
-	14	 0x3d02bd0	prcalias	0	510	530
-	15	 0x3d02be0	sprcmref	0	530	550
-	16	 0x3d02c10	sprcmref	0	550	570
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	111
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	48
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	110
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
-In module created from: ./011.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections

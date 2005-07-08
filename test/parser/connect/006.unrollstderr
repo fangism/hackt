@@ -1,35 +1,35 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c03820	module__	0	0	53
-	2	 0x3c00144	namespc_	0	53	85
-	3	 0x3c03844	dintcoll	0	85	132
-	4	 0x3c038a0	datainst	0	132	156
-	5	 0x3c038c0	datatprf	0	156	176
-	6	 0x3c038e0	datadefn	0	176	228
-	7	 0x3c03980	dprmlst_	0	228	244
-	8	 0x39f2028	cnstpi__	0	244	256
-	9	 0x3c03994	dintcoll	0	256	301
-	10	 0x3c039f0	datainst	0	301	325
-	11	 0x3c03a10	datatprf	0	325	345
-	12	 0x3c03a30	dprmlst_	0	345	361
-	13	 0x3c03a44	dintcoll	0	361	408
-	14	 0x3c03aa0	datainst	0	408	432
-	15	 0x3c03ac0	datatprf	0	432	452
-	16	 0x3c03ae0	dprmlst_	0	452	468
-	17	 0x3c03af0	dialias_	0	468	488
-	18	 0x3c03b00	sdimref_	0	488	508
-	19	 0x3c03b30	sdimref_	0	508	528
-	20	 0x3c03b60	dialias_	0	528	552
-	21	 0x3c03b70	sdimref_	0	552	572
-	22	 0x3c03ba0	sdimref_	0	572	592
-	23	 0x3c03bd0	sdimref_	0	592	612
-	24	 0x3c03c00	dialias_	0	612	632
-	25	 0x3c03c10	sdimref_	0	632	652
-	26	 0x3c03c40	sdimref_	0	652	672
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	47
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	45
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	47
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dialias_	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./006.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   3 instantiation-collections

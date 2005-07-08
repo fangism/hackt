@@ -1,59 +1,59 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d05b30	module__	0	0	29
-	2	 0x3d00144	namespc_	0	29	53
-	3	 0x3d05aa0	procdefn	0	53	182
-	4	 0x3d05b54	chancoll	0	182	225
-	5	 0x3d05bb0	chaninst	0	225	245
-	6	 0x3d05bd0	bchntprf	0	245	270
-	7	 0x3d05c00	datatprf	0	270	290
-	8	 0x3d05c20	datadefn	0	290	342
-	9	 0x3d05cc0	dprmlst_	0	342	358
-	10	 0x3aa5028	cnstpi__	0	358	370
-	11	 0x3d05cd4	chancoll	0	370	413
-	12	 0x3d05d30	chaninst	0	413	433
-	13	 0x3d05d54	chancoll	0	433	475
-	14	 0x3d05db0	chaninst	0	475	495
-	15	 0x3d05dd0	bchntprf	0	495	520
-	16	 0x3d05e00	datatprf	0	520	540
-	17	 0x3d05e20	dprmlst_	0	540	556
-	18	 0x3d05e34	chancoll	0	556	598
-	19	 0x3d05e90	chaninst	0	598	618
-	20	 0x3d05eb0	bchntprf	0	618	643
-	21	 0x3d05ee0	datatprf	0	643	663
-	22	 0x3d05f00	dprmlst_	0	663	679
-	23	 0x3d05f14	dintcoll	0	679	717
-	24	 0x3d05f70	datainst	0	717	741
-	25	 0x3d05f90	datatprf	0	741	761
-	26	 0x3d05fb0	dprmlst_	0	761	777
-	27	 0x3d05fc4	dintcoll	0	777	815
-	28	 0x3d06020	datainst	0	815	839
-	29	 0x3d06044	dintcoll	0	839	877
-	30	 0x3d060a0	datainst	0	877	901
-	31	 0x3d060c0	CHPseqnc	0	901	921
-	32	 0x3d060d0	CHPconcr	0	921	941
-	33	 0x3d060e0	CHPrecv_	0	941	961
-	34	 0x3d06100	schnnref	0	961	977
-	35	 0x3d06110	sdinref_	0	977	993
-	36	 0x3d06130	CHPrecv_	0	993	1013
-	37	 0x3d06150	schnnref	0	1013	1029
-	38	 0x3d06160	sdinref_	0	1029	1045
-	39	 0x3d06180	CHPsend_	0	1045	1065
-	40	 0x3d061a0	schnnref	0	1065	1081
-	41	 0x3d061c8	narithex	0	1081	1098
-	42	 0x3d061d0	sdinref_	0	1098	1114
-	43	 0x3d061f0	sdinref_	0	1114	1130
-	44	 0x3d06210	CHPseqnc	0	1130	1150
-	45	 0x3d06220	CHPrecv_	0	1150	1170
-	46	 0x3d06240	schnnref	0	1170	1186
-	47	 0x3d06250	sdinref_	0	1186	1202
-	48	 0x3d06270	CHPsend_	0	1202	1222
-	49	 0x3d06290	schnnref	0	1222	1238
-	50	 0x3d062a0	sdinref_	0	1238	1254
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	129
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	43
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	43
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 
-In module created from: ./039.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

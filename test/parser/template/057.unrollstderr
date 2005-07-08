@@ -1,31 +1,31 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c032b0	module__	0	0	29
-	2	 0x3c00144	namespc_	0	29	53
-	3	 0x3c032d0	procdefn	0	53	133
-	4	 0x3c03264	dintcoll	1	133	171
-	5	 0x3c03360	datainst	0	171	195
-	6	 0x3c03380	datatprf	0	195	215
-	7	 0x3c033a0	datadefn	0	215	267
-	8	 0x3c03440	dprmlst_	0	267	283
-	9	 0x39f2028	cnstpi__	0	283	295
-	10	 0x3c03450	drnglst_	0	295	311
-	11	 0x3c03474	dynrng__	0	311	327
-	12	 0x39f2038	cnstpi__	0	327	339
-	13	 0x3c03498	arithexp	0	339	356
-	14	 0x3c034a0	spimref_	0	356	376
-	15	 0x3c034d4	pintcoll	0	376	413
-	16	 0x3c03530	pintinst	0	413	429
-	17	 0x3c03540	spimref_	0	429	449
-	18	 0x3c03574	pintcoll	0	449	486
-	19	 0x3c035d0	pintinst	0	486	502
-	20	 0x39f2048	cnstpi__	0	502	514
-	21	 0x5000c00	piassign	0	514	534
-	22	 0x3c035e0	spimref_	0	534	554
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
+	4	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	38
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	19	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./057.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

@@ -1,44 +1,44 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d04510	module__	0	0	45
-	2	 0x3d00144	namespc_	0	45	77
-	3	 0x3d04534	pintcoll	1	77	134
-	4	 0x3d045f0	pintinst	0	134	150
-	5	 0x3d04600	crnglst_	0	150	170
-	6	 0x3d04610	procdefn	0	170	230
-	7	 0x3d046a4	pintcoll	1	230	263
-	8	 0x3d04760	pintinst	0	263	279
-	9	 0x3d04770	crnglst_	0	279	299
-	10	 0x3d04784	proccoll	0	299	343
-	11	 0x3d047e0	procinst	0	343	367
-	12	 0x3d04800	proctprf	0	367	387
-	13	 0x3d04820	dprmlst_	0	387	403
-	14	 0x3d04830	spimref_	0	403	423
-	15	 0x3d04860	dindlst_	0	423	439
-	16	 0x3d04884	dynrng__	0	439	455
-	17	 0x3d04890	spimref_	0	455	475
-	18	 0x3d048c0	cindlst_	0	475	491
-	19	 0x3aa5028	cnstpi__	0	491	503
-	20	 0x3d048d0	spimref_	0	503	523
-	21	 0x3d04900	cindlst_	0	523	539
-	22	 0x3aa5038	cnstpi__	0	539	551
-	23	 0x3d04910	proctprf	0	551	571
-	24	 0x3d04930	cprmlst_	0	571	587
-	25	 0x3d04944	cnstpic_	1	587	627
-	26	 0x5000c00	piassign	0	627	647
-	27	 0x3aa5048	cnstpi__	0	647	659
-	28	 0x3d049b0	spimref_	0	659	679
-	29	 0x3d049e0	cindlst_	0	679	695
-	30	 0x3aa5058	cnstpi__	0	695	707
-	31	 0x5000c10	piassign	0	707	727
-	32	 0x3aa5068	cnstpi__	0	727	739
-	33	 0x3d049f0	spimref_	0	739	759
-	34	 0x3d04a20	cindlst_	0	759	775
-	35	 0x3aa5078	cnstpi__	0	775	787
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	44
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	26	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./036.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   1 parameter-collections
   1 instantiation-collections

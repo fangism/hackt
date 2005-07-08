@@ -1,21 +1,21 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c02370	module__	0	0	41
-	2	 0x3c00144	namespc_	0	41	69
-	3	 0x3c02394	dboolcol	0	69	111
-	4	 0x3c023f0	datainst	0	111	135
-	5	 0x3c02410	datatprf	0	135	155
-	6	 0x3c02430	datadefn	0	155	208
-	7	 0x3c024d4	dboolcol	0	208	249
-	8	 0x3c02530	datainst	0	249	273
-	9	 0x3c02550	datatprf	0	273	293
-	10	 0x3c02570	dbalias_	0	293	313
-	11	 0x3c02580	sdbmref_	0	313	333
-	12	 0x3c025b0	sdbmref_	0	333	353
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	41
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./001.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections

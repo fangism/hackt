@@ -1,32 +1,32 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d03430	module__	0	0	29
-	2	 0x3d00144	namespc_	0	29	53
-	3	 0x3d03450	procdefn	0	53	149
-	4	 0x3d033d4	chancoll	0	149	191
-	5	 0x3d034e0	chaninst	0	191	211
-	6	 0x3d03500	bchntprf	0	211	236
-	7	 0x3d03530	datatprf	0	236	256
-	8	 0x3d03550	datadefn	0	256	309
-	9	 0x3d035f4	chancoll	0	309	351
-	10	 0x3d03650	chaninst	0	351	371
-	11	 0x3d03670	bchntprf	0	371	396
-	12	 0x3d036a0	datatprf	0	396	416
-	13	 0x3d036c4	dboolcol	0	416	450
-	14	 0x3d03720	datainst	0	450	474
-	15	 0x3d03740	datatprf	0	474	494
-	16	 0x3d03760	CHPloop_	0	494	506
-	17	 0x3d03770	CHPrecv_	0	506	526
-	18	 0x3d03790	schnnref	0	526	542
-	19	 0x3d037a0	sdbnref_	0	542	558
-	20	 0x3d037c0	CHPloop_	0	558	570
-	21	 0x3d037d0	CHPsend_	0	570	590
-	22	 0x3d037f0	schnnref	0	590	606
-	23	 0x5004004	cnstpb__	0	606	615
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 
-In module created from: ./041.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

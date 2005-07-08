@@ -1,5 +1,19 @@
 # "test/ChangeLog"
 
+2005-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-23:
+	  Made `cleaner' recursive in Make.test, inherited by other
+		Makefiles in subdirectories.  
+	  Changed artobjunroll test script!
+		We now store the *filtered* unrolldump in the the
+		repository's .stderr outputs, since there's no sense in
+		keeping the unfiltered version around for comparison.  
+		This will also dramatically reduce the size of the
+		patches everytime the binaries change size as a result
+		of individual objects changing size.  
+
+
 2005-07-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-19:

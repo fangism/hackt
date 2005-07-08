@@ -1,42 +1,42 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d042a0	module__	0	0	29
-	2	 0x3d00144	namespc_	0	29	53
-	3	 0x3d042c0	procdefn	0	53	155
-	4	 0x3d04354	chancoll	0	155	197
-	5	 0x3d043b0	chaninst	0	197	217
-	6	 0x3d043d0	bchntprf	0	217	242
-	7	 0x3d04400	datatprf	0	242	262
-	8	 0x3d04420	datadefn	0	262	314
-	9	 0x3d044c0	dprmlst_	0	314	330
-	10	 0x3aa5028	cnstpi__	0	330	342
-	11	 0x3d044d4	chancoll	0	342	384
-	12	 0x3d04530	chaninst	0	384	404
-	13	 0x3d04550	bchntprf	0	404	429
-	14	 0x3d04580	datatprf	0	429	449
-	15	 0x3d045a0	dprmlst_	0	449	465
-	16	 0x3d045b4	dintcoll	0	465	503
-	17	 0x3d04610	datainst	0	503	527
-	18	 0x3d04630	datatprf	0	527	547
-	19	 0x3d04650	dprmlst_	0	547	563
-	20	 0x3d04664	dintcoll	0	563	601
-	21	 0x3d046c0	datainst	0	601	625
-	22	 0x3d046e0	CHPseqnc	0	625	649
-	23	 0x3d046f0	CHPrecv_	0	649	669
-	24	 0x3d04710	schnnref	0	669	685
-	25	 0x3d04720	sdinref_	0	685	701
-	26	 0x3d04740	CHPrecv_	0	701	721
-	27	 0x3d04760	schnnref	0	721	737
-	28	 0x3d04770	sdinref_	0	737	753
-	29	 0x3d04790	CHPsend_	0	753	773
-	30	 0x3d047b0	schnnref	0	773	789
-	31	 0x3d047d8	narithex	0	789	806
-	32	 0x3d047e0	sdinref_	0	806	822
-	33	 0x3d04800	sdinref_	0	822	838
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 
-In module created from: ./032.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

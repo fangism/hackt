@@ -1,32 +1,32 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4303200	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4303220	procdefn	0	53	142
-	4	 0x43032b4	pintcoll	1	142	175
-	5	 0x4303300	pintinst	0	175	191
-	6	 0x4303310	drnglst_	0	191	207
-	7	 0x4303334	dynrng__	0	207	223
-	8	 0x374a028	cnstpi__	0	223	235
-	9	 0x4303358	arithexp	0	235	252
-	10	 0x4303360	spimref_	0	252	272
-	11	 0x4303394	pintcoll	0	272	309
-	12	 0x43033e0	pintinst	0	309	325
-	13	 0x374a038	cnstpi__	0	325	337
-	14	 0x43033f4	pintcoll	1	337	370
-	15	 0x4303440	pintinst	0	370	386
-	16	 0x4303450	drnglst_	0	386	402
-	17	 0x4303474	dynrng__	0	402	418
-	18	 0x374a048	cnstpi__	0	418	430
-	19	 0x4303498	arithexp	0	430	447
-	20	 0x43034a0	spimref_	0	447	467
-	21	 0x43034d0	cindlst_	0	467	483
-	22	 0x374a058	cnstpi__	0	483	495
-	23	 0x374a068	cnstpi__	0	495	507
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
+	4	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	10	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./004.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

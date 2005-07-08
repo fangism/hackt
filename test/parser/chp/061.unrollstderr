@@ -1,61 +1,61 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d05e00	module__	0	0	29
-	2	 0x3d00144	namespc_	0	29	53
-	3	 0x3d05e20	procdefn	0	53	177
-	4	 0x3d05eb4	chancoll	0	177	219
-	5	 0x3d05f10	chaninst	0	219	239
-	6	 0x3d05f30	bchntprf	0	239	264
-	7	 0x3d05f60	datatprf	0	264	284
-	8	 0x3d05f80	datadefn	0	284	337
-	9	 0x3d06024	chancoll	0	337	379
-	10	 0x3d06080	chaninst	0	379	399
-	11	 0x3d060a4	chancoll	0	399	441
-	12	 0x3d06100	chaninst	0	441	461
-	13	 0x3d06124	chancoll	0	461	503
-	14	 0x3d06180	chaninst	0	503	523
-	15	 0x3d061a0	bchntprf	0	523	548
-	16	 0x3d061d0	datatprf	0	548	568
-	17	 0x3d061f4	dboolcol	0	568	602
-	18	 0x3d06250	datainst	0	602	626
-	19	 0x3d06270	datatprf	0	626	646
-	20	 0x3d06294	dboolcol	0	646	680
-	21	 0x3d062f0	datainst	0	680	704
-	22	 0x3d06314	dboolcol	0	704	738
-	23	 0x3d06370	datainst	0	738	762
-	24	 0x3d06390	CHPdowhl	0	762	786
-	25	 0x3d063a0	CHPguard	0	786	802
-	26	 0x3d063c0	sdbnref_	0	802	818
-	27	 0x3d063e0	CHPrecv_	0	818	838
-	28	 0x3d06400	schnnref	0	838	854
-	29	 0x3d06410	sdbnref_	0	854	870
-	30	 0x3d06430	CHPguard	0	870	886
-	31	 0x3d06450	nlogicex	0	886	907
-	32	 0x3d06470	nbnotex_	0	907	919
-	33	 0x3d06480	sdbnref_	0	919	935
-	34	 0x3d064a0	sdbnref_	0	935	951
-	35	 0x3d064c0	CHPrecv_	0	951	971
-	36	 0x3d064e0	schnnref	0	971	987
-	37	 0x3d064f0	sdbnref_	0	987	1003
-	38	 0x3d06510	CHPguard	0	1003	1019
-	39	 0x3d06530	nlogicex	0	1019	1040
-	40	 0x3d06550	nlogicex	0	1040	1061
-	41	 0x3d06570	nbnotex_	0	1061	1073
-	42	 0x3d06580	sdbnref_	0	1073	1089
-	43	 0x3d065a0	nbnotex_	0	1089	1101
-	44	 0x3d065b0	sdbnref_	0	1101	1117
-	45	 0x3d065d0	sdbnref_	0	1117	1133
-	46	 0x3d065f0	CHPseqnc	0	1133	1153
-	47	 0x3d06600	CHPsend_	0	1153	1173
-	48	 0x3d06620	schnnref	0	1173	1189
-	49	 0x5004004	cnstpb__	0	1189	1198
-	50	 0x3d06630	CHPrecv_	0	1198	1218
-	51	 0x3d06650	schnnref	0	1218	1234
-	52	 0x3d06660	sdbnref_	0	1234	1250
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	CHPdowhl	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	41	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	50	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 
-In module created from: ./061.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

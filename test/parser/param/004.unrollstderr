@@ -1,21 +1,21 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x33006b4	module__	0	0	44
-	2	 0x3300170	namespc_	0	44	72
-	3	 0x3806450	pintcoll	0	72	109
-	4	 0x3803004	pintinst	0	109	125
-	5	 0x33006f0	spiref__	0	125	145
-	6	 0x380649c	pintcoll	0	145	182
-	7	 0x3803018	pintinst	0	182	198
-	8	 0x263f024	cnstpi__	0	198	210
-	9	 0x3805600	piassign	0	210	230
-	10	 0x3300720	spiref__	0	230	250
-	11	 0x3805614	piassign	0	250	270
-	12	 0x33018a0	spiref__	0	270	290
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 
-In module created from: -stdin- (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   2 parameter-collections
   0 instantiation-collections
@@ -23,7 +23,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    M = pint<> M (init = pint-inst-ref N) value: 2
-    N = pint<> N (init = 2) value: 2
+    M = pint^0 M (init = pint-inst-ref ::N) value: 2
+    N = pint^0 N (init = 2) value: 2
 }
 

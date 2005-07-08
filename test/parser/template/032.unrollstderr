@@ -1,37 +1,37 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d03b00	module__	0	0	45
-	2	 0x3d00144	namespc_	0	45	77
-	3	 0x3d03b24	pintcoll	1	77	134
-	4	 0x3d03be0	pintinst	0	134	150
-	5	 0x3d03bf0	crnglst_	0	150	170
-	6	 0x3d03c00	procdefn	0	170	230
-	7	 0x3d03c94	pintcoll	0	230	267
-	8	 0x3d03cf0	pintinst	0	267	283
-	9	 0x3d03d04	proccoll	0	283	327
-	10	 0x3d03d60	procinst	0	327	351
-	11	 0x3d03d80	proctprf	0	351	371
-	12	 0x3d03da0	dprmlst_	0	371	387
-	13	 0x3d03db0	spimref_	0	387	407
-	14	 0x3d03de0	cindlst_	0	407	423
-	15	 0x3aa5028	cnstpi__	0	423	435
-	16	 0x3d03df0	proctprf	0	435	455
-	17	 0x3d03e10	cprmlst_	0	455	471
-	18	 0x3d03e24	cnstpic_	0	471	499
-	19	 0x5000c00	piassign	0	499	519
-	20	 0x3aa5038	cnstpi__	0	519	531
-	21	 0x3d03e90	spimref_	0	531	551
-	22	 0x3d03ec0	cindlst_	0	551	567
-	23	 0x3aa5048	cnstpi__	0	567	579
-	24	 0x5000c10	piassign	0	579	599
-	25	 0x3aa5058	cnstpi__	0	599	611
-	26	 0x3d03ed0	spimref_	0	611	631
-	27	 0x3d03f00	cindlst_	0	631	647
-	28	 0x3aa5068	cnstpi__	0	647	659
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	44
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./032.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   1 parameter-collections
   1 instantiation-collections

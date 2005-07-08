@@ -1,15 +1,15 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x834e564	module__	0	0	36
-	2	 0x8341340	namespc_	0	36	64
-	3	 0x83390e0	pintcoll	0	64	101
-	4	 0x834326c	pintinst	0	101	117
-	5	 0x83511e4	pboolcol	0	117	147
-	6	 0x834265c	pboolins	0	147	163
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 
-In module created from: -stdin- (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   2 parameter-collections
   0 instantiation-collections
@@ -17,7 +17,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    N = pint<> N value: ?
-    b = pbool<> b value: ?
+    N = pint^0 N value: ?
+    b = pbool^0 b value: ?
 }
 

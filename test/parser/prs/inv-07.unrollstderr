@@ -1,38 +1,38 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c03cc0	module__	0	0	32
-	2	 0x3c00144	namespc_	0	32	56
-	3	 0x3c03ce0	procdefn	0	56	124
-	4	 0x3c03c74	dboolcol	2	124	153
-	5	 0x3c03d70	datainst	0	153	177
-	6	 0x3c03d90	datatprf	0	177	197
-	7	 0x3c03db0	datadefn	0	197	250
-	8	 0x3c03e50	crnglst_	0	250	278
-	9	 0x501ac08	PRSpuldn	0	278	295
-	10	 0x3c03e68	PRSlitrl	0	295	307
-	11	 0x3c03ff0	sdbmref_	0	307	327
-	12	 0x3c04020	cindlst_	0	327	347
-	13	 0x39f2028	cnstpi__	0	347	359
-	14	 0x39f2038	cnstpi__	0	359	371
-	15	 0x3c04030	sdbmref_	0	371	391
-	16	 0x3c04060	cindlst_	0	391	411
-	17	 0x39f2048	cnstpi__	0	411	423
-	18	 0x39f2058	cnstpi__	0	423	435
-	19	 0x501b008	PRSpulup	0	435	452
-	20	 0x3c04078	PRSnot__	0	452	464
-	21	 0x3c03e74	PRSlitrl	0	464	476
-	22	 0x3c04200	sdbmref_	0	476	496
-	23	 0x3c04230	cindlst_	0	496	516
-	24	 0x39f2068	cnstpi__	0	516	528
-	25	 0x39f2078	cnstpi__	0	528	540
-	26	 0x3c04240	sdbmref_	0	540	560
-	27	 0x3c04270	cindlst_	0	560	580
-	28	 0x39f2088	cnstpi__	0	580	592
-	29	 0x39f2098	cnstpi__	0	592	604
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	68
+	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	29
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	10	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./inv-07.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

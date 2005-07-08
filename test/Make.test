@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.11.10.4 2005/07/08 18:15:31 fang Exp $
+#	$Id: Make.test,v 1.11.10.5 2005/07/08 19:20:13 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -80,7 +80,6 @@ CLEANFILES += $(TESTS) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunroll) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump.filter) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr.filter) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff) \
 	check.log
 
@@ -134,11 +133,21 @@ clean-local:
 	-$(RM) *.core core.*
 
 # really remove these files!
-cleaner: clean
+cleaner: clean cleaner-recursive
 	-$(RM) *.filter *.diff *.artobj
 	-$(RM) *.artctest *.artobjtest *.artobjunrolltest
 	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.artobjunroll *.unrolldump *.unrolldiff
+
+cleaner-recursive:
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d cleaner ; \
+			fi ; \
+		fi ; \
+	done
+	
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...

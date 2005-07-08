@@ -1,25 +1,25 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c02930	module__	0	0	45
-	2	 0x3c00144	namespc_	0	45	85
-	3	 0x3c02954	dintcoll	0	85	124
-	4	 0x3c029b0	datainst	0	124	148
-	5	 0x3c029d0	datatprf	0	148	168
-	6	 0x3c029f0	datatpdf	0	168	210
-	7	 0x3c02a60	datatprf	0	210	230
-	8	 0x3c02a80	datadefn	0	230	282
-	9	 0x3c02b20	dprmlst_	0	282	298
-	10	 0x39f2028	cnstpi__	0	298	310
-	11	 0x3c02b34	dintcoll	0	310	349
-	12	 0x3c02b90	datainst	0	349	373
-	13	 0x3c02bb4	dintcoll	0	373	412
-	14	 0x3c02c10	datainst	0	412	436
-	15	 0x3c02c34	dintcoll	0	436	476
-	16	 0x3c02c90	datainst	0	476	500
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	40
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 
-In module created from: ./004.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   4 instantiation-collections

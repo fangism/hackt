@@ -1,36 +1,36 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d039e0	module__	0	0	37
-	2	 0x3d00144	namespc_	0	37	69
-	3	 0x3d03a04	proccoll	0	69	111
-	4	 0x3d03a60	procinst	0	111	135
-	5	 0x3d03a80	proctprf	0	135	155
-	6	 0x3d03aa0	procdefn	0	155	227
-	7	 0x3d03b34	pintcoll	0	227	264
-	8	 0x3d03b90	pintinst	0	264	280
-	9	 0x3d03ba4	pintcoll	0	280	317
-	10	 0x3d03c00	pintinst	0	317	333
-	11	 0x3d03c10	spimref_	0	333	353
-	12	 0x3d03c40	dprmlst_	0	353	373
-	13	 0x3aa5028	cnstpi__	0	373	385
-	14	 0x3aa5038	cnstpi__	0	385	397
-	15	 0x3d03c50	proctprf	0	397	417
-	16	 0x3d03c70	cprmlst_	0	417	437
-	17	 0x3aa5048	cnstpi__	0	437	449
-	18	 0x3aa5058	cnstpi__	0	449	461
-	19	 0x3d03c84	proccoll	0	461	503
-	20	 0x3d03ce0	procinst	0	503	527
-	21	 0x3d03d00	proctprf	0	527	547
-	22	 0x3d03d20	dprmlst_	0	547	567
-	23	 0x3aa5068	cnstpi__	0	567	579
-	24	 0x3d03d30	proctprf	0	579	599
-	25	 0x3d03d50	cprmlst_	0	599	619
-	26	 0x3aa5078	cnstpi__	0	619	631
-	27	 0x3aa5088	cnstpi__	0	631	643
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	42
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	42
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./029.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections

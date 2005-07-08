@@ -1,38 +1,38 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c03c70	module__	0	0	49
-	2	 0x3c00144	namespc_	0	49	89
-	3	 0x3c03c94	dintcoll	0	89	132
-	4	 0x3c03cf0	datainst	0	132	156
-	5	 0x3c03d10	datatprf	0	156	176
-	6	 0x3c03d30	datadefn	0	176	228
-	7	 0x3c03dd0	dprmlst_	0	228	244
-	8	 0x39f2028	cnstpi__	0	244	256
-	9	 0x3c03de4	dintcoll	0	256	300
-	10	 0x3c03e40	datainst	0	300	324
-	11	 0x3c03e60	datatprf	0	324	344
-	12	 0x3c03e80	datatpdf	0	344	386
-	13	 0x3c03ef0	datatprf	0	386	406
-	14	 0x3c03f10	dprmlst_	0	406	422
-	15	 0x39f2038	cnstpi__	0	422	434
-	16	 0x3c03f24	dintcoll	0	434	477
-	17	 0x3c03f80	datainst	0	477	501
-	18	 0x3c03fa0	datatprf	0	501	521
-	19	 0x3c03fc0	dprmlst_	0	521	537
-	20	 0x39f2048	cnstpi__	0	537	549
-	21	 0x3c03fd4	dintcoll	0	549	592
-	22	 0x3c04030	datainst	0	592	616
-	23	 0x3c04050	datatprf	0	616	636
-	24	 0x3c04070	dprmlst_	0	636	652
-	25	 0x3c04080	dialias_	0	652	680
-	26	 0x3c04090	sdimref_	0	680	700
-	27	 0x3c040c0	sdimref_	0	700	720
-	28	 0x3c040f0	sdimref_	0	720	740
-	29	 0x3c04120	sdimref_	0	740	760
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	43
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	44
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	43
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	43
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dialias_	0	#HEAD#	#TAIL#	28
+	26	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./007.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   4 instantiation-collections

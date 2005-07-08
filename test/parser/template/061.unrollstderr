@@ -1,49 +1,49 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d04ca0	module__	0	0	41
-	2	 0x3d00144	namespc_	0	41	77
-	3	 0x3d04cf4	proccoll	1	77	163
-	4	 0x3d04cc0	procinst	0	163	187
-	5	 0x3d04d40	proctprf	0	187	207
-	6	 0x3d04d60	procdefn	0	207	279
-	7	 0x3d04c44	pintcoll	0	279	316
-	8	 0x3d04ce0	pintinst	0	316	332
-	9	 0x3d04df4	pintcoll	0	332	369
-	10	 0x3d04e50	pintinst	0	369	385
-	11	 0x3d04e60	dprmlst_	0	385	401
-	12	 0x3aa5028	cnstpi__	0	401	413
-	13	 0x3d04e70	crnglst_	0	413	433
-	14	 0x3d04e80	proctprf	0	433	453
-	15	 0x3d04ea0	cprmlst_	0	453	469
-	16	 0x3aa5038	cnstpi__	0	469	481
-	17	 0x3d04eb4	proccoll	1	481	567
-	18	 0x3d04f00	procinst	0	567	591
-	19	 0x3d04f20	proctprf	0	591	611
-	20	 0x3d04f40	dprmlst_	0	611	627
-	21	 0x3aa5048	cnstpi__	0	627	639
-	22	 0x3d04f50	dprmlst_	0	639	655
-	23	 0x3aa5058	cnstpi__	0	655	667
-	24	 0x3d04f60	crnglst_	0	667	687
-	25	 0x3d04f70	proctprf	0	687	707
-	26	 0x3d04f90	cprmlst_	0	707	723
-	27	 0x3aa5068	cnstpi__	0	723	735
-	28	 0x3d04fa4	proccoll	1	735	821
-	29	 0x3d04ff0	procinst	0	821	845
-	30	 0x3d05010	proctprf	0	845	865
-	31	 0x3d05030	dprmlst_	0	865	881
-	32	 0x3aa5078	cnstpi__	0	881	893
-	33	 0x3d05040	dprmlst_	0	893	909
-	34	 0x3aa5088	cnstpi__	0	909	921
-	35	 0x3d05050	crnglst_	0	921	941
-	36	 0x3d05060	proctprf	0	941	961
-	37	 0x3d05080	cprmlst_	0	961	977
-	38	 0x3aa5098	cnstpi__	0	977	989
-	39	 0x3d05090	cprmlst_	0	989	1005
-	40	 0x3aa50a8	cnstpi__	0	1005	1017
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	86
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	proccoll	1	#HEAD#	#TAIL#	86
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	86
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./061.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   3 instantiation-collections

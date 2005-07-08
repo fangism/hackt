@@ -1,31 +1,31 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x8351e44	module__	0	0	60
-	2	 0x8341340	namespc_	0	60	96
-	3	 0x83390e0	pintcoll	0	96	133
-	4	 0x834326c	pintinst	0	133	149
-	5	 0x8351200	spiref__	0	149	169
-	6	 0x833912c	pintcoll	0	169	206
-	7	 0x8343280	pintinst	0	206	222
-	8	 0x833a5c4	cnstpi__	0	222	234
-	9	 0x834f6e4	pboolcol	0	234	264
-	10	 0x834265c	pboolins	0	264	280
-	11	 0x834a3b4	cnstpb__	0	280	289
-	12	 0x834f994	pboolcol	0	289	319
-	13	 0x8342670	pboolins	0	319	335
-	14	 0x834fc50	spbref__	0	335	355
-	15	 0x8341e48	piassign	0	355	375
-	16	 0x834fc98	spiref__	0	375	395
-	17	 0x8341e60	piassign	0	395	415
-	18	 0x834fce8	spiref__	0	415	435
-	19	 0x8341730	pbassign	0	435	455
-	20	 0x834fd38	spbref__	0	455	475
-	21	 0x8341748	pbassign	0	475	495
-	22	 0x834fd80	spbref__	0	495	515
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	30
+	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	12	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	spbmref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spbmref_	0	#HEAD#	#TAIL#	20
 
-In module created from: -stdin- (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   4 parameter-collections
   0 instantiation-collections
@@ -33,9 +33,9 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    M = pint<> M (init = pint-inst-ref N) value: 5
-    N = pint<> N (init = 5) value: 5
-    a = pbool<> a (init = true) value: 1
-    b = pbool<> b (init = pbool-inst-ref a) value: 1
+    M = pint^0 M (init = pint-inst-ref ::N) value: 5
+    N = pint^0 N (init = 5) value: 5
+    a = pbool^0 a (init = true) value: 1
+    b = pbool^0 b (init = pbool-inst-ref ::a) value: 1
 }
 

@@ -1,57 +1,57 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d05820	module__	0	0	41
-	2	 0x3d00144	namespc_	0	41	77
-	3	 0x3d057c4	proccoll	0	77	119
-	4	 0x3d05840	procinst	0	119	143
-	5	 0x3d05860	proctprf	0	143	163
-	6	 0x3d05880	procdefn	0	163	247
-	7	 0x3d05914	pintcoll	0	247	284
-	8	 0x3d05970	pintinst	0	284	300
-	9	 0x3d05984	pintcoll	0	300	337
-	10	 0x3d059e0	pintinst	0	337	353
-	11	 0x3d05a08	arithexp	0	353	370
-	12	 0x3d05a10	spimref_	0	370	390
-	13	 0x3aa5028	cnstpi__	0	390	402
-	14	 0x3d05a44	pintcoll	0	402	439
-	15	 0x3d05aa0	pintinst	0	439	455
-	16	 0x3d05ac8	arithexp	0	455	472
-	17	 0x3d05ad0	spimref_	0	472	492
-	18	 0x3aa5038	cnstpi__	0	492	504
-	19	 0x3d05b00	dprmlst_	0	504	528
-	20	 0x3aa5048	cnstpi__	0	528	540
-	21	 0x3aa5058	cnstpi__	0	540	552
-	22	 0x3d05b10	proctprf	0	552	572
-	23	 0x3d05b30	cprmlst_	0	572	596
-	24	 0x3aa5068	cnstpi__	0	596	608
-	25	 0x3aa5078	cnstpi__	0	608	620
-	26	 0x3aa5088	cnstpi__	0	620	632
-	27	 0x3d05b44	proccoll	0	632	674
-	28	 0x3d05ba0	procinst	0	674	698
-	29	 0x3d05bc0	proctprf	0	698	718
-	30	 0x3d05be0	dprmlst_	0	718	742
-	31	 0x3aa5098	cnstpi__	0	742	754
-	32	 0x3d05bf0	proctprf	0	754	774
-	33	 0x3d05c10	cprmlst_	0	774	798
-	34	 0x3aa50a8	cnstpi__	0	798	810
-	35	 0x3aa50b8	cnstpi__	0	810	822
-	36	 0x3aa50c8	cnstpi__	0	822	834
-	37	 0x3d05c24	proccoll	0	834	876
-	38	 0x3d05c80	procinst	0	876	900
-	39	 0x3d05ca0	proctprf	0	900	920
-	40	 0x3d05cc0	dprmlst_	0	920	944
-	41	 0x3aa50d8	cnstpi__	0	944	956
-	42	 0x3aa50e8	cnstpi__	0	956	968
-	43	 0x3aa50f8	cnstpi__	0	968	980
-	44	 0x3d05cd0	proctprf	0	980	1000
-	45	 0x3d05cf0	cprmlst_	0	1000	1024
-	46	 0x3aa5108	cnstpi__	0	1024	1036
-	47	 0x3aa5118	cnstpi__	0	1036	1048
-	48	 0x3aa5128	cnstpi__	0	1048	1060
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	42
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	17	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	42
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	42
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./038.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   3 instantiation-collections

@@ -1,31 +1,31 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3d032f0	module__	0	0	45
-	2	 0x3d00144	namespc_	0	45	77
-	3	 0x3d03314	proccoll	1	77	210
-	4	 0x3d03360	procinst	0	210	234
-	5	 0x3d03380	proctprf	0	234	254
-	6	 0x3d03260	procdefn	0	254	303
-	7	 0x3d033a0	crnglst_	0	303	323
-	8	 0x3d033b0	proctprf	0	323	343
-	9	 0x3d033d4	proccoll	0	343	395
-	10	 0x3d03430	procinst	0	395	419
-	11	 0x3d03450	proctprf	0	419	439
-	12	 0x3d03470	proctprf	0	439	459
-	13	 0x3d03490	prcalias	0	459	479
-	14	 0x3d034a0	sprcmref	0	479	499
-	15	 0x3d034d0	sprcmref	0	499	519
-	16	 0x3d03500	cindlst_	0	519	535
-	17	 0x3aa5028	cnstpi__	0	535	547
-	18	 0x3d03510	prcalias	0	547	567
-	19	 0x3d03520	sprcmref	0	567	587
-	20	 0x3d03550	cindlst_	0	587	603
-	21	 0x3aa5038	cnstpi__	0	603	615
-	22	 0x3d03560	sprcmref	0	615	635
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	133
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	49
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
-In module created from: ./017.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections

@@ -1,17 +1,17 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3300674	module__	0	0	28
-	2	 0x3300170	namespc_	0	28	52
-	3	 0x33001a4	namespc_	0	52	85
-	4	 0x33001d8	namespc_	0	85	110
-	5	 0x330020c	namespc_	0	110	131
-	6	 0x3300240	namespc_	0	131	152
-	7	 0x3300274	namespc_	0	152	177
-	8	 0x33002a8	namespc_	0	177	198
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
+	6	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
+	7	##ADDR##	namespc_	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
 
-In module created from: -stdin- (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

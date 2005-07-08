@@ -1,31 +1,31 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c032c0	module__	0	0	33
-	2	 0x3c00144	namespc_	0	33	57
-	3	 0x3c032e0	procdefn	0	57	151
-	4	 0x3c03264	dboolcol	0	151	185
-	5	 0x3c03370	datainst	0	185	209
-	6	 0x3c03390	datatprf	0	209	229
-	7	 0x3c033b0	datadefn	0	229	282
-	8	 0x3c03454	dboolcol	0	282	316
-	9	 0x3c034b0	datainst	0	316	340
-	10	 0x3c034d4	dboolcol	0	340	374
-	11	 0x3c03530	datainst	0	374	398
-	12	 0x5018008	PRSpulup	0	398	415
-	13	 0x3c03558	PRSor___	0	415	435
-	14	 0x3c03668	PRSnot__	0	435	447
-	15	 0x3c037f8	PRSlitrl	0	447	459
-	16	 0x3c03980	sdbmref_	0	459	479
-	17	 0x3c03674	PRSnot__	0	479	491
-	18	 0x3c03804	PRSlitrl	0	491	503
-	19	 0x3c039b0	sdbmref_	0	503	523
-	20	 0x3c039e0	sdbmref_	0	523	543
-	21	 0x5018408	PRSpuldn	0	543	560
-	22	 0x3c03a18	PRSand__	0	560	580
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	13	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 
-In module created from: ./nand-03.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

@@ -1,36 +1,36 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3c039f0	module__	0	0	33
-	2	 0x3c00144	namespc_	0	33	57
-	3	 0x3c03a10	procdefn	0	57	151
-	4	 0x3c03994	dboolcol	0	151	185
-	5	 0x3c03aa0	datainst	0	185	209
-	6	 0x3c03ac0	datatprf	0	209	229
-	7	 0x3c03ae0	datadefn	0	229	282
-	8	 0x3c03b84	dboolcol	0	282	316
-	9	 0x3c03be0	datainst	0	316	340
-	10	 0x3c03c04	dboolcol	0	340	374
-	11	 0x3c03c60	datainst	0	374	398
-	12	 0x5019e08	PRSpuldn	0	398	415
-	13	 0x3c03c88	PRSand__	0	415	435
-	14	 0x3c03d98	PRSlitrl	0	435	447
-	15	 0x3c03f20	sdbmref_	0	447	467
-	16	 0x3c03da4	PRSlitrl	0	467	479
-	17	 0x3c03f50	sdbmref_	0	479	499
-	18	 0x3c03f80	sdbmref_	0	499	519
-	19	 0x501a208	PRSpulup	0	519	536
-	20	 0x3c03fb8	PRSor___	0	536	556
-	21	 0x3c040c8	PRSnot__	0	556	568
-	22	 0x3c03db0	PRSlitrl	0	568	580
-	23	 0x3c04250	sdbmref_	0	580	600
-	24	 0x3c040d4	PRSnot__	0	600	612
-	25	 0x3c03dbc	PRSlitrl	0	612	624
-	26	 0x3c04280	sdbmref_	0	624	644
-	27	 0x3c042b0	sdbmref_	0	644	664
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	13	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./nand-01.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
