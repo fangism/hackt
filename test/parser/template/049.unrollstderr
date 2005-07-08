@@ -2,37 +2,37 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3c03fa0	module__	0	0	37
-	2	 0x3c00144	namespc_	0	37	69
-	3	 0x3c03fc0	procdefn	0	69	141
-	4	 0x3c04054	pintcoll	0	141	178
-	5	 0x3c040b0	pintinst	0	178	194
-	6	 0x39f2028	cnstpi__	0	194	206
-	7	 0x3c040c4	pintcoll	0	206	243
-	8	 0x3c04120	pintinst	0	243	259
-	9	 0x3c04134	proccoll	0	259	299
-	10	 0x3c04190	procinst	0	299	323
-	11	 0x3c041b0	proctprf	0	323	343
-	12	 0x3c041d0	dprmlst_	0	343	359
-	13	 0x3c041e0	dprmlst_	0	359	375
-	14	 0x39f2038	cnstpi__	0	375	387
-	15	 0x3c041f0	proctprf	0	387	407
-	16	 0x3c04210	cprmlst_	0	407	423
-	17	 0x39f2048	cnstpi__	0	423	435
-	18	 0x3c04220	cprmlst_	0	435	451
-	19	 0x39f2058	cnstpi__	0	451	463
-	20	 0x3c04234	proccoll	0	463	503
-	21	 0x3c04290	procinst	0	503	527
-	22	 0x3c042b0	proctprf	0	527	547
-	23	 0x3c042d0	dprmlst_	0	547	563
-	24	 0x39f2068	cnstpi__	0	563	575
-	25	 0x3c042e0	dprmlst_	0	575	591
-	26	 0x39f2078	cnstpi__	0	591	603
-	27	 0x3c042f0	proctprf	0	603	623
-	28	 0x3c04310	cprmlst_	0	623	639
-	29	 0x39f2088	cnstpi__	0	639	651
-	30	 0x3c04320	cprmlst_	0	651	667
-	31	 0x39f2098	cnstpi__	0	667	679
+	1	 0x3d03fa0	module__	0	0	37
+	2	 0x3d00144	namespc_	0	37	69
+	3	 0x3d03fc0	procdefn	0	69	141
+	4	 0x3d04054	pintcoll	0	141	178
+	5	 0x3d040b0	pintinst	0	178	194
+	6	 0x3aa5028	cnstpi__	0	194	206
+	7	 0x3d040c4	pintcoll	0	206	243
+	8	 0x3d04120	pintinst	0	243	259
+	9	 0x3d04134	proccoll	0	259	303
+	10	 0x3d04190	procinst	0	303	327
+	11	 0x3d041b0	proctprf	0	327	347
+	12	 0x3d041d0	dprmlst_	0	347	363
+	13	 0x3d041e0	dprmlst_	0	363	379
+	14	 0x3aa5038	cnstpi__	0	379	391
+	15	 0x3d041f0	proctprf	0	391	411
+	16	 0x3d04210	cprmlst_	0	411	427
+	17	 0x3aa5048	cnstpi__	0	427	439
+	18	 0x3d04220	cprmlst_	0	439	455
+	19	 0x3aa5058	cnstpi__	0	455	467
+	20	 0x3d04234	proccoll	0	467	511
+	21	 0x3d04290	procinst	0	511	535
+	22	 0x3d042b0	proctprf	0	535	555
+	23	 0x3d042d0	dprmlst_	0	555	571
+	24	 0x3aa5068	cnstpi__	0	571	583
+	25	 0x3d042e0	dprmlst_	0	583	599
+	26	 0x3aa5078	cnstpi__	0	599	611
+	27	 0x3d042f0	proctprf	0	611	631
+	28	 0x3d04310	cprmlst_	0	631	647
+	29	 0x3aa5088	cnstpi__	0	647	659
+	30	 0x3d04320	cprmlst_	0	659	675
+	31	 0x3aa5098	cnstpi__	0	675	687
 
 In module created from: ./049.in (unrolled)
 In namespace "", we have: {

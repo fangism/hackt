@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.21.2.3 2005/07/07 23:48:12 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.21.2.4 2005/07/08 18:15:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/art_object_instance_int.h"
+#include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/expr/int_expr.h"

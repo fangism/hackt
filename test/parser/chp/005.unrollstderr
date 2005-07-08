@@ -2,21 +2,21 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x4302630	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4302650	procdefn	0	53	134
-	4	 0x43025d4	chancoll	0	134	172
-	5	 0x43026e0	chaninst	0	172	192
-	6	 0x4302700	bchntprf	0	192	217
-	7	 0x4302730	datatprf	0	217	237
-	8	 0x4302750	datadefn	0	237	290
-	9	 0x43027f4	chancoll	0	290	328
-	10	 0x4302850	chaninst	0	328	348
-	11	 0x4302870	bchntprf	0	348	373
-	12	 0x43028a0	datatprf	0	373	393
-	13	 0x43028c0	CHPsend_	0	393	413
-	14	 0x43028e0	schnnref	0	413	429
-	15	 0x4804404	cnstpb__	0	429	438
+	1	 0x3d02820	module__	0	0	29
+	2	 0x3d00144	namespc_	0	29	53
+	3	 0x3d02840	procdefn	0	53	134
+	4	 0x3d027c4	chancoll	0	134	176
+	5	 0x3d028d0	chaninst	0	176	196
+	6	 0x3d028f0	bchntprf	0	196	221
+	7	 0x3d02920	datatprf	0	221	241
+	8	 0x3d02940	datadefn	0	241	294
+	9	 0x3d029e4	chancoll	0	294	336
+	10	 0x3d02a40	chaninst	0	336	356
+	11	 0x3d02a60	bchntprf	0	356	381
+	12	 0x3d02a90	datatprf	0	381	401
+	13	 0x3d02ab0	CHPsend_	0	401	421
+	14	 0x3d02ad0	schnnref	0	421	437
+	15	 0x5004004	cnstpb__	0	437	446
 
 In module created from: ./005.in (unrolled)
 In namespace "", we have: {

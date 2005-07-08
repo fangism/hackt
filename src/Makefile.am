@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.9 2005/07/06 20:14:20 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.10 2005/07/08 18:15:23 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -148,6 +148,7 @@ OBJECT_CC_FILES = \
 	Object/art_object_classification_details.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
+	Object/art_object_instance_alias_actuals.cc \
 	Object/art_object_instance.cc \
 	Object/art_object_instance_param.cc \
 	Object/art_object_instance_bool.cc \
@@ -279,6 +280,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_index.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_alias.h \
+	Object/art_object_instance_alias_empty.h \
 	Object/art_object_instance_collection.h \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \

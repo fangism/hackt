@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_proc_traits.h"
 	Traits and policies for processes.  
-	$Id: art_object_proc_traits.h,v 1.1.2.1 2005/06/25 21:07:26 fang Exp $
+	$Id: art_object_proc_traits.h,v 1.1.2.2 2005/07/08 18:15:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PROC_TRAITS_H__
@@ -25,6 +25,8 @@ struct class_traits<process_tag> {
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+	typedef	instance_alias_info_actuals
+					instance_alias_relaxed_actuals_type;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

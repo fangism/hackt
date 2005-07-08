@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.4 2005/07/08 03:03:47 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.5 2005/07/08 18:15:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -156,6 +156,7 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 	// in which case it is not yet unrolled.  
 	if (this->container)
 		this->container->collect_transient_info(m);
+	actuals_parent_type::collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -197,6 +198,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
 	m.write_pointer(o, this->instance);
 	m.write_pointer(o, this->container);
+	actuals_parent_type::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -207,9 +209,13 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
 	m.read_pointer(i, this->instance);
 	m.read_pointer(i, this->container);
+	actuals_parent_type::load_object_base(m, i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor for calling collect_transient_info_base.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::transient_info_collector::operator () (
@@ -652,7 +658,9 @@ INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE 
 ostream&
 INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
-	os << auto_indent << _Select1st<value_type>()(p) << " = ";
+	os << auto_indent << _Select1st<value_type>()(p);
+	p.dump_actuals(os);
+	os << " = ";
 	p.get_next()->dump_alias(os);
 	return os << endl;
 }
@@ -685,12 +693,14 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 					element_type(key_gen,
 					never_ptr<const this_type>(this))));
 			// set its relaxed actuals!!! (if appropriate)
+			if (actuals) {
 			const bool attached(new_elem->attach_actuals(actuals));
 			if (!attached) {
 				cerr << "ERROR: attaching relaxed actuals to "
 					<< this->get_qualified_name() <<
 					key_gen << endl;
 				err = true;
+			}
 			}
 		} else {
 			// found one that already exists!
@@ -1083,7 +1093,8 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		return good_bool(false);
 	}
 	this->the_instance.instantiate(never_ptr<const this_type>(this));
-	const bool attached(this->the_instance.attach_actuals(actuals));
+	const bool attached(actuals ?
+		this->the_instance.attach_actuals(actuals) : true);
 	if (!attached) {
 		cerr << "ERROR: attaching relaxed actuals to scalar ";
 		this->type_dump(cerr) << " " << this->get_qualified_name()

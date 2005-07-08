@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.3 2005/07/07 23:48:10 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.4 2005/07/08 18:15:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/art_object_instance_bool.h"
+#include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/expr/bool_expr.h"

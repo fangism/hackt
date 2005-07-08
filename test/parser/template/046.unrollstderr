@@ -7,17 +7,17 @@ Persistent Object Manager text dump:
 	3	 0x3d029a0	procdefn	0	61	133
 	4	 0x3d02a34	pintcoll	0	133	170
 	5	 0x3d02a90	pintinst	0	170	186
-	6	 0x3a07028	cnstpi__	0	186	198
+	6	 0x3aa5028	cnstpi__	0	186	198
 	7	 0x3d02aa4	pintcoll	0	198	235
 	8	 0x3d02b00	pintinst	0	235	251
-	9	 0x3d02b14	proccoll	0	251	291
-	10	 0x3d02b70	procinst	0	291	315
-	11	 0x3d02b90	proctprf	0	315	335
-	12	 0x3d02bb0	dprmlst_	0	335	351
-	13	 0x3a07038	cnstpi__	0	351	363
-	14	 0x3d02bc0	proctprf	0	363	383
-	15	 0x3d02be0	cprmlst_	0	383	399
-	16	 0x3a07048	cnstpi__	0	399	411
+	9	 0x3d02b14	proccoll	0	251	295
+	10	 0x3d02b70	procinst	0	295	319
+	11	 0x3d02b90	proctprf	0	319	339
+	12	 0x3d02bb0	dprmlst_	0	339	355
+	13	 0x3aa5038	cnstpi__	0	355	367
+	14	 0x3d02bc0	proctprf	0	367	387
+	15	 0x3d02be0	cprmlst_	0	387	403
+	16	 0x3aa5048	cnstpi__	0	403	415
 
 In module created from: ./046.in (unrolled)
 In namespace "", we have: {

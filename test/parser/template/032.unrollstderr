@@ -2,34 +2,34 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3c03b00	module__	0	0	45
-	2	 0x3c00144	namespc_	0	45	77
-	3	 0x3c03b24	pintcoll	1	77	134
-	4	 0x3c03be0	pintinst	0	134	150
-	5	 0x3c03bf0	crnglst_	0	150	170
-	6	 0x3c03c00	procdefn	0	170	230
-	7	 0x3c03c94	pintcoll	0	230	267
-	8	 0x3c03cf0	pintinst	0	267	283
-	9	 0x3c03d04	proccoll	0	283	323
-	10	 0x3c03d60	procinst	0	323	347
-	11	 0x3c03d80	proctprf	0	347	367
-	12	 0x3c03da0	dprmlst_	0	367	383
-	13	 0x3c03db0	spimref_	0	383	403
-	14	 0x3c03de0	cindlst_	0	403	419
-	15	 0x39f2028	cnstpi__	0	419	431
-	16	 0x3c03df0	proctprf	0	431	451
-	17	 0x3c03e10	cprmlst_	0	451	467
-	18	 0x3c03e24	cnstpic_	0	467	495
-	19	 0x5000c00	piassign	0	495	515
-	20	 0x39f2038	cnstpi__	0	515	527
-	21	 0x3c03e90	spimref_	0	527	547
-	22	 0x3c03ec0	cindlst_	0	547	563
-	23	 0x39f2048	cnstpi__	0	563	575
-	24	 0x5000c10	piassign	0	575	595
-	25	 0x39f2058	cnstpi__	0	595	607
-	26	 0x3c03ed0	spimref_	0	607	627
-	27	 0x3c03f00	cindlst_	0	627	643
-	28	 0x39f2068	cnstpi__	0	643	655
+	1	 0x3d03b00	module__	0	0	45
+	2	 0x3d00144	namespc_	0	45	77
+	3	 0x3d03b24	pintcoll	1	77	134
+	4	 0x3d03be0	pintinst	0	134	150
+	5	 0x3d03bf0	crnglst_	0	150	170
+	6	 0x3d03c00	procdefn	0	170	230
+	7	 0x3d03c94	pintcoll	0	230	267
+	8	 0x3d03cf0	pintinst	0	267	283
+	9	 0x3d03d04	proccoll	0	283	327
+	10	 0x3d03d60	procinst	0	327	351
+	11	 0x3d03d80	proctprf	0	351	371
+	12	 0x3d03da0	dprmlst_	0	371	387
+	13	 0x3d03db0	spimref_	0	387	407
+	14	 0x3d03de0	cindlst_	0	407	423
+	15	 0x3aa5028	cnstpi__	0	423	435
+	16	 0x3d03df0	proctprf	0	435	455
+	17	 0x3d03e10	cprmlst_	0	455	471
+	18	 0x3d03e24	cnstpic_	0	471	499
+	19	 0x5000c00	piassign	0	499	519
+	20	 0x3aa5038	cnstpi__	0	519	531
+	21	 0x3d03e90	spimref_	0	531	551
+	22	 0x3d03ec0	cindlst_	0	551	567
+	23	 0x3aa5048	cnstpi__	0	567	579
+	24	 0x5000c10	piassign	0	579	599
+	25	 0x3aa5058	cnstpi__	0	599	611
+	26	 0x3d03ed0	spimref_	0	611	631
+	27	 0x3d03f00	cindlst_	0	631	647
+	28	 0x3aa5068	cnstpi__	0	647	659
 
 In module created from: ./032.in (unrolled)
 In namespace "", we have: {

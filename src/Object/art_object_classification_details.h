@@ -2,7 +2,7 @@
 	\file "Object/art_object_classification_details.h"
 	Traits and policy classes for instances.  
 	This file is included by "Object/art_object_*_traits.h"
-	$Id: art_object_classification_details.h,v 1.8.4.2 2005/06/25 21:07:18 fang Exp $
+	$Id: art_object_classification_details.h,v 1.8.4.3 2005/07/08 18:15:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
@@ -27,6 +27,12 @@ using util::ring_node_derived;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+
+// defined in "Object/art_object_instance_alias_empty.h"
+class instance_alias_info_empty;
+
+// defined in "Object/art_object_instance_alias_actuals.h"
+class instance_alias_info_actuals;
 
 /**
 	Default definition is empty, must specialize for each class.  
@@ -55,6 +61,17 @@ struct class_traits {
 	/// a non-owned, modifiable pointer reference to instance_alias_base_type
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+
+	/**
+		This determines which alias classes contain relaxed
+		actual parameters.  
+		Two base classes are provided:
+			instance_alias_info_empty, 
+			and instance_alias_info_actuals.
+		Each policy that corresponds to a collection type
+			will define this type.  
+	 */
+	typedef	void			instance_alias_relaxed_actuals_type;
 
 	/**
 		This is the base type of the instance collection, 

@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.11.10.3 2005/07/08 03:03:48 fang Exp $
+#	$Id: Make.test,v 1.11.10.4 2005/07/08 18:15:31 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -89,10 +89,14 @@ DISTCLEANFILES += .cvsignore subdir.not_a_test
 all-local: .cvsignore subdir.not_a_test \
 	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
 
+# doesn't work, but would like it to
+# .PRECIOUS: check.log
+
 # -k option allows continuation past directories with failed tests
 check.log: force
 	@$(ECHO) "Logging results of \"make -k check\" in $@ ..."
-	$(MAKE) -k check 2>&1 | cat > $@
+	$(MAKE) -k check 2>&1 | cat > $@.tmp
+	-$(MV) $@.tmp $@
 	-$(GREP) -v ^PASS $@
 	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 

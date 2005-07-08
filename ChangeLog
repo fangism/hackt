@@ -1,5 +1,1318 @@
 "ChangeLog"
 
+2005-07-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-22:
+	  Added distcheck.log target to Makefile.am.  Nice!
+
+
+2005-06-21	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-45-merged-anal-04:
+	  Merged in branch revisions for anal-retentitiveness, 
+		turning on max warnings, warnings-to-errors.  
+	  Code was cleaned up, no non-standardness remains.  
+	  Life is good.  
+
+
+2005-06-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-44:
+	  Renamed "configure.in" to "configure.ac" to be more correct.
+
+
+2005-06-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-43-merged-CHP-01-25:
+	  Details of source code merge in src/ChangeLog.  
+	  In this directory, updates to include new test subdirectories
+		test/parser/{chp,channel}.
+
+
+2005-06-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-14:
+	  Introducing 'bootstrap' 1.2!
+		added: touch src/headers_deps.make
+		to break the chicken-before-the-egg dependency problem.  
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-12-merged-dataexpr-10:
+	  Child branch merge.  Details in src/ChangeLog.  
+
+
+2005-06-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-42-CHP-01-09-dataexpr-06:
+	  .cvsignore: ignore auto-generated config.hchk
+
+
+2005-05-22	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-39:
+	  Major housework with headers, making them 'standalone'.
+		See src/ChangeLog for details.  
+
+
+2005-05-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-38:
+	  configure.in: check for getopt
+	  Reorganized main programs, having factored out common top-level
+		functionality into main/main_funcs.{h,cc}
+	  see also src/ChangeLog, test/ChangeLog for more details.
+
+
+2005-05-19	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-37-merged-PRS-01-09:
+	  Merged revisions from -PRS-01 branch, which also includes
+		essential core utility library fixes.  
+		Details in src/ChangeLog.  
+	  Also updated a few parser/prs tests to account for bison/yacc 
+		differences.
+
+
+2005-05-13	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-36-merged-exprcheck-07:
+	  Merged revisions from -main-00-35-exprcheck branch to trunk.  
+	  Summary: replaced parser::expr::check_build() (and friends)
+		with more appropriate routines and interfaces.  
+		Eliminated entity::object_list, and context's object_stacks.  
+	  See src/ChangeLog for details.  
+
+
+2005-05-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-35:
+	  From now on, #include files should refer to full relative path, 
+	  never relying on -Ipath in CPPFLAGS.  Hopefully, this makes code
+	  easier to follow when tracing through includes across different
+	  directories.  
+
+
+2005-05-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-30:
+	  Re-synchronized test expected outputs between bison- and yacc-
+	  generated parsers.  (This has not been checked for a long time.)
+
+	* ARTXX-00-01-04-main-00-29:
+	  Re-organized dox subdirectory, making room for new documents.
+	  Factored out common Makefile-ism into the dox/mk directory, 
+	  including maketexdepend business and suffix rules into Make.latex.  
+
+
+2005-05-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-28-merged-template-01-09:
+	  Merged revisions from -template-01 branch.  
+	  Summary: added front-end language support for strict+relaxed
+		template parameters.  
+	  	Re-worked parser and AST (and scripts), eliminating
+			need for ART::parser:node.  
+		TODO: implement strict and relaxed template argument checks.  
+	  Will return to this branch as -template-02 in the near future.  
+	  Some of the revisions of this branch just had to be merged to trunk.
+
+
+2005-05-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27-template-01-04:
+	  Added more latex-related conditionals to configure.in.  
+
+
+2005-04-28	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-27:
+	  Updated configure.in, as recommended by autoscan.  
+
+
+2005-04-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-24:
+	  From now on, revision details should be written to
+		directories' ChangeLogs.  This ChangeLog will only contain
+		high-level summaries.  (It's just been getting too cluttered.)
+	  Added: dox/lang/ChangeLog, src/ChangeLog.
+
+
+2005-04-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-23:
+	  Bring code up to speed with gcc-4 (20050409).
+	  Compiles and runs cleanly with gcc-3.3 through 4.0 on
+		powerpc-darwin, i686-linux, i386-freebsd.
+	  Needed to respect missing virtual destructor warning with struct
+		  functors in "util/operators.h".  
+
+
+2005-04-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-22-merged-parser-02-05:
+	  Merged parser-02 branch, through revision -05.  
+
+
+2005-04-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-05:
+	  Clean-up, making USE_NEW_NODE_LIST permanent.  
+	  (Removed old "AST/art_parser.tcc")
+
+
+2005-04-10	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-03:
+	  Replaced most token_keyword with faster keyword_position, 
+	  	which still stores redundant strings, using a fixed-length
+		char array[12].  
+
+	* ARTXX-00-01-04-main-00-21-parser-02-04:
+	  Enabled chunk-map pooling of most (terminal) token classes.
+
+
+2005-04-09	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-02:
+	  Modified parser to use node_position for syntactic sugar tokens
+		  such as characters and short symbol strings.
+	  Enabled USE_NEW_NODE_LIST in "AST/art_parser_fwd.h".
+	  art_parser.tcc can be replaced by art_parser_node_list.tcc.
+		No more delimiter lists, but open/close list-wrappers kept.
+	  Replaced most non-essential token_char and token_string with
+		  node_position (using char_punctuation_type, etc...)
+	  Fixed typo bug in "util/numeric/integer_traits.h".
+	
+
+2005-03-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-21-parser-02-01:
+	  New branch for parser/AST-related improvements.  
+	  Plans include: stripping unnecessary token information, 
+		saving only position, token pooling for effective reclamation, 
+		replacing node_list class template with simpler one.
+	  This revision just added conditional code for USE_NEW_NODE_LIST, 
+		in preparation for upcoming changes, and is disabled.  
+
+	* ARTXX-00-01-04-main-00-20:
+	  Upgraded param_expression_assignments to use template.  
+	  Updated DevelopmentPlan.dot.
+	  Updated a few artc test outputs' error messages.  
+
+		+ -main-00-21: Just cleaned up conditional code.  
+
+	* ARTXX-00-01-04-main-00-19-merged-inststmt-09:
+	  Merged all revisions from -inststmt branch (-09) to main trunk.  
+
+
+2005-03-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-07:
+	  Ported data,proc,chan instantiation_statements to use new
+	  template class, no problems!
+	  Next revision will clean up #if USE_INST_STMT_TEMPLATE.  
+	  Plan: clean-up, merge to trunk, work templateing expr-assignments.  
+
+	* -inststmt-08:
+	  Cleaned up, instantiation_statement template is now "committed."
+	  Another -1000 LOC!
+
+	* -inststmt-09: gcc4 standard compliance patch, 
+	  template-related name fixes.  Compiles and passes all tests.  
+	  Ready to commit to trunk.  
+
+
+2005-03-10	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-04-merged-collection-03:
+	  Merged revisions from -collection child branch (-03).
+
+	* -inststmt-05:
+	  Updating the way instantiation statements are unrolled
+	  (tested on pint and pbool inst_stmts, which currently use
+	  the instantiation statement class template.  
+	  The work for resolving the range of instantiation is pushed
+	  to the instantiation_statement_base, which owns the
+	  indices (range_expr_list) pointer.  
+	  value_collection::instantiate_indices now takes const_range_list&.
+	  Added range_expr_list::unroll_resolve (pure virt.).
+	  Added const unroll_context& argument to 
+		class_traits<Tag>::instantiation_statement_type_ref_base::
+			unroll_type_check().  
+
+	* -inststmt-06:
+	  Applied same changes to proc,chan,data types, but haven't
+	  applied instantiation_statement template to them yet.
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-03:
+	  Cleaned up conditional code with USE_VALUE_COLLECTION_TEMPLATE.  
+	  Resulting in 2000 fewer LOC.  :)
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-02-merged-expr-05:
+	  Merged in revisions from -expr child branch (through -05).
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-04:
+	  Fixed problem with error message, mis-carried return statement
+	  turned into bug during copying.  Doh.  
+	  Use of value_reference template is now enabled.  
+	  After cleanup, we can retire this baby branch...
+
+	* -expr-05:
+	  Cleaned up USE_VALUE_REFERENCE_TEMPLATE and 
+	  USE_CONST_COLLECTION_TEMPLATE.  Ready to merge to parent.  
+
+
+2005-03-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01-expr-01:
+	  We need to port many expressions classes to follow consistent
+	  templates, this has been punted for way too long. 
+	  Need to rename some methods to conform to standard interface.  
+
+	* -expr-02:
+	  Ported pint_const_collection to const_collection_template.
+	  Renamed {may,must}_be_equivalent method functions of many
+	  pint and pbool class derivatives.  
+
+	* -expr-03:
+	  Added code for porting pint/pbool_instance_reference to
+	  value_reference template class, but kept it disabled for this
+	  revision with USE_VALUE_REFERENCE_TEMPLATE set to 0.  
+	  (Enabling it yielded different error messages in the param test
+	  directory, and haven't figured out why... will need stacktrace?)
+	  Removed (comment) unnecessary
+	  pint_instance_reference::unroll_resolve_index method.  
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03-collection-01:
+	  Porting parameter instance collections to use new value_collection
+	  template, similar to instance_collection class template.  
+	  Updated "art_built_ins.cc" to follow more procedural
+	  default parameter initialization.  
+	  More of class_traits<{pint,pbool}_tag> fleshed out, giving them
+	  some parameter-specific traits.  
+	  Next: param_instance_reference upgrading.  
+
+
+2005-03-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-03:
+	  More details on class_traits<>::instantiation_statement_type_ref_ptr
+	  interface, also provided a default empty class implementation.  
+	  Need to rework instantiation statement framework: which methods
+	  are responsible for type-checking, index/range-resolving, 
+	  sparse-instance populating, etc...
+	  but _after_ fixing interface for range_expr_lists.
+
+	* Happy Birthday to ART++!
+	  (Wait, I've spent a year on this!?)
+
+
+2005-03-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-02:
+	  Ported pbool and pint_instantiation_statement to using
+	  new instantiation_statement template, everything works still.  
+	  Leveraging specialization of a parent type-reference base
+	  through class_traits, so that built-in types need not
+	  include unnecessary pointers (optimization).  
+	  Will continue with data, channel, and process inst-stmts.  
+
+
+2005-03-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-18-inststmt-01:
+	  Spawned branch for reworking instantiation statement classes
+	  into easier-to-maintain templates, using class_traits<Tag>.
+	  This first revision just renamed instantiation_statement to
+	  instantiation_statement_base to make way for the template name.  
+
+	* ARTXX-00-01-04-main-00-18:
+	  Major cleanup.
+	  Stripped archaic debugging files "art_debug.h"
+		  "art_parser_debug.h" "art_switches.h".
+	  Removed any debug macros that were derived from those files.  
+	  Split some more AST header files to reduce inclusion of
+		unnecesary header files, by recursion.
+
+
+2005-03-05	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-17-merged-chunkmap-03:
+	  Merged revisions from -chunkmap child branch (through -03).  
+
+	* ARTXX-00-01-04-main-00-16-chunkmap-01:
+	  This branch is for developing custom allocators.  
+	  Draft of working chunk_map_pool, tested.  
+	  Rule for allocators: they are NOT responsible for calling
+	  construct and destroy, only allocating.  
+	  Need to revisit list_vector_pool's use.  
+	  No more lazy- or eager- destruction business...
+	  Later revision will add macros to override new and delete
+	  using the chunk_map_pool.  
+
+	* -chunkmap-02:
+	  Realized mistake in list_vector_pool implementation.
+	  Even overloaded new/delete operators implicitly call
+	  ctors and dtors on the relevant pointers, thus rendering
+	  eager/lazy destruction somewhat irrelevant -- always destroyed
+	  afer delete.  To compensate, re-construct elements pointed
+	  in the free-list before destruction of the pool.  
+	  Cleaned up files a bit.  Will apply these concepts to chunk_map_pool.
+
+	* -chunkmap-03:
+	  Wrote CHUNK_MAP_POOL declaration and definition macros, 
+	  in the style ripped from list_vector_pool.  
+	  Updated LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS macro name.  
+	  Corrected little pointer arithmetic bug in 
+	  typeless_memory_chunk::__deallocate.
+	  Ported ART::parser::token_char to using chunk_map_pool now.  
+	  Everything still works.  Going to check with gcc4 before
+	  marking ready to merge to trunk... still good, no new issues.  
+
+
+2005-03-03	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-16-merged-collect-02:
+	  Merged in revisions from -collection child branch up to 
+	  subrevision -02.  
+
+	* ARTXX-00-01-04-main-00-15-collect-01:
+	  This branch is intended really a continuation of where the last
+	  -13-persistent branch left off.  This focuses on improvements
+	  to the persistent object manager.  
+	  Major improvements in this revision:
+	  Added mechanism to mark and classify visits through
+	  persistent_object_manager::read_pointer<>().
+	  This allows the manager to verify the status of ownership of each
+	  reconstructed pointer during load_objects().  
+	  Any object that doesn't meet the "claimed" criterion may be
+	  deleted by the reconstruction_table_entry when it expires
+	  (unless otherwise flagged).  
+	  This makes load_objects() exception-safe!  
+	  Little note: needed "special handling" of built-in-datatype-def
+	  pointers faked as user-defined-datatypes,
+		see "art_object_type_ref.cc"
+	  Minor improvements include cleanup of other source and header files.  
+	  To do: upgrade the reconstruction_table to list_vector to 
+	  avoid bulk copy-construction on a push back operation.  
+
+	* -collect-02:
+	  Upgraded persistent_object_manager's reconstruction_table
+	  to util::list_vector<reconstruction_table_entry>.  
+	  NEVERMORE will the entire array of entries be reallocated to 
+	  new locations upon push_back()!  
+	  Accesses to the array are now O(log(N/C)) where N is the 
+	  total size, and C is the chunk-size (because of internal map).  
+
+
+2005-03-03	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-15:
+	  Cleaned up commented out code in #if HAVE_PERSISTENT_CONSTRUCT_EMPTY
+
+	* ARTXX-00-01-04-main-00-14-merged-persistent-02:
+	  Some file tags were screwed up in CVS, so merging early back to
+	  main trunk first (for coherence sake), then splitting off again.  
+
+	* ARTXX-00-01-04-main-00-13-persistent-02:
+	  (With old code kept commented out)
+	  Replaced bare construct_empty function pointers with
+	  nullary constructor functors, more generalizable.
+	  (Tradeoff: virtual dispatch overhead.)
+	  Almost every file in src/Object affected.  
+		+ util: improvements to new_functor, and nullary_function
+			templates including compile-time switch
+			between virtual and non-virtual parent.  
+		+ new_functor is always derived from virtual base, 
+			nullary_function_virtual<T*>.
+	  Some later revision will have to clean-up code as always.  
+
+
+2005-03-02	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-13-persistent-01:
+	  Some big plans for this line of development.  
+	  This revision just added a few utility classes for turning
+	  constructor calls into functors (with virtual function).  
+	  Some persistence files were touched up for clean up.  
+	  Plans include: re-doing the persistent reconstruction 
+		framework to use constructor functors, rather than
+		raw pointers to static construct_empty(int).
+		+ Instead of overloading one type-key entry for the 
+		  table of reconstructors, we'll upgrade to a table
+		  of vectors of constructor functors, where the vector
+		  is indexed by the auxiliary constructor argument, 
+		  (instead of passing it to construct empty).  
+		+ Will phase out the construct_empty pattern.  
+		+ re-do collect_transient_info so that the object
+		  manager will handle visit once traversal.  
+		+ Transient object registration will be done through
+		  passing pointer-objects so that each visit may be flagged
+		  with the type of pointer used to visit.  
+		  (But we also don't want to burden the caller with 
+		  knowing the type-key, that should be automatic still.)
+		+ Handle exceptions during load object, and ensure 
+		  proper methodical clean-up of allocated but un-touched
+		  memory upon exception in load_objects().  
+		  This will require some finesse.  
+
+
+2005-03-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-13:
+	  So I forgot to include the new try_lex_catch.awk script 
+	  last revision, my bad!  
+	  While I was at it, straightened out some symbol namespaces
+	  and linkage with the parser.  
+
+	* ARTXX-00-01-04-main-00-12:
+	  Made lexer/parser more exception-safe by throwing exceptions
+	  and proprely freeing memory when caught.  
+	  A few basic tests have been added to the lexer that demonstrate
+	  that no memory leaks occur with this mechanism in place.  
+	  Updated {yacc,bison}-union-type.awk to do a litle more 
+	  array-bounds checking on union-lookup.  
+	  To do eventually: make persistent object-loader exception safe.
+	  This will be much more difficult because of difficult
+	  guarantee that each object in the table is visited only once.  
+	  May require a destructor-like method in each class that
+	  registers each visit with the persistent object manager.  
+
+	* ARTXX-00-01-04-main-00-11-merged-what-01:
+	  Merged insignificant revisions from -10-what-01.  
+
+	* ARTXX-00-01-04-main-00-10-what-01:
+	  This branch attempting to work around some multiple definition
+	  linking issues with implicitly instantiated symbols, 
+	  particularly from util::what.  This issue only arises with
+	  gcc-4.0 with odcctools' ld linker.  
+	  This is going to be nearly impossible to fix in the near future, 
+	  but nothing is broken, I'm only easily irritated by warnings.  
+	  Will revisit this issue another day.  
+
+
+2005-02-28	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-10-merged-bool-06:
+	  Merged revisions from -bool branch (-06), 
+	  improving semantic clarity of boolean values in the program.  
+
+	* ARTXX-00-01-04-main-00-09:
+	  Support for gcc-3.2 (ix86-linux) dropped.  It *BOMBS* completely.
+	  Wrote some notes in the source on where and why things die.
+	  Don't even bother trying to compile util/test/integer_traits_test.
+	  (If you try, don't say I didn't warn you.)
+	  The art* executables all compile with a little help from this patch,
+	  but all executables die a horrible abort-trap death.
+	  (Something is horked with the global static initialization 
+	  and destruction, I believe.)
+	  (It's a fact of compiler-life: code dies, life goes on.)
+
+	* ARTXX-00-01-04-main-00-08-bool-03:
+	  This revision has nothing to do with bools, 
+	  but are targeted back to the main trunk anyhow.  
+		+ Makefile notes on various CFLAGS, for future
+		  super-anal-retentiveness.  
+		+ Notes on where gcc4 gets multiple definition warning
+		  with ranlib.  
+		+ A few standard-conforming tweaks.  
+		+ Better namespace injection workaround "pointer_manipluator.h"
+
+	* -bool-04:
+	  Upgraded bool return values for methods in definition classes, 
+	  some expression classes, instantiation statements, 
+	  instance collections.  
+
+	* -bool-05:
+	  Upgraded more bool return values in expression methods and
+	  param value instance collection methods.  
+	  Actually caught an old (wrong error message) bug in the process!
+
+	* -bool-06:
+	  Final revisions upgrading bools.
+	  Upgraded some class methods in context, definitions, 
+	  param assignments, connections, instance_references, namespace.
+	  This is ready to merge to trunk.  
+
+
+2005-02-27	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-08-bool-01:
+	  This branch is for changing ALL diagnostic functions to 
+	  return a "good_bool" or "bad_bool" two new bool types defined
+	  in "util/boolean_types.h".  This will help keep the meaning of 
+	  return values clear and self-documenting.  
+	  Initially testing on a few classes at a time.  
+
+	* -bool-02: boolean upgrades to expression assignments.  
+
+	* ARTXX-00-01-04-main-00-08:
+	  Passes on all tested platforms and compilers:
+	  {gcc-3.3, 3.4, 4.0} x {FreeBSD, linux, darwin}
+	  Some ranlib warnings about multiple definitions 
+	  (related to util::what) using odcctools' ld with g++-4.0.  
+	  Will try to appease it in next revisions.  
+	  Will spend some revisions improving code that will benefit
+	  development along all directions before branching again.  
+
+	* ARTXX-00-01-04-main-00-07-merged-object-01-18:
+	  The great merge.
+	  Merged huge revisions from object-01 branch to mainline.  
+	  Tested on powerpc-apple-darwin, with gcc-3.3.  
+	  Will also check with gcc-4.0 (pre- 20050130)
+	  FreeBSD gcc-3.4, and ix86-linux.  
+
+	* ARTXX-00-01-04-main-00-06-merged-parser-01-05:
+	  Merged moderate revisions to parser and front-end into mainline.  
+
+	* ARTXX-00-01-04-main-00-05-merged-docs-00-01:
+	  Merged in tiny revisions to documentation from last series
+	  into mainline.  
+
+	* ARTXX-00-01-04-main-00-04-parser-01-05:
+	  Slight reorganization of some util library headers.  
+	  Added placeholder code for chunk_map_pool.  
+	  Definition is pending a merge to the main trunk, 
+	  will depend on maplikeset, defined in -object-01 branch.  
+	  It's time for convergence!
+
+	* ARTXX-00-01-04-main-00-04-object-01-17:
+	  Successfully worked around defects in prerelease of gcc4 (20050130).  
+	  Code compiles and passes all tests, with some archival warnings
+	  from odcctools' ld/ranlib.  (powerpc-darwin only)
+	  Workarounds included additional using declaration in
+	  util/memory/pointer_manipulator.h to prevent friend class
+	  forward declaration name-injection.  
+	  Explicit template typedef typename was added to 
+	  art_object_instance_alias.h and art_object_instance_collection.h.
+	  None of these modifications cause any regressions with gcc-3.3.
+	  Added some missing *_instance method definitions to satisfy
+	  g++-4.0's ld.  
+
+	* -object-01-18:
+	  Updated DevelopmentPlan.dot.
+
+
+2005-02-26	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-15-merged-alias-12:
+	  Merged in tons of revisions from the alias child branch.  
+	  Hallelujah!  *Basic* alias connections work.  
+
+	* -object-01-16:
+	  Added DevelopmentPlan.dot, which makes a .ps.  
+	  No more relying on the white-board in my office.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-10-merged-instance-13:
+	  Merged all revisions from -09-instance child branch (rev -13)
+	  in this branch, very critical for progress.  
+
+	* -alias-11: "breakthrough"
+	  The moment we've been waiting for...
+	  First successful unrolling of connections, with persistence!
+	  Tested one case with scalars, and one complicated case 
+	  with multidimensional slices, and they pass!
+	  Currently, connection-equivalence type-checking is not yet
+	  implemented, that will have to wait until the -object-02 phase.  
+
+		Other minor changes:
+		+ cleaned up packed_array*, removing packed_array_base.
+
+	* -alias-12:
+	  Added more tests for alias connections in connect directory.  
+	  Many unroll tests disabled because required features aren't
+	  implemented yet, such as port connections and member instance
+	  references.  (Member instance references will require
+	  type/definition layout first.)  
+	  This branch is now ready to merge to parent.  
+
+
+2005-02-25	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-10:
+	  Ported all int-related instance classes (aliases, info, collection, 
+	  arrays) using the instance_collection template family.  
+	  This added ring-connection data to the binary, which resulted
+	  in updating tests because of increased object binary sizes.  
+	  New member of class_traits: tag_name (const char[]).
+	  90% of art_object_instance_{int,bool}.{h,cc} are commented out now.
+	  Will perform massive cleanup after applying instance collection
+	  template to remaining types: enum, struct, channel, process.
+
+	* -instance-11:
+	  Ported and upgraded enum to instance_collection template, 
+	  same story as before.  They now have alias connections.  
+	  Sweet, that was easy... structs, you're next.
+
+	* -instance-12:
+	  Ported datastruct, channel and process collections using 
+	  instance_collection template in one fell swoop.  
+	  Added a physical_instance_collection type between
+	  instance_collection_base and datatype/channel/process collections.  
+	  Wrote appropriate functor specializations for them.  
+	  Updated interface of collection_persistence to use 
+	  static function calls: collect, write, load. 
+	  Process and channels (aliases) are now initially connected
+	  to themselves.  
+	  This branch is nearly mature,  next revision will be 
+	  massive cleanup before merging to parent.  
+
+	* -instance-13:
+	  Ahhhh... code is 7000 lines lighter after the removal
+	  of blatantly replicated code in the old instance_collection
+	  implementations.  This branch is ready to merge to parent.  
+
+
+2005-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-03:
+	  art++-parse.yy: deleted uses of *_append *_wrap macros, 
+	  in preparation for substituting code with new node_list.
+
+	* -parser-01-03:
+	  Some clean-up of macros, added node_position class, 
+	  wrote new node_list class.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-05:
+	  Chose bool_instance_alias_info as the first guinea pig class
+	  to use instance_alias_info class template, 
+	  based on class_traits<Tag>.  
+	  Nothing blew up, all tests still intact.
+
+	* -instance-06:
+	  Major name clean-up and substitution to reduce ambiguity
+	  and provide template-typedef-like naming interface
+	  with class_traits for dimension-specific classes.  
+
+	* -instance-07:
+	  Ported bool_instance_alias_info, bool_instance_alias_base, 
+	  and bool_instance_alias<D> to class_traits template version.  
+	  All test still intact!  Next: porting instance_collections.
+
+	* -instance-08:
+	  Converted bool_instance_collection and arrays over using
+	  template instance_collection.  Nothing died, but code is 
+	  messy with conditionals...
+	  To do: define functors for type-specific variations
+	  in methods... may have to make them 'friendly'.  
+
+	* -instance-09:
+	  Added instance_collection functor prototypes for 
+	  collection parameter persistence, type-committing.  
+	  So far, only specialized for bool_tag, others will follow in time.  
+
+
+2005-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-02:
+	  Started to re-organize parser code base some.
+	  check_build is no longer in ART::parser_node, because we only ever
+	  call it from main through root_body.  
+	  Later, each sub-class may have its own prototype, 
+	  especially for return types -- makes much more sense
+	  and waill actually make some use of the return value, which 
+	  is currently ignored in most cases.  
+	  Some lexer structs moved into the ART::lexer namespace.
+	  Supplied "Fang, write me!" to many unimplemented 
+	  check_build()'s temporarily, causing a few updates to
+	  test suite expected outputs.  
+	  Coming soon: replacement code for node_list class template.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09-instance-01:
+	  New branch for the purpose of making the instance_collection
+	  class framework consistent.  
+	  This revision introduces classification tag which control the 
+	  infrastructure of template class patterns with a set of
+	  traits-class specializations.  
+	  So far, we applied this to member_instance_references as a 
+	  test case, and everything is hunky-dory.  
+
+	* -instance-02:
+	  Converted instance_reference to use class_traits<Tag>.
+	  Next: alias_connections, then ... instance collections, 
+	  the final frontier!
+
+	* -instance-03:
+	  alias_connections converted to class_traits, muahahaha...
+	  Code needs some serious clean-up before proceeding.  
+
+	* -instance-04:
+	  Cleaned-up, no more conditionals on SUBTYPE_ALIAS_CONNECTION
+	  and USE_CLASSIFICATION_TAGS.  
+
+
+2005-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-parser-01-01:
+	  New branch started off of the trunk, dedicated to improving the
+	  front-end lexer/parser.  
+	  In this revision, we sliced and diced the AST/ header files into
+	  more manageable units, resulting in noticeably faster 
+	  compile-times, and even smaller binaries.  
+	  See what a little organization can do?
+	  Later revisions will re-work the parser, especially the 
+	  node_list aspect, eliminating non-essential terminals.  
+
+
+2005-02-21	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-09:
+	  Fixed multikey_assoc::is_compact(), adding necessary, 
+	  implicit conversion to key type in {int,bool}_instance_alias.  
+	  Really sick and tired of maintaining copies of code for each
+	  physical instance collection type... it's time to employ
+	  templates with policy functors... (sub-branch).
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-08:
+	  Initial testing of instance unrolling, without connections, 
+	  just for int_instance_collection, our guinea pig.  
+	  Placeholder code pasted into other instance collections, 
+	  but marked as empty for now.  
+
+		+ Updated packed_array[_generic] template signature to 
+		  include type for index, so it's not hard-coded to size_t.  
+
+		+ Fixed bug in multikey_assoc::is_compact()'s return value
+		  for the case where D == 1.
+		  There may be another bug for D != 1, related to 
+		  index_extremities, look for "WRONG" in "multikey_assoc.tcc".
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-07:
+	  Added draft of code for alias_connection unrolling, untested.  
+	  Added draft code for reference unrolling, packing aliases
+	  into packed_array_generics.  
+	  Added tons of methods for unroll-time expression resolution, 
+	  many of which seem redundantly redundant -- clean later.  
+
+		+ unroll_aliases method only appears in int_instance_collection
+		  for now.
+
+		+ Some minor interface improvements to packed_array_generic, 
+		  and multikey_generator_generic.  
+
+
+2005-02-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-06-merged-instref-02:
+	  Merged -instref-02 revisions.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-instref-01:
+	  Replaced copy-pasted *_instance_reference with template
+	  class definition instance_reference<Collection,Parent>, 
+	  which makes this code so much more maintainable!
+	  Next revision: clean-up.
+
+	+ -instref-02: cleaned up, ready to merge to parent branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-05-merged-persistent-04:
+	  Merged -persistent-04 branch revisions into this branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-04:
+	  Substituted direct use of TYPE_KEY macros with
+	  persistent_traits<...>::type_key for less copying, 
+	  better maintainability.  
+	  This revision is clean and ready to merge with parent branch.
+
+
+2005-02-19	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-02-member-01:
+	  Child branch created for the sake of revising the 
+	  member_instance_reference system.  
+	  Testing to see if member_instance_reference_base
+	  really requires simple_instance_reference as the base type, 
+	  should really be generic.
+	  (a few connect tests will still die until announced otherwise)
+
+	+ -member-02:
+	  Changed base type of member_instance_reference_base to generic
+	  instance_reference_base.  Later, the base type shouldn't be allowed
+	  to be complex-aggregate, so perhaps deriving from nothing 
+	  (instead of instance_reference_base) is the correct thing to do.  
+
+	+ -member-03:
+	  Replaced all member_instance_references with template
+	  versions, extended datatypes members into subtype-specific
+	  versions.  ALL tests pass in this revision!
+	  This revision is littered with commented out code, next revision
+	  must clean up.  
+
+	+ -member-04: cleaned-up, ready to merge to parent branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-03-merged-member-04:
+	  Merged -member-04 child branch.
+
+
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04-persistent-01:
+	  Subtype template classes for alias_connection s are enabled, 
+	  everything compiles, but there is some difficulty with 
+	  persistent type registration: the hash_key's are not retrieved
+	  properly by calls to static persistent_traits<T>::get_hash_key.
+	  Solution: we need proper specialization of persistent_traits, 
+	  which currently isn't done because type-keys are only registered
+	  dynamically by static objects, hence specialized definitions
+	  do not exist.  This branch will remedy this by using specialization
+	  and dynamic registration (for unique ID).  
+	  This initial revision compiles, but some tests will die while
+	  modifications are in transient state.  
+
+	+ -persistent-02:
+	  Overhauled persistent type registration as promised.  
+	  Compiles, runs most tests, some unexpected deaths in 
+	  tests/parser/connect.  Must sleep first...
+	  Deaths related to datatype_member_instance_references.
+
+
+2005-02-18	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-04:
+	  Draft of template code for alias_connection.  
+	  Need to write instance_reference_base::make_alias_connection
+	  before enabling new class heirarchy (conditional now).
+	  Happened to do some header clean-up in this revision too.  
+
+
+2005-02-17	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-13-alias-01:
+	  New branch created for working on alias_connections.  
+	  May require some serious reworking and sub-typing.  
+	  Issue is what the interface for unrolled instance connection
+	  should be.  
+
+	+ -alias-02:
+	  Cleaned up some of object class heirarchy, having object as
+	  super-uber-parent is totally unnecessary in most cases.  
+	  Preparing to perform some major surgery on instance_reference
+	  and alias_connection class sub-heirarchy for connections.  
+
+	+ -alias-03:
+	  Renamed some classes, conditional code in-place for
+	  extending aliases_connection_base class heirarchy.  
+	  Some NOTES on proposed parse-context improvement in the future.  
+	  Everything still stable, the calm before the storm...
+
+	* ARTXX-00-01-04-main-00-04-object-01-13:
+	  Prelimiary testing of saving and restoring bool instance aliases, 
+	  where there are no actual connections.  So far so good.
+	  Some minor updates to instance dumping.  
+	  Tests were also updated because of expansion in bool
+	  instance object binary size.  
+
+
+2005-02-16	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-12:
+	  Wrote draft of code to save and restore bool aliases, 
+	  untested and disabled, so all tests still pass.  
+	  Will enable and test in next revision.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-11-merged-gcc4-02:
+	  Merged tiny revisions from the -09-gcc child branch, 
+	  through rev -02.
+	  These were micro-changes needed to make gcc-4.0 (prerelease)
+	  happy, because of more standard-conforming behavior.  
+	  That snapshot of gcc-4.0 (20050130) will not actually compile
+	  succesfully due to a bug discovered, see 02-14 entry of ChangeLog.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-10-merged-multikey-09:
+	  Merged all revisions from the -09-multikey child branch 
+	  (through rev. -09)
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-07:
+	  bool_instance_collections (scalar, array<D>) are once again
+	  reconstructible *without* connections.  
+	  (A lotta work to get nowhere!)
+	  Next revision will massively clean-up before porting over the 
+	  overall changes with bool collections to int<W> collections.
+	  Then we'll attempt to reconstruct aliases... ooooh...
+
+	+ -multikey-08:
+	  Massively cleaned up, as promised.
+	  Affected: multikey_map-related files, art_object_instance_bool.*
+
+	+ -multikey-09:
+	  int_instance_collections are reconstructible once again.  
+	  No aliases reconstructed yet.  
+	  Many test output updated because binary objects have changed size.
+	  All tests pass, this snapshot is good enough to merge back to
+	  the parent branch.  
+
+
+2005-02-15	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-05:
+	  Namespace clean-up only, replaced *_NAMESPACE in the util/
+	  directory with 'util'.  
+
+	+ -multikey-06:
+	  IO_utils*: added value_writer and value_reader functors to
+	  facilitate partial specializations with template classes.  
+	  Defaults to using plain-old write_value and read_value.  
+	  Skeletal implementations of bool alias persistence and 
+	  reconstruction.  
+	  bool_instance_alias<D> is now derived from 
+	  multikey_set_element_derived!  (except when D == 0)
+	  Thus, bool_array<D> may directly use multikey_set<element_type>.
+	  This revision compiles, same as before, but not all tests pass
+	  because code is in transient state.  
+
+
+2005-02-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-03:
+	  Designed "derived" versions of maplikeset_element and
+	  multikey_set_element.  Functionally, they are the same as their
+	  non-derived counterparts, but their implementations facilitate
+	  composition of features such as ring_node-connectivity.  
+	  These have been tested individually in the util/test directory.  
+	  Next revision will test the composability on
+	  "art_object_instance_bool.*".  
+
+	+ -multikey-04:
+	  Now using node_ring_derived for alias base.
+	  Now using multikey_set_element_derived in bool_array<D>.
+	  Trying replacing bool_instance_alias_base derived definition
+	  with typedef to ring_node_derived<bool_instance_alias_info>.
+	  Everything compiles, nothing dies, tests don't pass still
+	  because alias persistence hasn't been implemented yet.  
+	  Some updating in maplikeset.h, multikey_assoc.h now uses
+	  _Select1st, _Select2nd functors to allow specialization
+	  of key-value accessors.  (Needs clean-up.)
+
+	* ARTXX-0-01-04-main-00-04-object-01-09-gcc:
+	  Branch created for the sake of isolating an ICE bug with
+	  gcc-4.0 prerelease 20050130.  
+
+	+ ICE-trigger example reduced to about 30 lines in "gcc4death.cc"
+	  Submitted to gcc bugzilla database as report # 19948.  
+
+
+2005-02-13	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-02:
+	  Enabled instance_alias persistence of parameters (pint, pbool)
+	  because they contain no pointers.  
+	  multikey_map.tcc: using {write,read}_value with the key 
+	  of the key-value pair.  
+
+	+ Complication: desire the connective properties of ring_node
+	  and the key-aware properties of maplikeset_element
+	  (manifested as multikey_set_element), but creating such
+	  a result is highly non-trivial with the current data structure
+	  library.  
+
+	+ Added a variation of ring_node call ring_node_derived, which
+	  extends a base type, by making it ring-node-connected to
+	  its own type.  This will be required for use with 
+	  maplikeset_element, because one cannot compound two container-like
+	  adapters to make a super-type with the properties of both parents.  
+	  Testing passed easily... too easily.  
+
+	+ Drafted an implementation of bool_instance_alias_info
+	  and bool_instance_alias_base, which will be adapted in the
+	  next revision to use ring_node_derived.  
+
+	+ Much clean-up of art_object_instance_bool.h.
+
+	* ARTXX-00-01-04-main-00-04-object-01-09-multikey-01:
+	  In this child branch, I'm play-testing the development of 
+	  using multikey_set for instance aliases, and ways of 
+	  reconstructing connections through object persistence.  
+	  This snapshot compiles and runs, but many tests will not pass
+	  because instance collection persistence has been disabled.  
+	  Working on the persistence of aliases...
+
+
+2005-02-08	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-08-merged-set-16:
+	  Merged all revisions from -set child branch.  No issues.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-collection-00-trans-00:
+	  Temporary sibling branch for changes that have to wait until
+	  after -set branch is merged.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-15:
+	  Once again stable.  Introduced maplikeset interface to 
+	  adapt a set to have a map-like interface, where key components
+	  of set::value_type may be passed to method functions.  
+	  Stuck this into multikey_set and multikey_set_element, 
+	  and it works like magic, AFAICT.  
+	  Code is in real desparate need of housekeeping... next rev.
+
+	+ -set16:
+	  Cleaned up and removed excess commented code.  
+	  Reverted some changes to multikey_assoc back to the way they
+	  were before the multikey_set fiasco.  
+	  Code is trim and functional.  Time to move on.  
+
+
+2005-02-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-12:
+	+ "ring_node.h": eliminated need for const_cast of second
+	  pointer in iterator construction by const-ifying 
+	  the second pointer member, which is never dereferenced anyways.  
+
+	+ -set-13: "multikey_assoc*": multidimensional associative 
+	  container adapter.  Factored out multidimensional facilities
+	  of multikey_map into multikey_assoc template wrapper.  
+	  Much removed code in commends in this snapshot.  
+
+	+ -set-14-trans-00: "multikey_set*" family added (1st draft), 
+	  *almost* entirely working, just needed to add initial files
+	  to checkpoint first revision.  
+	  This is a *transient* snapshot, and will compile, but the newly
+	  added test (multikey_set_test) does not run correctly yet.  
+	  Many adaptations have been made to the base multikey_assoc, 
+	  without disturbing the functionality of multikey_maps.  
+	  Future plans for major improvement of code maintainability:
+	  Make a set adapter to give map-like key-value interface to 
+	  std::set, since we find ourselves working around basic
+	  fundamental differences.  
+
+
+2005-02-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-07:
+	  Obliterated multikey_base, multikey_map_base.
+	  (Actually, just #if 0'd all referenceds to them)
+	  A few regression tests were updated with more accurate
+	  error reporting in test/parser/param.  
+
+	+ -set-08:
+	  Expurgated any and all references to the virtual base types
+	  involving multikey and multikey_map.  
+
+	+ -set-09:
+	  Factored out multikey implementation into seperate struct, 
+	  for the sake of specializing the <1> case.  
+	  Implements standard sequence/iterator interface.
+	  Replaced direct references to indices[] array with iterators.  
+	  Removed (comment) specialization of multikey_map using qmap
+	  as the implementation type, no longer needed.  
+
+	+ -set-10:
+	  Eliminated virtual base classes (in comments, flagged out):
+		  base_multidimensional_qmap
+		  base_multidimensional_sparse_set
+	  Internalized/privatized implementation of 
+	  simple_instance_reference::mset_base, defining as a module-local
+	  virtual base class in "art_object_inst_ref.cc".
+	  In general, we prefer this pattern of "let the user virtualize"
+	  the various dimension-specific data structures.  
+	  We provide a uniform functional interface to make this easy.  
+
+	+ -set-11:
+	  Cleaned out commented and flagged out blocks of code
+	  removed from revision -set-10.
+
+
+2005-02-05	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set-01:
+	  Many util library improvements.
+
+	+ "pointer_traits" completely re-done.
+	  Individualized traits, for better orthogonal design.  
+	  Instantiating pointer_traits for the purpose of using one trait
+	  would try result in instantiating for all traits, some of 
+	  which were not applicable.  
+	  Leveraged partial specializations in various pointer classes.  
+
+	+ "const_assoc_query" an implementation-independent wrapper
+	  for maps to overload the lookup [] operator.  
+	  (This would've saved hundreds of lines of useless wrapping
+	  in qmap.* and hash_qmap.*)
+
+	+ "null_construct.h" guarantees initial values for constructed
+	  objects, especially pointers, which default to junk.  
+	  Useful for const-query returning of null pointers when 
+	  something is not found.  
+
+	+ "hash_qmap.*" wiped verbose definition, and replaced with
+	  const_assoc_query wrapper.  So simple!  Legacy code 
+	  in the declaration and definitions files is block commented out.  
+	  Next revision will alter qmap, and add qset.  
+
+	+ -set-02: qmap now derived from const_assoc_query<std:map<...> >
+
+	+ -set-03: consistency patch
+	  Changed multikey_base<pint_value_type> to
+	  ART::entity::multikey_index_type as defined in "art_object_index.h"
+	  Preparing to obliterate multikey_base...
+	  and create multikey associative interface...
+	  multikey_base has been obsoleted by the introduction of 
+	  multikey_generic.  
+
+	+ -set-04: slowly phasing out multikey_base.
+	  Minor extensions to multikey interface, ablility to convert from
+	  generic type to dimension-specific with assertion check on size.  
+	  Replaced definition of multikey_index_type with multikey_generic.  
+	  Goal: no more virtual function calls from multikey_base.  
+	  To do: continue similar changes with "unroll_index_type".
+	  Possibly specialize multikey<1> as plain value instead of [1].
+
+	+ -set-05: no more references to multikey_base remaining.
+	  Replaced unroll_index_type with multikey_index_type, 
+	  both are multikey_generic<pint_value_type>.
+
+	+ -set-06: changed signature of dereference functor
+	  to take a generic class argument, and using pointer_traits
+	  (internal_reference<T>::type).
+	  Relocated "dereference_t" and hellper to "dereference.h".
+	  Updated all affected source files.  
+
+
+2005-02-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-07-set:
+	  Branch dedicated to developing multikey_set structure.  
+	  Consider re-doing all of multikey_map family:
+	  create a qtree, underlying base type to qmap, qset.
+	  Or a multikey-tree, with new multikey methods?
+
+
+2005-02-03	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-06:
+	  Worked on new data structure: ring_node!
+	  Is a singly-circularly linked list that implements the 
+	  standard container and iterator interfaces, so one may use any 
+	  STL algorithm on begin() and end(), or intermediate iterators.  
+	  Maintains circular linkage (and uniqueness) invariant.
+	  Nodes maintain circular structure even when members of ring
+	  are destroyed, thus no additional memory management burden 
+	  on the user.  Note that such nodes are not truly copy-constructible;
+	  when a node is copied, only the value object is copied, never
+	  the forward pointer, which is in fact, always initialized to 
+	  point to itself.  This is intended for use with connections
+	  of instances and aliases... muahaha.
+	  ring_node<instance_alias_containing_count_ptr_to_unique_instance>
+
+
+2005-02-02	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-05:
+	  Duplicate tag of -01-04-merged-unroll-00-03.
+
+	* ARTXX-00-01-04-main-00-04-object-01-04-merged-unroll-00-03:
+	  Merged in revisions from -unroll-00 sub-branch.
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-unroll-00-03:
+	  Basic single process instance (alias) works.  
+	  Made proc_instance_alias pseudo-persistent, 
+	  never actually dynmically allocating through the object
+	  manager, but still contains aliases to unique instances, 
+	  which requires pointer management.  
+	  Many tests updated.  
+	  To do: be able to write / read collections of aliases.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-02:
+	  Factored out "safety" code for persistent object management
+	  out of all implementations of write_object, load_object.  
+	  Gave write/load object references to iostream arguments.  
+	  Gave persistent::load_object const persistent_object_manager& 
+	  argument.
+	  Cleaned out hash_map headers, moved to STL subdir, with forward
+	  declaration file.  
+	  Next, clean up the commented out code mess.  
+
+
+2005-02-01	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00-01:
+	  Un-templated some non-essential method functions in
+	  persistent_object_manager.tcc, relocated to .cc.  
+
+	* ARTXX-00-01-04-main-00-04-object-01-03-persistent-00:
+	  This branch created to introduce complete redo of 
+	  persistent object management.  
+	  Need to distinguish between heap/non-heap objects.  
+	  Need to factor out object alignment and visit-once code. 
+
+
+2005-01-31	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-docs-00:
+	  New branch created for documentation of the ART++ language spec.  
+	  (Not for doxygenating code comments.)
+
+	* ARTXX-00-01-04-main-00-04-docs-00-01:
+	  Defined template signature equivalence.  
+	  Minor text tweaks.  
+	  Consider using the listings.sty package, or converting
+	  grammar into latex interpreter...
+
+
+2005-01-30	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-02:
+	  Major contributions in this release, improving template 
+	  signature equivalence checking to be more precise.  
+
+		+ Refined definition_base::dump to also report whether a 
+		  definition object is merely declared or fully defined.  
+
+		+ new: definition_base::lookup_template_formal_position()
+		  to determine whether or not two formal parameter
+		  instance references are equivalent (useful for comparison
+		  during re-declarations).
+
+		+ Changed template_formals_list implementation to vector, 
+		  for constant-time formal position distance evaluation.  
+		  (Can probably use vectors more for this reason...)
+
+		+ instance_collection_base::is_template_formal():
+		  now returns the 1-indexed position of the referenced
+		  parameter instance collection, 0 if not found.  
+		  formal_size_equivalence is updated to check for 
+		  template parameter equivalence.  
+
+		+ art_object_expr* (important):
+		  Equivalence checking refined with pbool/pint/index/range
+		  -specific versions to allow comparison by structural 
+		  equivalence which is far more precise (but not perfect)
+		  than what was in place before, which was over-conservative
+		  w.r.t. constants and non-constants.  
+		  Only the "must_be_equivalent" family of method functions
+	 	  was improved.  
+		  De-inlined some empty constructors and destructors.  
+
+		+ Implemented part of process instance unrolling.  
+		  Dumping-related functions improved.  
+		  Added full set of checks in test/parser/process/.
+		  Updated some old artc tests.  
+
+
+2005-01-29	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04-object-01-01:
+	  Implemented (enabled) unrolling for datatypes, added 
+	  datatype_instance_collection::dump().
+	  Refined error messages during unroll-time errors,
+	  in pint/pbool_instance_collection, and updated tests.  
+	  New tests in test/parser/array to test unroll-time error catching.  
+
+
+2005-01-28	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-04:
+	  These revisions merged and converged the revisions on the
+	  -parser-00, -util-00, and -object-00 branches.  
+	  No issues in merging, since their develop was mostly sequential.
+
+	* ARTXX-00-01-04-main-00-04-object-01-00:
+	  Implemented object de/serialization of enum data-type definitions
+	  and instances.  Added bunch of tests in test/parser/datatype.
+	  Updated definition_base::*_object_base to include the
+	  'defined' member flag, which was forgotten before.  
+	  Enum members are just treated as strings for binary persistence.  
+
+
 2005-01-27	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-object-00-13:

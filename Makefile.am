@@ -2,12 +2,12 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.11 2005/01/17 06:28:05 fang Exp $
+#	$Id: Makefile.am,v 1.14.4.1 2005/07/08 18:15:21 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = src test . dox/lang
+SUBDIRS = src test . dox
 
 include $(top_srcdir)/Make.stddef
 
@@ -21,7 +21,7 @@ libtool: $(LIBTOOL_DEPS)
 
 # see configure.in for adding libtool flags
 
-CLEANFILES = art++.doxygen.config art++.doxygen.log
+CLEANFILES = art++.doxygen.config art++.doxygen.log DevelopmentPlan.ps
 
 DISTCLEANFILES = config.in.h~
 
@@ -30,6 +30,7 @@ DISTCLEANDIRS = autom4te.cache
 EXTRA_DIST = Make.stddef \
 	bootstrap maintainerclobber \
 	$(DOXYGEN_CONFIG).in \
+	DevelopmentPlan.dot \
 	readable_gcc_errors.sed \
 	balance_indent.awk
 
@@ -39,6 +40,14 @@ $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
 else
 $(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
 	$(SED) '/^HAVE_DOT/s/YES/NO/g' $? > $@
+endif
+
+if HAVE_DOT
+DevelopmentPlan.ps: DevelopmentPlan.dot
+	$(DOT) -Tps $? -o$@
+else
+DevelopmentPlan.ps: DevelopmentPlan.dot
+	@$(ECHO) No dot found in path.  
 endif
 
 if HAVE_DOXYGEN
@@ -59,13 +68,30 @@ distcleandirs:
 
 distclean-local: distcleandirs
 
+# .PRECIOUS: distcheck.log
+# doesn't work, tries to override previous definition without accumulating
+distcheck.log: force
+	@$(ECHO) "Logging \"make distcheck\" to $@ ..."
+	$(MAKE) distcheck 2>&1 | cat > $@.tmp
+	-$(MV) $@.tmp $@
+	@if $(GREP) -q "archives ready for distribution" $@ ; then \
+		$(TAIL) -n 5 $@ ; \
+		$(ECHO) "Congratulations!" ; \
+	else \
+		$(ECHO) "Sorry, check $@ for distcheck errors." ; \
+		exit 1 ; \
+	fi
+
 # don't include CVS directories in distribution
 dist-hook:
 	$(RM) -r `find $(distdir) -name CVS`
 
 cvsdiffs: force
 	-$(CVS) diff -u > $@
+	@$(ECHO) `$(GREP) "^-" $@ | $(GREP) -v "^---" | wc -l` "lines removed"
+	@$(ECHO) `$(GREP) "^+" $@ | $(GREP) -v "^+++" | wc -l` "lines added"
 
+.NOTPARALLEL: commit
 commit: cvsdiffs distcheck
 	$(CVS) commit
 

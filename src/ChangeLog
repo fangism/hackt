@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-22:
+	  Done: added relaxed actuals to instance_alias_info, as dictated by 
+		class_traits<Tag>::instance_alias_relaxed_actuals_type.
+		instance_alias_info<> derived from this to take advantage
+		of EBCO for the classes that don't actually have actuals.  
+	  TODO -> PUNT: type-completion statements in the AST
+	  Nearly EVERY unroll test expect updated to reflect change
+		in size of alias collections, one pointer (4B) per
+		sparse member in the collection.  
+
+
 2005-07-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-21:

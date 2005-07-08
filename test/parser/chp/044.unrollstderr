@@ -2,36 +2,36 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3c03e40	module__	0	0	29
-	2	 0x3c00144	namespc_	0	29	53
-	3	 0x3c03e60	procdefn	0	53	140
-	4	 0x3c03de4	chancoll	0	140	178
-	5	 0x3c03ef0	chaninst	0	178	198
-	6	 0x3c03f10	bchntprf	0	198	223
-	7	 0x3c03f40	datatprf	0	223	243
-	8	 0x3c03f60	datadefn	0	243	296
-	9	 0x3c04004	chancoll	0	296	334
-	10	 0x3c04060	chaninst	0	334	354
-	11	 0x3c04080	bchntprf	0	354	379
-	12	 0x3c040b0	datatprf	0	379	399
-	13	 0x3c040d4	dboolcol	0	399	433
-	14	 0x3c04130	datainst	0	433	457
-	15	 0x3c04150	datatprf	0	457	477
-	16	 0x3c04170	CHPseqnc	0	477	501
-	17	 0x3c04180	CHPassgn	0	501	517
-	18	 0x3c041a0	sdbnref_	0	517	533
-	19	 0x5004004	cnstpb__	0	533	542
-	20	 0x3c041c0	CHPsend_	0	542	562
-	21	 0x3c041e0	schnnref	0	562	578
-	22	 0x3c041f0	sdbnref_	0	578	594
-	23	 0x3c04210	CHPloop_	0	594	606
-	24	 0x3c04220	CHPseqnc	0	606	626
-	25	 0x3c04230	CHPrecv_	0	626	646
-	26	 0x3c04250	schnnref	0	646	662
-	27	 0x3c04260	sdbnref_	0	662	678
-	28	 0x3c04280	CHPsend_	0	678	698
-	29	 0x3c042a0	schnnref	0	698	714
-	30	 0x3c042b0	sdbnref_	0	714	730
+	1	 0x3d03e40	module__	0	0	29
+	2	 0x3d00144	namespc_	0	29	53
+	3	 0x3d03e60	procdefn	0	53	140
+	4	 0x3d03de4	chancoll	0	140	182
+	5	 0x3d03ef0	chaninst	0	182	202
+	6	 0x3d03f10	bchntprf	0	202	227
+	7	 0x3d03f40	datatprf	0	227	247
+	8	 0x3d03f60	datadefn	0	247	300
+	9	 0x3d04004	chancoll	0	300	342
+	10	 0x3d04060	chaninst	0	342	362
+	11	 0x3d04080	bchntprf	0	362	387
+	12	 0x3d040b0	datatprf	0	387	407
+	13	 0x3d040d4	dboolcol	0	407	441
+	14	 0x3d04130	datainst	0	441	465
+	15	 0x3d04150	datatprf	0	465	485
+	16	 0x3d04170	CHPseqnc	0	485	509
+	17	 0x3d04180	CHPassgn	0	509	525
+	18	 0x3d041a0	sdbnref_	0	525	541
+	19	 0x5004004	cnstpb__	0	541	550
+	20	 0x3d041c0	CHPsend_	0	550	570
+	21	 0x3d041e0	schnnref	0	570	586
+	22	 0x3d041f0	sdbnref_	0	586	602
+	23	 0x3d04210	CHPloop_	0	602	614
+	24	 0x3d04220	CHPseqnc	0	614	634
+	25	 0x3d04230	CHPrecv_	0	634	654
+	26	 0x3d04250	schnnref	0	654	670
+	27	 0x3d04260	sdbnref_	0	670	686
+	28	 0x3d04280	CHPsend_	0	686	706
+	29	 0x3d042a0	schnnref	0	706	722
+	30	 0x3d042b0	sdbnref_	0	722	738
 
 In module created from: ./044.in (unrolled)
 In namespace "", we have: {

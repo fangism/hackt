@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_bool_traits.h"
 	Traits and policies for boolean data types.  
-	$Id: art_object_bool_traits.h,v 1.1.2.1 2005/06/25 21:07:18 fang Exp $
+	$Id: art_object_bool_traits.h,v 1.1.2.2 2005/07/08 18:15:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
@@ -20,6 +20,8 @@ struct class_traits<bool_tag> {
 	typedef	bool_instance_alias_base	instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+	typedef	instance_alias_info_empty
+					instance_alias_relaxed_actuals_type;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

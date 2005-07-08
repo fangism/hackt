@@ -2,29 +2,29 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3c03430	module__	0	0	29
-	2	 0x3c00144	namespc_	0	29	57
-	3	 0x3c03450	procdefn	0	57	144
-	4	 0x3c033d4	chancoll	0	144	182
-	5	 0x3c034e0	chaninst	0	182	202
-	6	 0x3c03500	bchntprf	0	202	227
-	7	 0x3c03530	datatprf	0	227	247
-	8	 0x3c03550	enumdefn	0	247	279
-	9	 0x3c035b4	chancoll	0	279	317
-	10	 0x3c03610	chaninst	0	317	337
-	11	 0x3c03630	bchntprf	0	337	362
-	12	 0x3c03660	datatprf	0	362	382
-	13	 0x3c03684	enumcoll	0	382	420
-	14	 0x3c036e0	datainst	0	420	444
-	15	 0x3c03700	datatprf	0	444	464
-	16	 0x3c03720	CHPloop_	0	464	476
-	17	 0x3c03730	CHPseqnc	0	476	496
-	18	 0x3c03740	CHPrecv_	0	496	516
-	19	 0x3c03760	schnnref	0	516	532
-	20	 0x3c03770	sdenref_	0	532	548
-	21	 0x3c03790	CHPsend_	0	548	568
-	22	 0x3c037b0	schnnref	0	568	584
-	23	 0x3c037c0	sdenref_	0	584	600
+	1	 0x3d03430	module__	0	0	29
+	2	 0x3d00144	namespc_	0	29	57
+	3	 0x3d03450	procdefn	0	57	144
+	4	 0x3d033d4	chancoll	0	144	186
+	5	 0x3d034e0	chaninst	0	186	206
+	6	 0x3d03500	bchntprf	0	206	231
+	7	 0x3d03530	datatprf	0	231	251
+	8	 0x3d03550	enumdefn	0	251	283
+	9	 0x3d035b4	chancoll	0	283	325
+	10	 0x3d03610	chaninst	0	325	345
+	11	 0x3d03630	bchntprf	0	345	370
+	12	 0x3d03660	datatprf	0	370	390
+	13	 0x3d03684	enumcoll	0	390	428
+	14	 0x3d036e0	datainst	0	428	452
+	15	 0x3d03700	datatprf	0	452	472
+	16	 0x3d03720	CHPloop_	0	472	484
+	17	 0x3d03730	CHPseqnc	0	484	504
+	18	 0x3d03740	CHPrecv_	0	504	524
+	19	 0x3d03760	schnnref	0	524	540
+	20	 0x3d03770	sdenref_	0	540	556
+	21	 0x3d03790	CHPsend_	0	556	576
+	22	 0x3d037b0	schnnref	0	576	592
+	23	 0x3d037c0	sdenref_	0	592	608
 
 In module created from: ./052.in (unrolled)
 In namespace "", we have: {

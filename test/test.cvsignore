@@ -20,3 +20,4 @@ test-report.txt
 clean-test
 subdir.not_a_test
 check.log
+check.log.tmp

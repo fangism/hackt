@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.16.2.2 2005/07/07 23:48:12 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.3 2005/07/08 18:15:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -13,6 +13,7 @@
 #include <algorithm>
 
 #include "Object/art_object_instance_enum.h"
+#include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/expr/enum_expr.h"

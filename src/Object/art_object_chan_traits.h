@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_chan_traits.h"
 	Traits and policies for channels.  
-	$Id: art_object_chan_traits.h,v 1.1.2.1 2005/06/25 21:07:18 fang Exp $
+	$Id: art_object_chan_traits.h,v 1.1.2.2 2005/07/08 18:15:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHAN_TRAITS_H__
@@ -28,6 +28,14 @@ struct class_traits<channel_tag> {
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+	/**
+		Actually, this may have to be split into 
+		sub-tags, one for built-in, one for user-defined.  
+		Built-in channel types have no relaxed parameters
+		(currently decided in language constraints.)
+	 */
+	typedef	instance_alias_info_actuals
+					instance_alias_relaxed_actuals_type;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

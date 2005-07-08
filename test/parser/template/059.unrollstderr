@@ -9,28 +9,28 @@ Persistent Object Manager text dump:
 	5	 0x3d03dd0	pintinst	0	178	194
 	6	 0x3d03de4	pintcoll	0	194	231
 	7	 0x3d03e40	pintinst	0	231	247
-	8	 0x3d03e54	proccoll	0	247	287
-	9	 0x3d03eb0	procinst	0	287	311
-	10	 0x3d03ed0	proctprf	0	311	331
-	11	 0x3d03ef0	dprmlst_	0	331	347
-	12	 0x3a0a028	cnstpi__	0	347	359
-	13	 0x3d03f00	dprmlst_	0	359	375
-	14	 0x3a0a038	cnstpi__	0	375	387
-	15	 0x3d03f10	proctprf	0	387	407
-	16	 0x3d03f30	cprmlst_	0	407	423
-	17	 0x3a0a048	cnstpi__	0	423	435
-	18	 0x3d03f44	proccoll	0	435	475
-	19	 0x3d03fa0	procinst	0	475	499
-	20	 0x3d03fc0	proctprf	0	499	519
-	21	 0x3d03fe0	dprmlst_	0	519	535
-	22	 0x3a0a058	cnstpi__	0	535	547
-	23	 0x3d03ff0	dprmlst_	0	547	563
-	24	 0x3a0a068	cnstpi__	0	563	575
-	25	 0x3d04000	proctprf	0	575	595
-	26	 0x3d04020	cprmlst_	0	595	611
-	27	 0x3a0a078	cnstpi__	0	611	623
-	28	 0x3d04030	cprmlst_	0	623	639
-	29	 0x3a0a088	cnstpi__	0	639	651
+	8	 0x3d03e54	proccoll	0	247	291
+	9	 0x3d03eb0	procinst	0	291	315
+	10	 0x3d03ed0	proctprf	0	315	335
+	11	 0x3d03ef0	dprmlst_	0	335	351
+	12	 0x3aa5028	cnstpi__	0	351	363
+	13	 0x3d03f00	dprmlst_	0	363	379
+	14	 0x3aa5038	cnstpi__	0	379	391
+	15	 0x3d03f10	proctprf	0	391	411
+	16	 0x3d03f30	cprmlst_	0	411	427
+	17	 0x3aa5048	cnstpi__	0	427	439
+	18	 0x3d03f44	proccoll	0	439	483
+	19	 0x3d03fa0	procinst	0	483	507
+	20	 0x3d03fc0	proctprf	0	507	527
+	21	 0x3d03fe0	dprmlst_	0	527	543
+	22	 0x3aa5058	cnstpi__	0	543	555
+	23	 0x3d03ff0	dprmlst_	0	555	571
+	24	 0x3aa5068	cnstpi__	0	571	583
+	25	 0x3d04000	proctprf	0	583	603
+	26	 0x3d04020	cprmlst_	0	603	619
+	27	 0x3aa5078	cnstpi__	0	619	631
+	28	 0x3d04030	cprmlst_	0	631	647
+	29	 0x3aa5088	cnstpi__	0	647	659
 
 In module created from: ./059.in (unrolled)
 In namespace "", we have: {

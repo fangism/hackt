@@ -2,41 +2,41 @@
 Persistent Object Manager text dump: 
 	i	addr		type		arg	head	tail
 	0	         0	________	0	0	0
-	1	 0x3c04510	module__	0	0	45
-	2	 0x3c00144	namespc_	0	45	77
-	3	 0x3c04534	pintcoll	1	77	134
-	4	 0x3c045f0	pintinst	0	134	150
-	5	 0x3c04600	crnglst_	0	150	170
-	6	 0x3c04610	procdefn	0	170	230
-	7	 0x3c046a4	pintcoll	1	230	263
-	8	 0x3c04760	pintinst	0	263	279
-	9	 0x3c04770	crnglst_	0	279	299
-	10	 0x3c04784	proccoll	0	299	339
-	11	 0x3c047e0	procinst	0	339	363
-	12	 0x3c04800	proctprf	0	363	383
-	13	 0x3c04820	dprmlst_	0	383	399
-	14	 0x3c04830	spimref_	0	399	419
-	15	 0x3c04860	dindlst_	0	419	435
-	16	 0x3c04884	dynrng__	0	435	451
-	17	 0x3c04890	spimref_	0	451	471
-	18	 0x3c048c0	cindlst_	0	471	487
-	19	 0x39f2028	cnstpi__	0	487	499
-	20	 0x3c048d0	spimref_	0	499	519
-	21	 0x3c04900	cindlst_	0	519	535
-	22	 0x39f2038	cnstpi__	0	535	547
-	23	 0x3c04910	proctprf	0	547	567
-	24	 0x3c04930	cprmlst_	0	567	583
-	25	 0x3c04944	cnstpic_	1	583	623
-	26	 0x5000c00	piassign	0	623	643
-	27	 0x39f2048	cnstpi__	0	643	655
-	28	 0x3c049b0	spimref_	0	655	675
-	29	 0x3c049e0	cindlst_	0	675	691
-	30	 0x39f2058	cnstpi__	0	691	703
-	31	 0x5000c10	piassign	0	703	723
-	32	 0x39f2068	cnstpi__	0	723	735
-	33	 0x3c049f0	spimref_	0	735	755
-	34	 0x3c04a20	cindlst_	0	755	771
-	35	 0x39f2078	cnstpi__	0	771	783
+	1	 0x3d04510	module__	0	0	45
+	2	 0x3d00144	namespc_	0	45	77
+	3	 0x3d04534	pintcoll	1	77	134
+	4	 0x3d045f0	pintinst	0	134	150
+	5	 0x3d04600	crnglst_	0	150	170
+	6	 0x3d04610	procdefn	0	170	230
+	7	 0x3d046a4	pintcoll	1	230	263
+	8	 0x3d04760	pintinst	0	263	279
+	9	 0x3d04770	crnglst_	0	279	299
+	10	 0x3d04784	proccoll	0	299	343
+	11	 0x3d047e0	procinst	0	343	367
+	12	 0x3d04800	proctprf	0	367	387
+	13	 0x3d04820	dprmlst_	0	387	403
+	14	 0x3d04830	spimref_	0	403	423
+	15	 0x3d04860	dindlst_	0	423	439
+	16	 0x3d04884	dynrng__	0	439	455
+	17	 0x3d04890	spimref_	0	455	475
+	18	 0x3d048c0	cindlst_	0	475	491
+	19	 0x3aa5028	cnstpi__	0	491	503
+	20	 0x3d048d0	spimref_	0	503	523
+	21	 0x3d04900	cindlst_	0	523	539
+	22	 0x3aa5038	cnstpi__	0	539	551
+	23	 0x3d04910	proctprf	0	551	571
+	24	 0x3d04930	cprmlst_	0	571	587
+	25	 0x3d04944	cnstpic_	1	587	627
+	26	 0x5000c00	piassign	0	627	647
+	27	 0x3aa5048	cnstpi__	0	647	659
+	28	 0x3d049b0	spimref_	0	659	679
+	29	 0x3d049e0	cindlst_	0	679	695
+	30	 0x3aa5058	cnstpi__	0	695	707
+	31	 0x5000c10	piassign	0	707	727
+	32	 0x3aa5068	cnstpi__	0	727	739
+	33	 0x3d049f0	spimref_	0	739	759
+	34	 0x3d04a20	cindlst_	0	759	775
+	35	 0x3aa5078	cnstpi__	0	775	787
 
 In module created from: ./036.in (unrolled)
 In namespace "", we have: {

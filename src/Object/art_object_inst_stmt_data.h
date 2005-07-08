@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.5 2005/07/08 03:03:45 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.6 2005/07/08 18:15:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
@@ -13,6 +13,7 @@
 #include "Object/art_object_instance.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
+#include "Object/art_object_instance_alias_empty.h"
 
 namespace ART {
 namespace entity {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31.4.5 2005/07/06 04:44:40 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.6 2005/07/08 18:15:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -14,6 +14,7 @@
 
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_instance.h"
+#include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_inst_ref_data.h"
