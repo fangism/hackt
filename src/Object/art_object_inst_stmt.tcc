@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.8 2005/07/07 23:48:08 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.9 2005/07/08 03:03:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -61,6 +61,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+class const_param_expr_list;
 USING_STACKTRACE
 #include "util/using_ostream.h"
 using util::persistent_traits;
@@ -245,7 +246,33 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
+#if 0
+		// need to pass in relaxed arguments from final_type_ref!
 		this->inst_base->instantiate_indices(crl);
+		// final_type_ref->get_template_params().get_relaxed_actuals());
+#else
+		const count_ptr<const param_expr_list>
+			relaxed_actuals(final_type_ref->get_template_params()
+				.get_relaxed_args());
+		// should correspond to
+		//	instance_collection_base::instance_relaxed_actuals_type
+		const count_ptr<const const_param_expr_list>
+			relaxed_const_actuals(relaxed_actuals.
+				template is_a<const const_param_expr_list>());
+		// really shouldn't be dynamic if the actuals have been resolved
+		if (relaxed_actuals && !relaxed_const_actuals) {
+			cerr << "Internal compiler error: expected "
+				"const_param_expr_list in "
+				"instantiation_statement<>::unroll." << endl;
+			relaxed_actuals->dump(cerr << "\tgot: ") << endl;
+			THROW_EXIT;
+		}
+		// actuals are allowed to be NULL, and in some cases,
+		// will be required to be NULL, e.g. for types that never
+		// have relaxed actuals.  
+		return type_ref_parent_type::instantiate_indices_with_actuals(
+				*this->inst_base, crl, relaxed_const_actuals);
+#endif
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.1 2005/07/05 07:59:44 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.2 2005/07/08 03:03:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -19,6 +19,7 @@
 
 namespace ART {
 namespace entity {
+class const_param_expr_list;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
@@ -48,6 +49,8 @@ instance_alias_info<Tag>
 	Information structure for a heirarchical name for a bool.  
 	This may be extended arbitrarily to contain attributes.  
 	Each object of this type represents a unique qualified name.  
+	TODO: parent type that determines whether or not
+	this contains relaxed actual parameters, and how they are stored.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 class instance_alias_info {
@@ -110,12 +113,27 @@ virtual	~instance_alias_info();
 
 	/**
 		Instantiates officially by linking to parent collection.  
+		FYI: This is only called by instance_array<0> (scalar)
+			in instantiate_indices().
 	 */
 	void
 	instantiate(const container_ptr_type p) {
 		NEVER_NULL(p);
 		INVARIANT(!this->container);
 		this->container = p;
+	}
+
+	/**
+		Attaches actual parameters to this alias.  
+		TODO: make this policy-specific, of course.  
+		NOTE: constness is merely for convenience, promising not
+			to modify the key.  
+		\return true if successful, didn't collide.
+	 */
+	bool
+	attach_actuals(const count_ptr<const const_param_expr_list>&) const {
+		// for now return true without checking, fix later
+		return true;
 	}
 
 	// consider: pure virtual multikey_generic<K>

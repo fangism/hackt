@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.3 2005/07/07 23:48:11 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.4 2005/07/08 03:03:47 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -664,8 +664,9 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	\param i fully-specified range of indices to instantiate.
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
+good_bool
+INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
+		const instance_relaxed_actuals_type& actuals) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
@@ -675,12 +676,22 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 	key_gen.initialize();
 	bool err = false;
 	do {
-		const_iterator iter = this->collection.find(key_gen);
+		const const_iterator iter(this->collection.find(key_gen));
 		if (iter == collection.end()) {
 			// then we can insert a new one
 			// create with back-ref!
-			this->collection.insert(element_type(key_gen,
-				never_ptr<const this_type>(this)));
+			const iterator
+				new_elem(this->collection.insert(
+					element_type(key_gen,
+					never_ptr<const this_type>(this))));
+			// set its relaxed actuals!!! (if appropriate)
+			const bool attached(new_elem->attach_actuals(actuals));
+			if (!attached) {
+				cerr << "ERROR: attaching relaxed actuals to "
+					<< this->get_qualified_name() <<
+					key_gen << endl;
+				err = true;
+			}
 		} else {
 			// found one that already exists!
 			// more detailed message, please!
@@ -691,8 +702,12 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 		}
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
+#if 0
 	if (err)
 		THROW_EXIT;
+#else
+	return good_bool(!err);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1054,18 +1069,27 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 	is easily detected (and actually detected) during the compile phase.
 	\param i indices must be NULL because this is not an array.
  */
-void
+good_bool
 INSTANCE_SCALAR_CLASS::instantiate_indices(
-		const const_range_list& r) {
+		const const_range_list& r, 
+		const instance_relaxed_actuals_type& actuals) {
 	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
 	INVARIANT(r.empty());
 	if (this->the_instance.valid()) {
 		// should never happen, but just in case...
 		this->type_dump(cerr << "ERROR: Scalar ") <<
 			" already instantiated!" << endl;
-		THROW_EXIT;
+//		THROW_EXIT;
+		return good_bool(false);
 	}
 	this->the_instance.instantiate(never_ptr<const this_type>(this));
+	const bool attached(this->the_instance.attach_actuals(actuals));
+	if (!attached) {
+		cerr << "ERROR: attaching relaxed actuals to scalar ";
+		this->type_dump(cerr) << " " << this->get_qualified_name()
+			<< endl;
+	}
+	return good_bool(attached);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

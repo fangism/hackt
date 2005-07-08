@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.5 2005/07/05 17:25:44 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.6 2005/07/08 03:03:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -463,13 +463,14 @@ VALUE_ARRAY_CLASS::key_value_dumper::operator () (
 	\param ranges fully-specified range of indices to instantiate.  
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
-void
+good_bool
 VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
+	good_bool ret(true);
 	do {
 #if 0
 		multikey_index_type::const_iterator
@@ -483,13 +484,15 @@ VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 			cerr << "ERROR: Index " << key_gen << " of " <<
 				this->get_qualified_name() <<
 				" already instantiated!" << endl;
-			THROW_EXIT;
+			ret.good = false;
+			// THROW_EXIT;
 		}
 		pi.instantiated = true;
 		// sanity check: shouldn't start out valid
 		INVARIANT(!pi.valid);
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -708,17 +711,19 @@ VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
 	\param i indices must be NULL because this is not an array.
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-void
+good_bool
 VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
 	INVARIANT (r.empty());
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
 		cerr << "ERROR: Already instantiated!" << endl;
-		THROW_EXIT;
+		return good_bool(false);
+		// THROW_EXIT;
 	}
 	the_instance.instantiated = true;
 	INVARIANT(!the_instance.valid);
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

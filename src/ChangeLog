@@ -2,6 +2,20 @@
 
 2005-07-07	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-21:
+	  Small but important revision!
+	  In instantiation_statement<>::unroll(), 
+		replaced plain call to collection_type::instantiate_indices
+		with policy-defined call that passes in pointer to
+		relaxed actuals list (instantiate_indices_with_actuals).  
+		This is specialized for parameter value collections, 
+		that don't need actuals (also future plan for built-ins).
+	  In instance_array<>::instantiate_indices(), 
+		added relaxed actuals argument used to attach to 
+		the referenced instance_alias(info).
+	  The TODOs from the previous revision still apply.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-20:
 	  We now allow scalar instance declarations to have relaxed
 		types for the sake of being able to alias them

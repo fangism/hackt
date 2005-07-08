@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.11.10.2 2005/07/07 06:03:01 fang Exp $
+#	$Id: Make.test,v 1.11.10.3 2005/07/08 03:03:48 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -94,7 +94,7 @@ check.log: force
 	@$(ECHO) "Logging results of \"make -k check\" in $@ ..."
 	$(MAKE) -k check 2>&1 | cat > $@
 	-$(GREP) -v ^PASS $@
-#	@$(ECHO) `$(GREP) ^FAIL $@ | wc -l` failures encountered.
+	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 
 # consider using CLEANFILES
 AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr) \

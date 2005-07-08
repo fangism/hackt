@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.4 2005/07/07 23:48:08 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.5 2005/07/08 03:03:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
@@ -11,13 +11,13 @@
 #include "Object/art_object_data_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance.h"
-// #include "Object/art_object_instance_collection.h"
-#include "Object/expr/param_expr_list.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
 
 namespace ART {
 namespace entity {
 class param_expr_list;
+class const_param_expr_list;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
@@ -37,6 +37,8 @@ class class_traits<datatype_tag>::instantiation_statement_type_ref_base {
 public:
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+	typedef	count_ptr<const const_param_expr_list>
+						instance_relaxed_actuals_type;
 protected:
 	type_ref_ptr_type				type;
 	const_relaxed_args_type				relaxed_args;
@@ -103,6 +105,14 @@ protected:
 	commit_type_check(instance_collection_generic_type& v,
 			const type_ref_ptr_type& t) {
 		return v.commit_type(t);
+	}
+
+	static
+	good_bool
+	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
+			const const_range_list& crl, 
+			const instance_relaxed_actuals_type& a) {
+		return v.instantiate_indices(crl, a);
 	}
 
 	void

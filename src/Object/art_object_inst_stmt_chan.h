@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.4 2005/07/07 23:48:08 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.5 2005/07/08 03:03:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
@@ -17,6 +17,7 @@
 namespace ART {
 namespace entity {
 class param_expr_list;
+class const_param_expr_list;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -24,6 +25,8 @@ class param_expr_list;
 class class_traits<channel_tag>::instantiation_statement_type_ref_base {
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+	typedef	count_ptr<const const_param_expr_list>	
+						instance_relaxed_actuals_type;
 protected:
 	type_ref_ptr_type				type;
 	// TODO: switch this bad boy over to the default, 
@@ -94,6 +97,19 @@ protected:
 	commit_type_check(instance_collection_generic_type& v,
 			const type_ref_ptr_type& t) {
 		return v.commit_type(t);
+	}
+
+	static
+	good_bool
+	instantiate_indices_with_actuals(instance_collection_generic_type& v,
+			const const_range_list& crl,
+			const instance_relaxed_actuals_type& a) {
+#if 0
+		return v.instantiate_indices(crl, a);
+#else
+		cerr << "FANG, not ready to instantiate channels yet." << endl;
+		return good_bool(false);
+#endif
 	}
 
 	void

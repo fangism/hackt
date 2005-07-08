@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.40.4.2 2005/07/07 23:48:09 fang Exp $
+	$Id: art_object_instance.h,v 1.40.4.3 2005/07/08 03:03:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -36,6 +36,8 @@ protected:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
 						member_inst_ref_ptr_type;
+	typedef	parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 protected:
 	explicit
 	physical_instance_collection(const size_t d) : parent_type(d) { }
@@ -91,6 +93,8 @@ protected:
 	typedef	parent_type::member_inst_ref_ptr_type	
 						member_inst_ref_ptr_type;
 	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
+	typedef	parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
@@ -131,8 +135,9 @@ virtual	bad_bool
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
 
-virtual void
-	instantiate_indices(const const_range_list& i) = 0;
+virtual good_bool
+	instantiate_indices(const const_range_list& i, 
+		const instance_relaxed_actuals_type&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;

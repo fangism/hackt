@@ -1,18 +1,20 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.6 2005/07/07 23:48:08 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.7 2005/07/08 03:03:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
 
 #include "Object/art_object_inst_stmt_param_base.h"
+#include "Object/art_object_instance_param.h"
+#include "Object/art_object_value_collection.h"
 #include "Object/art_object_pint_traits.h"
 #include "Object/art_object_pbool_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_built_ins.h"
-#include "Object/expr/param_expr_list.h"
+#include "Object/expr/const_param_expr_list.h"
 
 namespace ART {
 namespace entity {
@@ -27,6 +29,8 @@ class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	// consider importing built-in type ref as a static member
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+	typedef	count_ptr<const const_param_expr_list>
+						instance_relaxed_actuals_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -74,6 +78,16 @@ protected:
 		// no-op
 	}
 
+	static
+	good_bool
+	instantiate_indices_with_actuals(value_collection_generic_type& v,
+			const const_range_list& crl,
+			const instance_relaxed_actuals_type& a) {
+		INVARIANT(!a);
+		return v.instantiate_indices(crl);
+	}
+
+
 };      // end class instantiation_statement_type_ref_base
 
 //=============================================================================
@@ -87,6 +101,8 @@ class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 protected:
+	typedef	count_ptr<const const_param_expr_list>
+						instance_relaxed_actuals_type;
 	instantiation_statement_type_ref_base() { }
 
 	/**
@@ -131,6 +147,15 @@ protected:
 	commit_type_first_time(value_collection_generic_type&, 
 		const type_ref_ptr_type&) {
 		// no-op
+	}
+
+	static
+	good_bool
+	instantiate_indices_with_actuals(value_collection_generic_type& v,
+			const const_range_list& crl,
+			const instance_relaxed_actuals_type& a) {
+		INVARIANT(!a);
+		return v.instantiate_indices(crl);
 	}
 
 };      // end class instantiation_statement_type_ref_base

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.2 2005/07/07 23:48:11 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.3 2005/07/08 03:03:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -27,6 +27,7 @@ using std::set;
 using std::string;
 using util::memory::count_ptr;
 using util::memory::never_ptr;
+using util::good_bool;
 using util::bad_bool;
 using util::multikey_set;
 using util::multikey_set_element_derived;
@@ -128,8 +129,9 @@ public:
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
-							instance_alias_base_type;
-	typedef	never_ptr<instance_alias_base_type>	instance_alias_base_ptr_type;
+						instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
@@ -145,7 +147,9 @@ public:
 protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	typename parent_type::member_inst_ref_ptr_type
-							member_inst_ref_ptr_type;
+						member_inst_ref_ptr_type;
+	typedef	typename parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 private:
 	/**
 		General parameter object for type checking.  
@@ -203,8 +207,9 @@ virtual	bool
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
 
-virtual	void
-	instantiate_indices(const const_range_list& i) = 0;
+virtual	good_bool
+	instantiate_indices(const const_range_list& i, 
+		const instance_relaxed_actuals_type&) = 0;
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -277,11 +282,13 @@ friend class instance_collection<Tag>;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							parent_type;
 public:
+	typedef	typename parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
-							instance_alias_base_type;
+						instance_alias_base_type;
 //	typedef	typename parent_type::instance_alias_base_ptr_type
 	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
-							instance_alias_base_ptr_type;
+						instance_alias_base_ptr_type;
 	typedef	typename class_traits<Tag>::alias_collection_type
 							alias_collection_type;
 	// template explicitly required by g++-4.0
@@ -317,8 +324,9 @@ public:
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
 
-	void
-	instantiate_indices(const const_range_list& i);
+	good_bool
+	instantiate_indices(const const_range_list& i,
+		const instance_relaxed_actuals_type&);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -410,6 +418,8 @@ friend class instance_collection<Tag>;
 							parent_type;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
+	typedef	typename parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
@@ -439,8 +449,9 @@ public:
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
 
-	void
-	instantiate_indices(const const_range_list& i);
+	good_bool
+	instantiate_indices(const const_range_list& i,
+		const instance_relaxed_actuals_type&);
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

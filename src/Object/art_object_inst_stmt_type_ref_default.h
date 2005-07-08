@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.5 2005/07/07 23:48:09 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.6 2005/07/08 03:03:45 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
@@ -10,12 +10,13 @@
 #include <iostream>
 #include "Object/art_object_classification_details.h"
 #include "Object/art_object_type_ref.h"
-#include "Object/expr/param_expr_list.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
 
 namespace ART {
 namespace entity {
 class param_expr_list;
+class const_param_expr_list;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
@@ -40,6 +41,8 @@ public:
 					instance_collection_generic_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
+	typedef	count_ptr<const const_param_expr_list>
+					instance_relaxed_actuals_type;
 protected:
 	/**
 		Note: this may be a partial or relaxed type, 
@@ -136,6 +139,14 @@ protected:
 			const type_ref_ptr_type& t) {
 		// note: automatic conversion from bad_bool to good_bool :)
 		return v.commit_type(t);
+	}
+
+	static
+	good_bool
+	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
+			const const_range_list& crl, 
+			const instance_relaxed_actuals_type& a) {
+		return v.instantiate_indices(crl, a);
 	}
 
 	void

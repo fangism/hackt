@@ -3,6 +3,9 @@
 This directory was established to contain al the files relevant to 
 meta-expressions and nonmeta (data) expressions in HACKT.  
 
+All source file declarations and definitions reside in the ART::entity
+namespace for now.  
+
 At one time in the revision history (ARTXX-00-01-04-main-00-48-connect-01), 
 everything in here was stored in a few gargantuan headers, and 2 big honking
 translation units.  fangism grew very weary of massive recompilations 

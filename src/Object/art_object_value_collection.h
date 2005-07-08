@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6.4.3 2005/07/04 19:13:29 fang Exp $
+	$Id: art_object_value_collection.h,v 1.6.4.4 2005/07/08 03:03:47 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -141,7 +141,7 @@ virtual	ostream&
 	good_bool
 	must_type_check_actual_param_expr(const const_param& pe) const;
 
-virtual	void
+virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
 
 // virtual	bool lookup_value(bool& v) const = 0;
@@ -235,7 +235,7 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	// update this to accept const_range_list instead
-	void
+	good_bool
 	instantiate_indices(const const_range_list&);
 
 	const_index_list
@@ -318,7 +318,7 @@ public:
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
 	// update this to accept a const_range_list
-	void
+	good_bool
 	instantiate_indices(const const_range_list&);
 
 	good_bool
