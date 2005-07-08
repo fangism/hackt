@@ -2,6 +2,12 @@
 
 2005-07-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-23:
+	  No source changes, only the test directory's artobjunroll
+		test format was changed for the sake of simplifying
+		and reducing the differences when objects change size.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-22:
 	  Done: added relaxed actuals to instance_alias_info, as dictated by 
 		class_traits<Tag>::instance_alias_relaxed_actuals_type.
