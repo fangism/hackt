@@ -2,6 +2,19 @@
 
 2005-07-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-24:
+	  Tested basic facilities for registering relaxed template
+		actuals with instance aliases.  Added dumping of 
+		alias's actuals when the parent collection has only
+		relaxed type.  
+		Fixed minor problem with missing actuals: collection pass
+		for persistence was missing from instance_array::collect
+	  Some debugging hooks to instance_alias_info_actuals added.  
+	  Minor test updates.  
+	  Previous TODOs have been flushed, but more extensive testing 
+		is required.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-23:
 	  No source changes, only the test directory's artobjunroll
 		test format was changed for the sake of simplifying

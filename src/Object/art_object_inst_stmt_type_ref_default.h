@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.6 2005/07/08 03:03:45 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.7 2005/07/09 01:23:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
@@ -94,6 +94,9 @@ protected:
 			// enable later when things are more stable
 			// cache the equivalent resolved type
 			const_cast<this_type*>(this)->type = ret;
+			// NOTE: caching won't work if the type
+			// is loop-dependent!!!
+			// need smarter handling...
 		}
 #endif
 		return ret;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.9 2005/07/08 03:03:44 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.10 2005/07/09 01:23:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -251,6 +251,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		this->inst_base->instantiate_indices(crl);
 		// final_type_ref->get_template_params().get_relaxed_actuals());
 #else
+#if 0
+		final_type_ref->dump(cerr) << endl;
+#endif
 		const count_ptr<const param_expr_list>
 			relaxed_actuals(final_type_ref->get_template_params()
 				.get_relaxed_args());
@@ -259,6 +262,10 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		const count_ptr<const const_param_expr_list>
 			relaxed_const_actuals(relaxed_actuals.
 				template is_a<const const_param_expr_list>());
+#if 0
+		if (relaxed_const_actuals)
+			relaxed_const_actuals->dump(cerr << '<') << '>' << endl;
+#endif
 		// really shouldn't be dynamic if the actuals have been resolved
 		if (relaxed_actuals && !relaxed_const_actuals) {
 			cerr << "Internal compiler error: expected "

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.16.2.3 2005/07/08 18:15:29 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.4 2005/07/09 01:23:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -112,6 +112,12 @@ struct collection_type_manager<enum_tag> {
 			// want get_base_def_subtype!!!
 			e.get_base_def()
 			.is_a<const datatype_definition_base>()));
+	}
+
+	static
+	bool
+	is_relaxed_type(const instance_collection_generic_type& c) {
+		return false;
 	}
 
 	/**

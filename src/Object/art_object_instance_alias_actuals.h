@@ -1,11 +1,13 @@
 /**
 	\file "Object/art_object_instance_alias_actuals.h"
 	Implementation of alias info that has actual parameters.  
-	$Id: art_object_instance_alias_actuals.h,v 1.1.2.1 2005/07/08 18:15:27 fang Exp $
+	$Id: art_object_instance_alias_actuals.h,v 1.1.2.2 2005/07/09 01:23:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
+
+#define	DEBUG_ALIAS_ACTUALS		1
 
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
@@ -43,6 +45,10 @@ protected:
 	/**
 		\return false, error if actuals was already set.
 	 */
+#if DEBUG_ALIAS_ACTUALS
+	bool
+	attach_actuals(const alias_actuals_type& a) const;
+#else
 	bool
 	attach_actuals(const alias_actuals_type& a) const {
 		if (actuals)
@@ -53,6 +59,7 @@ protected:
 			return true;
 		}
 	}
+#endif
 
 public:
 	ostream&

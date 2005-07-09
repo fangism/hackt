@@ -1,0 +1,13 @@
+// "063.in" should pass, relaxed actuals differ in same relaxed collection
+// copy-modified from "061.in"
+
+template <pint Q><pint R>
+defproc foo();
+
+// this means that relaxed parameters are only tied to these ranges.  
+foo<5> bar<4>[3];
+foo<5> bar<4>[7..9];
+foo<5> bar<3>[4..6];
+
+
+

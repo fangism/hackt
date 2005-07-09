@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.11.10.5 2005/07/08 19:20:13 fang Exp $
+#	$Id: Make.test,v 1.11.10.6 2005/07/09 01:23:33 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -94,7 +94,8 @@ all-local: .cvsignore subdir.not_a_test \
 # -k option allows continuation past directories with failed tests
 check.log: force
 	@$(ECHO) "Logging results of \"make -k check\" in $@ ..."
-	$(MAKE) -k check 2>&1 | cat > $@.tmp
+	@$(ECHO) Tests started `$(DATE)` > $@.tmp
+	$(MAKE) -k check 2>&1 | cat >> $@.tmp
 	-$(MV) $@.tmp $@
 	-$(GREP) -v ^PASS $@
 	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.

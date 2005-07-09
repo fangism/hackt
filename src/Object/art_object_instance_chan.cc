@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.14.4.4 2005/07/08 18:15:28 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.14.4.5 2005/07/09 01:23:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CHAN_CC__
@@ -102,6 +102,12 @@ struct collection_type_manager<channel_tag> {
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type& c) {
 		return c.type_parameter;
+	}
+
+	static
+	bool
+	is_relaxed_type(const instance_collection_generic_type& c) {
+		return c.type_parameter->is_relaxed();
 	}
 
 	/**

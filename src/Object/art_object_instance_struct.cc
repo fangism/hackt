@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.16.2.4 2005/07/08 18:15:30 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.16.2.5 2005/07/09 01:23:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -109,6 +109,13 @@ struct collection_type_manager<datastruct_tag> {
 	get_type(const instance_collection_generic_type& e) {
 		return e.type_parameter;
 	}
+
+	static
+	bool
+	is_relaxed_type(const instance_collection_generic_type& c) {
+		return c.type_parameter->is_relaxed();
+	}
+
 
 	/**
 		During unroll phase, this commits the type of the collection.  

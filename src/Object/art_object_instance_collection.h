@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.3 2005/07/08 03:03:46 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.4 2005/07/09 01:23:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -194,6 +194,9 @@ virtual	bool
 	establish_collection_type(const type_ref_ptr_type&);
 #endif
 
+	bool
+	has_relaxed_type(void) const;
+
 	// 2005-07-07: now intended for use AFTER collection type is established
 	bad_bool
 	commit_type(const type_ref_ptr_type& );
@@ -346,60 +349,13 @@ public:
 	instance_alias_base_type&
 	load_reference(istream& i) const;
 
-	class element_writer {
-		ostream& os;
-		const persistent_object_manager& pom;
-	public:
-		element_writer(const persistent_object_manager& m, ostream& o)
-			: os(o), pom(m) { }
-
-		void
-		operator () (const element_type& ) const;
-	};      // end struct element_writer
-
-	class element_loader {
-		istream& is;
-		const persistent_object_manager& pom;
-		collection_type& coll;
-	public:
-		element_loader(const persistent_object_manager& m,
-			istream& i, collection_type& c) :
-			is(i), pom(m), coll(c) { }
-
-		void
-		operator () (void);
-	};      // end class element_loader
-
-	class connection_writer {
-		ostream& os;
-		const persistent_object_manager& pom;
-	public:
-		connection_writer(const persistent_object_manager& m,
-			ostream& o) : os(o), pom(m) { }
-
-		void
-		operator () (const element_type& ) const;
-	};      // end struct connection_writer
-
-	class connection_loader {
-		istream& is;
-		const persistent_object_manager& pom;
-	public:
-		connection_loader(const persistent_object_manager& m,
-			istream& i) : is(i), pom(m) { }
-
-		void
-		operator () (const element_type& );
-	};      // end class connection_loader
-
-	struct key_dumper {
-		ostream& os;
-
-		key_dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const value_type& );
-	};	// end struct key_dumper
+private:
+	class element_collector;
+	class element_writer;
+	class element_loader;
+	class connection_writer;
+	class connection_loader;
+	struct key_dumper;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

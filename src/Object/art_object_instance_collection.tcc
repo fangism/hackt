@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.5 2005/07/08 18:15:28 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.6 2005/07/09 01:23:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -40,6 +40,7 @@
 #include "Object/art_object_instance_collection.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
+#include "Object/expr/const_param_expr_list.h"		// for debug only
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/art_object_inst_ref_subtypes.h"
@@ -116,6 +117,103 @@ using util::read_value;
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;
+
+//=============================================================================
+// class instance_array member class definitions
+
+/**
+	Functor to collect transient info in the aliases.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+class INSTANCE_ARRAY_CLASS::element_collector {
+	persistent_object_manager& pom;
+public:
+	element_collector(persistent_object_manager& m) : pom(m) { }
+
+	void
+	operator () (const element_type& ) const;
+};      // end struct element_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor to write alias elements.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+class INSTANCE_ARRAY_CLASS::element_writer {
+	ostream& os;
+	const persistent_object_manager& pom;
+public:
+	element_writer(const persistent_object_manager& m, ostream& o)
+		: os(o), pom(m) { }
+
+	void
+	operator () (const element_type& ) const;
+};      // end struct element_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor to load alias elements.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+class INSTANCE_ARRAY_CLASS::element_loader {
+	istream& is;
+	const persistent_object_manager& pom;
+	collection_type& coll;
+public:
+	element_loader(const persistent_object_manager& m,
+		istream& i, collection_type& c) :
+		is(i), pom(m), coll(c) { }
+
+	void
+	operator () (void);
+};      // end class element_loader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor to write alias connections, continuation pointers.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+class INSTANCE_ARRAY_CLASS::connection_writer {
+	ostream& os;
+	const persistent_object_manager& pom;
+public:
+	connection_writer(const persistent_object_manager& m,
+		ostream& o) : os(o), pom(m) { }
+
+	void
+	operator () (const element_type& ) const;
+};      // end struct connection_writer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor to load alias connections, continuation pointers.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+class INSTANCE_ARRAY_CLASS::connection_loader {
+	istream& is;
+	const persistent_object_manager& pom;
+public:
+	connection_loader(const persistent_object_manager& m,
+		istream& i) : is(i), pom(m) { }
+
+	void
+	operator () (const element_type& );
+};      // end class connection_loader
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor to dump keys and alias information.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+struct INSTANCE_ARRAY_CLASS::key_dumper {
+	ostream& os;
+
+	key_dumper(ostream& o) : os(o) { }
+
+	ostream&
+	operator () (const value_type& );
+};      // end struct key_dumper
+
 
 //=============================================================================
 // class instance_alias_info method definitions
@@ -482,6 +580,13 @@ INSTANCE_COLLECTION_CLASS::establish_collection_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+bool
+INSTANCE_COLLECTION_CLASS::has_relaxed_type(void) const {
+	return collection_type_manager<Tag>::is_relaxed_type(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	During unroll phase, this commits the type of the collection.  
 	\param t the data integer type reference, containing width, 
@@ -578,6 +683,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
 	collection_type_manager<Tag>::collect(m, *this);
 }
@@ -659,7 +765,8 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	os << auto_indent << _Select1st<value_type>()(p);
-	p.dump_actuals(os);
+	if (p.container->has_relaxed_type())
+		p.dump_actuals(os);
 	os << " = ";
 	p.get_next()->dump_alias(os);
 	return os << endl;
@@ -701,6 +808,10 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 					key_gen << endl;
 				err = true;
 			}
+#if 0
+			actuals->dump(cerr << "expect: ") << endl;
+			new_elem->dump_actuals(cerr << "got: ") << endl;
+#endif
 			}
 		} else {
 			// found one that already exists!
@@ -908,6 +1019,20 @@ INSTANCE_ARRAY_CLASS::load_reference(istream& i) const {
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
+INSTANCE_ARRAY_CLASS::element_collector::operator () (
+		const element_type& e) const {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_collector::operator()");
+	e.collect_transient_info_base(pom);
+	// postpone connection writing until next phase
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Going to need some sort of element_reader counterpart.
+	\param e is a reference to a INSTANCE_ALIAS_CLASS.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
 INSTANCE_ARRAY_CLASS::element_writer::operator () (const element_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_writer::operator()");
 	value_writer<key_type> write_key(os);
@@ -979,6 +1104,12 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key, D)) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
+	for_each(this->collection.begin(), this->collection.end(), 
+		element_collector(m)	// added 2005-07-07
+	);
+	// optimization for later: factor this out into a policy
+	// so that collections without pointers to collect
+	// may be skipped.
 }
 }
 
@@ -1066,6 +1197,9 @@ ostream&
 INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
+	if (this->the_instance.container->has_relaxed_type()) {
+		this->the_instance.dump_actuals(o);
+	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
 	return o;
 }

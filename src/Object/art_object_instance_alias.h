@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.3 2005/07/08 18:15:27 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.4 2005/07/09 01:23:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -126,7 +126,6 @@ virtual	~instance_alias_info();
 		this->container = p;
 	}
 
-#if 1
 	/**
 		Attaches actual parameters to this alias.  
 		TODO: make this policy-specific, of course.  
@@ -134,6 +133,7 @@ virtual	~instance_alias_info();
 			to modify the key.  
 		\return true if successful, didn't collide.
 	 */
+#if 0
 	bool
 	attach_actuals(const count_ptr<const const_param_expr_list>&) const {
 		// for now return true without checking, fix later

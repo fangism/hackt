@@ -1,11 +1,13 @@
 /**
 	\file "Object/art_object_instance_alias_empty.h"
 	Implementation of alias info that has no actual parameters.  
-	$Id: art_object_instance_alias_empty.h,v 1.1.2.1 2005/07/08 18:15:27 fang Exp $
+	$Id: art_object_instance_alias_empty.h,v 1.1.2.2 2005/07/09 01:23:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_EMPTY_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_EMPTY_H__
+
+#define	DEBUG_ALIAS_EMPTY		1
 
 #include <iosfwd>
 #include "util/memory/pointer_classes_fwd.h"
@@ -31,6 +33,10 @@ class instance_alias_info_empty {
 protected:
 	typedef	count_ptr<const const_param_expr_list>	alias_actuals_type;
 
+#if DEBUG_ALIAS_EMPTY
+	bool
+	attach_actuals(const alias_actuals_type&) const;
+#else
 	/**
 		No-op.  
 		Need to fake const-ness to make child-class happy
@@ -41,6 +47,7 @@ protected:
 		// no-op!
 		return true;
 	}
+#endif
 
 public:
 	/**

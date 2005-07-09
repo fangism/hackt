@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.4 2005/07/08 18:15:28 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.5 2005/07/09 01:23:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -120,6 +120,12 @@ struct collection_type_manager<bool_tag> {
 	get_type(const instance_collection_generic_type& i) {
 		// just return built-in type
 		return bool_type_ptr;
+	}
+
+	static
+	bool
+	is_relaxed_type(const instance_collection_generic_type& i) {
+		return false;
 	}
 
 	// return true on error, false on success
