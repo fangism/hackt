@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.6 2005/07/08 18:15:26 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.7 2005/07/09 05:52:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
@@ -82,16 +82,21 @@ protected:
 	}
 
 	/**
+		2005-07-09: NOT fusing
 		Only need to check for collectible equivalence, 
 		not connectible equivalence.  
 	 */
 	type_ref_ptr_type
 	unroll_type_reference(unroll_context& c) const {
+#if 0
 		if (relaxed_args) {
 			const type_ref_ptr_type
 			merged_type(type->merge_relaxed_actuals(relaxed_args));
 			return merged_type->unroll_resolve(c);
 		} else	return type->unroll_resolve(c);
+#else
+		return type->unroll_resolve(c);
+#endif
 	}
 
 	static

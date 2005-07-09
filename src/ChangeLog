@@ -2,6 +2,37 @@
 
 2005-07-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-25:
+	  const_collection<>::unroll_resolve_value() (and friends):
+		used to never allowed call, but now allowed under the
+		precondition that it is scalar, 0-dimensional.  
+	  instantiation_statement<>::unroll():
+		Reworked type-unrolling, completion, and commit:
+		The call to unroll_resolve_type no longer combines
+		the instance relaxed actuals into the result type.  
+		The relaxed actuals are checked separately before
+		passing them into instantiate_indices_with_actuals().  
+		This is cleaner.  
+	  scopespace::add_instance(): (semantic clarification)
+		Instance additions to the same collection must now have
+		the same strictness, i.e. both strict, or both relaxed.
+	  fundamental_type_reference::must_be_collectibly_type_equivalent():
+		Now prints descriptive error upon type mismatch.
+	  process_type_reference::make_canonical_type_reference():
+		removed assertion that template_args.is_constant(), just false.
+	  Object/expr/operators.cc:
+		all ::unroll_resolve methods changed evaluation of
+		operands, can no longer assert pint/pbool_const, 
+		because resolve may return (scalar) const_collections.  
+		Rewritten to account for this.  
+	  Some unroll test updates, based on above revisions, also added
+		a bunch of new test cases for template types with
+		relaxed parameters.  
+	  TODO: a little more type/collection checking before moving on.
+
+
+2005-07-08	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-48-connect-01-24:
 	  Tested basic facilities for registering relaxed template
 		actuals with instance aliases.  Added dumping of 

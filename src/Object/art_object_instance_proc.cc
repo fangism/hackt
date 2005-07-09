@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.14.4.5 2005/07/09 01:23:31 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.14.4.6 2005/07/09 05:52:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -139,32 +139,10 @@ struct collection_type_manager<process_tag> {
 	bad_bool
 	commit_type(const instance_collection_generic_type& c,
 		const type_ref_ptr_type& t) {
-#if 0
-		// make sure this is the canonical definition
-		//      in case type is typedef!
-		// this really should be statically type-checked
-		// until we allow templates to include type parameters.  
-
-		// only needs to be "collectibly" type equivalent, 
-		// not necessarily "connectible".
-		if (c.type_parameter)
-			return bad_bool(
-				!c.type_parameter->must_be_collectibly_type_equivalent(*t)
-			);
-		else {
-			// TODO: need way to distinguish between
-			// strict and relaxed collection type.  
-			// If strictly declared, then type should already 
-			// be set!!!
-			c.type_parameter = t;
-			return bad_bool(false);
-		}
-#else
 		INVARIANT(c.type_parameter);
 		return bad_bool(
 			!c.type_parameter->must_be_collectibly_type_equivalent(*t)
 		);
-#endif
 	}
 
 	/**

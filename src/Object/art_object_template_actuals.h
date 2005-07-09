@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.h"
 	Class for template arguments, a.k.a. actuals.  
-	$Id: art_object_template_actuals.h,v 1.1.4.3 2005/07/07 06:02:22 fang Exp $
+	$Id: art_object_template_actuals.h,v 1.1.4.4 2005/07/09 05:52:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_ACTUALS_H__
@@ -65,21 +65,11 @@ public:
 	const_arg_list_ptr_type
 	get_strict_args(void) const;
 
-#if 0
-	arg_list_ptr_type
-	get_strict_args_const(void) const;
-#endif
-
 	arg_list_ptr_type
 	get_strict_args(void);
 
 	const_arg_list_ptr_type
 	get_relaxed_args(void) const;
-
-#if 0
-	arg_list_ptr_type
-	get_relaxed_args(void);
-#endif
 
 	operator bool () const;
 
@@ -91,6 +81,9 @@ public:
 
 	bool
 	is_dynamically_parameter_dependent(void) const;
+
+	bool
+	is_strictly_compatible_with(const this_type&) const;
 
 	bool
 	may_be_strict_equivalent(const this_type&) const;

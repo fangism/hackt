@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.1.2.2 2005/07/06 00:59:31 fang Exp $
+ 	$Id: operators.cc,v 1.1.2.3 2005/07/09 05:52:30 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -238,12 +238,17 @@ pint_unary_expr::unroll_resolve(const unroll_context& c) const {
 	// maybe make a pint_const version to avoid casting
 	const return_type ret(ex->unroll_resolve(c));
 	if (ret) {
+#if 0
 		count_ptr<pint_const> pc(ret.is_a<pint_const>());
-		INVARIANT(pc);
+		INVARIANT(pc);	// NOT TRUE, could be scalar const_collection
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(
 			new pint_const(- pc->static_constant_value()));
+#else
+		return return_type(new pint_const(
+			-ret.is_a<const pint_expr>()->static_constant_value()));
+#endif
 	} else {
 		// there is an error
 		// discard intermediate result
@@ -404,12 +409,18 @@ pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
 	// maybe make a pint_const version to avoid casting
 	const return_type ret(ex->unroll_resolve(c));
 	if (ret) {
+#if 0
 		count_ptr<pbool_const> pc(ret.is_a<pbool_const>());
-		INVARIANT(pc);
+		INVARIANT(pc);	// NOT TRUE: could be scalar const_collection
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
 		return return_type(
 			new pbool_const(!pc->static_constant_value()));
+#else
+		return return_type(new pbool_const(
+			!ret.is_a<const pbool_expr>()
+				->static_constant_value()));
+#endif
 	} else {
 		// there is an error
 		// discard intermediate result
@@ -673,15 +684,25 @@ pint_arith_expr::unroll_resolve(const unroll_context& c) const {
 	const return_type lex(lx->unroll_resolve(c));
 	const return_type rex(rx->unroll_resolve(c));
 	if (lex && rex) {
+		// actually could be scalar const_collection!
+#if 0
 		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
 		const count_ptr<pint_const> rpc(rex.is_a<pint_const>());
 		INVARIANT(lpc);
 		INVARIANT(rpc);
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
-		return return_type(new pint_const(
-			(*op)(lpc->static_constant_value(), 
-				rpc->static_constant_value())));
+		const pint_value_type lop = lpc->static_constant_value();
+		const pint_value_type rop = rpc->static_constant_value();
+#else
+		// TODO: need a specialized unroll_resolve for the value_type
+		// for now, just assert the type
+		const pint_value_type lop =
+			lex.is_a<const pint_expr>()->static_constant_value();
+		const pint_value_type rop =
+			rex.is_a<const pint_expr>()->static_constant_value();
+#endif
+		return return_type(new pint_const((*op)(lop, rop)));
 	} else {
 		// there is an error in at least one sub-expression
 		// discard intermediate result
@@ -691,8 +712,7 @@ pint_arith_expr::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_arith_expr::collect_transient_info(
-		persistent_object_manager& m) const {
+pint_arith_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	lx->collect_transient_info(m);
@@ -702,7 +722,8 @@ if (!m.register_transient_object(this,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-pint_arith_expr::write_object(const persistent_object_manager& m, ostream& f) const {
+pint_arith_expr::write_object(const persistent_object_manager& m,
+		ostream& f) const {
 	write_value(f, reverse_op_map[op]);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
@@ -952,15 +973,23 @@ pint_relational_expr::unroll_resolve(const unroll_context& c) const {
 	const return_type lex(lx->unroll_resolve(c));
 	const return_type rex(rx->unroll_resolve(c));
 	if (lex && rex) {
+#if 0
 		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
 		const count_ptr<pint_const> rpc(rex.is_a<pint_const>());
-		INVARIANT(lpc);
+		// NOT TRUE, could be scalar const_collection
+		INVARIANT(lpc);	
 		INVARIANT(rpc);
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
-		return return_type(new pbool_const(
-			(*op)(lpc->static_constant_value(), 
-				rpc->static_constant_value())));
+		const pint_value_type lop = lpc->static_constant_value();
+		const pint_value_type rop = rpc->static_constant_value();
+#else
+		const pint_value_type lop =
+			lex.is_a<const pint_expr>()->static_constant_value();
+		const pint_value_type rop =
+			rex.is_a<const pint_expr>()->static_constant_value();
+#endif
+		return return_type(new pbool_const((*op)(lop, rop)));
 	} else {
 		// there is an error in at least one sub-expression
 		// discard intermediate result
@@ -1203,15 +1232,23 @@ pbool_logical_expr::unroll_resolve(const unroll_context& c) const {
 	const return_type lex(lx->unroll_resolve(c));
 	const return_type rex(rx->unroll_resolve(c));
 	if (lex && rex) {
+#if 0
 		const count_ptr<pbool_const> lpc(lex.is_a<pbool_const>());
 		const count_ptr<pbool_const> rpc(rex.is_a<pbool_const>());
+		// NOT TRUE: could be scalar const_collection
 		INVARIANT(lpc);
 		INVARIANT(rpc);
 		// would like to just modify pc, but pint_const's 
 		// value_type is const :( consider un-const-ing it...
-		return return_type(new pbool_const(
-			(*op)(lpc->static_constant_value(), 
-				rpc->static_constant_value())));
+		const pbool_value_type lop = lpc->static_constant_value();
+		const pbool_value_type rop = rpc->static_constant_value();
+#else
+		const pbool_value_type lop =
+			lex.is_a<const pbool_expr>()->static_constant_value();
+		const pbool_value_type rop =
+			rex.is_a<const pbool_expr>()->static_constant_value();
+#endif
+		return return_type(new pbool_const((*op)(lop, rop)));
 	} else {
 		// there is an error in at least one sub-expression
 		// discard intermediate result

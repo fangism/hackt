@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.6 2005/07/07 06:02:22 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.7 2005/07/09 05:52:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -120,14 +120,6 @@ template_actuals::get_strict_args(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template_actuals::arg_list_ptr_type
-template_actuals::get_strict_args_const(void) const {
-	return strict_template_args;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::arg_list_ptr_type
 template_actuals::get_strict_args(void) {
 	return strict_template_args;
@@ -138,14 +130,6 @@ template_actuals::const_arg_list_ptr_type
 template_actuals::get_relaxed_args(void) const {
 	return relaxed_template_args;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-template_actuals::arg_list_ptr_type
-template_actuals::get_relaxed_args(void) {
-	return relaxed_template_args;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -195,6 +179,18 @@ template_actuals::transform_template_actuals(const this_type& a,
 	unroll_context c;
 	const template_actuals_transformer tx(c, a, m);
 	return unroll_resolve(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compatibility is defined as both template actuals begin
+	relaxed or both being strict.  
+	If they differ, they are incompatible.  
+	NOTE: this does not compare the strict template arguments.  
+ */
+bool
+template_actuals::is_strictly_compatible_with(const this_type& a) const {
+	return !(relaxed_template_args ^ a.relaxed_template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

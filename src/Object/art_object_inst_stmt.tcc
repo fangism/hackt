@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.10 2005/07/09 01:23:26 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.11 2005/07/09 05:52:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -184,7 +184,6 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
-#if 1
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 
 	// collection, because unroll_type_reference combines the
@@ -201,10 +200,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			ft(type_ref_parent_type::get_resolved_type(c));
 		if (!ft) {
 			// already have error message
-#if 0
-			t->what(cerr << "ERROR: unable to resolve ") <<
-				" during unroll." << endl;
-#endif
 			return good_bool(false);
 		}
 		// ft will either be strict or relaxed.  
@@ -212,7 +207,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			*this->inst_base, ft);
 		// this->inst_base->establish_collection_type(ft);
 	}
-#endif
 	// unroll_type_check is specialized for each tag type.  
 	// NOTE: this results in a "fused" type that combines
 	// the relaxed template actuals.  
@@ -231,6 +225,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 #endif
 	// TODO: decide what do to about relaxed type parameters
 	// 2005-07-07: answer is above under "HACK"
+#if 0
+	final_type_ref->dump(cerr << "checking in ") << endl;
+#endif
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			*this->inst_base, final_type_ref));
@@ -246,14 +243,8 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
+		// passing in relaxed arguments from final_type_ref!
 #if 0
-		// need to pass in relaxed arguments from final_type_ref!
-		this->inst_base->instantiate_indices(crl);
-		// final_type_ref->get_template_params().get_relaxed_actuals());
-#else
-#if 0
-		final_type_ref->dump(cerr) << endl;
-#endif
 		const count_ptr<const param_expr_list>
 			relaxed_actuals(final_type_ref->get_template_params()
 				.get_relaxed_args());
@@ -262,10 +253,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		const count_ptr<const const_param_expr_list>
 			relaxed_const_actuals(relaxed_actuals.
 				template is_a<const const_param_expr_list>());
-#if 0
-		if (relaxed_const_actuals)
-			relaxed_const_actuals->dump(cerr << '<') << '>' << endl;
-#endif
 		// really shouldn't be dynamic if the actuals have been resolved
 		if (relaxed_actuals && !relaxed_const_actuals) {
 			cerr << "Internal compiler error: expected "
@@ -274,12 +261,28 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			relaxed_actuals->dump(cerr << "\tgot: ") << endl;
 			THROW_EXIT;
 		}
+#else
+		const count_ptr<const param_expr_list>
+			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
+		count_ptr<const const_param_expr_list>
+			relaxed_const_actuals;
+		if (relaxed_actuals) {
+			relaxed_const_actuals =
+				relaxed_actuals->unroll_resolve(c);
+			if (!relaxed_const_actuals) {
+				cerr << "ERROR: unable to resolve relaxed "
+					"actual parameters in " <<
+					util::what<this_type>::name() <<
+					"::unroll()." << endl;
+				return good_bool(false);
+			}
+		}
+#endif
 		// actuals are allowed to be NULL, and in some cases,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				*this->inst_base, crl, relaxed_const_actuals);
-#endif
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;

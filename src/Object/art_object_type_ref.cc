@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.11 2005/07/07 23:48:14 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.12 2005/07/09 05:52:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -189,6 +189,11 @@ fundamental_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is called by instance_collection's
+	collection_type_manager<>::commit_type() when checking
+	for type consistency between members of the same collection.  
+ */
 bool
 fundamental_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
@@ -212,10 +217,45 @@ fundamental_type_reference::must_be_collectibly_type_equivalent(
 	INVARIANT(ld && rd);
 	INVARIANT(!ld.is_a<const typedef_base>());
 	INVARIANT(!rd.is_a<const typedef_base>());
-	if (ld != rd)
+	if (ld != rd) {
 		return false;
-	else	return lt->template_args.must_be_relaxed_equivalent(
-			rt->template_args);
+	} else {
+#if 1
+		const bool ret(lt->template_args.must_be_strict_equivalent(
+			rt->template_args));
+		if (!ret) {
+			cerr << "ERROR: types mismatch!" << endl;
+			lt->dump(cerr << "\tgot: ") << endl;
+			rt->dump(cerr << "\tand: ") << endl;
+		}
+		return ret;
+#else
+		// 2005-07-08 refinement: (on hold... cancelled)
+		const template_actuals& largs(lt->template_args);
+		const template_actuals& rargs(rt->template_args);
+		if (!largs.must_be_relaxed_equivalent(rargs))
+			return false;
+		const template_actuals::const_arg_list_ptr_type
+			l_relaxed(largs.get_relaxed_args());
+		const template_actuals::const_arg_list_ptr_type
+			r_relaxed(rargs.get_relaxed_args());
+		if (l_relaxed && r_relaxed)
+			return l_relaxed->must_be_equivalent(*r_relaxed);
+		else {
+			if (l_relaxed || r_relaxed) {
+				lt->dump(cerr << "got: ") << endl;
+				rt->dump(cerr << "and: ") << endl;
+			}
+			INVARIANT(!l_relaxed && !r_relaxed);
+			// because otherwise, the two types have different 
+			// strictness, which is nonsense when it comes to
+			// checking types for the same collection.  
+			// Mismatches in strictness should be caught earlier
+			// in the front-end, in scopespace::add_instance().
+			return true;
+		}
+#endif
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1144,9 +1184,13 @@ process_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: we allow canonicalization using non-const expressions
+		in the type actuals.  
+ */
 count_ptr<const fundamental_type_reference>
 process_type_reference::make_canonical_type_reference(void) const {
-	INVARIANT(template_args.is_constant());
+	// INVARIANT(template_args.is_constant());	// not true
 	return base_proc_def->make_canonical_type_reference(template_args);
 }
 

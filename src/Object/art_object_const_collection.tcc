@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.5.10.3 2005/07/05 17:25:42 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.5.10.4 2005/07/09 05:52:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -284,33 +284,66 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	See comment for static_constant_value().
+	\return good if successful.
+ */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 CONST_COLLECTION_CLASS::unroll_resolve_value(
-		const unroll_context&, value_type& ) const {
+		const unroll_context&, value_type& v) const {
+#if 0
 	cerr << "Never supposed to call "
 		"CONST_COLLECTION_CLASS::unroll_resolve_value()." << endl;
 	THROW_EXIT;
 	return good_bool(false);
+#else
+	INVARIANT(!values.dimensions());
+	v = *values.begin();
+	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	See comment for static_constant_value().
+	\return good if successful.
+ */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-CONST_COLLECTION_CLASS::resolve_value(value_type& ) const {
+CONST_COLLECTION_CLASS::resolve_value(value_type& v) const {
+#if 0
 	cerr << "Never supposed to call CONST_COLLECTION_CLASS::resolve_value()."
 		<< endl;
 	THROW_EXIT;
 	return good_bool(false);
+#else
+	INVARIANT(!values.dimensions());
+	v = *values.begin();
+	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	2005-07-08:
+	It is possible for this to be called after a valur-reference
+	has been resolved down to a scalar constant, 
+	in which case it should be equivalent to a pint_const or pbool_const.  
+	\pre this is 0-dimensional, or scalar.  
+	\return the value of the only member.  
+ */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 typename CONST_COLLECTION_CLASS::value_type
 CONST_COLLECTION_CLASS::static_constant_value(void) const {
+#if 0
 	cerr << "Never supposed to call CONST_COLLECTION_CLASS::static_constant_value()." << endl;
 	THROW_EXIT;
 	return -1;
+#else
+	INVARIANT(!values.dimensions());
+	return *values.begin();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

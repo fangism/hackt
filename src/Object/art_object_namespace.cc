@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.28.4.2 2005/07/05 07:59:48 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.28.4.3 2005/07/09 05:52:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -250,13 +250,6 @@ scopespace::add_instance(
 	// inst_stmt won't have a name yet!
 	// const string id(inst_stmt->get_name());
 	const size_t dim = inst_stmt->dimensions();
-#if 0
-	// DEBUG
-	cerr << "In scopespace::add_instance with this = " << this << endl;
-//	i->dump(cerr << "excl_ptr<instance_collection_base> i = ") << endl;
-	inst_stmt->dump(cerr << "never_ptr<instantiation_statement_base> inst_stmt = ") << endl;
-	dump(cerr);	// dump the entire namespace
-#endif
 	const never_ptr<object> probe(lookup_object_here_with_modify(id));
 	if (probe) {
 		const never_ptr<instance_collection_base>
@@ -280,6 +273,22 @@ scopespace::add_instance(
 				old_type(probe_inst->get_type_ref());
 			const count_ptr<const fundamental_type_reference>
 				new_type(inst_stmt->get_type_ref());
+			// 2005-07-08 decision: 
+			// strictness must be the same as original declaration, 
+			// the first to appear in text, not necessarily first 
+			// to be unrolled, in the case of conditional scopes.
+			// In the future, these constraints may be revisited
+			// and changed.  
+			if (!old_type->get_template_params()
+					.is_strictly_compatible_with(
+					new_type->get_template_params())) {
+				cerr << "ERROR: type redeclaration of "
+					"collection " << id <<
+					" does not match in strictness "
+					"to the original declaration." << endl;
+				return return_type(NULL);
+
+			}
 			// type comparison is conservative, in the 
 			// case of dynamic template parameters.  
 			if (!old_type->may_be_collectibly_type_equivalent(*new_type)) {

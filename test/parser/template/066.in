@@ -1,0 +1,9 @@
+// "066.in" should fail -- cannot redeclare a strict array as relaxed
+// copy-modified from "065.in"
+
+template <pint Q><pint R>
+defproc foo();
+
+foo<5><4> bar[3];		// strict collection
+foo<5> bar<4>[4..6];		// relaxed collection (conflict)
+
