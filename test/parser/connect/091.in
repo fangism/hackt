@@ -1,0 +1,15 @@
+// "091.in" should fail at unroll time, won't be caught at parse time
+// copy-modified from "090.in"
+
+template <pint A>
+defproc foo();
+
+pint x[2];
+x[0] = 6;
+x[1] = 7;
+
+foo<x[0]> bar, ick;
+foo<x[1]> poo;
+
+bar = poo;		// bad type
+

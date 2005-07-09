@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.10 2005/07/08 18:15:23 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.11 2005/07/09 23:13:12 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -723,6 +723,7 @@ HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchk
 TESTS = art_persistent_table
 
 check-headers: $(HEADER_TCC_TESTS)
+	@$(ECHO) All header tests passed.
 
 headers_deps.make: Makefile.am
 	@$(ECHO) Regenerating $@ ...

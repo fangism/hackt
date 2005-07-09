@@ -1,4 +1,4 @@
-// should fail: non-scalar instance reference in port connection
+// "072.in" should fail: non-scalar instance reference in port connection
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

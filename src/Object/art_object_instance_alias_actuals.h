@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_alias_actuals.h"
 	Implementation of alias info that has actual parameters.  
-	$Id: art_object_instance_alias_actuals.h,v 1.1.2.2 2005/07/09 01:23:28 fang Exp $
+	$Id: art_object_instance_alias_actuals.h,v 1.1.2.3 2005/07/09 23:13:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
@@ -13,6 +13,7 @@
 #include "util/memory/count_ptr.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_fwd.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -62,8 +63,18 @@ protected:
 #endif
 
 public:
+	const alias_actuals_type&
+	get_relaxed_actuals(void) const {
+		return actuals;
+	}
+
 	ostream&
 	dump_actuals(ostream& o) const;
+
+	static
+	good_bool
+	compare_and_update_actuals(alias_actuals_type& l, 
+		const alias_actuals_type& r);
 
 protected:
 	void

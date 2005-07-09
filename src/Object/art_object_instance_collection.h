@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.4 2005/07/09 01:23:29 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.5 2005/07/09 23:13:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -185,6 +185,9 @@ virtual	bool
 
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;
+
+	bool
+	must_match_type(const this_type&) const;
 
 #if 1
 	// 2005-07-07: intended for first-time type establishment, 

@@ -1,4 +1,4 @@
-// should pass: sizes match
+// "019.in" should pass: sizes match
 
 defproc fang();
 

@@ -1,4 +1,4 @@
-// should fail: type mismatch
+// "056.in" should fail: type mismatch
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

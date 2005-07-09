@@ -1,4 +1,4 @@
-// should pass: size matches after dimension collapsing
+// "017.in" should pass: size matches after dimension collapsing
 
 defproc barf();
 

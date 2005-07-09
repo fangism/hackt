@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.16.2.4 2005/07/09 01:23:31 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.5 2005/07/09 23:13:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -120,6 +120,17 @@ struct collection_type_manager<enum_tag> {
 		return false;
 	}
 
+
+	/**
+		NOTE: called during connection checking.  
+	 */ 
+	static
+	bool
+	must_match_type(const instance_collection_generic_type& l, 
+		const instance_collection_generic_type& r) {
+		return l.get_base_def() == r.get_base_def();
+	}
+
 	/**
 		During unroll phase, this commits the type of the collection.  
 		\param t the data integer type reference, containing width, 
@@ -191,6 +202,7 @@ enum_instance::load_object(const persistent_object_manager& m,
 //=============================================================================
 // explicit class instantiations
 
+template class instance_alias_info<enum_tag>;
 template class instance_collection<enum_tag>;
 template class instance_array<enum_tag, 0>;
 template class instance_array<enum_tag, 1>;

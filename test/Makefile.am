@@ -1,10 +1,10 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/01/28 19:59:00 fang Exp $
+#	$Id: Makefile.am,v 1.8.4.1 2005/07/09 23:13:20 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 # this directory first, to clean the test-report
-SUBDIRS = . parser
+SUBDIRS = . lexer parser
 
 clean-test:
 	@$(ECHO) "#!$(SHELL)" > $@
@@ -18,10 +18,14 @@ DISTCLEANFILES = $(TESTS)
 
 CLEANFILES = 
 
-EXTRA_DIST = Make.test artc-expect.sh artobj-diff.sh \
+EXTRA_DIST = ChangeLog Make.test artc-expect.sh artobj-diff.sh \
 	artobjunroll-expect.sh \
 	state_enum_filter.awk address_filter.sed \
-	spacestonewline.awk test.cvsignore
+	POM-header-filter.awk \
+	update-artcstderr.sh \
+	update-unrollstderr.sh \
+	spacestonewline.awk test.cvsignore \
+	test-series.sh
 
 # template test Makefile
 include $(top_srcdir)/test/Make.test

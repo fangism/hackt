@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.6 2005/07/09 01:23:30 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.7 2005/07/09 23:13:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -234,6 +234,17 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 		p->dump(cerr) << endl;
 		DIE;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compares collection types of the two instances and then
+	(TODO) compares their relaxed actuals (if applicable).
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
+	return this->container->must_match_type(*a.container);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -568,6 +579,13 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
 	return collection_type_manager<Tag>::get_type(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+bool
+INSTANCE_COLLECTION_CLASS::must_match_type(const this_type& c) const {
+	return collection_type_manager<Tag>::must_match_type(*this, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

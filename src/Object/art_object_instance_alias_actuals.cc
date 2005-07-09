@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_alias_actuals.cc"
 	Method definitions of class instance_alias_info_actuals.
-	$Id: art_object_instance_alias_actuals.cc,v 1.1.2.2 2005/07/09 01:23:28 fang Exp $
+	$Id: art_object_instance_alias_actuals.cc,v 1.1.2.3 2005/07/09 23:13:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -27,6 +27,9 @@ instance_alias_info_empty::attach_actuals(const alias_actuals_type& a) const {
 }
 #endif
 
+const instance_alias_info_empty::alias_actuals_type
+instance_alias_info_empty::null;
+
 //=============================================================================
 // class instance_alias_info_actuals method definitions
 
@@ -48,6 +51,34 @@ instance_alias_info_actuals::attach_actuals(const alias_actuals_type& a) const {
 ostream&
 instance_alias_info_actuals::dump_actuals(ostream& o) const {
 	return (actuals ? actuals->dump(o << '<') << '>' : o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Comparing relaxed actuals for the sake of connection checking.  
+ */
+good_bool
+instance_alias_info_actuals::compare_and_update_actuals(
+		alias_actuals_type& l, const alias_actuals_type& r) {
+	if (r) {
+	if (l) {
+		// then compare them
+		if (!l->must_be_equivalent(*r)) {
+			cerr << "ERROR: attempted to connect instances with "
+				"conflicting relaxed parameters!" << endl;
+			// TODO: report where, more info!
+			l->dump(cerr << "\tgot: ") << endl;
+			r->dump(cerr << "\tand: ") << endl;
+			// for now stop on 1st error
+			return good_bool(false);
+		}
+		// else good to connect because l is relaxed
+	} else {
+		// then set them for the rest of this connection loop.
+		l = r;
+	}
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

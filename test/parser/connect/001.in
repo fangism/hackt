@@ -1,4 +1,4 @@
-// should pass: simple connection of datatypes
+// "001.in" should pass: simple connection of datatypes
 
 bool fool;
 bool frodo;

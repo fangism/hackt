@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.4 2005/07/09 01:23:27 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5 2005/07/09 23:13:15 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -133,15 +133,11 @@ virtual	~instance_alias_info();
 			to modify the key.  
 		\return true if successful, didn't collide.
 	 */
-#if 0
-	bool
-	attach_actuals(const count_ptr<const const_param_expr_list>&) const {
-		// for now return true without checking, fix later
-		return true;
-	}
-#else
 	using actuals_parent_type::attach_actuals;
-#endif
+	using actuals_parent_type::compare_and_update_actuals;
+
+	bool
+	must_match_type(const this_type&) const;
 
 	// consider: pure virtual multikey_generic<K>
 

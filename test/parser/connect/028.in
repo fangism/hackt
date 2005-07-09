@@ -1,4 +1,4 @@
-// should fail: sizes don't match
+// "028.in" should fail: sizes don't match
 
 int foo;
 

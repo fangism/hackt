@@ -1,4 +1,4 @@
-// should fail: types mismatch in ports
+// "050.in" should fail: types mismatch in ports
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

@@ -1,4 +1,4 @@
-// should pass: types match
+// "006.in" should pass: types match
 
 int blah;
 int sneeze = blah;

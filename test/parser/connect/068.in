@@ -1,4 +1,4 @@
-// should fail: not instantiated yet
+// "068.in" should fail: not instantiated yet
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

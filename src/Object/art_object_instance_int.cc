@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.21.2.5 2005/07/09 01:23:31 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.21.2.6 2005/07/09 23:13:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -186,6 +186,18 @@ private:
 	}
 
 public:
+
+	/**
+		NOTE: called during connection checking.  
+	 */ 
+	static
+	bool
+	must_match_type(const instance_collection_generic_type& l, 
+		const instance_collection_generic_type& r) {
+		// must be const-resolved!
+		return l.type_parameter == r.type_parameter;
+	}
+
 	/**
 		During unroll phase, this commits the type of the collection.  
 		\param t the data integer type reference, containing width, 
@@ -289,6 +301,7 @@ operator << (ostream& o, const int_instance_alias_base& i) {
 //=============================================================================
 // explicit template instantiations
 
+template class instance_alias_info<int_tag>;
 template class instance_collection<int_tag>;
 template class instance_array<int_tag, 0>;
 template class instance_array<int_tag, 1>;

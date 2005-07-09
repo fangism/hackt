@@ -1,4 +1,4 @@
-// should pass: equivalent types and sizes
+// "013.in" should pass: equivalent types and sizes
 
 defproc foo();
 

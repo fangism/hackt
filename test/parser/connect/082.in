@@ -1,4 +1,4 @@
-// should fail: too many arguments
+// "082.in" should fail: too many arguments
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

@@ -1,4 +1,4 @@
-// should fail: scalar types don't match
+// "004.in" should fail: scalar types don't match
 
 int the_int;
 bool the_bool = the_int;

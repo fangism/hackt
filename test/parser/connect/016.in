@@ -1,4 +1,4 @@
-// should fail: mismatch in size
+// "016.in" should fail: mismatch in size
 
 defproc barf();
 

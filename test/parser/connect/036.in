@@ -1,4 +1,4 @@
-// should pass: nested member
+// "036.in" should pass: nested member
 
 defproc egg(bool white; int yolk);
 defproc basket(egg egg_array[12]);

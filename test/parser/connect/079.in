@@ -1,4 +1,4 @@
-// should fail: wrong number of arguments
+// "079.in" should fail: wrong number of arguments
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

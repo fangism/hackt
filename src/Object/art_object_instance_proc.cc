@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.14.4.6 2005/07/09 05:52:27 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.14.4.7 2005/07/09 23:13:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -119,6 +119,17 @@ struct collection_type_manager<process_tag> {
 		return c.type_parameter->is_relaxed();
 	}
 
+	/**
+		NOTE: called during connection checking.  
+	 */
+	static
+	bool
+	must_match_type(const instance_collection_generic_type& l, 
+		const instance_collection_generic_type& r) {
+		// must be const-resolved!
+		return l.type_parameter->must_be_collectibly_type_equivalent(
+			*r.type_parameter);
+	}
 
 	/**
 		During unroll phase, this commits the type of the collection.  
@@ -146,6 +157,7 @@ struct collection_type_manager<process_tag> {
 	}
 
 	/**
+		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
 	static
@@ -202,6 +214,7 @@ process_instance::load_object(const persistent_object_manager& m, istream& f) {
 //=============================================================================
 // explicit template clas instantiations
 
+template class instance_alias_info<process_tag>;
 template class instance_collection<process_tag>;
 template class instance_array<process_tag, 0>;
 template class instance_array<process_tag, 1>;

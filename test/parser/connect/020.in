@@ -1,4 +1,4 @@
-// should fail: sizes don't match
+// "020.in" should fail: sizes don't match
 
 defproc fang();
 

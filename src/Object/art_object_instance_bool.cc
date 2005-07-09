@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.5 2005/07/09 01:23:29 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.6 2005/07/09 23:13:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -128,6 +128,16 @@ struct collection_type_manager<bool_tag> {
 		return false;
 	}
 
+	/**
+		NOTE: called during connection checking.  
+	 */ 
+	static
+	bool
+	must_match_type(const instance_collection_generic_type& l, 
+		const instance_collection_generic_type& r) {
+		return true;
+	}
+
 	// return true on error, false on success
 	static
 	bad_bool
@@ -188,6 +198,7 @@ operator << (ostream& o, const bool_instance_alias_base& b) {
 //=============================================================================
 // explicit instantiations
 
+template class instance_alias_info<bool_tag>;
 template class instance_collection<bool_tag>;
 template class instance_array<bool_tag, 0>;
 template class instance_array<bool_tag, 1>;

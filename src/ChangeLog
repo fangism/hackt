@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-07-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-26:
+	  Breakthrough (it's about friggin' time).
+	  Proper type checking in place for checking instance alias 
+		connections!  Modifications in alias_connection<>::unroll().
+	  Implemented instance_alias_info_actuals::compare_and_update_actuals().
+	  Implemented instance_collection::must_match_type() through
+		the collection_type_manager<Tag>.
+	  Some initial test cases to test/parser/connect (088-091).
+
+
 2005-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-25:

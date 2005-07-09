@@ -1,4 +1,4 @@
-// should fail: size mismatch
+// "055.in" should fail: size mismatch
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

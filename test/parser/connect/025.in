@@ -1,4 +1,4 @@
-// should pass: valid reference to a member
+// "025.in" should pass: valid reference to a member
 
 int foo;
 
