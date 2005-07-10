@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.1.2.2 2005/07/10 19:37:26 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.1.2.3 2005/07/10 21:11:22 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -27,10 +27,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_pint_traits.h"
 #include "Object/art_object_pbool_traits.h"
 #include "Object/art_object_bool_traits.h"
+#include "Object/art_object_int_traits.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/bool_expr.h"
-#include "Object/art_built_ins.h"
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -82,7 +82,7 @@ struct data_type_resolver<pint_tag> {
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
-		return int32_type_ptr;
+		return int_traits::int32_type_ptr;
 	}
 };      // end struct data_type_resolver
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_int_traits.h"
 	Traits and policies for data type integers.  
-	$Id: art_object_int_traits.h,v 1.1.2.3 2005/07/10 19:37:25 fang Exp $
+	$Id: art_object_int_traits.h,v 1.1.2.4 2005/07/10 21:11:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INT_TRAITS_H__
@@ -67,6 +67,20 @@ struct class_traits<int_tag> {
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+
+	/**
+		Built-in static integer datatype definition.
+		NOTE (2005-07-10): its type cache will updated
+		as integers are instantiated.
+	 */
+	static const built_in_datatype_def	built_in_definition;
+
+	/**
+		One hard-coded copy of the default integer pointer type.  
+		This built-in type pointer is not a substitute
+		for 'built_in_type_ptr' because the definition is a template.  
+	 */
+	static const type_ref_ptr_type		int32_type_ptr;
 };	// end struct class_traits<int_tag>
 
 //=============================================================================

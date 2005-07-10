@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.7 2005/07/10 19:37:21 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.8 2005/07/10 21:11:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -29,7 +29,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_built_ins.h"
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/art_object_instance_collection.tcc"
@@ -72,94 +71,6 @@ namespace memory {
 //=============================================================================
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// struct type_dumper specialization
-
-#if 0
-template <>
-struct collection_type_manager<bool_tag> {
-	typedef	class_traits<bool_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<bool_tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef class_traits<bool_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
-
-	struct dumper {
-		ostream& os;
-		dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const instance_collection_generic_type& c) {
-			return os << "bool^" << c.get_dimensions();
-		}
-	};	// end struct dumper
-
-	static
-	void
-	collect(persistent_object_manager&,
-		const instance_collection_generic_type&) {
-		// do nothing! bool has no parameters!
-	}
-
-	static
-	void
-	write(const persistent_object_manager&, ostream&,
-		const instance_collection_generic_type&) {
-		// do nothing! bool has no parameters!
-	}
-
-	static
-	void
-	load(const persistent_object_manager&, istream&,
-		instance_collection_generic_type&) {
-		// do nothing! bool has no parameters!
-	}
-
-	static
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type& i) {
-		// just return built-in type
-		return bool_type_ptr;
-	}
-
-	static
-	bool
-	is_relaxed_type(const instance_collection_generic_type& i) {
-		return false;
-	}
-
-	/**
-		NOTE: called during connection checking.  
-	 */ 
-	static
-	bool
-	must_match_type(const instance_collection_generic_type& l, 
-		const instance_collection_generic_type& r) {
-		return true;
-	}
-
-	// return true on error, false on success
-	static
-	bad_bool
-	commit_type(instance_collection_generic_type& c, 
-		const type_ref_ptr_type& t) {
-		// INVARIANT(!is_partially_unrolled());
-		INVARIANT(t->get_base_datatype_def()
-			->resolve_canonical_datatype_definition() == &bool_def);
-		// shouldn't have any parameters, NULL or empty list
-		return bad_bool(false);
-	}
-
-	static
-	void
-	commit_type_first_time(instance_collection_generic_type& c, 
-		const type_ref_ptr_type&) {
-		// no-op
-	}
-};	// end struct collection_type_committer
-#endif
 
 //=============================================================================
 // class bool_instance method definitions

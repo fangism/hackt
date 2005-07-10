@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.16.2.6 2005/07/10 19:37:23 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.7 2005/07/10 21:11:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -55,124 +55,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-#if 0
-template <>
-struct collection_type_manager<enum_tag> {
-	typedef class_traits<enum_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<enum_tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef class_traits<enum_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
-
-	struct dumper {
-		ostream& os;
-		dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const instance_collection_generic_type& c) {
-			return os << "enum " <<
-				c.get_base_def()->get_qualified_name() <<
-				'^' << c.get_dimensions();
-		}
-	};	// end struct dumper
-
-	static
-	void
-	collect(persistent_object_manager& m, 
-		const instance_collection_generic_type& c) {
-		if (c.type_parameter)
-			c.type_parameter->collect_transient_info(m);
-	}
-
-	static
-	void
-	write(const persistent_object_manager& m, ostream& o,
-		const instance_collection_generic_type& c) {
-		m.write_pointer(o, c.type_parameter);
-	}
-
-	static
-	void
-	load(const persistent_object_manager& m, istream& i,
-		instance_collection_generic_type& c) {
-		m.read_pointer(i, c.type_parameter);
-	}
-
-	/**
-		TODO: what if type_parameter is not already set
-			because it is template-dependent and unresolved?
-		Then return the template-dependent type.  
-		Consumer is responsible to testing template-dependence. 
-	 */
-	static
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type& e) {
-		return type_ref_ptr_type(new data_type_reference(
-			// want get_base_def_subtype!!!
-			e.get_base_def()
-			.is_a<const datatype_definition_base>()));
-	}
-
-	static
-	bool
-	is_relaxed_type(const instance_collection_generic_type& c) {
-		return false;
-	}
-
-
-	/**
-		NOTE: called during connection checking.  
-	 */ 
-	static
-	bool
-	must_match_type(const instance_collection_generic_type& l, 
-		const instance_collection_generic_type& r) {
-		return l.get_base_def() == r.get_base_def();
-	}
-
-	/**
-		During unroll phase, this commits the type of the collection.  
-		\param t the data integer type reference, containing width, 
-			must already be resolved to a const_param_expr_list.  
-		\return false on success, true on error.  
-		\post the integer width is fixed for the rest of the program.  
-	 */
-	static
-	bad_bool
-	commit_type(const instance_collection_generic_type& c,
-		const type_ref_ptr_type& t) {
-#if 0
-		// make sure this is the canonical definition
-		//	in case type is typedef!
-		// this really should be statically type-checked
-		// until we allow templates to include type parameters.  
-		if (c.type_parameter)
-			INVARIANT(t->get_base_def() == c.type_parameter);
-		else
-			c.type_parameter = t->get_base_def()
-				.is_a<const enum_datatype_def>();
-		return bad_bool(false);
-#else
-		INVARIANT(c.type_parameter);
-		INVARIANT(t->get_base_def() == c.type_parameter);
-		return bad_bool(false);
-#endif
-	}
-
-	static
-	void
-	commit_type_first_time(instance_collection_generic_type& c, 
-			const type_ref_ptr_type& t) {
-		INVARIANT(!c.type_parameter);
-		c.type_parameter = t->get_base_def()
-			.is_a<const enum_datatype_def>();
-	}
-
-};	// end struct collection_type_manager
-#endif
 
 //=============================================================================
 // class enum_instance method definitions

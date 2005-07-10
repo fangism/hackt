@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.9.4.3 2005/07/10 19:37:20 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.9.4.4 2005/07/10 21:11:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -22,7 +22,6 @@
 #include "Object/expr/enum_expr.h"
 #include "Object/expr/struct_expr.h"
 #include "Object/expr/const_range.h"
-#include "Object/art_built_ins.h"
 
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.7 2005/07/08 03:03:45 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.8 2005/07/10 21:11:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -13,7 +13,6 @@
 #include "Object/art_object_pint_traits.h"
 #include "Object/art_object_pbool_traits.h"
 #include "Object/art_object_type_ref.h"
-#include "Object/art_built_ins.h"
 #include "Object/expr/const_param_expr_list.h"
 
 namespace ART {

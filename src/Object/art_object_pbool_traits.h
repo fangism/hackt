@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_pbool_traits.h"
 	Traits and policies for parameter booleans.  
-	$Id: art_object_pbool_traits.h,v 1.1.2.1 2005/06/25 21:07:26 fang Exp $
+	$Id: art_object_pbool_traits.h,v 1.1.2.2 2005/07/10 21:11:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PBOOL_TRAITS_H__
@@ -75,6 +75,8 @@ struct class_traits<pbool_tag> {
 		Initialized in "Object/art_built_ins.cc"
 	 */
 	static const type_ref_ptr_type		built_in_type_ptr;
+private:
+	static const built_in_param_def		built_in_definition;
 };	// end struct class_traits<pbool_tag>
 
 //=============================================================================

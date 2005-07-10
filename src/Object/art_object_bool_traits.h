@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_bool_traits.h"
 	Traits and policies for boolean data types.  
-	$Id: art_object_bool_traits.h,v 1.1.2.3 2005/07/10 19:37:18 fang Exp $
+	$Id: art_object_bool_traits.h,v 1.1.2.4 2005/07/10 21:11:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
@@ -64,6 +64,10 @@ struct class_traits<bool_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 
+	/**
+		Built-in static definition. 
+	 */
+	static const built_in_datatype_def	built_in_definition;
 	/**
 		Built-in type pointer.  
 		This is defined and initialized in

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.21.2.7 2005/07/10 19:37:23 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.21.2.8 2005/07/10 21:11:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -31,7 +31,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_built_ins.h"
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_instance_collection.tcc"
 #include "Object/art_object_inst_stmt.h"
@@ -69,166 +68,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-#if 0
-// functor specializations
-template <>
-struct collection_type_manager<int_tag> {
-	typedef class_traits<int_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<int_tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef class_traits<int_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
-
-	struct dumper {
-		ostream& os;
-		dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const instance_collection_generic_type& c) {
-			return os << "int<" << c.get_type_parameter() <<
-				">^" << c.get_dimensions();
-		}
-	};	// end struct dumper
-
-	static
-	void
-	collect(persistent_object_manager& m, 
-		const instance_collection_generic_type& c) {
-		// c.type_parameter contains no pointers
-	}
-
-	static
-	void
-	write(const persistent_object_manager&, ostream& o,
-		const instance_collection_generic_type& c) {
-		// parameter is just an int
-		write_value(o, c.type_parameter);
-	}
-
-	static
-	void
-	load(const persistent_object_manager&, istream& i,
-		instance_collection_generic_type& c) {
-		// parameter is just an int
-		read_value(i, c.type_parameter);
-	}
-
-	/**
-		TODO: optimization, cache the result of the first call
-		to this function (for this collection), and return the
-		cached type, because it's not supposed to change.  
-		See also implementation in "Object/art_built_ins.cc", 
-			under int32_type_ptr.
-		TODO: What if parameter is template-dependent and not
-			yet resolved?
-			Should probably return the template-dependent
-			width expression in the type pointer.  
-	 */
-	static
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type& i) {
-		if (i.type_parameter) {
-			// then type was already committed
-			return type_ref_ptr_type(
-				data_type_reference::make_quick_int_type_ref(
-					i.type_parameter));
-		} else {
-			// not yet unrolled... need to extract from
-			// first instantiation statement.
-			// extract as in pulling teeth...
-			// TODO: subtype versions of the following calls
-			const never_ptr<const data_instantiation_statement>
-				first(i.index_collection.front()
-				.is_a<const data_instantiation_statement>());
-			return first->get_type_ref()
-				.is_a<const data_type_reference>();
-		}
-	}
-
-	static
-	bool
-	is_relaxed_type(const instance_collection_generic_type& c) {
-		return false;
-	}
-
-private:
-	/**
-		Can't we expect type to be resolved constants by now?
-	 */
-	static
-	pint_value_type
-	get_int_width(const type_ref_ptr_type& tp) {
-		// resolve type def?
-		const type_ref_ptr_type
-			t(tp->make_canonical_type_reference()
-				.is_a<const data_type_reference>());
-		INVARIANT(t->get_base_datatype_def()
-			->resolve_canonical_datatype_definition() == &int_def);
-
-		const count_ptr<const param_expr_list>
-			params(t->get_template_params().get_strict_args());
-		NEVER_NULL(params);
-		// extract first and only parameter, the integer width
-		const count_ptr<const const_param_expr_list>
-			cparams(params.is_a<const const_param_expr_list>());
-
-		NEVER_NULL(cparams);
-		INVARIANT(cparams->size() == 1); 
-		const count_ptr<const const_param>&
-			param1(cparams->front());
-		NEVER_NULL(param1);
-		const count_ptr<const pint_const>
-			pwidth(param1.is_a<const pint_const>());
-		NEVER_NULL(pwidth);
-		return pwidth->static_constant_value();
-	}
-
-public:
-
-	/**
-		NOTE: called during connection checking.  
-	 */ 
-	static
-	bool
-	must_match_type(const instance_collection_generic_type& l, 
-		const instance_collection_generic_type& r) {
-		// must be const-resolved!
-		return l.type_parameter == r.type_parameter;
-	}
-
-	/**
-		During unroll phase, this commits the type of the collection.  
-		\param t the data integer type reference, containing width, 
-			must already be resolved to a const_param_expr_list.  
-		\return false on success, true on error.  
-		\post the integer width is fixed for the rest of the program.  
-	 */
-	static
-	bad_bool
-	commit_type(const instance_collection_generic_type& c,
-		const type_ref_ptr_type& tp) {
-		// resolve type def?
-		const pint_value_type
-			new_width = get_int_width(tp);
-		INVARIANT(c.type_parameter);
-		return bad_bool(new_width != c.type_parameter);
-	}
-
-	static
-	void
-	commit_type_first_time(instance_collection_generic_type& c,
-		const type_ref_ptr_type& tp) {
-		INVARIANT(!c.type_parameter);
-		c.type_parameter = get_int_width(tp);
-	}
-
-
-};      // end struct collection_type_manager
-#endif
-
 //=============================================================================
 // class int_instance method definitions
 

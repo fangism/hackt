@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.13 2005/07/10 19:37:25 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.14 2005/07/10 21:11:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -28,7 +28,6 @@
 #include "Object/expr/meta_range_list.h"
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
-#include "Object/art_built_ins.h"
 #include "Object/art_object_int_traits.h"
 #include "Object/art_object_bool_traits.h"
 #include "Object/art_object_enum_traits.h"
@@ -556,10 +555,10 @@ data_type_reference::make_instance_collection(
 		// what about typedefs/aliases of built-in types? Ahhhh....
 		INVARIANT(alias.is_a<const built_in_datatype_def>());
 		// just compare pointers
-		if (alias == &bool_def) {
+		if (alias == &bool_traits::built_in_definition) {
 			return return_type(
 				bool_instance_collection::make_array(*s, id, d));
-		} else if (alias == &int_def) {
+		} else if (alias == &int_traits::built_in_definition) {
 			return return_type(
 				int_instance_collection::make_array(*s, id, d));
 		} else {
@@ -582,8 +581,8 @@ data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 			count_ptr<const pint_const>(new pint_const(w))));
 	const template_actuals tpl(width_params, 
 		template_actuals::arg_list_ptr_type());
-	return new data_type_reference(
-		never_ptr<const built_in_datatype_def>(&int_def), tpl);
+	return new data_type_reference(never_ptr<const built_in_datatype_def>(
+		&int_traits::built_in_definition), tpl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -635,13 +634,13 @@ data_type_reference::load_object(const persistent_object_manager& m,
 		const_cast<datatype_definition_base*>(&*base_type_def));
 	if (base_type_def->get_key() == "bool") {
 		m.please_delete(&*base_type_def);	// HACKERY
-		base_type_def =
-			never_ptr<const datatype_definition_base>(&bool_def);
+		base_type_def = never_ptr<const datatype_definition_base>(
+			&bool_traits::built_in_definition);
 		// must flag visit specially
 	} else if (base_type_def->get_key() == "int") {
 		m.please_delete(&*base_type_def);	// HACKERY
-		base_type_def =
-			never_ptr<const datatype_definition_base>(&int_def);
+		base_type_def = never_ptr<const datatype_definition_base>(
+			&int_traits::built_in_definition);
 		// must flag visit specially
 	}
 	// else leave the base definition as is

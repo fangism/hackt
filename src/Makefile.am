@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.12 2005/07/10 19:37:15 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.13 2005/07/10 21:11:10 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -174,12 +174,12 @@ OBJECT_CC_FILES = \
 	Object/art_object_port_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
-	Object/art_built_ins.cc \
 	Object/art_object_PRS.cc \
 	Object/art_object_CHP.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
+	Object/art_built_ins.cc \
 	Object/expr/basic_param.cc \
 	Object/expr/param_const_collection.cc \
 	Object/expr/meta_index_expr_list.cc \
@@ -279,9 +279,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/pint_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
-	Object/art_object_data_expr_base.h \
-	Object/art_object_expr_base.h \
-	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
 	Object/art_object_index.h \
 	Object/inst/general_collection_type_manager.h \

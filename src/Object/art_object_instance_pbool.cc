@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.22.4.3 2005/07/05 07:59:47 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.22.4.4 2005/07/10 21:11:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -21,7 +21,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/pbool_const.h"
-#include "Object/art_built_ins.h"
 #include "Object/art_object_type_hash.h"
 
 // experimental: suppressing automatic template instantiation

@@ -2,6 +2,15 @@
 
 2005-07-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-28:
+	  Obsoleted "Object/art_built_ins.h" everything moved into their
+		respective traits classes (class_traits<>).
+		Initializations are still done in "Object/art_built_ins.cc".
+	  Source files cleaned up some, removing obsolete code.
+	  Removed obsolete expr headers from repository (to Attic).
+	  Upcoming branch: developing instance alias hierarchy.
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-27:
 	  New directory Object/inst for gradual migration of instance-related
 		classes to find a new home.  

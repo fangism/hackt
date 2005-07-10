@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.8.4.1 2005/07/05 07:59:42 fang Exp $
+	$Id: art_object_inst_ref_data.h,v 1.8.4.2 2005/07/10 21:11:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
@@ -11,7 +11,6 @@
 // #include "Object/art_object_inst_ref.h"
 // might as well include this here because data_reference<Tag>::interface_type
 // is going to be int_expr or bool_expr from the base class header file.  
-// #include "Object/art_object_data_expr_base.h"
 
 namespace ART {
 namespace entity {

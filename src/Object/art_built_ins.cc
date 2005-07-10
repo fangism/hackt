@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.24.2.3 2005/07/10 19:37:17 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.24.2.4 2005/07/10 21:11:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
@@ -16,7 +16,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.h"
-#include "Object/art_built_ins.h"
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_param.h"
@@ -25,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_pint_traits.h"
 #include "Object/art_object_pbool_traits.h"
 #include "Object/art_object_bool_traits.h"
+#include "Object/art_object_int_traits.h"
 
 #if DEBUG_ART_BUILT_INS
 	#define	ENABLE_STACKTRACE			1
@@ -52,51 +52,53 @@ REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_scalar)
 
 //=============================================================================
 /**
+	TODO: Does this actually need external linkage?
 	The built-in namespace, not global.
 	We don't actually add anything to it.  
 	In fact this is rather useless.  :P
 	Constructing built in definitions doesn't add them to it...
  */
+static
 name_space
 built_in_namespace("BUILT-IN", never_ptr<const name_space>(NULL));
 
 //-----------------------------------------------------------------------------
 /** built-in parameter pbool type definition initialization */
 const built_in_param_def
-pbool_def = built_in_param_def(
+pbool_traits::built_in_definition = built_in_param_def(
 	never_ptr<const name_space>(&built_in_namespace), "pbool");
 
 /** built-in parameter pint type definition initialization */
 const built_in_param_def
-pint_def = built_in_param_def(
+pint_traits::built_in_definition = built_in_param_def(
 	never_ptr<const name_space>(&built_in_namespace), "pint");
 
 // will need to pool param_type_reference?
 
 /** built-in parameter pbool type reference */
-const class_traits<pbool_tag>::type_ref_ptr_type
-class_traits<pbool_tag>::built_in_type_ptr =
+const pbool_traits::type_ref_ptr_type
+pbool_traits::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
-		never_ptr<const built_in_param_def>(&pbool_def)));
+		never_ptr<const built_in_param_def>(&built_in_definition)));
 
 /** built-in parameter pint type reference */
-const class_traits<pint_tag>::type_ref_ptr_type
-class_traits<pint_tag>::built_in_type_ptr =
+const pint_traits::type_ref_ptr_type
+pint_traits::built_in_type_ptr =
 	count_ptr<const param_type_reference>(new param_type_reference(
-	never_ptr<const built_in_param_def>(&pint_def)));
+		never_ptr<const built_in_param_def>(&built_in_definition)));
 
 //-----------------------------------------------------------------------------
 
 /** built-in data bool type definition initialization */
 const built_in_datatype_def
-bool_def = built_in_datatype_def(
+bool_traits::built_in_definition = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "bool");
 
 /** built-in data int type definition initialization */
 // not really necessary, but this may make things cleaner in future
 // this eliminates need for special-case built-in definition constructor
 const built_in_datatype_def
-int_def = built_in_datatype_def(
+int_traits::built_in_definition = built_in_datatype_def(
 	never_ptr<const name_space>(&built_in_namespace), "int");
 
 
@@ -121,10 +123,7 @@ dummy_bool(new pbool_const(true));
 
 // will transfer ownership to definition
 static excl_ptr<pint_scalar>
-int_def_width(
-//	new pint_scalar(int_def, "width", int_def_width_default) // was this
-	new pint_scalar(int_def, "width")
-);
+int_def_width(new pint_scalar(int_traits::built_in_definition, "width"));
 
 static const good_bool
 __good_int_width(int_def_width->assign_default_value(int_def_width_default));
@@ -136,7 +135,7 @@ int_def_width_base(int_def_width);
 
 static const never_ptr<const instance_collection_base>
 int_def_width_ref =
-const_cast<built_in_datatype_def&>(int_def)
+const_cast<built_in_datatype_def&>(int_traits::built_in_definition)
 	.add_template_formal(int_def_width_base);
 
 #if 0
@@ -167,7 +166,7 @@ bool_type_ptr(new data_type_reference(
 #else
 const bool_traits::type_ref_ptr_type
 bool_traits::built_in_type_ptr(new data_type_reference(
-	never_ptr<const built_in_datatype_def>(&bool_def)));
+	never_ptr<const built_in_datatype_def>(&built_in_definition)));
 #endif
 
 #if 0
@@ -183,7 +182,7 @@ int32_type_ptr(new data_type_reference(
 // be careful once type references are memory-pooled!
 // the following function call calls a bunch of allocators (new)
 const count_ptr<const data_type_reference>
-int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
+int_traits::int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 #endif
 
 //=============================================================================

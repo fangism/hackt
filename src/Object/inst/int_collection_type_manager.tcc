@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.1.2.1 2005/07/10 19:37:27 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.1.2.2 2005/07/10 21:11:23 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -133,7 +133,8 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_int_width(
 		t(tp->make_canonical_type_reference()
 			.template is_a<const data_type_reference>());
 	INVARIANT(t->get_base_datatype_def()
-		->resolve_canonical_datatype_definition() == &int_def);
+		->resolve_canonical_datatype_definition() ==
+			&int_traits::built_in_definition);
 
 	const count_ptr<const param_expr_list>
 		params(t->get_template_params().get_strict_args());
