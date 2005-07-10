@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_chan.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.14.4.6 2005/07/09 23:13:17 fang Exp $
+	$Id: art_object_instance_chan.cc,v 1.14.4.7 2005/07/10 19:37:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CHAN_CC__
@@ -28,6 +28,7 @@
 #include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/general_collection_type_manager.tcc"
 
 namespace util {
 
@@ -55,6 +56,7 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+#if 0
 template <>
 struct collection_type_manager<channel_tag> {
 	typedef class_traits<channel_tag>::instance_collection_generic_type
@@ -166,6 +168,7 @@ struct collection_type_manager<channel_tag> {
 	}
 
 };
+#endif
 
 //=============================================================================
 // class channel_instance method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_int_traits.h"
 	Traits and policies for data type integers.  
-	$Id: art_object_int_traits.h,v 1.1.2.2 2005/07/08 18:15:31 fang Exp $
+	$Id: art_object_int_traits.h,v 1.1.2.3 2005/07/10 19:37:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INT_TRAITS_H__
@@ -11,6 +11,7 @@
 
 namespace ART {
 namespace entity {
+template <class> class int_collection_type_manager;
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<int_tag> {
@@ -29,6 +30,8 @@ struct class_traits<int_tag> {
 
 	typedef	int_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	typedef	int_collection_type_manager<tag_type>
+					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;

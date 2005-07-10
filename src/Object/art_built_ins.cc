@@ -2,7 +2,7 @@
 	\file "Object/art_built_ins.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.24.2.2 2005/07/05 07:59:32 fang Exp $
+ 	$Id: art_built_ins.cc,v 1.24.2.3 2005/07/10 19:37:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_BUILT_INS_CC__
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_value_collection.h"
 #include "Object/art_object_pint_traits.h"
 #include "Object/art_object_pbool_traits.h"
+#include "Object/art_object_bool_traits.h"
 
 #if DEBUG_ART_BUILT_INS
 	#define	ENABLE_STACKTRACE			1
@@ -159,9 +160,15 @@ bool_type = data_type_reference(
 	never_ptr<const built_in_datatype_def>(&bool_def));
 #endif
 
+#if 0
 const count_ptr<const data_type_reference>
 bool_type_ptr(new data_type_reference(
 	never_ptr<const built_in_datatype_def>(&bool_def)));
+#else
+const bool_traits::type_ref_ptr_type
+bool_traits::built_in_type_ptr(new data_type_reference(
+	never_ptr<const built_in_datatype_def>(&bool_def)));
+#endif
 
 #if 0
 // is an excl_ptr...

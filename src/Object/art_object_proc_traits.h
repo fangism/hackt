@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_proc_traits.h"
 	Traits and policies for processes.  
-	$Id: art_object_proc_traits.h,v 1.1.2.2 2005/07/08 18:15:31 fang Exp $
+	$Id: art_object_proc_traits.h,v 1.1.2.3 2005/07/10 19:37:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PROC_TRAITS_H__
@@ -11,7 +11,8 @@
 
 namespace ART {
 namespace entity {
-
+template <class> class general_collection_type_manager;
+//-----------------------------------------------------------------------------
 /**
 	Class traits specialization for processes.  
  */
@@ -34,6 +35,8 @@ struct class_traits<process_tag> {
 
 	typedef	process_instance_collection	instance_collection_generic_type;
 	typedef	physical_instance_collection	instance_collection_parent_type;
+	typedef	general_collection_type_manager<tag_type>
+					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;

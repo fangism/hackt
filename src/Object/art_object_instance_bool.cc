@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.6 2005/07/09 23:13:16 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.7 2005/07/10 19:37:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -31,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_type_hash.h"
 #include "Object/art_built_ins.h"
 #include "Object/art_object_nonmeta_value_reference.h"
+#include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/art_object_instance_collection.tcc"
 
 // experimental: suppressing automatic template instantiation
@@ -75,6 +76,7 @@ namespace entity {
 //=============================================================================
 // struct type_dumper specialization
 
+#if 0
 template <>
 struct collection_type_manager<bool_tag> {
 	typedef	class_traits<bool_tag>::instance_collection_generic_type
@@ -157,6 +159,7 @@ struct collection_type_manager<bool_tag> {
 		// no-op
 	}
 };	// end struct collection_type_committer
+#endif
 
 //=============================================================================
 // class bool_instance method definitions

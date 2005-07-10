@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.9.4.2 2005/07/08 18:15:26 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.9.4.3 2005/07/10 19:37:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
@@ -27,6 +27,10 @@
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/art_object_classification_details.h"
+#include "Object/inst/general_collection_type_manager.h"
+#include "Object/inst/null_collection_type_manager.h"
+#include "Object/inst/int_collection_type_manager.h"
+#include "Object/inst/parameterless_collection_type_manager.h"
 
 namespace util {
 using ART::entity::int_tag;
@@ -131,7 +135,7 @@ struct data_type_resolver<bool_tag> {
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
 		// easy, no parameters!
-		return bool_type_ptr;
+		return bool_traits::built_in_type_ptr;
 	}
 };	// end class data_type_resolver
 

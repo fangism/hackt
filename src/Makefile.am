@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.11 2005/07/09 23:13:12 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.12 2005/07/10 19:37:15 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -39,8 +39,6 @@ parser/yacc_or_bison.h:
 endif
 # Automatically generated sources can just check for YYBISON definition.
 
-
-
 ########################### main dependencies #################################
 
 bin_PROGRAMS = artc art++2obj artobjdump artobjunroll prsobjdemo
@@ -55,11 +53,11 @@ noinst_LTLIBRARIES = libart++.la libhacktparsers.la libbogus.la libfangutil.la
 # order in parallel builds.  
 
 artc_SOURCES = art_main.cc
-art_main.$(OBJEXT) art_main.lo: parser/art++-parse-prefix.h
+# art_main.$(OBJEXT) art_main.lo: parser/art++-parse-prefix.h
 artc_LDADD = libart++.la libfangutil.la
 
 art__2obj_SOURCES = art++2obj.cc
-art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
+# art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
 art__2obj_LDADD = libart++.la libfangutil.la
 
 artobjdump_SOURCES = artobjdump.cc
@@ -81,7 +79,8 @@ BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
 	parser/art++-parse.output.h
 
 # phony program to cause _build directories to be generated on distcheck
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
+	Object/inst/dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
@@ -93,6 +92,9 @@ util/numeric/dummy.cc:
 	$(TOUCH) $@
 
 util/obsolete/dummy.cc:
+	$(TOUCH) $@
+
+Object/inst/dummy.cc:
 	$(TOUCH) $@
 
 # libbogus.la is not actually used, hence the name.
@@ -198,6 +200,10 @@ OBJECT_TCC_FILES = \
 	Object/art_object_assign.tcc \
 	Object/art_object_connect.tcc \
 	Object/art_object_const_collection.tcc \
+	Object/inst/general_collection_type_manager.tcc \
+	Object/inst/null_collection_type_manager.tcc \
+	Object/inst/int_collection_type_manager.tcc \
+	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/art_object_instance_collection.tcc \
 	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_stmt_param.tcc \
@@ -278,6 +284,10 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_expr_const.h \
 	Object/art_object_expr_param_ref.h \
 	Object/art_object_index.h \
+	Object/inst/general_collection_type_manager.h \
+	Object/inst/null_collection_type_manager.h \
+	Object/inst/int_collection_type_manager.h \
+	Object/inst/parameterless_collection_type_manager.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_alias.h \
 	Object/art_object_instance_alias_empty.h \
@@ -454,6 +464,10 @@ libart___la_SOURCES = \
 	main/main_funcs.cc \
 	main/main_funcs.h
 
+# any other files that depend on automatically generated headers
+# should have explicit dependencies.  
+main/main_funcs.$(OBJEXT) main/main_funcs.lo: parser/art++-parse-prefix.h
+
 # build up main library from pieces
 # Here, libart++ will include all of libhacktparsers
 libart___la_LIBADD = libhacktparsers.la
@@ -565,14 +579,11 @@ AM_CPPFLAGS = -I$(srcdir)
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-# some of these flags are deadly...
 GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
 	-Wcast-qual -Wcast-align -Wconversion -Werror
-# -Wshadow
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 	-Wbad-function-cast -Wnested-externs
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
-# -Wold-style-cast	# kills bison/yacc parser code... consider separate lib
 # -Wsign-promo
 DIALECT_FLAGS = -ansi -pedantic-errors
 # -pedantic		# kills some pointer class conversions, fix later...
@@ -665,25 +676,6 @@ util/using_ostream.hchk:
 	@$(TOUCH) $@
 
 ../config.hchk:
-	@$(TOUCH) $@
-
-# The following exceptions are temporary due to deprecation of headers. 
-Object/art_object_expr_types.hchk:
-	@$(TOUCH) $@
-
-Object/art_object_data_expr_base.hchk:
-	@$(TOUCH) $@
-
-Object/art_object_data_expr.hchk:
-	@$(TOUCH) $@
-
-Object/art_object_expr_base.hchk:
-	@$(TOUCH) $@
-
-Object/art_object_expr_const.hchk:
-	@$(TOUCH) $@
-
-Object/art_object_expr.hchk:
 	@$(TOUCH) $@
 
 EXTRA_DIST = \

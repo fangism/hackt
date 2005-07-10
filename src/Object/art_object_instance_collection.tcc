@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.7 2005/07/09 23:13:17 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8 2005/07/10 19:37:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -554,7 +554,7 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
-		parent_type(o, n, d), type_parameter() {
+		parent_type(o, n, d), collection_type_manager_parent_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -570,7 +570,7 @@ INSTANCE_COLLECTION_CLASS::~instance_collection() {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	typename collection_type_manager<Tag>::dumper dump_it(o);
+	typename collection_type_manager_parent_type::dumper dump_it(o);
 	return dump_it(*this);
 }
 
@@ -578,14 +578,14 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
-	return collection_type_manager<Tag>::get_type(*this);
+	return collection_type_manager_parent_type::get_type(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bool
 INSTANCE_COLLECTION_CLASS::must_match_type(const this_type& c) const {
-	return collection_type_manager<Tag>::must_match_type(*this, c);
+	return collection_type_manager_parent_type::must_match_type(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -594,14 +594,14 @@ void
 INSTANCE_COLLECTION_CLASS::establish_collection_type(
 		const type_ref_ptr_type& t) {
 	NEVER_NULL(t);
-	collection_type_manager<Tag>::commit_type_first_time(*this, t);
+	collection_type_manager_parent_type::commit_type_first_time(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bool
 INSTANCE_COLLECTION_CLASS::has_relaxed_type(void) const {
-	return collection_type_manager<Tag>::is_relaxed_type(*this);
+	return collection_type_manager_parent_type::is_relaxed_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -611,12 +611,13 @@ INSTANCE_COLLECTION_CLASS::has_relaxed_type(void) const {
 		must already be resolved to a const_param_expr_list.  
 	\return false on success, true on error.  
 	\post the integer width is fixed for the rest of the program.  
+	TODO: rename this!, doesn't commit anymore, just checks (const)
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bad_bool
 INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
 	// functor, specialized for each class
-	return collection_type_manager<Tag>::commit_type(*this, t);
+	return collection_type_manager_parent_type::commit_type(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -703,7 +704,7 @@ INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
-	collection_type_manager<Tag>::collect(m, *this);
+	collection_type_manager_parent_type::collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -713,7 +714,7 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	parent_type::write_object_base(m, o);
 	// specialization functor parameter writer
-	collection_type_manager<Tag>::write(m, o, *this);
+	collection_type_manager_parent_type::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -723,7 +724,7 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	parent_type::load_object_base(m, i);
 	// specialization functor parameter loader
-	collection_type_manager<Tag>::load(m, i, *this);
+	collection_type_manager_parent_type::load_object_base(m, i);
 }
 
 //=============================================================================

@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-27:
+	  New directory Object/inst for gradual migration of instance-related
+		classes to find a new home.  
+	  Replaced collection_type_manager classes (specialized in
+		various Object/art_object_instance*.cc) with 
+		collection_type_manager parent class templates in Object/inst:
+		{general,int,null,parameterless}_collection_type_manager.{h,tcc}
+	  Moved bool_type_ptr into bool_traits (class_traits<bool_tag>)
+		policy class as a static const member, but is still
+		initialized in Object/art_built_ins.cc.
+		(Consider moving definition too.)
+	  Minor Makefile.am clean-up.  
+	  TODO: connect sub-instances to (parent) super-instances, 
+		i.e. recursive instantiation, perhaps in instace_alias_info.  
+
+
 2005-07-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-26:

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_int.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.21.2.6 2005/07/09 23:13:18 fang Exp $
+	$Id: art_object_instance_int.cc,v 1.21.2.7 2005/07/10 19:37:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
@@ -40,7 +40,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
-
+#include "Object/inst/int_collection_type_manager.tcc"
 
 //=============================================================================
 // module-local specializations
@@ -71,6 +71,7 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+#if 0
 // functor specializations
 template <>
 struct collection_type_manager<int_tag> {
@@ -210,44 +211,10 @@ public:
 	commit_type(const instance_collection_generic_type& c,
 		const type_ref_ptr_type& tp) {
 		// resolve type def?
-#if 0
-		const type_ref_ptr_type
-			t(tp->make_canonical_type_reference()
-				.is_a<const data_type_reference>());
-		INVARIANT(t->get_base_datatype_def()
-			->resolve_canonical_datatype_definition() == &int_def);
-
-		const count_ptr<const param_expr_list>
-			params(t->get_template_params().get_strict_args());
-		NEVER_NULL(params);
-		// extract first and only parameter, the integer width
-		const count_ptr<const const_param_expr_list>
-			cparams(params.is_a<const const_param_expr_list>());
-
-		NEVER_NULL(cparams);
-		INVARIANT(cparams->size() == 1); 
-		const count_ptr<const const_param>&
-			param1(cparams->front());
-		NEVER_NULL(param1);
-		const count_ptr<const pint_const>
-			pwidth(param1.is_a<const pint_const>());
-		NEVER_NULL(pwidth);
-		const pint_value_type
-			new_width = pwidth->static_constant_value();
-		INVARIANT(new_width);
-		if (c.is_partially_unrolled()) {
-			INVARIANT(c.type_parameter);
-			return bad_bool(new_width != c.type_parameter);
-		} else { 
-			c.type_parameter = new_width;
-			return bad_bool(false);
-		}
-#else
 		const pint_value_type
 			new_width = get_int_width(tp);
 		INVARIANT(c.type_parameter);
 		return bad_bool(new_width != c.type_parameter);
-#endif
 	}
 
 	static
@@ -260,6 +227,7 @@ public:
 
 
 };      // end struct collection_type_manager
+#endif
 
 //=============================================================================
 // class int_instance method definitions

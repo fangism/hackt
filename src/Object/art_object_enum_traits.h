@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_enum_traits.h"
 	Traits and policies for enum data types.  
-	$Id: art_object_enum_traits.h,v 1.1.2.2 2005/07/08 18:15:25 fang Exp $
+	$Id: art_object_enum_traits.h,v 1.1.2.3 2005/07/10 19:37:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ENUM_TRAITS_H__
@@ -11,6 +11,7 @@
 
 namespace ART {
 namespace entity {
+template <class> class parameterless_collection_type_manager;
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<enum_tag> {
@@ -31,6 +32,8 @@ struct class_traits<enum_tag> {
 
 	typedef	enum_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	typedef	parameterless_collection_type_manager<tag_type>
+					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;

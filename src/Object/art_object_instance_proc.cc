@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.14.4.7 2005/07/09 23:13:19 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.14.4.8 2005/07/10 19:37:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -31,6 +31,7 @@
 #include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/general_collection_type_manager.tcc"
 
 
 namespace util {
@@ -61,6 +62,7 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+#if 0
 template <>
 struct collection_type_manager<process_tag> {
 	typedef class_traits<process_tag>::instance_collection_generic_type
@@ -168,6 +170,7 @@ struct collection_type_manager<process_tag> {
 		c.type_parameter = t;
 	}
 };	// end struct collection_type_manager
+#endif
 
 //=============================================================================
 // class proc_instance method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_chan_traits.h"
 	Traits and policies for channels.  
-	$Id: art_object_chan_traits.h,v 1.1.2.2 2005/07/08 18:15:24 fang Exp $
+	$Id: art_object_chan_traits.h,v 1.1.2.3 2005/07/10 19:37:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHAN_TRAITS_H__
@@ -11,6 +11,7 @@
 
 namespace ART {
 namespace entity {
+template <class> class general_collection_type_manager;
 //-----------------------------------------------------------------------------
 /**
 	NOTE: recently split off channel type references into 
@@ -43,6 +44,8 @@ struct class_traits<channel_tag> {
 
 	typedef	channel_instance_collection	instance_collection_generic_type;
 	typedef	physical_instance_collection	instance_collection_parent_type;
+	typedef	general_collection_type_manager<tag_type>
+					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;

@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.1.2.1 2005/07/05 07:59:52 fang Exp $
+ 	$Id: basic_param.cc,v 1.1.2.2 2005/07/10 19:37:26 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/art_built_ins.h"
+#include "Object/art_object_bool_traits.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_pint_traits.h"	// needed for assign
 #include "Object/art_object_pbool_traits.h"	// needed for assign
@@ -137,7 +138,7 @@ pbool_expr::~pbool_expr() {
  */
 count_ptr<const data_type_reference>
 pbool_expr::get_data_type_ref(void) const {
-	return bool_type_ptr;
+	return bool_traits::built_in_type_ptr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

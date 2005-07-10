@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.5 2005/07/09 23:13:17 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.6 2005/07/10 19:37:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -42,6 +42,7 @@ class const_range_list;
 class const_param_expr_list;
 
 //=============================================================================
+#if 0
 /**
 	This is a functor for specializing the formatting of printed types.  
 	We provide a default implementation.  
@@ -101,6 +102,7 @@ struct collection_type_manager {
 		const type_ref_ptr_type&);
 
 };	// end struct type_manager
+#endif
 
 //-----------------------------------------------------------------------------
 //=============================================================================
@@ -116,8 +118,11 @@ instance_collection<Tag>
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
-	public class_traits<Tag>::instance_collection_parent_type {
-friend struct collection_type_manager<Tag>;
+	public class_traits<Tag>::instance_collection_parent_type, 
+	public class_traits<Tag>::collection_type_manager_parent_type {
+// friend struct collection_type_manager<Tag>;
+// temporary workaround until int's type is better integrated
+friend	class class_traits<Tag>::collection_type_manager_parent_type;
 private:
 	typedef	Tag					category_type;
 	typedef	typename class_traits<Tag>::instance_collection_parent_type
@@ -128,6 +133,8 @@ public:
 							type_ref_type;
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
+	typedef	typename class_traits<Tag>::collection_type_manager_parent_type
+					collection_type_manager_parent_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
@@ -150,23 +157,28 @@ protected:
 						member_inst_ref_ptr_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+#if 0
 private:
 	/**
 		General parameter object for type checking.  
 	 */
 	instance_collection_parameter_type		type_parameter;
+#endif
 protected:
 	explicit
 	instance_collection(const size_t d) :
-		parent_type(d), type_parameter() { }
+		parent_type(d), collection_type_manager_parent_type() { }
 public:
 	instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
 virtual	~instance_collection();
 
+#if 0
+	// called by collection_type_manager_parent_type::dumper
 	const instance_collection_parameter_type&
-	get_type_parameter(void) const { return type_parameter; }
+	get_type_parameter(void) const;
+#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;

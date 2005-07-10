@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.14.4.3 2005/07/05 07:59:40 fang Exp $
+	$Id: art_object_fwd.h,v 1.14.4.4 2005/07/10 19:37:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -16,6 +16,13 @@ namespace ART {
 namespace entity {
 
 // TODO: organize into groups by where full declarations are found
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	typedef	class_traits<enum_tag>		enum_traits;
+	typedef	class_traits<process_tag>	process_traits;
+	typedef	class_traits<channel_tag>	channel_traits;
+	typedef	class_traits<pbool_tag>		pbool_traits;
+	typedef	class_traits<pint_tag>		pint_traits;
 
 	class module;
 	class object;

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_enum.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_enum.cc,v 1.16.2.5 2005/07/09 23:13:18 fang Exp $
+	$Id: art_object_instance_enum.cc,v 1.16.2.6 2005/07/10 19:37:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_CC__
@@ -29,6 +29,7 @@
 #include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/parameterless_collection_type_manager.tcc"
 
 namespace util {
 
@@ -56,6 +57,7 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+#if 0
 template <>
 struct collection_type_manager<enum_tag> {
 	typedef class_traits<enum_tag>::instance_collection_generic_type
@@ -170,6 +172,7 @@ struct collection_type_manager<enum_tag> {
 	}
 
 };	// end struct collection_type_manager
+#endif
 
 //=============================================================================
 // class enum_instance method definitions

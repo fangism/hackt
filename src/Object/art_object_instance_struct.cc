@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.16.2.6 2005/07/09 23:13:19 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.16.2.7 2005/07/10 19:37:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -28,6 +28,7 @@
 #include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/general_collection_type_manager.tcc"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_instance_collection,
@@ -55,6 +56,7 @@ namespace ART {
 namespace entity {
 
 //=============================================================================
+#if 0
 template <>
 struct collection_type_manager<datastruct_tag> {
 	typedef class_traits<datastruct_tag>::instance_collection_generic_type
@@ -174,6 +176,7 @@ struct collection_type_manager<datastruct_tag> {
 	}
 
 };	// end struct collection_type_manager
+#endif
 
 //=============================================================================
 // class struct_instance method definitions

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.1.2.2 2005/07/06 04:44:41 fang Exp $
+	$Id: data_expr.cc,v 1.1.2.3 2005/07/10 19:37:26 fang Exp $
  */
 
 #include <iostream>
@@ -19,6 +19,7 @@
 #include "Object/art_object_nonmeta_value_reference.tcc"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_built_ins.h"
+#include "Object/art_object_bool_traits.h"
 
 #include "util/reserve.h"
 #include "util/persistent_object_manager.tcc"
@@ -337,7 +338,7 @@ int_relational_expr::get_data_type_ref(void) const {
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
 	if (lt->may_be_connectibly_type_equivalent(*rt)) {
-		return bool_type_ptr;
+		return bool_traits::built_in_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
 	} else {
 		cerr << "Operand types mismatch in int_relational_expr, got:"
@@ -497,7 +498,7 @@ bool_logical_expr::get_data_type_ref(void) const {
 	// so it's possible to defer, don't just assume they are boolean.
 	// this call currently uses generic check, which is ok.
 	if (lt->may_be_connectibly_type_equivalent(*rt))
-		return bool_type_ptr;
+		return bool_traits::built_in_type_ptr;
 	// idea: if one type is complete and resolvable, then prefer it.
 	else	return return_type(NULL);
 }

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_bool_traits.h"
 	Traits and policies for boolean data types.  
-	$Id: art_object_bool_traits.h,v 1.1.2.2 2005/07/08 18:15:24 fang Exp $
+	$Id: art_object_bool_traits.h,v 1.1.2.3 2005/07/10 19:37:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
@@ -11,6 +11,7 @@
 
 namespace ART {
 namespace entity {
+template <class> class null_collection_type_manager;
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<bool_tag> {
@@ -29,6 +30,8 @@ struct class_traits<bool_tag> {
 
 	typedef	bool_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+	typedef	null_collection_type_manager<tag_type>
+					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;
@@ -60,6 +63,13 @@ struct class_traits<bool_tag> {
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+
+	/**
+		Built-in type pointer.  
+		This is defined and initialized in
+		"Object/art_built_in.cc"
+	 */
+	static const type_ref_ptr_type		built_in_type_ptr;
 };	// end struct class_traits<bool_tag>
 
 //=============================================================================

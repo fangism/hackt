@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.12 2005/07/09 05:52:29 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.13 2005/07/10 19:37:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -40,6 +40,10 @@
 #include "Object/art_object_inst_stmt_data.h"
 #include "Object/art_object_inst_stmt_chan.h"
 #include "Object/art_object_inst_stmt_proc.h"
+#include "Object/inst/general_collection_type_manager.h"
+#include "Object/inst/null_collection_type_manager.h"
+#include "Object/inst/parameterless_collection_type_manager.h"
+#include "Object/inst/int_collection_type_manager.h"
 
 #include "util/sstream.h"
 #include "util/indent.h"
@@ -1262,10 +1266,10 @@ param_type_reference::make_instantiation_statement_private(
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
 	typedef	excl_ptr<instantiation_statement_base>	return_type;
-	static const class_traits<pbool_tag>::type_ref_ptr_type&
-		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
-	static const class_traits<pint_tag>::type_ref_ptr_type&
-		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
+	static const pbool_traits::type_ref_ptr_type&
+		pbool_type_ptr(pbool_traits::built_in_type_ptr);
+	static const pint_traits::type_ref_ptr_type&
+		pint_type_ptr(pint_traits::built_in_type_ptr);
 	INVARIANT(t == this);
 	INVARIANT(!a);
 	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr)) {
@@ -1296,10 +1300,10 @@ param_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
-	static const class_traits<pbool_tag>::type_ref_ptr_type&
-		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
-	static const class_traits<pint_tag>::type_ref_ptr_type&
-		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
+	static const pbool_traits::type_ref_ptr_type&
+		pbool_type_ptr(pbool_traits::built_in_type_ptr);
+	static const pint_traits::type_ref_ptr_type&
+		pint_type_ptr(pint_traits::built_in_type_ptr);
 	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pbool_instance_collection::make_array(*s, id, d));
@@ -1321,10 +1325,10 @@ param_type_reference::make_instance_collection(
  */
 count_ptr<const fundamental_type_reference>
 param_type_reference::make_canonical_type_reference(void) const {
-	static const class_traits<pbool_tag>::type_ref_ptr_type&
-		pbool_type_ptr(class_traits<pbool_tag>::built_in_type_ptr);
-	static const class_traits<pint_tag>::type_ref_ptr_type&
-		pint_type_ptr(class_traits<pint_tag>::built_in_type_ptr);
+	static const pbool_traits::type_ref_ptr_type&
+		pbool_type_ptr(pbool_traits::built_in_type_ptr);
+	static const pint_traits::type_ref_ptr_type&
+		pint_type_ptr(pint_traits::built_in_type_ptr);
 	typedef	count_ptr<const fundamental_type_reference>	return_type;
 	INVARIANT(!template_args);
 	// don't return copy-construction, use built-in type refs
