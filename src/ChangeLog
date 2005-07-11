@@ -2,6 +2,14 @@
 
 2005-07-11	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-03:
+	  Instance aliases with substructure now visit, write, and load (empty)
+		subinstance list.  This results in a change in object
+		binary sizes for recursive instances.  
+		Unroll tests updated accordingly.  
+	  TODO: fix KNOWN BUG from test case test/parser/connect/097.in.
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-02:
 	  Added subinstance classes to Object/inst.  
 	  Every instance_collection(_base) now has a back-pointer to 

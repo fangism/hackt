@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17.4.4.2.2 2005/07/11 20:19:22 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.4.2.3 2005/07/11 21:40:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -236,6 +236,9 @@ public:
 
 	bool
 	is_port_formal(void) const;
+
+	bool
+	is_local_to_definition(void) const;
 
 	bool
 	template_formal_equivalent(

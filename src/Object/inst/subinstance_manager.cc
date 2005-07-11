@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.1.2.1 2005/07/11 20:19:24 fang Exp $
+	$Id: subinstance_manager.cc,v 1.1.2.2 2005/07/11 21:40:39 fang Exp $
  */
 
 #include "Object/inst/subinstance_manager.h"
@@ -35,6 +35,7 @@ subinstance_manager::relink_super_instance_alias(
 	iterator i(subinstance_array.begin());
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
 		(*i)->relink_super_instance(p);
 	}
 }

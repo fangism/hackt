@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.7.2.1 2005/07/11 20:19:21 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.7.2.2 2005/07/11 21:40:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -336,6 +336,16 @@ instance_collection_base::is_port_formal(void) const {
 	if (def)
 		return def->lookup_port_formal(key);
 	else return false;		// owner is not a definition
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Whether or not this instance is a reference to a collection
+	local to a definition, else is a top-level (global).
+ */
+bool
+instance_collection_base::is_local_to_definition(void) const {
+	return owner.is_a<const definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

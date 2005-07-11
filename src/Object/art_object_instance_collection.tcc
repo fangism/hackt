@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.1 2005/07/11 20:19:23 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.2 2005/07/11 21:40:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -266,6 +266,7 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 	if (this->container)
 		this->container->collect_transient_info(m);
 	actuals_parent_type::collect_transient_info_base(m);
+	substructure_parent_type::collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -308,6 +309,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	m.write_pointer(o, this->instance);
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
+	substructure_parent_type::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -319,6 +321,7 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 	m.read_pointer(i, this->instance);
 	m.read_pointer(i, this->container);
 	actuals_parent_type::load_object_base(m, i);
+	substructure_parent_type::load_object_base(m, i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

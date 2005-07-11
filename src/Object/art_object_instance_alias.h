@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.5.2.2 2005/07/11 20:19:22 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5.2.3 2005/07/11 21:40:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -54,6 +54,8 @@ class instance_alias_info :
 public:
 	typedef	typename class_traits<Tag>::instance_alias_relaxed_actuals_type
 						actuals_parent_type;
+	typedef	substructure_alias_base<class_traits<Tag>::has_substructure>
+						substructure_parent_type;
 	typedef	typename class_traits<Tag>::instance_type
 						instance_type;
 	/**
