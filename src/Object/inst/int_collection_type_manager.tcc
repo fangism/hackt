@@ -1,16 +1,20 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.1.2.2 2005/07/10 21:11:23 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.1.2.2.2.1 2005/07/11 06:55:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 #define	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 
-#include "Object/inst/int_collection_type_manager.h"
-#include "Object/art_object_type_ref.h"
-#include "Object/art_object_inst_stmt_data.h"
 #include <iostream>
+#include "Object/art_object_fwd.h"
+#include "Object/inst/int_collection_type_manager.h"
+#include "Object/traits/int_traits.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_inst_stmt_data.h"
+#include "Object/expr/pint_const.h"
 #include "util/persistent_object_manager.h"
 
 namespace ART {

@@ -1,0 +1,10 @@
+// "092.in" should pass connection, both references are relaxed. 
+// copy-modified from "088.in"
+
+template <pint A><pint B>
+defproc foo();
+
+foo<1> bar, ick, poo;
+
+bar = ick;
+

@@ -1,0 +1,10 @@
+// "094.in" should pass connection, both reference is strict and matched
+// copy-modified from "093.in"
+
+template <pint A><pint B>
+defproc foo();
+
+foo<1> bar<1>, ick<1>, poo<2>;
+
+bar = ick;	// matching relaxd actuals
+

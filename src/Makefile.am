@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.13.2.1 2005/07/11 03:26:38 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.13.2.2 2005/07/11 06:55:19 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -774,9 +774,9 @@ clean-header-tests:
 # this should call clean-header-tests to guarantee proper regeneration...
 clean-header-deps:
 	@$(ECHO) "Resetting .deps/*chkd in all sub-directories..."
-	@for f in $(HEADER_TCC_TESTS); do \
+	@for f in $(HEADER_TCC_DEPBASES); do \
 		$(ECHO) "# reset" > \
-			`$(ECHO) $$f | $(SED) 's|[^/]*$$|$(DEPDIR)/&chkd|'` ; \
+			`$(ECHO) $$f | $(SED) 's|[^/]*$$|$(DEPDIR)/&|'` ; \
 	done
 #	@$(ECHO) "WARNING: you'll have to make clean-header-tests to properly "\
 #		"regenerate the header-dependencies."

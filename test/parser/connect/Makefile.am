@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.7.2.2 2005/07/09 23:13:35 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.2.2.1 2005/07/11 06:55:56 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -27,7 +27,8 @@ ARTC_TEST_PASSES = \
 	062 063 064 065 067 069 \
 	078 \
 	083 084 085 086 087 088 089 \
-	091
+	091 092 093 094 095 096
+# 097, 098 pending (KNOWN BUG)
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -42,7 +43,7 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 	010 011 012 013 014 015 017 018 019 \
 	021 022 \
 	088 089 \
-	091
+	091 092 093 094 095 096
 
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
