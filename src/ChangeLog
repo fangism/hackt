@@ -1,5 +1,20 @@
 "ChangeLog"
 
+2005-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-02:
+	  Added subinstance classes to Object/inst.  
+	  Every instance_collection(_base) now has a back-pointer to 
+		parent super instance (not yet used).  It will be the 
+		super instances' responsiblity to restore the back-links
+		during persistent object restoration.  
+	  Added new static const bool field to class_traits:
+		has_substructure: used to determine whether or not
+		alias contains substructure information.  
+		instance_alias_info derives from a base with or without
+		substructure information.  
+
+
 2005-07-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-01:

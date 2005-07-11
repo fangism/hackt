@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.1.2.1 2005/07/11 03:27:12 fang Exp $
+	$Id: bool_traits.h,v 1.1.2.2 2005/07/11 20:19:25 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -24,6 +24,7 @@ struct class_traits<bool_tag> {
 						instance_alias_base_ptr_type;
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
+	static const bool		has_substructure = false;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

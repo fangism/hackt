@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17.4.4.2.1 2005/07/11 03:26:55 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.4.2.2 2005/07/11 20:19:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -15,8 +15,8 @@
 #include "util/boolean_types.h"
 #include "Object/art_object_base.h"
 #include "Object/art_object_util_types.h"
+#include "Object/inst/substructure_alias_fwd.h"
 #include "util/persistent.h"		// for persistent object interface
-	// includes <iosfwd>
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -73,10 +73,8 @@ public:
 						member_inst_ref_ptr_type;
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
-#if 0
-	typedef	never_ptr<const physical_instance_collection>
+	typedef	never_ptr<const substructure_alias>
 						super_instance_ptr_type;
-#endif
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -121,6 +119,26 @@ protected:
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
+
+	/**
+		Pointer to parent super instance.  
+		Added 2005-07-10.
+		If top-level instance item, then this is NULL.  
+		TODO: decide what to do about persistence.  
+		Does this only belong in physical_instance_collection?
+		No, EVERYTHING may have a super, even parameters.  
+
+		2005-07-11:
+		NOTE: this field is maintained persistently in a
+		less-than-usual fashion.  It is the responsibility of the
+		super instance (parent) alias to write and restore its
+		back-link (to itself) to its children.  
+		Thus, the persistent object manager will not touch
+		this field, however, it should be noted that
+		restoration will have to be well ordered between
+		parent and children.  
+	 */
+	super_instance_ptr_type		super_instance;
 protected:
 	/**
 		Private, dimensions-specific construct, intended for
@@ -129,7 +147,7 @@ protected:
 	explicit
 	instance_collection_base(const size_t d) :
 		object(), persistent(), owner(), key(), 
-		index_collection(), dimensions(d) { }
+		index_collection(), dimensions(d), super_instance() { }
 
 public:
 	// o should be reference, not pointer
@@ -140,6 +158,12 @@ virtual	~instance_collection_base();
 
 	size_t
 	get_dimensions(void) const { return dimensions; }
+
+	void
+	relink_super_instance(const substructure_alias& a) {
+		INVARIANT(!super_instance);
+		super_instance = super_instance_ptr_type(&a);
+	}
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.5.2.1 2005/07/11 03:26:55 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5.2.2 2005/07/11 20:19:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -15,7 +15,7 @@
 #include "util/ring_node.h"
 #include "util/persistent.h"
 #include "Object/expr/types.h"
-// #include "Object/inst/substructure_alias_base.h"
+#include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 
 namespace ART {
@@ -30,16 +30,6 @@ using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::multikey_set_element_derived;
 using util::persistent_object_manager;
-
-//=============================================================================
-// class datatype_instance_collection declared in "art_object_instance.h"
-
-// class instance;
-
-#if 0
-template <class, size_t>
-class instance_array;
-#endif
 
 //=============================================================================
 #define	INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE				\
@@ -57,6 +47,8 @@ instance_alias_info<Tag>
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 class instance_alias_info :
+		public substructure_alias_base<
+			class_traits<Tag>::has_substructure>, 
 		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 public:

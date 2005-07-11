@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.13.2.2 2005/07/11 06:55:19 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.13.2.3 2005/07/11 20:19:19 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -79,8 +79,7 @@ BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
 	parser/art++-parse.output.h
 
 # phony program to cause _build directories to be generated on distcheck
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
-	Object/inst/dummy.cc
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
@@ -92,9 +91,6 @@ util/numeric/dummy.cc:
 	$(TOUCH) $@
 
 util/obsolete/dummy.cc:
-	$(TOUCH) $@
-
-Object/inst/dummy.cc:
 	$(TOUCH) $@
 
 # libbogus.la is not actually used, hence the name.
@@ -150,6 +146,8 @@ OBJECT_CC_FILES = \
 	Object/traits/class_traits.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
+	Object/inst/substructure_alias_base.cc \
+	Object/inst/subinstance_manager.cc \
 	Object/art_object_instance_alias_actuals.cc \
 	Object/art_object_instance.cc \
 	Object/art_object_instance_param.cc \
@@ -281,6 +279,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/types.h \
 	Object/art_object_expr_param_ref.h \
 	Object/art_object_index.h \
+	Object/inst/substructure_alias_fwd.h \
 	Object/inst/general_collection_type_manager.h \
 	Object/inst/null_collection_type_manager.h \
 	Object/inst/int_collection_type_manager.h \

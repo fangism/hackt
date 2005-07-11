@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.7 2005/07/10 21:11:17 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.7.2.1 2005/07/11 20:19:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -101,7 +101,8 @@ instance_collection_base::instance_collection_base() :
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n, const size_t d) : 
 		object(), owner(owner_ptr_type(&o)),
-		key(n), index_collection(), dimensions(d) {
+		key(n), index_collection(), dimensions(d), 
+		super_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

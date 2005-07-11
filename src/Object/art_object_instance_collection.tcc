@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8 2005/07/10 19:37:22 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.1 2005/07/11 20:19:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -403,6 +403,8 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 #endif
 	instance_alias_base_type& n(next_container->load_reference(i));
 	this->merge(n);       // re-link
+	// this->unsafe_merge(n);       // re-link (undeclared!??)
+	// unsafe is OK because we've already checked linkage when it was made!
 #if STACKTRACE_PERSISTENTS
 	cerr << ", after = " << this->size() << endl;
 #endif
