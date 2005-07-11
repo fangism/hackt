@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17.4.4 2005/07/08 03:03:46 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.4.2.1 2005/07/11 03:26:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -32,6 +32,7 @@ class fundamental_type_reference;
 class const_range_list;
 class param_expr;
 class const_param_expr_list;
+class physical_instance_collection;
 USING_LIST
 using std::istream;
 using std::string;
@@ -72,6 +73,10 @@ public:
 						member_inst_ref_ptr_type;
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
+#if 0
+	typedef	never_ptr<const physical_instance_collection>
+						super_instance_ptr_type;
+#endif
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation

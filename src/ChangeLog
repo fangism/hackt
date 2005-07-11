@@ -2,6 +2,20 @@
 
 2005-07-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-01:
+	  Child branch for the purpose of developing subinstance and
+		substructure management.  
+	  This initial revision just moved and renamed some files for
+		reorganization, namely, all class_traits files, 
+		have been moved into the Object/traits directory. 
+		Object/art_built_ins.cc -> Object/traits/class_traits_types.cc.
+	  Makefile.am: enabled and modified the clean-header-deps target
+		to not remove, but just reset the auto-dependency files.  
+		Now it's usable for maintainence.  
+
+
+2005-07-10	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-48-connect-01-28:
 	  Obsoleted "Object/art_built_ins.h" everything moved into their
 		respective traits classes (class_traits<>).

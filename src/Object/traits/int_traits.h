@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_int_traits.h"
+	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
-	$Id: art_object_int_traits.h,v 1.1.2.4 2005/07/10 21:11:21 fang Exp $
+	This file used to be "Object/art_object_int_traits.h".
+	$Id: int_traits.h,v 1.1.2.1 2005/07/11 03:27:16 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INT_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_INT_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_INT_TRAITS_H__
+#define	__OBJECT_TRAITS_INT_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -87,5 +88,5 @@ struct class_traits<int_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INT_TRAITS_H__
+#endif	// __OBJECT_TRAITS_INT_TRAITS_H__
 

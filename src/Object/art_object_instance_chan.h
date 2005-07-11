@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_instance_chan.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.11.14.1 2005/06/25 21:07:23 fang Exp $
+	$Id: art_object_instance_chan.h,v 1.11.14.1.4.1 2005/07/11 03:26:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CHAN_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_CHAN_H__
 
 #include "Object/art_object_instance.h"
-#include "Object/art_object_chan_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_instance_alias.h"
 

@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_bool_traits.h"
+	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
-	$Id: art_object_bool_traits.h,v 1.1.2.4 2005/07/10 21:11:13 fang Exp $
+	This file used to be "Object/art_object_bool_traits.h".
+	$Id: bool_traits.h,v 1.1.2.1 2005/07/11 03:27:12 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__
+#define	__OBJECT_TRAITS_BOOL_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -80,5 +81,5 @@ struct class_traits<bool_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_BOOL_TRAITS_H__
+#endif	// __OBJECT_TRAITS_BOOL_TRAITS_H__
 

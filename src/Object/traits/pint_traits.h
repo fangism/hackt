@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_pint_traits.h"
+	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
-	$Id: art_object_pint_traits.h,v 1.1.2.2 2005/07/10 21:11:21 fang Exp $
+	This file used to be "Object/art_object_pint_traits.h".
+	$Id: pint_traits.h,v 1.1.2.1 2005/07/11 03:27:18 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_PINT_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_PINT_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_PINT_TRAITS_H__
+#define	__OBJECT_TRAITS_PINT_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -37,7 +38,7 @@ struct class_traits<pint_tag> {
 	typedef	pint_instantiation_statement
 					instantiation_statement_type;
 
-	// define this elsewhere, in "art_object_inst_stmt_chan.h"
+	// define this elsewhere, in "traits/inst_stmt_chan.h"
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
@@ -83,5 +84,5 @@ private:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_PINT_TRAITS_H__
+#endif	// __OBJECT_TRAITS_PINT_TRAITS_H__
 

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.16.2.8 2005/07/10 21:11:21 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.16.2.8.2.1 2005/07/11 03:27:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -22,7 +22,6 @@
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_nonmeta_value_reference.h"
-#include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"

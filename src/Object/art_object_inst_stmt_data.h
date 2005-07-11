@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.7 2005/07/09 05:52:27 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.7.2.1 2005/07/11 03:26:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
 
 #include <iostream>
-#include "Object/art_object_data_traits.h"
+#include "Object/traits/data_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance.h"
 #include "Object/expr/const_param_expr_list.h"

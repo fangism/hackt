@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_instance_proc.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.11.14.1 2005/06/25 21:07:25 fang Exp $
+	$Id: art_object_instance_proc.h,v 1.11.14.1.4.1 2005/07/11 03:27:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_PROC_H__
 
 #include "Object/art_object_instance.h"
-#include "Object/art_object_proc_traits.h"
+#include "Object/traits/proc_traits.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_instance_alias.h"
 

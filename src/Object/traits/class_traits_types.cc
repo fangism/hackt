@@ -1,14 +1,15 @@
 /**
-	\file "Object/art_built_ins.cc"
+	\file "Object/traits/class_traits_types.cc"
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
- 	$Id: art_built_ins.cc,v 1.24.2.4 2005/07/10 21:11:13 fang Exp $
+	This file used to be "Object/art_built_ins.cc".
+ 	$Id: class_traits_types.cc,v 1.1.2.1 2005/07/11 03:27:14 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_BUILT_INS_CC__
-#define	__OBJECT_ART_BUILT_INS_CC__
+#ifndef	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
+#define	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
 
-#define	DEBUG_ART_BUILT_INS			0
+#define	DEBUG_TRAITS_CLASS_TRAITS_TYPES			0
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -21,12 +22,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/expr/pint_const.h"
 #include "Object/art_object_value_collection.h"
-#include "Object/art_object_pint_traits.h"
-#include "Object/art_object_pbool_traits.h"
-#include "Object/art_object_bool_traits.h"
-#include "Object/art_object_int_traits.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/pbool_traits.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
 
-#if DEBUG_ART_BUILT_INS
+#if DEBUG_TRAITS_CLASS_TRAITS_TYPES
 	#define	ENABLE_STACKTRACE			1
 	#include "util/stacktrace.h"
 
@@ -189,9 +190,9 @@ int_traits::int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 }	// end namespace entity
 }	// end namespace ART
 
-#undef	DEBUG_ART_BUILT_INS
+#undef	DEBUG_TRAITS_CLASS_TRAITS_TYPES
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_BUILT_INS_CC__
+#endif	// __OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
 

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.5 2005/07/09 23:13:15 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5.2.1 2005/07/11 03:26:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -15,7 +15,8 @@
 #include "util/ring_node.h"
 #include "util/persistent.h"
 #include "Object/expr/types.h"
-#include "Object/art_object_classification_fwd.h"
+// #include "Object/inst/substructure_alias_base.h"
+#include "Object/traits/class_traits_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -35,8 +36,10 @@ using util::persistent_object_manager;
 
 // class instance;
 
+#if 0
 template <class, size_t>
 class instance_array;
+#endif
 
 //=============================================================================
 #define	INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE				\

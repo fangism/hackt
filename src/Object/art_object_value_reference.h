@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.4 2005/07/06 00:59:29 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.4.2.1 2005/07/11 03:27:09 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -13,7 +13,7 @@
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/art_object_index.h"
 #include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"

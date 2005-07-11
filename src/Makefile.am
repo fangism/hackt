@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.13 2005/07/10 21:11:10 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.13.2.1 2005/07/11 03:26:38 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -147,7 +147,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
-	Object/art_object_classification_details.cc \
+	Object/traits/class_traits.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
 	Object/art_object_instance_alias_actuals.cc \
@@ -179,7 +179,7 @@ OBJECT_CC_FILES = \
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
-	Object/art_built_ins.cc \
+	Object/traits/class_traits_types.cc \
 	Object/expr/basic_param.cc \
 	Object/expr/param_const_collection.cc \
 	Object/expr/meta_index_expr_list.cc \
@@ -221,18 +221,18 @@ OBJECT_TCC_FILES = \
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
-	Object/art_object_classification_fwd.h \
-	Object/art_object_classification_tags.h \
-	Object/art_object_chan_traits.h \
-	Object/art_object_data_traits.h \
-	Object/art_object_proc_traits.h \
-	Object/art_object_param_traits.h \
-	Object/art_object_pint_traits.h \
-	Object/art_object_pbool_traits.h \
-	Object/art_object_int_traits.h \
-	Object/art_object_bool_traits.h \
-	Object/art_object_enum_traits.h \
-	Object/art_object_struct_traits.h \
+	Object/traits/class_traits_fwd.h \
+	Object/traits/classification_tags.h \
+	Object/traits/chan_traits.h \
+	Object/traits/data_traits.h \
+	Object/traits/proc_traits.h \
+	Object/traits/param_traits.h \
+	Object/traits/pint_traits.h \
+	Object/traits/pbool_traits.h \
+	Object/traits/int_traits.h \
+	Object/traits/bool_traits.h \
+	Object/traits/enum_traits.h \
+	Object/traits/struct_traits.h \
 	Object/art_object_const_collection.h \
 	Object/art_object_definition_base.h \
 	Object/art_object_definition_chan.h \
@@ -772,10 +772,15 @@ clean-header-tests:
 # disabling this for now to prevent self-infliction of harm...
 # perhaps enable only if maintainer-mode is on...
 # this should call clean-header-tests to guarantee proper regeneration...
-#clean-header-deps:
+clean-header-deps:
+	@$(ECHO) "Resetting .deps/*chkd in all sub-directories..."
+	@for f in $(HEADER_TCC_TESTS); do \
+		$(ECHO) "# reset" > \
+			`$(ECHO) $$f | $(SED) 's|[^/]*$$|$(DEPDIR)/&chkd|'` ; \
+	done
 #	@$(ECHO) "WARNING: you'll have to make clean-header-tests to properly "\
 #		"regenerate the header-dependencies."
-#	@$(ECHO) "Removing .deps/*chkd in all sub-directories..."
+# don't bother deleting
 #	@for d in $(CLEANSUBDIRS); do \
 #		$(RM) $$d/$(DEPDIR)/*chkd ; \
 #	done

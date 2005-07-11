@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.6 2005/07/07 23:48:07 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.6.2.1 2005/07/11 03:26:48 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -38,8 +38,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/meta_range_list.h"
 #include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_pint_traits.h"
-#include "Object/art_object_pbool_traits.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/pbool_traits.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"

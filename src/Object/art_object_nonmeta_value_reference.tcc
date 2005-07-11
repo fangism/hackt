@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_value_reference.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_nonmeta_value_reference.tcc,v 1.3.2.1 2005/07/05 07:59:49 fang Exp $
+ 	$Id: art_object_nonmeta_value_reference.tcc,v 1.3.2.1.2.1 2005/07/11 03:27:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_TCC__
@@ -25,7 +25,7 @@
 #include <algorithm>
 
 #include "Object/art_object_nonmeta_value_reference.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 #include "Object/art_object_nonmeta_inst_ref_subtypes.h"
 #include "Object/art_object_type_ref.h"		// for data_type_reference
 #include "Object/art_object_instance_param.h"

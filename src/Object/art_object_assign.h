@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.20.4.2 2005/07/05 07:59:33 fang Exp $
+	$Id: art_object_assign.h,v 1.20.4.2.2.1 2005/07/11 03:26:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -10,8 +10,7 @@
 
 #include "util/boolean_types.h"
 #include "Object/art_object_instance_management_base.h"
-// #include "Object/art_object_expr_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 

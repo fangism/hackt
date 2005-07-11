@@ -1,268 +1,121 @@
 /**
-	\file "art_object_inst_ref.h"
+	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_inst_ref.h,v 1.15 2005/01/13 05:28:30 fang Exp $
+	TODO: rename file to simple_meta_instance_reference
+	$Id: art_object_inst_ref.h,v 1.22.8.1 2005/07/11 03:26:50 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_INST_REF_H__
-#define	__ART_OBJECT_INST_REF_H__
+#ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
+#define	__OBJECT_ART_OBJECT_INST_REF_H__
 
-#include "art_object_inst_ref_base.h"
-#include "art_object_instance_base.h"
-#include "memory/pointer_classes.h"
+#include "Object/art_object_inst_ref_base.h"
+#include "Object/art_object_instance_base.h"
+#include "Object/traits/class_traits_fwd.h"
+#include "util/memory/excl_ptr.h"
+#include "util/packed_array_fwd.h"
 
 namespace ART {
 namespace entity {
+class unroll_context;
 using std::ostream;
 using std::istream;
-using namespace util::memory;
+using util::memory::excl_ptr;
+using util::memory::never_ptr;
+using util::packed_array_generic;
 
 //=============================================================================
-// consider relocating to "art_object_inst_ref_data.h"
+#define	SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
+template <class Tag>
+
+#define	SIMPLE_META_INSTANCE_REFERENCE_CLASS				\
+simple_meta_instance_reference<Tag>
+
 /**
-	A reference to a simple instance of datatype.  
-	Consider sub-typing into user-defined and built-in, 
-	making this an abstract base.
+	Class template for physical instance references.
+	Needs to be virtual so that member_meta_instance_reference may safely
+	derive from this class.  
+	\param Collection the instance collection type.
+	\param Parent the type from which this is derived, 
+		probably simple_meta_instance_reference_base or descendant.  
+	TODO: this could be properly renamed simple_meta_instance_reference.
+	TODO: derive using multiple inheritance from now on:
+		always derive from simple_meta_instance_reference_base and the
+		type interface designated by class_traits.
  */
-class datatype_instance_reference : public simple_instance_reference {
-private:
-	typedef	simple_instance_reference		parent_type;
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+class simple_meta_instance_reference :
+	public simple_meta_instance_reference_base, 
+	public class_traits<Tag>::meta_instance_reference_parent_type {
+	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-//	excl_ptr<index_list>			array_indices;	// inherited
-
-protected:
-	datatype_instance_reference();
-
-	explicit
-	datatype_instance_reference(const instantiation_state& s);
-
-#if 0
-	// may be obsolete...
-	datatype_instance_reference(excl_ptr<index_list>& i, 
-		const instantiation_state& s);
-#endif
-
+	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+						parent_type;
 public:
-virtual	~datatype_instance_reference();
-
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-//	ostream& dump(ostream& o) const;
-
-virtual	never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-
-protected:
-	using parent_type::collect_transient_info_base;
-	using parent_type::write_object_base;
-	using parent_type::load_object_base;
-public:
-};	// end class datatype_instance_reference
-
-//-----------------------------------------------------------------------------
-/**
-	A reference to a simple instance of channel.  
- */
-class channel_instance_reference : public simple_instance_reference {
+	typedef	simple_meta_instance_reference_base	common_base_type;
+	/// the instance collection base type
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+					instance_collection_generic_type;
+	/// the type of alias element contained by instance collections
+	typedef	typename class_traits<Tag>::instance_alias_base_type
+						instance_alias_base_type;
+	/// the type of connections formed by the alias type
+	typedef	typename class_traits<Tag>::alias_connection_type
+						alias_connection_type;
+	/// type used to unroll collections of instance aliases
+	typedef	typename class_traits<Tag>::alias_collection_type
+						alias_collection_type;
+	/// pointer type for instance collections
+	typedef	never_ptr<const instance_collection_generic_type>
+						instance_collection_ptr_type;
 private:
-	typedef	simple_instance_reference		parent_type;
+	const instance_collection_ptr_type	inst_collection_ref;
 protected:
-//	excl_ptr<index_list>			array_indices;	// inherited
-	const never_ptr<const channel_instance_collection>
-							channel_inst_ref;
-
-protected:
-	channel_instance_reference();
+	simple_meta_instance_reference();
 public:
 	explicit
-	channel_instance_reference(
-		const never_ptr<const channel_instance_collection> ci);
+	simple_meta_instance_reference(const instance_collection_ptr_type);
 
-#if 0
-	channel_instance_reference(
-		const never_ptr<const channel_instance_collection> ci, 
-		excl_ptr<index_list>& i);
-#endif
+virtual	~simple_meta_instance_reference();
 
-virtual	~channel_instance_reference();
+	ostream&
+	what(ostream&) const;
 
-virtual	ostream&
-	what(ostream& o) const;
-
-//	ostream& dump(ostream& o) const;
+	using parent_type::dump;
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
-protected:
-	void
-	write_object_base(const persistent_object_manager& m, ostream&) const;
+	// overridden by member_meta_instance_reference
+virtual	bad_bool
+	unroll_references(unroll_context&, alias_collection_type&) const;
 
-	void
-	load_object_base(persistent_object_manager& m, istream&);
-
-public:
-	// need to be virtual? for member_instance_reference?
-	PERSISTENT_METHODS
-};	// end class channel_instance_reference
-
-//-----------------------------------------------------------------------------
-/**
-	A reference to a simple instance of process.  
- */
-class process_instance_reference : public simple_instance_reference {
 private:
-	typedef	simple_instance_reference		parent_type;
-protected:
-//	excl_ptr<index_list>			array_indices;	// inherited
-	const never_ptr<const process_instance_collection>
-							process_inst_ref;
-
-protected:
-	process_instance_reference();
-public:
-	explicit
-	process_instance_reference(
-		const never_ptr<const process_instance_collection> pi);
-
-#if 0
-	process_instance_reference(
-		const never_ptr<const process_instance_collection> pi, 
-		excl_ptr<index_list>& i);
-#endif
-
-virtual	~process_instance_reference();
-
-virtual	ostream&
-	what(ostream& o) const;
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
 
 protected:
 	void
-	write_object_base(const persistent_object_manager& m, ostream&) const;
+	collect_transient_info_base(persistent_object_manager& ) const;
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 public:
-	// need to be virtual? for member_instance_reference?
-	PERSISTENT_METHODS
-};	// end class process_instance_reference
+	FRIEND_PERSISTENT_TRAITS
+	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
+
+};	// end class meta_instance_reference
 
 //=============================================================================
-/**
-	Reference to a process instance member of something else.
-	Derive from some generic member_instance_reference?
- */
-class process_member_instance_reference :
-		public member_instance_reference_base, 
-		public process_instance_reference {
-private:
-	typedef	process_instance_reference		parent_type;
-	typedef	member_instance_reference_base		interface_type;
-protected:
-// inherited:
-//	excl_ptr<index_list>			array_indices;
-//	const never_ptr<const process_instance_collection>	process_inst_ref;
-//	const count_ptr<const simple_instance_reference>	base;
-private:
-	process_member_instance_reference();
-public:
-	process_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const process_instance_collection> m);
-
-	~process_member_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-// can also attach indices!
-
-public:
-	PERSISTENT_METHODS
-};	// end class process_member_instance_reference
-
-//=============================================================================
-/**
-	Reference to a datatype instance member of another struct.  
-	Potential problem to address: nested structs (easy, just fix)
-		Containership vs. inheritance.  
- */
-class datatype_member_instance_reference : 
-		public member_instance_reference_base, 
-		public datatype_instance_reference {
-private:
-	typedef	datatype_instance_reference		parent_type;
-	typedef	member_instance_reference_base		interface_type;
-protected:
-// inherited:
-//	excl_ptr<index_list>			array_indices;
-//	const count_ptr<const simple_instance_reference>	base;
-	const never_ptr<const datatype_instance_collection>	data_inst_ref;
-private:
-	datatype_member_instance_reference();
-public:
-	datatype_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const datatype_instance_collection> m);
-
-	~datatype_member_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-// can also attach indices!
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
-public:
-	PERSISTENT_METHODS
-
-};	// end class datatype_member_instance_reference
-
-//=============================================================================
-/**
-	Reference to a channel instance member of another struct.  
- */
-class channel_member_instance_reference : 
-		public member_instance_reference_base, 
-		public channel_instance_reference {
-private:
-	typedef	channel_instance_reference		parent_type;
-	typedef	member_instance_reference_base		interface_type;
-protected:
-// inherited:
-//	excl_ptr<index_list>			array_indices;
-//	const never_ptr<const channel_instance_collection>	channel_inst_ref;
-//	const count_ptr<const simple_instance_reference>	base;
-private:
-	channel_member_instance_reference();
-public:
-	channel_member_instance_reference(
-		const count_ptr<const simple_instance_reference>& b, 
-		const never_ptr<const channel_instance_collection> m);
-
-	~channel_member_instance_reference();
-
-	ostream&
-	what(ostream& o) const;
-// can also attach indices!
-
-public:
-	PERSISTENT_METHODS
-
-};	// end class channel_member_instance_reference
-
-//=============================================================================
-// classes pint_instance_reference and pbool_instance_reference
+// classes pint_meta_instance_reference and pbool_meta_instance_reference
 //	are in "art_object_expr_param_ref.*"
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_INST_REF_H__
+#endif	// __OBJECT_ART_OBJECT_INST_REF_H__
 

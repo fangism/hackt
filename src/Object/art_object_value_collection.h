@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6.4.4 2005/07/08 03:03:47 fang Exp $
+	$Id: art_object_value_collection.h,v 1.6.4.4.2.1 2005/07/11 03:27:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -12,7 +12,7 @@
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_index.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 
 #include "util/persistent_fwd.h"

@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.8 2005/07/09 05:52:27 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.8.2.1 2005/07/11 03:26:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
 
 #include <iostream>
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"

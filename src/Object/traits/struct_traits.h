@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_struct_traits.h"
+	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
-	$Id: art_object_struct_traits.h,v 1.1.2.3 2005/07/10 19:37:25 fang Exp $
+	This file used to be "Object/art_object_struct_traits.h".
+	$Id: struct_traits.h,v 1.1.2.1 2005/07/11 03:27:19 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_STRUCT_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_STRUCT_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_STRUCT_TRAITS_H__
+#define	__OBJECT_TRAITS_STRUCT_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -73,5 +74,5 @@ struct class_traits<datastruct_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_STRUCT_TRAITS_H__
+#endif	// __OBJECT_TRAITS_STRUCT_TRAITS_H__
 

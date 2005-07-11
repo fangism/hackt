@@ -2,14 +2,14 @@
 	\file "Object/art_object_instance_enum.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.11.14.1 2005/06/25 21:07:24 fang Exp $
+	$Id: art_object_instance_enum.h,v 1.11.14.1.4.1 2005/07/11 03:26:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_ENUM_H__
 
 #include "Object/art_object_instance.h"
-#include "Object/art_object_enum_traits.h"
+#include "Object/traits/enum_traits.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_instance_alias.h"
 

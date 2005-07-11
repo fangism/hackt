@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.6 2005/07/06 00:59:29 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.6.2.1 2005/07/11 03:27:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -37,7 +37,7 @@
 // this will override the definition in "art_object_base.h"
 
 #include "Object/art_object_value_reference.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_unroll_context.tcc"
 #include "Object/art_object_index.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.6 2005/07/10 19:37:22 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.6.2.1 2005/07/11 03:26:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include <set>
 
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "Object/art_object_index.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -41,70 +41,6 @@ class const_index_list;
 class const_range_list;
 class const_param_expr_list;
 
-//=============================================================================
-#if 0
-/**
-	This is a functor for specializing the formatting of printed types.  
-	We provide a default implementation.  
-	Specializations should follow the same pattern.  
-	(Why not use plain static functions?)
- */
-template <class Tag>
-struct collection_type_manager {
-	typedef	typename class_traits<Tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef	typename class_traits<Tag>::type_ref_ptr_type
-					type_ref_ptr_type;
-
-	/// was separate type-dumper functor
-	struct dumper {
-		ostream& os;
-		dumper(ostream& o) : os(o) { }
-
-		// intentionally undefined
-		ostream&
-		operator () (const instance_collection_generic_type&);
-	};	// end struct dumper
-
-	static
-	void
-	collect(persistent_object_manager&, 
-		const instance_collection_generic_type&);
-
-	static
-	void
-	write(const persistent_object_manager&, ostream&, 
-		const instance_collection_generic_type&);
-
-	static
-	void
-	load(const persistent_object_manager&, istream&, 
-		instance_collection_generic_type&);
-
-	static
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type&);
-
-	/**
-		NOTE: Was separate type-dumper functor.
-		\return true on error, false on success.
-	 */
-	static
-	bad_bool
-	commit_type(const instance_collection_generic_type&, 
-		const type_ref_ptr_type&);
-
-	static
-	void
-	commit_type_first_time(instance_collection_generic_type&, 
-		const type_ref_ptr_type&);
-
-};	// end struct type_manager
-#endif
-
-//-----------------------------------------------------------------------------
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
 template <class Tag>
@@ -157,13 +93,8 @@ protected:
 						member_inst_ref_ptr_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
-#if 0
-private:
-	/**
-		General parameter object for type checking.  
-	 */
-	instance_collection_parameter_type		type_parameter;
-#endif
+	// type parameter, if applicable is inherited from
+	// collection_type_manager_parent_type
 protected:
 	explicit
 	instance_collection(const size_t d) :
