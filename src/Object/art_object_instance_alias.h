@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.5.2.3 2005/07/11 21:40:37 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5.2.4 2005/07/12 23:30:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -26,6 +26,7 @@ using std::ostream;
 using std::istream;
 using std::string;
 using util::ring_node_derived;
+using util::ring_node_derived_iterator_default;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::multikey_set_element_derived;
@@ -71,6 +72,27 @@ public:
 						container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
+
+#if 1
+	// workaround for shortcoming of gcc: direct reference to
+	// the resolved type.  
+	// since ring_node_derived derives from the parameter type, 
+	// it is considered an incomplete type, and hence unusable.  
+	typedef	typename ring_node_derived_iterator_default<this_type>::type
+						iterator;
+	typedef	typename ring_node_derived_iterator_default<this_type>::const_type
+						const_iterator;
+#else
+	// this is what we really mean
+	// doesn't like this: thinks ring_node_derived<...> is incomplete.
+	// because this_type is still incomplete, BAH!
+	typedef	typename instance_alias_base_type::const_iterator
+						const_iterator;
+	typedef	typename instance_alias_base_type::iterator
+						iterator;
+#endif
+	typedef	typename actuals_parent_type::alias_actuals_type
+						relaxed_actuals_type;
 public:
 	/**
 		During finalization phase, this will be constructed, 
@@ -111,6 +133,14 @@ virtual	~instance_alias_info();
 	void
 	check(const container_type* p) const;
 
+// should be pure virtual (but can't)
+virtual	const_iterator
+	begin(void) const;
+
+// should be pure virtual (but can't)
+virtual	const_iterator
+	end(void) const;
+
 	/**
 		Instantiates officially by linking to parent collection.  
 		FYI: This is only called by instance_array<0> (scalar)
@@ -132,6 +162,9 @@ virtual	~instance_alias_info();
 	 */
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_and_update_actuals;
+
+	const relaxed_actuals_type&
+	find_relaxed_actuals(void) const;
 
 	bool
 	must_match_type(const this_type&) const;
@@ -250,6 +283,10 @@ private:
 public:
 	typedef	typename parent_type::key_type		key_type;
 	// or simple_type?
+	typedef	typename instance_alias_info<Tag>::const_iterator
+							const_iterator;
+	typedef	typename instance_alias_info<Tag>::iterator
+							iterator;
 public:
 	instance_alias() : parent_type() { }
 
@@ -271,6 +308,12 @@ public:
 		algorithms.  
 	 */
 	operator const key_type& () const { return this->key; }
+
+	const_iterator
+	begin(void) const;
+
+	const_iterator
+	end(void) const;
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -320,11 +363,21 @@ public:
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_array<0>::type
 							container_type;
+	typedef	typename instance_alias_info<Tag>::const_iterator
+							const_iterator;
+	typedef	typename instance_alias_info<Tag>::iterator
+							iterator;
 public:
 	~instance_alias();
 
 	void
 	dump_alias(ostream& o) const;
+
+	const_iterator
+	begin(void) const;
+
+	const_iterator
+	end(void) const;
 
 	void
 	write_next_connection(const persistent_object_manager& m, 

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.2 2005/07/11 21:40:38 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.3 2005/07/12 23:30:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -46,6 +46,7 @@
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_inst_ref.h"
+#include "Object/art_object_instance_alias_actuals.tcc"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
@@ -237,6 +238,13 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+const typename INSTANCE_ALIAS_INFO_CLASS::relaxed_actuals_type&
+INSTANCE_ALIAS_INFO_CLASS::find_relaxed_actuals(void) const {
+	return actuals_parent_type::find_relaxed_actuals(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Compares collection types of the two instances and then
 	(TODO) compares their relaxed actuals (if applicable).
@@ -273,6 +281,20 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
+INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
+INSTANCE_ALIAS_INFO_CLASS::end(void) const {
 	DIE;
 }
 
@@ -369,6 +391,20 @@ INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::const_iterator
+INSTANCE_ALIAS_CLASS::begin(void) const {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::const_iterator
+INSTANCE_ALIAS_CLASS::end(void) const {
+	return instance_alias_base_type::end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
@@ -459,6 +495,20 @@ void
 KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
 	o << this->container->get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) const {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::end(void) const {
+	return instance_alias_base_type::end();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

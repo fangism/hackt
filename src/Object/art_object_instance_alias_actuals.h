@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_alias_actuals.h"
 	Implementation of alias info that has actual parameters.  
-	$Id: art_object_instance_alias_actuals.h,v 1.1.2.3 2005/07/09 23:13:16 fang Exp $
+	$Id: art_object_instance_alias_actuals.h,v 1.1.2.3.2.1 2005/07/12 23:30:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
@@ -18,6 +18,7 @@
 namespace ART {
 namespace entity {
 class const_param_expr_list;
+template <class> class instance_alias_info;
 using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
@@ -85,6 +86,12 @@ protected:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+protected:
+	template <class Tag>
+	static
+	const alias_actuals_type&
+	find_relaxed_actuals(const instance_alias_info<Tag>&);
 
 };	// end class instance_alias_info_empty_actuals
 
