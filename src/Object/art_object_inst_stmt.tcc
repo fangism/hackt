@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.12 2005/07/09 07:45:42 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.12.2.1 2005/07/13 21:56:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -218,17 +218,8 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			" during unroll." << endl;
 		return good_bool(false);
 	}
-	// this would be a good time to "unroll" a complete definition's
-	// substructure map, before comitting it to the collection.  
-	// Details: register the type with the principle base definition.
-#if 0
-	final_type_ref->unroll_register_complete_type();
-#endif
 	// TODO: decide what do to about relaxed type parameters
 	// 2005-07-07: answer is above under "HACK"
-#if 0
-	final_type_ref->dump(cerr << "checking in ") << endl;
-#endif
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			*this->inst_base, final_type_ref));
@@ -245,24 +236,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
-#if 0
-		const count_ptr<const param_expr_list>
-			relaxed_actuals(final_type_ref->get_template_params()
-				.get_relaxed_args());
-		// should correspond to
-		//	instance_collection_base::instance_relaxed_actuals_type
-		const count_ptr<const const_param_expr_list>
-			relaxed_const_actuals(relaxed_actuals.
-				template is_a<const const_param_expr_list>());
-		// really shouldn't be dynamic if the actuals have been resolved
-		if (relaxed_actuals && !relaxed_const_actuals) {
-			cerr << "Internal compiler error: expected "
-				"const_param_expr_list in "
-				"instantiation_statement<>::unroll." << endl;
-			relaxed_actuals->dump(cerr << "\tgot: ") << endl;
-			THROW_EXIT;
-		}
-#else
 		const count_ptr<const param_expr_list>
 			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 		count_ptr<const const_param_expr_list>
@@ -278,13 +251,75 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 				return good_bool(false);
 			}
 		}
-#endif
 		// actuals are allowed to be NULL, and in some cases,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				*this->inst_base, crl, relaxed_const_actuals);
 	} else {
+		cerr << "ERROR: resolving index range of instantiation!"
+			<< endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this does NOT touch the referenced instance_collection, 
+		since that refers to a port-formal.  
+	TODO: instate a check to make sure that only top-level
+		instances are unrolled, and only port-formals call this.  
+	\pre once and only instantiation for the port collection.  
+ */
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+good_bool
+INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
+		physical_instance_collection& p) const {
+	// dynamic cast assertion, until we fix class hierarchy
+	collection_type& coll(IS_A(collection_type&, p));
+	INVARIANT(!coll.is_partially_unrolled());
+	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
+	if (!ft) {
+		// already have error message
+		return good_bool(false);
+	}
+	INVARIANT(ft->is_resolved());
+	INVARIANT(ft->is_canonical());
+	// ft will either be strict or relaxed.  
+	type_ref_parent_type::commit_type_first_time(coll, ft);
+	// no need to re-evaluate type, since get_resolved_type is
+	// (for now) the same as unroll_type_reference.
+	const bool good(type_ref_parent_type::commit_type_check(coll, ft).good);
+	INVARIANT(good);
+	// everything below is copied from unroll(), above
+	// TODO: factor out common code.  
+	const_range_list crl;
+	const good_bool rr(this->resolve_instantiation_range(crl, c));
+	if (rr.good) {
+		// passing in relaxed arguments from final_type_ref!
+		const count_ptr<const param_expr_list>
+			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
+		count_ptr<const const_param_expr_list>
+			relaxed_const_actuals;
+		if (relaxed_actuals) {
+			relaxed_const_actuals =
+				relaxed_actuals->unroll_resolve(c);
+			if (!relaxed_const_actuals) {
+				cerr << "ERROR: unable to resolve relaxed "
+					"actual parameters in " <<
+					util::what<this_type>::name() <<
+					"::unroll()." << endl;
+				return good_bool(false);
+			}
+		}
+		// actuals are allowed to be NULL, and in some cases,
+		// will be required to be NULL, e.g. for types that never
+		// have relaxed actuals.  
+		return type_ref_parent_type::instantiate_indices_with_actuals(
+				coll, crl, relaxed_const_actuals);
+	} else {
+		// consider different message
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
 		return good_bool(false);

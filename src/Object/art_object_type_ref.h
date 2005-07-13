@@ -2,7 +2,7 @@
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
 	TODO: must pool-allocate these, they're created frequently!
- 	$Id: art_object_type_ref.h,v 1.27.2.7 2005/07/07 23:48:14 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.7.2.1 2005/07/13 21:56:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -77,10 +77,13 @@ public:
 	good_bool
 	must_be_valid(void) const;
 
+	bool
+	is_canonical(void) const;
+
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...
 	count_ptr<const this_type>
-	unroll_resolve(unroll_context&) const;
+	unroll_resolve(const unroll_context&) const;
 
 	static
 	data_type_reference*
@@ -90,6 +93,7 @@ public:
 
 	MERGE_RELAXED_ACTUALS_PROTO;
 
+	UNROLL_PORT_INSTANCES_PROTO;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -145,7 +149,7 @@ virtual	ostream&
 
 #if 0
 virtual	count_ptr<const this_type>
-	unroll_resolve(unroll_context&) const = 0;
+	unroll_resolve(const unroll_context&) const = 0;
 #endif
 
 virtual	never_ptr<const builtin_channel_type_reference>
@@ -193,6 +197,9 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	bool
+	is_canonical(void) const;
+
 	void
 	reserve_datatypes(const size_t);
 
@@ -211,7 +218,7 @@ public:
 
 #if 0
 	count_ptr<const channel_type_reference_base>
-	unroll_resolve(unroll_context&) const;
+	unroll_resolve(const unroll_context&) const;
 #endif
 
 	never_ptr<const builtin_channel_type_reference>
@@ -220,6 +227,7 @@ public:
 private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	UNROLL_PORT_INSTANCES_PROTO;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -264,9 +272,12 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	bool
+	is_canonical(void) const;
+
 #if 0
 	count_ptr<const channel_type_reference_base>
-	unroll_resolve(unroll_context&) const;
+	unroll_resolve(const unroll_context&) const;
 #endif
 
 	never_ptr<const builtin_channel_type_reference>
@@ -276,6 +287,7 @@ public:
 private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	UNROLL_PORT_INSTANCES_PROTO;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -324,9 +336,12 @@ public:
 	never_ptr<const process_definition_base>
 	get_base_proc_def(void) const { return base_proc_def; }
 
+	bool
+	is_canonical(void) const;
+
 	// just resolves template actuals to constants
 	count_ptr<const this_type>
-	unroll_resolve(unroll_context& ) const;
+	unroll_resolve(const unroll_context& ) const;
 
 	good_bool
 	unroll_register_complete_type(void) const;
@@ -343,6 +358,7 @@ private:
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
+	UNROLL_PORT_INSTANCES_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -363,6 +379,9 @@ private:
 	typedef	param_type_reference		this_type;
 	typedef	fundamental_type_reference	parent_type;	// not used
 protected:
+	/**
+		TODO: If this is never used, then phase it out.
+	 */
 	never_ptr<const built_in_param_def>	base_param_def;
 public:
 	explicit
@@ -377,9 +396,12 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	bool
+	is_canonical(void) const;
+
 #if 0
 	count_ptr<const this_type>
-	unroll_resolve(unroll_context& ) const;
+	unroll_resolve(const unroll_context& ) const;
 #endif
 
 private:
@@ -390,6 +412,7 @@ private:
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
+	UNROLL_PORT_INSTANCES_PROTO;
 private:
 	// dummy implementation, never called
 	PERSISTENT_METHODS_DECLARATIONS

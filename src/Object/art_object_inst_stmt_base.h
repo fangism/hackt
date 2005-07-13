@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.11.4.5 2005/07/07 06:02:20 fang Exp $
+	$Id: art_object_inst_stmt_base.h,v 1.11.4.5.2.1 2005/07/13 21:56:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
@@ -19,6 +19,7 @@ namespace entity {
 class const_range_list;
 class param_expr_list;
 class instance_collection_base;
+class physical_instance_collection;
 class fundamental_type_reference;
 using std::string;
 using std::istream;
@@ -92,6 +93,17 @@ virtual	good_bool
 	unroll(unroll_context& ) const;
 
 virtual	UNROLL_META_INSTANTIATE_PROTO = 0;
+
+/**
+	2005-07-13:
+	After reworking class hierarchy, this should not be virtual.
+ */
+#define	INSTANTIATE_PORT_PROTO						\
+	good_bool							\
+	instantiate_port(const unroll_context&, 			\
+		physical_instance_collection&) const
+
+virtual	INSTANTIATE_PORT_PROTO = 0;
 
 /***
 	case: A top-level instantiation is called.

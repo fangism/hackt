@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.5.2.4 2005/07/12 23:30:58 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5.2.5 2005/07/13 21:56:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -145,12 +145,16 @@ virtual	const_iterator
 		Instantiates officially by linking to parent collection.  
 		FYI: This is only called by instance_array<0> (scalar)
 			in instantiate_indices().
+		TODO (2005-07-12): 
+			recursively unroll public ports, using 
+			subinstance_manager
 	 */
 	void
 	instantiate(const container_ptr_type p) {
 		NEVER_NULL(p);
 		INVARIANT(!this->container);
 		this->container = p;
+		// substructure_parent_type::unroll_port_instances(*this);
 	}
 
 	/**

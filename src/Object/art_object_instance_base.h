@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17.4.4.2.3 2005/07/11 21:40:38 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.4.2.4 2005/07/13 21:56:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -33,6 +33,7 @@ class const_range_list;
 class param_expr;
 class const_param_expr_list;
 class physical_instance_collection;
+class unroll_context;
 USING_LIST
 using std::istream;
 using std::string;
@@ -184,7 +185,7 @@ virtual	ostream&
 	ostream&
 	pair_dump(ostream& o) const;
 
-	string
+	const string&
 	get_name(void) const { return key; }
 
 virtual	string
@@ -268,6 +269,15 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 // return type may become generic...
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
+
+#if 0
+#define	UNROLL_PORT_ONLY_PROTO						\
+	count_ptr<physical_instance_collection>				\
+	unroll_port_only(const unroll_context&) const
+
+virtual	UNROLL_PORT_ONLY_PROTO = 0;
+#endif
+
 private:
 	// utility functions for handling index collection (inlined)
 	void

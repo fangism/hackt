@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.1 2005/07/11 03:27:07 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.2 2005/07/13 21:56:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -43,6 +43,7 @@
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
+#include "Object/inst/subinstance_manager.h"
 
 #include "util/sstream.h"
 #include "util/indent.h"
@@ -136,6 +137,16 @@ if (IS_A(const builtin_channel_type_reference*, this)) {
 	} else {
 		return !expects;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if all template actuals are constants, 
+		regardless of strictness.  
+ */
+bool
+fundamental_type_reference::is_resolved(void) const {
+	return template_args.is_resolved();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -437,6 +448,12 @@ data_type_reference::get_base_datatype_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+data_type_reference::is_canonical(void) const {
+	return !base_type_def.is_a<const datatype_definition_alias>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The final blessing from the compiler that the template actuals
 	meet the requirements specified by the base definition's 
@@ -460,18 +477,20 @@ data_type_reference::must_be_valid(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const data_type_reference>
-data_type_reference::unroll_resolve(unroll_context& c) const {
+data_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
+		INVARIANT(c.empty());
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
+		unroll_context cc(c);	// workaround: just make a copy
 		const template_actuals_transformer
-			uc(c, template_args, 
+			uc(cc, template_args, 
 				base_type_def->get_template_formals_manager());
 		const template_actuals
-			actuals(template_args.unroll_resolve(c));
+			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
 		if (actuals) {
 			// the final type-check:
@@ -566,6 +585,29 @@ data_type_reference::make_instance_collection(
 			return return_type(NULL);
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Transient work around for special cases only.  
+	TODO (2005-07-12): implement for real.
+ */
+void
+data_type_reference::unroll_port_instances(subinstance_manager& sub) const {
+#if 0
+	INVARIANT(is_canonical());
+	INVARIANT(is_resolved());
+#else
+	if (base_type_def == &bool_traits::built_in_definition) {
+		// do nothing!
+	} else if (base_type_def == &bool_traits::built_in_definition) {
+		// do nothing... for now
+		// don't really anticipate expanding bits fields.  
+	} else {
+		// includes enums for now...
+		cerr << "FANG, finish data_type_reference::unroll_port_instances()!" << endl;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -756,6 +798,15 @@ builtin_channel_type_reference::get_base_def(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Built-in channel types cannot be typedefs!
+ */
+bool
+builtin_channel_type_reference::is_canonical(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Only applicable if datatype_list_type is a vector.  
  */
 void
@@ -837,6 +888,13 @@ builtin_channel_type_reference::make_canonical_type_reference(void) const {
 	cerr << "Fang, finish builtin_channel_type_reference::"
 		"make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+builtin_channel_type_reference::unroll_port_instances(
+		subinstance_manager& sub) const {
+	cerr << "FANG, finish builtin_channel_type_reference::unroll_port_instances()!" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -924,6 +982,12 @@ channel_type_reference::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type_reference::is_canonical(void) const {
+	return !base_chan_def.is_a<const channel_definition_alias>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return what does it mean to return NULL?
 	TODO: handles cases for resolving typedefs.  
@@ -995,6 +1059,14 @@ channel_type_reference::make_canonical_type_reference(void) const {
 	cerr << "Fang, finish channel_type_reference::"
 		"make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_type_reference::unroll_port_instances(
+		subinstance_manager& sub) const {
+	cerr << "FANG, finish channel_type_reference::unroll_port_instances()!"
+			<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1071,6 +1143,12 @@ process_type_reference::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+process_type_reference::is_canonical(void) const {
+	return !base_proc_def.is_a<const process_definition_alias>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The final blessing from the compiler that the template actuals
 	meet the requirements specified by the base definition's 
@@ -1095,18 +1173,20 @@ process_type_reference::must_be_valid(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const process_type_reference>
-process_type_reference::unroll_resolve(unroll_context& c) const {
+process_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("process_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
+		INVARIANT(c.empty());
+		unroll_context cc(c);	// workaround: just make a copy
 		const template_actuals_transformer
-			uc(c, template_args, 
+			uc(cc, template_args, 
 				base_proc_def->get_template_formals_manager());
 		const template_actuals
-			actuals(template_args.unroll_resolve(c));
+			actuals(template_args.unroll_resolve(cc));
 		if (actuals) {
 			// the final type-check:
 			// now they MUST size-type check
@@ -1199,6 +1279,29 @@ process_type_reference::make_canonical_type_reference(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+process_type_reference::unroll_port_instances(
+		subinstance_manager& sub) const {
+	INVARIANT(is_resolved());
+	INVARIANT(is_canonical());
+	const never_ptr<const process_definition>
+		proc_def(base_proc_def.is_a<const process_definition>());
+	NEVER_NULL(proc_def);
+	const port_formals_manager& port_formals(proc_def->get_port_formals());
+#if 0
+	sub.reserve(port_formals.size());
+#else
+	{
+		unroll_context c;
+		const template_actuals_transformer
+			uc(c, template_args, 
+				proc_def->get_template_formals_manager());
+		port_formals.unroll_ports(c, sub);
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 process_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1254,6 +1357,13 @@ param_type_reference::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parameter types cannot be typedef'd.
+ */
+bool
+param_type_reference::is_canonical(void) const {
+	return true;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1339,6 +1449,16 @@ param_type_reference::make_canonical_type_reference(void) const {
 		return pint_type_ptr;
 	else	DIE;
 	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This really should never be called.  
+ */
+void
+param_type_reference::unroll_port_instances(
+		subinstance_manager& sub) const {
+	// no-op
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

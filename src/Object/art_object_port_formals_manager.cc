@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.2.4.1 2005/06/30 23:22:24 fang Exp $
+ 	$Id: art_object_port_formals_manager.cc,v 1.2.4.1.2.1 2005/07/13 21:56:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
@@ -23,8 +23,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/art_object_port_formals_manager.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_instance_base.h"
+#include "Object/art_object_instance.h"
 #include "Object/art_object_inst_ref_base.h"
+#include "Object/inst/subinstance_manager.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -99,6 +100,25 @@ port_formals_manager::lookup_port_formal(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return 1-indexed position in the list of the referenced
+	      port formal, else 0 if not found.  
+ */
+size_t
+port_formals_manager::lookup_port_formal_position(const string& id) const {
+	const never_ptr<const instance_collection_base>
+		probe(lookup_port_formal(id));
+	if (probe) {
+		const port_formals_list_type::const_iterator
+			ports_begin(port_formals_list.begin());
+		return 1 +distance(ports_begin, 
+			std::find(ports_begin, port_formals_list.end(), probe));
+	} else {
+		return 0;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Validates a list of objects (instance references) against
 	the port formal specification.  
 	\return true if type checks (is conservative).
@@ -115,11 +135,11 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 		return good_bool(false);
 	}
 	refs_list_type::const_iterator
-		a_iter = ol.begin();
+		a_iter(ol.begin());
 	port_formals_list_type::const_iterator
-		f_iter = port_formals_list.begin();
+		f_iter(port_formals_list.begin());
 	const port_formals_list_type::const_iterator
-		f_end = port_formals_list.end();
+		f_end(port_formals_list.end());
 	size_t i = 1;
 	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
 		const count_ptr<const meta_instance_reference_base> a_iref(*a_iter);
@@ -169,16 +189,14 @@ bool
 port_formals_manager::equivalent_port_formals(
 		const port_formals_manager& p) const {
 	// shortcut reference
-	const port_formals_list_type& pports = p.port_formals_list;
+	const port_formals_list_type& pports(p.port_formals_list);
 	if (port_formals_list.size() != pports.size()) {
 		cerr << "ERROR: number of port formal parameters "
 			"doesn\'t match!" << endl;
 		return false;
 	}
-	port_formals_list_type::const_iterator
-		i = port_formals_list.begin();
-	port_formals_list_type::const_iterator
-		j = pports.begin();
+	port_formals_list_type::const_iterator i(port_formals_list.begin());
+	port_formals_list_type::const_iterator j(pports.begin());
 	for ( ; i!=port_formals_list.end() && j!=pports.end(); i++, j++) {
 		const never_ptr<const instance_collection_base> ipf(*i);
 		const never_ptr<const instance_collection_base> jpf(*j);
@@ -193,6 +211,47 @@ port_formals_manager::equivalent_port_formals(
 	// sanity size check
 	INVARIANT(i == port_formals_list.end() && j == pports.end());
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unpacks each port formal into port-actual placeholders
+	in the subinstance_manager's port list.  
+	TODO: in instance_collection implementations, 
+		use packed array representation for port formals collections.  
+ */
+void
+port_formals_manager::unroll_ports(const unroll_context& c, 
+		subinstance_manager& sub) const {
+	INVARIANT(sub.empty());
+	sub.reserve(size());		// pre-allocate
+	port_formals_list_type::const_iterator i(port_formals_list.begin());
+	const port_formals_list_type::const_iterator e(port_formals_list.end());
+	for ( ; i!=e; i++) {
+		const never_ptr<const instance_collection_base> icb(*i);
+		NEVER_NULL(icb);
+		// because parameter collections are forbidden in ports:
+		const never_ptr<const physical_instance_collection>
+			pcb(icb.is_a<const physical_instance_collection>());
+		NEVER_NULL(pcb);
+		// resolve its type
+#if 0
+		const count_ptr<const fundamental_type_reference>
+			s_type(icb->get_type_ref());
+		const count_ptr<const fundamental_type_reference>
+			r_type(s_type->make_canonical_type_reference());
+		// don't unroll the whole thing, JUST the ports
+		// i.e. unroll the first instantiation statement
+		// of each port's instance collection.
+#else
+		// supposed to return a new copy of instance-collection
+		const count_ptr<physical_instance_collection>
+			new_port(pcb->unroll_port_only(c));
+		NEVER_NULL(new_port);
+		sub.push_back(new_port);
+#endif
+	}
+	// relink somewhere?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -230,9 +289,9 @@ port_formals_manager::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	m.read_pointer_list(f, port_formals_list);
 	port_formals_list_type::const_iterator
-		iter = port_formals_list.begin();
+		iter(port_formals_list.begin());
 	const port_formals_list_type::const_iterator
-		end = port_formals_list.end();
+		end(port_formals_list.end());
 	for ( ; iter!=end; iter++) {
 		const port_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);

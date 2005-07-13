@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.3.14.1 2005/06/30 23:22:26 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.3.14.1.2.1 2005/07/13 21:56:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -17,6 +17,12 @@ unroll_context::unroll_context() : template_args(), template_formals() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::~unroll_context() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+unroll_context::empty(void) const {
+	return (!template_args && !template_formals);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

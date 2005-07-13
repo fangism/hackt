@@ -38,6 +38,9 @@ UNROLL (connect) phase:
 cflat: will be purely text dump traversal, as originally planned.  
 
 UNIQUE (create) phase:
+	NOTE: will probably need one final type check for references
+		and aliases that involve relaxed actual parameters
+		because some checks are deferred during the unroll stage.  
 	Recursive traversal of aliases to establish object uniqueness, 
 		can be identified by e.g. a memory address of residence.  
 	Allocation of memory for state information. 

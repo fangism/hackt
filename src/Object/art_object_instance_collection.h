@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.6.2.1 2005/07/11 03:26:58 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.6.2.2 2005/07/13 21:56:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -35,11 +35,20 @@ using util::persistent;
 using util::persistent_object_manager;
 
 class scopespace;
+class physical_instance_collection;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class const_index_list;
 class const_range_list;
 class const_param_expr_list;
+class unroll_context;
+
+// lazy to include, just copied over from "Object/art_object_instance_base.h"
+#ifndef	UNROLL_PORT_ONLY_PROTO
+#define	UNROLL_PORT_ONLY_PROTO						\
+count_ptr<physical_instance_collection>					\
+unroll_port_only(const unroll_context&) const
+#endif
 
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -292,6 +301,8 @@ public:
 	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
 		alias_collection_type&) const;
 
+	UNROLL_PORT_ONLY_PROTO;
+
 	instance_alias_base_type&
 	load_reference(istream& i) const;
 
@@ -365,6 +376,8 @@ public:
 	bool
 	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
 		alias_collection_type&) const;
+
+	UNROLL_PORT_ONLY_PROTO;
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;

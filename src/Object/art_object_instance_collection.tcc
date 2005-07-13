@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.3 2005/07/12 23:30:59 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.4 2005/07/13 21:56:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -47,13 +47,13 @@
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_instance_alias_actuals.tcc"
+#include "Object/art_object_inst_stmt_base.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 
-// #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "util/what.h"
@@ -1070,6 +1070,26 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Expands this collection into a copy for a port formal.  
+	\return owned pointer to new created collection.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+count_ptr<physical_instance_collection>
+INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type(*this));
+	NEVER_NULL(ret);
+	// Is this really copy-constructible?
+	// TODO: unroll first instantiation statement
+	INVARIANT(index_collection.size() == 1);	// port constraint
+	const index_collection_type::const_iterator b(index_collection.begin());
+	INVARIANT(*b);
+	if ((*b)->instantiate_port(c, *ret).good)
+		return ret;
+	else 	return count_ptr<physical_instance_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
  */
@@ -1383,6 +1403,25 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 			<< "!" << endl;
 		return true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands this collection into a copy for a port formal.  
+	\return owned pointer to new created collection.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+count_ptr<physical_instance_collection>
+INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type(*this));
+	NEVER_NULL(ret);
+	// Is this really copy-constructible?
+	INVARIANT(index_collection.size() == 1);	// port constraint
+	const index_collection_type::const_iterator b(index_collection.begin());
+	INVARIANT(*b);
+	if ((*b)->instantiate_port(c, *ret).good)
+		return ret;
+	else 	return count_ptr<physical_instance_collection>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.7.2.1 2005/07/11 03:26:53 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.7.2.2 2005/07/13 21:56:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
@@ -60,7 +60,7 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(unroll_context& c) const {
+	get_resolved_type(const unroll_context& c) const {
 		const type_ref_ptr_type ret(type->unroll_resolve(c));
 		if (!ret) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
@@ -87,7 +87,7 @@ protected:
 		not connectible equivalence.  
 	 */
 	type_ref_ptr_type
-	unroll_type_reference(unroll_context& c) const {
+	unroll_type_reference(const unroll_context& c) const {
 #if 0
 		if (relaxed_args) {
 			const type_ref_ptr_type

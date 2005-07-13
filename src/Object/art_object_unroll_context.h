@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.3.14.2 2005/07/04 01:54:06 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.3.14.2.2.1 2005/07/13 21:56:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
@@ -28,11 +28,18 @@ using util::memory::count_ptr;
  */
 class unroll_context {
 private:
+	/**
+		INVARIANT: template_args and template_formals are either
+		both NULL or both valid at all times.  
+	 */
 	never_ptr<const template_actuals>		template_args;
 	never_ptr<const template_formals_manager>	template_formals;
 public:
 	unroll_context();
 	~unroll_context();
+
+	bool
+	empty(void) const;
 
 	void
 	set_transform_context(const template_actuals&,

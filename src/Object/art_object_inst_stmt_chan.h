@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.6.2.1 2005/07/11 03:26:53 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.6.2.2 2005/07/13 21:56:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
@@ -49,7 +49,7 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(unroll_context& c) const {
+	get_resolved_type(const unroll_context& c) const {
 		cerr << "FANG, finish channel_type_reference_base::unroll_resolve()!" << endl;
 #if 0
 		const type_ref_ptr_type ret(type->unroll_resolve(c));
@@ -67,7 +67,7 @@ protected:
 
 
 	type_ref_ptr_type
-	unroll_type_reference(unroll_context& c) const {
+	unroll_type_reference(const unroll_context& c) const {
 		cerr << "FANG, finish channel_type_reference_base::unroll_resolve()!" << endl;
 #if 0
 		return type->unroll_resolve(c);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.17.4.4.2.1 2005/07/11 03:26:52 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.17.4.4.2.2 2005/07/13 21:56:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
@@ -118,6 +118,7 @@ public:
 	// yet overridden by param_instantiation_statement<>
 	UNROLL_META_INSTANTIATE_PROTO;
 
+	INSTANTIATE_PORT_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

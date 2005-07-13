@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-07-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-05:
+	  Added mechanism for recursively creating port instances
+		in the public hierarchy, though not enabled or tested.  
+		Too lazy to spill the details here.  
+	  Updated bunch of unroll_context prototypes to take
+		const unroll_context&.
+	  Handy utility methods added hither and thither.
+	  Code really needs 1) facelift, 2) bath.
+
+
 2005-07-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-04:
