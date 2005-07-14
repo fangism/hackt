@@ -1,14 +1,25 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.1.2.2 2005/07/11 21:40:39 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.1.2.3 2005/07/14 23:15:54 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
+#include "util/macros.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
 
+/**
+	Virtually pure virtual.
+ */
+ostream&
+substructure_alias::dump_hierarchical_name(ostream& o) const {
+	DIE;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 substructure_alias::collect_transient_info_base(
 		persistent_object_manager& m) const {

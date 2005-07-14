@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.2.4.1.2.1 2005/07/13 21:56:40 fang Exp $
+ 	$Id: art_object_port_formals_manager.cc,v 1.2.4.1.2.2 2005/07/14 23:15:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
@@ -234,22 +234,11 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 		const never_ptr<const physical_instance_collection>
 			pcb(icb.is_a<const physical_instance_collection>());
 		NEVER_NULL(pcb);
-		// resolve its type
-#if 0
-		const count_ptr<const fundamental_type_reference>
-			s_type(icb->get_type_ref());
-		const count_ptr<const fundamental_type_reference>
-			r_type(s_type->make_canonical_type_reference());
-		// don't unroll the whole thing, JUST the ports
-		// i.e. unroll the first instantiation statement
-		// of each port's instance collection.
-#else
 		// supposed to return a new copy of instance-collection
 		const count_ptr<physical_instance_collection>
 			new_port(pcb->unroll_port_only(c));
 		NEVER_NULL(new_port);
 		sub.push_back(new_port);
-#endif
 	}
 	// relink somewhere?
 }

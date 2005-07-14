@@ -1,4 +1,4 @@
-// should pass: forward declaring process, then defining
+// "024.in" should pass: forward declaring process, then defining
 // redeclaring prototypes should have no effect
 
 defproc foo();

@@ -1,4 +1,4 @@
-// should fail: redeclaration doesn't match in template formals
+// "025.in" should fail: redeclaration doesn't match in template formals
 
 defproc foo();
 

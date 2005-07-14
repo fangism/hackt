@@ -2,6 +2,22 @@
 
 2005-07-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-08:
+	  Demonstrated working hierarchical port instantiation.
+	  Added dump_hierarchical_name to instance_collection_base
+		and substructure_alias as a means of printing
+		the hierarchical alias name, such as x[y].z.
+	  Added scopespace::dump_qualified_name(ostream&) for convenience.  
+	  instance_alias<>::dump_alias now calls dump_hierarchical_name
+		instead of get_qualified_name.
+		No existing tests were affected, since we hadn't tested
+		hierarchy until now.  
+	  Implemented substructure pretty-printing.  
+	  This branch is nearing maturity.
+	  TODO: test cases, test cases, test cases.  
+		One new test case added for demo: test/parser/process/054.in
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-07:
 	  Critical library bug fixed in multikey_generic, 
 		described in src/util/ChangeLog.

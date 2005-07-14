@@ -1,0 +1,10 @@
+// "054.in"
+
+defproc foo(bool a, b) { }
+
+defproc bar(foo x, y) { }
+
+defproc ick(bar p, q) { }
+
+ick poo;
+

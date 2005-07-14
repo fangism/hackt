@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.6 2005/07/14 06:16:23 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.7 2005/07/14 23:15:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -287,6 +287,14 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
+	dump_alias(o);	// should call virtually, won't die
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
 	DIE;
@@ -383,7 +391,11 @@ INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
+#if 0
 	o << this->container->get_qualified_name() <<
+#else
+	this->container->dump_hierarchical_name(o) <<
+#endif
 		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
@@ -495,7 +507,11 @@ KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
+#if 0
 	o << this->container->get_qualified_name();
+#else
+	this->container->dump_hierarchical_name(o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -844,6 +860,9 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 		p.dump_actuals(os);
 	os << " = ";
 	p.get_next()->dump_alias(os);
+#if 1
+	p.dump_ports(os << ' ');
+#endif
 	return os << endl;
 }
 
@@ -1297,6 +1316,9 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 		this->the_instance.dump_actuals(o);
 	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
+#if 1
+	this->the_instance.dump_ports(o << ' ');
+#endif
 	return o;
 }
 

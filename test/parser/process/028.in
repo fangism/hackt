@@ -1,6 +1,18 @@
-// should pass: redeclaration matches in template formals
+// "028.in" should pass: redeclaration matches in template formals
 // formal parameter name need match!
 // honestly, name should be optional unless latter parameter depends on it
+/**
+	This is only a problem if the language spec allows references
+	to to parameters:
+	foo<3> bar;
+	pint Q = bar.bar;
+
+	the what if template parameter is a type?
+	typedef	bar::local_type	my_type;
+	(akin to nested types)
+
+	to be resolved...
+**/
 
 template <pint bar>
 defproc foo();

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.1.2.3 2005/07/14 03:15:40 fang Exp $
+	$Id: subinstance_manager.h,v 1.1.2.4 2005/07/14 23:15:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -69,6 +69,9 @@ public:
 	push_back(const entry_value_type& v) {
 		subinstance_array.push_back(v);
 	}
+
+	ostream&
+	dump(ostream&) const;
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>

@@ -1,4 +1,4 @@
-// should pass: redeclaration matches in template formals
+// "029.in" should pass: redeclaration matches in template formals
 // two equivalent specifications of formal parameter
 
 template <pint bar, none, blah>

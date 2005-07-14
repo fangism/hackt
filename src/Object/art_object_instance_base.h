@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17.4.4.2.4 2005/07/13 21:56:39 fang Exp $
+	$Id: art_object_instance_base.h,v 1.17.4.4.2.5 2005/07/14 23:15:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -190,6 +190,12 @@ virtual	ostream&
 
 virtual	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
+
+	ostream&
+	dump_hierarchical_name(ostream&) const;
 
 virtual	string
 	hash_string(void) const { return key; }

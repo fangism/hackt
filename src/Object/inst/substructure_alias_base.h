@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.1.2.2 2005/07/14 03:15:41 fang Exp $
+	$Id: substructure_alias_base.h,v 1.1.2.3 2005/07/14 23:15:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -31,12 +31,6 @@ protected:
 public:
 virtual	~substructure_alias_base() { }
 
-	template <class Tag>
-	void
-	unroll_port_instances(const instance_collection<Tag>& p) {
-		subinstances.unroll_port_instances(p);
-	}
-
 	/**
 		Visits children of the subinstance manager and 
 		restores parent-child back-link.  
@@ -46,6 +40,20 @@ virtual	~substructure_alias_base() { }
 	restore_parent_child_links(void) {
 		subinstances.relink_super_instance_alias(*this);
 	}
+
+	template <class Tag>
+	void
+	unroll_port_instances(const instance_collection<Tag>& p) {
+		subinstances.unroll_port_instances(p);
+		restore_parent_child_links();
+	}
+
+// want to be pure virtual, but cannot be, :S
+virtual	ostream&
+	dump_hierarchical_name(ostream&) const;
+
+	ostream&
+	dump_ports(ostream& o) const { return subinstances.dump(o); }
 
 	// call forwarding
 	void
@@ -79,6 +87,9 @@ public:
 	 */
 	void
 	restore_parent_child_links(void) { }
+
+	ostream&
+	dump_ports(ostream& o) const { return o; }
 
 	void
 	collect_transient_info_base(const persistent_object_manager&) const { }

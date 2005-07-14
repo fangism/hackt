@@ -1,4 +1,4 @@
-// should fail: ports mismatch
+// "048.in" should fail: ports mismatch
 
 defproc food(int<16> sleep);
 

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.5.2.6 2005/07/14 03:15:35 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.5.2.7 2005/07/14 23:15:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -189,6 +189,10 @@ virtual	const_iterator
 
 virtual	void
 	dump_alias(ostream& o) const;
+
+	ostream&
+	dump_hierarchical_name(ostream&) const;
+
 	/**
 		Wants to be pure virtual but can't...
 	 */
@@ -331,6 +335,11 @@ public:
 	void
 	dump_alias(ostream& o) const;
 
+#if 0
+	ostream&
+	dump_hierarchical_name(ostream&) const;
+#endif
+
 	/**
 		Use with maplikeset_element requires comparison operator.  
 		Not sure if this is the correct thing to do.  
@@ -377,6 +386,11 @@ public:
 
 	void
 	dump_alias(ostream& o) const;
+
+#if 0
+	ostream&
+	dump_hierarchical_name(ostream&) const;
+#endif
 
 	const_iterator
 	begin(void) const;

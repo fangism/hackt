@@ -1,4 +1,4 @@
-// should die on improper template spec
+// "012.in" should die on improper template spec
 
 defproc barbar<pint milk, tea; pbool water[4]>(){
 // empty definition

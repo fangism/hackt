@@ -1,4 +1,4 @@
-// should die on improper template specification
+// "010.in" should die on improper template specification
 
 defproc barbar<pint milk, tea; pbool water[4]>();
 

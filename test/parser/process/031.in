@@ -1,4 +1,4 @@
-// should fail: redeclaration doesn't match in template formals
+// "031.in" should fail: redeclaration doesn't match in template formals
 
 template <pint bar, none, blah>
 defproc foo();

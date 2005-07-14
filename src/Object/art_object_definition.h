@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.35.2.1 2005/07/01 20:34:12 fang Exp $
+	$Id: art_object_definition.h,v 1.35.2.1.2.1 2005/07/14 23:15:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -84,6 +84,9 @@ virtual	const string&
 
 	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
 
 virtual	ostream&
 	what(ostream& o) const = 0;

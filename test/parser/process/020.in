@@ -1,4 +1,4 @@
-// should pass, is complete prototype, should type-check fine
+// "020.in" should pass, is complete prototype, should type-check fine
 
 template <pint milk, tea; pbool water[4]>
 defproc barbar();

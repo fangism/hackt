@@ -1,4 +1,4 @@
-// should fail: size mismatch
+// "039.in" should fail: size mismatch
 
 template <pint bar[3][5][2]>
 defproc foo();

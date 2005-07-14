@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.3 2005/07/14 03:15:36 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.4 2005/07/14 23:15:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -1382,9 +1382,15 @@ process_type_reference::make_canonical_type_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes this type and expands its port subinstances.
+	\pre this type must be canonical and resolved to constants.  
+	\post the subinstance manager will be populated with
+		instance collections of the proper port types, 
+		according to the canonical definition.  
+ */
 void
-process_type_reference::unroll_port_instances(
-		subinstance_manager& sub) const {
+process_type_reference::unroll_port_instances(subinstance_manager& sub) const {
 	INVARIANT(is_resolved());
 	INVARIANT(is_canonical());
 	const never_ptr<const process_definition>

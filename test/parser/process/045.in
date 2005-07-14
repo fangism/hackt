@@ -1,4 +1,4 @@
-// should fail: ports name mismatch
+// "045.in" should fail: ports name mismatch
 
 defproc fang(int food; bool now);
 

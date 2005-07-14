@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.7.2.1.2.1 2005/07/13 21:56:37 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.7.2.1.2.2 2005/07/14 23:15:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -88,6 +88,9 @@ public:
 
 	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
 
 	never_ptr<const scopespace>
 	get_parent(void) const;

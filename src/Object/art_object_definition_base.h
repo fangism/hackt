@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.23.2.4 2005/07/06 00:59:26 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23.2.4.2.1 2005/07/14 23:15:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -183,6 +183,9 @@ virtual	excl_ptr<definition_base>
 // need not be virtual?
 virtual	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
 
 /** definition signature comparison, true if equal */
 virtual	good_bool

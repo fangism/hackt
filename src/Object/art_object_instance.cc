@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.7.2.2 2005/07/11 21:40:37 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.7.2.3 2005/07/14 23:15:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -24,6 +24,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/inst/substructure_alias_base.h"
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -167,6 +168,22 @@ instance_collection_base::get_qualified_name(void) const {
 		return owner->get_qualified_name() +"::" +key;
 		// "::" should be the same as ART::parser::scope
 	else return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_qualified_name(ostream& o) const {
+	if (owner)
+		return owner->dump_qualified_name(o) << "::" << key;
+	else	return o << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_hierarchical_name(ostream& o) const {
+	if (super_instance)
+		return super_instance->dump_hierarchical_name(o) << '.' << key;
+	else	return dump_qualified_name(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

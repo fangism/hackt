@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.6.2.1 2005/07/11 03:26:48 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.6.2.2 2005/07/14 23:15:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -222,6 +222,16 @@ definition_base::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+definition_base::dump_qualified_name(ostream& o) const {
+	const string& key(get_key());
+	const never_ptr<const scopespace> parent(get_parent());
+	if (parent)
+		parent->dump_qualified_name(o) << scope;
+	return o << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Certifies the template arguments against this definition's
 	template signature.  
@@ -429,6 +439,12 @@ typedef_base::~typedef_base() {
 string
 typedef_base::get_qualified_name(void) const {
 	return definition_base::get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+typedef_base::dump_qualified_name(ostream& o) const {
+	return definition_base::dump_qualified_name(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -684,6 +700,14 @@ user_def_chan::get_qualified_name(void) const {
 	if (parent)
 		return parent->get_qualified_name() + scope + key;
 	else return string(scope) + key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+user_def_chan::dump_qualified_name(ostream& o) const {
+	if (parent)
+		parent->dump_qualified_name(o);
+	return o << scope << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1041,6 +1065,12 @@ built_in_datatype_def::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+built_in_datatype_def::dump_qualified_name(ostream& o) const {
+	return datatype_definition_base::dump_qualified_name(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const scopespace>
 built_in_datatype_def::get_parent(void) const {
 	return parent;
@@ -1338,6 +1368,14 @@ enum_datatype_def::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+enum_datatype_def::dump_qualified_name(ostream& o) const {
+	if (parent)
+		parent->dump_qualified_name(o);
+	return o << scope << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const scopespace>
 enum_datatype_def::get_parent(void) const {
 	return parent;
@@ -1604,6 +1642,14 @@ user_def_datatype::get_qualified_name(void) const {
 	if (parent)
 		return parent->get_qualified_name() + scope + key;
 	else return string(scope) + key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+user_def_datatype::dump_qualified_name(ostream& o) const {
+	if (parent)
+		parent->dump_qualified_name(o);
+	return o << scope << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2081,6 +2127,12 @@ process_definition::get_key(void) const {
 string
 process_definition::get_qualified_name(void) const {
 	return parent->get_qualified_name() + scope + key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+process_definition::dump_qualified_name(ostream& o) const {
+	return parent->dump_qualified_name(o) << scope << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
