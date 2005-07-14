@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.5 2005/07/14 03:15:35 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.8.2.6 2005/07/14 06:16:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -1081,8 +1081,9 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?
 	// TODO: unroll first instantiation statement
-	INVARIANT(index_collection.size() == 1);	// port constraint
-	const index_collection_type::const_iterator b(index_collection.begin());
+	INVARIANT(this->index_collection.size() == 1);	// port constraint
+	const index_collection_type::const_iterator
+		b(this->index_collection.begin());
 	INVARIANT(*b);
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
@@ -1417,8 +1418,9 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?
-	INVARIANT(index_collection.size() == 1);	// port constraint
-	const index_collection_type::const_iterator b(index_collection.begin());
+	INVARIANT(this->index_collection.size() == 1);	// port constraint
+	const index_collection_type::const_iterator
+		b(this->index_collection.begin());
 	INVARIANT(*b);
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;

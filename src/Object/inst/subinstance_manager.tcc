@@ -1,17 +1,20 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.1.2.1 2005/07/14 03:15:41 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.1.2.2 2005/07/14 06:16:24 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
 #define	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
 
+#include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/art_object_instance_collection.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
+
 //=============================================================================
 // class subinstance_manager method definitions
 

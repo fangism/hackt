@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.14.4.1 2005/07/08 18:15:21 fang Exp $
+#	$Id: Makefile.am,v 1.14.4.1.2.1 2005/07/14 06:16:23 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -71,8 +71,10 @@ distclean-local: distcleandirs
 # .PRECIOUS: distcheck.log
 # doesn't work, tries to override previous definition without accumulating
 distcheck.log: force
+	@if [ -f $@ ] ; then $(MV) $@ $@~ ; fi
 	@$(ECHO) "Logging \"make distcheck\" to $@ ..."
-	$(MAKE) distcheck 2>&1 | cat > $@.tmp
+	@$(ECHO) Tests started `$(DATE)` > $@.tmp
+	$(MAKE) distcheck 2>&1 | cat >> $@.tmp
 	-$(MV) $@.tmp $@
 	@if $(GREP) -q "archives ready for distribution" $@ ; then \
 		$(TAIL) -n 5 $@ ; \
