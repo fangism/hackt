@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.12.2.2 2005/07/04 19:13:30 fang Exp $
+	$Id: packed_array.tcc,v 1.12.2.2.2.1 2005/07/14 19:38:51 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -489,6 +489,8 @@ PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 void
 PACKED_ARRAY_GENERIC_CLASS::resize(const key_type& s) {
 	dim = s.size();
+	// problem: is sizes and s alias, then assignment may go awry
+	// this is fixed by catching the alias case in multikey_generic
 	sizes = s;
 	values.resize(sizes_product(s));
 	// offsets?

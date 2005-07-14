@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.8.2.2 2005/07/04 01:54:08 fang Exp $
+	$Id: multikey.tcc,v 1.8.2.2.2.1 2005/07/14 19:38:50 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -274,12 +274,18 @@ MULTIKEY_GENERIC_CLASS::multikey_generic(const MULTIKEY_CLASS& m) : impl_type(D)
 	Custom assignment operator required because the valarray
 	class implementation is not Assignable; 
 	it does not automatically realloc!
+	\param m the source multikey to copy from.
+	NOTE: if this and m alias, then straight assignment would result
+		in destruction of both the source and destination!
+		We protect against such misuse.  
  */
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 MULTIKEY_GENERIC_CLASS&
 MULTIKEY_GENERIC_CLASS::operator = (const this_type& m) {
+if (this != &m) {
 	this->~multikey_generic();	// explicit call to own dtor
 	new (this) this_type(m);	// placement copy-constructor
+}
 	return *this;
 }
 

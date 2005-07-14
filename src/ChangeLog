@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-07:
+	  Critical library bug fixed in multikey_generic, 
+		described in src/util/ChangeLog.
+
+
 2005-07-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-06:
