@@ -2,6 +2,17 @@
 
 2005-07-13	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-06:
+	  All type-references' unroll_resolve methods no longer
+		have unroll_context as an argument; the contexts
+		(translation from formal to actual) are all locally
+		created w.r.t. the definitions.  
+	  Fixed bug where I forgot to canonicalize typedefs before
+		committing types to instance collections.  
+		Example test case is test/parser/typedef/012.
+	  TODO: enable recursive port instantiation.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-05:
 	  Added mechanism for recursively creating port instances
 		in the public hierarchy, though not enabled or tested.  

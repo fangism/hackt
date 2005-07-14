@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.1.2.2 2005/07/13 21:56:43 fang Exp $
+	$Id: subinstance_manager.h,v 1.1.2.3 2005/07/14 03:15:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -14,6 +14,8 @@ namespace ART {
 namespace entity {
 class substructure_manager;
 class instance_collection_base;
+class physical_instance_collection;
+template <class> class instance_collection;
 using std::ostream;
 using std::istream;
 using std::string;
@@ -69,8 +71,10 @@ public:
 	}
 
 	// want to recursively expand ports when this is instantiated
+	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection_base&);
+	unroll_port_instances(const instance_collection<Tag>&);
+	// unroll_port_instances(const physical_instance_collection&);
 
 	// for each entry, re-link
 	void

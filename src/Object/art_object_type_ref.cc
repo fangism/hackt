@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.2 2005/07/13 21:56:41 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.3 2005/07/14 03:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -477,15 +477,14 @@ data_type_reference::must_be_valid(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const data_type_reference>
-data_type_reference::unroll_resolve(const unroll_context& c) const {
+data_type_reference::unroll_resolve(void) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
-		INVARIANT(c.empty());
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
-		unroll_context cc(c);	// workaround: just make a copy
+		unroll_context cc;	// local context
 		const template_actuals_transformer
 			uc(cc, template_args, 
 				base_type_def->get_template_formals_manager());
@@ -837,6 +836,57 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Makes a copy of this type reference, but with strictly resolved
+	constant parameter arguments.  
+	Will eventually require a context-like object.  
+	\return a copy of itself, but with type parameters resolved, 
+		if applicable.  Returns NULL if there is error in resolution.  
+ */
+count_ptr<const channel_type_reference_base>
+builtin_channel_type_reference::unroll_resolve(void) const {
+	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
+	typedef	count_ptr<const this_type>	return_type;
+	// can this code be factored out to type_ref_base?
+#if 0
+	if (template_args) {
+		// if template actuals depends on other template parameters, 
+		// then we need to pass actuals into its own context!
+		unroll_context cc;	// local context
+		const template_actuals_transformer
+			uc(cc, template_args, 
+				base_type_def->get_template_formals_manager());
+		const template_actuals
+			actuals(template_args.unroll_resolve(cc));
+		// check for errors??? at least try-catch
+		if (actuals) {
+			// the final type-check:
+			// now they MUST size-type check
+			const return_type
+				ret(new this_type(base_type_def, actuals));
+			NEVER_NULL(ret);
+			return (ret->must_be_valid().good ?
+				ret : return_type(NULL));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		// need to check must_be_valid?
+		const return_type ret(new this_type(base_type_def));
+		INVARIANT(ret->must_be_valid().good);
+		return ret;
+	}
+#else
+	// NOTE: built-in channel types (currently) cannot have tempalte args
+	// will have to resolve types of various data members
+	cerr << "FANG, finish builtin_channel_type_reference::unroll_resolve()!"
+		<< endl;
+	return return_type(NULL);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Returns a newly constructed channel instantiation statement object.
 	Currently same as (user-defined) channel_type_reference.  
 	Perhaps fold into parent class?
@@ -1011,6 +1061,57 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Makes a copy of this type reference, but with strictly resolved
+	constant parameter arguments.  
+	Will eventually require a context-like object.  
+	\return a copy of itself, but with type parameters resolved, 
+		if applicable.  Returns NULL if there is error in resolution.  
+ */
+count_ptr<const channel_type_reference_base>
+channel_type_reference::unroll_resolve(void) const {
+	STACKTRACE("channel_type_reference::unroll_resolve()");
+	typedef	count_ptr<const this_type>	return_type;
+	// can this code be factored out to type_ref_base?
+#if 0
+	if (template_args) {
+		// if template actuals depends on other template parameters, 
+		// then we need to pass actuals into its own context!
+		unroll_context cc;	// local context
+		const template_actuals_transformer
+			uc(cc, template_args, 
+				base_type_def->get_template_formals_manager());
+		const template_actuals
+			actuals(template_args.unroll_resolve(cc));
+		// check for errors??? at least try-catch
+		if (actuals) {
+			// the final type-check:
+			// now they MUST size-type check
+			const return_type
+				ret(new this_type(base_type_def, actuals));
+			NEVER_NULL(ret);
+			return (ret->must_be_valid().good ?
+				ret : return_type(NULL));
+		} else {
+			cerr << "ERROR resolving template arguments." << endl;
+			return return_type(NULL);
+		}
+	} else {
+		// need to check must_be_valid?
+		const return_type ret(new this_type(base_type_def));
+		INVARIANT(ret->must_be_valid().good);
+		return ret;
+	}
+#else
+	// NOTE: built-in channel types (currently) cannot have tempalte args
+	// will have to resolve types of various data members
+	cerr << "FANG, finish channel_type_reference::unroll_resolve()!"
+		<< endl;
+	return return_type(NULL);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Combines relaxed template arguments to make a complete strict type.  
 	\param a non-NULL relaxed template actuals.
 	\pre this->template_args doesn't already have relaxed actuals, 
@@ -1055,10 +1156,14 @@ channel_type_reference::make_instance_collection(
  */
 count_ptr<const fundamental_type_reference>
 channel_type_reference::make_canonical_type_reference(void) const {
+#if 0
 	typedef	count_ptr<const fundamental_type_reference>	return_type;
 	cerr << "Fang, finish channel_type_reference::"
 		"make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+#else
+	return base_chan_def->make_canonical_type_reference(template_args);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1173,15 +1278,14 @@ process_type_reference::must_be_valid(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const process_type_reference>
-process_type_reference::unroll_resolve(const unroll_context& c) const {
+process_type_reference::unroll_resolve(void) const {
 	STACKTRACE("process_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
-		INVARIANT(c.empty());
-		unroll_context cc(c);	// workaround: just make a copy
+		unroll_context cc;	// local context
 		const template_actuals_transformer
 			uc(cc, template_args, 
 				base_proc_def->get_template_formals_manager());

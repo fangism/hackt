@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.8.2.2 2005/07/13 21:56:38 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.8.2.3 2005/07/14 03:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
@@ -83,8 +83,8 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(const unroll_context& c) const {
-		const type_ref_ptr_type ret(type->unroll_resolve(c));
+	get_resolved_type(void) const {
+		const type_ref_ptr_type ret(type->unroll_resolve());
 		if (!ret) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
@@ -115,16 +115,16 @@ protected:
 		TODO: rename to unroll_fused_type_reference
 	 */
 	type_ref_ptr_type
-	unroll_type_reference(const unroll_context& c) const {
+	unroll_type_reference(void) const {
 #if 0
 		if (relaxed_args) {
 			// clumsy but effective, make a temporary deep-copy
 			const type_ref_ptr_type
 			merged_type(type->merge_relaxed_actuals(relaxed_args));
-			return merged_type->unroll_resolve(c);
-		} else	return type->unroll_resolve(c);
+			return merged_type->unroll_resolve();
+		} else	return type->unroll_resolve();
 #else
-		return type->unroll_resolve(c);
+		return type->unroll_resolve();
 #endif
 	}
 

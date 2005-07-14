@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.6.2.2 2005/07/13 21:56:39 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.6.2.3 2005/07/14 03:15:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -42,6 +42,7 @@ class const_index_list;
 class const_range_list;
 class const_param_expr_list;
 class unroll_context;
+class subinstance_manager;
 
 // lazy to include, just copied over from "Object/art_object_instance_base.h"
 #ifndef	UNROLL_PORT_ONLY_PROTO
@@ -68,11 +69,13 @@ class instance_collection :
 // friend struct collection_type_manager<Tag>;
 // temporary workaround until int's type is better integrated
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
+friend	class subinstance_manager;
 private:
 	typedef	Tag					category_type;
 	typedef	typename class_traits<Tag>::instance_collection_parent_type
 							parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
+// friend void subinstance_manager::unroll_port_instances(const this_type&);
 public:
 	typedef	typename class_traits<Tag>::type_ref_type
 							type_ref_type;

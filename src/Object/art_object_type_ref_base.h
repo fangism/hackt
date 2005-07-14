@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.5.2.1 2005/07/13 21:56:42 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.5.2.2 2005/07/14 03:15:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -172,7 +172,9 @@ virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 	void								\
 	unroll_port_instances(subinstance_manager&) const
 
+#if 0
 virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
+#endif
 
 public:
 	bool
@@ -202,7 +204,6 @@ public:
 	count_ptr<const fundamental_type_reference>			\
 	make_canonical_type_reference(void) const
 
-protected:
 virtual	MAKE_CANONICAL_TYPE_REFERENCE_PROTO = 0;
 
 public:

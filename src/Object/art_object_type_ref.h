@@ -2,7 +2,7 @@
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
 	TODO: must pool-allocate these, they're created frequently!
- 	$Id: art_object_type_ref.h,v 1.27.2.7.2.1 2005/07/13 21:56:42 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.7.2.2 2005/07/14 03:15:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -83,7 +83,7 @@ public:
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...
 	count_ptr<const this_type>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve(void) const;
 
 	static
 	data_type_reference*
@@ -147,10 +147,12 @@ virtual	ostream&
 	ostream&
 	dump_direction(ostream&) const;
 
-#if 0
+#if 1
 virtual	count_ptr<const this_type>
-	unroll_resolve(const unroll_context&) const = 0;
+	unroll_resolve(void) const = 0;
 #endif
+
+virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
 
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
@@ -216,18 +218,18 @@ public:
 	datatype_ptr_type
 	index_datatype(const size_t) const;
 
-#if 0
+#if 1
 	count_ptr<const channel_type_reference_base>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve(void) const;
 #endif
 
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
-private:
+	UNROLL_PORT_INSTANCES_PROTO;
+
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
-	UNROLL_PORT_INSTANCES_PROTO;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -275,19 +277,20 @@ public:
 	bool
 	is_canonical(void) const;
 
-#if 0
+#if 1
 	count_ptr<const channel_type_reference_base>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve(void) const;
 #endif
 
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
 	MERGE_RELAXED_ACTUALS_PROTO;
-private:
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 	UNROLL_PORT_INSTANCES_PROTO;
+
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -341,7 +344,7 @@ public:
 
 	// just resolves template actuals to constants
 	count_ptr<const this_type>
-	unroll_resolve(const unroll_context& ) const;
+	unroll_resolve(void) const;
 
 	good_bool
 	unroll_register_complete_type(void) const;
@@ -350,7 +353,7 @@ public:
 	must_be_valid(void) const;
 
 	MERGE_RELAXED_ACTUALS_PROTO;
-private:
+	UNROLL_PORT_INSTANCES_PROTO;
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 private:
@@ -358,7 +361,6 @@ private:
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
-	UNROLL_PORT_INSTANCES_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -401,10 +403,9 @@ public:
 
 #if 0
 	count_ptr<const this_type>
-	unroll_resolve(const unroll_context& ) const;
+	unroll_resolve(void) const;
 #endif
 
-private:
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
 private:

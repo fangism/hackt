@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.1.2.1 2005/07/11 20:19:25 fang Exp $
+	$Id: substructure_alias_base.h,v 1.1.2.2 2005/07/14 03:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -13,6 +13,7 @@
 
 namespace ART {
 namespace entity {
+class physical_instance_collection;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -29,6 +30,12 @@ protected:
 	subinstance_manager			subinstances;
 public:
 virtual	~substructure_alias_base() { }
+
+	template <class Tag>
+	void
+	unroll_port_instances(const instance_collection<Tag>& p) {
+		subinstances.unroll_port_instances(p);
+	}
 
 	/**
 		Visits children of the subinstance manager and 
@@ -61,6 +68,12 @@ class substructure_alias_base<false> {
 protected:
 	// has no sub-instances
 public:
+	/**
+		No-op.
+	 */
+	void
+	unroll_port_instances(const physical_instance_collection&) const { }
+
 	/**
 		No-op.  
 	 */

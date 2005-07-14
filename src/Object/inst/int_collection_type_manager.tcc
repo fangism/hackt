@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.1.2.2.2.1 2005/07/11 06:55:21 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.1.2.2.2.2 2005/07/14 03:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -120,6 +120,8 @@ void
 INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const type_ref_ptr_type& tp) {
 	INVARIANT(!this->type_parameter);
+	INVARIANT(tp->is_resolved());
+	INVARIANT(tp->is_canonical());
 	this->type_parameter = get_int_width(tp);
 }
 

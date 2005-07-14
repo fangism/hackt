@@ -1,11 +1,12 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.1.2.3 2005/07/13 21:56:43 fang Exp $
+	$Id: subinstance_manager.cc,v 1.1.2.4 2005/07/14 03:15:40 fang Exp $
  */
 
+#include <iostream>
 #include "Object/inst/subinstance_manager.h"
-#include "Object/art_object_instance_base.h"
+#include "Object/art_object_instance.h"
 #include "Object/art_object_type_ref_base.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -13,6 +14,7 @@
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 //=============================================================================
 // class subinstance_manager method definitions
 
@@ -31,21 +33,33 @@ subinstance_manager::subinstance_manager(const this_type& s) :
 subinstance_manager::~subinstance_manager() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Recursively creates hierarchy of public ports.  
+	TODO: template this for general physical types
+		to avoid up/down-casting.  
 	\param parent_instance the parent instance, from which we acquire type information.  
  */
 void
 subinstance_manager::unroll_port_instances(
-		const instance_collection_base& parent_instance) {
+		const physical_instance_collection& parent_instance) {
 	INVARIANT(subinstance_array.empty());	// must be the first time
 	// need strict type information of the parent instance
 	// from the parent's type's definition, create the number of ports.
 	// util::reserve(subinstance_array, N);
 	// instantiate each port formal/actual entry
+#if 0
 	const count_ptr<const fundamental_type_reference>
 		super_instance_type(parent_instance.get_type_ref());
 	NEVER_NULL(super_instance_type);
+	const count_ptr<const fundamental_type_reference>
+		resolved_super_instance_type(
+			super_instance_type->unroll_resolve());
+	if (!super_instance_type) {
+		super_instance_type->dump(
+			cerr << "Error resolving port type: ") << endl;
+		THROW_EXIT;
+	}
 #if 0
 	// make sure it is resolved! at least the strict parameters
 	// TODO: this won't work for built-in channel types
@@ -54,10 +68,19 @@ subinstance_manager::unroll_port_instances(
 		super_instance_def(super_instance_type->get_base_def());
 	// may need to create an unroll_context
 #else
-	super_instance_type->unroll_port_instances(*this);
+#if 0
+	super_instance_type->dump(cerr << "type: ") << endl;
+#endif
+	INVARIANT(resolved_super_instance_type->is_resolved());
+	INVARIANT(resolved_super_instance_type->is_canonical());
+	resolved_super_instance_type->unroll_port_instances(*this);
+#endif
+#else
+
 #endif
 	// relink_super_instance_alias(...);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

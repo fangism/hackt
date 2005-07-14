@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66.2.13.2.4 2005/07/12 23:30:55 fang Exp $
+#	$Id: Makefile.am,v 1.66.2.13.2.5 2005/07/14 03:15:32 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -202,6 +202,7 @@ OBJECT_TCC_FILES = \
 	Object/inst/null_collection_type_manager.tcc \
 	Object/inst/int_collection_type_manager.tcc \
 	Object/inst/parameterless_collection_type_manager.tcc \
+	Object/inst/subinstance_manager.tcc \
 	Object/art_object_instance_alias_actuals.tcc \
 	Object/art_object_instance_collection.tcc \
 	Object/art_object_inst_stmt.tcc \

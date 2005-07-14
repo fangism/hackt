@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.12.2.1 2005/07/13 21:56:37 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.12.2.2 2005/07/14 03:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -198,21 +198,38 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	const bool first_time = !this->inst_base->is_partially_unrolled();
 	if (first_time) {
 		const type_ref_ptr_type
-			ft(type_ref_parent_type::get_resolved_type(c));
+			ft(type_ref_parent_type::get_resolved_type());
 		if (!ft) {
 			// already have error message
 			return good_bool(false);
 		}
 		// ft will either be strict or relaxed.  
+		const type_ref_ptr_type
+			cft(ft->make_canonical_type_reference()
+				.template is_a<const typename type_ref_ptr_type::element_type>());
 		type_ref_parent_type::commit_type_first_time(
-			*this->inst_base, ft);
+			*this->inst_base, cft);
 		// this->inst_base->establish_collection_type(ft);
 	}
 	// unroll_type_check is specialized for each tag type.  
 	// NOTE: this results in a "fused" type that combines
 	// the relaxed template actuals.  
+#if 0
 	const type_ref_ptr_type
-		final_type_ref(type_ref_parent_type::unroll_type_reference(c));
+		final_type_ref(type_ref_parent_type::unroll_type_reference());
+#else
+	// we forgot to canonicalize
+	const type_ref_ptr_type
+		temp_type_ref(type_ref_parent_type::unroll_type_reference());
+	if (!temp_type_ref) {
+		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
+			" during unroll." << endl;
+		return good_bool(false);
+	}
+	const type_ref_ptr_type
+		final_type_ref(temp_type_ref->make_canonical_type_reference()
+			.template is_a<const typename type_ref_ptr_type::element_type>());
+#endif
 	if (!final_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
@@ -279,7 +296,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());
-	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
+	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type());
 	if (!ft) {
 		// already have error message
 		return good_bool(false);

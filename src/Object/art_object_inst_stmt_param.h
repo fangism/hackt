@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.8.2.1 2005/07/11 03:26:53 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.8.2.2 2005/07/14 03:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -44,7 +44,7 @@ protected:
 	get_type(void) const { return built_in_type_ptr; }
 
 	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
+	get_resolved_type(void) const {
 		return built_in_type_ptr;
 	}
 
@@ -57,7 +57,7 @@ protected:
 	}
 
 	const type_ref_ptr_type&
-	unroll_type_reference(const unroll_context&) const {
+	unroll_type_reference(void) const {
 		// trivial unrolling, context independent
 		return built_in_type_ptr;
 	}
@@ -115,7 +115,7 @@ protected:
 	get_type(void) const { return built_in_type_ptr; }
 
 	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
+	get_resolved_type(void) const {
 		return built_in_type_ptr;
 	}
 
@@ -128,7 +128,7 @@ protected:
 	}
 
 	const type_ref_ptr_type&
-	unroll_type_reference(const unroll_context&) const {
+	unroll_type_reference(void) const {
 		// trivial unrolling, context independent
 		return built_in_type_ptr;
 	}
