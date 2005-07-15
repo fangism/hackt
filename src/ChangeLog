@@ -2,6 +2,24 @@
 
 2005-07-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-09:
+	  Implemented a bunch of missing channel-type reference methods:
+		resolve, canonicalize, equivalence.  (It's about time!)
+	  Upgraded inst-stmt (channel) to use the default generic
+		type-ref parent template, which means it may accommodate
+		relaxed template actuals.  Channel instantiation statements
+		grew in object size by 1 pointer (4B).
+		Only tests in the test/parser/chp dir were affected and updated.
+	  New basic channel instance and connection tests in:
+		test/parser/channel/0{18,19,20,21,22,23,24}.in
+	  More consistent error reporting in type-reference checking, 
+		using fundamental_type_reference::type_mismatch_error();
+	  Added workarounds for built-in channel-type equivalence
+		comparisons to each (4) equivalence method
+		(of fundamental_type_reference)
+	  End of branch -- beam me up!
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-08:
 	  Demonstrated working hierarchical port instantiation.
 	  Added dump_hierarchical_name to instance_collection_base

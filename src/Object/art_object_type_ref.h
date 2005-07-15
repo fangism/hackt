@@ -2,7 +2,7 @@
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
 	TODO: must pool-allocate these, they're created frequently!
- 	$Id: art_object_type_ref.h,v 1.27.2.7.2.2 2005/07/14 03:15:37 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.7.2.3 2005/07/15 03:18:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -88,6 +88,10 @@ public:
 	static
 	data_type_reference*
 	make_quick_int_type_ref(const pint_value_type);
+
+	// sub-typed helper
+	count_ptr<const this_type>
+	make_canonical_data_type_reference(void) const;
 
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
@@ -218,7 +222,25 @@ public:
 	datatype_ptr_type
 	index_datatype(const size_t) const;
 
+	bool
+	may_be_collectibly_channel_type_equivalent(const this_type&) const;
+
+	bool
+	must_be_collectibly_channel_type_equivalent(const this_type&) const;
+
+	bool
+	may_be_connectibly_channel_type_equivalent(const this_type&) const;
+
+	bool
+	must_be_connectibly_channel_type_equivalent(const this_type&) const;
+
 #if 1
+private:
+	// consider using member function template...
+	struct datatype_resolver;
+	struct datatype_canonicalizer;
+
+public:
 	count_ptr<const channel_type_reference_base>
 	unroll_resolve(void) const;
 #endif
@@ -274,8 +296,14 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	never_ptr<const channel_definition_base>
+	get_base_chan_def(void) const { return base_chan_def; }
+
 	bool
 	is_canonical(void) const;
+
+	good_bool
+	must_be_valid(void) const;
 
 #if 1
 	count_ptr<const channel_type_reference_base>

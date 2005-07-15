@@ -3,6 +3,11 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-14:
+	Do built-in channel types have ports?  Should they be expanded
+		recursively like other structured types?
+
+//=============================================================================
 RESOLUTIONS (minutes of 2005-07-12 meeting):
 	(addressing  2005-07-11 entry)
 UNROLL (connect) phase:

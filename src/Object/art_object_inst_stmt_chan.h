@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.6.2.3 2005/07/14 03:15:34 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.6.2.4 2005/07/15 03:18:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
@@ -13,7 +13,7 @@
 #include "Object/art_object_instance_chan.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "util/persistent_object_manager.h"
-// #include "Object/art_object_inst_stmt_type_ref_default.h"
+#include "Object/art_object_inst_stmt_type_ref_default.h"
 
 namespace ART {
 namespace entity {
@@ -22,7 +22,7 @@ class const_param_expr_list;
 #include "util/using_ostream.h"
 
 //=============================================================================
-#if 1
+#if 0
 class class_traits<channel_tag>::instantiation_statement_type_ref_base {
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;

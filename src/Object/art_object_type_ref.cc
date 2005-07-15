@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.4 2005/07/14 23:15:54 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.14.2.5 2005/07/15 03:18:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -49,6 +49,7 @@
 #include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/reserve.h"
 
 //=============================================================================
 // specializations
@@ -69,6 +70,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 using std::ostringstream;
+using std::transform;
+using std::back_inserter;
 #include "util/using_ostream.h"
 USING_STACKTRACE
 using util::indent;
@@ -170,6 +173,16 @@ fundamental_type_reference::make_instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+fundamental_type_reference::type_mismatch_error(ostream& o, 
+		const this_type& l, const this_type& r) {
+	o << "ERROR: types mismatch!" << endl;
+	l.dump(o << "\tgot: ") << endl;
+	r.dump(o << "\tand: ") << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: channel type references may have no base definition!
  */
@@ -189,6 +202,19 @@ fundamental_type_reference::may_be_collectibly_type_equivalent(
 	}
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.
+#if 1
+	// HACK: to catch built-in channel types as a temporary workaround.
+	const count_ptr<const builtin_channel_type_reference>
+		lbcr(lt.is_a<const builtin_channel_type_reference>());
+	const count_ptr<const builtin_channel_type_reference>
+		rbcr(rt.is_a<const builtin_channel_type_reference>());
+	if (lbcr && rbcr) {
+		return lbcr->may_be_collectibly_channel_type_equivalent(*rbcr);
+	} else if (lbcr ^ rbcr) {
+		// type_mismatch_error(cerr, *lt, *rt);
+		return false;
+	}
+#endif
 	const never_ptr<const definition_base>
 		ld(lt->get_base_def());
 	const never_ptr<const definition_base>
@@ -222,6 +248,19 @@ fundamental_type_reference::must_be_collectibly_type_equivalent(
 			"FAAAAANNNNG!" << endl;
 		THROW_EXIT;
 	}
+#if 1
+	// HACK: to catch built-in channel types as a temporary workaround.
+	const count_ptr<const builtin_channel_type_reference>
+		lbcr(lt.is_a<const builtin_channel_type_reference>());
+	const count_ptr<const builtin_channel_type_reference>
+		rbcr(rt.is_a<const builtin_channel_type_reference>());
+	if (lbcr && rbcr) {
+		return lbcr->must_be_collectibly_channel_type_equivalent(*rbcr);
+	} else if (lbcr ^ rbcr) {
+		type_mismatch_error(cerr, *lt, *rt);
+		return false;
+	}
+#endif
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.
 	const never_ptr<const definition_base>
@@ -232,43 +271,15 @@ fundamental_type_reference::must_be_collectibly_type_equivalent(
 	INVARIANT(!ld.is_a<const typedef_base>());
 	INVARIANT(!rd.is_a<const typedef_base>());
 	if (ld != rd) {
+		// type_mismatch_error(cerr, *lt, *rt);
 		return false;
 	} else {
-#if 1
 		const bool ret(lt->template_args.must_be_strict_equivalent(
 			rt->template_args));
 		if (!ret) {
-			cerr << "ERROR: types mismatch!" << endl;
-			lt->dump(cerr << "\tgot: ") << endl;
-			rt->dump(cerr << "\tand: ") << endl;
+			type_mismatch_error(cerr, *lt, *rt);
 		}
 		return ret;
-#else
-		// 2005-07-08 refinement: (on hold... cancelled)
-		const template_actuals& largs(lt->template_args);
-		const template_actuals& rargs(rt->template_args);
-		if (!largs.must_be_relaxed_equivalent(rargs))
-			return false;
-		const template_actuals::const_arg_list_ptr_type
-			l_relaxed(largs.get_relaxed_args());
-		const template_actuals::const_arg_list_ptr_type
-			r_relaxed(rargs.get_relaxed_args());
-		if (l_relaxed && r_relaxed)
-			return l_relaxed->must_be_equivalent(*r_relaxed);
-		else {
-			if (l_relaxed || r_relaxed) {
-				lt->dump(cerr << "got: ") << endl;
-				rt->dump(cerr << "and: ") << endl;
-			}
-			INVARIANT(!l_relaxed && !r_relaxed);
-			// because otherwise, the two types have different 
-			// strictness, which is nonsense when it comes to
-			// checking types for the same collection.  
-			// Mismatches in strictness should be caught earlier
-			// in the front-end, in scopespace::add_instance().
-			return true;
-		}
-#endif
 	}
 }
 
@@ -289,6 +300,19 @@ fundamental_type_reference::may_be_connectibly_type_equivalent(
 	}
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.
+#if 1
+	// HACK: to catch built-in channel types as a temporary workaround.
+	const count_ptr<const builtin_channel_type_reference>
+		lbcr(lt.is_a<const builtin_channel_type_reference>());
+	const count_ptr<const builtin_channel_type_reference>
+		rbcr(rt.is_a<const builtin_channel_type_reference>());
+	if (lbcr && rbcr) {
+		return lbcr->may_be_connectibly_channel_type_equivalent(*rbcr);
+	} else if (lbcr ^ rbcr) {
+		// type_mismatch_error(cerr, *lt, *rt);
+		return false;
+	}
+#endif
 	const never_ptr<const definition_base>
 		ld(lt->get_base_def());
 	const never_ptr<const definition_base>
@@ -296,10 +320,19 @@ fundamental_type_reference::may_be_connectibly_type_equivalent(
 	INVARIANT(ld && rd);
 	INVARIANT(!ld.is_a<const typedef_base>());
 	INVARIANT(!rd.is_a<const typedef_base>());
-	if (ld != rd)
+	if (ld != rd) {
+		// type_mismatch_error(cerr, *lt, *rt);
 		return false;
-	else	return lt->template_args.may_be_strict_equivalent(
-			rt->template_args);
+	} else {
+		const bool ret(lt->template_args.may_be_strict_equivalent(
+			rt->template_args));
+#if 0
+		if (!ret) {
+			type_mismatch_error(cerr, *lt, *rt);
+		}
+#endif
+		return ret;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -319,6 +352,19 @@ fundamental_type_reference::must_be_connectibly_type_equivalent(
 	}
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.
+#if 1
+	// HACK: to catch built-in channel types as a temporary workaround.
+	const count_ptr<const builtin_channel_type_reference>
+		lbcr(lt.is_a<const builtin_channel_type_reference>());
+	const count_ptr<const builtin_channel_type_reference>
+		rbcr(rt.is_a<const builtin_channel_type_reference>());
+	if (lbcr && rbcr) {
+		return lbcr->must_be_connectibly_channel_type_equivalent(*rbcr);
+	} else if (lbcr ^ rbcr) {
+		type_mismatch_error(cerr, *lt, *rt);
+		return false;
+	}
+#endif
 	const never_ptr<const definition_base>
 		ld(lt->get_base_def());
 	const never_ptr<const definition_base>
@@ -326,10 +372,17 @@ fundamental_type_reference::must_be_connectibly_type_equivalent(
 	INVARIANT(ld && rd);
 	INVARIANT(!ld.is_a<const typedef_base>());
 	INVARIANT(!rd.is_a<const typedef_base>());
-	if (ld != rd)
+	if (ld != rd) {
+		// type_mismatch_error(cerr, *lt, *rt);
 		return false;
-	else	return lt->template_args.must_be_strict_equivalent(
-			rt->template_args);
+	} else {
+		const bool ret(lt->template_args.must_be_strict_equivalent(
+			rt->template_args));
+		if (!ret) {
+			type_mismatch_error(cerr, *lt, *rt);
+		}
+		return ret;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -602,8 +655,9 @@ data_type_reference::unroll_port_instances(subinstance_manager& sub) const {
 	} else if (base_type_def == &bool_traits::built_in_definition) {
 		// do nothing... for now
 		// don't really anticipate expanding bits fields.  
+	} else if (base_type_def.is_a<const enum_datatype_def>()) {
+		// do nothing
 	} else {
-		// includes enums for now...
 		cerr << "FANG, finish data_type_reference::unroll_port_instances()!" << endl;
 	}
 #endif
@@ -627,13 +681,20 @@ data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_type_reference>
+data_type_reference::make_canonical_data_type_reference(void) const {
+	// INVARIANT(template_args.is_constant());		// NOT true
+	return base_type_def->make_canonical_type_reference(template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return a type reference to a non-typedef data type.  
  */
 count_ptr<const fundamental_type_reference>
 data_type_reference::make_canonical_type_reference(void) const {
-	// INVARIANT(template_args.is_constant());		// NOT true
-	return base_type_def->make_canonical_type_reference(template_args);
+//	return base_type_def->make_canonical_type_reference(template_args);
+	return make_canonical_data_type_reference();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -725,6 +786,32 @@ channel_type_reference_base::load_object_base(
 //=============================================================================
 // class builtin_channel_type_reference method definitions
 
+/**
+	Helper class functor for transforming data types into
+	resolved types.  
+ */
+struct builtin_channel_type_reference::datatype_resolver {
+	datatype_ptr_type
+	operator () (const datatype_ptr_type& dt) const {
+		NEVER_NULL(dt);
+		return dt->unroll_resolve();
+	}
+};	// end class datatype_resolved
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper class functor for transforming data types into
+	canonical types.  
+ */
+struct builtin_channel_type_reference::datatype_canonicalizer {
+	datatype_ptr_type
+	operator () (const datatype_ptr_type& dt) const {
+		NEVER_NULL(dt);
+		return dt->make_canonical_data_type_reference();
+	}
+};	// end class datatype_resolved
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 builtin_channel_type_reference::builtin_channel_type_reference() :
 		parent_type(), datatype_list() {
 }
@@ -810,7 +897,7 @@ builtin_channel_type_reference::is_canonical(void) const {
  */
 void
 builtin_channel_type_reference::reserve_datatypes(const size_t s) {
-	datatype_list.reserve(s);
+	util::reserve(datatype_list, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -828,6 +915,126 @@ builtin_channel_type_reference::index_datatype(const size_t i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates whether or not two built-in channel types may be
+	collectibly equivalent.  
+ */
+bool
+builtin_channel_type_reference::may_be_collectibly_channel_type_equivalent(
+		const this_type& t) const {
+	const size_t ls(datatype_list.size());
+	const size_t rs(t.datatype_list.size());
+	if (ls != rs) {
+		type_mismatch_error(cerr, *this, t);
+		return false;
+	}
+	// use functional inner_product?
+	// find mismatch?
+	typedef datatype_list_type::const_iterator	const_iterator;
+	const_iterator i(datatype_list.begin());
+	const_iterator j(t.datatype_list.begin());
+	const const_iterator e(datatype_list.end());
+	for ( ; i!=e; i++, j++) {
+		if (!(*i)->may_be_collectibly_type_equivalent(**j)) {
+			// already have error message
+			return false;
+		}
+	}
+	// else everything matches
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates whether or not two built-in channel types are
+	collectibly equivalent.  
+ */
+bool
+builtin_channel_type_reference::must_be_collectibly_channel_type_equivalent(
+		const this_type& t) const {
+	const size_t ls(datatype_list.size());
+	const size_t rs(t.datatype_list.size());
+	if (ls != rs) {
+		type_mismatch_error(cerr, *this, t);
+		return false;
+	}
+	// use functional inner_product?
+	// find mismatch?
+	typedef datatype_list_type::const_iterator	const_iterator;
+	const_iterator i(datatype_list.begin());
+	const_iterator j(t.datatype_list.begin());
+	const const_iterator e(datatype_list.end());
+	for ( ; i!=e; i++, j++) {
+		if (!(*i)->must_be_collectibly_type_equivalent(**j)) {
+			// already have error message
+			return false;
+		}
+	}
+	// else everything matches
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates whether or not two built-in channel types may be
+	connectibly equivalent.  
+ */
+bool
+builtin_channel_type_reference::may_be_connectibly_channel_type_equivalent(
+		const this_type& t) const {
+	const size_t ls(datatype_list.size());
+	const size_t rs(t.datatype_list.size());
+	if (ls != rs) {
+		type_mismatch_error(cerr, *this, t);
+		return false;
+	}
+	// use functional inner_product?
+	// find mismatch?
+	typedef datatype_list_type::const_iterator	const_iterator;
+	const_iterator i(datatype_list.begin());
+	const_iterator j(t.datatype_list.begin());
+	const const_iterator e(datatype_list.end());
+	for ( ; i!=e; i++, j++) {
+		if (!(*i)->may_be_connectibly_type_equivalent(**j)) {
+			// already have error message
+			return false;
+		}
+	}
+	// else everything matches
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates whether or not two built-in channel types are
+	connectibly equivalent.  
+ */
+bool
+builtin_channel_type_reference::must_be_connectibly_channel_type_equivalent(
+		const this_type& t) const {
+	const size_t ls(datatype_list.size());
+	const size_t rs(t.datatype_list.size());
+	if (ls != rs) {
+		type_mismatch_error(cerr, *this, t);
+		return false;
+	}
+	// use functional inner_product?
+	// find mismatch?
+	typedef datatype_list_type::const_iterator	const_iterator;
+	const_iterator i(datatype_list.begin());
+	const_iterator j(t.datatype_list.begin());
+	const const_iterator e(datatype_list.end());
+	for ( ; i!=e; i++, j++) {
+		if (!(*i)->must_be_connectibly_type_equivalent(**j)) {
+			// already have error message
+			return false;
+		}
+	}
+	// else everything matches
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const builtin_channel_type_reference>
 builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 	typedef	never_ptr<const builtin_channel_type_reference>	return_type;
@@ -841,43 +1048,26 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 	Will eventually require a context-like object.  
 	\return a copy of itself, but with type parameters resolved, 
 		if applicable.  Returns NULL if there is error in resolution.  
+	TODO: what if template-dependent type appears in type-list, 
+		say inside a definition body?
  */
 count_ptr<const channel_type_reference_base>
 builtin_channel_type_reference::unroll_resolve(void) const {
 	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
-#if 0
-	if (template_args) {
-		// if template actuals depends on other template parameters, 
-		// then we need to pass actuals into its own context!
-		unroll_context cc;	// local context
-		const template_actuals_transformer
-			uc(cc, template_args, 
-				base_type_def->get_template_formals_manager());
-		const template_actuals
-			actuals(template_args.unroll_resolve(cc));
-		// check for errors??? at least try-catch
-		if (actuals) {
-			// the final type-check:
-			// now they MUST size-type check
-			const return_type
-				ret(new this_type(base_type_def, actuals));
-			NEVER_NULL(ret);
-			return (ret->must_be_valid().good ?
-				ret : return_type(NULL));
-		} else {
-			cerr << "ERROR resolving template arguments." << endl;
-			return return_type(NULL);
-		}
-	} else {
-		// need to check must_be_valid?
-		const return_type ret(new this_type(base_type_def));
-		INVARIANT(ret->must_be_valid().good);
-		return ret;
-	}
+#if 1
+	INVARIANT(!template_args);
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+	util::reserve(ret->datatype_list, datatype_list.size());
+	transform(datatype_list.begin(), datatype_list.end(),
+		back_inserter(ret->datatype_list), 
+		datatype_resolver()	// helper functor
+	);
+	return ret;
 #else
-	// NOTE: built-in channel types (currently) cannot have tempalte args
+	// NOTE: built-in channel types (currently) cannot have template args
 	// will have to resolve types of various data members
 	cerr << "FANG, finish builtin_channel_type_reference::unroll_resolve()!"
 		<< endl;
@@ -935,12 +1125,29 @@ builtin_channel_type_reference::make_instance_collection(
 count_ptr<const fundamental_type_reference>
 builtin_channel_type_reference::make_canonical_type_reference(void) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
+#if 0
 	cerr << "Fang, finish builtin_channel_type_reference::"
 		"make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+#else
+	INVARIANT(!template_args);
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+	util::reserve(ret->datatype_list, datatype_list.size());
+	transform(datatype_list.begin(), datatype_list.end(),
+		back_inserter(ret->datatype_list), 
+		datatype_canonicalizer()	// helper functor
+	);
+	return ret;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't really know what to do, since built-in channel types 
+	are supposed to be abstract, right?
+	Interpret data-types as unnamed ports?
+ */
 void
 builtin_channel_type_reference::unroll_port_instances(
 		subinstance_manager& sub) const {
@@ -1038,6 +1245,13 @@ channel_type_reference::is_canonical(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_type_reference::must_be_valid(void) const {
+	return base_chan_def->get_template_formals_manager()
+		.must_validate_actuals(template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return what does it mean to return NULL?
 	TODO: handles cases for resolving typedefs.  
@@ -1072,14 +1286,14 @@ channel_type_reference::unroll_resolve(void) const {
 	STACKTRACE("channel_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
-#if 0
+#if 1
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
 		unroll_context cc;	// local context
 		const template_actuals_transformer
 			uc(cc, template_args, 
-				base_type_def->get_template_formals_manager());
+				base_chan_def->get_template_formals_manager());
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -1087,7 +1301,7 @@ channel_type_reference::unroll_resolve(void) const {
 			// the final type-check:
 			// now they MUST size-type check
 			const return_type
-				ret(new this_type(base_type_def, actuals));
+				ret(new this_type(base_chan_def, actuals));
 			NEVER_NULL(ret);
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
@@ -1097,7 +1311,7 @@ channel_type_reference::unroll_resolve(void) const {
 		}
 	} else {
 		// need to check must_be_valid?
-		const return_type ret(new this_type(base_type_def));
+		const return_type ret(new this_type(base_chan_def));
 		INVARIANT(ret->must_be_valid().good);
 		return ret;
 	}

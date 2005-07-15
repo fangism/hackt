@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.5.2.2 2005/07/14 03:15:38 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.5.2.3 2005/07/15 03:18:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -70,6 +70,7 @@ virtual	~type_reference_base() { }
 	instance_collection family of classes...
  */
 class fundamental_type_reference : public type_reference_base {
+	typedef	fundamental_type_reference		this_type;
 public:
 	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
 	typedef	template_actuals::const_arg_list_ptr_type
@@ -205,6 +206,10 @@ public:
 	make_canonical_type_reference(void) const
 
 virtual	MAKE_CANONICAL_TYPE_REFERENCE_PROTO = 0;
+
+	static
+	ostream&
+	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
 public:
 virtual	good_bool

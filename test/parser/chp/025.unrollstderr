@@ -6,12 +6,12 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	109
 	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
 	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37

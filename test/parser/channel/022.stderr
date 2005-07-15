@@ -1,0 +1,3 @@
+Types do not match! got: chan(bool<>) and: chan(int<11>).
+ERROR: type/size of instance reference 2 of alias list doesn't match the type/size of the first instance reference!  
+HALT: at least one error in connection list.  [6:1..15]

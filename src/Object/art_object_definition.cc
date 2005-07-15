@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.6.2.2 2005/07/14 23:15:49 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.6.2.3 2005/07/15 03:18:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -922,10 +922,17 @@ channel_definition_alias::assign_typedef(
 count_ptr<const channel_type_reference_base>
 channel_definition_alias::make_canonical_type_reference(
 		const template_actuals& a) const {
+#if 0
 	typedef count_ptr<const channel_type_reference_base>	return_type;
 	cerr << "Fang, finish channel_definition_alias::"
 		"make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+#else
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_chan_def()->make_canonical_type_reference(ta);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

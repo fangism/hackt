@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.1.2.2 2005/07/11 20:19:25 fang Exp $
+	$Id: chan_traits.h,v 1.1.2.3 2005/07/15 03:18:40 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -58,7 +58,7 @@ struct class_traits<channel_tag> {
 	typedef	channel_instantiation_statement
 					instantiation_statement_type;
 	// define this elsewhere, in "traits/inst_stmt_chan.h"
-#if 1
+#if 0
 	class instantiation_statement_type_ref_base;
 #else
 	// not until channel_type_reference_base::unroll_resolve is done

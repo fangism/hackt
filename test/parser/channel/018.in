@@ -1,0 +1,10 @@
+// "018.in" should pass: instantiating a user-defined channel
+// copy-extended from "002.in"
+
+defchan mychan <: chan(bool) (int i) {
+send {}
+recv {}
+}
+
+mychan foobar;
+
