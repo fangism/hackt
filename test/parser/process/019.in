@@ -1,4 +1,4 @@
-// should die on incomplete defproc or prototype
+// "019.in" should die on incomplete defproc or prototype
 
 template <pint milk, tea; pbool water[4]>
 defproc barbar()

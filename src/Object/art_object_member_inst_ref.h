@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.7.4.1 2005/07/05 07:59:48 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.7.4.2 2005/07/15 03:49:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
 #define	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
 
 #include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 
 namespace ART {
 namespace entity {

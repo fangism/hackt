@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_bool_traits.h"
+	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
-	$Id: art_object_bool_traits.h,v 1.1.2.4 2005/07/10 21:11:13 fang Exp $
+	This file used to be "Object/art_object_bool_traits.h".
+	$Id: bool_traits.h,v 1.1.4.2 2005/07/15 03:49:23 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_BOOL_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__
+#define	__OBJECT_TRAITS_BOOL_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -23,6 +24,7 @@ struct class_traits<bool_tag> {
 						instance_alias_base_ptr_type;
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
+	static const bool		has_substructure = false;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
@@ -80,5 +82,5 @@ struct class_traits<bool_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_BOOL_TRAITS_H__
+#endif	// __OBJECT_TRAITS_BOOL_TRAITS_H__
 

@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_data_traits.h"
+	\file "Object/traits/data_traits.h"
 	Traits and policies for generic data types.  
-	$Id: art_object_data_traits.h,v 1.1.2.1 2005/06/25 21:07:20 fang Exp $
+	This file used to be "Object/art_object_data_traits.h".
+	$Id: data_traits.h,v 1.1.4.2 2005/07/15 03:49:25 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_DATA_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_DATA_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_DATA_TRAITS_H__
+#define	__OBJECT_TRAITS_DATA_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -33,7 +34,7 @@ struct class_traits<datatype_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 
-	// define this elsewhere, in "art_object_inst_stmt_data.h"
+	// define this elsewhere, in "traits/inst_stmt_data.h"
 	class instantiation_statement_type_ref_base;
 };	// end struct class_traits<datatype_tag>
 
@@ -41,5 +42,5 @@ struct class_traits<datatype_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_DATA_TRAITS_H__
+#endif	// __OBJECT_TRAITS_DATA_TRAITS_H__
 

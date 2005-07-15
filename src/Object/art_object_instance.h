@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.40.4.3 2005/07/08 03:03:45 fang Exp $
+	$Id: art_object_instance.h,v 1.40.4.4 2005/07/15 03:49:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -67,6 +67,15 @@ virtual	~physical_instance_collection();
 	good_bool
 	must_check_reference_dimensions(...) const;
 #endif
+
+// macro co-defined in "Object/art_object_instance_collection.h"
+#ifndef	UNROLL_PORT_ONLY_PROTO
+#define	UNROLL_PORT_ONLY_PROTO						\
+	count_ptr<physical_instance_collection>				\
+	unroll_port_only(const unroll_context&) const
+#endif
+
+virtual	UNROLL_PORT_ONLY_PROTO = 0;
 
 virtual bool
 	is_partially_unrolled(void) const = 0;

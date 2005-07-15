@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_int_traits.h"
+	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
-	$Id: art_object_int_traits.h,v 1.1.2.4 2005/07/10 21:11:21 fang Exp $
+	This file used to be "Object/art_object_int_traits.h".
+	$Id: int_traits.h,v 1.1.4.2 2005/07/15 03:49:25 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INT_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_INT_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_INT_TRAITS_H__
+#define	__OBJECT_TRAITS_INT_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -21,6 +22,7 @@ struct class_traits<int_tag> {
 	typedef	int_instance_alias_base		instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+	static const bool		has_substructure = false;
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	template <size_t D>
@@ -87,5 +89,5 @@ struct class_traits<int_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INT_TRAITS_H__
+#endif	// __OBJECT_TRAITS_INT_TRAITS_H__
 

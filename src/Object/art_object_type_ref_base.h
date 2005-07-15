@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.5 2005/07/07 23:48:15 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.6 2005/07/15 03:49:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -25,6 +25,7 @@ namespace entity {
 class definition_base;
 class instance_collection_base;
 class scopespace;
+class subinstance_manager;	// from "Object/inst/subinstance_manager.h"
 using parser::token_identifier;
 using std::istream;
 using util::persistent;
@@ -69,6 +70,7 @@ virtual	~type_reference_base() { }
 	instance_collection family of classes...
  */
 class fundamental_type_reference : public type_reference_base {
+	typedef	fundamental_type_reference		this_type;
 public:
 	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
 	typedef	template_actuals::const_arg_list_ptr_type
@@ -118,6 +120,14 @@ virtual never_ptr<const definition_base>
 	bool
 	is_relaxed(void) const { return !is_strict(); }
 
+	// whether or not base definition is canonical
+virtual	bool
+	is_canonical(void) const = 0;
+
+	// whether or not actuals are constants
+	bool
+	is_resolved(void) const;
+
 #define	MERGE_RELAXED_ACTUALS_PROTO					\
 	count_ptr<const this_type>					\
 	merge_relaxed_actuals(const const_template_args_ptr_type&) const
@@ -159,6 +169,14 @@ public:
 
 virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 
+#define	UNROLL_PORT_INSTANCES_PROTO					\
+	void								\
+	unroll_port_instances(subinstance_manager&) const
+
+#if 0
+virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
+#endif
+
 public:
 	bool
 	may_be_collectibly_type_equivalent(
@@ -187,8 +205,11 @@ public:
 	count_ptr<const fundamental_type_reference>			\
 	make_canonical_type_reference(void) const
 
-protected:
 virtual	MAKE_CANONICAL_TYPE_REFERENCE_PROTO = 0;
+
+	static
+	ostream&
+	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
 public:
 virtual	good_bool

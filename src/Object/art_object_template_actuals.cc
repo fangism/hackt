@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.7 2005/07/09 05:52:29 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.8 2005/07/15 03:49:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -75,6 +75,15 @@ template_actuals::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+template_actuals::is_resolved(void) const {
+	return (!strict_template_args ||
+		strict_template_args.is_a<const const_param_expr_list>()) && 
+		(!relaxed_template_args ||
+		relaxed_template_args.is_a<const const_param_expr_list>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::operator bool () const {
 	return strict_template_args || relaxed_template_args;
 }
@@ -140,7 +149,7 @@ template_actuals::get_relaxed_args(void) const {
 		so we must require the caller to provide them in context.  
  */
 template_actuals
-template_actuals::unroll_resolve(unroll_context& c) const {
+template_actuals::unroll_resolve(const unroll_context& c) const {
 	bool err = false;
 	arg_list_ptr_type sr, rr;
 	if (strict_template_args) {

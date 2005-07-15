@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.h"
 	Class for template arguments, a.k.a. actuals.  
-	$Id: art_object_template_actuals.h,v 1.1.4.4 2005/07/09 05:52:29 fang Exp $
+	$Id: art_object_template_actuals.h,v 1.1.4.5 2005/07/15 03:49:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_ACTUALS_H__
@@ -71,6 +71,9 @@ public:
 	const_arg_list_ptr_type
 	get_relaxed_args(void) const;
 
+	bool
+	is_resolved(void) const;
+
 	operator bool () const;
 
 	count_ptr<const param_expr>
@@ -98,7 +101,7 @@ public:
 	must_be_relaxed_equivalent(const this_type&) const;
 
 	this_type
-	unroll_resolve(unroll_context&) const;
+	unroll_resolve(const unroll_context&) const;
 
 	this_type
 	transform_template_actuals(const this_type&, 

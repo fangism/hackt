@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.1.2.3 2005/07/10 21:11:22 fang Exp $
+ 	$Id: basic_param.cc,v 1.1.2.4 2005/07/15 03:49:20 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -27,11 +27,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/art_object_bool_traits.h"
-#include "Object/art_object_int_traits.h"
 #include "Object/art_object_instance_param.h"
-#include "Object/art_object_pint_traits.h"	// needed for assign
-#include "Object/art_object_pbool_traits.h"	// needed for assign
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/pint_traits.h"	// needed for assign
+#include "Object/traits/pbool_traits.h"	// needed for assign
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_type_hash.h"

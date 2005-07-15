@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_chan_traits.h"
+	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
-	$Id: art_object_chan_traits.h,v 1.1.2.3 2005/07/10 19:37:18 fang Exp $
+	This file used to be "Object/art_object_chan_traits.h".
+	$Id: chan_traits.h,v 1.1.4.2 2005/07/15 03:49:23 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CHAN_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_CHAN_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
+#define	__OBJECT_TRAITS_CHAN_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -29,6 +30,7 @@ struct class_traits<channel_tag> {
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+	static const bool		has_substructure = true;
 	/**
 		Actually, this may have to be split into 
 		sub-tags, one for built-in, one for user-defined.  
@@ -55,8 +57,8 @@ struct class_traits<channel_tag> {
 					instantiation_statement_parent_type;
 	typedef	channel_instantiation_statement
 					instantiation_statement_type;
-	// define this elsewhere, in "art_object_inst_stmt_chan.h"
-#if 1
+	// define this elsewhere, in "traits/inst_stmt_chan.h"
+#if 0
 	class instantiation_statement_type_ref_base;
 #else
 	// not until channel_type_reference_base::unroll_resolve is done
@@ -91,5 +93,5 @@ struct class_traits<channel_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_CHAN_TRAITS_H__
+#endif	// __OBJECT_TRAITS_CHAN_TRAITS_H__
 

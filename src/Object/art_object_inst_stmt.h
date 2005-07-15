@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_inst_stmt.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.17.4.4 2005/07/07 06:02:20 fang Exp $
+	$Id: art_object_inst_stmt.h,v 1.17.4.5 2005/07/15 03:49:05 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_H__
 
 #include "Object/art_object_inst_stmt_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
@@ -118,6 +118,7 @@ public:
 	// yet overridden by param_instantiation_statement<>
 	UNROLL_META_INSTANTIATE_PROTO;
 
+	INSTANTIATE_PORT_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

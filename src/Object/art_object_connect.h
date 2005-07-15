@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.20.4.2 2005/07/05 07:59:34 fang Exp $
+	$Id: art_object_connect.h,v 1.20.4.3 2005/07/15 03:48:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
@@ -9,7 +9,7 @@
 
 #include "Object/expr/types.h"
 #include "Object/art_object_instance_management_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/multikey_fwd.h"
 

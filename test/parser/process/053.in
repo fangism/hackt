@@ -1,0 +1,6 @@
+// "053.in" should fail: ports mismatch
+
+defproc food(int sleep);		// default 32
+
+defproc food(int<16> sleep);
+

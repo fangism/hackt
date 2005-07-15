@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.5.2.1 2005/06/30 23:22:15 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.5.2.2 2005/07/15 03:49:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -77,6 +77,9 @@ public:
 
 	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
 
 	never_ptr<const scopespace>
 	get_parent(void) const;
@@ -158,6 +161,9 @@ private:
 protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;
+	/**
+		Not channel_type_reference_base?
+	 */
 	excl_ptr<const channel_type_reference>	base;
 private:
 	channel_definition_alias();

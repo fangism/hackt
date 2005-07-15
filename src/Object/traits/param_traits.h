@@ -1,13 +1,14 @@
 /**
-	\file "Object/art_object_param_traits.h"
+	\file "Object/traits/param_traits.h"
 	Traits and policies for general parameters.  
-	$Id: art_object_param_traits.h,v 1.1.2.1 2005/06/25 21:07:25 fang Exp $
+	This file used to be "Object/art_object_param_traits.h".
+	$Id: param_traits.h,v 1.1.4.2 2005/07/15 03:49:25 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_PARAM_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_PARAM_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_PARAM_TRAITS_H__
+#define	__OBJECT_TRAITS_PARAM_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
@@ -22,5 +23,5 @@ struct class_traits<parameter_value_tag> {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_PARAM_TRAITS_H__
+#endif	// __OBJECT_TRAITS_PARAM_TRAITS_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_param.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.5.4.8 2005/07/10 21:11:17 fang Exp $
+	$Id: art_object_inst_stmt_param.h,v 1.5.4.9 2005/07/15 03:49:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
@@ -10,8 +10,8 @@
 #include "Object/art_object_inst_stmt_param_base.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_value_collection.h"
-#include "Object/art_object_pint_traits.h"
-#include "Object/art_object_pbool_traits.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/pbool_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/expr/const_param_expr_list.h"
 
@@ -44,7 +44,7 @@ protected:
 	get_type(void) const { return built_in_type_ptr; }
 
 	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
+	get_resolved_type(void) const {
 		return built_in_type_ptr;
 	}
 
@@ -57,7 +57,7 @@ protected:
 	}
 
 	const type_ref_ptr_type&
-	unroll_type_reference(const unroll_context&) const {
+	unroll_type_reference(void) const {
 		// trivial unrolling, context independent
 		return built_in_type_ptr;
 	}
@@ -115,7 +115,7 @@ protected:
 	get_type(void) const { return built_in_type_ptr; }
 
 	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
+	get_resolved_type(void) const {
 		return built_in_type_ptr;
 	}
 
@@ -128,7 +128,7 @@ protected:
 	}
 
 	const type_ref_ptr_type&
-	unroll_type_reference(const unroll_context&) const {
+	unroll_type_reference(void) const {
 		// trivial unrolling, context independent
 		return built_in_type_ptr;
 	}

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.7.2.1 2005/06/30 23:22:16 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.7.2.2 2005/07/15 03:49:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -89,8 +89,14 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
+
+	const port_formals_manager&
+	get_port_formals(void) const { return port_formals; }
 
 	/** overrides definition_base's */
 	never_ptr<const instance_collection_base>

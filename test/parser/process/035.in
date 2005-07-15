@@ -1,4 +1,4 @@
-// should pass: matching redeclaration
+// "035.in" should pass: matching redeclaration
 
 template <pint bar[5]>
 defproc foo();

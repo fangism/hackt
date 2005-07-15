@@ -1,38 +1,40 @@
 /**
-	\file "Object/art_object_struct_traits.h"
-	Traits and policies for data structs.  
-	$Id: art_object_struct_traits.h,v 1.1.2.3 2005/07/10 19:37:25 fang Exp $
+	\file "Object/traits/enum_traits.h"
+	Traits and policies for enum data types.  
+	This file used to be "Object/art_object_enum_traits.h".
+	$Id: enum_traits.h,v 1.1.4.2 2005/07/15 03:49:25 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_STRUCT_TRAITS_H__
-#define	__OBJECT_ART_OBJECT_STRUCT_TRAITS_H__
+#ifndef	__OBJECT_TRAITS_ENUM_TRAITS_H__
+#define	__OBJECT_TRAITS_ENUM_TRAITS_H__
 
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 
 namespace ART {
 namespace entity {
-template <class> class general_collection_type_manager;
+template <class> class parameterless_collection_type_manager;
 //-----------------------------------------------------------------------------
 template <>
-struct class_traits<datastruct_tag> {
-	typedef	datastruct_tag			tag_type;
+struct class_traits<enum_tag> {
+	typedef	enum_tag			tag_type;
 	static const char			tag_name[];
-	typedef	struct_instance			instance_type;
+	typedef	enum_instance			instance_type;
 
-	typedef	struct_instance_alias_base	instance_alias_base_type;
+	typedef	enum_instance_alias_base	instance_alias_base_type;
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
-	typedef	instance_alias_info_actuals
+	static const bool		has_substructure = false;
+	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
 
-	typedef	struct_instance_collection	instance_collection_generic_type;
+	typedef	enum_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
-	typedef	general_collection_type_manager<tag_type>
+	typedef	parameterless_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
 	template <size_t D>
 	struct instance_array {
@@ -40,38 +42,38 @@ struct class_traits<datastruct_tag> {
 	};
 
 #if 1
-	typedef	struct_expr			data_expr_base_type;
-	typedef	struct_value_type		data_value_type;
+	typedef	enum_expr			data_expr_base_type;
 #endif
+	typedef	enum_value_type			data_value_type;
 
 	// later add instantiation_statement support...
 
-	typedef	simple_datastruct_nonmeta_instance_reference
+	typedef	simple_enum_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;
-	typedef	simple_datastruct_meta_instance_reference
+	typedef	simple_enum_meta_instance_reference
 					simple_meta_instance_reference_type;
-	typedef	struct_instance_reference_base	
+	typedef	enum_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-	typedef	struct_meta_instance_reference_base
+	typedef	enum_meta_instance_reference_base
 				meta_instance_reference_parent_type;
-	typedef	struct_instance_reference_base
+	typedef	enum_instance_reference_base
 				nonmeta_instance_reference_parent_type;
-	typedef	datastruct_member_meta_instance_reference
+	typedef	enum_member_meta_instance_reference
 				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
 						alias_collection_type;
-	typedef	datastruct_alias_connection	alias_connection_type;
+	typedef	enum_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
-	// need real type here!
+	typedef	never_ptr<const enum_datatype_def>
+						instance_collection_parameter_type;
 	typedef	data_type_reference		type_ref_type;
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
-};	// end struct class_traits<datastruct_tag>
+};	// end struct class_traits<enum_tag>
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_STRUCT_TRAITS_H__
+#endif	// __OBJECT_TRAITS_ENUM_TRAITS_H__
 

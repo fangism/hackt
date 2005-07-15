@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.24.2.4 2005/07/06 23:11:24 fang Exp $
+	$Id: art++-parse.yy,v 1.24.2.5 2005/07/15 03:49:27 fang Exp $
  */
 
 %{
@@ -1981,8 +1981,8 @@ binary_assignment
 //	| member_index_expr ANDMASK expr
 //	| member_index_expr ORMASK expr
 //	| member_index_expr XORMASK expr
-*/
 	;
+*/
 
 unary_assignment
 	: member_index_expr PLUSPLUS

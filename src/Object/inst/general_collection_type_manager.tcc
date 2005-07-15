@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.1.2.1 2005/07/10 19:37:27 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.1.2.2 2005/07/15 03:49:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -89,7 +89,7 @@ bool
 GENERAL_COLLECTION_TYPE_MANAGER_CLASS::must_match_type(
 		const this_type& r) const {
 	// must be const-resolved!
-	return this->type_parameter->must_be_collectibly_type_equivalent(
+	return this->type_parameter->must_be_connectibly_type_equivalent(
 		*r.type_parameter);
 }
 
@@ -129,6 +129,8 @@ void
 GENERAL_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const type_ref_ptr_type& t) {
 	INVARIANT(!this->type_parameter);
+	INVARIANT(t->is_resolved());
+	INVARIANT(t->is_canonical());
 	this->type_parameter = t;
 }
 

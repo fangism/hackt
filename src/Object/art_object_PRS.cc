@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.7.4.2 2005/07/05 07:59:33 fang Exp $
+	$Id: art_object_PRS.cc,v 1.7.4.3 2005/07/15 03:48:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -15,7 +15,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_PRS.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_ref_data.h"
-#include "Object/art_object_bool_traits.h"
+#include "Object/traits/bool_traits.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_inst_ref_subtypes.h"

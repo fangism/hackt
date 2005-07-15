@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.6 2005/07/08 03:03:48 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.7 2005/07/15 03:49:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -167,7 +167,7 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 VALUE_COLLECTION_CLASS::get_type_ref(void) const {
 	return class_traits<Tag>::built_in_type_ptr;
-		// declared in "art_object_classification_details.h"
+		// declared in "traits/class_traits.h"
 		// initialized in "art_built_ins.cc"
 }
 

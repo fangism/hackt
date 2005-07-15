@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.7 2005/07/09 05:52:27 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.8 2005/07/15 03:49:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
 
 #include <iostream>
-#include "Object/art_object_data_traits.h"
+#include "Object/traits/data_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -60,8 +60,8 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(unroll_context& c) const {
-		const type_ref_ptr_type ret(type->unroll_resolve(c));
+	get_resolved_type(void) const {
+		const type_ref_ptr_type ret(type->unroll_resolve());
 		if (!ret) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
@@ -87,15 +87,15 @@ protected:
 		not connectible equivalence.  
 	 */
 	type_ref_ptr_type
-	unroll_type_reference(unroll_context& c) const {
+	unroll_type_reference(void) const {
 #if 0
 		if (relaxed_args) {
 			const type_ref_ptr_type
 			merged_type(type->merge_relaxed_actuals(relaxed_args));
-			return merged_type->unroll_resolve(c);
-		} else	return type->unroll_resolve(c);
+			return merged_type->unroll_resolve();
+		} else	return type->unroll_resolve();
 #else
-		return type->unroll_resolve(c);
+		return type->unroll_resolve();
 #endif
 	}
 

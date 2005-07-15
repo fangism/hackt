@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.28.4.3 2005/07/09 05:52:28 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.28.4.4 2005/07/15 03:49:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -768,6 +768,14 @@ name_space::get_qualified_name(void) const {
 	if (parent)
 		return parent->get_qualified_name() +scope +key;
 	else return "";			// global e.g. ::foo
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+name_space::dump_qualified_name(ostream& o) const {
+	if (parent)
+		return parent->dump_qualified_name(o) << scope << key;
+	else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

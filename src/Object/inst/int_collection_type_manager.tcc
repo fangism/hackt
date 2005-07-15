@@ -1,16 +1,20 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.1.2.2 2005/07/10 21:11:23 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.1.2.3 2005/07/15 03:49:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 #define	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 
-#include "Object/inst/int_collection_type_manager.h"
-#include "Object/art_object_type_ref.h"
-#include "Object/art_object_inst_stmt_data.h"
 #include <iostream>
+#include "Object/art_object_fwd.h"
+#include "Object/inst/int_collection_type_manager.h"
+#include "Object/traits/int_traits.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/art_object_inst_stmt.h"
+#include "Object/art_object_inst_stmt_data.h"
+#include "Object/expr/pint_const.h"
 #include "util/persistent_object_manager.h"
 
 namespace ART {
@@ -116,6 +120,8 @@ void
 INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const type_ref_ptr_type& tp) {
 	INVARIANT(!this->type_parameter);
+	INVARIANT(tp->is_resolved());
+	INVARIANT(tp->is_canonical());
 	this->type_parameter = get_int_width(tp);
 }
 

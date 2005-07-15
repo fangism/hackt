@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_data.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_data.h,v 1.2.2.1 2005/06/30 23:22:16 fang Exp $
+	$Id: art_object_definition_data.h,v 1.2.2.2 2005/07/15 03:49:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_DATA_H__
@@ -95,6 +95,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
@@ -182,6 +185,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
@@ -235,6 +241,9 @@ public:
 
 	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
 
 	never_ptr<const scopespace>
 	get_parent(void) const;

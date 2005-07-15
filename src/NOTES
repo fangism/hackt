@@ -3,6 +3,95 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-14:
+	Do built-in channel types have ports?  Should they be expanded
+		recursively like other structured types?
+
+//=============================================================================
+RESOLUTIONS (minutes of 2005-07-12 meeting):
+	(addressing  2005-07-11 entry)
+UNROLL (connect) phase:
+	Queries:
+	Are x and y connected? (somewhere in hierarchy)
+		Lemma: If super instances a, and b are explicitly aliased, 
+			and subinstances a....x, b....y are somehow
+			connected, then then all intermediate types
+			from top to bottom must match.  
+		Result: checking for connection requires upward checking
+			of x and y (and their aliases') parents WHILE
+			their types match.  As soon as parents' types
+			mismatch, can deduce non-connectivity.  
+	What is x connected to (all aliases)?
+		print aliases of itself and all parents' aliases.
+		(potentially multiplicative in size)
+	Graph connectivity: are two instances connected by anything?
+		Are any public ports of the two instances connected?
+		(recursive in public ports)
+	Subinstance implementation:
+		Upon instantiation, can recursively expand sub-instances
+		of ports down to leaf types, or defer until
+		member is actually referenced (or ports connected), 
+		a mere demand-driven optimization.
+		Should be able to expand ports recursively regardless
+		of relaxed template actuals because no ports may depend
+		on relaxed actuals.  
+		Private internal instances will not come into play until
+		unique creation.  
+	Any need to "play" local internal connections in this phase?
+		NO.  Only needed during unique creation.  
+
+cflat: will be purely text dump traversal, as originally planned.  
+
+UNIQUE (create) phase:
+	NOTE: will probably need one final type check for references
+		and aliases that involve relaxed actual parameters
+		because some checks are deferred during the unroll stage.  
+	Recursive traversal of aliases to establish object uniqueness, 
+		can be identified by e.g. a memory address of residence.  
+	Allocation of memory for state information. 
+
+SIMULATE operations and issues:
+	Establish fan-in and fan-out relationships.  
+	Don't want to replicate expression objects, instead have unique
+		instance reference expression of definitions.
+	(prsim) expression memoization
+	expression templates for prs in definitions
+		each production rule will map literals to 
+		positions to be used in the...
+	translation tables from local references to global unique IDs:
+		unique instances will point to (OR-combination)
+		of expression templates.
+	
+//-----------------------------------------------------------------------------
+2005-07-11:
+	Instance alias connection considerations:
+	Suppose type A has public members b and c.
+		A x, y;
+		If b and c are connected (internally), then what exactly 
+		happens when x = y?
+	How to determine whether or not two instances are connected?
+		Two instances referenced may be deep in the subinstance
+		hierarchy, and they connect if *any* of their parents 
+		are aliases.  But what an efficient way (<O(N^2)) of 
+		checking for aliasing parents?
+	WHEN are sub-instances expanded?
+		Do they require type to be complete?
+			(Theoretically, no, because instances should not 
+			depend on relaxed actual parameters.)
+		Sometimes types are never completed because they are 
+			merely relaxed-typed aliases (in arrays, e.g.).  
+		Create upon instantiation (regardless of relaxed actuals)?
+		Expand public ports only? Defer private and internals?
+	cflat -- want it to flatten connections in the hierarchy?
+		Or just some sort of hierarchical traversal to 
+		dump connections in some format?
+	Preventing mutual recursion/inclusion between types requires
+		some partial ordering between definitions.  
+		Or simply require definition before use/instance declaration.  
+	Procedure: check definition for existing type
+
+
+//=============================================================================
 2005-07-05:
 	Enforcing that things that shouldn't depend on relaxed formal
 		parameters... don't depend.  
@@ -37,7 +126,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 //=============================================================================
 2005-06-23:
 	Major goal: port and member instance connections (unroll-time)
-	RESOLUTION (205-07-01):
+	RESOLUTION (2005-07-01):
 		use single unified pass, 
 		don't worry about multifile instance linking, 
 			we may drop support for that idea completely

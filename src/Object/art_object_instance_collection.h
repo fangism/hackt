@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.6 2005/07/10 19:37:22 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.7 2005/07/15 03:49:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include <set>
 
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "Object/art_object_index.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -35,76 +35,22 @@ using util::persistent;
 using util::persistent_object_manager;
 
 class scopespace;
+class physical_instance_collection;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class const_index_list;
 class const_range_list;
 class const_param_expr_list;
+class unroll_context;
+class subinstance_manager;
 
-//=============================================================================
-#if 0
-/**
-	This is a functor for specializing the formatting of printed types.  
-	We provide a default implementation.  
-	Specializations should follow the same pattern.  
-	(Why not use plain static functions?)
- */
-template <class Tag>
-struct collection_type_manager {
-	typedef	typename class_traits<Tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef	typename class_traits<Tag>::type_ref_ptr_type
-					type_ref_ptr_type;
-
-	/// was separate type-dumper functor
-	struct dumper {
-		ostream& os;
-		dumper(ostream& o) : os(o) { }
-
-		// intentionally undefined
-		ostream&
-		operator () (const instance_collection_generic_type&);
-	};	// end struct dumper
-
-	static
-	void
-	collect(persistent_object_manager&, 
-		const instance_collection_generic_type&);
-
-	static
-	void
-	write(const persistent_object_manager&, ostream&, 
-		const instance_collection_generic_type&);
-
-	static
-	void
-	load(const persistent_object_manager&, istream&, 
-		instance_collection_generic_type&);
-
-	static
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type&);
-
-	/**
-		NOTE: Was separate type-dumper functor.
-		\return true on error, false on success.
-	 */
-	static
-	bad_bool
-	commit_type(const instance_collection_generic_type&, 
-		const type_ref_ptr_type&);
-
-	static
-	void
-	commit_type_first_time(instance_collection_generic_type&, 
-		const type_ref_ptr_type&);
-
-};	// end struct type_manager
+// lazy to include, just copied over from "Object/art_object_instance_base.h"
+#ifndef	UNROLL_PORT_ONLY_PROTO
+#define	UNROLL_PORT_ONLY_PROTO						\
+count_ptr<physical_instance_collection>					\
+unroll_port_only(const unroll_context&) const
 #endif
 
-//-----------------------------------------------------------------------------
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
 template <class Tag>
@@ -123,11 +69,13 @@ class instance_collection :
 // friend struct collection_type_manager<Tag>;
 // temporary workaround until int's type is better integrated
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
+friend	class subinstance_manager;
 private:
 	typedef	Tag					category_type;
 	typedef	typename class_traits<Tag>::instance_collection_parent_type
 							parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
+// friend void subinstance_manager::unroll_port_instances(const this_type&);
 public:
 	typedef	typename class_traits<Tag>::type_ref_type
 							type_ref_type;
@@ -157,13 +105,8 @@ protected:
 						member_inst_ref_ptr_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
-#if 0
-private:
-	/**
-		General parameter object for type checking.  
-	 */
-	instance_collection_parameter_type		type_parameter;
-#endif
+	// type parameter, if applicable is inherited from
+	// collection_type_manager_parent_type
 protected:
 	explicit
 	instance_collection(const size_t d) :
@@ -361,6 +304,8 @@ public:
 	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
 		alias_collection_type&) const;
 
+	UNROLL_PORT_ONLY_PROTO;
+
 	instance_alias_base_type&
 	load_reference(istream& i) const;
 
@@ -434,6 +379,8 @@ public:
 	bool
 	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
 		alias_collection_type&) const;
+
+	UNROLL_PORT_ONLY_PROTO;
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;

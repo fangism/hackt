@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.6 2005/07/07 23:48:07 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.7 2005/07/15 03:49:01 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -38,8 +38,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/meta_range_list.h"
 #include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_pint_traits.h"
-#include "Object/art_object_pbool_traits.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/pbool_traits.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -219,6 +219,16 @@ definition_base::get_qualified_name(void) const {
 	if (parent)
 		return parent->get_qualified_name() +scope +key;
 	else return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+definition_base::dump_qualified_name(ostream& o) const {
+	const string& key(get_key());
+	const never_ptr<const scopespace> parent(get_parent());
+	if (parent)
+		parent->dump_qualified_name(o) << scope;
+	return o << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -429,6 +439,12 @@ typedef_base::~typedef_base() {
 string
 typedef_base::get_qualified_name(void) const {
 	return definition_base::get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+typedef_base::dump_qualified_name(ostream& o) const {
+	return definition_base::dump_qualified_name(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -687,6 +703,14 @@ user_def_chan::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+user_def_chan::dump_qualified_name(ostream& o) const {
+	if (parent)
+		parent->dump_qualified_name(o);
+	return o << scope << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const scopespace>
 user_def_chan::get_parent(void) const {
 	return parent;
@@ -898,10 +922,17 @@ channel_definition_alias::assign_typedef(
 count_ptr<const channel_type_reference_base>
 channel_definition_alias::make_canonical_type_reference(
 		const template_actuals& a) const {
+#if 0
 	typedef count_ptr<const channel_type_reference_base>	return_type;
 	cerr << "Fang, finish channel_definition_alias::"
 		"make_canonical_type_reference()!" << endl;
 	return return_type(NULL);
+#else
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_chan_def()->make_canonical_type_reference(ta);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1038,6 +1069,12 @@ built_in_datatype_def::get_key(void) const {
 string
 built_in_datatype_def::get_qualified_name(void) const {
 	return datatype_definition_base::get_qualified_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+built_in_datatype_def::dump_qualified_name(ostream& o) const {
+	return datatype_definition_base::dump_qualified_name(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1338,6 +1375,14 @@ enum_datatype_def::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+enum_datatype_def::dump_qualified_name(ostream& o) const {
+	if (parent)
+		parent->dump_qualified_name(o);
+	return o << scope << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const scopespace>
 enum_datatype_def::get_parent(void) const {
 	return parent;
@@ -1604,6 +1649,14 @@ user_def_datatype::get_qualified_name(void) const {
 	if (parent)
 		return parent->get_qualified_name() + scope + key;
 	else return string(scope) + key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+user_def_datatype::dump_qualified_name(ostream& o) const {
+	if (parent)
+		parent->dump_qualified_name(o);
+	return o << scope << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2081,6 +2134,12 @@ process_definition::get_key(void) const {
 string
 process_definition::get_qualified_name(void) const {
 	return parent->get_qualified_name() + scope + key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+process_definition::dump_qualified_name(ostream& o) const {
+	return parent->dump_qualified_name(o) << scope << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

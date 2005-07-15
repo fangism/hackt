@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_nonmeta_value_reference.h"
 	Classes related to nonmeta (data) instance reference expressions. 
-	$Id: art_object_nonmeta_value_reference.h,v 1.2.4.2 2005/07/10 21:11:21 fang Exp $
+	$Id: art_object_nonmeta_value_reference.h,v 1.2.4.3 2005/07/15 03:49:15 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
@@ -13,7 +13,7 @@
 #include "Object/art_object_index.h"
 #include "Object/expr/data_expr.h"
 #include "Object/art_object_nonmeta_inst_ref_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"

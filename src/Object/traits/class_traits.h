@@ -1,12 +1,13 @@
 /**
-	\file "Object/art_object_classification_details.h"
+	\file "Object/traits/class_traits.h"
 	Traits and policy classes for instances.  
 	This file is included by "Object/art_object_*_traits.h"
-	$Id: art_object_classification_details.h,v 1.8.4.3 2005/07/08 18:15:24 fang Exp $
+	This file used to be "Object/art_object_classification_details.h".
+	$Id: class_traits.h,v 1.1.4.2 2005/07/15 03:49:23 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
-#define	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
+#ifndef	__OBJECT_TRAITS_CLASS_TRAITS_H__
+#define	__OBJECT_TRAITS_CLASS_TRAITS_H__
 
 #include <iosfwd>
 #include "Object/art_object_fwd.h"
@@ -214,5 +215,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_H__
+#endif	// __OBJECT_TRAITS_CLASS_TRAITS_H__
 

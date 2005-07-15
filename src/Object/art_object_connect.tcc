@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.8.4.3 2005/07/09 23:13:15 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.8.4.4 2005/07/15 03:49:00 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -242,7 +242,7 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 		typedef	count_ptr<const const_param_expr_list>
 				relaxed_actuals_ptr_type;
 		relaxed_actuals_ptr_type
-			current_relaxed_actuals(head->get_relaxed_actuals());
+			current_relaxed_actuals(head->find_relaxed_actuals());
 		for ( ; ref_iter_iter != ref_iter_end; ref_iter_iter++) {
 			// this loop connects the first alias in the list
 			// to the others, a 1-to-N connection.
@@ -272,7 +272,7 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 			// may pass through this as a No-op!
 			const relaxed_actuals_ptr_type&
 				connectee_actuals(
-					connectee->get_relaxed_actuals());
+					connectee->find_relaxed_actuals());
 			typedef	typename instance_alias_base_type::actuals_parent_type
 						relaxed_actuals_policy;
 			if (!relaxed_actuals_policy::compare_and_update_actuals(

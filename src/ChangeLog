@@ -1,5 +1,131 @@
 "ChangeLog"
 
+2005-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-29-merged-subinstance-09:
+	  Merged revisions from -subinstance (-09) branch.
+		Summary: implemented recursive instantiation of
+		subinstance, public ports of structured types, 
+		adding substructure to select instance alias types.  
+		Implemented more type-checking for channels, 
+		and checking between connections and collections.  
+		Also include one critical bug fix in the util library.
+		Includes notes about some resolutions.
+		Files moved around for re-organization.  
+	  TODO: back to the original goal:
+		member instance reference resolution and connection, and ports.  
+
+2005-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-09:
+	  Implemented a bunch of missing channel-type reference methods:
+		resolve, canonicalize, equivalence.  (It's about time!)
+	  Upgraded inst-stmt (channel) to use the default generic
+		type-ref parent template, which means it may accommodate
+		relaxed template actuals.  Channel instantiation statements
+		grew in object size by 1 pointer (4B).
+		Only tests in the test/parser/chp dir were affected and updated.
+	  New basic channel instance and connection tests in:
+		test/parser/channel/0{18,19,20,21,22,23,24}.in
+	  More consistent error reporting in type-reference checking, 
+		using fundamental_type_reference::type_mismatch_error();
+	  Added workarounds for built-in channel-type equivalence
+		comparisons to each (4) equivalence method
+		(of fundamental_type_reference)
+	  End of branch -- beam me up!
+
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-08:
+	  Demonstrated working hierarchical port instantiation.
+	  Added dump_hierarchical_name to instance_collection_base
+		and substructure_alias as a means of printing
+		the hierarchical alias name, such as x[y].z.
+	  Added scopespace::dump_qualified_name(ostream&) for convenience.  
+	  instance_alias<>::dump_alias now calls dump_hierarchical_name
+		instead of get_qualified_name.
+		No existing tests were affected, since we hadn't tested
+		hierarchy until now.  
+	  Implemented substructure pretty-printing.  
+	  This branch is nearing maturity.
+	  TODO: test cases, test cases, test cases.  
+		One new test case added for demo: test/parser/process/054.in
+
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-07:
+	  Critical library bug fixed in multikey_generic, 
+		described in src/util/ChangeLog.
+
+
+2005-07-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-06:
+	  All type-references' unroll_resolve methods no longer
+		have unroll_context as an argument; the contexts
+		(translation from formal to actual) are all locally
+		created w.r.t. the definitions.  
+	  Fixed bug where I forgot to canonicalize typedefs before
+		committing types to instance collections.  
+		Example test case is test/parser/typedef/012.
+	  TODO: enable recursive port instantiation.  
+
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-05:
+	  Added mechanism for recursively creating port instances
+		in the public hierarchy, though not enabled or tested.  
+		Too lazy to spill the details here.  
+	  Updated bunch of unroll_context prototypes to take
+		const unroll_context&.
+	  Handy utility methods added hither and thither.
+	  Code really needs 1) facelift, 2) bath.
+
+
+2005-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-04:
+	  Fixed: squashed the known bug mentioned in previous revision.  
+		This was done by changing get_relaxed_actuals 
+		(in connect's unroll) to new find_relaxed_actuals(), 
+		implemented in "Object/art_object_instance_alias_actuals.tcc".
+	  Append minutes of 2005-07-12 meeting to NOTES.  
+
+
+2005-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-03:
+	  Instance aliases with substructure now visit, write, and load (empty)
+		subinstance list.  This results in a change in object
+		binary sizes for recursive instances.  
+		Unroll tests updated accordingly.  
+	  TODO: fix KNOWN BUG from test case test/parser/connect/097.in.
+
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-02:
+	  Added subinstance classes to Object/inst.  
+	  Every instance_collection(_base) now has a back-pointer to 
+		parent super instance (not yet used).  It will be the 
+		super instances' responsiblity to restore the back-links
+		during persistent object restoration.  
+	  Added new static const bool field to class_traits:
+		has_substructure: used to determine whether or not
+		alias contains substructure information.  
+		instance_alias_info derives from a base with or without
+		substructure information.  
+
+
+2005-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-01:
+	  Child branch for the purpose of developing subinstance and
+		substructure management.  
+	  This initial revision just moved and renamed some files for
+		reorganization, namely, all class_traits files, 
+		have been moved into the Object/traits directory. 
+		Object/art_built_ins.cc -> Object/traits/class_traits_types.cc.
+	  Makefile.am: enabled and modified the clean-header-deps target
+		to not remove, but just reset the auto-dependency files.  
+		Now it's usable for maintainence.  
+
+
 2005-07-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-28:

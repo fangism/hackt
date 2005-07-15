@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.18.2.6 2005/07/10 21:11:12 fang Exp $
+	$Id: art_parser_chp.cc,v 1.18.2.7 2005/07/15 03:48:55 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -26,8 +26,8 @@
 #include "Object/expr/bool_expr.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_nonmeta_inst_ref_subtypes.h"
-#include "Object/art_object_bool_traits.h"
-#include "Object/art_object_chan_traits.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_definition_data.h"

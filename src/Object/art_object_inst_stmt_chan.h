@@ -1,19 +1,19 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.4.10.6 2005/07/10 19:37:21 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.4.10.7 2005/07/15 03:49:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
 #define	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
 
 #include <iostream>
-#include "Object/art_object_chan_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_chan.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "util/persistent_object_manager.h"
-// #include "Object/art_object_inst_stmt_type_ref_default.h"
+#include "Object/art_object_inst_stmt_type_ref_default.h"
 
 namespace ART {
 namespace entity {
@@ -22,7 +22,7 @@ class const_param_expr_list;
 #include "util/using_ostream.h"
 
 //=============================================================================
-#if 1
+#if 0
 class class_traits<channel_tag>::instantiation_statement_type_ref_base {
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
@@ -49,10 +49,10 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(unroll_context& c) const {
+	get_resolved_type(void) const {
 		cerr << "FANG, finish channel_type_reference_base::unroll_resolve()!" << endl;
 #if 0
-		const type_ref_ptr_type ret(type->unroll_resolve(c));
+		const type_ref_ptr_type ret(type->unroll_resolve());
 		if (!ret) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
@@ -67,10 +67,10 @@ protected:
 
 
 	type_ref_ptr_type
-	unroll_type_reference(unroll_context& c) const {
+	unroll_type_reference(void) const {
 		cerr << "FANG, finish channel_type_reference_base::unroll_resolve()!" << endl;
 #if 0
-		return type->unroll_resolve(c);
+		return type->unroll_resolve();
 #else
 		// temporary
 		// don't forget to merge relaxed actuals

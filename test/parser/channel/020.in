@@ -1,0 +1,5 @@
+// "020.in" should pass: instantiating a built-in channel type
+// copy-modified from "019.in"
+
+chan(int<12>) foobar;
+

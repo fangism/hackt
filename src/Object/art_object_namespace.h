@@ -1,22 +1,27 @@
 /**
-	\file "art_object_namespace.h"
+	\file "Object/art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.7 2005/01/28 19:58:44 fang Exp $
+	$Id: art_object_namespace.h,v 1.18.4.1 2005/07/15 03:49:14 fang Exp $
  */
 
-#ifndef	__ART_OBJECT_NAMESPACE_H__
-#define	__ART_OBJECT_NAMESPACE_H__
+#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
+#define	__OBJECT_ART_OBJECT_NAMESPACE_H__
 
-#include "STL/list.h"
+#include "util/STL/list.h"
 
-#include "art_object_base.h"
-#include "persistent.h"		// for persistent object interface
+#include "Object/art_object_base.h"
+#include "Object/art_object_util_types.h"
+#include "util/persistent.h"		// for persistent object interface
 	// includes <iosfwd> <string>
 
-#include "qmap.h"		// need complete definition
-#include "hash_qmap.h"		// need complete definition
-#include "memory/excl_ptr.h"	// need complete definition (never_ptr members)
-#include "memory/list_vector_pool_fwd.h"
+#include "util/boolean_types.h"
+#include "util/qmap.h"		// need complete definition
+#include "util/hash_qmap.h"		// need complete definition
+#include "util/memory/excl_ptr.h"	// need complete definition (never_ptr members)
+#include "util/memory/list_vector_pool_fwd.h"
+
+// #include "what.h"
+// including declarations of partial specializations prevents
 
 namespace ART {
 //=============================================================================
@@ -38,18 +43,26 @@ namespace parser {
  */
 namespace entity {
 //=============================================================================
+class definition_base;
+class typedef_base;
+class instance_collection_base;
+class param_instance_collection;
 USING_LIST
 USING_CONSTRUCT
 using std::string;
 using std::istream;
+using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using parser::token_identifier;
 using parser::qualified_id_slice;
 using parser::qualified_id;
-using namespace util::memory;
-using QMAP_NAMESPACE::qmap;
-using HASH_QMAP_NAMESPACE::hash_qmap;
+using util::memory::never_ptr;
+using util::memory::some_ptr;
+using util::memory::excl_ptr;
+using util::qmap;
+using util::good_bool;
+using util::bad_bool;
 
 //=============================================================================
 /**
@@ -61,7 +74,9 @@ using HASH_QMAP_NAMESPACE::hash_qmap;
 	process definitions, and namespaces do not contain formals or
 	naked language bodies.  
  */
-class scopespace : virtual public object, virtual public persistent {
+class scopespace :
+//		virtual public object, 
+		virtual public persistent {
 protected:	// typedefs -- keep these here for re-use
 
 	/**
@@ -188,8 +203,10 @@ protected:
 public:
 virtual	~scopespace();
 
+#if 0
 virtual	ostream&
 	what(ostream& o) const = 0;
+#endif
 
 virtual	ostream&
 	dump(ostream& o) const = 0;
@@ -199,6 +216,9 @@ virtual	const string&
 
 virtual	string
 	get_qualified_name(void) const = 0;
+
+virtual	ostream&
+	dump_qualified_name(ostream&) const = 0;
 
 virtual never_ptr<const scopespace>
 	get_parent(void) const = 0;
@@ -224,10 +244,10 @@ protected:
 public:
 	// need id because instantiation statement won't be named yet!
 	never_ptr<const instance_collection_base>
-	add_instance(never_ptr<instantiation_statement> i, 
+	add_instance(const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id);
 
-	bool
+	good_bool
 	add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a);
 
@@ -251,7 +271,7 @@ private:
 		ostream&) const;
 
 	void
-	load_object_used_id_map(persistent_object_manager& m, 
+	load_object_used_id_map(const persistent_object_manager& m, 
 		istream&);
 
 protected:
@@ -266,7 +286,7 @@ protected:
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
 	void
-	load_object_base(persistent_object_manager& m, istream&);
+	load_object_base(const persistent_object_manager& m, istream&);
 
 private:
 // no concrete method for loading -- that remains derived-class specific
@@ -279,7 +299,7 @@ virtual	void
 /**
 	Namespace container class.  
  */
-class name_space : public scopespace {
+class name_space : public object, public scopespace {
 private:
 	typedef	name_space			this_type;
 	// list of pointers to other opened namespaces (and their aliases)
@@ -367,6 +387,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const name_space>
 	get_global_namespace(void) const;
 
@@ -400,6 +423,14 @@ public:
 
 	never_ptr<const name_space>
 	lookup_open_alias(const string& id) const;
+
+	void
+	collect_namespaces(namespace_collection_type&) const;
+
+	// defined in "Object/art_object_namespace.tcc"
+	template <class L>
+	void
+	collect(L&) const;
 
 // type-specific counterparts, obsolete
 
@@ -449,7 +480,8 @@ public:
 
 // methods for object file I/O
 public:
-	PERSISTENT_METHODS
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
 
 /** helper method for adding a variety of objects */
 	void
@@ -458,7 +490,7 @@ public:
 	static const never_ptr<const name_space>	null;
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_STATIC_DECLARATIONS
+	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
 };	// end class name_space
 
@@ -466,5 +498,15 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __ART_OBJECT_NAMESPACE_H__
+//=============================================================================
+// specializations in other namespaces
+
+#if 0
+namespace util {
+	SPECIALIZE_UTIL_WHAT_DECLARATION(ART::entity::name_space)
+}	// end namespace util
+#endif
+
+//=============================================================================
+#endif	// __OBJECT_ART_OBJECT_NAMESPACE_H__
 

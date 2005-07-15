@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.7 2005/07/10 21:11:17 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.8 2005/07/15 03:49:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -24,6 +24,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/inst/substructure_alias_base.h"
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -101,7 +102,8 @@ instance_collection_base::instance_collection_base() :
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n, const size_t d) : 
 		object(), owner(owner_ptr_type(&o)),
-		key(n), index_collection(), dimensions(d) {
+		key(n), index_collection(), dimensions(d), 
+		super_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,6 +168,22 @@ instance_collection_base::get_qualified_name(void) const {
 		return owner->get_qualified_name() +"::" +key;
 		// "::" should be the same as ART::parser::scope
 	else return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_qualified_name(ostream& o) const {
+	if (owner)
+		return owner->dump_qualified_name(o) << "::" << key;
+	else	return o << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_hierarchical_name(ostream& o) const {
+	if (super_instance)
+		return super_instance->dump_hierarchical_name(o) << '.' << key;
+	else	return dump_qualified_name(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -335,6 +353,16 @@ instance_collection_base::is_port_formal(void) const {
 	if (def)
 		return def->lookup_port_formal(key);
 	else return false;		// owner is not a definition
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Whether or not this instance is a reference to a collection
+	local to a definition, else is a top-level (global).
+ */
+bool
+instance_collection_base::is_local_to_definition(void) const {
+	return owner.is_a<const definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

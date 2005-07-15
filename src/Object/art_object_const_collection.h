@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.3 2005/07/06 00:59:23 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.4 2005/07/15 03:49:00 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
@@ -10,7 +10,7 @@
 #include <iosfwd>
 // #include "Object/art_object_expr_const.h"	// for const_range_list
 #include "Object/expr/types.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/STL/construct_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/packed_array.h"

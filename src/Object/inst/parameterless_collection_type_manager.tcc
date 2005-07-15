@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.1.2.1 2005/07/10 19:37:28 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.1.2.2 2005/07/15 03:49:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -126,12 +126,17 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
 /**
 	\param t type must be resolved constant.
 	\pre first time called for the collection.  
+	TODO: handle typedef'd enums!
  */
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const type_ref_ptr_type& t) {
 	INVARIANT(!this->type_parameter);
+#if 0
+	INVARIANT(t->is_resolved());
+	INVARIANT(t->is_canonical());
+#endif
 	this->type_parameter =
 		t->get_base_def().template is_a<
 			const typename class_traits<Tag>::

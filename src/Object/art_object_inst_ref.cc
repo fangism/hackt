@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31.4.8 2005/07/10 21:11:15 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.31.4.9 2005/07/15 03:49:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -30,8 +30,8 @@
 #include "Object/art_object_connect.h"		// for aliases_connection_base
 #include "util/persistent_object_manager.tcc"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_proc_traits.h"
-#include "Object/art_object_chan_traits.h"
+#include "Object/traits/proc_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 

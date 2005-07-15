@@ -1,22 +1,23 @@
 /**
-	\file "Object/art_object_classification_details.cc"
+	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
-	$Id: art_object_classification_details.cc,v 1.4.14.1 2005/06/25 21:07:18 fang Exp $
+	This file used to be "Object/art_object_classification_details.cc".
+	$Id: class_traits.cc,v 1.1.4.2 2005/07/15 03:49:23 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_CC__
-#define	__OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_CC__
+#ifndef	__OBJECT_TRAITS_CLASS_TRAITS_CC__
+#define	__OBJECT_TRAITS_CLASS_TRAITS_CC__
 
-#include "Object/art_object_chan_traits.h"
-#include "Object/art_object_data_traits.h"
-#include "Object/art_object_proc_traits.h"
-#include "Object/art_object_param_traits.h"
-#include "Object/art_object_pbool_traits.h"
-#include "Object/art_object_pint_traits.h"
-#include "Object/art_object_int_traits.h"
-#include "Object/art_object_bool_traits.h"
-#include "Object/art_object_enum_traits.h"
-#include "Object/art_object_struct_traits.h"
+#include "Object/traits/chan_traits.h"
+#include "Object/traits/data_traits.h"
+#include "Object/traits/proc_traits.h"
+#include "Object/traits/param_traits.h"
+#include "Object/traits/pbool_traits.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/enum_traits.h"
+#include "Object/traits/struct_traits.h"
 
 namespace ART {
 namespace entity {
@@ -63,5 +64,5 @@ class_traits<pfloat_tag>::value_type_name[] = "floating-point";
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_CLASSIFICATION_DETAILS_CC__
+#endif	// __OBJECT_TRAITS_CLASS_TRAITS_CC__
 

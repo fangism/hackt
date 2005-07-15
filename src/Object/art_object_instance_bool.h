@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_bool.h"
 	Class declarations for built-in boolean data instances
 	and instance collections.  
-	$Id: art_object_instance_bool.h,v 1.11.14.1 2005/06/25 21:07:23 fang Exp $
+	$Id: art_object_instance_bool.h,v 1.11.14.2 2005/07/15 03:49:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_H__
@@ -10,7 +10,7 @@
 
 #include "Object/art_object_instance.h"
 #include "util/memory/list_vector_pool_fwd.h"
-#include "Object/art_object_bool_traits.h"
+#include "Object/traits/bool_traits.h"
 
 #include "Object/art_object_instance_alias.h"
 #include "Object/art_object_instance_collection.h"

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.8 2005/07/10 19:37:22 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.9 2005/07/15 03:49:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -46,13 +46,15 @@
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_inst_ref.h"
+#include "Object/art_object_instance_alias_actuals.tcc"
+#include "Object/art_object_inst_stmt_base.h"
+#include "Object/inst/subinstance_manager.tcc"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 
-// #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "util/what.h"
@@ -237,6 +239,13 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+const typename INSTANCE_ALIAS_INFO_CLASS::relaxed_actuals_type&
+INSTANCE_ALIAS_INFO_CLASS::find_relaxed_actuals(void) const {
+	return actuals_parent_type::find_relaxed_actuals(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Compares collection types of the two instances and then
 	(TODO) compares their relaxed actuals (if applicable).
@@ -266,12 +275,35 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 	if (this->container)
 		this->container->collect_transient_info(m);
 	actuals_parent_type::collect_transient_info_base(m);
+	substructure_parent_type::collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
+	dump_alias(o);	// should call virtually, won't die
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
+INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
+	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
+INSTANCE_ALIAS_INFO_CLASS::end(void) const {
 	DIE;
 }
 
@@ -308,6 +340,7 @@ INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 	m.write_pointer(o, this->instance);
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
+	substructure_parent_type::write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -319,6 +352,7 @@ INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 	m.read_pointer(i, this->instance);
 	m.read_pointer(i, this->container);
 	actuals_parent_type::load_object_base(m, i);
+	substructure_parent_type::load_object_base(m, i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -357,11 +391,29 @@ INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
+#if 0
 	o << this->container->get_qualified_name() <<
+#else
+	this->container->dump_hierarchical_name(o) <<
+#endif
 		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
 		// bah, not important
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::const_iterator
+INSTANCE_ALIAS_CLASS::begin(void) const {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::const_iterator
+INSTANCE_ALIAS_CLASS::end(void) const {
+	return instance_alias_base_type::end();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -403,6 +455,8 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 #endif
 	instance_alias_base_type& n(next_container->load_reference(i));
 	this->merge(n);       // re-link
+	// this->unsafe_merge(n);       // re-link (undeclared!??)
+	// unsafe is OK because we've already checked linkage when it was made!
 #if STACKTRACE_PERSISTENTS
 	cerr << ", after = " << this->size() << endl;
 #endif
@@ -453,7 +507,25 @@ KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
+#if 0
 	o << this->container->get_qualified_name();
+#else
+	this->container->dump_hierarchical_name(o);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) const {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::end(void) const {
+	return instance_alias_base_type::end();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -788,6 +860,9 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 		p.dump_actuals(os);
 	os << " = ";
 	p.get_next()->dump_alias(os);
+#if 1
+	p.dump_ports(os << ' ');
+#endif
 	return os << endl;
 }
 
@@ -1015,6 +1090,27 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Expands this collection into a copy for a port formal.  
+	\return owned pointer to new created collection.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+count_ptr<physical_instance_collection>
+INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type(*this));
+	NEVER_NULL(ret);
+	// Is this really copy-constructible?
+	// TODO: unroll first instantiation statement
+	INVARIANT(this->index_collection.size() == 1);	// port constraint
+	const index_collection_type::const_iterator
+		b(this->index_collection.begin());
+	INVARIANT(*b);
+	if ((*b)->instantiate_port(c, *ret).good)
+		return ret;
+	else 	return count_ptr<physical_instance_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
  */
@@ -1220,6 +1316,9 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 		this->the_instance.dump_actuals(o);
 	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
+#if 1
+	this->the_instance.dump_ports(o << ' ');
+#endif
 	return o;
 }
 
@@ -1328,6 +1427,26 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 			<< "!" << endl;
 		return true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands this collection into a copy for a port formal.  
+	\return owned pointer to new created collection.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+count_ptr<physical_instance_collection>
+INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type(*this));
+	NEVER_NULL(ret);
+	// Is this really copy-constructible?
+	INVARIANT(this->index_collection.size() == 1);	// port constraint
+	const index_collection_type::const_iterator
+		b(this->index_collection.begin());
+	INVARIANT(*b);
+	if ((*b)->instantiate_port(c, *ret).good)
+		return ret;
+	else 	return count_ptr<physical_instance_collection>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
