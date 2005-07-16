@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.10.14.2 2005/07/04 19:13:30 fang Exp $
+	$Id: packed_array.h,v 1.10.14.3 2005/07/16 05:59:56 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -155,6 +155,18 @@ public:
 
 	const_reverse_iterator
 	rend(void) const { return &values[0]; }
+
+	reference
+	front(void) { return values[0]; }
+
+	const_reference
+	front(void) const { return values[0]; }
+
+	reference
+	back(void) { return values[values.size() -1]; }
+
+	const_reference
+	back(void) const { return values[values.size() -1]; }
 
 	key_type
 	first_key(void) const;
@@ -316,6 +328,18 @@ public:
 
 	const_reverse_iterator
 	rend(void) const { return values.rend(); }
+
+	reference
+	front(void) { return values.front(); }
+
+	const_reference
+	front(void) const { return values.front(); }
+
+	reference
+	back(void) { return values.back(); }
+
+	const_reference
+	back(void) const { return values.back(); }
 
 	key_type
 	first_key(void) const;

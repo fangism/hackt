@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.1.4.2 2005/07/15 03:49:22 fang Exp $
+	$Id: substructure_alias_base.h,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -13,7 +13,7 @@
 
 namespace ART {
 namespace entity {
-class physical_instance_collection;
+class instance_collection_base;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -48,6 +48,10 @@ virtual	~substructure_alias_base() { }
 		restore_parent_child_links();
 	}
 
+	// just a forwarded call
+	subinstance_manager::value_type
+	lookup_port_instance(const instance_collection_base& i) const;
+
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&
 	dump_hierarchical_name(ostream&) const;
@@ -79,8 +83,9 @@ public:
 	/**
 		No-op.
 	 */
+	template <class Tag>
 	void
-	unroll_port_instances(const physical_instance_collection&) const { }
+	unroll_port_instances(const instance_collection<Tag>&) const { }
 
 	/**
 		No-op.  

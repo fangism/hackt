@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.7.4.2 2005/07/15 03:49:14 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.7.4.3 2005/07/16 05:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
@@ -49,7 +49,7 @@ public:
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
 	/// the containing type, whose member is referenced
-	typedef	meta_instance_reference_base			base_inst_type;
+	typedef	meta_instance_reference_base		base_inst_type;
 	// should be kept consistent with
 	//	instance_collection_base::inst_ref_ptr_type
 	typedef	count_ptr<const base_inst_type>		base_inst_ptr_type;
@@ -77,6 +77,15 @@ public:
 	// overrides parent's implementation.  
 	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
+
+#if ENABLE_MEMBER_UNROLLING
+	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
+#endif
+private:
+#if 1
+	count_ptr<instance_collection_generic_type>
+	resolve_parent_member_helper(unroll_context&) const;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

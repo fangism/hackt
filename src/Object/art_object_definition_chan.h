@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.5.2.2 2005/07/15 03:49:02 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.5.2.3 2005/07/16 05:59:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -113,6 +113,9 @@ public:
 
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string&) const;
+
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
 
 	good_bool
 	certify_port_actuals(const checked_refs_type&) const;

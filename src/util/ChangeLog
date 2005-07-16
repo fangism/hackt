@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2005-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-30:
+	  Added front() and back() interface to packed_array[_generic].
+	  Added "util/wtf.h" as developer tool for figuring out
+		the canonical type of a typename/typedef and 
+		the type of an object, e.g. return type.  
+
+
 2005-07-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-07:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.5 2005/07/15 03:49:19 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.6 2005/07/16 05:59:54 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -208,6 +208,8 @@ public:
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
+
+	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
 
 protected:
 	using common_base_type::collect_transient_info_base;

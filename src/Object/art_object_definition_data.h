@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_data.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_data.h,v 1.2.2.2 2005/07/15 03:49:02 fang Exp $
+	$Id: art_object_definition_data.h,v 1.2.2.3 2005/07/16 05:59:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_DATA_H__
@@ -274,6 +274,9 @@ public:
 
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string&) const;
+
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.23.2.5 2005/07/15 03:49:02 fang Exp $
+	$Id: art_object_definition_base.h,v 1.23.2.6 2005/07/16 05:59:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
@@ -124,6 +124,9 @@ virtual	never_ptr<const scopespace>
 /** should be pure virtual, but let's default to NULL */
 virtual	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
+
+virtual	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
 
 virtual	never_ptr<const object>
 	lookup_object_here(const string& id) const;

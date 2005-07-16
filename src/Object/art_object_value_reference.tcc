@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.7 2005/07/15 03:49:19 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.8 2005/07/16 05:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -653,6 +653,18 @@ excl_ptr<aliases_connection_base>
 SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
 	DIE;
 	return excl_ptr<aliases_connection_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should never be called.  
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<substructure_alias>
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+		unroll_context& ) const {
+	DIE;
+	return never_ptr<substructure_alias>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

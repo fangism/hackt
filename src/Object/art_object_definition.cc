@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.7 2005/07/15 03:49:01 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.8 2005/07/16 05:59:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -188,6 +188,19 @@ definition_base::check_null_template_argument(void) const {
 never_ptr<const instance_collection_base>
 definition_base::lookup_port_formal(const string& id) const {
 	return never_ptr<const instance_collection_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	By default, definitions don't have port formals, unless 
+	defined otherwise.  
+	Overridden in children classes.  
+	\return 0, signaling port formal not found.  
+ */
+size_t
+definition_base::lookup_port_formal_position(
+		const instance_collection_base&) const {
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -771,6 +784,16 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 never_ptr<const instance_collection_base>
 user_def_chan::lookup_port_formal(const string& id) const {
 	return port_formals.lookup_port_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	\return 1-indexed position of port-formal, else 0 if not found.  
+ */
+size_t
+user_def_chan::lookup_port_formal_position(
+		const instance_collection_base& i) const {
+	return port_formals.lookup_port_formal_position(i.get_name());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -1729,6 +1752,16 @@ user_def_datatype::lookup_port_formal(const string& id) const {
 	return port_formals.lookup_port_formal(id);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	\return 1-indexed position of port-formal, else 0 if not found.  
+ */
+size_t
+user_def_datatype::lookup_port_formal_position(
+		const instance_collection_base& i) const {
+	return port_formals.lookup_port_formal_position(i.get_name());
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 definition_base::type_ref_ptr_type
 user_def_datatype::make_fundamental_type_reference(
@@ -2162,6 +2195,16 @@ process_definition::lookup_object_here(const string& s) const {
 never_ptr<const instance_collection_base>
 process_definition::lookup_port_formal(const string& id) const {
 	return port_formals.lookup_port_formal(id);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	\return 1-indexed position of port-formal, else 0 if not found.  
+ */
+size_t
+process_definition::lookup_port_formal_position(
+		const instance_collection_base& i) const {
+	return port_formals.lookup_port_formal_position(i.get_name());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

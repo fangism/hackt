@@ -2,7 +2,7 @@
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
 	TODO: rename file to simple_meta_instance_reference
-	$Id: art_object_inst_ref.h,v 1.22.4.1 2005/07/15 03:49:04 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.22.4.2 2005/07/16 05:59:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -13,6 +13,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
+#include "Object/ref/inst_ref_implementation_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -46,6 +47,10 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_instance_reference :
 	public simple_meta_instance_reference_base, 
 	public class_traits<Tag>::meta_instance_reference_parent_type {
+#if 1
+	template <bool>
+	friend struct simple_meta_instance_reference_implementation;
+#endif
 	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
 	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
@@ -85,9 +90,23 @@ virtual	~simple_meta_instance_reference();
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
+protected:
+	/**
+		Helper function.  
+	 */
+	static
+	bad_bool
+	unroll_references_helper(unroll_context&, 
+		const instance_collection_generic_type&,
+		const never_ptr<const index_list_type>, 
+		alias_collection_type&);
+
+public:
 	// overridden by member_meta_instance_reference
 virtual	bad_bool
 	unroll_references(unroll_context&, alias_collection_type&) const;
+
+virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
 
 private:
 	excl_ptr<aliases_connection_base>

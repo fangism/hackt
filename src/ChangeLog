@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-30:
+	  Implemented (untested) member instance reference unrolling.  
+		Much if it is currently wrapped in #if ENABLE_MEMBER_UNROLLING.
+		Commit after further testing.  
+		Factored out common code in instance_reference and 
+		member_instance_reference method definitions.
+		Also added simple_meta_instance_reference_implementation<bool>
+		policy class.  
+	  Added Object/ref directory, the future home of all 
+		instance- and value-reference classes and code.  
+	  Implemented definition_base (and kids)::lookup_port_formal_position.
+	  TODO: tons of testing...
+
+
 2005-07-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-29-merged-subinstance-09:

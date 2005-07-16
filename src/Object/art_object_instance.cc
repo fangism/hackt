@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.8 2005/07/15 03:49:07 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.9 2005/07/16 05:59:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -345,14 +345,13 @@ instance_collection_base::is_template_formal(void) const {
 /**
 	Queries whether or not this is a port formal, by 
 	checking its membership in the owner.  
+	\return 1-indexed position into port list, else 0 if not found.
  */
-bool
+size_t
 instance_collection_base::is_port_formal(void) const {
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
-	if (def)
-		return def->lookup_port_formal(key);
-	else return false;		// owner is not a definition
+	return def ? def->lookup_port_formal_position(*this) : 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

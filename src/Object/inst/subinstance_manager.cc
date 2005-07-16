@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.1.4.2 2005/07/15 03:49:21 fang Exp $
+	$Id: subinstance_manager.cc,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
  */
 
 #include <iostream>
@@ -53,6 +53,21 @@ if (subinstance_array.empty()) {
 	}
 	return o << auto_indent << ')';
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i reference to formal instance, to be translated to an
+		actual (unrolled) instance reference.  
+	TODO: invariant check for matching definitions and types.  
+ */
+subinstance_manager::value_type
+subinstance_manager::lookup_port_instance(
+		const instance_collection_base& i) const {
+	const size_t index = i.is_port_formal();
+	INVARIANT(index);
+	INVARIANT(index < subinstance_array.size());
+	return subinstance_array[index];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

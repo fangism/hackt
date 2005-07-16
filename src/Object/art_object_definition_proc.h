@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.7.2.2 2005/07/15 03:49:02 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.7.2.3 2005/07/16 05:59:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -101,6 +101,9 @@ public:
 	/** overrides definition_base's */
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
+
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
 
 	never_ptr<const object>
 	lookup_object_here(const string& id) const;

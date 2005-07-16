@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.8.4.2 2005/07/05 07:59:41 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.8.4.3 2005/07/16 05:59:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -17,8 +17,9 @@
 	// will explicitly instantiate
 #include "util/persistent_object_manager.tcc"
 #include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/inst/substructure_alias_base.h"
+#include "Object/ref/inst_ref_implementation.h"
 
-//=============================================================================
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
@@ -26,7 +27,9 @@ using util::write_value;
 using util::read_value;
 using util::persistent_traits;
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//=============================================================================
+// class simple_meta_instance_reference method definitions
+
 /**
 	Private empty constructor.  
  */
@@ -68,21 +71,20 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Unrolls the reference into aliases.  
-	\param c the context of unrolling.
-	\param a the destination collection in which to return
-		resolved instance aliases.  
-	\return true on error, else false.
+	Re-usable helper function (also used by member_instance_reference).  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(unroll_context& c, 
-		alias_collection_type& a) const {
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
+		unroll_context& c,
+		const instance_collection_generic_type& inst, 
+		const never_ptr<const index_list_type> ind, 
+		alias_collection_type& a) {
 	// possibly factor this part out into simple_meta_instance_reference_base?
-if (this->inst_collection_ref->get_dimensions()) {
+if (inst.get_dimensions()) {
 	const_index_list cil;
-	if (this->array_indices) {
-		cil = this->array_indices->unroll_resolve(c);
+	if (ind) {
+		cil = ind->unroll_resolve(c);
 		if (cil.empty()) {
 			cerr << "ERROR: Failed to resolve indices at "
 				"unroll-time!" << endl;
@@ -92,8 +94,9 @@ if (this->inst_collection_ref->get_dimensions()) {
 	// else empty, implicitly refer to whole collection if it is dense
 	// we have resolve constant indices
 	const const_index_list
-		full_indices(this->inst_collection_ref->resolve_indices(cil));
+		full_indices(inst.resolve_indices(cil));
 	if (full_indices.empty()) {
+		// might fail because implicit slice reference is not packed
 		// more descriptive error message later...
 		cerr << "ERROR: failed to resolve indices." << endl;
 		return bad_bool(true);
@@ -113,7 +116,7 @@ if (this->inst_collection_ref->get_dimensions()) {
 	const multikey_index_type lower(full_indices.lower_multikey());
 	const multikey_index_type upper(full_indices.upper_multikey());
 	// this will set the size and dimensions of packed_array a
-	if (this->inst_collection_ref->unroll_aliases(lower, upper, a)) {
+	if (inst.unroll_aliases(lower, upper, a)) {
 		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}
@@ -124,13 +127,49 @@ if (this->inst_collection_ref->get_dimensions()) {
 	// size the alias_collection_type appropriately
 	a.resize();		// empty
 	const multikey_index_type bogus;
-	if (this->inst_collection_ref->unroll_aliases(bogus, bogus, a)) {
+	if (inst.unroll_aliases(bogus, bogus, a)) {
 		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}
 	return bad_bool(false);
 }
+}	// end method unroll_references_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls the reference into aliases.  
+	\param c the context of unrolling.
+	\param a the destination collection in which to return
+		resolved instance aliases.  
+	\return true on error, else false.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
+		unroll_context& c, alias_collection_type& a) const {
+	return unroll_references_helper(c, *this->inst_collection_ref,
+		this->array_indices, a);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_MEMBER_UNROLLING
+/**
+	Called by member_instance_reference::unroll_references.
+	This implementation should be policy-determined.  
+	\return a single instance alias.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<substructure_alias>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+		unroll_context& c) const {
+	typedef	simple_meta_instance_reference_implementation<
+			class_traits<Tag>::has_substructure>
+				substructure_implementation_policy;
+	return substructure_implementation_policy::
+		template unroll_generic_scalar_reference<Tag>(
+			*this->inst_collection_ref, this->array_indices, c);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

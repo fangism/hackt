@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.1.4.2 2005/07/15 03:49:21 fang Exp $
+	$Id: subinstance_manager.h,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -44,7 +44,9 @@ friend class substructure_manager;
 	typedef	subinstance_manager			this_type;
 public:
 	typedef	count_ptr<instance_collection_base>	entry_value_type;
-	typedef	vector<entry_value_type>		array_type;
+	// just a synonym
+	typedef	entry_value_type			value_type;
+	typedef	vector<value_type>			array_type;
 protected:
 	typedef	array_type::const_iterator		const_iterator;
 	typedef	array_type::iterator			iterator;
@@ -72,6 +74,10 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	// TODO: assertion check that arg is a port member of this type?
+	value_type
+	lookup_port_instance(const instance_collection_base&) const;
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>

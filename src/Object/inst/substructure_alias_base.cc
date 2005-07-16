@@ -1,9 +1,10 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.1.4.2 2005/07/15 03:49:21 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/art_object_instance_base.h"
 #include "util/macros.h"
 
 namespace ART {
@@ -17,6 +18,13 @@ ostream&
 substructure_alias::dump_hierarchical_name(ostream& o) const {
 	DIE;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+subinstance_manager::value_type
+substructure_alias::lookup_port_instance(
+		const instance_collection_base& inst) const {
+	return subinstances.lookup_port_instance(inst);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
