@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
+	$Id: subinstance_manager.h,v 1.1.4.4 2005/07/16 22:11:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -63,6 +63,9 @@ public:
 
 	bool
 	empty(void) const { return subinstance_array.empty(); }
+
+	size_t
+	size(void) const { return subinstance_array.size(); }
 
 	void
 	reserve(const size_t s) { subinstance_array.reserve(s); }

@@ -1,4 +1,4 @@
-// "054.in"
+// "054.in" should pass, will recursively instantiate ports
 
 defproc foo(bool a, b) { }
 

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.6 2005/07/15 03:49:08 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.7 2005/07/16 22:11:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -111,9 +111,23 @@ protected:
 		instance(NULL), container(NULL) { }
 
 public:
-	// constructors only intended for children classes
+	/**
+		TODO: the following comment is not true.
+		This constructor initializes the mother container pointer
+		AND (implicitly) recursively instantiates public ports.  
+		TODO: does recursive instantiation require actuals?
+		Called from instance_array<>::instantiate_indices.
+		Perhaps introduce constructor with actuals argument?
+	 */
 	instance_alias_info(const container_ptr_type m) :
-		instance(NULL), container(m) { }
+		instance(NULL), container(m) {
+#if 0
+		// cancel this idea:
+		NEVER_NULL(container);
+		substructure_parent_type::unroll_port_instances(
+			*this->container);
+#endif
+	}
 
 public:
 

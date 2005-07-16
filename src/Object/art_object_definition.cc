@@ -1,13 +1,15 @@
 /**
 	\file "Object/art_object_definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.53.2.8 2005/07/16 05:59:50 fang Exp $
+ 	$Id: art_object_definition.cc,v 1.53.2.9 2005/07/16 22:11:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
 #define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 //=============================================================================
 #include "util/static_trace.h"
@@ -47,6 +49,20 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/compose.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
+
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
+
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -102,7 +118,7 @@ definition_base::definition_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 definition_base::~definition_base() {
-	STACKTRACE("~definition_base()");
+	STACKTRACE_DTOR("~definition_base()");
 #if 0
 	cerr << "\t@ " << this << endl;
 #endif
@@ -200,6 +216,7 @@ definition_base::lookup_port_formal(const string& id) const {
 size_t
 definition_base::lookup_port_formal_position(
 		const instance_collection_base&) const {
+	STACKTRACE_VERBOSE;
 	return 0;
 }
 
@@ -445,7 +462,7 @@ typedef_base::typedef_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inline
 typedef_base::~typedef_base() {
-	STACKTRACE("~typedef_base()");
+	STACKTRACE_DTOR("~typedef_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -550,7 +567,7 @@ datatype_definition_base::datatype_definition_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inline
 datatype_definition_base::~datatype_definition_base() {
-	STACKTRACE("~datatype_definition_base()");
+	STACKTRACE_DTOR("~datatype_definition_base()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -793,6 +810,7 @@ user_def_chan::lookup_port_formal(const string& id) const {
 size_t
 user_def_chan::lookup_port_formal_position(
 		const instance_collection_base& i) const {
+	STACKTRACE_VERBOSE;
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
 
@@ -1067,7 +1085,7 @@ built_in_datatype_def::built_in_datatype_def(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 built_in_datatype_def::~built_in_datatype_def() {
-	STACKTRACE("~built_in_datatype_def()");
+	STACKTRACE_DTOR("~built_in_datatype_def()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1188,7 +1206,7 @@ built_in_datatype_def::add_template_formal(
 void
 built_in_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
-	STACKTRACE("built_in_data::collect_transients()");
+	STACKTRACE_PERSISTENT("built_in_data::collect_transients()");
 	m.register_transient_object(this, 
 		persistent_traits<user_def_datatype>::type_key);
 	// NOTE: not using this_type is INTENTIONAL
@@ -1211,7 +1229,7 @@ built_in_datatype_def::collect_transient_info(
 void
 built_in_datatype_def::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-	STACKTRACE("built_in_data::write_object()");
+	STACKTRACE_PERSISTENT("built_in_data::write_object()");
 	static const port_formals_manager port_formals;
 	static const CHP::action_sequence fake_chp;
 	write_string(f, key);
@@ -1759,6 +1777,7 @@ user_def_datatype::lookup_port_formal(const string& id) const {
 size_t
 user_def_datatype::lookup_port_formal_position(
 		const instance_collection_base& i) const {
+	STACKTRACE_VERBOSE;
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
 
@@ -1800,7 +1819,7 @@ user_def_datatype::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	STACKTRACE("user_def_datatype::collect_transient()");
+	STACKTRACE_PERSISTENT("user_def_datatype::collect_transient()");
 // later: template formals
 	sequential_scope::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);
@@ -1822,7 +1841,7 @@ if (!m.register_transient_object(this,
 void
 user_def_datatype::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-	STACKTRACE("user_def_datatype::write_object()");
+	STACKTRACE_PERSISTENT("user_def_datatype::write_object()");
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -1841,7 +1860,7 @@ user_def_datatype::write_object(
 void
 user_def_datatype::load_object(
 		const persistent_object_manager& m, istream& f) {
-	STACKTRACE("user_def_datatype::load_object()");
+	STACKTRACE_PERSISTENT("user_def_datatype::load_object()");
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -1895,7 +1914,7 @@ datatype_definition_alias::datatype_definition_alias(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_definition_alias::~datatype_definition_alias() {
-	STACKTRACE("~data_def_alias()");
+	STACKTRACE_DTOR("~data_def_alias()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2006,7 +2025,7 @@ if (!m.register_transient_object(this,
 void
 datatype_definition_alias::write_object(
 		const persistent_object_manager& m, ostream& f) const {
-	STACKTRACE("data_def_alias::write_object()");
+	STACKTRACE_PERSISTENT("data_def_alias::write_object()");
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
@@ -2019,7 +2038,7 @@ datatype_definition_alias::write_object(
 void
 datatype_definition_alias::load_object(
 		const persistent_object_manager& m, istream& f) {
-	STACKTRACE("data_def_alias::load_object()");
+	STACKTRACE_PERSISTENT("data_def_alias::load_object()");
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
@@ -2204,6 +2223,10 @@ process_definition::lookup_port_formal(const string& id) const {
 size_t
 process_definition::lookup_port_formal_position(
 		const instance_collection_base& i) const {
+	STACKTRACE_VERBOSE;
+#if 0
+	dump(cerr) << endl;
+#endif
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
 

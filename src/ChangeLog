@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-07-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-31:
+	  Bug fixes in progress.
+	  Instrumented code with more stacktracing.  
+		BUG FIX: proper copy-constructor for subinstance_manager.
+		BUG FIX: fixed bounds check in subinstance_manager::
+			lookup_port_instance().
+	  instance_collection::instantiate_indices():
+		Create empty first, then manually instantiate (recursive).
+	  Added a few new test cases to process/ and connect/.
+	  TODO: address bug exhibited by process/057.in
+
+
 2005-07-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-30:

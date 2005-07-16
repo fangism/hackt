@@ -1,0 +1,14 @@
+// "057.in" should pass, will recursively instantiate ports
+// copy-modified from "056.in"
+/**
+BUG tracking notes (2005-07-16):
+	1) dies once port "bool a" is added to foo
+	2) dies with port of bar declared as array and 1) holds
+**/
+
+defproc foo(bool a) { }
+
+defproc bar(foo x[2]) { }
+
+bar poo;
+

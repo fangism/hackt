@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.9 2005/07/15 03:49:10 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.10 2005/07/16 22:11:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -289,6 +289,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
+	STACKTRACE_VERBOSE;
 	dump_alias(o);	// should call virtually, won't die
 	return o;
 }
@@ -390,6 +391,7 @@ INSTANCE_ALIAS_CLASS::~instance_alias() {
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
 #if 0
 	o << this->container->get_qualified_name() <<
@@ -438,7 +440,7 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 	never_ptr<instance_collection_generic_type> next_container;
 	m.read_pointer(i, next_container);
 	// reconstruction ordering problem:
-	// container must have its instances alread loaded, though 
+	// container must have its instances already loaded, though 
 	// not necessarily constructed.
 	// This is why instance re-population MUST be decoupled from
 	// connection re-establishment *GRIN*.  
@@ -627,12 +629,16 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), collection_type_manager_parent_type() {
+#if 0
+	// STACKTRACE_VERBOSE;
+	this->what(cerr << "Constructing ") << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::~instance_collection() {
-	STACKTRACE("~instance_collection<>()");
+	STACKTRACE_DTOR("~instance_collection<>()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -784,6 +790,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_PERSISTENT("instance_collection<Tag>::write_base()");
 	parent_type::write_object_base(m, o);
 	// specialization functor parameter writer
 	collection_type_manager_parent_type::write_object_base(m, o);
@@ -794,6 +801,7 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
 	parent_type::load_object_base(m, i);
 	// specialization functor parameter loader
 	collection_type_manager_parent_type::load_object_base(m, i);
@@ -815,6 +823,10 @@ operator << (ostream& o, const instance_alias<Tag,D>& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array() : parent_type(D), collection() {
+#if 0
+	// STACKTRACE_VERBOSE;
+	this->what(cerr << "Constructing empty ") << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -856,13 +868,13 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	os << auto_indent << _Select1st<value_type>()(p);
+	NEVER_NULL(p.container);
 	if (p.container->has_relaxed_type())
 		p.dump_actuals(os);
 	os << " = ";
+	NEVER_NULL(p.get_next());
 	p.get_next()->dump_alias(os);
-#if 1
 	p.dump_ports(os << ' ');
-#endif
 	return os << endl;
 }
 
@@ -891,8 +903,22 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// create with back-ref!
 			const iterator
 				new_elem(this->collection.insert(
-					element_type(key_gen,
-					never_ptr<const this_type>(this))));
+					element_type(key_gen)));
+					// never_ptr<const this_type>(NULL))));
+			// recursive instantiation happens on construction
+#if 1
+			// alternative to constructing and copying:
+			// construct empty, then initialize the new reference.
+			// establish back-linnk here.  
+			const_cast<instance_alias_base_type&>(
+				static_cast<const instance_alias_base_type&>(
+				*new_elem)).instantiate(
+					never_ptr<const this_type>(this));
+#endif
+#if ENABLE_STACKTRACE
+			// somehow, the ports are destroyed... or not copied
+			new_elem->dump_ports(cerr) << endl;
+#endif
 			// set its relaxed actuals!!! (if appropriate)
 			if (actuals) {
 			const bool attached(new_elem->attach_actuals(actuals));
@@ -1096,6 +1122,7 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?
@@ -1164,12 +1191,16 @@ INSTANCE_ARRAY_CLASS::element_writer::operator () (const element_type& e) const 
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::element_loader::operator () (void) {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_loader::operator()");
 	key_type temp_key;
 	value_reader<key_type> read_key(this->is);
 	read_key(temp_key);
 	element_type temp_elem(temp_key);
 	temp_elem.load_object_base(this->pom, this->is);
 	this->coll.insert(temp_elem);
+	// TODO: (minor enhancement, 2005-07-16)
+	// alternatively, insert first, then load to avoid subinstance_array
+	// copy overhead, just like in instantiate_indices()
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1233,6 +1264,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::write_object()");
 	parent_type::write_object_base(m, f);
 	// need to know how many members to expect
 	write_value(f, this->collection.size());
@@ -1249,6 +1281,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::load_object(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT("instance_array<Tag,D>::load_object()");
 	parent_type::load_object_base(m, f);
 	// procedure:
 	// 1) load all instantiated indices *without* their connections
@@ -1279,6 +1312,10 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(bool_scalar, 256)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array() : parent_type(0), the_instance() {
+#if 0
+	// STACKTRACE_VERBOSE;
+	this->what(cerr << "Constructing empty ") << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1344,6 +1381,7 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 //		THROW_EXIT;
 		return good_bool(false);
 	}
+	// here we need an explicit instantiation (recursive)
 	this->the_instance.instantiate(never_ptr<const this_type>(this));
 	const bool attached(actuals ?
 		this->the_instance.attach_actuals(actuals) : true);
@@ -1437,6 +1475,7 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?

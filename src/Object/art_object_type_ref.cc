@@ -1,13 +1,15 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.15 2005/07/15 03:49:17 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.16 2005/07/16 22:11:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
 #define	__OBJECT_ART_OBJECT_TYPE_REF_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <iostream>
 
@@ -50,6 +52,19 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
+
+// conditional defines, after including "stacktrace.h"
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
+#else
+	#define STACKTRACE_DTOR(x)
+#endif
+
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+#endif
 
 //=============================================================================
 // specializations
@@ -96,7 +111,7 @@ fundamental_type_reference::fundamental_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fundamental_type_reference::~fundamental_type_reference() {
-	STACKTRACE("~fundamental_type_reference()");
+	STACKTRACE_DTOR("~fundamental_type_reference()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -408,7 +423,7 @@ fundamental_type_reference::collect_transient_info_base(
 void
 fundamental_type_reference::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE("fund_type_ref::write_object_base()");
+	STACKTRACE_PERSISTENT("fund_type_ref::write_object_base()");
 	template_args.write_object_base(m, o);
 }
 
@@ -416,7 +431,7 @@ fundamental_type_reference::write_object_base(
 void
 fundamental_type_reference::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-	STACKTRACE("fund_type_ref::load_object_base()");
+	STACKTRACE_PERSISTENT("fund_type_ref::load_object_base()");
 	template_args.load_object_base(m, i);
 }
 
@@ -479,7 +494,7 @@ data_type_reference::data_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
-	STACKTRACE("~data_type_reference()");
+	STACKTRACE_DTOR("~data_type_reference()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -703,7 +718,7 @@ data_type_reference::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	STACKTRACE("data_type_ref::collect_transients()");
+	STACKTRACE_PERSISTENT("data_type_ref::collect_transients()");
 	base_type_def->collect_transient_info(m);
 	parent_type::collect_transient_info_base(m);
 }
@@ -713,7 +728,7 @@ if (!m.register_transient_object(this,
 void
 data_type_reference::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	STACKTRACE("data_type_ref::write_object()");
+	STACKTRACE_PERSISTENT("data_type_ref::write_object()");
 	m.write_pointer(f, base_type_def);
 	parent_type::write_object_base(m, f);
 }
@@ -726,7 +741,7 @@ data_type_reference::write_object(const persistent_object_manager& m,
 void
 data_type_reference::load_object(const persistent_object_manager& m, 
 		istream& f) {
-	STACKTRACE("data_type_ref::load_object()");
+	STACKTRACE_PERSISTENT("data_type_ref::load_object()");
 	m.read_pointer(f, base_type_def);
 	parent_type::load_object_base(m, f);
 
@@ -1605,6 +1620,7 @@ process_type_reference::make_canonical_type_reference(void) const {
  */
 void
 process_type_reference::unroll_port_instances(subinstance_manager& sub) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(is_resolved());
 	INVARIANT(is_canonical());
 	const never_ptr<const process_definition>

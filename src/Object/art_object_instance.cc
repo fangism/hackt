@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.9 2005/07/16 05:59:53 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.10 2005/07/16 22:11:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -181,9 +181,12 @@ instance_collection_base::dump_qualified_name(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance_collection_base::dump_hierarchical_name(ostream& o) const {
-	if (super_instance)
+	STACKTRACE_VERBOSE;
+	if (super_instance) {
 		return super_instance->dump_hierarchical_name(o) << '.' << key;
-	else	return dump_qualified_name(o);
+	} else {
+		return dump_qualified_name(o);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

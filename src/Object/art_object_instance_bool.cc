@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_bool.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.18.2.8 2005/07/10 21:11:18 fang Exp $
+	$Id: art_object_instance_bool.cc,v 1.18.2.9 2005/07/16 22:11:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
@@ -33,9 +33,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/art_object_instance_collection.tcc"
 
-// experimental: suppressing automatic template instantiation
-#include "Object/art_object_extern_templates.h"
-
 #include "util/memory/list_vector_pool.tcc"
 
 //=============================================================================
@@ -64,7 +61,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace memory {
 	// can we still lazy destroy with instance aliases?
 	// or will it contain pointers to other things later?  (instances)
+#if 1
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
+#endif
 }	// end namespace memory
 }	// end namespace util
 

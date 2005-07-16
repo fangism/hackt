@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.7.2.3 2005/07/15 03:49:42 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.4 2005/07/16 22:11:37 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -40,7 +40,8 @@ ARTOBJ_TEST_SUBJECTS = \
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	001 006 007 \
 	010 011 012 013 014 015 017 018 019 \
-	021 022 \
+	021 022 025 027 \
+	030 \
 	088 089 \
 	091 092 093 094 095 096 097 098
 

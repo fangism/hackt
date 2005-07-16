@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.1.4.2 2005/07/15 03:49:21 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.1.4.3 2005/07/16 22:11:35 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/art_object_instance_collection.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -33,6 +34,7 @@ subinstance_manager::unroll_port_instances(
 						type_ref_ptr_type;
 	typedef	typename type_ref_ptr_type::element_type
 						type_ref_pointee_type;
+	STACKTRACE_VERBOSE;
 	INVARIANT(this->empty());
 	const type_ref_ptr_type unresolved_super_type(inst.get_type());
 	NEVER_NULL(unresolved_super_type);

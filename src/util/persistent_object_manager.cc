@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.23.2.1 2005/07/09 01:23:32 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.23.2.2 2005/07/16 22:11:35 fang Exp $
  */
 
 // flags and switches
@@ -930,6 +930,9 @@ persistent_object_manager::reconstruct(void) {
 				// this allocates and empty constructs
 				e.assign_addr((*ctor_vec[j])());
 				addr_to_index_map[e.addr()] = i;
+#if 0
+				e.addr()->what(cerr << i << ": ") << endl;
+#endif
 			}
 		} else {
 			e.assign_addr(NULL);
@@ -1102,12 +1105,16 @@ persistent_object_manager::load_objects(void) {
 	size_t i = 1;
 	for ( ; i<max; i++) {
 #if 0
+		cerr << "Loading object number " << i << "!!!!!!!!!!!!!!!!!"
+			<< endl;
+#endif
+#if 0
 		ostringstream oss;
 		oss << "iter: " << i;
 		STACKTRACE(oss.str());
 #endif
-		reconstruction_table_entry& e = reconstruction_table[i];
-		persistent* o = const_cast<persistent*>(e.addr());
+		reconstruction_table_entry& e(reconstruction_table[i]);
+		persistent* const o(const_cast<persistent*>(e.addr()));
 		if (o) {
 		/***
 			CONSIDER: moving common header and footer code
@@ -1117,10 +1124,10 @@ persistent_object_manager::load_objects(void) {
 			member function, because load_object is allowed
 			to call load_object recursively.
 		***/
-			__load_object_once(o, raw_pointer_tag());
 #if 0
-			o->what(cerr << "@ " << o << ", ") << endl;
+			o->what(cerr << i << " @ " << o << ", ") << endl;
 #endif
+			__load_object_once(o, raw_pointer_tag());
 		}
 		// else can't load a NULL object
 	}

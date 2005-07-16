@@ -1,8 +1,10 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
+	$Id: subinstance_manager.cc,v 1.1.4.4 2005/07/16 22:11:34 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
@@ -12,6 +14,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
 #include "util/indent.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -29,17 +32,24 @@ subinstance_manager::subinstance_manager() : subinstance_array() { }
 	re-establish local connections.  
  */
 subinstance_manager::subinstance_manager(const this_type& s) :
-	subinstance_array() {
+	subinstance_array(s.subinstance_array) {
+	// 2005-07-16: bug fixed, forgot to copy the array!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-subinstance_manager::~subinstance_manager() { }
+subinstance_manager::~subinstance_manager() {
+	STACKTRACE_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 subinstance_manager::dump(ostream& o) const {
 if (subinstance_array.empty()) {
+#if 0
+	return o << "(no ports)";
+#else
 	return o;
+#endif
 } else {
 	o << '(' << endl;
 	{
@@ -65,9 +75,21 @@ subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
 		const instance_collection_base& i) const {
 	const size_t index = i.is_port_formal();
+	if (index > subinstance_array.size()) {
+		cerr << "Internal compiler error: got port index of " << index
+			<< " when limit is " << subinstance_array.size()
+			<< endl;
+		i.dump(cerr << "\twhile looking up: ") << endl;
+#if 0
+		cerr << "Here\'s the complete dump of this subinstance set: "
+			"at " << this << endl;
+		dump(cerr) << endl;
+#endif
+		THROW_EXIT;
+	}
 	INVARIANT(index);
-	INVARIANT(index < subinstance_array.size());
-	return subinstance_array[index];
+	INVARIANT(index <= subinstance_array.size());
+	return subinstance_array[index-1];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -90,6 +112,11 @@ subinstance_manager::relink_super_instance_alias(
 void
 subinstance_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	cerr << "collected " << subinstance_array.size() << " subinstances."
+		<< endl;
+#endif
 	m.collect_pointer_list(subinstance_array);
 }
 
@@ -97,14 +124,24 @@ subinstance_manager::collect_transient_info_base(
 void
 subinstance_manager::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_VERBOSE;
 	m.write_pointer_list(o, subinstance_array);
+#if ENABLE_STACKTRACE
+	cerr << "wrote " << subinstance_array.size() << " subinstances."
+		<< endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subinstance_manager::load_object_base(const persistent_object_manager& m,
 		istream& i) {
+	STACKTRACE_VERBOSE;
 	m.read_pointer_list(i, subinstance_array);
+#if ENABLE_STACKTRACE
+	cerr << "loaded " << subinstance_array.size() << " subinstances."
+		<< endl;
+#endif
 }
 
 //=============================================================================

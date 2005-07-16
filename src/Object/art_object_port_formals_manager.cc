@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.2.4.2 2005/07/15 03:49:16 fang Exp $
+ 	$Id: art_object_port_formals_manager.cc,v 1.2.4.3 2005/07/16 22:11:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
@@ -223,6 +223,7 @@ port_formals_manager::equivalent_port_formals(
 void
 port_formals_manager::unroll_ports(const unroll_context& c, 
 		subinstance_manager& sub) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(sub.empty());
 	sub.reserve(size());		// pre-allocate
 	port_formals_list_type::const_iterator i(port_formals_list.begin());
@@ -238,9 +239,15 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 		const count_ptr<physical_instance_collection>
 			new_port(pcb->unroll_port_only(c));
 		NEVER_NULL(new_port);
+#if ENABLE_STACKTRACE
+		new_port->dump(cerr << "new port: ") << endl;
+#endif
 		sub.push_back(new_port);
 	}
 	// relink somewhere?
+#if ENABLE_STACKTRACE
+	cerr << "Just unrolled " << sub.size() << " port instances." << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
