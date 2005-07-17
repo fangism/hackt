@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.7 2005/07/15 03:49:19 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.8 2005/07/17 20:58:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -551,7 +551,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
-	const element_type& pi = collection[index];
+	const element_type& pi(collection[index]);
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -580,7 +580,7 @@ VALUE_ARRAY_CLASS::lookup_value_collection(
 	key_gen.initialize();
 	good_bool ret(true);
 	do {
-		const element_type& pi = collection[key_gen];
+		const element_type& pi(collection[key_gen]);
 		// INVARIANT(pi.instantiated);	// else earlier check failed
 		if (!pi.instantiated) {
 			// this should NOT happen

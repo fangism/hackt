@@ -1,14 +1,13 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.6 2005/07/16 05:59:54 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.7 2005/07/17 20:58:42 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 #define __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 
 #include <iosfwd>
-#include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/art_object_index.h"
@@ -25,7 +24,6 @@ class const_param;
 class const_index_list;
 class const_range_list;
 class unroll_context;
-USING_LIST
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -164,8 +162,10 @@ public:
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;
 
+#if 0
 	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
+#endif
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
@@ -175,6 +175,10 @@ public:
 	unroll_resolve_index(const unroll_context&) const;
 #endif
 
+	bad_bool
+	assign_value_collection(const const_collection_type&) const;
+
+#if 0
 public:
 	/**
 		TODO: consider separate file?
@@ -204,6 +208,7 @@ public:
 			return this->operator()(b, *p);
 		}
 	};	// end class assigner
+#endif
 
 private:
 	excl_ptr<aliases_connection_base>

@@ -1,8 +1,8 @@
-ERROR: reference to uninitialized pint ::foo at index [0][0][0]
-ERROR: reference to uninitialized pint ::foo at index [0][0][1]
-ERROR: reference to uninitialized pint ::foo at index [0][0][2]
-ERROR: reference to uninitialized pint ::foo at index [0][0][3]
-ERROR: in flattening integer values.
-ERROR: something went wrong in pint assignment.
+ERROR: reference to uninitialized pint ::foo at index: [0][0][0]
+ERROR: reference to uninitialized pint ::foo at index: [0][0][1]
+ERROR: reference to uninitialized pint ::foo at index: [0][0][2]
+ERROR: reference to uninitialized pint ::foo at index: [0][0][3]
+ERROR: in unroll_resolve-ing simple_meta_instance_reference.
+ERROR: failed to resolve source values of pint-inst-ref ::foo[0][0][0..3] in pint assignment.
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

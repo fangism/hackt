@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.14.4.2 2005/07/15 03:48:51 fang Exp $
+#	$Id: Makefile.am,v 1.14.4.3 2005/07/17 20:58:35 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
@@ -76,13 +76,15 @@ distcheck.log: force
 	@$(ECHO) Tests started `$(DATE)` > $@.tmp
 	$(MAKE) distcheck 2>&1 | cat >> $@.tmp
 	-$(MV) $@.tmp $@
-	@if $(GREP) -q "archives ready for distribution" $@ ; then \
-		$(TAIL) -n 5 $@ ; \
-		$(ECHO) "Congratulations!" ; \
-	else \
-		$(ECHO) "Sorry, check $@ for distcheck errors." ; \
-		exit 1 ; \
-	fi
+	$(TAIL) -n 5 $@
+# grep not working as expected?
+#	@if $(GREP) -q "archives ready for distribution" $@ ; then \
+#		$(TAIL) -n 5 $@ ; \
+#		$(ECHO) "Congratulations!" ; \
+#	else \
+#		$(ECHO) "Sorry, check $@ for distcheck errors." ; \
+#		exit 1 ; \
+#	fi
 
 # don't include CVS directories in distribution
 dist-hook:

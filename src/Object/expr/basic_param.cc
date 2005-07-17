@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.1.2.4 2005/07/15 03:49:20 fang Exp $
+ 	$Id: basic_param.cc,v 1.1.2.5 2005/07/17 20:58:43 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -436,11 +436,13 @@ pint_const::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 good_bool
 pint_const::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(val);
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -570,11 +572,13 @@ pbool_const::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 good_bool
 pbool_const::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(val);
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_param>

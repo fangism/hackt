@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.20.4.3 2005/07/15 03:48:58 fang Exp $
+	$Id: art_object_assign.h,v 1.20.4.4 2005/07/17 20:58:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -116,6 +116,10 @@ public:
 							value_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+							const_expr_type;
+	typedef	typename class_traits<Tag>::const_collection_type
+							const_collection_type;
 	typedef	count_ptr<value_reference_type>	dest_ptr_type;
 	typedef	count_ptr<const value_reference_type>	dest_const_ptr_type;
 	typedef	list<dest_const_ptr_type>		dest_list_type;
@@ -173,6 +177,14 @@ public:
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
+private:
+	typedef	typename dest_list_type::const_iterator	const_dest_iterator;
+
+	static
+	good_bool
+	assign_dests(const_dest_iterator, const const_dest_iterator&, 
+		const const_collection_type&);
+	
 };	// end cllass expression_assignment
 
 //=============================================================================

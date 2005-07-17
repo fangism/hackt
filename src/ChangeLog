@@ -2,6 +2,18 @@
 
 2005-07-17	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-33:
+	  Reworked parameter assignment unrolling, value_reference, 
+		and const_collection to re-use existing unrolling
+		methods, and eliminate the eye-sore:
+		resolve_values_into_flat_list, which pre-dates the
+		introduction of const_collection and packed_array_generic.  
+		Good riddance!  (still commented out)
+	  TODO: address bugs process/059,060.in
+		Will probably add context to lookup_value[_collection].  
+	  Updated a few test outputs' error messages in test suite.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-32:
 	  BUG fixed re: process/057.in
 		in instance_array<>::element_loader::operator():

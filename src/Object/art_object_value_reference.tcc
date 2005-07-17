@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.8 2005/07/16 05:59:54 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.9 2005/07/17 20:58:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -40,6 +40,8 @@
 #include "Object/traits/class_traits.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_unroll_context.tcc"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"
 #include "Object/art_object_index.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_index.h"
@@ -301,15 +303,14 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) c
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
-	This code is grossly replicated... damn copy-paste...
 	TODO: need to handle passing template actuals in context?
-	\return true if resolution succeeds, else false.
+	\return good if resolution succeeds
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
-	// lookup pbool_instance_collection
+	// lookup value_collection
 	if (this->array_indices) {
 		const const_index_list
 			indices(this->array_indices->unroll_resolve(c));
@@ -322,6 +323,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 				cerr << "ERROR: upper != lower" << endl;
 				return good_bool(false);
 			}
+			// what if this references a formal parameter?
+			// then we need to get the template actuals
 			return value_collection_ref->lookup_value(i, lower);
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!" << endl;
@@ -371,6 +374,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\pre This is called only if is an indexed (implicit or explicit)
 		instance reference, and under no circumstances
@@ -396,6 +400,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_values_into_flat_list(
 	else	return value_collection_ref->lookup_value_collection(
 			l, const_range_list(ranges));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -600,12 +605,15 @@ if (value_collection_ref->is_template_formal()) {
 			// reference is std::_Bit_reference.
 			value_type val;
 			if (!vcref.lookup_value(val, key_gen).good) {
+#if 0
+				// callee already has error message
 				cerr << "ERROR: looking up index " <<
 					key_gen << " of " <<
 					class_traits<Tag>::tag_name <<
 					" collection " <<
 					vcref.get_qualified_name() <<
 					"." << endl;
+#endif
 				lookup_err.bad = true;
 			}
 			*coll_iter = val;
@@ -723,6 +731,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& 
 }
 
 //-----------------------------------------------------------------------------
+#if 0
 // class SIMPLE_META_VALUE_REFERENCE_CLASS::assigner method definitions
 
 /**
@@ -821,7 +830,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assigner::operator() (const bad_bool b,
 	key_gen.get_upper_corner() = dim.upper_multikey();
 	key_gen.initialize();
 
-	typename list<value_type>::const_iterator list_iter = vals.begin();
+	typename list<value_type>::const_iterator list_iter(vals.begin());
 	bad_bool assign_err(false);
 	do {
 		if (p.value_collection_ref->assign(key_gen, *list_iter).bad) {
@@ -837,6 +846,89 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assigner::operator() (const bad_bool b,
 	} while (key_gen != key_gen.get_upper_corner());
 	INVARIANT(list_iter == vals.end());	// sanity check
 	return assign_err || b;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: This will need some context eventually.
+	assignment's destination is either a top-level value collection 
+	or a definition-local, private value-collection.  
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
+		const const_collection_type& values) const {
+	if (value_collection_ref->get_owner()
+		.template is_a<const definition_base>()) {
+		cerr << "FANG, enable definition-local private "
+			"value reference resolution in "
+			"simple_meta_value_reference::assign_value_collection!"
+			<< endl;
+		return bad_bool(true);
+	}
+	// else we have top-level value reference
+	// TODO: repeated call to same invariant source value is wasteful...
+	const const_range_list src_ranges(values.static_constant_dimensions());
+	if (src_ranges.empty()) {
+		INVARIANT(!values.dimensions());
+		// is scalar assignment, but may be indexed
+		const never_ptr<value_scalar_type> 
+			scalar_inst(this->value_collection_ref.
+				template is_a<value_scalar_type>());
+		if (scalar_inst) {
+			return scalar_inst->assign(*values.begin());
+		}
+	}
+
+	const const_index_list dim(this->resolve_dimensions());
+	if (dim.empty()) {
+		cerr << "ERROR: unable to resolve constant dimensions."
+			<< endl;
+		return bad_bool(true);
+		THROW_EXIT;
+		// return true;
+	}
+	// We are assured that the dimensions of the references
+	// are equal, b/c dimensionality is statically checked.  
+	// However, ranges may be of different length because
+	// of collapsible dimensions.  
+	// Compare dim against ranges: sizes of each dimension...
+	// but what about collapsed dimensions?
+	const const_range_list dst_ranges(dim.collapsed_dimension_ranges());
+	if (!src_ranges.empty() && !src_ranges.is_size_equivalent(dst_ranges)) {
+		// if range.empty(), then there is no need to match dimensions,
+		// dimensions must be equal because both src/dest are scalar.
+		cerr << "ERROR: resolved indices are not "
+			"dimension-equivalent!" << endl;
+		src_ranges.dump(cerr << "got: ");
+		dim.dump(cerr << " and: ") << endl;
+		return bad_bool(true);
+	}
+	// else good to continue
+	generic_index_generator_type key_gen(dim.size());
+	key_gen.get_lower_corner() = dim.lower_multikey();
+	key_gen.get_upper_corner() = dim.upper_multikey();
+	key_gen.initialize();
+
+	typename const_collection_type::const_iterator
+		val_iter(values.begin());
+	bad_bool assign_err(false);
+	do {
+		if (this->value_collection_ref->
+				assign(key_gen, *val_iter).bad) {
+			cerr << "ERROR: assigning index " << key_gen << 
+				" of " << class_traits<Tag>::tag_name <<
+				" collection " << this->value_collection_ref
+					->get_qualified_name() <<
+				"." << endl;
+			assign_err.bad = true;
+		}
+		val_iter++;			// unsafe, but checked
+		key_gen++;
+	} while (key_gen != key_gen.get_upper_corner());
+	INVARIANT(val_iter == values.end());	// sanity check
+	return assign_err;
 }
 
 //=============================================================================

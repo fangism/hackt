@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.5.10.5 2005/07/15 03:49:00 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.5.10.6 2005/07/17 20:58:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -347,6 +347,7 @@ CONST_COLLECTION_CLASS::static_constant_value(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Straight copy of constant values to list.  
 	May become obsolete in future.  
@@ -358,6 +359,7 @@ CONST_COLLECTION_CLASS::resolve_values_into_flat_list(
 	copy(values.begin(), values.end(), back_inserter(l));
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE

@@ -1,18 +1,16 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.4 2005/07/15 03:49:00 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.5 2005/07/17 20:58:41 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 #define __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 
 #include <iosfwd>
-// #include "Object/art_object_expr_const.h"	// for const_range_list
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/STL/construct_fwd.h"
-#include "util/STL/list_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
@@ -28,7 +26,6 @@ class unroll_context;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
-using std::list;
 using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent;
@@ -152,9 +149,11 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
+#if 0
 	// flat-list needs to be replaced
 	good_bool
 	resolve_values_into_flat_list(list<value_type>& ) const;
+#endif
 
 	count_ptr<parent_const_type>
 	unroll_resolve(const unroll_context&) const;

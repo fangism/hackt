@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.1.2.3 2005/07/06 00:59:32 fang Exp $
+	$Id: pint_expr.h,v 1.1.2.4 2005/07/17 20:58:44 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_EXPR_H__
@@ -13,7 +13,6 @@
 #include "Object/expr/meta_index_expr.h"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/types.h"
-#include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 
 //=============================================================================
@@ -22,7 +21,6 @@ namespace entity {
 class const_param;
 class const_index_list;
 class unroll_context;
-USING_LIST
 using util::good_bool;
 using util::bad_bool;
 using util::memory::excl_ptr;
@@ -119,8 +117,10 @@ virtual	good_bool
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
 
+#if 0
 virtual	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const = 0;
+#endif
 
 protected:
 	excl_ptr<param_expression_assignment>

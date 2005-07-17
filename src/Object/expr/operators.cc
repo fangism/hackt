@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.1.2.3 2005/07/09 05:52:30 fang Exp $
+ 	$Id: operators.cc,v 1.1.2.4 2005/07/17 20:58:43 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -206,6 +206,7 @@ pint_unary_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\return false if there is error in resolving.
  */
@@ -216,6 +217,7 @@ pint_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(i);		// regardless of validity
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -390,6 +392,7 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 good_bool
 pbool_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	value_type b;
@@ -397,6 +400,7 @@ pbool_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(b);
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -626,6 +630,7 @@ pint_arith_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\return false if there is error in resolving.
  */
@@ -636,6 +641,7 @@ pint_arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(i);		// regardless of validity
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -948,6 +954,7 @@ pint_relational_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Appends the value to the list, even if there was an error.
 	\param l the cumulative list of values.
@@ -960,6 +967,7 @@ pint_relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(b);
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1212,6 +1220,7 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 good_bool
 pbool_logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	arg_type b;
@@ -1219,6 +1228,7 @@ pbool_logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
 	l.push_back(b);
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

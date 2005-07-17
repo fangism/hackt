@@ -3,6 +3,12 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-17:
+	BUG to fix:
+	Passing template parameters down to ports:
+	e.g. process/059,060.in
+
+//=============================================================================
 2005-07-14:
 	Do built-in channel types have ports?  Should they be expanded
 		recursively like other structured types?

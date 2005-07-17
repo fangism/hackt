@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.1.2.2 2005/07/06 00:59:32 fang Exp $
+	$Id: pint_arith_expr.h,v 1.1.2.3 2005/07/17 20:58:44 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -119,8 +119,11 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
+#if 0
 	good_bool
 	resolve_values_into_flat_list(list<value_type>& l) const;
+#endif
+
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
