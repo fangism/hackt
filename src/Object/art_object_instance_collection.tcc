@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.10 2005/07/16 22:11:32 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.11 2005/07/17 06:35:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -1187,20 +1187,31 @@ INSTANCE_ARRAY_CLASS::element_writer::operator () (const element_type& e) const 
 /**
 	This must perfectly complement element_writer::operator().
 	construct the element locally first, then insert it into set.
+	BUG FIX NOTE: 2005-07-16:
+		Loading the object *after* inserting it into the collection
+		is not only an enhancement (eliminating copy-overhead), 
+		but absolutely necessary for correctness, because effective 
+		loading of the object base requires that the parent object 
+		be stable, i.e.  not have short lifetime.  
+		Operating on the newly inserted reference guarantees 
+		proper lifetime.  This also applies to 
+		instance_collection<>::instantiate_indices.
+		This is not an issue with scalar instances, because
+		they have the same lifetime as their parent collection, 
+		by construction.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::element_loader::operator () (void) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_loader::operator()");
+	typedef	typename collection_type::iterator	local_iterator;
 	key_type temp_key;
 	value_reader<key_type> read_key(this->is);
 	read_key(temp_key);
-	element_type temp_elem(temp_key);
-	temp_elem.load_object_base(this->pom, this->is);
-	this->coll.insert(temp_elem);
-	// TODO: (minor enhancement, 2005-07-16)
-	// alternatively, insert first, then load to avoid subinstance_array
-	// copy overhead, just like in instantiate_indices()
+	const element_type temp_elem(temp_key);
+	const local_iterator i(this->coll.insert(temp_elem));
+	const_cast<element_type&>(static_cast<const element_type&>(*i))
+		.load_object_base(this->pom, this->is);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1208,7 +1219,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-	const instance_alias_base_type* const next = e.get_next();
+	const instance_alias_base_type* const next(e.get_next());
 	NEVER_NULL(next);
 	if (next != &e) {
 		write_value<char>(os, 1);

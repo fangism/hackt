@@ -1,0 +1,69 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+        foo<> x with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "bar", we have: {
+        x = foo<> x with indices: {
+          [0..1]
+        }
+
+      }
+
+    foo = process-definition (defined) foo(
+        bool<> a
+      )
+      In definition "foo", we have: {
+        a = bool<> a
+      }
+
+  Instances:
+    poo = process bar<>^0 poo (instantiated) = ::poo (
+      process foo<>^1 x with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::poo.x[0] (
+            bool^0 a (instantiated) = ::poo.x[0].a 
+          )
+          1 = ::poo.x[1] (
+            bool^0 a (instantiated) = ::poo.x[1].a 
+          )
+        }
+    )
+}
+

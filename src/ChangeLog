@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-32:
+	  BUG fixed re: process/057.in
+		in instance_array<>::element_loader::operator():
+		insert new element into collection BEFORE load_object_base, 
+		to satisfy reconstruction ordering problem.  
+	  New BUG: process/059,060.in:
+		passing template actuals to ports of instances.  
+	  TODO: more rigorous hierarchical connection testing.  
+
+
 2005-07-16	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-31:
