@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.10 2005/07/18 00:02:10 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.11 2005/07/18 23:29:44 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -325,7 +325,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			}
 			// what if this references a formal parameter?
 			// then we need to get the template actuals
-			return value_collection_ref->lookup_value(i, lower);
+			return value_collection_ref->lookup_value(i, lower, c);
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!" << endl;
 			return good_bool(false);
@@ -359,7 +359,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 				cerr << "ERROR: upper != lower" << endl;
 				return good_bool(false);
 			}
-			return value_collection_ref->lookup_value(i, lower);
+			return value_collection_ref->lookup_value(
+				i, lower, unroll_context());
 		} else {
 			cerr << "Unable to resolve array_indices!" << endl;
 			return good_bool(false);
@@ -574,7 +575,7 @@ if (value_collection_ref->is_template_formal()) {
 			// using local value is necessary because bool's 
 			// reference is std::_Bit_reference.
 			value_type val;
-			if (!vcref.lookup_value(val, key_gen).good) {
+			if (!vcref.lookup_value(val, key_gen, c).good) {
 #if 0
 				// callee already has error message
 				cerr << "ERROR: looking up index " <<

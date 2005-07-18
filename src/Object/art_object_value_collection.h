@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6.4.7 2005/07/18 00:02:09 fang Exp $
+	$Id: art_object_value_collection.h,v 1.6.4.8 2005/07/18 23:29:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -146,21 +146,12 @@ virtual	good_bool
 
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
 	good_bool							\
-	lookup_value(value_type& v, const multikey_index_type& i) const
-
-#if 0
-#define	LOOKUP_VALUE_COLLECTION_PROTO					\
-	good_bool							\
-	lookup_value_collection(list<value_type>& l, 			\
-		const const_range_list& r) const
-#endif
+	lookup_value(value_type& v, const multikey_index_type& i, 	\
+		const unroll_context&) const
 
 virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-#if 0
-virtual	LOOKUP_VALUE_COLLECTION_PROTO = 0;
-#endif
 
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
@@ -250,10 +241,6 @@ public:
 
 	LOOKUP_VALUE_INDEXED_PROTO;
 
-#if 0
-	LOOKUP_VALUE_COLLECTION_PROTO;
-#endif
-
 	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
 
@@ -331,9 +318,6 @@ public:
 	LOOKUP_VALUE_INDEXED_PROTO;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-#if 0
-	LOOKUP_VALUE_COLLECTION_PROTO;
-#endif
 
 	bad_bool
 	assign(const multikey_index_type& k, const value_type i);

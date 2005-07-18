@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.5.10.7 2005/07/18 00:02:08 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.5.10.8 2005/07/18 23:29:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -207,7 +207,6 @@ CONST_COLLECTION_CLASS::has_static_constant_dimensions(void) const {
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_range_list
 CONST_COLLECTION_CLASS::static_constant_dimensions(void) const {
-	typedef	typename array_type::key_type	key_type;
 	const_range_list ret;
 	const key_type first(values.first_key());
 	const key_type last(values.last_key());
@@ -263,6 +262,17 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const param_expr& e) const {
 	}
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up one value indexed.  
+	\pre k must have same dimensions as the collection.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+typename CONST_COLLECTION_CLASS::value_type
+CONST_COLLECTION_CLASS::operator [] (const key_type& k) const {
+	return values[k];
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -350,7 +360,6 @@ CONST_COLLECTION_CLASS::static_constant_value(void) const {
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_index_list
 CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
-	typedef	typename array_type::key_type	key_type;
 	const_index_list ret;
 	const key_type first(values.first_key());
 	const key_type last(values.last_key());

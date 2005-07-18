@@ -3,6 +3,24 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-18:
+	Minutes of meeting.
+	cflat (backwards compatibility) has some constraints:
+		some programs require prior canonicalization of
+		unique instances, must use the same name to refer
+		to same node.  
+		Name canonicalization may only occur after unique
+		creation (instantiation).  
+		Therefore, creation must be done first.  
+	For unique creation, need to play back instantiations
+		after connection pass (unroll).  
+		Visit each top-level instance and check whether state 
+		has been created/allocated.  If not, then allocate.
+		Then recursively do for all ports and members.  
+		When check finds already created, establish
+		the pointer to the same memory.  
+
+//=============================================================================
 2005-07-17:
 	BUG to fix:
 	Passing template parameters down to ports:

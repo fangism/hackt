@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.17 2005/07/18 19:20:39 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.18 2005/07/18 23:29:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -564,10 +564,14 @@ data_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
+#if 0
 		unroll_context cc;	// local context
 		const template_actuals_transformer
 			uc(cc, template_args, 
 				base_type_def->get_template_formals_manager());
+#else
+		const unroll_context cc(make_unroll_context());
+#endif
 #if 0
 		cc.dump(cerr << "cc = ") << endl;
 		// dies on assert(!index_collection.empty()), 
@@ -1359,10 +1363,14 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
+#if 0
 		unroll_context cc;	// local context
 		const template_actuals_transformer
 			uc(cc, template_args, 
 				base_chan_def->get_template_formals_manager());
+#else
+		const unroll_context cc(make_unroll_context());
+#endif
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
 		// then translate actuals from super-context
@@ -1718,19 +1726,20 @@ process_type_reference::unroll_port_instances(
 		proc_def(base_proc_def.is_a<const process_definition>());
 	NEVER_NULL(proc_def);
 	const port_formals_manager& port_formals(proc_def->get_port_formals());
-#if 0
-	sub.reserve(port_formals.size());
-#else
 	{
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
+#if 1
 		unroll_context cc;
 		const template_actuals_transformer
 			uc(cc, resolved_template_args, 
 				proc_def->get_template_formals_manager());
+#else
+		// hold on, this is not equivalent
+		const unroll_context cc(make_unroll_context());
+#endif
 		port_formals.unroll_ports(cc, sub);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

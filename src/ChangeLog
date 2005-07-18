@@ -2,6 +2,21 @@
 
 2005-07-18	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-36:
+	  BUG cases process/061,062,063.in fixed.
+	  Added unroll_context argument to all value_collections'
+		resolve_value methods (indexed and non-indexed).
+	  Updated NOTES with brief minutes of today's meeting.  
+	  Added [] operator to const_collection, only returns scalar value.
+	  In type_references' unroll_resolve(), favoring call to
+		make_unroll_context over making a blank context
+		and then applying the template_actuals_transformer.  
+		This should clean-up the code some, make it easier to
+		hunt down remaining related bugs.  
+	  BUG: targeting process/064.in
+	  TODO: finish this and enable port connections (trivial)
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-35:
 	  BUG process/060 fixed, but there is known inconsistency
 		between process/data_type_reference's unroll_resolve

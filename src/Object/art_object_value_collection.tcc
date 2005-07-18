@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.9 2005/07/18 00:02:10 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.10 2005/07/18 23:29:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -112,32 +112,6 @@ VALUE_COLLECTION_CLASS::value_collection(const scopespace& o,
 		const string& n, const size_t d) :
 		parent_type(o, n, d), ival(NULL) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	This is a special case used by built-in definition construction, 
-	so we restrict the default argument to constant scalar integer.  
-	This way, we can safely omit the call to
-	may_type_check_actual_param_expr(*i).
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-VALUE_COLLECTION_CLASS::value_collection(const scopespace& o, 
-		const string& n, const size_t d, 
-		const count_ptr<const pint_const>& i) :
-		parent_type(o, n, d), 
-		ival(i) {
-	/***
-		INVARIANT(may_type_check_actual_param_expr(*i));
-		This causes problem... calls pure virtual dimensions()
-		during construction phase, resulting in a run-time
-		"pure virtual method called" abort trap.  
-	***/
-#if 0
-	INVARIANT(may_type_check_actual_param_expr(*i));
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -327,22 +301,6 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
 		const const_param& pe) const {
-#if 0
-	const never_ptr<const const_collection_type>
-		pi(IS_A(const const_collection_type*, &pe));
-	// can it be scalar?
-	const never_ptr<const const_expr_type>
-		ps(IS_A(const const_expr_type*, &pe));
-	if (ps) {
-		cerr << "Fang, don\'t forget scalar const case in "
-			"value_collection<>::must_type_check_actual_param()"
-			<< endl;
-	}
-	if (!pi) {
-		// useful error message?
-		return good_bool(false);
-	}
-#endif
 	// only for formal parameters is this assertion valid.  
 	// this says that the only instantiation statement for this parameter
 	// in the original declaration, which in this case was in the ports.  
@@ -515,12 +473,10 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 		// already fully specified
 		return l;
 	}
-#if 1
 	// convert indices to pair of list of multikeys
 	if (!l_size) {
 		return const_index_list(l, collection.is_compact());
 	}
-#endif
 	// else construct slice
 	list<pint_value_type> lower_list, upper_list;
 	transform(l.begin(), l.end(), back_inserter(lower_list), 
@@ -551,12 +507,19 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 VALUE_ARRAY_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i) const {
+		const multikey_index_type& i, 
+		const unroll_context& c) const {
 	INVARIANT(D == i.dimensions());
 	if (this->owner.template is_a<const definition_base>()) {
-		cerr << "FANG: add context to value_scalar::lookup_value()!"
-			<< endl;
-		return good_bool(false);
+		INVARIANT(!c.empty());
+		const count_ptr<const const_param>
+			ac(c.lookup_actual(*this));
+		NEVER_NULL(ac);
+		const count_ptr<const const_collection_type>
+			sc(ac.template is_a<const const_collection_type>());
+		NEVER_NULL(sc);
+		v = (*sc)[i];
+		return good_bool(true);
 	}
 	const key_type index(i);
 	const element_type& pi(collection[index]);
@@ -570,47 +533,6 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	}
 	return good_bool(pi.valid);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\param l list in which to accumulate values.
-	\param r the ranges, must be valid, and fully resolved.
-	\return false on error, e.g. if value doesn't exist or 
-		is uninitialized; true on success.
- */
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-VALUE_ARRAY_CLASS::lookup_value_collection(
-		list<value_type>& l, const const_range_list& r) const {
-	INVARIANT(!r.empty());
-	multikey_generator<D, pint_value_type> key_gen;
-	r.make_multikey_generator(key_gen);
-	key_gen.initialize();
-	good_bool ret(true);
-	do {
-		const element_type& pi(collection[key_gen]);
-		// INVARIANT(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated) {
-			// this should NOT happen
-			cerr << "FATAL: reference to uninstantiated " <<
-				class_traits<Tag>::tag_name << ' ' <<
-				this->get_qualified_name() << " at index " <<
-				key_gen << endl;
-			ret.good = false;
-		} else if (!pi.valid) {
-			cerr << "ERROR: reference to uninitialized " <<
-				class_traits<Tag>::tag_name << ' ' <<
-				this->get_qualified_name() << " at index " <<
-				key_gen << endl;
-			ret.good = false;
-		}
-		l.push_back(pi.value);
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -635,9 +557,7 @@ VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
 	// write out the instance map
-#if 1
 	this->collection.write(f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -646,9 +566,7 @@ void
 VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 	// load the instance map
-#if 1
 	this->collection.read(f);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -766,10 +684,6 @@ good_bool
 VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
 		const unroll_context& c) const {
 	if (this->owner.template is_a<const definition_base>()) {
-#if 0
-		cerr << "FANG: add context to value_scalar::lookup_value()!"
-			<< endl;
-#endif
 		INVARIANT(!c.empty());
 		const count_ptr<const const_param>
 			ac(c.lookup_actual(*this));
@@ -779,9 +693,6 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 		NEVER_NULL(sc);
 		v = sc->static_constant_value();
 		return good_bool(true);
-#if 0
-		return good_bool(false);
-#endif
 	} else {
 		// NOT TRUE. see test case template/009,040,041.in
 		// INVARIANT(c.empty());
@@ -802,30 +713,14 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-VALUE_SCALAR_CLASS::lookup_value_collection(
-		list<value_type>& l, const const_range_list& r) const {
-	cerr << "WARNING: VALUE_SCALAR_CLASS::lookup_value_collection(...) "
-		"should never be called." << endl;
-	// DIE;
-	INVARIANT(r.empty());
-	value_type i;
-	const good_bool ret(lookup_value(i));
-	l.push_back(i);
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This should never be called.  
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i) const {
+		const multikey_index_type& i, 
+		const unroll_context&) const {
 	cerr << "FATAL: VALUE_SCALAR_CLASS::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;

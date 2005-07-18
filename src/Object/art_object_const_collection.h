@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.6 2005/07/18 00:02:07 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.7 2005/07/18 23:29:42 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
@@ -60,6 +60,8 @@ public:
 	typedef	typename array_type::iterator		iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
 protected:
+	typedef	typename array_type::key_type		key_type;
+protected:
 	array_type					values;
 public:
 	explicit
@@ -108,6 +110,9 @@ public:
 
 	const_range_list
 	static_constant_dimensions(void) const;
+
+	value_type
+	operator [] (const key_type&) const;
 
 	bool
 	may_be_initialized(void) const { return true; }
