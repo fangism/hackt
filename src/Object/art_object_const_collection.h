@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.5 2005/07/17 20:58:41 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.6 2005/07/18 00:02:07 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
@@ -148,12 +148,6 @@ public:
 
 	const_index_list
 	resolve_dimensions(void) const;
-
-#if 0
-	// flat-list needs to be replaced
-	good_bool
-	resolve_values_into_flat_list(list<value_type>& ) const;
-#endif
 
 	count_ptr<parent_const_type>
 	unroll_resolve(const unroll_context&) const;

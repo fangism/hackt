@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.8 2005/07/17 20:58:42 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.9 2005/07/18 00:02:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -34,6 +34,9 @@
 #include "Object/expr/const_range_list.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_unroll_context.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -550,6 +553,11 @@ good_bool
 VALUE_ARRAY_CLASS::lookup_value(value_type& v, 
 		const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
+	if (this->owner.template is_a<const definition_base>()) {
+		cerr << "FANG: add context to value_scalar::lookup_value()!"
+			<< endl;
+		return good_bool(false);
+	}
 	const key_type index(i);
 	const element_type& pi(collection[index]);
 	if (pi.valid) {
@@ -564,6 +572,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	\param l list in which to accumulate values.
 	\param r the ranges, must be valid, and fully resolved.
@@ -601,6 +610,7 @@ VALUE_ARRAY_CLASS::lookup_value_collection(
 	} while (key_gen != key_gen.get_lower_corner());
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -746,11 +756,37 @@ VALUE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This version assumes collection is a scalar.  
+	\param v the value reference at which to store back the resolved value.
+	\param c the unroll context.  
 	\return true if lookup found a valid value.  
+	TODO: propagage actual context changes to value_array.
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
+VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
+		const unroll_context& c) const {
+	if (this->owner.template is_a<const definition_base>()) {
+#if 0
+		cerr << "FANG: add context to value_scalar::lookup_value()!"
+			<< endl;
+#endif
+		INVARIANT(!c.empty());
+		const count_ptr<const const_param>
+			ac(c.lookup_actual(*this));
+		NEVER_NULL(ac);
+		const count_ptr<const expr_type>
+			sc(ac.template is_a<const expr_type>());
+		NEVER_NULL(sc);
+		v = sc->static_constant_value();
+		return good_bool(true);
+#if 0
+		return good_bool(false);
+#endif
+	} else {
+		// NOT TRUE. see test case template/009,040,041.in
+		// INVARIANT(c.empty());
+		// no need for context in top-level!
+	}
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated " <<
 			class_traits<Tag>::tag_name << ' ' <<
@@ -766,6 +802,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::lookup_value_collection(
@@ -779,6 +816,7 @@ VALUE_SCALAR_CLASS::lookup_value_collection(
 	l.push_back(i);
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

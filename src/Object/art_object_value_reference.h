@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8.4.7 2005/07/17 20:58:42 fang Exp $
+	$Id: art_object_value_reference.h,v 1.8.4.8 2005/07/18 00:02:10 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
@@ -162,11 +162,6 @@ public:
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;
 
-#if 0
-	good_bool
-	resolve_values_into_flat_list(list<value_type>& l) const;
-#endif
-
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
 
@@ -177,38 +172,6 @@ public:
 
 	bad_bool
 	assign_value_collection(const const_collection_type&) const;
-
-#if 0
-public:
-	/**
-		TODO: consider separate file?
-		Helper class for assigning values to instances.
-	 */
-	class assigner {
-	protected:
-		/** reference to the source of values */
-		const interface_type&	src;
-		/** resolved range list */
-		const_index_list	ranges;
-		/** flat list of unrolled values */
-		list<value_type>		vals;
-	public:
-		assigner(const interface_type& p);
-		// default destructor
-
-		bad_bool
-		operator () (const bad_bool b,
-			const SIMPLE_META_VALUE_REFERENCE_CLASS& p) const;
-
-		template <template <class> class P>
-		bad_bool
-		operator () (const bad_bool b,
-			const P<const SIMPLE_META_VALUE_REFERENCE_CLASS >& p) const {
-			assert(p);
-			return this->operator()(b, *p);
-		}
-	};	// end class assigner
-#endif
 
 private:
 	excl_ptr<aliases_connection_base>

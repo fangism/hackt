@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.8 2005/07/15 03:49:16 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.9 2005/07/18 00:02:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -97,10 +97,14 @@ template_actuals::operator bool () const {
 count_ptr<const param_expr>
 template_actuals::operator [] (const size_t i) const {
 	if (strict_template_args) {
-		const size_t s = strict_template_args->size();
-		return (i < s) ?
-			(*strict_template_args)[i] :
-			(*relaxed_template_args)[i-s];
+		const size_t s(strict_template_args->size());
+		if (i < s) {
+			return (*strict_template_args)[i];
+		} else {
+			NEVER_NULL(relaxed_template_args);
+			INVARIANT(i < s +relaxed_template_args->size());
+			return (*relaxed_template_args)[i-s];
+		}
 	} else {
 		INVARIANT(relaxed_template_args);
 		return (*relaxed_template_args)[i];

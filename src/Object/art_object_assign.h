@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.20.4.4 2005/07/17 20:58:41 fang Exp $
+	$Id: art_object_assign.h,v 1.20.4.5 2005/07/18 00:02:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -51,7 +51,6 @@ public:
 	param_expression_assignment();
 virtual	~param_expression_assignment();
 
-// virtualize
 virtual	ostream&
 	what(ostream& o) const = 0;
 

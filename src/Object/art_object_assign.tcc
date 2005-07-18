@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.5.4.3 2005/07/17 20:58:41 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.5.4.4 2005/07/18 00:02:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
@@ -227,25 +227,6 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(unroll_context& c) const {
 	INVARIANT(!dests.empty());		// sanity check
 	INVARIANT(this->src);
 	// works for scalars and multidimensional arrays alike
-#if 0
-try {
-	typename value_reference_type::assigner the_assigner(*this->src);
-	// throws exception upon error in constructor
-	bad_bool assign_err = 
-		accumulate(this->dests.begin(), this->dests.end(), 
-			bad_bool(false), the_assigner);
-	if (assign_err.bad) {
-		cerr << "ERROR: something went wrong in " <<
-			class_traits<Tag>::tag_name << " assignment." << endl;
-		return good_bool(false);
-	}
-} catch (...) {
-	cerr << "ERROR: something went wrong in " <<
-		class_traits<Tag>::tag_name << " assignment." << endl;
-	return good_bool(false);
-}
-	return good_bool(true);
-#else
 	const count_ptr<const const_param>
 		src_values(this->src->unroll_resolve(c));
 	if (!src_values) {
@@ -264,15 +245,8 @@ try {
 		static const multikey_index_type blank;
 		// temporary 0-D, scalar value
 		const_collection_type the_lonesome_value(blank);
-#if 0
-		const good_bool
-			must_be(the_lonesome_value.assign(
-				scalar_const->static_constant_value()));
-		INVARIANT(must_be.good);
-#else
 		*the_lonesome_value.begin() =
 			scalar_const->static_constant_value();
-#endif
 		return assign_dests(this->dests.begin(), this->dests.end(),
 			the_lonesome_value);
 	} else {
@@ -280,7 +254,6 @@ try {
 		return assign_dests(this->dests.begin(), this->dests.end(),
 			*bunch_of_consts);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

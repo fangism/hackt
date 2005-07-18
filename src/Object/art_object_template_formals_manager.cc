@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.13 2005/07/17 06:35:39 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.14 2005/07/18 00:02:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -173,7 +173,7 @@ template_formals_manager::resolve_template_actual(
 		const template_actuals& a) const {
 	typedef	const_param			local_return_type;
 	INVARIANT(p.is_template_formal());
-	const size_t i = lookup_template_formal_position(p.get_name());
+	const size_t i(lookup_template_formal_position(p.get_name()));
 	// this value is 1-indexed
 	// but actuals are 0-indexed
 	INVARIANT(i);

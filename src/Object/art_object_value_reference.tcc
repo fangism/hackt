@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.9 2005/07/17 20:58:42 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.10 2005/07/18 00:02:10 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -47,6 +47,7 @@
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/art_object_unroll_context.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/art_object_extern_templates.h"
@@ -310,7 +311,6 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
-	// lookup value_collection
 	if (this->array_indices) {
 		const const_index_list
 			indices(this->array_indices->unroll_resolve(c));
@@ -334,7 +334,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const never_ptr<value_scalar_type>
 			scalar_inst(value_collection_ref.template is_a<value_scalar_type>());
 		NEVER_NULL(scalar_inst);
-		return scalar_inst->lookup_value(i);
+		return scalar_inst->lookup_value(i, c);
 	}
 }
 
@@ -347,7 +347,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
-	// lookup pbool_instance_collection
 	if (this->array_indices) {
 		const const_index_list
 			indices(this->array_indices->resolve_index_list());
@@ -369,38 +368,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 		const never_ptr<value_scalar_type>
 			scalar_inst(value_collection_ref.template is_a<value_scalar_type>());
 		NEVER_NULL(scalar_inst);
-		return scalar_inst->lookup_value(i);
+		return scalar_inst->lookup_value(i, unroll_context());
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\pre This is called only if is an indexed (implicit or explicit)
-		instance reference, and under no circumstances
-		should this be invoked for scalars for which 
-		resolve_dimensions() always returns an empty list.  
-	\param l the list in which to accumulate values.
-	\return false if there was error.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_values_into_flat_list(
-		list<value_type>& l) const {
-	// base collection must be non-scalar
-	INVARIANT(value_collection_ref->get_dimensions());
-	const const_index_list
-		ranges(resolve_dimensions());
-	if (ranges.empty()) {
-		cerr << "ERROR: could not unroll " <<
-			class_traits<Tag>::tag_name <<
-			"values with bad index." << endl;
-		return good_bool(false);
-	}
-	else	return value_collection_ref->lookup_value_collection(
-			l, const_range_list(ranges));
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -640,7 +610,7 @@ if (value_collection_ref->is_template_formal()) {
 			ps(IS_A(const value_scalar_type*, &vcref));
 #endif
 		INVARIANT(ps);
-		const bad_bool valid(ps->lookup_value(_val));
+		const bad_bool valid(ps->lookup_value(_val, c));
 		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"simple_meta_value_reference, "
@@ -650,7 +620,7 @@ if (value_collection_ref->is_template_formal()) {
 			return return_type(new const_expr_type(_val));
 	}
 }
-}
+}	// end method unroll_resolve
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -731,125 +701,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& 
 }
 
 //-----------------------------------------------------------------------------
-#if 0
-// class SIMPLE_META_VALUE_REFERENCE_CLASS::assigner method definitions
-
-/**
-	Constructor caches the sequence of values for assigning to 
-	an integer instance collection.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-SIMPLE_META_VALUE_REFERENCE_CLASS::assigner::assigner(const expr_base_type& p) :
-		src(p), ranges(), vals() {
-	if (src.dimensions()) {
-		ranges = src.resolve_dimensions();
-		if (ranges.empty()) {
-			// if empty list returned, there was an error,
-			// because we know that the # dimensions is > 0.
-			cerr << "ERROR: assignment unrolling expecting "
-				"valid dimensions!" << endl;
-			// or throw exception
-			THROW_EXIT;
-		}
-		// load values into cache list as a sequence
-		// pass list by reference to a virtual func?
-		const bad_bool err(src.resolve_values_into_flat_list(vals));
-		if (err.bad) {
-			cerr << "ERROR: in flattening " <<
-				class_traits<Tag>::value_type_name <<
-				" values." << endl;
-			THROW_EXIT;
-		}
-	} else {	// is just scalar value
-		// leave ranges empty
-		value_type i;
-		if (src.resolve_value(i).good) {
-			vals.push_back(i);
-		} else {
-			cerr << "ERROR: resolving scalar " <<
-				class_traits<Tag>::value_type_name <<
-				" value!" << endl;
-			THROW_EXIT;
-		}
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assigns cached list of unrolled values to the destination
-	instance collection.  
-	\param b the cumulative error status.
-	\param p the destination instance reference.  
-	\return bad if anything goes wrong, or has gone wrong before.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bad_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::assigner::operator() (const bad_bool b, 
-		const SIMPLE_META_VALUE_REFERENCE_CLASS& p) const {
-	// check dimensions for match first
-	if (ranges.empty()) {
-		INVARIANT(vals.size() == 1);
-		// is scalar assignment, but may be indexed
-		const never_ptr<value_scalar_type> 
-			scalar_inst(p.value_collection_ref.
-				template is_a<value_scalar_type>());
-		if (scalar_inst) {
-			return bad_bool(scalar_inst->assign(vals.front())) || b;
-		}
-	}
-	// else is scalar or array, but must resolve indices
-	const const_index_list dim(p.resolve_dimensions());
-	if (dim.empty()) {
-		cerr << "ERROR: unable to resolve constant dimensions."
-			<< endl;
-		return bad_bool(true);
-		THROW_EXIT;
-		// return true;
-	}
-	// We are assured that the dimensions of the references
-	// are equal, b/c dimensionality is statically checked.  
-	// However, ranges may be of different length because
-	// of collapsible dimensions.  
-	// Compare dim against ranges: sizes of each dimension...
-	// but what about collapsed dimensions?
-	if (!ranges.empty() && !ranges.equal_dimensions(dim)) {
-		// if range.empty(), then there is no need to match dimensions,
-		// dimensions must be equal because both src/dest are scalar.
-		cerr << "ERROR: resolved indices are not "
-			"dimension-equivalent!" << endl;
-		ranges.dump(cerr << "got: ");
-		dim.dump(cerr << " and: ") << endl;
-		return bad_bool(true);
-		THROW_EXIT;
-		// return true;
-	}
-	// else good to continue
-
-	generic_index_generator_type key_gen(dim.size());
-	key_gen.get_lower_corner() = dim.lower_multikey();
-	key_gen.get_upper_corner() = dim.upper_multikey();
-	key_gen.initialize();
-
-	typename list<value_type>::const_iterator list_iter(vals.begin());
-	bad_bool assign_err(false);
-	do {
-		if (p.value_collection_ref->assign(key_gen, *list_iter).bad) {
-			cerr << "ERROR: assigning index " << key_gen << 
-				" of " << class_traits<Tag>::tag_name <<
-				" collection " <<
-				p.value_collection_ref->get_qualified_name() <<
-				"." << endl;
-			assign_err.bad = true;
-		}
-		list_iter++;			// unsafe, but checked
-		key_gen++;
-	} while (key_gen != key_gen.get_upper_corner());
-	INVARIANT(list_iter == vals.end());	// sanity check
-	return assign_err || b;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: This will need some context eventually.
 	assignment's destination is either a top-level value collection 

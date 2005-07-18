@@ -2,6 +2,17 @@
 
 2005-07-17	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-34:
+	  BUG process/059.in squashed (simple scalar case only).  
+		Added unroll_context argument to value_scalar::lookup_value.
+		TODO: propagate change to array references, 
+		in const_collection::lookup_value...
+	  Some clean-up from previous revision.  
+	  TODO: fix process/060.in, etc...
+		in instantiation_statement::instantiate_port(), 
+		in which type parameters refer to actuals.  
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-33:
 	  Reworked parameter assignment unrolling, value_reference, 
 		and const_collection to re-use existing unrolling

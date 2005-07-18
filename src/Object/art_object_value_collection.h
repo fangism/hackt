@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6.4.6 2005/07/17 20:58:42 fang Exp $
+	$Id: art_object_value_collection.h,v 1.6.4.7 2005/07/18 00:02:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -31,6 +31,8 @@ class param_expr;
 class const_param;
 class const_range_list;
 class const_index_list;
+class scopespace;
+class unroll_context;
 USING_LIST
 using std::istream;
 using std::ostream;
@@ -43,7 +45,6 @@ using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
 
-class scopespace;
 
 //=============================================================================
 #define	VALUE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -147,15 +148,19 @@ virtual	good_bool
 	good_bool							\
 	lookup_value(value_type& v, const multikey_index_type& i) const
 
+#if 0
 #define	LOOKUP_VALUE_COLLECTION_PROTO					\
 	good_bool							\
 	lookup_value_collection(list<value_type>& l, 			\
 		const const_range_list& r) const
+#endif
 
 virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
+#if 0
 virtual	LOOKUP_VALUE_COLLECTION_PROTO = 0;
+#endif
 
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
@@ -245,7 +250,9 @@ public:
 
 	LOOKUP_VALUE_INDEXED_PROTO;
 
+#if 0
 	LOOKUP_VALUE_COLLECTION_PROTO;
+#endif
 
 	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
@@ -285,6 +292,8 @@ public:
 							instance_type;
 	typedef	instance_type				element_type;
 	typedef	typename class_traits<Tag>::value_type	value_type;
+	typedef	typename class_traits<Tag>::expr_base_type
+							expr_type;
 	typedef	typename class_traits<Tag>::const_expr_type
 							const_expr_type;
 private:
@@ -308,7 +317,7 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	good_bool
-	lookup_value(value_type& i) const;
+	lookup_value(value_type& i, const unroll_context&) const;
 
 	bad_bool
 	assign(const value_type i);
@@ -322,7 +331,9 @@ public:
 	LOOKUP_VALUE_INDEXED_PROTO;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
+#if 0
 	LOOKUP_VALUE_COLLECTION_PROTO;
+#endif
 
 	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
@@ -334,7 +345,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 	// POOL?
 
-};	// end class pbool_array specialization
+};	// end class value_array specialization
 
 //=============================================================================
 }	// end namespace entity

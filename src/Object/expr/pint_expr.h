@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.1.2.4 2005/07/17 20:58:44 fang Exp $
+	$Id: pint_expr.h,v 1.1.2.5 2005/07/18 00:02:12 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_EXPR_H__
@@ -116,11 +116,6 @@ virtual	good_bool
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
-
-#if 0
-virtual	good_bool
-	resolve_values_into_flat_list(list<value_type>& l) const = 0;
-#endif
 
 protected:
 	excl_ptr<param_expression_assignment>

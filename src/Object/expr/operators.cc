@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.1.2.4 2005/07/17 20:58:43 fang Exp $
+ 	$Id: operators.cc,v 1.1.2.5 2005/07/18 00:02:11 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -206,20 +206,6 @@ pint_unary_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\return false if there is error in resolving.
- */
-good_bool
-pint_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
-	value_type i = 0;
-	const good_bool ret(resolve_value(i));
-	l.push_back(i);		// regardless of validity
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return empty list, signifying a scalar value, because all 
 		expressions operations only work on scalars.  
@@ -390,17 +376,6 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 	i = !b;
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-good_bool
-pbool_unary_expr::resolve_values_into_flat_list(list<value_type>& l) const {
-	value_type b;
-	const good_bool ret(resolve_value(b));
-	l.push_back(b);
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -628,20 +603,6 @@ pint_arith_expr::resolve_value(value_type& i) const {
 		return good_bool(true);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\return false if there is error in resolving.
- */
-good_bool
-pint_arith_expr::resolve_values_into_flat_list(list<value_type>& l) const {
-	value_type i = 0;
-	const good_bool ret(resolve_value(i));
-	l.push_back(i);		// regardless of validity
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -954,22 +915,6 @@ pint_relational_expr::resolve_value(value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Appends the value to the list, even if there was an error.
-	\param l the cumulative list of values.
-	\return error status
- */
-good_bool
-pint_relational_expr::resolve_values_into_flat_list(list<value_type>& l) const {
-	value_type b;
-	const good_bool ret(resolve_value(b));
-	l.push_back(b);
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return pbool_const of the resolved value.
  */
@@ -1218,17 +1163,6 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 	i = (*op)(lb, rb);
 	return l_ret && r_ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-good_bool
-pbool_logical_expr::resolve_values_into_flat_list(list<value_type>& l) const {
-	arg_type b;
-	const good_bool ret(resolve_value(b));
-	l.push_back(b);
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
