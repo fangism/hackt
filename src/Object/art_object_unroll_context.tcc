@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.tcc"
 	Template method implementation for unroll_context class.  
-	$Id: art_object_unroll_context.tcc,v 1.1.4.4 2005/07/04 01:54:06 fang Exp $
+	$Id: art_object_unroll_context.tcc,v 1.1.4.5 2005/07/18 19:20:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_TCC__
@@ -9,6 +9,7 @@
 
 #include "Object/art_object_unroll_context.h"
 #include "Object/art_object_template_formals_manager.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -24,11 +25,18 @@ namespace entity {
 template <class C>
 count_ptr<const const_param>
 unroll_context::resolve_meta_value_reference(const C& c) const {
+	STACKTRACE_VERBOSE;
+#if 0
+	this->dump(cerr) << endl;
+#endif
 	if (c.is_template_formal()) {
 		// TODO: this is not true
 		// when template parameter depends on another parameter.  
 		// I believe the correct thing to do is	fill in
 		// template-dependent arguments at declaration time
+#if 0
+		c.dump(cerr << "c = ") << endl;
+#endif
 		INVARIANT(this->have_template_actuals());
 		// could be const_param in general, 
 		// not necessarily param_instance_collection

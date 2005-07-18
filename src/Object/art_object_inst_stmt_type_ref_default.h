@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.9 2005/07/15 03:49:06 fang Exp $
+	$Id: art_object_inst_stmt_type_ref_default.h,v 1.1.2.10 2005/07/18 19:20:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
@@ -83,8 +83,8 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(void) const {
-		const type_ref_ptr_type ret(type->unroll_resolve());
+	get_resolved_type(const unroll_context& c) const {
+		const type_ref_ptr_type ret(type->unroll_resolve(c));
 		if (!ret) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
@@ -115,7 +115,7 @@ protected:
 		TODO: rename to unroll_fused_type_reference
 	 */
 	type_ref_ptr_type
-	unroll_type_reference(void) const {
+	unroll_type_reference(const unroll_context& c) const {
 #if 0
 		if (relaxed_args) {
 			// clumsy but effective, make a temporary deep-copy
@@ -124,7 +124,7 @@ protected:
 			return merged_type->unroll_resolve();
 		} else	return type->unroll_resolve();
 #else
-		return type->unroll_resolve();
+		return type->unroll_resolve(c);
 #endif
 	}
 
@@ -153,8 +153,9 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
 			const const_range_list& crl, 
+			const unroll_context& c, 
 			const instance_relaxed_actuals_type& a) {
-		return v.instantiate_indices(crl, a);
+		return v.instantiate_indices(crl, a, c);
 	}
 
 	void

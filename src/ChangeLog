@@ -1,5 +1,20 @@
 "ChangeLog"
 
+2005-07-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-35:
+	  BUG process/060 fixed, but there is known inconsistency
+		between process/data_type_reference's unroll_resolve
+		implementations.  (In other words, I think it may be wrong
+		and fragile.)  Haven't cause any regressions yet.  
+	  Added unroll_context back to all type_references' unroll_resolve
+		methods, as their necessity was demonstrated by this
+		revision's fixed bug.  
+		unroll_context also added to unroll_port, instantiate...
+	  TODO: rework passing of formal-actual contexts in clean fashion.
+	  BUG: process/061.in known to crash.  
+
+
 2005-07-17	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-34:

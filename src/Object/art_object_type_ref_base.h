@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref_base.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.14.4.6 2005/07/15 03:49:18 fang Exp $
+	$Id: art_object_type_ref_base.h,v 1.14.4.7 2005/07/18 19:20:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
@@ -171,7 +171,8 @@ virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 
 #define	UNROLL_PORT_INSTANCES_PROTO					\
 	void								\
-	unroll_port_instances(subinstance_manager&) const
+	unroll_port_instances(const unroll_context&, 			\
+		subinstance_manager&) const
 
 #if 0
 virtual	UNROLL_PORT_INSTANCES_PROTO = 0;

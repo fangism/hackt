@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.14 2005/07/18 00:02:09 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.15 2005/07/18 19:20:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -176,6 +176,11 @@ template_formals_manager::resolve_template_actual(
 	const size_t i(lookup_template_formal_position(p.get_name()));
 	// this value is 1-indexed
 	// but actuals are 0-indexed
+	if (!i) {
+		cerr << "Internal compiler error: failed to resolve ";
+		p.dump(cerr) << endl;
+		THROW_EXIT;
+	}
 	INVARIANT(i);
 	const count_ptr<const param_expr> e(a[i-1]);
 	INVARIANT(e);

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.1.4.3 2005/07/16 05:59:55 fang Exp $
+	$Id: substructure_alias_base.h,v 1.1.4.4 2005/07/18 19:20:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -43,8 +43,9 @@ virtual	~substructure_alias_base() { }
 
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>& p) {
-		subinstances.unroll_port_instances(p);
+	unroll_port_instances(const instance_collection<Tag>& p, 
+			const unroll_context& c) {
+		subinstances.unroll_port_instances(p, c);
 		restore_parent_child_links();
 	}
 
@@ -85,7 +86,8 @@ public:
 	 */
 	template <class Tag>
 	void
-	unroll_port_instances(const instance_collection<Tag>&) const { }
+	unroll_port_instances(const instance_collection<Tag>&, 
+		const unroll_context&) const { }
 
 	/**
 		No-op.  

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_data.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_data.h,v 1.4.10.8 2005/07/15 03:49:06 fang Exp $
+	$Id: art_object_inst_stmt_data.h,v 1.4.10.9 2005/07/18 19:20:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_DATA_H__
@@ -19,6 +19,7 @@ namespace ART {
 namespace entity {
 class param_expr_list;
 class const_param_expr_list;
+class unroll_context;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
@@ -60,8 +61,8 @@ protected:
 	get_type(void) const { return type; }
 
 	type_ref_ptr_type
-	get_resolved_type(void) const {
-		const type_ref_ptr_type ret(type->unroll_resolve());
+	get_resolved_type(const unroll_context& c) const {
+		const type_ref_ptr_type ret(type->unroll_resolve(c));
 		if (!ret) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
@@ -87,7 +88,7 @@ protected:
 		not connectible equivalence.  
 	 */
 	type_ref_ptr_type
-	unroll_type_reference(void) const {
+	unroll_type_reference(const unroll_context& c) const {
 #if 0
 		if (relaxed_args) {
 			const type_ref_ptr_type
@@ -95,7 +96,7 @@ protected:
 			return merged_type->unroll_resolve();
 		} else	return type->unroll_resolve();
 #else
-		return type->unroll_resolve();
+		return type->unroll_resolve(c);
 #endif
 	}
 
@@ -117,8 +118,9 @@ protected:
 	good_bool
 	instantiate_indices_with_actuals(instance_collection_generic_type& v, 
 			const const_range_list& crl, 
+			const unroll_context& c, 
 			const instance_relaxed_actuals_type& a) {
-		return v.instantiate_indices(crl, a);
+		return v.instantiate_indices(crl, a, c);
 	}
 
 	void

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.13 2005/07/15 03:49:05 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.14 2005/07/18 19:20:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -198,7 +198,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	const bool first_time = !this->inst_base->is_partially_unrolled();
 	if (first_time) {
 		const type_ref_ptr_type
-			ft(type_ref_parent_type::get_resolved_type());
+			ft(type_ref_parent_type::get_resolved_type(c));
 		if (!ft) {
 			// already have error message
 			return good_bool(false);
@@ -220,7 +220,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 #else
 	// we forgot to canonicalize
 	const type_ref_ptr_type
-		temp_type_ref(type_ref_parent_type::unroll_type_reference());
+		temp_type_ref(type_ref_parent_type::unroll_type_reference(c));
 	if (!temp_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
@@ -272,7 +272,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				*this->inst_base, crl, relaxed_const_actuals);
+				*this->inst_base, crl, 
+				final_type_ref->make_unroll_context(), 
+				relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
@@ -293,10 +295,14 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		physical_instance_collection& p) const {
+	STACKTRACE_VERBOSE;
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());
-	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type());
+#if 0
+	c.dump(cerr << "c = ") << endl;
+#endif
+	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
 	if (!ft) {
 		// already have error message
 		return good_bool(false);
@@ -334,7 +340,8 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				coll, crl, relaxed_const_actuals);
+				coll, crl, ft->make_unroll_context(), 
+				relaxed_const_actuals);
 	} else {
 		// consider different message
 		cerr << "ERROR: resolving index range of instantiation!"

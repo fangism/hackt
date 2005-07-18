@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.11 2005/07/17 06:35:38 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.12 2005/07/18 19:20:38 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -225,6 +225,9 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: add more checks for relationship with parent instance
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
@@ -243,6 +246,18 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 const typename INSTANCE_ALIAS_INFO_CLASS::relaxed_actuals_type&
 INSTANCE_ALIAS_INFO_CLASS::find_relaxed_actuals(void) const {
 	return actuals_parent_type::find_relaxed_actuals(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p, 
+		const unroll_context& c) {
+	NEVER_NULL(p);
+	INVARIANT(!this->container);
+	this->container = p;
+	substructure_parent_type::unroll_port_instances(
+		*this->container, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -887,7 +902,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
-		const instance_relaxed_actuals_type& actuals) {
+		const instance_relaxed_actuals_type& actuals, 
+		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
@@ -913,7 +929,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			const_cast<instance_alias_base_type&>(
 				static_cast<const instance_alias_base_type&>(
 				*new_elem)).instantiate(
-					never_ptr<const this_type>(this));
+					never_ptr<const this_type>(this), c);
 #endif
 #if ENABLE_STACKTRACE
 			// somehow, the ports are destroyed... or not copied
@@ -1382,7 +1398,8 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const const_range_list& r, 
-		const instance_relaxed_actuals_type& actuals) {
+		const instance_relaxed_actuals_type& actuals, 
+		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
 	INVARIANT(r.empty());
 	if (this->the_instance.valid()) {
@@ -1393,7 +1410,7 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		return good_bool(false);
 	}
 	// here we need an explicit instantiation (recursive)
-	this->the_instance.instantiate(never_ptr<const this_type>(this));
+	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
 	const bool attached(actuals ?
 		this->the_instance.attach_actuals(actuals) : true);
 	if (!attached) {

@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.7 2005/07/16 22:11:31 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.8 2005/07/18 19:20:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -164,13 +164,7 @@ virtual	const_iterator
 			subinstance_manager
 	 */
 	void
-	instantiate(const container_ptr_type p) {
-		NEVER_NULL(p);
-		INVARIANT(!this->container);
-		this->container = p;
-		substructure_parent_type::unroll_port_instances(
-			*this->container);
-	}
+	instantiate(const container_ptr_type p, const unroll_context&);
 
 	/**
 		Attaches actual parameters to this alias.  

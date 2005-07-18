@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.1.4.3 2005/07/16 22:11:35 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.1.4.4 2005/07/18 19:20:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -26,7 +26,8 @@ namespace entity {
 template <class Tag>
 void
 subinstance_manager::unroll_port_instances(
-		const instance_collection<Tag>& inst) {
+		const instance_collection<Tag>& inst, 
+		const unroll_context& c) {
 	typedef	instance_collection<Tag>	collection_type;
 	typedef	typename collection_type::collection_type_manager_parent_type
 						type_manager_type;
@@ -39,7 +40,7 @@ subinstance_manager::unroll_port_instances(
 	const type_ref_ptr_type unresolved_super_type(inst.get_type());
 	NEVER_NULL(unresolved_super_type);
 	const type_ref_ptr_type
-		resolved_super_type(unresolved_super_type->unroll_resolve());
+		resolved_super_type(unresolved_super_type->unroll_resolve(c));
 	if (!resolved_super_type) {
 		unresolved_super_type->dump(
 			cerr << "Error resolving type during "
@@ -56,7 +57,7 @@ subinstance_manager::unroll_port_instances(
 		resolved_super_type->make_canonical_type_reference()
 			.template is_a<const type_ref_pointee_type>());
 	INVARIANT(canonical_super_type->is_canonical());
-	canonical_super_type->unroll_port_instances(*this);
+	canonical_super_type->unroll_port_instances(c, *this);
 }
 
 //=============================================================================

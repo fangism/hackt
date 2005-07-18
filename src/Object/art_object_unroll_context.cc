@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.3.14.3 2005/07/18 00:02:09 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.3.14.4 2005/07/18 19:20:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -11,6 +11,7 @@
 #include "Object/expr/const_param.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_template_actuals.h"
+#include "Object/art_object_template_formals_manager.h"
 #include "util/memory/count_ptr.tcc"
 
 namespace ART {
@@ -28,6 +29,20 @@ unroll_context::~unroll_context() { }
 bool
 unroll_context::empty(void) const {
 	return (!template_args && !template_formals);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+unroll_context::dump(ostream& o) const {
+	o << "formals: ";
+	if (template_formals)
+		template_formals->dump(o);
+	else	o << "(none)";
+	o << endl << "actuals: ";
+	if (template_args)
+		template_args->dump(o);
+	else	o << "(none)";
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

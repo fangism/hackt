@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.7 2005/07/15 03:49:10 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.8 2005/07/18 19:20:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -168,9 +168,13 @@ virtual	bool
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
 
-virtual	good_bool
-	instantiate_indices(const const_range_list& i, 
-		const instance_relaxed_actuals_type&) = 0;
+#define	INSTANTIATE_INDICES_PROTO					\
+	good_bool							\
+	instantiate_indices(const const_range_list& i, 			\
+		const instance_relaxed_actuals_type&, 			\
+		const unroll_context&)
+
+virtual	INSTANTIATE_INDICES_PROTO = 0;
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -285,9 +289,7 @@ public:
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
 
-	good_bool
-	instantiate_indices(const const_range_list& i,
-		const instance_relaxed_actuals_type&);
+	INSTANTIATE_INDICES_PROTO;
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -365,9 +367,7 @@ public:
 	ostream&
 	dump_unrolled_instances(ostream& o) const;
 
-	good_bool
-	instantiate_indices(const const_range_list& i,
-		const instance_relaxed_actuals_type&);
+	INSTANTIATE_INDICES_PROTO;
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

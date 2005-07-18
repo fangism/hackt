@@ -2,7 +2,7 @@
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
 	TODO: must pool-allocate these, they're created frequently!
- 	$Id: art_object_type_ref.h,v 1.27.2.8 2005/07/15 03:49:17 fang Exp $
+ 	$Id: art_object_type_ref.h,v 1.27.2.9 2005/07/18 19:20:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
@@ -83,7 +83,7 @@ public:
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...
 	count_ptr<const this_type>
-	unroll_resolve(void) const;
+	unroll_resolve(const unroll_context&) const;
 
 	static
 	data_type_reference*
@@ -98,6 +98,9 @@ public:
 	MERGE_RELAXED_ACTUALS_PROTO;
 
 	UNROLL_PORT_INSTANCES_PROTO;
+
+	unroll_context
+	make_unroll_context(void) const;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -151,16 +154,16 @@ virtual	ostream&
 	ostream&
 	dump_direction(ostream&) const;
 
-#if 1
 virtual	count_ptr<const this_type>
-	unroll_resolve(void) const = 0;
-#endif
+	unroll_resolve(const unroll_context&) const = 0;
 
 virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
 
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
 
+virtual	unroll_context
+	make_unroll_context(void) const = 0;
 protected:
 	using parent_type::collect_transient_info_base;
 
@@ -234,7 +237,6 @@ public:
 	bool
 	must_be_connectibly_channel_type_equivalent(const this_type&) const;
 
-#if 1
 private:
 	// consider using member function template...
 	struct datatype_resolver;
@@ -242,8 +244,7 @@ private:
 
 public:
 	count_ptr<const channel_type_reference_base>
-	unroll_resolve(void) const;
-#endif
+	unroll_resolve(const unroll_context&) const;
 
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
@@ -252,6 +253,8 @@ public:
 
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	unroll_context
+	make_unroll_context(void) const;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -305,10 +308,8 @@ public:
 	good_bool
 	must_be_valid(void) const;
 
-#if 1
 	count_ptr<const channel_type_reference_base>
-	unroll_resolve(void) const;
-#endif
+	unroll_resolve(const unroll_context&) const;
 
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
@@ -319,6 +320,8 @@ public:
 
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	unroll_context
+	make_unroll_context(void) const;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -372,7 +375,7 @@ public:
 
 	// just resolves template actuals to constants
 	count_ptr<const this_type>
-	unroll_resolve(void) const;
+	unroll_resolve(const unroll_context&) const;
 
 	good_bool
 	unroll_register_complete_type(void) const;
@@ -384,6 +387,8 @@ public:
 	UNROLL_PORT_INSTANCES_PROTO;
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	unroll_context
+	make_unroll_context(void) const;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
@@ -429,19 +434,17 @@ public:
 	bool
 	is_canonical(void) const;
 
-#if 0
-	count_ptr<const this_type>
-	unroll_resolve(void) const;
-#endif
-
 	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
 
+	unroll_context
+	make_unroll_context(void) const;
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
 
 	UNROLL_PORT_INSTANCES_PROTO;
+
 private:
 	// dummy implementation, never called
 	PERSISTENT_METHODS_DECLARATIONS

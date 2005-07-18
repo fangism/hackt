@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.3.14.4 2005/07/18 00:02:09 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.3.14.5 2005/07/18 19:20:41 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
 #define	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
 
+#include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 
@@ -18,6 +19,7 @@ class template_actuals;
 class template_formals_manager;
 // template <class> class value_collection;
 class param_instance_collection;
+using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -42,6 +44,9 @@ public:
 
 	bool
 	empty(void) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	void
 	set_transform_context(const template_actuals&,

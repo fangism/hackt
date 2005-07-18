@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.16 2005/07/16 22:11:33 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.17 2005/07/18 19:20:39 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -537,6 +537,18 @@ data_type_reference::must_be_valid(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates a translation context between formals and actuals.  
+ */
+unroll_context
+data_type_reference::make_unroll_context(void) const {
+	unroll_context ret;
+	ret.set_transform_context(template_args,
+		base_type_def->get_template_formals_manager());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
@@ -545,7 +557,7 @@ data_type_reference::must_be_valid(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const data_type_reference>
-data_type_reference::unroll_resolve(void) const {
+data_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("data_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
@@ -556,8 +568,21 @@ data_type_reference::unroll_resolve(void) const {
 		const template_actuals_transformer
 			uc(cc, template_args, 
 				base_type_def->get_template_formals_manager());
+#if 0
+		cc.dump(cerr << "cc = ") << endl;
+		// dies on assert(!index_collection.empty()), 
+		// during get_type_ref of param collection?
+#else
+//		dump(cerr << "type = ") << endl;
+#endif
 		const template_actuals
-			actuals(template_args.unroll_resolve(cc));
+			resolved_template_args(template_args.unroll_resolve(c));
+#if 0
+		c.dump(cerr << "c = ") << endl;
+#endif
+		// final translation from type context
+		const template_actuals
+			actuals(resolved_template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
 		if (actuals) {
 			// the final type-check:
@@ -660,7 +685,8 @@ data_type_reference::make_instance_collection(
 	TODO (2005-07-12): implement for real.
  */
 void
-data_type_reference::unroll_port_instances(subinstance_manager& sub) const {
+data_type_reference::unroll_port_instances(const unroll_context& c,
+		subinstance_manager& sub) const {
 #if 0
 	INVARIANT(is_canonical());
 	INVARIANT(is_resolved());
@@ -806,12 +832,17 @@ channel_type_reference_base::load_object_base(
 	resolved types.  
  */
 struct builtin_channel_type_reference::datatype_resolver {
+	const unroll_context&		the_context;
+
+	explicit
+	datatype_resolver(const unroll_context& c) : the_context(c) { }
+
 	datatype_ptr_type
 	operator () (const datatype_ptr_type& dt) const {
 		NEVER_NULL(dt);
-		return dt->unroll_resolve();
+		return dt->unroll_resolve(the_context);
 	}
-};	// end class datatype_resolved
+};	// end class datatype_resolver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -824,7 +855,7 @@ struct builtin_channel_type_reference::datatype_canonicalizer {
 		NEVER_NULL(dt);
 		return dt->make_canonical_data_type_reference();
 	}
-};	// end class datatype_resolved
+};	// end class datatype_canonicalizer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 builtin_channel_type_reference::builtin_channel_type_reference() :
@@ -1058,6 +1089,16 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates a translation context between formals and actuals.  
+ */
+unroll_context
+builtin_channel_type_reference::make_unroll_context(void) const {
+	// doesn't have template formals...
+	return unroll_context();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
@@ -1067,7 +1108,7 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 		say inside a definition body?
  */
 count_ptr<const channel_type_reference_base>
-builtin_channel_type_reference::unroll_resolve(void) const {
+builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
@@ -1078,7 +1119,8 @@ builtin_channel_type_reference::unroll_resolve(void) const {
 	util::reserve(ret->datatype_list, datatype_list.size());
 	transform(datatype_list.begin(), datatype_list.end(),
 		back_inserter(ret->datatype_list), 
-		datatype_resolver()	// helper functor
+		datatype_resolver(c)	// helper functor
+			// TODO: may need context passed in!
 	);
 	return ret;
 #else
@@ -1165,6 +1207,7 @@ builtin_channel_type_reference::make_canonical_type_reference(void) const {
  */
 void
 builtin_channel_type_reference::unroll_port_instances(
+		const unroll_context& c, 
 		subinstance_manager& sub) const {
 	cerr << "FANG, finish builtin_channel_type_reference::unroll_port_instances()!" << endl;
 }
@@ -1290,6 +1333,18 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates a translation context between formals and actuals.  
+ */
+unroll_context
+channel_type_reference::make_unroll_context(void) const {
+	unroll_context ret;
+	ret.set_transform_context(template_args,
+		base_chan_def->get_template_formals_manager());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
@@ -1297,11 +1352,10 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const channel_type_reference_base>
-channel_type_reference::unroll_resolve(void) const {
+channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("channel_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
-#if 1
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
@@ -1309,6 +1363,9 @@ channel_type_reference::unroll_resolve(void) const {
 		const template_actuals_transformer
 			uc(cc, template_args, 
 				base_chan_def->get_template_formals_manager());
+		const template_actuals
+			resolved_template_args(template_args.unroll_resolve(c));
+		// then translate actuals from super-context
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -1330,13 +1387,6 @@ channel_type_reference::unroll_resolve(void) const {
 		INVARIANT(ret->must_be_valid().good);
 		return ret;
 	}
-#else
-	// NOTE: built-in channel types (currently) cannot have tempalte args
-	// will have to resolve types of various data members
-	cerr << "FANG, finish channel_type_reference::unroll_resolve()!"
-		<< endl;
-	return return_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1398,6 +1448,7 @@ channel_type_reference::make_canonical_type_reference(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_type_reference::unroll_port_instances(
+		const unroll_context& c, 
 		subinstance_manager& sub) const {
 	cerr << "FANG, finish channel_type_reference::unroll_port_instances()!"
 			<< endl;
@@ -1498,6 +1549,18 @@ process_type_reference::must_be_valid(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates a translation context between formals and actuals.  
+ */
+unroll_context
+process_type_reference::make_unroll_context(void) const {
+	unroll_context ret;
+	ret.set_transform_context(template_args,
+		base_proc_def->get_template_formals_manager());
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	NOTE: this procudure will be the model for data and channel types'
@@ -1507,19 +1570,46 @@ process_type_reference::must_be_valid(void) const {
 		if applicable.  Returns NULL if there is error in resolution.  
  */
 count_ptr<const process_type_reference>
-process_type_reference::unroll_resolve(void) const {
+process_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("process_type_reference::unroll_resolve()");
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
+#if 0
+		const template_actuals
+			resolved_template_args(template_args.unroll_resolve(c));
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
 		unroll_context cc;	// local context
 		const template_actuals_transformer
-			uc(cc, template_args, 
+			uc(cc, resolved_template_args, 
 				base_proc_def->get_template_formals_manager());
 		const template_actuals
-			actuals(template_args.unroll_resolve(cc));
+			actuals(resolved_template_args.unroll_resolve(cc));
+#else
+		// reverse order resolution:
+		// if template actuals depends on other template parameters, 
+		// then we need to pass actuals into its own context!
+#if 0
+		unroll_context cc;	// local context
+		const template_actuals_transformer
+			uc(cc, template_args, 
+				base_proc_def->get_template_formals_manager());
+#else
+		const unroll_context cc(make_unroll_context());
+#endif
+#if 0
+		cc.dump(cerr << "cc = ") << endl;
+		c.dump(cerr << "c = ") << endl;
+#endif
+		// MUST be cc to resolve parameter-dependent-parameters
+		const template_actuals
+			resolved_template_args(template_args.unroll_resolve(cc));
+		// this resolution resolves parameters dependent on
+		// the context of this type.  
+		const template_actuals
+			actuals(resolved_template_args.unroll_resolve(c));
+#endif
 		if (actuals) {
 			// the final type-check:
 			// now they MUST size-type check
@@ -1619,7 +1709,8 @@ process_type_reference::make_canonical_type_reference(void) const {
 		according to the canonical definition.  
  */
 void
-process_type_reference::unroll_port_instances(subinstance_manager& sub) const {
+process_type_reference::unroll_port_instances(
+		const unroll_context& c, subinstance_manager& sub) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(is_resolved());
 	INVARIANT(is_canonical());
@@ -1631,11 +1722,13 @@ process_type_reference::unroll_port_instances(subinstance_manager& sub) const {
 	sub.reserve(port_formals.size());
 #else
 	{
-		unroll_context c;
+		const template_actuals
+			resolved_template_args(template_args.unroll_resolve(c));
+		unroll_context cc;
 		const template_actuals_transformer
-			uc(c, template_args, 
+			uc(cc, resolved_template_args, 
 				proc_def->get_template_formals_manager());
-		port_formals.unroll_ports(c, sub);
+		port_formals.unroll_ports(cc, sub);
 	}
 #endif
 }
@@ -1793,11 +1886,20 @@ param_type_reference::make_canonical_type_reference(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates a translation context between formals and actuals.  
+ */
+unroll_context
+param_type_reference::make_unroll_context(void) const {
+	return unroll_context();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This really should never be called.  
  */
 void
 param_type_reference::unroll_port_instances(
-		subinstance_manager& sub) const {
+		const unroll_context&, subinstance_manager&) const {
 	// no-op
 }
 

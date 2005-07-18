@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.40.4.4 2005/07/15 03:49:07 fang Exp $
+	$Id: art_object_instance.h,v 1.40.4.5 2005/07/18 19:20:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -18,6 +18,7 @@ namespace entity {
 //=============================================================================
 class data_type_reference;
 class const_param_expr_list;
+class unroll_context;
 USING_LIST
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -146,7 +147,8 @@ virtual	count_ptr<meta_instance_reference_base>
 
 virtual good_bool
 	instantiate_indices(const const_range_list& i, 
-		const instance_relaxed_actuals_type&) = 0;
+		const instance_relaxed_actuals_type&, 
+		const unroll_context&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;
