@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.1.4.9 2005/07/18 00:02:09 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.1.4.10 2005/07/19 05:22:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -189,8 +189,7 @@ template_actuals
 template_actuals::transform_template_actuals(const this_type& a, 
 		const template_formals_manager& m) const {
 	INVARIANT(a.is_constant());
-	unroll_context c;
-	const template_actuals_transformer tx(c, a, m);
+	const unroll_context c(a, m);
 	return unroll_resolve(c);
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.19 2005/07/19 04:17:16 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.20 2005/07/19 05:22:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -541,10 +541,8 @@ data_type_reference::must_be_valid(void) const {
  */
 unroll_context
 data_type_reference::make_unroll_context(void) const {
-	unroll_context ret;
-	ret.set_transform_context(template_args,
+	return unroll_context(template_args,
 		base_type_def->get_template_formals_manager());
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -564,29 +562,10 @@ data_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
-#if 0
-		unroll_context cc;	// local context
-		const template_actuals_transformer
-			uc(cc, template_args, 
-				base_type_def->get_template_formals_manager());
-#else
-		const unroll_context cc(make_unroll_context());
-#endif
-#if 0
-		cc.dump(cerr << "cc = ") << endl;
-		// dies on assert(!index_collection.empty()), 
-		// during get_type_ref of param collection?
-#else
-		// dump(cerr << "type = ") << endl;
-#endif
+		unroll_context cc(make_unroll_context());
+		cc.chain_context(c);
 		const template_actuals
-			resolved_template_args(template_args.unroll_resolve(c));
-#if 0
-		c.dump(cerr << "c = ") << endl;
-#endif
-		// final translation from type context
-		const template_actuals
-			actuals(resolved_template_args.unroll_resolve(cc));
+			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
 		if (actuals) {
 			// the final type-check:
@@ -1341,10 +1320,8 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
  */
 unroll_context
 channel_type_reference::make_unroll_context(void) const {
-	unroll_context ret;
-	ret.set_transform_context(template_args,
+	return unroll_context(template_args,
 		base_chan_def->get_template_formals_manager());
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1363,17 +1340,8 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
-#if 0
-		unroll_context cc;	// local context
-		const template_actuals_transformer
-			uc(cc, template_args, 
-				base_chan_def->get_template_formals_manager());
-#else
-		const unroll_context cc(make_unroll_context());
-#endif
-		const template_actuals
-			resolved_template_args(template_args.unroll_resolve(c));
-		// then translate actuals from super-context
+		unroll_context cc(make_unroll_context());
+		cc.chain_context(c);
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -1443,14 +1411,7 @@ channel_type_reference::make_instance_collection(
  */
 count_ptr<const fundamental_type_reference>
 channel_type_reference::make_canonical_type_reference(void) const {
-#if 0
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
-	cerr << "Fang, finish channel_type_reference::"
-		"make_canonical_type_reference()!" << endl;
-	return return_type(NULL);
-#else
 	return base_chan_def->make_canonical_type_reference(template_args);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1561,10 +1522,8 @@ process_type_reference::must_be_valid(void) const {
  */
 unroll_context
 process_type_reference::make_unroll_context(void) const {
-	unroll_context ret;
-	ret.set_transform_context(template_args,
+	return unroll_context(template_args,
 		base_proc_def->get_template_formals_manager());
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1583,53 +1542,14 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 	typedef	count_ptr<const this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
-#if 0
-		const template_actuals
-			resolved_template_args(template_args.unroll_resolve(c));
-		// if template actuals depends on other template parameters, 
-		// then we need to pass actuals into its own context!
-		unroll_context cc;	// local context
-		const template_actuals_transformer
-			uc(cc, resolved_template_args, 
-				base_proc_def->get_template_formals_manager());
-		const template_actuals
-			actuals(resolved_template_args.unroll_resolve(cc));
-#else
-		// reverse order resolution:
-		// if template actuals depends on other template parameters, 
-		// then we need to pass actuals into its own context!
-#if 0
-		unroll_context cc;	// local context
-		const template_actuals_transformer
-			uc(cc, template_args, 
-				base_proc_def->get_template_formals_manager());
-#else
+		// chaining the contexts solves the problem of having
+		// parameters in the same actuals list resolve through
+		// formal parameters of different scopes.  
 		unroll_context cc(make_unroll_context());
 		cc.chain_context(c);
-#endif
-#if 0
-		this->dump(cerr) << endl;
-		cc.dump(cerr << "cc = ") << endl;
-		c.dump(cerr << "c = ") << endl;
-#endif
-		// MUST be cc to resolve parameter-dependent-parameters
-		// but MUST be c to resolve parameters dependent on context
-		// but this type's actuals may contain both!!!
-		// thus we must partially resolve the outer-context
-		// -dependent actuals first.  
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
-#if 0
-		// this resolution resolves parameters dependent on
-		// the context of this type.  
-		const template_actuals
-			actuals(resolved_template_args.unroll_resolve(c));
-#endif
-#endif
 		if (actuals) {
-#if 0
-			actuals.dump(cerr << "finally: ") << endl;
-#endif
 			// the final type-check:
 			// now they MUST size-type check
 			const return_type
@@ -1737,21 +1657,16 @@ process_type_reference::unroll_port_instances(
 		proc_def(base_proc_def.is_a<const process_definition>());
 	NEVER_NULL(proc_def);
 	const port_formals_manager& port_formals(proc_def->get_port_formals());
-#if 0
-	c.dump(cerr) << endl;
-#endif
 	{
 		STACKTRACE("local context");
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
 #if 1
-		unroll_context cc;
-		const template_actuals_transformer
-			uc(cc, resolved_template_args, 
+		const unroll_context
+			cc(resolved_template_args, 
 				proc_def->get_template_formals_manager());
-#if 0
-		cc.dump(cerr) << endl;
-#endif
+		// should the contexts be chained?
+		// or can the actuals always be resolved one scope at a time
 #else
 		// hold on, this is not equivalent
 		const unroll_context cc(make_unroll_context());

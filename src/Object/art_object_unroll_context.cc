@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.3.14.5 2005/07/19 04:17:16 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.3.14.6 2005/07/19 05:22:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -25,6 +25,26 @@ namespace entity {
 
 unroll_context::unroll_context() :
 		next(), template_args(), template_formals() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Construct a context (translator) between actuals and formals.  
+ */
+unroll_context::unroll_context(const template_actuals& a, 
+		const template_formals_manager& f) :
+		next(), template_args(&a), template_formals(&f) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In addition to standard construction, also chains to 
+	a parent context.  
+ */
+unroll_context::unroll_context(const template_actuals& a, 
+		const template_formals_manager& f, 
+		const this_type& c) :
+		next(&c), template_args(&a), template_formals(&f) {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::~unroll_context() { }
@@ -100,47 +120,31 @@ unroll_context::lookup_actual(const param_instance_collection& p) const {
 				const never_ptr<const instance_collection_base>
 					pbase(self->get_inst_base());
 				if (pbase == &p) {
+				// need to safeguard against self-lookup
+				// may happen with value_reference
+				// else will have infinite mutual recursion
 				if (next) {
+					// self-reference detected
 					return ret->unroll_resolve(*next);
 				} else {
 					lookup_panic(cerr);	// no return
 					return return_type(NULL);
 				}
 				} else {
+					// check this scope again
+					// for parameter-dependent-parameter
+					// e.g. in default parameter exprs.
 					return ret->unroll_resolve(*this);
 				}
 			} else {
+				// not self references, safe to lookup again
+				// NOTE: expressions cannot be cyclic
+				// so checking self-reference is sufficient
+				// for safety
 				return ret->unroll_resolve(*this);
+				// guaranteed that this will terminate
+				// even if recursive
 			}
-#if 0
-			if (next) {
-				// beware recursion with
-				// simple_meta_value_reference::unroll_resolve!
-				// recursively resolve it again, 
-				// MUST eventually resolve!
-#if 1
-				// results in self-lookup, infinitely!
-				return ret->unroll_resolve(*this);
-				// need to safeguard against self-lookup
-				// may happen with value_reference
-#endif
-#if 0
-				return ret->unroll_resolve(*next);
-				// ALMOST: this breaks case template/038.in
-				// because parameter-dependent paramaters
-				// need to lookup in the SAME scope,
-				// not the parent's.  
-#endif
-			} else {
-				// return ret->unroll_resolve(*this);
-				cerr << "Internal compiler error: " << endl <<
-					"In unroll_context::lookup_actual(): "
-					<< endl <<
-					"Help me, Obi-fang Kenobi!" << endl;
-				THROW_EXIT;
-				return return_type(NULL);
-			}
-#endif
 		}
 	} else if (next) {
 		// STACKTRACE("checking parent context");
@@ -163,49 +167,6 @@ unroll_context::lookup_panic(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	NOT the same as lookup_actual()!
-	This returns 
- */
-count_ptr<const const_param>
-unroll_context::lookup_const_collection(
-		const param_instance_collection& p) const {
-	typedef	count_ptr<const const_param>	return_type;
-	STACKTRACE("unroll_context::lookup_const_collection()");
-	INVARIANT(!empty());
-	INVARIANT(template_args);
-	const size_t index(p.is_template_formal());
-	if (index) {
-		STACKTRACE("found it.");
-//		cerr << "I got index " << index << "!!!" << endl;
-		// remember, index is 1-indexed, whereas [] is 0-indexed.
-		const count_ptr<const param_expr>
-			ret((*template_args)[index-1]);
-		NEVER_NULL(ret);
-		const return_type const_ret(ret.is_a<const const_param>());
-		// actual may STILL be another formal reference!
-		if (const_ret) {
-			return const_ret;
-		} else {
-			// recursively resolve it again, 
-			// MUST eventually resolve!
-			return ret->unroll_resolve(*this);
-		}
-	} else if (next) {
-		// STACKTRACE("checking parent context");
-		return next->lookup_actual(p);
-	} else {
-		cerr << "Internal compiler error: expected to be able to "
-			"resolve ";
-		p.dump(cerr) << " to constant value(s), but failed!" << endl;
-		THROW_EXIT;
-		return return_type(NULL);
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Attaches a continuation scope's context to be searchable from here.  
  */
@@ -216,6 +177,7 @@ unroll_context::chain_context(const this_type& c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 void
 unroll_context::set_transform_context(const template_actuals& a, 
 		const template_formals_manager& m) {
@@ -231,6 +193,7 @@ unroll_context::reset_transform_context(void) {
 	template_args = never_ptr<const template_actuals>();
 	template_formals = never_ptr<const template_formals_manager>();
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

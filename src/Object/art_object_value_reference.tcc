@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.12 2005/07/19 04:17:17 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.13 2005/07/19 05:22:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -31,10 +31,6 @@
 #include <iostream>
 #include <exception>
 #include <algorithm>
-
-// consider: (for reducing expression storage overhead)
-// #define NO_OBJECT_SANITY	1
-// this will override the definition in "art_object_base.h"
 
 #include "Object/art_object_value_reference.h"
 #include "Object/traits/class_traits.h"
@@ -480,7 +476,6 @@ if (value_collection_ref->is_template_formal()) {
 		const const_collection_type&
 			ce(IS_A(const const_collection_type&, *cpptr));
 		// NOTE: not reached yet by any test cases
-		// TODO: resolve dimensions using unroll-context!!!
 		const const_index_list rdim(unroll_resolve_dimensions(c));
 		if (rdim.empty()) {		// error, failed to resolve
 			cerr << "Error: failed to resolve dimensions of "
@@ -488,7 +483,6 @@ if (value_collection_ref->is_template_formal()) {
 			this->dump(cerr) << endl;
 			return return_type(NULL);
 		}
-		// TODO: extract ranges of values from specified dimensions
 		return return_type(
 			new const_collection_type(ce.make_value_slice(rdim)));
 		// TODO: error handling necessary
@@ -506,7 +500,6 @@ if (value_collection_ref->is_template_formal()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
 		// from compile phase.
-		// TODO: resolve dimensions using unroll-context!!!
 		const const_index_list rdim(unroll_resolve_dimensions(c));
 		if (rdim.empty()) {
 			cerr << "ERROR: failed to resolve dimensions of "

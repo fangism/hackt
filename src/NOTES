@@ -25,6 +25,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 	BUG to fix:
 	Passing template parameters down to ports:
 	e.g. process/059,060.in
+	TERMINATED. (2005-07-18)
 
 //=============================================================================
 2005-07-14:

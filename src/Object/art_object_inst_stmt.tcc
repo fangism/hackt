@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.15 2005/07/19 04:17:15 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.16 2005/07/19 05:22:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -214,11 +214,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// unroll_type_check is specialized for each tag type.  
 	// NOTE: this results in a "fused" type that combines
 	// the relaxed template actuals.  
-#if 0
-	const type_ref_ptr_type
-		final_type_ref(type_ref_parent_type::unroll_type_reference());
-#else
-	// we forgot to canonicalize
+	// we forgot to canonicalize?
 	const type_ref_ptr_type
 		temp_type_ref(type_ref_parent_type::unroll_type_reference(c));
 	if (!temp_type_ref) {
@@ -229,7 +225,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	const type_ref_ptr_type
 		final_type_ref(temp_type_ref->make_canonical_type_reference()
 			.template is_a<const typename type_ref_ptr_type::element_type>());
-#endif
 	if (!final_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
@@ -306,10 +301,6 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());
-#if 0
-	c.dump(cerr << "c = ") << endl;
-	type_ref_parent_type::get_type()->dump(cerr << "type = ") << endl;
-#endif
 	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
 	if (!ft) {
 		// already have error message

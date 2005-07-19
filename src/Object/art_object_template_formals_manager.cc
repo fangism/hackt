@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.16 2005/07/19 04:17:15 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.17 2005/07/19 05:22:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -156,46 +156,6 @@ template_formals_manager::lookup_template_formal_position(
 		}
 	} else	return 0;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Replaces a formal parameter reference with the actual value.  
-	\pre p.is_template_formal() true.
-	\param p the template formal collection to lookup.
-	\param a the set of actual parameters.  
-	\return pointer to resolved parameter collection.  
-	TODO: safety sanity and consistency checks.  
- */
-// const param_instance_collection&
-count_ptr<const const_param>
-template_formals_manager::resolve_template_actual(
-		const param_instance_collection& p, 
-		const template_actuals& a) const {
-	typedef	const_param			local_return_type;
-	INVARIANT(p.is_template_formal());
-	const size_t i(lookup_template_formal_position(p.get_name()));
-	// this value is 1-indexed
-	// but actuals are 0-indexed
-	if (!i) {
-		cerr << "Internal compiler error: failed to resolve ";
-		p.dump(cerr) << endl;
-		THROW_EXIT;
-	}
-	INVARIANT(i);
-	const count_ptr<const param_expr> e(a[i-1]);
-	INVARIANT(e);
-	const count_ptr<const local_return_type>
-		ret(e.is_a<const local_return_type>());
-	if (ret) {
-		return ret;
-	} else {
-		unroll_context c;
-		const template_actuals_transformer uc(c, a, *this);
-		return e->unroll_resolve(c);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

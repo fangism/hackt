@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.3.14.6 2005/07/19 04:17:17 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.3.14.7 2005/07/19 05:22:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
@@ -17,7 +17,6 @@ namespace entity {
 class const_param;
 class template_actuals;
 class template_formals_manager;
-// template <class> class value_collection;
 class param_instance_collection;
 using std::ostream;
 using util::memory::never_ptr;
@@ -29,7 +28,6 @@ using util::memory::count_ptr;
 	during the unroll phases.  
 	TODO: add flow control stack, etc...
 	TODO: obey lookup rules.  
-	TODO: chaining (stack-like)!
 	TODO: be able to fake actuals and formal to do loop-context!
  */
 class unroll_context {
@@ -49,7 +47,18 @@ private:
 	never_ptr<const template_actuals>		template_args;
 	never_ptr<const template_formals_manager>	template_formals;
 public:
+	// parameterless types and entity::modul need this
 	unroll_context();
+
+	unroll_context(const template_actuals&,
+		const template_formals_manager&);
+	unroll_context(const template_actuals&,
+		const template_formals_manager&, const this_type&);
+#if 0
+	// so I don't have to think about which order of arguments
+	unroll_context(const template_formals_manager&,
+		const template_actuals&);
+#endif
 	~unroll_context();
 
 	bool
@@ -61,21 +70,17 @@ public:
 	void
 	chain_context(const this_type&);
 
+#if 0
 	void
 	set_transform_context(const template_actuals&,
 		const template_formals_manager&);
 
 	void
 	reset_transform_context(void);
+#endif
 
 	bool
 	have_template_actuals(void) const { return template_args; }
-
-#if 0
-	template <class C>
-	count_ptr<const const_param>
-	resolve_meta_value_reference(const C&) const;
-#endif
 
 	count_ptr<const const_param>
 	lookup_actual(const param_instance_collection&) const;
@@ -88,6 +93,7 @@ private:
 };	// end class unroll_context
 
 //=============================================================================
+#if 0
 /**
 	Helper class for managing template actuals transformation.  
  */
@@ -106,6 +112,7 @@ public:
 	}
 
 };	// end class template_actuals_transformer
+#endif
 
 //=============================================================================
 }	// end namespace entity
