@@ -1,5 +1,28 @@
 "ChangeLog"
 
+2005-07-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-37:
+	  BUG cases process/064,065 fixed!  (and fixed well)
+	  unroll_context: enabled chaining of scopes, just using
+		another pointer to its own kind.
+		In lookup_actual (*KEY*), automatically lookup
+		in higher scopes where local ones fail to find.  
+		Properly handles parameter-dependent-parameters
+		in the same scope, such as the case with 
+		default template argument expressions.  
+		Also catches the dangerous self-reference case
+		and proceeds properly.  
+	  process_type_reference uses context chaining now to resolve types.  
+		Everything else should follow (next revision).  
+		Committing now to have a coherent snapshot.  
+	  Code is a mess with debugging and comments, must clean up next rev.
+		Some useless lookup functions must be removed.  
+		Everything should go through unroll_context::lookup_actual().
+		Removing unroll_context::resolve_meta_value_reference().
+	  No outstanding bugs, after clean up, implement port connections.  
+
+
 2005-07-18	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-36:

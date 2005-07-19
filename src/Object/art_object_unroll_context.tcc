@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.tcc"
 	Template method implementation for unroll_context class.  
-	$Id: art_object_unroll_context.tcc,v 1.1.4.5 2005/07/18 19:20:41 fang Exp $
+	$Id: art_object_unroll_context.tcc,v 1.1.4.6 2005/07/19 04:17:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_TCC__
@@ -16,6 +16,8 @@ namespace entity {
 //=============================================================================
 // class unroll_context method definitions
 
+#if 0
+// OBSOLETE: replaced by non-template method lookup_actual() const
 /**
 	\param C a const_collection type (pint, pbool, etc...)
 	\param c the reference to the formal parameter, to be resolved
@@ -29,6 +31,7 @@ unroll_context::resolve_meta_value_reference(const C& c) const {
 #if 0
 	this->dump(cerr) << endl;
 #endif
+#if 0
 	if (c.is_template_formal()) {
 		// TODO: this is not true
 		// when template parameter depends on another parameter.  
@@ -65,7 +68,11 @@ unroll_context::resolve_meta_value_reference(const C& c) const {
 		return template_formals->resolve_template_actual(
 			c, *template_args);
 	}
+#else
+		return this->lookup_actual(c);
+#endif
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

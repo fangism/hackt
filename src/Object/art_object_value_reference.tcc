@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.11 2005/07/18 23:29:44 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.12 2005/07/19 04:17:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -39,7 +39,6 @@
 #include "Object/art_object_value_reference.h"
 #include "Object/traits/class_traits.h"
 #include "Object/art_object_inst_ref_subtypes.h"
-#include "Object/art_object_unroll_context.tcc"
 #include "Object/art_object_definition_base.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_index.h"
@@ -472,7 +471,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 	// actuals from the context where necessary (2005-06-30)
 if (value_collection_ref->is_template_formal()) {
 	const count_ptr<const const_param>
-		cpptr(c.resolve_meta_value_reference(*value_collection_ref));
+		// beware mutual recursion...
+		cpptr(c.lookup_actual(*value_collection_ref));
 	if (!cpptr) {
 		cerr << "Error unroll-resolving parameter values." << endl;
 		return return_type(NULL);

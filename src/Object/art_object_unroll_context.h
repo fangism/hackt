@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.3.14.5 2005/07/18 19:20:41 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.3.14.6 2005/07/19 04:17:17 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
@@ -29,9 +29,19 @@ using util::memory::count_ptr;
 	during the unroll phases.  
 	TODO: add flow control stack, etc...
 	TODO: obey lookup rules.  
+	TODO: chaining (stack-like)!
+	TODO: be able to fake actuals and formal to do loop-context!
  */
 class unroll_context {
+	typedef	unroll_context				this_type;
 private:
+	/**
+		Stack-chain continuation to next context in scope.  
+		Should point to a static (stack-allocated) unroll context, 
+		such as one created in an outer scope.  
+		(Enforce by comparing stack addresses?)
+	 */
+	never_ptr<const unroll_context>			next;
 	/**
 		INVARIANT: template_args and template_formals are either
 		both NULL or both valid at all times.  
@@ -49,6 +59,9 @@ public:
 	dump(ostream&) const;
 
 	void
+	chain_context(const this_type&);
+
+	void
 	set_transform_context(const template_actuals&,
 		const template_formals_manager&);
 
@@ -58,12 +71,19 @@ public:
 	bool
 	have_template_actuals(void) const { return template_args; }
 
+#if 0
 	template <class C>
 	count_ptr<const const_param>
 	resolve_meta_value_reference(const C&) const;
+#endif
 
 	count_ptr<const const_param>
 	lookup_actual(const param_instance_collection&) const;
+
+private:
+	static
+	void
+	lookup_panic(ostream&);
 
 };	// end class unroll_context
 

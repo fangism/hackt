@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.38.2.18 2005/07/18 23:29:42 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.38.2.19 2005/07/19 04:17:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -577,7 +577,7 @@ data_type_reference::unroll_resolve(const unroll_context& c) const {
 		// dies on assert(!index_collection.empty()), 
 		// during get_type_ref of param collection?
 #else
-//		dump(cerr << "type = ") << endl;
+		// dump(cerr << "type = ") << endl;
 #endif
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
@@ -1604,21 +1604,32 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 			uc(cc, template_args, 
 				base_proc_def->get_template_formals_manager());
 #else
-		const unroll_context cc(make_unroll_context());
+		unroll_context cc(make_unroll_context());
+		cc.chain_context(c);
 #endif
 #if 0
+		this->dump(cerr) << endl;
 		cc.dump(cerr << "cc = ") << endl;
 		c.dump(cerr << "c = ") << endl;
 #endif
 		// MUST be cc to resolve parameter-dependent-parameters
+		// but MUST be c to resolve parameters dependent on context
+		// but this type's actuals may contain both!!!
+		// thus we must partially resolve the outer-context
+		// -dependent actuals first.  
 		const template_actuals
-			resolved_template_args(template_args.unroll_resolve(cc));
+			actuals(template_args.unroll_resolve(cc));
+#if 0
 		// this resolution resolves parameters dependent on
 		// the context of this type.  
 		const template_actuals
 			actuals(resolved_template_args.unroll_resolve(c));
 #endif
+#endif
 		if (actuals) {
+#if 0
+			actuals.dump(cerr << "finally: ") << endl;
+#endif
 			// the final type-check:
 			// now they MUST size-type check
 			const return_type
@@ -1726,7 +1737,11 @@ process_type_reference::unroll_port_instances(
 		proc_def(base_proc_def.is_a<const process_definition>());
 	NEVER_NULL(proc_def);
 	const port_formals_manager& port_formals(proc_def->get_port_formals());
+#if 0
+	c.dump(cerr) << endl;
+#endif
 	{
+		STACKTRACE("local context");
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
 #if 1
@@ -1734,6 +1749,9 @@ process_type_reference::unroll_port_instances(
 		const template_actuals_transformer
 			uc(cc, resolved_template_args, 
 				proc_def->get_template_formals_manager());
+#if 0
+		cc.dump(cerr) << endl;
+#endif
 #else
 		// hold on, this is not equivalent
 		const unroll_context cc(make_unroll_context());

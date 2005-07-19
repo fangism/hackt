@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.5.4.5 2005/07/06 20:14:27 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.5.4.6 2005/07/19 04:17:15 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -137,11 +137,13 @@ public:
 	add_relaxed_template_formal(
 		const never_ptr<const param_instance_collection>);
 
+#if 0
 	// called by unroll-context
 	// was const param_instance_collection&
 	count_ptr<const const_param>
 	resolve_template_actual(const param_instance_collection&, 
 		const template_actuals&) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;

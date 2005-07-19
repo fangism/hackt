@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5.4.14 2005/07/18 19:20:35 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.5.4.15 2005/07/19 04:17:15 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -290,6 +290,13 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	TODO: instate a check to make sure that only top-level
 		instances are unrolled, and only port-formals call this.  
 	\pre once and only instantiation for the port collection.  
+	TODO: 2005-07-18 problem: the type-reference may depend on
+		parameters passed into through the context, and
+		self-dependent (dependent on own parameters, such as defaults)
+		parameters in the same actuals list, however, unroll_context 
+		currently only supports one level context.  
+		Thus, we need to partially resolve SOME of the 
+		parameters first.  
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
@@ -301,6 +308,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	INVARIANT(!coll.is_partially_unrolled());
 #if 0
 	c.dump(cerr << "c = ") << endl;
+	type_ref_parent_type::get_type()->dump(cerr << "type = ") << endl;
 #endif
 	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
 	if (!ft) {

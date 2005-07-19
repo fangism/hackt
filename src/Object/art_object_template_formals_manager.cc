@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4.10.15 2005/07/18 19:20:39 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.4.10.16 2005/07/19 04:17:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -158,6 +158,7 @@ template_formals_manager::lookup_template_formal_position(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Replaces a formal parameter reference with the actual value.  
 	\pre p.is_template_formal() true.
@@ -194,6 +195,7 @@ template_formals_manager::resolve_template_actual(
 		return e->unroll_resolve(c);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
