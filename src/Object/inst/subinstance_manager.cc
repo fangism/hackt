@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.1.4.4 2005/07/16 22:11:34 fang Exp $
+	$Id: subinstance_manager.cc,v 1.1.4.5 2005/07/19 23:28:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/art_object_instance.h"
+#include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_type_ref_base.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -45,11 +46,7 @@ subinstance_manager::~subinstance_manager() {
 ostream&
 subinstance_manager::dump(ostream& o) const {
 if (subinstance_array.empty()) {
-#if 0
-	return o << "(no ports)";
-#else
 	return o;
-#endif
 } else {
 	o << '(' << endl;
 	{
@@ -90,6 +87,39 @@ subinstance_manager::lookup_port_instance(
 	INVARIANT(index);
 	INVARIANT(index <= subinstance_array.size());
 	return subinstance_array[index-1];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param cr sequence of meta instance references to resolve and 
+		connect to ports.  
+	\pre list sizes (ports vs. references) must be equal, 
+		already checked earlier.  
+	TODO: future, let port instantiation be on-demand, 
+		so check whether or not this is expanded first.  
+ */
+good_bool
+subinstance_manager::connect_ports(
+		const connection_references_type& cr, 
+		const unroll_context& c) {
+	typedef	connection_references_type::const_iterator
+						const_ref_iterator;
+	INVARIANT(subinstance_array.size() == cr.size());
+	iterator pi(subinstance_array.begin());	// instance_collection_base
+	const iterator pe(subinstance_array.end());
+	const_ref_iterator ri(cr.begin());
+	// const const_ref_iterator re(cr.end());
+	for ( ; pi!=pe; pi++, ri++) {
+	// references may be NULL (no-connect)
+	if (*ri) {
+		if ((*ri)->connect_port(**pi, c).bad) {
+			// already have error message
+			return good_bool(false);
+		}	// else good to continue
+	}
+	}
+	// all connections good
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

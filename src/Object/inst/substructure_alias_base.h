@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.1.4.4 2005/07/18 19:20:41 fang Exp $
+	$Id: substructure_alias_base.h,v 1.1.4.5 2005/07/19 23:28:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -14,6 +14,7 @@
 namespace ART {
 namespace entity {
 class instance_collection_base;
+class unroll_context;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -23,6 +24,9 @@ using util::persistent_object_manager;
  */
 template <>
 class substructure_alias_base<true> {
+private:
+	typedef	subinstance_manager::connection_references_type
+						connection_references_type;
 protected:
 	/**
 		Container of sub-instances.  
@@ -59,6 +63,12 @@ virtual	ostream&
 
 	ostream&
 	dump_ports(ostream& o) const { return subinstances.dump(o); }
+
+public:
+	// simply forwarded call
+	good_bool
+	connect_ports(const connection_references_type&, 
+		const unroll_context&);
 
 	// call forwarding
 	void

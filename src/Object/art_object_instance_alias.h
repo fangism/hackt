@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5.10.8 2005/07/18 19:20:36 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.5.10.9 2005/07/19 23:28:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -175,6 +175,7 @@ virtual	const_iterator
 	 */
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_and_update_actuals;
+	using actuals_parent_type::compare_actuals;
 
 	const relaxed_actuals_type&
 	find_relaxed_actuals(void) const;

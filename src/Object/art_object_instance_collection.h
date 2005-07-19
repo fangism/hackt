@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.8 2005/07/18 19:20:36 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.9 2005/07/19 23:28:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -144,13 +144,11 @@ virtual	bool
 	bool
 	must_match_type(const this_type&) const;
 
-#if 1
 	// 2005-07-07: intended for first-time type establishment, 
 	// which determines whether or not the collection is relaxed or 
 	// strictly typed.  
 	void
 	establish_collection_type(const type_ref_ptr_type&);
-#endif
 
 	bool
 	has_relaxed_type(void) const;
@@ -193,9 +191,21 @@ virtual	const_index_list
 virtual int
 	connect(const multikey_index_type& k, const instance_alias& b) = 0;
 #endif
-virtual	bool
-	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
-		alias_collection_type&) const = 0;
+#define	UNROLL_ALIASES_PROTO						\
+	bad_bool							\
+	unroll_aliases(const multikey_index_type&, 			\
+		const multikey_index_type&, 				\
+		alias_collection_type&) const
+
+virtual	UNROLL_ALIASES_PROTO = 0;
+
+#if 0
+#define	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO				\
+	bad_bool							\
+	unroll_all_aliases_autosize(alias_collection_type&) const
+
+virtual	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO = 0;
+#endif
 
 public:
 virtual	instance_alias_base_type&
@@ -302,9 +312,10 @@ public:
 	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const;
 
-	bool
-	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
-		alias_collection_type&) const;
+	UNROLL_ALIASES_PROTO;
+#if 0
+	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO;
+#endif
 
 	UNROLL_PORT_ONLY_PROTO;
 
@@ -376,9 +387,10 @@ public:
 	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const;
 
-	bool
-	unroll_aliases(const multikey_index_type&, const multikey_index_type&, 
-		alias_collection_type&) const;
+	UNROLL_ALIASES_PROTO;
+#if 0
+	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO;
+#endif
 
 	UNROLL_PORT_ONLY_PROTO;
 

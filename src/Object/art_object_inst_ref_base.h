@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.13.4.3 2005/07/16 05:59:52 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.13.4.4 2005/07/19 23:28:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -28,12 +28,10 @@ class const_range_list;
 class unroll_context;
 using std::istream;
 using std::ostream;
+using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-
-// temporary development switch
-#define	ENABLE_MEMBER_UNROLLING				1
 
 //=============================================================================
 /**
@@ -110,17 +108,22 @@ virtual	bool
 	make_aliases_connection(
 		const count_ptr<const meta_instance_reference_base>&);
 
-#if ENABLE_MEMBER_UNROLLING
 /**
 	The implementation of this will be policy-determined, 
 	by substructure_alias_base<bool>.  
  */
 #define	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO				\
 	never_ptr<substructure_alias>					\
-	unroll_generic_scalar_reference(unroll_context&) const
+	unroll_generic_scalar_reference(const unroll_context&) const
 
 virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO = 0;
-#endif
+
+#define	CONNECT_PORT_PROTO						\
+	bad_bool							\
+	connect_port(instance_collection_base&, 			\
+		const unroll_context&) const
+
+virtual	CONNECT_PORT_PROTO = 0;
 
 private:
 virtual	excl_ptr<aliases_connection_base>

@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.20.4.3 2005/07/15 03:48:59 fang Exp $
+	$Id: art_object_connect.h,v 1.20.4.4 2005/07/19 23:28:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
 #define	__OBJECT_ART_OBJECT_CONNECT_H__
 
+#include <vector>
 #include "Object/expr/types.h"
 #include "Object/art_object_instance_management_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -17,8 +18,8 @@ namespace ART {
 namespace entity {
 class meta_instance_reference_base;
 class simple_meta_instance_reference_base;
-USING_LIST
 using std::ostream;
+using std::vector;
 using util::memory::count_ptr;
 class unroll_context;
 
@@ -71,6 +72,9 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& ) const = 0;
+
+virtual	void
+	reserve(const size_t) = 0;
 
 };	// end class aliases_connection_base
 
@@ -127,7 +131,7 @@ public:
 						generic_inst_ptr_type;
 	typedef	count_ptr<const simple_meta_instance_reference_type>
 						inst_ref_ptr_type;
-	typedef	list<inst_ref_ptr_type>		inst_list_type;
+	typedef	vector<inst_ref_ptr_type>	inst_list_type;
 	typedef	typename inst_list_type::iterator
 						iterator;
 	typedef	typename inst_list_type::const_iterator
@@ -152,6 +156,9 @@ public:
 	dump(ostream& ) const;
 
 	void
+	reserve(const size_t);
+
+	void
 	append_meta_instance_reference(const generic_inst_ptr_type& );
 
 	good_bool
@@ -174,9 +181,12 @@ public:
 class port_connection : public meta_instance_reference_connection {
 	typedef	port_connection				this_type;
 protected:
-	typedef	meta_instance_reference_connection		parent_type;
+	typedef	meta_instance_reference_connection	parent_type;
 	typedef	parent_type::generic_inst_ptr_type	generic_inst_ptr_type;
-	typedef	list<generic_inst_ptr_type>		inst_list_type;
+	typedef	vector<generic_inst_ptr_type>		inst_list_type;
+	/**
+		The ported instance referenced must be a a scalar reference.  
+	 */
 	typedef	count_ptr<const simple_meta_instance_reference_base>
 							ported_inst_ptr_type;
 	/** should be reference to a simple instance, may be indexed.  */
@@ -196,6 +206,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	void
+	reserve(const size_t);
 
 	void
 	append_meta_instance_reference(const generic_inst_ptr_type& i);

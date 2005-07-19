@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.28.2.7 2005/07/07 23:48:05 fang Exp $
+	$Id: art_parser_instance.cc,v 1.28.2.8 2005/07/19 23:28:23 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -222,6 +222,7 @@ alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	NEVER_NULL(fir);
 	return_type ret = 
 		entity::meta_instance_reference_base::make_aliases_connection(fir);
+	ret->reserve(temp.size());
 	// keep this around for type-checking comparisons
 	ret->append_meta_instance_reference(fir);
 	// starting with second instance reference, type-check and alias
@@ -760,6 +761,7 @@ connection_statement::make_port_connection(
 	} else if (base_def->certify_port_actuals(temp).good) {
 		ref_list_type::const_iterator i(temp.begin());
 		const ref_list_type::const_iterator e(temp.end());
+		ret->reserve(temp.size());
 		for ( ; i!=e; i++) {
 			const count_ptr<const meta_instance_reference_base>
 				mir(i->is_a<const meta_instance_reference_base>());

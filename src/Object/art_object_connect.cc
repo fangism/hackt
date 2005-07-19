@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.24.4.4 2005/07/15 03:48:59 fang Exp $
+ 	$Id: art_object_connect.cc,v 1.24.4.5 2005/07/19 23:28:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_CC__
@@ -43,6 +43,7 @@
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
+#include "util/reserve.h"
 
 // conditional defines, after including "stacktrace.h"
 #ifndef	STACKTRACE_DTOR
@@ -175,8 +176,8 @@ port_connection::dump(ostream& o) const {
 	ported_inst->dump(o) << " (";
 
 	if (!inst_list.empty()) {
-		inst_list_type::const_iterator iter = inst_list.begin();
-		const inst_list_type::const_iterator end = inst_list.end();
+		inst_list_type::const_iterator iter(inst_list.begin());
+		const inst_list_type::const_iterator end(inst_list.end());
 		if (*iter)
 			(*iter)->dump(o);
 		else o << " ";
@@ -187,6 +188,12 @@ port_connection::dump(ostream& o) const {
 		}
 	}
 	return o << ");";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_connection::reserve(const size_t s) {
+	util::reserve(inst_list, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -215,8 +222,17 @@ port_connection::unroll(unroll_context& c) const {
  */
 good_bool
 port_connection::unroll_meta_connect(unroll_context& c) const {
-	cerr << "port_connection::unroll(): Fang, finish me!" << endl;
-	return good_bool(false);
+	NEVER_NULL(ported_inst);
+	const never_ptr<substructure_alias>
+		parent_instance(
+			ported_inst->unroll_generic_scalar_reference(c));
+	if (!parent_instance) {
+		cerr << "ERROR: resolving super instance of port connection: ";
+		ported_inst->dump(cerr) << endl;
+		return good_bool(false);
+	}
+	// iterators point to meta_instance_reference_base
+	return parent_instance->connect_ports(inst_list, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,8 +242,8 @@ if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key)) {
 	NEVER_NULL(ported_inst);
 	ported_inst->collect_transient_info(m);
-	inst_list_type::const_iterator iter = inst_list.begin();
-	const inst_list_type::const_iterator end = inst_list.end();
+	inst_list_type::const_iterator iter(inst_list.begin());
+	const inst_list_type::const_iterator end(inst_list.end());
 	for ( ; iter!=end; iter++) {
 		// port connection arguments may be NULL
 		if (*iter)

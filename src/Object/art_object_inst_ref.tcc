@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.8.4.3 2005/07/16 05:59:52 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.8.4.4 2005/07/19 23:28:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -72,11 +72,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Re-usable helper function (also used by member_instance_reference).  
+	\param inst a resolved actual instance (not formal).  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
-		unroll_context& c,
+		const unroll_context& c,
 		const instance_collection_generic_type& inst, 
 		const never_ptr<const index_list_type> ind, 
 		alias_collection_type& a) {
@@ -116,7 +117,7 @@ if (inst.get_dimensions()) {
 	const multikey_index_type lower(full_indices.lower_multikey());
 	const multikey_index_type upper(full_indices.upper_multikey());
 	// this will set the size and dimensions of packed_array a
-	if (inst.unroll_aliases(lower, upper, a)) {
+	if (inst.unroll_aliases(lower, upper, a).bad) {
 		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}
@@ -127,7 +128,7 @@ if (inst.get_dimensions()) {
 	// size the alias_collection_type appropriately
 	a.resize();		// empty
 	const multikey_index_type bogus;
-	if (inst.unroll_aliases(bogus, bogus, a)) {
+	if (inst.unroll_aliases(bogus, bogus, a).bad) {
 		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}
@@ -146,13 +147,12 @@ if (inst.get_dimensions()) {
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
-		unroll_context& c, alias_collection_type& a) const {
+		const unroll_context& c, alias_collection_type& a) const {
 	return unroll_references_helper(c, *this->inst_collection_ref,
 		this->array_indices, a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_MEMBER_UNROLLING
 /**
 	Called by member_instance_reference::unroll_references.
 	This implementation should be policy-determined.  
@@ -161,13 +161,105 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
 	return substructure_implementation_policy::
 		template unroll_generic_scalar_reference<Tag>(
 			*this->inst_collection_ref, this->array_indices, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
+/**
+	Expand both the port and the instance reference (this) into
+		alias_collection_types, populated by resolved aliases, 
+		and then connect them all if dimensions match.  
+	NOTE: this need not be virtual because it already calls
+		this->unroll_reference, which is virtual, and will give
+		the desired result.  
+	\param cl is a port member, a reference to a collection.
+		Since c is a port, it must be densely packed if it's an array.
+	\param c the unroll context.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
+		instance_collection_base& cl, 
+		const unroll_context& c) const {
+	// assert checked-cast, will throw bad_cast upon error
+	instance_collection_generic_type&
+		coll(IS_A(instance_collection_generic_type&, cl));
+	alias_collection_type this_aliases;
+	const bad_bool unroll_err(this->unroll_references(c, this_aliases));
+		// calls unroll_reference virtually, thus
+		// automatically handling member instance references.  
+		// will automatically size the array
+	if (unroll_err.bad) {
+		cerr << "ERROR unrolling port actual reference "
+			"during port connection: ";
+		this->dump(cerr) << endl;
+		return bad_bool(true);
+	}
+	// alternative, create a local temporary instance reference to coll?
+	alias_collection_type port_aliases;
+#if 0
+	// parser interprets this as a function prototype! shown by util::wtf.
+	// is this a parser bug?
+	const this_type temp_ref(instance_collection_ptr_type(&coll));
+#else
+	const instance_collection_ptr_type temp_ptr(&coll);
+	const this_type temp_ref(temp_ptr);
+#endif
+		// reference the whole port if it is collective (array)
+		// by not attaching indices
+	const bad_bool port_err(temp_ref.unroll_references(c, port_aliases));
+		// will automatically size the array
+	if (unroll_err.bad) {
+		cerr << "ERROR unrolling member instance reference "
+			"during port connection: ";
+		coll.dump(cerr) << endl;
+		return bad_bool(true);
+	}
+	typedef typename alias_collection_type::key_type	key_type;
+	const key_type t_size(this_aliases.size());
+	const key_type p_size(port_aliases.size());
+	if (t_size != p_size) {
+		cerr << "ERROR sizes mismatch in port connection: " << endl;
+		cerr << "\texpected: " << p_size << endl;
+		cerr << "\tgot: " << t_size << endl;
+		return bad_bool(true);
+	}
+	// else attempt to make connections, type-checking along the way
+	typedef	typename alias_collection_type::iterator	alias_iterator;
+	alias_iterator li(this_aliases.begin());
+	const alias_iterator le(this_aliases.end());
+	alias_iterator ri(port_aliases.begin());
+	// the following copied from alias_connection::unroll's do-loop
+	for ( ; li!=le; li++, ri++) {
+		const never_ptr<instance_alias_base_type> lp(*li);
+		const never_ptr<instance_alias_base_type> rp(*ri);
+		NEVER_NULL(lp);
+		NEVER_NULL(rp);
+		if (!lp->must_match_type(*rp)) {
+			// already have error message
+			return bad_bool(true);
+		}
+		typedef	typename instance_alias_base_type::relaxed_actuals_type
+					relaxed_actuals_type;
+		const relaxed_actuals_type& la(lp->find_relaxed_actuals());
+		const relaxed_actuals_type& ra(rp->find_relaxed_actuals());
+		// no need to update a cnonical actuals
+		if (!instance_alias_base_type::compare_actuals(la, ra).good) {
+			// already have error message
+			return bad_bool(true);
+		}
+		// else safe to connect
+		lp->merge(*rp);
+	}
+	INVARIANT(ri == port_aliases.end());
+	return bad_bool(false);
 }
 #endif
 

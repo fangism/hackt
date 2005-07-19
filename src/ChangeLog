@@ -2,6 +2,20 @@
 
 2005-07-19	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-39:
+	  Port connections implemented, everything works on the first shot!
+		Filled in port_connection::unroll_meta_connect().
+		Most of the work is done in subinstance_manager::connect_ports,
+		which calls meta_instance_reference_base::connect_port, 
+		(pure virtual).
+	  Enabled all the pending test cases in parser/connect, all work, 
+		and have been hand-verified.  
+	  Minor: instance reference lists use vector now, with reserve().  
+		instance_reference methods now take const unroll_context&.  
+	  Branch nearing maturity.  
+	  TODO: rigorous test cases, and cleanup.  
+	  
+
 	* ARTXX-00-01-04-main-00-48-connect-01-38:
 	  Remark: hierarchical alias connections (x.y = w.z)
 		are deemed reasonably stable.  

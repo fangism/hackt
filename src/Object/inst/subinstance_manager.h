@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.1.4.5 2005/07/18 19:20:41 fang Exp $
+	$Id: subinstance_manager.h,v 1.1.4.6 2005/07/19 23:28:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -8,6 +8,7 @@
 
 #include <vector>
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 
 namespace ART {
@@ -16,11 +17,13 @@ class substructure_manager;
 class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
+class meta_instance_reference_base;
 template <class> class instance_collection;
 using std::ostream;
 using std::istream;
 using std::string;
 using std::vector;
+using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
@@ -48,9 +51,12 @@ public:
 	// just a synonym
 	typedef	entry_value_type			value_type;
 	typedef	vector<value_type>			array_type;
+	typedef	vector<count_ptr<const meta_instance_reference_base> >
+						connection_references_type;
 protected:
 	typedef	array_type::const_iterator		const_iterator;
 	typedef	array_type::iterator			iterator;
+
 protected:
 	array_type					subinstance_array;
 public:
@@ -89,6 +95,10 @@ public:
 	unroll_port_instances(const instance_collection<Tag>&, 
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
+
+	good_bool
+	connect_ports(const connection_references_type&, 
+		const unroll_context&);
 
 	// for each entry, re-link
 	void

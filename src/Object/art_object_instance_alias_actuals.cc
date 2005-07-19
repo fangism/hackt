@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_alias_actuals.cc"
 	Method definitions of class instance_alias_info_actuals.
-	$Id: art_object_instance_alias_actuals.cc,v 1.1.2.3 2005/07/09 23:13:16 fang Exp $
+	$Id: art_object_instance_alias_actuals.cc,v 1.1.2.4 2005/07/19 23:28:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -79,6 +79,26 @@ instance_alias_info_actuals::compare_and_update_actuals(
 	}
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Comparing relaxed actuals for the sake of connection checking.  
+ */
+good_bool
+instance_alias_info_actuals::compare_actuals(
+		const alias_actuals_type& l, const alias_actuals_type& r) {
+	if (l && r && !l->must_be_equivalent(*r)) {
+		cerr << "ERROR: attempted to connect instances with "
+			"conflicting relaxed parameters!" << endl;
+		// TODO: report where, more info!
+		l->dump(cerr << "\tgot: ") << endl;
+		r->dump(cerr << "\tand: ") << endl;
+		// for now stop on 1st error
+		return good_bool(false);
+	} else {
+		return good_bool(true);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

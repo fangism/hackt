@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.12 2005/07/18 19:20:38 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.13 2005/07/19 23:28:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -1093,7 +1093,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance_collection(
 	\return true on error, else false.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-bool
+bad_bool
 INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
 	typedef	typename alias_collection_type::key_type
@@ -1127,7 +1127,7 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
-	return ret;
+	return bad_bool(ret);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1479,7 +1479,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance_collection(
 	\return true on error, false on success.
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-bool
+bad_bool
 INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l, 
 		const multikey_index_type& u, alias_collection_type& a) const {
 	if (this->the_instance.valid()) {
@@ -1487,11 +1487,11 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 			const_cast<instance_alias_base_type*>(
 				&static_cast<const instance_alias_base_type&>(
 					this->the_instance)));
-		return false;
+		return bad_bool(false);
 	} else {
 		this->type_dump(cerr << "ERROR: Reference to uninstantiated ")
 			<< "!" << endl;
-		return true;
+		return bad_bool(true);
 	}
 }
 

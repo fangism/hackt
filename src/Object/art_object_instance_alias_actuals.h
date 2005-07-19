@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_alias_actuals.h"
 	Implementation of alias info that has actual parameters.  
-	$Id: art_object_instance_alias_actuals.h,v 1.1.2.4 2005/07/15 03:49:08 fang Exp $
+	$Id: art_object_instance_alias_actuals.h,v 1.1.2.5 2005/07/19 23:28:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
@@ -76,6 +76,11 @@ public:
 	good_bool
 	compare_and_update_actuals(alias_actuals_type& l, 
 		const alias_actuals_type& r);
+
+	static
+	good_bool
+	compare_actuals(const alias_actuals_type&, 
+		const alias_actuals_type&);
 
 protected:
 	void

@@ -2,7 +2,7 @@
 	\file "Object/art_object_inst_ref.h"
 	Class family for instance references in ART.  
 	TODO: rename file to simple_meta_instance_reference
-	$Id: art_object_inst_ref.h,v 1.22.4.2 2005/07/16 05:59:52 fang Exp $
+	$Id: art_object_inst_ref.h,v 1.22.4.3 2005/07/19 23:28:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
@@ -96,7 +96,7 @@ protected:
 	 */
 	static
 	bad_bool
-	unroll_references_helper(unroll_context&, 
+	unroll_references_helper(const unroll_context&, 
 		const instance_collection_generic_type&,
 		const never_ptr<const index_list_type>, 
 		alias_collection_type&);
@@ -104,9 +104,12 @@ protected:
 public:
 	// overridden by member_meta_instance_reference
 virtual	bad_bool
-	unroll_references(unroll_context&, alias_collection_type&) const;
+	unroll_references(const unroll_context&, alias_collection_type&) const;
 
 virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
+
+	// see comment on why this need not be virtual!
+	CONNECT_PORT_PROTO;
 
 private:
 	excl_ptr<aliases_connection_base>

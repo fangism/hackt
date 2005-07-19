@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.7.2.5 2005/07/19 05:22:10 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.6 2005/07/19 23:28:34 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -34,15 +34,8 @@ ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 ARTOBJ_TEST_SUBJECTS = \
 	$(ARTC_TEST_PASSES)
 
-# some are intentionally left out for now because they require more features
-# 04{6,7,9}, 05{1,7,8}, 06{2,3,4,5,7,9}, 078, 08{3,4,5}: need port connections
 ARTOBJUNROLL_TEST_SUBJECTS = \
-	001 006 007 \
-	010 011 012 013 014 015 017 018 019 \
-	021 022 025 027 \
-	030 031 \
-	088 089 \
-	091 092 093 094 095 096 097 098
+	$(ARTOBJ_TEST_SUBJECTS)
 
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \

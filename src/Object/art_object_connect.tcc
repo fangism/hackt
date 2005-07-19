@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.8.4.4 2005/07/15 03:49:00 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.8.4.5 2005/07/19 23:28:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -23,13 +23,13 @@
 #include "Object/art_object_inst_ref_subtypes.h"
 
 #include "util/persistent_object_manager.h"
-#include "util/STL/list.h"
 #include "util/stacktrace.h"
 #include "util/what.h"
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/reserve.h"
 
 // conditional defines, after including "stactrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -97,6 +97,13 @@ ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
 		(*iter)->dump(o << " = ");
 	}
 	return o << ';';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::reserve(const size_t s) {
+	util::reserve(inst_list, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

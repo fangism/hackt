@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_member_inst_ref.tcc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.8.4.1 2005/07/16 05:59:54 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.8.4.2 2005/07/19 23:28:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -57,11 +57,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_MEMBER_UNROLLING
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_collection_generic_type>
 MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	typedef	count_ptr<instance_collection_generic_type>	return_type;
 	if (this->base_inst_ref->dimensions()) {
 		cerr << "ERROR: parent instance reference of a "
@@ -94,7 +93,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	INVARIANT(inst_base);
 	return inst_base;
 }	// end method resolve_parent_member_helper
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -108,11 +106,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
-		unroll_context& c, alias_collection_type& a) const {
-#if !ENABLE_MEMBER_UNROLLING
-	cerr << "FANG: write member_instance_reference<>::unroll_references()!" << endl;
-	return bad_bool(true);
-#else
+		const unroll_context& c, alias_collection_type& a) const {
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
@@ -120,15 +114,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 		return bad_bool(true);
 	}
 	return unroll_references_helper(c, *inst_base, this->array_indices, a);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_MEMBER_UNROLLING
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
@@ -141,6 +133,16 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	return substructure_implementation_policy::
 		template unroll_generic_scalar_reference<Tag>(
 			*inst_base, this->array_indices, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// not needed, base class's implementation suffices
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+MEMBER_INSTANCE_REFERENCE_CLASS::connect_port(
+		instance_collection_base& cl, 
+		const unroll_context& c) const {
 }
 #endif
 

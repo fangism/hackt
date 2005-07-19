@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.1.2.1 2005/07/16 05:59:56 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.1.2.2 2005/07/19 23:28:29 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INST_REF_IMPLEMENTATION__
@@ -47,7 +47,7 @@ unroll_generic_scalar_reference(
 		const typename
 			class_traits<Tag>::instance_collection_generic_type& inst,
 		const never_ptr<const simple_meta_instance_reference_base::index_list_type> ind, 
-		unroll_context& c) {
+		const unroll_context& c) {
 	typedef	simple_meta_instance_reference<Tag>	inst_ref_type;
 	typedef	typename inst_ref_type::alias_collection_type
 						alias_collection_type;
