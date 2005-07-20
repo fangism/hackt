@@ -8,10 +8,10 @@ state	value
 170	(type-ref) [7:1..3]
 36	identifier: fancy_array [7:5..15]
 116	(null) 
-187	[ [7:16]
+188	[ [7:16]
 125	(range) [7:17]
-204	, [7:18]
-in state 204, possible rules are:
-	bracketed_sparse_range: '[' range . ']'  (332)
+205	, [7:18]
+in state 205, possible rules are:
+	bracketed_sparse_range: '[' range . ']'  (343)
 acceptable tokens are: 
 	']' (shift)

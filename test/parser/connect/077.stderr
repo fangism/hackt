@@ -1,14 +1,15 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	(node_list): (process-prototype) ... [3:1--8:9]
+0	list<(root_item)>: (process-prototype) ... [3:1--8:7]
 22	(type-ref) [10:1..9]
-37	identifier: p [10:11]
-109	(node_list): (range) ... [10:13]
-176	( [10:15]
-in state 176, possible rules are:
-	instance_id_item : ID sparse_range_list .  (102)
-	sparse_range_list : sparse_range_list . bracketed_sparse_range  (278)
+38	identifier: p [10:11]
+115	(null) 
+188	list<(range)>: (range) ... [10:13]
+266	( [10:15]
+in state 266, possible rules are:
+	instance_id_item : ID optional_template_arguments_in_angles sparse_range_list .  (119)
+	sparse_range_list : sparse_range_list . bracketed_sparse_range  (340)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.24.2.5 2005/07/15 03:49:27 fang Exp $
+	$Id: art++-parse.yy,v 1.24.2.6 2005/07/20 20:22:34 fang Exp $
  */
 
 %{
@@ -26,18 +26,22 @@
 using namespace ART::lexer;
 using namespace ART::parser;
 
+#ifndef	YYBISON
+#define	YYBISON		0
+#endif
+
 #if YYBISON
 #include "util/memory/excl_ptr.h"
 /**
 	Work-around for bison.
 	Bison doesn't give public access to yyval, so we are forced to
 	pass it through a global variable.  
-	Make you long for yacc, doesn't it?
+	Makes one long for yacc, doesn't it?
 	Defined as an excl_ptr, which means exclusive but transferrable
 	ownership.  
  */
 util::memory::excl_ptr<root_body> AST_root;
-#endif
+#endif	// YYBISON
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.3.14.7 2005/07/20 06:45:52 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.3.14.8 2005/07/20 20:22:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -101,41 +101,25 @@ unroll_context::lookup_actual(const param_instance_collection& p) const {
 #endif
 	INVARIANT(!empty());
 	INVARIANT(template_args);
+	INVARIANT(p.is_template_formal());
 	// not the position of the template formal in its own list
 	// but in the current context!!!
-#if 0
-	const size_t index(p.is_template_formal());
-#else
 	// very awkward...
 	const instance_collection_base::owner_ptr_type
 		p_owner(p.get_owner());
 	const never_ptr<const definition_base>
 		p_def(p_owner.is_a<const definition_base>());
-	size_t index = 0;
-	if (p_def) {
-		const template_formals_manager&
-			p_tfm(p_def->get_template_formals_manager());
-		// need to make sure we're lookin up the correct set
-		// of formals...
-		// why don't we just search up the context chain until
-		// we find the matching template formals reference?
-		if (&*template_formals == &p_tfm) {
-			index = p_tfm.lookup_template_formal_position(
-				p.get_name());
-			INVARIANT(index);
-		} else {
-			index = 0;
-			// check next context
-		}
-	} else {
-		// is reference to top-level parameter, 
-		// a value collection that is not a formal
-		// FORBIDDEN
-		lookup_panic(cerr);	// no return
-	}
-#endif
-	if (index) {
-		STACKTRACE("found it.");
+	NEVER_NULL(p_def);
+	const template_formals_manager&
+		p_tfm(p_def->get_template_formals_manager());
+	// need to make sure we're lookin up the correct set
+	// of formals...
+	// why don't we just search up the context chain until
+	// we find the matching template formals reference?
+	if (template_formals == &p_tfm) {
+		const size_t index(p_tfm.lookup_template_formal_position(
+			p.get_name()));
+		INVARIANT(index);
 //		cerr << "I got index " << index << "!!!" << endl;
 		// remember, index is 1-indexed, whereas [] is 0-indexed.
 		const count_ptr<const param_expr>
@@ -194,6 +178,9 @@ unroll_context::lookup_actual(const param_instance_collection& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Another typical panic message.
+ */
 void
 unroll_context::lookup_panic(ostream& o) {
 	o << "Internal compiler error: " << endl <<
@@ -211,25 +198,6 @@ unroll_context::chain_context(const this_type& c) {
 	INVARIANT(!next);
 	next = never_ptr<const this_type>(&c);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-unroll_context::set_transform_context(const template_actuals& a, 
-		const template_formals_manager& m) {
-	INVARIANT(!template_args && !template_formals);
-	template_args = never_ptr<const template_actuals>(&a);
-	template_formals = never_ptr<const template_formals_manager>(&m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-unroll_context::reset_transform_context(void) {
-	INVARIANT(template_args && template_formals);
-	template_args = never_ptr<const template_actuals>();
-	template_formals = never_ptr<const template_formals_manager>();
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

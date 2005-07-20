@@ -3,21 +3,23 @@ parser stacks:
 state	value
 0	(null) 
 34	keyword: defproc [3:1..7]
-108	identifier: myinverter [3:9..18]
-173	(node_list): (port-formal-decl) ... [3:19..34]
-244	{ [3:36]
-281	(node_list): (prs-body) ... [4:1--7:1]
-352	(id-expr) [8:1..11]
-56	} [9:1]
-in state 56, possible rules are:
-	physical_type_ref : relative_id . optional_template_arguments_in_angles  (48)
-	id_expr : relative_id .  (204)
-	optional_template_arguments_in_angles : .  (262)
+114	identifier: myinverter [3:9..18]
+185	list<(port-formal-decl)>: (port-formal-decl) ... [3:19..34]
+261	{ [3:36]
+306	list<(def-body-item)>: (prs-body) ... [4:1--7:1]
+382	(qualified-id) [8:1..11]
+59	} [9:1]
+in state 59, possible rules are:
+	generic_type_ref : relative_id . strict_relaxed_template_arguments optional_chan_dir  (59)
+	id_expr : relative_id .  (260)
+	strict_relaxed_template_arguments : .  (319)
 acceptable tokens are: 
+	'!' (reduce)
 	'#' (reduce)
 	'(' (reduce)
 	'.' (reduce)
 	'<' (shift)
 	'=' (reduce)
+	'?' (reduce)
 	'[' (reduce)
 	ID (reduce)

@@ -2,6 +2,14 @@
 
 2005-07-20	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-48-connect-01-42:
+	  Cleaned up unroll_context::lookup_actual() as promised.  
+	  Tested with traditional yacc to update test cases'
+		expected outputs where they differ from bison's.  
+	  Also cross-checked this revision with FSF gcc-4.0.1.
+	  The grand merge coming up...
+
+
 	* ARTXX-00-01-04-main-00-48-connect-01-41:
 	  BUG fixed in expression equivalence checking:
 		In simple_meta_value_reference::must_be_equivalent, 

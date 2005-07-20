@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.3.14.7 2005/07/19 05:22:08 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.3.14.8 2005/07/20 20:22:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
@@ -70,15 +70,6 @@ public:
 	void
 	chain_context(const this_type&);
 
-#if 0
-	void
-	set_transform_context(const template_actuals&,
-		const template_formals_manager&);
-
-	void
-	reset_transform_context(void);
-#endif
-
 	bool
 	have_template_actuals(void) const { return template_args; }
 
@@ -91,28 +82,6 @@ private:
 	lookup_panic(ostream&);
 
 };	// end class unroll_context
-
-//=============================================================================
-#if 0
-/**
-	Helper class for managing template actuals transformation.  
- */
-class template_actuals_transformer {
-	unroll_context& uc;
-public:
-	explicit
-	template_actuals_transformer(unroll_context& c, 
-		const template_actuals& a, 
-		const template_formals_manager& m) : uc(c) {
-		uc.set_transform_context(a, m);
-	}
-
-	~template_actuals_transformer() {
-		uc.reset_transform_context();
-	}
-
-};	// end class template_actuals_transformer
-#endif
 
 //=============================================================================
 }	// end namespace entity
