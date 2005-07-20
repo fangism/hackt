@@ -3,7 +3,7 @@
 	Includes most "art_object_*.h" headers.  
 	Including this without thinking WILL unnecessarily slow down
 	compilation.  
-	$Id: art_object.h,v 1.8 2005/05/10 04:51:10 fang Exp $
+	$Id: art_object.h,v 1.9 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_H__
@@ -19,7 +19,8 @@
 #include "Object/art_object_instance_management_base.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr.h"
+// #include "Object/art_object_expr.h"
+	// replaced with a bunch of headers
 #include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"

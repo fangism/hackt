@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_proc.h"
 	Process-definition-related ART object classes.  
-	$Id: art_object_definition_proc.h,v 1.7 2005/06/23 03:00:30 fang Exp $
+	$Id: art_object_definition_proc.h,v 1.8 2005/07/20 20:59:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_PROC_H__
@@ -34,6 +34,12 @@ virtual	~process_definition_base() { }
 	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const;
+
+#define	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO			\
+	count_ptr<const process_type_reference>				\
+	make_canonical_type_reference(const template_actuals&) const
+
+virtual	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO = 0;
 
 // inherited pure virtuals are still pure virtuals
 protected:
@@ -83,17 +89,28 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
+
+	const port_formals_manager&
+	get_port_formals(void) const { return port_formals; }
 
 	/** overrides definition_base's */
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
 
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
+
 	never_ptr<const object>
 	lookup_object_here(const string& id) const;
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO;
 
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
@@ -168,6 +185,8 @@ public:
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

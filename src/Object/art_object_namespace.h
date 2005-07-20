@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.18 2005/06/19 01:58:45 fang Exp $
+	$Id: art_object_namespace.h,v 1.19 2005/07/20 21:00:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
@@ -217,6 +217,9 @@ virtual	const string&
 virtual	string
 	get_qualified_name(void) const = 0;
 
+virtual	ostream&
+	dump_qualified_name(ostream&) const = 0;
+
 virtual never_ptr<const scopespace>
 	get_parent(void) const = 0;
 
@@ -383,6 +386,9 @@ public:
 
 	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
 
 	never_ptr<const name_space>
 	get_global_namespace(void) const;

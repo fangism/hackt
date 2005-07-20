@@ -1,19 +1,19 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4301ec0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4301ee0	procdefn	0	53	140
-	4	 0x4301f74	pintcoll	0	140	179
-	5	 0x4301fc0	pintinst	0	179	195
-	6	 0x4301fd4	pboolcol	1	195	232
-	7	 0x4302020	pboolins	0	232	248
-	8	 0x4302030	crnglst_	0	248	268
-	9	 0x4302044	pintcoll	0	268	308
-	10	 0x4302090	pintinst	0	308	324
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	39
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	37
+	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	40
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 
-In module created from: ./022.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -28,8 +28,7 @@ In namespace "", we have: {
         [0..3]
       }
 
-      >
-      (
+      >(
       )
       In definition "barbar", we have: {
         tea = pint<> tea

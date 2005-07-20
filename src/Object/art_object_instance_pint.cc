@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pint.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.24 2005/06/19 01:58:44 fang Exp $
+ 	$Id: art_object_instance_pint.cc,v 1.25 2005/07/20 21:00:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
@@ -24,19 +24,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_param_ref.h"	// for pint/pbool_meta_instance_reference
-#include "Object/art_built_ins.h"
+#include "Object/expr/pint_const.h"
 #include "Object/art_object_type_hash.h"
-
-// experimental: suppressing automatic template instantiation
-#include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/art_object_value_collection.tcc"
-#include "Object/art_object_classification_details.h"
-
-#include "util/memory/count_ptr.tcc"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/int_traits.h"
 
 //=============================================================================
 namespace util {
@@ -83,12 +78,22 @@ REQUIRES_STACKTRACE_STATIC_INIT
 // struct pint_instance method definitions
 // not really methods...
 
+/**
+	Compares a pair of pint instances.  
+	If neither party is instantiated, consider them equal.
+ */
 bool
 operator == (const pint_instance& p, const pint_instance& q) {
-	INVARIANT(p.instantiated && q.instantiated);
+	// INVARIANT(p.instantiated && q.instantiated);
+	// multikey_assoc will need to compare against a default
+	// uninstantiated value, so we can't assert.  
+if (p.instantiated && q.instantiated) {
 	if (p.valid && q.valid) {
 		return p.value == q.value;
 	} else return (p.valid == q.valid); 
+} else {
+	return p.instantiated == q.instantiated;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

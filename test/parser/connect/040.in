@@ -1,4 +1,4 @@
-// should fail: see comment
+// "040.in" should fail: see comment
 
 defproc egg(bool white; int yolk);
 defproc basket(egg egg_array[12]);

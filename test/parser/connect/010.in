@@ -1,4 +1,4 @@
-// should pass: connecting two equivalent procs
+// "010.in" should pass: connecting two equivalent procs
 
 defproc foo();
 

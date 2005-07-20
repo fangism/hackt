@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.13 2005/06/19 01:58:40 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.14 2005/07/20 21:00:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -9,10 +9,10 @@
 
 #include "util/persistent.h"
 #include "Object/art_object_nonmeta_inst_ref_base.h"
-#include "Object/art_object_expr_const.h"	// for const_range_list
 #include "Object/art_object_util_types.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "Object/inst/substructure_alias_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -22,8 +22,13 @@ class fundamental_type_reference;
 class instance_collection_base;
 class param_instance_collection;
 class aliases_connection_base;
+class meta_index_list;
+class const_index_list;
+class const_range_list;
+class unroll_context;
 using std::istream;
 using std::ostream;
+using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -83,11 +88,15 @@ virtual	bool
 virtual	const_range_list
 	static_constant_dimensions(void) const = 0;
 
+// what kind of type equivalence?
 virtual	bool
-	may_be_type_equivalent(const meta_instance_reference_base& i) const = 0;
+	may_be_type_equivalent(
+		const meta_instance_reference_base& i) const = 0;
 
+// what kind of type equivalence?
 virtual	bool
-	must_be_type_equivalent(const meta_instance_reference_base& i) const = 0;
+	must_be_type_equivalent(
+		const meta_instance_reference_base& i) const = 0;
 
 	/**
 		Start an aliases connection list based on the referenced type.  
@@ -98,6 +107,23 @@ virtual	bool
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection(
 		const count_ptr<const meta_instance_reference_base>&);
+
+/**
+	The implementation of this will be policy-determined, 
+	by substructure_alias_base<bool>.  
+ */
+#define	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO				\
+	never_ptr<substructure_alias>					\
+	unroll_generic_scalar_reference(const unroll_context&) const
+
+virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO = 0;
+
+#define	CONNECT_PORT_PROTO						\
+	bad_bool							\
+	connect_port(instance_collection_base&, 			\
+		const unroll_context&) const
+
+virtual	CONNECT_PORT_PROTO = 0;
 
 private:
 virtual	excl_ptr<aliases_connection_base>
@@ -189,7 +215,7 @@ private:
 
 	template <size_t>
 	class mset;
-protected:
+public:
 	typedef	meta_index_list			index_list_type;
 protected:
 	/**
@@ -244,6 +270,9 @@ virtual	~simple_meta_instance_reference_base();
 
 	bool
 	has_static_constant_dimensions(void) const;
+
+	bool
+	is_relaxed_formal_dependent(void) const;
 
 	const_range_list
 	static_constant_dimensions(void) const;

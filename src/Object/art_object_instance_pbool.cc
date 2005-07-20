@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_pbool.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.22 2005/06/19 01:58:44 fang Exp $
+ 	$Id: art_object_instance_pbool.cc,v 1.23 2005/07/20 21:00:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
@@ -20,18 +20,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_param_ref.h"	// for pint/pbool_meta_instance_reference
-#include "Object/art_built_ins.h"
+#include "Object/expr/pbool_const.h"
 #include "Object/art_object_type_hash.h"
-
-// experimental: suppressing automatic template instantiation
-#include "Object/art_object_extern_templates.h"
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_nonmeta_value_reference.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/pbool_traits.h"
 #include "Object/art_object_value_collection.tcc"
-
-#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -122,12 +116,19 @@ using util::persistent_traits;
 // struct pbool_instance method definitions
 // not really methods...
 
+/**
+	Note: when both are uninstantiated, consider them equal.  
+ */
 bool
 operator == (const pbool_instance& p, const pbool_instance& q) {
-	INVARIANT(p.instantiated && q.instantiated);
+//	INVARIANT(p.instantiated && q.instantiated);
+if (p.instantiated && q.instantiated) {
 	if (p.valid && q.valid) {
 		return p.value == q.value;
 	} else return (p.valid == q.valid); 
+} else {
+	return p.instantiated == q.instantiated;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

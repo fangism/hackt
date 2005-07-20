@@ -1,7 +1,7 @@
 /**
-	\file "Object/art_object_instance_pint.cc"
+	\file "Object/art_object_value_collection.tcc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5 2005/06/19 01:58:49 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.6 2005/07/20 21:00:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
@@ -23,10 +23,20 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Object/art_object_extern_templates.h"
+// #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
+
 #include "Object/art_object_value_collection.h"
-#include "Object/art_object_expr_const.h"	// for const_index_list
+#include "Object/art_object_const_collection.h"
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"
+#include "Object/art_object_unroll_context.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -40,9 +50,6 @@
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
-
-// experimental: suppressing automatic template instantiation
-// #include "Object/art_object_extern_templates.h"
 
 //=============================================================================
 namespace ART {
@@ -107,32 +114,6 @@ VALUE_COLLECTION_CLASS::value_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	This is a special case used by built-in definition construction, 
-	so we restrict the default argument to constant scalar integer.  
-	This way, we can safely omit the call to
-	type_check_actual_param_expr(*i).
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-VALUE_COLLECTION_CLASS::value_collection(const scopespace& o, 
-		const string& n, const size_t d, 
-		const count_ptr<const pint_const>& i) :
-		parent_type(o, n, d), 
-		ival(i) {
-	/***
-		INVARIANT(type_check_actual_param_expr(*i));
-		This causes problem... calls pure virtual dimensions()
-		during construction phase, resulting in a run-time
-		"pure virtual method called" abort trap.  
-	***/
-#if 0
-	INVARIANT(type_check_actual_param_expr(*i));
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS::~value_collection() {
 //	STACKTRACE("~value_collection()");
@@ -163,7 +144,7 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 VALUE_COLLECTION_CLASS::get_type_ref(void) const {
 	return class_traits<Tag>::built_in_type_ptr;
-		// declared in "art_object_classification_details.h"
+		// declared in "traits/class_traits.h"
 		// initialized in "art_built_ins.cc"
 }
 
@@ -195,7 +176,7 @@ VALUE_COLLECTION_CLASS::initialize(const init_arg_type& e) {
 	NEVER_NULL(e);
 	INVARIANT(!ival);
 	if (this->dimensions == 0) {
-		if (type_check_actual_param_expr(*e).good) {
+		if (may_type_check_actual_param_expr(*e).good) {
 			ival = e;
 			return good_bool(true);
 		} else {
@@ -215,7 +196,7 @@ good_bool
 VALUE_COLLECTION_CLASS::assign_default_value(
 		const count_ptr<const param_expr>& p) {
 	const count_ptr<const expr_type> i(p.template is_a<const expr_type>());
-	if (i && type_check_actual_param_expr(*i).good) {
+	if (i && may_type_check_actual_param_expr(*i).good) {
 		ival = i;
 		return good_bool(true);
 	}
@@ -295,17 +276,37 @@ VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-VALUE_COLLECTION_CLASS::type_check_actual_param_expr(
+VALUE_COLLECTION_CLASS::may_type_check_actual_param_expr(
 		const param_expr& pe) const {
 	const never_ptr<const expr_type> pi(IS_A(const expr_type*, &pe));
 	if (!pi) {
 		// useful error message?
 		return good_bool(false);
 	}
+	// this says that the only instantiation statement for this parameter
+	// in the original declaration, which in this case was in the ports.  
 	// only for formal parameters is this assertion valid.  
 	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
-	return check_expression_dimensions(*pi);
+	return this->may_check_expression_dimensions(*pi);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks whether or not a param was passed to a formal 
+	parameter in a template.  
+	Should also check dimensionality and size.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+good_bool
+VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
+		const const_param& pe) const {
+	// only for formal parameters is this assertion valid.  
+	// this says that the only instantiation statement for this parameter
+	// in the original declaration, which in this case was in the ports.  
+	INVARIANT(this->index_collection.size() <= 1);
+	// check dimensions (is conservative with dynamic sizes)
+	return this->must_check_expression_dimensions(pe);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -348,28 +349,6 @@ VALUE_COLLECTION_CLASS::make_array(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Later: will become dimension-specific.
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-persistent*
-VALUE_COLLECTION_CLASS::construct_empty(const int i) {
-	// later convert to lookup table...
-	switch(i) {
-		case 0:	return new pint_array<0>();
-		case 1:	return new pint_array<1>();
-		case 2:	return new pint_array<2>();
-		case 3:	return new pint_array<3>();
-		case 4:	return new pint_array<4>();
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
 VALUE_COLLECTION_CLASS::write_object_base(
@@ -394,13 +373,14 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
-VALUE_ARRAY_CLASS::value_array() : parent_type(D), collection() {
+VALUE_ARRAY_CLASS::value_array() :
+		parent_type(D), collection(), cached_values(D) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
-		parent_type(o, n, D), collection() {
+		parent_type(o, n, D), collection(), cached_values(D) {
 	// until we eliminate that field from instance_collection_base
 }
 
@@ -444,13 +424,14 @@ VALUE_ARRAY_CLASS::key_value_dumper::operator () (
 	\param ranges fully-specified range of indices to instantiate.  
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
-void
+good_bool
 VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
+	good_bool ret(true);
 	do {
 #if 0
 		multikey_index_type::const_iterator
@@ -464,13 +445,15 @@ VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 			cerr << "ERROR: Index " << key_gen << " of " <<
 				this->get_qualified_name() <<
 				" already instantiated!" << endl;
-			THROW_EXIT;
+			ret.good = false;
+			// THROW_EXIT;
 		}
 		pi.instantiated = true;
 		// sanity check: shouldn't start out valid
 		INVARIANT(!pi.valid);
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -524,10 +507,22 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 VALUE_ARRAY_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i) const {
+		const multikey_index_type& i, 
+		const unroll_context& c) const {
 	INVARIANT(D == i.dimensions());
+	if (this->owner.template is_a<const definition_base>()) {
+		INVARIANT(!c.empty());
+		const count_ptr<const const_param>
+			ac(c.lookup_actual(*this));
+		NEVER_NULL(ac);
+		const count_ptr<const const_collection_type>
+			sc(ac.template is_a<const const_collection_type>());
+		NEVER_NULL(sc);
+		v = (*sc)[i];
+		return good_bool(true);
+	}
 	const key_type index(i);
-	const element_type& pi = collection[index];
+	const element_type& pi(collection[index]);
 	if (pi.valid) {
 		v = pi.value;
 	} else {
@@ -537,45 +532,6 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 			i << endl;
 	}
 	return good_bool(pi.valid);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\param l list in which to accumulate values.
-	\param r the ranges, must be valid, and fully resolved.
-	\return false on error, e.g. if value doesn't exist or 
-		is uninitialized; true on success.
- */
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-VALUE_ARRAY_CLASS::lookup_value_collection(
-		list<value_type>& l, const const_range_list& r) const {
-	INVARIANT(!r.empty());
-	multikey_generator<D, pint_value_type> key_gen;
-	r.make_multikey_generator(key_gen);
-	key_gen.initialize();
-	good_bool ret(true);
-	do {
-		const element_type& pi = collection[key_gen];
-		// INVARIANT(pi.instantiated);	// else earlier check failed
-		if (!pi.instantiated) {
-			// this should NOT happen
-			cerr << "FATAL: reference to uninstantiated " <<
-				class_traits<Tag>::tag_name << ' ' <<
-				this->get_qualified_name() << " at index " <<
-				key_gen << endl;
-			ret.good = false;
-		} else if (!pi.valid) {
-			cerr << "ERROR: reference to uninitialized " <<
-				class_traits<Tag>::tag_name << ' ' <<
-				this->get_qualified_name() << " at index " <<
-				key_gen << endl;
-			ret.good = false;
-		}
-		l.push_back(pi.value);
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -601,9 +557,7 @@ VALUE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 		ostream& f) const {
 	parent_type::write_object_base(m, f);
 	// write out the instance map
-#if 1
 	this->collection.write(f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -612,9 +566,7 @@ void
 VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 	parent_type::load_object_base(m, f);
 	// load the instance map
-#if 1
 	this->collection.read(f);
-#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -627,13 +579,18 @@ LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_scalar, 64);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-VALUE_SCALAR_CLASS::value_array() : parent_type(0), the_instance() {
+VALUE_SCALAR_CLASS::value_array() :
+		parent_type(0), the_instance(),
+		cached_value(const_expr_type::default_value), 
+		cache_validity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n) :
-		parent_type(o, n, 0), the_instance() {
+		parent_type(o, n, 0), the_instance(),
+		cached_value(const_expr_type::default_value), 
+		cache_validity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -682,17 +639,19 @@ VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
 	\param i indices must be NULL because this is not an array.
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-void
+good_bool
 VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
 	INVARIANT (r.empty());
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
 		cerr << "ERROR: Already instantiated!" << endl;
-		THROW_EXIT;
+		return good_bool(false);
+		// THROW_EXIT;
 	}
 	the_instance.instantiated = true;
 	INVARIANT(!the_instance.valid);
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -715,11 +674,30 @@ VALUE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This version assumes collection is a scalar.  
+	\param v the value reference at which to store back the resolved value.
+	\param c the unroll context.  
 	\return true if lookup found a valid value.  
+	TODO: propagage actual context changes to value_array.
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
+VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
+		const unroll_context& c) const {
+	if (this->owner.template is_a<const definition_base>()) {
+		INVARIANT(!c.empty());
+		const count_ptr<const const_param>
+			ac(c.lookup_actual(*this));
+		NEVER_NULL(ac);
+		const count_ptr<const expr_type>
+			sc(ac.template is_a<const expr_type>());
+		NEVER_NULL(sc);
+		v = sc->static_constant_value();
+		return good_bool(true);
+	} else {
+		// NOT TRUE. see test case template/009,040,041.in
+		// INVARIANT(c.empty());
+		// no need for context in top-level!
+	}
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated " <<
 			class_traits<Tag>::tag_name << ' ' <<
@@ -735,28 +713,14 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-VALUE_SCALAR_CLASS::lookup_value_collection(
-		list<value_type>& l, const const_range_list& r) const {
-	cerr << "WARNING: VALUE_SCALAR_CLASS::lookup_value_collection(...) "
-		"should never be called." << endl;
-	// DIE;
-	INVARIANT(r.empty());
-	value_type i;
-	const good_bool ret(lookup_value(i));
-	l.push_back(i);
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This should never be called.  
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i) const {
+		const multikey_index_type& i, 
+		const unroll_context&) const {
 	cerr << "FATAL: VALUE_SCALAR_CLASS::lookup_value(int&, multikey) "
 		"should never be called!" << endl;
 	DIE;

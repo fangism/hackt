@@ -2,7 +2,7 @@
 	\file "AST/art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.9 2005/05/23 01:02:33 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.10 2005/07/20 20:59:51 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_NODE_LIST_TCC__
@@ -16,7 +16,7 @@
 
 #include "AST/art_parser_node_list.h"	// includes "ptrs.h", "count_ptr.h"
 #include "AST/art_parser_node_position.h"
-#include "Object/art_context.h"
+// #include "Object/art_context.h"
 	// for class context, uses auto_indent()
 
 #include "util/what.tcc"
@@ -57,6 +57,7 @@
 //=============================================================================
 namespace ART {
 namespace parser {
+class context;
 using util::what;
 USING_STACKTRACE
 using std::transform;

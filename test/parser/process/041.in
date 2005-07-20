@@ -1,4 +1,4 @@
-// should pass: dynamic size is different, but won't catch until unroll time
+// "041.in" should fail: template signature is structurally different!
 
 template <pint bar; pbool jinx[bar]>
 defproc foo();

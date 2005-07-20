@@ -1,0 +1,11 @@
+// "090.in" should fail, connecting non-equivalent template types
+// copy-modified from "088.in"
+
+template <pint A>
+defproc foo();
+
+foo<1> bar, ick;
+foo<2> poo;
+
+bar = poo;		// bad type
+

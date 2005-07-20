@@ -1,24 +1,30 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.25 2005/06/19 01:58:34 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.26 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
 #define	__OBJECT_ART_OBJECT_ASSIGN_CC__
 
+#define	ENABLE_STACKTRACE		0
 #define	DEBUG_LIST_VECTOR_POOL		0
 
 #include <iostream>
 #include <numeric>
 
 #include "Object/art_object_assign.h"
-#include "Object/art_object_expr_param_ref.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/art_object_const_collection.h"
 #include "Object/art_object_value_reference.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/pbool_traits.h"
+#include "Object/traits/int_traits.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_assign.tcc"
-#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace util {

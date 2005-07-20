@@ -1,19 +1,23 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type_base.h,v 1.5 2005/06/19 01:58:32 fang Exp $
+	$Id: art_parser_type_base.h,v 1.6 2005/07/20 20:59:52 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_BASE_H__
 #define __AST_ART_PARSER_TYPE_BASE_H__
 
 #include "AST/art_parser_base.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
 	class definition_base;
+	class fundamental_type_reference;
 }
 namespace parser {
+using entity::fundamental_type_reference;
+using util::memory::count_ptr;
 //=============================================================================
 /**
 	Abstract base class for types in general (parameters, data, channel, 
@@ -48,6 +52,24 @@ virtual	line_position
 	 */
 virtual	TYPE_BASE_CHECK_PROTO = 0;
 };	// end class type_base
+
+//=============================================================================
+/**
+	Base complete type abstract class.  
+ */
+class concrete_type_ref {
+public:
+	typedef	count_ptr<const fundamental_type_reference>	return_type;
+
+public:
+	concrete_type_ref() { }
+virtual ~concrete_type_ref() { }
+
+	PURE_VIRTUAL_NODE_METHODS
+
+virtual return_type
+	check_type(context&) const = 0;
+};      // end class concrete_type_ref
 
 //=============================================================================
 }	// end namespace parser

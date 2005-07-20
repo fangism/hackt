@@ -1,15 +1,16 @@
 /**
 	\file "Object/art_object_connect.h"
 	Declarations for classes related to connection of physical entities. 
-	$Id: art_object_connect.h,v 1.20 2005/06/19 01:58:35 fang Exp $
+	$Id: art_object_connect.h,v 1.21 2005/07/20 20:59:56 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_H__
 #define	__OBJECT_ART_OBJECT_CONNECT_H__
 
-#include "Object/art_object_expr_types.h"
+#include <vector>
+#include "Object/expr/types.h"
 #include "Object/art_object_instance_management_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/multikey_fwd.h"
 
@@ -17,8 +18,8 @@ namespace ART {
 namespace entity {
 class meta_instance_reference_base;
 class simple_meta_instance_reference_base;
-USING_LIST
 using std::ostream;
+using std::vector;
 using util::memory::count_ptr;
 class unroll_context;
 
@@ -29,11 +30,13 @@ class unroll_context;
  */
 class meta_instance_reference_connection : public instance_management_base {
 protected:
-	typedef	meta_instance_reference_base			generic_instance_type;
+	typedef	meta_instance_reference_base		generic_instance_type;
 	typedef	count_ptr<const generic_instance_type>	generic_inst_ptr_type;
-public:
+
+protected:
 	meta_instance_reference_connection();
 
+public:
 virtual	~meta_instance_reference_connection();
 
 	/**
@@ -41,6 +44,8 @@ virtual	~meta_instance_reference_connection();
 	 */
 virtual	void
 	append_meta_instance_reference(const generic_inst_ptr_type& i) = 0;
+
+virtual	UNROLL_META_CONNECT_PROTO = 0;
 };	// end class meta_instance_reference_connection
 
 //-----------------------------------------------------------------------------
@@ -53,13 +58,13 @@ virtual	void
 class aliases_connection_base : public meta_instance_reference_connection {
 	typedef	aliases_connection_base			this_type;
 protected:
-	typedef	meta_instance_reference_connection		parent_type;
+	typedef	meta_instance_reference_connection	parent_type;
 	typedef	parent_type::generic_inst_ptr_type	generic_inst_ptr_type;
 protected:
 	// no additional fields
-public:
 	aliases_connection_base();
 
+public:
 virtual	~aliases_connection_base();
 
 virtual	ostream&
@@ -68,12 +73,15 @@ virtual	ostream&
 virtual	ostream&
 	dump(ostream& ) const = 0;
 
+virtual	void
+	reserve(const size_t) = 0;
+
 };	// end class aliases_connection_base
 
 //-----------------------------------------------------------------------------
 /**
 	Pointless class, for the sake of classifying data subtype aliases.  
-	Just another abstract base class in the heirarchy.  
+	Just another abstract base class in the hierarchy.  
  */
 class data_alias_connection_base : public aliases_connection_base {
 	typedef	data_alias_connection_base	this_type;
@@ -81,9 +89,11 @@ protected:
 	typedef	aliases_connection_base		parent_type;
 	typedef	parent_type::generic_inst_ptr_type
 						generic_inst_ptr_type;
-public:
+
+protected:
 	data_alias_connection_base() : parent_type() { }
 
+public:
 virtual	~data_alias_connection_base() { }
 
 };	// end class data_aliases_connection_base
@@ -109,10 +119,10 @@ public:
 						parent_type;
 	/// the instance reference type used by this connection
 	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
-						simple_meta_instance_reference_type;
+					simple_meta_instance_reference_type;
 	/// the instance collection type referenced
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
-						instance_collection_generic_type;
+					instance_collection_generic_type;
 	/// the instance alias type resolved by unrolling
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
@@ -121,7 +131,7 @@ public:
 						generic_inst_ptr_type;
 	typedef	count_ptr<const simple_meta_instance_reference_type>
 						inst_ref_ptr_type;
-	typedef	list<inst_ref_ptr_type>		inst_list_type;
+	typedef	vector<inst_ref_ptr_type>	inst_list_type;
 	typedef	typename inst_list_type::iterator
 						iterator;
 	typedef	typename inst_list_type::const_iterator
@@ -146,10 +156,15 @@ public:
 	dump(ostream& ) const;
 
 	void
-	append_meta_instance_reference(const generic_inst_ptr_type& );
+	reserve(const size_t);
 
 	void
+	append_meta_instance_reference(const generic_inst_ptr_type& );
+
+	good_bool
 	unroll(unroll_context& ) const;
+
+	UNROLL_META_CONNECT_PROTO;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
@@ -166,9 +181,12 @@ public:
 class port_connection : public meta_instance_reference_connection {
 	typedef	port_connection				this_type;
 protected:
-	typedef	meta_instance_reference_connection		parent_type;
+	typedef	meta_instance_reference_connection	parent_type;
 	typedef	parent_type::generic_inst_ptr_type	generic_inst_ptr_type;
-	typedef	list<generic_inst_ptr_type>		inst_list_type;
+	typedef	vector<generic_inst_ptr_type>		inst_list_type;
+	/**
+		The ported instance referenced must be a a scalar reference.  
+	 */
 	typedef	count_ptr<const simple_meta_instance_reference_base>
 							ported_inst_ptr_type;
 	/** should be reference to a simple instance, may be indexed.  */
@@ -190,10 +208,15 @@ public:
 	dump(ostream& o) const;
 
 	void
-	append_meta_instance_reference(const generic_inst_ptr_type& i);
+	reserve(const size_t);
 
 	void
+	append_meta_instance_reference(const generic_inst_ptr_type& i);
+
+	good_bool
 	unroll(unroll_context& ) const;
+
+	UNROLL_META_CONNECT_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

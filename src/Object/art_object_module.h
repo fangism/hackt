@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.18 2005/06/19 01:58:45 fang Exp $
+	$Id: art_object_module.h,v 1.19 2005/07/20 21:00:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -85,7 +85,7 @@ public:
 		and is non-virtual.  
 		Protected-ness keep user from accessing parent's unroll().
 	 */
-	void
+	good_bool
 	unroll_module(void);
 
 public:

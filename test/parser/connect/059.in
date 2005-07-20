@@ -1,4 +1,4 @@
-// should fail: uninstantiated indices
+// "059.in" should fail: uninstantiated indices
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

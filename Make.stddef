@@ -1,6 +1,6 @@
 # "Make.stddef"
 # make-independent definitions
-#	$Id: Make.stddef,v 1.7 2005/01/28 19:58:27 fang Exp $
+#	$Id: Make.stddef,v 1.8 2005/07/20 20:59:47 fang Exp $
 
 # SHELL = /bin/sh
 # add -v for verbose
@@ -10,6 +10,7 @@ CHMOD = chmod
 CP = cp
 # CPP = cpp
 CVS = cvs
+DATE = date
 DIFF = diff -B
 # -B: ignore blank line diffs
 ECHO = echo

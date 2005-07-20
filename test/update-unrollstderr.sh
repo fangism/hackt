@@ -4,7 +4,7 @@
 
 for i in $@
 do
-	cp -f $i.unrolldump $i.unrollstderr
+	cp -f $i.unrolldump.filter $i.unrollstderr
 	echo "Updated $i.unrollstderr"
 done
 

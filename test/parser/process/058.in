@@ -1,0 +1,9 @@
+// "058.in" should pass, will recursively instantiate ports
+// copy-modified from "057.in"
+
+defproc foo(bool a[2][2]) { }
+
+defproc bar(foo x[2][2]) { }
+
+bar poo;
+

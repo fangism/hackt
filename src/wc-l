@@ -1,4 +1,4 @@
 #!/bin/sh
 
-wc -l {AST,util,Object}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy,awk}
+wc -l {main,AST,util{,/memory,/STL,/numeric},Object{,/expr,/inst}}/*.{cc,tcc,h} lexer/*.ll parser/*.{yy,awk}
 

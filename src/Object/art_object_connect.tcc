@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_connect.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.8 2005/06/19 01:58:35 fang Exp $
+ 	$Id: art_object_connect.tcc,v 1.9 2005/07/20 20:59:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
@@ -23,13 +23,13 @@
 #include "Object/art_object_inst_ref_subtypes.h"
 
 #include "util/persistent_object_manager.h"
-#include "util/STL/list.h"
 #include "util/stacktrace.h"
 #include "util/what.h"
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/reserve.h"
 
 // conditional defines, after including "stactrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -48,6 +48,8 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+class const_param_expr_list;
+template <class> class instance_alias_info;
 USING_IO_UTILS
 using std::vector;
 using util::persistent_traits;
@@ -86,8 +88,8 @@ ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 ostream&
 ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
 	INVARIANT(inst_list.size() > 1);
-	const_iterator iter = inst_list.begin();
-	const const_iterator end = inst_list.end();
+	const_iterator iter(inst_list.begin());
+	const const_iterator end(inst_list.end());
 	NEVER_NULL(*iter);
 	(*iter)->dump(o);
 	for (iter++; iter!=end; iter++) {
@@ -95,6 +97,13 @@ ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
 		(*iter)->dump(o << " = ");
 	}
 	return o << ';';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+void
+ALIAS_CONNECTION_CLASS::reserve(const size_t s) {
+	util::reserve(inst_list, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -120,10 +129,10 @@ ALIAS_CONNECTION_CLASS::append_meta_instance_reference(
 #define	ALIAS_CONNECTION_UNROLL_VERBOSE		0
 /**
 	Connects the referenced instance aliases.  
-	This really needs a return value...
+	TODO: document this method with pseudocode, it's important.  
  */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
-void
+good_bool
 ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	typedef	vector<alias_collection_type>	alias_collection_array_type;
 	typedef	vector<typename alias_collection_type::iterator>
@@ -135,10 +144,10 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	const size_t num_refs = inst_list.size();
 	alias_collection_array_type ref_array(num_refs);
 	INVARIANT(ref_array.size() >= 1);
-	const_iterator iter = inst_list.begin();
-	const const_iterator end = inst_list.end();
+	const_iterator iter(inst_list.begin());
+	const const_iterator end(inst_list.end());
 	typename alias_collection_array_type::iterator
-		ref_iter = ref_array.begin();
+		ref_iter(ref_array.begin());
 	bool err = false;
 	// transform?
 	for ( ; iter != end; iter++, ref_iter++) {
@@ -149,16 +158,15 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 	if (err) {
 		what(cerr << "ERROR: unrolling instance references in ") <<
 			"::unroll()." << endl;
-		// or THROW_EXIT?
-		return;
+		return good_bool(false);
 	}
 /***
 	Make sure each packed array has the same dimensions.  
 ***/
 	typename alias_collection_array_type::const_iterator
-		cref_iter = ref_array.begin();
+		cref_iter(ref_array.begin());
 	const typename alias_collection_array_type::const_iterator
-		ref_end = ref_array.end();
+		ref_end(ref_array.end());
 	const typename alias_collection_type::key_type
 		head_size(cref_iter->size());
 	size_t j = 2;
@@ -174,8 +182,9 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 		}
 	}
 	// to be continued...
-	if (err)
-		THROW_EXIT;
+	if (err) {
+		return good_bool(false);
+	}
 /***
 	Since every alias collection has same type, we can use the same
 	key to generate keys for all of the collections.  
@@ -219,15 +228,33 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 #endif
 		// ref_iter_head is the element in the
 		// first packed alias collection
-		const iter_iter_type ref_iter_head = ref_iter_array.begin();
-		const iter_iter_type ref_iter_end = ref_iter_array.end();
+		const iter_iter_type ref_iter_head(ref_iter_array.begin());
+		const iter_iter_type ref_iter_end(ref_iter_array.end());
 		const never_ptr<instance_alias_base_type> head(**ref_iter_head);
 		NEVER_NULL(head);
 		// ref_iter_iter will walk along the array of references
 		// starting with the second packed collection
 		iter_iter_type ref_iter_iter(ref_iter_head);
 		ref_iter_iter++;
+		/***
+			Aliases in this sequence must be connectibly
+			type-equivalent, i.e. their relaxed parameters
+			(if applicable) MUST be equal.  
+			We use the following placeholder to track
+			the actuals as aliases references are visited
+			from left to right.  
+			While it is NULL, connections are allowed, 
+			there is no need to check.  
+		***/
+		typedef	count_ptr<const const_param_expr_list>
+				relaxed_actuals_ptr_type;
+		relaxed_actuals_ptr_type
+			current_relaxed_actuals(head->find_relaxed_actuals());
 		for ( ; ref_iter_iter != ref_iter_end; ref_iter_iter++) {
+			// this loop connects the first alias in the list
+			// to the others, a 1-to-N connection.
+			// HOWEVER, we need to check actuals for against 
+			// all connectees, not just the first.
 			// make the connection!
 #if ALIAS_CONNECTION_UNROLL_VERBOSE
 			cerr << "Connecting one alias..." << endl;
@@ -239,6 +266,31 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 #if ALIAS_CONNECTION_UNROLL_VERBOSE
 			cerr << "size before: " << head->size();
 #endif
+			if (!head->must_match_type(*connectee)) {
+				// already have error message
+				return good_bool(false);
+			}
+#if 1
+			// need to compare relaxed actuals if applicable!
+			// this is util::ring_node::merge()
+			// 2005-07-09: added actuals check
+			// TODO: factors this out into a policy so that
+			// meta-types that don't have relaxed actuals
+			// may pass through this as a No-op!
+			const relaxed_actuals_ptr_type&
+				connectee_actuals(
+					connectee->find_relaxed_actuals());
+			typedef	typename instance_alias_base_type::actuals_parent_type
+						relaxed_actuals_policy;
+			if (!relaxed_actuals_policy::compare_and_update_actuals(
+					current_relaxed_actuals,
+					connectee_actuals).good) {
+				// already have error message
+				return good_bool(false);
+			}
+#endif
+			// TODO: policy-determined recursive alias connection
+			// checking.  
 			head->merge(*connectee);
 #if ALIAS_CONNECTION_UNROLL_VERBOSE
 			cerr << ", size after: " << head->size() << endl;
@@ -250,9 +302,17 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 			mem_fun_ref<iterator_type&>(&iterator_type::operator++)
 		);
 	} while (ref_iter_array.front() != ref_array.front().end());
+	return good_bool(true);
 }
 
 #undef	ALIAS_CONNECTION_UNROLL_VERBOSE
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ALIAS_CONNECTION_TEMPLATE_SIGNATURE
+good_bool
+ALIAS_CONNECTION_CLASS::unroll_meta_connect(unroll_context& c) const {
+	return this->unroll(c);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
@@ -265,8 +325,8 @@ if (!m.register_transient_object(this,
 	STACKTRACE_PERSISTENT("alias_connection<>::collect_transients()");
 //	cerr << persistent_traits<this_type>::type_key << endl;
 #if 1
-	const_iterator iter = inst_list.begin();
-	const const_iterator end = inst_list.end();
+	const_iterator iter(inst_list.begin());
+	const const_iterator end(inst_list.end());
 	for ( ; iter!=end; iter++) {
 		(*iter)->collect_transient_info(m);
 	}

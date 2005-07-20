@@ -1,4 +1,4 @@
-// should pass: connecting via ports
+// "047.in" should pass: connecting via ports
 
 defproc portaproc(bool b, c[4]; int i, j[2]);
 

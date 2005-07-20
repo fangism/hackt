@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.5 2005/06/19 01:58:35 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.6 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
@@ -21,12 +21,15 @@
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/art_object_index.h"
 
+#include "util/wtf.h"
 #include "util/what.h"
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
 #include "util/ptrs_functional.h"
+#include "util/stacktrace.h"
 
 //=============================================================================
 namespace ART {
@@ -195,23 +198,70 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Helper function.
+ */
+EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
+good_bool
+EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i, 
+		const const_dest_iterator& e, const const_collection_type& v) {
+	for ( ; i!=e; i++) {
+		if ((*i)->assign_value_collection(v).bad) {
+			// just re-using same old lame error message
+			cerr << "ERROR: something went wrong in " <<
+				class_traits<Tag>::tag_name <<
+				" assignment." << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Assigns src value to each dest, after unpacking instances.  
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
-void
+good_bool
 EXPRESSION_ASSIGNMENT_CLASS::unroll(unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(!dests.empty());		// sanity check
+	INVARIANT(this->src);
 	// works for scalars and multidimensional arrays alike
-	typename value_reference_type::assigner the_assigner(*this->src);
-	// will exit upon error
-	bad_bool assign_err = 
-		accumulate(this->dests.begin(), this->dests.end(), 
-			bad_bool(false), the_assigner);
-	if (assign_err.bad) {
-		cerr << "ERROR: something went wrong in " <<
-			class_traits<Tag>::tag_name << " assignment." << endl;
-		THROW_EXIT;
+	const count_ptr<const const_param>
+		src_values(this->src->unroll_resolve(c));
+	if (!src_values) {
+		this->src->dump(
+			cerr << "ERROR: failed to resolve source values of ")
+			<< " in " << class_traits<Tag>::tag_name <<
+			" assignment." << endl;
+		return good_bool(false);
 	}
+	const count_ptr<const const_expr_type>
+		scalar_const(src_values.template is_a<const const_expr_type>());
+	const count_ptr<const const_collection_type>
+		bunch_of_consts(src_values
+			.template is_a<const const_collection_type>());
+	if (scalar_const) {
+		static const multikey_index_type blank;
+		// temporary 0-D, scalar value
+		const_collection_type the_lonesome_value(blank);
+		*the_lonesome_value.begin() =
+			scalar_const->static_constant_value();
+		return assign_dests(this->dests.begin(), this->dests.end(),
+			the_lonesome_value);
+	} else {
+		NEVER_NULL(bunch_of_consts);
+		return assign_dests(this->dests.begin(), this->dests.end(),
+			*bunch_of_consts);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
+good_bool
+EXPRESSION_ASSIGNMENT_CLASS::unroll_meta_evaluate(unroll_context& c) const {
+	// would've exited upon error
+	return this->unroll(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

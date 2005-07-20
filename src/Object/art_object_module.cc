@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.22 2005/05/23 15:56:59 fang Exp $
+ 	$Id: art_object_module.cc,v 1.23 2005/07/20 21:00:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
@@ -125,16 +125,41 @@ module::dump(ostream& o) const {
 	Don't just call sequential_scope::unroll, this makes sure
 	entire module is not already unrolled.  
  */
-void
+good_bool
 module::unroll_module(void) {
 	STACKTRACE("module::unroll_module()");
 	if (!unrolled) {
 		STACKTRACE("not already unrolled, unrolling...");
 		// start with blank context
 		unroll_context c;
-		sequential_scope::unroll(c);
+#if 1
+		if (!sequential_scope::unroll(c).good) {
+			cerr << "Error encountered during module::unroll."
+				<< endl;
+			return good_bool(false);
+		}
+#else
+		// three-phase unrolling
+		if (!sequential_scope::unroll_meta_evaluate(c).good) {
+			cerr << "Error during unroll_meta_evaluate." << endl;
+			return good_bool(false);
+		}
+		if (!sequential_scope::unroll_meta_instantiate(c).good) {
+			cerr << "Error during unroll_meta_instantiate." << endl;
+			return good_bool(false);
+		}
+		// this would be a good point to finalize sparse and dense
+		// array collections into index maps
+		// Top-level finalization would bind indexed instances
+		// to fixed offsets.  
+		if (!sequential_scope::unroll_meta_connect(c).good) {
+			cerr << "Error during unroll_meta_connect." << endl;
+			return good_bool(false);
+		}
+#endif
 		unrolled = true;
 	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

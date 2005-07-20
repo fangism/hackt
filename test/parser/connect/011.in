@@ -1,4 +1,4 @@
-// should pass: connecting two equivalent procs, array sizes match
+// "011.in" should pass: connecting two equivalent procs, array sizes match
 
 defproc foo();
 

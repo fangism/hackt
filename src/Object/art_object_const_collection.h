@@ -1,29 +1,32 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6 2005/05/22 06:23:52 fang Exp $
+	$Id: art_object_const_collection.h,v 1.7 2005/07/20 20:59:57 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 #define __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
 
 #include <iosfwd>
+#include "Object/expr/types.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/STL/construct_fwd.h"
-#include "Object/art_object_expr_const.h"	// for const_range_list
-#include "Object/art_object_expr_types.h"
-#include "Object/art_object_classification_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-
+class const_index_list;
+class const_range_list;
+class unroll_context;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
+using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent;
 using util::persistent_object_manager;	// forward declared
@@ -51,11 +54,15 @@ class const_collection :
 public:
 	typedef	typename class_traits<Tag>::const_collection_parent_type
 							parent_const_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+							const_expr_type;
 	typedef	typename class_traits<Tag>::value_type	value_type;
 	typedef	util::packed_array_generic<pint_value_type, value_type>
 							array_type;
 	typedef	typename array_type::iterator		iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
+protected:
+	typedef	typename array_type::key_type		key_type;
 protected:
 	array_type					values;
 public:
@@ -94,6 +101,9 @@ public:
 	bool
 	is_static_constant(void) const { return true; }
 
+	bool
+	is_relaxed_formal_dependent(void) const { return false; }
+
 	count_ptr<const parent_const_type>
 	static_constant_param(void) const;
 
@@ -102,6 +112,9 @@ public:
 
 	const_range_list
 	static_constant_dimensions(void) const;
+
+	value_type
+	operator [] (const key_type&) const;
 
 	bool
 	may_be_initialized(void) const { return true; }
@@ -143,12 +156,11 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
-	// flat-list needs to be replaced
-	good_bool
-	resolve_values_into_flat_list(list<value_type>& ) const;
-
 	count_ptr<parent_const_type>
 	unroll_resolve(const unroll_context&) const;
+
+	this_type
+	make_value_slice(const const_index_list&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

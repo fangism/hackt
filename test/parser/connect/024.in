@@ -1,4 +1,4 @@
-// should fail: size mismatches after dimension collapsing
+// "024.in" should fail: size mismatches after dimension collapsing
 
 defproc barf();
 

@@ -1,27 +1,27 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4302a80	module__	0	0	41
-	2	 0x4300144	namespc_	0	41	73
-	3	 0x4302aa4	proccoll	2	73	574
-	4	 0x4302af0	procinst	0	574	594
-	5	 0x4302b10	proctprf	0	594	610
-	6	 0x4302b20	procdefn	0	610	659
-	7	 0x4302bb0	crnglst_	0	659	687
-	8	 0x4302bc0	proctprf	0	687	703
-	9	 0x4302bd4	proccoll	1	703	863
-	10	 0x4302c20	procinst	0	863	883
-	11	 0x4302c40	proctprf	0	883	899
-	12	 0x4302c50	crnglst_	0	899	919
-	13	 0x4302c60	proctprf	0	919	935
-	14	 0x4302c70	prcalias	0	935	955
-	15	 0x4302c80	sprcmref	0	955	975
-	16	 0x4302cb0	sprcmref	0	975	995
-	17	 0x4302ce0	cindlst_	0	995	1011
-	18	 0x374a028	cnstpi__	0	1011	1023
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	701
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	49
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	200
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./022.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections
@@ -29,7 +29,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    barf = process-definition (declared) barf      (
+    barf = process-definition (declared) barf(
       )
       In definition "barf", we have: {
       }

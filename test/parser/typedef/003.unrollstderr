@@ -1,0 +1,38 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	40
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  4 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  1 typedefs
+  Typedefs:
+    int32 = datatype-definition-alias: int32
+      = int<32>
+  Instances:
+    fe = int<32>^0 fe (instantiated) = ::fe
+    fi = int<32>^0 fi (instantiated) = ::fi
+    fo = int<32>^0 fo (instantiated) = ::fo
+    fum = int<32>^0 fum (instantiated) = ::fum
+}
+

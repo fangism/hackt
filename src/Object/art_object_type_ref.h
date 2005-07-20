@@ -1,14 +1,16 @@
 /**
 	\file "Object/art_object_type_ref.h"
 	Type-reference classes of the ART language.  
- 	$Id: art_object_type_ref.h,v 1.27 2005/06/23 03:00:30 fang Exp $
+	TODO: must pool-allocate these, they're created frequently!
+ 	$Id: art_object_type_ref.h,v 1.28 2005/07/20 21:00:36 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_H__
 #define	__OBJECT_ART_OBJECT_TYPE_REF_H__
 
+#include <vector>
 #include "Object/art_object_type_ref_base.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 
 namespace ART {
 namespace parser {
@@ -23,6 +25,7 @@ class channel_definition_base;
 class process_definition_base;
 class built_in_param_def;
 USING_LIST
+using std::vector;
 using std::ostream;
 using parser::token_identifier;
 
@@ -34,6 +37,7 @@ using parser::token_identifier;
 /**
 	Reference to a data-type definition.  
 	Includes optional template parameters.  
+	TODO: consider sub-typing, and also keeping a generic type like this.
  */
 class data_type_reference : public fundamental_type_reference {
 private:
@@ -43,17 +47,12 @@ private:
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
 	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
-//	excl_ptr<const param_expr_list>	template_params;	// inherited
 	/**
 		Reference to data type definition, which may be a 
 		built-in type, enumeration, struct, or another typedef.  
 	 */
 	definition_ptr_type				base_type_def;
 
-	// NEW: resolved type
-	// resolve const_param_expr_list...
-	// but needs to be able to take arrays of constants.  
-	
 private:
 	data_type_reference();
 public:
@@ -61,8 +60,7 @@ public:
 	data_type_reference(const definition_ptr_type td);
 
 	data_type_reference(const definition_ptr_type td, 
-		template_args_ptr_type& pl);
-		// not gcc-2.95.3 friendly default argument = NULL
+		const template_actuals&);
 
 	// virtualize if something derives from this
 	~data_type_reference();
@@ -76,24 +74,38 @@ public:
 	never_ptr<const datatype_definition_base>
 	get_base_datatype_def(void) const;
 
+	good_bool
+	must_be_valid(void) const;
+
+	bool
+	is_canonical(void) const;
+
 	/// unroll-time type-resolution... arguments? return? context?
 	// need to be able to lookup parameters... update later...
 	count_ptr<const this_type>
-	unroll_resolve(unroll_context&) const;
+	unroll_resolve(const unroll_context&) const;
 
 	static
 	data_type_reference*
 	make_quick_int_type_ref(const pint_value_type);
 
+	// sub-typed helper
+	count_ptr<const this_type>
+	make_canonical_data_type_reference(void) const;
+
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+	MERGE_RELAXED_ACTUALS_PROTO;
+
+	UNROLL_PORT_INSTANCES_PROTO;
+
+	unroll_context
+	make_unroll_context(void) const;
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -104,6 +116,7 @@ public:
 	Abstract parent class for all channel types.  
  */
 class channel_type_reference_base : public fundamental_type_reference {
+	typedef	channel_type_reference_base		this_type;
 protected:
 	typedef	fundamental_type_reference		parent_type;
 public:
@@ -124,7 +137,7 @@ protected:
 	channel_type_reference_base() : parent_type(), direction('\0') { }
 
 	explicit
-	channel_type_reference_base(template_args_ptr_type&);
+	channel_type_reference_base(const template_actuals&);
 
 public:
 virtual	~channel_type_reference_base() { }
@@ -141,9 +154,16 @@ virtual	ostream&
 	ostream&
 	dump_direction(ostream&) const;
 
+virtual	count_ptr<const this_type>
+	unroll_resolve(const unroll_context&) const = 0;
+
+virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
+
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
 
+virtual	unroll_context
+	make_unroll_context(void) const = 0;
 protected:
 	using parent_type::collect_transient_info_base;
 
@@ -186,6 +206,9 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	bool
+	is_canonical(void) const;
+
 	void
 	reserve_datatypes(const size_t);
 
@@ -202,18 +225,40 @@ public:
 	datatype_ptr_type
 	index_datatype(const size_t) const;
 
+	bool
+	may_be_collectibly_channel_type_equivalent(const this_type&) const;
+
+	bool
+	must_be_collectibly_channel_type_equivalent(const this_type&) const;
+
+	bool
+	may_be_connectibly_channel_type_equivalent(const this_type&) const;
+
+	bool
+	must_be_connectibly_channel_type_equivalent(const this_type&) const;
+
+private:
+	// consider using member function template...
+	struct datatype_resolver;
+	struct datatype_canonicalizer;
+
+public:
+	count_ptr<const channel_type_reference_base>
+	unroll_resolve(const unroll_context&) const;
+
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
+	UNROLL_PORT_INSTANCES_PROTO;
+
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+	unroll_context
+	make_unroll_context(void) const;
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
@@ -230,7 +275,6 @@ private:
 	typedef	channel_type_reference_base		parent_type;
 protected:
 	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
-//	excl_ptr<const param_expr_list>	template_params;	// inherited
 	never_ptr<const channel_definition_base>	base_chan_def;
 private:
 	channel_type_reference();
@@ -241,7 +285,7 @@ public:
 
 	channel_type_reference(
 		const never_ptr<const channel_definition_base> td, 
-		template_args_ptr_type& pl);
+		const template_actuals& pl);
 
 	~channel_type_reference();
 
@@ -255,18 +299,33 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	never_ptr<const channel_definition_base>
+	get_base_chan_def(void) const { return base_chan_def; }
+
+	bool
+	is_canonical(void) const;
+
+	good_bool
+	must_be_valid(void) const;
+
+	count_ptr<const channel_type_reference_base>
+	unroll_resolve(const unroll_context&) const;
+
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
+	MERGE_RELAXED_ACTUALS_PROTO;
+
+	UNROLL_PORT_INSTANCES_PROTO;
+
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+	unroll_context
+	make_unroll_context(void) const;
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS
@@ -285,9 +344,9 @@ private:
 	typedef	process_definition_base			definition_type;
 	typedef	never_ptr<const definition_type>	definition_ptr_type;
 protected:
-	typedef	parent_type::template_args_ptr_type		template_args_ptr_type;
-//	excl_ptr<const param_expr_list>	template_params;	// inherited
+	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
 // should be const?  reference to base definition shouldn't change...
+	typedef	never_ptr<const definition_type>	base_definition_ptr_type;
 	never_ptr<const process_definition_base>	base_proc_def;
 private:
 	process_type_reference();
@@ -298,8 +357,7 @@ public:
 
 	process_type_reference(
 		const never_ptr<const process_definition_base> td, 
-		template_args_ptr_type& pl);
-		// not gcc-2.95.3 friendly default argument = NULL
+		const template_actuals&);
 
 	~process_type_reference();
 
@@ -309,18 +367,33 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
-	count_ptr<const this_type>
-	unroll_resolve(unroll_context& ) const;
+	never_ptr<const process_definition_base>
+	get_base_proc_def(void) const { return base_proc_def; }
 
+	bool
+	is_canonical(void) const;
+
+	// just resolves template actuals to constants
+	count_ptr<const this_type>
+	unroll_resolve(const unroll_context&) const;
+
+	good_bool
+	unroll_register_complete_type(void) const;
+
+	good_bool
+	must_be_valid(void) const;
+
+	MERGE_RELAXED_ACTUALS_PROTO;
+	UNROLL_PORT_INSTANCES_PROTO;
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+	unroll_context
+	make_unroll_context(void) const;
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s, 
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -341,7 +414,9 @@ private:
 	typedef	param_type_reference		this_type;
 	typedef	fundamental_type_reference	parent_type;	// not used
 protected:
-//	excl_ptr<const param_expr_list>	template_params;	// inherited, unused
+	/**
+		TODO: If this is never used, then phase it out.
+	 */
 	never_ptr<const built_in_param_def>	base_param_def;
 public:
 	explicit
@@ -356,15 +431,19 @@ public:
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
+	bool
+	is_canonical(void) const;
+
+	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+
+	unroll_context
+	make_unroll_context(void) const;
 private:
-	excl_ptr<instantiation_statement_base>
-	make_instantiation_statement_private(
-		const count_ptr<const fundamental_type_reference>& t, 
-		const index_collection_item_ptr_type& d) const;
+	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
-	excl_ptr<instance_collection_base>
-	make_instance_collection(const never_ptr<const scopespace> s,
-		const token_identifier& id, const size_t d) const;
+	MAKE_INSTANCE_COLLECTION_PROTO;
+
+	UNROLL_PORT_INSTANCES_PROTO;
 
 private:
 	// dummy implementation, never called

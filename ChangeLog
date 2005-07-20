@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-07-20	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-merged-connect-01-42:
+	  Merge -connect-01 branch entirely to trunk.  
+
+
+2005-07-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-22:
+	  Added distcheck.log target to Makefile.am.  Nice!
+
+
 2005-06-21	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-45-merged-anal-04:

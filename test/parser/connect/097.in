@@ -1,0 +1,12 @@
+// "097.in" should fail connection
+// copy-modified from "096.in"
+
+template <pint A><pint B>
+defproc foo();
+
+foo<1> bar<1>, ick, poo<2>;
+
+bar = ick;	// relaxed
+ick = poo;	// relaxed
+// but bar should not be connectible to poo!
+

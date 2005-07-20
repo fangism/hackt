@@ -1,0 +1,2 @@
+ERROR: range at position 1 depends on a formal parameter (forbidden).
+ERROR in instance-array declaration at [6:13]: array sizes are not allowed to depend on relaxed formal parameters.

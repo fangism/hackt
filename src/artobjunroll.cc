@@ -2,7 +2,7 @@
 	\file "artobjunroll.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: artobjunroll.cc,v 1.14 2005/05/24 02:38:09 fang Exp $
+	$Id: artobjunroll.cc,v 1.15 2005/07/20 20:59:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -48,11 +48,8 @@ main(int argc, char* argv[]) {
 	if (the_module->is_unrolled()) {
 		cerr << "Module is already unrolled, skipping..." << endl;
 	} else {
-		try {
-			STACKTRACE("main: try unrolling.");
-			the_module->unroll_module();
-		}
-		catch (...) {
+		STACKTRACE("main: try unrolling.");
+		if (!the_module->unroll_module().good) {
 			cerr << "ERROR in unrolling.  Aborting." << endl;
 			// although an empty unroll file was already created
 			return 1;

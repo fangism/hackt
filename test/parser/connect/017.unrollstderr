@@ -1,31 +1,31 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4303020	module__	0	0	45
-	2	 0x4300144	namespc_	0	45	77
-	3	 0x4303044	proccoll	1	77	190
-	4	 0x4303090	procinst	0	190	210
-	5	 0x43030b0	proctprf	0	210	226
-	6	 0x43030c0	procdefn	0	226	275
-	7	 0x4303150	crnglst_	0	275	295
-	8	 0x4303160	proctprf	0	295	311
-	9	 0x4303174	proccoll	0	311	359
-	10	 0x43031d0	procinst	0	359	379
-	11	 0x43031f0	proctprf	0	379	395
-	12	 0x4303200	proctprf	0	395	411
-	13	 0x4303210	prcalias	0	411	431
-	14	 0x4303220	sprcmref	0	431	451
-	15	 0x4303250	sprcmref	0	451	471
-	16	 0x4303280	cindlst_	0	471	487
-	17	 0x374a028	cnstpi__	0	487	499
-	18	 0x4303290	prcalias	0	499	519
-	19	 0x43032a0	sprcmref	0	519	539
-	20	 0x43032d0	cindlst_	0	539	555
-	21	 0x374a038	cnstpi__	0	555	567
-	22	 0x43032e0	sprcmref	0	567	587
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	153
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	49
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
-In module created from: ./017.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections
@@ -33,7 +33,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    barf = process-definition (declared) barf      (
+    barf = process-definition (declared) barf(
       )
       In definition "barf", we have: {
       }

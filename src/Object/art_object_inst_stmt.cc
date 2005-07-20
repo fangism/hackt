@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.21 2005/05/22 06:23:56 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.22 2005/07/20 21:00:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -27,11 +27,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_expr_base.h"
-#include "Object/art_built_ins.h"
+#include "Object/expr/param_expr_list.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_unroll_context.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_value_collection.h"
 
@@ -57,12 +58,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 #endif
 
 #include "Object/art_object_inst_stmt.tcc"
+#include "Object/art_object_inst_stmt_param.tcc"
 
 //=============================================================================
 // local specializations
 // Alternatively, explicit specialization here guarantees that the
 // static initialization occurs in the correct order in this module.  
 namespace util {
+using ART::entity::pbool_tag;
+using ART::entity::pint_tag;
+
 SPECIALIZE_UTIL_WHAT(ART::entity::data_instantiation_statement,
 	"data_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
@@ -106,10 +111,13 @@ REQUIRES_STACKTRACE_STATIC_INIT
 // class instantiation_statement_base method definitions
 
 #if 0
-/**	Private empty constructor. */
-instantiation_statement_base::instantiation_statement_base(void) :
-//		inst_base(NULL), type_base(NULL),
-		indices(NULL) {
+/**
+	Private empty constructor.
+	Consider a separate inline-header with definitions for these.  
+ */
+instantiation_statement_base::instantiation_statement_base() :
+		instance_management_base(), 
+		indices(NULL), relaxed_args(NULL) {
 }
 #endif
 
@@ -131,7 +139,13 @@ instantiation_statement_base::dump(ostream& o) const {
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
 	NEVER_NULL(type_base);
-	type_base->dump(o) << " ";
+	type_base->dump(o);
+	// is this ok: reference to automatic object?
+	const const_relaxed_args_type& ra(get_relaxed_actuals());
+	if (ra) {
+		ra->dump(o << '<') << '>';
+	}
+	o << " ";
 	never_ptr<const instance_collection_base>
 		inst_base(get_inst_base());
 	if(inst_base) {
@@ -182,7 +196,6 @@ if (indices) {
 			get_inst_base()->get_qualified_name() <<
 			" for instantiation: ";
 		indices->dump(cerr) << endl;
-		THROW_EXIT;	// temporary non-error-handling
 	}
 	return ret;
 } else {
@@ -203,10 +216,33 @@ instantiation_statement_base::dimensions(void) const {
 /**
 	Temporary, should be pure virtual in the end.
  */
-void
+good_bool
 instantiation_statement_base::unroll(unroll_context& c) const {
 	cerr << "instantiation_statement_base::unroll(): Fang, finish me!" << endl;
+	return good_bool(false);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Method for the instantiation pass of meta-unrolling.  
+	Default (un-implemented) is no-op.  
+ */
+good_bool
+instantiation_statement_base::unroll_meta_instantiate(unroll_context& c) const {
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Method for the connection pass of meta-unrolling.  
+	Default (un-implemented) is no-op.  
+ */
+good_bool
+instantiation_statement_base::unroll_meta_connect(unroll_context& c) const {
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -216,6 +252,10 @@ instantiation_statement_base::collect_transient_info_base(
 		"instantiation_statement_base::collect_transient_info_base()");
 	if (indices)
 		indices->collect_transient_info(m);
+#if 0
+	if (relaxed_args)
+		relaxed_args->collect_transient_info(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -223,6 +263,7 @@ void
 instantiation_statement_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, indices);
+//	m.write_pointer(o, relaxed_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -230,37 +271,43 @@ void
 instantiation_statement_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, indices);
+//	m.read_pointer(i, relaxed_args);
 }
 
 //=============================================================================
-// class param_instantiation_statement method definitions
+// class param_instantiation_statement_base method definitions
 
 #if 0
 /**
 	Private empty constructor.
  */
-param_instantiation_statement::param_instantiation_statement() :
+param_instantiation_statement_base::param_instantiation_statement_base() :
 		parent_type() {
 }
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-param_instantiation_statement::param_instantiation_statement(
+param_instantiation_statement_base::param_instantiation_statement_base(
 		const index_collection_item_ptr_type& i) :
 		parent_type(i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
-param_instantiation_statement::~param_instantiation_statement() {
+param_instantiation_statement_base::~param_instantiation_statement_base() {
 }
 #endif
 
 //=============================================================================
 // explicit template class instantiations
 
+#if 0
 template class instantiation_statement<pbool_tag>;
 template class instantiation_statement<pint_tag>;
+#else
+template class param_instantiation_statement<pbool_tag>;
+template class param_instantiation_statement<pint_tag>;
+#endif
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;

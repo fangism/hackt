@@ -1,0 +1,9 @@
+// "061.in" should pass, will recursively instantiate ports
+// copy-modified from "059.in" and "060.in"
+// slightly crazy...
+
+template <pint M, N>
+defproc bar(int<M> x[N]) { }
+
+bar<3,2> poo;
+

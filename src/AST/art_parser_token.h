@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.h"
 	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.16 2005/06/21 21:26:34 fang Exp $
+	$Id: art_parser_token.h,v 1.17 2005/07/20 20:59:52 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TOKEN_H__
@@ -165,7 +165,7 @@ public:
 	Abstract base class for keywords that correspond to built-in types, 
 	sub-classed into data-types and parameter types).  
  */
-class token_type : public token_keyword, public type_base {
+class token_type : public token_keyword {
 public:
 	explicit
 	token_type(const char* tf);
@@ -182,14 +182,13 @@ virtual	ostream&
 	line_position
 	rightmost(void) const;
 
-virtual	TYPE_BASE_CHECK_PROTO = 0;
 };	// end class token_type
 
 //-----------------------------------------------------------------------------
 /**
 	Class for built-in "int" and "bool" data types.
  */
-class token_datatype : public token_type {
+class token_datatype : public token_type, public type_base {
 public:
 	explicit
 	token_datatype(const char* dt);
@@ -198,6 +197,12 @@ virtual	~token_datatype();
 
 	ostream&
 	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const { return token_type::leftmost(); }
+
+	line_position
+	rightmost(void) const { return token_type::rightmost(); }
 
 virtual	TYPE_BASE_CHECK_PROTO = 0;
 };	// end class token_datatype
@@ -240,7 +245,7 @@ public:
 /**
 	Class for built-in "pint" and "pbool" parameter types.
  */
-class token_paramtype : public token_type {
+class token_paramtype : public token_type, public concrete_type_ref {
 public:
 	explicit
 	token_paramtype(const char* dt);
@@ -250,7 +255,15 @@ virtual	~token_paramtype();
 	ostream&
 	what(ostream& o) const;
 
+	line_position
+	leftmost(void) const { return token_type::leftmost(); }
+
+	line_position
+	rightmost(void) const { return token_type::rightmost(); }
+
+#if 0
 virtual	TYPE_BASE_CHECK_PROTO = 0;
+#endif
 };	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
@@ -265,7 +278,12 @@ public:
 
 	~token_pbool_type();
 
+#if 0
 	TYPE_BASE_CHECK_PROTO;
+#else
+	return_type
+	check_type(context&) const;
+#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pbool_type
@@ -282,7 +300,12 @@ public:
 
 	~token_pint_type();
 
+#if 0
 	TYPE_BASE_CHECK_PROTO;
+#else
+	return_type
+	check_type(context&) const;
+#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pint_type

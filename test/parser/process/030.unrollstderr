@@ -1,18 +1,18 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4301d50	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4301d70	procdefn	0	53	137
-	4	 0x4301e04	pintcoll	0	137	177
-	5	 0x4301e50	pintinst	0	177	193
-	6	 0x4301e64	pintcoll	0	193	232
-	7	 0x4301eb0	pintinst	0	232	248
-	8	 0x4301ec4	pintcoll	0	248	288
-	9	 0x4301f10	pintinst	0	288	304
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	40
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	39
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	40
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 
-In module created from: ./030.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -24,8 +24,7 @@ In namespace "", we have: {
       pint<> bar
       pint<> none
       pint<> blah
-      >
-      (
+      >(
       )
       In definition "foo", we have: {
         blah = pint<> blah

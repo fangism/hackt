@@ -1,17 +1,18 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.3 2005/06/22 02:56:34 fang Exp $
+	$Id: art_object_CHP.cc,v 1.4 2005/07/20 20:59:54 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/bool_expr.h"
+#include "Object/expr/int_expr.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_inst_ref_subtypes.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_collection.h"
 #include "util/persistent_object_manager.tcc"

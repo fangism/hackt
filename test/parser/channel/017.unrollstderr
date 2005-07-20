@@ -1,49 +1,49 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4304aa0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4304ac0	chandefn	0	53	190
-	4	 0x4304b64	dboolcol	0	190	224
-	5	 0x4304bc0	datainst	0	224	244
-	6	 0x4304be0	datatprf	0	244	260
-	7	 0x4304bf0	datadefn	0	260	313
-	8	 0x4304c94	dboolcol	0	313	347
-	9	 0x4304cf0	datainst	0	347	367
-	10	 0x4304d14	dboolcol	0	367	401
-	11	 0x4304d70	datainst	0	401	421
-	12	 0x4304d90	bchntprf	0	421	442
-	13	 0x4304db0	datatprf	0	442	458
-	14	 0x4304dc0	CHPwait_	0	458	470
-	15	 0x4304dd0	sdbnref_	0	470	486
-	16	 0x4304df0	CHPassgn	0	486	502
-	17	 0x4304e10	sdbnref_	0	502	518
-	18	 0x4802004	cnstpb__	0	518	527
-	19	 0x4304e30	CHPwait_	0	527	539
-	20	 0x4304e40	nbnotex_	0	539	551
-	21	 0x4304e50	sdbnref_	0	551	567
-	22	 0x4304e70	CHPassgn	0	567	583
-	23	 0x4304e90	sdbnref_	0	583	599
-	24	 0x4802010	cnstpb__	0	599	608
-	25	 0x4304eb0	CHPwait_	0	608	620
-	26	 0x4304ec0	nlogicex	0	620	641
-	27	 0x4304ee0	sdbnref_	0	641	657
-	28	 0x4304f00	sdbnref_	0	657	673
-	29	 0x4304f20	CHPassgn	0	673	689
-	30	 0x4304f40	sdbnref_	0	689	705
-	31	 0x480201c	cnstpb__	0	705	714
-	32	 0x4304f60	CHPwait_	0	714	726
-	33	 0x4304f70	nlogicex	0	726	747
-	34	 0x4304f90	nbnotex_	0	747	759
-	35	 0x4304fa0	sdbnref_	0	759	775
-	36	 0x4304fc0	nbnotex_	0	775	787
-	37	 0x4304fd0	sdbnref_	0	787	803
-	38	 0x4304ff0	CHPassgn	0	803	819
-	39	 0x4305010	sdbnref_	0	819	835
-	40	 0x4802028	cnstpb__	0	835	844
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	chandefn	0	#HEAD#	#TAIL#	137
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	19	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	25	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	32	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 
-In module created from: ./017.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

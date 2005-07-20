@@ -3,15 +3,15 @@ parser stacks:
 state	value
 0	keyword: template [3:1..8]
 12	< [3:10]
-102	paramtype: pint [3:11..14]
-171	list<(template-formal-id)>: (template-formal-id): identifier: milk ... [3:16..19]
-246	, [3:20]
-282	identifier: tea [3:22..24]
-245	keyword: defproc [4:1..7]
-in state 245, possible rules are:
-	template_formal_id : ID . optional_dense_range_list  (43)
-	template_formal_id : ID . optional_dense_range_list '=' shift_expr  (44)
-	optional_dense_range_list : .  (282)
+104	paramtype: pint [3:11..14]
+175	list<(template-formal-id)>: (template-formal-id): identifier: milk ... [3:16..19]
+248	, [3:20]
+291	identifier: tea [3:22..24]
+247	keyword: defproc [4:1..7]
+in state 247, possible rules are:
+	template_formal_id_default : ID . optional_dense_range_list '=' shift_expr  (49)
+	template_formal_id_nodefault : ID . optional_dense_range_list  (50)
+	optional_dense_range_list : .  (337)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)

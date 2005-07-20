@@ -1,58 +1,58 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4305760	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4305780	procdefn	0	53	142
-	4	 0x4305704	chancoll	0	142	180
-	5	 0x4305810	chaninst	0	180	200
-	6	 0x4305830	bchntprf	0	200	221
-	7	 0x4305850	datatprf	0	221	237
-	8	 0x4305860	datadefn	0	237	290
-	9	 0x4305904	chancoll	0	290	328
-	10	 0x4305960	chaninst	0	328	348
-	11	 0x4305980	bchntprf	0	348	369
-	12	 0x43059a0	datatprf	0	369	385
-	13	 0x43059b4	dintcoll	0	385	423
-	14	 0x4305a10	datainst	0	423	443
-	15	 0x4305a30	datatprf	0	443	459
-	16	 0x4305a40	datadefn	0	459	511
-	17	 0x4305ae0	dprmlst_	0	511	527
-	18	 0x3716028	cnstpi__	0	527	539
-	19	 0x4305af0	CHPseqnc	0	539	575
-	20	 0x4305b00	CHPsend_	0	575	595
-	21	 0x4305b20	schnnref	0	595	611
-	22	 0x4305b30	nrelatex	0	611	633
-	23	 0x3716038	cnstpi__	0	633	645
-	24	 0x3716048	cnstpi__	0	645	657
-	25	 0x4305b50	CHPsend_	0	657	677
-	26	 0x4305b70	schnnref	0	677	693
-	27	 0x4305b80	nrelatex	0	693	715
-	28	 0x3716058	cnstpi__	0	715	727
-	29	 0x3716068	cnstpi__	0	727	739
-	30	 0x4305ba0	CHPsend_	0	739	759
-	31	 0x4305bc0	schnnref	0	759	775
-	32	 0x4305bd0	nrelatex	0	775	797
-	33	 0x3716078	cnstpi__	0	797	809
-	34	 0x3716088	cnstpi__	0	809	821
-	35	 0x4305bf0	CHPsend_	0	821	841
-	36	 0x4305c10	schnnref	0	841	857
-	37	 0x4305c20	nrelatex	0	857	879
-	38	 0x3716098	cnstpi__	0	879	891
-	39	 0x37160a8	cnstpi__	0	891	903
-	40	 0x4305c40	CHPsend_	0	903	923
-	41	 0x4305c60	schnnref	0	923	939
-	42	 0x4305c70	nrelatex	0	939	960
-	43	 0x37160b8	cnstpi__	0	960	972
-	44	 0x37160c8	cnstpi__	0	972	984
-	45	 0x4305c90	CHPsend_	0	984	1004
-	46	 0x4305cb0	schnnref	0	1004	1020
-	47	 0x4305cc0	nrelatex	0	1020	1041
-	48	 0x37160d8	cnstpi__	0	1041	1053
-	49	 0x37160e8	cnstpi__	0	1053	1065
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	89
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
+	20	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	22
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	nrelatex	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./020.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

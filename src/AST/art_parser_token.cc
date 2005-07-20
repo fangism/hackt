@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.32 2005/06/22 22:13:32 fang Exp $
+	$Id: art_parser_token.cc,v 1.33 2005/07/20 20:59:52 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -23,8 +23,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_expr_const.h"
-#include "Object/art_built_ins.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/art_object_type_ref.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/traits/pbool_traits.h"
+#include "Object/traits/int_traits.h"
+#include "Object/traits/bool_traits.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -71,23 +76,13 @@ using entity::pint_const;
 using entity::pbool_const;
 
 // these are built-in instance references, not types.  
-using entity::pbool_def;
-using entity::pint_def;
-using entity::bool_def;
-using entity::int_def;
+using entity::pbool_traits;
+using entity::pint_traits;
+using entity::bool_traits;
+using entity::int_traits;
 
 //=============================================================================
 // class terminal definitions
-
-#if 0
-CONSTRUCTOR_INLINE
-terminal::terminal() : node(), pos(current) {
-	// "current" is defined in "art_switches.h"
-}
-
-DESTRUCTOR_INLINE
-terminal::~terminal() { }
-#endif
 
 void
 terminal::bogus(void) const { }
@@ -135,15 +130,6 @@ inline
 token_char::token_char() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-CONSTRUCTOR_INLINE
-token_char::token_char(const int i) : terminal(), c(i) { }
-
-DESTRUCTOR_INLINE
-token_char::~token_char() { }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_char)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -165,14 +151,6 @@ token_char::what(ostream& o) const {
 
 //=============================================================================
 // class token_int method definitions
-
-#if 0
-CONSTRUCTOR_INLINE
-token_int::token_int(const long v) : terminal(), expr(), val(v) { }
-
-DESTRUCTOR_INLINE
-token_int::~token_int() { }
-#endif
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int)
 
@@ -215,14 +193,6 @@ token_int::check_meta_expr(context& c) const {
 
 //=============================================================================
 // class token_float method definitions
-
-#if 0
-CONSTRUCTOR_INLINE
-token_float::token_float(const double v) : terminal(), expr(), val(v) { }
-
-DESTRUCTOR_INLINE
-token_float::~token_float() { }
-#endif
 
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_float)
 
@@ -521,7 +491,7 @@ token_quoted_string::check_meta_expr(context& c) const {
 // class token_type method definitions
 
 CONSTRUCTOR_INLINE
-token_type::token_type(const char* tf) : token_keyword(tf), type_base() { }
+token_type::token_type(const char* tf) : token_keyword(tf) { }
 
 DESTRUCTOR_INLINE
 token_type::~token_type() { }
@@ -540,7 +510,8 @@ token_type::rightmost(void) const {
 // class token_datatype method definitions
 
 CONSTRUCTOR_INLINE
-token_datatype::token_datatype(const char* dt) : token_type(dt) { }
+token_datatype::token_datatype(const char* dt) :
+		token_type(dt), type_base() { }
 
 DESTRUCTOR_INLINE
 token_datatype::~token_datatype() { }
@@ -554,7 +525,8 @@ token_datatype::what(ostream& o) const {
 // class token_paramtype method definitions
 
 CONSTRUCTOR_INLINE
-token_paramtype::token_paramtype(const char* dt) : token_type(dt) { }
+token_paramtype::token_paramtype(const char* dt) :
+		token_type(dt), concrete_type_ref() { }
 
 DESTRUCTOR_INLINE
 token_paramtype::~token_paramtype() { }
@@ -579,9 +551,8 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 type_base::return_type
 token_bool_type::check_definition(context& c) const {
 	STACKTRACE("token_bool_type::check_build()");
-	// bool_def declared in "art_built_ins.h"
 	// safe to use never_ptr on address of statically allocated definition
-	return type_base::return_type(&bool_def);
+	return type_base::return_type(&bool_traits::built_in_definition);
 }
 
 //=============================================================================
@@ -599,9 +570,8 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 type_base::return_type
 token_int_type::check_definition(context& c) const {
 	STACKTRACE("token_int_type::check_build()");
-	// int_def declared in "art_built_ins.h"
 	// safe to use never_ptr on address of statically allocated definition
-	return type_base::return_type(&int_def);
+	return type_base::return_type(&int_traits::built_in_definition);
 }
 
 //=============================================================================
@@ -617,17 +587,11 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Return pointer to the definition, 
-	the caller (concrete_type_ref) should convert it to the appropriate
-	concrete type reference.  
-	"pbool" is always used as a type_reference, and never refers
-	to the definition.  
+	Returns built-in parameter boolean type reference.  
  */
-type_base::return_type
-token_pbool_type::check_definition(context& c) const {
-	STACKTRACE("token_pbool_type::check_build()");
-	// pbool_def declared in "art_built_ins.h"
-	return type_base::return_type(&pbool_def);
+concrete_type_ref::return_type
+token_pbool_type::check_type(context&) const {
+	return pbool_traits::built_in_type_ptr;
 }
 
 //=============================================================================
@@ -643,15 +607,11 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Let caller resolve to concrete type reference with the definition.  
-//	"pint" is always used as a type_reference, and never refers
-//	to the definition.  
+	Return built-in parameter integer type reference.
  */
-type_base::return_type
-token_pint_type::check_definition(context& c) const {
-	STACKTRACE("token_pint_type::check_build()");
-	// pint_def declared in "art_built_ins.h"
-	return type_base::return_type(&pint_def);
+concrete_type_ref::return_type
+token_pint_type::check_type(context&) const {
+	return pint_traits::built_in_type_ptr;
 }
 
 //=============================================================================

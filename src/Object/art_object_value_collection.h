@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.6 2005/06/19 01:58:49 fang Exp $
+	$Id: art_object_value_collection.h,v 1.7 2005/07/20 21:00:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
@@ -12,7 +12,7 @@
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_index.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 
 #include "util/persistent_fwd.h"
@@ -28,8 +28,11 @@ class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class param_expr;
+class const_param;
 class const_range_list;
 class const_index_list;
+class scopespace;
+class unroll_context;
 USING_LIST
 using std::istream;
 using std::ostream;
@@ -42,7 +45,6 @@ using util::good_bool;
 using util::persistent;
 using util::persistent_object_manager;
 
-class scopespace;
 
 //=============================================================================
 #define	VALUE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -57,7 +59,6 @@ value_collection<Tag>
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 class value_collection :
 	public class_traits<Tag>::value_collection_parent_type {
-// friend class pbool_instantiation_statement;
 friend class simple_meta_instance_reference<Tag>;
 private:
 	typedef	VALUE_COLLECTION_CLASS		this_type;
@@ -71,6 +72,10 @@ public:
 					simple_nonmeta_instance_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 						expr_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+						const_expr_type;
+	typedef	typename class_traits<Tag>::const_collection_type
+						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
 protected:
 	/**
@@ -131,21 +136,22 @@ virtual	ostream&
 	initial_value(void) const;
 
 	good_bool
-	type_check_actual_param_expr(const param_expr& pe) const;
+	may_type_check_actual_param_expr(const param_expr& pe) const;
 
-virtual	void
+	good_bool
+	must_type_check_actual_param_expr(const const_param& pe) const;
+
+virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
 
-// virtual	bool lookup_value(bool& v) const = 0;
+#define	LOOKUP_VALUE_INDEXED_PROTO					\
+	good_bool							\
+	lookup_value(value_type& v, const multikey_index_type& i, 	\
+		const unroll_context&) const
 
-virtual	good_bool
-	lookup_value(value_type& v,
-		const multikey_index_type& i) const = 0;
+virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-virtual	good_bool
-	lookup_value_collection(list<value_type>& l, 
-		const const_range_list& r) const = 0;
 
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
@@ -161,18 +167,11 @@ public:
 	this_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
 
-	// only intended for children class
-	// need not be virtual, no pointers in subclasses
-	// TODO: phase this out in favor of constructor...
-	static
-	persistent*
-	construct_empty(const int);
-
-protected:	// restore to protected after upgrading simple_param_meta_value_reference
-public:		// temporary
+public:
 	void
 	collect_transient_info(persistent_object_manager& m) const;
 
+protected:
 	void
 	write_object_base(const persistent_object_manager& m, ostream& o) const;
 
@@ -191,7 +190,7 @@ template <class Tag, size_t D>
 value_array<Tag,D>
 
 /**
-	Dimension-specific array of boolean parameters.
+	Dimension-specific array of parameters.
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 class value_array : public value_collection<Tag> {
@@ -209,9 +208,14 @@ public:
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
+	typedef	typename class_traits<Tag>::const_collection_type
+							const_collection_type;
 private:
 	/// the collection of boolean instances
 	collection_type					collection;
+	// value cache is not persistent
+	const_collection_type				cached_values;
+	// tracking validity and density of the value cache?
 
 	value_array();
 
@@ -229,19 +233,13 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	// update this to accept const_range_list instead
-	void
+	good_bool
 	instantiate_indices(const const_range_list&);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	good_bool
-	lookup_value(value_type& v,
-		const multikey_index_type& i) const;
-
-	good_bool
-	lookup_value_collection(list<value_type>& l,
-		const const_range_list& r) const;
+	LOOKUP_VALUE_INDEXED_PROTO;
 
 	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
@@ -269,7 +267,7 @@ template <class Tag>
 value_array<Tag,0>
 
 /**
-	Specialization of scalar boolean parameter.
+	Specialization of scalar parameter.
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 class VALUE_SCALAR_CLASS : public value_collection<Tag> {
@@ -281,8 +279,14 @@ public:
 							instance_type;
 	typedef	instance_type				element_type;
 	typedef	typename class_traits<Tag>::value_type	value_type;
-protected:
+	typedef	typename class_traits<Tag>::expr_base_type
+							expr_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+							const_expr_type;
+private:
 	instance_type					the_instance;
+	const_expr_type					cached_value;
+	bool						cache_validity;
 public:
 	value_array();
 
@@ -300,7 +304,7 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	good_bool
-	lookup_value(value_type& i) const;
+	lookup_value(value_type& i, const unroll_context&) const;
 
 	bad_bool
 	assign(const value_type i);
@@ -308,17 +312,12 @@ public:
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
 	// update this to accept a const_range_list
-	void
+	good_bool
 	instantiate_indices(const const_range_list&);
 
-	good_bool
-	lookup_value(value_type& v, const multikey_index_type& i) const;
-
+	LOOKUP_VALUE_INDEXED_PROTO;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
-	good_bool
-	lookup_value_collection(list<value_type>& l, 
-		const const_range_list& r) const;
 
 	bad_bool
 	assign(const multikey_index_type& k, const value_type i);
@@ -330,7 +329,7 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
 	// POOL?
 
-};	// end class pbool_array specialization
+};	// end class value_array specialization
 
 //=============================================================================
 }	// end namespace entity

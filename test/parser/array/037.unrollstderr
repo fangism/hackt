@@ -1,46 +1,46 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4304660	module__	0	0	49
-	2	 0x4300144	namespc_	0	49	81
-	3	 0x4304684	dintcoll	1	81	233
-	4	 0x43046d0	datainst	0	233	253
-	5	 0x43046f0	datatprf	0	253	269
-	6	 0x43045c0	datadefn	0	269	321
-	7	 0x4304700	dprmlst_	0	321	337
-	8	 0x3716028	cnstpi__	0	337	349
-	9	 0x4304710	crnglst_	0	349	369
-	10	 0x4304724	dintcoll	3	369	1984
-	11	 0x4304770	datainst	0	1984	2004
-	12	 0x4304790	datatprf	0	2004	2020
-	13	 0x43047a0	dprmlst_	0	2020	2036
-	14	 0x43047b0	crnglst_	0	2036	2072
-	15	 0x43047c4	dintcoll	3	2072	3235
-	16	 0x4304810	datainst	0	3235	3255
-	17	 0x4304830	datatprf	0	3255	3271
-	18	 0x4304840	dprmlst_	0	3271	3287
-	19	 0x4304850	crnglst_	0	3287	3323
-	20	 0x4304860	dialias_	0	3323	3343
-	21	 0x4304870	sdimref_	0	3343	3363
-	22	 0x43048a0	sdimref_	0	3363	3383
-	23	 0x43048d0	cindlst_	0	3383	3407
-	24	 0x3716038	cnstpi__	0	3407	3419
-	25	 0x3716048	cnstpi__	0	3419	3431
-	26	 0x4805804	cnstrng_	0	3431	3447
-	27	 0x43048e0	dialias_	0	3447	3467
-	28	 0x43048f0	sdimref_	0	3467	3487
-	29	 0x4304920	cindlst_	0	3487	3511
-	30	 0x3716058	cnstpi__	0	3511	3523
-	31	 0x4805814	cnstrng_	0	3523	3539
-	32	 0x4805824	cnstrng_	0	3539	3555
-	33	 0x4304930	sdimref_	0	3555	3575
-	34	 0x4304960	cindlst_	0	3575	3599
-	35	 0x4805834	cnstrng_	0	3599	3615
-	36	 0x4805844	cnstrng_	0	3615	3631
-	37	 0x3716068	cnstpi__	0	3631	3643
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	152
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1615
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	15	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1163
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	20	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./037.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   3 instantiation-collections

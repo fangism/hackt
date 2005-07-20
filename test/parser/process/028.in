@@ -1,4 +1,4 @@
-// should pass: redeclaration matches in template formals
+// "028.in" should pass: redeclaration matches in template formals
 // formal parameter name need match!
 // honestly, name should be optional unless latter parameter depends on it
 /**

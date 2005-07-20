@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.5 2005/06/19 01:58:41 fang Exp $
+ 	$Id: art_object_inst_stmt.tcc,v 1.6 2005/07/20 21:00:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
@@ -31,8 +31,10 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Object/art_object_type_ref.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/param_expr_list.h"
+#include "Object/expr/meta_range_list.h"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -60,6 +62,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
+class const_param_expr_list;
 USING_STACKTRACE
 #include "util/using_ostream.h"
 using util::persistent_traits;
@@ -101,8 +104,16 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-INSTANTIATION_STATEMENT_CLASS::~instantiation_statement() {
+INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
+		const type_ref_ptr_type& t, 
+		const index_collection_item_ptr_type& i, 
+		const const_relaxed_args_type& a) :
+		parent_type(i), type_ref_parent_type(t, a), inst_base(NULL) {
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+INSTANTIATION_STATEMENT_CLASS::~instantiation_statement() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
@@ -155,21 +166,72 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+instantiation_statement_base::const_relaxed_args_type
+INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
+	return type_ref_parent_type::get_relaxed_actuals();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	this will require some serious specialization
+	Interprets a physical instantiation statement and instantiates
+	the members of the collection specified.  
+	(this will require some serious specialization)
+	\param c the unroll context.  
+	\return good if successful, else false.
+	TODO: clean-up the hack in here
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	NEVER_NULL(this->inst_base);
+	// 2005-07-07:
+	// HACK: detect that this is the first type commit to the 
+	// collection, because unroll_type_reference combines the
+	// strict and relaxed actuals of the instantiation_statement, 
+	// we can't tell from the unrolled type whether or not the 
+	// relaxed parameters were intended for the whole collection
+	// or just the specified indices.  
+	// Resolution: detect the first time, and do a first-time
+	// commit using the type_ref_parent_type's original type, 
+	// which will be distinguishably strict or relaxed.  
+	const bool first_time = !this->inst_base->is_partially_unrolled();
+	if (first_time) {
+		const type_ref_ptr_type
+			ft(type_ref_parent_type::get_resolved_type(c));
+		if (!ft) {
+			// already have error message
+			return good_bool(false);
+		}
+		// ft will either be strict or relaxed.  
+		const type_ref_ptr_type
+			cft(ft->make_canonical_type_reference()
+				.template is_a<const typename type_ref_ptr_type::element_type>());
+		type_ref_parent_type::commit_type_first_time(
+			*this->inst_base, cft);
+		// this->inst_base->establish_collection_type(ft);
+	}
 	// unroll_type_check is specialized for each tag type.  
+	// NOTE: this results in a "fused" type that combines
+	// the relaxed template actuals.  
+	// we forgot to canonicalize?
 	const type_ref_ptr_type
-		final_type_ref(type_ref_parent_type::unroll_type_reference(c));
+		temp_type_ref(type_ref_parent_type::unroll_type_reference(c));
+	if (!temp_type_ref) {
+		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
+			" during unroll." << endl;
+		return good_bool(false);
+	}
+	const type_ref_ptr_type
+		final_type_ref(temp_type_ref->make_canonical_type_reference()
+			.template is_a<const typename type_ref_ptr_type::element_type>());
 	if (!final_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
-		THROW_EXIT;
+		return good_bool(false);
 	}
+	// TODO: decide what do to about relaxed type parameters
+	// 2005-07-07: answer is above under "HACK"
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
 			*this->inst_base, final_type_ref));
@@ -178,18 +240,135 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		cerr << "ERROR: type-mismatch during " <<
 			util::what<this_type>::name() <<
 			"::unroll." << endl;
-		THROW_EXIT;
+		return good_bool(false);
 	}
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
-		this->inst_base->instantiate_indices(crl);
+		// passing in relaxed arguments from final_type_ref!
+		const count_ptr<const param_expr_list>
+			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
+		count_ptr<const const_param_expr_list>
+			relaxed_const_actuals;
+		if (relaxed_actuals) {
+			relaxed_const_actuals =
+				relaxed_actuals->unroll_resolve(c);
+			if (!relaxed_const_actuals) {
+				cerr << "ERROR: unable to resolve relaxed "
+					"actual parameters in " <<
+					util::what<this_type>::name() <<
+					"::unroll()." << endl;
+				return good_bool(false);
+			}
+		}
+		// actuals are allowed to be NULL, and in some cases,
+		// will be required to be NULL, e.g. for types that never
+		// have relaxed actuals.  
+		return type_ref_parent_type::instantiate_indices_with_actuals(
+				*this->inst_base, crl, 
+				final_type_ref->make_unroll_context(), 
+				relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
+		return good_bool(false);
 	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this does NOT touch the referenced instance_collection, 
+		since that refers to a port-formal.  
+	TODO: instate a check to make sure that only top-level
+		instances are unrolled, and only port-formals call this.  
+	\pre once and only instantiation for the port collection.  
+	TODO: 2005-07-18 problem: the type-reference may depend on
+		parameters passed into through the context, and
+		self-dependent (dependent on own parameters, such as defaults)
+		parameters in the same actuals list, however, unroll_context 
+		currently only supports one level context.  
+		Thus, we need to partially resolve SOME of the 
+		parameters first.  
+ */
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+good_bool
+INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
+		physical_instance_collection& p) const {
+	STACKTRACE_VERBOSE;
+	// dynamic cast assertion, until we fix class hierarchy
+	collection_type& coll(IS_A(collection_type&, p));
+	INVARIANT(!coll.is_partially_unrolled());
+	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
+	if (!ft) {
+		// already have error message
+		return good_bool(false);
+	}
+	INVARIANT(ft->is_resolved());
+	INVARIANT(ft->is_canonical());
+	// ft will either be strict or relaxed.  
+	type_ref_parent_type::commit_type_first_time(coll, ft);
+	// no need to re-evaluate type, since get_resolved_type is
+	// (for now) the same as unroll_type_reference.
+	const bool good(type_ref_parent_type::commit_type_check(coll, ft).good);
+	INVARIANT(good);
+	// everything below is copied from unroll(), above
+	// TODO: factor out common code.  
+	const_range_list crl;
+	const good_bool rr(this->resolve_instantiation_range(crl, c));
+	if (rr.good) {
+		// passing in relaxed arguments from final_type_ref!
+		const count_ptr<const param_expr_list>
+			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
+		count_ptr<const const_param_expr_list>
+			relaxed_const_actuals;
+		if (relaxed_actuals) {
+			relaxed_const_actuals =
+				relaxed_actuals->unroll_resolve(c);
+			if (!relaxed_const_actuals) {
+				cerr << "ERROR: unable to resolve relaxed "
+					"actual parameters in " <<
+					util::what<this_type>::name() <<
+					"::unroll()." << endl;
+				return good_bool(false);
+			}
+		}
+		// actuals are allowed to be NULL, and in some cases,
+		// will be required to be NULL, e.g. for types that never
+		// have relaxed actuals.  
+		return type_ref_parent_type::instantiate_indices_with_actuals(
+				coll, crl, ft->make_unroll_context(), 
+				relaxed_const_actuals);
+	} else {
+		// consider different message
+		cerr << "ERROR: resolving index range of instantiation!"
+			<< endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+good_bool
+INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
+		unroll_context& c) const {
+	// would've exited already
+	return this->unroll(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+void
+INSTANTIATION_STATEMENT_CLASS::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	NEVER_NULL(this->inst_base);
+	// let the scopespace take care of it
+	inst_base->collect_transient_info(m);
+	type_ref_parent_type::collect_transient_info_base(m);
+	parent_type::collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -199,11 +378,7 @@ INSTANTIATION_STATEMENT_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	NEVER_NULL(this->inst_base);
-	// let the scopespace take care of it
-	inst_base->collect_transient_info(m);
-	type_ref_parent_type::collect_transient_info_base(m);
-	parent_type::collect_transient_info_base(m);
+	collect_transient_info_base(m);
 }	// else already visited
 }
 

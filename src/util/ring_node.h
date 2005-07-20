@@ -1,7 +1,7 @@
 /**
 	\file "util/ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.3 2005/05/10 04:51:30 fang Exp $
+	$Id: ring_node.h,v 1.4 2005/07/20 21:01:02 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -12,7 +12,6 @@
 #define	FORCE_INLINE_RING_NODE		0
 #endif
 
-// #include <iostream>
 #include <iterator>
 #include "util/macros.h"
 #include "util/ring_node_fwd.h"
@@ -20,6 +19,7 @@
 namespace util {
 //=============================================================================
 // forward declarations
+// and summary of type defined here
 
 class ring_node_base;
 
@@ -30,7 +30,16 @@ template <class, class, class>
 class ring_node_iterator;
 
 template <class>
+class ring_node_iterator_default;
+
+template <class>
 class ring_node_derived;
+
+template <class, class, class>
+class ring_node_derived_iterator;
+
+template <class>
+class ring_node_derived_iterator_default;
 
 #define	RING_NODE_DERIVED_TEMPLATE_SIGNATURE				\
 template <class T>
@@ -262,6 +271,16 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
+	Handy way of declaring standard iterator types for ring nodes.  
+ */
+template <class T>
+struct ring_node_iterator_default {
+	typedef	ring_node_iterator<T, T&, T*>			type;
+	typedef	ring_node_iterator<T, const T&, const T*>	const_type;
+};	// end struct ring_node_iterator_default
+
+//-----------------------------------------------------------------------------
+/**
 	A ring_node::iterator.
  */
 template <class T, class R, class P>
@@ -274,9 +293,16 @@ public:
 	typedef	P				pointer;
 
 	typedef	ring_node_iterator<T, R, P>	this_type;
+#if 0
 	typedef	ring_node_iterator<T, T&, T*>	iterator;
 	typedef	ring_node_iterator<T, const T&, const T*>
 						const_iterator;
+#else
+	typedef	typename ring_node_iterator_default<T>::type
+						iterator;
+	typedef	typename ring_node_iterator_default<T>::const_type
+						const_iterator;
+#endif
 	typedef	ring_node<T>			node_type;
 	typedef	ring_node_base			node_base_type;
 
@@ -359,9 +385,16 @@ public:
 	typedef	const T&			const_reference;
 	typedef	T*				pointer;
 	typedef	const T*			const_pointer;
+#if 0
 	typedef	ring_node_iterator<T, T&, T*>	iterator;
 	typedef	ring_node_iterator<T, const T&, const T*>
 						const_iterator;
+#else
+	typedef	typename ring_node_iterator_default<T>::type
+						iterator;
+	typedef	typename ring_node_iterator_default<T>::const_type
+						const_iterator;
+#endif
 	// no reverse iterators, forward only
 	typedef	size_t				size_type;
 	typedef	ptrdiff_t			difference_type;
@@ -476,6 +509,11 @@ public:
 		base_type::safe_merge(n);
 	}
 
+	void
+	unsafe_merge(this_type& n) {
+		base_type::unsafe_merge(n);
+	}
+
 #if 0
 	iterator
 	erase(iterator pos);
@@ -519,7 +557,17 @@ struct ring_node_traits {
 //=============================================================================
 // classes below are implementations of ring_nodes *derived* from the base type
 //=============================================================================
+/**
+	Handy shortcut for making standard ring_node_derived_iterator types.  
+ */
+template <class T>
+struct ring_node_derived_iterator_default {
+	typedef	ring_node_derived_iterator<T, T&, T*>	type;
+	typedef	ring_node_derived_iterator<T, const T&, const T*>
+							const_type;
+};	// end class ring_node_derived_iterator_default
 
+//-----------------------------------------------------------------------------
 /**
 	Iterator for use with ring_node_derived.  
  */
@@ -532,9 +580,16 @@ public:
 	typedef	P					pointer;
 
 	typedef	ring_node_derived_iterator<T, R, P>	this_type;
+#if 0
 	typedef	ring_node_derived_iterator<T, T&, T*>	iterator;
 	typedef	ring_node_derived_iterator<T, const T&, const T*>
 							const_iterator;
+#else
+	typedef	typename ring_node_derived_iterator_default<T>::type
+							iterator;
+	typedef	typename ring_node_derived_iterator_default<T>::const_type
+							const_iterator;
+#endif
 	typedef	ring_node_derived<T>			node_type;
 protected:
 	typedef	ring_node_iterator_base<node_type>	parent_type;
@@ -627,9 +682,16 @@ public:
 	typedef	const T&				const_reference;
 	typedef	T*					pointer;
 	typedef	const T*				const_pointer;
+#if 0
 	typedef	ring_node_derived_iterator<T, T&, T*>	iterator;
 	typedef	ring_node_derived_iterator<T, const T&, const T*>
 							const_iterator;
+#else
+	typedef typename ring_node_derived_iterator_default<T>::type
+							iterator;
+	typedef typename ring_node_derived_iterator_default<T>::const_type
+							const_iterator;
+#endif
 	// no reverse iterators, forward only
 	typedef	size_t					size_type;
 	typedef	ptrdiff_t				difference_type;

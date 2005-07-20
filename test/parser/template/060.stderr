@@ -1,0 +1,1 @@
+ERROR: current type foo<5><3> is already strict and hence, does not require relaxed template actuals [7:14..16] in this instance declaration.  

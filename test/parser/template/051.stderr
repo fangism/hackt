@@ -1,0 +1,2 @@
+ERROR: range at position 1 depends on a formal parameter (forbidden).
+ERROR in port-formal-id at [5:24]: array sizes are not allowed to depend on relaxed formal parameters.

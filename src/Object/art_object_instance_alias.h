@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_alias.h"
 	Class declarations for aliases.
 	Definition of implementation is in "art_object_instance_collection.tcc"
-	$Id: art_object_instance_alias.h,v 1.5 2005/05/22 06:24:17 fang Exp $
+	$Id: art_object_instance_alias.h,v 1.6 2005/07/20 21:00:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_H__
@@ -14,28 +14,23 @@
 #include "util/multikey_set.h"
 #include "util/ring_node.h"
 #include "util/persistent.h"
-#include "Object/art_object_expr_types.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/expr/types.h"
+#include "Object/inst/substructure_alias_base.h"
+#include "Object/traits/class_traits_fwd.h"
 
 namespace ART {
 namespace entity {
+class const_param_expr_list;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
 using std::string;
 using util::ring_node_derived;
+using util::ring_node_derived_iterator_default;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::multikey_set_element_derived;
 using util::persistent_object_manager;
-
-//=============================================================================
-// class datatype_instance_collection declared in "art_object_instance.h"
-
-// class instance;
-
-template <class, size_t>
-class instance_array;
 
 //=============================================================================
 #define	INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE				\
@@ -48,11 +43,20 @@ instance_alias_info<Tag>
 	Information structure for a heirarchical name for a bool.  
 	This may be extended arbitrarily to contain attributes.  
 	Each object of this type represents a unique qualified name.  
+	TODO: parent type that determines whether or not
+	this contains relaxed actual parameters, and how they are stored.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-class instance_alias_info {
+class instance_alias_info :
+		public substructure_alias_base<
+			class_traits<Tag>::has_substructure>, 
+		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 public:
+	typedef	typename class_traits<Tag>::instance_alias_relaxed_actuals_type
+						actuals_parent_type;
+	typedef	substructure_alias_base<class_traits<Tag>::has_substructure>
+						substructure_parent_type;
 	typedef	typename class_traits<Tag>::instance_type
 						instance_type;
 	/**
@@ -68,6 +72,27 @@ public:
 						container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
+
+#if 1
+	// workaround for shortcoming of gcc: direct reference to
+	// the resolved type.  
+	// since ring_node_derived derives from the parameter type, 
+	// it is considered an incomplete type, and hence unusable.  
+	typedef	typename ring_node_derived_iterator_default<this_type>::type
+						iterator;
+	typedef	typename ring_node_derived_iterator_default<this_type>::const_type
+						const_iterator;
+#else
+	// this is what we really mean
+	// doesn't like this: thinks ring_node_derived<...> is incomplete.
+	// because this_type is still incomplete, BAH!
+	typedef	typename instance_alias_base_type::const_iterator
+						const_iterator;
+	typedef	typename instance_alias_base_type::iterator
+						iterator;
+#endif
+	typedef	typename actuals_parent_type::alias_actuals_type
+						relaxed_actuals_type;
 public:
 	/**
 		During finalization phase, this will be constructed, 
@@ -86,9 +111,23 @@ protected:
 		instance(NULL), container(NULL) { }
 
 public:
-	// constructors only intended for children classes
+	/**
+		TODO: the following comment is not true.
+		This constructor initializes the mother container pointer
+		AND (implicitly) recursively instantiates public ports.  
+		TODO: does recursive instantiation require actuals?
+		Called from instance_array<>::instantiate_indices.
+		Perhaps introduce constructor with actuals argument?
+	 */
 	instance_alias_info(const container_ptr_type m) :
-		instance(NULL), container(m) { }
+		instance(NULL), container(m) {
+#if 0
+		// cancel this idea:
+		NEVER_NULL(container);
+		substructure_parent_type::unroll_port_instances(
+			*this->container);
+#endif
+	}
 
 public:
 
@@ -108,15 +147,41 @@ virtual	~instance_alias_info();
 	void
 	check(const container_type* p) const;
 
+// should be pure virtual (but can't)
+virtual	const_iterator
+	begin(void) const;
+
+// should be pure virtual (but can't)
+virtual	const_iterator
+	end(void) const;
+
 	/**
 		Instantiates officially by linking to parent collection.  
+		FYI: This is only called by instance_array<0> (scalar)
+			in instantiate_indices().
+		TODO (2005-07-12): 
+			recursively unroll public ports, using 
+			subinstance_manager
 	 */
 	void
-	instantiate(const container_ptr_type p) {
-		NEVER_NULL(p);
-		INVARIANT(!this->container);
-		this->container = p;
-	}
+	instantiate(const container_ptr_type p, const unroll_context&);
+
+	/**
+		Attaches actual parameters to this alias.  
+		TODO: make this policy-specific, of course.  
+		NOTE: constness is merely for convenience, promising not
+			to modify the key.  
+		\return true if successful, didn't collide.
+	 */
+	using actuals_parent_type::attach_actuals;
+	using actuals_parent_type::compare_and_update_actuals;
+	using actuals_parent_type::compare_actuals;
+
+	const relaxed_actuals_type&
+	find_relaxed_actuals(void) const;
+
+	bool
+	must_match_type(const this_type&) const;
 
 	// consider: pure virtual multikey_generic<K>
 
@@ -133,6 +198,10 @@ virtual	~instance_alias_info();
 
 virtual	void
 	dump_alias(ostream& o) const;
+
+	ostream&
+	dump_hierarchical_name(ostream&) const;
+
 	/**
 		Wants to be pure virtual but can't...
 	 */
@@ -232,6 +301,10 @@ private:
 public:
 	typedef	typename parent_type::key_type		key_type;
 	// or simple_type?
+	typedef	typename instance_alias_info<Tag>::const_iterator
+							const_iterator;
+	typedef	typename instance_alias_info<Tag>::iterator
+							iterator;
 public:
 	instance_alias() : parent_type() { }
 
@@ -254,6 +327,12 @@ public:
 	 */
 	operator const key_type& () const { return this->key; }
 
+	const_iterator
+	begin(void) const;
+
+	const_iterator
+	end(void) const;
+
 	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
@@ -264,6 +343,11 @@ public:
 
 	void
 	dump_alias(ostream& o) const;
+
+#if 0
+	ostream&
+	dump_hierarchical_name(ostream&) const;
+#endif
 
 	/**
 		Use with maplikeset_element requires comparison operator.  
@@ -302,11 +386,26 @@ public:
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_array<0>::type
 							container_type;
+	typedef	typename instance_alias_info<Tag>::const_iterator
+							const_iterator;
+	typedef	typename instance_alias_info<Tag>::iterator
+							iterator;
 public:
 	~instance_alias();
 
 	void
 	dump_alias(ostream& o) const;
+
+#if 0
+	ostream&
+	dump_hierarchical_name(ostream&) const;
+#endif
+
+	const_iterator
+	begin(void) const;
+
+	const_iterator
+	end(void) const;
 
 	void
 	write_next_connection(const persistent_object_manager& m, 

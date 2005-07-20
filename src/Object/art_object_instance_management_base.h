@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_management_base.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.8 2005/05/10 04:51:18 fang Exp $
+	$Id: art_object_instance_management_base.h,v 1.9 2005/07/20 21:00:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
@@ -11,6 +11,7 @@
 #include "util/STL/list.h"
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace parser {
@@ -25,6 +26,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
 using util::memory::sticky_ptr;
+using util::good_bool;
 using parser::context;
 class unroll_context;
 
@@ -32,9 +34,8 @@ class unroll_context;
 /**
 	Abstract base class for sequential instantiation management objects, 
 	including instantiations, parameters, assignments, connections.  
-	Don't bother deriving from object, unless it is necessary.  
  */
-class instance_management_base : public persistent {
+class instance_management_base : virtual public persistent {
 protected:
 	// none
 public:
@@ -44,25 +45,43 @@ public:
 		Consider using this in object as well.  
 	 */
 	class dumper {
-		private:
-			ostream& os;
-		public:
-			explicit
-			dumper(ostream& o);
+	private:
+		ostream& os;
+	public:
+		explicit
+		dumper(ostream& o);
 
-			template <template <class> class P>
-			ostream&
-			operator () (const P<const instance_management_base>& i) const;
+		template <template <class> class P>
+		ostream&
+		operator () (const P<const instance_management_base>& i) const;
 	};      // end class dumper
 
 public:
 virtual ostream&
 	dump(ostream& o) const = 0;
 
+#define	UNROLL_META_EVALUATE_PROTO					\
+	good_bool							\
+	unroll_meta_evaluate(unroll_context& ) const
+
+#define	UNROLL_META_INSTANTIATE_PROTO					\
+	good_bool							\
+	unroll_meta_instantiate(unroll_context& ) const
+
+#define	UNROLL_META_CONNECT_PROTO					\
+	good_bool							\
+	unroll_meta_connect(unroll_context& ) const
+
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
-virtual void
+	// possible single-pass unroll may be phased out...
+virtual good_bool
 	unroll(unroll_context& ) const = 0;
+
+virtual	UNROLL_META_EVALUATE_PROTO;
+virtual	UNROLL_META_INSTANTIATE_PROTO;
+virtual	UNROLL_META_CONNECT_PROTO;
+
 };	// end class instance_management_base
 
 //=============================================================================
@@ -79,6 +98,8 @@ public:
 	 */
 	typedef list<sticky_ptr<const instance_management_base> >
 					instance_management_list_type;
+	typedef	instance_management_list_type::const_iterator
+							const_iterator;
 protected:
 	/**
 		The unified list of sequential instance management actions, 
@@ -103,20 +124,6 @@ public:
 	append_instance_management(
 		excl_ptr<const instance_management_base>& i);
 
-private:
-	void
-	collect_object_pointer_list(persistent_object_manager& m) const;
-
-
-	// why even have these at all?
-	void
-	write_object_pointer_list(const persistent_object_manager& m, 
-		ostream&) const;
-
-	void
-	load_object_pointer_list(const persistent_object_manager& m, 
-		istream&);
-
 protected:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
@@ -132,10 +139,14 @@ public:
 	void
 	write_object_base_fake(const persistent_object_manager& m, ostream&);
 
+protected:
 // need not be virtual?
-// may need context later...
-	void
+	good_bool
 	unroll(unroll_context& ) const;
+
+	UNROLL_META_EVALUATE_PROTO;
+	UNROLL_META_INSTANTIATE_PROTO;
+	UNROLL_META_CONNECT_PROTO;
 
 };      // end class sequential_scope
 

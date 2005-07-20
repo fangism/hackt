@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition.h,v 1.35 2005/06/23 03:00:29 fang Exp $
+	$Id: art_object_definition.h,v 1.36 2005/07/20 20:59:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_H__
@@ -39,6 +39,7 @@ using parser::token_identifier;
 //=============================================================================
 namespace entity {
 class data_type_reference;
+// class param_expr_list;
 using std::ostream;
 USING_LIST
 using util::memory::count_ptr;
@@ -84,6 +85,9 @@ virtual	const string&
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 virtual	ostream&
 	what(ostream& o) const = 0;
 
@@ -96,8 +100,10 @@ virtual never_ptr<const fundamental_type_reference>
 virtual	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f) = 0;
 
+#if 0
 	excl_ptr<const fundamental_type_reference>
 	resolve_complete_type(never_ptr<const param_expr_list> p) const;
+#endif
 
 private:
 virtual	void

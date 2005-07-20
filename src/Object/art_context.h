@@ -2,13 +2,13 @@
 	\file "Object/art_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.20 2005/06/19 01:58:32 fang Exp $
+	$Id: art_context.h,v 1.21 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef __OBJECT_ART_CONTEXT_H__
 #define __OBJECT_ART_CONTEXT_H__
 
-#include <string>
+#include "util/string_fwd.h"
 #include <stack>
 
 #include "util/STL/list.h"
@@ -34,6 +34,7 @@ namespace entity {
 	class instance_management_base;
 	class meta_instance_reference_connection;
 	class param_expr;
+	class param_expr_list;
 	class param_expression_assignment;
 }	// end namespace entity
 
@@ -64,6 +65,7 @@ using entity::instance_collection_base;
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
 using entity::param_expr;
+using entity::param_expr_list;
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 
@@ -97,9 +99,12 @@ class token_paramtype;
 
 	TODO: replace indent with util/indent implementation.  
 	TODO: rename this parse_context.
+	TODO: real error manager...
  */
 class context {
-protected:
+public:
+	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
+private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
 
@@ -170,7 +175,7 @@ public:
 //	const never_ptr<const name_space>	global_namespace;
 
 
-protected:
+private:
 	/**
 		Consider a stack of contexts for instance_management_lists.
 		Push/pop when entering/leaving definition or
@@ -369,10 +374,12 @@ public:
 	lookup_instance(const qualified_id& id) const;
 
 	never_ptr<const instance_collection_base>
-	add_instance(const token_identifier& id);
+	add_instance(const token_identifier& id, 
+		const relaxed_args_ptr_type&);
 
 	never_ptr<const instance_collection_base>
 	add_instance(const token_identifier& id, 
+		const relaxed_args_ptr_type&, 
 		index_collection_item_ptr_type dim);
 
 	// should be param_instance_collection
@@ -386,9 +393,11 @@ public:
 		index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d);
 
+	// port formals are not allowed to have instance-relaxed actuals.  
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id);
 
+	// port formals are not allowed to have instance-relaxed actuals.  
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);

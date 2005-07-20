@@ -1,12 +1,13 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.9 2005/06/19 01:58:40 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.10 2005/07/20 21:00:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
 #define	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
 
+#include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_instance_bool.h"
 #include "Object/art_object_instance_int.h"
 #include "Object/art_object_instance_enum.h"
@@ -16,11 +17,19 @@
 #include "Object/art_object_nonmeta_inst_ref.tcc"
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_nonmeta_value_reference.tcc"
-#include "Object/art_built_ins.h"
+#include "Object/expr/int_expr.h"
+#include "Object/expr/bool_expr.h"
+#include "Object/expr/enum_expr.h"
+#include "Object/expr/struct_expr.h"
+#include "Object/expr/const_range.h"
 
 #include "Object/art_object_type_hash.h"
 #include "util/persistent_object_manager.tcc"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
+#include "Object/inst/general_collection_type_manager.h"
+#include "Object/inst/null_collection_type_manager.h"
+#include "Object/inst/int_collection_type_manager.h"
+#include "Object/inst/parameterless_collection_type_manager.h"
 
 namespace util {
 using ART::entity::int_tag;
@@ -125,7 +134,7 @@ struct data_type_resolver<bool_tag> {
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
 		// easy, no parameters!
-		return bool_type_ptr;
+		return bool_traits::built_in_type_ptr;
 	}
 };	// end class data_type_resolver
 

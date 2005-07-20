@@ -1,6 +1,6 @@
 # "test/Make.test"
 # a template makefile for testing, to be included in recursive invocations
-#	$Id: Make.test,v 1.11 2005/05/20 19:29:15 fang Exp $
+#	$Id: Make.test,v 1.12 2005/07/20 21:01:03 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -80,13 +80,25 @@ CLEANFILES += $(TESTS) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunroll) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump.filter) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr.filter) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff)
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff) \
+	check.log
 
 DISTCLEANFILES += .cvsignore subdir.not_a_test
 
 all-local: .cvsignore subdir.not_a_test \
 	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
+
+# doesn't work, but would like it to
+# .PRECIOUS: check.log
+
+# -k option allows continuation past directories with failed tests
+check.log: force
+	@$(ECHO) "Logging results of \"make -k check\" in $@ ..."
+	@$(ECHO) Tests started `$(DATE)` > $@.tmp
+	$(MAKE) -k check 2>&1 | cat >> $@.tmp
+	-$(MV) $@.tmp $@
+	-$(GREP) -v ^PASS $@
+	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 
 # consider using CLEANFILES
 AUTO_IGNORE = $(ARTC_TEST_PASSES:=.stderr) \
@@ -122,10 +134,21 @@ clean-local:
 	-$(RM) *.core core.*
 
 # really remove these files!
-cleaner: clean
+cleaner: clean cleaner-recursive
 	-$(RM) *.filter *.diff *.artobj
 	-$(RM) *.artctest *.artobjtest *.artobjunrolltest
-	-$(RM) *.indump *.outdump *.artobjunroll *.unrolldump *.unrolldiff
+	-$(RM) *.indump *.outdump *.objdiff
+	-$(RM) *.artobjunroll *.unrolldump *.unrolldiff
+
+cleaner-recursive:
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d cleaner ; \
+			fi ; \
+		fi ; \
+	done
+	
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...
@@ -139,4 +162,6 @@ cleaner: clean
 #			$(TOUCH) $$f ; \
 #		fi ; \
 #	done
+
+force:
 

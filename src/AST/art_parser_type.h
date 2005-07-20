@@ -1,26 +1,28 @@
 /**
 	\file "AST/art_parser_type.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.9 2005/06/23 03:00:29 fang Exp $
+	$Id: art_parser_type.h,v 1.10 2005/07/20 20:59:52 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TYPE_H__
 #define __AST_ART_PARSER_TYPE_H__
 
 #include "AST/art_parser_type_base.h"
-#include "AST/art_parser_expr_list.h"
-#include "util/memory/count_ptr.h"
+#include "AST/art_parser_node_list.h"
+#include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
-	class fundamental_type_reference;
 	class builtin_channel_type_reference;
 }
 namespace parser {
 using util::good_bool;
-using entity::fundamental_type_reference;
+using util::memory::excl_ptr;
 using entity::builtin_channel_type_reference;
+class expr_list;
+class qualified_id;
+class template_argument_list_pair;
 
 //-----------------------------------------------------------------------------
 /**
@@ -78,21 +80,6 @@ public:
 };	// end class data_type_ref_list
 
 //=============================================================================
-class concrete_type_ref {
-public:
-	typedef	count_ptr<const fundamental_type_reference>	return_type;
-
-public:
-	concrete_type_ref() { }
-virtual	~concrete_type_ref() { }
-
-	PURE_VIRTUAL_NODE_METHODS
-
-virtual	return_type
-	check_type(context&) const = 0;
-};	// end class concrete_type_ref
-
-//-----------------------------------------------------------------------------
 /**
 	Reference to a concrete type, i.e. definition with its
 	template parameters specified (if applicable).
@@ -105,6 +92,8 @@ virtual	return_type
  */
 class generic_type_ref : public concrete_type_ref {
 	typedef	concrete_type_ref			parent_type;
+//	typedef expr_list				template_args_type;
+	typedef template_argument_list_pair		template_args_type;
 public:
 	typedef	parent_type::return_type		return_type;
 protected:
@@ -115,13 +104,15 @@ protected:
 		TODO: Needs to be split into strict and relaxed arguments.  
 		(see "AST/art_parser_expr_list.h":template_argument_list_pair.)
 	 */
-	const excl_ptr<const expr_list>			temp_spec;
+	const excl_ptr<const template_args_type>		temp_spec;
 	/**
 		Optional channel direction, only applies to channels.  
 	 */
 	const excl_ptr<const char_punctuation_type>	chan_dir;
 public:
-	generic_type_ref(const type_base* n, const expr_list* t = NULL,
+	explicit
+	generic_type_ref(const type_base* n,
+		const template_args_type* t = NULL,
 		const char_punctuation_type* d = NULL);
 
 	~generic_type_ref();
@@ -129,7 +120,7 @@ public:
 	never_ptr<const type_base>
 	get_base_def(void) const;
 
-	never_ptr<const expr_list>
+	never_ptr<const template_args_type>
 	get_temp_spec(void) const;
 
 	ostream&
@@ -144,7 +135,7 @@ public:
 	return_type
 	check_type(context&) const;
 
-};	// end class concrete_type_ref
+};	// end class generic_type_ref
 
 //-----------------------------------------------------------------------------
 /**

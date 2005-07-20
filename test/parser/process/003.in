@@ -1,4 +1,4 @@
-// should die: old-style template declaration
+// "003.in" should die: old-style template declaration
 
 defproc bad_fang <pint
 

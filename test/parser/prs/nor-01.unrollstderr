@@ -1,76 +1,76 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x43071e0	module__	0	0	32
-	2	 0x4300144	namespc_	0	32	64
-	3	 0x4307200	procdefn	0	64	162
-	4	 0x4307294	dboolcol	0	162	196
-	5	 0x43072f0	datainst	0	196	216
-	6	 0x4307310	datatprf	0	216	232
-	7	 0x4307320	datadefn	0	232	285
-	8	 0x43073c4	dboolcol	0	285	319
-	9	 0x4307420	datainst	0	319	339
-	10	 0x4307444	dboolcol	0	339	373
-	11	 0x43074a0	datainst	0	373	393
-	12	 0x4828c08	PRSpuldn	0	393	410
-	13	 0x43074c8	PRSor___	0	410	430
-	14	 0x43075d8	PRSlitrl	0	430	442
-	15	 0x4307760	sdbmref_	0	442	462
-	16	 0x43075e4	PRSlitrl	0	462	474
-	17	 0x4307790	sdbmref_	0	474	494
-	18	 0x43077c0	sdbmref_	0	494	514
-	19	 0x4829008	PRSpulup	0	514	531
-	20	 0x43077f8	PRSand__	0	531	551
-	21	 0x4307908	PRSnot__	0	551	563
-	22	 0x43075f0	PRSlitrl	0	563	575
-	23	 0x4307a90	sdbmref_	0	575	595
-	24	 0x4307914	PRSnot__	0	595	607
-	25	 0x43075fc	PRSlitrl	0	607	619
-	26	 0x4307ac0	sdbmref_	0	619	639
-	27	 0x4307af0	sdbmref_	0	639	659
-	28	 0x4307b20	procdefn	0	659	757
-	29	 0x4307bb4	dboolcol	0	757	791
-	30	 0x4307c10	datainst	0	791	811
-	31	 0x4307c30	datatprf	0	811	827
-	32	 0x4307c44	dboolcol	0	827	861
-	33	 0x4307ca0	datainst	0	861	881
-	34	 0x4307cc4	dboolcol	0	881	915
-	35	 0x4307d20	datainst	0	915	935
-	36	 0x4828c24	PRSpuldn	0	935	952
-	37	 0x43074d0	PRSor___	0	952	972
-	38	 0x4307608	PRSlitrl	0	972	984
-	39	 0x4307d40	sdbmref_	0	984	1004
-	40	 0x4307614	PRSlitrl	0	1004	1016
-	41	 0x4307d70	sdbmref_	0	1016	1036
-	42	 0x4307da0	sdbmref_	0	1036	1056
-	43	 0x4829024	PRSpulup	0	1056	1073
-	44	 0x4307800	PRSand__	0	1073	1093
-	45	 0x4307920	PRSnot__	0	1093	1105
-	46	 0x4307620	PRSlitrl	0	1105	1117
-	47	 0x430792c	PRSnot__	0	1117	1129
-	48	 0x430762c	PRSlitrl	0	1129	1141
-	49	 0x4307dd0	procdefn	0	1141	1239
-	50	 0x4307e64	dboolcol	0	1239	1273
-	51	 0x4307ec0	datainst	0	1273	1293
-	52	 0x4307ee0	datatprf	0	1293	1309
-	53	 0x4307ef4	dboolcol	0	1309	1343
-	54	 0x4307f50	datainst	0	1343	1363
-	55	 0x4307f74	dboolcol	0	1363	1397
-	56	 0x4307fd0	datainst	0	1397	1417
-	57	 0x4829040	PRSpulup	0	1417	1434
-	58	 0x4307808	PRSand__	0	1434	1454
-	59	 0x4307938	PRSnot__	0	1454	1466
-	60	 0x4307638	PRSlitrl	0	1466	1478
-	61	 0x4307ff0	sdbmref_	0	1478	1498
-	62	 0x4307944	PRSnot__	0	1498	1510
-	63	 0x4307644	PRSlitrl	0	1510	1522
-	64	 0x4308020	sdbmref_	0	1522	1542
-	65	 0x4308050	sdbmref_	0	1542	1562
-	66	 0x4828c40	PRSpuldn	0	1562	1579
-	67	 0x43074d8	PRSor___	0	1579	1599
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	13	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	37	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	44	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	58	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	67	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 
-In module created from: ./nor-01.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

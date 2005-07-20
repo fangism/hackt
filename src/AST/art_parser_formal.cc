@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.23 2005/06/22 22:13:32 fang Exp $
+	$Id: art_parser_formal.cc,v 1.24 2005/07/20 20:59:50 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -30,7 +30,9 @@
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_definition_chan.h"		// for user_def_chan
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/param_expr.h"
+#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/meta_range_list.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -59,6 +61,7 @@ namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
 using entity::user_def_chan;
+using entity::dynamic_param_expr_list;
 
 //=============================================================================
 // class data_param_id method definitions
@@ -89,6 +92,8 @@ data_param_id::rightmost(void) const {
 /**
 	Resolves data-type formal, and adds it to a channel definition's
 	public port list.  
+	NOTE: data-types in the user-defined channel's ports are allowed
+	to have relaxed types.  
  */
 never_ptr<const object>
 data_param_id::check_build(context& c) const {
@@ -97,6 +102,13 @@ data_param_id::check_build(context& c) const {
 	// not true anymore!
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
+#if 0
+	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
+	const count_ptr<const fundamental_type_reference>
+		type(c.get_current_fundamental_type());
+	INVARIANT(type);
+	const relaxed_args_ptr_type checked_relaxed_actuals;
+#endif
 	if (dim) {
 		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
@@ -105,6 +117,16 @@ data_param_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
+#if 1
+		// we must be in port formal context for some definition
+		INVARIANT(c.get_current_prototype());
+		if (d->is_relaxed_formal_dependent()) {
+			cerr << "ERROR in data-param-id at " << where(*dim) << 
+				": array sizes are not allowed to "
+				"depend on relaxed formal parameters." << endl;
+			THROW_EXIT;
+		}
+#endif
 		t = c.add_port_formal(*id, d);
 		// reuse generic definition_base::add_port (virtual)
 	} else {
@@ -245,7 +267,17 @@ port_formal_id::check_build(context& c) const {
 	STACKTRACE("port_formal_id::check_build()");
 	never_ptr<const instance_collection_base> t;
 		// should be anything but param_instantiation
-
+#if 0
+	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
+	const count_ptr<const fundamental_type_reference>
+		type(c.get_current_fundamental_type());
+	INVARIANT(type);
+	const relaxed_args_ptr_type checked_relaxed_actuals;
+	// Port formals cannot have instance-time relaxed actual parameters, 
+	// arrays must be declared with strict or relaxed parameters
+	// up front in the type.  
+	// Scalars declarations are allowed to be relaxed.  
+#endif
 	if (dim) {
 		const dense_range_list::meta_return_type
 			d(dim->check_formal_dense_ranges(c));
@@ -254,6 +286,16 @@ port_formal_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
+#if 1
+		// we must be in port formal context for some definition
+		INVARIANT(c.get_current_prototype());
+		if (d->is_relaxed_formal_dependent()) {
+			cerr << "ERROR in port-formal-id at " << where(*dim) << 
+				": array sizes are not allowed to "
+				"depend on relaxed formal parameters." << endl;
+			THROW_EXIT;
+		}
+#endif
 		t = c.add_port_formal(*name, d);
 	} else {
 		t = c.add_port_formal(*name);
@@ -408,6 +450,10 @@ template_formal_id::check_build(context& c) const {
 				where(*dim) << endl;
 			THROW_EXIT;
 		}
+		// NOTE: no need to check for relaxed formal dependence
+		// is syntactically impossible for strict parameters to
+		// reference relaxed parameter and relaxed are allowed
+		// to reference earlier relaxed.  
 		t = c.add_template_formal(*name, d, default_val);
 	} else {
 		t = c.add_template_formal(*name, default_val);
@@ -458,6 +504,7 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
+#if 0
 	const never_ptr<const definition_base>
 		def(type->check_definition(c));
 	if (!def) {
@@ -466,6 +513,11 @@ template_formal_decl::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	c.set_current_fundamental_type(def->make_fundamental_type_reference());
+#else
+	c.set_current_fundamental_type(type->check_type(c));
+	const never_ptr<const definition_base>
+		def(c.get_current_fundamental_type()->get_base_def());
+#endif
 		// don't anticipate any problems here...
 		// built-in param types pint and pbool
 		// have no template parameters...

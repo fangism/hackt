@@ -1,0 +1,10 @@
+// "096.in" should fail connection
+// copy-modified from "094.in"
+
+template <pint A><pint B>
+defproc foo();
+
+foo<1> bar<1>, ick<2>, poo<2>;
+
+bar = ick;	// mismatched relaxed actuals
+

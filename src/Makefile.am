@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.66 2005/06/22 22:13:31 fang Exp $
+#	$Id: Makefile.am,v 1.67 2005/07/20 20:59:49 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9 subdir-objects
 
@@ -8,7 +8,7 @@ SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .hchk .tccchk
+SUFFIXES = .yy .ll .hchk .tccchk .ii
 
 include $(top_srcdir)/Make.stddef
 
@@ -39,8 +39,6 @@ parser/yacc_or_bison.h:
 endif
 # Automatically generated sources can just check for YYBISON definition.
 
-
-
 ########################### main dependencies #################################
 
 bin_PROGRAMS = artc art++2obj artobjdump artobjunroll prsobjdemo
@@ -55,11 +53,11 @@ noinst_LTLIBRARIES = libart++.la libhacktparsers.la libbogus.la libfangutil.la
 # order in parallel builds.  
 
 artc_SOURCES = art_main.cc
-art_main.$(OBJEXT) art_main.lo: parser/art++-parse-prefix.h
+# art_main.$(OBJEXT) art_main.lo: parser/art++-parse-prefix.h
 artc_LDADD = libart++.la libfangutil.la
 
 art__2obj_SOURCES = art++2obj.cc
-art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
+# art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
 art__2obj_LDADD = libart++.la libfangutil.la
 
 artobjdump_SOURCES = artobjdump.cc
@@ -80,8 +78,9 @@ getopt_test_SOURCES = test/getopt_test.cc
 BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
 	parser/art++-parse.output.h
 
-# phony program to cause _build directories to be generated on distcheck
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
+# phony program to generate _build/*/.deps directories on distcheck
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
+	Object/ref/dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
@@ -93,6 +92,9 @@ util/numeric/dummy.cc:
 	$(TOUCH) $@
 
 util/obsolete/dummy.cc:
+	$(TOUCH) $@
+
+Object/ref/dummy.cc:
 	$(TOUCH) $@
 
 # libbogus.la is not actually used, hence the name.
@@ -145,11 +147,12 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
-	Object/art_object_classification_details.cc \
-	Object/art_object_data_expr.cc \
-	Object/art_object_expr.cc \
+	Object/traits/class_traits.cc \
 	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
+	Object/inst/substructure_alias_base.cc \
+	Object/inst/subinstance_manager.cc \
+	Object/art_object_instance_alias_actuals.cc \
 	Object/art_object_instance.cc \
 	Object/art_object_instance_param.cc \
 	Object/art_object_instance_bool.cc \
@@ -168,16 +171,27 @@ OBJECT_CC_FILES = \
 	Object/art_object_control.cc \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
+	Object/art_object_template_actuals.cc \
 	Object/art_object_template_formals_manager.cc \
 	Object/art_object_port_formals_manager.cc \
 	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
-	Object/art_built_ins.cc \
 	Object/art_object_PRS.cc \
 	Object/art_object_CHP.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
+	Object/traits/class_traits_types.cc \
+	Object/expr/basic_param.cc \
+	Object/expr/param_const_collection.cc \
+	Object/expr/meta_index_expr_list.cc \
+	Object/expr/meta_param_expr_list.cc \
+	Object/expr/meta_range.cc \
+	Object/expr/meta_range_list.cc \
+	Object/expr/meta_param_value_reference.cc \
+	Object/expr/nonmeta_param_value_reference.cc \
+	Object/expr/operators.cc \
+	Object/expr/data_expr.cc \
 	Object/art_object_instance_pint.cc \
 	Object/art_object_instance_pbool.cc \
 	Object/art_object_IO.cc
@@ -188,13 +202,21 @@ OBJECT_TCC_FILES = \
 	Object/art_object_assign.tcc \
 	Object/art_object_connect.tcc \
 	Object/art_object_const_collection.tcc \
+	Object/inst/general_collection_type_manager.tcc \
+	Object/inst/null_collection_type_manager.tcc \
+	Object/inst/int_collection_type_manager.tcc \
+	Object/inst/parameterless_collection_type_manager.tcc \
+	Object/inst/subinstance_manager.tcc \
+	Object/art_object_instance_alias_actuals.tcc \
 	Object/art_object_instance_collection.tcc \
 	Object/art_object_inst_stmt.tcc \
+	Object/art_object_inst_stmt_param.tcc \
 	Object/art_object_inst_ref.tcc \
 	Object/art_object_nonmeta_inst_ref.tcc \
 	Object/art_object_member_inst_ref.tcc \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
+	Object/art_object_unroll_context.tcc \
 	Object/art_object_value_collection.tcc \
 	Object/art_object_value_reference.tcc \
 	Object/art_object_nonmeta_value_reference.tcc \
@@ -203,28 +225,85 @@ OBJECT_TCC_FILES = \
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
 	Object/art_object.h \
-	Object/art_object_classification_fwd.h \
-	Object/art_object_classification_tags.h \
+	Object/traits/class_traits_fwd.h \
+	Object/traits/classification_tags.h \
+	Object/traits/chan_traits.h \
+	Object/traits/data_traits.h \
+	Object/traits/proc_traits.h \
+	Object/traits/param_traits.h \
+	Object/traits/pint_traits.h \
+	Object/traits/pbool_traits.h \
+	Object/traits/int_traits.h \
+	Object/traits/bool_traits.h \
+	Object/traits/enum_traits.h \
+	Object/traits/struct_traits.h \
 	Object/art_object_const_collection.h \
 	Object/art_object_definition_base.h \
 	Object/art_object_definition_chan.h \
 	Object/art_object_definition_data.h \
 	Object/art_object_definition_proc.h \
-	Object/art_object_data_expr_base.h \
-	Object/art_object_expr_base.h \
-	Object/art_object_expr_const.h \
+	Object/expr/bool_expr.h \
+	Object/expr/bool_logical_expr.h \
+	Object/expr/bool_negation_expr.h \
+	Object/expr/const_index.h \
+	Object/expr/const_index_list.h \
+	Object/expr/const_param.h \
+	Object/expr/const_param_expr_list.h \
+	Object/expr/const_range.h \
+	Object/expr/const_range_list.h \
+	Object/expr/data_expr.h \
+	Object/expr/dynamic_meta_index_list.h \
+	Object/expr/dynamic_meta_range_list.h \
+	Object/expr/dynamic_param_expr_list.h \
+	Object/expr/enum_expr.h \
+	Object/expr/int_arith_expr.h \
+	Object/expr/int_expr.h \
+	Object/expr/int_negation_expr.h \
+	Object/expr/int_range_expr.h \
+	Object/expr/int_range_list.h \
+	Object/expr/int_relational_expr.h \
+	Object/expr/meta_index_expr.h \
+	Object/expr/meta_index_list.h \
+	Object/expr/meta_range_expr.h \
+	Object/expr/meta_range_list.h \
+	Object/expr/nonmeta_index_expr_base.h \
+	Object/expr/nonmeta_index_list.h \
+	Object/expr/nonmeta_range_expr_base.h \
+	Object/expr/param_expr.h \
+	Object/expr/param_expr_list.h \
+	Object/expr/pbool_const.h \
+	Object/expr/pbool_expr.h \
+	Object/expr/pbool_logical_expr.h \
+	Object/expr/pbool_unary_expr.h \
+	Object/expr/pint_arith_expr.h \
+	Object/expr/pint_const.h \
+	Object/expr/pint_expr.h \
+	Object/expr/pint_range.h \
+	Object/expr/pint_relational_expr.h \
+	Object/expr/pint_unary_expr.h \
+	Object/expr/struct_expr.h \
+	Object/expr/types.h \
 	Object/art_object_expr_param_ref.h \
-	Object/art_object_expr_types.h \
 	Object/art_object_index.h \
+	Object/inst/substructure_alias_fwd.h \
+	Object/inst/general_collection_type_manager.h \
+	Object/inst/null_collection_type_manager.h \
+	Object/inst/int_collection_type_manager.h \
+	Object/inst/parameterless_collection_type_manager.h \
+	Object/ref/inst_ref_implementation_fwd.h \
+	Object/ref/inst_ref_implementation.h \
 	Object/art_object_instance_base.h \
 	Object/art_object_instance_alias.h \
+	Object/art_object_instance_alias_empty.h \
 	Object/art_object_instance_collection.h \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
+	Object/art_object_inst_stmt_param_base.h \
 	Object/art_object_inst_stmt_param.h \
 	Object/art_object_inst_stmt_data.h \
 	Object/art_object_inst_stmt_chan.h \
 	Object/art_object_inst_stmt_proc.h \
+	Object/art_object_inst_stmt_type_ref_default.h \
 	Object/art_object_inst_ref_base.h \
 	Object/art_object_inst_ref_subtypes.h \
 	Object/art_object_nonmeta_inst_ref_base.h \
@@ -294,6 +373,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_traits.h \
 	util/boolean_types.h \
 	util/const_traits.h \
+	util/cppcat.h \
 	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \
@@ -334,6 +414,7 @@ UTIL_HEADER_FILES = \
 	util/persistent_fwd.h \
 	util/persistent.h \
 	util/qmap_fwd.h \
+	util/reserve.h \
 	util/ring_node_fwd.h \
 	util/size_t.h \
 	util/sstream.h \
@@ -344,6 +425,7 @@ UTIL_HEADER_FILES = \
 	util/using_istream.h \
 	util/using_ostream.h \
 	util/what_fwd.h \
+	util/wtf.h \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
@@ -386,6 +468,10 @@ libart___la_SOURCES = \
 	config.h \
 	main/main_funcs.cc \
 	main/main_funcs.h
+
+# any other files that depend on automatically generated headers
+# should have explicit dependencies.  
+main/main_funcs.$(OBJEXT) main/main_funcs.lo: parser/art++-parse-prefix.h
 
 # build up main library from pieces
 # Here, libart++ will include all of libhacktparsers
@@ -498,14 +584,11 @@ AM_CPPFLAGS = -I$(srcdir)
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-# some of these flags are deadly...
 GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
 	-Wcast-qual -Wcast-align -Wconversion -Werror
-# -Wshadow
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 	-Wbad-function-cast -Wnested-externs
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
-# -Wold-style-cast	# kills bison/yacc parser code... consider separate lib
 # -Wsign-promo
 DIALECT_FLAGS = -ansi -pedantic-errors
 # -pedantic		# kills some pointer class conversions, fix later...
@@ -520,6 +603,11 @@ AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
+
+# for occasional debugging
+SAVETEMP = $(CXXCOMPILE) -v -save-temps
+.cc.ii:
+	$(SAVETEMP) -c $< -o $*.o
 
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=artxx_yy
@@ -615,6 +703,7 @@ EXTRA_DIST = \
 	scripts/filter_namespaces.sed \
 	scripts/automake_include.awk \
 	scripts/promote_header_deps.awk \
+	Object/expr/README \
 	ChangeLog \
 	NOTES \
 	wc-l
@@ -631,6 +720,7 @@ HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchk
 TESTS = art_persistent_table
 
 check-headers: $(HEADER_TCC_TESTS)
+	@$(ECHO) All header tests passed.
 
 headers_deps.make: Makefile.am
 	@$(ECHO) Regenerating $@ ...
@@ -666,7 +756,7 @@ CLEANFILES =
 
 DISTCLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
 
-CLEANSUBDIRS = lexer parser AST Object \
+CLEANSUBDIRS = lexer parser AST Object Object/expr \
 	util util/numeric util/memory util/obsolete util/STL
 
 clean-parser:
@@ -690,10 +780,15 @@ clean-header-tests:
 # disabling this for now to prevent self-infliction of harm...
 # perhaps enable only if maintainer-mode is on...
 # this should call clean-header-tests to guarantee proper regeneration...
-#clean-header-deps:
+clean-header-deps:
+	@$(ECHO) "Resetting .deps/*chkd in all sub-directories..."
+	@for f in $(HEADER_TCC_DEPBASES); do \
+		$(ECHO) "# reset" > \
+			`$(ECHO) $$f | $(SED) 's|[^/]*$$|$(DEPDIR)/&|'` ; \
+	done
 #	@$(ECHO) "WARNING: you'll have to make clean-header-tests to properly "\
 #		"regenerate the header-dependencies."
-#	@$(ECHO) "Removing .deps/*chkd in all sub-directories..."
+# don't bother deleting
 #	@for d in $(CLEANSUBDIRS); do \
 #		$(RM) $$d/$(DEPDIR)/*chkd ; \
 #	done
@@ -705,6 +800,8 @@ clean-AST:
 clean-Object:
 	-$(RM) Object/*.$(OBJEXT)
 	-$(RM) Object/*.lo
+	-$(RM) Object/expr/*.$(OBJEXT)
+	-$(RM) Object/expr/*.lo
 
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests

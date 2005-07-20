@@ -1,0 +1,14 @@
+// "039.in" should die: wrong size of template actuals
+// copy-modified from "036.in"
+
+template <pint N[2]>
+defproc foo();
+
+pint W[2];
+W[0] = 1;
+W[1] = 0;
+
+foo<W[W[1]..W[1]]> bar;
+
+// for type-checking ok if foo undefined
+

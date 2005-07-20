@@ -1,33 +1,33 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4303370	module__	0	0	33
-	2	 0x4300144	namespc_	0	33	57
-	3	 0x4303390	procdefn	0	57	151
-	4	 0x4303314	dboolcol	0	151	185
-	5	 0x4303420	datainst	0	185	205
-	6	 0x4303440	datatprf	0	205	221
-	7	 0x4303450	datadefn	0	221	274
-	8	 0x43034f4	dboolcol	0	274	308
-	9	 0x4303550	datainst	0	308	328
-	10	 0x4303574	dboolcol	0	328	362
-	11	 0x43035d0	datainst	0	362	382
-	12	 0x4818a08	PRSpuldn	0	382	399
-	13	 0x43035f8	PRSand__	0	399	419
-	14	 0x4303708	PRSlitrl	0	419	431
-	15	 0x4303890	sdbmref_	0	431	451
-	16	 0x4303714	PRSlitrl	0	451	463
-	17	 0x43038c0	sdbmref_	0	463	483
-	18	 0x43038f0	sdbmref_	0	483	503
-	19	 0x4819408	PRSpulup	0	503	520
-	20	 0x4303928	PRSor___	0	520	540
-	21	 0x4303a38	PRSnot__	0	540	552
-	22	 0x4303720	PRSlitrl	0	552	564
-	23	 0x4303a44	PRSnot__	0	564	576
-	24	 0x430372c	PRSlitrl	0	576	588
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	94
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	13	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 
-In module created from: ./nand-02.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

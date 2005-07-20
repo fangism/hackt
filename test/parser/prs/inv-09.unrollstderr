@@ -1,45 +1,45 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x43044c0	module__	0	0	32
-	2	 0x4300144	namespc_	0	32	56
-	3	 0x43044e0	procdefn	0	56	166
-	4	 0x4304574	pintcoll	0	166	203
-	5	 0x43045c0	pintinst	0	203	219
-	6	 0x43045d4	pintcoll	0	219	256
-	7	 0x4304620	pintinst	0	256	272
-	8	 0x4304634	pintcoll	0	272	309
-	9	 0x4304680	pintinst	0	309	325
-	10	 0x4304694	dboolcol	1	325	354
-	11	 0x43046e0	datainst	0	354	374
-	12	 0x4304700	datatprf	0	374	390
-	13	 0x4304710	datadefn	0	390	443
-	14	 0x43047b0	drnglst_	0	443	459
-	15	 0x43047d4	dynrng__	0	459	475
-	16	 0x3716028	cnstpi__	0	475	487
-	17	 0x43047f8	arithexp	0	487	504
-	18	 0x4304800	spimref_	0	504	524
-	19	 0x3716038	cnstpi__	0	524	536
-	20	 0x481da08	PRSpuldn	0	536	553
-	21	 0x4304838	PRSlitrl	0	553	565
-	22	 0x43049c0	sdbmref_	0	565	585
-	23	 0x43049f0	dindlst_	0	585	601
-	24	 0x4304a00	spimref_	0	601	621
-	25	 0x4304a30	sdbmref_	0	621	641
-	26	 0x4304a60	dindlst_	0	641	657
-	27	 0x4304a70	spimref_	0	657	677
-	28	 0x481de08	PRSpulup	0	677	694
-	29	 0x4304aa8	PRSnot__	0	694	706
-	30	 0x4304844	PRSlitrl	0	706	718
-	31	 0x4304c30	sdbmref_	0	718	738
-	32	 0x4304c60	dindlst_	0	738	754
-	33	 0x4304c70	spimref_	0	754	774
-	34	 0x4304ca0	sdbmref_	0	774	794
-	35	 0x4304cd0	dindlst_	0	794	810
-	36	 0x4304ce0	spimref_	0	810	830
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	14	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	29	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./inv-09.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -51,8 +51,7 @@ In namespace "", we have: {
       pint<> N
       pint<> I
       pint<> J
-      >
-(
+      >(
         bool<> a with indices: {
           [0..::crazy_inv::N-1]
         }

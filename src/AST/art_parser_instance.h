@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.h"
 	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.15 2005/06/19 01:58:31 fang Exp $
+	$Id: art_parser_instance.h,v 1.16 2005/07/20 20:59:51 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_INSTANCE_H__
@@ -127,13 +127,18 @@ virtual	line_position
  */
 class instance_base : virtual public instance_management {
 protected:
-/**
-	In instantiation context, id should only be a token_identifier, 
- */
+	/**
+		In pure instantiation context (not in declaration),
+		id should only be a token_identifier.
+	 */
 	const excl_ptr<const token_identifier>		id;
+	/**
+		Optional relaxed template arguments may follow the 
+		declarator identifier.  
+	 */
+	const excl_ptr<const expr_list>			relaxed_args;
 public:
-	explicit
-	instance_base(const token_identifier* i);
+	instance_base(const token_identifier*, const expr_list*);
 
 virtual	~instance_base();
 
@@ -172,7 +177,8 @@ class instance_array : public instance_base {
 protected:
 	const excl_ptr<const range_list>	ranges;	///< optional ranges
 public:
-	instance_array(const token_identifier* i, const range_list* rl);
+	instance_array(const token_identifier* i, 
+		const expr_list*, const range_list* rl);
 
 	~instance_array();
 
@@ -226,9 +232,11 @@ public:
 class instance_connection : public instance_base, public actuals_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;		// inherited
+//	const excl_ptr<const expr_list>		relaxed_args;	// inherited
 //	const excl_ptr<const expr_list>		actuals;	// inherited
 public:
-	instance_connection(const token_identifier* i, const expr_list* a);
+	instance_connection(const token_identifier* i, 
+		const expr_list* ta, const expr_list* pa);
 
 	~instance_connection();
 
@@ -294,9 +302,11 @@ public:
 class instance_alias : public instance_base {
 protected:
 //	const excl_ptr<const token_identifier>	id;	// inherited
+//	const excl_ptr<const expr_list>		relaxed_args;	// inherited
 	const excl_ptr<const alias_list>	aliases;
 public:
-	instance_alias(const token_identifier* i, alias_list* al);
+	instance_alias(const token_identifier* i, 
+		const expr_list* a, alias_list* al);
 
 	~instance_alias();
 

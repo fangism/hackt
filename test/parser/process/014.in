@@ -1,4 +1,4 @@
-// should still die on incomplete template spec
+// "014.in" should still die on incomplete template spec
 
 template <pint bar
 defproc foo

@@ -1,0 +1,132 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	15	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	19	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	23	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	25	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	35	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> M
+      pint<> N
+      >(
+        foo<pint-inst-ref ::bar::M, pint-inst-ref ::foo::D+1> x with indices: {
+          [0..::bar::N-1]
+        }
+
+      )
+      In definition "bar", we have: {
+        M = pint<> M
+        N = pint<> N
+        x = foo<pint-inst-ref ::bar::M, pint-inst-ref ::foo::D+1> x with indices: {
+          [0..::bar::N-1]
+        }
+
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> D
+      pint<> E (default = pint-inst-ref ::foo::D+1)
+      >(
+        bool<> a with indices: {
+          [0..::foo::D-1]
+        }
+
+      )
+      In definition "foo", we have: {
+        D = pint<> D
+        E = pint<> E (default = pint-inst-ref ::foo::D+1)
+        a = bool<> a with indices: {
+          [0..::foo::D-1]
+        }
+
+      }
+
+  Instances:
+    poo = process bar<3, 2>^0 poo (instantiated) = ::poo (
+      process foo<3, 4>^1 x with indices: {
+        [0..::bar::N-1]
+      }
+        unrolled indices: {
+          0 = ::poo.x[0] (
+            bool^1 a with indices: {
+              [0..::foo::D-1]
+            }
+              unrolled indices: {
+                0 = ::poo.x[0].a[0] 
+                1 = ::poo.x[0].a[1] 
+                2 = ::poo.x[0].a[2] 
+              }
+          )
+          1 = ::poo.x[1] (
+            bool^1 a with indices: {
+              [0..::foo::D-1]
+            }
+              unrolled indices: {
+                0 = ::poo.x[1].a[0] 
+                1 = ::poo.x[1].a[1] 
+                2 = ::poo.x[1].a[2] 
+              }
+          )
+        }
+    )
+}
+

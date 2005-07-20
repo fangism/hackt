@@ -1,30 +1,30 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4302e80	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4302ea0	procdefn	0	53	121
-	4	 0x4302e34	pintcoll	0	121	158
-	5	 0x4302f30	pintinst	0	158	174
-	6	 0x4302f44	dintcoll	1	174	209
-	7	 0x4302f90	datainst	0	209	229
-	8	 0x4302fb0	datatprf	0	229	245
-	9	 0x4302fc0	datadefn	0	245	297
-	10	 0x4303060	dprmlst_	0	297	313
-	11	 0x3716028	cnstpi__	0	313	325
-	12	 0x4303070	drnglst_	0	325	341
-	13	 0x4303094	dynrng__	0	341	357
-	14	 0x3716038	cnstpi__	0	357	369
-	15	 0x43030b8	arithexp	0	369	386
-	16	 0x43030d8	arithexp	0	386	403
-	17	 0x43030f8	arithexp	0	403	420
-	18	 0x3716048	cnstpi__	0	420	432
-	19	 0x4303100	spimref_	0	432	452
-	20	 0x3716058	cnstpi__	0	452	464
-	21	 0x3716068	cnstpi__	0	464	476
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	68
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	35
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	17	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./007.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -34,8 +34,7 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (defined) foo<
       pint<> N
-      >
-(
+      >(
       )
       In definition "foo", we have: {
         N = pint<> N

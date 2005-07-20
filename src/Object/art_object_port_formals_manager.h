@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.h"
 	Definition port formal instance manager class.  
-	$Id: art_object_port_formals_manager.h,v 1.2 2005/06/19 01:58:48 fang Exp $
+	$Id: art_object_port_formals_manager.h,v 1.3 2005/07/20 21:00:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_H__
@@ -24,6 +24,8 @@ namespace parser {
 //=============================================================================
 namespace entity {
 class instance_collection_base;
+class unroll_context;
+class subinstance_manager;		// basically, the port_actuals
 using std::string;
 using std::istream;
 using std::ostream;
@@ -72,9 +74,15 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+	size_t
+	size(void) const { return port_formals_list.size(); }
+
 	/** overrides definition_base's */
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
+
+	size_t
+	lookup_port_formal_position(const string& id) const;
 
 	void
 	add_port_formal(const never_ptr<const instance_collection_base>);
@@ -84,6 +92,9 @@ public:
 
 	bool
 	equivalent_port_formals(const port_formals_manager&) const;
+
+	void
+	unroll_ports(const unroll_context&, subinstance_manager&) const;
 
 public:
 	void

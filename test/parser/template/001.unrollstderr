@@ -1,22 +1,22 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4302300	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4302320	procdefn	0	53	130
-	4	 0x43022b4	pintcoll	1	130	163
-	5	 0x43023b0	pintinst	0	163	179
-	6	 0x43023c0	drnglst_	0	179	195
-	7	 0x43023e4	dynrng__	0	195	211
-	8	 0x374a028	cnstpi__	0	211	223
-	9	 0x4302408	arithexp	0	223	240
-	10	 0x4302410	spimref_	0	240	260
-	11	 0x4302444	pintcoll	0	260	297
-	12	 0x4302490	pintinst	0	297	313
-	13	 0x374a038	cnstpi__	0	313	325
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	77
+	4	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	10	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./001.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -30,8 +30,7 @@ In namespace "", we have: {
         [0..::array_me::N-1]
       }
 
-      >
-      (
+      >(
       )
       In definition "array_me", we have: {
         A = pint<> A with indices: {

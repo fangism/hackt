@@ -1,0 +1,14 @@
+// "072.in" should die at unroll time, when types are found unequal
+// copy-modified from "070.in"
+
+template <pint Q><pint R>
+defproc foo();
+
+pint X[2];
+X[0] = 4;
+X[1] = 3;
+
+foo<5><4> car[0..2];
+foo<X[0]><4> car[3..4];		// is equivalent
+
+

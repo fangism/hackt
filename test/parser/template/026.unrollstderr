@@ -1,29 +1,29 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4302cc0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	57
-	3	 0x4302d70	procdefn	0	57	141
-	4	 0x4302d24	pboolcol	0	141	171
-	5	 0x4302ce0	pboolins	0	171	187
-	6	 0x4302e04	pintcoll	0	187	224
-	7	 0x4302cf0	pintinst	0	224	240
-	8	 0x4302e50	spimref_	0	240	260
-	9	 0x4302e84	pintcoll	0	260	297
-	10	 0x4302d00	pintinst	0	297	313
-	11	 0x4800c00	piassign	0	313	333
-	12	 0x4302ed0	spimref_	0	333	353
-	13	 0x4302f00	procdefn	0	353	425
-	14	 0x4302f94	pintcoll	0	425	462
-	15	 0x4302d10	pintinst	0	462	478
-	16	 0x4302fe0	spimref_	0	478	498
-	17	 0x4303014	pintcoll	0	498	535
-	18	 0x4303060	pintinst	0	535	551
-	19	 0x4800c10	piassign	0	551	571
-	20	 0x4303070	spimref_	0	571	591
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	4	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./026.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections
@@ -32,10 +32,9 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar<>
-      <
+<
       pint<> K
-      >
-      (
+      >(
       )
       In definition "bar", we have: {
         J = pint<> J (init = pint-inst-ref ::bar::K)
@@ -44,11 +43,9 @@ In namespace "", we have: {
 
     foo = process-definition (defined) foo<
       pbool<> A
-      >
-      <
+      ><
       pint<> K
-      >
-      (
+      >(
       )
       In definition "foo", we have: {
         A = pbool<> A

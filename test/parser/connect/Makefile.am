@@ -1,12 +1,12 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2005/06/23 03:00:31 fang Exp $
+#	$Id: Makefile.am,v 1.8 2005/07/20 21:01:38 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 ARTC_TEST_FAILURES = \
-	    002 003 004 005 009 \
+	    002 003 004 005 008 009 \
 	016 \
 	020 023 024 026 028 029 \
 	032 033 034 035 036 037 038 039 \
@@ -14,10 +14,11 @@ ARTC_TEST_FAILURES = \
 	050 052 053 054 055 056 059 \
 	060 061 066 068 \
 	070 071 072 073 074 075 076 077 079 \
-	080 081 082
+	080 081 082 \
+	090
 
 ARTC_TEST_PASSES = \
-	001 006 007 008 \
+	001 006 007 \
 	010 011 012 013 014 015 017 018 019 \
 	021 022 025 027 \
 	030 031 \
@@ -25,21 +26,18 @@ ARTC_TEST_PASSES = \
 	051 057 058 \
 	062 063 064 065 067 069 \
 	078 \
-	083 084 085 086 087
+	083 084 085 086 087 088 089 \
+	091 092 093 094 095 096 097 098 099 \
+	100 101 102 103 104 105 106 107 108 109 \
+	110
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
 ARTOBJ_TEST_SUBJECTS = \
 	$(ARTC_TEST_PASSES)
 
-# some are intentionally left out for now because they require more features
-# 007, 008: require unroll-time typedef resolution
-# 025, 027, 030, 031: require member instance reference unrolling
-# 04{6,7,9}, 05{1,7,8}, 06{2,3,4,5,7,9}, 078, 08{3,4,5}: need port connections
 ARTOBJUNROLL_TEST_SUBJECTS = \
-	001 006 \
-	010 011 012 013 014 015 017 018 019 \
-	021 022
+	$(ARTOBJ_TEST_SUBJECTS)
 
 TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \

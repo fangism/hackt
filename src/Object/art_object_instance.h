@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.h"
 	Instance collection classes for ART.  
-	$Id: art_object_instance.h,v 1.40 2005/06/19 01:58:42 fang Exp $
+	$Id: art_object_instance.h,v 1.41 2005/07/20 21:00:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_H__
@@ -18,6 +18,7 @@ namespace entity {
 //=============================================================================
 class data_type_reference;
 class const_param_expr_list;
+class unroll_context;
 USING_LIST
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -36,6 +37,8 @@ protected:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
 						member_inst_ref_ptr_type;
+	typedef	parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 protected:
 	explicit
 	physical_instance_collection(const size_t d) : parent_type(d) { }
@@ -55,6 +58,25 @@ virtual	~physical_instance_collection();
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 #endif
+
+#if 0
+	// TODO: instance-references, simple and aggregate
+	// unveil when the time is right
+	good_bool
+	may_check_reference_dimensions(...) const;
+
+	good_bool
+	must_check_reference_dimensions(...) const;
+#endif
+
+// macro co-defined in "Object/art_object_instance_collection.h"
+#ifndef	UNROLL_PORT_ONLY_PROTO
+#define	UNROLL_PORT_ONLY_PROTO						\
+	count_ptr<physical_instance_collection>				\
+	unroll_port_only(const unroll_context&) const
+#endif
+
+virtual	UNROLL_PORT_ONLY_PROTO = 0;
 
 virtual bool
 	is_partially_unrolled(void) const = 0;
@@ -81,6 +103,8 @@ protected:
 	typedef	parent_type::member_inst_ref_ptr_type	
 						member_inst_ref_ptr_type;
 	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
+	typedef	parent_type::instance_relaxed_actuals_type
+						instance_relaxed_actuals_type;
 protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
@@ -107,6 +131,9 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
+virtual	void
+	establish_collection_type(const type_ref_ptr_type&) = 0;
+
 	// a better return type?
 virtual	bad_bool
 	commit_type(const type_ref_ptr_type& ) = 0;
@@ -118,8 +145,10 @@ virtual	bad_bool
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
 
-virtual void
-	instantiate_indices(const const_range_list& i) = 0;
+virtual good_bool
+	instantiate_indices(const const_range_list& i, 
+		const instance_relaxed_actuals_type&, 
+		const unroll_context&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;

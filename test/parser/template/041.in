@@ -1,0 +1,15 @@
+// "041.in" should fail: untimely initialization of parameter
+// copy-modified from "040.in"
+// NOTE: this test will exhibit different when switching between
+//	one-pass and three-pass unrolling implementation
+// see implementation in entity::module::unroll()
+
+pint D;
+
+template <pint Q=D>
+defproc foo();
+
+foo bar;
+
+D=13;
+

@@ -1,4 +1,4 @@
-// should fail: base types are not equivalent
+// "009.in" should fail: base types are not equivalent
 
 int fe;
 int<> fi;

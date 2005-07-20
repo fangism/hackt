@@ -1,4 +1,4 @@
-// should fail: types don't match
+// "029.in" should fail: types don't match
 
 int foo;
 

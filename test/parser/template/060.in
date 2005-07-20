@@ -1,0 +1,8 @@
+// "060.in" should fail, no default relaxed parameters
+// copy-modified from "059.in"
+
+template <pint Q><pint R>
+defproc foo();
+
+foo<5><3> bar<3>;	// should fail, relaxed argument in both positions
+

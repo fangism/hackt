@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_data.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_data.h,v 1.2 2005/06/23 03:00:30 fang Exp $
+	$Id: art_object_definition_data.h,v 1.3 2005/07/20 20:59:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_DATA_H__
@@ -47,6 +47,12 @@ virtual	never_ptr<const datatype_definition_base>
 
 virtual	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
+#define	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO			\
+	count_ptr<const data_type_reference>				\
+	make_canonical_type_reference(const template_actuals&) const
+
+virtual	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO = 0;
+
 virtual	good_bool
 	require_signature_match(
 		const never_ptr<const definition_base> d) const = 0;
@@ -89,6 +95,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
@@ -99,6 +108,8 @@ public:
 	// overrides definition_base's, exception to rule
 	// because this is not a scopespace
 	// ah, but it is now!
+
+	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
 	never_ptr<const instance_collection_base>
 	add_template_formal(excl_ptr<instance_collection_base>& f);
@@ -174,6 +185,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
@@ -181,6 +195,8 @@ public:
 	resolve_canonical_datatype_definition(void) const;
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
@@ -226,6 +242,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
@@ -256,11 +275,16 @@ public:
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string&) const;
 
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
+
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
 		{ return good_bool(false); }	// temporary
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
 #if 0
 	good_bool
@@ -316,6 +340,8 @@ public:
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;

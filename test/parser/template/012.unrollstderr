@@ -1,45 +1,45 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4304450	module__	0	0	45
-	2	 0x4300144	namespc_	0	45	85
-	3	 0x4304474	proccoll	0	85	126
-	4	 0x43044d0	procinst	0	126	146
-	5	 0x43044f0	proctprf	0	146	162
-	6	 0x4304500	procdefn	0	162	222
-	7	 0x4304594	pintcoll	0	222	259
-	8	 0x43045e0	pintinst	0	259	275
-	9	 0x374a028	cnstpi__	0	275	287
-	10	 0x43045f0	dprmlst_	0	287	303
-	11	 0x4304600	proctprf	0	303	319
-	12	 0x4304610	cprmlst_	0	319	335
-	13	 0x374a038	cnstpi__	0	335	347
-	14	 0x4304624	proccoll	0	347	387
-	15	 0x4304680	procinst	0	387	407
-	16	 0x43046a0	proctprf	0	407	423
-	17	 0x43046b0	dprmlst_	0	423	439
-	18	 0x374a048	cnstpi__	0	439	451
-	19	 0x43046c0	proctprf	0	451	467
-	20	 0x43046d0	cprmlst_	0	467	483
-	21	 0x374a058	cnstpi__	0	483	495
-	22	 0x43046e4	proccoll	0	495	535
-	23	 0x4304740	procinst	0	535	555
-	24	 0x4304760	proctprf	0	555	571
-	25	 0x4304770	dprmlst_	0	571	587
-	26	 0x4304780	proctprf	0	587	603
-	27	 0x4304790	cprmlst_	0	603	619
-	28	 0x374a068	cnstpi__	0	619	631
-	29	 0x43047a4	proccoll	0	631	671
-	30	 0x4304800	procinst	0	671	691
-	31	 0x4304820	proctprf	0	691	707
-	32	 0x4304830	dprmlst_	0	707	723
-	33	 0x374a078	cnstpi__	0	723	735
-	34	 0x4304840	proctprf	0	735	751
-	35	 0x4304850	cprmlst_	0	751	767
-	36	 0x374a088	cnstpi__	0	767	779
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./012.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   4 instantiation-collections
@@ -49,8 +49,7 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (declared) foo<
       pint<> N (default = 7)
-      >
-      (
+      >(
       )
       In definition "foo", we have: {
         N = pint<> N (default = 7)

@@ -1,33 +1,33 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x3302a04	module__	0	0	68
-	2	 0x3300170	namespc_	0	68	96
-	3	 0x3302b34	pintcoll	3	96	305
-	4	 0x3803004	pintinst	0	305	321
-	5	 0x3302a24	crnglst_	0	321	357
-	6	 0x3803018	pintinst	0	357	373
-	7	 0x3302a34	crnglst_	0	373	409
-	8	 0x380302c	pintinst	0	409	425
-	9	 0x3302a44	crnglst_	0	425	461
-	10	 0x3803040	pintinst	0	461	477
-	11	 0x3302b94	crnglst_	0	477	513
-	12	 0x3803054	pintinst	0	513	529
-	13	 0x3302ba4	crnglst_	0	529	565
-	14	 0x3302bb4	pintcoll	3	565	774
-	15	 0x3803068	pintinst	0	774	790
-	16	 0x3302c14	crnglst_	0	790	826
-	17	 0x380307c	pintinst	0	826	842
-	18	 0x3302c24	crnglst_	0	842	878
-	19	 0x3803090	pintinst	0	878	894
-	20	 0x3302c34	crnglst_	0	894	930
-	21	 0x38030a4	pintinst	0	930	946
-	22	 0x3302c44	crnglst_	0	946	982
-	23	 0x38030b8	pintinst	0	982	998
-	24	 0x3302c54	crnglst_	0	998	1034
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	209
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	14	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	209
+	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	19	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	23	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 
-In module created from: -stdin- (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   2 parameter-collections
   0 instantiation-collections

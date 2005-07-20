@@ -3,38 +3,290 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-07-18:
+	Minutes of meeting.
+	cflat (backwards compatibility) has some constraints:
+		some programs require prior canonicalization of
+		unique instances, must use the same name to refer
+		to same node.  
+		Name canonicalization may only occur after unique
+		creation (instantiation).  
+		Therefore, creation must be done first.  
+	For unique creation, need to play back instantiations
+		after connection pass (unroll).  
+		Visit each top-level instance and check whether state 
+		has been created/allocated.  If not, then allocate.
+		Then recursively do for all ports and members.  
+		When check finds already created, establish
+		the pointer to the same memory.  
+
+//=============================================================================
+2005-07-17:
+	BUG to fix:
+	Passing template parameters down to ports:
+	e.g. process/059,060.in
+	TERMINATED. (2005-07-18)
+
+//=============================================================================
+2005-07-14:
+	Do built-in channel types have ports?  Should they be expanded
+		recursively like other structured types?
+
+//=============================================================================
+RESOLUTIONS (minutes of 2005-07-12 meeting):
+	(addressing  2005-07-11 entry)
+UNROLL (connect) phase:
+	Queries:
+	Are x and y connected? (somewhere in hierarchy)
+		Lemma: If super instances a, and b are explicitly aliased, 
+			and subinstances a....x, b....y are somehow
+			connected, then then all intermediate types
+			from top to bottom must match.  
+		Result: checking for connection requires upward checking
+			of x and y (and their aliases') parents WHILE
+			their types match.  As soon as parents' types
+			mismatch, can deduce non-connectivity.  
+	What is x connected to (all aliases)?
+		print aliases of itself and all parents' aliases.
+		(potentially multiplicative in size)
+	Graph connectivity: are two instances connected by anything?
+		Are any public ports of the two instances connected?
+		(recursive in public ports)
+	Subinstance implementation:
+		Upon instantiation, can recursively expand sub-instances
+		of ports down to leaf types, or defer until
+		member is actually referenced (or ports connected), 
+		a mere demand-driven optimization.
+		Should be able to expand ports recursively regardless
+		of relaxed template actuals because no ports may depend
+		on relaxed actuals.  
+		Private internal instances will not come into play until
+		unique creation.  
+	Any need to "play" local internal connections in this phase?
+		NO.  Only needed during unique creation.  
+
+cflat: will be purely text dump traversal, as originally planned.  
+
+UNIQUE (create) phase:
+	NOTE: will probably need one final type check for references
+		and aliases that involve relaxed actual parameters
+		because some checks are deferred during the unroll stage.  
+	Recursive traversal of aliases to establish object uniqueness, 
+		can be identified by e.g. a memory address of residence.  
+	Allocation of memory for state information. 
+
+SIMULATE operations and issues:
+	Establish fan-in and fan-out relationships.  
+	Don't want to replicate expression objects, instead have unique
+		instance reference expression of definitions.
+	(prsim) expression memoization
+	expression templates for prs in definitions
+		each production rule will map literals to 
+		positions to be used in the...
+	translation tables from local references to global unique IDs:
+		unique instances will point to (OR-combination)
+		of expression templates.
+	
+//-----------------------------------------------------------------------------
+2005-07-11:
+	Instance alias connection considerations:
+	Suppose type A has public members b and c.
+		A x, y;
+		If b and c are connected (internally), then what exactly 
+		happens when x = y?
+	How to determine whether or not two instances are connected?
+		Two instances referenced may be deep in the subinstance
+		hierarchy, and they connect if *any* of their parents 
+		are aliases.  But what an efficient way (<O(N^2)) of 
+		checking for aliasing parents?
+	WHEN are sub-instances expanded?
+		Do they require type to be complete?
+			(Theoretically, no, because instances should not 
+			depend on relaxed actual parameters.)
+		Sometimes types are never completed because they are 
+			merely relaxed-typed aliases (in arrays, e.g.).  
+		Create upon instantiation (regardless of relaxed actuals)?
+		Expand public ports only? Defer private and internals?
+	cflat -- want it to flatten connections in the hierarchy?
+		Or just some sort of hierarchical traversal to 
+		dump connections in some format?
+	Preventing mutual recursion/inclusion between types requires
+		some partial ordering between definitions.  
+		Or simply require definition before use/instance declaration.  
+	Procedure: check definition for existing type
+
+
+//=============================================================================
+2005-07-05:
+	Enforcing that things that shouldn't depend on relaxed formal
+		parameters... don't depend.  
+	Difficulty: what if dependence is established through
+		expression assignment? e.g. pint x = y, where y is relaxed.
+	Difficulty: what if is done through arrays and collectives?
+		(don't worry until complex aggregate expressions)
+	Proposal: need mechanism for tracking origin... for EVERY
+		value that may exist!  That could get expensive fast...
+		Store extra 'poison' bit with each const_param, yuck???
+		What about const-collection? pair<value_type, bool>?
+		That's going to f*** up the binary format once more...
+		But this will make room for more value attributes.  
+
+
+//=============================================================================
+2005-07-01:
+	resolved CHP questions, answers inlined in the 2005-06-11 entry.
+
+//=============================================================================
+2005-06-27:
+	TODO: clearly define standard lookup and name resolution rules.  
+	Shadow warnings:
+		If a template/port/loop parameter shadows another
+		available identifier, issue warning (compiler option)?
+	What about enum member names?  need special lookup rules?
+		(application: CHP enum equality comparison)
+		If id_expr used as an expression, then look-up as
+		an expression or enum...
+
+
+//=============================================================================
+2005-06-23:
+	Major goal: port and member instance connections (unroll-time)
+	RESOLUTION (2005-07-01):
+		use single unified pass, 
+		don't worry about multifile instance linking, 
+			we may drop support for that idea completely
+	requires (meta) member_instance_reference unrolling, which
+	requires complete-type reference/definition unrolling, which
+	requires principle definitions to keep track of what template
+		parameters have been used to complete type-references.
+		(type-reference need non-const definition handles)
+		Propose to keep some sort of map/repository of unrolled
+		types and their substructure layouts.  
+		Repeated instantations of same type should be able to
+		trivially initialize with the same 'footprint'.
+		(Far Future: each complete type should back-point to the 
+		template (general, or specialized) used to generate it. 
+		This is especially important for checking partial-order
+		specialization consistency.)
+	Substructure_manager / offset_map:
+		(see also 2005-04-28 entry)
+		map of member name to some index/offset.
+		mapped type is some pointer to what?
+		e.g.: how should "x.y.z" be resolved?
+			lookup top-level instance x, 
+			lookup member y, obtain offset to y.
+			Use y's offset to get reference to the actual 
+				sub-instance x.y.
+			lookup member z of y, obtain offset in y.
+			resolve instance z of y.  
+		Need to have a public (port) section, 
+			and a private internal section.  
+			Basic meta language restricted to public ports,
+			whereas tool-specific languages *may* use private.  (?)
+			(Everything in top-level is default public.)
+			e.g. params cannot be in ports, thus must be private
+		entries of map contain pointers to index_maps for arrays.
+		Index_maps are are similar to the implementation of the
+			instance_array sparse collection class.  
+			instance_array is currently constructed on the fly, 
+				where offsets are not established.  
+			Index maps will have established indices after
+				a complete unroll of the instantiation
+				statements in the scope.  
+		Keep around reverse offset <-> key-index map?
+		What kind of pointers?  count_ptr?
+	Unrolling revisited: proposing 3-pass approach:
+		1) meta evaluation only -- instantiation and value assignment
+			of local meta parameters only.  Since meta-parameters
+			may depend on other meta parameters, both instantiation
+			and assignments have to be integrated into the 
+			same evaluation pass.  Need to distinguish value
+			instantiation statements from physical instantiations.  
+		2) meta instantiation only -- creation of physical instances
+			or sub-instances.  During this phase, meta types
+			and values have been completed, so only
+			completed types remain.  Recall, each 'type' refers
+			back to a principle definition base with 
+			template actuals.  The first time a specific
+			type is instantiated, the completed definition
+			goes through a definition-unroll to generate the
+			substructure map (for the given set of parameters).  
+			Subsequent instantiations of the same type will
+			reuse those maps for fast instance creation.  
+		3) meta connections only -- establishes physical connections
+			between created instances.  
+		advantages: can create static sparse collection map
+			to translate offsets.  Provides static offset
+			translation maps to the connection phase.  
+		disadvantage: makes tracking proper instantiation before use
+			more difficult because of decoupling.  
+			(Should we not consider them errors?
+			out-of-order declaration-uses?)
+			Consider re-specifying language?
+	What if type is relaxed, like a relaxed array (port) declaration?
+		Technically, type is incomplete, unless we constrain
+		relaxed types (in same family) to have same public ports.  
+		But then their private internal members may be completely 
+			different.  Tools that use private member references
+			will require a separate instance checking phase...
+
+//=============================================================================
 2005-06-11:
+	Integer types: implicitly UNSIGNED.  
+	Assignment semantics: x := y;
+		impose the lvalue's type on y, i.e. infer what y's type
+		should be.  
+		This should take care of widths of integer constants
+		in rvalues.  
+		(What about constant indices?)
 	Need well-defined semantics of data (int, bool) operators
 		in the CHP context.  
 		e.g. what does int<X> + int<X> return?
+			whatever is being expected on the left.  
+			TODO: optional warnings of truncation.  
 		what does int<X> + int<Y> return?
+			the max width, implicitly 0-padded because unsigned.  
 		what does int<X> * int<X> return?
 		Gut feeling: for now types must match, and return same type
 			for arithmetic operators.
-		What about comparisons?  operands must match.  
+		What about comparisons?  operands must match?
+			No, just pad to the wider.  
 		Provide sign-extensions definition?  built-in?
+			Since ints are unsigned, pad with 0's.
 		Truncation operations?
+			Possible warning.  
 	Do pints implicitly have width 32?  (For now assume yes.)
+		Moot.  Width is inferred from lvalue.  
 		How is it possible for them to mix with other widths?
 	"bits" type, bit fields of integers (not the same as bool).  
 		Proposal: implement as public ports of the int built-in
 			intrinsic definition, like:
 			deftype int <: (bits b[W]);
+		Resolution: Accepted.
+	Logical and bitwise operations:
+		overload '&' and '|' for both bools (logical) and 
+		ints (bitwise) operations.  
 	For data-ranges [x..y] where x,y are run-time values, 
 		do we place any restrictions on the type (width) of x,y?
 		must x <= y?
-		Don't fee good about have size of expression be unknown...
+		Don't feel good about have size of expression be unknown...
 			very ugly semantics, tons of run-time checks...
+		Resolution: Reject range expressions in CHP.  
 	Non-scalar data/expression references in CHP context?
 		Currently, not allowed.  
+		Resolution: agreed, not allowed.  
 		Need to extend type-references (of built-in channel type)
 			to include (unnamed) packed arrays.
 		Not difficult, just low priority for now.  
 	Support for dataless communications?  X!, Y? ?  just 'X'?
+		Resolution: accepted, also be able to declare
+			empty chan() types, allow dropping parens? ()
 	CHP language:
 		',' and ';'
 		Can we allow ',' between actions other than communications?
 			Currently grammar doesn't support it.  
+		Resolution: accept generalized compositions, 
+			and parenthesize precedence.  
 	Grammar:
 		dark corner: guard expressions starting with a + or - b
 			must be wrapped in parens, after a transformation

@@ -2,7 +2,7 @@
 	\file "Object/art_object_assign.h"
 	Declarations for classes related to connection of 
 	assignments of parameters.
-	$Id: art_object_assign.h,v 1.20 2005/06/19 01:58:34 fang Exp $
+	$Id: art_object_assign.h,v 1.21 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_H__
@@ -10,8 +10,7 @@
 
 #include "util/boolean_types.h"
 #include "Object/art_object_instance_management_base.h"
-#include "Object/art_object_expr_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
@@ -24,6 +23,7 @@ using std::ostream;
 using util::memory::count_ptr;	// for experimental pointer classes
 using util::bad_bool;
 using util::good_bool;
+class param_expr;
 class unroll_context;
 
 //=============================================================================
@@ -51,7 +51,6 @@ public:
 	param_expression_assignment();
 virtual	~param_expression_assignment();
 
-// virtualize
 virtual	ostream&
 	what(ostream& o) const = 0;
 
@@ -63,6 +62,8 @@ virtual	size_t
 
 virtual	bad_bool
 	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
+
+virtual	UNROLL_META_EVALUATE_PROTO = 0;
 
 	/**
 		Helper class for appending instance references to
@@ -114,6 +115,10 @@ public:
 							value_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+							const_expr_type;
+	typedef	typename class_traits<Tag>::const_collection_type
+							const_collection_type;
 	typedef	count_ptr<value_reference_type>	dest_ptr_type;
 	typedef	count_ptr<const value_reference_type>	dest_const_ptr_type;
 	typedef	list<dest_const_ptr_type>		dest_list_type;
@@ -145,8 +150,10 @@ public:
 	append_simple_param_meta_value_reference(
 		const typename parent_type::dest_ptr_type& e);
 
-	void
+	good_bool
 	unroll(unroll_context& ) const;
+
+	UNROLL_META_EVALUATE_PROTO;
 
 public:
 	/** helper class for printing dump of list */
@@ -169,6 +176,14 @@ public:
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
 
+private:
+	typedef	typename dest_list_type::const_iterator	const_dest_iterator;
+
+	static
+	good_bool
+	assign_dests(const_dest_iterator, const const_dest_iterator&, 
+		const const_collection_type&);
+	
 };	// end cllass expression_assignment
 
 //=============================================================================

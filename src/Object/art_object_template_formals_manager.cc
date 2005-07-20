@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.4 2005/05/22 06:24:19 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.5 2005/07/20 21:00:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,7 +11,11 @@
 
 #include "Object/art_object_template_formals_manager.h"
 #include "Object/art_object_instance_param.h"
-#include "Object/art_object_expr.h"
+#include "Object/expr/const_param.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/art_object_template_actuals.h"
+#include "Object/art_object_unroll_context.h"
 
 #include "util/hash_qmap.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -44,22 +48,29 @@ template_formals_manager::template_formals_manager() :
 template_formals_manager::~template_formals_manager() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pretty-prints template formals specification for a
+	list of formals.  
+ */
 ostream&
 template_formals_manager::dump_formals_list(ostream& o, 
 		const template_formals_list_type& l) {
 	o << '<' << endl;	// continued from last print
-	template_formals_list_type::const_iterator i = l.begin();
-	const template_formals_list_type::const_iterator e = l.end();
+	template_formals_list_type::const_iterator i(l.begin());
+	const template_formals_list_type::const_iterator e(l.end());
 	for ( ; i!=e; i++) {
-		// sanity check
 		NEVER_NULL(*i);
+		// sanity check
 		INVARIANT((*i)->is_template_formal());
 		(*i)->dump(o << auto_indent) << endl;
 	}
-	return o << auto_indent << '>' << endl;
+	return o << auto_indent << '>';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pretty-prints strict and relaxed template formal parameters.  
+ */
 ostream&
 template_formals_manager::dump(ostream& o) const {
 	STACKTRACE("template_formals_manager::dump_template_formals()");
@@ -68,78 +79,48 @@ template_formals_manager::dump(ostream& o) const {
 		+relaxed_template_formals_list.size()
 		== template_formals_map.size());
 	if (!strict_template_formals_list.empty()) {
-		indent tfl_ind(o);
+		INDENT_SECTION(o);
 		dump_formals_list(o, strict_template_formals_list);
 	}
 	if (!relaxed_template_formals_list.empty()) {
-		indent tfl_ind(o);
+		INDENT_SECTION(o);
 		// need to be able to read that this is the second param list
 		if (strict_template_formals_list.empty()) {
 			o << "<>" << endl;	// continued from last print
 		}
-		dump_formals_list(o << auto_indent,
-			relaxed_template_formals_list);
+		dump_formals_list(o, relaxed_template_formals_list);
 	}
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-UNVEIL LATER
-/**
-	Creates a map from template formals to actual values.  
-	Precondition: list passed by reference must be initially empty.
-	Considering making appropriate virtual call interface in 
-		param_expr_list?
- */
-void
-definition_base::fill_template_actuals_map(
-		template_actuals_map_type& am, 
-		const param_expr_list& al) const {
-	INVARIANT(am.empty());
-	INVARIANT(template_formals_list.size() == al.size());
-	// convert to virtual call interface to param_expr_list?
-	const const_param_expr_list* cpl =
-		IS_A(const const_param_expr_list*, &al);
-	const dynamic_param_expr_list* dpl =
-		IS_A(const dynamic_param_expr_list*, &al);
-	template_formals_list_type::const_iterator f_iter =
-		template_formals_list.begin();
-if (cpl) {
-	const_param_expr_list::const_iterator i = cpl->begin();
-	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
-		// const-reference saves unnecessary copying
-		const template_formals_value_type& tf(*f_iter);
-		// reminder: value type is pointer to param_instance_collection
-		NEVER_NULL(tf);
-		// reminder: actuals map is of count_ptr
-		NEVER_NULL(*i);
-		am[tf->get_name()] = *i;
-	}
-} else {
-	NEVER_NULL(dpl);
-	dynamic_param_expr_list::const_iterator i = dpl->begin();
-	for ( ; f_iter!=template_formals_list.end(); f_iter++, i++) {
-		// const-reference saves unnecessary copying
-		const template_formals_value_type& tf(*f_iter);
-		// reminder: value type is pointer to param_instance_collection
-		NEVER_NULL(tf);
-		// reminder: actuals map is of count_ptr
-		NEVER_NULL(*i);
-		am[tf->get_name()] = *i;
-	}
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Only looks up the identifier in the set of template formals.  
+	\param id the local name of the formal parameter.  
+	\return pointer to the formal template parameter.  
  */
 never_ptr<const param_instance_collection>
 template_formals_manager::lookup_template_formal(const string& id) const {
 	return static_cast<const template_formals_map_type&>
 		(template_formals_map)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks whether referenced instance is a relaxed template formal.
+ */
+bool
+template_formals_manager::probe_relaxed_template_formal(
+		const string& id) const {
+	const size_t ind = lookup_template_formal_position(id);
+	// remember: index is 1-indexed
+	return ind > strict_template_formals_list.size();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+template_formals_manager::has_relaxed_formals(void) const {
+	return !relaxed_template_formals_list.empty();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,7 +140,7 @@ template_formals_manager::lookup_template_formal_position(
 	// default, uses pointer comparison
 	if (pp) {
 		template_formals_list_type::const_iterator
-			pb = strict_template_formals_list.begin();
+			pb(strict_template_formals_list.begin());
 		// find the position in the list/array
 		size_t ret = 1 +distance(pb,
 			std::find(pb, strict_template_formals_list.end(), pp));
@@ -191,7 +172,7 @@ template_formals_manager::partial_check_null_template_argument(
 	if (!l.empty()) {
 		// make sure each formal has a default parameter value
 		// starting with strict formal parameters
-		template_formals_list_type::const_iterator i = l.begin();
+		template_formals_list_type::const_iterator i(l.begin());
 		for ( ; i!=l.end(); i++) {
 			const never_ptr<const param_instance_collection> p(*i);
 			NEVER_NULL(p);
@@ -199,6 +180,12 @@ template_formals_manager::partial_check_null_template_argument(
 			// if any formal is missing a default value, then this 
 			// definition cannot have null template arguments
 			if (!(*p).default_value()) {
+				// gives relative position in the partial
+				// list, not the combined lists.  
+				cerr << "ERROR: missing template actual at position "
+					<< distance(l.begin(), i)+1 <<
+					" where no default value is given." << endl;
+
 				return good_bool(false);
 			}
 			// else continue;       // keep checking
@@ -215,10 +202,12 @@ template_formals_manager::partial_check_null_template_argument(
 	\return true if this definition is not templated, 
 		or the template formals signature is empty, 
 		or default parameters are available for all formals.  
+	NOTE: null argument checking doesn't apply to relaxed formals.  
  */
 good_bool
 template_formals_manager::check_null_template_argument(void) const {
 	STACKTRACE("template_formals_manager::check_null_template_argument()");
+#if 0
 	if (!partial_check_null_template_argument(
 			strict_template_formals_list).good) {
 		return good_bool(false);
@@ -226,10 +215,19 @@ template_formals_manager::check_null_template_argument(void) const {
 			relaxed_template_formals_list).good) {
 		return good_bool(false);
 	} else	return good_bool(true);
+#else
+	return partial_check_null_template_argument(
+		strict_template_formals_list);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Checks equivalence between two template formal lists, 
+	as used by definitions and declarations.  
+	This is intelligent in that it does a *structural* comparison
+	between the parameter-dependent expressions in the parameter
+	declarations.  
 	\pre size of lists l and r are the same.  
  */
 bool
@@ -237,8 +235,8 @@ template_formals_manager::equivalent_template_formals_lists(
 		const template_formals_list_type& l, 
 		const template_formals_list_type& r, 
 		const string& err_msg) {
-	template_formals_list_type::const_iterator i = l.begin();
-	template_formals_list_type::const_iterator j = r.begin();
+	template_formals_list_type::const_iterator i(l.begin());
+	template_formals_list_type::const_iterator j(r.begin());
 	for ( ; i!=l.end() && j!=r.end(); i++, j++) {
 		const never_ptr<const param_instance_collection> itf(*i);
 		const never_ptr<const param_instance_collection> jtf(*j);
@@ -304,11 +302,6 @@ template_formals_manager::equivalent_template_formals(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: upgrade dynamic_param_expr_list to a template_argument_list
-		that is subdivided into strict and relaxed parameters.  
-	TEMPORARY (wrong):
-		Just check strict formal parameter list only.  
-	TODO: also check relaxed parameter list.
 	Certifies the template arguments against this definition's
 	template signature.  
 	This also replaces NULL arguments in the list with defaults
@@ -321,105 +314,102 @@ template_formals_manager::equivalent_template_formals(
  */
 good_bool
 template_formals_manager::certify_template_arguments(
-		const never_ptr<dynamic_param_expr_list> ta) const {
-if (ta) {
-	// first, number of arguments must match
-	const size_t a_size = ta->size();
-	const size_t f_size = strict_template_formals_list.size();
-	const template_formals_list_type::const_iterator f_end =
-		strict_template_formals_list.end();
-	template_formals_list_type::const_iterator
-		f_iter = strict_template_formals_list.begin();
-	if (a_size != f_size) {
-		if (a_size)
-			return good_bool(false);
-		// else a_size == 0, passed actuals list is empty, 
-		// try to fill in all default arguments
-		for ( ; f_iter!=f_end; f_iter++) {
-			const never_ptr<const param_instance_collection>
-				pinst(*f_iter);
-			NEVER_NULL(pinst);
-			const count_ptr<const param_expr>
-				default_expr(pinst->default_value());
-			if (!default_expr) {
-				// no default value to supply
-				return good_bool(false);
-			} else {
-				ta->push_back(default_expr);
-			}
-		}
-		// if it fails, then list will be incomplete.  
-		// if this point is reached, then fill-in was successfull
-		return good_bool(true);
-	}
-	dynamic_param_expr_list::iterator p_iter = ta->begin();
-	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
-		// eventually also work for complex aggregate types!
-		// "I promise this pointer is only local."  
-		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
-			pinst(*f_iter);
-		NEVER_NULL(pinst);
-		if (pex) {
-			// type-check assignment, conservative w.r.t. arrays
-			if (!pinst->type_check_actual_param_expr(*pex).good) {
-				// error message?
-				return good_bool(false);
-			}
-			// else continue checking successive arguments
-		} else {
-			// no parameter expression given, 
-			// check for default -- if exists, use it, 
-			// else is error
-			const count_ptr<const param_expr>
-				default_expr(pinst->default_value());
-			if (!default_expr) {
-				// error message?
-				return good_bool(false);
-			} else {
-				// else, actually assign it a copy in the list
-				*p_iter = default_expr;
-			}
-		}
-	}
-	// end of checking reached, everything passed
-	return good_bool(true);
-} else {
-	// no arguments supplied, make sure template specification is
-	// null, or every formal has default values.  
-	return check_null_template_argument();
-}
+		template_actuals& t) const {
+	const count_ptr<param_expr_list> spl(t.get_strict_args());
+	const good_bool sg(spl ?
+		spl->certify_template_arguments(
+			strict_template_formals_list) :
+		partial_check_null_template_argument(
+			strict_template_formals_list));
+	// NOTE: at this phase of certification, the relaxed actuals
+	// are allowed to be ommitted, and thus should not be filled in.  
+	// Also note: relaxed formals aren't allowed to have default values.
+	// we use the const variant which doesn't modify the list
+	const count_ptr<const param_expr_list> rpl(t.get_relaxed_args());
+#if 0
+	const good_bool rg(rpl ?
+		rpl->certify_template_arguments(
+			relaxed_template_formals_list) :
+		partial_check_null_template_argument(
+			relaxed_template_formals_list));
+#else
+	const good_bool rg(rpl ?
+		rpl->certify_template_arguments_without_defaults(
+			relaxed_template_formals_list) : good_bool(true));
+		// if relaxed is NULL, then accept for now
+#endif
+	return sg && rg;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: return a pair of parameter lists (strict/relaxed).
-	Prerequisiste for calling this: must satisfy
-		check_null_template_arguments.  
+	Validating finally resolved (constant) template actuals
+	against template formal parameters.
+	\param t the template actuals must contain only constants.  
+ */
+good_bool
+template_formals_manager::must_validate_actuals(
+		const template_actuals& t) const {
+	const count_ptr<const param_expr_list> spl(t.get_strict_args());
+	const count_ptr<const const_param_expr_list>
+		cspl(spl.is_a<const const_param_expr_list>());
+	if (spl) NEVER_NULL(cspl);
+	const good_bool sg(cspl ?
+		cspl->must_validate_template_arguments(
+			strict_template_formals_list) :
+		partial_check_null_template_argument(
+			strict_template_formals_list));
+	const count_ptr<const param_expr_list> rpl(t.get_relaxed_args());
+	const count_ptr<const const_param_expr_list>
+		crpl(rpl.is_a<const const_param_expr_list>());
+	if (rpl) NEVER_NULL(crpl);
+	// if relaxed actuals are NULL, don't check them for defaults
+	const good_bool rg(crpl ?
+		crpl->must_validate_template_arguments(
+			relaxed_template_formals_list) : good_bool(true));
+#if 0
+		partial_check_null_template_argument(
+			relaxed_template_formals_list);
+#endif
+	const good_bool ret(sg && rg);
+	if (!ret.good) {
+		cerr << "ERROR: actual parameter types do not "
+			"completely match up against formals." << endl;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs a set of default arguments based on prototype declaration.  
+	NOTE: relaxed template formals are not allowed to have
+		default values.  
+	\pre satisfies this->check_null_template_argument().
 	\returns a list of default parameter expressions.  
  */
-excl_ptr<dynamic_param_expr_list>
+template_actuals
 template_formals_manager::make_default_template_arguments(void) const {
-	typedef excl_ptr<dynamic_param_expr_list>       return_type;
+	typedef count_ptr<dynamic_param_expr_list>       return_type;
 	INVARIANT(check_null_template_argument().good);
 	if (strict_template_formals_list.empty())
-		return return_type(NULL);
-	// defaulting to dynamic_param_expr_list
-	return_type ret(new dynamic_param_expr_list);
+		return template_actuals();
+	const return_type
+		ret(new dynamic_param_expr_list(
+			strict_template_formals_list.size()));
 	template_formals_list_type::const_iterator
-		i = strict_template_formals_list.begin();
+		i(strict_template_formals_list.begin());
 	for ( ; i!=strict_template_formals_list.end(); i++) {
 		const count_ptr<const param_expr> d((*i)->default_value());
 		NEVER_NULL(d);  // everything must have default
 		ret->push_back(d);
 	}
 	// should transfer ownership
-	return ret;
+	return template_actuals(ret, template_actuals::arg_list_ptr_type());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Registers a strict template formal with this manager.  
 	\param pf the formal instance to add to the strict formal list.  
 	\pre Already checked that formal's name is not already taken.  
  */
@@ -433,6 +423,7 @@ template_formals_manager::add_strict_template_formal(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Registers a relaxed template formal with this manager.  
 	\param pf the formal instance to add to the relaxed formal list.  
 	\pre Already checked that formal's name is not already taken.  
  */
@@ -455,9 +446,9 @@ template_formals_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE("template_formals_manager::collect_transients()");
 	template_formals_list_type::const_iterator
-		iter = strict_template_formals_list.begin();
+		iter(strict_template_formals_list.begin());
 	template_formals_list_type::const_iterator
-		end = strict_template_formals_list.end();
+		end(strict_template_formals_list.end());
 	for ( ; iter!=end; iter++) {
 		(*iter)->collect_transient_info(m);
 	}
@@ -506,8 +497,8 @@ template_formals_manager::load_template_formals_list(
 		const persistent_object_manager& m, 
 		template_formals_map_type& the_map, 
 		template_formals_list_type& l) {
-	template_formals_list_type::const_iterator iter = l.begin();
-	const template_formals_list_type::const_iterator end = l.end();
+	template_formals_list_type::const_iterator iter(l.begin());
+	const template_formals_list_type::const_iterator end(l.end());
 	for ( ; iter!=end; iter++) {
 		STACKTRACE("for-loop: load a map entry");
 		const template_formals_value_type inst_ptr = *iter;
@@ -521,7 +512,6 @@ template_formals_manager::load_template_formals_list(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: eliminate code duplication, add some static methods.
 	Template formals are loaded in list order.
 	Remember that the redundant hash_map also needs to be reconstructed.  
 	Another method will add the entries to the corresponding

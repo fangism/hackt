@@ -1,0 +1,157 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	33
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
+	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	35	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	44	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	45	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	46	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
+	47	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
+	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
+	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
+	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  6 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    portaproc = process-definition (declared) portaproc(
+        bool<> b
+        bool<> c with indices: {
+          [0..3]
+        }
+
+        int<32> i
+        int<32> j with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "portaproc", we have: {
+        b = bool<> b
+        c = bool<> c with indices: {
+          [0..3]
+        }
+
+        i = int<32> i
+        j = int<32> j with indices: {
+          [0..1]
+        }
+
+      }
+
+  Instances:
+    a = bool^0 a (instantiated) = ::p.b 
+    p = process portaproc<>^0 p (instantiated) = ::p (
+      bool^0 b (instantiated) = ::a 
+      bool^1 c with indices: {
+        [0..3]
+      }
+        unrolled indices: {
+          0 = ::x[0] 
+          1 = ::x[1] 
+          2 = ::x[2] 
+          3 = ::x[3] 
+        }
+      int<32>^0 i (instantiated) = ::q 
+      int<32>^1 j with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::r[0] 
+          1 = ::r[1] 
+        }
+    )
+    q = int<32>^0 q (instantiated) = ::p.i 
+    r = int<32>^1 r with indices: {
+      [0..1]
+    }
+      unrolled indices: {
+        0 = ::p.j[0] 
+        1 = ::p.j[1] 
+      }
+    s = process portaproc<>^0 s (instantiated) = ::s (
+      bool^0 b (instantiated) = ::s.b 
+      bool^1 c with indices: {
+        [0..3]
+      }
+        unrolled indices: {
+          0 = ::s.c[0] 
+          1 = ::s.c[1] 
+          2 = ::s.c[2] 
+          3 = ::s.c[3] 
+        }
+      int<32>^0 i (instantiated) = ::s.i 
+      int<32>^1 j with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::s.j[0] 
+          1 = ::s.j[1] 
+        }
+    )
+    x = bool^1 x with indices: {
+      [0..3]
+    }
+      unrolled indices: {
+        0 = ::p.c[0] 
+        1 = ::p.c[1] 
+        2 = ::p.c[2] 
+        3 = ::p.c[3] 
+      }
+}
+

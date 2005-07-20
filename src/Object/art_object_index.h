@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_index.h"
 	Typedef for index types.  
-	$Id: art_object_index.h,v 1.6 2005/05/22 06:23:55 fang Exp $
+	$Id: art_object_index.h,v 1.7 2005/07/20 21:00:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INDEX_H__
 #define	__OBJECT_ART_OBJECT_INDEX_H__
 
 #include "util/multikey_fwd.h"
-#include "Object/art_object_expr_types.h"	// for pint/pbool_value_type
+#include "Object/expr/types.h"	// for pint/pbool_value_type
 
 namespace ART {
 namespace entity {

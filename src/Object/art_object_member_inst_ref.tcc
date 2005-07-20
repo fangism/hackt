@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_member_inst_ref.tcc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.8 2005/06/19 01:58:45 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.9 2005/07/20 21:00:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -10,8 +10,11 @@
 #include <iostream>
 #include "util/what.h"
 #include "util/persistent_object_manager.h"
+#include "Object/art_object_instance_base.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "util/memory/count_ptr.tcc"
+#include "Object/ref/inst_ref_implementation.h"
+#include "Object/inst/substructure_alias_base.h"
 
 //=============================================================================
 namespace ART {
@@ -54,15 +57,82 @@ MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_collection_generic_type>
+MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
+		const unroll_context& c) const {
+	typedef	count_ptr<instance_collection_generic_type>	return_type;
+	if (this->base_inst_ref->dimensions()) {
+		cerr << "ERROR: parent instance reference of a "
+			"member reference must be scalar." << endl <<
+			"However, non-scalar member-parent references "
+			"may be introduced in the future, bug Fang about it."
+			<< endl;
+		return return_type(NULL);
+	}
+	const never_ptr<substructure_alias>
+		parent_struct(this->base_inst_ref->
+			unroll_generic_scalar_reference(c));
+	if (!parent_struct) {
+		base_inst_ref->dump(
+			cerr << "ERROR resolving member reference parent ")
+			<< endl;
+		return return_type(NULL);
+	}
+	const count_ptr<instance_collection_base>
+		resolved_instance(parent_struct->lookup_port_instance(
+			*this->get_inst_base()));
+	if (!resolved_instance) {
+		cerr << "ERROR resolving port instance." << endl;
+		return return_type(NULL);
+	}
+	const return_type
+		inst_base(resolved_instance
+			.template is_a<instance_collection_generic_type>());
+	// expecting the right type!
+	INVARIANT(inst_base);
+	return inst_base;
+}	// end method resolve_parent_member_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\return true on error.  
+	Resolves a member instance reference.
+	Procedure:
+	\return error status.  
+	TODO: far future, support for non-scalar parents.  
+		That will allow effective construction of higher (>4)
+		dimensional arrays!
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
-		unroll_context& c, alias_collection_type& a) const {
-	cerr << "FANG: write member_instanace_reference<>::unroll_references()!" << endl;
-	return bad_bool(true);
+		const unroll_context& c, alias_collection_type& a) const {
+	const count_ptr<instance_collection_generic_type>
+		inst_base(resolve_parent_member_helper(c));
+	if (!inst_base) {
+		// already have error message
+		return bad_bool(true);
+	}
+	return unroll_references_helper(c, *inst_base, this->array_indices, a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<substructure_alias>
+MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+		const unroll_context& c) const {
+	typedef	simple_meta_instance_reference_implementation<
+			class_traits<Tag>::has_substructure>
+				substructure_implementation_policy;
+	const count_ptr<instance_collection_generic_type>
+		inst_base(resolve_parent_member_helper(c));
+	if (!inst_base) {
+		// already have error message
+		return never_ptr<substructure_alias>(NULL);
+	}
+	return substructure_implementation_policy::
+		template unroll_generic_scalar_reference<Tag>(
+			*inst_base, this->array_indices, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

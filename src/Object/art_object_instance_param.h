@@ -1,15 +1,16 @@
 /**
 	\file "Object/art_object_instance_param.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_instance_param.h,v 1.20 2005/06/19 01:58:44 fang Exp $
+	$Id: art_object_instance_param.h,v 1.21 2005/07/20 21:00:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_PARAM_H__
 
-#include "util/boolean_types.h"
 #include "Object/art_object_instance_base.h"
+#include "Object/expr/types.h"
 #include "Object/art_object_expr_param_ref.h"	// for typedef init_arg_type
+#include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
 
 #include "util/multikey_fwd.h"
@@ -19,6 +20,7 @@ namespace ART {
 namespace entity {
 struct pbool_tag;
 struct pint_tag;
+class const_param;
 USING_LIST
 using util::memory::count_ptr;
 using util::qmap;
@@ -103,10 +105,22 @@ virtual	count_ptr<const param_expr>
 virtual	good_bool
 	assign_default_value(const count_ptr<const param_expr>& p) = 0;
 
-// used by definition_base::certify_template_arguments
+// used by param_expr_list::certify_template_arguments
 virtual	good_bool
-	type_check_actual_param_expr(const param_expr& pe) const = 0;
+	may_type_check_actual_param_expr(const param_expr& pe) const = 0;
 
+virtual	good_bool
+	must_type_check_actual_param_expr(const const_param& pe) const = 0;
+
+// down-copied from instance_collection_base
+protected:
+	good_bool
+	may_check_expression_dimensions(const param_expr& pr) const;
+
+	good_bool
+	must_check_expression_dimensions(const const_param& pr) const;
+
+public:
 /**
 	whether or not this can be resolved to some static constant value.
 	Will also need two flavors.  

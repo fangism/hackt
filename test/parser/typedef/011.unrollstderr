@@ -1,0 +1,55 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	4	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	76
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  2 typedefs
+  Definitions:
+    array2d = process-definition (declared) array2d<
+      pint<> N
+      pint<> M
+      >(
+      )
+      In definition "array2d", we have: {
+        M = pint<> M
+        N = pint<> N
+      }
+
+  Typedefs:
+    col = process-definition-alias: col<
+      pint<> K
+      >
+      = array2d<pint-inst-ref ::col::K, 1>
+    row = process-definition-alias: row<
+      pint<> Q
+      >
+      = array2d<1, pint-inst-ref ::row::Q>
+}
+

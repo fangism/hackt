@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.24 2005/06/23 03:00:30 fang Exp $
+	$Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp $
  */
 
 %{
@@ -26,18 +26,22 @@
 using namespace ART::lexer;
 using namespace ART::parser;
 
+#ifndef	YYBISON
+#define	YYBISON		0
+#endif
+
 #if YYBISON
 #include "util/memory/excl_ptr.h"
 /**
 	Work-around for bison.
 	Bison doesn't give public access to yyval, so we are forced to
 	pass it through a global variable.  
-	Make you long for yacc, doesn't it?
+	Makes one long for yacc, doesn't it?
 	Defined as an excl_ptr, which means exclusive but transferrable
 	ownership.  
  */
 util::memory::excl_ptr<root_body> AST_root;
-#endif
+#endif	// YYBISON
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
@@ -269,6 +273,7 @@ extern const char* const yyrule[];
 	incdec_stmt*		_incdec_stmt;
 	expr_list*		_expr_list;
 	inst_ref_expr_list*	_inst_ref_expr_list;
+	template_argument_list_pair*	_template_argument_list_pair;
 /** not used
 	template_argument_list*	_template_argument_list;
 	connection_argument_list*	_connection_argument_list;
@@ -474,10 +479,13 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_user_chan_type_prototype>	declare_chan_proto
 %type	<_template_formal_decl_list>	template_formal_decl_list_in_angles template_formal_decl_list
 %type	<_template_formal_decl_list>	template_formal_decl_list_optional_in_angles
+%type	<_template_formal_decl_list>	template_formal_decl_nodefault_list_in_angles template_formal_decl_nodefault_list
 %type	<_template_formal_decl_list_pair>	template_specification optional_template_specification
-%type	<_template_formal_decl>	template_formal_decl
-%type	<_template_formal_id_list>	template_formal_id_list
+%type	<_template_formal_decl>	template_formal_decl template_formal_decl_nodefault
+%type	<_template_formal_id_list>	template_formal_id_list template_formal_id_nodefault_list
 %type	<_template_formal_id>	template_formal_id
+%type	<_template_formal_id>	template_formal_id_default
+%type	<_template_formal_id>	template_formal_id_nodefault
 %type	<_port_formal_decl_list>	optional_port_formal_decl_list_in_parens port_formal_decl_list
 %type	<_port_formal_decl>	port_formal_decl
 %type	<_port_formal_id_list>	port_formal_id_list
@@ -574,6 +582,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
+%type	<_expr_list>	shift_expr_list shift_expr_list_in_angles
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
@@ -590,6 +599,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_assign_stmt>	binary_assignment */
 %type	<_incdec_stmt>	unary_assignment
 %type	<_expr_list>	optional_template_arguments_in_angles
+%type	<_template_argument_list_pair>	strict_relaxed_template_arguments
 %type	<_expr_list>	expr_list_in_parens expr_list
 /* %type	<_range_list>	optional_range_list_in_brackets */
 /* %type	<_range_list>	range_list_in_brackets */
@@ -710,7 +720,7 @@ template_specification
 		{ DELETE_TOKEN($1);
 		  $$ = new template_formal_decl_list_pair($2, NULL); }
 	| TEMPLATE template_formal_decl_list_optional_in_angles
-	  template_formal_decl_list_in_angles
+	  template_formal_decl_nodefault_list_in_angles
 		/* second set of formals is for relaxed parameters */
 		{ DELETE_TOKEN($1);
 		  $$ = new template_formal_decl_list_pair($2, $3); }
@@ -781,6 +791,11 @@ template_formal_decl_list_in_angles
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
+template_formal_decl_nodefault_list_in_angles
+	: '<' template_formal_decl_nodefault_list '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
 template_formal_decl_list_optional_in_angles
 	: template_formal_decl_list_in_angles
 		{ $$ = $1; }
@@ -789,10 +804,13 @@ template_formal_decl_list_optional_in_angles
 		  WRAP_LIST($1, $$, $2); }
 	;
 
-/** OBSOLETE
-optional_template_formal_decl_list_in_angles
-	: template_formal_decl_list_in_angles
-	| { $$ = NULL; }
+/**
+template_formal_decl_nodefault_list_optional_in_angles
+	: template_formal_decl_nodefault_list_in_angles
+		{ $$ = $1; }
+	| '<' '>'
+		{ $$ = new template_formal_decl_list();
+		  WRAP_LIST($1, $$, $2); }
 	;
 **/
 
@@ -803,10 +821,22 @@ template_formal_decl_list
 		{ $$ = new template_formal_decl_list($1); }
 	;
 
+template_formal_decl_nodefault_list
+	: template_formal_decl_nodefault_list ';' template_formal_decl_nodefault
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| template_formal_decl_nodefault
+		{ $$ = new template_formal_decl_list($1); }
+	;
+
 template_formal_decl
 /* changing to C-style formal parameters, allowing comma-lists
 	is there any need for user-defined types in template argument? */
 	: base_param_type template_formal_id_list
+		{ $$ = new template_formal_decl($1, $2); }
+	;
+
+template_formal_decl_nodefault
+	: base_param_type template_formal_id_nodefault_list
 		{ $$ = new template_formal_decl($1, $2); }
 	;
 
@@ -817,24 +847,38 @@ template_formal_id_list
 		{ $$ = new template_formal_id_list($1); }
 	;
 
-template_formal_id
-	/** update formal declarations: only allow dense arrays, no ranges */
-	: ID optional_dense_range_list
-		{ $$ = new template_formal_id($1, $2); }
+template_formal_id_nodefault_list
+	: template_formal_id_nodefault_list ',' template_formal_id_nodefault
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| template_formal_id_nodefault
+		{ $$ = new template_formal_id_list($1); }
+	;
+
+template_formal_id_default
 /**
 	from http://www.computing.surrey.ac.uk/research/dsrg/fog/CxxGrammar.y:
 	The potential shift-reduce conflict on > is resolved by
 	flattening part of the expression grammar to know when the 
 	next > is template end or arithmetic >.
-**/
-	| ID optional_dense_range_list '=' shift_expr
-		{ $$ = new template_formal_id($1, $2, $3, $4); }
-/**
 	We choose to force the user to disambiguate by placing parentheses
 	around relational expressions, which covers arithmetic use of '>'.
 	Notice that below, shift_expr is the highest expression
 	before relational_expr.  
 **/
+	: ID optional_dense_range_list '=' shift_expr
+		{ $$ = new template_formal_id($1, $2, $3, $4); }
+	;
+
+template_formal_id_nodefault
+	: ID optional_dense_range_list
+		{ $$ = new template_formal_id($1, $2); }
+	;
+
+template_formal_id
+	/** update formal declarations: only allow dense arrays, no ranges **/
+	/** no relaxed parameters: never used in template formals **/
+	: template_formal_id_default { $$ = $1; }
+	| template_formal_id_nodefault { $$ = $1; }
 	;
 
 port_formal_decl_list
@@ -860,15 +904,16 @@ port_formal_id_list
 
 port_formal_id
 	/** update port formals: only dense arrays allowed, no sparse ranges */
+	/** forbid use of relaxed template arguments in port formals list? **/
 	: ID optional_dense_range_list
 		{ $$ = new port_formal_id($1, $2); }
 	;
 
 generic_type_ref
-	: relative_id optional_template_arguments_in_angles optional_chan_dir
+	: relative_id strict_relaxed_template_arguments optional_chan_dir
 		/* for userdef or chan type, and templating */
 		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
-	| absolute_id optional_template_arguments_in_angles optional_chan_dir
+	| absolute_id strict_relaxed_template_arguments optional_chan_dir
 		/* for userdef or chan type, and templating */
 		{ $$ = new generic_type_ref(new type_id($1), $2, $3); }
 	;
@@ -890,7 +935,7 @@ physical_type_ref
 	;
 
 base_data_type_ref
-	: base_data_type optional_template_arguments_in_angles
+	: base_data_type strict_relaxed_template_arguments
 		{ $$ = new generic_type_ref($1, $2); }
 		/* 3rd argument is channel direction, doesn't apply here */
 	;
@@ -904,7 +949,8 @@ data_type_ref
 type_id
 	: physical_type_ref { $$ = $1; }
 	| base_param_type
-		{ $$ = new generic_type_ref($1); }
+		{ $$ = $1; }
+		/* { $$ = new generic_type_ref($1); } */
 		/* should parameter declarations be allowed 
 			in loops and conditionals? rather not */
 	;
@@ -1161,19 +1207,21 @@ instance_id_list
 	;
 
 instance_id_item
+	/** NEW: relaxed template arguments */
 	/* array declaration: forbid connection, must connect later */
-	: ID sparse_range_list
-		{ $$ = new instance_array($1, $2); }
+	: ID optional_template_arguments_in_angles sparse_range_list
+		{ $$ = new instance_array($1, $2, $3); }
 	/* single instance declaration without connection */
-	| ID
-		{ $$ = new instance_base($1); }
+	| ID optional_template_arguments_in_angles
+		{ $$ = new instance_base($1, $2); }
 	/* single instance declaration with connection */
-	| ID connection_actuals_list
-		{ $$ = new instance_connection($1, $2); }
+	| ID optional_template_arguments_in_angles connection_actuals_list
+		{ $$ = new instance_connection($1, $2, $3); }
 	/* instance alias or parameter assignment */
-	| ID '=' rvalue_optional_alias_list
-		{ WRAP_LIST($2, $3, NULL);
-		  $$ = new instance_alias($1, $3); }
+	| ID optional_template_arguments_in_angles
+	  '=' rvalue_optional_alias_list
+		{ WRAP_LIST($3, $4, NULL);
+		  $$ = new instance_alias($1, $2, $4); }
 	;
 
 connection_statement
@@ -1937,8 +1985,8 @@ binary_assignment
 //	| member_index_expr ANDMASK expr
 //	| member_index_expr ORMASK expr
 //	| member_index_expr XORMASK expr
-*/
 	;
+*/
 
 unary_assignment
 	: member_index_expr PLUSPLUS
@@ -1968,18 +2016,41 @@ optional_expr_in_braces
 	;
 **/
 
+strict_relaxed_template_arguments
+	: shift_expr_optional_list_in_angles
+	  optional_template_arguments_in_angles
+/*		{ $$ = $1; DELETE_TOKEN($2); }	*/
+		{ $$ = new template_argument_list_pair($1, $2); }
+	|	{ $$ = NULL; }
+	;
+
 optional_template_arguments_in_angles
 /*	: member_index_expr_list_in_angles	*/
 /*	replaced with shift_expr_optional_list to eliminate S/R on '>' */
-	: shift_expr_optional_list_in_angles
+/*	: shift_expr_optional_list_in_angles	*/
+	: shift_expr_list_in_angles
+/*
+	if angles are given, then expressions are required because
+	relaxed template formals are forbidden from having default values.  
+*/
 		{ $$ = $1; }
-/*		{ $$ = new template_argument_list($1); }	*/
 	| { $$ = NULL; }
+	;
+
+shift_expr_list_in_angles
+	: '<' shift_expr_list '>'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
 shift_expr_optional_list_in_angles
 	: '<' shift_expr_optional_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+shift_expr_list
+	: shift_expr_list ',' shift_expr
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| shift_expr { $$ = new expr_list($1); }
 	;
 
 shift_expr_optional_list

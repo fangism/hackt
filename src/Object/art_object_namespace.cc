@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.28 2005/06/19 01:58:45 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.29 2005/07/20 21:00:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -44,7 +44,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_stmt_base.h"
-#include "Object/art_object_expr_const.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_type_hash.h"
 
@@ -249,13 +250,6 @@ scopespace::add_instance(
 	// inst_stmt won't have a name yet!
 	// const string id(inst_stmt->get_name());
 	const size_t dim = inst_stmt->dimensions();
-#if 0
-	// DEBUG
-	cerr << "In scopespace::add_instance with this = " << this << endl;
-//	i->dump(cerr << "excl_ptr<instance_collection_base> i = ") << endl;
-	inst_stmt->dump(cerr << "never_ptr<instantiation_statement_base> inst_stmt = ") << endl;
-	dump(cerr);	// dump the entire namespace
-#endif
 	const never_ptr<object> probe(lookup_object_here_with_modify(id));
 	if (probe) {
 		const never_ptr<instance_collection_base>
@@ -279,9 +273,25 @@ scopespace::add_instance(
 				old_type(probe_inst->get_type_ref());
 			const count_ptr<const fundamental_type_reference>
 				new_type(inst_stmt->get_type_ref());
+			// 2005-07-08 decision: 
+			// strictness must be the same as original declaration, 
+			// the first to appear in text, not necessarily first 
+			// to be unrolled, in the case of conditional scopes.
+			// In the future, these constraints may be revisited
+			// and changed.  
+			if (!old_type->get_template_params()
+					.is_strictly_compatible_with(
+					new_type->get_template_params())) {
+				cerr << "ERROR: type redeclaration of "
+					"collection " << id <<
+					" does not match in strictness "
+					"to the original declaration." << endl;
+				return return_type(NULL);
+
+			}
 			// type comparison is conservative, in the 
 			// case of dynamic template parameters.  
-			if (!old_type->may_be_type_equivalent(*new_type)) {
+			if (!old_type->may_be_collectibly_type_equivalent(*new_type)) {
 				cerr << "ERROR: type of redeclaration of "
 					<< id << " does not match "
 					"previous declaration: " << endl <<
@@ -761,6 +771,14 @@ name_space::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+name_space::dump_qualified_name(ostream& o) const {
+	if (parent)
+		return parent->dump_qualified_name(o) << scope << key;
+	else	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns pointer to global namespace by following parent pointers.
  */
@@ -803,13 +821,13 @@ name_space::dump(ostream& o) const {
 		"In namespace \"" << key << "\", we have: {" << endl;
 {
 	// indentation scope
-	indent ns_ind(o);
+	INDENT_SECTION(o);
 	bins.stats(o);
 
 	// maps are already sorted by key
 	if (!bins.param_bin.empty()) {
 		o << auto_indent << "Parameters:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -823,7 +841,7 @@ name_space::dump(ostream& o) const {
 
 	if (!bins.ns_bin.empty()) {
 		o << auto_indent << "Namespaces:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.ns_bin.begin(), bins.ns_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -840,7 +858,7 @@ name_space::dump(ostream& o) const {
 	
 	if (!bins.def_bin.empty()) {
 		o << auto_indent << "Definitions:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.def_bin.begin(), bins.def_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -854,7 +872,7 @@ name_space::dump(ostream& o) const {
 	
 	if (!bins.alias_bin.empty()) {
 		o << auto_indent << "Typedefs:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
@@ -868,7 +886,7 @@ name_space::dump(ostream& o) const {
 	
 	if (!bins.inst_bin.empty()) {
 		o << auto_indent << "Instances:" << endl;
-		indent indenter(o);
+		INDENT_SECTION(o);
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(

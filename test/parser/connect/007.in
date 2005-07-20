@@ -1,4 +1,4 @@
-// should pass: types are equivalent
+// "007.in" should pass: types are equivalent
 // actually type-checker is lazy and won't check param actuals
 // of typedef'd types until unroll time.
 // see 008.in

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: art_object_CHP.tcc,v 1.2 2005/06/19 01:58:33 fang Exp $
+	$Id: art_object_CHP.tcc,v 1.3 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_TCC__
@@ -74,7 +74,7 @@ channel_send::add_expressions(const L& l) {
 					" in send expression list.  " << endl;
 				return good_bool(false);
 			}
-			if (!(*ti)->may_be_type_equivalent(*etype)) {
+			if (!(*ti)->may_be_connectibly_type_equivalent(*etype)) {
 				cerr << "Type mismatch in expression " << i <<
 					" of send expression list.  " << endl;
 				etype->dump(cerr << "\tgot: ") << endl;
@@ -167,7 +167,7 @@ channel_receive::add_references(const L& l) {
 					" in receive list.  " << endl;
 				return good_bool(false);
 			}
-			if (!(*ti)->may_be_type_equivalent(*etype)) {
+			if (!(*ti)->may_be_connectibly_type_equivalent(*etype)) {
 				cerr << "Type mismatch in reference " << i <<
 					" of receive list.  " << endl;
 				etype->dump(cerr << "\tgot: ") << endl;

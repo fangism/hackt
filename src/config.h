@@ -2,7 +2,7 @@
 	\file "config.h"
 	Convenient wrapper for the one automatically generated
 	by configure.
-	$Id: config.h,v 1.2 2005/05/22 06:18:29 fang Exp $
+	$Id: config.h,v 1.3 2005/07/20 20:59:49 fang Exp $
  */
 
 #ifndef	__CONFIG_H__
@@ -17,6 +17,12 @@
 
 #if	defined(HAVE_CONFIG_H) && !defined(IGNORE_CONFIG_H)
 #include "../config.h"
+#endif
+
+#ifdef	const
+#error	Detected preprocessor definition of const.  \
+	This means that a configure test found const non-ANSI-conforming.  \
+	Sorry, but I refuse to let you compile this project with broken const.
 #endif
 
 #endif	// __CONFIG_H__

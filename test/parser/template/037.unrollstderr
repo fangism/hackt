@@ -1,0 +1,9 @@
+ERROR: bad range in const_range_list, got: [1..0]
+ERROR in expression 1 of param expr list: pint-inst-ref ::W[::W[0]..::W[1]]
+ERROR in dynamic_param_expr_list::unroll_resolve()
+ERROR in resolving strict template actuals.
+	pint-inst-ref ::W[::W[0]..::W[1]]
+ERROR resolving template arguments.
+ERROR: unable to resolve process-type-reference during unroll.
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

@@ -1,55 +1,55 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x43052b0	module__	0	0	69
-	2	 0x4300144	namespc_	0	69	97
-	3	 0x43053e4	dintcoll	3	97	314
-	4	 0x43052d0	datainst	0	314	334
-	5	 0x43052f0	datatprf	0	334	350
-	6	 0x4305430	datadefn	0	350	402
-	7	 0x43054d0	dprmlst_	0	402	418
-	8	 0x3716028	cnstpi__	0	418	430
-	9	 0x43054e0	crnglst_	0	430	466
-	10	 0x43054f0	datainst	0	466	486
-	11	 0x4305510	datatprf	0	486	502
-	12	 0x4305520	dprmlst_	0	502	518
-	13	 0x4305530	crnglst_	0	518	554
-	14	 0x4305540	datainst	0	554	574
-	15	 0x4305560	datatprf	0	574	590
-	16	 0x4305570	dprmlst_	0	590	606
-	17	 0x4305580	crnglst_	0	606	642
-	18	 0x4305590	datainst	0	642	662
-	19	 0x43055b0	datatprf	0	662	678
-	20	 0x43055c0	dprmlst_	0	678	694
-	21	 0x43055d0	crnglst_	0	694	730
-	22	 0x43055e0	datainst	0	730	750
-	23	 0x4305600	datatprf	0	750	766
-	24	 0x4305610	dprmlst_	0	766	782
-	25	 0x4305620	crnglst_	0	782	818
-	26	 0x4305634	dintcoll	3	818	1035
-	27	 0x4305680	datainst	0	1035	1055
-	28	 0x43056a0	datatprf	0	1055	1071
-	29	 0x43056b0	dprmlst_	0	1071	1087
-	30	 0x43056c0	crnglst_	0	1087	1123
-	31	 0x43056d0	datainst	0	1123	1143
-	32	 0x43056f0	datatprf	0	1143	1159
-	33	 0x4305700	dprmlst_	0	1159	1175
-	34	 0x4305710	crnglst_	0	1175	1211
-	35	 0x4305720	datainst	0	1211	1231
-	36	 0x4305740	datatprf	0	1231	1247
-	37	 0x4305750	dprmlst_	0	1247	1263
-	38	 0x4305760	crnglst_	0	1263	1299
-	39	 0x4305770	datainst	0	1299	1319
-	40	 0x4305790	datatprf	0	1319	1335
-	41	 0x43057a0	dprmlst_	0	1335	1351
-	42	 0x43057b0	crnglst_	0	1351	1387
-	43	 0x43057c0	datainst	0	1387	1407
-	44	 0x43057e0	datatprf	0	1407	1423
-	45	 0x43057f0	dprmlst_	0	1423	1439
-	46	 0x4305800	crnglst_	0	1439	1475
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	217
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	26	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	217
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 
-In module created from: ./029.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections

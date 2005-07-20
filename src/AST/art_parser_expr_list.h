@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.7 2005/06/19 01:58:30 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.8 2005/07/20 20:59:50 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_LIST_H__
@@ -12,6 +12,9 @@
 #include "util/STL/vector_fwd.h"
 
 namespace ART {
+namespace entity {
+class template_actuals;
+}
 namespace parser {
 using std::vector;
 //=============================================================================
@@ -32,6 +35,7 @@ typedef node_list<const inst_ref_expr>			inst_ref_expr_list_base;
 	Class connection_argument_list is derived from expr_list, 
 	so we should keep methods virtual.
 	TODO: typedef expr_list	connection_argument_list;
+	TODO: useful return values to postorder checks.  
  */
 class expr_list : public expr_list_base {
 protected:
@@ -119,16 +123,20 @@ public:
 
 //=============================================================================
 /**
+	TODO: once we introduce types in templates, then extend the list type.  
 	Contains a strict template argument list and a relaxed template
 	argument list.  
 	Intended for use with concrete_type_ref.
  */
 class template_argument_list_pair {
 protected:
-	const excl_ptr<const expr_list>		strict_args;
-	const excl_ptr<const expr_list>		relaxed_args;
+	typedef	expr_list			list_type;
+	const excl_ptr<const list_type>		strict_args;
+	const excl_ptr<const list_type>		relaxed_args;
 public:
-	template_argument_list_pair(const expr_list*, const expr_list*);
+	typedef	entity::template_actuals	return_type;
+public:
+	template_argument_list_pair(const list_type*, const list_type*);
 	~template_argument_list_pair();
 
 	ostream&
@@ -140,8 +148,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	never_ptr<const object>
-	check_build(context& c) const;
+	return_type
+	check_template_args(context& c) const;
 
 };	// end class template_argument_list_pair
 

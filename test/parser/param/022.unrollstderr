@@ -1,4 +1,14 @@
 ERROR: reference to uninitialized pint ::milk at index: [3]
-Unable to resolve array_indices!
-ERROR: resolving scalar integer value!
+ERROR: failed to unroll-resolve index list.
+ERROR: failed to resolve dimensions of collection referenced: pint^1 milk with indices: {
+  [0..3]
+}
+  unrolled index-value pairs: {
+    0 = 1
+    1 = 2
+    2 = 3
+    3 = ?
+  }
+ERROR: failed to resolve source values of pint-inst-ref ::milk[::milk[::milk[::milk[::milk[0]]]]] in pint assignment.
+Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.17 2005/06/19 01:58:31 fang Exp $
+	$Id: art_parser_prs.cc,v 1.18 2005/07/20 20:59:51 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -18,9 +18,11 @@
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_node_list.tcc"
+#include "Object/art_context.h"
 
 #include "Object/art_object_definition_proc.h"	// for process_definition
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/param_expr.h"
+#include "Object/expr/data_expr.h"
 #include "Object/art_object_PRS.h"
 
 #include "util/what.h"
@@ -42,6 +44,7 @@ namespace ART {
 namespace parser {
 namespace PRS {
 #include "util/using_ostream.h"
+using entity::definition_base;
 using entity::process_definition;
 
 //=============================================================================

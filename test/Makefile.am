@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2005/06/19 01:58:53 fang Exp $
+#	$Id: Makefile.am,v 1.9 2005/07/20 21:01:03 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
@@ -24,7 +24,8 @@ EXTRA_DIST = ChangeLog Make.test artc-expect.sh artobj-diff.sh \
 	POM-header-filter.awk \
 	update-artcstderr.sh \
 	update-unrollstderr.sh \
-	spacestonewline.awk test.cvsignore
+	spacestonewline.awk test.cvsignore \
+	test-series.sh
 
 # template test Makefile
 include $(top_srcdir)/test/Make.test

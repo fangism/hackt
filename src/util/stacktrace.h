@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.8 2005/06/21 21:26:38 fang Exp $
+	$Id: stacktrace.h,v 1.9 2005/07/20 21:01:02 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -18,29 +18,31 @@
 #endif
 
 
+#include "util/cppcat.h"		// for ithe UNIQUIFY macros
+
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
 #define	USING_STACKTRACE	using util::stacktrace;
 #define	STACKTRACE(str)							\
-	const util::stacktrace __stacktrace_##__LINE__##__(str)
+	const util::stacktrace UNIQUIFY(__stacktrace_) (str)
 /**
 	No user-supplied string required, uses __PRETTY_FUNCTION__
 	built-in internal string.  Is this gcc-only?
 	There's always __func__ for brevity.
  */
 #define	STACKTRACE_BRIEF						\
-	const util::stacktrace __stacktrace_##__LINE__##__(__func__)
+	const util::stacktrace UNIQUIFY(__stacktrace_) (__func__)
 #define	STACKTRACE_VERBOSE						\
-	const util::stacktrace __stacktrace__##__LINE__##_(__PRETTY_FUNCTION__)
+	const util::stacktrace UNIQUIFY(__stacktrace__) (__PRETTY_FUNCTION__)
 /**
 	This enables echoing each time trace stack is updated, i.e., 
 	upon entering and leaving function call stack 
 	or lexical scopes.  
  */
 #define STACKTRACE_ECHO_ON						\
-	const util::stacktrace::echo __echo_stacktrace__##__LINE__##_(1)
+	const util::stacktrace::echo UNIQUIFY(__echo_stacktrace__) (1)
 #define STACKTRACE_ECHO_OFF						\
-	const util::stacktrace::echo __echo_stacktrace__##__LINE__##_(0)
+	const util::stacktrace::echo UNIQUIFY(__echo_stacktrace__) (0)
 #define	STACKTRACE_STREAM						\
 		util::stacktrace::stream()
 #define REDIRECT_STACKTRACE(os)						\
@@ -49,7 +51,7 @@
 	if (!(expr)) { util::stacktrace::full_dump(); assert(expr); }
 #define	REQUIRES_STACKTRACE_STATIC_INIT					\
 	static const util::stacktrace::init_token			\
-	__stacktrace_init_##__LINE__##__(util::stacktrace::require_static_init());
+	UNIQUIFY(__stacktrace_init_) (util::stacktrace::require_static_init());
 
 #else	// ENABLE_STACKTRACE
 #define	USING_STACKTRACE

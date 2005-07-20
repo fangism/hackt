@@ -1,6 +1,6 @@
 /**
 	\file "packed_array_test.cc"
-	$Id: packed_array_test.cc,v 1.5 2005/02/27 22:54:33 fang Exp $
+	$Id: packed_array_test.cc,v 1.6 2005/07/20 21:01:02 fang Exp $
  */
 
 #include "packed_array.tcc"
@@ -8,17 +8,30 @@
 using util::packed_array;
 using util::packed_array_generic;
 using util::multikey;
+using util::multikey_generic;
 using util::multikey_generator;
 
 #include "using_ostream.h"
 using std::inner_product;
 
+typedef	multikey_generic<size_t>		generic_key_type;
 typedef	packed_array<3, size_t, float>		float_3d;
 typedef	packed_array<3, size_t, bool>		bool_3d;
 typedef	packed_array_generic<size_t, int>	int_3d;
 
 int
 main(int argc, char* argv[]) {
+{
+	// testing simple construction of scalar using multikey
+	// to specific (0) dimensions.  
+	const generic_key_type empty;
+	const int_3d a(empty);
+	a.dump(cerr << "a = ") << endl;
+	// the following should be equivalent to the above
+	const generic_key_type empty2(0,0);
+	const int_3d b(empty);
+	b.dump(cerr << "b = ") << endl;
+}
 {
 	float_3d foo;
 	foo.dump(cerr << "foo: ") << endl;
@@ -97,6 +110,7 @@ main(int argc, char* argv[]) {
 	bari.resize(ind);
 	assert(!bari.range_check(ind));
 	bari.dump(cerr << "bari: ") << endl;
+	bari.dump_values(cerr << "bari: ") << endl;
 	// should be 3 x 4 x 4 now
 }
 

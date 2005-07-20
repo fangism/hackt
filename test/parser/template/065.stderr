@@ -1,0 +1,2 @@
+ERROR: type redeclaration of collection bar does not match in strictness to the original declaration.
+[8:11..13]

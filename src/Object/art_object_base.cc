@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.34 2005/05/22 06:18:31 fang Exp $
+ 	$Id: art_object_base.cc,v 1.35 2005/07/20 20:59:54 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_CC__
@@ -13,7 +13,6 @@
 #include "util/STL/list.tcc"
 
 #include "Object/art_object_base.h"
-#include "Object/art_object_expr.h"		// for dynamic_param_expr_list
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"

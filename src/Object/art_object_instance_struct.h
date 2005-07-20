@@ -2,14 +2,14 @@
 	\file "Object/art_object_instance_struct.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_struct.h,v 1.12 2005/05/10 04:51:19 fang Exp $
+	$Id: art_object_instance_struct.h,v 1.13 2005/07/20 21:00:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_H__
 #define	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_H__
 
 #include "Object/art_object_instance.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/struct_traits.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_instance_alias.h"
 

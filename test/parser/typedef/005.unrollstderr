@@ -1,0 +1,57 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Namespaces:
+    fang =     In namespace "fang", we have: {
+      0 parameter-collections
+      1 instantiation-collections
+      0 sub-namespaces
+      1 definitions
+      0 typedefs
+      Definitions:
+        foo = process-definition (declared) foo(
+            bool<> a
+            bool<> b
+            bool<> c
+          )
+          In definition "foo", we have: {
+            a = bool<> a
+            b = bool<> b
+            c = bool<> c
+          }
+
+      Instances:
+        crazy = bool^0 crazy (instantiated) = ::fang::crazy
+    }
+  Instances:
+    tada = bool^0 tada (instantiated) = ::tada
+}
+

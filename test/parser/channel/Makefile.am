@@ -1,15 +1,18 @@
 # "test/parser/channel/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2005/06/22 15:57:04 fang Exp $
+#	$Id: Makefile.am,v 1.5 2005/07/20 21:01:10 fang Exp $
 
 AUTOMAKE_OPTIONS = 1.9
 
 SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
 
 ARTC_TEST_FAILURES = 000 003 004 006 007 \
-	013
+	013 \
+	022 023
 
 ARTC_TEST_PASSES = 001 002 005 008 009 010 \
-	011 012 014 015 016 017
+	011 012 014 015 016 017 018 019 \
+	020 021
+# 024 pending...
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 

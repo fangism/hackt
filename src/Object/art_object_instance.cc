@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45 2005/06/21 21:26:34 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.46 2005/07/20 21:00:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -21,9 +21,10 @@
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_expr_const.h"
-#include "Object/art_built_ins.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/inst/substructure_alias_base.h"
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -101,7 +102,8 @@ instance_collection_base::instance_collection_base() :
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n, const size_t d) : 
 		object(), owner(owner_ptr_type(&o)),
-		key(n), index_collection(), dimensions(d) {
+		key(n), index_collection(), dimensions(d), 
+		super_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -132,9 +134,9 @@ instance_collection_base::dump(ostream& o) const {
 	{	// indentation scope
 		INDENT_SECTION(o);
 		index_collection_type::const_iterator
-			i = index_collection.begin();
+			i(index_collection.begin());
 		const index_collection_type::const_iterator
-			e = index_collection.end();
+			e(index_collection.end());
 		for ( ; i!=e; i++) {
 			NEVER_NULL(*i);
 			const index_collection_item_ptr_type
@@ -169,6 +171,25 @@ instance_collection_base::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_qualified_name(ostream& o) const {
+	if (owner)
+		return owner->dump_qualified_name(o) << "::" << key;
+	else	return o << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_hierarchical_name(ostream& o) const {
+	STACKTRACE_VERBOSE;
+	if (super_instance) {
+		return super_instance->dump_hierarchical_name(o) << '.' << key;
+	} else {
+		return dump_qualified_name(o);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Return's the type's base definition.
  */
@@ -178,6 +199,11 @@ instance_collection_base::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: can't call this on formal template parameter collections, 
+	because they don't have an index collection.
+	TODO: subtype index collections.  
+ */
 count_ptr<const fundamental_type_reference>
 instance_collection_base::get_type_ref(void) const {
 	INVARIANT(!index_collection.empty());
@@ -231,7 +257,7 @@ instance_collection_base::detect_static_overlap(
 	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
 #endif
 	if (r.is_a<const const_range_list>()) {
-	index_collection_type::const_iterator i = index_collection.begin();
+	index_collection_type::const_iterator i(index_collection.begin());
 	for ( ; i!=index_collection.end(); i++) {
 		// return upon first overlap error
 		// later accumulate all overlaps.  
@@ -249,12 +275,14 @@ instance_collection_base::detect_static_overlap(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TO DO: this can only be done with non-formals.  Check this.  
+	TODO: this can only be done with non-formals.  Check this.  
 	If this instance is a collection, add the new range of indices
 	which may be sparse or dense.  
 
-	TO DO: type-check here?
+	TODO: type-check here?
 	see scopespace::add_instance's definition body
+	2005-07-07: need to register type of the first declaration up-front, 
+		i.e. its strict parameters, and relaxed parameters if available
 
 	This is only applicable if this instantiation was initialized
 	as a collective.  
@@ -285,12 +313,27 @@ instance_collection_base::add_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Checks whether or not this is a relaxed template formal parameter.  
+ */
+bool
+instance_collection_base::is_relaxed_template_formal(void) const {
+	const never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
+	if (def) {
+		return def->probe_relaxed_template_formal(key);
+	} else return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Queries whether or not this is a template formal, by 
 	checking its membership in the owner.  
 	\return 0 (false) if is not a template formal, 
 		otherwise returns the position (1-indexed)
 		of the instance referenced, 
 		useful for determining template parameter equivalence.  
+	TODO: is there potential confusion here if the key shadows
+		a declaration else where?
  */
 size_t
 instance_collection_base::is_template_formal(void) const {
@@ -310,14 +353,23 @@ instance_collection_base::is_template_formal(void) const {
 /**
 	Queries whether or not this is a port formal, by 
 	checking its membership in the owner.  
+	\return 1-indexed position into port list, else 0 if not found.
  */
-bool
+size_t
 instance_collection_base::is_port_formal(void) const {
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
-	if (def)
-		return def->lookup_port_formal(key);
-	else return false;		// owner is not a definition
+	return def ? def->lookup_port_formal_position(*this) : 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Whether or not this instance is a reference to a collection
+	local to a definition, else is a top-level (global).
+ */
+bool
+instance_collection_base::is_local_to_definition(void) const {
+	return owner.is_a<const definition_base>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -339,7 +391,7 @@ instance_collection_base::template_formal_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
 	// used to be may_be_equivalent...
-	if (!this_type->must_be_type_equivalent(*b_type)) {
+	if (!this_type->must_be_connectibly_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -364,7 +416,7 @@ instance_collection_base::port_formal_equivalent(
 		this_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		b_type(b->get_type_ref());
-	if (!this_type->may_be_type_equivalent(*b_type)) {
+	if (!this_type->may_be_connectibly_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -407,9 +459,9 @@ instance_collection_base::formal_size_equivalent(
 	if (this_coll == 1) {
 		// compare their collections
 		const index_collection_type::const_iterator
-			i = index_collection.begin();
+			i(index_collection.begin());
 		const index_collection_type::const_iterator
-			j = b->index_collection.begin();
+			j(b->index_collection.begin());
 		// difficult: what if some dimensions are not static?
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
@@ -434,68 +486,6 @@ instance_collection_base::formal_size_equivalent(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Checks for dimension and size equality between expression and 
-	instantiation.  
-	So far, only used by param_instance_collection derivatives, 
-		in the context of checking template formals.  
-	May be useful else where for connections.  
-	\return true if dimensions *may* match.  
- */
-good_bool
-instance_collection_base::check_expression_dimensions(
-		const param_expr& pe) const {
-	MUST_BE_A(const param_instance_collection*, this);
-	// else is not an expression class!
-
-	// dimensions() used to be a pure virtual method
-	// problem when dimensions() is called during construction:
-	// error: pure virtual method called (during construction)
-	// this occurs during static construction of the global 
-	// built in definition object: ind_def, which is templated
-	// with int width.  
-	// Solutions: 
-	// 1) make an unsafe/unchecked constructor for this special case.
-	// 2) add the template parameter after contruction is complete, 
-	//	which is safe as long as no other global (outside of
-	//	art_built_ins.cc) depends on it.
-	// we choose 2 because it is a general solution.  
-
-	if (dimensions != pe.dimensions()) {
-		// number of dimensions doesn't even match!
-		// useful error message?
-		return good_bool(false);
-	}
-	// dimensions match
-	if (dimensions != 0) {
-		INVARIANT(index_collection.size() == 1);	// huh? true?
-		// make sure sizes in each dimension
-		index_collection_type::const_iterator i =
-			index_collection.begin();
-		const count_ptr<const const_range_list>
-			crl((*i)->get_indices().is_a<const const_range_list>());
-		if (crl) {
-			if (pe.has_static_constant_dimensions()) {
-				const const_range_list
-					d(pe.static_constant_dimensions());
-				return good_bool(*crl == d);
-			} else {
-				// is dynamic, conservatively return true
-				return good_bool(true);
-			}
-		} else {
-			// is dynamic, conservatively return true
-			return good_bool(true);
-		}
-	} else {
-		// dimensions == 0 means instantiation is a single instance.  
-		// size may be zero b/c first statement hasn't been added yet
-		INVARIANT(index_collection.size() <= 1);
-		return good_bool(pe.dimensions() == 0);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Utility function for walking index collection list
 	and collecting pointers.  
  */
@@ -506,8 +496,8 @@ instance_collection_base::collect_index_collection_pointers(
 //	STACKTRACE_PERSISTENT("instance_collection_base::collect_index_collection_pointers()");
 #if 0
 	// keep this around for debugging, does same thing, but readable in gdb
-	index_collection_type::const_iterator i = index_collection.begin();
-	const index_collection_type::const_iterator e = index_collection.end();
+	index_collection_type::const_iterator i(index_collection.begin());
+	const index_collection_type::const_iterator e(index_collection.end());
 	for ( ; i!=e; i++) {
 		STACKTRACE_PERSISTENT("for all index_collection:");
 		NEVER_NULL(*i);
@@ -605,7 +595,7 @@ physical_instance_collection::dump(ostream& o) const {
 			o << auto_indent << "unrolled indices: {" << endl;
 			{
 				// INDENT_SECTION macro not making unique IDs
-				const indent __ind__(o);
+				INDENT_SECTION(o);
 				dump_unrolled_instances(o);
 			}
 			o << auto_indent << "}";        // << endl;

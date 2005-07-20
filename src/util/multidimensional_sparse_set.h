@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.9 2005/05/22 06:24:20 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.10 2005/07/20 21:01:00 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -18,6 +18,12 @@
 
 #include "util/qmap.h"		// queryable maps
 #include "util/memory/count_ptr.h"
+
+#define	MULTIDIMENSIONAL_SPARSE_SET_CLASS				\
+multidimensional_sparse_set<D,T,R,L>
+
+#define	SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_CLASS			\
+multidimensional_sparse_set<1,T,R,L>
 
 /**
 	Namespace containing multidimensional-sparse-set classes.  
@@ -79,7 +85,7 @@ class multidimensional_sparse_set {
 friend class multidimensional_sparse_set<D+1,T,R,L>;
 
 protected:
-	typedef	multidimensional_sparse_set<D,T,R,L>	this_type;
+	typedef	MULTIDIMENSIONAL_SPARSE_SET_CLASS	this_type;
 	typedef multidimensional_sparse_set<D-1,T,R,L>	child_type;
 	/** need count_ptr to be copy-constructable */
 	typedef	memory::count_ptr<child_type>		map_value_type;
@@ -137,6 +143,13 @@ public:
 	 */
 	bool
 	add_ranges(const range_list_type& r);
+
+	/**
+		Alternate implementation with generic range list type.  
+	 */
+	template <class S>
+	bool
+	add_ranges(const S& r);
 
 	/**
 		Removes the indices specified by the argument from the set.  
@@ -213,6 +226,12 @@ public:
 	range_list_type
 	query_compact_dimensions(const range_list_type& r) const;
 
+	/**
+		\param R any type like a sequence of pairs of values.  
+	 */
+	template <class S>
+	range_list_type
+	query_compact_dimensions(const S&) const;
 };	// end class multidimensional_sparse_set
 
 //-----------------------------------------------------------------------------
@@ -224,7 +243,7 @@ class multidimensional_sparse_set<1,T,R,L> {
 friend class multidimensional_sparse_set<2,T,R,L>;
 
 protected:
-	typedef	multidimensional_sparse_set<1,T,R,L>	this_type;
+	typedef	SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_CLASS	this_type;
 	typedef	discrete_interval_set<T>		map_type;
 	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
 public:
@@ -264,6 +283,10 @@ public:
 
 	bool
 	add_ranges(const range_list_type& r);
+
+	template <class S>
+	bool
+	add_ranges(const S& r);
 
 	/**
 		Queries whether this set contains the entire range
@@ -319,6 +342,10 @@ public:
 	 */
 	range_list_type
 	query_compact_dimensions(const range_list_type& r) const;
+
+	template <class S>
+	range_list_type
+	query_compact_dimensions(const S& r) const;
 
 };	// end class multidimensional_sparse_set
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.31 2005/06/19 01:58:39 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.32 2005/07/20 21:00:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -14,6 +14,7 @@
 
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_instance.h"
+#include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_inst_ref_data.h"
@@ -21,16 +22,18 @@
 #include "Object/art_object_nonmeta_inst_ref.tcc"
 #include "Object/art_object_member_inst_ref.tcc"
 #include "Object/art_object_inst_stmt_base.h"
-#include "Object/art_object_expr.h"		// for dynamic_meta_range_list
-#include "Object/art_object_data_expr.h"	// for nonmeta_index_list
+#include "Object/expr/const_range.h"
+#include "Object/expr/dynamic_meta_index_list.h"
+#include "Object/expr/dynamic_meta_range_list.h"
+#include "Object/expr/nonmeta_index_list.h"
 #include "Object/art_object_control.h"
 #include "Object/art_object_connect.h"		// for aliases_connection_base
 #include "util/persistent_object_manager.tcc"
-#include "Object/art_built_ins.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/proc_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_instance_collection.h"
-// #include "util/memory/count_ptr.tcc"
+#include "Object/inst/general_collection_type_manager.h"
 
 //=============================================================================
 // specializations
@@ -102,6 +105,8 @@ public:
 	typedef	multidimensional_sparse_set_traits<
 			pint_value_type, const_range, list>
 						traits_type;
+	// happens to be const_range_list::list_type
+	typedef	vector<const_range>		alt_range_list_type;
 	typedef	traits_type::range_type		range_type;
 	typedef	traits_type::range_list_type	range_list_type;
 
@@ -116,8 +121,14 @@ virtual	range_list_type
 virtual	range_list_type
 	query_compact_dimensions(const range_list_type& r) const = 0;
 
+virtual	range_list_type
+	query_compact_dimensions(const alt_range_list_type& r) const = 0;
+
 virtual	bool
 	add_ranges(const range_list_type& r) = 0;
+
+virtual	bool
+	add_ranges(const alt_range_list_type& r) = 0;
 
 virtual	bool
 	subtract_sparse_set(const mset_base& s) = 0;
@@ -146,13 +157,15 @@ template <size_t D>
 class simple_meta_instance_reference_base::mset :
 		public simple_meta_instance_reference_base::mset_base {
 protected:
-	typedef	multidimensional_sparse_set<D, pint_value_type, const_range>
+	typedef	multidimensional_sparse_set<D, pint_value_type,
+			const_range, list>
 							impl_type;
 	typedef	simple_meta_instance_reference_base::mset_base	base_type;
 	typedef	mset<D>					this_type;
 public:
 	typedef base_type::range_type			range_type;
 	typedef base_type::range_list_type		range_list_type;
+	typedef base_type::alt_range_list_type		alt_range_list_type;
 protected:
 	impl_type			sset;
 public:
@@ -169,8 +182,18 @@ public:
 		return sset.query_compact_dimensions(r);
 	}
 
+	range_list_type
+	query_compact_dimensions(const alt_range_list_type& r) const {
+		return sset.query_compact_dimensions(r);
+	}
+
 	bool
 	add_ranges(const range_list_type& r) {
+		return sset.add_ranges(r);
+	}
+
+	bool
+	add_ranges(const alt_range_list_type& r) {
 		return sset.add_ranges(r);
 	}
 
@@ -283,6 +306,19 @@ simple_meta_instance_reference_base::get_base_def(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true as soon as it finds a member dependent on 
+		a relaxed template formal.  
+ */
+bool
+simple_meta_instance_reference_base::is_relaxed_formal_dependent(void) const {
+	return get_inst_base()->is_relaxed_template_formal() ||
+		(array_indices ?
+		array_indices->is_relaxed_formal_dependent()
+		: false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Queries whether or not there were any dynamic instances added
 	to the collection from the initial instantiation up to the
 	point of references of this instance reference.  
@@ -292,7 +328,7 @@ simple_meta_instance_reference_base::get_base_def(void) const {
  */
 bool
 simple_meta_instance_reference_base::is_static_constant_collection(void) const {
-	instantiation_state iter = inst_state;
+	instantiation_state iter(inst_state);
 	const instantiation_state
 		end(get_inst_base()->collection_state_end());
 	for ( ; iter!=end; iter++) {
@@ -789,7 +825,7 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 		ltr(lib->get_type_ref());
 	const count_ptr<const fundamental_type_reference>
 		rtr(rib->get_type_ref());
-	const bool type_eq = ltr->may_be_type_equivalent(*rtr);
+	const bool type_eq = ltr->may_be_connectibly_type_equivalent(*rtr);
 	// if base types differ, then cannot be equivalent
 	if (!type_eq) {
 		ltr->dump(cerr << "Types do not match! got: ") << " and: ";

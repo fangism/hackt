@@ -1,27 +1,27 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4302a30	module__	0	0	32
-	2	 0x4300144	namespc_	0	32	56
-	3	 0x4302a50	procdefn	0	56	136
-	4	 0x4302ae4	dboolcol	0	136	170
-	5	 0x4302b40	datainst	0	170	190
-	6	 0x4302b60	datatprf	0	190	206
-	7	 0x4302b70	datadefn	0	206	259
-	8	 0x4302c14	dboolcol	0	259	293
-	9	 0x4302c70	datainst	0	293	313
-	10	 0x4816408	PRSpuldn	0	313	330
-	11	 0x4302c98	PRSlitrl	0	330	342
-	12	 0x4302e20	sdbmref_	0	342	362
-	13	 0x4302e50	sdbmref_	0	362	382
-	14	 0x4816808	PRSpulup	0	382	399
-	15	 0x4302e88	PRSnot__	0	399	411
-	16	 0x4302ca4	PRSlitrl	0	411	423
-	17	 0x4303010	sdbmref_	0	423	443
-	18	 0x4303040	sdbmref_	0	443	463
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 
-In module created from: ./inv-03.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

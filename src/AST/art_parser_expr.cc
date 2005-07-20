@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.24 2005/06/19 01:58:29 fang Exp $
+	$Id: art_parser_expr.cc,v 1.25 2005/07/20 20:59:50 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -13,6 +13,8 @@
 
 #define	ENABLE_STACKTRACE		0
 
+#include <iterator>
+
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_expr.h"
@@ -20,18 +22,33 @@
 #include "AST/art_parser_range_list.h"
 #include "AST/art_parser_node_list.tcc"
 #include "util/sublist.tcc"
+#include "Object/art_context.h"
 
 // will need these come time for type-checking
 #include "Object/art_object_instance_base.h"
 #include "Object/art_object_definition_base.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_inst_ref_subtypes.h"
-#include "Object/art_object_expr.h"
-#include "Object/art_object_data_expr.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/dynamic_param_expr_list.h"
+#include "Object/expr/meta_index_list.h"
+#include "Object/expr/nonmeta_index_list.h"
+#include "Object/expr/pbool_unary_expr.h"
+#include "Object/expr/pint_unary_expr.h"
+#include "Object/expr/pint_arith_expr.h"
+#include "Object/expr/pint_relational_expr.h"
+#include "Object/expr/pbool_logical_expr.h"
+#include "Object/expr/bool_negation_expr.h"
+#include "Object/expr/int_negation_expr.h"
+#include "Object/expr/int_arith_expr.h"
+#include "Object/expr/int_relational_expr.h"
+#include "Object/expr/bool_logical_expr.h"
 #include "Object/art_object_PRS.h"
-// to dynamic_cast bool_meta_instance_reference
+#include "Object/art_object_template_actuals.h"
 #include "Object/art_object_inst_ref.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/int_traits.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -63,6 +80,8 @@ SPECIALIZE_UTIL_WHAT(ART::parser::logical_expr, "(logical-expr)")
 SPECIALIZE_UTIL_WHAT(ART::parser::array_concatenation, "(array-concatenation)")
 SPECIALIZE_UTIL_WHAT(ART::parser::loop_concatenation, "(loop-concatenation)")
 SPECIALIZE_UTIL_WHAT(ART::parser::array_construction, "(array-construction)")
+SPECIALIZE_UTIL_WHAT(ART::parser::template_argument_list_pair,
+		"(expr-list-pair)")
 }
 
 //=============================================================================
@@ -72,7 +91,9 @@ using namespace entity;
 namespace parser {
 #include "util/using_ostream.h"
 using std::copy;
+using std::back_inserter;
 using std::transform;
+using std::distance;
 using std::_Select1st;
 using std::_Select2nd;
 using util::back_insert_assigner;
@@ -266,8 +287,8 @@ expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
 		context& c) const {
 	STACKTRACE("expr_list::postorder_check_meta_generic()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_meta_generic(c) :
 			checked_meta_generic_type::value_type());
@@ -278,6 +299,9 @@ expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just collects the result of type-checking of items in list.
+	Expressions are allowed to be NULL or empty, 
+	so don't catch NULLs for errors.  
+	(To catch errors, will need to check against original list...)
 	\param temp the type-checked result list.
 	\param c the context.
  */
@@ -286,8 +310,8 @@ expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
 		context& c) const {
 	STACKTRACE("expr_list::postorder_check_meta_exprs()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i) ? (*i)->check_meta_expr(c) :
 			checked_meta_exprs_type::value_type(NULL));
@@ -307,8 +331,8 @@ expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
 		context& c) const {
 	STACKTRACE("expr_list::postorder_check_nonmeta_exprs()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i)->check_nonmeta_expr(c));
 	}
@@ -349,11 +373,86 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 		checked_nonmeta_data_refs_type& temp, context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_nonmeta_data_refs()");
 	INVARIANT(temp.empty());
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		temp.push_back((*i)->check_nonmeta_data_reference(c));
 	}
+}
+
+//=============================================================================
+// class template_argument_list_pair method definitions
+
+template_argument_list_pair::template_argument_list_pair(
+		const list_type* s, const list_type* r) :
+		strict_args(s), relaxed_args(r) {
+	if (relaxed_args)
+		NEVER_NULL(strict_args);
+		// though strict args is allowed to be empty
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template_argument_list_pair::~template_argument_list_pair() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(template_argument_list_pair)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_argument_list_pair::leftmost(void) const {
+	if (strict_args)
+		return strict_args->leftmost();
+	else	return line_position();	// NONE
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+template_argument_list_pair::rightmost(void) const {
+	if (relaxed_args)
+		return relaxed_args->rightmost();
+	else	return strict_args->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks template expressions.  
+	TODO: how to signal error?
+	TODO: upgrade expressions to generalized template arguments.  
+	TODO: make sure strict paramters do not depend on relaxed, 
+		relaxed parameters may depend on relaxed parameters.  
+	TODO: sugar: check for const_param expressions to make const list?
+ */
+template_argument_list_pair::return_type
+template_argument_list_pair::check_template_args(context& c) const {
+	const count_ptr<dynamic_param_expr_list>
+		strict(strict_args ?
+			new dynamic_param_expr_list(strict_args->size()) :
+			NULL);
+	if (strict_args) {
+		expr_list::checked_meta_exprs_type temp;
+		strict_args->postorder_check_meta_exprs(temp, c);
+		// NULL are allowed, where should we check?
+		copy(temp.begin(), temp.end(), back_inserter(*strict));
+		if (strict->is_relaxed_formal_dependent()) {
+			cerr << "ERROR at " << where(*this) <<
+				": strict template arguments may never "
+				"depend on relaxed formal parameters." << endl;
+			THROW_EXIT;
+		}
+	}
+	const count_ptr<dynamic_param_expr_list>
+		relaxed(relaxed_args ?
+			new dynamic_param_expr_list(relaxed_args->size()) :
+			NULL);
+	if (relaxed_args) {
+		expr_list::checked_meta_exprs_type temp;
+		relaxed_args->postorder_check_meta_exprs(temp, c);
+		// relaxed arguments are allowed to depend on anything
+		// because they are relaxed
+		// NULL are allowed, where should we check?
+		copy(temp.begin(), temp.end(), back_inserter(*relaxed));
+	}
+	return return_type(strict, relaxed);
 }
 
 //=============================================================================
@@ -458,7 +557,7 @@ operator << (ostream& o, const qualified_id& id) {
 	if (id.empty()) {
 		return o << "<null qualified_id>";
 	} else {
-		qualified_id::const_iterator i = id.begin();
+		qualified_id::const_iterator i(id.begin());
 		if (id.is_absolute())
 			o << scope;
 		count_ptr<const token_identifier> tid(*i);
@@ -480,7 +579,7 @@ operator << (ostream& o, const qualified_id_slice& id) {
 	if (id.empty()) {
 		return o << "<null qualified_id_slice>";
 	} else {
-		qualified_id_slice::const_iterator i = id.begin();
+		qualified_id_slice::const_iterator i(id.begin());
 		if (id.is_absolute())
 			o << scope;
 //		count_ptr<const token_identifier> tid(*i);
@@ -1253,7 +1352,7 @@ arith_expr::check_meta_expr(context& c) const {
 		}
 		return return_type(NULL);	// never reached
 	} else {
-		return return_type(new entity::arith_expr(li, ch, ri));
+		return return_type(new entity::pint_arith_expr(li, ch, ri));
 	}
 }
 
@@ -1338,15 +1437,15 @@ relational_expr::check_meta_expr(context& c) const {
 	}
 	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
-	const entity::relational_expr::op_type*
-		o(entity::relational_expr::op_map[op_str]);
+	const entity::pint_relational_expr::op_type*
+		o(entity::pint_relational_expr::op_map[op_str]);
 	INVARIANT(o);
 	if (li->is_static_constant() && ri->is_static_constant()) {
 		const int lc = li->static_constant_value();
 		const int rc = ri->static_constant_value();
 		return return_type(new pbool_const((*o)(lc,rc)));
 	} else {
-		return return_type(new entity::relational_expr(li, o, ri));
+		return return_type(new entity::pint_relational_expr(li, o, ri));
 	}
 }
 
@@ -1432,15 +1531,15 @@ logical_expr::check_meta_expr(context& c) const {
 	}
 	// else is safe to make entity::relational_expr object
 	const string op_str(op->text);
-	entity::logical_expr::op_type const* const
-		o(entity::logical_expr::op_map[op_str]);
+	entity::pbool_logical_expr::op_type const* const
+		o(entity::pbool_logical_expr::op_map[op_str]);
 	INVARIANT(o);
 	if (lb->is_static_constant() && rb->is_static_constant()) {
 		const bool lc = lb->static_constant_value();
 		const bool rc = rb->static_constant_value();
 		return return_type(new pbool_const((*o)(lc,rc)));
 	} else {
-		return return_type(new entity::logical_expr(lb, o, rb));
+		return return_type(new entity::pbool_logical_expr(lb, o, rb));
 	}
 }
 
@@ -1592,7 +1691,7 @@ array_concatenation::rightmost(void) const {
 expr::meta_return_type
 array_concatenation::check_meta_expr(context& c) const {
 	if (size() == 1) {
-		const const_iterator only = begin();
+		const const_iterator only(begin());
 		return (*only)->check_meta_expr(c);
 	} else {
 		cerr << "Fang, finish array_concatenation::check_meta_expr()!"
@@ -1605,7 +1704,7 @@ array_concatenation::check_meta_expr(context& c) const {
 nonmeta_expr_return_type
 array_concatenation::check_nonmeta_expr(context& c) const {
 	if (size() == 1) {
-		const const_iterator only = begin();
+		const const_iterator only(begin());
 		return (*only)->check_nonmeta_expr(c);
 	} else {
 		cerr << "Fang, finish array_concatenation::check_nonmeta_expr()!"
@@ -1619,7 +1718,7 @@ expr::generic_meta_return_type
 array_concatenation::check_meta_generic(context& c) const {
 	STACKTRACE("array_concatenation::check_meta_generic()");
 	if (size() == 1) {
-		const const_iterator only = begin();
+		const const_iterator only(begin());
 		return (*only)->check_meta_generic(c);
 	} else {
 		cerr << "Fang, finish array_concatenation::check_meta_generic()!" <<

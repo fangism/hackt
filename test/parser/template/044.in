@@ -1,0 +1,8 @@
+// "044.in" should pass unrolling, die at creation time.  
+
+template <pint Q=5><pint R>
+defproc foo();
+
+foo bar;
+// unrolls fine, but will find relaxed actuals missing at creation phase
+

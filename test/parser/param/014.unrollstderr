@@ -1,24 +1,24 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4102720	module__	0	0	45
-	2	 0x4100144	namespc_	0	45	73
-	3	 0x4102744	pintcoll	0	73	110
-	4	 0x4102790	pintinst	0	110	126
-	5	 0x3466018	cnstpi__	0	126	138
-	6	 0x41027a4	pintcoll	1	138	197
-	7	 0x41027f0	pintinst	0	197	213
-	8	 0x4102800	crnglst_	0	213	233
-	9	 0x4800c00	piassign	0	233	253
-	10	 0x4102810	spimref_	0	253	273
-	11	 0x4800c10	piassign	0	273	293
-	12	 0x4102840	spimref_	0	293	313
-	13	 0x4102870	spimref_	0	313	333
-	14	 0x41028a0	cindlst_	0	333	349
-	15	 0x3466028	cnstpi__	0	349	361
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	59
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
-In module created from: ./014.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   2 parameter-collections
   0 instantiation-collections

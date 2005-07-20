@@ -28,4 +28,6 @@ art++.doxygen.log
 artxx-*.*.*
 DevelopmentPlan.ps
 *.hchk
+distcheck.log
+distcheck.log.tmp
 

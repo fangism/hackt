@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.18 2005/06/22 22:13:31 fang Exp $
+	$Id: art_parser_chp.cc,v 1.19 2005/07/20 20:59:50 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -18,18 +18,22 @@
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
 #include "AST/art_parser_token.h"
-#include "Object/art_built_ins.h"		// for bool_type_ptr
+#include "Object/art_context.h"
+
 #include "Object/art_object_CHP.tcc"
 #include "Object/art_object_type_ref.h"
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/bool_expr.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_nonmeta_inst_ref_subtypes.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/traits/chan_traits.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_collection.h"
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_definition_chan.h"
 #include "Object/art_object_definition_proc.h"
+#include "Object/inst/general_collection_type_manager.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -374,6 +378,9 @@ guarded_command::rightmost(void) const {
 guarded_command::return_type
 guarded_command::check_guarded_action(context& c) const {
 	typedef stmt_list::checked_stmts_type	checked_stmts_type;
+	typedef	entity::bool_traits	bool_traits;
+	static const bool_traits::type_ref_ptr_type&
+		bool_type_ptr(bool_traits::built_in_type_ptr);
 	// will need to be more general non-meta (bool) expression
 	const never_ptr<const token_else>
 		have_else(guard.is_a<const token_else>());
@@ -404,7 +411,7 @@ guarded_command::check_guarded_action(context& c) const {
 			<< endl;
 		return return_type(NULL);
 	}
-	if (!gtype->may_be_type_equivalent(*entity::bool_type_ptr)) {
+	if (!gtype->may_be_connectibly_type_equivalent(*bool_type_ptr)) {
 		cerr << "Error: guard expression at " << where(*guard) <<
 			" expected bool, but got: ";
 		gtype->dump(cerr) << endl;
@@ -581,7 +588,7 @@ binary_assignment::check_action(context& c) const {
 			where(*rval) << endl;
 		return statement::return_type(NULL);
 	}
-	if (!ltype->may_be_type_equivalent(*rtype)) {
+	if (!ltype->may_be_connectibly_type_equivalent(*rtype)) {
 		cerr << "Type mismatch in assignment at " <<
 			where(*this) << ':' << endl;
 		ltype->dump(cerr << "\tleft: ") << endl;
@@ -622,6 +629,9 @@ bool_assignment::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 bool_assignment::check_action(context& c) const {
+	typedef	entity::bool_traits	bool_traits;
+	static const bool_traits::type_ref_ptr_type&
+		bool_type_ptr(bool_traits::built_in_type_ptr);
 	const inst_ref_expr::nonmeta_data_return_type
 		lr(bool_var->check_nonmeta_data_reference(c));
 	if (!lr) {
@@ -651,7 +661,7 @@ bool_assignment::check_action(context& c) const {
 			where(*bool_var) << endl;
 		return statement::return_type(NULL);
 	}
-	if (!ltype->may_be_type_equivalent(*entity::bool_type_ptr)) {
+	if (!ltype->may_be_connectibly_type_equivalent(*bool_type_ptr)) {
 		cerr << "Type mismatch in boolean assignment at " <<
 			where(*this) << ':' << endl;
 		ltype->dump(cerr << "\tgot: ") << endl;

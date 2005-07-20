@@ -1,0 +1,11 @@
+// "040.in" should pass: timely initialization of parameter
+
+pint D;
+
+template <pint Q=D>
+defproc foo();
+
+D=13;
+
+foo bar;
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.15 2005/06/21 21:26:35 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.16 2005/07/20 21:00:32 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
@@ -17,7 +17,9 @@
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_inst_stmt_base.h"
-#include "Object/art_object_expr_base.h"
+#include "Object/expr/const_param.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -74,7 +76,7 @@ param_instance_collection::dump(ostream& o) const {
 			o << auto_indent <<
 				"unrolled index-value pairs: {" << endl;
 			{
-				const indent __ind__(o);
+				INDENT_SECTION(o);
 				dump_unrolled_values(o);
 			}
 			o << auto_indent << "}";	// << endl;
@@ -165,6 +167,134 @@ param_instance_collection::must_be_initialized(void) const {
 		// if there's no initial value, then it is definitely
 		// NOT already initialized.  
 		else return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for dimension and size equality between expression and 
+	instantiation.  
+	So far, only used by param_instance_collection derivatives, 
+		in the context of checking template formals.  
+	May be useful else where for connections.  
+	\return true if dimensions *may* match.  
+ */
+good_bool
+param_instance_collection::may_check_expression_dimensions(
+		const param_expr& pe) const {
+	// MUST_BE_A(const param_instance_collection*, this);
+	// else is not an expression class!
+
+	// dimensions() used to be a pure virtual method
+	// problem when dimensions() is called during construction:
+	// error: pure virtual method called (during construction)
+	// this occurs during static construction of the global 
+	// built in definition object: ind_def, which is templated
+	// with int width.  
+	// Solutions: 
+	// 1) make an unsafe/unchecked constructor for this special case.
+	// 2) add the template parameter after contruction is complete, 
+	//      which is safe as long as no other global (outside of
+	//      art_built_ins.cc) depends on it.
+	// we choose 2 because it is a general solution.  
+
+	if (dimensions != pe.dimensions()) {
+		// number of dimensions doesn't even match!
+		// useful error message?
+		return good_bool(false);
+	}
+	// dimensions match
+	if (dimensions != 0) {
+		INVARIANT(index_collection.size() == 1);	// huh? true?
+		// this is true only if parameters that check this
+		// are template formals.  
+		// not sure if this will be called by non-formals, will see...
+
+		// make sure sizes in each dimension
+		index_collection_type::const_iterator
+			i(index_collection.begin());
+		const count_ptr<const const_range_list>
+			crl((*i)->get_indices().is_a<const const_range_list>());
+		if (crl) {
+			if (pe.has_static_constant_dimensions()) {
+				const const_range_list
+					d(pe.static_constant_dimensions());
+				return good_bool(*crl == d);
+			} else {
+				// is dynamic, conservatively return true
+				return good_bool(true);
+			}
+		} else {
+			// is dynamic, conservatively return true
+			return good_bool(true);
+		}
+	} else {
+		// dimensions == 0 means instantiation is a single instance.  
+		// size may be zero b/c first statement hasn't been added yet
+		INVARIANT(index_collection.size() <= 1);
+		return good_bool(pe.dimensions() == 0);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for dimension and size equality between expression and 
+	instantiation.  
+	So far, only used by param_instance_collection derivatives, 
+		in the context of checking template formals.  
+	May be useful else where for connections.  
+	\return true if dimensions *may* match.  
+ */
+good_bool
+param_instance_collection::must_check_expression_dimensions(
+		const const_param& pe) const {
+	// MUST_BE_A(const param_instance_collection*, this);
+	// else is not an expression class!
+
+	// dimensions() used to be a pure virtual method
+	// problem when dimensions() is called during construction:
+	// error: pure virtual method called (during construction)
+	// this occurs during static construction of the global 
+	// built in definition object: ind_def, which is templated
+	// with int width.  
+	// Solutions: 
+	// 1) make an unsafe/unchecked constructor for this special case.
+	// 2) add the template parameter after contruction is complete, 
+	//      which is safe as long as no other global (outside of
+	//      art_built_ins.cc) depends on it.
+	// we choose 2 because it is a general solution.  
+
+	if (dimensions != pe.dimensions()) {
+		// number of dimensions doesn't even match!
+		// useful error message?
+		return good_bool(false);
+	}
+	// dimensions match
+	if (dimensions != 0) {
+		INVARIANT(index_collection.size() == 1);	// huh? true?
+		// this is true only if parameters that check this
+		// are template formals.  
+		// not sure if this will be called by non-formals, will see...
+
+		// make sure sizes in each dimension
+		index_collection_type::const_iterator
+			i(index_collection.begin());
+		const count_ptr<const const_range_list>
+			crl((*i)->get_indices().is_a<const const_range_list>());
+		if (crl) {
+			INVARIANT(pe.has_static_constant_dimensions());
+			const const_range_list
+				d(pe.static_constant_dimensions());
+			return good_bool(*crl == d);
+		} else {
+			// is dynamic, conservatively return false
+			return good_bool(false);
+		}
+	} else {
+		// dimensions == 0 means instantiation is a single instance.  
+		// size may be zero b/c first statement hasn't been added yet
+		INVARIANT(index_collection.size() <= 1);
+		return good_bool(pe.dimensions() == 0);
 	}
 }
 

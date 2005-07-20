@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.26 2005/06/23 03:00:28 fang Exp $
+	$Id: art_parser_base.cc,v 1.27 2005/07/20 20:59:49 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "AST/art_parser_expr_base.h"
+#include "AST/art_parser_expr_list.h"
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_root_item.h"
@@ -30,8 +31,9 @@
 
 #include "Object/art_context.h"
 #include "Object/art_object_definition_chan.h"	// for user_def_chan
+#include "Object/art_object_template_actuals.h"
 #include "Object/art_object_type_ref.h"		// for data_type_reference
-#include "Object/art_object_expr.h"		// for dynamic_param_expr_list
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/art_object_namespace.h"
 
 #include "util/indent.h"
@@ -212,7 +214,7 @@ chan_type::rightmost(void) const {
  */
 chan_type*
 chan_type::attach_data_types(const data_type_ref_list* t) {
-	assert(t); assert(!dtypes);     // sanity check    
+	NEVER_NULL(t); INVARIANT(!dtypes);     // sanity check    
 	dtypes = excl_ptr<const data_type_ref_list>(t);
 	assert(dtypes);
 	return this;
@@ -240,40 +242,17 @@ chan_type::check_base_chan_type(context& c) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: guarantee that channels don't depend on relaxed template formals
+ */
 chan_type::return_type
 chan_type::check_type(context& c) const {
-//	STACKTRACE_VERBOSE;
-//	cerr << "Fang, finish chan_type::check_type()!" << endl;
-#if 0
-	need count_ptr<const built_in_chan_type_reference>...
-	constructed from dtypes
-	will phase out add_chan_member...
-#endif
 	const data_type_ref_list::return_type
 		ret(dtypes->check_builtin_channel_type(c));
 	if (dir)
 		ret->set_direction(dir->text[0]);
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Needs to return a channel definition reference.  
-	Here, direction matters.  
-	Problem, returns a never_ptr<definition_base>, 
-		but refers to implicit built-in chan type.  
-	Someone has to own it!
-	See comments in class entity::built_in_channel_def. 
-	\return channel definition reference.
- */
-type_base::return_type
-chan_type::check_definition(context& c) const {
-	STACKTRACE("chan_type::check_build()");
-	cerr << "chan_type::check_build(): FINISH ME!" << endl;
-	return type_base::return_type(NULL);
-}
-#endif
 
 //=============================================================================
 // class statement method definitions
@@ -656,7 +635,8 @@ if (alias) {
 // class generic_type_ref method definitions
 
 CONSTRUCTOR_INLINE
-generic_type_ref::generic_type_ref(const type_base* n, const expr_list* t, 
+generic_type_ref::generic_type_ref(const type_base* n,
+		const template_args_type* t, 
 		const char_punctuation_type* d) : 
 		base(n), temp_spec(t), chan_dir(d) {
 	NEVER_NULL(base);
@@ -685,7 +665,7 @@ generic_type_ref::get_base_def(void) const {
 	return base;
 }
 
-never_ptr<const expr_list>
+never_ptr<const generic_type_ref::template_args_type>
 generic_type_ref::get_temp_spec(void) const {
 	return temp_spec;
 }
@@ -696,16 +676,12 @@ generic_type_ref::get_temp_spec(void) const {
 	arguments.  The type reference is used for creating instantiations.  
 	\return valid type-checked type-reference if successful, 
 		else NULL (does not exit on failure).  
-	TODO: check for channel direction.
-	TODO: real handling of template_actuals
  */
 generic_type_ref::return_type
 generic_type_ref::check_type(context& c) const {
 	// note: this is non-const, whereas we're returning const
 	typedef	definition_base::type_ref_ptr_type	local_return_type;
-#if ENABLE_STACKTRACE
-	util::stacktrace __st__("generic_type_ref::check_type()");
-#endif
+	STACKTRACE("generic_type_ref::check_type()");
 	// sets context's current definition
 	const never_ptr<const definition_base>
 		d(base->check_definition(c));
@@ -724,14 +700,8 @@ generic_type_ref::check_type(context& c) const {
 		STACKTRACE("checking template arguments (temp_spec)");
 		// FUTURE: need to extend to handle generic template
 		// type-argument placeholders.  
-		expr_list::checked_meta_exprs_type temp;
-		temp_spec->postorder_check_meta_exprs(temp, c);
-		// copied from object_list::make_param_expr_list()
-		excl_ptr<dynamic_param_expr_list>
-			tpl(new dynamic_param_expr_list);
-		expr_list::checked_meta_exprs_type::const_iterator
-			i(temp.begin());
-		copy(temp.begin(), temp.end(), back_inserter(*tpl));
+		const template_argument_list_pair::return_type
+			tpl(temp_spec->check_template_args(c));
 		type_ref = d->make_fundamental_type_reference(tpl);
 	} else {
 		STACKTRACE("empty template arguments (!temp_spec)");
@@ -800,6 +770,11 @@ data_type_ref_list::~data_type_ref_list() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Checks the list of type references, which must be data types.  
+	NOTE: the data types used must be strict, so that we may infer
+		that all built-in channel types are strict.  
+	This was arbitrarily chosen as the policy (2005-07-06) for no
+		reason other than a simplfying constraint.  If you should
+		ever find a reason to change this, talk to fangism.  
  */
 data_type_ref_list::return_type
 data_type_ref_list::check_builtin_channel_type(context& c) const {
@@ -820,7 +795,7 @@ data_type_ref_list::check_builtin_channel_type(context& c) const {
 	} else {
 		// copy to user_def_chan
 		ret->reserve_datatypes(size());
-		const_iterator j = begin();
+		const_iterator j(begin());
 		for ( ; i!=e; i++, j++) {
 			const count_ptr<const data_type_reference>
 				dtr(i->is_a<const data_type_reference>());
@@ -828,6 +803,13 @@ data_type_ref_list::check_builtin_channel_type(context& c) const {
 				cerr << "Channels can only carry data-types, ";
 				(*i)->what(cerr << "but resolved a ") <<
 					" at " << where(**j) << endl;
+				return return_type(NULL);
+			} else if (dtr->is_relaxed()) {
+				cerr << "ERROR: data types used in "
+					"channel-specifications must be "
+					"strictly typed." << endl;
+				dtr->dump(cerr << "\tgot: ") <<
+					" in " << where(*this) << endl;
 				return return_type(NULL);
 			} else {
 				ret->add_datatype(dtr);

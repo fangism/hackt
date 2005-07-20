@@ -1,0 +1,85 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	78
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	7	##ADDR##	chandefn	0	#HEAD#	#TAIL#	82
+	8	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
+	28	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
+	30	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
+	34	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
+	36	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    chan_proc = process-definition (declared) chan_proc(
+        fake_chan<> L
+        fake_chan<> R
+      )
+      In definition "chan_proc", we have: {
+        L = fake_chan<> L
+        R = fake_chan<> R
+      }
+
+    fake_chan = user-def-chan (declared) fake_chan
+      chan(
+        int<32>
+      )
+      (
+        int<32> d
+        bool<> e
+      )
+      In channel definition "fake_chan", we have: {
+        d = int<32> d
+        e = bool<> e
+      }
+
+  Instances:
+    P = process chan_proc<>^0 P (instantiated) = ::P (
+      channel fake_chan<>^0 L (instantiated) = ::X 
+      channel fake_chan<>^0 R (instantiated) = ::Y 
+    )
+    X = channel fake_chan<>^0 X (instantiated) = ::P.L 
+    Y = channel fake_chan<>^0 Y (instantiated) = ::P.R 
+}
+

@@ -2,7 +2,7 @@
 	\file "util/multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.21 2005/05/10 04:51:26 fang Exp $
+	$Id: multikey.h,v 1.22 2005/07/20 21:01:00 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -19,18 +19,23 @@
 #define	MULTIKEY_TEMPLATE_SIGNATURE					\
 template <size_t D, class K>
 
+#define	MULTIKEY_CLASS					multikey<D,K>
+
 #define MULTIKEY_GENERIC_TEMPLATE_SIGNATURE				\
 template <class K>
+
+#define	MULTIKEY_GENERIC_CLASS				multikey_generic<K>
 
 #define	MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE				\
 template <size_t D, class K>
 
+#define	MULTIKEY_GENERATOR_CLASS		multikey_generator<D,K>
+
 #define	MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE			\
 template <class K>
 
-/***
-	Later be able to compare between keys of different dimensions.  
-***/
+#define	MULTIKEY_GENERATOR_GENERIC_CLASS	multikey_generator_generic<K>
+
 namespace util {
 using std::valarray;
 using std::pair;
@@ -285,7 +290,7 @@ class multikey : public multikey_implementation_base<D,K> {
 	template <size_t, class C>
 	friend class multikey;
 
-	typedef	multikey<D,K>				this_type;
+	typedef	MULTIKEY_CLASS				this_type;
 	typedef	multikey_implementation_base<D,K>	impl_type;
 public:
 	// workaround for constness problem in multikey_set_element
@@ -445,7 +450,7 @@ MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 class multikey_generic : public valarray<K> {
 protected:
 	typedef	valarray<K>				impl_type;
-	typedef	multikey_generic<K>			this_type;
+	typedef	MULTIKEY_GENERIC_CLASS			this_type;
 public:
 	typedef	K*					iterator;
 	typedef	const K*				const_iterator;
@@ -535,6 +540,9 @@ public:
 		return impl_type::operator[](0);
 	}
 
+	this_type&
+	operator = (const this_type&);
+
 	bool
 	operator == (const this_type&) const;
 
@@ -591,6 +599,7 @@ operator << (ostream& o, const multikey_generic<K>& k);
  */
 template <size_t D, class K>
 class multikey_generator : public multikey<D,K> {
+	typedef	MULTIKEY_GENERATOR_CLASS		this_type;
 public:
 	typedef	K					value_type;
 	typedef	multikey<D,K>				base_type;
@@ -699,123 +708,12 @@ public:
 };	// end class multikey_generator
 
 //=============================================================================
-#if 0
-/**
-	Only works for integer-like keys.  
-	Extension of a standard multikey, with knowledge of bounds.  
- */
-template <class K>
-class multikey_generator<1,K> : public multikey<1,K> {
-public:
-	typedef	K					value_type;
-	typedef	multikey<1,K>				base_type;
-	typedef	typename base_type::iterator		iterator;
-	typedef	typename base_type::const_iterator	const_iterator;
-	typedef	typename base_type::reverse_iterator	reverse_iterator;
-	typedef	typename base_type::const_reverse_iterator
-							const_reverse_iterator;
-	typedef	base_type				corner_type;
-	typedef	typename base_type::simple_type		simple_type;
-// protected:
-public:		// for sake of laziness and convenience
-	/** vector of lower bounds */
-	corner_type		lower_corner;
-	/** vector of upper bounds */
-	corner_type		upper_corner;
-public:
-	/// default constructor
-	multikey_generator() : base_type(), lower_corner(), upper_corner() { }
-
-	// construct from a pair of keys
-	multikey_generator(const base_type& l, const base_type& u) :
-		base_type(), lower_corner(l), upper_corner(u) { }
-
-#if 0
-	// construct from a pair of keys
-	multikey_generator(const corner_type& l, const corner_type& u) :
-		base_type(), lower_corner(l), upper_corner(u) { }
-#endif
-
-	/// copy from a sequence of pairs
-	template <template <class> class L, template <class, class> class P>
-	explicit
-	multikey_generator(const L<P<K,K> >& l);
-
-	/**
-		\param LP is a list-of-pairs-like class.  
-	 */
-	template <class LP>
-	explicit
-	multikey_generator(const LP& l);
-
-	// use default destructor
-
-	/**
-		Make sure bounds are sane.  
-	 */
-	void
-	validate(void) const;
-
-	void
-	initialize(void);
-
-	size_t
-	size(void) const { return base_type::dimensions(); }
-
-	iterator
-	begin(void) { return base_type::begin(); }
-
-	const_iterator
-	begin(void) const { return base_type::begin(); }
-
-	iterator
-	end(void) { return base_type::end(); }
-
-	const_iterator
-	end(void) const { return base_type::end(); }
-
-	reverse_iterator
-	rbegin(void) { return base_type::rbegin(); }
-
-	const_reverse_iterator
-	rbegin(void) const { return base_type::rbegin(); }
-
-	reverse_iterator
-	rend(void) { return base_type::rend(); }
-
-	const_reverse_iterator
-	rend(void) const { return base_type::rend(); }
-
-	corner_type&
-	get_lower_corner(void) { return lower_corner; }
-
-	const corner_type&
-	get_lower_corner(void) const { return lower_corner; }
-
-	corner_type&
-	get_upper_corner(void) { return upper_corner; }
-
-	const corner_type&
-	get_upper_corner(void) const { return upper_corner; }
-
-	// can be used directly as key, no need to convert
-	corner_type&
-	operator ++ (int);
-
-	operator K () const { return base_type::index; }
-
-	// all other methods inherited
-
-};	// end class multikey_generator
-#endif
-
-//-----------------------------------------------------------------------------
 /**
 	Key-generator with run-time dimensions.  
  */
 template <class K>
 class multikey_generator_generic : public multikey_generic<K> {
-	typedef	multikey_generator_generic<K>		this_type;
+	typedef	MULTIKEY_GENERATOR_GENERIC_CLASS	this_type;
 public:
 	typedef	K					value_type;
 	typedef	multikey_generic<K>			base_type;

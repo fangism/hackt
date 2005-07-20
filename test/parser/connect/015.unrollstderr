@@ -1,33 +1,33 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4303380	module__	0	0	49
-	2	 0x4300144	namespc_	0	49	81
-	3	 0x43033a4	proccoll	1	81	180
-	4	 0x43033f0	procinst	0	180	200
-	5	 0x4303410	proctprf	0	200	216
-	6	 0x4303420	procdefn	0	216	264
-	7	 0x43034b0	crnglst_	0	264	284
-	8	 0x43034c0	proctprf	0	284	300
-	9	 0x43034d4	proccoll	1	300	406
-	10	 0x4303520	procinst	0	406	426
-	11	 0x4303540	proctprf	0	426	442
-	12	 0x4303550	crnglst_	0	442	462
-	13	 0x4303560	procinst	0	462	482
-	14	 0x4303580	proctprf	0	482	498
-	15	 0x4303590	crnglst_	0	498	518
-	16	 0x43035a0	procinst	0	518	538
-	17	 0x43035c0	proctprf	0	538	554
-	18	 0x43035d0	crnglst_	0	554	574
-	19	 0x43035e0	proctprf	0	574	590
-	20	 0x43035f0	prcalias	0	590	610
-	21	 0x4303600	sprcmref	0	610	630
-	22	 0x4303630	sprcmref	0	630	650
-	23	 0x4303660	cindlst_	0	650	666
-	24	 0x4805804	cnstrng_	0	666	682
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	123
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	48
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	130
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 
-In module created from: ./015.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   2 instantiation-collections
@@ -35,7 +35,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    foo = process-definition (declared) foo      (
+    foo = process-definition (declared) foo(
       )
       In definition "foo", we have: {
       }

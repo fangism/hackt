@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.5 2005/06/19 01:58:48 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.6 2005/07/20 21:00:35 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -16,12 +16,15 @@
 #include "util/persistent_fwd.h"	// for persistent object interface
 #include "util/hash_qmap.h"	// need complete definition
 #include "util/memory/excl_ptr.h"
+#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
+class const_param;
 class param_instance_collection;
 class dynamic_param_expr_list;
+class template_actuals;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -33,6 +36,7 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
+using util::memory::count_ptr;
 
 //=============================================================================
 /**
@@ -96,18 +100,11 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-#if 0
-	/**
-		OR pair of lists to distinguish between strict and relaxed
-		template parameters.  
-	 */
-	void
-	fill_template_actuals_map(template_actuals_map_type&, 
-		const param_expr_list& al) const;
-#endif
-
 	never_ptr<const param_instance_collection>
 	lookup_template_formal(const string& id) const;
+
+	bool
+	probe_relaxed_template_formal(const string& id) const;
 
 	size_t
 	lookup_template_formal_position(const string& id) const;
@@ -116,13 +113,18 @@ public:
 	check_null_template_argument(void) const;
 
 	bool
+	has_relaxed_formals(void) const;
+
+	bool
 	equivalent_template_formals(const template_formals_manager&) const;
 
 	good_bool
-	certify_template_arguments(
-		const never_ptr<dynamic_param_expr_list> ) const;
+	certify_template_arguments(template_actuals&) const;
 
-	excl_ptr<dynamic_param_expr_list>
+	good_bool
+	must_validate_actuals(const template_actuals&) const;
+
+	template_actuals
 	make_default_template_arguments(void) const;
 
 	// assumes already checked for conflicts!
@@ -134,6 +136,14 @@ public:
 	void
 	add_relaxed_template_formal(
 		const never_ptr<const param_instance_collection>);
+
+#if 0
+	// called by unroll-context
+	// was const param_instance_collection&
+	count_ptr<const const_param>
+	resolve_template_actual(const param_instance_collection&, 
+		const template_actuals&) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;

@@ -1,5 +1,90 @@
 # "src/util/ChangeLog"
 
+2005-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-30:
+	  Added front() and back() interface to packed_array[_generic].
+	  Added "util/wtf.h" as developer tool for figuring out
+		the canonical type of a typename/typedef and 
+		the type of an object, e.g. return type.  
+
+
+2005-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-07:
+	  Critical bug fix in multikey_generic<>::operator =:
+		detected self-assignment (alias) condition
+		and avoid self-destruction.  Hello?  C++ 101.  
+		Strangely, this problem only exhibited on a linux build...
+
+
+2005-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-28-subinstance-04:
+	  util/ring_node.h:
+		Added default iterator structs for convenience.
+		Sometimes necessary when wanting to refer to 
+		ring_node_derived<incomplete type>.
+
+
+2005-07-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-16:
+	  Cleaned up "util/multidimensional_sparse_set.tcc"
+		iterator construction over assignment, 
+		new flexible template methods for key method functions:
+		add_ranges() and query_compact_dimensions().
+	  Fixed (and used, and tested) "util/reserve.h".
+
+
+2005-07-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-14:
+	  Added "util/reserve.h" policy for vector-like memory reserve
+		when possible -- for other non-vectors, it no-ops.
+
+
+2005-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-10:
+	  Fixed scalar initialization bug in util::multikey_generic, 
+		where passing in 0 dimension would result in
+		allocating size_t(-1) size array in constructor. 
+		Moral of lesson: look before you subtract one.  
+		(Updated bunch of multikey_generic's constructors)
+	  Fixed multikey_generic assignment (=) bug:
+		default assignment semantics for valarray (implementation type)
+		are insufficient: defaults to truncated copy.
+		We replaced with proper reallocation (vector-style)
+		assignment, with explicit destruction and placement
+		copy-construction.  
+	  Eliminated copy-modified specialization of packed_array<bool>
+		and replaced it with a packed_array_implementation
+		policy class, with specialized types for bool case.  
+		Result: much code reduction for equivalent functionality.
+	  Updated pretty-print dump for all packed_array*.
+		Includes a nice multidimensional array dump.  
+	  Also added a test to packed_array_test to check for this.  
+	  While I was at it, replaced iterator initialization
+		with construction where possible in util::multikey*
+		and util::packed_array*.
+
+
+2005-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-07:
+	  Added explicit instantiation macros to "util/multikey.tcc".
+
+
+2005-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-06-actuals-02:
+	  Figured out how to automatically generate unique identifiers
+		using cpp, after discovering macro tricks on the web.  
+	  "util/indent.h" and "util/stacktrace.h" now use these macros.
+	  No more shadowing identifier conflicts!  Hallelujah!
+
+
 2005-06-21	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-45-merged-anal-04:

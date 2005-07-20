@@ -1,36 +1,36 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x43037d0	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x43037f0	procdefn	0	53	150
-	4	 0x4303884	chancoll	0	150	188
-	5	 0x43038e0	chaninst	0	188	208
-	6	 0x4303900	bchntprf	0	208	229
-	7	 0x4303920	datatprf	0	229	245
-	8	 0x4303930	datadefn	0	245	298
-	9	 0x43039d4	chancoll	0	298	336
-	10	 0x4303a30	chaninst	0	336	356
-	11	 0x4303a50	bchntprf	0	356	377
-	12	 0x4303a70	datatprf	0	377	393
-	13	 0x4303a84	dboolcol	1	393	422
-	14	 0x4303ad0	datainst	0	422	442
-	15	 0x4303af0	datatprf	0	442	458
-	16	 0x4303b00	crnglst_	0	458	478
-	17	 0x4303b14	dintcoll	0	478	516
-	18	 0x4303b70	datainst	0	516	536
-	19	 0x4303b90	datatprf	0	536	552
-	20	 0x4303ba0	datadefn	0	552	604
-	21	 0x4303c40	dprmlst_	0	604	620
-	22	 0x3716028	cnstpi__	0	620	632
-	23	 0x4303c50	CHPsend_	0	632	652
-	24	 0x4303c70	schnnref	0	652	668
-	25	 0x4303c80	sdbnref_	0	668	684
-	26	 0x4303ca0	nindlist	0	684	700
-	27	 0x4303cb0	sdinref_	0	700	716
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	97
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 
-In module created from: ./017.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

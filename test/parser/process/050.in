@@ -1,4 +1,4 @@
-// should fail: cannot add to collection of a port formal
+// "050.in" should fail: cannot add to collection of a port formal
 
 defproc foo(int fe[4][4]) {
 	int fe[4..4][4..4];

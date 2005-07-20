@@ -1,4 +1,4 @@
-// should pass: reference to array member
+// "027.in" should pass: reference to array member
 
 int foo;
 

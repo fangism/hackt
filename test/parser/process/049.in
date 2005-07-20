@@ -1,4 +1,4 @@
-// should pass: ports match
+// "049.in" should pass: ports match
 
 defproc food(int<32> sleep);
 

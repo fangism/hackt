@@ -1,21 +1,28 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.14 2005/06/19 01:58:39 fang Exp $
+	$Id: art_object_fwd.h,v 1.15 2005/07/20 21:00:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
 #define	__OBJECT_ART_OBJECT_FWD_H__
 
 #include "util/size_t.h"
-#include "Object/art_object_classification_tags.h"
-#include "Object/art_object_classification_fwd.h"
-#include "Object/art_object_expr_types.h"
+#include "Object/traits/classification_tags.h"
+#include "Object/traits/class_traits_fwd.h"
+#include "Object/expr/types.h"
 
 namespace ART {
 namespace entity {
 
 // TODO: organize into groups by where full declarations are found
+	typedef	class_traits<bool_tag>		bool_traits;
+	typedef	class_traits<int_tag>		int_traits;
+	typedef	class_traits<enum_tag>		enum_traits;
+	typedef	class_traits<process_tag>	process_traits;
+	typedef	class_traits<channel_tag>	channel_traits;
+	typedef	class_traits<pbool_tag>		pbool_traits;
+	typedef	class_traits<pint_tag>		pint_traits;
 
 	class module;
 	class object;
@@ -220,12 +227,15 @@ namespace entity {
 
 	template <class>
 	class instantiation_statement;
-	class instantiation_statement_base;
+	template <class>
 	class param_instantiation_statement;
 
-	typedef	instantiation_statement<pbool_tag>
+	class instantiation_statement_base;
+	class param_instantiation_statement_base;
+
+	typedef	param_instantiation_statement<pbool_tag>
 		pbool_instantiation_statement;
-	typedef	instantiation_statement<pint_tag>
+	typedef	param_instantiation_statement<pint_tag>
 		pint_instantiation_statement;
 	typedef	instantiation_statement<datatype_tag>
 		data_instantiation_statement;
@@ -282,9 +292,9 @@ namespace entity {
 	class pint_unary_expr;
 	class pbool_unary_expr;
 	class param_binary_expr;
-	class arith_expr;
-	class relational_expr;
-	class logical_expr;
+	class pint_arith_expr;
+	class pint_relational_expr;
+	class pbool_logical_expr;
 	class meta_range_expr;
 	class pint_range;
 	class const_range;

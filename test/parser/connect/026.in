@@ -1,4 +1,4 @@
-// should fail: invalid member
+// "026.in" should fail: invalid member
 
 int foo;
 

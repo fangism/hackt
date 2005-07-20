@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_definition_chan.h"
 	Definition-related ART object classes.  
-	$Id: art_object_definition_chan.h,v 1.5 2005/06/23 03:00:30 fang Exp $
+	$Id: art_object_definition_chan.h,v 1.6 2005/07/20 20:59:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CHAN_H__
@@ -14,10 +14,8 @@
 namespace ART {
 namespace entity {
 class builtin_channel_type_reference;
+class channel_type_reference_base;
 class channel_type_reference;
-using std::ostream;
-USING_LIST
-using namespace util::memory;	// for experimental pointer classes
 
 //=============================================================================
 /// abstract base class for channels and their representations
@@ -34,6 +32,12 @@ virtual	~channel_definition_base() { }
 		const token_identifier& id) const;
 
 virtual	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+#define	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO			\
+	count_ptr<const channel_type_reference_base>			\
+	make_canonical_type_reference(const template_actuals&) const
+
+virtual	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;
@@ -74,6 +78,9 @@ public:
 	string
 	get_qualified_name(void) const;
 
+	ostream&
+	dump_qualified_name(ostream&) const;
+
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
@@ -107,8 +114,13 @@ public:
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string&) const;
 
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
+
 	good_bool
 	certify_port_actuals(const checked_refs_type&) const;
+
+	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS
@@ -152,6 +164,9 @@ private:
 protected:
 	const string				key;
 	const never_ptr<const scopespace>	parent;
+	/**
+		Not channel_type_reference_base?
+	 */
 	excl_ptr<const channel_type_reference>	base;
 private:
 	channel_definition_alias();
@@ -175,6 +190,8 @@ public:
 
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
+	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

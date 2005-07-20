@@ -1,0 +1,65 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	proccoll	1	#HEAD#	#TAIL#	144
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (declared) foo<
+      pint<> Q
+      ><
+      pint<> R
+      >(
+      )
+      In definition "foo", we have: {
+        Q = pint<> Q
+        R = pint<> R
+      }
+
+  Instances:
+    car = process foo<5><4>^1 car with indices: {
+      [0..2]
+      [3..4]
+    }
+      unrolled indices: {
+        0 = ::car[0]
+        1 = ::car[1]
+        2 = ::car[2]
+        3 = ::car[3]
+        4 = ::car[4]
+      }
+}
+

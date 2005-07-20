@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.17 2005/06/19 01:58:42 fang Exp $
+	$Id: art_object_instance_base.h,v 1.18 2005/07/20 21:00:29 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
@@ -15,8 +15,8 @@
 #include "util/boolean_types.h"
 #include "Object/art_object_base.h"
 #include "Object/art_object_util_types.h"
+#include "Object/inst/substructure_alias_fwd.h"
 #include "util/persistent.h"		// for persistent object interface
-	// includes <iosfwd>
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -31,6 +31,9 @@ class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class const_range_list;
 class param_expr;
+class const_param_expr_list;
+class physical_instance_collection;
+class unroll_context;
 USING_LIST
 using std::istream;
 using std::string;
@@ -69,6 +72,10 @@ public:
 	// needs to be of a type that can be pushed onto object stack
 	typedef	count_ptr<meta_instance_reference_base>
 						member_inst_ref_ptr_type;
+	typedef	count_ptr<const const_param_expr_list>
+						instance_relaxed_actuals_type;
+	typedef	never_ptr<const substructure_alias>
+						super_instance_ptr_type;
 protected:
 	/**
 		Back-pointer to the namespace to which this instantiation
@@ -94,6 +101,8 @@ protected:
 		at specified indices in the multidimensional collection, 
 		implemented in the leaf children classes.  
 		Can elements be NULL?
+		TODO: subtype this!  don't use generic type common to all
+		children.  Implement using class_traits policy.  
 	 */
 	index_collection_type		index_collection;
 
@@ -111,6 +120,26 @@ protected:
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
+
+	/**
+		Pointer to parent super instance.  
+		Added 2005-07-10.
+		If top-level instance item, then this is NULL.  
+		TODO: decide what to do about persistence.  
+		Does this only belong in physical_instance_collection?
+		No, EVERYTHING may have a super, even parameters.  
+
+		2005-07-11:
+		NOTE: this field is maintained persistently in a
+		less-than-usual fashion.  It is the responsibility of the
+		super instance (parent) alias to write and restore its
+		back-link (to itself) to its children.  
+		Thus, the persistent object manager will not touch
+		this field, however, it should be noted that
+		restoration will have to be well ordered between
+		parent and children.  
+	 */
+	super_instance_ptr_type		super_instance;
 protected:
 	/**
 		Private, dimensions-specific construct, intended for
@@ -119,7 +148,7 @@ protected:
 	explicit
 	instance_collection_base(const size_t d) :
 		object(), persistent(), owner(), key(), 
-		index_collection(), dimensions(d) { }
+		index_collection(), dimensions(d), super_instance() { }
 
 public:
 	// o should be reference, not pointer
@@ -130,6 +159,12 @@ virtual	~instance_collection_base();
 
 	size_t
 	get_dimensions(void) const { return dimensions; }
+
+	void
+	relink_super_instance(const substructure_alias& a) {
+		INVARIANT(!super_instance);
+		super_instance = super_instance_ptr_type(&a);
+	}
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
@@ -150,11 +185,17 @@ virtual	ostream&
 	ostream&
 	pair_dump(ostream& o) const;
 
-	string
+	const string&
 	get_name(void) const { return key; }
 
 virtual	string
 	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
+
+	ostream&
+	dump_hierarchical_name(ostream&) const;
 
 virtual	string
 	hash_string(void) const { return key; }
@@ -198,7 +239,13 @@ public:
 	is_template_formal(void) const;
 
 	bool
+	is_relaxed_template_formal(void) const;
+
+	size_t
 	is_port_formal(void) const;
+
+	bool
+	is_local_to_definition(void) const;
 
 	bool
 	template_formal_equivalent(
@@ -208,9 +255,15 @@ public:
 	port_formal_equivalent(
 		const never_ptr<const instance_collection_base> b) const;
 
+#if 0
+// relocated to param_instance_collection
 protected:
 	good_bool
-	check_expression_dimensions(const param_expr& pr) const;
+	may_check_expression_dimensions(const param_expr& pr) const;
+
+	good_bool
+	must_check_expression_dimensions(const const_param& pr) const;
+#endif
 
 public:
 virtual	count_ptr<meta_instance_reference_base>
@@ -222,6 +275,15 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 // return type may become generic...
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
+
+#if 0
+#define	UNROLL_PORT_ONLY_PROTO						\
+	count_ptr<physical_instance_collection>				\
+	unroll_port_only(const unroll_context&) const
+
+virtual	UNROLL_PORT_ONLY_PROTO = 0;
+#endif
+
 private:
 	// utility functions for handling index collection (inlined)
 	void

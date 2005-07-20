@@ -1,19 +1,18 @@
 /**
 	\file "Object/art_object_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.8 2005/06/19 01:58:49 fang Exp $
+	$Id: art_object_value_reference.h,v 1.9 2005/07/20 21:00:37 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 #define __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
 
 #include <iosfwd>
-#include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/art_object_index.h"
-#include "Object/art_object_expr_const.h"	// for const_index_list
 #include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_classification_fwd.h"
+#include "Object/traits/class_traits_fwd.h"
 #include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -21,7 +20,10 @@
 //=============================================================================
 namespace ART {
 namespace entity {
-USING_LIST
+class const_param;
+class const_index_list;
+class const_range_list;
+class unroll_context;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -132,6 +134,9 @@ public:
 	is_static_constant(void) const;
 
 	bool
+	is_relaxed_formal_dependent(void) const;
+
+	bool
 	is_unconditional(void) const;
 
 	bool
@@ -149,11 +154,13 @@ public:
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
+	// why is this not available to other meta-instance-references?
+	// doesn't this need context?
 	const_index_list
 	resolve_dimensions(void) const;
 
-	good_bool
-	resolve_values_into_flat_list(list<value_type>& l) const;
+	const_index_list
+	unroll_resolve_dimensions(const unroll_context&) const;
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
@@ -163,40 +170,16 @@ public:
 	unroll_resolve_index(const unroll_context&) const;
 #endif
 
-public:
-	/**
-		TODO: consider separate file?
-		Helper class for assigning values to instances.
-	 */
-	class assigner {
-	protected:
-		/** reference to the source of values */
-		const interface_type&	src;
-		/** resolved range list */
-		const_index_list	ranges;
-		/** flat list of unrolled values */
-		list<value_type>		vals;
-	public:
-		assigner(const interface_type& p);
-		// default destructor
-
-		bad_bool
-		operator () (const bad_bool b,
-			const SIMPLE_META_VALUE_REFERENCE_CLASS& p) const;
-
-		template <template <class> class P>
-		bad_bool
-		operator () (const bad_bool b,
-			const P<const SIMPLE_META_VALUE_REFERENCE_CLASS >& p) const {
-			assert(p);
-			return this->operator()(b, *p);
-		}
-	};	// end class assigner
+	bad_bool
+	assign_value_collection(const const_collection_type&) const;
 
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
 
+	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
+
+	CONNECT_PORT_PROTO;
 protected:
 	using common_base_type::collect_transient_info_base;
 	using common_base_type::write_object_base;

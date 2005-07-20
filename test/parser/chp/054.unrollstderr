@@ -1,48 +1,48 @@
 
 Persistent Object Manager text dump: 
-	i	addr		type		arg	head	tail
-	0	         0	________	0	0	0
-	1	 0x4304920	module__	0	0	29
-	2	 0x4300144	namespc_	0	29	53
-	3	 0x4304940	procdefn	0	53	181
-	4	 0x43049d4	chancoll	0	181	219
-	5	 0x4304a30	chaninst	0	219	239
-	6	 0x4304a50	bchntprf	0	239	260
-	7	 0x4304a70	datatprf	0	260	276
-	8	 0x4304a80	datadefn	0	276	329
-	9	 0x4304b24	chancoll	0	329	367
-	10	 0x4304b80	chaninst	0	367	387
-	11	 0x4304ba4	chancoll	0	387	425
-	12	 0x4304c00	chaninst	0	425	445
-	13	 0x4304c24	chancoll	0	445	483
-	14	 0x4304c80	chaninst	0	483	503
-	15	 0x4304ca0	bchntprf	0	503	524
-	16	 0x4304cc0	datatprf	0	524	540
-	17	 0x4304cd4	dboolcol	0	540	574
-	18	 0x4304d30	datainst	0	574	594
-	19	 0x4304d50	datatprf	0	594	610
-	20	 0x4304d64	dboolcol	0	610	644
-	21	 0x4304dc0	datainst	0	644	664
-	22	 0x4304de0	CHPloop_	0	664	676
-	23	 0x4304df0	CHPseqnc	0	676	700
-	24	 0x4304e00	CHPrecv_	0	700	720
-	25	 0x4304e20	schnnref	0	720	736
-	26	 0x4304e30	sdbnref_	0	736	752
-	27	 0x4304e50	CHPdetsl	0	752	772
-	28	 0x4304e60	CHPguard	0	772	788
-	29	 0x4304e80	sdbnref_	0	788	804
-	30	 0x4304ea0	CHPrecv_	0	804	824
-	31	 0x4304ec0	schnnref	0	824	840
-	32	 0x4304ed0	sdbnref_	0	840	856
-	33	 0x4304ef0	CHPguard	0	856	872
-	34	 0x4304f10	CHPrecv_	0	872	892
-	35	 0x4304f30	schnnref	0	892	908
-	36	 0x4304f40	sdbnref_	0	908	924
-	37	 0x4304f60	CHPsend_	0	924	944
-	38	 0x4304f80	schnnref	0	944	960
-	39	 0x4304f90	sdbnref_	0	960	976
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	128
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	CHPdetsl	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 
-In module created from: ./054.in (unrolled)
+In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
   0 parameter-collections
   0 instantiation-collections

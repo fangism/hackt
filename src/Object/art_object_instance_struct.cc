@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_struct.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_struct.cc,v 1.16 2005/06/22 22:13:35 fang Exp $
+	$Id: art_object_instance_struct.cc,v 1.17 2005/07/20 21:00:33 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_STRUCT_CC__
@@ -13,20 +13,21 @@
 #include <algorithm>
 
 #include "Object/art_object_instance_struct.h"
+#include "Object/art_object_instance_alias_actuals.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
-#include "Object/art_object_expr_const.h"
+#include "Object/expr/struct_expr.h"
 #include "Object/art_object_connect.h"
 #include "Object/art_object_definition_data.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_nonmeta_value_reference.h"
-#include "Object/art_object_classification_details.h"
 
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/general_collection_type_manager.tcc"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_instance_collection,
@@ -52,90 +53,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-template <>
-struct collection_type_manager<datastruct_tag> {
-	typedef class_traits<datastruct_tag>::instance_collection_generic_type
-					instance_collection_generic_type;
-	typedef class_traits<datastruct_tag>::instance_collection_parameter_type
-					instance_collection_parameter_type;
-	typedef class_traits<datastruct_tag>::type_ref_ptr_type
-					type_ref_ptr_type;
-
-	struct dumper {
-		ostream& os;
-		dumper(ostream& o) : os(o) { }
-
-		ostream&
-		operator () (const instance_collection_generic_type& c) {
-			return os << "struct " <<
-				c.get_base_def()->get_qualified_name() <<
-				'^' << c.get_dimensions();
-		}
-	};	// end struct dumper
-
-	static
-	void
-	collect(persistent_object_manager& m, 
-		const instance_collection_generic_type& c) {
-		if (c.type_parameter)
-			c.type_parameter->collect_transient_info(m);
-	}
-
-	static
-	void
-	write(const persistent_object_manager& m, ostream& o,
-		const instance_collection_generic_type& c) {
-		m.write_pointer(o, c.type_parameter);
-	}
-
-	static
-	void
-	load(const persistent_object_manager& m, istream& i,
-		instance_collection_generic_type& c) {
-		m.read_pointer(i, c.type_parameter);
-	}
-
-	/**
-		TODO: what if type_parameter is not already set
-			because it is template-dependent and unresolved?
-		Then return the template-dependent type.  
-		Consumer is responsible to testing template-dependence. 
-	 */
-	static
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type& e) {
-		return e.type_parameter;
-	}
-
-	/**
-		During unroll phase, this commits the type of the collection.  
-		\param t the data integer type reference, containing width, 
-			must already be resolved to a const_param_expr_list.  
-		\return false on success, true on error.  
-		\post the integer width is fixed for the rest of the program.  
-	 */
-	static
-	bad_bool
-	commit_type(instance_collection_generic_type& c,
-		const type_ref_ptr_type& t) {
-		// make sure this is the canonical definition
-		//      in case type is typedef!
-		// this really should be statically type-checked
-		// until we allow templates to include type parameters.  
-
-		// only needs to be "collectibly" type equivalent, 
-		// not necessarily "connectible".
-		if (c.type_parameter)
-			return bad_bool(
-				!c.type_parameter->must_be_type_equivalent(*t));
-		else {
-			c.type_parameter = t;
-			return bad_bool(false);
-		}
-	}
-};	// end struct collection_type_manager
 
 //=============================================================================
 // class struct_instance method definitions
@@ -168,6 +85,7 @@ struct_instance::load_object(const persistent_object_manager& m,
 //=============================================================================
 // explicit template class instantiations
 
+template class instance_alias_info<datastruct_tag>;
 template class instance_collection<datastruct_tag>;
 template class instance_array<datastruct_tag, 0>;
 template class instance_array<datastruct_tag, 1>;

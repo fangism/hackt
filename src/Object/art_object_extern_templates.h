@@ -4,7 +4,7 @@
 	template classes.  
 	Useful for common template classes that are shared all over the place, 
 	explicitly or implicitly.  
-	$Id: art_object_extern_templates.h,v 1.7 2005/06/21 21:26:34 fang Exp $
+	$Id: art_object_extern_templates.h,v 1.8 2005/07/20 21:00:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_H__
@@ -13,7 +13,7 @@
 // never include this in the .cc file
 #ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
 
-#include "Object/art_object_expr_types.h"
+#include "Object/expr/types.h"
 #include "util/multikey_fwd.h"
 #include "util/packed_array_fwd.h"
 
@@ -61,7 +61,7 @@ class multikey_generator_generic<pint_value_type>;
 // NB: the inclusion of this file MUST precede the (attempted)
 // inclusion of the affected .tcc files for this to be effective.  
 #define	EXTERN_TEMPLATE_UTIL_MULTIKEY
-#define	EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
+// #define	EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
 #endif
 

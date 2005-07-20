@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.5 2005/05/23 01:02:34 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.6 2005/07/20 20:59:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -34,9 +34,15 @@
 #include <algorithm>
 
 #include "Object/art_object_const_collection.h"
-#include "Object/art_object_classification_details.h"
+#include "Object/traits/class_traits.h"
+#include "Object/art_object_index.h"
+#include "Object/expr/const_index.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_range_list.h"
 
 #include "util/persistent_object_manager.h"
+#include "util/multikey.h"
 #include "util/stacktrace.h"
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -71,20 +77,21 @@ struct persistent_traits<const_collection<Tag> > {			\
 	typedef	const_collection<Tag>		type;			\
 	static const persistent::hash_key	type_key;		\
 	static const int			type_ids[5];		\
-	static const binder_new_functor<type,persistent,int>		\
-					empty_constructors[5];		\
+	typedef	binder_new_functor<type,persistent,int>			\
+						constructor_type;	\
+	static const constructor_type		empty_constructors[5];	\
 };									\
 									\
 const persistent::hash_key						\
 persistent_traits<const_collection<Tag> >::type_key(Key);		\
 									\
-const binder_new_functor<const_collection<Tag>,persistent,int>		\
+const persistent_traits<const_collection<Tag> >::constructor_type	\
 persistent_traits<const_collection<Tag> >::empty_constructors[5] = {	\
-	binder_new_functor<const_collection<Tag>,persistent,int>(0),	\
-	binder_new_functor<const_collection<Tag>,persistent,int>(1),	\
-	binder_new_functor<const_collection<Tag>,persistent,int>(2),	\
-	binder_new_functor<const_collection<Tag>,persistent,int>(3),	\
-	binder_new_functor<const_collection<Tag>,persistent,int>(4)	\
+	persistent_traits<const_collection<Tag> >::constructor_type(0),	\
+	persistent_traits<const_collection<Tag> >::constructor_type(1),	\
+	persistent_traits<const_collection<Tag> >::constructor_type(2),	\
+	persistent_traits<const_collection<Tag> >::constructor_type(3),	\
+	persistent_traits<const_collection<Tag> >::constructor_type(4)	\
 };									\
 									\
 const int								\
@@ -149,7 +156,11 @@ CONST_COLLECTION_CLASS::what(ostream& o) const {
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 CONST_COLLECTION_CLASS::dump(ostream& o) const {
-	return values.dump(o);
+#if 0
+	return values.dump(o);	// too verbose
+#else
+	return values.dump_values(o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,7 +207,6 @@ CONST_COLLECTION_CLASS::has_static_constant_dimensions(void) const {
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_range_list
 CONST_COLLECTION_CLASS::static_constant_dimensions(void) const {
-	typedef	typename array_type::key_type	key_type;
 	const_range_list ret;
 	const key_type first(values.first_key());
 	const key_type last(values.last_key());
@@ -255,11 +265,23 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const param_expr& e) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Looks up one value indexed.  
+	\pre k must have same dimensions as the collection.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+typename CONST_COLLECTION_CLASS::value_type
+CONST_COLLECTION_CLASS::operator [] (const key_type& k) const {
+	return values[k];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Identical to the regular must_be_equivalent method.  
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 bool
 CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
+	STACKTRACE_VERBOSE;
 	const this_type* const
 		pcc = IS_A(const this_type*, &p);
 	if (pcc) {
@@ -267,64 +289,92 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
 			values.size() == pcc->values.size() &&
 			values == pcc->values);
 	} else {
-		// conservatively
-		return false;
+		// BUG FIXED (2005-07-20) forgot the scalar const case...
+		const const_expr_type* const
+			psc = IS_A(const const_expr_type*, &p);
+		if (psc) {
+			if (values.dimensions())
+				return false;
+			else	return psc->static_constant_value() == values.front();
+		} else {
+			// conservatively
+			return false;
+		}
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	See comment for static_constant_value().
+	\return good if successful.
+ */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 CONST_COLLECTION_CLASS::unroll_resolve_value(
-		const unroll_context&, value_type& ) const {
+		const unroll_context&, value_type& v) const {
+#if 0
 	cerr << "Never supposed to call "
 		"CONST_COLLECTION_CLASS::unroll_resolve_value()." << endl;
 	THROW_EXIT;
 	return good_bool(false);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-CONST_COLLECTION_TEMPLATE_SIGNATURE
-good_bool
-CONST_COLLECTION_CLASS::resolve_value(value_type& ) const {
-	cerr << "Never supposed to call CONST_COLLECTION_CLASS::resolve_value()."
-		<< endl;
-	THROW_EXIT;
-	return good_bool(false);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-CONST_COLLECTION_TEMPLATE_SIGNATURE
-typename CONST_COLLECTION_CLASS::value_type
-CONST_COLLECTION_CLASS::static_constant_value(void) const {
-	cerr << "Never supposed to call CONST_COLLECTION_CLASS::static_constant_value()." << endl;
-	THROW_EXIT;
-	return -1;
+#else
+	INVARIANT(!values.dimensions());
+	v = values.front();
+	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Straight copy of constant values to list.  
-	May become obsolete in future.  
+	See comment for static_constant_value().
+	\return good if successful.
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
-CONST_COLLECTION_CLASS::resolve_values_into_flat_list(
-		list<value_type>& l) const {
-	copy(values.begin(), values.end(), back_inserter(l));
+CONST_COLLECTION_CLASS::resolve_value(value_type& v) const {
+#if 0
+	cerr << "Never supposed to call CONST_COLLECTION_CLASS::resolve_value()."
+		<< endl;
+	THROW_EXIT;
+	return good_bool(false);
+#else
+	INVARIANT(!values.dimensions());
+	v = values.front();
 	return good_bool(true);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	2005-07-08:
+	It is possible for this to be called after a valur-reference
+	has been resolved down to a scalar constant, 
+	in which case it should be equivalent to a pint_const or pbool_const.  
+	\pre this is 0-dimensional, or scalar.  
+	\return the value of the only member.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+typename CONST_COLLECTION_CLASS::value_type
+CONST_COLLECTION_CLASS::static_constant_value(void) const {
+#if 0
+	cerr << "Never supposed to call CONST_COLLECTION_CLASS::static_constant_value()." << endl;
+	THROW_EXIT;
+	return -1;
+#else
+	INVARIANT(!values.dimensions());
+	return *values.begin();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_index_list
 CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
-	typedef	typename array_type::key_type	key_type;
 	const_index_list ret;
 	const key_type first(values.first_key());
 	const key_type last(values.last_key());
-	typename key_type::const_iterator f_iter = first.begin();
-	typename key_type::const_iterator l_iter = last.begin();
+	typename key_type::const_iterator f_iter(first.begin());
+	typename key_type::const_iterator l_iter(last.begin());
 	for ( ; f_iter != first.end(); f_iter++, l_iter++) {
 		ret.push_back(
 			// is reference-counted pointer type
@@ -339,6 +389,38 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<typename CONST_COLLECTION_CLASS::parent_const_type>
 CONST_COLLECTION_CLASS::unroll_resolve(const unroll_context& c) const {
 	return count_ptr<parent_const_type>(new this_type(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs and returns a value slice specfied by the index list
+	and returns the same type (possibly of lesser dimensions)
+	with copied/extracted values.  
+	\param il the list of indices to visit.  
+	TODO: error handling?
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+CONST_COLLECTION_CLASS
+CONST_COLLECTION_CLASS::make_value_slice(const const_index_list& il) const {
+if (il.empty()) {
+	// won't happen, as called from meta_value_reference<>::unroll_resolve.
+	return *this;
+} else {
+	const const_range_list crl(il.collapsed_dimension_ranges());
+	this_type ret(crl.resolve_sizes());
+	generic_index_generator_type key_gen(il.size());
+	key_gen.get_lower_corner() = il.lower_multikey();
+	key_gen.get_upper_corner() = il.upper_multikey();
+	key_gen.initialize();
+	typename array_type::iterator coll_iter(ret.values.begin());
+	do {
+		*coll_iter = ret.values[key_gen];
+		coll_iter++;
+		key_gen++;
+	} while (key_gen != key_gen.get_upper_corner());
+	INVARIANT(coll_iter == ret.values.end());
+	return ret;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
