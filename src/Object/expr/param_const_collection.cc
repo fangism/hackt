@@ -3,7 +3,7 @@
 	Class instantiations for const collections.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: param_const_collection.cc,v 1.1.2.2 2005/07/15 03:49:20 fang Exp $
+ 	$Id: param_const_collection.cc,v 1.1.2.3 2005/07/20 18:48:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
@@ -25,9 +25,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_const_collection.tcc"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
-#include "Object/expr/pint_expr.h"
-#include "Object/expr/pbool_expr.h"
-#include "Object/expr/const_param.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"

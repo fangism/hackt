@@ -1,7 +1,7 @@
 /**
-	\file "Object/art_object_instance_pint.cc"
+	\file "Object/art_object_value_collection.tcc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.5.4.10 2005/07/18 23:29:43 fang Exp $
+ 	$Id: art_object_value_collection.tcc,v 1.5.4.11 2005/07/20 18:48:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__

@@ -3,15 +3,13 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.1.2.5 2005/07/06 23:11:23 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.1.2.6 2005/07/20 18:48:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
 #define	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
-#define	DEBUG_LIST_VECTOR_POOL				0
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
@@ -174,7 +172,9 @@ bool
 const_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
 		IS_A(const const_param_expr_list*, &p);
+	STACKTRACE("const_expr_list::may_equivalent()");
 if (cpl) {
+	STACKTRACE("const vs. const");
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -190,6 +190,7 @@ if (cpl) {
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
+	STACKTRACE("const vs. dynamic");
 	const dynamic_param_expr_list* dpl =
 		IS_A(const dynamic_param_expr_list*, &p);
 	NEVER_NULL(dpl);
@@ -215,7 +216,9 @@ bool
 const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
 		IS_A(const const_param_expr_list*, &p);
+	STACKTRACE("const_expr_list::must_equivalent()");
 if (cpl) {
+	STACKTRACE("const vs. const");
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -231,6 +234,7 @@ if (cpl) {
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
+	STACKTRACE("const vs. dynamic");
 	const dynamic_param_expr_list* dpl =
 		IS_A(const dynamic_param_expr_list*, &p);
 	NEVER_NULL(dpl);
@@ -671,7 +675,9 @@ bool
 dynamic_param_expr_list::may_be_equivalent(const param_expr_list& p) const {
 	const never_ptr<const const_param_expr_list>
 		cpl(IS_A(const const_param_expr_list*, &p));
+	STACKTRACE("dynamic_expr_list::may_equivalent()");
 if (cpl) {
+	STACKTRACE("dynamic vs. const");
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -687,6 +693,7 @@ if (cpl) {
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
+	STACKTRACE("dynamic vs. dynamic");
 	const never_ptr<const dynamic_param_expr_list>
 		dpl(IS_A(const dynamic_param_expr_list*, &p));
 	NEVER_NULL(dpl);
@@ -712,7 +719,9 @@ bool
 dynamic_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	const never_ptr<const const_param_expr_list>
 		cpl(IS_A(const const_param_expr_list*, &p));
+	STACKTRACE("dynamic_expr_list::must_equivalent()");
 if (cpl) {
+	STACKTRACE("dynamic vs. const");
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -728,6 +737,7 @@ if (cpl) {
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
 } else {
+	STACKTRACE("dynamic vs. dynamic");
 	const never_ptr<const dynamic_param_expr_list>
 		dpl(IS_A(const dynamic_param_expr_list*, &p));
 	NEVER_NULL(dpl);
@@ -968,8 +978,6 @@ DEFAULT_STATIC_TRACE_END
 // responsibly undefining macros used
 // IDEA: for each header, write an undef header file...
 
-#undef	DEBUG_LIST_VECTOR_POOL
-#undef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 #undef	ENABLE_STACKTRACE
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.5.10.8 2005/07/18 23:29:42 fang Exp $
+ 	$Id: art_object_const_collection.tcc,v 1.5.10.9 2005/07/20 18:48:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
@@ -281,6 +281,7 @@ CONST_COLLECTION_CLASS::operator [] (const key_type& k) const {
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 bool
 CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
+	STACKTRACE_VERBOSE;
 	const this_type* const
 		pcc = IS_A(const this_type*, &p);
 	if (pcc) {
@@ -288,8 +289,17 @@ CONST_COLLECTION_CLASS::must_be_equivalent(const expr_base_type& p) const {
 			values.size() == pcc->values.size() &&
 			values == pcc->values);
 	} else {
-		// conservatively
-		return false;
+		// BUG FIXED (2005-07-20) forgot the scalar const case...
+		const const_expr_type* const
+			psc = IS_A(const const_expr_type*, &p);
+		if (psc) {
+			if (values.dimensions())
+				return false;
+			else	return psc->static_constant_value() == values.front();
+		} else {
+			// conservatively
+			return false;
+		}
 	}
 }
 
@@ -309,7 +319,7 @@ CONST_COLLECTION_CLASS::unroll_resolve_value(
 	return good_bool(false);
 #else
 	INVARIANT(!values.dimensions());
-	v = *values.begin();
+	v = values.front();
 	return good_bool(true);
 #endif
 }
@@ -329,7 +339,7 @@ CONST_COLLECTION_CLASS::resolve_value(value_type& v) const {
 	return good_bool(false);
 #else
 	INVARIANT(!values.dimensions());
-	v = *values.begin();
+	v = values.front();
 	return good_bool(true);
 #endif
 }

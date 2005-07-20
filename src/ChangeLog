@@ -1,6 +1,15 @@
 "ChangeLog"
 
-2005-07-19	David Fang		<fangism@users.sourceforge.net>
+2005-07-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-48-connect-01-41:
+	  BUG fixed in expression equivalence checking:
+		In simple_meta_value_reference::must_be_equivalent, 
+		added case to check against scalar constant, duh!
+		(Some debugging code added in the process.)
+	  New test cases added: parser/connect/103..110.in
+	  Tired of testing... going to clean-up and merge up.  
+
 
 	* ARTXX-00-01-04-main-00-48-connect-01-40:
 	  BUG discovered and fixed with new test cases in parser/connect.

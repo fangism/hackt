@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.6.10.7 2005/07/18 23:29:42 fang Exp $
+	$Id: art_object_const_collection.h,v 1.6.10.8 2005/07/20 18:48:26 fang Exp $
  */
 
 #ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
@@ -54,6 +54,8 @@ class const_collection :
 public:
 	typedef	typename class_traits<Tag>::const_collection_parent_type
 							parent_const_type;
+	typedef	typename class_traits<Tag>::const_expr_type
+							const_expr_type;
 	typedef	typename class_traits<Tag>::value_type	value_type;
 	typedef	util::packed_array_generic<pint_value_type, value_type>
 							array_type;

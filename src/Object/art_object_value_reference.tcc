@@ -1,21 +1,13 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.9.2.14 2005/07/19 23:28:28 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.9.2.15 2005/07/20 18:48:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
 #define	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
-#ifndef	DEBUG_LIST_VECTOR_POOL
-#define	DEBUG_LIST_VECTOR_POOL				0
-#endif
-
-#ifndef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
-#endif
-
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE				0
 #endif
@@ -79,11 +71,6 @@ using namespace util::memory;
 #include "util/using_ostream.h"
 USING_STACKTRACE
 using util::persistent_traits;
-
-#if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
-REQUIRES_STACKTRACE_STATIC_INIT
-// the robust list_vector_pool requires this.  
-#endif
 
 //=============================================================================
 // class simple_meta_value_reference method definitions
@@ -248,6 +235,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::is_unconditional(void) const {
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 typename SIMPLE_META_VALUE_REFERENCE_CLASS::value_type
 SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_value(void) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(is_static_constant());
 	return value_collection_ref->initial_value()->static_constant_value();
 }
@@ -263,7 +251,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_value(void) const {
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
+		const expr_base_type& b) const {
+	STACKTRACE_VERBOSE;
 	const this_type* const br = IS_A(const this_type*, &b);
 	if (br) {
 		// compare template formal parameter positions for equivalence!
@@ -290,6 +280,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(const expr_base_type& b) c
 			return false;
 		}
 	} else {
+		STACKTRACE("ACK!!");
 		// conservatively
 		return false;
 	}

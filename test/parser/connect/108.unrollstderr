@@ -1,0 +1,5 @@
+ERROR: types mismatch!
+	got: foo<2>
+	and: foo<4>
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

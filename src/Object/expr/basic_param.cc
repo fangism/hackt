@@ -1,9 +1,9 @@
 /**
-	\file "Object/expr/basicparam.cc"
+	\file "Object/expr/basic_param.cc"
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.1.2.6 2005/07/18 00:02:11 fang Exp $
+ 	$Id: basic_param.cc,v 1.1.2.7 2005/07/20 18:48:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -41,7 +41,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
-// #include "util/discrete_interval_set.tcc"
 
 // these conditional definitions must appear after inclusion of "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
@@ -59,10 +58,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_const,
-		"pint-const")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const,
-		"pbool-const")
+SPECIALIZE_UTIL_WHAT(ART::entity::pint_const, "pint-const")
+SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const, "pbool-const")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
@@ -144,6 +141,7 @@ pbool_expr::get_data_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_expr::may_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("pbool_expr::may_be_equivalent_generic()");
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
 	if (b) {
 		if (is_static_constant() && b->is_static_constant())
@@ -157,6 +155,7 @@ pbool_expr::may_be_equivalent_generic(const param_expr& p) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_expr::must_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("pbool_expr::must_be_equivalent_generic()");
 	const pbool_expr* b = IS_A(const pbool_expr*, &p);
 	if (b) {
 #if 0
@@ -205,6 +204,7 @@ pint_expr::~pint_expr() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_expr::may_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("pint_expr::may_be_equivalent_generic()");
 	const pint_expr* i = IS_A(const pint_expr*, &p);
 	if (i) {
 		if (is_static_constant() && i->is_static_constant())
@@ -218,6 +218,7 @@ pint_expr::may_be_equivalent_generic(const param_expr& p) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_expr::must_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("pint_expr::must_be_equivalent_generic()");
 	const pint_expr* i = IS_A(const pint_expr*, &p);
 	if (i) {
 #if 0
@@ -395,6 +396,7 @@ pint_const::operator == (const const_range& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_const::must_be_equivalent(const pint_expr& p) const {
+	STACKTRACE("pint_const::must_be_equivalent()");
 	return p.is_static_constant() && (val == p.static_constant_value());
 }
 

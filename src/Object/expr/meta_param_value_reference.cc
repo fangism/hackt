@@ -3,15 +3,13 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.1.2.2 2005/07/15 03:49:20 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.1.2.3 2005/07/20 18:48:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
 #define	__OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
-#define	DEBUG_LIST_VECTOR_POOL				0
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
@@ -85,8 +83,6 @@ DEFAULT_STATIC_TRACE_END
 // responsibly undefining macros used
 // IDEA: for each header, write an undef header file...
 
-#undef	DEBUG_LIST_VECTOR_POOL
-#undef	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE
 #undef	ENABLE_STACKTRACE
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
