@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_member_inst_ref.tcc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.8.4.2 2005/07/19 23:28:27 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.8.4.3 2005/07/20 06:45:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -134,17 +134,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		template unroll_generic_scalar_reference<Tag>(
 			*inst_base, this->array_indices, c);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// not needed, base class's implementation suffices
-MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bad_bool
-MEMBER_INSTANCE_REFERENCE_CLASS::connect_port(
-		instance_collection_base& cl, 
-		const unroll_context& c) const {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

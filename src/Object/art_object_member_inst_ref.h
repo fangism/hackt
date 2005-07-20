@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_member_inst_ref.h,v 1.7.4.4 2005/07/19 23:28:27 fang Exp $
+	$Id: art_object_member_inst_ref.h,v 1.7.4.5 2005/07/20 06:45:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_H__
@@ -71,20 +71,13 @@ public:
 	ostream&
 	what(ostream&) const;
 
-// already implicit
-//	using parent_type::make_aliases_connection_private;
-
 	// overrides parent's implementation.  
 	bad_bool
 	unroll_references(const unroll_context&, alias_collection_type&) const;
 
 	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
 
-#if 0
-	CONNECT_PORT_PROTO;
-#else
 	using parent_type::connect_port;
-#endif
 private:
 	count_ptr<instance_collection_generic_type>
 	resolve_parent_member_helper(const unroll_context&) const;

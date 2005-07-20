@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.12.4.13 2005/07/19 23:28:26 fang Exp $
+	$Id: art_object_instance_collection.tcc,v 1.12.4.14 2005/07/20 06:45:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
@@ -408,11 +408,7 @@ void
 INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
-#if 0
-	o << this->container->get_qualified_name() <<
-#else
 	this->container->dump_hierarchical_name(o) <<
-#endif
 		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
@@ -524,11 +520,7 @@ KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
-#if 0
-	o << this->container->get_qualified_name();
-#else
 	this->container->dump_hierarchical_name(o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -644,10 +636,6 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), collection_type_manager_parent_type() {
-#if 0
-	// STACKTRACE_VERBOSE;
-	this->what(cerr << "Constructing ") << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -837,12 +825,7 @@ operator << (ostream& o, const instance_alias<Tag,D>& b) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array() : parent_type(D), collection() {
-#if 0
-	// STACKTRACE_VERBOSE;
-	this->what(cerr << "Constructing empty ") << endl;
-#endif
-}
+INSTANCE_ARRAY_CLASS::instance_array() : parent_type(D), collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -920,21 +903,15 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			const iterator
 				new_elem(this->collection.insert(
 					element_type(key_gen)));
-					// never_ptr<const this_type>(NULL))));
 			// recursive instantiation happens on construction
-#if 1
 			// alternative to constructing and copying:
 			// construct empty, then initialize the new reference.
-			// establish back-linnk here.  
+			// establish back-link here.  
+			// This is actually necessary for correctness as well.
 			const_cast<instance_alias_base_type&>(
 				static_cast<const instance_alias_base_type&>(
 				*new_elem)).instantiate(
 					never_ptr<const this_type>(this), c);
-#endif
-#if ENABLE_STACKTRACE
-			// somehow, the ports are destroyed... or not copied
-			new_elem->dump_ports(cerr) << endl;
-#endif
 			// set its relaxed actuals!!! (if appropriate)
 			if (actuals) {
 			const bool attached(new_elem->attach_actuals(actuals));
@@ -944,10 +921,6 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 					key_gen << endl;
 				err = true;
 			}
-#if 0
-			actuals->dump(cerr << "expect: ") << endl;
-			new_elem->dump_actuals(cerr << "got: ") << endl;
-#endif
 			}
 		} else {
 			// found one that already exists!
@@ -959,12 +932,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		}
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
-#if 0
-	if (err)
-		THROW_EXIT;
-#else
 	return good_bool(!err);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1339,10 +1307,6 @@ LIST_VECTOR_POOL_DEFAULT_STATIC_DEFINITION(bool_scalar, 256)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array() : parent_type(0), the_instance() {
-#if 0
-	// STACKTRACE_VERBOSE;
-	this->what(cerr << "Constructing empty ") << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1380,9 +1344,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 		this->the_instance.dump_actuals(o);
 	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
-#if 1
 	this->the_instance.dump_ports(o << ' ');
-#endif
 	return o;
 }
 
@@ -1406,7 +1368,6 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		// should never happen, but just in case...
 		this->type_dump(cerr << "ERROR: Scalar ") <<
 			" already instantiated!" << endl;
-//		THROW_EXIT;
 		return good_bool(false);
 	}
 	// here we need an explicit instantiation (recursive)

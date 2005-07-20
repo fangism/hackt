@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.45.2.10 2005/07/16 22:11:29 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.45.2.11 2005/07/20 06:45:50 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -199,6 +199,11 @@ instance_collection_base::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: can't call this on formal template parameter collections, 
+	because they don't have an index collection.
+	TODO: subtype index collections.  
+ */
 count_ptr<const fundamental_type_reference>
 instance_collection_base::get_type_ref(void) const {
 	INVARIANT(!index_collection.empty());

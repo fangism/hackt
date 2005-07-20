@@ -1,0 +1,12 @@
+// "101.in" should pass, types match
+// copy-modified from "100.in"
+
+template <pint A>
+defproc foo();
+
+template <pint X,Y>
+defproc bar(foo<X> a; foo<Y> b);
+
+bar<2,3> w, z;
+w.a = z.a;
+

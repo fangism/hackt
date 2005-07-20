@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.10.4.9 2005/07/19 23:28:26 fang Exp $
+	$Id: art_object_instance_collection.h,v 1.10.4.10 2005/07/20 06:45:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
@@ -187,10 +187,6 @@ virtual	bool
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
-#if 0
-virtual int
-	connect(const multikey_index_type& k, const instance_alias& b) = 0;
-#endif
 #define	UNROLL_ALIASES_PROTO						\
 	bad_bool							\
 	unroll_aliases(const multikey_index_type&, 			\
@@ -199,13 +195,6 @@ virtual int
 
 virtual	UNROLL_ALIASES_PROTO = 0;
 
-#if 0
-#define	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO				\
-	bad_bool							\
-	unroll_all_aliases_autosize(alias_collection_type&) const
-
-virtual	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO = 0;
-#endif
 
 public:
 virtual	instance_alias_base_type&
@@ -313,9 +302,6 @@ public:
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
-#if 0
-	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO;
-#endif
 
 	UNROLL_PORT_ONLY_PROTO;
 
@@ -388,9 +374,6 @@ public:
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
-#if 0
-	UNROLL_ALL_ALIASES_AUTOSIZE_PROTO;
-#endif
 
 	UNROLL_PORT_ONLY_PROTO;
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.8.4.4 2005/07/19 23:28:24 fang Exp $
+ 	$Id: art_object_inst_ref.tcc,v 1.8.4.5 2005/07/20 06:45:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
@@ -171,7 +171,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Expand both the port and the instance reference (this) into
 		alias_collection_types, populated by resolved aliases, 
@@ -260,8 +259,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	}
 	INVARIANT(ri == port_aliases.end());
 	return bad_bool(false);
-}
-#endif
+}	// end method connect_port
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

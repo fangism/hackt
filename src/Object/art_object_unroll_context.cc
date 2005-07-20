@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.3.14.6 2005/07/19 05:22:08 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.3.14.7 2005/07/20 06:45:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -11,6 +11,8 @@
 #include <iostream>
 #include "Object/art_object_unroll_context.h"
 #include "Object/expr/const_param.h"
+#include "Object/art_object_definition_base.h"
+#include "Object/art_object_namespace.h"	// for class scopespace
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_template_formals_manager.h"
@@ -79,13 +81,15 @@ unroll_context::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this method is SO CRITICAL...
-	\param p reference the the formal instance.  
+	FYI: this is called by simple_meta_value_reference::unroll_resolve().
+	\param p reference to the formal instance, cannont be non-formal!
 	\return actual value, a bunch of constants.  
 		NOT the same as lookup_const_collection (below)
 	\pre the context has formal and actual parameters.  
 	\pre the type used to expand the formals and actuals
 		was canonical and has the same base definition
 		as the (definition) owner of p.  
+	TODO: completely rewrite this.
  */
 count_ptr<const const_param>
 unroll_context::lookup_actual(const param_instance_collection& p) const {
@@ -97,7 +101,39 @@ unroll_context::lookup_actual(const param_instance_collection& p) const {
 #endif
 	INVARIANT(!empty());
 	INVARIANT(template_args);
+	// not the position of the template formal in its own list
+	// but in the current context!!!
+#if 0
 	const size_t index(p.is_template_formal());
+#else
+	// very awkward...
+	const instance_collection_base::owner_ptr_type
+		p_owner(p.get_owner());
+	const never_ptr<const definition_base>
+		p_def(p_owner.is_a<const definition_base>());
+	size_t index = 0;
+	if (p_def) {
+		const template_formals_manager&
+			p_tfm(p_def->get_template_formals_manager());
+		// need to make sure we're lookin up the correct set
+		// of formals...
+		// why don't we just search up the context chain until
+		// we find the matching template formals reference?
+		if (&*template_formals == &p_tfm) {
+			index = p_tfm.lookup_template_formal_position(
+				p.get_name());
+			INVARIANT(index);
+		} else {
+			index = 0;
+			// check next context
+		}
+	} else {
+		// is reference to top-level parameter, 
+		// a value collection that is not a formal
+		// FORBIDDEN
+		lookup_panic(cerr);	// no return
+	}
+#endif
 	if (index) {
 		STACKTRACE("found it.");
 //		cerr << "I got index " << index << "!!!" << endl;
