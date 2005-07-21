@@ -1,17 +1,23 @@
 # "Make.stddef"
 # make-independent definitions
-#	$Id: Make.stddef,v 1.8 2005/07/20 20:59:47 fang Exp $
+# This Makefile fragment should be included as early as possible
+# by other makefiles.  
+#	$Id: Make.stddef,v 1.8.2.1 2005/07/21 01:06:18 fang Exp $
 
 # SHELL = /bin/sh
 # add -v for verbose
 
+# to control the version of automake (minimum)
+AUTOMAKE_OPTIONS = 1.9
+
+# useful standard utility definitions
+# consider autoconf-ing these...
 CAT = cat
 CHMOD = chmod
-CP = cp
-# CPP = cpp
+CP = cp -f
 CVS = cvs
 DATE = date
-DIFF = diff -B
+DIFF = diff
 # -B: ignore blank line diffs
 ECHO = echo
 GREP = grep
@@ -22,16 +28,36 @@ RM = rm -f
 MV = mv -f
 SYNC = sync
 TOUCH = touch
-# TAR = tar -czvf
 
-# The following are detected by autoconf
+# The following are detected and set by autoconf
 # AR = ar
 # ARFLAGS = -ru
 # AWK = awk
+# CPP = cpp
 # LN = ln -fs
 # RANLIB = ranlib
 
-# defined with intention of self-modification...
-THISMAKEFILE = Makefile
+# defined with intention of self-modification... no used anymore
+# THISMAKEFILE = Makefile
 
+# standard automake targets to be initialized empty so subsequent uses
+# may simply accumulate using +=, without having to worry about initialization
 
+CLEANFILES =
+DISTCLEANFILES =
+DISTCLEANDIRS =
+EXTRA_DIST =
+
+# The following macros are custom-defined for use with this project, 
+# in particular for coupled use with Make.global.
+
+SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
+# yeah, stupid place to put a globally useful script, move it later...
+
+# to accumulate and generate automatic .cvsignore
+# we've provided some project wide definitions here for starters,
+# but your project may choose differently
+# NOTE: only directory and file names here, no wild-cards
+AUTO_IGNORE = Makefile.in Makefile ignore backup temp
+
+# end "Make.stddef"

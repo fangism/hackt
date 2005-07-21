@@ -1,9 +1,7 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2005/07/20 21:01:56 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.1 2005/07/21 01:06:28 fang Exp $
 
-AUTOMAKE_OPTIONS = 1.9
-
-SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
+include $(top_srcdir)/test/Make.test-head
 
 ARTC_TEST_FAILURES = \
 	    001 002 003 004 005 006 007 008 009 \
@@ -33,15 +31,8 @@ TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS = 001 002 003 004 005 006 007 008 009 010 \
+BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \
 	011 012 013 014 015 016 017 018 019 021 023
 
-# define empty, let template Makefile add to it
-EXTRA_DIST =
-CLEANFILES =
-DISTCLEANFILES =
-
-include $(top_srcdir)/test/Make.test
-
-# dist-hook: dist-hook-extra
+include $(top_srcdir)/test/Make.test-tail
 

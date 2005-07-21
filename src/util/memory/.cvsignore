@@ -1,9 +1,0 @@
-*.swp
-*.hchk
-*.o
-*.lo
-.deps
-.libs
-.dirstamp
-*.tccchk
-

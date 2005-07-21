@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2005/05/04 19:31:42 fang Exp $
+#	$Id: Makefile.am,v 1.14.20.1 2005/07/21 01:06:20 fang Exp $
 
 include $(top_srcdir)/dox/mk/Make.latex
 
@@ -13,7 +13,7 @@ pdf-local: $(PDFS)
 ps-local: $(PSS)
 
 # have to add these by hand? :S
-EXTRA_DIST = \
+EXTRA_DIST += \
 	artxx.bib artxx.tex \
 	chapters/preface.tex \
 	chapters/goals.tex \

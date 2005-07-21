@@ -1,11 +1,11 @@
 # "src/util/test/Makefile.am"
 
-AUTOMAKE_OPTIONS = 1.9 subdir-objects
+include $(top_srcdir)/Make.stddef
+
+AUTOMAKE_OPTIONS += subdir-objects
 
 SUFFIXES = .test .ii
 TEST_EXPECT_SH = $(srcdir)/test-expect.sh
-
-include $(top_srcdir)/Make.stddef
 
 # auto-generated test scripts
 .cc.test:
@@ -177,11 +177,11 @@ MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
-EXTRA_DIST = test-expect.sh test.cvsignore \
+EXTRA_DIST += test-expect.sh local.cvsignore \
 	$(noinst_PROGRAMS:=.stderr) \
 	$(MOREFILTER_TESTS:=.morefilter.sh)
 
-CLEANFILES = \
+CLEANFILES += \
 	$(noinst_PROGRAMS:=.test) \
 	$(noinst_PROGRAMS:=.diff) \
 	$(noinst_PROGRAMS:=.filter) \
@@ -191,28 +191,19 @@ CLEANFILES = \
 	$(PREFILTER_FILES) \
 	$(EMPTY_STDERR_FILES)
 
-DISTCLEANFILES = .cvsignore $(libfangutil_la_SOURCES)
+DISTCLEANFILES += $(libfangutil_la_SOURCES)
 
 TESTS = $(noinst_PROGRAMS:=.test)
 
-SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
+AUTO_IGNORE += $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
+	$(BUILT_SOURCES) $(PREFILTER_FILES) $(TESTS)
 
-AUTO_IGNORE = $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
-	$(BUILT_SOURCES) $(PREFILTER_FILES)
-
-# resorting to intermediate file because distcheck sets file permissions
-# to forbid writing/appending to existing files... (read-only)
-.cvsignore: $(srcdir)/test.cvsignore
-	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
-	$(CAT) $(srcdir)/test.cvsignore $@.temp > $@
-	-$(RM) $@.temp
-
-.cvsignore: Makefile.am Makefile.in
-
-all-local: .cvsignore $(TESTS)
+all-local: $(TESTS)
 
 clean-local:
 	-$(RM) $(BUILT_SOURCES)
 	-$(RM) *.core core.*
 	-$(RM) *.diff *.test *.out *.filter
+
+include $(top_srcdir)/Make.global
 

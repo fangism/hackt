@@ -1,7 +1,9 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67 2005/07/20 20:59:49 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.1 2005/07/21 01:06:21 fang Exp $
 
-AUTOMAKE_OPTIONS = 1.9 subdir-objects
+include $(top_srcdir)/Make.stddef
+
+AUTOMAKE_OPTIONS += subdir-objects
 
 # for recursive make only
 SUBDIRS = util/test .
@@ -9,8 +11,6 @@ SUBDIRS = util/test .
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
 SUFFIXES = .yy .ll .hchk .tccchk .ii
-
-include $(top_srcdir)/Make.stddef
 
 
 ###################### Are we using yacc or bison? ############################
@@ -683,7 +683,8 @@ util/using_ostream.hchk:
 ../config.hchk:
 	@$(TOUCH) $@
 
-EXTRA_DIST = \
+EXTRA_DIST += local.cvsignore \
+	parser/local.cvsignore \
 	parser/lexyacc-prefix.awk \
 	parser/common-output-to-C.awk \
 	parser/yacc-output-to-C.awk \
@@ -694,6 +695,7 @@ EXTRA_DIST = \
 	parser/yyerror_bison_hack.awk \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
+	lexer/local.cvsignore \
 	test/header_test.cc \
 	util/ChangeLog \
 	util/README \
@@ -736,6 +738,7 @@ include headers_deps.make
 
 all-local: check-headers
 
+# choosing not to distribute lex/yacc-generated sources for now
 CLEANPARSER = \
 	parser/yacc_or_bison.h \
 	parser/art++-parse.cc \
@@ -752,9 +755,7 @@ CLEANLEXER = \
 	lexer/art++-lex.cc
 
 
-CLEANFILES =
-
-DISTCLEANFILES = $(CLEANPARSER) $(CLEANLEXER)
+DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
 CLEANSUBDIRS = lexer parser AST Object Object/expr \
 	util util/numeric util/memory util/obsolete util/STL
@@ -777,21 +778,12 @@ clean-header-tests:
 # IF you do remove it, be sure to replace it with an empty placeholder
 # before re-running make.  
 
-# disabling this for now to prevent self-infliction of harm...
-# perhaps enable only if maintainer-mode is on...
-# this should call clean-header-tests to guarantee proper regeneration...
 clean-header-deps:
 	@$(ECHO) "Resetting .deps/*chkd in all sub-directories..."
 	@for f in $(HEADER_TCC_DEPBASES); do \
 		$(ECHO) "# reset" > \
 			`$(ECHO) $$f | $(SED) 's|[^/]*$$|$(DEPDIR)/&|'` ; \
 	done
-#	@$(ECHO) "WARNING: you'll have to make clean-header-tests to properly "\
-#		"regenerate the header-dependencies."
-# don't bother deleting
-#	@for d in $(CLEANSUBDIRS); do \
-#		$(RM) $$d/$(DEPDIR)/*chkd ; \
-#	done
 
 clean-AST:
 	-$(RM) AST/*.$(OBJEXT)
@@ -809,8 +801,64 @@ clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests
 		$(RM) $$d/*.loT ; \
 	done
 
+# cvsignore targets
+AUTO_IGNORE += $(PROGRAMS) headers_deps.make
+lexer/.cvsignore: .cvsignore lexer/local.cvsignore
+	$(CAT) .cvsignore $(srcdir)/lexer/local.cvsignore > $@
+parser/.cvsignore: .cvsignore parser/local.cvsignore
+	$(CAT) .cvsignore $(srcdir)/parser/local.cvsignore > $@
+Object/.cvsignore: .cvsignore
+	$(CP) $? $@
+Object/expr/.cvsignore: .cvsignore
+	$(CP) $? $@
+Object/inst/.cvsignore: .cvsignore
+	$(CP) $? $@
+Object/ref/.cvsignore: .cvsignore
+	$(CP) $? $@
+Object/traits/.cvsignore: .cvsignore
+	$(CP) $? $@
+AST/.cvsignore: .cvsignore
+	$(CP) $? $@
+main/.cvsignore: .cvsignore
+	$(CP) $? $@
+util/.cvsignore: .cvsignore
+	$(CP) $? $@
+util/STL/.cvsignore: .cvsignore
+	$(CP) $? $@
+util/memory/.cvsignore: .cvsignore
+	$(CP) $? $@
+util/numeric/.cvsignore: .cvsignore
+	$(CP) $? $@
+util/obsolete/.cvsignore: .cvsignore
+	$(CP) $? $@
+test/.cvsignore: .cvsignore
+	$(CP) $? $@
+
+SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
+	Object/.cvsignore Object/expr/.cvsignore \
+	Object/inst/.cvsignore Object/ref/.cvsignore \
+	Object/traits/.cvsignore \
+	AST/.cvsignore main/.cvsignore \
+	util/.cvsignore util/STL/.cvsignore \
+	util/memory/.cvsignore util/numeric/.cvsignore \
+	util/obsolete/.cvsignore \
+	test/.cvsignore
+
+all-local: $(SUBDIR_CVSIGNORE)
+
+cvsignore: $(SUBDIR_CVSIGNORE)
+
+clean-cvsignore: clean-cvsignore-subdirs
+
+clean-cvsignore-subdirs:
+	-$(RM) $(SUBDIR_CVSIGNORE)
+
+DISTCLEANFILES += $(SUBDIR_CVSIGNORE)
+
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
 		$(RM) $(distdir)/$$f ; \
 	done
+
+include $(top_srcdir)/Make.global
 

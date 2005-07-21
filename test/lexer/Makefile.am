@@ -1,9 +1,7 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.1 2005/03/02 00:29:02 fang Exp $
+#	$Id: Makefile.am,v 1.1.38.1 2005/07/21 01:06:26 fang Exp $
 
-AUTOMAKE_OPTIONS = 1.9
-
-SUFFIXES = .in .artctest
+include $(top_srcdir)/test/Make.test-head
 
 ARTC_TEST_FAILURES = \
 	badid-000 badid-001
@@ -24,14 +22,7 @@ TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS =
+# BISON_OUTPUTS +=
 
-# define empty, let template Makefile add to it
-CLEANFILES =
-DISTCLEANFILES =
-EXTRA_DIST =
-
-include $(top_srcdir)/test/Make.test
-
-# dist-hook: dist-hook-extra
+include $(top_srcdir)/test/Make.test-tail
 

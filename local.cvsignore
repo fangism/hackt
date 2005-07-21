@@ -1,0 +1,10 @@
+*.core
+core.*
+*.tar.gz
+*.tar.bz2
+flatsrc
+configure_with_ccache.sh
+art++.doxygen.log
+artxx-*.*.*
+*.hchk
+

@@ -1,0 +1,76 @@
+# "Make.global"
+# Project-wide Makefile targets and dependencies.
+# Generally, it is recommended to include this Makefile last.  
+# This file may be used as an includable Makefile snippet, 
+# or with automake for automatic inlining.  
+# NOTE: standard definition macros appear in "Make.stddef" and should
+# be included *before* the inclusion of this Makefile.  
+#	$Id: Make.global,v 1.1.2.1 2005/07/21 01:06:17 fang Exp $
+
+
+# list of files to automatically CVS ignore, accumulated over Makefile
+AUTO_IGNORE += cvsdiffs check.log
+
+# automatically runs autotools (and recursively in dubdirectories)
+reconf: force
+	autoreconf
+
+# .cvsignore for this project will always be semi-automatically generated
+.cvsignore: Makefile.am Makefile.in $(top_srcdir)/Make.global
+
+# might as well include this for non-maintainers too
+# again, can't append to file with cat redirection because distclean
+# sets permissions of new files as read-only
+# NOTE: local.cvsignore may be normal or automatic
+.cvsignore: local.cvsignore
+	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
+	$(CAT) $< $@.temp > $@
+	-$(RM) $@.temp
+
+# make cvsignore by default
+all-local: .cvsignore
+
+# phony recursive target
+cvsignore: .cvsignore force
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d cvsignore ; \
+			fi ; \
+		fi ; \
+	done
+
+clean-cvsignore: clean-cvsignore-recursive
+	-$(RM) .cvsignore
+
+# extra prefix ". " needed for shell script interpretation
+# note: cd $$d; make ... will not work!
+clean-cvsignore-recursive:
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d clean-cvsignore ; \
+			fi ; \
+		fi ; \
+	done
+
+
+DISTCLEANFILES += .cvsignore
+
+# -k option allows continuation past directories with failed tests
+check.log: force
+	@$(ECHO) "Logging results of \"make -k check\" in $@ ..."
+	@$(ECHO) Tests started `$(DATE)` > $@.tmp
+	$(MAKE) -k check 2>&1 | cat >> $@.tmp
+	-$(MV) $@.tmp $@
+	-$(GREP) -v ^PASS $@
+	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
+
+cvsdiffs: force
+	-$(CVS) diff -u > $@
+	@$(ECHO) `$(GREP) "^-" $@ | $(GREP) -v "^---" | wc -l` "lines removed"
+	@$(ECHO) `$(GREP) "^+" $@ | $(GREP) -v "^+++" | wc -l` "lines added"
+
+# standard phony target for unconditional targets
+force:
+
