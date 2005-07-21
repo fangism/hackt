@@ -1,12 +1,13 @@
 /**
-	\file "Object/art_context.h"
+	\file "AST/parse_context.h"
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
-	$Id: art_context.h,v 1.21 2005/07/20 20:59:54 fang Exp $
+	This file came from "Object/art_context.h" in a previous life.  
+	$Id: parse_context.h,v 1.1.2.1 2005/07/21 20:44:13 fang Exp $
  */
 
-#ifndef __OBJECT_ART_CONTEXT_H__
-#define __OBJECT_ART_CONTEXT_H__
+#ifndef __AST_PARSE_CONTEXT_H__
+#define __AST_PARSE_CONTEXT_H__
 
 #include "util/string_fwd.h"
 #include <stack>
@@ -422,5 +423,5 @@ private:
 }	// end namespace parser
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_CONTEXT_H__
+#endif	// __AST_PARSE_CONTEXT_H__
 

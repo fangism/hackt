@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.3 2005/07/21 19:48:06 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.4 2005/07/21 20:44:07 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -116,9 +116,12 @@ AST_CC_FILES = \
 	AST/art_parser_formal.cc \
 	AST/art_parser_chp.cc \
 	AST/art_parser_hse.cc \
-	AST/art_parser_prs.cc
+	AST/art_parser_prs.cc \
+	AST/parse_context.cc
 
-AST_TCC_FILES = AST/art_parser_node_list.tcc
+AST_TCC_FILES = \
+	AST/art_parser_node_list.tcc \
+	AST/parse_context.tcc
 
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	$(AST_TCC_FILES:.tcc=.h) \
@@ -145,7 +148,6 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 
 # all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
-	Object/art_context.cc \
 	Object/art_object_base.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
@@ -198,7 +200,6 @@ OBJECT_CC_NO_H_FILES = \
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
-	Object/art_context.tcc \
 	Object/art_object_assign.tcc \
 	Object/art_object_connect.tcc \
 	Object/art_object_const_collection.tcc \

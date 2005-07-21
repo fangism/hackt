@@ -1,18 +1,19 @@
 /**
-	\file "Object/art_context.tcc"
+	\file "AST/parse_context.tcc"
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.tcc,v 1.2 2005/06/19 01:58:32 fang Exp $
+	This file was "Object/art_context.tcc" in a previous life.
+ 	$Id: parse_context.tcc,v 1.1.2.1 2005/07/21 20:44:13 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_CONTEXT_TCC__
-#define	__OBJECT_ART_CONTEXT_TCC__
+#ifndef	__AST_PARSE_CONTEXT_TCC__
+#define	__AST_PARSE_CONTEXT_TCC__
 
 #include <cassert>
 #include <exception>
 #include <iostream>
 
-#include "Object/art_context.h"
+#include "AST/parse_context.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
 #include "Object/art_object_namespace.h"
@@ -148,5 +149,5 @@ context::lookup_instance(const qualified_id& id) const {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_CONTEXT_TCC__
+#endif	// __AST_PARSE_CONTEXT_TCC__
 

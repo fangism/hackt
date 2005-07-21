@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.25.2.1 2005/07/21 05:34:57 fang Exp $
+	$Id: art_parser_expr.cc,v 1.25.2.2 2005/07/21 20:44:10 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -22,7 +22,7 @@
 #include "AST/art_parser_range_list.h"
 #include "AST/art_parser_node_list.tcc"
 #include "util/sublist.tcc"
-#include "Object/art_context.h"
+#include "AST/parse_context.h"
 
 // will need these come time for type-checking
 #include "Object/art_object_instance_base.h"

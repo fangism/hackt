@@ -1,12 +1,13 @@
 /**
-	\file "Object/art_context.cc"
+	\file "AST/parse_context.cc"
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
- 	$Id: art_context.cc,v 1.36.2.2 2005/07/21 19:48:11 fang Exp $
+	This file was "Object/art_context.cc" in a previous life.  
+ 	$Id: parse_context.cc,v 1.1.2.1 2005/07/21 20:44:12 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_CONTEXT_CC__
-#define	__OBJECT_ART_CONTEXT_CC__
+#ifndef	__AST_PARSE_CONTEXT_CC__
+#define	__AST_PARSE_CONTEXT_CC__
 
 #define ENABLE_STACKTRACE		0
 
@@ -14,7 +15,8 @@
 #include <exception>
 #include <iostream>
 
-#include "Object/art_context.h"
+#include "AST/parse_context.h"
+#include "AST/parse_context.tcc"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
 #include "Object/expr/meta_range_list.h"
@@ -31,7 +33,6 @@
 #include "Object/art_object_instance.h"	// for instantiation_statement_base
 #include "Object/art_object_instance_param.h"	// for param_instantiation_statement_base
 #include "Object/art_object_module.h"
-#include "Object/art_context.tcc"
 
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -954,5 +955,5 @@ INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_datatype)
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_CONTEXT_CC__
+#endif	// __AST_PARSE_CONTEXT_CC__
 

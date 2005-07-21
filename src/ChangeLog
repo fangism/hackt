@@ -2,6 +2,10 @@
 
 2005-07-21	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-49-maintainence-04:
+	  Object/art_context.* -> AST/parse_context.*
+
+
 	* ARTXX-00-01-04-main-00-49-maintainence-03:
 	  This revision pushed Object/art_object_type_ref* into
 		Object/type/ and split the headers into separate files.  
