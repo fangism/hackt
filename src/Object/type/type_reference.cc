@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_type_ref.cc"
+	\file "Object/type/type_reference.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.39.2.1 2005/07/21 05:35:08 fang Exp $
+	This file originally came from "Object/art_object_type_ref.cc"
+		in a previous life.  
+ 	$Id: type_reference.cc,v 1.1.2.1 2005/07/21 19:48:25 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
-#define	__OBJECT_ART_OBJECT_TYPE_REF_CC__
+#ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
+#define	__OBJECT_TYPE_TYPE_REFERENCE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -23,7 +25,11 @@
 #include "Object/def/datatype_definition_alias.h"
 #include "Object/def/process_definition.h"
 #include "Object/def/process_definition_alias.h"
-#include "Object/art_object_type_ref.h"
+#include "Object/type/data_type_reference.h"
+#include "Object/type/channel_type_reference.h"
+#include "Object/type/builtin_channel_type_reference.h"
+#include "Object/type/process_type_reference.h"
+#include "Object/type/param_type_reference.h"
 #include "Object/art_object_instance_bool.h"
 #include "Object/art_object_instance_int.h"
 #include "Object/art_object_instance_enum.h"
@@ -1859,5 +1865,5 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_TYPE_REF_CC__
+#endif	// __OBJECT_TYPE_TYPE_REFERENCE_CC__
 

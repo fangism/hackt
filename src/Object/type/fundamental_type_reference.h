@@ -1,18 +1,18 @@
 /**
-	\file "Object/art_object_type_ref_base.h"
+	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
-	$Id: art_object_type_ref_base.h,v 1.15 2005/07/20 21:00:36 fang Exp $
+	This file originated from "Object/art_object_type_ref_base.h".
+	$Id: fundamental_type_reference.h,v 1.1.2.1 2005/07/21 19:48:24 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
-#define	__OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
+#ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
+#define	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
 
-#include "util/macros.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"
 
+#include "Object/type/type_reference_base.h"
 #include "Object/art_object_util_types.h"
 #include "Object/art_object_template_actuals.h"
 
@@ -28,25 +28,11 @@ class scopespace;
 class subinstance_manager;	// from "Object/inst/subinstance_manager.h"
 using parser::token_identifier;
 using std::istream;
-using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::good_bool;
-
-//=============================================================================
-/**
-	Ultimate base class of all type-references, don't know if this
-	is actually useful...
- */
-class type_reference_base : public persistent {
-protected:
-public:
-	type_reference_base() : persistent() { }
-virtual	~type_reference_base() { }
-
-};	// end class type_reference_base
 
 //=============================================================================
 /**
@@ -232,5 +218,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_TYPE_REF_BASE_H__
+#endif	// __OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.46.2.1 2005/07/21 05:35:03 fang Exp $
+ 	$Id: art_object_instance.cc,v 1.46.2.2 2005/07/21 19:48:15 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
@@ -16,7 +16,7 @@
 #include <algorithm>
 
 #include "Object/def/definition_base.h"
-#include "Object/art_object_type_ref.h"
+#include "Object/type/fundamental_type_reference.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_ref.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.29.2.1 2005/07/21 05:35:07 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.29.2.2 2005/07/21 19:48:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -46,7 +46,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/art_object_type_ref_base.h"
+#include "Object/type/fundamental_type_reference.h"
 #include "Object/art_object_type_hash.h"
 
 #include "util/memory/count_ptr.tcc"

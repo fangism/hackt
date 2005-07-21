@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.22 2005/07/20 21:00:26 fang Exp $
+ 	$Id: art_object_inst_stmt.cc,v 1.22.2.1 2005/07/21 19:48:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
@@ -22,7 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <algorithm>
 
-#include "Object/art_object_type_ref.h"
+#include "Object/type/fundamental_type_reference.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_inst_stmt.h"

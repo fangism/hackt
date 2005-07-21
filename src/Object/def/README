@@ -1,0 +1,5 @@
+"src/Object/def/README"
+
+This directory is for containing class headers and implementations
+for everything related to type definitions in the language.  
+

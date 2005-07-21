@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.32 2005/07/20 21:00:24 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.32.2.1 2005/07/21 19:48:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -12,7 +12,7 @@
 #include "util/STL/list.tcc"
 #include "util/multidimensional_sparse_set.tcc"
 
-#include "Object/art_object_type_ref_base.h"
+#include "Object/type/fundamental_type_reference.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_alias_empty.h"
 #include "Object/art_object_instance_param.h"

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.2 2005/07/21 05:34:53 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.3 2005/07/21 19:48:06 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -148,7 +148,6 @@ OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
 	Object/traits/class_traits.cc \
-	Object/art_object_type_ref.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
 	Object/art_object_instance_alias_actuals.cc \
@@ -192,6 +191,7 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/nonmeta_param_value_reference.cc \
 	Object/expr/operators.cc \
 	Object/expr/data_expr.cc \
+	Object/type/type_reference.cc \
 	Object/art_object_instance_pint.cc \
 	Object/art_object_instance_pbool.cc \
 	Object/art_object_IO.cc
@@ -320,7 +320,14 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_nonmeta_inst_ref_subtypes.h \
 	Object/art_object_member_inst_ref.h \
 	Object/art_object_scopespace.h \
-	Object/art_object_type_ref_base.h \
+	Object/type/builtin_channel_type_reference.h \
+	Object/type/channel_type_reference.h \
+	Object/type/channel_type_reference_base.h \
+	Object/type/data_type_reference.h \
+	Object/type/fundamental_type_reference.h \
+	Object/type/param_type_reference.h \
+	Object/type/process_type_reference.h \
+	Object/type/type_reference_base.h \
 	Object/art_object_type_hash.h \
 	Object/art_object_util_types.h \
 	Object/art_object_value_collection.h \
@@ -502,7 +509,6 @@ ALL_HEADER_FILES = \
 	$(PARSER_H_FILES) \
 	config.h \
 	main/main_funcs.h
-# don't bother checking:
 
 ALL_TCC_FILES = \
 	$(UTIL_TCC_FILES) \
@@ -513,7 +519,6 @@ ALL_TCC_FILES = \
 
 # don't actually need -l[f]l
 # libart___la_LDADD = @LEXLIB@
-
 
 ARTXX_YACC_PREFIX = artxx_
 
@@ -716,7 +721,9 @@ EXTRA_DIST += local.cvsignore \
 	scripts/filter_namespaces.sed \
 	scripts/automake_include.awk \
 	scripts/promote_header_deps.awk \
+	Object/def/README \
 	Object/expr/README \
+	Object/type/README \
 	ChangeLog \
 	NOTES \
 	wc-l
@@ -831,6 +838,8 @@ Object/ref/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/traits/.cvsignore: .cvsignore
 	$(CP) $? $@
+Object/type/.cvsignore: .cvsignore
+	$(CP) $? $@
 AST/.cvsignore: .cvsignore
 	$(CP) $? $@
 main/.cvsignore: .cvsignore
@@ -851,7 +860,7 @@ test/.cvsignore: .cvsignore
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	Object/.cvsignore Object/def/.cvsignore Object/expr/.cvsignore \
 	Object/inst/.cvsignore Object/ref/.cvsignore \
-	Object/traits/.cvsignore \
+	Object/traits/.cvsignore Object/type/.cvsignore \
 	AST/.cvsignore main/.cvsignore \
 	util/.cvsignore util/STL/.cvsignore \
 	util/memory/.cvsignore util/numeric/.cvsignore \

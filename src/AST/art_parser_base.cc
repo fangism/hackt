@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.27.2.1 2005/07/21 05:34:55 fang Exp $
+	$Id: art_parser_base.cc,v 1.27.2.2 2005/07/21 19:48:09 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -32,7 +32,9 @@
 #include "Object/art_context.h"
 #include "Object/def/user_def_chan.h"
 #include "Object/art_object_template_actuals.h"
-#include "Object/art_object_type_ref.h"		// for data_type_reference
+#include "Object/type/data_type_reference.h"
+#include "Object/type/builtin_channel_type_reference.h"
+#include "Object/type/channel_type_reference.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/art_object_namespace.h"
 

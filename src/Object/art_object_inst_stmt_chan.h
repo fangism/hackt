@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_stmt_chan.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.5 2005/07/20 21:00:26 fang Exp $
+	$Id: art_object_inst_stmt_chan.h,v 1.5.2.1 2005/07/21 19:48:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include "Object/traits/chan_traits.h"
-#include "Object/art_object_type_ref.h"
+#include "Object/type/channel_type_reference_base.h"
 #include "Object/art_object_instance_chan.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "util/persistent_object_manager.h"
