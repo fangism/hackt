@@ -2,7 +2,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.8.2.1 2005/07/21 01:06:18 fang Exp $
+#	$Id: Make.stddef,v 1.8.2.2 2005/07/21 05:34:43 fang Exp $
 
 # SHELL = /bin/sh
 # add -v for verbose
@@ -55,9 +55,8 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 # yeah, stupid place to put a globally useful script, move it later...
 
 # to accumulate and generate automatic .cvsignore
-# we've provided some project wide definitions here for starters,
-# but your project may choose differently
+# we've provided some project wide definitions in Make.global
 # NOTE: only directory and file names here, no wild-cards
-AUTO_IGNORE = Makefile.in Makefile ignore backup temp
+AUTO_IGNORE =
 
 # end "Make.stddef"
