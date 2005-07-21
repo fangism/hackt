@@ -1,14 +1,14 @@
 /**
-	\file "Object/art_object_definition_base.h"
+	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
-	$Id: art_object_definition_base.h,v 1.24 2005/07/20 20:59:59 fang Exp $
+	This file used to be "Object/art_object_definition_base.h".
+	$Id: definition_base.h,v 1.1.2.1 2005/07/21 05:35:12 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
-#define	__OBJECT_ART_OBJECT_DEFINITION_BASE_H__
+#ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
+#define	__OBJECT_DEF_DEFINITION_BASE_H__
 
 #include "util/string_fwd.h"
-
 #include "util/macros.h"
 #include "Object/art_object_base.h"
 #include "Object/art_object_util_types.h"
@@ -244,5 +244,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_DEFINITION_BASE_H__
+#endif	// __OBJECT_DEF_DEFINITION_BASE_H__
 

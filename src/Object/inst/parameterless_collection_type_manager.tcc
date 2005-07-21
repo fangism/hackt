@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.2 2005/07/20 21:00:53 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.2.2.1 2005/07/21 05:35:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -9,7 +9,7 @@
 
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/art_object_type_ref.h"
-#include "Object/art_object_definition_data.h"
+#include "Object/def/enum_datatype_def.h"
 #include <iostream>
 #include "util/persistent_object_manager.h"
 

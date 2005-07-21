@@ -2,7 +2,7 @@
 	\file "prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.1 2005/05/24 02:38:09 fang Exp $
+	$Id: prsobjdemo.cc,v 1.1.16.1 2005/07/21 05:34:54 fang Exp $
  */
 
 #include <iostream>
@@ -10,8 +10,7 @@
 
 #include "main/main_funcs.h"
 #include "Object/art_object_module.tcc"	// for template method definitions
-#include "Object/art_object_definition_proc.h"
-		// to complete the type of ART::entity::process_definition
+#include "Object/def/process_definition.h"
 
 // using declarations
 using namespace ART;

@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.27 2005/07/20 20:59:50 fang Exp $
+	$Id: art_parser_definition.cc,v 1.27.2.1 2005/07/21 05:34:56 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -31,9 +31,12 @@
 
 #include "Object/art_context.h"
 #include "Object/art_object_type_ref.h"	// for builtin_channel_type_reference
-#include "Object/art_object_definition_data.h"
-#include "Object/art_object_definition_chan.h"
-#include "Object/art_object_definition_proc.h"
+#include "Object/def/typedef_base.h"
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/enum_datatype_def.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/process_definition.h"
+#include "Object/art_object_namespace.h"
 
 #include "util/what.h"		// already included in "art_parser.tcc"
 #include "util/stacktrace.h"

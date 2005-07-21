@@ -2,7 +2,7 @@
 	\file "Object/art_object_instance_proc.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.15 2005/07/20 21:00:32 fang Exp $
+	$Id: art_object_instance_proc.cc,v 1.15.2.1 2005/07/21 05:35:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
@@ -24,9 +24,6 @@
 #include "Object/art_object_connect.h"
 #include "Object/art_object_instance_alias_actuals.h"
 #include "Object/art_object_type_hash.h"
-
-// experimental: suppressing automatic template instantiation
-#include "Object/art_object_extern_templates.h"
 
 #include "Object/art_object_instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"

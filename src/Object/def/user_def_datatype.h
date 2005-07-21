@@ -1,0 +1,110 @@
+/**
+	\file "Object/def/user_def_datatype.h"
+	Definition-related ART object classes.  
+	This file came from "Object/art_object_definition_data.h".
+	$Id: user_def_datatype.h,v 1.1.2.1 2005/07/21 05:35:16 fang Exp $
+ */
+
+#ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
+#define	__OBJECT_DEF_USER_DEF_DATATYPE_H__
+
+#include "Object/def/datatype_definition_base.h"
+#include "Object/art_object_instance_management_base.h"
+#include "Object/art_object_scopespace.h"
+#include "Object/art_object_port_formals_manager.h"
+#include "Object/art_object_CHP.h"
+
+namespace ART {
+namespace entity {
+//=============================================================================
+/**
+	Generalizable user-defined data type, which can (eventually) 
+	build upon other user-defined data types.  
+ */
+class user_def_datatype : public datatype_definition_base, public scopespace, 
+		public sequential_scope {
+private:
+	typedef	user_def_datatype		this_type;
+protected:
+	const string				key;
+	const never_ptr<const name_space>	parent;
+	count_ptr<const data_type_reference>	base_type;
+	port_formals_manager			port_formals;
+	CHP::action_sequence			set_chp;
+	CHP::action_sequence			get_chp;
+private:
+	user_def_datatype();
+public:
+	user_def_datatype(const never_ptr<const name_space> o, 
+		const string& name);
+	~user_def_datatype();
+
+	const string&
+	get_key(void) const;
+
+	string
+	get_qualified_name(void) const;
+
+	ostream&
+	dump_qualified_name(ostream&) const;
+
+	never_ptr<const scopespace>
+	get_parent(void) const;
+
+	never_ptr<const datatype_definition_base>
+	resolve_canonical_datatype_definition(void) const;
+
+	never_ptr<const object>
+	lookup_object_here(const string& id) const;
+
+	ostream&
+	what(ostream& o) const;
+
+	ostream&
+	dump(ostream& o) const;
+
+	DEFINITION_ADD_PORT_FORMAL_PROTO;
+
+	void
+	attach_base_data_type(const count_ptr<const data_type_reference>&);
+
+	CHP::action_sequence&
+	get_set_body(void) { return set_chp; }
+
+	// yeah, I know: funny name
+	CHP::action_sequence&
+	get_get_body(void) { return get_chp; }
+
+	never_ptr<const instance_collection_base>
+	lookup_port_formal(const string&) const;
+
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
+
+	good_bool
+	require_signature_match(const never_ptr<const definition_base> d) const
+		{ return good_bool(false); }	// temporary
+
+	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
+
+#if 0
+	good_bool
+	certify_port_actuals(const object_list& ol) const;
+#endif
+public:
+	FRIEND_PERSISTENT_TRAITS
+	PERSISTENT_METHODS_DECLARATIONS
+
+private:
+	void
+	load_used_id_map_object(excl_ptr<persistent>& o);
+};	// end class user_def_datatype
+
+//=============================================================================
+}	// end namespace entity
+}	// end namespace ART
+
+#endif	// __OBJECT_DEF_USER_DEF_DATATYPE_H__
+

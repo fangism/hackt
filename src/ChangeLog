@@ -2,6 +2,24 @@
 
 2005-07-20	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-49-maintainence-02:
+	  This revision pushed Object/art_object_definition* into
+		Object/def/ and split the headers into one class/file.  
+		Actually resulted in smaller binaries, and probably
+		sped up compilation.  
+	  Also split scopespace class into "Object/art_object_scopespace.h"
+	  TODO: type-references, art_context, instance_references, 
+		instance_collections, instance_management.  
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-02:
+	  Major Makefile.am and cvsignore rework, as described in the
+		root ChangeLog.  This Makefile.am now makes use of the
+		project-wide definitions in Make.global.
+
+
+2005-07-20	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-49-merged-connect-01-42:
 	  Major merge to trunk, summary:
 		Implemented unrolling of connections, what was left of

@@ -1,7 +1,8 @@
 /**
-	\file "Object/art_object_definition.cc"
+	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
- 	$Id: art_object_definition.cc,v 1.54 2005/07/20 20:59:58 fang Exp $
+	This file used to be "Object/art_object_definition.cc".
+ 	$Id: definition.cc,v 1.1.2.1 2005/07/21 05:35:11 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -26,9 +27,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/hash_qmap.tcc"
 #include "util/hash_specializations.h"		// substitute for the following
 
-#include "Object/art_object_definition_data.h"
-#include "Object/art_object_definition_chan.h"
-#include "Object/art_object_definition_proc.h"
+#include "Object/def/param_definition.h"
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/built_in_datatype_def.h"
+#include "Object/def/datatype_definition_alias.h"
+#include "Object/def/enum_datatype_def.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/channel_definition_alias.h"
+#include "Object/def/process_definition.h"
+#include "Object/def/process_definition_alias.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance.h"
 #include "Object/art_object_instance_param.h"
@@ -40,6 +47,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/meta_range_list.h"
 #include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_type_hash.h"
+#include "Object/art_object_namespace.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 

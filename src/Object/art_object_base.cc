@@ -1,24 +1,14 @@
 /**
 	\file "Object/art_object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.35 2005/07/20 20:59:54 fang Exp $
+ 	$Id: art_object_base.cc,v 1.35.2.1 2005/07/21 05:34:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_BASE_CC__
 #define	__OBJECT_ART_OBJECT_BASE_CC__
 
 #include <iostream>
-#include <numeric>
-
-#include "util/STL/list.tcc"
-
 #include "Object/art_object_base.h"
-#include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_assign.h"
-#include "Object/art_object_connect.h"
-#include "Object/art_object_definition_base.h"
-
-#include "util/boolean_types.h"
 
 //=============================================================================
 
@@ -28,9 +18,7 @@
 //=============================================================================
 namespace ART {
 namespace entity {
-using std::accumulate;
 #include "util/using_ostream.h"
-using namespace util::memory;
 
 // for function compositions
 // using namespace ADS;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_instance_param.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.16 2005/07/20 21:00:32 fang Exp $
+ 	$Id: art_object_instance_param.cc,v 1.16.2.1 2005/07/21 05:35:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
@@ -11,7 +11,6 @@
 
 #include <iostream>
 
-#include "Object/art_object_definition_base.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_type_ref_base.h"
 #include "Object/art_object_instance_param.h"

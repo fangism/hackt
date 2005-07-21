@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_type_ref.cc"
 	Type-reference class method definitions.  
- 	$Id: art_object_type_ref.cc,v 1.39 2005/07/20 21:00:35 fang Exp $
+ 	$Id: art_object_type_ref.cc,v 1.39.2.1 2005/07/21 05:35:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TYPE_REF_CC__
@@ -14,9 +14,15 @@
 #include <iostream>
 
 #include "AST/art_parser_token_string.h"	// so token_identifier : string
-#include "Object/art_object_definition_chan.h"
-#include "Object/art_object_definition_data.h"
-#include "Object/art_object_definition_proc.h"
+#include "Object/def/param_definition.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/channel_definition_alias.h"
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/built_in_datatype_def.h"
+#include "Object/def/enum_datatype_def.h"
+#include "Object/def/datatype_definition_alias.h"
+#include "Object/def/process_definition.h"
+#include "Object/def/process_definition_alias.h"
 #include "Object/art_object_type_ref.h"
 #include "Object/art_object_instance_bool.h"
 #include "Object/art_object_instance_int.h"
@@ -908,7 +914,8 @@ never_ptr<const definition_base>
 builtin_channel_type_reference::get_base_def(void) const {
 	cerr << "Got: builtin_chanel_type_reference::get_base_def(), "
 		"did you really mean this?" << endl;
-	return never_ptr<const built_in_channel_def>(NULL);
+//	return never_ptr<const built_in_channel_def>(NULL);
+	return never_ptr<const definition_base>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

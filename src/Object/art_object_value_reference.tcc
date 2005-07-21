@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.10 2005/07/20 21:00:37 fang Exp $
+ 	$Id: art_object_value_reference.tcc,v 1.10.2.1 2005/07/21 05:35:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
@@ -27,7 +27,7 @@
 #include "Object/art_object_value_reference.h"
 #include "Object/traits/class_traits.h"
 #include "Object/art_object_inst_ref_subtypes.h"
-#include "Object/art_object_definition_base.h"
+#include "Object/def/definition_base.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_index.h"
 #include "Object/expr/const_param.h"

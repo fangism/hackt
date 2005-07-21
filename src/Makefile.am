@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.1 2005/07/21 01:06:21 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.2 2005/07/21 05:34:53 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -148,7 +148,6 @@ OBJECT_CC_FILES = \
 	Object/art_context.cc \
 	Object/art_object_base.cc \
 	Object/traits/class_traits.cc \
-	Object/art_object_definition.cc \
 	Object/art_object_type_ref.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
@@ -182,6 +181,7 @@ OBJECT_CC_FILES = \
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
 	Object/traits/class_traits_types.cc \
+	Object/def/definition.cc \
 	Object/expr/basic_param.cc \
 	Object/expr/param_const_collection.cc \
 	Object/expr/meta_index_expr_list.cc \
@@ -238,10 +238,20 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
 	Object/art_object_const_collection.h \
-	Object/art_object_definition_base.h \
-	Object/art_object_definition_chan.h \
-	Object/art_object_definition_data.h \
-	Object/art_object_definition_proc.h \
+	Object/def/built_in_datatype_def.h \
+	Object/def/channel_definition_alias.h \
+	Object/def/channel_definition_base.h \
+	Object/def/datatype_definition_alias.h \
+	Object/def/datatype_definition_base.h \
+	Object/def/definition_base.h \
+	Object/def/enum_datatype_def.h \
+	Object/def/param_definition.h \
+	Object/def/process_definition.h \
+	Object/def/process_definition_alias.h \
+	Object/def/process_definition_base.h \
+	Object/def/typedef_base.h \
+	Object/def/user_def_chan.h \
+	Object/def/user_def_datatype.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
 	Object/expr/bool_negation_expr.h \
@@ -309,6 +319,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_nonmeta_inst_ref_base.h \
 	Object/art_object_nonmeta_inst_ref_subtypes.h \
 	Object/art_object_member_inst_ref.h \
+	Object/art_object_scopespace.h \
 	Object/art_object_type_ref_base.h \
 	Object/art_object_type_hash.h \
 	Object/art_object_util_types.h \
@@ -757,7 +768,8 @@ CLEANLEXER = \
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
-CLEANSUBDIRS = lexer parser AST Object Object/expr \
+CLEANSUBDIRS = lexer parser AST Object Object/expr Object/def \
+	Object/inst Object/ref Object/traits \
 	util util/numeric util/memory util/obsolete util/STL
 
 clean-parser:
@@ -809,6 +821,8 @@ parser/.cvsignore: .cvsignore parser/local.cvsignore
 	$(CAT) .cvsignore $(srcdir)/parser/local.cvsignore > $@
 Object/.cvsignore: .cvsignore
 	$(CP) $? $@
+Object/def/.cvsignore: .cvsignore
+	$(CP) $? $@
 Object/expr/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/inst/.cvsignore: .cvsignore
@@ -835,7 +849,7 @@ test/.cvsignore: .cvsignore
 	$(CP) $? $@
 
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
-	Object/.cvsignore Object/expr/.cvsignore \
+	Object/.cvsignore Object/def/.cvsignore Object/expr/.cvsignore \
 	Object/inst/.cvsignore Object/ref/.cvsignore \
 	Object/traits/.cvsignore \
 	AST/.cvsignore main/.cvsignore \

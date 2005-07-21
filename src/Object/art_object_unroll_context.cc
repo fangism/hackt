@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.4 2005/07/20 21:00:36 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.4.2.1 2005/07/21 05:35:09 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -11,8 +11,8 @@
 #include <iostream>
 #include "Object/art_object_unroll_context.h"
 #include "Object/expr/const_param.h"
-#include "Object/art_object_definition_base.h"
-#include "Object/art_object_namespace.h"	// for class scopespace
+#include "Object/def/definition_base.h"
+#include "Object/art_object_scopespace.h"
 #include "Object/art_object_instance_param.h"
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_template_formals_manager.h"
