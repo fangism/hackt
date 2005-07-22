@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.4.2.2 2005/07/22 00:25:05 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.4.2.3 2005/07/22 04:54:30 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -14,7 +14,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/art_object_scopespace.h"
 #include "Object/inst/param_value_collection.h"
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_template_formals_manager.h"
 #include "util/memory/count_ptr.tcc"

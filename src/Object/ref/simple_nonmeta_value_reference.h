@@ -1,20 +1,19 @@
 /**
-	\file "Object/art_object_nonmeta_value_reference.h"
+	\file "Object/ref/simple_nonmeta_value_reference.h"
 	Classes related to nonmeta (data) instance reference expressions. 
-	$Id: art_object_nonmeta_value_reference.h,v 1.3 2005/07/20 21:00:34 fang Exp $
+	This file was reincarnated from
+		"Object/art_object_nonmeta_value_reference.h"
+	$Id: simple_nonmeta_value_reference.h,v 1.1.2.1 2005/07/22 04:54:38 fang Exp $
  */
 
-#ifndef __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
-#define __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
+#ifndef __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
+#define __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 
-#include <iosfwd>
-#include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/art_object_index.h"
 #include "Object/expr/data_expr.h"
-#include "Object/art_object_nonmeta_inst_ref_base.h"
+#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -22,7 +21,6 @@
 namespace ART {
 namespace entity {
 class const_index_list;
-USING_LIST
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -133,5 +131,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_H__
+#endif	// __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 

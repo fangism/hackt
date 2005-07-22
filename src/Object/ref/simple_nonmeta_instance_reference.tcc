@@ -1,19 +1,20 @@
 /**
-	\file "Object/art_object_nonmeta_inst_ref.tcc"
-	$Id: art_object_nonmeta_inst_ref.tcc,v 1.2 2005/06/19 01:58:46 fang Exp $
+	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
+	This file was "Object/art_object_nonmeta_inst_ref.tcc"
+		in a previous life.  
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.1.2.1 2005/07/22 04:54:38 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_TCC__
-#define	__OBJECT_ART_OBJECT_NONMETA_INST_REF_TCC__
+#ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
+#define	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
-#include "Object/art_object_nonmeta_inst_ref.h"
+#include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "util/what.h"
 #include "util/persistent_object_manager.tcc"
 
 // might as well include this, will be needed
-#include "Object/art_object_nonmeta_inst_ref.h"
-#include "Object/art_object_nonmeta_inst_ref_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
 namespace ART {
 namespace entity {
@@ -94,5 +95,5 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::load_object(
 }	// end namespace entity
 }	// end namepace ART
 
-#endif	// __OBJECT_ART_OBJECT_NONMETA_INST_REF_TCC__
+#endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 

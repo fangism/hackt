@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_nonmeta_value_reference.cc"
+	\file "Object/ref/simple_nonmeta_value_reference.cc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_nonmeta_value_reference.tcc,v 1.4.2.2 2005/07/22 00:25:04 fang Exp $
+	This file was reincarnated from 
+		"Object/art_object_nonmeta_value_reference.cc"
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.1.2.1 2005/07/22 04:54:38 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_TCC__
-#define	__OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_TCC__
+#ifndef	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
+#define	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -24,9 +26,9 @@
 #include <exception>
 #include <algorithm>
 
-#include "Object/art_object_nonmeta_value_reference.h"
+#include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/traits/class_traits.h"
-#include "Object/art_object_nonmeta_inst_ref_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
@@ -246,5 +248,5 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manage
 }	// end namepace entity
 }	// end namepace ART
 
-#endif	// __OBJECT_ART_OBJECT_NONMETA_VALUE_REFERENCE_TCC__
+#endif	// __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
 

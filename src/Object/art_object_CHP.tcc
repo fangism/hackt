@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: art_object_CHP.tcc,v 1.3.2.2 2005/07/22 00:24:49 fang Exp $
+	$Id: art_object_CHP.tcc,v 1.3.2.3 2005/07/22 04:54:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_TCC__
@@ -14,8 +14,8 @@
 #include "Object/inst/channel_instance_collection.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
-#include "Object/art_object_nonmeta_inst_ref.h"
-#include "Object/art_object_nonmeta_inst_ref_subtypes.h"
+#include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
 namespace ART {
 namespace entity {

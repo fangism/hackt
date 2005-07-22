@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.26 2005/07/20 20:59:54 fang Exp $
+ 	$Id: art_object_assign.cc,v 1.26.2.1 2005/07/22 04:54:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
@@ -19,7 +19,7 @@
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/art_object_const_collection.h"
-#include "Object/art_object_value_reference.h"
+#include "Object/ref/simple_meta_value_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/int_traits.h"

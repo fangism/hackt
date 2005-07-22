@@ -1,21 +1,17 @@
 /**
-	\file "Object/art_object_value_reference.h"
+	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
-	$Id: art_object_value_reference.h,v 1.9 2005/07/20 21:00:37 fang Exp $
+	This file was reincarnated from "Object/art_object_value_reference.h".
+	$Id: simple_meta_value_reference.h,v 1.1.2.1 2005/07/22 04:54:37 fang Exp $
  */
 
-#ifndef __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
-#define __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
+#ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
+#define __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 
-#include <iosfwd>
-#include "util/boolean_types.h"
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/art_object_index.h"
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "util/persistent.h"
-#include "util/memory/excl_ptr.h"
-#include "util/memory/count_ptr.h"
 
 //=============================================================================
 namespace ART {
@@ -24,12 +20,8 @@ class const_param;
 class const_index_list;
 class const_range_list;
 class unroll_context;
-using std::ostream;
 using util::good_bool;
 using util::bad_bool;
-using util::memory::excl_ptr;
-using util::memory::never_ptr;
-using util::memory::count_ptr;
 
 //=============================================================================
 #define	SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE			\
@@ -194,5 +186,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __OBJECT_ART_OBJECT_VALUE_REFERENCE_H__
+#endif	// __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 

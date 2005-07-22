@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.1.2.3 2005/07/22 00:25:06 fang Exp $
+ 	$Id: definition.cc,v 1.1.2.4 2005/07/22 04:54:31 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -41,7 +41,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/param_value_collection.h"
-#include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/art_object_inst_stmt_param_base.h"
 #include "Object/art_object_inst_stmt_data.h"

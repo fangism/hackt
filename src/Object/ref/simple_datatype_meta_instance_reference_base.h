@@ -1,16 +1,14 @@
 /**
-	\file "Object/art_object_inst_ref_data.h"
+	\file "Object/ref/simple_datatype_meta_instance_reference_base.h"
 	Classes for datatype instance references (built-in and user-defined).
-	$Id: art_object_inst_ref_data.h,v 1.9 2005/07/20 21:00:25 fang Exp $
+	This file was reincarnated from "Object/art_object_inst_ref_data.h".
+	$Id: simple_datatype_meta_instance_reference_base.h,v 1.1.2.1 2005/07/22 04:54:36 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
-#define	__OBJECT_ART_OBJECT_INST_REF_DATA_H__
+#ifndef	__OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
+#define	__OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 
-#include "Object/art_object_inst_ref_base.h"
-// #include "Object/art_object_inst_ref.h"
-// might as well include this here because data_reference<Tag>::interface_type
-// is going to be int_expr or bool_expr from the base class header file.  
+#include "Object/ref/simple_meta_instance_reference_base.h"
 
 namespace ART {
 namespace entity {
@@ -58,5 +56,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_REF_DATA_H__
+#endif	// __OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 

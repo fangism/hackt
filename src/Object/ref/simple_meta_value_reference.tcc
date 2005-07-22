@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_value_reference.tcc"
+	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
- 	$Id: art_object_value_reference.tcc,v 1.10.2.1 2005/07/21 05:35:09 fang Exp $
+	This file was reincarnated from "Object/art_object_value_reference.tcc".
+ 	$Id: simple_meta_value_reference.tcc,v 1.1.2.1 2005/07/22 04:54:37 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
-#define	__OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
+#ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
+#define	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -24,9 +25,9 @@
 #include <exception>
 #include <algorithm>
 
-#include "Object/art_object_value_reference.h"
+#include "Object/ref/simple_meta_value_reference.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/class_traits.h"
-#include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/def/definition_base.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_index.h"
@@ -784,5 +785,5 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 }	// end namepace entity
 }	// end namepace ART
 
-#endif	// __OBJECT_ART_OBJECT_VALUE_REFERENCE_TCC__
+#endif	// __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
 

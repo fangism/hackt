@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_assign.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.6 2005/07/20 20:59:54 fang Exp $
+ 	$Id: art_object_assign.tcc,v 1.6.2.1 2005/07/22 04:54:24 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
@@ -20,7 +20,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/art_object_index.h"
 
 #include "util/wtf.h"

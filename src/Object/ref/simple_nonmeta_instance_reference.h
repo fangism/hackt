@@ -1,25 +1,22 @@
 /**
-	\file "Object/art_object_nonmeta_inst_ref.h"
-	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.3.2.1 2005/07/22 00:25:04 fang Exp $
+	\file "Object/ref/simple_nonmeta_instnace_reference.h"
+	Class template for nonmeta instance references in ART.  
+	This file originated from "Object/art_object_nonmeta_inst_ref.h"
+		in a previous life.  
+	$Id: simple_nonmeta_instance_reference.h,v 1.1.2.1 2005/07/22 04:54:37 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
-#define	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
+#ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
+#define	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
 
 namespace ART {
 namespace entity {
 class unroll_context;
-using std::ostream;
-using std::istream;
-using util::memory::excl_ptr;
-using util::memory::never_ptr;
 using util::packed_array_generic;
 
 //=============================================================================
@@ -102,5 +99,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
+#endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 

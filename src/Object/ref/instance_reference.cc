@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_inst_ref.cc"
-	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.32.2.2 2005/07/22 00:24:51 fang Exp $
+	\file "Object/ref/instance_reference.cc"
+	Class instantiations for the meta_instance_reference family of objects.
+	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
+ 	$Id: instance_reference.cc,v 1.1.2.1 2005/07/22 04:54:34 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
-#define	__OBJECT_ART_OBJECT_INST_REF_CC__
+#ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
+#define	__OBJECT_REF_INSTANCE_REFERENCE_CC__
 
 #include <iostream>
 
@@ -17,10 +18,11 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/art_object_namespace.h"
-#include "Object/art_object_inst_ref_data.h"
-#include "Object/art_object_inst_ref.tcc"
-#include "Object/art_object_nonmeta_inst_ref.tcc"
-#include "Object/art_object_member_inst_ref.tcc"
+#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
+#include "Object/ref/simple_param_meta_value_reference.h"
+#include "Object/ref/simple_meta_instance_reference.tcc"
+#include "Object/ref/simple_nonmeta_instance_reference.tcc"
+#include "Object/ref/member_meta_instance_reference.tcc"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/dynamic_meta_index_list.h"
@@ -1430,5 +1432,5 @@ template class member_meta_instance_reference<process_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_REF_CC__
+#endif	// __OBJECT_REF_INSTANCE_REFERENCE_CC__
 

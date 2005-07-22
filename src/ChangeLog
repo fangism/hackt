@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-07-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-maintainence-06:
+	  Pushed Object/art_object_inst_ref* and _value_reference*
+		into Object/ref subdirectory, and also split up 
+		some of the base header files.  
+	  Some Makefile.am rework, minimizing use of BUILT_SOURCES, 
+		but still inevitable for one auto-header file.  
+
+
 2005-07-21	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-49-maintainence-05:

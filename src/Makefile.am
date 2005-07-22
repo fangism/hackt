@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.5 2005/07/22 00:24:44 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.6 2005/07/22 04:54:18 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -53,11 +53,9 @@ noinst_LTLIBRARIES = libart++.la libhacktparsers.la libbogus.la libfangutil.la
 # order in parallel builds.  
 
 artc_SOURCES = art_main.cc
-# art_main.$(OBJEXT) art_main.lo: parser/art++-parse-prefix.h
 artc_LDADD = libart++.la libfangutil.la
 
 art__2obj_SOURCES = art++2obj.cc
-# art++2obj.$(OBJEXT) art++2obj.lo: parser/art++-parse-prefix.h
 art__2obj_LDADD = libart++.la libfangutil.la
 
 artobjdump_SOURCES = artobjdump.cc
@@ -74,13 +72,12 @@ art_persistent_table_LDADD = libart++.la libfangutil.la
 
 getopt_test_SOURCES = test/getopt_test.cc
 
-# need these first!  (easy to just stick them here)
-BUILT_SOURCES = parser/yacc_or_bison.h parser/art++-parse.h \
-	parser/art++-parse.output.h
+# trying NOT to abuse this, writing explicit dependencies below
+BUILT_SOURCES = parser/art++-parse.output.h
+# This says, "build me first."
 
 # phony program to generate _build/*/.deps directories on distcheck
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
-	Object/ref/dummy.cc
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
@@ -94,8 +91,8 @@ util/numeric/dummy.cc:
 util/obsolete/dummy.cc:
 	$(TOUCH) $@
 
-Object/ref/dummy.cc:
-	$(TOUCH) $@
+ARTXX_PARSE_ROOT = art++-parse
+ARTXX_LEX_ROOT = art++-lex
 
 # libbogus.la is not actually used, hence the name.
 # force use of lex/yacc suffix rules to generate the .c and .cc files
@@ -104,6 +101,10 @@ Object/ref/dummy.cc:
 libbogus_la_SOURCES = \
 	lexer/art++-lex.ll \
 	parser/art++-parse.yy
+
+# automake doesn't like macro in generating .Plo, a bug methinks
+#	lexer/$(ARTXX_LEX_ROOT).ll \
+#	parser/$(ARTXX_PARSE_ROOT).yy
 
 AST_CC_FILES = \
 	AST/art_parser_base.cc \
@@ -164,9 +165,6 @@ OBJECT_CC_FILES = \
 	Object/inst/process_instance_collection.cc \
 	Object/inst/channel_instance_collection.cc \
 	Object/art_object_instance_management_base.cc \
-	Object/art_object_inst_ref.cc \
-	Object/art_object_inst_ref_data.cc \
-	Object/art_object_nonmeta_inst_ref.cc \
 	Object/art_object_inst_stmt.cc \
 	Object/art_object_assign.cc \
 	Object/art_object_connect.cc \
@@ -196,6 +194,8 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/operators.cc \
 	Object/expr/data_expr.cc \
 	Object/type/type_reference.cc \
+	Object/ref/instance_reference.cc \
+	Object/ref/instance_reference_datatype.cc \
 	Object/art_object_IO.cc
 
 # these header files have source (.cc) files with different names
@@ -210,17 +210,17 @@ OBJECT_TCC_FILES = \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/instance_collection.tcc \
+	Object/inst/value_collection.tcc \
 	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_stmt_param.tcc \
-	Object/art_object_inst_ref.tcc \
-	Object/art_object_nonmeta_inst_ref.tcc \
-	Object/art_object_member_inst_ref.tcc \
+	Object/ref/simple_meta_instance_reference.tcc \
+	Object/ref/simple_nonmeta_instance_reference.tcc \
+	Object/ref/member_meta_instance_reference.tcc \
+	Object/ref/simple_meta_value_reference.tcc \
+	Object/ref/simple_nonmeta_value_reference.tcc \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
 	Object/art_object_unroll_context.tcc \
-	Object/inst/value_collection.tcc \
-	Object/art_object_value_reference.tcc \
-	Object/art_object_nonmeta_value_reference.tcc \
 	Object/art_object_CHP.tcc
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
@@ -300,14 +300,29 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/null_collection_type_manager.h \
 	Object/inst/int_collection_type_manager.h \
 	Object/inst/parameterless_collection_type_manager.h \
-	Object/ref/inst_ref_implementation_fwd.h \
-	Object/ref/inst_ref_implementation.h \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
 	Object/inst/instance_alias_info.h \
 	Object/inst/instance_alias.h \
 	Object/inst/alias_empty.h \
+	Object/inst/value_collection.h \
+	Object/ref/member_meta_instance_reference.h \
+	Object/ref/meta_instance_reference_base.h \
+	Object/ref/meta_instance_reference_subtypes.h \
+	Object/ref/nonmeta_instance_reference_base.h \
+	Object/ref/nonmeta_instance_reference_subtypes.h \
+	Object/ref/simple_datatype_meta_instance_reference_base.h \
+	Object/ref/simple_datatype_nonmeta_value_reference.h \
+	Object/ref/simple_meta_instance_reference.h \
+	Object/ref/simple_meta_instance_reference_base.h \
+	Object/ref/simple_meta_value_reference.h \
+	Object/ref/simple_nonmeta_instance_reference.h \
+	Object/ref/simple_nonmeta_instance_reference_base.h \
+	Object/ref/simple_nonmeta_value_reference.h \
+	Object/ref/simple_param_meta_value_reference.h \
+	Object/ref/inst_ref_implementation_fwd.h \
+	Object/ref/inst_ref_implementation.h \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
 	Object/art_object_inst_stmt_param_base.h \
@@ -316,11 +331,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_inst_stmt_chan.h \
 	Object/art_object_inst_stmt_proc.h \
 	Object/art_object_inst_stmt_type_ref_default.h \
-	Object/art_object_inst_ref_base.h \
-	Object/art_object_inst_ref_subtypes.h \
-	Object/art_object_nonmeta_inst_ref_base.h \
-	Object/art_object_nonmeta_inst_ref_subtypes.h \
-	Object/art_object_member_inst_ref.h \
 	Object/art_object_scopespace.h \
 	Object/type/builtin_channel_type_reference.h \
 	Object/type/channel_type_reference.h \
@@ -332,9 +342,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/type_reference_base.h \
 	Object/art_object_type_hash.h \
 	Object/art_object_util_types.h \
-	Object/inst/value_collection.h \
-	Object/art_object_value_reference.h \
-	Object/art_object_nonmeta_value_reference.h \
 	Object/art_object_PRS_base.h \
 	Object/art_object_CHP_base.h
 
@@ -467,11 +474,11 @@ UTIL_CC_FILES = \
 
 PARSER_H_FILES = \
 	parser/yacc_or_bison.h \
-	parser/art++-parse-prefix.h \
+	parser/$(ARTXX_PARSE_ROOT)-prefix.h \
 	parser/art++-union.h \
-	parser/art++-parse.output.h \
-	parser/art++-parse-options.h \
-	lexer/art++-lex-options.h \
+	parser/$(ARTXX_PARSE_ROOT).output.h \
+	parser/$(ARTXX_PARSE_ROOT)-options.h \
+	lexer/$(ARTXX_LEX_ROOT)-options.h \
 	lexer/art_lex.h
 
 PARSER_CC_FILES = \
@@ -479,6 +486,10 @@ PARSER_CC_FILES = \
 	parser/art++-union.cc \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc
+
+# automake doesn't like macro in generating .Plo, a bug methinks
+#	parser/$(ARTXX_PARSE_ROOT)-prefix.cc
+#	lexer/$(ARTXX_LEX_ROOT)-prefix.cc
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libart___la_SOURCES = \
@@ -491,7 +502,17 @@ libart___la_SOURCES = \
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
-main/main_funcs.$(OBJEXT) main/main_funcs.lo: parser/art++-parse-prefix.h
+main/main_funcs.cc: parser/yacc_or_bison.h parser/$(ARTXX_PARSE_ROOT)-prefix.h
+lexer/$(ARTXX_LEX_ROOT).cc: parser/$(ARTXX_PARSE_ROOT).h
+parser/art++-union.lo: parser/$(ARTXX_PARSE_ROOT).output.h
+parser/art++-union.$(OBJEXT): parser/$(ARTXX_PARSE_ROOT).output.h
+
+# the following targets need to be prefixed with the library name, libbogus, 
+# but automake complains that it overrides the automatic definition...
+# parser/$(ARTXX_PARSE_ROOT).lo: parser/$(ARTXX_PARSE_ROOT).output.h
+# parser/$(ARTXX_PARSE_ROOT).$(OBJEXT): parser/$(ARTXX_PARSE_ROOT).output.h
+# this creates cyclic dependencies (bad)
+# parser/$(ARTXX_PARSE_ROOT).cc: parser/$(ARTXX_PARSE_ROOT).output.h
 
 # build up main library from pieces
 # Here, libart++ will include all of libhacktparsers
@@ -527,30 +548,36 @@ ARTXX_YACC_PREFIX = artxx_
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
 if HAVE_BISON
-parser/art++-parse-prefix.cc: parser/art++-parse.cc
-	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk $? | \
+parser/$(ARTXX_PARSE_ROOT)-prefix.cc: parser/$(ARTXX_PARSE_ROOT).cc \
+		parser/$(ARTXX_PARSE_ROOT).output.h
+	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
+		parser/$(ARTXX_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 else
-parser/art++-parse-prefix.cc: parser/art++-parse.cc
-	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk $? | \
+parser/$(ARTXX_PARSE_ROOT)-prefix.cc: parser/$(ARTXX_PARSE_ROOT).cc \
+		parser/$(ARTXX_PARSE_ROOT).output.h
+	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
+		parser/$(ARTXX_PARSE_ROOT).cc | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
 endif
 
-parser/art++-parse-prefix.h: parser/art++-parse.h
+parser/$(ARTXX_PARSE_ROOT)-prefix.h: parser/$(ARTXX_PARSE_ROOT).h
 	$(ECHO) "#include \"parser/art++-union.h\"" > $@
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(ARTXX_YACC_PREFIX) $? >> $@
 
-lexer/art++-lex-prefix.cc: lexer/art++-lex.cc
+lexer/$(ARTXX_LEX_ROOT)-prefix.cc: lexer/$(ARTXX_LEX_ROOT).cc \
+		parser/$(ARTXX_PARSE_ROOT)-prefix.h
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) $? > $@
+		-v PREFIX=$(ARTXX_YACC_PREFIX) \
+			lexer/$(ARTXX_LEX_ROOT).cc > $@
 
 # can't depend on the .output alone, not a known dependence with .y[y]
-ARTXX_PARSE_OUTPUT = parser/art++-parse.output
-$(ARTXX_PARSE_OUTPUT): parser/art++-parse.h
+ARTXX_PARSE_OUTPUT = parser/$(ARTXX_PARSE_ROOT).output
+$(ARTXX_PARSE_OUTPUT): parser/$(ARTXX_PARSE_ROOT).h
 
 $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
@@ -564,7 +591,7 @@ $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 
 CPP_TRADITIONAL = cpp
 
-parser/art++.types: parser/art++-parse.yy
+parser/art++.types: parser/$(ARTXX_PARSE_ROOT).yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
 		$(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
@@ -574,25 +601,25 @@ parser/art++.types: parser/art++-parse.yy
 # "cut" is not a good idea, if # define is separated... :(
 # the last awk pipe eliminate extraneous whitespace not filtered by sed
 GET_START_TOKEN_ENUM = \
-	$(GREP) "define.*MINIMUM_BOGOSITY" parser/art++-parse.h | \
+	$(GREP) "define.*MINIMUM_BOGOSITY" parser/$(ARTXX_PARSE_ROOT).h | \
 		$(HEAD) -n1 | $(SED) 's/^.*MINIMUM_BOGOSITY[ \t]*//g' | \
 		$(AWK) '/.*/{printf($$1);}'
 
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
-		-v include="AST/art_parser.h parser/art++-parse-prefix.h" \
+		-v include="AST/art_parser.h parser/$(ARTXX_PARSE_ROOT)-prefix.h" \
 		-v namespace=ART::parser \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
-parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/art++-parse-prefix.h
+parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/$(ARTXX_PARSE_ROOT)-prefix.h
 	@if ! [ -s parser/art++.types ] ; then \
 		$(ECHO) "parser/art++.types is empty!" ; \
 		exit 1 ; \
 	fi
 	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
 		-f $(YACC_UNION_SCRIPT) $(YACC_UNION_SCRIPT_ARGS) \
-		parser/art++-parse.output > $@
+		$(ARTXX_PARSE_OUTPUT) > $@
 
 
 # AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
@@ -735,7 +762,6 @@ EXTRA_DIST += local.cvsignore \
 # This means we have to fake an object file in each subdirectory
 # containing headers we want to check for standalone-ness.  
 # Really, they should just be able to link to "test/header_test.cc"
-# Make links in BUILT_SOURCES.  
 HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
 HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
 
@@ -761,24 +787,24 @@ all-local: check-headers
 # choosing not to distribute lex/yacc-generated sources for now
 CLEANPARSER = \
 	parser/yacc_or_bison.h \
-	parser/art++-parse.cc \
-	parser/art++-parse.h \
-	parser/art++-parse-prefix.cc \
-	parser/art++-parse-prefix.h \
-	parser/art++-parse.output \
-	parser/art++-parse.output.h \
+	parser/$(ARTXX_PARSE_ROOT).cc \
+	parser/$(ARTXX_PARSE_ROOT).h \
+	parser/$(ARTXX_PARSE_ROOT)-prefix.cc \
+	parser/$(ARTXX_PARSE_ROOT)-prefix.h \
+	parser/$(ARTXX_PARSE_ROOT).output \
+	parser/$(ARTXX_PARSE_ROOT).output.h \
 	parser/art++-union.cc \
 	parser/art++.types
 
 CLEANLEXER = \
-	lexer/art++-lex-prefix.cc \
-	lexer/art++-lex.cc
+	lexer/$(ARTXX_LEX_ROOT)-prefix.cc \
+	lexer/$(ARTXX_LEX_ROOT).cc
 
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
 CLEANSUBDIRS = lexer parser AST Object Object/expr Object/def \
-	Object/inst Object/ref Object/traits \
+	Object/inst Object/ref Object/traits Object/type \
 	util util/numeric util/memory util/obsolete util/STL
 
 clean-parser:

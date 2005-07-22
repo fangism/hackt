@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_PRS.cc"
 	Implementation of PRS objects.
-	$Id: art_object_PRS.cc,v 1.8 2005/07/20 20:59:54 fang Exp $
+	$Id: art_object_PRS.cc,v 1.8.2.1 2005/07/22 04:54:23 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_CC__
@@ -13,12 +13,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	ENABLE_STACKTRACE		0
 
 #include "Object/art_object_PRS.h"
-#include "Object/art_object_inst_ref.h"
-#include "Object/art_object_inst_ref_data.h"
+#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_inst_ref_subtypes.h"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/IO_utils.h"

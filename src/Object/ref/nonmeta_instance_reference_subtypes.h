@@ -1,13 +1,15 @@
 /**
-	\file "Object/art_object_nonmeta_inst_ref_subtypes.h"
+	\file "Object/ref/nonmeta_instance_reference_subtypes.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref_subtypes.h,v 1.2 2005/06/19 01:58:47 fang Exp $
+	This file used to be "Object/art_object_nonmeta_inst_ref_subtypes.h"
+		in a previous life.  
+	$Id: nonmeta_instance_reference_subtypes.h,v 1.1.2.1 2005/07/22 04:54:35 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_SUBTYPES_H__
-#define	__OBJECT_ART_OBJECT_NONMETA_INST_REF_SUBTYPES_H__
+#ifndef	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
+#define	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 
-#include "Object/art_object_nonmeta_inst_ref_base.h"
+#include "Object/ref/nonmeta_instance_reference_base.h"
 
 namespace ART {
 namespace entity {
@@ -118,5 +120,5 @@ virtual	~pbool_instance_reference_base() { }
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_NONMETA_INST_REF_SUBTYPES_H__
+#endif	// __OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 

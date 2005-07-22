@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.1.2.1 2005/07/22 00:25:11 fang Exp $
+ 	$Id: instance_collection.cc,v 1.1.2.2 2005/07/22 04:54:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -20,8 +20,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/datatype_instance_collection.h"
-// #include "Object/inst/param_value_collection.h"
-#include "Object/art_object_inst_ref.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"

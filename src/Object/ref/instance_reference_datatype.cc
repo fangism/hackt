@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_inst_ref_data.cc"
+	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.10.2.1 2005/07/22 00:24:52 fang Exp $
+	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
+	$Id: instance_reference_datatype.cc,v 1.1.2.1 2005/07/22 04:54:34 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
-#define	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
+#ifndef	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
+#define	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
 
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/bool_instance_collection.h"
@@ -13,10 +14,10 @@
 #include "Object/inst/enum_instance_collection.h"
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/art_object_connect.h"
-#include "Object/art_object_inst_ref.tcc"
-#include "Object/art_object_nonmeta_inst_ref.tcc"
-#include "Object/art_object_member_inst_ref.tcc"
-#include "Object/art_object_nonmeta_value_reference.tcc"
+#include "Object/ref/simple_meta_instance_reference.tcc"
+#include "Object/ref/simple_nonmeta_instance_reference.tcc"
+#include "Object/ref/member_meta_instance_reference.tcc"
+#include "Object/ref/simple_nonmeta_value_reference.tcc"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/enum_expr.h"
@@ -200,5 +201,5 @@ template class member_meta_instance_reference<datastruct_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_REF_DATA_CC__
+#endif	// __OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
 

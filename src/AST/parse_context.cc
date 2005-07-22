@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.1.2.2 2005/07/22 00:24:49 fang Exp $
+ 	$Id: parse_context.cc,v 1.1.2.3 2005/07/22 04:54:22 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -26,7 +26,7 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/type/param_type_reference.h"
-#include "Object/art_object_inst_ref.h"
+#include "Object/ref/meta_instance_reference_base.h"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"

@@ -1,22 +1,23 @@
 /**
-	\file "Object/art_object_inst_ref.cc"
+	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.tcc,v 1.9 2005/07/20 21:00:25 fang Exp $
+	This file was reincarnated from "Object/art_object_inst_ref.cc".
+ 	$Id: simple_meta_instance_reference.tcc,v 1.1.2.1 2005/07/22 04:54:36 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_REF_TCC__
-#define	__OBJECT_ART_OBJECT_INST_REF_TCC__
+#ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
+#define	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
 
-#include "Object/art_object_inst_ref.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 	// will explicitly instantiate
 #include "util/persistent_object_manager.tcc"
-#include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/ref/inst_ref_implementation.h"
 
@@ -363,5 +364,5 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_REF_TCC__
+#endif	// __OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
 

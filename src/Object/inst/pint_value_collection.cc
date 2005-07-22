@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.1.2.1 2005/07/22 00:25:14 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.1.2.2 2005/07/22 04:54:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -24,13 +24,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/type/param_type_reference.h"
 #include "Object/inst/pint_value_collection.h"
-#include "Object/art_object_inst_ref.h"
-#include "Object/art_object_inst_stmt.h"
+#include "Object/ref/simple_meta_value_reference.h"
+#include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/pint_const.h"
+#include "Object/art_object_inst_stmt.h"
 #include "Object/art_object_type_hash.h"
 
-#include "Object/art_object_value_reference.h"
-#include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/inst/value_collection.tcc"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/int_traits.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.2.2.2 2005/07/22 00:25:15 fang Exp $
+	$Id: subinstance_manager.cc,v 1.2.2.3 2005/07/22 04:54:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,7 +9,7 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/physical_instance_collection.h"
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"

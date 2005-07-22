@@ -1,14 +1,14 @@
 /**
-	\file "Object/art_object_inst_ref.h"
+	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in ART.  
-	TODO: rename file to simple_meta_instance_reference
-	$Id: art_object_inst_ref.h,v 1.23.2.1 2005/07/22 00:24:51 fang Exp $
+	This file was reincarnated from "Object/art_object_inst_ref.h".
+	$Id: simple_meta_instance_reference.h,v 1.1.2.1 2005/07/22 04:54:36 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_REF_H__
-#define	__OBJECT_ART_OBJECT_INST_REF_H__
+#ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
+#define	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/ref/simple_meta_instance_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -17,11 +17,6 @@
 
 namespace ART {
 namespace entity {
-class unroll_context;
-using std::ostream;
-using std::istream;
-using util::memory::excl_ptr;
-using util::memory::never_ptr;
 using util::packed_array_generic;
 
 //=============================================================================
@@ -38,7 +33,6 @@ simple_meta_instance_reference<Tag>
 	\param Collection the instance collection type.
 	\param Parent the type from which this is derived, 
 		probably simple_meta_instance_reference_base or descendant.  
-	TODO: this could be properly renamed simple_meta_instance_reference.
 	TODO: derive using multiple inheritance from now on:
 		always derive from simple_meta_instance_reference_base and the
 		type interface designated by class_traits.
@@ -132,12 +126,8 @@ public:
 };	// end class meta_instance_reference
 
 //=============================================================================
-// classes pint_meta_instance_reference and pbool_meta_instance_reference
-//	are in "art_object_expr_param_ref.*"
-
-//=============================================================================
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_REF_H__
+#endif	// __OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 
