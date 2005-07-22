@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_scopespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_scopespace.h,v 1.1.2.1 2005/07/21 05:35:08 fang Exp $
+	$Id: art_object_scopespace.h,v 1.1.2.2 2005/07/22 00:25:04 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_SCOPESPACE_H__
@@ -31,7 +31,7 @@ class object;
 class definition_base;
 class typedef_base;
 class instance_collection_base;
-class param_instance_collection;
+class param_value_collection;
 using std::list;
 using std::string;
 using std::istream;
@@ -118,7 +118,7 @@ protected:	// typedefs -- keep these here for re-use
 							alias_bin_type;
 		typedef qmap<string, never_ptr<instance_collection_base> >
 							inst_bin_type;
-		typedef qmap<string, never_ptr<param_instance_collection> >
+		typedef qmap<string, never_ptr<param_value_collection> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -148,7 +148,7 @@ protected:	// typedefs -- keep these here for re-use
 							alias_bin_type;
 		typedef qmap<string, never_ptr<const instance_collection_base> >
 							inst_bin_type;
-		typedef qmap<string, never_ptr<const param_instance_collection> >
+		typedef qmap<string, never_ptr<const param_value_collection> >
 							param_bin_type;
 
 		ns_bin_type		ns_bin;

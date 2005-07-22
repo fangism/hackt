@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.1.2.1 2005/07/21 19:48:25 fang Exp $
+ 	$Id: type_reference.cc,v 1.1.2.2 2005/07/22 00:25:16 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -30,12 +30,12 @@
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/type/param_type_reference.h"
-#include "Object/art_object_instance_bool.h"
-#include "Object/art_object_instance_int.h"
-#include "Object/art_object_instance_enum.h"
-#include "Object/art_object_instance_struct.h"
-#include "Object/art_object_instance_param.h"
-#include "Object/art_object_value_collection.h"
+#include "Object/inst/bool_instance_collection.h"
+#include "Object/inst/int_instance_collection.h"
+#include "Object/inst/enum_instance_collection.h"
+#include "Object/inst/struct_instance_collection.h"
+#include "Object/inst/pbool_value_collection.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"

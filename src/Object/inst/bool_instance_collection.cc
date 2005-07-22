@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_bool.cc"
+	\file "Object/inst/bool_instance_collection.cc"
 	Method definitions for boolean data type instance classes.
-	$Id: art_object_instance_bool.cc,v 1.19.2.2 2005/07/21 19:48:16 fang Exp $
+	This file came from "Object/art_object_instance_bool.cc"
+		in a previous life.  
+	$Id: bool_instance_collection.cc,v 1.1.2.1 2005/07/22 00:25:09 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
+#ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
+#define	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
@@ -20,8 +22,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <algorithm>
 
-#include "Object/art_object_instance_bool.h"
-#include "Object/art_object_instance_alias_empty.h"
+#include "Object/inst/bool_instance_collection.h"
+#include "Object/inst/alias_empty.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/expr/bool_expr.h"
@@ -31,7 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/inst/null_collection_type_manager.tcc"
-#include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/instance_collection.tcc"
 
 #include "util/memory/list_vector_pool.tcc"
 
@@ -125,5 +127,5 @@ template class instance_array<bool_tag, 4>;
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_BOOL_CC__
+#endif	// __OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
 

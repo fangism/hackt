@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_param.cc"
+	\file "Object/inst/param_value_collection.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_param.cc,v 1.16.2.2 2005/07/21 19:48:18 fang Exp $
+	This file used to be "Object/art_object_instance_param.cc"
+		in a previous life.  
+ 	$Id: param_value_collection.cc,v 1.1.2.1 2005/07/22 00:25:13 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
+#ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
+#define	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -13,7 +15,7 @@
 
 #include "Object/art_object_namespace.h"
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/expr/const_param.h"
@@ -34,31 +36,31 @@ using util::disable_indent;
 USING_STACKTRACE
 
 //=============================================================================
-// class param_instance_collection method definitions
+// class param_value_collection method definitions
 
 /**
 	Private empty constructor.  
  */
-param_instance_collection::param_instance_collection(const size_t d) :
+param_value_collection::param_value_collection(const size_t d) :
 		parent_type(d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-param_instance_collection::param_instance_collection(const scopespace& o, 
+param_value_collection::param_value_collection(const scopespace& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-param_instance_collection::~param_instance_collection() {
-	STACKTRACE("~param_instance_collection()");
+param_value_collection::~param_value_collection() {
+	STACKTRACE("~param_value_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-param_instance_collection::dump(ostream& o) const {
+param_value_collection::dump(ostream& o) const {
 #if 0
-	STACKTRACE("param_instance_collection::dump()");
+	STACKTRACE("param_value_collection::dump()");
 #endif
 	parent_type::dump(o);
 	const count_ptr<const param_expr>
@@ -97,8 +99,8 @@ param_instance_collection::dump(ostream& o) const {
 	look itself up in the owning namespace.  
  */
 bool
-param_instance_collection::is_template_formal(void) const {
-	STACKTRACE("param_instance_collection::is_template_formal()");
+param_value_collection::is_template_formal(void) const {
+	STACKTRACE("param_value_collection::is_template_formal()");
 	// look itself up in owner namespace
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
@@ -125,7 +127,7 @@ param_instance_collection::is_template_formal(void) const {
 	\sa must_be_initialized
  */
 bool
-param_instance_collection::may_be_initialized(void) const {
+param_value_collection::may_be_initialized(void) const {
 	if (dimensions || is_template_formal())
 		return true;
 	else {
@@ -150,7 +152,7 @@ param_instance_collection::may_be_initialized(void) const {
 	\sa may_be_initialized
  */
 bool
-param_instance_collection::must_be_initialized(void) const {
+param_value_collection::must_be_initialized(void) const {
 	if (dimensions)
 		return false;
 	else if (is_template_formal())
@@ -173,15 +175,15 @@ param_instance_collection::must_be_initialized(void) const {
 /**
 	Checks for dimension and size equality between expression and 
 	instantiation.  
-	So far, only used by param_instance_collection derivatives, 
+	So far, only used by param_value_collection derivatives, 
 		in the context of checking template formals.  
 	May be useful else where for connections.  
 	\return true if dimensions *may* match.  
  */
 good_bool
-param_instance_collection::may_check_expression_dimensions(
+param_value_collection::may_check_expression_dimensions(
 		const param_expr& pe) const {
-	// MUST_BE_A(const param_instance_collection*, this);
+	// MUST_BE_A(const param_value_collection*, this);
 	// else is not an expression class!
 
 	// dimensions() used to be a pure virtual method
@@ -239,15 +241,15 @@ param_instance_collection::may_check_expression_dimensions(
 /**
 	Checks for dimension and size equality between expression and 
 	instantiation.  
-	So far, only used by param_instance_collection derivatives, 
+	So far, only used by param_value_collection derivatives, 
 		in the context of checking template formals.  
 	May be useful else where for connections.  
 	\return true if dimensions *may* match.  
  */
 good_bool
-param_instance_collection::must_check_expression_dimensions(
+param_value_collection::must_check_expression_dimensions(
 		const const_param& pe) const {
-	// MUST_BE_A(const param_instance_collection*, this);
+	// MUST_BE_A(const param_value_collection*, this);
 	// else is not an expression class!
 
 	// dimensions() used to be a pure virtual method
@@ -299,7 +301,7 @@ param_instance_collection::must_check_expression_dimensions(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-param_instance_collection::is_static_constant(void) const {
+param_value_collection::is_static_constant(void) const {
 	if (dimensions) {
 		// conservatively return... depends on may or must...
 		return false;
@@ -325,7 +327,7 @@ param_instance_collection::is_static_constant(void) const {
 	put this on hold...
  */
 bool
-param_instance_collection::is_loop_independent(void) const {
+param_value_collection::is_loop_independent(void) const {
 	
 }
 #endif
@@ -336,8 +338,8 @@ param_instance_collection::is_loop_independent(void) const {
 	2) Thus they cannot even be referenced.  
 	3) This is just a placeholder that should never be called.  
  */
-param_instance_collection::member_inst_ref_ptr_type
-param_instance_collection::make_member_meta_instance_reference(
+param_value_collection::member_inst_ref_ptr_type
+param_value_collection::make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const {
 	typedef	member_inst_ref_ptr_type	return_type;
 	NEVER_NULL(b);
@@ -350,5 +352,5 @@ param_instance_collection::make_member_meta_instance_reference(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_PARAM_CC__
+#endif	// __OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 

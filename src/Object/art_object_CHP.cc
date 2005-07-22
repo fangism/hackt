@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.4.2.1 2005/07/21 19:48:12 fang Exp $
+	$Id: art_object_CHP.cc,v 1.4.2.2 2005/07/22 00:24:49 fang Exp $
  */
 
 #include "Object/art_object_CHP.h"
@@ -14,8 +14,8 @@
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/traits/chan_traits.h"
-#include "Object/art_object_instance.h"
-#include "Object/art_object_instance_collection.h"
+#include "Object/inst/datatype_instance_collection.h"
+#include "Object/inst/instance_collection.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref.cc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_inst_ref.cc,v 1.32.2.1 2005/07/21 19:48:13 fang Exp $
+ 	$Id: art_object_inst_ref.cc,v 1.32.2.2 2005/07/22 00:24:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_CC__
@@ -13,9 +13,9 @@
 #include "util/multidimensional_sparse_set.tcc"
 
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/art_object_instance.h"
-#include "Object/art_object_instance_alias_empty.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/art_object_namespace.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_inst_ref.tcc"
@@ -32,7 +32,7 @@
 #include "Object/art_object_type_hash.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
-#include "Object/art_object_instance_collection.h"
+#include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 
 //=============================================================================
@@ -1257,7 +1257,7 @@ bool
 simple_param_meta_value_reference::may_be_initialized(void) const {
 	const never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
-	return i.is_a<const param_instance_collection>()->may_be_initialized();
+	return i.is_a<const param_value_collection>()->may_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1265,7 +1265,7 @@ bool
 simple_param_meta_value_reference::must_be_initialized(void) const {
 	const never_ptr<const instance_collection_base> i(get_inst_base());
 	NEVER_NULL(i);
-	return i.is_a<const param_instance_collection>()->must_be_initialized();
+	return i.is_a<const param_value_collection>()->must_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

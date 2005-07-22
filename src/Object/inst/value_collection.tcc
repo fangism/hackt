@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_value_collection.tcc"
+	\file "Object/inst/value_collection.tcc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_value_collection.tcc,v 1.6.2.1 2005/07/21 05:35:09 fang Exp $
+	This file was "Object/art_object_value_collection.tcc"
+		in a previous life.  
+ 	$Id: value_collection.tcc,v 1.1.2.1 2005/07/22 00:25:15 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
-#define	__OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
+#ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
+#define	__OBJECT_INST_VALUE_COLLECTION_TCC__
 
 #ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -26,7 +28,7 @@
 #include "Object/art_object_extern_templates.h"
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
-#include "Object/art_object_value_collection.h"
+#include "Object/inst/value_collection.h"
 #include "Object/art_object_const_collection.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
@@ -778,5 +780,5 @@ VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) 
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_VALUE_COLLECTION_TCC__
+#endif	// __OBJECT_INST_VALUE_COLLECTION_TCC__
 

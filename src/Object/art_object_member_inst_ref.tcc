@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_member_inst_ref.tcc"
 	Method definitions for the meta_instance_reference family of objects.
- 	$Id: art_object_member_inst_ref.tcc,v 1.9 2005/07/20 21:00:33 fang Exp $
+ 	$Id: art_object_member_inst_ref.tcc,v 1.9.2.1 2005/07/22 00:25:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MEMBER_INST_REF_TCC__
@@ -10,11 +10,11 @@
 #include <iostream>
 #include "util/what.h"
 #include "util/persistent_object_manager.h"
-#include "Object/art_object_instance_base.h"
+#include "Object/inst/instance_collection_base.h"
 #include "Object/art_object_member_inst_ref.h"
-#include "util/memory/count_ptr.tcc"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "util/memory/count_ptr.tcc"
 
 //=============================================================================
 namespace ART {

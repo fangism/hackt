@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.1.2.1 2005/07/21 20:44:12 fang Exp $
+ 	$Id: parse_context.cc,v 1.1.2.2 2005/07/22 00:24:49 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -30,8 +30,8 @@
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/art_object_assign.h"
 #include "Object/art_object_connect.h"
-#include "Object/art_object_instance.h"	// for instantiation_statement_base
-#include "Object/art_object_instance_param.h"	// for param_instantiation_statement_base
+#include "Object/inst/instance_collection_base.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/art_object_module.h"
 
 #include "util/stacktrace.h"
@@ -46,7 +46,7 @@ using entity::object_handle;
 using entity::enum_datatype_def;
 using entity::instantiation_statement_base;
 using entity::param_type_reference;
-using entity::param_instance_collection;
+using entity::param_value_collection;
 using entity::process_definition;
 using entity::user_def_chan;
 using entity::user_def_datatype;
@@ -840,11 +840,11 @@ context::add_template_formal(const token_identifier& id,
 	}
 
 	if (d) {
-		// need modifiable pointer to param_instance_collection
+		// need modifiable pointer to param_value_collection
 		const never_ptr<instance_collection_base>
 			ib(inst_stmt->get_inst_base());
-		const never_ptr<param_instance_collection>
-			pic(ib.is_a<param_instance_collection>());
+		const never_ptr<param_value_collection>
+			pic(ib.is_a<param_value_collection>());
 		NEVER_NULL(pic);
 		if (!pic->assign_default_value(d).good) {
 			// error: type check failed

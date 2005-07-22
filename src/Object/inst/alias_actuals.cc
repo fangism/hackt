@@ -1,13 +1,15 @@
 /**
-	\file "Object/art_object_instance_alias_actuals.cc"
+	\file "Object/inst/alias_actuals.cc"
 	Method definitions of class instance_alias_info_actuals.
-	$Id: art_object_instance_alias_actuals.cc,v 1.2 2005/07/20 21:00:28 fang Exp $
+	This file was originally "Object/art_object_instance_alias_actuals.cc"
+		in a previous life.  
+	$Id: alias_actuals.cc,v 1.1.2.1 2005/07/22 00:25:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
-#include "Object/art_object_instance_alias_actuals.h"
-#include "Object/art_object_instance_alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_empty.h"
 #include <iostream>
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"

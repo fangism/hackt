@@ -1,16 +1,18 @@
 /**
-	\file "Object/art_object_instance_alias_actuals.tcc"
+	\file "Object/inst/alias_actuals.tcc"
 	Definition of template methods for instance_alias_info_actuals
 		and instance_alias_info_empty.
-	$Id: art_object_instance_alias_actuals.tcc,v 1.2 2005/07/20 21:00:29 fang Exp $
+	This file was "Object/art_object_instance_alias_actuals.tcc"
+		in a previous life.  
+	$Id: alias_actuals.tcc,v 1.1.2.1 2005/07/22 00:25:08 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_TCC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_TCC__
+#ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
+#define	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 
-#include "Object/art_object_instance_alias_empty.h"
-#include "Object/art_object_instance_alias_actuals.h"
-#include "Object/art_object_instance_alias.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/instance_alias.h"
 
 namespace ART {
 namespace entity {
@@ -57,5 +59,5 @@ instance_alias_info_actuals::find_relaxed_actuals(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_TCC__
+#endif	// __OBJECT_INST_ALIAS_ACTUALS_TCC__
 

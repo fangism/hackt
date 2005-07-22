@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_nonmeta_inst_ref.h"
 	Class family for instance references in ART.  
-	$Id: art_object_nonmeta_inst_ref.h,v 1.3 2005/07/20 21:00:34 fang Exp $
+	$Id: art_object_nonmeta_inst_ref.h,v 1.3.2.1 2005/07/22 00:25:04 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
 #define	__OBJECT_ART_OBJECT_NONMETA_INST_REF_H__
 
 #include "Object/art_object_inst_ref_base.h"
-#include "Object/art_object_instance_base.h"
+#include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"

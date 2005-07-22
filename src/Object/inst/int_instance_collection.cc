@@ -1,12 +1,14 @@
 /**
-	\file "Object/art_object_instance_int.cc"
+	\file "Object/inst/int_instance_collection.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_int.cc,v 1.22.2.2 2005/07/21 19:48:17 fang Exp $
+	This file came from "Object/art_object_instance_int.cc"
+		in a previous life.  
+	$Id: int_instance_collection.cc,v 1.1.2.1 2005/07/22 00:25:12 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_INT_CC__
+#ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
+#define	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -20,8 +22,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <algorithm>
 
-#include "Object/art_object_instance_int.h"
-#include "Object/art_object_instance_alias_empty.h"
+#include "Object/inst/int_instance_collection.h"
+#include "Object/inst/alias_empty.h"
 #include "Object/art_object_inst_ref_data.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/expr/int_expr.h"
@@ -32,7 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/data_type_reference.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_nonmeta_value_reference.h"
-#include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/instance_collection.tcc"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/art_object_inst_stmt_data.h"
 	// for class_traits<>::instantiation_statement_type_ref_base
@@ -120,5 +122,5 @@ template class instance_array<int_tag, 4>;
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_INT_CC__
+#endif	// __OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 

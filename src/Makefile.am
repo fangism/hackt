@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.4 2005/07/21 20:44:07 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.5 2005/07/22 00:24:44 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -152,15 +152,17 @@ OBJECT_CC_FILES = \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
-	Object/art_object_instance_alias_actuals.cc \
-	Object/art_object_instance.cc \
-	Object/art_object_instance_param.cc \
-	Object/art_object_instance_bool.cc \
-	Object/art_object_instance_int.cc \
-	Object/art_object_instance_enum.cc \
-	Object/art_object_instance_struct.cc \
-	Object/art_object_instance_proc.cc \
-	Object/art_object_instance_chan.cc \
+	Object/inst/alias_actuals.cc \
+	Object/inst/instance_collection.cc \
+	Object/inst/param_value_collection.cc \
+	Object/inst/pbool_value_collection.cc \
+	Object/inst/pint_value_collection.cc \
+	Object/inst/bool_instance_collection.cc \
+	Object/inst/int_instance_collection.cc \
+	Object/inst/enum_instance_collection.cc \
+	Object/inst/struct_instance_collection.cc \
+	Object/inst/process_instance_collection.cc \
+	Object/inst/channel_instance_collection.cc \
 	Object/art_object_instance_management_base.cc \
 	Object/art_object_inst_ref.cc \
 	Object/art_object_inst_ref_data.cc \
@@ -194,8 +196,6 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/operators.cc \
 	Object/expr/data_expr.cc \
 	Object/type/type_reference.cc \
-	Object/art_object_instance_pint.cc \
-	Object/art_object_instance_pbool.cc \
 	Object/art_object_IO.cc
 
 # these header files have source (.cc) files with different names
@@ -208,8 +208,8 @@ OBJECT_TCC_FILES = \
 	Object/inst/int_collection_type_manager.tcc \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/subinstance_manager.tcc \
-	Object/art_object_instance_alias_actuals.tcc \
-	Object/art_object_instance_collection.tcc \
+	Object/inst/alias_actuals.tcc \
+	Object/inst/instance_collection.tcc \
 	Object/art_object_inst_stmt.tcc \
 	Object/art_object_inst_stmt_param.tcc \
 	Object/art_object_inst_ref.tcc \
@@ -218,7 +218,7 @@ OBJECT_TCC_FILES = \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
 	Object/art_object_unroll_context.tcc \
-	Object/art_object_value_collection.tcc \
+	Object/inst/value_collection.tcc \
 	Object/art_object_value_reference.tcc \
 	Object/art_object_nonmeta_value_reference.tcc \
 	Object/art_object_CHP.tcc
@@ -294,7 +294,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/pint_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
-	Object/art_object_expr_param_ref.h \
 	Object/art_object_index.h \
 	Object/inst/substructure_alias_fwd.h \
 	Object/inst/general_collection_type_manager.h \
@@ -303,10 +302,12 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/parameterless_collection_type_manager.h \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h \
-	Object/art_object_instance_base.h \
-	Object/art_object_instance_alias.h \
-	Object/art_object_instance_alias_empty.h \
-	Object/art_object_instance_collection.h \
+	Object/inst/instance_collection_base.h \
+	Object/inst/physical_instance_collection.h \
+	Object/inst/datatype_instance_collection.h \
+	Object/inst/instance_alias_info.h \
+	Object/inst/instance_alias.h \
+	Object/inst/alias_empty.h \
 	Object/art_object_instance_management_base.h \
 	Object/art_object_inst_stmt_base.h \
 	Object/art_object_inst_stmt_param_base.h \
@@ -331,7 +332,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/type_reference_base.h \
 	Object/art_object_type_hash.h \
 	Object/art_object_util_types.h \
-	Object/art_object_value_collection.h \
+	Object/inst/value_collection.h \
 	Object/art_object_value_reference.h \
 	Object/art_object_nonmeta_value_reference.h \
 	Object/art_object_PRS_base.h \

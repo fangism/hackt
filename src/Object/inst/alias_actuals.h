@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_alias_actuals.h"
+	\file "Object/inst/alias_actuals.h"
 	Implementation of alias info that has actual parameters.  
-	$Id: art_object_instance_alias_actuals.h,v 1.2 2005/07/20 21:00:29 fang Exp $
+	This file originated from "Object/art_object_instance_alias_actuals.h"
+		in a previous life.  
+	$Id: alias_actuals.h,v 1.1.2.1 2005/07/22 00:25:08 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
+#ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
+#define	__OBJECT_INST_ALIAS_ACTUALS_H__
 
 #define	DEBUG_ALIAS_ACTUALS		1
 
@@ -104,5 +106,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_ALIAS_ACTUALS_H__
+#endif	// __OBJECT_INST_ALIAS_ACTUALS_H__
 

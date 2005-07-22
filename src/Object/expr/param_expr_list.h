@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.2 2005/07/20 21:00:48 fang Exp $
+	$Id: param_expr_list.h,v 1.2.2.1 2005/07/22 00:25:08 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -20,7 +20,7 @@ namespace ART {
 namespace entity {
 class param_expr;
 class const_param_expr_list;
-class param_instance_collection;
+class param_value_collection;
 class unroll_context;
 class template_actuals;
 using util::good_bool;
@@ -88,7 +88,7 @@ virtual	unroll_resolve_return_type
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
-	typedef	DEFAULT_VECTOR(never_ptr<const param_instance_collection>)
+	typedef	DEFAULT_VECTOR(never_ptr<const param_value_collection>)
 					template_formals_list_type;
 
 public:

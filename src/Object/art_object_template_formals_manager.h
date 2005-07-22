@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.6 2005/07/20 21:00:35 fang Exp $
+	$Id: art_object_template_formals_manager.h,v 1.6.2.1 2005/07/22 00:25:05 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
@@ -22,7 +22,7 @@ namespace ART {
 namespace entity {
 //=============================================================================
 class const_param;
-class param_instance_collection;
+class param_value_collection;
 class dynamic_param_expr_list;
 class template_actuals;
 using std::string;
@@ -63,7 +63,7 @@ public:
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
 	**/
-	typedef	never_ptr<const param_instance_collection>
+	typedef	never_ptr<const param_value_collection>
 					template_formals_value_type;
 	// double-maintenance...
 	typedef	hash_qmap<string, template_formals_value_type>
@@ -100,7 +100,7 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-	never_ptr<const param_instance_collection>
+	never_ptr<const param_value_collection>
 	lookup_template_formal(const string& id) const;
 
 	bool
@@ -130,18 +130,18 @@ public:
 	// assumes already checked for conflicts!
 	void
 	add_strict_template_formal(
-		const never_ptr<const param_instance_collection>);
+		const never_ptr<const param_value_collection>);
 
 	// assumes already checked for conflicts!
 	void
 	add_relaxed_template_formal(
-		const never_ptr<const param_instance_collection>);
+		const never_ptr<const param_value_collection>);
 
 #if 0
 	// called by unroll-context
-	// was const param_instance_collection&
+	// was const param_value_collection&
 	count_ptr<const const_param>
-	resolve_template_actual(const param_instance_collection&, 
+	resolve_template_actual(const param_value_collection&, 
 		const template_actuals&) const;
 #endif
 

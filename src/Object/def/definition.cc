@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.1.2.2 2005/07/21 19:48:22 fang Exp $
+ 	$Id: definition.cc,v 1.1.2.3 2005/07/22 00:25:06 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -40,15 +40,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
-#include "Object/art_object_instance.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/art_object_inst_stmt_param_base.h"
 #include "Object/art_object_inst_stmt_data.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
-#include "Object/art_object_expr_param_ref.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/art_object_namespace.h"
 #include "Object/traits/pint_traits.h"
@@ -162,7 +160,7 @@ definition_base::pair_dump(ostream& o) const {
 /**
 	Only looks up the identifier in the set of template formals.  
  */
-never_ptr<const param_instance_collection>
+never_ptr<const param_value_collection>
 definition_base::lookup_template_formal(const string& id) const {
 	return template_formals.lookup_template_formal(id);
 }
@@ -331,7 +329,7 @@ definition_base::make_fundamental_type_reference(void) const {
 	template argument checking.  
 	What if template formal is an array, or collective?
 	TO DO: convert to pointer-classes...
-	\param f needs to be a param_instance_collection... what about array?
+	\param f needs to be a param_value_collection... what about array?
 		need to be non-const? storing to hash_map_of_ptr...
 		must be modifiable for used_id_map
  */
@@ -364,8 +362,8 @@ definition_base::add_strict_template_formal(
 	NEVER_NULL(ss);
 	// this creates and adds to the definition
 	// and bi-links statement to collection
-	const never_ptr<const param_instance_collection>
-		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
+	const never_ptr<const param_value_collection>
+		pf(ss->add_instance(i, id).is_a<const param_value_collection>());
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
 
@@ -398,8 +396,8 @@ definition_base::add_relaxed_template_formal(
 	}
 	scopespace* ss = IS_A(scopespace*, this);
 	NEVER_NULL(ss);
-	const never_ptr<const param_instance_collection>
-		pf(ss->add_instance(i, id).is_a<const param_instance_collection>());
+	const never_ptr<const param_value_collection>
+		pf(ss->add_instance(i, id).is_a<const param_value_collection>());
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
 	template_formals.add_relaxed_template_formal(pf);
@@ -1081,7 +1079,7 @@ built_in_datatype_def::built_in_datatype_def(
 built_in_datatype_def::built_in_datatype_def(
 		never_ptr<const name_space> o, 
 		const string& n, 
-		excl_ptr<param_instance_collection> p) :
+		excl_ptr<param_value_collection> p) :
 		definition_base(), 
 		datatype_definition_base(), 
 		scopespace(), 
@@ -1181,8 +1179,8 @@ never_ptr<const instance_collection_base>
 built_in_datatype_def::add_template_formal(
 		excl_ptr<instance_collection_base>& f) {
 	STACKTRACE("add_template_formal(excl_ptr<>)");
-	const never_ptr<const param_instance_collection>
-		pf(f.is_a<const param_instance_collection>());
+	const never_ptr<const param_value_collection>
+		pf(f.is_a<const param_value_collection>());
 	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
 	const never_ptr<const object>

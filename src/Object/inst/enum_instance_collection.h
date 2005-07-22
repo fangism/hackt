@@ -1,18 +1,19 @@
 /**
-	\file "Object/art_object_instance_enum.h"
+	\file "Object/inst/enum_instance_collection.h"
 	Class declarations for built-in and user-defined data instances
 	and instance collections.  
-	$Id: art_object_instance_enum.h,v 1.12 2005/07/20 21:00:31 fang Exp $
+	This file was "Object/art_object_instance_enum.h"
+		in a previous life.  
+	$Id: enum_instance_collection.h,v 1.1.2.1 2005/07/22 00:25:10 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_ENUM_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_ENUM_H__
+#ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
+#define	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
 
-#include "Object/art_object_instance.h"
+#include "Object/inst/datatype_instance_collection.h"
 #include "Object/traits/enum_traits.h"
-#include "Object/art_object_instance_collection.h"
-#include "Object/art_object_instance_alias.h"
-
+#include "Object/inst/instance_collection.h"
+#include "Object/inst/instance_alias.h"
 
 namespace ART {
 namespace entity {
@@ -46,5 +47,5 @@ typedef	instance_array<enum_tag, 4>	enum_array_4D;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_ENUM_H__
+#endif	// __OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
 

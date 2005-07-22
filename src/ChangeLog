@@ -2,6 +2,14 @@
 
 2005-07-21	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-49-maintainence-05:
+	  Pushed Object/art_object_instance* into Object/inst/
+		(except for instance_management_base, which is sequential.)
+	  param_instance_collection -> param_value_collection
+	  TODO: sequetial instance management -> Object/unroll, 
+		instance/value references.  
+
+
 	* ARTXX-00-01-04-main-00-49-maintainence-04:
 	  Object/art_context.* -> AST/parse_context.*
 

@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_pbool.cc"
+	\file "Object/inst/pbool_value_collection.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pbool.cc,v 1.23.2.1 2005/07/21 19:48:18 fang Exp $
+	This file was "Object/art_object_instance_pbool.cc"
+		in a previous life.  
+ 	$Id: pbool_value_collection.cc,v 1.1.2.1 2005/07/22 00:25:13 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
+#ifndef	__OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
+#define	__OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
 
 //=============================================================================
 // start of static initializations
@@ -17,7 +19,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/type/param_type_reference.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/pbool_value_collection.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/pbool_const.h"
@@ -25,7 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_nonmeta_value_reference.h"
 #include "Object/traits/pbool_traits.h"
-#include "Object/art_object_value_collection.tcc"
+#include "Object/inst/value_collection.tcc"
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -156,5 +158,5 @@ template class value_array<pbool_tag,4>;
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_PBOOL_CC__
+#endif	// __OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
 

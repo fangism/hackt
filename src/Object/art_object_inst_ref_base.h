@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_inst_ref_base.h"
 	Base class family for instance references in ART.  
-	$Id: art_object_inst_ref_base.h,v 1.14 2005/07/20 21:00:25 fang Exp $
+	$Id: art_object_inst_ref_base.h,v 1.14.2.1 2005/07/22 00:24:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_BASE_H__
@@ -20,7 +20,7 @@ class scopespace;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
-class param_instance_collection;
+class param_value_collection;
 class aliases_connection_base;
 class meta_index_list;
 class const_index_list;
@@ -364,7 +364,7 @@ virtual	ostream&
 virtual	never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
 
-virtual	never_ptr<const param_instance_collection>
+virtual	never_ptr<const param_value_collection>
 	get_param_inst_base(void) const = 0;
 
 	// consider moving these functions into meta_instance_reference_base

@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_pint.cc"
+	\file "Object/inst/pint_value_collection.cc"
 	Method definitions for parameter instance collection classes.
- 	$Id: art_object_instance_pint.cc,v 1.25.2.1 2005/07/21 19:48:18 fang Exp $
+	This file used to be "Object/art_object_instance_pint.cc"
+		in a previous life.  
+ 	$Id: pint_value_collection.cc,v 1.1.2.1 2005/07/22 00:25:14 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
+#ifndef	__OBJECT_INST_PINT_VALUE_COLLECTION_CC__
+#define	__OBJECT_INST_PINT_VALUE_COLLECTION_CC__
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
@@ -21,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/type/param_type_reference.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/pint_const.h"
@@ -29,7 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/art_object_value_reference.h"
 #include "Object/art_object_nonmeta_value_reference.h"
-#include "Object/art_object_value_collection.tcc"
+#include "Object/inst/value_collection.tcc"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/int_traits.h"
 
@@ -121,5 +123,5 @@ template class value_array<pint_tag,4>;
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_PINT_CC__
+#endif	// __OBJECT_INST_PINT_VALUE_COLLECTION_CC__
 

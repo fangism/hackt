@@ -1,16 +1,18 @@
 /**
-	\file "Object/art_object_instance_proc.h"
+	\file "Object/inst/process_instance_collection.h"
 	Class declarations for process instance and collections.  
-	$Id: art_object_instance_proc.h,v 1.12 2005/07/20 21:00:33 fang Exp $
+	This file originated from "Object/art_object_instance_proc.h"
+		in a previous life.
+	$Id: process_instance_collection.h,v 1.1.2.1 2005/07/22 00:25:14 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_PROC_H__
+#ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
+#define	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
 
-#include "Object/art_object_instance.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/proc_traits.h"
-#include "Object/art_object_instance_collection.h"
-#include "Object/art_object_instance_alias.h"
+#include "Object/inst/instance_collection.h"
+#include "Object/inst/instance_alias.h"
 
 
 namespace ART {
@@ -58,5 +60,5 @@ typedef	instance_array<process_tag, 4>	process_array_4D;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_PROC_H__
+#endif	// __OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
 

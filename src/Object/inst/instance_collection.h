@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_collection.h"
+	\file "Object/inst/instance_collection.h"
 	Class declarations for scalar instances and instance collections.  
-	$Id: art_object_instance_collection.h,v 1.11 2005/07/20 21:00:30 fang Exp $
+	This file was originally "Object/art_object_instance_collection.h"
+		in a previous life.  
+	$Id: instance_collection.h,v 1.1.2.1 2005/07/22 00:25:11 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
+#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
+#define	__OBJECT_INST_INSTANCE_COLLECTION_H__
 
 #include <iosfwd>
 #include <set>
@@ -398,5 +400,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_COLLECTION_H__
+#endif	// __OBJECT_INST_INSTANCE_COLLECTION_H__
 

@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance.cc"
+	\file "Object/inst/instance_collection.cc"
 	Method definitions for instance collection classes.
- 	$Id: art_object_instance.cc,v 1.46.2.2 2005/07/21 19:48:15 fang Exp $
+	This file was originally "Object/art_object_instance.cc"
+		in a previous (long) life.  
+ 	$Id: instance_collection.cc,v 1.1.2.1 2005/07/22 00:25:11 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_CC__
+#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
+#define	__OBJECT_INST_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -17,8 +19,8 @@
 
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/art_object_instance.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/datatype_instance_collection.h"
+// #include "Object/inst/param_value_collection.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_inst_stmt.h"
 #include "Object/expr/const_range.h"
@@ -114,7 +116,7 @@ instance_collection_base::~instance_collection_base() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Overridden by param_instance_collection.  
+	Overridden by param_value_collection.  
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
@@ -657,5 +659,5 @@ datatype_instance_collection::get_actual_param_list(void) const {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_CC__
+#endif	// __OBJECT_INST_INSTANCE_COLLECTION_CC__
 

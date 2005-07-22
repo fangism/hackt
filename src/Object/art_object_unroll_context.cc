@@ -1,6 +1,6 @@
 /**
 	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.4.2.1 2005/07/21 05:35:09 fang Exp $
+	$Id: art_object_unroll_context.cc,v 1.4.2.2 2005/07/22 00:25:05 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
@@ -13,7 +13,8 @@
 #include "Object/expr/const_param.h"
 #include "Object/def/definition_base.h"
 #include "Object/art_object_scopespace.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/param_value_collection.h"
+#include "Object/art_object_inst_ref_base.h"
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_template_formals_manager.h"
 #include "util/memory/count_ptr.tcc"
@@ -92,7 +93,7 @@ unroll_context::dump(ostream& o) const {
 	TODO: completely rewrite this.
  */
 count_ptr<const const_param>
-unroll_context::lookup_actual(const param_instance_collection& p) const {
+unroll_context::lookup_actual(const param_value_collection& p) const {
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE("unroll_context::lookup_actual()");
 #if ENABLE_STACKTRACE

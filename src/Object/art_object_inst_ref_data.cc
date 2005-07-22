@@ -1,17 +1,17 @@
 /**
 	\file "Object/art_object_inst_ref_data.cc"
 	Method definitions for datatype instance reference classes.
-	$Id: art_object_inst_ref_data.cc,v 1.10 2005/07/20 21:00:25 fang Exp $
+	$Id: art_object_inst_ref_data.cc,v 1.10.2.1 2005/07/22 00:24:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
 #define	__OBJECT_ART_OBJECT_INST_REF_DATA_CC__
 
-#include "Object/art_object_instance_alias_empty.h"
-#include "Object/art_object_instance_bool.h"
-#include "Object/art_object_instance_int.h"
-#include "Object/art_object_instance_enum.h"
-#include "Object/art_object_instance_struct.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/bool_instance_collection.h"
+#include "Object/inst/int_instance_collection.h"
+#include "Object/inst/enum_instance_collection.h"
+#include "Object/inst/struct_instance_collection.h"
 #include "Object/art_object_connect.h"
 #include "Object/art_object_inst_ref.tcc"
 #include "Object/art_object_nonmeta_inst_ref.tcc"

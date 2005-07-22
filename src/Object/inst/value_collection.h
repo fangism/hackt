@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_value_collection.h"
+	\file "Object/inst/value_collection.h"
 	Parameter instance collection classes for ART.  
-	$Id: art_object_value_collection.h,v 1.7 2005/07/20 21:00:37 fang Exp $
+	This file was "Object/art_object_value_collection.h"
+		in a previous life.  
+	$Id: value_collection.h,v 1.1.2.1 2005/07/22 00:25:15 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
-#define	__OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
+#ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
+#define	__OBJECT_INST_VALUE_COLLECTION_H__
 
 #include <iosfwd>
 #include "util/string_fwd.h"
@@ -335,5 +337,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_VALUE_COLLECTION_H__
+#endif	// __OBJECT_INST_VALUE_COLLECTION_H__
 

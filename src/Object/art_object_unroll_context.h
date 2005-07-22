@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.4 2005/07/20 21:00:36 fang Exp $
+	$Id: art_object_unroll_context.h,v 1.4.2.1 2005/07/22 00:25:05 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
@@ -17,7 +17,7 @@ namespace entity {
 class const_param;
 class template_actuals;
 class template_formals_manager;
-class param_instance_collection;
+class param_value_collection;
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -74,7 +74,7 @@ public:
 	have_template_actuals(void) const { return template_args; }
 
 	count_ptr<const const_param>
-	lookup_actual(const param_instance_collection&) const;
+	lookup_actual(const param_value_collection&) const;
 
 private:
 	static

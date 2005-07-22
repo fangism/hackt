@@ -1,19 +1,21 @@
 /**
-	\file "Object/art_object_instance_chan.cc"
+	\file "Object/inst/channel_instance_collection.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_chan.cc,v 1.15.2.2 2005/07/21 19:48:16 fang Exp $
+	This file originated from "Object/art_object_instance_chan.cc"
+		in a previous life.  
+	$Id: channel_instance_collection.cc,v 1.1.2.1 2005/07/22 00:25:09 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_CHAN_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_CHAN_CC__
+#ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
+#define	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 
 #include <exception>
 #include <iostream>
 #include <algorithm>
 
-#include "Object/art_object_instance_chan.h"
-#include "Object/art_object_instance_alias_actuals.h"
+#include "Object/inst/channel_instance_collection.h"
+#include "Object/inst/alias_actuals.h"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_member_inst_ref.h"
@@ -21,8 +23,7 @@
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/art_object_connect.h"
 #include "Object/art_object_type_hash.h"
-
-#include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 
 namespace util {
@@ -92,5 +93,5 @@ template class instance_array<channel_tag, 4>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_CHAN_CC__
+#endif	// __OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 

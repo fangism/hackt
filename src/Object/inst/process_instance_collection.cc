@@ -1,12 +1,14 @@
 /**
-	\file "Object/art_object_instance_proc.cc"
+	\file "Object/inst/process_instance_collection.cc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_proc.cc,v 1.15.2.2 2005/07/21 19:48:19 fang Exp $
+	This file came from "Object/art_object_instance_proc.cc"
+		in a previous life.  
+	$Id: process_instance_collection.cc,v 1.1.2.1 2005/07/22 00:25:14 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
+#ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
+#define	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_PERSISTENTS		0
@@ -16,16 +18,16 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/art_object_instance_proc.h"
+#include "Object/inst/process_instance_collection.h"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/art_object_inst_ref.h"
 #include "Object/art_object_member_inst_ref.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/art_object_connect.h"
-#include "Object/art_object_instance_alias_actuals.h"
+#include "Object/inst/alias_actuals.h"
 #include "Object/art_object_type_hash.h"
 
-#include "Object/art_object_instance_collection.tcc"
+#include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 
 
@@ -115,5 +117,5 @@ template class instance_array<process_tag, 4>;
 
 #undef	ENABLE_STACKTRACE
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_PROC_CC__
+#endif	// __OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
 

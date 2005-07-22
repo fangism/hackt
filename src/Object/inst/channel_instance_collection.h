@@ -1,16 +1,18 @@
 /**
-	\file "Object/art_object_instance_chan.h"
+	\file "Object/inst/channel_instance_collection.h"
 	Class declarations for channel instance and collections.  
-	$Id: art_object_instance_chan.h,v 1.12 2005/07/20 21:00:30 fang Exp $
+	This file originated from "Object/art_object_instance_chan.h"
+		in a previous life.  
+	$Id: channel_instance_collection.h,v 1.1.2.1 2005/07/22 00:25:10 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_CHAN_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_CHAN_H__
+#ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
+#define	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
 
-#include "Object/art_object_instance.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/chan_traits.h"
-#include "Object/art_object_instance_collection.h"
-#include "Object/art_object_instance_alias.h"
+#include "Object/inst/instance_collection.h"
+#include "Object/inst/instance_alias.h"
 #include "Object/inst/general_collection_type_manager.h"
 
 namespace ART {
@@ -45,5 +47,5 @@ typedef	instance_array<channel_tag, 4>	channel_array_4D;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_CHAN_H__
+#endif	// __OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
 

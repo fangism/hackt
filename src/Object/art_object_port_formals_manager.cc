@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.3 2005/07/20 21:00:34 fang Exp $
+ 	$Id: art_object_port_formals_manager.cc,v 1.3.2.1 2005/07/22 00:25:04 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
@@ -23,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/art_object_port_formals_manager.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_instance.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/art_object_inst_ref_base.h"
 #include "Object/inst/subinstance_manager.h"
 

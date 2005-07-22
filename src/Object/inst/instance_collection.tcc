@@ -1,12 +1,15 @@
 /**
-	\file "Object/art_object_instance_collection.tcc"
+	\file "Object/inst/instance_collection.tcc"
 	Method definitions for integer data type instance classes.
 	Hint: copied from the bool counterpart, and text substituted.  
-	$Id: art_object_instance_collection.tcc,v 1.13 2005/07/20 21:00:30 fang Exp $
+	This file originally came from 
+		"Object/art_object_instance_collection.tcc"
+		in a previous life.  
+	$Id: instance_collection.tcc,v 1.1.2.1 2005/07/22 00:25:12 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
+#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
+#define	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overridable debug switches
@@ -36,8 +39,8 @@
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
 
-#include "Object/art_object_instance_alias.h"
-#include "Object/art_object_instance_collection.h"
+#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_collection.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"		// for debug only
@@ -46,7 +49,7 @@
 #include "Object/art_object_inst_ref_subtypes.h"
 #include "Object/art_object_nonmeta_inst_ref.h"
 #include "Object/art_object_inst_ref.h"
-#include "Object/art_object_instance_alias_actuals.tcc"
+#include "Object/inst/alias_actuals.tcc"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/inst/subinstance_manager.tcc"
 
@@ -1528,5 +1531,5 @@ INSTANCE_SCALAR_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_COLLECTION_TCC__
+#endif	// __OBJECT_INST_INSTANCE_COLLECTION_TCC__
 

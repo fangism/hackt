@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_instance_base.h"
+	\file "Object/inst/instance_collection_base.h"
 	Base classes for instance and instance collection objects.  
-	$Id: art_object_instance_base.h,v 1.18 2005/07/20 21:00:29 fang Exp $
+	This file was "Object/art_object_instance_base.h"
+		in a previous life.  
+	$Id: instance_collection_base.h,v 1.1.2.1 2005/07/22 00:25:12 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_BASE_H__
+#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
+#define	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 
 #include <string>
 #include <deque>
@@ -256,7 +258,7 @@ public:
 		const never_ptr<const instance_collection_base> b) const;
 
 #if 0
-// relocated to param_instance_collection
+// relocated to param_value_collection
 protected:
 	good_bool
 	may_check_expression_dimensions(const param_expr& pr) const;
@@ -317,5 +319,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_BASE_H__
+#endif	// __OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 

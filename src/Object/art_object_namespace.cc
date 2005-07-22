@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.29.2.2 2005/07/21 19:48:19 fang Exp $
+ 	$Id: art_object_namespace.cc,v 1.29.2.3 2005/07/22 00:25:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
@@ -41,8 +41,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/art_object_namespace.h"
 #include "Object/def/typedef_base.h"
-#include "Object/art_object_instance.h"
-#include "Object/art_object_instance_param.h"
+#include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/param_value_collection.h"
 #include "Object/art_object_inst_stmt_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -609,8 +609,8 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 			alias_bin[k] = t_b;
 		else	def_bin[k] = d_b;
 	} else if (i_b) {
-		const never_ptr<param_instance_collection>
-			p_b(i_b.is_a<param_instance_collection>());
+		const never_ptr<param_value_collection>
+			p_b(i_b.is_a<param_value_collection>());
 		if (p_b)
 			param_bin[k] = p_b;
 		else	inst_bin[k] = i_b;
@@ -656,8 +656,8 @@ scopespace::const_bin_sort::operator () (
 			def_bin[k] = d_b;	INVARIANT(def_bin[k]);
 		}
 	} else if (i_b) {
-		const never_ptr<const param_instance_collection>
-			p_b(i_b.is_a<const param_instance_collection>());
+		const never_ptr<const param_value_collection>
+			p_b(i_b.is_a<const param_value_collection>());
 		if (p_b) {
 			param_bin[k] = p_b;	INVARIANT(param_bin[k]);
 		} else {
