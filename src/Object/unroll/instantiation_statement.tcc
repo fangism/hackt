@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_inst_stmt.tcc"
+	\file "Object/unroll/instantiation_statement.tcc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.tcc,v 1.6.2.1 2005/07/21 19:48:14 fang Exp $
+	This file's previous revision history is in
+		"Object/art_object_inst_stmt.tcc"
+ 	$Id: instantiation_statement.tcc,v 1.1.2.1 2005/07/22 21:34:29 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_TCC__
-#define	__OBJECT_ART_OBJECT_INST_STMT_TCC__
+#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
+#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overrideable debug switches
@@ -32,7 +34,7 @@
 #include <algorithm>
 
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/art_object_inst_stmt.h"
+#include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 
@@ -406,5 +408,5 @@ INSTANTIATION_STATEMENT_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_TCC__
+#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
 

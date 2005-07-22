@@ -1,13 +1,15 @@
 /**
-	\file "Object/art_object_inst_stmt_param.tcc"
+	\file "Object/unroll/param_instantiation_statement.tcc"
 	Template method definitions for param_instantiation_statement.  
-	$Id: art_object_inst_stmt_param.tcc,v 1.2 2005/07/20 21:00:27 fang Exp $
+	This file came from "Object/art_object_inst_stmt_param.tcc"
+		in a previous life.  
+	$Id: param_instantiation_statement.tcc,v 1.1.2.1 2005/07/22 21:34:30 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_TCC__
-#define	__OBJECT_ART_OBJECT_INST_STMT_PARAM_TCC__
+#ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
+#define	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
 
-#include "Object/art_object_inst_stmt_param.h"
+#include "Object/unroll/param_instantiation_statement.h"
 
 namespace ART {
 namespace entity {
@@ -58,5 +60,5 @@ PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_PARAM_TCC__
+#endif	// __OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
 

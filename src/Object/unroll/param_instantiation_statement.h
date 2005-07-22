@@ -1,13 +1,15 @@
 /**
-	\file "Object/art_object_inst_stmt_param.h"
+	\file "Object/unroll/param_instantiation_statement.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_param.h,v 1.6.2.2 2005/07/22 00:24:53 fang Exp $
+	This file came from "Object/art_object_inst_stmt_param.h"
+		in a previous life.  
+	$Id: param_instantiation_statement.h,v 1.1.2.1 2005/07/22 21:34:30 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
-#define	__OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
+#ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
+#define	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 
-#include "Object/art_object_inst_stmt_param_base.h"
+#include "Object/unroll/param_instantiation_statement_base.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/traits/pint_traits.h"
@@ -202,5 +204,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_PARAM_H__
+#endif	// __OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 

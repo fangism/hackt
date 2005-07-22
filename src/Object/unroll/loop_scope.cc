@@ -1,13 +1,13 @@
 /**
-	\file "Object/art_object_control.cc"
+	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: art_object_control.cc,v 1.9 2005/05/22 06:23:52 fang Exp $
+ 	$Id: loop_scope.cc,v 1.1.2.1 2005/07/22 21:34:29 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CONTROL_CC__
-#define	__OBJECT_ART_OBJECT_CONTROL_CC__
+#ifndef	__OBJECT_UNROLL_LOOP_SCOPE_CC__
+#define	__OBJECT_UNROLL_LOOP_SCOPE_CC__
 
-#include "Object/art_object_control.h"
+#include "Object/unroll/loop_scope.h"
 #include "util/persistent_object_manager.tcc"
 
 namespace ART {
@@ -25,11 +25,8 @@ loop_scope::~loop_scope() {
 }
 
 //=============================================================================
-// class conditional_scope method definitions
-
-//=============================================================================
 } 	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_CONTROL_CC__
+#endif	// __OBJECT_UNROLL_LOOP_SCOPE_CC__
 

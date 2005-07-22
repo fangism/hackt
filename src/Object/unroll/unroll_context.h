@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_unroll_context.h"
+	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
-	$Id: art_object_unroll_context.h,v 1.4.2.1 2005/07/22 00:25:05 fang Exp $
+	This file was reincarnated from "Object/art_object_unroll_context.h".
+	$Id: unroll_context.h,v 1.1.2.1 2005/07/22 21:34:32 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
-#define	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
+#ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
+#define	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
 
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
@@ -87,5 +88,5 @@ private:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_UNROLL_CONTEXT_H__
+#endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_H__
 

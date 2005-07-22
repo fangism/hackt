@@ -1,18 +1,20 @@
 /**
-	\file "Object/art_object_inst_stmt_base.h"
+	\file "Object/unroll/instantiation_statement_base.h"
 	Instance statement base class.
-	$Id: art_object_inst_stmt_base.h,v 1.12 2005/07/20 21:00:26 fang Exp $
+	This file's previous revision history is in
+		"Object/art_object_inst_stmt_base.h"
+	$Id: instantiation_statement_base.h,v 1.1.2.1 2005/07/22 21:34:29 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
-#define	__OBJECT_ART_OBJECT_INST_STMT_BASE_H__
+#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
+#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 
 #include "util/string_fwd.h"
-#include "Object/art_object_instance_management_base.h"
+#include "Object/unroll/instance_management_base.h"
 #include "Object/art_object_util_types.h"
+	// for index_collection_item_ptr_type
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -23,10 +25,9 @@ class physical_instance_collection;
 class fundamental_type_reference;
 using std::string;
 using std::istream;
-USING_LIST
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-using util::good_bool;
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -128,5 +129,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_BASE_H__
+#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 

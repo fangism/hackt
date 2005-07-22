@@ -1,13 +1,15 @@
 /**
-	\file "Object/art_object_inst_stmt.h"
+	\file "Object/unroll/instantiation_statement.h"
 	Instance statement classes for ART.  
-	$Id: art_object_inst_stmt.h,v 1.18 2005/07/20 21:00:26 fang Exp $
+	This file used to be "Object/art_object_inst_stmt.h"
+		in a previous life.  
+	$Id: instantiation_statement.h,v 1.1.2.1 2005/07/22 21:34:28 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_H__
-#define	__OBJECT_ART_OBJECT_INST_STMT_H__
+#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
+#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
 
-#include "Object/art_object_inst_stmt_base.h"
+#include "Object/unroll/instantiation_statement_base.h"
 #include "Object/traits/class_traits.h"
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
@@ -32,6 +34,7 @@ instantiation_statement<Tag>
 	Even though param_instantiation_statement<Tag> derived from this
 	class, we NEVER use a pointer to this class directly, 
 	so we don't need to make any methods or the destructor virtual.  
+	TODO: use template technique to enforce never-delete on this type.  
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 class instantiation_statement :
@@ -165,5 +168,5 @@ class excl_ptr<instantiation_statement<pbool_tag> >;
 }	// end namespace memory
 }	// end namespace util
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_H__
+#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
 

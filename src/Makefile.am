@@ -1,11 +1,13 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.6 2005/07/22 04:54:18 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.7 2005/07/22 21:34:06 fang Exp $
 
+# standard definitions and macro initializers
 include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects
 
-# for recursive make only
+# for recursive make only, all other subdirectories (not listed)
+# are managed by this Makefile (flat)
 SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), 
@@ -164,17 +166,18 @@ OBJECT_CC_FILES = \
 	Object/inst/struct_instance_collection.cc \
 	Object/inst/process_instance_collection.cc \
 	Object/inst/channel_instance_collection.cc \
-	Object/art_object_instance_management_base.cc \
-	Object/art_object_inst_stmt.cc \
-	Object/art_object_assign.cc \
-	Object/art_object_connect.cc \
-	Object/art_object_control.cc \
+	Object/unroll/conditional_scope.cc \
+	Object/unroll/expression_assignment.cc \
+	Object/unroll/instance_management_base.cc \
+	Object/unroll/instantiation_statement.cc \
+	Object/unroll/loop_scope.cc \
+	Object/unroll/meta_instance_reference_connection.cc \
+	Object/unroll/unroll_context.cc \
 	Object/art_object_module.cc \
 	Object/art_object_namespace.cc \
 	Object/art_object_template_actuals.cc \
 	Object/art_object_template_formals_manager.cc \
 	Object/art_object_port_formals_manager.cc \
-	Object/art_object_unroll_context.cc \
 	Object/art_object_extern_templates.cc \
 	Object/art_object_PRS.cc \
 	Object/art_object_CHP.cc
@@ -195,13 +198,10 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/data_expr.cc \
 	Object/type/type_reference.cc \
 	Object/ref/instance_reference.cc \
-	Object/ref/instance_reference_datatype.cc \
-	Object/art_object_IO.cc
+	Object/ref/instance_reference_datatype.cc
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
-	Object/art_object_assign.tcc \
-	Object/art_object_connect.tcc \
 	Object/art_object_const_collection.tcc \
 	Object/inst/general_collection_type_manager.tcc \
 	Object/inst/null_collection_type_manager.tcc \
@@ -211,21 +211,22 @@ OBJECT_TCC_FILES = \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/instance_collection.tcc \
 	Object/inst/value_collection.tcc \
-	Object/art_object_inst_stmt.tcc \
-	Object/art_object_inst_stmt_param.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
 	Object/ref/simple_meta_value_reference.tcc \
 	Object/ref/simple_nonmeta_value_reference.tcc \
+	Object/unroll/alias_connection.tcc \
+	Object/unroll/expression_assignment.tcc \
+	Object/unroll/instantiation_statement.tcc \
+	Object/unroll/param_instantiation_statement.tcc \
+	Object/unroll/unroll_context.tcc \
 	Object/art_object_module.tcc \
 	Object/art_object_namespace.tcc \
-	Object/art_object_unroll_context.tcc \
 	Object/art_object_CHP.tcc
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
-	Object/art_object.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags.h \
 	Object/traits/chan_traits.h \
@@ -323,14 +324,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/ref/simple_param_meta_value_reference.h \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h \
-	Object/art_object_instance_management_base.h \
-	Object/art_object_inst_stmt_base.h \
-	Object/art_object_inst_stmt_param_base.h \
-	Object/art_object_inst_stmt_param.h \
-	Object/art_object_inst_stmt_data.h \
-	Object/art_object_inst_stmt_chan.h \
-	Object/art_object_inst_stmt_proc.h \
-	Object/art_object_inst_stmt_type_ref_default.h \
 	Object/art_object_scopespace.h \
 	Object/type/builtin_channel_type_reference.h \
 	Object/type/channel_type_reference.h \
@@ -340,6 +333,20 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/param_type_reference.h \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
+	Object/unroll/alias_connection.h \
+	Object/unroll/aliases_connection_base.h \
+	Object/unroll/channel_instantiation_statement.h \
+	Object/unroll/data_alias_connection_base.h \
+	Object/unroll/datatype_instantiation_statement.h \
+	Object/unroll/instance_management_base.h \
+	Object/unroll/instantiation_statement_base.h \
+	Object/unroll/instantiation_statement_type_ref_default.h \
+	Object/unroll/param_expression_assignment.h \
+	Object/unroll/param_instantiation_statement.h \
+	Object/unroll/param_instantiation_statement_base.h \
+	Object/unroll/port_connection.h \
+	Object/unroll/process_instantiation_statement.h \
+	Object/unroll/sequential_scope.h \
 	Object/art_object_type_hash.h \
 	Object/art_object_util_types.h \
 	Object/art_object_PRS_base.h \
@@ -752,7 +759,11 @@ EXTRA_DIST += local.cvsignore \
 	scripts/promote_header_deps.awk \
 	Object/def/README \
 	Object/expr/README \
+	Object/inst/README \
+	Object/traits/README \
 	Object/type/README \
+	Object/ref/README \
+	Object/unroll/README \
 	ChangeLog \
 	NOTES \
 	wc-l
@@ -782,7 +793,7 @@ headers_deps.make: Makefile.am
 # really only needed for dynamic dependence-tracking
 include headers_deps.make
 
-all-local: check-headers
+all: check-headers
 
 # choosing not to distribute lex/yacc-generated sources for now
 CLEANPARSER = \
@@ -803,8 +814,10 @@ CLEANLEXER = \
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
-CLEANSUBDIRS = lexer parser AST Object Object/expr Object/def \
-	Object/inst Object/ref Object/traits Object/type \
+OBJECT_DIRS = Object Object/expr Object/def Object/inst Object/ref \
+	Object/traits Object/type Object/unroll
+
+CLEANSUBDIRS = lexer parser AST $(OBJECT_DIRS) \
 	util util/numeric util/memory util/obsolete util/STL
 
 clean-parser:
@@ -837,10 +850,10 @@ clean-AST:
 	-$(RM) AST/*.lo
 
 clean-Object:
-	-$(RM) Object/*.$(OBJEXT)
-	-$(RM) Object/*.lo
-	-$(RM) Object/expr/*.$(OBJEXT)
-	-$(RM) Object/expr/*.lo
+	for d in $(OBJECT_SUBDIRS) ; do \
+		$(RM) $$d/*.$(OBJEXT) ; \
+		$(RM) $$d/*.lo ; \
+	done
 
 # implies CLEANFILES
 clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests
@@ -868,6 +881,8 @@ Object/traits/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/type/.cvsignore: .cvsignore
 	$(CP) $? $@
+Object/unroll/.cvsignore: .cvsignore
+	$(CP) $? $@
 AST/.cvsignore: .cvsignore
 	$(CP) $? $@
 main/.cvsignore: .cvsignore
@@ -889,13 +904,14 @@ SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	Object/.cvsignore Object/def/.cvsignore Object/expr/.cvsignore \
 	Object/inst/.cvsignore Object/ref/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
+	Object/unroll/.cvsignore \
 	AST/.cvsignore main/.cvsignore \
 	util/.cvsignore util/STL/.cvsignore \
 	util/memory/.cvsignore util/numeric/.cvsignore \
 	util/obsolete/.cvsignore \
 	test/.cvsignore
 
-all-local: $(SUBDIR_CVSIGNORE)
+all: cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)
 
@@ -911,5 +927,6 @@ dist-hook:
 		$(RM) $(distdir)/$$f ; \
 	done
 
+# standard targets
 include $(top_srcdir)/Make.global
 

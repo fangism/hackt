@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.1.2.2 2005/07/22 00:25:16 fang Exp $
+ 	$Id: type_reference.cc,v 1.1.2.3 2005/07/22 21:34:25 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -36,7 +36,6 @@
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/inst/pbool_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
-#include "Object/art_object_inst_stmt.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
@@ -48,11 +47,12 @@
 #include "Object/traits/struct_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
-#include "Object/art_object_unroll_context.h"
-#include "Object/art_object_inst_stmt_param.h"
-#include "Object/art_object_inst_stmt_data.h"
-#include "Object/art_object_inst_stmt_chan.h"
-#include "Object/art_object_inst_stmt_proc.h"
+#include "Object/unroll/unroll_context.h"
+#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/param_instantiation_statement.h"
+#include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/channel_instantiation_statement.h"
+#include "Object/unroll/process_instantiation_statement.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"

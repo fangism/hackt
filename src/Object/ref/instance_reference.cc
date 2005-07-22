@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.1.2.1 2005/07/22 04:54:34 fang Exp $
+ 	$Id: instance_reference.cc,v 1.1.2.2 2005/07/22 21:34:20 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -23,19 +23,19 @@
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
-#include "Object/art_object_inst_stmt_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
 #include "Object/expr/nonmeta_index_list.h"
-#include "Object/art_object_control.h"
-#include "Object/art_object_connect.h"		// for aliases_connection_base
-#include "util/persistent_object_manager.tcc"
+#include "Object/unroll/instantiation_statement_base.h"
+#include "Object/unroll/loop_scope.h"
+#include "Object/unroll/alias_connection.h"
 #include "Object/art_object_type_hash.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
+#include "util/persistent_object_manager.tcc"
 
 //=============================================================================
 // specializations

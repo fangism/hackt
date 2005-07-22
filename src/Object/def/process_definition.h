@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.1.2.1 2005/07/21 05:35:14 fang Exp $
+	$Id: process_definition.h,v 1.1.2.2 2005/07/22 21:34:16 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -10,7 +10,7 @@
 
 #include "Object/def/process_definition_base.h"
 #include "Object/art_object_scopespace.h"
-#include "Object/art_object_instance_management_base.h"
+#include "Object/unroll/sequential_scope.h"
 #include "Object/art_object_PRS_base.h"
 #include "Object/art_object_port_formals_manager.h"
 #include "Object/art_object_CHP.h"

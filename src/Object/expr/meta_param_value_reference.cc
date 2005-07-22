@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.2.2.2 2005/07/22 04:54:32 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.2.2.3 2005/07/22 21:34:17 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -30,7 +30,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/art_object_const_collection.h"
 #include "Object/inst/pbool_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
-#include "Object/art_object_connect.h"	// for ~aliases_connection_base
+#include "Object/unroll/aliases_connection_base.h"
 #include "Object/art_object_type_hash.h"
 
 #include "util/stacktrace.h"

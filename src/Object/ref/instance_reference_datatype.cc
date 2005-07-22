@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.1.2.1 2005/07/22 04:54:34 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.1.2.2 2005/07/22 21:34:22 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -13,7 +13,8 @@
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
 #include "Object/inst/struct_instance_collection.h"
-#include "Object/art_object_connect.h"
+#include "Object/unroll/alias_connection.h"
+#include "Object/unroll/data_alias_connection_base.h"
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"

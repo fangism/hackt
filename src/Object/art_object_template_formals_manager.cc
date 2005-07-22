@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.5.2.1 2005/07/22 00:25:04 fang Exp $
+	$Id: art_object_template_formals_manager.cc,v 1.5.2.2 2005/07/22 21:34:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,7 +15,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/art_object_template_actuals.h"
-#include "Object/art_object_unroll_context.h"
+#include "Object/unroll/unroll_context.h"
 
 #include "util/hash_qmap.tcc"
 #include "util/persistent_object_manager.tcc"

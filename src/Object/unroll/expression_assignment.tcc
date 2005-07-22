@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_assign.cc"
+	\file "Object/unroll/expression_assignment.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.tcc,v 1.6.2.1 2005/07/22 04:54:24 fang Exp $
+	This file came from "Object/art_object_assign.tcc"
+		in a previoius life.  
+ 	$Id: expression_assignment.tcc,v 1.1.2.1 2005/07/22 21:34:28 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_ASSIGN_TCC__
-#define	__OBJECT_ART_OBJECT_ASSIGN_TCC__
+#ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
+#define	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
 
 #ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL		0
@@ -14,7 +16,7 @@
 #include <iostream>
 #include <numeric>
 
-#include "Object/art_object_assign.h"
+#include "Object/unroll/expression_assignment.h"
 
 #include "util/STL/list.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -310,5 +312,5 @@ EXPRESSION_ASSIGNMENT_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_ASSIGN_TCC__
+#endif	// __OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
 

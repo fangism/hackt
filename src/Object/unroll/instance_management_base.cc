@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_instance_management_base.cc"
+	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
- 	$Id: art_object_instance_management_base.cc,v 1.14 2005/07/20 21:00:32 fang Exp $
+	This file was moved from "Object/art_object_instance_management_base.cc"
+ 	$Id: instance_management_base.cc,v 1.1.2.1 2005/07/22 21:34:28 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
-#define	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
+#define	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -24,11 +25,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/binders.h"
 
 #include "util/STL/list.tcc"
-#include "Object/art_object_instance_management_base.h"
+#include "Object/unroll/instance_management_base.h"
+#include "Object/unroll/sequential_scope.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
-// conditional defines, after including "stactrace.h"
+// conditional defines, after including "stacktrace.h"
 #if STACKTRACE_DESTRUCTORS
 	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
 #else
@@ -275,5 +277,5 @@ instance_management_base::dumper::operator () (
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_CC__
+#endif	// __OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
 

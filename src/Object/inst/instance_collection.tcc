@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.1.2.2 2005/07/22 04:54:32 fang Exp $
+	$Id: instance_collection.tcc,v 1.1.2.3 2005/07/22 21:34:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -39,8 +39,9 @@
 // experimental: suppressing automatic template instantiation
 #include "Object/art_object_extern_templates.h"
 
-#include "Object/inst/instance_alias.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/alias_actuals.tcc"
+#include "Object/inst/subinstance_manager.tcc"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"		// for debug only
@@ -49,9 +50,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/inst/alias_actuals.tcc"
-#include "Object/art_object_inst_stmt_base.h"
-#include "Object/inst/subinstance_manager.tcc"
+#include "Object/unroll/instantiation_statement_base.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.1.2.1 2005/07/22 04:54:37 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.1.2.2 2005/07/22 21:34:23 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -35,7 +35,7 @@
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/art_object_unroll_context.h"
+#include "Object/unroll/unroll_context.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/art_object_extern_templates.h"

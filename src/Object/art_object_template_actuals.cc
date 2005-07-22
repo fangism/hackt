@@ -1,14 +1,14 @@
 /**
 	\file "Object/art_object_template_actuals.cc"
 	Class implementation of template actuals.
-	$Id: art_object_template_actuals.cc,v 1.2 2005/07/20 21:00:34 fang Exp $
+	$Id: art_object_template_actuals.cc,v 1.2.2.1 2005/07/22 21:34:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include "Object/art_object_template_actuals.h"
 #include "Object/art_object_template_formals_manager.h"
-#include "Object/art_object_unroll_context.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.tcc"

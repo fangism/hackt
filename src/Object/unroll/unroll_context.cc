@@ -1,15 +1,17 @@
 /**
-	\file "Object/art_object_unroll_context.cc"
-	$Id: art_object_unroll_context.cc,v 1.4.2.3 2005/07/22 04:54:30 fang Exp $
+	\file "Object/unroll/unroll_context.cc"
+	This file originated from "Object/art_object_unroll_context.cc"
+		in a previous life.  
+	$Id: unroll_context.cc,v 1.1.2.1 2005/07/22 21:34:32 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
-#define	__OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
+#ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
+#define	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include "Object/art_object_unroll_context.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/expr/const_param.h"
 #include "Object/def/definition_base.h"
 #include "Object/art_object_scopespace.h"
@@ -204,5 +206,5 @@ unroll_context::chain_context(const this_type& c) {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_UNROLL_CONTEXT_CC__
+#endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 

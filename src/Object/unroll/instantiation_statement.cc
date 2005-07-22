@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_inst_stmt.cc"
+	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
- 	$Id: art_object_inst_stmt.cc,v 1.22.2.3 2005/07/22 04:54:27 fang Exp $
+	This file was moved from "Object/art_object_inst_stmt.cc".
+ 	$Id: instantiation_statement.cc,v 1.1.2.1 2005/07/22 21:34:28 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_CC__
-#define	__OBJECT_ART_OBJECT_INST_STMT_CC__
+#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
+#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
 
 // for debugging only, before inclusion of any header files
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -25,21 +26,21 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
-#include "Object/art_object_inst_stmt.h"
+#include "Object/unroll/instantiation_statement.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_unroll_context.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/value_collection.h"
 
-#include "Object/art_object_inst_stmt_param.h"
-#include "Object/art_object_inst_stmt_data.h"
-#include "Object/art_object_inst_stmt_chan.h"
-#include "Object/art_object_inst_stmt_proc.h"
+#include "Object/unroll/param_instantiation_statement.h"
+#include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/channel_instantiation_statement.h"
+#include "Object/unroll/process_instantiation_statement.h"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -57,8 +58,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 	#define	STACKTRACE_PERSISTENT(x)
 #endif
 
-#include "Object/art_object_inst_stmt.tcc"
-#include "Object/art_object_inst_stmt_param.tcc"
+#include "Object/unroll/instantiation_statement.tcc"
+#include "Object/unroll/param_instantiation_statement.tcc"
 
 //=============================================================================
 // local specializations
@@ -327,5 +328,5 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_CC__
+#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
 

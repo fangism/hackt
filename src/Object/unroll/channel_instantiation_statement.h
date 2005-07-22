@@ -1,19 +1,19 @@
 /**
-	\file "Object/art_object_inst_stmt_chan.h"
+	\file "Object/unroll/channel_instantiation_statement.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_chan.h,v 1.5.2.2 2005/07/22 00:24:53 fang Exp $
+	This file came from "Object/art_object_inst_stmt_chan.h"
+		in a previous life.  
+	$Id: channel_instantiation_statement.h,v 1.1.2.1 2005/07/22 21:34:27 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
-#define	__OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
+#ifndef	__OBJECT_UNROLL_CHANNEL_INSTANTIATION_STATEMENT_CHAN_H__
+#define	__OBJECT_UNROLL_CHANNEL_INSTANTIATION_STATEMENT_CHAN_H__
 
-#include <iostream>
 #include "Object/traits/chan_traits.h"
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/inst/channel_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
-#include "util/persistent_object_manager.h"
-#include "Object/art_object_inst_stmt_type_ref_default.h"
+#include "Object/unroll/instantiation_statement_type_ref_default.h"
 
 namespace ART {
 namespace entity {
@@ -25,5 +25,5 @@ class const_param_expr_list;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_CHAN_H__
+#endif	// __OBJECT_UNROLL_CHANNEL_INSTANTIATION_STATEMENT_CHAN_H__
 

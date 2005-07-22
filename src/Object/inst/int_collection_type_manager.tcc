@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.2.2.1 2005/07/21 19:48:23 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.2.2.2 2005/07/22 21:34:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -12,8 +12,8 @@
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/traits/int_traits.h"
 #include "Object/type/data_type_reference.h"
-#include "Object/art_object_inst_stmt.h"
-#include "Object/art_object_inst_stmt_data.h"
+#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/expr/pint_const.h"
 #include "util/persistent_object_manager.h"
 

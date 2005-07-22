@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_assign.cc"
+	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_assign.cc,v 1.26.2.1 2005/07/22 04:54:23 fang Exp $
+	This file was moved from "Object/art_object_assign.cc".
+ 	$Id: expression_assignment.cc,v 1.1.2.1 2005/07/22 21:34:27 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_ASSIGN_CC__
-#define	__OBJECT_ART_OBJECT_ASSIGN_CC__
+#ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
+#define	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	DEBUG_LIST_VECTOR_POOL		0
@@ -13,7 +14,8 @@
 #include <iostream>
 #include <numeric>
 
-#include "Object/art_object_assign.h"
+#include "Object/unroll/param_expression_assignment.h"
+#include "Object/unroll/expression_assignment.tcc"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/const_index.h"
@@ -24,7 +26,6 @@
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/art_object_type_hash.h"
-#include "Object/art_object_assign.tcc"
 
 //=============================================================================
 namespace util {
@@ -126,5 +127,5 @@ template class expression_assignment<pint_tag>;
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_ASSIGN_CC__
+#endif	// __OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
 

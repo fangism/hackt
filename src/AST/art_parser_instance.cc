@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.29.2.5 2005/07/22 04:54:21 fang Exp $
+	$Id: art_parser_instance.cc,v 1.29.2.6 2005/07/22 21:34:08 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -32,8 +32,9 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/art_object_assign.h"
-#include "Object/art_object_connect.h"
+#include "Object/unroll/expression_assignment.h"
+#include "Object/unroll/alias_connection.h"
+#include "Object/unroll/port_connection.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"

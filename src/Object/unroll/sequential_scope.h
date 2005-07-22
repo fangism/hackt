@@ -1,17 +1,21 @@
 /**
-	\file "Object/art_object_instance_management_base.h"
+	\file "Object/unroll/sequential_scope.h"
 	Base class for any sequential instantiation or manupulation.  
-	$Id: art_object_instance_management_base.h,v 1.9 2005/07/20 21:00:32 fang Exp $
+	This file came from "Object/art_object_instance_management_base.h"
+		in prehistoric revisions.  
+	$Id: sequential_scope.h,v 1.1.2.1 2005/07/22 21:34:31 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
-#define	__OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#ifndef	__OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
+#define	__OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
 
 #include <iosfwd>
-#include "util/STL/list.h"
-#include "util/persistent.h"
-#include "util/memory/excl_ptr.h"
+#include <list>
+#include "util/persistent_fwd.h"
+#include "util/memory/excl_ptr.h"	// contains sticky_ptr
 #include "util/boolean_types.h"
+#include "Object/unroll/instance_management_base.h"
+	// for prototype macros
 
 namespace ART {
 namespace parser {
@@ -19,7 +23,7 @@ class context;
 }
 
 namespace entity {
-USING_LIST
+using std::list;
 using std::istream;
 using std::ostream;
 using util::persistent;
@@ -29,60 +33,7 @@ using util::memory::sticky_ptr;
 using util::good_bool;
 using parser::context;
 class unroll_context;
-
-//=============================================================================
-/**
-	Abstract base class for sequential instantiation management objects, 
-	including instantiations, parameters, assignments, connections.  
- */
-class instance_management_base : virtual public persistent {
-protected:
-	// none
-public:
-	/**
-		Helper functor for adding a dereference before dumping, 
-		since the majority of objects are pointer-classed.
-		Consider using this in object as well.  
-	 */
-	class dumper {
-	private:
-		ostream& os;
-	public:
-		explicit
-		dumper(ostream& o);
-
-		template <template <class> class P>
-		ostream&
-		operator () (const P<const instance_management_base>& i) const;
-	};      // end class dumper
-
-public:
-virtual ostream&
-	dump(ostream& o) const = 0;
-
-#define	UNROLL_META_EVALUATE_PROTO					\
-	good_bool							\
-	unroll_meta_evaluate(unroll_context& ) const
-
-#define	UNROLL_META_INSTANTIATE_PROTO					\
-	good_bool							\
-	unroll_meta_instantiate(unroll_context& ) const
-
-#define	UNROLL_META_CONNECT_PROTO					\
-	good_bool							\
-	unroll_meta_connect(unroll_context& ) const
-
-	// need pure virtual unrolling methods
-	// argument should contain some stack of expression values
-	// possible single-pass unroll may be phased out...
-virtual good_bool
-	unroll(unroll_context& ) const = 0;
-
-virtual	UNROLL_META_EVALUATE_PROTO;
-virtual	UNROLL_META_INSTANTIATE_PROTO;
-virtual	UNROLL_META_CONNECT_PROTO;
-
-};	// end class instance_management_base
+class instance_management_base;
 
 //=============================================================================
 /**
@@ -90,7 +41,7 @@ virtual	UNROLL_META_CONNECT_PROTO;
 	instance management actions.
  */
 class sequential_scope {
-// allow context to reference instance_management_list directly
+// allow parser::context to reference instance_management_list directly
 friend class context;
 public:
 	/**
@@ -154,5 +105,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INSTANCE_MANAGEMENT_BASE_H__
+#endif	// __OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
 

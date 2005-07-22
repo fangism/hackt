@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_connect.tcc"
+	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.tcc,v 1.9.2.1 2005/07/22 04:54:24 fang Exp $
+	This file was moved from "Object/art_object_connect.tcc".
+ 	$Id: alias_connection.tcc,v 1.1.2.1 2005/07/22 21:34:26 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CONNECT_TCC__
-#define	__OBJECT_ART_OBJECT_CONNECT_TCC__
+#ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
+#define	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
 
 // compilation switches for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -15,11 +16,10 @@
 #endif
 
 #include <iostream>
-#include <vector>
 #include <functional>
 #include <algorithm>
 
-#include "Object/art_object_connect.h"
+#include "Object/unroll/alias_connection.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 
 #include "util/persistent_object_manager.h"
@@ -365,5 +365,5 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_CONNECT_TCC__
+#endif	// __OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
 

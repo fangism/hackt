@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_connect.cc"
+	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
- 	$Id: art_object_connect.cc,v 1.25.2.2 2005/07/22 04:54:24 fang Exp $
+	This file was moved from "Object/art_object_connect.cc".
+ 	$Id: meta_instance_reference_connection.cc,v 1.1.2.1 2005/07/22 21:34:30 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CONNECT_CC__
-#define	__OBJECT_ART_OBJECT_CONNECT_CC__
+#ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
+#define	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -15,8 +16,9 @@
 #include <iostream>
 #include <vector>
 
-#include "Object/art_object_connect.h"
-#include "Object/art_object_connect.tcc"
+#include "Object/unroll/alias_connection.tcc"
+#include "Object/unroll/data_alias_connection_base.h"
+#include "Object/unroll/port_connection.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/inst/alias_empty.h"
@@ -293,5 +295,5 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_CONNECT_CC__
+#endif	// __OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 

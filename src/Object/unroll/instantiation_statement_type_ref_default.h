@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_inst_stmt_type_ref_default.h"
+	\file "Object/unroll/instantiation_statement_type_ref_default.h"
 	Contains definition of nested, specialized class_traits types.  
-	$Id: art_object_inst_stmt_type_ref_default.h,v 1.2.2.1 2005/07/21 19:48:15 fang Exp $
+	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
+		in a previous life.  
+	$Id: instantiation_statement_type_ref_default.h,v 1.1.2.1 2005/07/22 21:34:29 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
-#define	__OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
+#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
+#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 
 #include <iostream>
 #include "Object/traits/class_traits.h"
@@ -184,5 +186,5 @@ protected:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INST_STMT_TYPE_REF_DEFAULT_H__
+#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 

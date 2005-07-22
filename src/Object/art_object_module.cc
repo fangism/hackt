@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.23 2005/07/20 21:00:33 fang Exp $
+ 	$Id: art_object_module.cc,v 1.23.2.1 2005/07/22 21:34:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
@@ -15,7 +15,7 @@
 #include <iostream>
 #include "Object/art_object_module.h"
 #include "Object/art_object_namespace.h"
-#include "Object/art_object_unroll_context.h"
+#include "Object/unroll/unroll_context.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/art_object_type_hash.h"
 #include "util/stacktrace.h"

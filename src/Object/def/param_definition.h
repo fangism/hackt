@@ -2,7 +2,7 @@
 	\file "Object/def/param_definition.h"
 	Definition-related ART object classes.  
 	This file used to be "Object/art_object_definition.h".
-	$Id: param_definition.h,v 1.1.2.1 2005/07/21 05:35:13 fang Exp $
+	$Id: param_definition.h,v 1.1.2.2 2005/07/22 21:34:16 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PARAM_DEFINITION_H__
@@ -10,7 +10,6 @@
 
 #include "Object/def/definition_base.h"
 #include "Object/art_object_namespace.h"
-#include "Object/art_object_instance_management_base.h"
 
 namespace ART {
 //=============================================================================

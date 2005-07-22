@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: art_object_module.h,v 1.19 2005/07/20 21:00:33 fang Exp $
+	$Id: art_object_module.h,v 1.19.2.1 2005/07/22 21:34:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -9,7 +9,7 @@
 
 #include <string>
 #include "Object/art_object_util_types.h"
-#include "Object/art_object_instance_management_base.h"
+#include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
 
 namespace ART {

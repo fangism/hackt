@@ -2,6 +2,16 @@
 
 2005-07-22	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-49-maintainence-07:
+	  Pushed Object/ (instantiation statement, instance_management, 
+		assignment, connection, unroll_context) all into the
+		Object/unroll subdirectory, basically everything that
+		has to do with sequentially played statements.  
+	  Added bunch of README files in subdirs.  
+	  Removed a few obsolete headers and source units.  
+	  Minor Makefile.am enhancements.  
+
+
 	* ARTXX-00-01-04-main-00-49-maintainence-06:
 	  Pushed Object/art_object_inst_ref* and _value_reference*
 		into Object/ref subdirectory, and also split up 

@@ -2,7 +2,7 @@
 	\file "Object/def/typedef_base.h"
 	Definition-related ART object classes.  
 	This file originated from "Object/art_object_definition.h",  
-	$Id: typedef_base.h,v 1.1.2.1 2005/07/21 05:35:15 fang Exp $
+	$Id: typedef_base.h,v 1.1.2.2 2005/07/22 21:34:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_TYPEDEF_BASE_H__
@@ -10,8 +10,7 @@
 
 #include "Object/def/definition_base.h"
 #include "Object/art_object_scopespace.h"
-#include "Object/art_object_instance_management_base.h"
-
+#include "Object/unroll/sequential_scope.h"
 
 namespace ART {
 //=============================================================================

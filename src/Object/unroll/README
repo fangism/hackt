@@ -1,0 +1,7 @@
+"src/Object/unroll/README"
+
+This class is for classes that pertain to sequential instance management, 
+i.e. records that are played sequentially.  This includes instantiation
+statements, expression assignments, alias- and port-connections.  
+
+

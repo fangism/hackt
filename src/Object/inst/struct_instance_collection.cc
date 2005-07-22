@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.1.2.2 2005/07/22 04:54:33 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.1.2.3 2005/07/22 21:34:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -20,7 +20,6 @@
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/struct_expr.h"
-#include "Object/art_object_connect.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/art_object_type_hash.h"

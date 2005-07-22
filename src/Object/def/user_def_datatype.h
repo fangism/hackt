@@ -2,14 +2,14 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.1.2.1 2005/07/21 05:35:16 fang Exp $
+	$Id: user_def_datatype.h,v 1.1.2.2 2005/07/22 21:34:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
 #define	__OBJECT_DEF_USER_DEF_DATATYPE_H__
 
 #include "Object/def/datatype_definition_base.h"
-#include "Object/art_object_instance_management_base.h"
+#include "Object/unroll/sequential_scope.h"
 #include "Object/art_object_scopespace.h"
 #include "Object/art_object_port_formals_manager.h"
 #include "Object/art_object_CHP.h"
