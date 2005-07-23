@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.2.2.1 2005/07/22 04:54:32 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.2.2.2 2005/07/23 01:05:54 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -22,13 +22,13 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/art_object_extern_templates.h"
+#include "Object/common/extern_templates.h"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/bool_expr.h"
 

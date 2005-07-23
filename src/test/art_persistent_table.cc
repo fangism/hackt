@@ -1,11 +1,12 @@
 /**
 	\file "art_persistent_table.cc"
 	Just dumps the registered persistent type table.  
+	$Id: art_persistent_table.cc,v 1.4.10.1 2005/07/23 01:06:02 fang Exp $
  */
 
 #include <iostream>
 #include "util/persistent_object_manager.h"
-#include "Object/art_object_module.h"
+#include "Object/module.h"
 
 using std::cerr;
 

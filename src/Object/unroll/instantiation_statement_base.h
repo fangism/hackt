@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.1.2.1 2005/07/22 21:34:29 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.1.2.2 2005/07/23 01:06:02 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -11,7 +11,7 @@
 
 #include "util/string_fwd.h"
 #include "Object/unroll/instance_management_base.h"
-#include "Object/art_object_util_types.h"
+#include "Object/common/util_types.h"
 	// for index_collection_item_ptr_type
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"

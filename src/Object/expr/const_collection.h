@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_const_collection.h"
+	\file "Object/expr/const_collection.h"
 	Classes related to constant expressions, symbolic and parameters.  
-	$Id: art_object_const_collection.h,v 1.7 2005/07/20 20:59:57 fang Exp $
+	This file was "Object/expr/const_collection.h"
+		in a previous life.  
+	$Id: const_collection.h,v 1.1.2.1 2005/07/23 01:05:52 fang Exp $
  */
 
-#ifndef __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
-#define __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
+#ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
+#define __OBJECT_EXPR_CONST_COLLECTION_H__
 
 #include <iosfwd>
 #include "Object/expr/types.h"
@@ -171,5 +173,5 @@ public:
 }	// end namespace ART
 }	// end namespace entity
 
-#endif	// __OBJECT_ART_OBJECT_CONST_COLLECTION_H__
+#endif	// __OBJECT_EXPR_CONST_COLLECTION_H__
 

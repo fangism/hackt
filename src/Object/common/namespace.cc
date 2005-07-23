@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_namespace.cc"
+	\file "Object/common/namespace.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_namespace.cc,v 1.29.2.4 2005/07/22 21:34:14 fang Exp $
+	This file was "Object/common/namespace.cc"
+		in a previous lifetime.  
+ 	$Id: namespace.cc,v 1.1.2.1 2005/07/23 01:05:45 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_CC__
-#define	__OBJECT_ART_OBJECT_NAMESPACE_CC__
+#ifndef	__OBJECT_COMMON_NAMESPACE_CC__
+#define	__OBJECT_COMMON_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -39,7 +41,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
 
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 #include "Object/def/typedef_base.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
@@ -47,7 +49,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -1600,5 +1602,5 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_NAMESPACE_CC__
+#endif	// __OBJECT_COMMON_NAMESPACE_CC__
 

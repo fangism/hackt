@@ -1,14 +1,16 @@
 /**
-	\file "Object/art_object_namespace.tcc"
+	\file "Object/common/namespace.tcc"
 	Template method definitions for class name_space.  
-	$Id: art_object_namespace.tcc,v 1.1 2005/05/24 02:38:13 fang Exp $
+	This file was "Object/common/namespace.tcc"
+		in a previous life.  
+	$Id: namespace.tcc,v 1.1.2.1 2005/07/23 01:05:45 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_TCC__
-#define	__OBJECT_ART_OBJECT_NAMESPACE_TCC__
+#ifndef	__OBJECT_COMMON_NAMESPACE_TCC__
+#define	__OBJECT_COMMON_NAMESPACE_TCC__
 
 #include "util/hash_specializations.h"	// needs to be first
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 
 namespace ART {
 namespace entity {
@@ -47,5 +49,5 @@ name_space::collect(L& l) const {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_NAMESPACE_TCC__
+#endif	// __OBJECT_COMMON_NAMESPACE_TCC__
 

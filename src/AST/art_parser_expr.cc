@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.25.2.4 2005/07/22 04:54:20 fang Exp $
+	$Id: art_parser_expr.cc,v 1.25.2.5 2005/07/23 01:05:35 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -46,8 +46,8 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
-#include "Object/art_object_PRS.h"
-#include "Object/art_object_template_actuals.h"
+#include "Object/lang/PRS.h"
+#include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 

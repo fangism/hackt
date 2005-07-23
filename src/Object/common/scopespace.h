@@ -1,14 +1,16 @@
 /**
-	\file "Object/art_object_scopespace.h"
+	\file "Object/common/scopespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_scopespace.h,v 1.1.2.2 2005/07/22 00:25:04 fang Exp $
+	This file came from "Object/common/scopespace.h"
+		in its previous short-lived history.  
+	$Id: scopespace.h,v 1.1.2.1 2005/07/23 01:05:46 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_SCOPESPACE_H__
-#define	__OBJECT_ART_OBJECT_SCOPESPACE_H__
+#ifndef	__OBJECT_COMMON_SCOPESPACE_H__
+#define	__OBJECT_COMMON_SCOPESPACE_H__
 
 #include <list>
-#include "Object/art_object_util_types.h"
+#include "Object/common/util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"
 #include "util/qmap.h"			// need complete definition
@@ -283,5 +285,5 @@ virtual	void
 }	// end namespace ART
 
 //=============================================================================
-#endif	// __OBJECT_ART_OBJECT_SCOPESPACE_H__
+#endif	// __OBJECT_COMMON_SCOPESPACE_H__
 

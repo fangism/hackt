@@ -3,7 +3,7 @@
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.tcc" in a previous life.
- 	$Id: parse_context.tcc,v 1.1.2.1 2005/07/21 20:44:13 fang Exp $
+ 	$Id: parse_context.tcc,v 1.1.2.2 2005/07/23 01:05:37 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_TCC__
@@ -16,7 +16,7 @@
 #include "AST/parse_context.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_identifier.h"
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 // #include "Object/art_object_instance_management_base.h"
 
 //=============================================================================

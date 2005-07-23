@@ -2,14 +2,14 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.1.2.1 2005/07/22 04:54:37 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.1.2.2 2005/07/23 01:06:00 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 #define __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 
 #include "Object/expr/const_index_list.h"	// used in assigner, below
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/traits/class_traits_fwd.h"
 

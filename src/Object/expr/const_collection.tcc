@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_const_collection.cc"
+	\file "Object/expr/const_collection.cc"
 	Class implementation of collections of expression constants.  
- 	$Id: art_object_const_collection.tcc,v 1.6 2005/07/20 20:59:57 fang Exp $
+	This file was moved from "Object/expr/const_collection.cc"
+ 	$Id: const_collection.tcc,v 1.1.2.1 2005/07/23 01:05:52 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
-#define	__OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
+#ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
+#define	__OBJECT_EXPR_CONST_COLLECTION_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 
@@ -33,9 +34,9 @@
 #include <exception>
 #include <algorithm>
 
-#include "Object/art_object_const_collection.h"
+#include "Object/expr/const_collection.h"
 #include "Object/traits/class_traits.h"
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
@@ -458,5 +459,5 @@ CONST_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 }	// end namepace entity
 }	// end namepace ART
 
-#endif	// __OBJECT_ART_OBJECT_CONST_COLLECTION_TCC__
+#endif	// __OBJECT_EXPR_CONST_COLLECTION_TCC__
 

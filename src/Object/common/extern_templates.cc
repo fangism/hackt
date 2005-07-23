@@ -1,12 +1,14 @@
 /**
-	\file "Object/art_object_extern_templates.cc"
-	Repository of explici template instantiations needed 
+	\file "Object/common/extern_templates.cc"
+	Repository of explicit template instantiations needed 
 	by the object-related library.  
-	$Id: art_object_extern_templates.cc,v 1.6 2005/07/20 21:00:24 fang Exp $
+	This file was "Object/common/extern_templates.cc"
+		in its previous life.  
+	$Id: extern_templates.cc,v 1.1.2.1 2005/07/23 01:05:44 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
-#define	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
+#ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#define	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include "util/STL/list_fwd.h"
 #include "Object/expr/types.h"
@@ -40,5 +42,5 @@ template class packed_array_generic<pint_value_type, pbool_value_type>;
 
 }	// end namespace util
 
-#endif	// __OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
+#endif	// __OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 

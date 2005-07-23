@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.1.2.3 2005/07/22 21:34:18 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.1.2.4 2005/07/23 01:05:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -22,7 +22,7 @@
 #include "Object/expr/enum_expr.h"
 #include "Object/def/enum_datatype_def.h"
 #include "Object/type/data_type_reference.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"

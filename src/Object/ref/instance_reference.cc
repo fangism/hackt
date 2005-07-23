@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.1.2.2 2005/07/22 21:34:20 fang Exp $
+ 	$Id: instance_reference.cc,v 1.1.2.3 2005/07/23 01:05:59 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -17,7 +17,7 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/param_value_collection.h"
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_meta_instance_reference.tcc"
@@ -30,7 +30,7 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/alias_connection.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_collection.h"

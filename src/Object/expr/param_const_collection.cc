@@ -3,7 +3,7 @@
 	Class instantiations for const collections.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: param_const_collection.cc,v 1.2 2005/07/20 21:00:47 fang Exp $
+ 	$Id: param_const_collection.cc,v 1.2.2.1 2005/07/23 01:05:55 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
@@ -21,8 +21,8 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/art_object_extern_templates.h"
-#include "Object/art_object_const_collection.tcc"
+#include "Object/common/extern_templates.h"
+#include "Object/expr/const_collection.tcc"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/expr/pint_const.h"
@@ -31,7 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -62,7 +62,7 @@ SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const_collection,
 // this example shows how we can register various bound constructor
 // functors with the persistent_object_manager type registry.  
 using ART::entity::const_collection;
-// macros defined in "art_object_const_collection.tcc"
+// macros defined in "expr/const_collection.tcc"
 SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
 	ART::entity::pint_tag, CONST_PINT_COLLECTION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(

@@ -1,7 +1,7 @@
 /**
-	\file "Object/art_object_PRS_base.h"
+	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: art_object_PRS_base.h,v 1.5 2005/06/19 01:58:34 fang Exp $
+	$Id: PRS_base.h,v 1.1.2.1 2005/07/23 01:05:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_BASE_H__

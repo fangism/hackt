@@ -2,14 +2,14 @@
 	\file "prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.1.16.1 2005/07/21 05:34:54 fang Exp $
+	$Id: prsobjdemo.cc,v 1.1.16.2 2005/07/23 01:05:27 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 
 #include "main/main_funcs.h"
-#include "Object/art_object_module.tcc"	// for template method definitions
+#include "Object/module.tcc"	// for template method definitions
 #include "Object/def/process_definition.h"
 
 // using declarations

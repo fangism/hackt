@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_index.h"
+	\file "Object/common/multikey_index.h"
 	Typedef for index types.  
-	$Id: art_object_index.h,v 1.7 2005/07/20 21:00:24 fang Exp $
+	This file was moved from "Object/common/multikey_index.h".
+	$Id: multikey_index.h,v 1.1.2.1 2005/07/23 01:05:45 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_INDEX_H__
-#define	__OBJECT_ART_OBJECT_INDEX_H__
+#ifndef	__OBJECT_COMMON_MULTIKEY_INDEX_H__
+#define	__OBJECT_COMMON_MULTIKEY_INDEX_H__
 
 #include "util/multikey_fwd.h"
 #include "Object/expr/types.h"	// for pint/pbool_value_type
@@ -37,5 +38,5 @@ typedef	util::multikey_generator_generic<pint_value_type>
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_INDEX_H__
+#endif	// __OBJECT_COMMON_MULTIKEY_INDEX_H__
 

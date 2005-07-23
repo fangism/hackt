@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.2.2.1 2005/07/22 00:25:07 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.2.2.2 2005/07/23 01:05:53 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -24,7 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/inst/param_value_collection.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 #include "util/reserve.h"
 #include "util/stacktrace.h"

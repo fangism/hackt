@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.1.2.2 2005/07/22 00:25:07 fang Exp $
+	$Id: definition_base.h,v 1.1.2.3 2005/07/23 01:05:47 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -10,15 +10,15 @@
 
 #include "util/string_fwd.h"
 #include "util/macros.h"
-#include "Object/art_object_base.h"
-#include "Object/art_object_util_types.h"
+#include "Object/common/object_base.h"
+#include "Object/common/util_types.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
-#include "Object/art_object_template_formals_manager.h"
+#include "Object/def/template_formals_manager.h"
 
 namespace ART {
 // forward declarations from outside namespaces

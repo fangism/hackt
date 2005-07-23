@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_port_formals_manager.cc"
+	\file "Object/def/port_formals_manager.cc"
 	Method definitions for port_formals_manager.
- 	$Id: art_object_port_formals_manager.cc,v 1.3.2.2 2005/07/22 04:54:30 fang Exp $
+	This file was "Object/def/port_formals_manager.cc"
+		in a former life.  
+ 	$Id: port_formals_manager.cc,v 1.1.2.1 2005/07/23 01:05:49 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
-#define	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
+#ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
+#define	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
 
 #define ENABLE_STACKTRACE		0
 
@@ -21,8 +23,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/hash_qmap.tcc"
 #include "AST/art_parser_token_string.h"	// for token_identifier
 
-#include "Object/art_object_port_formals_manager.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/def/port_formals_manager.h"
+#include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/subinstance_manager.h"
 #include "Object/ref/meta_instance_reference_base.h"
@@ -303,5 +305,5 @@ port_formals_manager::load_object_base(
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_CC__
+#endif	// __OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
 

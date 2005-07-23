@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.1.2.1 2005/07/22 21:34:28 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.1.2.2 2005/07/23 01:06:01 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -23,7 +23,7 @@
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 
 #include "util/wtf.h"
 #include "util/what.h"

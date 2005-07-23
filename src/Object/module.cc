@@ -1,11 +1,12 @@
 /**
-	\file "Object/art_object_module.cc"
+	\file "Object/module.cc"
 	Method definitions for module class.  
- 	$Id: art_object_module.cc,v 1.23.2.1 2005/07/22 21:34:14 fang Exp $
+	This file was renamed from "Object/art_object_module.cc".
+ 	$Id: module.cc,v 1.1.2.1 2005/07/23 01:05:43 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_MODULE_CC__
-#define	__OBJECT_ART_OBJECT_MODULE_CC__
+#ifndef	__OBJECT_MODULE_CC__
+#define	__OBJECT_MODULE_CC__
 
 // code debugging switches
 #define	ENABLE_STACKTRACE		0
@@ -13,11 +14,11 @@
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
 #include <iostream>
-#include "Object/art_object_module.h"
-#include "Object/art_object_namespace.h"
+#include "Object/module.h"
+#include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 #include "util/persistent_object_manager.tcc"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "util/stacktrace.h"
 
 // conditional defines, after including "stacktrace.h"
@@ -207,5 +208,5 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
 
-#endif	// __OBJECT_ART_OBJECT_MODULE_CC__
+#endif	// __OBJECT_MODULE_CC__
 

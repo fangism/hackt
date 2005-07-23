@@ -2,14 +2,14 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.1.2.1 2005/07/22 00:25:10 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.1.2.2 2005/07/23 01:05:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/physical_instance_collection.h"
-// #include "Object/art_object_index.h"
+// #include "Object/common/multikey_index.h"
 
 namespace ART {
 namespace entity {

@@ -1,17 +1,17 @@
 /**
-	\file "Object/art_object_util_types.h"
+	\file "Object/common/util_types.h"
 	Collective typedefs for utility types.  
-	$Id: art_object_util_types.h,v 1.2 2005/06/19 01:58:49 fang Exp $
+	This file was "Object/common/util_types.h" in a former life.  
+	$Id: util_types.h,v 1.1.2.1 2005/07/23 01:05:46 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
-#define	__OBJECT_ART_OBJECT_UTIL_TYPES_H__
+#ifndef	__OBJECT_COMMON_UTIL_TYPES_H__
+#define	__OBJECT_COMMON_UTIL_TYPES_H__
 
 #include "util/STL/vector_fwd.h"
 #include "util/STL/deque_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
-
 #include <deque>		// to complete type for deque
 
 namespace ART {
@@ -69,5 +69,5 @@ namespace entity {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_UTIL_TYPES_H__
+#endif	// __OBJECT_COMMON_UTIL_TYPES_H__
 

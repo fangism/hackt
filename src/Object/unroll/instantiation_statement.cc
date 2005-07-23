@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.1.2.1 2005/07/22 21:34:28 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.1.2.2 2005/07/23 01:06:02 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -31,7 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
 #include "Object/inst/instance_collection.h"

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.67.2.7 2005/07/22 21:34:06 fang Exp $
+#	$Id: Makefile.am,v 1.67.2.8 2005/07/23 01:05:26 fang Exp $
 
 # standard definitions and macro initializers
 include $(top_srcdir)/Make.stddef
@@ -151,7 +151,9 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 
 # all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
-	Object/art_object_base.cc \
+	Object/common/object_base.cc \
+	Object/common/namespace.cc \
+	Object/common/extern_templates.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
@@ -173,14 +175,12 @@ OBJECT_CC_FILES = \
 	Object/unroll/loop_scope.cc \
 	Object/unroll/meta_instance_reference_connection.cc \
 	Object/unroll/unroll_context.cc \
-	Object/art_object_module.cc \
-	Object/art_object_namespace.cc \
-	Object/art_object_template_actuals.cc \
-	Object/art_object_template_formals_manager.cc \
-	Object/art_object_port_formals_manager.cc \
-	Object/art_object_extern_templates.cc \
-	Object/art_object_PRS.cc \
-	Object/art_object_CHP.cc
+	Object/module.cc \
+	Object/type/template_actuals.cc \
+	Object/def/template_formals_manager.cc \
+	Object/def/port_formals_manager.cc \
+	Object/lang/PRS.cc \
+	Object/lang/CHP.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -202,7 +202,7 @@ OBJECT_CC_NO_H_FILES = \
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
-	Object/art_object_const_collection.tcc \
+	Object/expr/const_collection.tcc \
 	Object/inst/general_collection_type_manager.tcc \
 	Object/inst/null_collection_type_manager.tcc \
 	Object/inst/int_collection_type_manager.tcc \
@@ -221,12 +221,16 @@ OBJECT_TCC_FILES = \
 	Object/unroll/instantiation_statement.tcc \
 	Object/unroll/param_instantiation_statement.tcc \
 	Object/unroll/unroll_context.tcc \
-	Object/art_object_module.tcc \
-	Object/art_object_namespace.tcc \
-	Object/art_object_CHP.tcc
+	Object/module.tcc \
+	Object/common/namespace.tcc \
+	Object/lang/CHP.tcc
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/art_object_fwd.h \
+	Object/persistent_type_hash.h \
+	Object/common/multikey_index.h \
+	Object/common/util_types.h \
+	Object/common/scopespace.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags.h \
 	Object/traits/chan_traits.h \
@@ -239,7 +243,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
-	Object/art_object_const_collection.h \
 	Object/def/built_in_datatype_def.h \
 	Object/def/channel_definition_alias.h \
 	Object/def/channel_definition_base.h \
@@ -257,6 +260,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
 	Object/expr/bool_negation_expr.h \
+	Object/expr/const_collection.h \
 	Object/expr/const_index.h \
 	Object/expr/const_index_list.h \
 	Object/expr/const_param.h \
@@ -295,7 +299,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/pint_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
-	Object/art_object_index.h \
 	Object/inst/substructure_alias_fwd.h \
 	Object/inst/general_collection_type_manager.h \
 	Object/inst/null_collection_type_manager.h \
@@ -324,7 +327,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/ref/simple_param_meta_value_reference.h \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h \
-	Object/art_object_scopespace.h \
 	Object/type/builtin_channel_type_reference.h \
 	Object/type/channel_type_reference.h \
 	Object/type/channel_type_reference_base.h \
@@ -347,10 +349,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/port_connection.h \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
-	Object/art_object_type_hash.h \
-	Object/art_object_util_types.h \
-	Object/art_object_PRS_base.h \
-	Object/art_object_CHP_base.h
+	Object/lang/PRS_base.h \
+	Object/lang/CHP_base.h
 
 # template definition header files
 UTIL_TCC_FILES = \
@@ -757,9 +757,11 @@ EXTRA_DIST += local.cvsignore \
 	scripts/filter_namespaces.sed \
 	scripts/automake_include.awk \
 	scripts/promote_header_deps.awk \
+	Object/common/README \
 	Object/def/README \
 	Object/expr/README \
 	Object/inst/README \
+	Object/lang/README \
 	Object/traits/README \
 	Object/type/README \
 	Object/ref/README \
@@ -814,8 +816,8 @@ CLEANLEXER = \
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
-OBJECT_DIRS = Object Object/expr Object/def Object/inst Object/ref \
-	Object/traits Object/type Object/unroll
+OBJECT_DIRS = Object Object/common Object/expr Object/def Object/inst \
+	Object/lang Object/ref Object/traits Object/type Object/unroll
 
 CLEANSUBDIRS = lexer parser AST $(OBJECT_DIRS) \
 	util util/numeric util/memory util/obsolete util/STL
@@ -850,7 +852,7 @@ clean-AST:
 	-$(RM) AST/*.lo
 
 clean-Object:
-	for d in $(OBJECT_SUBDIRS) ; do \
+	for d in $(OBJECT_DIRS) ; do \
 		$(RM) $$d/*.$(OBJEXT) ; \
 		$(RM) $$d/*.lo ; \
 	done
@@ -869,11 +871,15 @@ parser/.cvsignore: .cvsignore parser/local.cvsignore
 	$(CAT) .cvsignore $(srcdir)/parser/local.cvsignore > $@
 Object/.cvsignore: .cvsignore
 	$(CP) $? $@
+Object/common/.cvsignore: .cvsignore
+	$(CP) $? $@
 Object/def/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/expr/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/inst/.cvsignore: .cvsignore
+	$(CP) $? $@
+Object/lang/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/ref/.cvsignore: .cvsignore
 	$(CP) $? $@
@@ -901,8 +907,9 @@ test/.cvsignore: .cvsignore
 	$(CP) $? $@
 
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
-	Object/.cvsignore Object/def/.cvsignore Object/expr/.cvsignore \
-	Object/inst/.cvsignore Object/ref/.cvsignore \
+	Object/.cvsignore Object/common/.cvsignore \
+	Object/def/.cvsignore Object/expr/.cvsignore \
+	Object/inst/.cvsignore Object/lang/.cvsignore Object/ref/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
 	Object/unroll/.cvsignore \
 	AST/.cvsignore main/.cvsignore \

@@ -1,7 +1,7 @@
 /**
-	\file "Object/art_object_CHP.tcc"
+	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: art_object_CHP.tcc,v 1.3.2.3 2005/07/22 04:54:23 fang Exp $
+	$Id: CHP.tcc,v 1.1.2.1 2005/07/23 01:05:57 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_TCC__
@@ -10,7 +10,7 @@
 #include <iostream>
 #include <iterator>
 #include "util/memory/count_ptr.tcc"
-#include "Object/art_object_CHP.h"
+#include "Object/lang/CHP.h"
 #include "Object/inst/channel_instance_collection.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"

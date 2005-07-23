@@ -2,17 +2,17 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.1.2.2 2005/07/22 21:34:17 fang Exp $
+	$Id: user_def_chan.h,v 1.1.2.3 2005/07/23 01:05:51 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_CHAN_H__
 #define	__OBJECT_DEF_USER_DEF_CHAN_H__
 
 #include "Object/def/channel_definition_base.h"
-#include "Object/art_object_scopespace.h"
+#include "Object/common/scopespace.h"
 #include "Object/unroll/sequential_scope.h"
-#include "Object/art_object_port_formals_manager.h"
-#include "Object/art_object_CHP.h"
+#include "Object/def/port_formals_manager.h"
+#include "Object/lang/CHP.h"
 
 namespace ART {
 namespace entity {

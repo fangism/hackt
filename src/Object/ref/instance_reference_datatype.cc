@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.1.2.2 2005/07/22 21:34:22 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.1.2.3 2005/07/23 01:05:59 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -25,7 +25,7 @@
 #include "Object/expr/struct_expr.h"
 #include "Object/expr/const_range.h"
 
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/traits/class_traits.h"
 #include "Object/inst/general_collection_type_manager.h"

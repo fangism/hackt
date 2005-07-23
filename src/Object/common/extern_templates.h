@@ -1,17 +1,19 @@
 /**
-	\file "Object/art_object_extern_templates.h"
+	\file "Object/common/extern_templates.h"
 	Declarations to suppress the automatic instantiation of certain
 	template classes.  
 	Useful for common template classes that are shared all over the place, 
 	explicitly or implicitly.  
-	$Id: art_object_extern_templates.h,v 1.8 2005/07/20 21:00:24 fang Exp $
+	This file used to be "Object/common/extern_templates.h"
+		in its previous life.  
+	$Id: extern_templates.h,v 1.1.2.1 2005/07/23 01:05:44 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_H__
-#define	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_H__
+#ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_H__
+#define	__OBJECT_COMMON_EXTERN_TEMPLATES_H__
 
 // never include this in the .cc file
-#ifndef	__OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
+#ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include "Object/expr/types.h"
 #include "util/multikey_fwd.h"
@@ -76,6 +78,6 @@ class multikey_generator_generic<pint_value_type>;
 
 }	// end namespace util
 
-#endif	// __OBJECT_ART_OBJECT_EXTERN_TEMPLATES_CC__
-#endif	// __OBJECT_ART_OBJECT_EXTERN_TEMPLATES_H__
+#endif	// __OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#endif	// __OBJECT_COMMON_EXTERN_TEMPLATES_H__
 

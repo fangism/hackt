@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.18.2.2 2005/07/21 20:44:12 fang Exp $
+	$Id: art_parser_prs.cc,v 1.18.2.3 2005/07/23 01:05:37 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -23,7 +23,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/data_expr.h"
-#include "Object/art_object_PRS.h"
+#include "Object/lang/PRS.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"

@@ -1,7 +1,9 @@
 /**
-	\file "Object/art_object_template_formals_manager.cc"
+	\file "Object/def/template_formals_manager.cc"
 	Template formals manager implementation.
-	$Id: art_object_template_formals_manager.cc,v 1.5.2.2 2005/07/22 21:34:15 fang Exp $
+	This file was "Object/def/template_formals_manager.cc"
+		in a previous life.  
+	$Id: template_formals_manager.cc,v 1.1.2.1 2005/07/23 01:05:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,12 +11,12 @@
 #include <iostream>
 #include "util/hash_specializations.h"	// include as early as possible
 
-#include "Object/art_object_template_formals_manager.h"
+#include "Object/def/template_formals_manager.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
-#include "Object/art_object_template_actuals.h"
+#include "Object/type/template_actuals.h"
 #include "Object/unroll/unroll_context.h"
 
 #include "util/hash_qmap.tcc"

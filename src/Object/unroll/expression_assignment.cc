@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.1.2.1 2005/07/22 21:34:27 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.1.2.2 2005/07/23 01:06:01 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -20,12 +20,12 @@
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
-#include "Object/art_object_const_collection.h"
+#include "Object/expr/const_collection.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/int_traits.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 //=============================================================================
 namespace util {

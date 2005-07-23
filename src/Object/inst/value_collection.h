@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.1.2.1 2005/07/22 00:25:15 fang Exp $
+	$Id: value_collection.h,v 1.1.2.2 2005/07/23 01:05:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -13,7 +13,7 @@
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 

@@ -1,16 +1,16 @@
 /**
-	\file "Object/art_object_CHP.cc"
+	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: art_object_CHP.cc,v 1.4.2.3 2005/07/22 04:54:23 fang Exp $
+	$Id: CHP.cc,v 1.1.2.1 2005/07/23 01:05:57 fang Exp $
  */
 
-#include "Object/art_object_CHP.h"
+#include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/traits/chan_traits.h"

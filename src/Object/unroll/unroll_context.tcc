@@ -1,14 +1,14 @@
 /**
 	\file "Object/unroll/unroll_context.tcc"
 	Template method implementation for unroll_context class.  
-	$Id: unroll_context.tcc,v 1.1.2.1 2005/07/22 21:34:32 fang Exp $
+	$Id: unroll_context.tcc,v 1.1.2.2 2005/07/23 01:06:02 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_TCC__
 #define	__OBJECT_UNROLL_UNROLL_CONTEXT_TCC__
 
 #include "Object/unroll/unroll_context.h"
-#include "Object/art_object_template_formals_manager.h"
+#include "Object/def/template_formals_manager.h"
 
 namespace ART {
 namespace entity {

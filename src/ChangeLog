@@ -2,6 +2,20 @@
 
 2005-07-22	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-49-maintainence-08:
+	  Most remaining files in Object/ have been pushed into subdirectories:
+		CHP, PRS -> Object/lang/
+		object_base, namespace, scopespace, extern_templates, 
+			index, util_types -> Object/common/
+		const_collection -> Object/expr/
+		template_formals_manager, port_formals_manager -> Object/def
+		template_actuals_manager -> Object/type
+		art_object_module -> module
+		art_object_type_hash -> persistent_type_hash
+	  TODO: write new front-end for executable dispatch, 
+		using double-command format (like cvs).
+
+
 	* ARTXX-00-01-04-main-00-49-maintainence-07:
 	  Pushed Object/ (instantiation statement, instance_management, 
 		assignment, connection, unroll_context) all into the

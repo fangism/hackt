@@ -1,0 +1,5 @@
+"src/Object/common/README"
+
+This directory is for facilities common to all Object/ subdirectories and
+components.  (In other words, "miscellaneous but useful.")
+

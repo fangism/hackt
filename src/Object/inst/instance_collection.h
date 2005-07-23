@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.1.2.1 2005/07/22 00:25:11 fang Exp $
+	$Id: instance_collection.h,v 1.1.2.2 2005/07/23 01:05:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -13,7 +13,7 @@
 #include <set>
 
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.1.2.1 2005/07/22 21:34:32 fang Exp $
+	$Id: unroll_context.cc,v 1.1.2.2 2005/07/23 01:06:02 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -14,11 +14,11 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/const_param.h"
 #include "Object/def/definition_base.h"
-#include "Object/art_object_scopespace.h"
+#include "Object/common/scopespace.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
-#include "Object/art_object_template_actuals.h"
-#include "Object/art_object_template_formals_manager.h"
+#include "Object/type/template_actuals.h"
+#include "Object/def/template_formals_manager.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 

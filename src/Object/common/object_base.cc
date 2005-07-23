@@ -1,30 +1,20 @@
 /**
-	\file "Object/art_object_base.cc"
+	\file "Object/common/object_base.cc"
 	Method definitions for base classes for semantic objects.  
- 	$Id: art_object_base.cc,v 1.35.2.1 2005/07/21 05:34:59 fang Exp $
+	This file used to be "Object/common/object_base.cc"
+		in a previous life.  
+ 	$Id: object_base.cc,v 1.1.2.1 2005/07/23 01:05:45 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_BASE_CC__
-#define	__OBJECT_ART_OBJECT_BASE_CC__
+#ifndef	__OBJECT_COMMON_OBJECT_BASE_CC__
+#define	__OBJECT_COMMON_OBJECT_BASE_CC__
 
 #include <iostream>
-#include "Object/art_object_base.h"
+#include "Object/common/object_base.h"
 
-//=============================================================================
-
-// whether or not unimplemented objects should be written/loaded to/from file. 
-// #define	USE_UNDEFINED_OBJECTS		1
-
-//=============================================================================
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
-
-// for function compositions
-// using namespace ADS;
-
-//=============================================================================
-// general non-member function definitions
 
 //=============================================================================
 // class object method definitions
@@ -62,5 +52,5 @@ object_handle::dump(ostream& o) const {
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_BASE_CC__
+#endif	// __OBJECT_COMMON_OBJECT_BASE_CC__
 

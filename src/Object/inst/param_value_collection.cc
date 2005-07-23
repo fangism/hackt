@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.1.2.3 2005/07/22 21:34:19 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.1.2.4 2005/07/23 01:05:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -13,7 +13,7 @@
 
 #include <iostream>
 
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_instance_reference_base.h"

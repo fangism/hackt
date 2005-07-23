@@ -1,14 +1,14 @@
 /**
-	\file "Object/art_object_PRS.h"
+	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: art_object_PRS.h,v 1.4 2005/06/19 01:58:34 fang Exp $
+	$Id: PRS.h,v 1.1.2.1 2005/07/23 01:05:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_PRS_H__
 #define	__OBJECT_ART_OBJECT_PRS_H__
 
 #include "Object/art_object_fwd.h"
-#include "Object/art_object_PRS_base.h"
+#include "Object/lang/PRS_base.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 

@@ -3,14 +3,14 @@
 	Base class family for instance references in ART.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_param_meta_value_reference.h,v 1.1.2.1 2005/07/22 04:54:39 fang Exp $
+	$Id: simple_param_meta_value_reference.h,v 1.1.2.2 2005/07/23 01:06:00 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
 #define	__OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
 
 #include "Object/ref/simple_meta_instance_reference_base.h"
-#include "Object/art_object_util_types.h"
+#include "Object/common/util_types.h"
 
 namespace ART {
 namespace entity {

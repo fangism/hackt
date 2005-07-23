@@ -3,14 +3,14 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.1.2.1 2005/07/22 04:54:38 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.1.2.2 2005/07/23 01:06:00 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 #define __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 
 #include "util/boolean_types.h"
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "Object/expr/data_expr.h"
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/traits/class_traits_fwd.h"

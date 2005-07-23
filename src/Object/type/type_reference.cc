@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.1.2.3 2005/07/22 21:34:25 fang Exp $
+ 	$Id: type_reference.cc,v 1.1.2.4 2005/07/23 01:06:01 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -39,7 +39,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"

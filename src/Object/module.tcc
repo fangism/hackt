@@ -1,15 +1,14 @@
 /**
 	\file "Object/art_object_module.tcc"
 	Template method definitions for the module class.
-	$Id: art_object_module.tcc,v 1.1 2005/05/24 02:38:13 fang Exp $
+	$Id: module.tcc,v 1.1.2.1 2005/07/23 01:05:43 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_TCC__
 #define	__OBJECT_ART_OBJECT_MODULE_TCC__
 
-#include "Object/art_object_module.h"
-// #include "Object/art_object_namespace.h"
-#include "Object/art_object_namespace.tcc"
+#include "Object/module.h"
+#include "Object/common/namespace.tcc"
 
 namespace ART {
 namespace entity {

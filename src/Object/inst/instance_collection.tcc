@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.1.2.3 2005/07/22 21:34:19 fang Exp $
+	$Id: instance_collection.tcc,v 1.1.2.4 2005/07/23 01:05:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -37,7 +37,7 @@
 #include <algorithm>
 
 // experimental: suppressing automatic template instantiation
-#include "Object/art_object_extern_templates.h"
+#include "Object/common/extern_templates.h"
 
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/alias_actuals.tcc"

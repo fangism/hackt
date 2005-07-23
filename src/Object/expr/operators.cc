@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.2 2005/07/20 21:00:47 fang Exp $
+ 	$Id: operators.cc,v 1.2.2.1 2005/07/23 01:05:54 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -31,7 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/const_range.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
 #include "util/qmap.tcc"

@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_template_actuals.h"
+	\file "Object/type/template_actuals.h"
 	Class for template arguments, a.k.a. actuals.  
-	$Id: art_object_template_actuals.h,v 1.2 2005/07/20 21:00:35 fang Exp $
+	This file came from "Object/type/template_actuals.h"
+		in a previous life.  
+	$Id: template_actuals.h,v 1.1.2.1 2005/07/23 01:06:01 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_TEMPLATE_ACTUALS_H__
-#define	__OBJECT_ART_OBJECT_TEMPLATE_ACTUALS_H__
+#ifndef	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
+#define	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
 
 #include <iosfwd>
 #include "util/string_fwd.h"
@@ -125,5 +127,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_TEMPLATE_ACTUALS_H__
+#endif	// __OBJECT_TYPE_TEMPLATE_ACTUALS_H__
 

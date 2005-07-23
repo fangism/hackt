@@ -1,20 +1,21 @@
 /**
-	\file "Object/art_object_template_formals_manager.h"
+	\file "Object/def/template_formals_manager.h"
 	Template formal manager class.  
-	$Id: art_object_template_formals_manager.h,v 1.6.2.1 2005/07/22 00:25:05 fang Exp $
+	This file was "Object/def/template_formals_manager.h"
+		in a former life.  
+	$Id: template_formals_manager.h,v 1.1.2.1 2005/07/23 01:05:50 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
-#define	__OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
+#ifndef	__OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
+#define	__OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
 
 #include <iosfwd>
 #include <vector>
 
 #include "util/macros.h"
-
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"	// for persistent object interface
-#include "util/hash_qmap.h"	// need complete definition
+#include "util/hash_qmap.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -193,5 +194,5 @@ vector<ART::entity::template_formals_manager::template_formals_value_type>;
 }	// end namespace std
 #endif
 
-#endif	// __OBJECT_ART_OBJECT_TEMPLATE_FORMALS_MANAGER_H__
+#endif	// __OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
 

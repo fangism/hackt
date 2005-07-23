@@ -1,16 +1,18 @@
 /**
-	\file "Object/art_object_port_formals_manager.h"
+	\file "Object/def/port_formals_manager.h"
 	Definition port formal instance manager class.  
-	$Id: art_object_port_formals_manager.h,v 1.3 2005/07/20 21:00:34 fang Exp $
+	This file was "Object/def/port_formals_manager.h"
+		in a previous life.  
+	$Id: port_formals_manager.h,v 1.1.2.1 2005/07/23 01:05:49 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_H__
-#define	__OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_H__
+#ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
+#define	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
 
 #include <iosfwd>
 #include <vector>
 #include "util/macros.h"
-#include "Object/art_object_util_types.h"	// for checked_refs_type
+#include "Object/common/util_types.h"	// for checked_refs_type
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -112,5 +114,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_PORT_FORMALS_MANAGER_H__
+#endif	// __OBJECT_DEF_PORT_FORMALS_MANAGER_H__
 

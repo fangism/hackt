@@ -1,11 +1,11 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.1 2005/05/20 19:28:41 fang Exp $
+	$Id: main_funcs.h,v 1.1.16.1 2005/07/23 01:06:02 fang Exp $
  */
 
 #include "util/boolean_types.h"
-#include "Object/art_object_module.h"
+#include "Object/module.h"
 #include "util/memory/excl_ptr.h"
 
 namespace ART {

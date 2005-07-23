@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.1.2.3 2005/07/22 21:34:19 fang Exp $
+ 	$Id: value_collection.tcc,v 1.1.2.4 2005/07/23 01:05:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -25,11 +25,11 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Object/art_object_extern_templates.h"
+#include "Object/common/extern_templates.h"
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
 #include "Object/inst/value_collection.h"
-#include "Object/art_object_const_collection.h"
+#include "Object/expr/const_collection.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
@@ -38,7 +38,7 @@
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/def/definition_base.h"
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 
 #include "util/memory/list_vector_pool.tcc"

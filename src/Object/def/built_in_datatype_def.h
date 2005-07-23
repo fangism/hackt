@@ -2,14 +2,14 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.1.2.1 2005/07/21 05:35:10 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.1.2.2 2005/07/23 01:05:46 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
 #define	__OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
 
 #include "Object/def/datatype_definition_base.h"
-#include "Object/art_object_scopespace.h"
+#include "Object/common/scopespace.h"
 
 namespace ART {
 namespace entity {

@@ -1,15 +1,17 @@
 /**
-	\file "Object/art_object_namespace.h"
+	\file "Object/common/namespace.h"
 	Classes for scoped objects including namespaces.  
-	$Id: art_object_namespace.h,v 1.19.2.1 2005/07/21 05:35:07 fang Exp $
+	This file came from "Object/common/namespace.h"
+		in its previous life.  
+	$Id: namespace.h,v 1.1.2.1 2005/07/23 01:05:45 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_NAMESPACE_H__
-#define	__OBJECT_ART_OBJECT_NAMESPACE_H__
+#ifndef	__OBJECT_COMMON_NAMESPACE_H__
+#define	__OBJECT_COMMON_NAMESPACE_H__
 
-#include "Object/art_object_scopespace.h"
-#include "Object/art_object_base.h"
-#include "Object/art_object_util_types.h"
+#include "Object/common/scopespace.h"
+#include "Object/common/object_base.h"
+#include "Object/common/util_types.h"
 
 #include "util/memory/list_vector_pool_fwd.h"
 
@@ -149,7 +151,7 @@ public:
 	void
 	collect_namespaces(namespace_collection_type&) const;
 
-	// defined in "Object/art_object_namespace.tcc"
+	// defined in "Object/common/namespace.tcc"
 	template <class L>
 	void
 	collect(L&) const;
@@ -230,5 +232,5 @@ namespace util {
 #endif
 
 //=============================================================================
-#endif	// __OBJECT_ART_OBJECT_NAMESPACE_H__
+#endif	// __OBJECT_COMMON_NAMESPACE_H__
 

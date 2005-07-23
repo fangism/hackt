@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.1.2.3 2005/07/22 21:34:18 fang Exp $
+ 	$Id: instance_collection.cc,v 1.1.2.4 2005/07/23 01:05:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -24,8 +24,8 @@
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/art_object_namespace.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/common/namespace.h"
+#include "Object/persistent_type_hash.h"
 #include "Object/inst/substructure_alias_base.h"
 
 #include "util/STL/list.tcc"

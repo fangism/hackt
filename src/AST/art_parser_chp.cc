@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.19.2.5 2005/07/22 04:54:20 fang Exp $
+	$Id: art_parser_chp.cc,v 1.19.2.6 2005/07/23 01:05:29 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -20,7 +20,7 @@
 #include "AST/art_parser_token.h"
 #include "AST/parse_context.h"
 
-#include "Object/art_object_CHP.tcc"
+#include "Object/lang/CHP.tcc"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/expr/pbool_const.h"

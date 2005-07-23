@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the ART language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.2.2.3 2005/07/22 00:25:16 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.2.2.4 2005/07/23 01:06:00 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -19,7 +19,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/list_vector_pool.h"
 #include "Object/def/built_in_datatype_def.h"
 #include "Object/def/param_definition.h"
-#include "Object/art_object_namespace.h"
+#include "Object/common/namespace.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/inst/pint_value_collection.h"
