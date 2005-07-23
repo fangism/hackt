@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.25 2005/07/20 20:59:50 fang Exp $
+	$Id: art_parser_expr.cc,v 1.26 2005/07/23 06:51:17 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -22,13 +22,15 @@
 #include "AST/art_parser_range_list.h"
 #include "AST/art_parser_node_list.tcc"
 #include "util/sublist.tcc"
-#include "Object/art_context.h"
+#include "AST/parse_context.h"
 
 // will need these come time for type-checking
-#include "Object/art_object_instance_base.h"
-#include "Object/art_object_definition_base.h"
-#include "Object/art_object_inst_ref_data.h"
-#include "Object/art_object_inst_ref_subtypes.h"
+#include "Object/inst/instance_collection_base.h"
+#include "Object/def/definition_base.h"
+#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
+#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/simple_nonmeta_instance_reference_base.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -44,9 +46,8 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
-#include "Object/art_object_PRS.h"
-#include "Object/art_object_template_actuals.h"
-#include "Object/art_object_inst_ref.h"
+#include "Object/lang/PRS.h"
+#include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
 

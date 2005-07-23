@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.2 2005/07/20 21:00:41 fang Exp $
+	$Id: data_expr.cc,v 1.3 2005/07/23 06:52:30 fang Exp $
  */
 
 #include <iostream>
@@ -15,11 +15,10 @@
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/int_range_list.h"
 
-#include "Object/art_object_type_hash.h"
-#include "Object/art_object_nonmeta_value_reference.tcc"
-#include "Object/art_object_type_ref.h"
+#include "Object/persistent_type_hash.h"
+#include "Object/ref/simple_nonmeta_value_reference.tcc"
+#include "Object/type/data_type_reference.h"
 #include "Object/traits/bool_traits.h"
-// #include "Object/art_object_int_traits.h"
 
 #include "util/reserve.h"
 #include "util/persistent_object_manager.tcc"

@@ -2,18 +2,16 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.15 2005/07/20 20:59:47 fang Exp $
+#	$Id: Makefile.am,v 1.16 2005/07/23 06:51:08 fang Exp $
 
-AUTOMAKE_OPTIONS = 1.9 subdir-objects dist-bzip2
+include $(top_srcdir)/Make.stddef
+
+AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
 SUBDIRS = src test . dox
 
-include $(top_srcdir)/Make.stddef
-
-
-
-DOXYGEN_CONFIG = art++.doxygen.config
+DOXYGEN_CONFIG = hackt.doxygen.config
 
 # When to update the libtool script:
 libtool: $(LIBTOOL_DEPS)
@@ -21,26 +19,26 @@ libtool: $(LIBTOOL_DEPS)
 
 # see configure.in for adding libtool flags
 
-CLEANFILES = art++.doxygen.config art++.doxygen.log DevelopmentPlan.ps
+CLEANFILES += $(DOXYGEN_CONFIG) hackt.doxygen.log DevelopmentPlan.ps
 
-DISTCLEANFILES = config.in.h~
+DISTCLEANFILES += config.in.h~ distcheck.log
 
-DISTCLEANDIRS = autom4te.cache
+DISTCLEANDIRS += autom4te.cache
 
-EXTRA_DIST = Make.stddef \
+AUTO_IGNORE += aclocal.m4 libtool stamp-h1 \
+	config.h.in config.h config.log config.status config.cache \
+	configure configure.scan configure.lineno \
+	autoscan.log autom4te.cache \
+	$(CLEANFILES) \
+	distcheck.log distcheck.log.tmp
+
+EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap maintainerclobber \
 	$(DOXYGEN_CONFIG).in \
 	DevelopmentPlan.dot \
 	readable_gcc_errors.sed \
 	balance_indent.awk
 
-if HAVE_DOT
-$(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
-	$(LN_S) $? $@
-else
-$(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
-	$(SED) '/^HAVE_DOT/s/YES/NO/g' $? > $@
-endif
 
 if HAVE_DOT
 DevelopmentPlan.ps: DevelopmentPlan.dot
@@ -68,6 +66,7 @@ distcleandirs:
 
 distclean-local: distcleandirs
 
+# distcheck is a top-level only target
 # .PRECIOUS: distcheck.log
 # doesn't work, tries to override previous definition without accumulating
 distcheck.log: force
@@ -77,27 +76,14 @@ distcheck.log: force
 	$(MAKE) distcheck 2>&1 | cat >> $@.tmp
 	-$(MV) $@.tmp $@
 	$(TAIL) -n 5 $@
-# grep not working as expected?
-#	@if $(GREP) -q "archives ready for distribution" $@ ; then \
-#		$(TAIL) -n 5 $@ ; \
-#		$(ECHO) "Congratulations!" ; \
-#	else \
-#		$(ECHO) "Sorry, check $@ for distcheck errors." ; \
-#		exit 1 ; \
-#	fi
 
 # don't include CVS directories in distribution
 dist-hook:
 	$(RM) -r `find $(distdir) -name CVS`
 
-cvsdiffs: force
-	-$(CVS) diff -u > $@
-	@$(ECHO) `$(GREP) "^-" $@ | $(GREP) -v "^---" | wc -l` "lines removed"
-	@$(ECHO) `$(GREP) "^+" $@ | $(GREP) -v "^+++" | wc -l` "lines added"
-
 .NOTPARALLEL: commit
 commit: cvsdiffs distcheck
 	$(CVS) commit
 
-force:
+include $(top_srcdir)/Make.global
 

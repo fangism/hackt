@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.24 2005/07/20 20:59:50 fang Exp $
+	$Id: art_parser_formal.cc,v 1.25 2005/07/23 06:51:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -25,11 +25,11 @@
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_type.h"
 #include "AST/art_parser_node_list.tcc"
+#include "AST/parse_context.h"
 
-#include "Object/art_context.h"
-#include "Object/art_object_type_ref_base.h"
-#include "Object/art_object_instance_base.h"
-#include "Object/art_object_definition_chan.h"		// for user_def_chan
+#include "Object/type/fundamental_type_reference.h"
+#include "Object/inst/instance_collection_base.h"
+#include "Object/def/user_def_chan.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/meta_range_list.h"

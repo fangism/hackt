@@ -1,0 +1,81 @@
+/**
+	\file "Object/unroll/instance_management_base.h"
+	Base class for any sequential instantiation or manupulation.  
+	This file came from "Object/art_object_instance_management_base.h"
+		in prehistoric revisions.  
+	$Id: instance_management_base.h,v 1.2 2005/07/23 06:52:59 fang Exp $
+ */
+
+#ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
+#define	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
+
+#include "util/persistent.h"
+#include "util/boolean_types.h"
+
+namespace ART {
+namespace entity {
+using std::ostream;
+using util::persistent;
+using util::good_bool;
+class unroll_context;
+
+//=============================================================================
+/**
+	Abstract base class for sequential instantiation management objects, 
+	including instantiations, parameters, assignments, connections.  
+ */
+class instance_management_base : virtual public persistent {
+protected:
+	// none
+public:
+	/**
+		Helper functor for adding a dereference before dumping, 
+		since the majority of objects are pointer-classed.
+		Consider using this in object as well.  
+	 */
+	class dumper {
+	private:
+		ostream& os;
+	public:
+		explicit
+		dumper(ostream& o);
+
+		template <template <class> class P>
+		ostream&
+		operator () (const P<const instance_management_base>& i) const;
+	};      // end class dumper
+
+public:
+virtual ostream&
+	dump(ostream& o) const = 0;
+
+#define	UNROLL_META_EVALUATE_PROTO					\
+	good_bool							\
+	unroll_meta_evaluate(unroll_context& ) const
+
+#define	UNROLL_META_INSTANTIATE_PROTO					\
+	good_bool							\
+	unroll_meta_instantiate(unroll_context& ) const
+
+#define	UNROLL_META_CONNECT_PROTO					\
+	good_bool							\
+	unroll_meta_connect(unroll_context& ) const
+
+	// need pure virtual unrolling methods
+	// argument should contain some stack of expression values
+	// possible single-pass unroll may be phased out...
+virtual good_bool
+	unroll(unroll_context& ) const = 0;
+
+virtual	UNROLL_META_EVALUATE_PROTO;
+virtual	UNROLL_META_INSTANTIATE_PROTO;
+virtual	UNROLL_META_CONNECT_PROTO;
+
+};	// end class instance_management_base
+
+//=============================================================================
+}	// end namespace entity
+}	// end namespace ART
+
+#endif	// __OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
+

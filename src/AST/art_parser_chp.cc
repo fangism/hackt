@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.19 2005/07/20 20:59:50 fang Exp $
+	$Id: art_parser_chp.cc,v 1.20 2005/07/23 06:51:17 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -18,21 +18,21 @@
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_node_list.tcc"
 #include "AST/art_parser_token.h"
-#include "Object/art_context.h"
+#include "AST/parse_context.h"
 
-#include "Object/art_object_CHP.tcc"
-#include "Object/art_object_type_ref.h"
+#include "Object/lang/CHP.tcc"
+#include "Object/type/data_type_reference.h"
+#include "Object/type/channel_type_reference_base.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/bool_expr.h"
-#include "Object/art_object_nonmeta_inst_ref.h"
-#include "Object/art_object_nonmeta_inst_ref_subtypes.h"
+#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
-#include "Object/art_object_instance.h"
-#include "Object/art_object_instance_collection.h"
-#include "Object/art_object_definition_data.h"
-#include "Object/art_object_definition_chan.h"
-#include "Object/art_object_definition_proc.h"
+#include "Object/inst/channel_instance_collection.h"
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
 
 #include "util/what.h"

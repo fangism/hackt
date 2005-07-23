@@ -1,9 +1,7 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2005/07/20 21:02:29 fang Exp $
+#	$Id: Makefile.am,v 1.9 2005/07/23 06:53:12 fang Exp $
 
-AUTOMAKE_OPTIONS = 1.9
-
-SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
+include $(top_srcdir)/test/Make.test-head
 
 ARTC_TEST_FAILURES = \
 	    003 005 \
@@ -27,7 +25,7 @@ ARTC_TEST_PASSES = \
 # should fail at unroll-time:
 #	057 058 (not propagating relaxed formal dependence yet)
 
-BISON_OUTPUTS = 027 028 042 047 048 050
+BISON_OUTPUTS += 027 028 042 047 048 050
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -41,12 +39,5 @@ TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
-# define empty, let template Makefile add to it
-EXTRA_DIST =
-CLEANFILES =
-DISTCLEANFILES =
-
-include $(top_srcdir)/test/Make.test
-
-# dist-hook: dist-hook-extra
+include $(top_srcdir)/test/Make.test-tail
 

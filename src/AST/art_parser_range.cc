@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.6 2005/07/20 20:59:52 fang Exp $
+	$Id: art_parser_range.cc,v 1.7 2005/07/23 06:51:19 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -19,8 +19,7 @@
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_node_list.tcc"
 
-// will need these come time for type-checking
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/pint_range.h"
 #include "Object/expr/pint_const.h"

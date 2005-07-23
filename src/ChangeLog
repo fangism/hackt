@@ -1,5 +1,93 @@
 "ChangeLog"
 
+2005-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-50-merged-maintainence-10:
+	  Merged all maintainence revisions.  
+		Almost every file has moved, in an attempt to reorganize.  
+		Object/ files all pushed into subdirectories, by category.  
+	  Major Makefile.am rework.  
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-09:
+	  Added a few more READMEs.
+	  No longer generate "yacc_or_bison.h", the #defines that used
+		to be in there have been folded into the configure procedure
+		in the generation of "config.h".
+
+
+2005-07-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-maintainence-08:
+	  Most remaining files in Object/ have been pushed into subdirectories:
+		CHP, PRS -> Object/lang/
+		object_base, namespace, scopespace, extern_templates, 
+			index, util_types -> Object/common/
+		const_collection -> Object/expr/
+		template_formals_manager, port_formals_manager -> Object/def
+		template_actuals_manager -> Object/type
+		art_object_module -> module
+		art_object_type_hash -> persistent_type_hash
+	  TODO: write new front-end for executable dispatch, 
+		using double-command format (like cvs).
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-07:
+	  Pushed Object/ (instantiation statement, instance_management, 
+		assignment, connection, unroll_context) all into the
+		Object/unroll subdirectory, basically everything that
+		has to do with sequentially played statements.  
+	  Added bunch of README files in subdirs.  
+	  Removed a few obsolete headers and source units.  
+	  Minor Makefile.am enhancements.  
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-06:
+	  Pushed Object/art_object_inst_ref* and _value_reference*
+		into Object/ref subdirectory, and also split up 
+		some of the base header files.  
+	  Some Makefile.am rework, minimizing use of BUILT_SOURCES, 
+		but still inevitable for one auto-header file.  
+
+
+2005-07-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-maintainence-05:
+	  Pushed Object/art_object_instance* into Object/inst/
+		(except for instance_management_base, which is sequential.)
+	  param_instance_collection -> param_value_collection
+	  TODO: sequetial instance management -> Object/unroll, 
+		instance/value references.  
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-04:
+	  Object/art_context.* -> AST/parse_context.*
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-03:
+	  This revision pushed Object/art_object_type_ref* into
+		Object/type/ and split the headers into separate files.  
+	  TODO: everything else in the previous TODO.
+
+
+2005-07-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-maintainence-02:
+	  This revision pushed Object/art_object_definition* into
+		Object/def/ and split the headers into one class/file.  
+		Actually resulted in smaller binaries, and probably
+		sped up compilation.  
+	  Also split scopespace class into "Object/art_object_scopespace.h"
+	  TODO: type-references, art_context, instance_references, 
+		instance_collections, instance_management.  
+
+
+	* ARTXX-00-01-04-main-00-49-maintainence-02:
+	  Major Makefile.am and cvsignore rework, as described in the
+		root ChangeLog.  This Makefile.am now makes use of the
+		project-wide definitions in Make.global.
+
+
 2005-07-20	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-49-merged-connect-01-42:

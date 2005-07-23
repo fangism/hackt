@@ -1,0 +1,6 @@
+"src/Object/type/README"
+
+This directory is for classes that maintain type information in the 
+language, or type-references.  Generally speaking, a type-reference is
+a combination of a base definition and optional parameter arguments (actuals).  
+

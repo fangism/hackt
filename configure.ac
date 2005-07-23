@@ -3,17 +3,17 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.1 2005/06/20 19:47:31 fang Exp $
+#	$Id: configure.ac,v 1.2 2005/07/23 06:51:09 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(artxx, 0.1.4, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20050723, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
-AC_CONFIG_SRCDIR([src/art_main.cc])
+AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 
 AC_CANONICAL_HOST
 
@@ -46,6 +46,7 @@ AC_ISC_POSIX
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
+# AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
 
 # compiler characteristic checks
 AC_HEADER_STDBOOL
@@ -84,27 +85,67 @@ sleep 1; echo " no"
 # depending on which parser is used.  
 AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
 
+if (echo "$YACC" | grep -q bison)
+then
+	AC_DEFINE(USING_BISON, 1, [Define to 1 if we're using bison.])
+	AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
+else
+	AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
+	AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
+fi
+# don't know what to do about byacc yet...
+
+# AC_PROG_PERL
+AC_CHECK_PROG([PERL], perl, perl)
+if test -n "$PERL"
+then
+	AC_SUBST(PERL_PATH, `which perl`)
+fi
+
 # documentation support
 AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
-AM_CONDITIONAL(HAVE_DOXYGEN, test "$DOXYGEN" = doxygen)
+AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")
 
 AC_CHECK_PROG([DOT], dot, dot)
-AM_CONDITIONAL(HAVE_DOT, test "$DOT" = dot)
+AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
 
 AC_CHECK_PROG([LATEX], latex, latex)
-AM_CONDITIONAL(HAVE_LATEX, test "$LATEX" = latex)
+AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )
 
 AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
-AM_CONDITIONAL(HAVE_PDFLATEX, test "$PDFLATEX" = pdflatex)
+AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )
 
 AC_CHECK_PROG([DVIPS], dvips, dvips)
-AM_CONDITIONAL(HAVE_DVIPS, test "$DVIPS" = dvips)
+AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )
 
 AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
-AM_CONDITIONAL(HAVE_BIBTEX, test "$BIBTEX" = bibtex)
+AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )
 
 AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
-AM_CONDITIONAL(HAVE_MAKEINDEX, test "$MAKEINDEX" = makeindex)
+AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
+
+# some substitution variables for the doxygen configuration
+if test -n "$DOT"
+then
+	AC_SUBST(HAVE_DOT, "YES")
+	AC_SUBST(DOT_PATH, `which dot`)
+else
+	AC_SUBST(HAVE_DOT, "NO")
+fi
+
+if test -n "$LATEX"
+then
+	AC_SUBST(HAVE_LATEX, "YES")
+else
+	AC_SUBST(HAVE_LATEX, "NO")
+fi
+
+if test -n "$PDFLATEX"
+then
+	AC_SUBST(HAVE_PDFLATEX, "YES")
+else
+	AC_SUBST(HAVE_PDFLATEX, "NO")
+fi
 
 AC_CONFIG_FILES([
 	Makefile
@@ -130,6 +171,7 @@ AC_CONFIG_FILES([
 	dox/lang/Makefile
 	dox/util/Makefile
 	dox/objfmt/Makefile
+	hackt.doxygen.config
 	])
 
 AC_OUTPUT

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_expr_base.h,v 1.6 2005/06/19 01:58:30 fang Exp $
+	$Id: art_parser_expr_base.h,v 1.7 2005/07/23 06:51:18 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_EXPR_BASE_H__
@@ -14,7 +14,7 @@ namespace ART {
 //=============================================================================
 // forward declaration of outside namespace and classes
 namespace entity {
-	// defined in "art_object_base.h"
+	// defined in "common/object_base.h"
 	class object;
 	class param_expr;
 	class meta_index_list;

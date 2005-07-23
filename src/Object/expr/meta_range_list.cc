@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.2 2005/07/20 21:00:46 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.3 2005/07/23 06:52:31 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -21,14 +21,14 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pint_range.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_index_list.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/persistent_type_hash.h"
 
 #include "util/reserve.h"
 #include "util/stacktrace.h"

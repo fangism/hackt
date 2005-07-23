@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.33 2005/07/20 20:59:52 fang Exp $
+	$Id: art_parser_token.cc,v 1.34 2005/07/23 06:51:19 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -18,14 +18,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/art_parser_token.h"
 #include "AST/art_parser_token_char.h"
 #include "AST/art_parser_token_string.h"
+#include "AST/parse_context.h"
 
-#include "Object/art_context.h"
-#include "Object/art_object_definition_data.h"
-#include "Object/art_object_instance_base.h"
-#include "Object/art_object_inst_ref_base.h"
+#include "Object/def/built_in_datatype_def.h"
+#include "Object/inst/instance_collection_base.h"
+#include "Object/ref/meta_instance_reference_base.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
-#include "Object/art_object_type_ref.h"
+#include "Object/type/param_type_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/int_traits.h"

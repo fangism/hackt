@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.2 2005/07/20 21:00:40 fang Exp $
+	$Id: const_index_list.h,v 1.3 2005/07/23 06:52:30 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -13,7 +13,7 @@
 #include <list>
 #include <vector>
 #include "Object/expr/meta_index_list.h"
-#include "Object/art_object_index.h"
+#include "Object/common/multikey_index.h"
 #include "util/memory/pointer_classes_fwd.h"
 
 //=============================================================================

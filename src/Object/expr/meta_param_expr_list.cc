@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.2 2005/07/20 21:00:45 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.3 2005/07/23 06:52:31 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -23,8 +23,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
-#include "Object/art_object_instance_param.h"
-#include "Object/art_object_type_hash.h"
+#include "Object/inst/param_value_collection.h"
+#include "Object/persistent_type_hash.h"
 
 #include "util/reserve.h"
 #include "util/stacktrace.h"
@@ -288,7 +288,7 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		// does default expression have to be constant to be
@@ -312,11 +312,11 @@ if (a_size != f_size) {
 } else {
 	iterator p_iter(begin());
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
+		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
@@ -384,11 +384,11 @@ if (a_size != f_size) {
 } else {
 	const_iterator p_iter(begin());
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
+		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -424,11 +424,11 @@ if (a_size != f_size) {
 } else {
 	const_iterator p_iter(begin());
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
+		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param>& pex(*p_iter);
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -807,7 +807,7 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		const count_ptr<const param_expr>
@@ -827,11 +827,11 @@ if (a_size != f_size) {
 } else {
 	iterator p_iter(begin());
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
+		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
@@ -887,11 +887,11 @@ if (a_size != f_size) {
 } else {
 	const_iterator p_iter(begin());
 	for ( ; f_iter!=f_end; p_iter++, f_iter++) {
-		// need method to check param_instance_collection against param_expr
+		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_instance_collection>
+		const never_ptr<const param_value_collection>
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);

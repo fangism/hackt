@@ -1,0 +1,13 @@
+.deps
+.libs
+.dirstamp
+ignore
+art++.types
+*.output
+*.lo
+*.loT
+*.h
+*.cc
+*.swp
+*.hchk
+

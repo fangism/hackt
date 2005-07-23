@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.2 2005/07/20 21:00:54 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.3 2005/07/23 06:52:42 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
-#include "Object/art_object_instance_base.h"
+#include "Object/inst/instance_collection_base.h"
 #include "util/macros.h"
 
 namespace ART {

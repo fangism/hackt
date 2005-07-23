@@ -1,0 +1,15 @@
+.deps
+.libs
+.dirstamp
+*.lo
+*.loT
+*.la
+core.*
+*.core
+*.artobj
+.gdb_history
+*.swp
+*.hchk
+*.tccchk
+dummy.cc
+

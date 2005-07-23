@@ -1,0 +1,13 @@
+# "dox/Make.dox-tail"
+# To be included last by Makefiles in subdirectories
+#	$Id: Make.dox-tail,v 1.2 2005/07/23 06:51:13 fang Exp $
+
+local.cvsignore: $(top_srcdir)/dox/local.cvsignore
+	$(CP) $< $@
+
+AUTO_IGNORE += local.cvsignore
+DISTCLEANFILES += local.cvsignore
+
+include $(top_srcdir)/dox/mk/Make.latex
+include $(top_srcdir)/Make.global
+

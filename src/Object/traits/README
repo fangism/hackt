@@ -1,0 +1,8 @@
+"src/Object/traits/README"
+
+This directory manages the implementation traits of various meta classes.
+The policies for most template class implementations and specializations
+is handled in the traits files here.  
+The traits in this directory also manages and intrinsic characteristics of the
+language, such as built-in defintions and types.  
+

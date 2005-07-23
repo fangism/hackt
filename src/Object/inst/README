@@ -1,0 +1,5 @@
+"src/Object/inst/README"
+
+This directory is for classes that are related to instance collections
+and instance aliases (including parameter value collections).
+

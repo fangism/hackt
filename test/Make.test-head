@@ -1,0 +1,16 @@
+# "Make.test-head"
+# include this first in every subdirectory's Makefile.am
+#	$Id: Make.test-head,v 1.2 2005/07/23 06:53:10 fang Exp $
+
+include $(top_srcdir)/Make.stddef
+
+# suffixes used by all test directories' Makefiles
+SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
+
+# will this work?
+# SUFFIXES = .in .artctest artobjtest .artobjunrolltest
+
+# names of test cases (without extension) whose artc error output
+# differs when using bison vs. yacc (result of different state-machines)
+BISON_OUTPUTS =
+

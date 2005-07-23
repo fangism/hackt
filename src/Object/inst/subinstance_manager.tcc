@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.2 2005/07/20 21:00:54 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.3 2005/07/23 06:52:42 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
-#include "Object/art_object_instance_collection.h"
+#include "Object/inst/instance_collection.h"
 #include "util/stacktrace.h"
 
 namespace ART {

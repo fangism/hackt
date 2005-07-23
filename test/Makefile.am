@@ -1,7 +1,7 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2005/07/20 21:01:03 fang Exp $
+#	$Id: Makefile.am,v 1.10 2005/07/23 06:53:10 fang Exp $
 
-AUTOMAKE_OPTIONS = 1.9
+include $(srcdir)/Make.test-head
 
 # this directory first, to clean the test-report
 SUBDIRS = . lexer parser
@@ -14,11 +14,10 @@ clean-test:
 # bogus test
 TESTS = clean-test
 
-DISTCLEANFILES = $(TESTS)
+DISTCLEANFILES += $(TESTS)
 
-CLEANFILES = 
-
-EXTRA_DIST = ChangeLog Make.test artc-expect.sh artobj-diff.sh \
+EXTRA_DIST += ChangeLog Make.test-head Make.test-tail \
+	artc-expect.sh artobj-diff.sh \
 	artobjunroll-expect.sh \
 	state_enum_filter.awk address_filter.sed \
 	POM-header-filter.awk \
@@ -27,11 +26,11 @@ EXTRA_DIST = ChangeLog Make.test artc-expect.sh artobj-diff.sh \
 	spacestonewline.awk test.cvsignore \
 	test-series.sh
 
-# template test Makefile
-include $(top_srcdir)/test/Make.test
-
 # remove extraneous auto-generated files
 dist-hook:
 	-$(RM) -r `find $(distdir) -name subdir.not_a_test`
 	-$(RM) -r `find $(distdir) -name clean-test`
+
+# template test Makefile
+include $(top_srcdir)/test/Make.test-tail
 
