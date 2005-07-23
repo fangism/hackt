@@ -1,22 +1,10 @@
 # "dox/mk/Make.latex"
-#	$Id: Make.latex,v 1.2 2005/05/04 23:39:05 fang Exp $
+# Include this file *LAST* in latex Makefiles.  
+# This file uses macros defined in "dox/Make.dox-head"
+# Note, this is a configurable Makefile.in, resolved by the top configure script
+#	$Id: Make.latex,v 1.2.20.1 2005/07/23 04:27:54 fang Exp $
 
-include $(top_srcdir)/Make.stddef
-
-# commented definitions are set by configure
-# DVIPS = dvips
-PSNUP = psnup
-# LATEX = latex
-# PDFLATEX = pdflatex
-# BIBTEX = bibtex
-# MAKEINDEX = makeindex
-MAKETEXDEPEND = $(AWK) -f $(top_srcdir)/dox/mk/maketexdepend.awk \
-	-v script=$(top_srcdir)/dox/mk/maketexdepend.awk -v srcdir=$(srcdir) \
-	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
-
-SUFFIXES = .ps .dvi .tex .pdf .depend
-
-
+# dependence generation
 .tex.depend:
 	@$(ECHO) "Generating auto-dependencies $@..."
 	@if [ -f $@ ] ; then \
@@ -32,19 +20,38 @@ SUFFIXES = .ps .dvi .tex .pdf .depend
 		$(ECHO) "Created $@." ; \
 	fi
 
+# makeindex
+.idx.ind:
+if HAVE_MAKEINDEX
+	@if [ -f $< ] ; then $(MAKEINDEX) $< ; fi 
+endif
+	@$(TOUCH) $@
+
+# bibtex
+.aux.bbl:
+if HAVE_BIBTEX
+	@if $(GREP) -q "\\citation" $< ; then $(BIBTEX) $* ; fi
+endif
+	@$(TOUCH) $@
+
 if HAVE_LATEX
 .tex.dvi:
 	@$(ECHO) "Generating $@..."
+	@if [ -f $*.stamp ] ; then \
+		if $(GREP) -q $(PDFLATEX) $*.stamp ; then \
+			$(MAKE) clean-temps ; fi \
+	fi
 	@$(LATEX) $< > /dev/null < /dev/null
+	@$(ECHO) $(LATEX) > $*.stamp
 	@if $(GREP) "TeX capacity" $*.log; \
 		then $(ECHO) SHIT ; \
 	fi
-	@if $(GREP) -q "\\citation" $*.aux ; then $(BIBTEX) $* ; fi
-	@if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi 
+	@$(MAKE) $*.bbl
+	@$(MAKE) $*.ind
 	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(LATEX) $< > /dev/null < /dev/null; \
-		if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi ; \
+		$(MAKE) $*.ind ; \
 		if $(GREP) "TeX capacity" $*.log; \
 			then $(ECHO) SHIT; \
 		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
@@ -59,16 +66,21 @@ endif
 if HAVE_PDFLATEX
 .tex.pdf:
 	@$(ECHO) "Generating $@..."
+	@if [ -f $*.stamp ] ; then \
+		if $(GREP) -q $(PDFLATEX) $*.stamp ; then \
+			$(ECHO) -n ; else $(MAKE) clean-temps ; fi \
+	fi
 	@$(PDFLATEX) $< > /dev/null < /dev/null
+	@$(ECHO) $(PDFLATEX) > $*.stamp
 	@if $(GREP) "TeX capacity" $*.log; \
 		then $(ECHO) SHIT ; \
 	fi
-	@if $(GREP) -q "\\citation" $*.aux ; then $(BIBTEX) $* ; fi
-	@if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi 
+	@$(MAKE) $*.bbl
+	@$(MAKE) $*.ind
 	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(PDFLATEX) $< > /dev/null < /dev/null; \
-		if [ -f $*.idx ] ; then $(MAKEINDEX) $*.idx ; fi ; \
+		$(MAKE) $*.ind ; \
 		if $(GREP) "TeX capacity" $*.log; \
 			then $(ECHO) SHIT; \
 		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
@@ -85,6 +97,11 @@ if HAVE_DVIPS
 	$(DVIPS) $< -o $@
 endif
 
+# files that may conflict between latex and pdflatex
+# may add .lof, .lot, for list of ...
+clean-temps:
+	-$(RM) *.aux *.toc *.bbl *.ind *.stamp
+
 clean-bib:
 	-$(RM) *.bbl *.blg
 
@@ -92,7 +109,7 @@ clean-index:
 	-$(RM) *.idx *.ind *.ilg *.out
 
 clean-aux:
-	-$(RM) *.aux *.log *.toc
+	-$(RM) *.aux *.log *.toc *.stamp
 
 clean-depend:
 	-$(RM) *.depend

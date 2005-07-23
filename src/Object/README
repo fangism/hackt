@@ -1,0 +1,31 @@
+"src/Object/README"
+
+The directory tree rooted here (src/Object) contains classes and 
+functions for the persistent intermediate object format used by HACKT.  
+It is organized by subdirectories as follows:
+
+common/ contains classes and definitions that are generally shared
+	by several other directories, general miscellaneous useful stuff.  
+
+def/ contains classes pertaining to type definitions, including
+	template formals and port formals.  
+
+expr/ contains classes for meta expressions (compile-time), 
+	nonmeta expressions (run-time) and value references.  
+
+inst/ classes that manage collections of instances or parameter values, 
+	as well as single instances.  
+
+lang/ classes for sub-languages supported by HACKT.  
+
+ref/ classes for meta and nonmeta instance / value references.  
+
+traits/ template-driven implementation policies for classes, 
+	also contains built-in definitions and types of the language.  
+
+type/ classes that contain type information, i.e. definitions
+	paired with (optional) template actual expressions.  
+
+unroll/ classes that manage the sequential playback of instantiations, 
+	expression assignments, and instance reference connections.  
+

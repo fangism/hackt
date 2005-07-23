@@ -1,7 +1,7 @@
 # "test/Make.test-tail"
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
-#	$Id: Make.test-tail,v 1.1.2.1 2005/07/21 01:06:25 fang Exp $
+#	$Id: Make.test-tail,v 1.1.2.2 2005/07/23 04:27:58 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/artc
 ART2OBJ_EXE = $(top_builddir)/src/art++2obj
@@ -79,8 +79,7 @@ CLEANFILES += $(TESTS) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunroll) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump.filter) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff) \
-	check.log
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff)
 
 DISTCLEANFILES += local.cvsignore subdir.not_a_test
 

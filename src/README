@@ -1,0 +1,29 @@
+"src/README"
+
+Welcome to the root of the source tree for HACKT.  
+Whether you're a developer or user, this will be the home base for 
+most of the work.  You will run most build-related commands from here.  
+
+You'll note that this directory contains many subdirectories, 
+HOWEVER, 99% of the Makefile work belongs to this directory.  
+For efficiency reasons, we will use a flat Makefile to do our building.  
+
+The Makefile(.am)
+
+targets of interest include:
+
+all (the default)
+	just builds all executables and their dependencies
+
+check-headers:
+For this project, I, fangism, am enforcing the Standalone-Header-Policy, 
+which states that "Every header file should be compilable on its own, 
+without having to depend on inclusion of another header file."
+(Note: `all' depends on this target.)
+
+Exceptions.  Of course, the simple workaround for exceptions
+is to add a custom bogus rule for a particular header check
+to override the suffix-rule user to generate it.  
+
+Fang, write more README!!!
+

@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-07-23	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-maintainence-09:
+	  Added a few more READMEs.
+	  No longer generate "yacc_or_bison.h", the #defines that used
+		to be in there have been folded into the configure procedure
+		in the generation of "config.h".
+
+
 2005-07-22	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-49-maintainence-08:

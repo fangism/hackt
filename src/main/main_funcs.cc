@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.2.16.1 2005/07/21 20:44:14 fang Exp $
+	$Id: main_funcs.cc,v 1.2.16.2 2005/07/23 04:27:58 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,8 @@
 
 #define	ENABLE_STACKTRACE		0
 #define	ENABLE_STATIC_TRACE		0
+
+#include "config.h"			// for USING_BISON / USING_YACC
 
 #include "util/macros.h"
 #include "main/main_funcs.h"
@@ -23,7 +25,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.h"
 
 // forward declarations needed for YSTYPE
-#include "parser/yacc_or_bison.h"	// configuration-generated
 #include "parser/art++-parse-prefix.h"	// for YYSTYPE
 using util::memory::excl_ptr;
 

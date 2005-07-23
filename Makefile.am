@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.15.2.1 2005/07/21 01:06:18 fang Exp $
+#	$Id: Makefile.am,v 1.15.2.2 2005/07/23 04:27:50 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -21,7 +21,7 @@ libtool: $(LIBTOOL_DEPS)
 
 CLEANFILES += $(DOXYGEN_CONFIG) art++.doxygen.log DevelopmentPlan.ps
 
-DISTCLEANFILES += config.in.h~
+DISTCLEANFILES += config.in.h~ distcheck.log
 
 DISTCLEANDIRS += autom4te.cache
 
@@ -39,14 +39,6 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	readable_gcc_errors.sed \
 	balance_indent.awk
 
-# TODO: use configure for this
-if HAVE_DOT
-$(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
-	$(LN_S) $? $@
-else
-$(DOXYGEN_CONFIG): $(DOXYGEN_CONFIG).in
-	$(SED) '/^HAVE_DOT/s/YES/NO/g' $? > $@
-endif
 
 if HAVE_DOT
 DevelopmentPlan.ps: DevelopmentPlan.dot

@@ -1,5 +1,6 @@
-Makefile.in
-Makefile
+html
+latex
+*.stamp
 core.*
 *.core
 *.depend

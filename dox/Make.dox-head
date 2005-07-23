@@ -1,0 +1,19 @@
+# "dox/Make.dox-head"
+# To be included first by Makefiles in subdirectories
+# The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
+
+include $(top_srcdir)/Make.stddef
+
+# commented definitions are set by configure
+# DVIPS = dvips
+PSNUP = psnup
+# LATEX = latex
+# PDFLATEX = pdflatex
+# BIBTEX = bibtex
+# MAKEINDEX = makeindex
+MAKETEXDEPEND = $(AWK) -f $(top_srcdir)/dox/mk/maketexdepend.awk \
+	-v script=$(top_srcdir)/dox/mk/maketexdepend.awk -v srcdir=$(srcdir) \
+	-v readable=1 -v extensions="pdf dvi depend" -v touch=0
+
+SUFFIXES = .ps .dvi .tex .pdf .depend .ind .idx .bbl .aux
+

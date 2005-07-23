@@ -1,7 +1,7 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.14.20.1 2005/07/21 01:06:20 fang Exp $
+#	$Id: Makefile.am,v 1.14.20.2 2005/07/23 04:27:54 fang Exp $
 
-include $(top_srcdir)/dox/mk/Make.latex
+include $(top_srcdir)/dox/Make.dox-head
 
 PDFS = artxx.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -36,4 +36,6 @@ EXTRA_DIST += \
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
 -include artxx.depend
+
+include $(top_srcdir)/dox/Make.dox-tail
 
