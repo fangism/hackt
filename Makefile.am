@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.15.2.2 2005/07/23 04:27:50 fang Exp $
+#	$Id: Makefile.am,v 1.15.2.3 2005/07/23 06:17:56 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -11,7 +11,7 @@ AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 
 SUBDIRS = src test . dox
 
-DOXYGEN_CONFIG = art++.doxygen.config
+DOXYGEN_CONFIG = hackt.doxygen.config
 
 # When to update the libtool script:
 libtool: $(LIBTOOL_DEPS)
@@ -19,7 +19,7 @@ libtool: $(LIBTOOL_DEPS)
 
 # see configure.in for adding libtool flags
 
-CLEANFILES += $(DOXYGEN_CONFIG) art++.doxygen.log DevelopmentPlan.ps
+CLEANFILES += $(DOXYGEN_CONFIG) hackt.doxygen.log DevelopmentPlan.ps
 
 DISTCLEANFILES += config.in.h~ distcheck.log
 

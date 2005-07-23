@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.1.2.1 2005/07/23 01:05:57 fang Exp $
+	$Id: CHP.tcc,v 1.1.2.2 2005/07/23 06:17:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_CHP_TCC__
@@ -15,6 +15,7 @@
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
 namespace ART {
@@ -147,20 +148,8 @@ channel_receive::add_references(const L& l) {
 		for ( ; ti!=te; ti++, ei++, i++) {
 			// TODO: consider using a predicated copy_if functor?
 			NEVER_NULL(*ei);
-#if 0
-			const count_ptr<simple_datatype_nonmeta_value_reference>
-				sdir(ei->template is_a<simple_datatype_nonmeta_value_reference>());
-			if (!sdir) {
-				cerr << "Sorry, channel-receive is currently "
-					"limited to simple, datatype nonmeta "
-					"instance_references.  " << endl;
-				(*ei)->what(cerr << "\tgot: ") << endl;
-				return good_bool(false);
-			}
-#else
 			const count_ptr<simple_datatype_nonmeta_value_reference>
 				sdir(*ei);
-#endif
 			const count_ptr<const data_type_reference>
 				etype(sdir->get_data_type_ref());
 			if (!etype) {

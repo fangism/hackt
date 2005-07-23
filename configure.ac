@@ -3,17 +3,17 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.1.10.1 2005/07/23 04:27:50 fang Exp $
+#	$Id: configure.ac,v 1.1.10.2 2005/07/23 06:17:57 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(artxx, 0.1.4, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20050723, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
-AC_CONFIG_SRCDIR([src/art_main.cc])
+AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 
 AC_CANONICAL_HOST
 
@@ -46,6 +46,7 @@ AC_ISC_POSIX
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
+# AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
 
 # compiler characteristic checks
 AC_HEADER_STDBOOL
@@ -170,7 +171,7 @@ AC_CONFIG_FILES([
 	dox/lang/Makefile
 	dox/util/Makefile
 	dox/objfmt/Makefile
-	art++.doxygen.config
+	hackt.doxygen.config
 	])
 
 AC_OUTPUT

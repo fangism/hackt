@@ -5,12 +5,12 @@
 # or with automake for automatic inlining.  
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
-#	$Id: Make.global,v 1.1.2.3 2005/07/23 04:27:50 fang Exp $
+#	$Id: Make.global,v 1.1.2.4 2005/07/23 06:17:56 fang Exp $
 
 
 # list of files to automatically CVS ignore, accumulated over Makefile
-AUTO_IGNORE += cvsdiffs check.log .cvsignore \
-	Makefile.in Makefile ignore backup temp
+AUTO_IGNORE += cvsdiffs check.log .cvsignore .gdb_history \
+	Makefile.in Makefile make.log ignore backup temp
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
