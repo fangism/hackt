@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.cc"
 	Implementation of core hackt program registration interface.  
-	$Id: program_registry.cc,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: program_registry.cc,v 1.2 2005/07/25 14:55:06 fang Exp $
  */
 
 #include <iostream>
@@ -38,7 +38,8 @@ program_entry::operator () (const int argc, char* argv[],
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 program_entry::dump(ostream& o) const {
-	o << '@' << reinterpret_cast<void*>(size_t(main_ptr)) << ": " << brief;
+	return o << '@' << reinterpret_cast<void*>(size_t(main_ptr))
+		<< ": " << brief;
 }
 
 //=============================================================================
