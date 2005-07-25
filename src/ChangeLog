@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-07-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-51:
+	  Replaced multiple executables with single consolidated executable
+		"hackt" from which other programs are launched.  
+	  Implemented sub-program dispatch system in "main/hackt.h"
+		where each program registers itself with the main dispatcher
+		through a standard interface.  
+	  available commands in this release:
+		compile, unroll, objdump, parse_test, and more!
+	  Usage notes in README.
+	  libart++ renamed to libhackt (convenience library).  
+
+
 2005-07-23	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-50-merged-maintainence-10:

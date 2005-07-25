@@ -1,5 +1,20 @@
 # "test/ChangeLog"
 
+2005-07-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-51:
+	  Updated Make.test-tail to use new double-command form
+		of executable "hackt <command>".
+
+
+2005-07-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-49-maintainence-01:
+	  Reworked Makefile.am structure, replacing Make.test
+		with Make.test-head (include first) and Make.test-tail
+		(include last).
+
+
 2005-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-23:

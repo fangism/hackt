@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-07-24	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-51:
+	  Posted BOUNTY for found bugs.  
+	  Added more information in README.
+	  Added distcleandirs to Make.global.
+
+
 2005-07-23	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-50-merged-maintainence-10:

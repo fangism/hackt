@@ -1,32 +1,53 @@
 /**
-	\file "prsobjdemo.cc"
+	\file "main/prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.2 2005/07/23 06:51:16 fang Exp $
+	$Id: prsobjdemo.cc,v 1.1 2005/07/25 02:10:09 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 
+#include "main/prsobjdemo.h"
+#include "main/program_registry.h"
 #include "main/main_funcs.h"
 #include "Object/module.tcc"	// for template method definitions
 #include "Object/def/process_definition.h"
 
 // using declarations
-using namespace ART;
+namespace ART {
 #include "util/using_ostream.h"
 using std::list;
 using util::memory::never_ptr;		// never-delete pointer
-using ART::entity::process_definition;
+using entity::process_definition;
 
 //=============================================================================
+class prsobjdemo::options {
+	// none
+};	// end class options
+
+//=============================================================================
+// class prsobjdemo static initializers
+
+const char
+prsobjdemo::name[] = "prsobjdemo";
+
+const char
+prsobjdemo::brief_str[] = "manipulates prs in process definitions";
+
+const size_t
+prsobjdemo::program_id = 
+	register_hackt_program(prsobjdemo::name, 
+		prsobjdemo::main, prsobjdemo::brief_str);
+
+//=============================================================================
+prsobjdemo::prsobjdemo() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
-main(int argc, char* argv[]) {
+prsobjdemo::main(int argc, char* argv[], const global_options&) {
 	if (argc != 3) {
-		cerr << argv[0] << ": manipulates prs in process definitions."
-			<< endl;
-		cerr << "Usage: " << argv[0] <<
-			" <art-obj-infile> <art-obj-outfile>" << endl;
+		usage();
 		return 1;
 	}
 	if (!strcmp(argv[1], argv[2])) {
@@ -51,8 +72,8 @@ main(int argc, char* argv[]) {
 		// in a library of useful module passes one day.
 		proc_list_type proc_defs;
 		the_module->collect(proc_defs);	// is a template method call
-		proc_list_type::const_iterator i = proc_defs.begin();
-		const proc_list_type::const_iterator e = proc_defs.end();
+		proc_list_type::const_iterator i(proc_defs.begin());
+		const proc_list_type::const_iterator e(proc_defs.end());
 		for ( ; i!=e; i++) {
 			(*i)->expand_prs_complements();
 //			(*i)->compact_prs_references();
@@ -62,5 +83,16 @@ main(int argc, char* argv[]) {
 	save_module(*the_module, argv[2]);
 	return 0;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+prsobjdemo::usage(void) {
+	cerr << name << ": manipulates prs in process definitions." << endl;
+	cerr << "Usage: " << name <<
+		" <art-obj-infile> <art-obj-outfile>" << endl;
+}
+
 //=============================================================================
+
+}	// end namespace ART
 

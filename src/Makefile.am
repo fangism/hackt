@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.68 2005/07/23 06:51:16 fang Exp $
+#	$Id: Makefile.am,v 1.69 2005/07/25 02:10:04 fang Exp $
 
 # standard definitions and macro initializers
 include $(top_srcdir)/Make.stddef
@@ -33,40 +33,47 @@ endif
 
 ########################### main dependencies #################################
 
-bin_PROGRAMS = artc art++2obj artobjdump artobjunroll prsobjdemo
+bin_PROGRAMS = hackt
+# artc art++2obj artobjdump artobjunroll prsobjdemo
 
 # dirgen is completely bogus, workaround to corce directory generation
-noinst_PROGRAMS = dirgen art_persistent_table getopt_test
+noinst_PROGRAMS = dirgen getopt_test
+# art_persistent_table
+noinst_SCRIPTS = art_persistent_table.sh
 
 # convenience libraries
-noinst_LTLIBRARIES = libart++.la libhacktparsers.la libbogus.la libfangutil.la
+noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
+	libhacktexec.la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 
-artc_SOURCES = art_main.cc
-artc_LDADD = libart++.la libfangutil.la
+hackt_SOURCES = main/hackt.cc
+hackt_LDADD = libhacktexec.la libhackt.la libfangutil.la
 
-art__2obj_SOURCES = art++2obj.cc
-art__2obj_LDADD = libart++.la libfangutil.la
+# artc_SOURCES = art_main.cc
+# artc_LDADD = libart++.la libfangutil.la
 
-artobjdump_SOURCES = artobjdump.cc
-artobjdump_LDADD = libart++.la libfangutil.la
+# art__2obj_SOURCES = art++2obj.cc
+# art__2obj_LDADD = libart++.la libfangutil.la
 
-artobjunroll_SOURCES = artobjunroll.cc
-artobjunroll_LDADD = libart++.la libfangutil.la
+# artobjdump_SOURCES = artobjdump.cc
+# artobjdump_LDADD = libart++.la libfangutil.la
 
-prsobjdemo_SOURCES = prsobjdemo.cc
-prsobjdemo_LDADD = libart++.la libfangutil.la
+# artobjunroll_SOURCES = artobjunroll.cc
+# artobjunroll_LDADD = libart++.la libfangutil.la
 
-art_persistent_table_SOURCES = test/art_persistent_table.cc
-art_persistent_table_LDADD = libart++.la libfangutil.la
+# prsobjdemo_SOURCES = prsobjdemo.cc
+# prsobjdemo_LDADD = libart++.la libfangutil.la
+
+# art_persistent_table_SOURCES = test/art_persistent_table.cc
+# art_persistent_table_LDADD = libart++.la libfangutil.la
 
 getopt_test_SOURCES = test/getopt_test.cc
 
+# This says, "always build me first."
 # trying NOT to abuse this, writing explicit dependencies below
 BUILT_SOURCES = parser/art++-parse.output.h
-# This says, "build me first."
 
 # phony program to generate _build/*/.deps directories on distcheck
 PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
@@ -483,18 +490,34 @@ PARSER_CC_FILES = \
 	lexer/art++-lex-prefix.cc \
 	lexer/art_lex.cc
 
+# libhacktexec sources
+MAIN_EXEC_CC_FILES = \
+	main/force_load.cc \
+	main/program_registry.cc \
+	main/main_funcs.cc \
+	main/parse_test.cc \
+	main/compile.cc \
+	main/unroll.cc \
+	main/prsobjdemo.cc \
+	main/dump_persistent_table.cc \
+	main/objdump.cc
+
+MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
+	main/hackt.h \
+	main/hackt_fwd.h
+
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(ARTXX_PARSE_ROOT)-prefix.cc
 #	lexer/$(ARTXX_LEX_ROOT)-prefix.cc
 
 # the generated lexer and parser sources aren't supposed to be distributed!
-libart___la_SOURCES = \
+libhackt_la_SOURCES = \
 	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
-	config.h \
-	main/main_funcs.cc \
-	main/main_funcs.h
+	config.h
+
+libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
@@ -511,8 +534,8 @@ parser/art++-union.$(OBJEXT): parser/$(ARTXX_PARSE_ROOT).output.h
 # parser/$(ARTXX_PARSE_ROOT).cc: parser/$(ARTXX_PARSE_ROOT).output.h
 
 # build up main library from pieces
-# Here, libart++ will include all of libhacktparsers
-libart___la_LIBADD = libhacktparsers.la
+# Here, libhackt will include all of libhacktparsers
+libhackt_la_LIBADD = libhacktparsers.la
 
 # compile lexer and parser into separate library to for convenient way
 # of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS
@@ -537,7 +560,7 @@ ALL_TCC_FILES = \
 # note: Object/art_object_IO.cc only contains explicit template instantiations
 
 # don't actually need -l[f]l
-# libart___la_LDADD = @LEXLIB@
+# libhackt_la_LDADD = @LEXLIB@
 
 ARTXX_YACC_PREFIX = artxx_
 
@@ -652,7 +675,7 @@ SAVETEMP = $(CXXCOMPILE) -v -save-temps
 
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=artxx_yy
-# libart___la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
+# libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
 # *COUGH* *HACK*:
 # NO_FANCY_YYERROR tells lexer/art++-lex.cc to use un-transfomed symbol names
@@ -769,7 +792,14 @@ EXTRA_DIST += local.cvsignore \
 HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
 HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
 
-TESTS = art_persistent_table
+TESTS = art_persistent_table.sh
+DISTCLEANFILES += art_persistent_table.sh
+AUTO_IGNORE += $(TESTS)
+
+art_persistent_table.sh: hackt
+	@$(ECHO) "#!/bin/sh" > $@
+	@$(ECHO) "hackt dump_persistent_table" >> $@
+	@$(CHMOD) +x $@
 
 check-headers: $(HEADER_TCC_TESTS)
 	@$(ECHO) All header tests passed.
@@ -918,6 +948,7 @@ clean-cvsignore-subdirs:
 	-$(RM) $(SUBDIR_CVSIGNORE)
 
 DISTCLEANFILES += $(SUBDIR_CVSIGNORE)
+DISTCLEANDIRS += $(DEPDIR)
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \

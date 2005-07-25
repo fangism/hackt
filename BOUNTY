@@ -1,0 +1,58 @@
+"BOUNTY"
+
+Bugs wanted: dead or alive.
+
+Effective 2005-07-24 through 2005-09-30, 
+In the quest to produce a more perfect kompiler, I, fangism, have posted
+this bounty notice for discovered bugs.
+
+Rewards:
+One standard unit of reward will be a snack or drink from the CSL fridge, 
+whose monetary value is capped at $.50.
+
+Positive bugs: Classification
+build-failure: package fails to build on a platform/system that is NOT
+	on the list of unsupported platforms/compilers, worth 3 units.
+rejects-valid: compiler rejects valid code, worth 1 unit.
+accepts-invalid: compiler accepts invalid code, worth 1 units.  
+wrong-result: compiler produces incorrect result, worth 2 units. 
+ICE: internal compiler errors, includes all assertion failures, worth 3 units.  
+
+Not bugs:
+Features that are missing are not considered bugs.  
+Missing documentation is not a bug, but should be reported anyhow.  
+
+Known bugs and duplicates:
+Duplicates are bugs that have already been reported and flagged as valid.  
+Trivial test-case variations that produce the same bug do not count.  
+Known bugs and duplicate bug reports count for zero reward units.  
+
+Procedure:
+Build-failure reports consist of a description of the platform
+(architecture-OS-compiler) and a log of the build process, starting
+from the configure invocation.  
+All other bug-reports require a test-case, an input which exhibits the
+alleged bug.  The test-case need not be minimal, but one should make a
+reasonable effort to reduce the test case.  The only case when a 
+test-case is not required is when the case is already
+in the test suite.  Finally the report should consist of a list of steps
+taken (commands run) to produce the bug.  
+
+The FIRST valid bug one finds is worth two additional standard units, 
+on top of the bug's worth.  
+
+Bug slayers:
+Individuals who FIX bugs shall be rewarded double the value of the 
+bug's worth.  
+
+Adjudication:
+I, fangism, will be the final judge on the resolution of each bug report.  
+Reward substitution is negotiablem but be forewarned that I drive
+a hard bargain.  
+
+Bonus:
+The individual who has the most bugs (count, not net worth) found to 
+his/her credit by the expiration date of this bounty shall receive a 
+bonus reward to be announced at a later date, worth up to $20, 
+such as a free dinner.  
+

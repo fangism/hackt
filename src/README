@@ -25,5 +25,39 @@ Exceptions.  Of course, the simple workaround for exceptions
 is to add a custom bogus rule for a particular header check
 to override the suffix-rule user to generate it.  
 
+###############################################################################
+The executables:
+
+all commands are run form the HACKT dispatcher, named hackt.  
+
+hackt
+
+will give you a summary of the available subcommands.
+Complete commands are of the form:
+
+hackt [options] command [options] [arguments]
+
+###############################################################################
+Sample tool chain:
+
+Suppose you have a source file "foo.in".  
+(hackt is currently file-extension-agnostic.)
+
+One might run:
+
+hackt compile foo.in foo.artobj
+
+to produce a compiled object file, assuming the input is accepted.  
+To create the top-level port connections, one would then invoke:
+
+hackt unroll foo.artobj foo.artobjunroll
+
+to produce an unrolled object file, foo.artobjunroll.
+To view the contents of any object file in semi-human-readable form:
+
+hackt objdump foo.artobjunroll
+
+###############################################################################
+
 Fang, write more README!!!
 

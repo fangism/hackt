@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.16 2005/07/23 06:51:08 fang Exp $
+#	$Id: Makefile.am,v 1.17 2005/07/25 02:10:01 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -34,6 +34,7 @@ AUTO_IGNORE += aclocal.m4 libtool stamp-h1 \
 
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap maintainerclobber \
+	BOUNTY \
 	$(DOXYGEN_CONFIG).in \
 	DevelopmentPlan.dot \
 	readable_gcc_errors.sed \
@@ -58,13 +59,6 @@ else
 docs:
 	@$(ECHO) No doxygen found in path.  
 endif
-
-clean-local:
-
-distcleandirs:
-	$(RM) -r $(DISTCLEANDIRS)
-
-distclean-local: distcleandirs
 
 # distcheck is a top-level only target
 # .PRECIOUS: distcheck.log
