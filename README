@@ -54,9 +54,13 @@ The following compilers are supported and recommended:
 	gcc-3.3.x, -3.4.x, -4.0.x
 
 The following platforms and compilers are actively supported by this project:
-	Mac OS X 10.3+, gcc-3.3+ (either Apple or FSF)
+	Mac OS X 10.3+, gcc-3.3+ (either Apple* or FSF)
 	FreeBSD 4.3+, gcc-3.4+)
 	SuSE (or any) linux, gcc-3.3+
+
+* Apple's gcc-4.0 release with OS X 10.4 (build 4061) is buggy and missing
+6 months of bug fixes from FSF.  You'll need the XCode 2.1 upgrade for 
+a working compiler (build 5026).  
 
 These are the platforms to which the developer has access and can maintain
 build success and consistency.  
@@ -68,6 +72,15 @@ or some POSIX-compliant implementation of yacc.  The configuration uses
 the YACC variable to set the parser generator.  
 lex or flex is required to generate the scanner, and may be set using the
 LEX configure variable.  
+
+===============================================================================
+KNOWN ISSUES
+
+2005-07-26:
+It has been reported that some implementations of libc's getopt don't work
+as expected, especially if your name is Chris LaFrieda.  
+An investigation on this matter is pending.  
+
 
 ===============================================================================
 FOR DEVELOPERS

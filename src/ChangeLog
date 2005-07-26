@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-07-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-52:
+	  Makefile.am: dummy.cc to force configure creation of .deps/
+		directory for check-headers.  NOTE: make distcheck
+		somehow did not catch this mistake.  
+
+
 2005-07-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-51:
