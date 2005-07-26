@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.69 2005/07/25 02:10:04 fang Exp $
+#	$Id: Makefile.am,v 1.70 2005/07/26 02:47:08 fang Exp $
 
 # standard definitions and macro initializers
 include $(top_srcdir)/Make.stddef
@@ -51,24 +51,6 @@ noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhackt.la libfangutil.la
 
-# artc_SOURCES = art_main.cc
-# artc_LDADD = libart++.la libfangutil.la
-
-# art__2obj_SOURCES = art++2obj.cc
-# art__2obj_LDADD = libart++.la libfangutil.la
-
-# artobjdump_SOURCES = artobjdump.cc
-# artobjdump_LDADD = libart++.la libfangutil.la
-
-# artobjunroll_SOURCES = artobjunroll.cc
-# artobjunroll_LDADD = libart++.la libfangutil.la
-
-# prsobjdemo_SOURCES = prsobjdemo.cc
-# prsobjdemo_LDADD = libart++.la libfangutil.la
-
-# art_persistent_table_SOURCES = test/art_persistent_table.cc
-# art_persistent_table_LDADD = libart++.la libfangutil.la
-
 getopt_test_SOURCES = test/getopt_test.cc
 
 # This says, "always build me first."
@@ -76,11 +58,15 @@ getopt_test_SOURCES = test/getopt_test.cc
 BUILT_SOURCES = parser/art++-parse.output.h
 
 # phony program to generate _build/*/.deps directories on distcheck
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
+PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
+	dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
 # subdirectories, that are needed for make distcheck, for check-headers
+dummy.cc:
+	$(TOUCH) $@
+
 util/STL/dummy.cc:
 	$(TOUCH) $@
 
