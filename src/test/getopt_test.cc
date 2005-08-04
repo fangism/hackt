@@ -4,7 +4,7 @@
 	All this does is character-for-character cat. 
 	Copied (slightly modified) from:
 	http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html#Example-of-Getopt
-	$Id: getopt_test.cc,v 1.2.10.2 2005/08/04 20:14:18 fang Exp $
+	$Id: getopt_test.cc,v 1.2.10.3 2005/08/04 20:23:21 fang Exp $
  */
 
 #include <iostream>
@@ -17,12 +17,24 @@ using std::ifstream;
 
 int
 main (int argc, char *argv[]) {
-	const char* optstring = "abc:";
+	const char optstring[] = "abc:";
 	int aflag = 0;
 	int bflag = 0;
 	char *cvalue = NULL;
 	int index;
 	int c;
+
+	{
+		cout << "--------------------------------------------" << endl;
+		int i = 0;
+		if (i < argc) {
+			cout << "entire command:";
+			while (i < argc) {
+				cout << ' ' << argv[i++];
+			}
+			cout << endl;
+		}
+	}
 
 	opterr = 0;
 
