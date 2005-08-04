@@ -1,7 +1,7 @@
 #!/bin/sh
 # "test/getopt_test.sh"
 # Produces expected output for testing libc getopt behavior.  
-#	$Id: getopt_test.sh,v 1.1.2.1 2005/08/04 12:47:30 fang Exp $
+#	$Id: getopt_test.sh,v 1.1.2.2 2005/08/04 19:46:20 fang Exp $
 
 cmd=getopt_test
 redirin=/dev/null
@@ -23,4 +23,7 @@ $cmd -c -bfoo < $redirin
 $cmd -c -b foo < $redirin
 $cmd -bfoo < $redirin
 $cmd -b foo < $redirin
+$cmd -x < $redirin
+$cmd -x foo < $redirin
+$cmd -xy < $redirin
 

@@ -34,3 +34,6 @@ Unknown option `-f'.
 aflag = 0, bflag = 1, cvalue = (null)
 Non-option argument foo
 Couldn't open "foo" for reading.
+Unknown option `-x'.
+Unknown option `-x'.
+Unknown option `-x'.
