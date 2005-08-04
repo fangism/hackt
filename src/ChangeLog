@@ -2,6 +2,13 @@
 
 2005-08-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-52-configtest-03:
+	  The reason for non-POSIX behavior of getopt on linux is because
+		(according to the man-page) the default behavior is
+		non-POSIX.  To enforce POSIX, the option string should 
+		begin with a '+'.
+
+
 	* ARTXX-00-01-04-main-00-52-configtest-02:
 	  Makefile maintainence: factored out header-check functionality.  
 	  Added getopt_test test script to TESTS.

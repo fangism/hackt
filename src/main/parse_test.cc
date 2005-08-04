@@ -6,7 +6,7 @@
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: parse_test.cc,v 1.1.2.1 2005/08/04 20:46:15 fang Exp $
  */
 
 #include <iostream>
@@ -84,12 +84,14 @@ parse_test::main(const int argc, char* argv[],
 	\param o program options set by this routine.  
 	\return 0 if is ok to continue, anything else will signal early
 		termination, an error will cause exit(1).
+	NOTE: the getopt option string begins with '+' to enforce
+		POSIXLY correct termination at the first non-option argument.  
  */
 int
 parse_test::parse_command_options(const int argc, char* argv[],
 		options& opt) {
 	STACKTRACE_VERBOSE;
-	static const char* optstring = "dh";
+	static const char optstring[] = "+dh";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {

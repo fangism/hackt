@@ -78,9 +78,22 @@ KNOWN ISSUES
 
 2005-07-26:
 It has been reported that some implementations of libc's getopt don't work
-as expected, especially if your name is Chris LaFrieda.  
-An investigation on this matter is pending.  
-
+as expected, especially if your name is Chris LaFrieda and you run linux.  
+Here's the reason why: from the man (3) page of linux's getopt:
+	By  default,  getopt() permutes the contents of argv as it
+	scans, so that eventually all the non-options are  at  the
+	end.   Two other modes are also implemented.  If the first
+	character of optstring is '+' or the environment  variable
+	POSIXLY_CORRECT  is  set,  then option processing stops as
+	soon as a non-option  argument  is  encountered.   If  the
+	first  character of optstring is '-', then each non-option
+	argv-element is handled as if it were the argument  of  an
+	option  with  character code 1.  (This is used by programs
+	that were written to expect options  and  other  argv-ele­
+	ments in any order and that care about the ordering of the
+	two.)  The special argument '--' forces an end of  option-
+	scanning regardless of the scanning mode.
+The problem is fixed by passing '+' to enforce POSIX behavior.  
 
 ===============================================================================
 FOR DEVELOPERS

@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt.cc"
 	Implementation of core hackt program, contains main().
-	$Id: hackt.cc,v 1.1 2005/07/25 02:10:08 fang Exp $
+	$Id: hackt.cc,v 1.1.2.1 2005/08/04 20:46:15 fang Exp $
  */
 
 #include <iostream>
@@ -71,11 +71,13 @@ hackt::main(const int argc, char* argv[], const options&) {
 	getopt side effect:
 		sets optind to the index of the next argument to parse.  
 	\return 0 if options accepted.
+	NOTE: the getopt option string begins with '+' to enforce
+		POSIXLY correct termination at the first non-option argument.  
  */
 int
 hackt::parse_command_options(const int argc, char* argv[], options& opt) {
 	// none yet
-	static const char* optstring = "";
+	static const char optstring[] = "+";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
