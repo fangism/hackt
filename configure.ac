@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.3.2.2 2005/08/04 17:26:07 fang Exp $
+#	$Id: configure.ac,v 1.3.2.3 2005/08/04 20:51:48 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -179,6 +179,7 @@ AC_CONFIG_FILES([
 	test/artc-expect.sh
 	test/artobj-diff.sh
 	test/artobjunroll-expect.sh
+	test/test-series.sh
 	test/lexer/Makefile
 	test/parser/Makefile
 	test/parser/basic/Makefile
@@ -205,6 +206,7 @@ AC_OUTPUT
 
 # make configure-generated scripts executable
 chmod +x src/util/test/test-expect.sh
+chmod +x test/test-series.sh
 chmod +x test/artc-expect.sh
 chmod +x test/artobj-diff.sh
 chmod +x test/artobjunroll-expect.sh
