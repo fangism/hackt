@@ -5,7 +5,7 @@ include $(top_srcdir)/Make.stddef
 AUTOMAKE_OPTIONS += subdir-objects
 
 SUFFIXES = .test .ii
-TEST_EXPECT_SH = $(srcdir)/test-expect.sh
+TEST_EXPECT_SH = test-expect.sh
 
 # auto-generated test scripts
 .cc.test:
@@ -177,7 +177,7 @@ MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
-EXTRA_DIST += test-expect.sh local.cvsignore \
+EXTRA_DIST += README test-expect.sh.in local.cvsignore \
 	$(noinst_PROGRAMS:=.stderr) \
 	$(MOREFILTER_TESTS:=.morefilter.sh)
 
@@ -191,11 +191,11 @@ CLEANFILES += \
 	$(PREFILTER_FILES) \
 	$(EMPTY_STDERR_FILES)
 
-DISTCLEANFILES += $(libfangutil_la_SOURCES)
+DISTCLEANFILES += test-expect.sh $(libfangutil_la_SOURCES)
 
 TESTS = $(noinst_PROGRAMS:=.test)
 
-AUTO_IGNORE += $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
+AUTO_IGNORE += test-expect.sh $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 	$(BUILT_SOURCES) $(PREFILTER_FILES) $(TESTS)
 
 all-local: $(TESTS)

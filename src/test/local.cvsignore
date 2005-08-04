@@ -1,0 +1,4 @@
+*.output
+*.diff
+getopt_test.test
+

@@ -1,4 +1,5 @@
 .cvsignore
+*.swp
 *.core
 core.*
 *.test

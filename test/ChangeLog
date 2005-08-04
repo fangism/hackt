@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2005-08-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-52-configtest-02:
+	  Made test shell scripts configure-generated, using the 
+		results of configure.  
+
+
 2005-07-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-51:

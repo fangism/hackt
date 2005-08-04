@@ -1,6 +1,7 @@
-#!/bin/sh
-# "test-expect.sh"
-#	$Id: test-expect.sh,v 1.5 2005/06/19 01:58:53 fang Exp $
+#!@SH_PATH@
+# "test-expect.sh.in"
+#	$Id: test-expect.sh.in,v 1.1.2.1 2005/08/04 17:26:14 fang Exp $
+# This file came from "test-expect.sh" in revision prehistory.  
 
 # $1 is the executable, expecting no input
 # $2 is the path to the source directory, which is not necessarily ./
@@ -13,10 +14,10 @@ bldroot=$1
 morefilter=$srcroot.morefilter.sh
 
 # see if it crashes first
-{ $cmd ; if [ $? -gt 1 ] ; then exit 1 ; fi } 2>&1 | cat > /dev/null
+{ $cmd ; if [ $? -gt 1 ] ; then exit 1 ; fi } 2>&1 | @CAT@ > /dev/null
 
 # the run real test, comparing outputs
-$cmd 2>&1 | cat > $bldroot.out
+$cmd 2>&1 | @CAT@ > $bldroot.out
 
 $filter $bldroot.out > $bldroot.out.filter
 
@@ -30,7 +31,7 @@ else
 	then
 		expect=$1.stderr
 	else
-		echo "Missing $srcroot.stderr (or $1.stderr)"
+		@ECHO@ "Missing $srcroot.stderr (or $1.stderr)"
 		exit 1
 	fi
 fi
@@ -42,23 +43,25 @@ $filter $expect > $bldroot.stderr.filter
 #	and create replacement .filter files from the .prefilter files
 if [ -f $morefilter ]
 then
-	mv $bldroot.stderr.filter $bldroot.stderr.prefilter
-	mv $bldroot.out.filter $bldroot.out.prefilter
+	mv -f $bldroot.stderr.filter $bldroot.stderr.prefilter
+	mv -f $bldroot.out.filter $bldroot.out.prefilter
 	$morefilter $bldroot.stderr.prefilter $bldroot.stderr.filter
 	$morefilter $bldroot.out.prefilter $bldroot.out.filter
-	diff -u $bldroot.stderr.prefilter $bldroot.out.prefilter 2>&1 | cat > $bldroot.prefilter.diff
+	@DIFF@ -u $bldroot.stderr.prefilter $bldroot.out.prefilter 2>&1 | \
+		@CAT@ > $bldroot.prefilter.diff
 	# what the heck, print a warning message, just FYI
 	if [ -s $bldroot.prefilter.diff ]
 	then
-		echo "$bldroot.prefilter.diff is actually non-empty.  (OK)"
+		@ECHO@ "$bldroot.prefilter.diff is actually non-empty.  (OK)"
 	fi
 fi
 
-diff -u $bldroot.stderr.filter $bldroot.out.filter 2>&1 | cat > $bldroot.diff
+@DIFF@ -u $bldroot.stderr.filter $bldroot.out.filter 2>&1 | \
+	@CAT@ > $bldroot.diff
 
 if [ -s $bldroot.diff ]
 then
-	echo "$bldroot.diff is non-empty!"
+	@ECHO@ "$bldroot.diff is non-empty!"
 	exit 1
 fi
 

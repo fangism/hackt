@@ -1,0 +1,68 @@
+#!@SH_PATH@
+# "artc-expect.sh.in"
+#	$Id: artc-expect.sh.in,v 1.1.2.1 2005/08/04 17:26:16 fang Exp $
+# This file came from "artc-expect.sh" in revision pre-history.
+
+# $1 is the executable, expecting input from stdin
+# $2 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $3 is the input file name WITHOUT the .in extension
+# $4 is the filter for ignoring certain difference in output
+#	(for no filter, pass "cat")
+# $5 is the test report log file, summarizing results
+# other subsequent arguments are ignored
+
+# if [ $# -lt 6 ] ; then exit 1 ; fi
+
+cmd=$1
+srcroot=$2/$3
+bldroot=$3
+filter="$4"
+logfile=$5
+
+# echo $cmd
+# echo $srcroot
+# echo $bldroot
+# echo $filter
+# echo $logfile
+
+# see if it crashes first
+$cmd < $srcroot.in 2> /dev/null ; \
+if [ $? -gt 1 ] ; then exit 1 ; fi > /dev/null
+
+# the run real test, comparing outputs
+$cmd < $srcroot.in 2>&1 | @CAT@ > $bldroot.test
+$filter $bldroot.test > $bldroot.test.filter
+if [ -f $srcroot.stderr ] ; then
+	$filter $srcroot.stderr > $bldroot.stderr.filter
+else
+	@TOUCH@ $bldroot.stderr.filter
+fi
+
+@DIFF@ -bu $bldroot.stderr.filter $bldroot.test.filter 2>&1 | \
+	@CAT@ > $bldroot.diff
+
+# first-try: if different, see if it's because of bison...
+# if so, re-run using bison's expected output
+# otherwise, exit with error
+@HAVE_BISON_TRUE@if [ -s $bldroot.diff ] ; then
+@HAVE_BISON_TRUE@	if [ -f $srcroot.stderr.bison ] ; then
+@HAVE_BISON_TRUE@		$filter $srcroot.stderr.bison > $bldroot.stderr.bison.filter
+@HAVE_BISON_TRUE@	else
+@HAVE_BISON_TRUE@		@TOUCH@ $bldroot.stderr.bison.filter
+@HAVE_BISON_TRUE@	fi
+@HAVE_BISON_TRUE@	@DIFF@ -bu $bldroot.stderr.bison.filter $bldroot.test.filter \
+@HAVE_BISON_TRUE@		2>&1 | @CAT@ > $bldroot.bison.diff
+@HAVE_BISON_TRUE@	if ! [ -s $bldroot.bison.diff ] ; then
+@HAVE_BISON_TRUE@		mv -f $bldroot.bison.diff $bldroot.diff
+@HAVE_BISON_TRUE@	else
+@HAVE_BISON_TRUE@		@ECHO@ "$bldroot.bison.diff is non-empty!"
+@HAVE_BISON_TRUE@	fi
+@HAVE_BISON_TRUE@fi
+
+if [ -s $bldroot.diff ] ; then
+	@ECHO@ "$bldroot.diff is non-empty!  See $logfile."
+	@ECHO@ `pwd`/"$bldroot.diff" >> $logfile
+	exit 1
+fi
+

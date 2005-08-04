@@ -1,0 +1,5 @@
+"src/util/test/README"
+
+This directory contains a test suite for libfangutil, the library
+contained in the src/util directory subtree.  
+

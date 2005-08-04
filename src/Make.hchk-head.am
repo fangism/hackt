@@ -1,0 +1,26 @@
+# "src/Make.hchk-head.am"
+#	$Id: Make.hchk-head.am,v 1.1.2.1 2005/08/04 17:26:12 fang Exp $
+# Makefile header for enforcing header checks.
+# Counterpart is "src/Make.hchk-tail.am"
+
+# This defines (initializes) the following Makefile variables:
+# ALL_HEADER_FILES
+# ALL_TCC_FILES
+
+# The following variable should be set by the includer of this makefile:
+# EMPTY_SOURCE
+
+# NOTE: requires that SUFFIXES is already defined, because this file
+# adds to the suffixes list.  
+
+###############################################################################
+# standard definitions and macro initializers
+include $(top_srcdir)/Make.stddef
+
+# .hchk and .tccchk for standalone header checks
+SUFFIXES += .hchk .tccchk
+
+ALL_HEADER_FILES =
+ALL_TCC_FILES =
+
+

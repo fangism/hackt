@@ -3,19 +3,44 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.3.2.1 2005/08/04 12:47:22 fang Exp $
+#	$Id: configure.ac,v 1.3.2.2 2005/08/04 17:26:07 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20050724, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20050804, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
 
 AC_CANONICAL_HOST
+AC_CHECK_PROG([SH], sh, sh)
+AC_PATH_PROG(SH_PATH, sh)
+
+# CALLMAKE is intended for shell scripts' invocations of make
+# NOT intended for direct use in configured Makefiles, because
+# MAKE is more appropriate and configured for automake already.
+AC_CHECK_PROGS([CALLMAKE], gmake make)
+
+# basic program checks
+AC_CHECK_PROG([CAT], cat, cat)
+AC_CHECK_PROG([CPP_TRADITIONAL], cpp, cpp)
+AC_CHECK_PROG([CHMOD], chmod, chmod)
+# CVS is not required, but will enable some handy targets
+AC_CHECK_PROG([CVS], cvs, cvs)
+AM_CONDITIONAL(HAVE_CVS, test -n "$CVS")
+AC_CHECK_PROG([DATE], date, date)
+AC_CHECK_PROG([DIFF], diff, diff)
+AC_CHECK_PROG([GREP], grep, grep)
+AC_CHECK_PROG([ECHO], echo, echo)
+AC_CHECK_PROG([HEAD], head, head)
+AC_CHECK_PROG([TAIL], tail, tail)
+# AC_CHECK_PROG([PWD], pwd, pwd)
+#	checking for PWD doesn't work as expected...
+AC_CHECK_PROG([SED], sed, sed)
+AC_CHECK_PROG([TOUCH], touch, touch)
 
 # don't need this yet
 # AC_CONFIG_SUBDIRS
@@ -98,10 +123,7 @@ fi
 
 # AC_PROG_PERL
 AC_CHECK_PROG([PERL], perl, perl)
-if test -n "$PERL"
-then
-	AC_SUBST(PERL_PATH, `which perl`)
-fi
+AC_PATH_PROG([PERL_PATH], perl)
 
 # documentation support
 AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
@@ -129,7 +151,7 @@ AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
 if test -n "$DOT"
 then
 	AC_SUBST(HAVE_DOT, "YES")
-	AC_SUBST(DOT_PATH, `which dot`)
+	AC_PATH_PROG([DOT_PATH], dot)
 else
 	AC_SUBST(HAVE_DOT, "NO")
 fi
@@ -152,7 +174,11 @@ AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
 	src/util/test/Makefile
+	src/util/test/test-expect.sh
 	test/Makefile
+	test/artc-expect.sh
+	test/artobj-diff.sh
+	test/artobjunroll-expect.sh
 	test/lexer/Makefile
 	test/parser/Makefile
 	test/parser/basic/Makefile
@@ -176,4 +202,10 @@ AC_CONFIG_FILES([
 	])
 
 AC_OUTPUT
+
+# make configure-generated scripts executable
+chmod +x src/util/test/test-expect.sh
+chmod +x test/artc-expect.sh
+chmod +x test/artobj-diff.sh
+chmod +x test/artobjunroll-expect.sh
 

@@ -1,0 +1,6 @@
+"test/README"
+This is the root directory the the HACKT test suite.  
+All Makefiles in this subdirectory tree include the Make.test-head and 
+Make.test-tail template makefile snippets.  
+The test scripts are configure-generated.  
+

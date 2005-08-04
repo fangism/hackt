@@ -1,8 +1,16 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.70.2.1 2005/08/04 12:47:28 fang Exp $
+#	$Id: Makefile.am,v 1.70.2.2 2005/08/04 17:26:12 fang Exp $
+
+# TODO: substitute ARTXX -> HACKT
+
+# .yy for yacc (C++), .ll for lex (C++), 
+# .hchk and .tccchk for standalone header checks
+SUFFIXES = .yy .ll .ii .test
 
 # standard definitions and macro initializers
-include $(top_srcdir)/Make.stddef
+# appends to SUFFIXES
+include $(srcdir)/Make.hchk-head.am
+# includes "Make.stddef"
 
 AUTOMAKE_OPTIONS += subdir-objects
 
@@ -10,16 +18,8 @@ AUTOMAKE_OPTIONS += subdir-objects
 # are managed by this Makefile (flat)
 SUBDIRS = util/test .
 
-# .yy for yacc (C++), .ll for lex (C++), 
-# .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .hchk .tccchk .ii .test
-
 
 ###################### Are we using yacc or bison? ############################
-
-# use autoconf-defined HAVE_BISON
-GREP_FOR_BISON = $(GREP) "^YACC =" Makefile | $(GREP) -q bison
-
 LEXYACC_PREFIX_SCRIPT = $(srcdir)/parser/lexyacc-prefix.awk
 
 if HAVE_BISON
@@ -530,7 +530,7 @@ libhacktparsers_la_SOURCES = \
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 
-ALL_HEADER_FILES = \
+ALL_HEADER_FILES += \
 	$(UTIL_HEADER_FILES) \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \
@@ -538,7 +538,7 @@ ALL_HEADER_FILES = \
 	config.h \
 	main/main_funcs.h
 
-ALL_TCC_FILES = \
+ALL_TCC_FILES += \
 	$(UTIL_TCC_FILES) \
 	$(OBJECT_TCC_FILES) \
 	$(AST_TCC_FILES)
@@ -594,7 +594,7 @@ $(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
 # NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
 # gcc -E ignores file that require no preprocessing
 
-CPP_TRADITIONAL = cpp
+CPP_TRADITIONAL = @CPP_TRADITIONAL@
 
 parser/art++.types: parser/$(ARTXX_PARSE_ROOT).yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
@@ -676,48 +676,8 @@ libhacktparsers_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 # art__2obj_CPPFLAGS = $(AM_CPPFLAGS)
 # artobjdump_CPPFLAGS = $(AM_CPPFLAGS)
 
+# is required to be set for Make.hchk-tail.am
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
-
-# no need for -MT (already correct target)
-# no need for -MP for phony targets, awk-script already does it, 
-#	but redundant phony targets are ignored by it anyhow.
-# expects name of temporary file after -MF
-FAST_MAKEDEP_FLAGS = -MMD -MF
-PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
-	-v srcdir=$(srcdir)
-FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g' | $(SED) 's|[^ ]*\.cc||g'
-# some exceptions to checking
-
-# cray-zee anal-retentive header checking with depdendence-tracking
-.h.hchk:
-	@$(ECHO) "Validating $< ... "
-if am__fastdepCXX
-	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
-	if $(CXXCOMPILE) -I$(srcdir) -include $< \
-		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
-		$(EMPTY_SOURCE) -o $@; \
-	then $(CAT) "$$depbase.Thd" | $(FILTER_HEADER_DEPS) | \
-		$(PROMOTE_HEADER_DEPS) > "$$depbase.hchkd"; \
-		$(RM) "$$depbase.Thd" ; \
-	else $(RM) "$$depbase.Thd"; exit 1; fi
-else
-	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
-endif
-
-.tcc.tccchk:
-	@$(ECHO) "Validating $< ... "
-if am__fastdepCXX
-	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
-	if $(CXXCOMPILE) -I$(srcdir) -include $< \
-		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
-		$(EMPTY_SOURCE) -o $@; \
-	then $(CAT) "$$depbase.Ttccd" | $(FILTER_HEADER_DEPS) | \
-		$(PROMOTE_HEADER_DEPS) > "$$depbase.tccchkd"; \
-		$(RM) "$$depbase.Ttccd" ; \
-	else $(RM) "$$depbase.Ttccd"; exit 1; fi
-else
-	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
-endif
 
 # there are a few headers we want exempt from stand-alone testing
 # what about their dependencies?  
@@ -746,15 +706,16 @@ EXTRA_DIST += local.cvsignore \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
 	lexer/local.cvsignore \
+	test/local.cvsignore \
 	test/header_test.cc \
+	test/getopt_test.sh \
+	test/getopt_test.stderr \
 	util/ChangeLog \
 	util/README \
 	util/TODO \
 	util/STL/README \
 	util/obsolete/README \
 	scripts/filter_namespaces.sed \
-	scripts/automake_include.awk \
-	scripts/promote_header_deps.awk \
 	Object/README \
 	Object/common/README \
 	Object/def/README \
@@ -770,18 +731,10 @@ EXTRA_DIST += local.cvsignore \
 	NOTES \
 	wc-l
 
-# NOTE: subdirectories which will not have .o,.lo object files built
-# will not be generated in the _build tree of the distcheck.
-# This means we have to fake an object file in each subdirectory
-# containing headers we want to check for standalone-ness.  
-# Really, they should just be able to link to "test/header_test.cc"
-HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
-HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
-
-TESTS = art_persistent_table.sh
+TESTS = art_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
 DISTCLEANFILES += art_persistent_table.sh
-AUTO_IGNORE += $(TESTS)
+AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@
@@ -794,27 +747,14 @@ test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) fi >> $@
 	@$(CHMOD) +x $@
 
+DISTCLEANFILES += test/getopt_test.test \
+	test/getopt_test.diff \
+	test/getopt_test.output
+
 art_persistent_table.sh: hackt
 	@$(ECHO) "#!/bin/sh" > $@
 	@$(ECHO) "hackt dump_persistent_table" >> $@
 	@$(CHMOD) +x $@
-
-check-headers: $(HEADER_TCC_TESTS)
-	@$(ECHO) All header tests passed.
-
-headers_deps.make: Makefile.am
-	@$(ECHO) Regenerating $@ ...
-	@$(ECHO) "# $@ -- generated by rule in Makefile.am" > $@
-	@$(ECHO) "#	(This is not an automake feature, just a custom extension.)" >> $@
-	@$(ECHO) $(HEADER_TCC_DEPBASES) | \
-		$(AWK) -f $(srcdir)/scripts/automake_include.awk >> $@
-
-
-# inlined into Makefile.in by automake
-# really only needed for dynamic dependence-tracking
-include headers_deps.make
-
-all: check-headers
 
 # choosing not to distribute lex/yacc-generated sources for now
 CLEANPARSER = \
@@ -848,23 +788,6 @@ clean-lexer:
 	-$(RM) $(CLEANLEXER)
 	-$(RM) lexer/*.$(OBJEXT) lexer/*.lo
 
-clean-header-tests:
-	-$(RM) $(HEADER_TCC_TESTS)
-
-# Incidentally, automake is smart enough to make initial dummy files
-# for dependencies that are automatically generated.
-# You never want to manually remove the .Po .Plo files
-# (now including .hchkd, .tccchkd) from the .deps directories.  
-# IF you do remove it, be sure to replace it with an empty placeholder
-# before re-running make.  
-
-clean-header-deps:
-	@$(ECHO) "Resetting .deps/*chkd in all sub-directories..."
-	@for f in $(HEADER_TCC_DEPBASES); do \
-		$(ECHO) "# reset" > \
-			`$(ECHO) $$f | $(SED) 's|[^/]*$$|$(DEPDIR)/&|'` ; \
-	done
-
 clean-AST:
 	-$(RM) AST/*.$(OBJEXT)
 	-$(RM) AST/*.lo
@@ -882,7 +805,6 @@ clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests
 	done
 
 # cvsignore targets
-AUTO_IGNORE += $(PROGRAMS) headers_deps.make
 lexer/.cvsignore: .cvsignore lexer/local.cvsignore
 	$(CAT) .cvsignore $(srcdir)/lexer/local.cvsignore > $@
 parser/.cvsignore: .cvsignore parser/local.cvsignore
@@ -921,8 +843,8 @@ util/numeric/.cvsignore: .cvsignore
 	$(CP) $? $@
 util/obsolete/.cvsignore: .cvsignore
 	$(CP) $? $@
-test/.cvsignore: .cvsignore
-	$(CP) $? $@
+test/.cvsignore: .cvsignore test/local.cvsignore
+	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	Object/.cvsignore Object/common/.cvsignore \
@@ -954,5 +876,6 @@ dist-hook:
 	done
 
 # standard targets
-include $(top_srcdir)/Make.global
+include $(srcdir)/Make.hchk-tail.am
+# includes "Make.global"
 

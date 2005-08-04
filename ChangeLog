@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-08-04	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-52-configtest-01:
+	  Configure properly determins and sets the shell interpreter
+		for all Makefiles, using @SH_PATH@, just in case
+		/bin/sh is in non-standard location, and also to prevent
+		bash from being used as the interpreter.  
+
+
 2005-07-24	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-52:
