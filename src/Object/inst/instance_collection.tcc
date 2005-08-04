@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.2 2005/07/23 06:52:37 fang Exp $
+	$Id: instance_collection.tcc,v 1.3 2005/08/04 23:02:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -316,6 +316,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
 	DIE;
+	return const_iterator(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -323,6 +324,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::end(void) const {
 	DIE;
+	return const_iterator(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2005/07/23 06:53:10 fang Exp $
+#	$Id: Makefile.am,v 1.11 2005/08/04 23:02:57 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -14,17 +14,26 @@ clean-test:
 # bogus test
 TESTS = clean-test
 
-DISTCLEANFILES += $(TESTS)
+# configure-input scripts
+PRECONFIGURED_TESTSCRIPTS = \
+	artc-expect.sh.in \
+	artobj-diff.sh.in \
+	artobjunroll-expect.sh.in \
+	test-series.sh.in
 
-EXTRA_DIST += ChangeLog Make.test-head Make.test-tail \
-	artc-expect.sh artobj-diff.sh \
-	artobjunroll-expect.sh \
+POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
+AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
+
+DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
+
+EXTRA_DIST += ChangeLog README \
+	Make.test-head Make.test-tail \
+	$(PRECONFIGURED_TESTSCRIPTS) \
 	state_enum_filter.awk address_filter.sed \
 	POM-header-filter.awk \
 	update-artcstderr.sh \
 	update-unrollstderr.sh \
-	spacestonewline.awk test.cvsignore \
-	test-series.sh
+	spacestonewline.awk test.cvsignore
 
 # remove extraneous auto-generated files
 dist-hook:

@@ -1,9 +1,10 @@
 /**
 	\file "main/getopt_test.cc"
 	Testing portability of libc's getopt.  
+	All this does is character-for-character cat. 
 	Copied (slightly modified) from:
 	http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html#Example-of-Getopt
-	$Id: getopt_test.cc,v 1.2 2005/06/21 21:26:36 fang Exp $
+	$Id: getopt_test.cc,v 1.3 2005/08/04 23:02:55 fang Exp $
  */
 
 #include <iostream>
@@ -16,12 +17,24 @@ using std::ifstream;
 
 int
 main (int argc, char *argv[]) {
-	const char* optstring = "abc:";
+	const char optstring[] = "+abc:";
 	int aflag = 0;
 	int bflag = 0;
 	char *cvalue = NULL;
 	int index;
 	int c;
+
+	{
+		cout << "--------------------------------------------" << endl;
+		int i = 0;
+		if (i < argc) {
+			cout << "entire command:";
+			while (i < argc) {
+				cout << ' ' << argv[i++];
+			}
+			cout << endl;
+		}
+	}
 
 	opterr = 0;
 
@@ -36,6 +49,9 @@ main (int argc, char *argv[]) {
 	case 'c':
 		cvalue = optarg;
 		break;
+	case ':':
+		cerr << "Expected but missing non-option argument." << endl;
+		return 1;
 	case '?':
 		if (isprint(optopt))
 			cerr << "Unknown option `-" << char(optopt) <<
@@ -55,6 +71,17 @@ main (int argc, char *argv[]) {
 		cout << cvalue;
 	else	cout << "(null)";
 	cout << endl;
+
+	{
+		int i = optind;
+		if (i < argc) {
+			cout << "non-option argv-elements:";
+			while (i < argc) {
+				cout << ' ' << argv[i++];
+			}
+			cout << endl;
+		}
+	}
 
 	index = optind;
 	if (index == argc) {

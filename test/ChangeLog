@@ -1,5 +1,18 @@
 # "test/ChangeLog"
 
+2005-08-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-merged-configtest-03:
+	  Merged revisions from -configtest (-03) branch.
+
+
+2005-08-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-52-configtest-02:
+	  Made test shell scripts configure-generated, using the 
+		results of configure.  
+
+
 2005-07-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-51:

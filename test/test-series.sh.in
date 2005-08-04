@@ -1,6 +1,8 @@
-#!/bin/sh
-# "test-series.sh"
+#!@SH_PATH@
+# "test-series.sh.in"
 # convenience script for running a sequence of tests on one input file.
+#	$Id: test-series.sh.in,v 1.2 2005/08/04 23:02:59 fang Exp $
+# This file originally came from "test-series.sh" in revision prehistory.  
 
 # usage: pass in the root names of the test cases (without the .in extension)
 
@@ -8,23 +10,23 @@ for t in $@
 do
 	if ! [ -f $t.artctest ]
 	then
-		make $t.artctest
+		@CALLMAKE@ $t.artctest
 	fi
-	echo $t.artctest
+	@ECHO@ $t.artctest
 	$t.artctest
 	if ! [ -s $t.test ]
 	then
 		if ! [ -f $t.artobjtest ]
 		then
-			make $t.artobjtest
+			@CALLMAKE@ $t.artobjtest
 		fi
-		echo $t.artobjtest
+		@ECHO@ $t.artobjtest
 		$t.artobjtest
 		if ! [ -f $t.artobjunrolltest ]
 		then
-			make $t.artobjunrolltest
+			@CALLMAKE@ $t.artobjunrolltest
 		fi
-		echo $t.artobjunrolltest
+		@ECHO@ $t.artobjunrolltest
 		$t.artobjunrolltest
 	fi
 done

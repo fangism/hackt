@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.1 2005/07/25 02:10:07 fang Exp $
+	$Id: compile.cc,v 1.2 2005/08/04 23:02:54 fang Exp $
  */
 
 #include <iostream>
@@ -83,10 +83,12 @@ compile::main(const int argc, char* argv[], const global_options&) {
 /**
 	\return 0 if is ok to continue, anything else will signal early
 		termination, an error will cause exit(1).
+	NOTE: the getopt option string begins with '+' to enforce
+		POSIXLY correct termination at the first non-option argument.  
  */
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "dh";
+	static const char* optstring = "+dh";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {

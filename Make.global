@@ -5,7 +5,8 @@
 # or with automake for automatic inlining.  
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
-#	$Id: Make.global,v 1.3 2005/07/25 02:10:01 fang Exp $
+# NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
+#	$Id: Make.global,v 1.4 2005/08/04 23:02:50 fang Exp $
 
 
 # list of files to automatically CVS ignore, accumulated over Makefile
@@ -22,7 +23,7 @@ reconf: force
 # might as well include this for non-maintainers too
 # again, can't append to file with cat redirection because distclean
 # sets permissions of new files as read-only
-# NOTE: local.cvsignore may be normal or automatic
+# NOTE: local.cvsignore may be normal or automatically generated
 .cvsignore: local.cvsignore
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	$(CAT) $< $@.temp > $@
@@ -55,7 +56,6 @@ clean-cvsignore-recursive:
 		fi ; \
 	done
 
-
 DISTCLEANFILES += .cvsignore check.log
 
 distcleandirs:
@@ -72,10 +72,15 @@ check.log: force
 	-$(GREP) -v ^PASS $@
 	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 
+if HAVE_CVS
 cvsdiffs: force
 	-$(CVS) diff -u > $@
 	@$(ECHO) `$(GREP) "^-" $@ | $(GREP) -v "^---" | wc -l` "lines removed"
 	@$(ECHO) `$(GREP) "^+" $@ | $(GREP) -v "^+++" | wc -l` "lines added"
+else
+cvsdiffs:
+	@$(ECHO) "Sorry, no 'cvs' found in path."
+endif
 
 # standard phony target for unconditional targets
 force:

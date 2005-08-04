@@ -1,21 +1,25 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.9 2005/05/19 18:43:36 fang Exp $
+	$Id: stacktrace.cc,v 1.10 2005/08/04 23:02:55 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
 #define	ENABLE_STACKTRACE	1
 // #define	ENABLE_STATIC_TRACE	1
 
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("stacktrace")
+
+#include "config.h"
+
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif
 #include <iostream>
 #include <iterator>
 #include <string>
 #include <stack>
-
-#include "util/static_trace.h"
-STATIC_TRACE_BEGIN("stacktrace")
 
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"

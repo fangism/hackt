@@ -1,16 +1,17 @@
 # "test/Make.test-tail"
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
-#	$Id: Make.test-tail,v 1.3 2005/07/25 02:10:10 fang Exp $
+#	$Id: Make.test-tail,v 1.4 2005/08/04 23:02:57 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
 ARTOBJDUMP_EXE = $(top_builddir)/src/hackt objdump
 ARTOBJUNROLL_EXE = $(top_builddir)/src/hackt unroll
 
-ARTC_TEST_SH = $(top_srcdir)/test/artc-expect.sh
-ARTOBJ_TEST_SH = $(top_srcdir)/test/artobj-diff.sh
-ARTOBJUNROLL_TEST_SH = $(top_srcdir)/test/artobjunroll-expect.sh
+# NOTE: these scripts are configure-generated from their .in files.  
+ARTC_TEST_SH = $(top_builddir)/test/artc-expect.sh
+ARTOBJ_TEST_SH = $(top_builddir)/test/artobj-diff.sh
+ARTOBJUNROLL_TEST_SH = $(top_builddir)/test/artobjunroll-expect.sh
 
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
 POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
