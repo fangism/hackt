@@ -2,9 +2,11 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.9 2005/07/23 06:51:08 fang Exp $
+#	$Id: Make.stddef,v 1.9.2.1 2005/08/04 12:47:18 fang Exp $
 
-# SHELL = /bin/sh
+# force use of the ancient canonical bourne shell, 
+# else configure may pick up bash as the shell interpreter.  
+SHELL = /bin/sh
 # add -v for verbose
 
 # to control the version of automake (minimum)

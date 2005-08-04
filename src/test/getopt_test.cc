@@ -1,9 +1,10 @@
 /**
 	\file "main/getopt_test.cc"
 	Testing portability of libc's getopt.  
+	All this does is character-for-character cat. 
 	Copied (slightly modified) from:
 	http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html#Example-of-Getopt
-	$Id: getopt_test.cc,v 1.2 2005/06/21 21:26:36 fang Exp $
+	$Id: getopt_test.cc,v 1.2.10.1 2005/08/04 12:47:30 fang Exp $
  */
 
 #include <iostream>

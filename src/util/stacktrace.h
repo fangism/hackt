@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.9 2005/07/20 21:01:02 fang Exp $
+	$Id: stacktrace.h,v 1.9.4.1 2005/08/04 12:47:32 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -18,7 +18,7 @@
 #endif
 
 
-#include "util/cppcat.h"		// for ithe UNIQUIFY macros
+#include "util/cppcat.h"		// for the UNIQUIFY macros
 
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
@@ -46,7 +46,7 @@
 #define	STACKTRACE_STREAM						\
 		util::stacktrace::stream()
 #define REDIRECT_STACKTRACE(os)						\
-	const util::stacktrace::redirect __redir_stacktrace__##__LINE__##_(os)
+	const util::stacktrace::redirect UNIQUIFY(__redir_stacktrace__) (os)
 #define	ASSERT_STACKTRACE(expr)						\
 	if (!(expr)) { util::stacktrace::full_dump(); assert(expr); }
 #define	REQUIRES_STACKTRACE_STATIC_INIT					\
@@ -192,7 +192,7 @@ struct stacktrace::redirect {
 
 }	// end namespace util
 
-#else
+#else	// ENABLE_STACKTRACE
 	// don't even bother processing class declaration!
 #endif	// ENABLE_STACKTRACE
 

@@ -1,0 +1,36 @@
+aflag = 0, bflag = 0, cvalue = (null)
+No standard arguments found, expecting input from stdin:
+aflag = 0, bflag = 0, cvalue = (null)
+Non-option argument foo
+Couldn't open "foo" for reading.
+aflag = 1, bflag = 0, cvalue = (null)
+No standard arguments found, expecting input from stdin:
+aflag = 0, bflag = 1, cvalue = (null)
+No standard arguments found, expecting input from stdin:
+aflag = 1, bflag = 1, cvalue = (null)
+No standard arguments found, expecting input from stdin:
+aflag = 1, bflag = 1, cvalue = (null)
+No standard arguments found, expecting input from stdin:
+Unknown option `-c'.
+aflag = 0, bflag = 0, cvalue = foo
+No standard arguments found, expecting input from stdin:
+aflag = 0, bflag = 0, cvalue = foo
+No standard arguments found, expecting input from stdin:
+aflag = 1, bflag = 0, cvalue = foo
+No standard arguments found, expecting input from stdin:
+aflag = 1, bflag = 0, cvalue = foo
+No standard arguments found, expecting input from stdin:
+aflag = 0, bflag = 0, cvalue = bfoo
+No standard arguments found, expecting input from stdin:
+aflag = 0, bflag = 0, cvalue = b
+Non-option argument foo
+Couldn't open "foo" for reading.
+aflag = 0, bflag = 0, cvalue = -bfoo
+No standard arguments found, expecting input from stdin:
+aflag = 0, bflag = 0, cvalue = -b
+Non-option argument foo
+Couldn't open "foo" for reading.
+Unknown option `-f'.
+aflag = 0, bflag = 1, cvalue = (null)
+Non-option argument foo
+Couldn't open "foo" for reading.

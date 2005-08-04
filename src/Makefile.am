@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.70 2005/07/26 02:47:08 fang Exp $
+#	$Id: Makefile.am,v 1.70.2.1 2005/08/04 12:47:28 fang Exp $
 
 # standard definitions and macro initializers
 include $(top_srcdir)/Make.stddef
@@ -12,7 +12,7 @@ SUBDIRS = util/test .
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .hchk .tccchk .ii
+SUFFIXES = .yy .ll .hchk .tccchk .ii .test
 
 
 ###################### Are we using yacc or bison? ############################
@@ -779,8 +779,20 @@ HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
 HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
 
 TESTS = art_persistent_table.sh
+# test/getopt_test.test
 DISTCLEANFILES += art_persistent_table.sh
 AUTO_IGNORE += $(TESTS)
+
+test/getopt_test.test: getopt_test test/getopt_test.sh
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "$(srcdir)/$*.sh 2>&1 | cat > $*.output" >> $@
+	@$(ECHO) "$(DIFF) $*.output $(srcdir)/$*.stderr > $*.diff" >> $@
+	@$(ECHO) "if [ -s $*.diff ]" >> $@
+	@$(ECHO) then >> $@
+		@$(ECHO) "$(ECHO) \"libc getopt behavior differs from expectation!\"" >> $@
+		@$(ECHO) "exit 1" >> $@
+	@$(ECHO) fi >> $@
+	@$(CHMOD) +x $@
 
 art_persistent_table.sh: hackt
 	@$(ECHO) "#!/bin/sh" > $@
