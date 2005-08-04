@@ -1,8 +1,19 @@
 aflag = 0, bflag = 0, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 aflag = 0, bflag = 0, cvalue = (null)
+non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
+aflag = 0, bflag = 0, cvalue = (null)
+non-option argv-elements: foo bar
+Non-option argument foo
+Couldn't open "foo" for reading.
+Non-option argument bar
+Couldn't open "bar" for reading.
+aflag = 1, bflag = 0, cvalue = (null)
+No standard arguments found, expecting input from stdin:
+aflag = 1, bflag = 0, cvalue = (null)
+No standard arguments found, expecting input from stdin:
 aflag = 1, bflag = 0, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 aflag = 0, bflag = 1, cvalue = (null)
@@ -23,17 +34,68 @@ No standard arguments found, expecting input from stdin:
 aflag = 0, bflag = 0, cvalue = bfoo
 No standard arguments found, expecting input from stdin:
 aflag = 0, bflag = 0, cvalue = b
+non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
 aflag = 0, bflag = 0, cvalue = -bfoo
 No standard arguments found, expecting input from stdin:
 aflag = 0, bflag = 0, cvalue = -b
+non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
 Unknown option `-f'.
 aflag = 0, bflag = 1, cvalue = (null)
+non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
+aflag = 0, bflag = 1, cvalue = (null)
+non-option argv-elements: foo bar ick
+Non-option argument foo
+Couldn't open "foo" for reading.
+Non-option argument bar
+Couldn't open "bar" for reading.
+Non-option argument ick
+Couldn't open "ick" for reading.
+aflag = 0, bflag = 1, cvalue = (null)
+non-option argv-elements: foo -a bar ick
+Non-option argument foo
+Couldn't open "foo" for reading.
+Non-option argument -a
+Couldn't open "-a" for reading.
+Non-option argument bar
+Couldn't open "bar" for reading.
+Non-option argument ick
+Couldn't open "ick" for reading.
+aflag = 0, bflag = 1, cvalue = (null)
+non-option argv-elements: foo -b bar ick
+Non-option argument foo
+Couldn't open "foo" for reading.
+Non-option argument -b
+Couldn't open "-b" for reading.
+Non-option argument bar
+Couldn't open "bar" for reading.
+Non-option argument ick
+Couldn't open "ick" for reading.
+aflag = 0, bflag = 1, cvalue = foo
+non-option argv-elements: bar ick
+Non-option argument bar
+Couldn't open "bar" for reading.
+Non-option argument ick
+Couldn't open "ick" for reading.
+aflag = 0, bflag = 0, cvalue = bar
+non-option argv-elements: ick
+Non-option argument ick
+Couldn't open "ick" for reading.
+aflag = 0, bflag = 1, cvalue = (null)
+non-option argv-elements: foo -c bar ick
+Non-option argument foo
+Couldn't open "foo" for reading.
+Non-option argument -c
+Couldn't open "-c" for reading.
+Non-option argument bar
+Couldn't open "bar" for reading.
+Non-option argument ick
+Couldn't open "ick" for reading.
 Unknown option `-x'.
 Unknown option `-x'.
 Unknown option `-x'.

@@ -4,7 +4,7 @@
 	All this does is character-for-character cat. 
 	Copied (slightly modified) from:
 	http://www.gnu.org/software/libc/manual/html_node/Example-of-Getopt.html#Example-of-Getopt
-	$Id: getopt_test.cc,v 1.2.10.1 2005/08/04 12:47:30 fang Exp $
+	$Id: getopt_test.cc,v 1.2.10.2 2005/08/04 20:14:18 fang Exp $
  */
 
 #include <iostream>
@@ -37,6 +37,9 @@ main (int argc, char *argv[]) {
 	case 'c':
 		cvalue = optarg;
 		break;
+	case ':':
+		cerr << "Expected but missing non-option argument." << endl;
+		return 1;
 	case '?':
 		if (isprint(optopt))
 			cerr << "Unknown option `-" << char(optopt) <<
@@ -56,6 +59,17 @@ main (int argc, char *argv[]) {
 		cout << cvalue;
 	else	cout << "(null)";
 	cout << endl;
+
+	{
+		int i = optind;
+		if (i < argc) {
+			cout << "non-option argv-elements:";
+			while (i < argc) {
+				cout << ' ' << argv[i++];
+			}
+			cout << endl;
+		}
+	}
 
 	index = optind;
 	if (index == argc) {

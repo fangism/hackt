@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.70.2.2 2005/08/04 17:26:12 fang Exp $
+#	$Id: Makefile.am,v 1.70.2.3 2005/08/04 20:14:15 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -739,10 +739,11 @@ AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES)
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "$(srcdir)/$*.sh 2>&1 | cat > $*.output" >> $@
-	@$(ECHO) "$(DIFF) $*.output $(srcdir)/$*.stderr > $*.diff" >> $@
+	@$(ECHO) "$(DIFF) -u $*.output $(srcdir)/$*.stderr > $*.diff" >> $@
 	@$(ECHO) "if [ -s $*.diff ]" >> $@
 	@$(ECHO) then >> $@
 		@$(ECHO) "$(ECHO) \"libc getopt behavior differs from expectation!\"" >> $@
+		@$(ECHO) "$(CAT) $*.diff" >> $@
 		@$(ECHO) "exit 1" >> $@
 	@$(ECHO) fi >> $@
 	@$(CHMOD) +x $@
