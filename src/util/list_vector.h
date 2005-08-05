@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.8 2005/05/10 04:51:25 fang Exp $
+	$Id: list_vector.h,v 1.8.24.1 2005/08/05 23:26:57 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -15,7 +15,6 @@
 
 #include "util/macros.h"
 #include "util/list_vector_fwd.h"
-
 #include "util/STL/list.h"
 #include "util/qmap.h"
 #include "util/nested_iterator.h"
@@ -340,7 +339,7 @@ public:
 	begin(void) {
 		// const list_iterator b = vec_list.begin();
 		// return iterator(b, b->begin());
-		const list_iterator lf = vec_list_front();
+		const list_iterator lf(vec_list_front());
 		return iterator(lf, lf->begin());
 	}
 
@@ -355,7 +354,7 @@ public:
 	begin(void) const {
 		// const const_list_iterator b = vec_list.begin();
 		// return const_iterator(b, b->begin());
-		const const_list_iterator lf = vec_list_front();
+		const const_list_iterator lf(vec_list_front());
 		return const_iterator(lf, lf->begin());
 	}
 
@@ -368,7 +367,7 @@ public:
 	 */
 	iterator
 	end(void) {
-		const list_iterator b = this->end_sentinel_iter();
+		const list_iterator b(this->end_sentinel_iter());
 		return iterator(b, b->end());
 		// should be same as begin() wbecause end sentinel is empty
 	}
@@ -382,7 +381,7 @@ public:
 	 */
 	const_iterator
 	end(void) const {
-		const const_list_iterator b = this->end_sentinel_iter();
+		const const_list_iterator b(this->end_sentinel_iter());
 		return const_iterator(b, b->end());
 		// should be same as begin() wbecause end sentinel is empty
 	}
@@ -391,7 +390,7 @@ public:
 	reverse_iterator
 	rbegin(void) {
 		// ++ because sentinel is last chunk
-		const reverse_list_iterator b = vec_list_rback();
+		const reverse_list_iterator b(vec_list_rback());
 		return reverse_iterator(b, b->rbegin());
 	}
 
@@ -399,7 +398,7 @@ public:
 	const_reverse_iterator
 	rbegin(void) const {
 		// ++ because sentinel is last chunk
-		const const_reverse_list_iterator b = vec_list_rback();
+		const const_reverse_list_iterator b(vec_list_rback());
 		return const_reverse_iterator(b, b->rbegin());
 	}
 
@@ -410,7 +409,7 @@ public:
 	 */
 	reverse_iterator
 	rend(void) {
-		const reverse_list_iterator b = this->rend_sentinel_iter();
+		const reverse_list_iterator b(this->rend_sentinel_iter());
 		return reverse_iterator(b, b->rend());
 		// should be same as b->rbegin()
 	}
@@ -422,7 +421,7 @@ public:
 	 */
 	const_reverse_iterator
 	rend(void) const {
-		const const_reverse_list_iterator b = this->rend_sentinel_iter();
+		const const_reverse_list_iterator b(this->rend_sentinel_iter());
 		return const_reverse_iterator(b, b->rend());
 		// should be same as b->rbegin()
 	}
@@ -450,8 +449,8 @@ public:
 			return 0;
 		} else {
 			// constant time!
-			const typename vec_map_type::value_type& last = 
-				*(--vec_map.end());
+			const typename vec_map_type::value_type&
+				last(*(--vec_map.end()));
 			return last.first +last.second->size();
 		}
 	}
@@ -467,7 +466,8 @@ public:
 	 */
 	size_type
 	max_size(void) const {
-		return size_type(-1) / sizeof(value_type);
+		static const size_type s = size_type(-1) / sizeof(value_type);
+		return s;
 	}
 
 #if 0
@@ -490,8 +490,8 @@ public:
 		if (vec_map.empty()) {
 			return 0;
 		} else {
-			const typename vec_map_type::value_type& last = 
-				*(--vec_map.end());
+			const typename vec_map_type::value_type&
+				last(*(--vec_map.end()));
 			return last.first +last.second->capacity();
 		}
 	}
@@ -530,7 +530,7 @@ public:
 		// lower_bound returns iterator first element >= key
 		// upper_bound returns iterator first element > key
 		const vec_map_iterator
-			vec_iter = --vec_map.upper_bound(n);
+			vec_iter(--vec_map.upper_bound(n));
 //			vec_iter = --vec_map.lower_bound(n+1);	// same
 		// INVARIANT(vec_iter != vec_map.end());
 		INVARIANT(vec_iter->second);
@@ -553,7 +553,7 @@ public:
 		// lower_bound returns iterator first element >= key
 		// upper_bound returns iterator first element > key
 		const const_vec_map_iterator
-			vec_iter = --vec_map.upper_bound(n);
+			vec_iter(--vec_map.upper_bound(n));
 //			vec_iter = --vec_map.lower_bound(n+1);	// same
 		// INVARIANT(vec_iter != vec_map.end());
 		INVARIANT(vec_iter->second);
@@ -645,8 +645,8 @@ public:
 	push_back(const value_type& v) {
 		// if last chunk points to head sentinel, 
 		// it will be detected as a full chunk.
-		vector_type* last_chunk = &*vec_list_back();
-		const size_type cap = last_chunk->capacity();
+		vector_type* last_chunk(&*vec_list_back());
+		const size_type cap(last_chunk->capacity());
 		if (UNLIKELY(last_chunk->size() == cap)) {
 			// then we need to reserve next chunk
 			vec_list.insert(this->end_sentinel_iter(),
@@ -674,7 +674,7 @@ public:
 	void
 	pop_back(void) {
 		INVARIANT(!this->empty());
-		vector_type* last_chunk = &*vec_list_back();
+		vector_type* last_chunk(&*vec_list_back());
 #if 1
 		// eager implementation
 		INVARIANT(!last_chunk->empty());
@@ -796,7 +796,7 @@ private:
 		static
 		list_map_checker
 		add(const list_map_checker& c1, const list_map_checker& c2) {
-			assert(c1.valid());
+			INVARIANT(c1.valid());
 			return list_map_checker(c1.list_size +c2.list_size, 
 				c2.map_size);
 		}
