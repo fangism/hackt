@@ -2,6 +2,13 @@
 
 2005-08-05	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-53-unique-01-03:
+	  NOTES: discussion on implementation of (instance) state allocation.  
+	  Updated bool_instance and int_instance classes (tinkering).
+		Prototype implementation of
+		instance_alias_info<>::allocate_state().
+
+
 	* ARTXX-00-01-04-main-00-53-unique-01-02:
 	  Added some more utilities to libfangutil for integer types and
 		traits.  

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.1 2005/08/05 14:04:59 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.2 2005/08/05 23:26:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -265,11 +265,32 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates space for a sub-instance, during the create phase  
-	TODO: finish me!
+	Checks whether or not this alias already points to allocated
+	state, and if so, just returns.  
+	Otherwise, allocate state and propagate the newly allocated
+	state to all other equivalent aliases (downward).  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
+#if 0
+	if (this->instance)
+		return good_bool(true);
+	// hideous const_cast :S consider mutability?
+	this_type& _this = const_cast<this_type&>(*this);
+	// for now the creator will be the canonical back-reference
+	_this.instance = instance_ptr_type(new instance_type(*this));
+	// visit each alias in the ring and connect
+	iterator i(_this.begin());
+	const iterator e(_this.end());
+	for ( ; i!=e; i++) {
+		INVARIANT(!i->instance);
+		i->instance = _this.instance;
+#if 0
+		// do stuff here, recursive connections, merging ports.
+#endif
+	}
+#endif
 	return good_bool(true);
 }
 
@@ -336,6 +357,22 @@ typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::end(void) const {
 	DIE;
 	return const_iterator(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::iterator
+INSTANCE_ALIAS_INFO_CLASS::begin(void) {
+	DIE;
+	return iterator(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::iterator
+INSTANCE_ALIAS_INFO_CLASS::end(void) {
+	DIE;
+	return iterator(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -446,6 +483,20 @@ INSTANCE_ALIAS_CLASS::end(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::iterator
+INSTANCE_ALIAS_CLASS::begin(void) {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::iterator
+INSTANCE_ALIAS_CLASS::end(void) {
+	return instance_alias_base_type::end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
@@ -549,6 +600,20 @@ KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) const {
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::end(void) const {
+	return instance_alias_base_type::end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 	return instance_alias_base_type::end();
 }
 

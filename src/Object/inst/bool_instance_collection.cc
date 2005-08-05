@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.2.4.1 2005/08/05 21:08:27 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.2.4.2 2005/08/05 23:26:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -77,11 +77,24 @@ namespace entity {
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(bool_instance)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_instance::bool_instance() : persistent(), back_ref() {
-}
+bool_instance::bool_instance() : persistent(), back_ref() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_instance::bool_instance(const bool_instance_alias_info& b) :
+		persistent(), back_ref(&b) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance::~bool_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+bool_instance::what(ostream& o) const {
+	o << "bool-state";
+	if (this->back_ref) {
+		this->back_ref->dump_hierarchical_name(o << " = ");
+	}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -3,7 +3,7 @@
 	Class declarations for built-in boolean data instances
 	and instance collections.  
 	This file was "Object/art_object_instance_bool.h" in a previous life.  
-	$Id: bool_instance_collection.h,v 1.2.4.1 2005/08/05 21:08:27 fang Exp $
+	$Id: bool_instance_collection.h,v 1.2.4.2 2005/08/05 23:26:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_H__
@@ -32,7 +32,19 @@ operator << (ostream&, const bool_instance_alias_base&);
 	what used to be called "node".
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
-	This is like PrsNode from prsim.  
+	This is like PrsNode from prsim -- it contains simulation state.  
+
+	Really don't want this to be persistently allocated...
+	Consider using a non-allocator pool, one whose members
+		need not be deallocated until the end of the program.  
+		That would save from having to reference-count.
+	Is *very expensive* to keep each instance in separate
+		entry per instance persistently.  
+	Save this idea for later.  
+	Replace reference-count pointer with index (ID#) to static pool.
+		Such a scheme would have non-reclaimable memory (not leak).  
+		Consider using list_vector.
+		Is saving/restoring state complicated?
 
 	Should be pool allocated for efficiency.  
  */
@@ -40,10 +52,23 @@ class bool_instance : public persistent {
 	typedef	bool_instance				this_type;
 private:
 	// need one back-reference to one alias (connected in a ring)
-	never_ptr<const bool_instance_alias_base>	back_ref;
+	never_ptr<const bool_instance_alias_info>	back_ref;
+	/**
+		Boolean state information.  
+		Consider pointing to another general structure.  
+		See old prsim's prs_node.  
+		Not used yet.  
+	 */
+	int						state;
 public:
 	bool_instance();
+
+	explicit
+	bool_instance(const bool_instance_alias_info&);
 	~bool_instance();
+
+	ostream&
+	what(ostream&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

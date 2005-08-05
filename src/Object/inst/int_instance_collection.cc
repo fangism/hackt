@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.2 2005/07/23 06:52:38 fang Exp $
+	$Id: int_instance_collection.cc,v 1.2.4.1 2005/08/05 23:26:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -71,6 +71,16 @@ int_instance::int_instance() : persistent(), back_ref() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance::~int_instance() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+int_instance::what(ostream& o) const {
+	return o << "int-state";
+	if (this->back_ref) {
+		this->back_ref->dump_hierarchical_name(o << " = ");
+	}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

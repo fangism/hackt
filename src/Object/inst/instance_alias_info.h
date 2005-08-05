@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.2.4.1 2005/08/05 14:04:59 fang Exp $
+	$Id: instance_alias_info.h,v 1.2.4.2 2005/08/05 23:26:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -150,6 +150,14 @@ virtual	const_iterator
 virtual	const_iterator
 	end(void) const;
 
+private:
+virtual	iterator
+	begin(void);
+
+virtual	iterator
+	end(void);
+
+public:
 	/**
 		Instantiates officially by linking to parent collection.  
 		FYI: This is only called by instance_array<0> (scalar)
