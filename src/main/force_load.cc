@@ -3,7 +3,7 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.1 2005/07/25 02:10:08 fang Exp $
+	$Id: force_load.cc,v 1.1.4.1 2005/08/05 14:05:03 fang Exp $
  */
 
 #include "main/force_load.h"
@@ -11,6 +11,7 @@
 #include "main/compile.h"
 #include "main/parse_test.h"
 #include "main/unroll.h"
+#include "main/create.h"
 #include "main/objdump.h"
 #include "main/prsobjdemo.h"
 #include "main/dump_persistent_table.h"
@@ -42,6 +43,7 @@ force_load(void) {
 	const compile compiler;
 	const parse_test parse_tester;
 	const unroll unroller;
+	const create creator;
 	const objdump objdumper;
 	const prsobjdemo prsobjdemoer;
 	const dump_persistent_table persistent_dumper;

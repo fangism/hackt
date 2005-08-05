@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.71 2005/08/04 23:02:54 fang Exp $
+#	$Id: Makefile.am,v 1.71.2.1 2005/08/05 14:04:56 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -34,7 +34,6 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt
-# artc art++2obj artobjdump artobjunroll prsobjdemo
 
 # dirgen is completely bogus, workaround to corce directory generation
 noinst_PROGRAMS = dirgen getopt_test
@@ -484,6 +483,7 @@ MAIN_EXEC_CC_FILES = \
 	main/parse_test.cc \
 	main/compile.cc \
 	main/unroll.cc \
+	main/create.cc \
 	main/prsobjdemo.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.2 2005/07/23 06:52:19 fang Exp $
+ 	$Id: module.cc,v 1.2.4.1 2005/08/05 14:04:58 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -59,13 +59,15 @@ using util::persistent_traits;
  */
 module::module() :
 		persistent(), sequential_scope(),
-		name(""), global_namespace(NULL), unrolled(false) {
+		name(""), global_namespace(NULL),
+		unrolled(false), created(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
 		persistent(), sequential_scope(),
-		name(s), global_namespace(new name_space("")), unrolled(false) {
+		name(s), global_namespace(new name_space("")),
+		unrolled(false), created(false) {
 	NEVER_NULL(global_namespace);
 }
 
@@ -111,6 +113,8 @@ module::dump(ostream& o) const {
 	o << "In module created from: " << name;
 	if (unrolled)
 		o << " (unrolled)";
+	if (created)
+		o << " (created)";
 	o << endl;
 
 	global_namespace->dump(o) << endl;
@@ -164,6 +168,31 @@ module::unroll_module(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Replays all instantiation statements and allocates unique
+	space to each alias recursively.  
+	Will automatically unroll the object if it hasn't already 
+	been unrolled.  
+	\return 'good' if successful.  
+ */
+good_bool
+module::create_unique(void) {
+	STACKTRACE("module::create_unique()");
+	if (!unroll_module().good)
+		return good_bool(false);
+	if (!created) {
+		STACKTRACE("not already created, creating...");
+		const unroll_context c;	// empty context
+		if (!sequential_scope::create_unique(c).good) {
+			cerr << "Error during create_unique." << endl;
+			return good_bool(false);
+		}
+		created = true;
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -183,6 +212,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
 	write_value(f, unrolled);
+	write_value(f, created);
 	sequential_scope::write_object_base(m, f);
 }
 
@@ -193,6 +223,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	read_string(f, name);
 	m.read_pointer(f, global_namespace);
 	read_value(f, unrolled);
+	read_value(f, created);
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
 }

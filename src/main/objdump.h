@@ -1,7 +1,7 @@
 /**
 	\file "main/objdump.h"
 	Interface header for the objdump module.  
-	$Id: objdump.h,v 1.1 2005/07/25 02:10:08 fang Exp $
+	$Id: objdump.h,v 1.1.4.1 2005/08/05 14:05:04 fang Exp $
  */
 
 #ifndef	__MAIN_OBJDUMP_H__
@@ -20,11 +20,10 @@ class objdump {
 private:
 	class options;
 
-private:
+public:
 	static const char		name[];
 	static const char		brief_str[];
 
-public:
 	objdump();
 
 	static

@@ -1,7 +1,7 @@
 /**
 	\file "main/unroll.h"
 	Interface header for unroll module.  
-	$Id: unroll.h,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: unroll.h,v 1.1.4.1 2005/08/05 14:05:05 fang Exp $
  */
 
 #ifndef	__MAIN_UNROLL_H__
@@ -20,11 +20,10 @@ class unroll {
 private:
 	class options;
 
-private:
+public:
 	static const char		name[];
 	static const char		brief_str[];
 
-public:
 	unroll();
 
 	static

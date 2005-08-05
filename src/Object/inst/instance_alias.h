@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.2 2005/07/23 06:52:36 fang Exp $
+	$Id: instance_alias.h,v 1.2.4.1 2005/08/05 14:04:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -108,6 +108,9 @@ public:
 
 	const_iterator
 	end(void) const;
+
+	using parent_type::instantiate;
+	using parent_type::allocate_state;
 
 	void
 	write_next_connection(const persistent_object_manager& m, 

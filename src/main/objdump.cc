@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.1 2005/07/25 02:10:08 fang Exp $
+	$Id: objdump.cc,v 1.1.4.1 2005/08/05 14:05:04 fang Exp $
  */
 
 #include <iostream>
@@ -28,9 +28,7 @@ const char
 objdump::brief_str[] = "Dumps HACKT object semi-human-readably to stdout.";
 
 const size_t
-objdump::program_id =
-	register_hackt_program(objdump::name, objdump::main,
-		objdump::brief_str);
+objdump::program_id = register_hackt_program_class<objdump>();
 
 //=============================================================================
 // class objdump member definitions

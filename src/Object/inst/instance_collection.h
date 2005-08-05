@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.2 2005/07/23 06:52:37 fang Exp $
+	$Id: instance_collection.h,v 1.2.4.1 2005/08/05 14:04:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -168,6 +168,9 @@ virtual	bool
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
 
+/**
+	Prototype for instantiating alias indices during unroll phase.  
+ */
 #define	INSTANTIATE_INDICES_PROTO					\
 	good_bool							\
 	instantiate_indices(const const_range_list& i, 			\
@@ -175,6 +178,16 @@ virtual	bool
 		const unroll_context&)
 
 virtual	INSTANTIATE_INDICES_PROTO = 0;
+
+/**
+	Prototype for allocating unique state during create phase.
+ */
+#define	CREATE_UNIQUE_STATE_PROTO					\
+	good_bool							\
+	create_unique_state(const const_range_list&, 			\
+		const unroll_context&)
+
+virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -292,6 +305,8 @@ public:
 
 	INSTANTIATE_INDICES_PROTO;
 
+	CREATE_UNIQUE_STATE_PROTO;
+
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
@@ -367,6 +382,8 @@ public:
 	dump_unrolled_instances(ostream& o) const;
 
 	INSTANTIATE_INDICES_PROTO;
+
+	CREATE_UNIQUE_STATE_PROTO;
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

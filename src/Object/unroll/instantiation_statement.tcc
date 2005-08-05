@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.2 2005/07/23 06:53:00 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.2.4.1 2005/08/05 14:05:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -359,6 +359,27 @@ INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
 		unroll_context& c) const {
 	// would've exited already
 	return this->unroll(c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allocates state space for the aliases referenced by this statement.  
+	\pre already unrolled.  
+	TODO: possibly cache the resolved indices from unrolling, 
+		but don't bother saving them persistently.  
+ */
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+good_bool
+INSTANTIATION_STATEMENT_CLASS::create_unique(const unroll_context& c) const {
+	const_range_list crl;
+	const good_bool rr(this->resolve_instantiation_range(crl, c));
+	INVARIANT(rr.good);
+#if 0
+	FINISH ME
+	return type_ref_parent_type::create_unique_state(
+		*this->inst_base, crl, c);
+#endif
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

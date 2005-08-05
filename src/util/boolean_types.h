@@ -3,7 +3,7 @@
 	Boolean-like classes with different semantics.  
 	The purpose of these classes is to provide self-documenting
 	boolean values, which prevent user errors.  
-	$Id: boolean_types.h,v 1.3 2005/05/10 04:51:22 fang Exp $
+	$Id: boolean_types.h,v 1.3.24.1 2005/08/05 14:05:05 fang Exp $
  */
 
 #ifndef	__UTIL_BOOLEAN_TYPES_H__
@@ -56,6 +56,12 @@ struct good_bool {
 		return good_bool(this->good && b.good);
 	}
 
+	good_bool&
+	operator &= (const good_bool& c) {
+		this->good &= c.good;
+		return *this;
+	}
+
 };	// end struct good_bool
 
 //=============================================================================
@@ -97,6 +103,12 @@ struct bad_bool {
 	bad_bool
 	operator || (const bad_bool& b) const {
 		return bad_bool(this->bad || b.bad);
+	}
+
+	bad_bool&
+	operator |= (const bad_bool& c) {
+		this->bad |= c.bad;
+		return *this;
 	}
 
 };	// end struct bad_bool

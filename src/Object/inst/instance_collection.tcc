@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3 2005/08/04 23:02:54 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.1 2005/08/05 14:04:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -260,6 +260,17 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	this->container = p;
 	substructure_parent_type::unroll_port_instances(
 		*this->container, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allocates space for a sub-instance, during the create phase  
+	TODO: finish me!
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -941,6 +952,27 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates uniquely allocated space for aliases instances.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges, 
+		const unroll_context& c) {
+	multikey_generator<D, pint_value_type> key_gen;
+	ranges.make_multikey_generator(key_gen);
+	key_gen.initialize();
+	good_bool err(true);
+	do {
+		const const_iterator iter(this->collection.find(key_gen));
+		INVARIANT(iter != collection.end());
+		err &= iter->allocate_state(c);
+		key_gen++;
+	} while (key_gen != key_gen.get_lower_corner());
+	return err;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
         Expands indices which may be under-specified into explicit
         indices for the implicit subslice, if it is densely packed.
         Depends on the current state of the collection.
@@ -1384,6 +1416,17 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 			<< endl;
 	}
 	return good_bool(attached);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges, 
+		const unroll_context& c) {
+	STACKTRACE("instance_array<Tag,0>::create_unique_state()");
+	INVARIANT(ranges.empty());
+	INVARIANT(this->the_instance.valid());
+	return this->the_instance.allocate_state(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

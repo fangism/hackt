@@ -1,11 +1,11 @@
 /**
-	\file "main/parse_test.h"
-	Interface header for parse_test module.  
-	$Id: parse_test.h,v 1.1.4.1 2005/08/05 14:05:04 fang Exp $
+	\file "main/create.h"
+	Interface header for create module.  
+	$Id: create.h,v 1.1.2.1 2005/08/05 14:05:03 fang Exp $
  */
 
-#ifndef	__MAIN_PARSE_TEST_H__
-#define	__MAIN_PARSE_TEST_H__
+#ifndef	__MAIN_CREATE_H__
+#define	__MAIN_CREATE_H__
 
 #include "main/hackt_fwd.h"
 
@@ -16,7 +16,7 @@ namespace ART {
 	Yes, most everything is private, not supposed to use this directly, 
 	but rather, through program registration.  
  */
-class parse_test {
+class create {
 private:
 	class options;
 
@@ -24,7 +24,7 @@ public:
 	static const char		name[];
 	static const char		brief_str[];
 
-	parse_test();
+	create();
 
 	static
 	int
@@ -35,16 +35,18 @@ private:
 	void
 	usage(void);
 
+#if 0
 	static
 	int
 	parse_command_options(const int, char*[], options&);
+#endif
 
 	static
 	const size_t
 	program_id;
-};	// end class parse_test
+};	// end class create
 
 }	// end namespace ART
 
-#endif	// __MAIN_PARSE_TEST_H__
+#endif	// __MAIN_CREATE_H__
 

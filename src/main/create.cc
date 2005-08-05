@@ -1,9 +1,8 @@
 /**
-	\file "main/unroll.cc"
+	\file "main/create.cc"
 	Unrolls an object file, saves it to another object file.  
-	This file was reincarnated from "artobjunroll.cc" in a previous life.  
 
-	$Id: unroll.cc,v 1.1.4.1 2005/08/05 14:05:04 fang Exp $
+	$Id: create.cc,v 1.1.2.1 2005/08/05 14:05:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,7 +10,7 @@
 #include <iostream>
 #include <cstring>
 
-#include "main/unroll.h"
+#include "main/create.h"
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
@@ -25,28 +24,28 @@ using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
 //=============================================================================
-class unroll::options {
+class create::options {
 	// none
 };	// end class options
 
 //=============================================================================
-// class unroll static initializers
+// class create static initializers
 
 const char
-unroll::name[] = "unroll";
+create::name[] = "create";
 
 const char
-unroll::brief_str[] = "Unrolls an object file, saving to another object file";
+create::brief_str[] = "Creates unique state for aliased objects for simulation";
 
 const size_t
-unroll::program_id = register_hackt_program_class<unroll>();
+create::program_id = register_hackt_program_class<create>();
 
 //=============================================================================
-unroll::unroll() { }
+create::create() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
-unroll::main(const int argc, char* argv[], const global_options&) {
+create::main(const int argc, char* argv[], const global_options&) {
 	options opt;
 	if (argc != 3) {
 		usage();
@@ -71,13 +70,12 @@ unroll::main(const int argc, char* argv[], const global_options&) {
 		return 1;
 
 //	the_module->dump(cerr);
-	if (the_module->is_unrolled()) {
-		cerr << "Module is already unrolled, skipping..." << endl;
+	if (the_module->is_created()) {
+		cerr << "Module is already created, skipping..." << endl;
 	} else {
-		STACKTRACE("main: try unrolling.");
-		if (!the_module->unroll_module().good) {
-			cerr << "ERROR in unrolling.  Aborting." << endl;
-			// although an empty unroll file was already created
+		STACKTRACE("main: try createing.");
+		if (!the_module->create_unique().good) {
+			cerr << "ERROR in creating.  Aborting." << endl;
 			return 1;
 		}
 //		the_module->dump(cerr);
@@ -90,7 +88,7 @@ unroll::main(const int argc, char* argv[], const global_options&) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-unroll::usage(void) {
+create::usage(void) {
 	cerr << "Usage: " << name <<
 		" <art-obj-infile> <art-obj-outfile>" << endl;
 }

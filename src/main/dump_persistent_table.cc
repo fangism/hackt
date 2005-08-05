@@ -2,7 +2,7 @@
 	\file "main/dump_persistent_table.cc"
 	Just dumps the registered persistent type table.  
 	This file came from "art_persistent_table.cc".
-	$Id: dump_persistent_table.cc,v 1.1 2005/07/25 02:10:07 fang Exp $
+	$Id: dump_persistent_table.cc,v 1.1.4.1 2005/08/05 14:05:03 fang Exp $
  */
 
 #include <iostream>
@@ -28,9 +28,7 @@ dump_persistent_table::brief_str[] = "Dumps persistent type registry.";
 
 const size_t
 dump_persistent_table::program_id =
-	register_hackt_program(dump_persistent_table::name, 
-		dump_persistent_table::main, 
-		dump_persistent_table::brief_str);
+	register_hackt_program_class<dump_persistent_table>();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dump_persistent_table::dump_persistent_table() { }

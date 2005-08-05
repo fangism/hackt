@@ -1,7 +1,7 @@
 /**
-	\file "main/hack_fwd.h"
+	\file "main/hackt_fwd.h"
 	Forward declarations for hackt program interface.  
-	$Id: hackt_fwd.h,v 1.1 2005/07/25 02:10:08 fang Exp $
+	$Id: hackt_fwd.h,v 1.1.4.1 2005/08/05 14:05:04 fang Exp $
  */
 
 #ifndef	__MAIN_HACKT_FWD_H__

@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.2 2005/07/23 06:53:04 fang Exp $
+	$Id: sequential_scope.h,v 1.2.4.1 2005/08/05 14:05:01 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -98,6 +98,8 @@ protected:
 	UNROLL_META_EVALUATE_PROTO;
 	UNROLL_META_INSTANTIATE_PROTO;
 	UNROLL_META_CONNECT_PROTO;
+
+	CREATE_UNIQUE_PROTO;
 
 };      // end class sequential_scope
 

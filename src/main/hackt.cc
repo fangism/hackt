@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt.cc"
 	Implementation of core hackt program, contains main().
-	$Id: hackt.cc,v 1.2 2005/08/04 23:02:54 fang Exp $
+	$Id: hackt.cc,v 1.2.2.1 2005/08/05 14:05:03 fang Exp $
  */
 
 #include <iostream>
@@ -30,8 +30,7 @@ const char
 hackt::bugreport[] = PACKAGE_BUGREPORT;
 
 const size_t
-hackt::program_id =
-	register_hackt_program(hackt::name, hackt::main, hackt::brief_str);
+hackt::program_id = register_hackt_program_class<hackt>();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
