@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.5 2005/05/19 18:43:36 fang Exp $
+	$Id: chunk_map_pool.h,v 1.5.20.1 2005/08/05 21:08:29 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -12,6 +12,8 @@
 #include <list>
 #include <map>
 #include "util/memory/chunk_map_pool_fwd.h"
+#include "util/numeric/inttype_traits.h"
+#include "util/bitset.h"
 
 #define	CHUNK_MAP_POOL_CHUNK_CLASS					\
 chunk_map_pool_chunk<T,C>
@@ -104,33 +106,33 @@ struct chunk_size_traits;
 
 template <>
 struct chunk_size_traits<8> {
-	enum { size = 8 };
-	typedef	unsigned char		bit_map_type;
+//	enum { size = 8 };
+//	typedef	uint8			bit_map_type;
 	// concept_check sizeof(bit_map_type)/size == 1
 	typedef	size_t			print_type;
 };
 
 template <>
 struct chunk_size_traits<16> {
-	enum { size = 16 };
-	typedef	unsigned short		bit_map_type;
+//	enum { size = 16 };
+//	typedef	uint16			bit_map_type;
 	typedef	size_t			print_type;
 };
 
 template <>
 struct chunk_size_traits<32> {
-	enum { size = 32 };
-	typedef	unsigned int		bit_map_type;
+//	enum { size = 32 };
+//	typedef	uint32			bit_map_type;
 	typedef	size_t			print_type;
 };
 
-#if 0
 // will be compiler/architecture -specific
 template <>
 struct chunk_size_traits<64> {
-	typedef	unsigned long long	bit_map_type;
+//	enum { size = 64 };
+//	typedef	uint64			bit_map_type;
+	typedef	uint64			print_type;
 };
-#endif
 
 //=============================================================================
 #define	TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE			\
@@ -152,7 +154,11 @@ class typeless_memory_chunk {
 protected:
 	typedef	char				storage_type[S];
 public:
+#if 0
 	typedef	typename chunk_size_traits<C>::bit_map_type
+#else
+	typedef	typename numeric::uint_of_size<C>::type
+#endif
 						bit_map_type;
 	enum { element_size = S };
 	enum { chunk_size = C };
@@ -164,6 +170,7 @@ protected:
 		are available for allocation, and which are live
 		(already allocated out).
 		0 means free, 1 means allocated.
+		The interface should follow that of std::bitset();
 	 */
 	bit_map_type				free_mask;
 
@@ -186,11 +193,22 @@ public:
 
 	/// empty means every element is available for allocation
 	bool
-	empty(void) const { return !this->free_mask; }
+	empty(void) const
+#if 0
+		{ return !this->free_mask; }
+#else
+		{ return !any_bits<bit_map_type>()(this->free_mask); }
+#endif
 
 	/// free means no element is available for allocation
 	bool
-	full(void) const { return !bit_map_type(this->free_mask +1); }
+	full(void) const
+#if 0
+		{ return !bit_map_type(this->free_mask +1); }
+//		{ return this->free_mask == bit_map_type(-1); }
+#else
+		{ return all_bits<bit_map_type>()(this->free_mask); }
+#endif
 
 	const void*
 	start_address(void) const {

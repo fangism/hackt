@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.71.2.1 2005/08/05 14:04:56 fang Exp $
+#	$Id: Makefile.am,v 1.71.2.2 2005/08/05 21:08:25 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -339,6 +339,7 @@ UTIL_TCC_FILES = \
 	util/STL/list.tcc \
 	util/STL/map.tcc \
 	util/IO_utils.tcc \
+	util/bitset.tcc \
 	util/const_assoc_query.tcc \
 	util/discrete_interval_set.tcc \
 	util/hash_qmap.tcc \
@@ -397,6 +398,7 @@ UTIL_HEADER_FILES = \
 	util/hash_specializations.h \
 	util/ifthenelse.h \
 	util/indent.h \
+	util/inttypes.h \
 	util/iterator_more.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
@@ -423,7 +425,9 @@ UTIL_HEADER_FILES = \
 	util/nullary_function_fwd.h \
 	util/nullary_function.h \
 	util/null_construct.h \
+	util/numeric/bigger_ints.h \
 	util/numeric/integer_traits.h \
+	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
@@ -435,6 +439,7 @@ UTIL_HEADER_FILES = \
 	util/size_t.h \
 	util/sstream.h \
 	util/stacktrace.h \
+	util/static_assert.h \
 	util/static_trace.h \
 	util/string_fwd.h \
 	util/type_traits.h \
@@ -453,6 +458,7 @@ UTIL_HEADER_FILES = \
 
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
+	util/bitset.cc \
 	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \

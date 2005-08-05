@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.2 2005/07/23 06:52:34 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.2.4.1 2005/08/05 21:08:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -33,8 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/inst/instance_collection.tcc"
-
-#include "util/memory/list_vector_pool.tcc"
+#include "util/memory/chunk_map_pool.tcc"
 
 //=============================================================================
 // module-local specializations
@@ -62,7 +61,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace memory {
 	// can we still lazy destroy with instance aliases?
 	// or will it contain pointers to other things later?  (instances)
-#if 1
+#if 0
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
 #endif
 }	// end namespace memory
@@ -75,6 +74,9 @@ namespace entity {
 //=============================================================================
 // class bool_instance method definitions
 
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(bool_instance)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_instance::bool_instance() : persistent(), back_ref() {
 }
 

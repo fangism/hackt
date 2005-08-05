@@ -1,5 +1,24 @@
 # "src/util/ChangeLog"
 
+2005-08-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-02:
+	  Added bitset placeholder class, intending to extend
+		std::bitset with arithmetic functionality later.
+	  util/inttypes.h: configure-dependent wrapper to standard headers.
+	  util/numeric/bigger_ints.h: definitions of larger synthesized
+		integer types.
+	  util/numeric/inttype_traits.h: relationships between
+		next larger/smaller integer types.  
+	  util/numeric/nibble_tables.h: generalized MSB_position.  
+	  util/static_assert.h: like compile-time constraint/concept check.
+	  Working towards more extendable chunk_map_pool, 
+		allowing for bigger chunks (64 now enabled by uin64).
+	  util/test/chunk_map_pool_test.cc:
+		added (disabled) checks for huge chunked-pools.  
+		Need to turn them on by hand and hand-check.  
+
+
 2005-07-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-48-connect-01-30:
