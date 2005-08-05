@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.4 2005/08/04 23:02:50 fang Exp $
+#	$Id: configure.ac,v 1.4.2.1 2005/08/05 21:08:08 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -41,6 +41,7 @@ AC_CHECK_PROG([TAIL], tail, tail)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
 AC_CHECK_PROG([TOUCH], touch, touch)
+AC_DEFINE_UNQUOTED(HACKT_BUILD_DATE, "`$DATE`", [Define the build date.])
 
 # don't need this yet
 # AC_CONFIG_SUBDIRS
