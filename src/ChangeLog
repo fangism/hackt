@@ -2,6 +2,20 @@
 
 2005-08-05	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-53-unique-01-04:
+	  Update all *_instance classes: no longer derived from persistent
+		because they will be managed differently.  
+	  instance_alias_info's instance (ref-count) pointer has been 
+		replaced with an integer index for indexing into 
+		allocation array of state info (pool).  
+		Binary object sizes remain the same because 
+		sizeof(size_t) == sizeof(pointer).
+	  Implemented back-reference saving and restoring for all instances.  
+	  TODO: allocate and link instances to state.  
+	  TODO: introduce static global list_vector pools for allocation.  
+	  TODO: save and restore global state.  
+
+
 	* ARTXX-00-01-04-main-00-53-unique-01-03:
 	  NOTES: discussion on implementation of (instance) state allocation.  
 	  Updated bool_instance and int_instance classes (tinkering).

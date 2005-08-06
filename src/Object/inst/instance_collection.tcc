@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.2 2005/08/05 23:26:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.3 2005/08/06 01:32:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -311,8 +311,10 @@ void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::collect_base()");
+#if !USE_INSTANCE_INDEX
 	if (this->instance)
 		this->instance->collect_transient_info(m);
+#endif
 	// eventually need to implement this...
 
 	// shouldn't need to re-visit parent pointer, 
@@ -400,12 +402,43 @@ INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called during loading of the state instances' back-references.  
+	Also is counterpart to load_next_connection.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type&
+INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
+		const persistent_object_manager& m, istream& i) {
+	never_ptr<container_type> next_container;
+	m.read_pointer(i, next_container);
+	// reconstruction ordering problem:
+	// container must have its instances already loaded, though 
+	// not necessarily constructed.
+	// This is why instance re-population MUST be decoupled from
+	// connection re-establishment *GRIN*.  
+	// See? there's a reason for everything.  
+	NEVER_NULL(next_container);
+	// this is the safe way of ensuring that object is loaded once only.
+	m.load_object_once(next_container);
+	// the CONTAINER should read the key, because it is dimension-specific!
+	// it should return a reference to the alias node, 
+	// which can then be linked.  
+	return next_container->load_reference(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
+#if USE_INSTANCE_INDEX
+	// let the module take care of saving the state information
+	write_value(o, this->instance_index);
+#else
 	m.write_pointer(o, this->instance);
+#endif
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
@@ -417,7 +450,12 @@ void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
+#if USE_INSTANCE_INDEX
+	// let the module take care of restoring the state information
+	read_value(i, this->instance_index);
+#else
 	m.read_pointer(i, this->instance);
+#endif
 	m.read_pointer(i, this->container);
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);
@@ -509,30 +547,18 @@ INSTANCE_ALIAS_CLASS::write_next_connection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-links connection.  
+ */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	never_ptr<instance_collection_generic_type> next_container;
-	m.read_pointer(i, next_container);
-	// reconstruction ordering problem:
-	// container must have its instances already loaded, though 
-	// not necessarily constructed.
-	// This is why instance re-population MUST be decoupled from
-	// connection re-establishment *GRIN*.  
-	// See? there's a reason for everything.  
-	NEVER_NULL(next_container);
-	// this is the safe way of ensuring that object is loaded once only.
-	m.load_object_once(next_container);
-
-	// the CONTAINER should read the key, because it is dimension-specific!
-	// it should return a reference to the alias node, 
-	// which can then be linked.  
+	instance_alias_base_type& n(load_alias_reference(m, i));
 #if STACKTRACE_PERSISTENTS
 	cerr << "ring size before = " << this->size();
 #endif
-	instance_alias_base_type& n(next_container->load_reference(i));
 	this->merge(n);       // re-link
 	// this->unsafe_merge(n);       // re-link (undeclared!??)
 	// unsafe is OK because we've already checked linkage when it was made!

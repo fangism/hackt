@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_struct.h"
 		in a previous life.  
-	$Id: struct_instance_collection.h,v 1.2 2005/07/23 06:52:41 fang Exp $
+	$Id: struct_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
@@ -13,7 +13,7 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/traits/struct_traits.h"
 #include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_alias_info.h"
 
 namespace ART {
 namespace entity {
@@ -23,15 +23,32 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-struct struct_instance : public persistent {
+struct struct_instance {
+private:
+	typedef	struct_instance			this_type;
+	typedef	datastruct_instance_alias_info	alias_info_type;
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const struct_instance_alias_base>	back_ref;
+	never_ptr<const alias_info_type>	back_ref;
 public:
 	struct_instance();
 
+	explicit
+	struct_instance(const alias_info_type&);
+
 	~struct_instance();
 
+#if 0
 	PERSISTENT_METHODS_DECLARATIONS
+#else
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+#endif
 };	// end class struct_instance
 
 //=============================================================================

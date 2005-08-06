@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_int.h"
 		in a previous life.  
-	$Id: int_instance_collection.h,v 1.2.4.1 2005/08/05 23:26:47 fang Exp $
+	$Id: int_instance_collection.h,v 1.2.4.2 2005/08/06 01:32:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_H__
@@ -13,8 +13,8 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/traits/int_traits.h"
 #include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias.h"
-#include "util/memory/chunk_map_pool_fwd.h"
+#include "Object/inst/instance_alias_info.h"
+// #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -27,21 +27,39 @@ operator << (ostream&, const int_instance_alias_base&);
 /**
 	State information for an integer.  
  */
-class int_instance : public persistent {
-	never_ptr<const int_instance_alias_info>	back_ref;
+class int_instance {
+	typedef	int_instance				this_type;
+	typedef	int_instance_alias_info			alias_info_type;
+private:
+	never_ptr<const alias_info_type>		back_ref;
+	/**
+		TODO: use a real integer type for the state.  
+	 */
+	int						state;
 public:
 	int_instance();
 
 	explicit
-	int_instance(const int_instance_alias_info&);
+	int_instance(const alias_info_type&);
 
 	~int_instance();
 
+#if 0
 	ostream&
 	what(ostream&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS
+#else
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+#endif
 };	// end class int_instance
 
 //-----------------------------------------------------------------------------

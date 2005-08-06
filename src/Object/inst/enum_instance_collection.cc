@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.2 2005/07/23 06:52:35 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.2.4.1 2005/08/06 01:32:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -58,26 +58,35 @@ namespace entity {
 enum_instance::enum_instance() : back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+enum_instance::enum_instance(const alias_info_type& e) : back_ref(&e) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum_instance::~enum_instance() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-enum_instance::collect_transient_info(persistent_object_manager& m) const {
+enum_instance::collect_transient_info_base(persistent_object_manager& m) const {
 	// collect pointers
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-enum_instance::write_object(const persistent_object_manager& m, 
+enum_instance::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	// write me!
+#if USE_INSTANCE_INDEX
+	NEVER_NULL(back_ref);
+	back_ref->write_next_connection(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-enum_instance::load_object(const persistent_object_manager& m, 
+enum_instance::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	// write me!
+#if USE_INSTANCE_INDEX
+	back_ref = never_ptr<const alias_info_type>(
+		&alias_info_type::load_alias_reference(m, i));
+#endif 
 }
 
 //=============================================================================

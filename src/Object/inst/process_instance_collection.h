@@ -3,7 +3,7 @@
 	Class declarations for process instance and collections.  
 	This file originated from "Object/art_object_instance_proc.h"
 		in a previous life.
-	$Id: process_instance_collection.h,v 1.2 2005/07/23 06:52:41 fang Exp $
+	$Id: process_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
@@ -12,7 +12,7 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/proc_traits.h"
 #include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_alias_info.h"
 
 
 namespace ART {
@@ -25,11 +25,13 @@ namespace entity {
 	Needs to be pool allocated for efficient unique construction. 
 	Derive from unique_instance_base.  
  */
-class process_instance : public persistent {
+class process_instance {
+private:
 	typedef	process_instance		this_type;
+	typedef	process_instance_alias_info	alias_info_type;
 private:
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const process_instance_alias_base>	back_ref;
+	never_ptr<const alias_info_type>	back_ref;
 
 	// TODO: contain a vector of pointers to sub-structures
 	// concrete definition map will map member names to index/offsets
@@ -38,13 +40,27 @@ private:
 
 public:
 	process_instance();
+
+	explicit
+	process_instance(const alias_info_type&);
+
 	~process_instance();
 
 	ostream&
 	what(ostream&) const;
 
+#if 0
 	PERSISTENT_METHODS_DECLARATIONS
+#else
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
 
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+#endif
 };	// end class proc_instance
 
 //=============================================================================

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.2.4.1 2005/08/05 23:26:47 fang Exp $
+	$Id: int_instance_collection.cc,v 1.2.4.2 2005/08/06 01:32:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -66,13 +66,16 @@ namespace entity {
 //=============================================================================
 // class int_instance method definitions
 
-int_instance::int_instance() : persistent(), back_ref() {
-}
+int_instance::int_instance() : back_ref() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_instance::int_instance(const alias_info_type& i) : back_ref(&i) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance::~int_instance() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 int_instance::what(ostream& o) const {
 	return o << "int-state";
@@ -81,25 +84,32 @@ int_instance::what(ostream& o) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-int_instance::collect_transient_info(persistent_object_manager& m) const {
+int_instance::collect_transient_info_base(persistent_object_manager& m) const {
 	// register me!
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-int_instance::write_object(const persistent_object_manager& m, 
+int_instance::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	// write me!
+#if USE_INSTANCE_INDEX
+	NEVER_NULL(back_ref);
+	back_ref->write_next_connection(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-int_instance::load_object(const persistent_object_manager& m, 
+int_instance::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
-	// load me!
+#if USE_INSTANCE_INDEX
+	back_ref = never_ptr<const alias_info_type>(
+		&alias_info_type::load_alias_reference(m, i));
+#endif
 }
 
 //=============================================================================

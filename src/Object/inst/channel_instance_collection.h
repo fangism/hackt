@@ -3,7 +3,7 @@
 	Class declarations for channel instance and collections.  
 	This file originated from "Object/art_object_instance_chan.h"
 		in a previous life.  
-	$Id: channel_instance_collection.h,v 1.2 2005/07/23 06:52:35 fang Exp $
+	$Id: channel_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
@@ -12,7 +12,7 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_alias_info.h"
 #include "Object/inst/general_collection_type_manager.h"
 
 namespace ART {
@@ -23,15 +23,30 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-struct channel_instance : public persistent {
+struct channel_instance {
+	typedef	channel_instance_alias_info	alias_info_type;
 	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const channel_instance_alias_base>	back_ref;
+	never_ptr<const alias_info_type>	back_ref;
 public:
 	channel_instance();
 
+	explicit
+	channel_instance(const alias_info_type&);
+
 	~channel_instance();
 
+#if 0
 	PERSISTENT_METHODS_DECLARATIONS
+#else
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+#endif
 };	// end class chan_instance
 
 //=============================================================================
