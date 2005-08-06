@@ -3,7 +3,7 @@
 	Class declarations for built-in boolean data instances
 	and instance collections.  
 	This file was "Object/art_object_instance_bool.h" in a previous life.  
-	$Id: bool_instance_collection.h,v 1.2.4.3 2005/08/06 01:32:19 fang Exp $
+	$Id: bool_instance_collection.h,v 1.2.4.4 2005/08/06 15:42:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_H__
@@ -13,6 +13,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/state_instance.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
@@ -48,6 +49,7 @@ operator << (ostream&, const bool_instance_alias_base&);
 
 	Should be pool allocated for efficiency.  
  */
+#if 0
 class bool_instance {
 	typedef	bool_instance				this_type;
 	typedef	bool_instance_alias_info		alias_info_type;
@@ -85,7 +87,18 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 #endif
+public:
+	static
+	instance_pool<this_type>			pool;
+
 };	// end class bool_instance
+#else
+class class_traits<bool_tag>::state_instance_base {
+protected:
+	int						state;
+// persistence methods:
+};	// end class state_instance_base
+#endif
 
 //-----------------------------------------------------------------------------
 // convenient typedefs

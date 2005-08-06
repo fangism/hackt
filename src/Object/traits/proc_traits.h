@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.2 2005/07/20 21:00:59 fang Exp $
+	$Id: proc_traits.h,v 1.2.6.1 2005/08/06 15:42:30 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PROC_TRAITS_H__
@@ -30,6 +30,9 @@ struct class_traits<process_tag> {
 	static const bool		has_substructure = true;
 	typedef	instance_alias_info_actuals
 					instance_alias_relaxed_actuals_type;
+	typedef	process_instance_alias_info	instance_alias_info_type;
+	/// defined in "Object/inst/process_instance_collection.h"
+	class state_instance_base;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

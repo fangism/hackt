@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.2.4.1 2005/08/06 01:32:19 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.2.4.2 2005/08/06 15:42:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -23,6 +23,7 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 namespace util {
 
@@ -51,6 +52,7 @@ namespace entity {
 //=============================================================================
 // class channel_instance method definitions
 
+#if 0
 channel_instance::channel_instance() : back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -85,6 +87,7 @@ channel_instance::load_object_base(const persistent_object_manager& m,
 		&alias_info_type::load_alias_reference(m, i));
 #endif
 }
+#endif
 
 //=============================================================================
 // explicit template class instantiations

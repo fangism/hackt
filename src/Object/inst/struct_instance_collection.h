@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_struct.h"
 		in a previous life.  
-	$Id: struct_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:21 fang Exp $
+	$Id: struct_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
@@ -14,6 +14,7 @@
 #include "Object/traits/struct_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/state_instance.h"
 
 namespace ART {
 namespace entity {
@@ -23,6 +24,7 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
+#if 0
 struct struct_instance {
 private:
 	typedef	struct_instance			this_type;
@@ -50,6 +52,10 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 #endif
 };	// end class struct_instance
+#else
+class class_traits<datastruct_tag>::state_instance_base {
+};	// end class state_instance_base
+#endif
 
 //=============================================================================
 // convenient typedefs

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.2.4.2 2005/08/06 01:32:20 fang Exp $
+	$Id: int_instance_collection.cc,v 1.2.4.3 2005/08/06 15:42:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -35,6 +35,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/int_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 //=============================================================================
 // module-local specializations
@@ -66,6 +67,11 @@ namespace entity {
 //=============================================================================
 // class int_instance method definitions
 
+#if 0
+instance_pool<int_instance>
+int_instance::pool(1024);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_instance::int_instance() : back_ref() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -111,6 +117,7 @@ int_instance::load_object_base(const persistent_object_manager& m,
 		&alias_info_type::load_alias_reference(m, i));
 #endif
 }
+#endif
 
 //=============================================================================
 // typedef int_instance_alias_base function definitions

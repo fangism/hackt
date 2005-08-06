@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.2.4.1 2005/08/06 01:32:20 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.2.4.2 2005/08/06 15:42:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -26,6 +26,7 @@
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 namespace util {
 
@@ -55,6 +56,7 @@ namespace entity {
 //=============================================================================
 // class enum_instance method definitions
 
+#if 0
 enum_instance::enum_instance() : back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,6 +90,7 @@ enum_instance::load_object_base(const persistent_object_manager& m,
 		&alias_info_type::load_alias_reference(m, i));
 #endif 
 }
+#endif
 
 //=============================================================================
 // explicit class instantiations

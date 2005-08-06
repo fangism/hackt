@@ -3,7 +3,7 @@
 	Class declarations for channel instance and collections.  
 	This file originated from "Object/art_object_instance_chan.h"
 		in a previous life.  
-	$Id: channel_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:19 fang Exp $
+	$Id: channel_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
@@ -14,16 +14,19 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/general_collection_type_manager.h"
+#include "Object/inst/state_instance.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
+#if 0
 /**
 	An actual instantiated instance of a channel.
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
 struct channel_instance {
+	typedef	channel_instance		this_type;
 	typedef	channel_instance_alias_info	alias_info_type;
 	// need back-reference(s) to owner(s) or hierarchical keys?
 	never_ptr<const alias_info_type>	back_ref;
@@ -47,7 +50,18 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 #endif
+public:
+	static
+	instance_pool<this_type>		pool;
 };	// end class chan_instance
+#else
+/**
+	Channel state information.  
+ */
+class class_traits<channel_tag>::state_instance_base {
+// state information, persistence...
+};	// end class state_instance_base
+#endif
 
 //=============================================================================
 // convenient typedefs

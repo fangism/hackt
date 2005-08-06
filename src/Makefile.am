@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.71.2.2 2005/08/05 21:08:25 fang Exp $
+#	$Id: Makefile.am,v 1.71.2.3 2005/08/06 15:42:24 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -193,6 +193,8 @@ OBJECT_TCC_FILES = \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/instance_collection.tcc \
 	Object/inst/value_collection.tcc \
+	Object/inst/instance_pool.tcc \
+	Object/inst/state_instance.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
@@ -293,6 +295,9 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/instance_alias.h \
 	Object/inst/alias_empty.h \
 	Object/inst/value_collection.h \
+	Object/inst/instance_pool_fwd.h \
+	Object/inst/instance_pool.h \
+	Object/inst/state_instance.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \

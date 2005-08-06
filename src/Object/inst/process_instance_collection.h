@@ -3,7 +3,7 @@
 	Class declarations for process instance and collections.  
 	This file originated from "Object/art_object_instance_proc.h"
 		in a previous life.
-	$Id: process_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:20 fang Exp $
+	$Id: process_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
@@ -13,7 +13,7 @@
 #include "Object/traits/proc_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
-
+#include "Object/inst/state_instance.h"
 
 namespace ART {
 namespace entity {
@@ -25,6 +25,7 @@ namespace entity {
 	Needs to be pool allocated for efficient unique construction. 
 	Derive from unique_instance_base.  
  */
+#if 0
 class process_instance {
 private:
 	typedef	process_instance		this_type;
@@ -62,6 +63,15 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 #endif
 };	// end class proc_instance
+#else
+/**
+	Unique process state.
+ */
+class class_traits<process_tag>::state_instance_base {
+protected:
+
+};	// end class state_instance_base
+#endif
 
 //=============================================================================
 // convenient typedefs

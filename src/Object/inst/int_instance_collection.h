@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_int.h"
 		in a previous life.  
-	$Id: int_instance_collection.h,v 1.2.4.2 2005/08/06 01:32:20 fang Exp $
+	$Id: int_instance_collection.h,v 1.2.4.3 2005/08/06 15:42:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_H__
@@ -14,6 +14,7 @@
 #include "Object/traits/int_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/state_instance.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
@@ -27,6 +28,7 @@ operator << (ostream&, const int_instance_alias_base&);
 /**
 	State information for an integer.  
  */
+#if 0
 class int_instance {
 	typedef	int_instance				this_type;
 	typedef	int_instance_alias_info			alias_info_type;
@@ -60,7 +62,16 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 #endif
+public:
+	static
+	instance_pool<this_type>			pool;
 };	// end class int_instance
+#else
+class class_traits<int_tag>::state_instance_base {
+protected:
+	int						state;
+};	// end class state_instance_base
+#endif
 
 //-----------------------------------------------------------------------------
 // convenient typedefs

@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.2.4.3 2005/08/06 01:32:19 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.2.4.4 2005/08/06 15:42:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -33,7 +33,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/inst/instance_collection.tcc"
-#include "util/memory/chunk_map_pool.tcc"
+#include "Object/inst/state_instance.tcc"
+// #include "util/memory/chunk_map_pool.tcc"
 
 //=============================================================================
 // module-local specializations
@@ -74,6 +75,11 @@ namespace entity {
 //=============================================================================
 // class bool_instance method definitions
 
+#if 0
+instance_pool<bool_instance>
+bool_instance::pool(1024);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(bool_instance)
 #endif
@@ -135,6 +141,7 @@ bool_instance::load_object_base(const persistent_object_manager& m,
 		&alias_info_type::load_alias_reference(m, i));
 #endif
 }
+#endif
 
 //=============================================================================
 // typedef bool_instance_alias_base function definitions

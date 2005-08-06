@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-05:
+	  Added Object/inst/instance_pool.{h,tcc}:
+		wrapper around util::list_vector for state allocation.  
+		Result of ::allocate is an index into the list_vector.
+	  Added Object/inst/state_instance.{h,tcc}:
+		Template class from which state instances are defined.  
+	  Redefined  *_instance classes (in Object/inst/*_instance_collection.h)
+		in terms of state_instance template class.  
+	  Updated instance_alias_info<>::allocate_state to use
+		instance_pool's allocation.  
+
+
 2005-08-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-unique-01-04:

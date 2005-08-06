@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.2 2005/07/20 21:00:56 fang Exp $
+	$Id: chan_traits.h,v 1.2.6.1 2005/08/06 15:42:30 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -30,6 +30,7 @@ struct class_traits<channel_tag> {
 
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
+	typedef	channel_instance_alias_info	instance_alias_info_type;
 	static const bool		has_substructure = true;
 	/**
 		Actually, this may have to be split into 
@@ -39,6 +40,8 @@ struct class_traits<channel_tag> {
 	 */
 	typedef	instance_alias_info_actuals
 					instance_alias_relaxed_actuals_type;
+	/// defined in "Object/inst/channel_instance_collection.h"
+	class state_instance_base;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

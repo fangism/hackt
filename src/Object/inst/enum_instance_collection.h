@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_enum.h"
 		in a previous life.  
-	$Id: enum_instance_collection.h,v 1.2.4.1 2005/08/06 01:32:20 fang Exp $
+	$Id: enum_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
@@ -14,10 +14,12 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/state_instance.h"
 
 namespace ART {
 namespace entity {
 //=============================================================================
+#if 0
 /**
 	An actual instantiated instance of an enum.
 	These are not constructed until after unrolling.  
@@ -49,6 +51,15 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 #endif
 };	// end class enum_instance
+#else
+/**
+	Channel state information.
+ */
+class class_traits<enum_tag>::state_instance_base {
+protected:
+	int				state;
+};	// end class state_instance_base
+#endif
 
 //=============================================================================
 // convenient typedefs

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.3 2005/08/06 01:32:20 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.4 2005/08/06 15:42:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -273,19 +273,21 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
-#if 0
-	if (this->instance)
+#if 1
+	if (this->instance_index)
 		return good_bool(true);
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
-	_this.instance = instance_ptr_type(new instance_type(*this));
+	_this.instance_index = instance_type::pool.allocate();
+		// instance_ptr_type(new instance_type(*this));
+	INVARIANT(_this.instance_index);
 	// visit each alias in the ring and connect
 	iterator i(_this.begin());
 	const iterator e(_this.end());
 	for ( ; i!=e; i++) {
-		INVARIANT(!i->instance);
-		i->instance = _this.instance;
+		INVARIANT(!i->instance_index);
+		i->instance_index = _this.instance_index;
 #if 0
 		// do stuff here, recursive connections, merging ports.
 #endif
