@@ -1,4 +1,4 @@
-// should fail: overlapping multidimensional arrays
+// "034.in" should fail: overlapping multidimensional arrays
 
 int q[4][4][4];
 int q[1..6][2..6][3..6];

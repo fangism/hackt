@@ -1,4 +1,4 @@
-// should fail: bad enum
+// "018.in" should fail: bad enum
 
 enum;
 

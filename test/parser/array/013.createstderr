@@ -1,0 +1,51 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	513
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    x = pint^3 x with indices: {
+      [0..3][0..0][6..11]
+    }
+      unrolled index-value pairs: {
+        [0][0][6] = ?
+        [0][0][7] = ?
+        [0][0][8] = ?
+        [0][0][9] = ?
+        [0][0][10] = ?
+        [0][0][11] = ?
+        [1][0][6] = ?
+        [1][0][7] = ?
+        [1][0][8] = ?
+        [1][0][9] = ?
+        [1][0][10] = ?
+        [1][0][11] = ?
+        [2][0][6] = ?
+        [2][0][7] = ?
+        [2][0][8] = ?
+        [2][0][9] = ?
+        [2][0][10] = ?
+        [2][0][11] = ?
+        [3][0][6] = ?
+        [3][0][7] = ?
+        [3][0][8] = ?
+        [3][0][9] = ?
+        [3][0][10] = ?
+        [3][0][11] = ?
+      }
+}
+
+Created state:
+

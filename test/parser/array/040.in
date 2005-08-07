@@ -1,4 +1,4 @@
-// should pass: non-overlapping multidimensional sparse arrays
+// "040.in" should pass: non-overlapping multidimensional sparse arrays
 // (copied from 029.in, changed int -> pint
 
 pint z[0..0][1..1][2];

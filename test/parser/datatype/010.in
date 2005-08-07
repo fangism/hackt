@@ -1,4 +1,4 @@
-// should fail on re-use of identifier
+// "010.in" should fail on re-use of identifier
 
 int W, X, Y, Z;
 namespace X { }		// die

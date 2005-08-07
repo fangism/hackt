@@ -1,4 +1,4 @@
-// should pass, because identifiers may overshadow
+// "013.in" should pass, because identifiers may overshadow
 
 int x;
 namespace A { }

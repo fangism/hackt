@@ -1,4 +1,4 @@
-// should pass: non-overlapping multidimensional sparse arrays
+// "029.in" should pass: non-overlapping multidimensional sparse arrays
 
 int z[0..0][1..1][2];
 int z[1..1][2][0..0];

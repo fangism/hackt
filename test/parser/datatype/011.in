@@ -1,4 +1,4 @@
-// should fail opening identifier that is not a namespace
+// "011.in" should fail opening identifier that is not a namespace
 
 namespace X { }
 int y;

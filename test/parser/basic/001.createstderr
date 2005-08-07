@@ -19,7 +19,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    N = int<32>^0 N (instantiated) = ::N 
+    N = int<32>^0 N (instantiated) = ::N  (1)
 }
 
 Created state:

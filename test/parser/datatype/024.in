@@ -1,4 +1,4 @@
-// should fail, repeat definition of enum
+// "024.in" should fail, repeat definition of enum
 
 enum foo { bar }
 

@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.1 2005/08/07 01:07:36 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.2 2005/08/07 14:56:13 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -36,6 +36,18 @@ ARTOBJ_TEST_SUBJECTS = \
 
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
+
+# note: known unroll rejects (should be excluded from create test)
+
+# adding tests one-by-one, should be subset of ARTOBJUNROLL_TEST_SUBJECTS
+HACKT_CREATE_TEST_SUBJECTS = \
+	001 006 007 \
+	010 011 012 013 014 015 017 018 019 \
+	021 022
+
+# notes:
+# the following connect processes (recursive ports)
+# 025 027 030 031 046 ...
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077

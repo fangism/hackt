@@ -1,4 +1,4 @@
-// should pass: type and dimensions match
+// "037.in" should pass: type and dimensions match
 
 int foo[3][4][5];
 int bar[4][5][2];

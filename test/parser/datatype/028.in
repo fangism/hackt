@@ -1,4 +1,4 @@
-// should pass, definition of a declared enumeration
+// "028.in" should pass, definition of a declared enumeration
 
 enum foo;	// forward declaration
 

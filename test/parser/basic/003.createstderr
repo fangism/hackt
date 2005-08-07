@@ -27,7 +27,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        parser = int<32>^0 parser (instantiated) = ::rajit::parser 
+        parser = int<32>^0 parser (instantiated) = ::rajit::parser  (1)
     }
 }
 

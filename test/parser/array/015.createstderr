@@ -1,0 +1,129 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	466
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    foo = int<32>^1 foo with indices: {
+      [0..3]
+      [40..42]
+      [6..12]
+      [15..20]
+      [25..29]
+      [21..24]
+      [4..4]
+      [5..5]
+    }
+      unrolled indices: {
+        0 = ::foo[0] (1) 
+        1 = ::foo[1] (2) 
+        2 = ::foo[2] (3) 
+        3 = ::foo[3] (4) 
+        4 = ::foo[4] (30) 
+        5 = ::foo[5] (31) 
+        6 = ::foo[6] (8) 
+        7 = ::foo[7] (9) 
+        8 = ::foo[8] (10) 
+        9 = ::foo[9] (11) 
+        10 = ::foo[10] (12) 
+        11 = ::foo[11] (13) 
+        12 = ::foo[12] (14) 
+        15 = ::foo[15] (15) 
+        16 = ::foo[16] (16) 
+        17 = ::foo[17] (17) 
+        18 = ::foo[18] (18) 
+        19 = ::foo[19] (19) 
+        20 = ::foo[20] (20) 
+        21 = ::foo[21] (26) 
+        22 = ::foo[22] (27) 
+        23 = ::foo[23] (28) 
+        24 = ::foo[24] (29) 
+        25 = ::foo[25] (21) 
+        26 = ::foo[26] (22) 
+        27 = ::foo[27] (23) 
+        28 = ::foo[28] (24) 
+        29 = ::foo[29] (25) 
+        40 = ::foo[40] (5) 
+        41 = ::foo[41] (6) 
+        42 = ::foo[42] (7) 
+      }
+}
+
+Created state:
+int instance pool:
+1	::foo[0]
+2	::foo[1]
+3	::foo[2]
+4	::foo[3]
+5	::foo[40]
+6	::foo[41]
+7	::foo[42]
+8	::foo[6]
+9	::foo[7]
+10	::foo[8]
+11	::foo[9]
+12	::foo[10]
+13	::foo[11]
+14	::foo[12]
+15	::foo[15]
+16	::foo[16]
+17	::foo[17]
+18	::foo[18]
+19	::foo[19]
+20	::foo[20]
+21	::foo[25]
+22	::foo[26]
+23	::foo[27]
+24	::foo[28]
+25	::foo[29]
+26	::foo[21]
+27	::foo[22]
+28	::foo[23]
+29	::foo[24]
+30	::foo[4]
+31	::foo[5]
+

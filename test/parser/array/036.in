@@ -1,4 +1,4 @@
-// should fail: overlapping multidimensional arrays
+// "036.in" should fail: overlapping multidimensional arrays
 // Will overlap with two clusters,
 // but for now reports overlap for only the latter.  
 // Later, report collisions will all previous groups.  

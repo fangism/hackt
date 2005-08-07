@@ -1,4 +1,4 @@
-// should fail: backwards range
+// "008.in" should fail: backwards range
 
 pint x[-4];
 

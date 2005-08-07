@@ -1,0 +1,109 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	721
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	49
+	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	134
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    barf = process-definition (declared) barf(
+      )
+      In definition "barf", we have: {
+      }
+
+  Instances:
+    bag = process barf<>^1 bag with indices: {
+      [2..4]
+    }
+      unrolled indices: {
+        2 = ::sack[1][0] (1) 
+        3 = ::sack[2][0] (2) 
+        4 = ::sack[3][0] (3) 
+      }
+    sack = process barf<>^2 sack with indices: {
+      [0..4][0..4]
+    }
+      unrolled indices: {
+        [0][0] = ::sack[0][0] (4) 
+        [0][1] = ::sack[0][1] (5) 
+        [0][2] = ::sack[0][2] (6) 
+        [0][3] = ::sack[0][3] (7) 
+        [0][4] = ::sack[0][4] (8) 
+        [1][0] = ::sack[4][0] (1) 
+        [1][1] = ::sack[1][1] (9) 
+        [1][2] = ::sack[1][2] (10) 
+        [1][3] = ::sack[1][3] (11) 
+        [1][4] = ::sack[1][4] (12) 
+        [2][0] = ::sack[4][1] (2) 
+        [2][1] = ::sack[2][1] (13) 
+        [2][2] = ::sack[2][2] (14) 
+        [2][3] = ::sack[2][3] (15) 
+        [2][4] = ::sack[2][4] (16) 
+        [3][0] = ::sack[4][2] (3) 
+        [3][1] = ::sack[3][1] (17) 
+        [3][2] = ::sack[3][2] (18) 
+        [3][3] = ::sack[3][3] (19) 
+        [3][4] = ::sack[3][4] (20) 
+        [4][0] = ::bag[2] (1) 
+        [4][1] = ::bag[3] (2) 
+        [4][2] = ::bag[4] (3) 
+        [4][3] = ::sack[4][3] (21) 
+        [4][4] = ::sack[4][4] (22) 
+      }
+}
+
+Created state:
+process instance pool:
+1	::bag[2]
+2	::bag[3]
+3	::bag[4]
+4	::sack[0][0]
+5	::sack[0][1]
+6	::sack[0][2]
+7	::sack[0][3]
+8	::sack[0][4]
+9	::sack[1][1]
+10	::sack[1][2]
+11	::sack[1][3]
+12	::sack[1][4]
+13	::sack[2][1]
+14	::sack[2][2]
+15	::sack[2][3]
+16	::sack[2][4]
+17	::sack[3][1]
+18	::sack[3][2]
+19	::sack[3][3]
+20	::sack[3][4]
+21	::sack[4][3]
+22	::sack[4][4]
+

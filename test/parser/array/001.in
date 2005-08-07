@@ -1,4 +1,4 @@
-// should pass: simple parameter arrays
+// "001.in" should pass: simple parameter arrays
 
 pint N;
 pint x[5];
