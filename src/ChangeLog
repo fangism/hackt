@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-08-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-07:
+	  Bug fixed in util/ring_node.h.
+	  Fixed alias iteration in instance_alias_info::allocate.
+	  Enabled most test cases that don't require recursive expansion.  
+	  TODO: recursive subinstance state creation.  
+
+
 2005-08-06	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-unique-01-06:

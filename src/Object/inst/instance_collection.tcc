@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.5 2005/08/07 01:07:26 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.6 2005/08/07 14:55:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -276,6 +276,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
 	STACKTRACE("instance_alias_info::allocate_state()");
 	if (this->instance_index)
 		return good_bool(true);
+	// else we haven't visited this one yet
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
@@ -284,9 +285,14 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
 	// visit each alias in the ring and connect
-	iterator i(++_this.begin());	// skip itself, the start
+	iterator i(_this.begin());	// begin points to next! (ring_node)
+	// skip itself, the start
+	iterator j(i);
+	j++;
+	// j stays one-ahead of i
+	// stop one-short of the end, which points to itself
 	const iterator e(_this.end());
-	for ( ; i!=e; i++) {
+	for ( ; j!=e; i=j, j++) {
 		INVARIANT(!i->instance_index);
 		i->instance_index = this->instance_index;
 #if 0
@@ -984,6 +990,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	os << " = ";
 	NEVER_NULL(p.get_next());
 	p.get_next()->dump_alias(os);
+	if (p.instance_index)
+		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ');
 	return os << endl;
 }
@@ -1479,6 +1487,8 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
 	this->the_instance.dump_ports(o << ' ');
+	if (this->the_instance.instance_index)
+		o << '(' << this->the_instance.instance_index << ')';
 	return o;
 }
 

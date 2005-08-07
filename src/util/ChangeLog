@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2005-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-07:
+	  Fixed bug in ring_node:
+		iterator copy-constructor wrongly asserted condition, 
+		now we allow copy-constructor to call an unchecked constructor
+		because the source is already a valid iterator.  
+
+
 2005-08-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-unique-01-03:
