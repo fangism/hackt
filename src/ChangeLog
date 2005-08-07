@@ -2,6 +2,21 @@
 
 2005-08-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-53-unique-01-06:
+	  Added state manager, whose responsibility is managing 
+		the global state pools (static member pools in various
+		state_instance classes).
+	  Implemented dumping of created state, just prints canonical alias.  
+	  Implemented creation state persistence.  
+	  Enabled unique state creation! (without recursion)
+		So far basic tests look good, but no connections 
+		have been tested yet.  
+	  Corrected initialization of instance_pool constructor, 
+		call set_chunk_size rather than pass to parent ctor.  
+		Implemented an allocate that takes a value to assign.  
+	  TODO: test cases with alias connections.  
+
+
 	* ARTXX-00-01-04-main-00-53-unique-01-05:
 	  Added Object/inst/instance_pool.{h,tcc}:
 		wrapper around util::list_vector for state allocation.  

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.2.4.2 2005/08/06 15:42:28 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.2.4.3 2005/08/07 01:07:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -95,6 +95,7 @@ enum_instance::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // explicit class instantiations
 
+template class state_instance<enum_tag>;
 template class instance_alias_info<enum_tag>;
 template class instance_collection<enum_tag>;
 template class instance_array<enum_tag, 0>;

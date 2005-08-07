@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.2.4.4 2005/08/06 15:42:27 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.2.4.5 2005/08/07 01:07:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -154,6 +154,7 @@ operator << (ostream& o, const bool_instance_alias_base& b) {
 //=============================================================================
 // explicit instantiations
 
+template class state_instance<bool_tag>;
 template class instance_alias_info<bool_tag>;
 template class instance_collection<bool_tag>;
 template class instance_array<bool_tag, 0>;

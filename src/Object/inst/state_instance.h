@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.1.2.1 2005/08/06 15:42:29 fang Exp $
+	$Id: state_instance.h,v 1.1.2.2 2005/08/07 01:07:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -49,6 +49,9 @@ public:
 
 	~state_instance();
 
+	ostream&
+	dump(ostream&) const;
+
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -59,8 +62,29 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 public:
+	typedef	instance_pool<this_type>	pool_type;
+private:
+	typedef	typename pool_type::const_iterator	const_pool_iterator;
+public:
 	static
-	instance_pool<this_type>		pool;
+	pool_type				pool;
+
+	static
+	ostream&
+	dump_pool_state(ostream&);
+
+	static
+	void
+	collect_pool_state(persistent_object_manager&);
+
+	static
+	void
+	write_pool_state(const persistent_object_manager&, ostream&);
+
+	static
+	void
+	load_pool_state(const persistent_object_manager&, istream&);
+
 };	// end class state_instance
 
 //=============================================================================

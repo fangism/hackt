@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.2.4.2 2005/08/06 15:42:29 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.2.4.3 2005/08/07 01:07:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -95,6 +95,7 @@ struct_instance::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // explicit template class instantiations
 
+template class state_instance<datastruct_tag>;
 template class instance_alias_info<datastruct_tag>;
 template class instance_collection<datastruct_tag>;
 template class instance_array<datastruct_tag, 0>;

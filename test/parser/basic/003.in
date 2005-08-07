@@ -1,4 +1,4 @@
-// this should pass
+// "003.in" this should pass
 
 namespace rajit {
 int parser;

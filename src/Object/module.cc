@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.2.4.1 2005/08/05 14:04:58 fang Exp $
+ 	$Id: module.cc,v 1.2.4.2 2005/08/07 01:07:25 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -17,8 +17,9 @@
 #include "Object/module.h"
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
-#include "util/persistent_object_manager.tcc"
 #include "Object/persistent_type_hash.h"
+#include "Object/state_manager.h"
+#include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
 // conditional defines, after including "stacktrace.h"
@@ -77,12 +78,19 @@ module::~module() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return pointer to the global namespace.  
+ */
 never_ptr<name_space>
 module::get_global_namespace(void) const {
 	return global_namespace;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the global namespace for this module.
+	\param n owned (and transferred) pointer to new namespace.  
+ */
 void
 module::set_global_namespace(excl_ptr<name_space>& n) {
 	// automatically memory-managed
@@ -122,7 +130,12 @@ module::dump(ostream& o) const {
 	if (!unrolled) {
 		o << "Sequential instance management (to unroll): " << endl;
 		return sequential_scope::dump(o);
-	} else	return o;
+	}
+	if (created) {
+		o << "Created state:" << endl;
+		state_manager::dump_state(o) << endl;
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -193,6 +206,9 @@ module::create_unique(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sweeps entire module structure for persistently managed objects.  
+ */
 void
 module::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -201,6 +217,7 @@ if (!m.register_transient_object(this,
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
+	state_manager::collect_state(m);
 }
 // else already visited
 }
@@ -214,6 +231,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_value(f, unrolled);
 	write_value(f, created);
 	sequential_scope::write_object_base(m, f);
+	state_manager::write_state(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,6 +244,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, created);
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
+	state_manager::load_state(m, f);
 }
 
 //=============================================================================

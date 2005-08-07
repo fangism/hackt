@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.2 2005/07/23 06:52:58 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.2.4.1 2005/08/07 01:07:28 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -123,6 +123,19 @@ protected:
 			const unroll_context& c, 
 			const instance_relaxed_actuals_type& a) {
 		return v.instantiate_indices(crl, a, c);
+	}
+
+	/**
+		This this base class even used yet?
+		If so, then add virtual function create_unique_state
+		to datatype_instance_collection before enabling
+		the call to create_unique_state.
+	 */
+	static
+	good_bool
+	create_unique_state(instance_collection_generic_type& v,
+			const const_range_list& crl, const unroll_context& c) {
+		return v.create_unique_state(crl, c);
 	}
 
 	void

@@ -1,17 +1,20 @@
 # "test/Make.test-tail"
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
-#	$Id: Make.test-tail,v 1.4 2005/08/04 23:02:57 fang Exp $
+# The counterpart header Makefile is "test/Make.test-head".
+#	$Id: Make.test-tail,v 1.4.2.1 2005/08/07 01:07:29 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
 ARTOBJDUMP_EXE = $(top_builddir)/src/hackt objdump
 ARTOBJUNROLL_EXE = $(top_builddir)/src/hackt unroll
+HACKT_CREATE_EXE = $(top_builddir)/src/hackt create
 
 # NOTE: these scripts are configure-generated from their .in files.  
 ARTC_TEST_SH = $(top_builddir)/test/artc-expect.sh
 ARTOBJ_TEST_SH = $(top_builddir)/test/artobj-diff.sh
 ARTOBJUNROLL_TEST_SH = $(top_builddir)/test/artobjunroll-expect.sh
+HACKT_CREATE_TEST_SH = $(top_builddir)/test/hackt-create-expect.sh
 
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
 POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
@@ -54,12 +57,26 @@ subdir.not_a_test:
 		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
 
+.in.hacktcreatetest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
+		"\"$(ARTOBJDUMP_EXE)\"" $(srcdir) \
+		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
+	@$(CHMOD) +x $@
+
 # must be previously defined to use +=
 # assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
 EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) \
 	$(ARTC_TEST_FAILURES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr)
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) 
+
+TESTS += $(ARTC_TEST_SUBJECTS:=.artctest) \
+	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) 
 
 # filter-out is GNUMake feature
 #	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
@@ -82,7 +99,11 @@ CLEANFILES += $(TESTS) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunroll) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldump.filter) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff)
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrolldiff) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktobjcreate) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.createdump) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.createdump.filter) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.creatediff)
 
 DISTCLEANFILES += local.cvsignore subdir.not_a_test
 
@@ -92,7 +113,8 @@ all-local: .cvsignore subdir.not_a_test \
 # consider using CLEANFILES
 AUTO_IGNORE += local.cvsignore \
 	$(ARTC_TEST_PASSES:=.stderr) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
+	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest) \
+	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest)
 
 # we generate all the local.cvsignore's in the test directories
 local.cvsignore: $(top_srcdir)/test/test.cvsignore
@@ -108,9 +130,10 @@ clean-local:
 # really remove these files!
 cleaner: clean cleaner-recursive
 	-$(RM) *.filter *.diff *.artobj
-	-$(RM) *.artctest *.artobjtest *.artobjunrolltest
+	-$(RM) *.artctest *.artobjtest *.artobjunrolltest *.hacktcreatetest
 	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.artobjunroll *.unrolldump *.unrolldiff
+	-$(RM) *.hacktobjcreate *.createdump *.creatediff
 
 cleaner-recursive:
 	@for d in $(SUBDIRS) ; do \

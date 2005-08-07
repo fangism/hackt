@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.2.4.2 2005/08/06 15:42:29 fang Exp $
+	$Id: process_instance_collection.cc,v 1.2.4.3 2005/08/07 01:07:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -113,6 +113,7 @@ process_instance::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // explicit template clas instantiations
 
+template class state_instance<process_tag>;
 template class instance_alias_info<process_tag>;
 template class instance_collection<process_tag>;
 template class instance_array<process_tag, 0>;

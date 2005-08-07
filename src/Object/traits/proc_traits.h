@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.2.6.1 2005/08/06 15:42:30 fang Exp $
+	$Id: proc_traits.h,v 1.2.6.2 2005/08/07 01:07:28 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PROC_TRAITS_H__
@@ -51,13 +51,8 @@ struct class_traits<process_tag> {
 					instantiation_statement_parent_type;
 	typedef	process_instantiation_statement
 					instantiation_statement_type;
-	// define this elsewhere, in "traits/inst_stmt_proc.h"
-#if 0
-	class instantiation_statement_type_ref_base;
-#else
 	typedef	instantiation_statement_type_ref_default<tag_type>
 					instantiation_statement_type_ref_base;
-#endif
 
 	typedef	simple_process_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;

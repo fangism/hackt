@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.4 2005/08/06 15:42:28 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.5 2005/08/07 01:07:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -273,26 +273,27 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
-#if 1
+	STACKTRACE("instance_alias_info::allocate_state()");
 	if (this->instance_index)
 		return good_bool(true);
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
-	_this.instance_index = instance_type::pool.allocate();
+	_this.instance_index =
+		instance_type::pool.allocate(instance_type(*this));
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
 	// visit each alias in the ring and connect
-	iterator i(_this.begin());
+	iterator i(++_this.begin());	// skip itself, the start
 	const iterator e(_this.end());
 	for ( ; i!=e; i++) {
 		INVARIANT(!i->instance_index);
-		i->instance_index = _this.instance_index;
+		i->instance_index = this->instance_index;
 #if 0
 		// do stuff here, recursive connections, merging ports.
+		// instance_type::pool[this->instance_index];
 #endif
 	}
-#endif
 	return good_bool(true);
 }
 
@@ -536,6 +537,9 @@ INSTANCE_ALIAS_CLASS::end(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Saves alias connection information persistently.  
+ */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::write_next_connection(
@@ -543,7 +547,6 @@ INSTANCE_ALIAS_CLASS::write_next_connection(
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::write_next_connection()");
 	NEVER_NULL(this->container);
 	m.write_pointer(o, this->container);
-
 	value_writer<key_type> write_key(o);
 	write_key(this->key);
 }
@@ -583,6 +586,7 @@ INSTANCE_ALIAS_CLASS::collect_transient_info(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Saves persistent information for reconstruction.  
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
@@ -1051,6 +1055,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges, 
 		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
@@ -1512,6 +1517,9 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates state for a single instance alias.  
+ */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges, 

@@ -1,4 +1,4 @@
-// this should die, bad array declaration
+// "005.in" this should die, bad array declaration
 
 int[3] oldstyle_bad;
 

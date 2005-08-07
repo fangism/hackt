@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.2.4.3 2005/08/06 15:42:29 fang Exp $
+	$Id: int_instance_collection.cc,v 1.2.4.4 2005/08/07 01:07:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -130,6 +130,7 @@ operator << (ostream& o, const int_instance_alias_base& i) {
 //=============================================================================
 // explicit template instantiations
 
+template class state_instance<int_tag>;
 template class instance_alias_info<int_tag>;
 template class instance_collection<int_tag>;
 template class instance_array<int_tag, 0>;

@@ -1,5 +1,17 @@
 # "test/ChangeLog"
 
+2005-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-06:
+	  Added automake macros and rules for hackt create tests.  
+		using .hacktcreatetest as generated test script, 
+		.hacktobjcreate as created object file, 
+		.create{dump,stderr,diff} as test outputs.  
+	  Added hackt-create-expect.sh.in configured test script.  
+	  Moved standard TESTS definition (+=) to Make.test-tail.
+	  TODO: eventually abandon the ART/art names and adopt HACKT/hackt.  
+
+
 2005-08-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-merged-configtest-03:

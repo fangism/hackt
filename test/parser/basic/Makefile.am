@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2005/07/23 06:53:11 fang Exp $
+#	$Id: Makefile.am,v 1.8.4.1 2005/08/07 01:07:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,9 +20,8 @@ ARTOBJ_TEST_SUBJECTS = \
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
 
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
+HACKT_CREATE_TEST_SUBJECTS = \
+	$(ARTOBJUNROLL_TEST_SUBJECTS)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 004 005 008 010
