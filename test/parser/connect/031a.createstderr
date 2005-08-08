@@ -1,0 +1,156 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	46
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	45
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	63
+	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	63
+	19	##ADDR##	proccoll	1	#HEAD#	#TAIL#	41
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proccoll	1	#HEAD#	#TAIL#	95
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	43	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    basket = process-definition (declared) basket(
+        egg<> egg_array with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "basket", we have: {
+        egg_array = egg<> egg_array with indices: {
+          [0..1]
+        }
+
+      }
+
+    bundle = process-definition (declared) bundle(
+        basket<> c with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "bundle", we have: {
+        c = basket<> c with indices: {
+          [0..1]
+        }
+
+      }
+
+    egg = process-definition (declared) egg(
+        int<32> yolk
+      )
+      In definition "egg", we have: {
+        yolk = int<32> yolk
+      }
+
+  Instances:
+    count = int<32>^0 count (instantiated) = ::golden.yolk (2) 
+    golden = process egg<>^0 golden (instantiated) = ::load.c[0].egg_array[1] (4) (
+      int<32>^0 yolk (instantiated) = ::count (2) 
+    )
+    load = process bundle<>^0 load (instantiated) = ::load (1) (
+      process basket<>^1 c with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::load.c[0] (2) (
+            process egg<>^1 egg_array with indices: {
+              [0..1]
+            }
+              unrolled indices: {
+                0 = ::load.c[0].egg_array[0] (3) (
+                  int<32>^0 yolk (instantiated) = ::load.c[0].egg_array[0].yolk (1) 
+                )
+                1 = ::golden (4) (
+                  int<32>^0 yolk (instantiated) = ::load.c[0].egg_array[1].yolk (2) 
+                )
+              }
+          )
+          1 = ::load.c[1] (5) (
+            process egg<>^1 egg_array with indices: {
+              [0..1]
+            }
+              unrolled indices: {
+                0 = ::load.c[1].egg_array[0] (6) (
+                  int<32>^0 yolk (instantiated) = ::load.c[1].egg_array[0].yolk (3) 
+                )
+                1 = ::load.c[1].egg_array[1] (7) (
+                  int<32>^0 yolk (instantiated) = ::load.c[1].egg_array[1].yolk (4) 
+                )
+              }
+          )
+        }
+    )
+}
+
+Created state:
+process instance pool:
+1	::load
+2	::load.c[0]
+3	::load.c[0].egg_array[0]
+4	::load.c[0].egg_array[1]
+5	::load.c[1]
+6	::load.c[1].egg_array[0]
+7	::load.c[1].egg_array[1]
+int instance pool:
+1	::load.c[0].egg_array[0].yolk
+2	::load.c[0].egg_array[1].yolk
+3	::load.c[1].egg_array[0].yolk
+4	::load.c[1].egg_array[1].yolk
+

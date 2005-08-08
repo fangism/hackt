@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.7 2005/08/08 02:54:21 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.8 2005/08/08 05:20:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -285,11 +285,9 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
 	// create ports: is it safe to do this? hasn't been visited yet
-#if 1
 	// however, some of the aliases connected may have been visited
 	_this.allocate_subinstances();
-	// can also go later...
-#endif
+	// can also appear at the end
 	// visit each alias in the ring and connect
 	iterator j(_this.begin());	// begin points to next! (ring_node)
 	// skip itself, the start
@@ -298,7 +296,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 	// stop one-short of the end, which points to itself
 	const iterator e(_this.end());
 	for ( ; j!=e; i=j, j++) {
-#if 1
+#if 0
 		if (i->instance_index) {
 			cerr << "Internal compiler error: expected "
 				"instance_index to be 0, but got " <<
@@ -317,16 +315,12 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 		_this.create_subinstance_state(*i);
 		// instance_type::pool[this->instance_index] // self
 	}
-#if 0
-	// however, some of the aliases connected may have been visited
-	_this.allocate_subinstances();
-	// can also be earlier
-#endif
 	return this->instance_index;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Don't forget to merge all aliases too!
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -368,9 +362,14 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!this->instance_index);
 	INVARIANT(t.instance_index);
-	this->instance_index = t.instance_index;
-	substructure_parent_type::inherit_state(
-		instance_type::pool[t.instance_index]);
+	iterator i(this->begin());
+	const iterator e(this->end());
+	const instance_type& inst(instance_type::pool[t.instance_index]);
+	for ( ; i!=e; i++) {
+		INVARIANT(!i->instance_index);
+		i->instance_index = t.instance_index;
+		i->inherit_state(inst);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

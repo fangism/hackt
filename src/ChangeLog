@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-09:
+	  Fixed bug for connect/031b.in: forgot to propagate
+		instance_index copyes to aliases during merge_allocate_state.
+	  TODO: clean up USE_INSTANCE_INDEX macro (commit)
+	  Status: branch is nearly complete, well-tested.
+	  TODO: more test cases in connections.  
+
+
 2005-08-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-unique-01-08:
