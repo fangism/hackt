@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.2 2005/07/23 06:53:04 fang Exp $
+	$Id: unroll_context.cc,v 1.2.6.1 2005/08/08 22:57:16 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -19,6 +19,7 @@
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
+#include "common/ICE.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
@@ -173,9 +174,10 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 		// STACKTRACE("checking parent context");
 		return next->lookup_actual(p);
 	} else {
-		cerr << "Internal compiler error: expected resolve ";
+	ICE(cerr, 
+		cerr << "expected resolve ";
 		p.dump(cerr) << " to constant value(s), but failed!" << endl;
-		THROW_EXIT;
+	)
 		return return_type(NULL);
 	}
 }
@@ -186,10 +188,10 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
  */
 void
 unroll_context::lookup_panic(ostream& o) {
-	o << "Internal compiler error: " << endl <<
-		"In unroll_context::lookup_actual(): " << endl <<
-		"Help me, Obi-fang Kenobi!" << endl;
-	THROW_EXIT;
+	ICE(o, 
+		o << "In unroll_context::lookup_actual(): " << endl <<
+			"Help me, Obi-fang Kenobi!" << endl;
+	)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

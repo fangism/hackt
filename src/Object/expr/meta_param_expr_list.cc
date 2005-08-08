@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.3.6.1 2005/08/08 19:07:53 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.3.6.2 2005/08/08 22:57:14 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_param.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/persistent_type_hash.h"
+#include "common/ICE.h"
 
 #include "util/reserve.h"
 #include "util/stacktrace.h"
@@ -326,13 +327,14 @@ if (a_size != f_size) {
 			const count_ptr<const const_param>
 				default_expr(ex.is_a<const const_param>());
 			if (ex && !default_expr) {
-				cerr << "Internal compiler error: (KNOWN BUG) "
+			ICE(cerr, 
+				cerr << "(KNOWN BUG) "
 					"in const_param_expr_list::"
 					"certify_template_actuals(): " << endl;
 				cerr << "\tgot non-const param default "
 					"expression where const was expected."
 					<< endl;
-				THROW_EXIT;
+			)
 			}
 			if (!default_expr) {
 				cerr << "ERROR: missing template actual at position "

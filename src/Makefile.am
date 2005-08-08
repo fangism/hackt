@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.72 2005/08/08 16:51:06 fang Exp $
+#	$Id: Makefile.am,v 1.72.2.1 2005/08/08 22:57:11 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -504,6 +504,10 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
 	main/hackt_fwd.h
 
+COMMON_FILES = \
+	common/ICE.cc \
+	common/ICE.h
+
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(ARTXX_PARSE_ROOT)-prefix.cc
 #	lexer/$(ARTXX_LEX_ROOT)-prefix.cc
@@ -513,6 +517,7 @@ libhackt_la_SOURCES = \
 	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
+	$(COMMON_FILES) \
 	config.h
 
 libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
@@ -722,6 +727,7 @@ EXTRA_DIST += local.cvsignore \
 	test/header_test.cc \
 	test/getopt_test.sh \
 	test/getopt_test.stderr \
+	common/README \
 	util/ChangeLog \
 	util/README \
 	util/TODO \
@@ -822,6 +828,8 @@ lexer/.cvsignore: .cvsignore lexer/local.cvsignore
 	$(CAT) .cvsignore $(srcdir)/lexer/local.cvsignore > $@
 parser/.cvsignore: .cvsignore parser/local.cvsignore
 	$(CAT) .cvsignore $(srcdir)/parser/local.cvsignore > $@
+common/.cvsignore: .cvsignore
+	$(CP) $? $@
 Object/.cvsignore: .cvsignore
 	$(CP) $? $@
 Object/common/.cvsignore: .cvsignore
@@ -860,6 +868,7 @@ test/.cvsignore: .cvsignore test/local.cvsignore
 	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
+	common/.cvsignore \
 	Object/.cvsignore Object/common/.cvsignore \
 	Object/def/.cvsignore Object/expr/.cvsignore \
 	Object/inst/.cvsignore Object/lang/.cvsignore Object/ref/.cvsignore \

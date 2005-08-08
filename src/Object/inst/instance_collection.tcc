@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.4.2.1 2005/08/08 19:07:55 fang Exp $
+	$Id: instance_collection.tcc,v 1.4.2.2 2005/08/08 22:57:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -45,6 +45,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
+#include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
@@ -273,14 +274,14 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 	for ( ; j!=e; i=j, j++) {
 #if 0
 		if (i->instance_index) {
-			cerr << "Internal compiler error: expected "
-				"instance_index to be 0, but got " <<
+			ICE(cerr, 
+			cerr << "expected instance_index to be 0, but got " <<
 				i->instance_index << endl;
 			this->dump_hierarchical_name(cerr << "this = ") << endl;
 			instance_type::pool[i->instance_index]
 				.get_back_ref()->dump_hierarchical_name(
 					cerr << "alias = ") << endl;
-			THROW_EXIT;
+			)
 		}
 #else
 		INVARIANT(!i->instance_index);
@@ -319,7 +320,8 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 			// possible both are already connected and allocated
 #if 1
 			if (ind != tind) {
-				cerr << "Internal compiler error: connecting "
+			ICE(cerr, 
+				cerr << "connecting "
 					"two instances already assigned to "
 					"different IDs: got " << ind <<
 					" and " << tind << endl;
@@ -329,7 +331,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 				instance_type::pool[tind].get_back_ref()
 					->dump_hierarchical_name(cerr << '\t')
 					<< endl;
-				THROW_EXIT;
+			)
 			}
 #else
 			INVARIANT(ind == tind);

@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.6 2005/06/21 21:26:41 fang Exp $
+	$Id: excl_ptr.h,v 1.6.14.1 2005/08/08 22:57:18 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -37,12 +37,24 @@
 //=============================================================================
 // debugging stuff
 
+/**
+	Debuggling flag for null-pointer-checking the excl_ptr 
+	pointer class family (including never_ptr, some_ptr, sticky_ptr).
+	This may be predefined to explicitly enable checking per module.  
+ */
+#ifndef	DEBUG_EXCL_PTR
+#define	DEBUG_EXCL_PTR		0
+#endif
+
+#if DEBUG_EXCL_PTR
+	#define	EXCL_PTR_NEVER_NULL(x)		NEVER_NULL(x)
+#else
+	#define	EXCL_PTR_NEVER_NULL(x)
+#endif
+
 //=============================================================================
 
 namespace util {
-// forward declaration only
-class persistent_object_manager;
-
 namespace memory {
 //=============================================================================
 /**
@@ -214,14 +226,14 @@ public:
 		\return reference at the pointer.  
 	 */
 	reference
-	operator * () const throw() { NEVER_NULL(ptr); return *ptr; }
+	operator * () const throw() { EXCL_PTR_NEVER_NULL(ptr); return *ptr; }
 
 	/**
 		Pointer member/method dereference, unchecked.  
 		\returns the pointer.  
 	 */
 	pointer
-	operator -> () const throw() { NEVER_NULL(ptr); return ptr; }
+	operator -> () const throw() { EXCL_PTR_NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
 
@@ -460,10 +472,10 @@ public:
 	~sticky_ptr() { this->reset(); }
 
 	reference
-	operator * () const { NEVER_NULL(ptr); return *ptr; }
+	operator * () const { EXCL_PTR_NEVER_NULL(ptr); return *ptr; }
 
 	pointer
-	operator -> () const { NEVER_NULL(ptr); return ptr; }
+	operator -> () const { EXCL_PTR_NEVER_NULL(ptr); return ptr; }
 
 	/**
 		Sticky pointers cannot steal ownership from each other.  
@@ -627,14 +639,14 @@ template <class S>
 		\return reference at the pointer.  
 	 */
 	reference
-	operator * () const throw() { NEVER_NULL(ptr); return *ptr; }
+	operator * () const throw() { EXCL_PTR_NEVER_NULL(ptr); return *ptr; }
 
 	/**
 		Pointer member/method dereference, unchecked.  
 		\returns the pointer.  
 	 */
 	pointer
-	operator -> () const throw() { NEVER_NULL(ptr); return ptr; }
+	operator -> () const throw() { EXCL_PTR_NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
 
@@ -852,14 +864,14 @@ public:
 		\return reference at the pointer.  
 	 */
 	reference
-	operator * () const throw() { NEVER_NULL(ptr); return *ptr; }
+	operator * () const throw() { EXCL_PTR_NEVER_NULL(ptr); return *ptr; }
 
 	/**
 		Pointer member/method dereference, unchecked.  
 		\returns the pointer.  
 	 */
 	pointer
-	operator -> () const throw() { NEVER_NULL(ptr); return ptr; }
+	operator -> () const throw() { EXCL_PTR_NEVER_NULL(ptr); return ptr; }
 
 	operator bool() const { return ptr != NULL; }
 

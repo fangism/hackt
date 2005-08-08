@@ -3,6 +3,23 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-08-08:
+	In creating unique state, need to process the definition
+	of the thing being instantiated to determine internal connections.
+	Each complete type will have a pseudo state template
+		used to check internal connections when creating
+		external state.  
+
+	CFLAT format notes:
+	cflat -connect:
+		"x" "y"
+		where x != y, and x is the canonical name
+		quotes requires to be safe.  
+	cflat -prsim:
+		adds production rules, literals also quoted
+		parenthesization optional
+
+//=============================================================================
 2005-08-07:
 	KNOWN ISSUE: need to check that all connected aliases (during or after
 		unique-creation phase) have valid and equivalent

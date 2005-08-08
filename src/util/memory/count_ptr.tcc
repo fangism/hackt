@@ -4,7 +4,7 @@
 	type (T) of a count_ptr isn't complete until later -- 
 	compiles should complain about destructor of incomplete type.  
 
-	$Id: count_ptr.tcc,v 1.3 2005/06/21 21:26:40 fang Exp $
+	$Id: count_ptr.tcc,v 1.3.14.1 2005/08/08 22:57:18 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
@@ -61,12 +61,12 @@ template <class T>
 count_ptr<T>::count_ptr(T* p, size_t* c) : ptr(p), ref_count(p ? c : NULL) {
 	if (p) {
 		STATIC_RC_POOL_REF_INIT;
-		NEVER_NULL(c);		// counter must be valid
+		COUNT_PTR_FAST_INVARIANT(c);	// counter must be valid
 		VALIDATE_SIZE_T(c);
 		(*c)++;			// increment here
 		REASONABLE_REFERENCE_COUNT;
 	} else {
-		INVARIANT(!ref_count);	// counter must also be NULL
+		COUNT_PTR_FAST_INVARIANT(!ref_count);	// counter must also be NULL
 	}
 }
 
@@ -79,10 +79,10 @@ count_ptr<T>::count_ptr(const raw_count_ptr<T>& r) :
 		STATIC_RC_POOL_REF_INIT;
 		VALIDATE_SIZE_T(this->ref_count);
 		(*this->ref_count)++;
-		NEVER_NULL(ptr);
+		COUNT_PTR_FAST_INVARIANT(ptr);
 		REASONABLE_REFERENCE_COUNT;
 	} else {
-		INVARIANT(!ptr);
+		COUNT_PTR_FAST_INVARIANT(!ptr);
 	}
 }
 
@@ -96,10 +96,10 @@ count_ptr<T>::count_ptr(const raw_count_ptr<S>& r) :
 		STATIC_RC_POOL_REF_INIT;
 		VALIDATE_SIZE_T(this->ref_count);
 		(*this->ref_count)++;
-		NEVER_NULL(ptr);
+		COUNT_PTR_FAST_INVARIANT(ptr);
 		REASONABLE_REFERENCE_COUNT;
 	} else {
-		INVARIANT(!ptr);
+		COUNT_PTR_FAST_INVARIANT(!ptr);
 	}
 }
 
@@ -113,19 +113,19 @@ typename count_ptr<T>::pointer
 count_ptr<T>::release(void) {
 	T* ret = ptr;
 	if(this->ref_count) {
-		INVARIANT(*this->ref_count);
+		COUNT_PTR_FAST_INVARIANT(*this->ref_count);
 		(*this->ref_count)--;
 		REASONABLE_REFERENCE_COUNT;
 		if (!*this->ref_count) {
 			STATIC_RC_POOL_REF_INIT;
 			DELETE_SIZE_T(this->ref_count);
-			NEVER_NULL(ptr);
+			COUNT_PTR_FAST_INVARIANT(ptr);
 			delete ptr;
 		}
 		ptr = NULL;
 		this->ref_count = NULL;
 	} else {
-		INVARIANT(!ptr);
+		COUNT_PTR_FAST_INVARIANT(!ptr);
 	}
 	return ret;
 }
@@ -147,23 +147,23 @@ void
 count_ptr<T>::reset(T* p, size_t* c) {
 	if (ptr == p) {
 		// true whether or not ptr == NULL
-		INVARIANT(this->ref_count == c);
+		COUNT_PTR_FAST_INVARIANT(this->ref_count == c);
 		// no need to decrement count, both source and
 		// destination are alive.  
 		return;
 	}
 	if(this->ref_count) {
-		INVARIANT(*this->ref_count);
+		COUNT_PTR_FAST_INVARIANT(*this->ref_count);
 		(*this->ref_count)--;
 		REASONABLE_REFERENCE_COUNT;
 		if (!*this->ref_count) {
 			STATIC_RC_POOL_REF_INIT;
 			DELETE_SIZE_T(this->ref_count);
-			NEVER_NULL(ptr);
+			COUNT_PTR_FAST_INVARIANT(ptr);
 			delete ptr;
 		}
 	} else {
-		INVARIANT(!ptr);
+		COUNT_PTR_FAST_INVARIANT(!ptr);
 	}
 	ptr = p;
 	this->ref_count = (ptr) ? c : NULL;

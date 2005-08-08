@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.2.6.1 2005/08/08 19:07:55 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.2.6.2 2005/08/08 22:57:15 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -32,6 +32,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/unroll/unroll_context.h"
+#include "common/ICE.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/common/extern_templates.h"
@@ -485,10 +486,11 @@ if (value_collection_ref->is_template_formal()) {
 		// NOT TRUE: instance reference may be scalar, 
 		// which results in a 0-dimensional reference when collapsed.
 		if (crl.empty()) {
-			cerr << "Internal compiler error: " 
-				"got an empty range list after "
+		ICE(cerr, 
+			cerr << "got an empty range list after "
 				"collapsing dimension ranges, from: " << endl;
 			rdim.dump(cerr << "const_index_list = ") << endl;
+		)
 		}
 		INVARIANT(!crl.empty());
 #endif

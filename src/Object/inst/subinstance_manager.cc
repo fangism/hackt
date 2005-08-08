@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.4 2005/08/08 16:51:10 fang Exp $
+	$Id: subinstance_manager.cc,v 1.4.2.1 2005/08/08 22:57:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,6 +11,7 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
+#include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
@@ -73,16 +74,15 @@ subinstance_manager::lookup_port_instance(
 		const instance_collection_base& i) const {
 	const size_t index = i.is_port_formal();
 	if (index > subinstance_array.size()) {
-		cerr << "Internal compiler error: got port index of " << index
+	ICE(cerr, 
+		cerr << "got port index of " << index
 			<< " when limit is " << subinstance_array.size()
 			<< endl;
 		i.dump(cerr << "\twhile looking up: ") << endl;
-#if 0
-		cerr << "Here\'s the complete dump of this subinstance set: "
-			"at " << this << endl;
-		dump(cerr) << endl;
-#endif
-		THROW_EXIT;
+//		cerr << "Here\'s the complete dump of this subinstance set: "
+//			"at " << this << endl;
+//		dump(cerr) << endl;
+	)
 	}
 	INVARIANT(index);
 	INVARIANT(index <= subinstance_array.size());
