@@ -1,7 +1,7 @@
 /**
 	\file "main/dump_persistent_table.h"
 	Interface header for dump_persistent_table module.  
-	$Id: dump_persistent_table.h,v 1.1 2005/07/25 02:10:07 fang Exp $
+	$Id: dump_persistent_table.h,v 1.2 2005/08/08 16:51:12 fang Exp $
  */
 
 #ifndef	__MAIN_DUMP_PERSISTENT_TABLE_H__
@@ -22,11 +22,10 @@ private:
 	class options;
 #endif
 
-private:
+public:
 	static const char		name[];
 	static const char		brief_str[];
 
-public:
 	dump_persistent_table();
 
 	static

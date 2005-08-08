@@ -1,4 +1,4 @@
-// should fail: "node" is not a valid type, until we allow typedefs
+// "012.in" should fail: "node" is not a valid type, until we allow typedefs
 // this should be a legitimate PRS definition, should pass
 // copy-modified from 007.in
 

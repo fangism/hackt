@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2005/07/23 06:53:12 fang Exp $
+#	$Id: Makefile.am,v 1.10 2005/08/08 16:52:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -35,9 +35,16 @@ ARTOBJ_TEST_SUBJECTS = \
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
 
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
+# omitted tests are just uninteresting
+HACKT_CREATE_TEST_SUBJECTS = \
+	008 009 \
+	011 012 \
+	029 \
+	038 \
+	045 046 049 \
+	059 \
+	061 062 063 064 068 \
+	070 073
 
 include $(top_srcdir)/test/Make.test-tail
 

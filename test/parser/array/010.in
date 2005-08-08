@@ -1,4 +1,4 @@
-// should pass: sparse single range
+// "010.in" should pass: sparse single range
 
 pint x[0..0];
 

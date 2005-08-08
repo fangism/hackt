@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.2 2005/07/23 06:52:41 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.3 2005/08/08 16:51:10 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -26,6 +26,7 @@
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::struct_instance_collection,
@@ -51,38 +52,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class struct_instance method definitions
-
-struct_instance::struct_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct_instance::~struct_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-struct_instance::collect_transient_info(persistent_object_manager& m) const {
-	// collect pointers
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-struct_instance::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	// write me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-struct_instance::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	// write me!
-}
-
 //=============================================================================
 // explicit template class instantiations
 
+template class state_instance<datastruct_tag>;
 template class instance_alias_info<datastruct_tag>;
 template class instance_collection<datastruct_tag>;
 template class instance_array<datastruct_tag, 0>;

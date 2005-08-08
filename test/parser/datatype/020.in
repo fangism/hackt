@@ -1,4 +1,4 @@
-// should fail: empty enum definition
+// "020.in" should fail: empty enum definition
 
 enum foo { }
 

@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.h"
 	Header for the interface to the main program.  
-	$Id: program_registry.h,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: program_registry.h,v 1.2 2005/08/08 16:51:13 fang Exp $
  */
 
 #ifndef	__MAIN_PROGRAM_REGISTRY_H__
@@ -126,6 +126,18 @@ size_t
 register_hackt_program(const char* name, 
 		program_entry::main_type* const main, 
 		const char* brief);
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenient template wrapper for program class registration.
+	Recommend using this over register_hackt_program_directly.  
+ */
+template <class Prog>
+inline
+size_t
+register_hackt_program_class(void) {
+	return register_hackt_program(Prog::name, Prog::main, Prog::brief_str);
+}
 
 //=============================================================================
 }	// end namespace ART

@@ -1,4 +1,4 @@
-// should pass: sparse-style arrays
+// "007.in" should pass: sparse-style arrays
 
 pint x[0..4];
 pint y[5..12];

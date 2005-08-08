@@ -1,0 +1,28 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	enumdefn	0	#HEAD#	#TAIL#	32
+	4	##ADDR##	enumcoll	0	#HEAD#	#TAIL#	40
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = enum-datatype-def: foo (undefined)
+  Instances:
+    bar = enum ::foo^0 bar (instantiated) = ::bar (1)
+}
+
+Created state:
+enum instance pool:
+1	::bar
+

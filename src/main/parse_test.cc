@@ -6,7 +6,7 @@
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.2 2005/08/04 23:02:54 fang Exp $
+	$Id: parse_test.cc,v 1.3 2005/08/08 16:51:13 fang Exp $
  */
 
 #include <iostream>
@@ -42,9 +42,7 @@ const char
 parse_test::brief_str[] = "Parses input file and runs self-test.";
 
 const size_t
-parse_test::program_id =
-	register_hackt_program(parse_test::name, parse_test::main,
-		parse_test::brief_str);
+parse_test::program_id = register_hackt_program_class<parse_test>();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 parse_test::parse_test() { }

@@ -1,4 +1,4 @@
-// should fail: NULL range
+// "012.in" should fail: NULL range
 
 pint x[4][0][3];
 

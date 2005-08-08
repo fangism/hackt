@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.2 2005/07/23 06:52:38 fang Exp $
+	$Id: int_instance_collection.cc,v 1.3 2005/08/08 16:51:09 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -35,6 +35,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/int_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 //=============================================================================
 // module-local specializations
@@ -64,35 +65,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 //=============================================================================
-// class int_instance method definitions
-
-int_instance::int_instance() : persistent(), back_ref() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_instance::~int_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-int_instance::collect_transient_info(persistent_object_manager& m) const {
-	// register me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-int_instance::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	// write me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-int_instance::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	// load me!
-}
-
-//=============================================================================
 // typedef int_instance_alias_base function definitions
 
 ostream&
@@ -103,6 +75,7 @@ operator << (ostream& o, const int_instance_alias_base& i) {
 //=============================================================================
 // explicit template instantiations
 
+template class state_instance<int_tag>;
 template class instance_alias_info<int_tag>;
 template class instance_collection<int_tag>;
 template class instance_array<int_tag, 0>;

@@ -1,9 +1,10 @@
 /**
 	\file "chunk_map_pool_test.cc"
 	Testing functionality of chunk_map_pool allocator.  
-	$Id: chunk_map_pool_test.cc,v 1.2 2005/03/06 04:36:50 fang Exp $
+	$Id: chunk_map_pool_test.cc,v 1.3 2005/08/08 16:51:16 fang Exp $
  */
 
+#include "numeric/bigger_ints.h"
 #include "memory/chunk_map_pool.tcc"
 #include "memory/excl_ptr.h"
 #include <iostream>
@@ -13,6 +14,10 @@ using util::memory::chunk_map_pool_chunk;
 using util::memory::chunk_map_pool;
 using util::memory::excl_ptr;
 
+// only enable for testing, produces too much output
+#define	ENABLE_HUGE_CHUNK		0
+// vary this to some power of two, 64 up to 256
+#define	HUGE_SIZE			256
 
 class foo {
 #if 0
@@ -28,10 +33,12 @@ namespace util {
 typedef	chunk_map_pool_chunk<foo,8>		small_chunk_type;
 typedef	chunk_map_pool_chunk<foo,16>		medium_chunk_type;
 typedef	chunk_map_pool_chunk<foo,32>		large_chunk_type;
+typedef	chunk_map_pool_chunk<foo, HUGE_SIZE>	huge_chunk_type;
 
 typedef	chunk_map_pool<foo,8>			small_pool_type;
 typedef	chunk_map_pool<foo,16>			medium_pool_type;
 typedef	chunk_map_pool<foo,32>			large_pool_type;
+typedef	chunk_map_pool<foo, HUGE_SIZE>		huge_pool_type;
 
 static
 void
@@ -47,6 +54,10 @@ large_chunk_test(void);
 
 static
 void
+huge_chunk_test(void);
+
+static
+void
 small_pool_test(void);
 
 static
@@ -57,14 +68,24 @@ static
 void
 large_pool_test(void);
 
+static
+void
+huge_pool_test(void);
+
 int
 main(int argc, char* argv[]) {
 	small_chunk_test();
 	medium_chunk_test();
 	large_chunk_test();
+#if ENABLE_HUGE_CHUNK
+	huge_chunk_test();
+#endif
 	small_pool_test();
 	medium_pool_test();
 	large_pool_test();
+#if ENABLE_HUGE_CHUNK
+	huge_pool_test();
+#endif
 }
 
 void
@@ -170,6 +191,36 @@ large_chunk_test(void) {
 //	large_chunk.deallocate(ptrs[0]);	// not-allocated!
 }
 
+#if ENABLE_HUGE_CHUNK
+void
+huge_chunk_test(void) {
+	huge_chunk_type huge_chunk;
+	INVARIANT(huge_chunk.empty());
+	INVARIANT(!huge_chunk.full());
+	huge_chunk.status(cout);
+
+	foo* ptrs[HUGE_SIZE];
+	size_t i = 0;
+	for ( ; i<HUGE_SIZE; i++) {
+		ptrs[i] = huge_chunk.allocate();
+		huge_chunk.status(cout);
+	}
+	INVARIANT(!huge_chunk.empty());
+	INVARIANT(huge_chunk.full());
+//	huge_chunk.allocate();		// over-allocated!
+
+	i = 0;
+	for ( ; i<HUGE_SIZE; i++) {
+		// try deallocating in some weird order for kicks...
+		huge_chunk.deallocate(ptrs[(i*43)%HUGE_SIZE]);
+		huge_chunk.status(cout);
+	}
+	INVARIANT(huge_chunk.empty());
+	INVARIANT(!huge_chunk.full());
+//	huge_chunk.deallocate(ptrs[0]);	// not-allocated!
+}
+#endif
+
 void
 small_pool_test(void) {
 	small_pool_type small_pool;
@@ -238,4 +289,25 @@ large_pool_test(void) {
 		large_pool.status(cout);
 	}
 }
+
+#if ENABLE_HUGE_CHUNK
+void
+huge_pool_test(void) {
+	huge_pool_type huge_pool;
+	huge_pool.status(cout);
+
+	foo* ptrs[160];
+	size_t i = 0;
+	for ( ; i<160; i++) {
+		ptrs[i] = huge_pool.allocate();
+		huge_pool.status(cout);
+	}
+
+	i = 0;
+	for ( ; i<160; i++) {
+		huge_pool.deallocate(ptrs[(i*27)%160]);
+		huge_pool.status(cout);
+	}
+}
+#endif
 

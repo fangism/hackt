@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_struct.h"
 		in a previous life.  
-	$Id: struct_instance_collection.h,v 1.2 2005/07/23 06:52:41 fang Exp $
+	$Id: struct_instance_collection.h,v 1.3 2005/08/08 16:51:10 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
@@ -13,7 +13,8 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/traits/struct_traits.h"
 #include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/state_instance.h"
 
 namespace ART {
 namespace entity {
@@ -23,16 +24,8 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-struct struct_instance : public persistent {
-	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const struct_instance_alias_base>	back_ref;
-public:
-	struct_instance();
-
-	~struct_instance();
-
-	PERSISTENT_METHODS_DECLARATIONS
-};	// end class struct_instance
+class class_traits<datastruct_tag>::state_instance_base {
+};	// end class state_instance_base
 
 //=============================================================================
 // convenient typedefs

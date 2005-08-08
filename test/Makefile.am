@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2005/08/04 23:02:57 fang Exp $
+#	$Id: Makefile.am,v 1.12 2005/08/08 16:51:16 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -12,13 +12,14 @@ clean-test:
 	@$(CHMOD) +x $@
 
 # bogus test
-TESTS = clean-test
+TESTS += clean-test
 
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
 	artc-expect.sh.in \
 	artobj-diff.sh.in \
 	artobjunroll-expect.sh.in \
+	hackt-create-expect.sh.in \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
@@ -33,6 +34,7 @@ EXTRA_DIST += ChangeLog README \
 	POM-header-filter.awk \
 	update-artcstderr.sh \
 	update-unrollstderr.sh \
+	update-createstderr.sh \
 	spacestonewline.awk test.cvsignore
 
 # remove extraneous auto-generated files

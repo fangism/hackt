@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.2 2005/07/23 06:52:41 fang Exp $
+	$Id: process_instance_collection.cc,v 1.3 2005/08/08 16:51:09 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -27,6 +27,7 @@
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 
 namespace util {
@@ -38,8 +39,10 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_3D, "process_array_3D")
 	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_4D, "process_array_4D")
 
+#if 0
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::process_scalar, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -55,52 +58,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class proc_instance method definitions
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance::process_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance::~process_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-process_instance::what(ostream& o) const {
-	return o << "process_instance";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	// walk vector of pointers...
-}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance::write_object(const persistent_object_manager& m, 
-		ostream& f) const {
-#if 0
-	write_value(f, state);
-	// write pointer sequence...
-#endif
-}
-
-void
-process_instance::load_object(const persistent_object_manager& m, istream& f) {
-#if 0
-	read_value(f, state);
-	// read pointer sequence...
-#endif
-}
-
 //=============================================================================
 // explicit template clas instantiations
 
+template class state_instance<process_tag>;
 template class instance_alias_info<process_tag>;
 template class instance_collection<process_tag>;
 template class instance_array<process_tag, 0>;

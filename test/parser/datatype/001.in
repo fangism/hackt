@@ -1,4 +1,4 @@
-// simple test of fundamental data types
+// "001.in" simple test of fundamental data types
 
 int x;
 bool y;

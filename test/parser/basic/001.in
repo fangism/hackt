@@ -1,4 +1,4 @@
-/* this should pass */
+/* "001.in" this should pass */
 
 int N;
 

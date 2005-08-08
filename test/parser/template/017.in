@@ -1,4 +1,4 @@
-// should pass: proper use of pint template formal
+// "017.in" should pass: proper use of pint template formal
 // for now is acceptable to use an uninitialized param as a default value.  
 // unroll-link time will eventually check that everything is properly
 // initialized before use.  

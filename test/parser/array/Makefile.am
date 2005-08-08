@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2005/07/23 06:53:10 fang Exp $
+#	$Id: Makefile.am,v 1.8 2005/08/08 16:51:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -25,9 +25,14 @@ ARTOBJ_TEST_SUBJECTS = \
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
 
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
+# The following fail during unrolling:
+# 041
+HACKT_CREATE_TEST_SUBJECTS = \
+	001 002 007 \
+	010 013 015 016 \
+	029 \
+	037 038 039 \
+	040
 
 include $(top_srcdir)/test/Make.test-tail
 

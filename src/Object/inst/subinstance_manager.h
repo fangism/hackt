@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.2 2005/07/20 21:00:54 fang Exp $
+	$Id: subinstance_manager.h,v 1.3 2005/08/08 16:51:10 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -99,6 +99,16 @@ public:
 	good_bool
 	connect_ports(const connection_references_type&, 
 		const unroll_context&);
+
+	void
+	allocate(void);
+
+	// const is bogus here (temporary workaround)
+	void
+	create_state(const this_type&);
+
+	void
+	inherit_state(const this_type&);
 
 	// for each entry, re-link
 	void

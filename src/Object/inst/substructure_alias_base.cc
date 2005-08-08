@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.3 2005/07/23 06:52:42 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4 2005/08/08 16:51:10 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
@@ -36,6 +36,12 @@ good_bool
 substructure_alias::connect_ports(const connection_references_type& cr, 
 		const unroll_context& c) {
 	return subinstances.connect_ports(cr, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+substructure_alias::allocate_subinstances(void) {
+	return subinstances.allocate();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

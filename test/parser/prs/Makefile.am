@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2005/07/23 06:53:12 fang Exp $
+#	$Id: Makefile.am,v 1.4 2005/08/08 16:51:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -14,10 +14,6 @@ ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 ARTOBJ_TEST_SUBJECTS = $(ARTC_TEST_PASSES)
 
 ARTOBJUNROLL_TEST_SUBJECTS = $(ARTOBJ_TEST_SUBJECTS)
-
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += inv-01 inv-11

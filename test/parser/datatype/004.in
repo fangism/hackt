@@ -1,4 +1,4 @@
-// should fail, on re-declaration of same identifier
+// "004.in" should fail, on re-declaration of same identifier
 
 int a;
 int b;

@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.2 2005/07/20 21:00:56 fang Exp $
+	$Id: bool_traits.h,v 1.3 2005/08/08 16:51:10 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -24,7 +24,10 @@ struct class_traits<bool_tag> {
 						instance_alias_base_ptr_type;
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
+	typedef	bool_instance_alias_info	instance_alias_info_type;
 	static const bool		has_substructure = false;
+	/// defined in "Object/inst/bool_instance_collection.h"
+	class state_instance_base;
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
@@ -73,7 +76,7 @@ struct class_traits<bool_tag> {
 	/**
 		Built-in type pointer.  
 		This is defined and initialized in
-		"Object/art_built_in.cc"
+		"Object/traits/class_traits_types.cc"
 	 */
 	static const type_ref_ptr_type		built_in_type_ptr;
 };	// end struct class_traits<bool_tag>

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3 2005/08/04 23:02:54 fang Exp $
+	$Id: instance_collection.tcc,v 1.4 2005/08/08 16:51:08 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -264,6 +264,136 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Allocates space for a sub-instance, during the create phase  
+	Checks whether or not this alias already points to allocated
+	state, and if so, just returns.  
+	Otherwise, allocate state and propagate the newly allocated
+	state to all other equivalent aliases (downward).  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
+	STACKTRACE_VERBOSE;
+	if (this->instance_index)
+		return this->instance_index;
+	// else we haven't visited this one yet
+	// hideous const_cast :S consider mutability?
+	this_type& _this = const_cast<this_type&>(*this);
+	// for now the creator will be the canonical back-reference
+	_this.instance_index =
+		instance_type::pool.allocate(instance_type(*this));
+		// instance_ptr_type(new instance_type(*this));
+	INVARIANT(_this.instance_index);
+	// NOTE: can't _this.allocate_subinstances() yet because there
+	// may be aliases between the ports, see comment below.  
+	// Visit each alias in the ring and connect
+	iterator j(_this.begin());	// begin points to next! (ring_node)
+	// skip itself, the start
+	iterator i(j++);
+	// j stays one-ahead of i
+	// stop one-short of the end, which points to itself
+	const iterator e(_this.end());
+	for ( ; j!=e; i=j, j++) {
+#if 0
+		if (i->instance_index) {
+			cerr << "Internal compiler error: expected "
+				"instance_index to be 0, but got " <<
+				i->instance_index << endl;
+			this->dump_hierarchical_name(cerr << "this = ") << endl;
+			instance_type::pool[i->instance_index]
+				.get_back_ref()->dump_hierarchical_name(
+					cerr << "alias = ") << endl;
+			THROW_EXIT;
+		}
+#else
+		INVARIANT(!i->instance_index);
+#endif
+		i->instance_index = this->instance_index;
+		// recursive connections, merging ports.
+		_this.create_subinstance_state(*i);
+		// instance_type::pool[this->instance_index] // self
+	}
+	// This must be done AFTER processing aliases because
+	// ports may be connected to each other externally
+	// Postponing guarantees that port aliases are resolved first.
+	// Then remaining unaliased ports may be allocated, 
+	// once we can deduce that no further aliases exist.  
+	// a test case that demonstrates this is parser/connect/111.in
+	_this.allocate_subinstances();
+	return this->instance_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't forget to merge all aliases too!
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
+	STACKTRACE_VERBOSE;
+	const size_t ind = this->instance_index;
+	const size_t tind = t.instance_index;
+#if ENABLE_STACKTRACE
+	cerr << "this = " << this << ", &t = " << &t << endl;
+	cerr << "ind = " << ind << ", tind = " << tind << endl;
+#endif
+	if (ind) {
+		if (tind) {
+			// possible both are already connected and allocated
+#if 1
+			if (ind != tind) {
+				cerr << "Internal compiler error: connecting "
+					"two instances already assigned to "
+					"different IDs: got " << ind <<
+					" and " << tind << endl;
+				instance_type::pool[ind].get_back_ref()
+					->dump_hierarchical_name(cerr << '\t')
+					<< endl;
+				instance_type::pool[tind].get_back_ref()
+					->dump_hierarchical_name(cerr << '\t')
+					<< endl;
+				THROW_EXIT;
+			}
+#else
+			INVARIANT(ind == tind);
+#endif
+		} else {
+			// this already assigned, assign to t
+			t.inherit_subinstances_state(*this);
+		}
+	} else {
+		if (!tind) {
+			// neither has been created yet
+			t.allocate_state();
+		}
+		this->inherit_subinstances_state(t);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Simply copy state_instance indices from source to this destination.  
+	\pre this is not at all state assigned, 
+		and t is completely state assigned.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(!this->instance_index);
+	INVARIANT(t.instance_index);
+	iterator i(this->begin());
+	const iterator e(this->end());
+	const instance_type& inst(instance_type::pool[t.instance_index]);
+	for ( ; i!=e; i++) {
+		INVARIANT(!i->instance_index);
+		i->instance_index = t.instance_index;
+		i->inherit_state(inst);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Compares collection types of the two instances and then
 	(TODO) compares their relaxed actuals (if applicable).
  */
@@ -279,8 +409,6 @@ void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::collect_base()");
-	if (this->instance)
-		this->instance->collect_transient_info(m);
 	// eventually need to implement this...
 
 	// shouldn't need to re-visit parent pointer, 
@@ -306,7 +434,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
-	STACKTRACE_VERBOSE;
+	// STACKTRACE_VERBOSE;
 	dump_alias(o);	// should call virtually, won't die
 	return o;
 }
@@ -325,6 +453,22 @@ typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::end(void) const {
 	DIE;
 	return const_iterator(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::iterator
+INSTANCE_ALIAS_INFO_CLASS::begin(void) {
+	DIE;
+	return iterator(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::iterator
+INSTANCE_ALIAS_INFO_CLASS::end(void) {
+	DIE;
+	return iterator(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -352,12 +496,39 @@ INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called during loading of the state instances' back-references.  
+	Also is counterpart to load_next_connection.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type&
+INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
+		const persistent_object_manager& m, istream& i) {
+	never_ptr<container_type> next_container;
+	m.read_pointer(i, next_container);
+	// reconstruction ordering problem:
+	// container must have its instances already loaded, though 
+	// not necessarily constructed.
+	// This is why instance re-population MUST be decoupled from
+	// connection re-establishment *GRIN*.  
+	// See? there's a reason for everything.  
+	NEVER_NULL(next_container);
+	// this is the safe way of ensuring that object is loaded once only.
+	m.load_object_once(next_container);
+	// the CONTAINER should read the key, because it is dimension-specific!
+	// it should return a reference to the alias node, 
+	// which can then be linked.  
+	return next_container->load_reference(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
-	m.write_pointer(o, this->instance);
+	// let the module take care of saving the state information
+	write_value(o, this->instance_index);
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
@@ -369,7 +540,8 @@ void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
-	m.read_pointer(i, this->instance);
+	// let the module take care of restoring the state information
+	read_value(i, this->instance_index);
 	m.read_pointer(i, this->container);
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);
@@ -435,42 +607,46 @@ INSTANCE_ALIAS_CLASS::end(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::iterator
+INSTANCE_ALIAS_CLASS::begin(void) {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::iterator
+INSTANCE_ALIAS_CLASS::end(void) {
+	return instance_alias_base_type::end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Saves alias connection information persistently.  
+ */
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::write_next_connection(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::write_next_connection()");
 	NEVER_NULL(this->container);
 	m.write_pointer(o, this->container);
-
 	value_writer<key_type> write_key(o);
 	write_key(this->key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-links connection.  
+ */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	never_ptr<instance_collection_generic_type> next_container;
-	m.read_pointer(i, next_container);
-	// reconstruction ordering problem:
-	// container must have its instances already loaded, though 
-	// not necessarily constructed.
-	// This is why instance re-population MUST be decoupled from
-	// connection re-establishment *GRIN*.  
-	// See? there's a reason for everything.  
-	NEVER_NULL(next_container);
-	// this is the safe way of ensuring that object is loaded once only.
-	m.load_object_once(next_container);
-
-	// the CONTAINER should read the key, because it is dimension-specific!
-	// it should return a reference to the alias node, 
-	// which can then be linked.  
+	instance_alias_base_type& n(this->load_alias_reference(m, i));
 #if STACKTRACE_PERSISTENTS
 	cerr << "ring size before = " << this->size();
 #endif
-	instance_alias_base_type& n(next_container->load_reference(i));
 	this->merge(n);       // re-link
 	// this->unsafe_merge(n);       // re-link (undeclared!??)
 	// unsafe is OK because we've already checked linkage when it was made!
@@ -493,6 +669,7 @@ INSTANCE_ALIAS_CLASS::collect_transient_info(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Saves persistent information for reconstruction.  
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
@@ -538,6 +715,20 @@ KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) const {
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::end(void) const {
+	return instance_alias_base_type::end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) {
+	return instance_alias_base_type::begin();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 	return instance_alias_base_type::end();
 }
 
@@ -876,6 +1067,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	os << " = ";
 	NEVER_NULL(p.get_next());
 	p.get_next()->dump_alias(os);
+	if (p.instance_index)
+		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ');
 	return os << endl;
 }
@@ -937,6 +1130,43 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	return good_bool(!err);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates uniquely allocated space for aliases instances.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges) {
+	STACKTRACE_VERBOSE;
+	multikey_generator<D, pint_value_type> key_gen;
+	ranges.make_multikey_generator(key_gen);
+	key_gen.initialize();
+	do {
+		// should be iterator, not const_iterator
+		const const_iterator iter(this->collection.find(key_gen));
+		INVARIANT(iter != collection.end());
+		iter->allocate_state();
+		key_gen++;
+	} while (key_gen != key_gen.get_lower_corner());
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Like create_unique_state except it operates on the entire collection.
+	Called from subinstance_manager::create_state.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::allocate_state(void) {
+	STACKTRACE_VERBOSE;
+	iterator i(collection.begin());
+	const iterator e(collection.end());
+	for ( ; i!=e; i++) {
+		i->allocate_state();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1122,6 +1352,57 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
 	else 	return count_ptr<physical_instance_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Merges two instance collections, assigning them the same allocated
+	state.  
+	Called by subinstance_manager::create_state(), 
+		during create-unique phase.  
+	this and t must be port subinstances, 
+		and hence, must be densely packed.  
+	Since collection p was type/size checked during connection, 
+	we can conclude that they have the same size.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++, j++) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		element_type& jj(const_cast<element_type&>(
+			AS_A(const element_type&, *j)));
+		ii.merge_allocate_state(jj);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::inherit_created_state(
+		const physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	const_iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++, j++) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		ii.inherit_subinstances_state(*j);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1348,6 +1629,8 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 		this->the_instance.dump_actuals(o);
 	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
+	if (this->the_instance.instance_index)
+		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ');
 	return o;
 }
@@ -1384,6 +1667,31 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 			<< endl;
 	}
 	return good_bool(attached);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates state for a single instance alias.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges) {
+	STACKTRACE("instance_array<Tag,0>::create_unique_state()");
+	INVARIANT(ranges.empty());
+	INVARIANT(this->the_instance.valid());
+	return good_bool(this->the_instance.allocate_state());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as create_unique_state.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::allocate_state(void) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(this->the_instance.valid());
+	this->the_instance.allocate_state();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1479,6 +1787,31 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
 	else 	return count_ptr<physical_instance_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Merges two instances, assigning them the same allocated state.  
+	Called by subinstance_manager::create_state(), 
+		during create-unique phase.  
+	this and t must be port subinstances.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	this->the_instance.merge_allocate_state(t.the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::inherit_created_state(
+		const physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+	this->the_instance.inherit_subinstances_state(t.the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

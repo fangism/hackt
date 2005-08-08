@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.2 2005/07/23 06:52:59 fang Exp $
+	$Id: instance_management_base.h,v 1.3 2005/08/08 16:51:11 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -70,6 +70,15 @@ virtual good_bool
 virtual	UNROLL_META_EVALUATE_PROTO;
 virtual	UNROLL_META_INSTANTIATE_PROTO;
 virtual	UNROLL_META_CONNECT_PROTO;
+
+/**
+	Prototype for unique-creation pass.  
+ */
+#define	CREATE_UNIQUE_PROTO						\
+	good_bool							\
+	create_unique(const unroll_context&) const
+
+virtual	CREATE_UNIQUE_PROTO;
 
 };	// end class instance_management_base
 

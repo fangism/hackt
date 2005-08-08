@@ -1,4 +1,4 @@
-// should pass, re-declaration of an enumeration
+// "022.in" should pass, re-declaration of an enumeration
 
 enum foo;
 

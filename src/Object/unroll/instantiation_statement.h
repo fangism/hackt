@@ -3,7 +3,7 @@
 	Instance statement classes for ART.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.2 2005/07/23 06:52:59 fang Exp $
+	$Id: instantiation_statement.h,v 1.3 2005/08/08 16:51:11 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -122,6 +122,8 @@ public:
 	UNROLL_META_INSTANTIATE_PROTO;
 
 	INSTANTIATE_PORT_PROTO;
+
+	CREATE_UNIQUE_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

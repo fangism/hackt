@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2005/07/23 06:53:11 fang Exp $
+#	$Id: Makefile.am,v 1.4 2005/08/08 16:51:27 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -28,10 +28,6 @@ ARTOBJ_TEST_SUBJECTS = \
 # should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
-
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 \

@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.2 2005/07/23 06:53:00 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.3 2005/08/08 16:51:11 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -111,6 +111,8 @@ virtual	INSTANTIATE_PORT_PROTO = 0;
 	case: won't happen?  instantiation inside definition called
 ***/
 	// unroll (context?)
+
+virtual	CREATE_UNIQUE_PROTO = 0;
 
 protected:
 

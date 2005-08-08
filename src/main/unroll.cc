@@ -1,8 +1,9 @@
 /**
-	\file "artobjunroll.cc"
+	\file "main/unroll.cc"
 	Unrolls an object file, saves it to another object file.  
+	This file was reincarnated from "artobjunroll.cc" in a previous life.  
 
-	$Id: unroll.cc,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: unroll.cc,v 1.2 2005/08/08 16:51:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,8 +39,7 @@ const char
 unroll::brief_str[] = "Unrolls an object file, saving to another object file";
 
 const size_t
-unroll::program_id =
-	register_hackt_program(unroll::name, unroll::main, unroll::brief_str);
+unroll::program_id = register_hackt_program_class<unroll>();
 
 //=============================================================================
 unroll::unroll() { }

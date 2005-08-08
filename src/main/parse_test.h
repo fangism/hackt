@@ -1,7 +1,7 @@
 /**
 	\file "main/parse_test.h"
 	Interface header for parse_test module.  
-	$Id: parse_test.h,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: parse_test.h,v 1.2 2005/08/08 16:51:13 fang Exp $
  */
 
 #ifndef	__MAIN_PARSE_TEST_H__
@@ -20,11 +20,10 @@ class parse_test {
 private:
 	class options;
 
-private:
+public:
 	static const char		name[];
 	static const char		brief_str[];
 
-public:
 	parse_test();
 
 	static

@@ -1,4 +1,4 @@
-// this should pass, good array declaration
+// "006.in" this should pass, good array declaration
 // an example of rejected cast-style arrays is in 010.in
 
 // eventually type checker will reject this...

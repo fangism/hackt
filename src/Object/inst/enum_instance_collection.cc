@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.2 2005/07/23 06:52:35 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -26,6 +26,7 @@
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 namespace util {
 
@@ -51,38 +52,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class enum_instance method definitions
-
-enum_instance::enum_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-enum_instance::~enum_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-enum_instance::collect_transient_info(persistent_object_manager& m) const {
-	// collect pointers
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-enum_instance::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	// write me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-enum_instance::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	// write me!
-}
-
 //=============================================================================
 // explicit class instantiations
 
+template class state_instance<enum_tag>;
 template class instance_alias_info<enum_tag>;
 template class instance_collection<enum_tag>;
 template class instance_array<enum_tag, 0>;

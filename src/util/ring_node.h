@@ -1,7 +1,7 @@
 /**
 	\file "util/ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.4 2005/07/20 21:01:02 fang Exp $
+	$Id: ring_node.h,v 1.5 2005/08/08 16:51:15 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -214,9 +214,25 @@ protected:
 	 */
 	ring_node_iterator_base(node_ptr_type p, const_node_ptr_type l) :
 		current_node(p), last_node(l) {
-		NEVER_NULL(l);
-		INVARIANT(l->points_to(p));
+		if (last_node)
+			INVARIANT(last_node->points_to(current_node));
 	}
+
+#if 0
+	/**
+		This unsafe constructor is called from ring_node_iterator's
+		copy-constructor, in which case the last_node may be NULL.  
+		The bool argument is unused and is present to distinguish
+		from the previous constructor.  
+		Rationale, copy-constructor is copying from a valid
+		iterator which need not be checked again.  
+	 */
+	ring_node_iterator_base(node_ptr_type p, const_node_ptr_type l, 
+			const bool b) :
+		current_node(p), last_node(l) {
+		INVARIANT(b);
+	}
+#endif
 
 public:
 	void
@@ -293,16 +309,10 @@ public:
 	typedef	P				pointer;
 
 	typedef	ring_node_iterator<T, R, P>	this_type;
-#if 0
-	typedef	ring_node_iterator<T, T&, T*>	iterator;
-	typedef	ring_node_iterator<T, const T&, const T*>
-						const_iterator;
-#else
 	typedef	typename ring_node_iterator_default<T>::type
 						iterator;
 	typedef	typename ring_node_iterator_default<T>::const_type
 						const_iterator;
-#endif
 	typedef	ring_node<T>			node_type;
 	typedef	ring_node_base			node_base_type;
 
@@ -312,7 +322,7 @@ public:
 		parent_type(n) { }
 
 	/**
-		\pre n must point to l.
+		\pre n must point to l, as checked by parent constructor.
 	 */
 	ring_node_iterator(node_base_type* n, const node_base_type* l) :
 		parent_type(n, l) { }
@@ -323,6 +333,9 @@ public:
 	/**
 		Allows both iterator and const_iterator to be 
 		copy-constructed from iterator.  
+		Passing extra (unused) bool to signal that
+		it is safe, and need not be checked again
+		by the parent constructor.  
 	 */
 	// explicit
 	ring_node_iterator(const iterator& i) :

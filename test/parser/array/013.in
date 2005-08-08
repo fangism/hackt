@@ -1,4 +1,4 @@
-// should pass: sparse single range, mixed with dense ranges
+// "013.in" should pass: sparse single range, mixed with dense ranges
 
 pint x[4][0..0][6..11];
 

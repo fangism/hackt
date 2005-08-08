@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.2 2005/07/23 06:52:59 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.3 2005/08/08 16:51:11 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -85,6 +85,16 @@ instance_management_base::unroll_meta_instantiate(unroll_context& ) const {
  */
 good_bool
 instance_management_base::unroll_meta_connect(unroll_context& ) const {
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overrideable default for unroll creation.  
+	Only instantiation_statements actually provide a real implementation.  
+ */
+good_bool
+instance_management_base::create_unique(const unroll_context&) const {
 	return good_bool(true);
 }
 
@@ -203,6 +213,20 @@ sequential_scope::unroll_meta_connect(unroll_context& c) const {
 	const const_iterator e(instance_management_list.end());
 	for ( ; i!=e; i++) {
 		if (!(*i)->unroll_meta_connect(c).good) {
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+sequential_scope::create_unique(const unroll_context& c) const {
+	STACKTRACE("sequential_scope::create_unique()");
+	const_iterator i(instance_management_list.begin());
+	const const_iterator e(instance_management_list.end());
+	for ( ; i!=e; i++) {
+		if (!(*i)->create_unique(c).good) {
 			return good_bool(false);
 		}
 	}

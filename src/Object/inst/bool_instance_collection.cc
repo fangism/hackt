@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.2 2005/07/23 06:52:34 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -33,8 +33,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/inst/instance_collection.tcc"
-
-#include "util/memory/list_vector_pool.tcc"
+#include "Object/inst/state_instance.tcc"
+// #include "util/memory/chunk_map_pool.tcc"
 
 //=============================================================================
 // module-local specializations
@@ -62,7 +62,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace memory {
 	// can we still lazy destroy with instance aliases?
 	// or will it contain pointers to other things later?  (instances)
-#if 1
+#if 0
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
 #endif
 }	// end namespace memory
@@ -71,35 +71,6 @@ namespace memory {
 //=============================================================================
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class bool_instance method definitions
-
-bool_instance::bool_instance() : persistent(), back_ref() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_instance::~bool_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance::collect_transient_info(persistent_object_manager& m) const {
-	// register me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	// write me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	// load me!
-}
 
 //=============================================================================
 // typedef bool_instance_alias_base function definitions
@@ -112,6 +83,7 @@ operator << (ostream& o, const bool_instance_alias_base& b) {
 //=============================================================================
 // explicit instantiations
 
+template class state_instance<bool_tag>;
 template class instance_alias_info<bool_tag>;
 template class instance_collection<bool_tag>;
 template class instance_array<bool_tag, 0>;

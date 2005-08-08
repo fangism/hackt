@@ -3,6 +3,44 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-08-07:
+	KNOWN ISSUE: need to check that all connected aliases (during or after
+		unique-creation phase) have valid and equivalent
+		relaxed template actuals.  Unrolling is insufficient to
+		catch errors, mismatches that occur across the hierarchy.  
+	TODO: fix crash when loading empty object file (easy).
+
+//=============================================================================
+2005-08-05:
+	Unique creation: allocating unique state to aliases.  
+	Considerations of implementation:
+	Want state to be persistent (save/restorable)
+		yet don't want each state instance to be managed
+		by persistent object manager (each entry is costly).  
+		Resolution: use a list_vector as an indexed pool of state
+			(per type).
+	Instead of keeping a reference count pointer per alias, 
+		just keep an index into the pool of the appropriate type.  
+		Instance-entries still have back-reference to canonical
+		hierarchical instance alias.  
+		(Reserve 0 as 'uninitialized')
+	But who owns these state pools?
+		Shouldn't be global UNLESS there is a way to
+			save and restore all the state through module.  
+			list_vectors (and their) instances are
+			copy-constructible, so this is feasible.  
+		Could belong to the module, since that needs to be 
+			kept persistent.  Create a 'state' member.  
+		Could belong to particular definition, since those
+			must outlive their instances.  
+		Each type could have its own pool.  
+			relaxed or strict?
+		pool could be public static member of instance_type
+			and referenced by the module class.  
+		Clear pool upon expiration of module?
+	Tentative resolution: global static member pools of instance_types.  
+
+//=============================================================================
 2005-07-18:
 	Minutes of meeting.
 	cflat (backwards compatibility) has some constraints:

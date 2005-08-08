@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.2 2005/08/04 23:02:54 fang Exp $
+	$Id: compile.cc,v 1.3 2005/08/08 16:51:12 fang Exp $
  */
 
 #include <iostream>
@@ -38,9 +38,7 @@ const char
 compile::brief_str[] = "Compiles HACKT source to object file.";
 
 const size_t
-compile::program_id =
-	register_hackt_program(compile::name,
-		compile::main, compile::brief_str);
+compile::program_id = register_hackt_program_class<compile>();
 
 //=============================================================================
 compile::compile() { }

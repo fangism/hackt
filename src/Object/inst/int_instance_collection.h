@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_int.h"
 		in a previous life.  
-	$Id: int_instance_collection.h,v 1.2 2005/07/23 06:52:38 fang Exp $
+	$Id: int_instance_collection.h,v 1.3 2005/08/08 16:51:09 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_H__
@@ -13,7 +13,9 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/traits/int_traits.h"
 #include "Object/inst/instance_collection.h"
-#include "Object/inst/instance_alias.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/state_instance.h"
+// #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -23,15 +25,13 @@ ostream&
 operator << (ostream&, const int_instance_alias_base&);
 
 //-----------------------------------------------------------------------------
-class int_instance : public persistent {
-	never_ptr<int_instance_alias_base>	back_ref;
-public:
-	int_instance();
-	~int_instance();
-
-public:
-	PERSISTENT_METHODS_DECLARATIONS
-};	// end class int_instance
+/**
+	State information for an integer.  
+ */
+class class_traits<int_tag>::state_instance_base {
+protected:
+	int						state;
+};	// end class state_instance_base
 
 //-----------------------------------------------------------------------------
 // convenient typedefs

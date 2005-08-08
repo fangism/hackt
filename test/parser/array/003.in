@@ -1,4 +1,4 @@
-// should fail: extending single instance with array
+// "003.in" should fail: extending single instance with array
 
 pint y;
 pint y[2];

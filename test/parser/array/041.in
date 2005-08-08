@@ -1,4 +1,4 @@
-// should pass parsing, die during unrolling
+// "041.in" should pass parsing, die during unrolling
 // (copied from 037.in, changed int -> pint)
 
 pint foo[3][4][5];

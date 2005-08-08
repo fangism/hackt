@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.71 2005/08/04 23:02:54 fang Exp $
+#	$Id: Makefile.am,v 1.72 2005/08/08 16:51:06 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -34,7 +34,6 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt
-# artc art++2obj artobjdump artobjunroll prsobjdemo
 
 # dirgen is completely bogus, workaround to corce directory generation
 noinst_PROGRAMS = dirgen getopt_test
@@ -159,6 +158,7 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_instance_reference_connection.cc \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
+	Object/state_manager.cc \
 	Object/type/template_actuals.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
@@ -194,6 +194,8 @@ OBJECT_TCC_FILES = \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/instance_collection.tcc \
 	Object/inst/value_collection.tcc \
+	Object/inst/instance_pool.tcc \
+	Object/inst/state_instance.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
@@ -294,6 +296,9 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/instance_alias.h \
 	Object/inst/alias_empty.h \
 	Object/inst/value_collection.h \
+	Object/inst/instance_pool_fwd.h \
+	Object/inst/instance_pool.h \
+	Object/inst/state_instance.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \
@@ -340,6 +345,7 @@ UTIL_TCC_FILES = \
 	util/STL/list.tcc \
 	util/STL/map.tcc \
 	util/IO_utils.tcc \
+	util/bitset.tcc \
 	util/const_assoc_query.tcc \
 	util/discrete_interval_set.tcc \
 	util/hash_qmap.tcc \
@@ -398,6 +404,7 @@ UTIL_HEADER_FILES = \
 	util/hash_specializations.h \
 	util/ifthenelse.h \
 	util/indent.h \
+	util/inttypes.h \
 	util/iterator_more.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
@@ -424,7 +431,9 @@ UTIL_HEADER_FILES = \
 	util/nullary_function_fwd.h \
 	util/nullary_function.h \
 	util/null_construct.h \
+	util/numeric/bigger_ints.h \
 	util/numeric/integer_traits.h \
+	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
@@ -436,6 +445,7 @@ UTIL_HEADER_FILES = \
 	util/size_t.h \
 	util/sstream.h \
 	util/stacktrace.h \
+	util/static_assert.h \
 	util/static_trace.h \
 	util/string_fwd.h \
 	util/type_traits.h \
@@ -454,6 +464,7 @@ UTIL_HEADER_FILES = \
 
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
+	util/bitset.cc \
 	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
@@ -484,6 +495,7 @@ MAIN_EXEC_CC_FILES = \
 	main/parse_test.cc \
 	main/compile.cc \
 	main/unroll.cc \
+	main/create.cc \
 	main/prsobjdemo.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc

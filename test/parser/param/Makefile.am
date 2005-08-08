@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2005/07/23 06:53:12 fang Exp $
+#	$Id: Makefile.am,v 1.7 2005/08/08 16:51:48 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -26,17 +26,6 @@ ARTOBJ_TEST_SUBJECTS = \
 # subset of ARTOBJ_TEST_SUBJECTS
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
-
-# not needed yet, parse/type-check/unroll failures already handled by scripts
-ARTOBJUNROLL_XFAIL_TEST_SUBJECTS =
-
-TESTS = $(ARTC_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest)
-
-XFAIL_TESTS = $(ARTC_XFAIL_TEST_SUBJECTS:=.artctest) \
-	$(ARTOBJ_XFAIL_TEST_SUBJECTS:=.artobjtest) \
-	$(ARTOBJUNROLL_XFAIL_TEST_SUBJECTS:=.artobjunrolltest)
 
 include $(top_srcdir)/test/Make.test-tail
 

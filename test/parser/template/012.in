@@ -1,4 +1,4 @@
-// should pass: all valid uses of a template type with default
+// "012.in" should pass: all valid uses of a template type with default
 
 template <pint N = 7>
 defproc foo();

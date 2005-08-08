@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.2 2005/07/23 06:52:36 fang Exp $
+	$Id: instance_alias_info.h,v 1.3 2005/08/08 16:51:08 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -90,10 +90,12 @@ public:
 						relaxed_actuals_type;
 public:
 	/**
-		During finalization phase, this will be constructed, 
-		and references will be copied to neighbors.  
+		Index into the global pool to access
+		the state referenced by this alias.  
+		0 means unassigned.  
+		This is set during the create-unique phase.  
 	 */
-	instance_ptr_type				instance;
+	size_t					instance_index;
 	/**
 		Back-reference to the mother container.
 		Consider using this to determine "instantiated" state.  
@@ -102,8 +104,7 @@ public:
 
 protected:
 	// constructors only intended for children classes
-	instance_alias_info() :
-		instance(NULL), container(NULL) { }
+	instance_alias_info() : instance_index(0), container(NULL) { }
 
 public:
 	/**
@@ -115,7 +116,7 @@ public:
 		Perhaps introduce constructor with actuals argument?
 	 */
 	instance_alias_info(const container_ptr_type m) :
-		instance(NULL), container(m) {
+		instance_index(0), container(m) {
 #if 0
 		// cancel this idea:
 		NEVER_NULL(container);
@@ -150,6 +151,14 @@ virtual	const_iterator
 virtual	const_iterator
 	end(void) const;
 
+private:
+virtual	iterator
+	begin(void);
+
+virtual	iterator
+	end(void);
+
+public:
 	/**
 		Instantiates officially by linking to parent collection.  
 		FYI: This is only called by instance_array<0> (scalar)
@@ -160,6 +169,16 @@ virtual	const_iterator
 	 */
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
+
+	// really shouldn't be const...
+	size_t
+	allocate_state(void) const;
+
+	void
+	merge_allocate_state(this_type&);
+
+	void
+	inherit_subinstances_state(const this_type&);
 
 	/**
 		Attaches actual parameters to this alias.  
@@ -186,8 +205,8 @@ virtual	const_iterator
 	 */
 	bool
 	operator == (const this_type& i) const {
-		return (this->instance == i.instance) &&
-			(this->container == i.container);
+		return (this->instance_index == i.instance_index)
+			&& (this->container == i.container);
 	}
 
 
@@ -208,6 +227,10 @@ virtual	void
 virtual	void
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
+
+	static
+	instance_alias_base_type&
+	load_alias_reference(const persistent_object_manager& m, istream& i);
 
 public:
 	void

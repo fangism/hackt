@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.4 2005/08/04 23:02:50 fang Exp $
+#	$Id: configure.ac,v 1.5 2005/08/08 16:51:02 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20050804, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20050808, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -41,6 +41,10 @@ AC_CHECK_PROG([TAIL], tail, tail)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
 AC_CHECK_PROG([TOUCH], touch, touch)
+
+# comment out until time for release
+# this causes too many rebuilds during development
+# AC_DEFINE_UNQUOTED(HACKT_BUILD_DATE, "`$DATE`", [Define the build date.])
 
 # don't need this yet
 # AC_CONFIG_SUBDIRS
@@ -191,6 +195,7 @@ AC_CONFIG_FILES([
 	test/artc-expect.sh
 	test/artobj-diff.sh
 	test/artobjunroll-expect.sh
+	test/hackt-create-expect.sh
 	test/test-series.sh
 	test/lexer/Makefile
 	test/parser/Makefile
@@ -222,4 +227,5 @@ chmod +x test/test-series.sh
 chmod +x test/artc-expect.sh
 chmod +x test/artobj-diff.sh
 chmod +x test/artobjunroll-expect.sh
+chmod +x test/hackt-create-expect.sh
 

@@ -1,4 +1,4 @@
-// should pass: non-overlapping sparse array instantiations
+// "016.in" should pass: non-overlapping sparse array instantiations
 // same as 015.in, but reverse order
 
 int foo[5..5];

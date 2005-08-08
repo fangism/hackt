@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.7 2005/06/21 21:26:39 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.8 2005/08/08 16:51:15 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -15,6 +15,8 @@
 #include "util/macros.h"
 #include "util/numeric/nibble_tables.h"
 #include "util/numeric/integer_traits.h"
+#include "util/static_assert.h"
+#include "util/bitset.tcc"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MEMORY_CHUNK_MAP_POOL
 #define	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
@@ -31,6 +33,7 @@ namespace memory {
 #include "util/using_ostream.h"
 using numeric::MSB_position;
 using numeric::divide_by_constant;
+using numeric::is_power_of_2;
 
 //=============================================================================
 // class typeless_memory_chunk method definitions
@@ -45,7 +48,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::contains(void* p) const {
 		divide_by_constant<element_size, size_t>(diff);
 	if (offset >= chunk_size)
 		return false;
-	register const bit_map_type dealloc_mask = bit_map_type(1) << offset;
+	const bit_map_type dealloc_mask = bit_map_type(1) << offset;
 	return (free_mask & dealloc_mask);
 }
 
@@ -57,10 +60,20 @@ TYPELESS_MEMORY_CHUNK_CLASS::contains(void* p) const {
 TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE
 void*
 TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
+	UTIL_STATIC_ASSERT(is_power_of_2<chunk_size>::value);
 	INVARIANT(!this->full());
-	register const bit_map_type after_alloc = free_mask | (free_mask +1);
-	register const bit_map_type alloc_bit = after_alloc ^ free_mask;
+#if 0
+	const bit_map_type after_alloc = free_mask | (free_mask +1);
+#else
+	const bit_map_type after_alloc = set_any_bit<bit_map_type>()(free_mask);
+#endif
+	const bit_map_type alloc_bit = after_alloc ^ free_mask;
+#if 0
 	INVARIANT(alloc_bit);	// throw bad_alloc()
+#else
+	const bool v = any_bits<bit_map_type>()(alloc_bit);
+	INVARIANT(v);
+#endif
 	register const size_t alloc_position =
 		MSB_position<bit_map_type>()(alloc_bit);
 	INVARIANT(alloc_position < chunk_size);
@@ -87,7 +100,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 			-reinterpret_cast<size_t>(&elements[0]);
 	register const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
-#if 1
+#if 0
 	// for debugging
 	if (offset >= chunk_size) {
 		cerr << "p = " << p <<
@@ -97,7 +110,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 	}
 #endif
 	INVARIANT(offset < chunk_size);	// else doesn't belong to this chunk!
-	register const bit_map_type dealloc_mask = bit_map_type(1) << offset;
+	const bit_map_type dealloc_mask = bit_map_type(1) << offset;
 	// was actually allocated and not already freed
 #if 0
 	cerr << "start = " << start_address();
@@ -166,7 +179,11 @@ CHUNK_MAP_POOL_CHUNK_CLASS::status(ostream& o) const {
 //	const std::ios_base::fmtflags f = o.flags();
 //	o.flags(f | std::ios_base::hex);
 	// interpreting for getting hexadecimal formatting
+#if 0
 	o << FORMAT_HEX_POINTER(this->free_mask) << endl;
+#else
+	return print_bits_hex<bit_map_type>()(o, this->free_mask) << endl;
+#endif
 //	o.flags(f);
 	return o;
 }

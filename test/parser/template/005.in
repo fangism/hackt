@@ -1,4 +1,4 @@
-// should fail: x not found anywhere
+// "005.in" should fail: x not found anywhere
 
 template <pint N>
 defproc foo() {

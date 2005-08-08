@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.2 2005/07/23 06:52:34 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -23,6 +23,7 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
+#include "Object/inst/state_instance.tcc"
 
 namespace util {
 
@@ -49,36 +50,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 //=============================================================================
-// class channel_instance method definitions
-
-channel_instance::channel_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance::~channel_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance::collect_transient_info(persistent_object_manager& m) const {
-	// collect pointers
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance::write_object(const persistent_object_manager& m, 
-		ostream& o) const {
-	// write me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance::load_object(const persistent_object_manager& m, 
-		istream& i) {
-	// write me!
-}
-
-//=============================================================================
 // explicit template class instantiations
 
+template class state_instance<channel_tag>;
 template class instance_alias_info<channel_tag>;
 template class instance_collection<channel_tag>;
 template class instance_array<channel_tag, 0>;

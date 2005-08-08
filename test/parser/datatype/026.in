@@ -1,4 +1,4 @@
-// should pass, instantiation of an enumeration fully defined
+// "026.in" should pass, instantiation of an enumeration fully defined
 
 enum foo { bar, one, two }
 

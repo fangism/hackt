@@ -1,4 +1,4 @@
-// this should fail to type check because "b" is not declared
+// "013.in" this should fail to type check because "b" is not declared
 
 defproc badinverter(bool a) {
 int k;

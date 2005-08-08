@@ -1,4 +1,4 @@
-// should fail: overlapping sparse arrays
+// "026.in" should fail: overlapping sparse arrays
 
 int blah[10..12];
 int blah[5..10];

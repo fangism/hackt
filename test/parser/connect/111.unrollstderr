@@ -1,0 +1,61 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	73
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    wrap = process-definition (defined) wrap(
+        bool<> a
+        bool<> b
+      )
+      In definition "wrap", we have: {
+        a = bool<> a
+        b = bool<> b
+      }
+
+  Instances:
+    j = process wrap<>^0 j (instantiated) = ::k (
+      bool^0 a (instantiated) = ::k.b 
+      bool^0 b (instantiated) = ::j.b 
+    )
+    k = process wrap<>^0 k (instantiated) = ::j (
+      bool^0 a (instantiated) = ::k.a 
+      bool^0 b (instantiated) = ::j.a 
+    )
+}
+

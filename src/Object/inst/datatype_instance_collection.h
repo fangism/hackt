@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.2 2005/07/23 06:52:35 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.3 2005/08/08 16:51:08 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -76,6 +76,9 @@ virtual good_bool
 	instantiate_indices(const const_range_list& i, 
 		const instance_relaxed_actuals_type&, 
 		const unroll_context&) = 0;
+
+virtual	good_bool
+	create_unique_state(const const_range_list&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;

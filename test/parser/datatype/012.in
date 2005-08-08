@@ -1,4 +1,4 @@
-// should fail trying to alias namespace to a taken identifier
+// "012.in" should fail trying to alias namespace to a taken identifier
 
 namespace A { }
 int x;

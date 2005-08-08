@@ -1,7 +1,7 @@
 /**
 	\file "main/prsobjdemo.h"
 	Interface header for prsobjdemo module.  
-	$Id: prsobjdemo.h,v 1.1 2005/07/25 02:10:09 fang Exp $
+	$Id: prsobjdemo.h,v 1.2 2005/08/08 16:51:13 fang Exp $
  */
 
 #ifndef	__MAIN_PRSOBJDEMO_H__
@@ -20,11 +20,10 @@ class prsobjdemo {
 private:
 	class options;
 
-private:
+public:
 	static const char		name[];
 	static const char		brief_str[];
 
-public:
 	prsobjdemo();
 
 	static

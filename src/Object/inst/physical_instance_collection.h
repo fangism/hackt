@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.2 2005/07/23 06:52:40 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3 2005/08/08 16:51:09 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -14,7 +14,7 @@
 namespace ART {
 namespace entity {
 //=============================================================================
-// class instance_collection_base declared in "art_object_instance_base.h"
+// class instance_collection_base defined in "Object/inst/instance_collection_base.h"
 
 /**
 	Base class for physical entity collections, 
@@ -22,6 +22,7 @@ namespace entity {
  */
 class physical_instance_collection : public instance_collection_base {
 private:
+	typedef	physical_instance_collection	this_type;
 	typedef	instance_collection_base	parent_type;
 protected:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
@@ -73,6 +74,15 @@ virtual bool
 
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
+
+virtual	void
+	allocate_state(void) = 0;
+
+virtual	void
+	merge_created_state(this_type&) = 0;
+
+virtual	void
+	inherit_created_state(const this_type&) = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

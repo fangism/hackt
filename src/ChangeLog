@@ -1,5 +1,117 @@
 "ChangeLog"
 
+2005-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-54-merged-unique-01-10:
+	  Merged -unique-01 branch (-10).
+	  Summary: implemented unique state allocation after unrolling.  
+	  Includes some fixes in the util library as well.  
+	  TODO: cflat
+
+
+2005-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-10:
+	  Fixed bug in port state allocation:
+		ports may be aliased to each other, thus we must process
+		aliases' state allocation, and then follow up with
+		allocation for the remaining unaliasaed ports.
+		See comment in instance_alias_info<>::allocate_state().
+		Added new test cases to check for correct behavior:
+			parser/connect/111,112,113.in
+	  Some gcc4 happiness patches in this branch's new files/methods.  
+	  Cleaned out USE_INSTANCE_INDEX conditional.  
+	  Branch is nearly mature.  
+
+
+	* ARTXX-00-01-04-main-00-53-unique-01-09:
+	  Fixed bug for connect/031b.in: forgot to propagate
+		instance_index copyes to aliases during merge_allocate_state.
+	  TODO: clean up USE_INSTANCE_INDEX macro (commit)
+	  Status: branch is nearly complete, well-tested.
+	  TODO: more test cases in connections.  
+
+
+2005-08-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-08:
+	  Implemented recursive state allocation of instances and aliases.  
+		Updated several related method prototypes.  
+	  Enabled a bunch of "hackt create" test cases in test suite.  
+	  Currently working on fixing bug exhibited by parser/connect/031b.in.  
+
+
+	* ARTXX-00-01-04-main-00-53-unique-01-07:
+	  Bug fixed in util/ring_node.h.
+	  Fixed alias iteration in instance_alias_info::allocate.
+	  Enabled most test cases that don't require recursive expansion.  
+	  TODO: recursive subinstance state creation.  
+
+
+2005-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-06:
+	  Added state manager, whose responsibility is managing 
+		the global state pools (static member pools in various
+		state_instance classes).
+	  Implemented dumping of created state, just prints canonical alias.  
+	  Implemented creation state persistence.  
+	  Enabled unique state creation! (without recursion)
+		So far basic tests look good, but no connections 
+		have been tested yet.  
+	  Corrected initialization of instance_pool constructor, 
+		call set_chunk_size rather than pass to parent ctor.  
+		Implemented an allocate that takes a value to assign.  
+	  TODO: test cases with alias connections.  
+
+
+	* ARTXX-00-01-04-main-00-53-unique-01-05:
+	  Added Object/inst/instance_pool.{h,tcc}:
+		wrapper around util::list_vector for state allocation.  
+		Result of ::allocate is an index into the list_vector.
+	  Added Object/inst/state_instance.{h,tcc}:
+		Template class from which state instances are defined.  
+	  Redefined  *_instance classes (in Object/inst/*_instance_collection.h)
+		in terms of state_instance template class.  
+	  Updated instance_alias_info<>::allocate_state to use
+		instance_pool's allocation.  
+
+
+2005-08-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-53-unique-01-04:
+	  Update all *_instance classes: no longer derived from persistent
+		because they will be managed differently.  
+	  instance_alias_info's instance (ref-count) pointer has been 
+		replaced with an integer index for indexing into 
+		allocation array of state info (pool).  
+		Binary object sizes remain the same because 
+		sizeof(size_t) == sizeof(pointer).
+	  Implemented back-reference saving and restoring for all instances.  
+	  TODO: allocate and link instances to state.  
+	  TODO: introduce static global list_vector pools for allocation.  
+	  TODO: save and restore global state.  
+
+
+	* ARTXX-00-01-04-main-00-53-unique-01-03:
+	  NOTES: discussion on implementation of (instance) state allocation.  
+	  Updated bool_instance and int_instance classes (tinkering).
+		Prototype implementation of
+		instance_alias_info<>::allocate_state().
+
+
+	* ARTXX-00-01-04-main-00-53-unique-01-02:
+	  Added some more utilities to libfangutil for integer types and
+		traits.  
+
+
+	* ARTXX-00-01-04-main-00-53-unique-01-01:
+	  This branch is intended for development of unique-creation
+		(state allocation).  This first revision just sets up 
+		some empty function calls and outlines.  
+	  Also improved hackt program registration.  
+
+
 2005-08-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-merged-configtest-03:

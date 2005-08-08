@@ -1,4 +1,4 @@
-// should fail: template signatures don't match in redeclaration
+// "023.in" should fail: template signatures don't match in redeclaration
 
 template <pint N; pint A[N]>
 defproc foo();

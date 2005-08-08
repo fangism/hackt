@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.2 2005/07/23 06:52:20 fang Exp $
+	$Id: module.h,v 1.3 2005/08/08 16:51:07 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -48,6 +48,11 @@ protected:
 		successfully unrolled.
 	 */
 	bool					unrolled;
+	/**
+		Whether or not this object has had state space
+		uniquely allocated.  
+	 */
+	bool					created;
 
 private:
 	module();
@@ -78,7 +83,10 @@ public:
 	dump(ostream& o) const;
 
 	bool
-	is_unrolled(void) const {	return unrolled;	}
+	is_unrolled(void) const { return unrolled; }
+
+	bool
+	is_created(void) const { return created; }
 
 	/**
 		Note: sequential scope has a const-version of this, 
@@ -87,6 +95,9 @@ public:
 	 */
 	good_bool
 	unroll_module(void);
+
+	good_bool
+	create_unique(void);
 
 public:
 	FRIEND_PERSISTENT_TRAITS

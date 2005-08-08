@@ -1,4 +1,4 @@
-// this should pass, good array declaration
+// "010.in" this should pass, good array declaration
 
 int good_array[5];
 

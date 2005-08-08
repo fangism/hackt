@@ -1,0 +1,60 @@
+#!@SH_PATH@
+# "hackt-create-expect.sh.in"
+#	$Id: hackt-create-expect.sh.in,v 1.2 2005/08/08 16:51:17 fang Exp $
+
+# $1 is the executable for the creator (hackt create), expecting 2 arguments
+# $2 is the executable for reading in the object file, (probably artobjdump)
+#	and producing a textual dump to stderr.
+
+# $3 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $4 is the input file name WITHOUT the .in extension
+# $5 is the filter for ignoring certain difference in output
+#	(for no filter, pass "cat")
+# $6 is the test report log file, summarizing results
+# other subsequent arguments are ignored
+
+# if [ $# -lt 6 ] ; then exit 1 ; fi
+
+create=$1
+dump=$2
+srcroot=$3/$4
+bldroot=$4
+filter=$5
+logfile=$6
+
+# an pre-created (already unrolled) object file must already exist
+if ! [ -e $bldroot.artobjunroll ] ; then exit 1 ; fi
+
+# see if it crashes first
+$create $bldroot.artobjunroll $bldroot.hacktobjcreate 2> $bldroot.createdump
+
+# depending on exit status, take action
+case $? in
+	0) 
+		$dump $bldroot.hacktobjcreate 2>&1 | @CAT@ > $bldroot.createdump
+		break ;;
+	1) break ;;
+	*) exit 1 ;;
+esac
+
+@CAT@ $bldroot.createdump | $filter > $bldroot.createdump.filter
+
+# .createstderr comparison file must exist
+if ! [ -f $srcroot.createstderr ]
+then
+	@ECHO@ "Missing $srcroot.createstderr."
+	exit 1
+fi
+
+# ignore whitespace differences
+@DIFF@ -buw $srcroot.createstderr $bldroot.createdump.filter 2>&1 | \
+	@CAT@ > $bldroot.creatediff
+
+if [ -s $bldroot.creatediff ]
+then
+	@ECHO@ "$bldroot.creatediff is non-empty!  See $logfile."
+	@ECHO@ `pwd`/"$bldroot.creatediff" >> $logfile
+	exit 1
+fi
+

@@ -2,7 +2,7 @@
 	file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.9 2005/06/21 21:26:37 fang Exp $
+	$Id: list_vector.tcc,v 1.10 2005/08/08 16:51:14 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -135,9 +135,9 @@ LIST_VECTOR_CLASS::dump_details(ostream& o) const {
 	// start map one-ahead, skip the last vector chunk, 
 	// because it may not be full.
 	assert(vec_list.size() == vec_map.size() +2);
-	const_vec_map_iterator mi = vec_map.begin();
-	const_list_iterator li = vec_list.begin();
-	const const_list_iterator le = --vec_list.end();
+	const_vec_map_iterator mi(vec_map.begin());
+	const_list_iterator li(vec_list.begin());
+	const const_list_iterator le(--vec_list.end());
 //	const const_vec_map_iterator me = vec_map.end();
 	// the head sentinel
 	o << "\tat " << &*li << "\t" <<

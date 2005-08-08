@@ -1,4 +1,4 @@
-// this should pass, good array declaration
+// "014.in" this should pass, good array declaration
 // this file was copied from 006.in with the substitution: int -> bool
 // an example of rejected cast-style arrays is in 010.in
 

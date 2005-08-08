@@ -1,4 +1,4 @@
-// should pass: proper use of an element of a 2D array of pints
+// "018.in" should pass: proper use of an element of a 2D array of pints
 
 template <pint N, M[N][N]>
 defproc the_matrix() {

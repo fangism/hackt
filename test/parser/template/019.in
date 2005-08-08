@@ -1,4 +1,4 @@
-// should fail: can't use 1D array where scalar is expected
+// "019.in" should fail: can't use 1D array where scalar is expected
 
 template <pint N, M[N][N]>
 defproc the_matrix() {

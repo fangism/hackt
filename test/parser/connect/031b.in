@@ -1,0 +1,15 @@
+// "031b.in" should pass: nested member
+// copy-reduced from "031a.in"
+
+defproc egg(int yolk);
+defproc basket(egg egg_array);
+defproc bundle(basket c);
+
+bundle load;
+
+egg golden;
+
+load.c.egg_array = golden;
+
+int count = golden.yolk;
+

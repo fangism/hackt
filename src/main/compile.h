@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.1 2005/07/25 02:10:07 fang Exp $
+	$Id: compile.h,v 1.2 2005/08/08 16:51:12 fang Exp $
  */
 
 #ifndef	__MAIN_COMPILE_H__
@@ -20,11 +20,10 @@ class compile {
 private:
 	class options;
 
-private:
+public:
 	static const char		name[];
 	static const char		brief_str[];
 
-public:
 	compile();
 
 	static

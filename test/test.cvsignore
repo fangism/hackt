@@ -14,6 +14,9 @@ core.*
 *.artobjunroll
 *.unrolldump
 *.unrolldiff
+*.hacktobjcreate
+*.createdump
+*.creatediff
 ignore
 Makefile
 Makefile.in

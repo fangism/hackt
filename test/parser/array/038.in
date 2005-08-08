@@ -1,4 +1,4 @@
-// should pass: non-overlapping sparse array instantiations
+// "038.in" should pass: non-overlapping sparse array instantiations
 // copied from 015.in, changed int to pint
 
 pint foo[4];
