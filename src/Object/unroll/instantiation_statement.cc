@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.2 2005/07/23 06:52:59 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.2.6.1 2005/08/08 19:07:56 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -41,25 +41,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/channel_instantiation_statement.h"
 #include "Object/unroll/process_instantiation_statement.h"
+#include "Object/unroll/instantiation_statement.tcc"
+#include "Object/unroll/param_instantiation_statement.tcc"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
-// conditional defines, after inclusion of "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
-#include "Object/unroll/instantiation_statement.tcc"
-#include "Object/unroll/param_instantiation_statement.tcc"
 
 //=============================================================================
 // local specializations

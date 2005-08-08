@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.2 2005/07/23 06:52:25 fang Exp $
+ 	$Id: definition.cc,v 1.2.6.1 2005/08/08 19:07:52 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -57,19 +57,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/compose.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
-
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
 
 
 namespace util {

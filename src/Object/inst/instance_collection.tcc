@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.4 2005/08/08 16:51:08 fang Exp $
+	$Id: instance_collection.tcc,v 1.4.2.1 2005/08/08 19:07:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -23,12 +23,6 @@
 
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE		0
-#endif
-#ifndef	STACKTRACE_DESTRUCTORS
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#endif
-#ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,23 +60,6 @@
 #include "util/compose.h"
 #include "util/binders.h"
 #include "util/dereference.h"
-
-// conditional defines, after including "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
 
 //=============================================================================
 // module-local specializations

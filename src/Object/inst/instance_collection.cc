@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.2 2005/07/23 06:52:36 fang Exp $
+ 	$Id: instance_collection.cc,v 1.2.6.1 2005/08/08 19:07:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -37,19 +37,6 @@
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
-
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
 
 
 //=============================================================================

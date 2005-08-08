@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.2 2005/07/23 06:52:51 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.2.6.1 2005/08/08 19:07:55 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -16,10 +16,6 @@
 
 #ifndef	STACKTRACE_DESTRUCTORS
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#endif
-
-#ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 #endif
 
 #include <iostream>
@@ -37,23 +33,6 @@
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
 #include "util/memory/count_ptr.tcc"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
 
 //=============================================================================
 namespace ART {

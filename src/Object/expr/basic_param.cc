@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.3 2005/07/23 06:52:30 fang Exp $
+ 	$Id: basic_param.cc,v 1.3.6.1 2005/08/08 19:07:52 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -41,20 +41,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
 
 //=============================================================================
 namespace util {

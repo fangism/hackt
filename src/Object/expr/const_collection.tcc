@@ -1,8 +1,8 @@
 /**
-	\file "Object/expr/const_collection.cc"
+	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.2 2005/07/23 06:52:30 fang Exp $
+ 	$Id: const_collection.tcc,v 1.2.6.1 2005/08/08 19:07:53 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -26,10 +26,6 @@
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
 #endif
 
-#ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
-#endif
-
 #include <iostream>
 #include <exception>
 #include <algorithm>
@@ -47,23 +43,6 @@
 #include "util/stacktrace.h"
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
 
 //=============================================================================
 // partial specializations

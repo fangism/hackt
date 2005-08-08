@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.2 2005/07/23 06:52:50 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.2.6.1 2005/08/08 19:07:55 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -15,10 +15,6 @@
 
 #ifndef	STACKTRACE_DESTRUCTORS
 #define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#endif
-
-#ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
 #endif
 
 #include <iostream>
@@ -46,23 +42,6 @@
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
 #include "util/memory/count_ptr.tcc"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
 
 //=============================================================================
 namespace ART {

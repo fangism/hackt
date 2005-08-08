@@ -1,14 +1,16 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.19 2005/06/21 21:26:38 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.19.14.1 2005/08/08 19:07:57 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 #define	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
 
-// #define	ENABLE_STACKTRACE		1
-// depend on whatever file includes this
+// overrideable debug flag, can be preset by the includer of this
+#ifndef	ENABLE_STACKTRACE
+#define	ENABLE_STACKTRACE		0
+#endif
 
 #include "util/persistent_object_manager.h"
 
@@ -34,7 +36,31 @@
 #include "util/sstream.h"
 #endif
 
+#ifndef	STACKTRACE_PERSISTENTS
+#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#endif
 
+/**
+	Conditionally enabling stacktracing for persistent_object_manager
+	related functions and methods.  
+ */
+#ifndef	STACKTRACE_PERSISTENT
+#if STACKTRACE_PERSISTENTS
+	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
+	#define	STACKTRACE_PERSISTENT_BRIEF	STACKTRACE_BRIEF
+	#define	STACKTRACE_PERSISTENT_VERBOSE	STACKTRACE_VERBOSE
+#else
+	#define	STACKTRACE_PERSISTENT(x)
+	#define	STACKTRACE_PERSISTENT_BRIEF
+	#define	STACKTRACE_PERSISTENT_VERBOSE
+#endif
+#endif
+
+
+/**
+	Debug flag for printing each type as it is registered
+	in the persistent type manager.  
+ */
 #define	WELCOME_TO_TYPE_REGISTRATION			0
 
 namespace util {
@@ -188,12 +214,12 @@ inline
 persistent_object_manager::visit_info*
 persistent_object_manager::__read_pointer(istream& f, 
 		const P& ptr, const single_owner_pointer_tag) const {
-#if ENABLE_STACKTRACE
+#if STACKTRACE_PERSISTENTS
 	static ostringstream oss;
 	static const ostream& oss_ref = 
 		oss << "__read_pointer-single<" <<
 			what<typename P::element_type>::name() << ">()";
-	STACKTRACE(oss.str());
+	STACKTRACE_PERSISTENT(oss.str());
 #endif
 	const typename pointer_traits<P>::pointer&
 		p = pointer_manipulator::get_pointer(ptr);
@@ -211,12 +237,12 @@ persistent_object_manager::__read_pointer(istream& f,
 		const P& ptr, const shared_owner_pointer_tag) const {
 	typedef	persistent_object_manager::visit_info*	return_type;
 	typedef typename pointer_traits<P>::pointer	pointer_type;
-#if ENABLE_STACKTRACE
+#if STACKTRACE_PERSISTENTS
 	static ostringstream oss;
 	static const ostream& oss_ref = 
 		oss << "__read_pointer-shared<" <<
 			what<typename P::element_type>::name() << ">()";
-	STACKTRACE(oss.str());
+	STACKTRACE_PERSISTENT(oss.str());
 #endif
 	// not reference here, use a local copy first!
 	const pointer_type p = pointer_manipulator::get_pointer(ptr);
@@ -267,7 +293,7 @@ persistent_object_manager::write_pointer(ostream& f, const P& ptr) const {
 template <class P>
 void
 persistent_object_manager::read_pointer(istream& f, const P& ptr) const {
-	STACKTRACE("pom::read_pointer()");
+	STACKTRACE_PERSISTENT("pom::read_pointer()");
 	visit_info* v = __read_pointer(f, ptr, __pointer_category(ptr));
 	NEVER_NULL(v);
 	// really the value of the pointer is irrelevant, just the ownership
@@ -340,7 +366,7 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 	typedef	typename L::size_type	size_type;
 	typedef	typename L::value_type	pointer_type;
 	// assert(l.empty()); ?
-	STACKTRACE("pom::read_pointer_list()");
+	STACKTRACE_PERSISTENT("pom::read_pointer_list()");
 	size_type s = 0;
 	read_value(f, s);
 	size_type i = 0;

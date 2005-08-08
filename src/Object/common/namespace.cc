@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.2 2005/07/23 06:52:22 fang Exp $
+ 	$Id: namespace.cc,v 1.2.6.1 2005/08/08 19:07:51 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -56,25 +56,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
-
-//=============================================================================
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
-//=============================================================================
-
-// whether or not unimplemented objects should be written/loaded to/from file. 
-// #define	USE_UNDEFINED_OBJECTS		1
 
 //=============================================================================
 namespace util {

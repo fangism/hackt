@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.3 2005/07/23 06:52:31 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.3.6.1 2005/08/08 19:07:54 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -35,20 +35,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/multikey.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
 
 //=============================================================================
 namespace util {

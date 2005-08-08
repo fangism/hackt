@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.2 2005/07/23 06:52:55 fang Exp $
+ 	$Id: type_reference.cc,v 1.2.6.1 2005/08/08 19:07:56 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -64,19 +64,6 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
-
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
 
 //=============================================================================
 // specializations
