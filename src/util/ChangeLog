@@ -1,5 +1,18 @@
 # "src/util/ChangeLog"
 
+2005-08-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-54-macros-02:
+	  Standardized some stacktrace macros for _PERSISTENT and _DTOR
+		and _CTOR, because they were blatantly copied everywhere
+		before.  Now they are available for each module
+		to enable or disable.  
+	  Added pointer-class-specific assertion macros, versions
+		of NEVER_NULL and INVARIANT to control debug level
+		of the most commonly used templates.  
+		Each module may alter the debug mode or use the default.  
+
+
 2005-08-06	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-unique-01-07:

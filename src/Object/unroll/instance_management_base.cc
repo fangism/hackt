@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.3 2005/08/08 16:51:11 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.4 2005/08/08 23:08:31 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -29,19 +29,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
-
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
 
 
 namespace ART {

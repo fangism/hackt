@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.2 2005/07/23 06:52:56 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.3 2005/08/08 23:08:30 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -12,7 +12,6 @@
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 #endif
 
 #include <iostream>
@@ -22,7 +21,7 @@
 #include "Object/unroll/alias_connection.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/what.h"
 #include "util/binders.h"
@@ -30,20 +29,6 @@
 #include "util/dereference.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
-
-// conditional defines, after including "stactrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
 
 //=============================================================================
 namespace ART {
@@ -321,9 +306,7 @@ ALIAS_CONNECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	// improper key!!!
 	STACKTRACE_PERSISTENT("alias_connection<>::collect_transients()");
-//	cerr << persistent_traits<this_type>::type_key << endl;
 #if 1
 	const_iterator iter(inst_list.begin());
 	const const_iterator end(inst_list.end());

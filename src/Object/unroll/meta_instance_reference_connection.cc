@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.2 2005/07/23 06:53:01 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.3 2005/08/08 23:08:31 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -45,25 +45,6 @@
 #include "util/compose.h"
 #include "util/dereference.h"
 #include "util/reserve.h"
-
-// conditional defines, after including "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
-
-
 
 //=============================================================================
 namespace util {

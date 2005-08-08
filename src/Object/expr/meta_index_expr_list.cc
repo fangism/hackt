@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.3 2005/07/23 06:52:31 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.4 2005/08/08 23:08:28 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -39,20 +39,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/conditional.h"		// for compare_if
 #include "util/dereference.h"
 #include "util/ptrs_functional.h"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
 
 //=============================================================================
 namespace util {

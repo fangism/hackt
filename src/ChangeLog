@@ -2,6 +2,27 @@
 
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-merged-macros-02:
+	  Merged branch.
+
+
+	* ARTXX-00-01-04-main-00-54-macros-02:
+	  Added ICE module and macros to the common/ directory.  
+	  From now on, use ICE(...) for internal compiler errors
+		in this project.  
+
+
+	* ARTXX-00-01-04-main-00-54-macros-01:
+	  This branch is for cleaning up some debugging macros project-wide.
+	  The first revision cleaned up STACKTRACE_* (DTOR, PERSISTENT...)
+		macros: _PERSISTENT was standardized with 
+		util/persistent_object_manager.tcc
+		and _DTOR and _CTOR were standardized in "util/stacktrace.h".
+		Many source files were cleaned up as a result.  
+
+
+2005-08-08	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-54-merged-unique-01-10:
 	  Merged -unique-01 branch (-10).
 	  Summary: implemented unique state allocation after unrolling.  

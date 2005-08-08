@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.3 2005/07/23 06:52:31 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.4 2005/08/08 23:08:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -34,20 +34,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
-
-// these conditional definitions must appear after inclusion of "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-
 
 //=============================================================================
 namespace util {

@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.3 2005/08/08 16:51:11 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4 2005/08/08 23:08:31 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -23,12 +23,6 @@
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE				0
 #endif
-#ifndef	STACKTRACE_DESTRUCTORS
-#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#endif
-#ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
-#endif
 
 #include <iostream>
 #include <algorithm>
@@ -41,25 +35,8 @@
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
-
-// conditional defines, after inclusion of "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
 
 //=============================================================================
 namespace ART {

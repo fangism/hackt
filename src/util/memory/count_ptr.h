@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.5 2005/05/19 18:43:37 fang Exp $
+	$Id: count_ptr.h,v 1.6 2005/08/08 23:08:33 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -36,12 +36,39 @@
 #define	USE_REF_COUNT_POOL				1
 #endif
 
+/**
+	Multiple levels of debugging count_ptrs:
+	0 = off,
+	1 = fast invariants only (non-null, comparison),
+	2 = all invariants (includes slower checks), 
+	3 = with null-checks before deferencing
+	Recommended default level: 1 or 2
+ */
+#ifndef	DEBUG_COUNT_PTR
+#define	DEBUG_COUNT_PTR				1
+#endif
+
+#if DEBUG_COUNT_PTR >= 3
+	#define	COUNT_PTR_NEVER_NULL(x)		NEVER_NULL(x)
+#else
+	#define	COUNT_PTR_NEVER_NULL(x)
+#endif
+
+#if DEBUG_COUNT_PTR >= 2
+	#define	COUNT_PTR_INVARIANT(x)		INVARIANT(x)
+#else
+	#define	COUNT_PTR_INVARIANT(x)
+#endif
+
+#if DEBUG_COUNT_PTR >= 1
+	#define	COUNT_PTR_FAST_INVARIANT(x)	INVARIANT(x)
+#else
+	#define	COUNT_PTR_FAST_INVARIANT(x)
+#endif
+
 //=============================================================================
 
 namespace util {
-// forward declaration only
-class persistent_object_manager;
-
 namespace memory {
 //=============================================================================
 /***
@@ -73,14 +100,14 @@ struct raw_count_ptr {
 		Never transfers invalid pointers and reference counts.  
 	 */
 	raw_count_ptr(T* p, size_t* c) : ptr(p), ref_count(c) {
-		NEVER_NULL(ptr);
-		NEVER_NULL(ref_count);
+		COUNT_PTR_FAST_INVARIANT(ptr);
+		COUNT_PTR_FAST_INVARIANT(ref_count);
 	}
 
 	template <class S>
 	raw_count_ptr(S* p, size_t* c) : ptr(p), ref_count(c) {
-		NEVER_NULL(ptr);
-		NEVER_NULL(ref_count);
+		COUNT_PTR_FAST_INVARIANT(ptr);
+		COUNT_PTR_FAST_INVARIANT(ref_count);
 	}
 
 	template <class S>
@@ -124,7 +151,7 @@ struct raw_count_ptr {
 		rc_pool_ref(*util::memory::get_ref_count_allocator_anchor())
 	#define	NEW_SIZE_T		rc_pool_ref.allocate()
 	#define	DELETE_SIZE_T(x)	rc_pool_ref.deallocate(x)
-	#define	VALIDATE_SIZE_T(x)	assert(rc_pool_ref.contains(x))
+	#define	VALIDATE_SIZE_T(x)	COUNT_PTR_INVARIANT(rc_pool_ref.contains(x))
 	#include "util/memory/ref_count_pool.h"
 #else
 	#define STATIC_RC_POOL_REF_INIT		// blank
@@ -194,10 +221,10 @@ public:
 			ptr(c.ptr), ref_count(c.ref_count) {
 		if (this->ref_count) {
 			(*this->ref_count)++;
-			NEVER_NULL(ptr);
+			COUNT_PTR_FAST_INVARIANT(ptr);
 			REASONABLE_REFERENCE_COUNT;
 		} else {
-			INVARIANT(!ptr);
+			COUNT_PTR_FAST_INVARIANT(!ptr);
 		}
 	}
 
@@ -210,10 +237,10 @@ public:
 			ptr(c.ptr), ref_count(c.ref_count) {
 		if (this->ref_count) {
 			(*this->ref_count)++;
-			NEVER_NULL(ptr);
+			COUNT_PTR_FAST_INVARIANT(ptr);
 			REASONABLE_REFERENCE_COUNT;
 		} else {
-			INVARIANT(!ptr);
+			COUNT_PTR_FAST_INVARIANT(!ptr);
 		}
 	}
 
@@ -257,24 +284,30 @@ public:
 		copy of the pointer.  
 		The last reference to an object is the owner.  
 	 */
-	bool owned(void) const {
+	bool
+	owned(void) const {
 		return (ref_count && *ref_count == 1);
 	}
 
 	/// synonym for release()
-	void abandon(void) { release(); }
+	void
+	abandon(void) { release(); }
 
 	/**
 		Dereference.  
 	 */
 	reference
-	operator * (void) const throw() { NEVER_NULL(ptr); return *ptr; }
+	operator * (void) const throw() {
+		COUNT_PTR_NEVER_NULL(ptr); return *ptr;
+	}
 
 	/**
 		Dereference to member or method.  
 	 */
 	pointer
-	operator -> (void) const throw() { NEVER_NULL(ptr); return ptr; }
+	operator -> (void) const throw() {
+		COUNT_PTR_NEVER_NULL(ptr); return ptr;
+	}
 
 	operator bool() const { return ptr != NULL; }
 

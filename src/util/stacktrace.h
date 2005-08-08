@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.10 2005/08/04 23:02:55 fang Exp $
+	$Id: stacktrace.h,v 1.11 2005/08/08 23:08:33 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -18,11 +18,17 @@
 #endif
 
 
-#include "util/cppcat.h"		// for the UNIQUIFY macros
+#include <cassert>
 
+//=============================================================================
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
+#include "util/cppcat.h"		// for the UNIQUIFY macros
 #define	USING_STACKTRACE	using util::stacktrace;
+/**
+	The macro that keeps track of scope and call stacks.  
+	\param str the string to be printed.  
+ */
 #define	STACKTRACE(str)							\
 	const util::stacktrace UNIQUIFY(__stacktrace_) (str)
 /**
@@ -53,7 +59,8 @@
 	static const util::stacktrace::init_token			\
 	UNIQUIFY(__stacktrace_init_) (util::stacktrace::require_static_init());
 
-#else	// ENABLE_STACKTRACE
+#else	// ENABLE_STACKTRACE --------------------------------------------------
+
 #define	USING_STACKTRACE
 #define	STACKTRACE(str)
 #define	STACKTRACE_BRIEF
@@ -64,8 +71,51 @@
 #define REDIRECT_STACKTRACE(os)
 #define	ASSERT_STACKTRACE(expr)		assert(expr)
 #define	REQUIRES_STACKTRACE_STATIC_INIT	
-#endif	// ENABLE_STACKTRACE
+#endif	// ENABLE_STACKTRACE --------------------------------------------------
 
+//=============================================================================
+// additional macros for general purpose use
+// we provide these macro layers for ease controlling
+// certain subsets of debugging
+
+#ifndef	STACKTRACE_DESTRUCTORS
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#endif
+#ifndef	STACKTRACE_CONSTRUCTORS
+#define	STACKTRACE_CONSTRUCTORS		0 && ENABLE_STACKTRACE
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	STACKTRACE_DTOR is intended for use with destructors
+ */
+#ifndef	STACKTRACE_DTOR
+#if STACKTRACE_DESTRUCTORS
+	#define	STACKTRACE_DTOR(x)	STACKTRACE(x)
+	#define	STACKTRACE_DTOR_BRIEF	STACKTRACE_BRIEF
+	#define	STACKTRACE_DTOR_VERBOSE	STACKTRACE_VERBOSE
+#else
+	#define	STACKTRACE_DTOR(x)
+	#define	STACKTRACE_DTOR_BRIEF
+	#define	STACKTRACE_DTOR_VERBOSE
+#endif	// STACKTRACE_DESTRUCTORS
+#endif	// STACKTRACE_DTOR
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	STACKTRACE_CTOR is intended for use with constructors
+ */
+#ifndef	STACKTRACE_CTOR
+#if STACKTRACE_CONSTRUCTORS
+	#define	STACKTRACE_CTOR(x)	STACKTRACE(x)
+	#define	STACKTRACE_CTOR_BRIEF	STACKTRACE_BRIEF
+	#define	STACKTRACE_CTOR_VERBOSE	STACKTRACE_VERBOSE
+#else
+	#define	STACKTRACE_CTOR(x)
+	#define	STACKTRACE_CTOR_BRIEF
+	#define	STACKTRACE_CTOR_VERBOSE
+#endif	// STACKTRACE_CONSTRUCTORS
+#endif	// STACKTRACE_CTOR
 
 //=============================================================================
 
@@ -77,7 +127,7 @@
 
 #include "util/STL/list_fwd.h"
 #include "util/STL/stack_fwd.h"
-#include <stack>
+#include <stack>	// needed
 
 // need count pointer to be able to guarantee proper initialization
 // across modules during static construction debugging

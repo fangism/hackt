@@ -1,0 +1,10 @@
+"src/common/README"
+
+This directory is for project-wide source code that doesn't
+really belong in the fangutil library, nor does it belong exclusively
+to any sub-module.  To the useful and unclassified, Welcome Home.  
+
+An example of what might belong here are definitions that are
+shared by different modules, such as intermediate data structures.  
+Macros that are globall useful to this project should be placed herein.  
+

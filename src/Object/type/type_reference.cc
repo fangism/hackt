@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.2 2005/07/23 06:52:55 fang Exp $
+ 	$Id: type_reference.cc,v 1.3 2005/08/08 23:08:30 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -58,25 +58,13 @@
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/subinstance_manager.h"
+#include "common/ICE.h"
 
 #include "util/sstream.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/reserve.h"
-
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
 
 //=============================================================================
 // specializations
@@ -221,11 +209,10 @@ fundamental_type_reference::may_be_collectibly_type_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		rt(t.make_canonical_type_reference());
 	if (!lt || !rt) {
-		cerr << "Internal compiler error: "
-			"In fundamental_type_reference::may_be_collectibly_type_equivalent(), "
-			"got null left-type or right-type after canonicalization.  "
+	ICE(cerr, 
+		cerr << "got null left-type or right-type after canonicalization.  "
 			"FAAAAANNNNG!" << endl;
-		THROW_EXIT;
+	)
 	}
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.
@@ -269,11 +256,10 @@ fundamental_type_reference::must_be_collectibly_type_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		rt(t.make_canonical_type_reference());
 	if (!lt || !rt) {
-		cerr << "Internal compiler error: "
-			"In fundamental_type_reference::must_be_collectibly_type_equivalent(), "
-			"got null left-type or right-type after canonicalization.  "
+	ICE(cerr, 
+		cerr << "got null left-type or right-type after canonicalization.  "
 			"FAAAAANNNNG!" << endl;
-		THROW_EXIT;
+	)
 	}
 #if 1
 	// HACK: to catch built-in channel types as a temporary workaround.
@@ -319,11 +305,10 @@ fundamental_type_reference::may_be_connectibly_type_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		rt(t.make_canonical_type_reference());
 	if (!lt || !rt) {
-		cerr << "Internal compiler error: "
-			"In fundamental_type_reference::may_be_connectibly_type_equivalent(), "
-			"got null left-type or right-type after canonicalization.  "
+	ICE(cerr, 
+		cerr << "got null left-type or right-type after canonicalization.  "
 			"FAAAAANNNNG!" << endl;
-		THROW_EXIT;
+	)
 	}
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.
@@ -371,11 +356,10 @@ fundamental_type_reference::must_be_connectibly_type_equivalent(
 	const count_ptr<const fundamental_type_reference>
 		rt(t.make_canonical_type_reference());
 	if (!lt || !rt) {
-		cerr << "Internal compiler error: "
-			"In fundamental_type_reference::must_be_connectibly_type_equivalent(), "
-			"got null left-type or right-type after canonicalization.  "
+	ICE(cerr, 
+		cerr << "got null left-type or right-type after canonicalization.  "
 			"FAAAAANNNNG!" << endl;
-		THROW_EXIT;
+	)
 	}
 	// NOTE: this will not work on built-in channels!
 	// NOTE: will require more re-work with nested template types.

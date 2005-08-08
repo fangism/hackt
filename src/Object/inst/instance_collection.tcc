@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.4 2005/08/08 16:51:08 fang Exp $
+	$Id: instance_collection.tcc,v 1.5 2005/08/08 23:08:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -23,12 +23,6 @@
 
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE		0
-#endif
-#ifndef	STACKTRACE_DESTRUCTORS
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#endif
-#ifndef	STACKTRACE_PERSISTENTS
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -51,6 +45,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
+#include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
@@ -66,23 +61,6 @@
 #include "util/compose.h"
 #include "util/binders.h"
 #include "util/dereference.h"
-
-// conditional defines, after including "stacktrace.h"
-#ifndef	STACKTRACE_DTOR
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-#endif
-
-#ifndef	STACKTRACE_PERSISTENT
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
-#endif
 
 //=============================================================================
 // module-local specializations
@@ -296,14 +274,14 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 	for ( ; j!=e; i=j, j++) {
 #if 0
 		if (i->instance_index) {
-			cerr << "Internal compiler error: expected "
-				"instance_index to be 0, but got " <<
+			ICE(cerr, 
+			cerr << "expected instance_index to be 0, but got " <<
 				i->instance_index << endl;
 			this->dump_hierarchical_name(cerr << "this = ") << endl;
 			instance_type::pool[i->instance_index]
 				.get_back_ref()->dump_hierarchical_name(
 					cerr << "alias = ") << endl;
-			THROW_EXIT;
+			)
 		}
 #else
 		INVARIANT(!i->instance_index);
@@ -342,7 +320,8 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 			// possible both are already connected and allocated
 #if 1
 			if (ind != tind) {
-				cerr << "Internal compiler error: connecting "
+			ICE(cerr, 
+				cerr << "connecting "
 					"two instances already assigned to "
 					"different IDs: got " << ind <<
 					" and " << tind << endl;
@@ -352,7 +331,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 				instance_type::pool[tind].get_back_ref()
 					->dump_hierarchical_name(cerr << '\t')
 					<< endl;
-				THROW_EXIT;
+			)
 			}
 #else
 			INVARIANT(ind == tind);
