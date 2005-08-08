@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.9 2005/08/08 12:28:38 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.10 2005/08/08 12:32:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -623,7 +623,7 @@ void
 INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
-	instance_alias_base_type& n(load_alias_reference(m, i));
+	instance_alias_base_type& n(this->load_alias_reference(m, i));
 #if STACKTRACE_PERSISTENTS
 	cerr << "ring size before = " << this->size();
 #endif
