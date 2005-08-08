@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.7.12.1 2005/08/05 21:08:29 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.7.12.2 2005/08/08 12:07:42 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -33,7 +33,7 @@ namespace memory {
 #include "util/using_ostream.h"
 using numeric::MSB_position;
 using numeric::divide_by_constant;
-using numeric::is_power_of_2;;
+using numeric::is_power_of_2;
 
 //=============================================================================
 // class typeless_memory_chunk method definitions
