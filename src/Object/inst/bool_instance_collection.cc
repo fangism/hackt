@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.2.4.5 2005/08/07 01:07:26 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.2.4.6 2005/08/08 12:28:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -71,77 +71,6 @@ namespace memory {
 //=============================================================================
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class bool_instance method definitions
-
-#if 0
-instance_pool<bool_instance>
-bool_instance::pool(1024);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(bool_instance)
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_instance::bool_instance() :
-#if 0
-		persistent(),
-#endif
-		back_ref() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_instance::bool_instance(const alias_info_type& b) :
-#if 0
-		persistent(),
-#endif
-		back_ref(&b) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool_instance::~bool_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-bool_instance::what(ostream& o) const {
-	o << "bool-state";
-	if (back_ref) {
-		back_ref->dump_hierarchical_name(o << " = ");
-	}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Don't actually register the back-reference because it is
-	not directly managed by the persistent object manager.  
- */
-void
-bool_instance::collect_transient_info_base(persistent_object_manager& m) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-#if USE_INSTANCE_INDEX
-	NEVER_NULL(back_ref);
-	back_ref->write_next_connection(m, o);
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-bool_instance::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-#if USE_INSTANCE_INDEX
-	back_ref = never_ptr<const alias_info_type>(
-		&alias_info_type::load_alias_reference(m, i));
-#endif
-}
-#endif
 
 //=============================================================================
 // typedef bool_instance_alias_base function definitions

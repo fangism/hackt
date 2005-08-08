@@ -3,7 +3,7 @@
 	Class declarations for process instance and collections.  
 	This file originated from "Object/art_object_instance_proc.h"
 		in a previous life.
-	$Id: process_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:29 fang Exp $
+	$Id: process_instance_collection.h,v 1.2.4.3 2005/08/08 12:28:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
@@ -23,55 +23,11 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
 	Needs to be pool allocated for efficient unique construction. 
-	Derive from unique_instance_base.  
- */
-#if 0
-class process_instance {
-private:
-	typedef	process_instance		this_type;
-	typedef	process_instance_alias_info	alias_info_type;
-private:
-	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const alias_info_type>	back_ref;
-
-	// TODO: contain a vector of pointers to sub-structures
-	// concrete definition map will map member names to index/offsets
-	//	per-class structure layout...
-	// empty for now
-
-public:
-	process_instance();
-
-	explicit
-	process_instance(const alias_info_type&);
-
-	~process_instance();
-
-	ostream&
-	what(ostream&) const;
-
-#if 0
-	PERSISTENT_METHODS_DECLARATIONS
-#else
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
-};	// end class proc_instance
-#else
-/**
-	Unique process state.
  */
 class class_traits<process_tag>::state_instance_base {
 protected:
 
 };	// end class state_instance_base
-#endif
 
 //=============================================================================
 // convenient typedefs

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.2.4.3 2005/08/07 01:07:26 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.2.4.4 2005/08/08 12:28:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -49,46 +49,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-//=============================================================================
-// class channel_instance method definitions
-
-#if 0
-channel_instance::channel_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance::channel_instance(const alias_info_type& c) : back_ref(&c) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-channel_instance::~channel_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	// collect pointers
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-#if USE_INSTANCE_INDEX
-	NEVER_NULL(back_ref);
-	back_ref->write_next_connection(m, o);
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-channel_instance::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-#if USE_INSTANCE_INDEX
-	back_ref = never_ptr<const alias_info_type>(
-		&alias_info_type::load_alias_reference(m, i));
-#endif
-}
-#endif
-
 //=============================================================================
 // explicit template class instantiations
 

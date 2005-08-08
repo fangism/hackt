@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.2.4.3 2005/08/07 01:07:27 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.2.4.4 2005/08/08 12:28:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -52,46 +52,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class struct_instance method definitions
-
-#if 0
-struct_instance::struct_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct_instance::struct_instance(const alias_info_type& s) : back_ref(&s) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-struct_instance::~struct_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-struct_instance::collect_transient_info_base(
-		persistent_object_manager& m) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-struct_instance::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-#if USE_INSTANCE_INDEX
-	NEVER_NULL(back_ref);
-	back_ref->write_next_connection(m, o);
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-struct_instance::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-#if USE_INSTANCE_INDEX
-	back_ref = never_ptr<const alias_info_type>(
-		&alias_info_type::load_alias_reference(m, i));
-#endif 
-}
-#endif
-
 //=============================================================================
 // explicit template class instantiations
 

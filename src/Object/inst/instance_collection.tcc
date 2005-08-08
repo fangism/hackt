@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.8 2005/08/08 05:20:54 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.9 2005/08/08 12:28:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -389,10 +389,6 @@ void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::collect_base()");
-#if !USE_INSTANCE_INDEX
-	if (this->instance)
-		this->instance->collect_transient_info(m);
-#endif
 	// eventually need to implement this...
 
 	// shouldn't need to re-visit parent pointer, 
@@ -511,12 +507,8 @@ void
 INSTANCE_ALIAS_INFO_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::write_object_base()");
-#if USE_INSTANCE_INDEX
 	// let the module take care of saving the state information
 	write_value(o, this->instance_index);
-#else
-	m.write_pointer(o, this->instance);
-#endif
 	m.write_pointer(o, this->container);
 	actuals_parent_type::write_object_base(m, o);
 	substructure_parent_type::write_object_base(m, o);
@@ -528,12 +520,8 @@ void
 INSTANCE_ALIAS_INFO_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::load_object_base()");
-#if USE_INSTANCE_INDEX
 	// let the module take care of restoring the state information
 	read_value(i, this->instance_index);
-#else
-	m.read_pointer(i, this->instance);
-#endif
 	m.read_pointer(i, this->container);
 	actuals_parent_type::load_object_base(m, i);
 	substructure_parent_type::load_object_base(m, i);

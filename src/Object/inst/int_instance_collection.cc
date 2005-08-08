@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.2.4.4 2005/08/07 01:07:27 fang Exp $
+	$Id: int_instance_collection.cc,v 1.2.4.5 2005/08/08 12:28:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -64,61 +64,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-//=============================================================================
-// class int_instance method definitions
-
-#if 0
-instance_pool<int_instance>
-int_instance::pool(1024);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_instance::int_instance() : back_ref() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_instance::int_instance(const alias_info_type& i) : back_ref(&i) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_instance::~int_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-ostream&
-int_instance::what(ostream& o) const {
-	return o << "int-state";
-	if (this->back_ref) {
-		this->back_ref->dump_hierarchical_name(o << " = ");
-	}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-int_instance::collect_transient_info_base(persistent_object_manager& m) const {
-	// register me!
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-int_instance::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-#if USE_INSTANCE_INDEX
-	NEVER_NULL(back_ref);
-	back_ref->write_next_connection(m, o);
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-int_instance::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-#if USE_INSTANCE_INDEX
-	back_ref = never_ptr<const alias_info_type>(
-		&alias_info_type::load_alias_reference(m, i));
-#endif
-}
-#endif
-
 //=============================================================================
 // typedef int_instance_alias_base function definitions
 

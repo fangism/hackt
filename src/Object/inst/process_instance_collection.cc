@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.2.4.3 2005/08/07 01:07:27 fang Exp $
+	$Id: process_instance_collection.cc,v 1.2.4.4 2005/08/08 12:28:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -58,58 +58,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 
 namespace ART {
 namespace entity {
-
-//=============================================================================
-// class proc_instance method definitions
-
-#if 0
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance::process_instance() : back_ref(NULL) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance::process_instance(const alias_info_type& p) : back_ref(&p) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-process_instance::~process_instance() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-process_instance::what(ostream& o) const {
-	return o << "process_instance";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance::collect_transient_info_base(
-		persistent_object_manager& m) const {
-#if 0
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	// walk vector of pointers...
-}
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-process_instance::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-#if USE_INSTANCE_INDEX
-	NEVER_NULL(back_ref);
-	back_ref->write_next_connection(m, o);
-#endif
-}
-
-void
-process_instance::load_object_base(const persistent_object_manager& m,
-		istream& i) {
-#if USE_INSTANCE_INDEX
-	back_ref = never_ptr<const alias_info_type>(
-		&alias_info_type::load_alias_reference(m, i));
-#endif 
-}
-#endif
-
 //=============================================================================
 // explicit template clas instantiations
 

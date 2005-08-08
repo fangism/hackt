@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.1.2.2 2005/08/07 01:07:27 fang Exp $
+	$Id: state_instance.tcc,v 1.1.2.3 2005/08/08 12:28:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -12,9 +12,14 @@
 #include "Object/inst/instance_pool.tcc"
 // #include "util/persistent_object_manager.h"
 #include "util/stacktrace.h"
+#include "util/IO_utils.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
+using util::write_value;
+using util::read_value;
+
 //=============================================================================
 // class state_instance method definitions
 

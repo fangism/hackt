@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_struct.h"
 		in a previous life.  
-	$Id: struct_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:30 fang Exp $
+	$Id: struct_instance_collection.h,v 1.2.4.3 2005/08/08 12:28:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
@@ -24,38 +24,8 @@ namespace entity {
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-#if 0
-struct struct_instance {
-private:
-	typedef	struct_instance			this_type;
-	typedef	datastruct_instance_alias_info	alias_info_type;
-	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const alias_info_type>	back_ref;
-public:
-	struct_instance();
-
-	explicit
-	struct_instance(const alias_info_type&);
-
-	~struct_instance();
-
-#if 0
-	PERSISTENT_METHODS_DECLARATIONS
-#else
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
-};	// end class struct_instance
-#else
 class class_traits<datastruct_tag>::state_instance_base {
 };	// end class state_instance_base
-#endif
 
 //=============================================================================
 // convenient typedefs

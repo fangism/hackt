@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.1.2.2 2005/08/07 01:07:27 fang Exp $
+	$Id: instance_pool.tcc,v 1.1.2.3 2005/08/08 12:28:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -22,7 +22,7 @@ namespace entity {
  */
 template <class T>
 instance_pool<T>::instance_pool(const size_t s) : parent_type() {
-	set_chunk_size(s);
+	this->set_chunk_size(s);
 	allocate();
 }
 

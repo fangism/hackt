@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_enum.h"
 		in a previous life.  
-	$Id: enum_instance_collection.h,v 1.2.4.2 2005/08/06 15:42:28 fang Exp $
+	$Id: enum_instance_collection.h,v 1.2.4.3 2005/08/08 12:28:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
@@ -19,47 +19,15 @@
 namespace ART {
 namespace entity {
 //=============================================================================
-#if 0
 /**
 	An actual instantiated instance of an enum.
 	These are not constructed until after unrolling.  
 	A final pass is required to construct the instances.  
  */
-class enum_instance {
-private:
-	typedef	enum_instance_alias_info	alias_info_type;
-	// need back-reference(s) to owner(s) or hierarchical keys?
-	never_ptr<const alias_info_type>	back_ref;
-public:
-	enum_instance();
-
-	explicit
-	enum_instance(const alias_info_type&);
-
-	~enum_instance();
-
-#if 0
-	PERSISTENT_METHODS_DECLARATIONS
-#else
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
-};	// end class enum_instance
-#else
-/**
-	Channel state information.
- */
 class class_traits<enum_tag>::state_instance_base {
 protected:
 	int				state;
 };	// end class state_instance_base
-#endif
 
 //=============================================================================
 // convenient typedefs

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.2.4.4 2005/08/08 02:54:21 fang Exp $
+	$Id: instance_alias_info.h,v 1.2.4.5 2005/08/08 12:28:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -16,12 +16,6 @@
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
-
-/**
-	Whether or not we use pool indexing or reference counting
-	to maintain allocated state.  
- */
-#define	USE_INSTANCE_INDEX			1
 
 namespace ART {
 namespace entity {
@@ -95,20 +89,13 @@ public:
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
 public:
-#if USE_INSTANCE_INDEX
 	/**
 		Index into the global pool to access
 		the state referenced by this alias.  
 		0 means unassigned.  
+		This is set during the create-unique phase.  
 	 */
 	size_t					instance_index;
-#else
-	/**
-		During finalization phase, this will be constructed, 
-		and references will be copied to neighbors.  
-	 */
-	instance_ptr_type				instance;
-#endif
 	/**
 		Back-reference to the mother container.
 		Consider using this to determine "instantiated" state.  
@@ -117,13 +104,7 @@ public:
 
 protected:
 	// constructors only intended for children classes
-	instance_alias_info() :
-#if USE_INSTANCE_INDEX
-		instance_index(0), 
-#else
-		instance(NULL),
-#endif
-		container(NULL) { }
+	instance_alias_info() : instance_index(0), container(NULL) { }
 
 public:
 	/**
@@ -135,12 +116,7 @@ public:
 		Perhaps introduce constructor with actuals argument?
 	 */
 	instance_alias_info(const container_ptr_type m) :
-#if USE_INSTANCE_INDEX
-		instance_index(0), 
-#else
-		instance(NULL),
-#endif
-		container(m) {
+		instance_index(0), container(m) {
 #if 0
 		// cancel this idea:
 		NEVER_NULL(container);
@@ -229,12 +205,7 @@ public:
 	 */
 	bool
 	operator == (const this_type& i) const {
-		return
-#if USE_INSTANCE_INDEX
-			(this->instance_index == i.instance_index)
-#else
-			(this->instance == i.instance)
-#endif
+		return (this->instance_index == i.instance_index)
 			&& (this->container == i.container);
 	}
 
