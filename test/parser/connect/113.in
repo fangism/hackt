@@ -1,0 +1,12 @@
+// "113.in" test of connectivity
+// copy-modified from "111.in"
+
+defproc wrap(bool a[2]) {
+}
+
+wrap j, k;
+j = k;
+j.a[0] = k.a[1];
+
+// should reduce to one unique bool
+

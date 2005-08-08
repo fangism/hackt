@@ -96,5 +96,5 @@ process instance pool:
 2	::load.c
 3	::load.c.egg_array
 int instance pool:
-1	::load.c.egg_array.yolk
+1	::golden.yolk
 

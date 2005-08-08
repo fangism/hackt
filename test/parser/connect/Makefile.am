@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.4 2005/08/08 05:21:01 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.5 2005/08/08 16:16:36 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -27,7 +27,7 @@ ARTC_TEST_PASSES = \
 	083 084 085 086 087 088 089 \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 104 105 106 107 108 109 \
-	110
+	110 111 112 113
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -53,7 +53,8 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	078 \
 	083 084 085 088 089 \
 	092 093 094 095 099 \
-	100 102 103 104 106 107 109
+	100 102 103 104 106 107 109 \
+	111 112 113
 
 # notes:
 # the following tests depend channel port subinstances

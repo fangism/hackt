@@ -1,0 +1,82 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	61
+	7	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
+	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
+	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    wrap = process-definition (defined) wrap(
+        bool<> a with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "wrap", we have: {
+        a = bool<> a with indices: {
+          [0..1]
+        }
+
+      }
+
+  Instances:
+    j = process wrap<>^0 j (instantiated) = ::k (1) (
+      bool^1 a with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::k.a[1] (1) 
+          1 = ::j.a[1] (1) 
+        }
+    )
+    k = process wrap<>^0 k (instantiated) = ::j (1) (
+      bool^1 a with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::k.a[0] (1) 
+          1 = ::j.a[0] (1) 
+        }
+    )
+}
+
+Created state:
+process instance pool:
+1	::j
+bool instance pool:
+1	::k.a[0]
+

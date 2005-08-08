@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.10 2005/08/08 12:32:38 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.11 2005/08/08 16:16:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -284,11 +284,9 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 		instance_type::pool.allocate(instance_type(*this));
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
-	// create ports: is it safe to do this? hasn't been visited yet
-	// however, some of the aliases connected may have been visited
-	_this.allocate_subinstances();
-	// can also appear at the end
-	// visit each alias in the ring and connect
+	// NOTE: can't _this.allocate_subinstances() yet because there
+	// may be aliases between the ports, see comment below.  
+	// Visit each alias in the ring and connect
 	iterator j(_this.begin());	// begin points to next! (ring_node)
 	// skip itself, the start
 	iterator i(j++);
@@ -315,6 +313,13 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 		_this.create_subinstance_state(*i);
 		// instance_type::pool[this->instance_index] // self
 	}
+	// This must be done AFTER processing aliases because
+	// ports may be connected to each other externally
+	// Postponing guarantees that port aliases are resolved first.
+	// Then remaining unaliased ports may be allocated, 
+	// once we can deduce that no further aliases exist.  
+	// a test case that demonstrates this is parser/connect/111.in
+	_this.allocate_subinstances();
 	return this->instance_index;
 }
 
@@ -332,11 +337,26 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 	cerr << "this = " << this << ", &t = " << &t << endl;
 	cerr << "ind = " << ind << ", tind = " << tind << endl;
 #endif
-	INVARIANT(!ind || !tind || ind == tind);
 	if (ind) {
 		if (tind) {
 			// possible both are already connected and allocated
+#if 1
+			if (ind != tind) {
+				cerr << "Internal compiler error: connecting "
+					"two instances already assigned to "
+					"different IDs: got " << ind <<
+					" and " << tind << endl;
+				instance_type::pool[ind].get_back_ref()
+					->dump_hierarchical_name(cerr << '\t')
+					<< endl;
+				instance_type::pool[tind].get_back_ref()
+					->dump_hierarchical_name(cerr << '\t')
+					<< endl;
+				THROW_EXIT;
+			}
+#else
 			INVARIANT(ind == tind);
+#endif
 		} else {
 			// this already assigned, assign to t
 			t.inherit_subinstances_state(*this);
@@ -414,7 +434,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
-	STACKTRACE_VERBOSE;
+	// STACKTRACE_VERBOSE;
 	dump_alias(o);	// should call virtually, won't die
 	return o;
 }

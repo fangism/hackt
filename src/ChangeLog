@@ -2,6 +2,19 @@
 
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-53-unique-01-10:
+	  Fixed bug in port state allocation:
+		ports may be aliased to each other, thus we must process
+		aliases' state allocation, and then follow up with
+		allocation for the remaining unaliasaed ports.
+		See comment in instance_alias_info<>::allocate_state().
+		Added new test cases to check for correct behavior:
+			parser/connect/111,112,113.in
+	  Some gcc4 happiness patches in this branch's new files/methods.  
+	  Cleaned out USE_INSTANCE_INDEX conditional.  
+	  Branch is nearly mature.  
+
+
 	* ARTXX-00-01-04-main-00-53-unique-01-09:
 	  Fixed bug for connect/031b.in: forgot to propagate
 		instance_index copyes to aliases during merge_allocate_state.
