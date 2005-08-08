@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.2.4.1 2005/08/05 14:04:59 fang Exp $
+	$Id: instance_collection.h,v 1.2.4.2 2005/08/08 02:54:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -184,10 +184,12 @@ virtual	INSTANTIATE_INDICES_PROTO = 0;
  */
 #define	CREATE_UNIQUE_STATE_PROTO					\
 	good_bool							\
-	create_unique_state(const const_range_list&, 			\
-		const unroll_context&)
+	create_unique_state(const const_range_list&)
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
+
+virtual	void
+	allocate_state(void) = 0;
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -210,6 +212,11 @@ virtual	const_index_list
 
 virtual	UNROLL_ALIASES_PROTO = 0;
 
+virtual	void
+	merge_created_state(physical_instance_collection&) = 0;
+
+virtual	void
+	inherit_created_state(const physical_instance_collection&) = 0;
 
 public:
 virtual	instance_alias_base_type&
@@ -307,6 +314,9 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+	void
+	allocate_state(void);
+
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
@@ -324,6 +334,12 @@ public:
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;
+
+	void
+	merge_created_state(physical_instance_collection&);
+
+	void
+	inherit_created_state(const physical_instance_collection&);
 
 private:
 	class element_collector;
@@ -385,6 +401,9 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+	void
+	allocate_state(void);
+
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
 
@@ -402,6 +421,11 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
+	void
+	merge_created_state(physical_instance_collection&);
+
+	void
+	inherit_created_state(const physical_instance_collection&);
 
 public:
 	FRIEND_PERSISTENT_TRAITS

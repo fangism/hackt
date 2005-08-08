@@ -1,4 +1,4 @@
-// should pass: appropriate use of template type, overriding default
+// "011.in" should pass: appropriate use of template type, overriding default
 
 template <pint N = 7>
 defproc foo();

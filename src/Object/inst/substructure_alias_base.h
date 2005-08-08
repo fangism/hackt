@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.2 2005/07/20 21:00:55 fang Exp $
+	$Id: substructure_alias_base.h,v 1.2.6.1 2005/08/08 02:54:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -15,6 +15,7 @@ namespace ART {
 namespace entity {
 class instance_collection_base;
 class unroll_context;
+template <class> class state_instance;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -25,6 +26,7 @@ using util::persistent_object_manager;
 template <>
 class substructure_alias_base<true> {
 private:
+	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
 protected:
@@ -35,6 +37,7 @@ protected:
 public:
 virtual	~substructure_alias_base() { }
 
+protected:
 	/**
 		Visits children of the subinstance manager and 
 		restores parent-child back-link.  
@@ -53,6 +56,22 @@ virtual	~substructure_alias_base() { }
 		restore_parent_child_links();
 	}
 
+	void
+	create_subinstance_state(this_type& t) {
+		subinstances.create_state(t.subinstances);
+		// t.get_back_ref()->subinstances.create_state(subinstances);
+	}
+
+	template <class Tag>
+	void
+	inherit_state(const state_instance<Tag>& t) {
+		subinstances.inherit_state(t.get_back_ref()->subinstances);
+	}
+
+	void
+	allocate_subinstances(void);
+
+public:
 	// just a forwarded call
 	subinstance_manager::value_type
 	lookup_port_instance(const instance_collection_base& i) const;
@@ -64,12 +83,12 @@ virtual	ostream&
 	ostream&
 	dump_ports(ostream& o) const { return subinstances.dump(o); }
 
-public:
 	// simply forwarded call
 	good_bool
 	connect_ports(const connection_references_type&, 
 		const unroll_context&);
 
+protected:
 	// call forwarding
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
@@ -88,9 +107,10 @@ public:
  */
 template <>
 class substructure_alias_base<false> {
+	typedef	substructure_alias_base<false>		this_type;
 protected:
 	// has no sub-instances
-public:
+protected:
 	/**
 		No-op.
 	 */
@@ -100,14 +120,32 @@ public:
 		const unroll_context&) const { }
 
 	/**
+		Has no substructure, thus does not recur.  
+	 */
+	void
+	create_subinstance_state(const this_type&) const { }
+
+	/**
+		Nothing to copy recursively.  
+	 */
+	template <class Tag>
+	void
+	inherit_state(const state_instance<Tag>&) const { }
+
+	void
+	allocate_subinstances(void) const { }
+
+	/**
 		No-op.  
 	 */
 	void
 	restore_parent_child_links(void) { }
 
+public:
 	ostream&
 	dump_ports(ostream& o) const { return o; }
 
+protected:
 	void
 	collect_transient_info_base(const persistent_object_manager&) const { }
 

@@ -1,4 +1,4 @@
-// should pass type-checking
+// "004.in" should pass type-checking
 
 template <pint N, A[N], B[A[0]]>
 defproc array_me();

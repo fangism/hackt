@@ -1,4 +1,4 @@
-// should fail: no empty template param lists
+// "027.in" should fail: no empty template param lists
 
 template <>
 defproc foo() { }

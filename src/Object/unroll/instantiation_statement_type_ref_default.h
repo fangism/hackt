@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.2.4.1 2005/08/05 14:05:00 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.2.4.2 2005/08/08 02:54:23 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -162,8 +162,8 @@ protected:
 	static
 	good_bool
 	create_unique_state(instance_collection_generic_type& v, 
-			const const_range_list& crl, const unroll_context& c) {
-		return v.create_unique_state(crl, c);
+			const const_range_list& crl) {
+		return v.create_unique_state(crl);
 	}
 
 	void

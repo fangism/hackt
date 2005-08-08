@@ -1,4 +1,4 @@
-// should fail: forward declarations are not equivalent
+// "024.in" should fail: forward declarations are not equivalent
 
 template <pint N; pint A[N]>
 defproc foo();

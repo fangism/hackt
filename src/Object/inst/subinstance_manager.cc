@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.3 2005/07/23 06:52:42 fang Exp $
+	$Id: subinstance_manager.cc,v 1.3.4.1 2005/08/08 02:54:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -135,6 +135,79 @@ subinstance_manager::relink_super_instance_alias(
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		(*i)->relink_super_instance(p);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allocates each port entirely.  
+ */
+void
+subinstance_manager::allocate(void) {
+	STACKTRACE("subinstance_manager::allocate()");
+	iterator i(subinstance_array.begin());
+	const iterator e(subinstance_array.end());
+	for ( ; i!=e; i++) {
+		NEVER_NULL(*i);
+		// merge created state (instance_collection_bases)
+		// dynamic cast to physical_instance_collection
+		const count_ptr<physical_instance_collection>
+			pi(i->is_a<physical_instance_collection>());
+		NEVER_NULL(pi);
+		pi->allocate_state();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: clean up the const-hack.  
+ */
+void
+subinstance_manager::create_state(const this_type& s) {
+	STACKTRACE("subinstance_manager::create_state()");
+	this_type& t(const_cast<this_type&>(s));
+	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
+	iterator i(subinstance_array.begin());
+	iterator j(t.subinstance_array.begin());
+	const iterator e(subinstance_array.end());
+	for ( ; i!=e; i++, j++) {
+		NEVER_NULL(*i);
+		NEVER_NULL(*j);
+		// merge created state (instance_collection_bases)
+		// dynamic cast to physical_instance_collection
+		const count_ptr<physical_instance_collection>
+			pi(i->is_a<physical_instance_collection>());
+		const count_ptr<physical_instance_collection>
+			pj(j->is_a<physical_instance_collection>());
+		NEVER_NULL(pi);
+		NEVER_NULL(pj);
+		pi->merge_created_state(*pj);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: clean up the const-hack.  
+ */
+void
+subinstance_manager::inherit_state(const this_type& s) {
+	STACKTRACE("subinstance_manager::inherit_state()");
+	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
+	iterator i(subinstance_array.begin());
+	const_iterator j(s.subinstance_array.begin());
+	const iterator e(subinstance_array.end());
+	for ( ; i!=e; i++, j++) {
+		NEVER_NULL(*i);
+		NEVER_NULL(*j);
+		// merge created state (instance_collection_bases)
+		// dynamic cast to physical_instance_collection
+		const count_ptr<physical_instance_collection>
+			pi(i->is_a<physical_instance_collection>());
+		const count_ptr<const physical_instance_collection>
+			pj(j->is_a<const physical_instance_collection>());
+		NEVER_NULL(pi);
+		NEVER_NULL(pj);
+		pi->inherit_created_state(*pj);
 	}
 }
 

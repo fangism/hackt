@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.8.4.2 2005/08/07 14:56:20 fang Exp $
+#	$Id: Makefile.am,v 1.8.4.3 2005/08/08 02:54:27 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -26,12 +26,11 @@ ARTOBJ_TEST_SUBJECTS = \
 ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
 
+# the omitted unroll tests either have no instances or are just uninteresting
 HACKT_CREATE_TEST_SUBJECTS = \
-	024
-
-# pending recusive creation:
-# 054 055 056 057 058 059
-# 060 061 062 063 064 065
+	024 \
+	054 055 056 057 058 059 \
+	060 061 062 063 064 065
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \

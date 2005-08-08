@@ -1,4 +1,4 @@
-// should pass:
+// "007.in" should pass:
 
 template <pint N>
 defproc foo() {

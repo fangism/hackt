@@ -1,4 +1,4 @@
-// should pass: appropriate use of template type
+// "009.in" should pass: appropriate use of template type
 
 template <pint N>
 defproc foo();

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.2.4.1 2005/08/07 01:07:28 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.2.4.2 2005/08/08 02:54:23 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -97,10 +97,9 @@ protected:
 	static
 	good_bool
 	create_unique_state(value_collection_generic_type& v, 
-			const const_range_list& crl, 
-			const unroll_context& c) {
+			const const_range_list& crl) {
 #if 0
-		return v.create_unique_state(crl, c);
+		return v.create_unique_state(crl);
 #else
 		return good_bool(true);
 #endif
@@ -185,10 +184,9 @@ protected:
 	static
 	good_bool
 	create_unique_state(value_collection_generic_type& v, 
-			const const_range_list& crl, 
-			const unroll_context& c) {
+			const const_range_list& crl) {
 #if 0
-		return v.create_unique_state(crl, c);
+		return v.create_unique_state(crl);
 #else
 		return good_bool(true);
 #endif

@@ -1,4 +1,4 @@
-// should pass: proper use of pint template formal
+// "015.in" should pass: proper use of pint template formal
 
 pint default_width = 16;
 

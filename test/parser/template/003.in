@@ -1,4 +1,4 @@
-// should die:
+// "003.in" should die:
 // A has not been formed yet!
 // should die looking up A[N]
 

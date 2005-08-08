@@ -1,4 +1,4 @@
-// should fail: wrong number of template args
+// "010.in" should fail: wrong number of template args
 
 template <pint N>
 defproc foo();

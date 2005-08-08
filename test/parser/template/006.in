@@ -1,4 +1,4 @@
-// should pass: appropriate use of template formal int
+// "006.in" should pass: appropriate use of template formal int
 
 template <pint N>
 defproc foo() {

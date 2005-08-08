@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.1.2.2 2005/08/07 01:07:27 fang Exp $
+	$Id: state_instance.h,v 1.1.2.3 2005/08/08 02:54:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -48,6 +48,11 @@ public:
 	state_instance(const alias_info_type&);
 
 	~state_instance();
+
+	never_ptr<const alias_info_type>
+	get_back_ref(void) const {
+		return back_ref;
+	}
 
 	ostream&
 	dump(ostream&) const;

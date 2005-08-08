@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.3.2.6 2005/08/07 14:55:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.3.2.7 2005/08/08 02:54:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -271,11 +271,11 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	state to all other equivalent aliases (downward).  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
-	STACKTRACE("instance_alias_info::allocate_state()");
+size_t
+INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
+	STACKTRACE_VERBOSE;
 	if (this->instance_index)
-		return good_bool(true);
+		return this->instance_index;
 	// else we haven't visited this one yet
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
@@ -284,23 +284,93 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(const unroll_context& c) const {
 		instance_type::pool.allocate(instance_type(*this));
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
+	// create ports: is it safe to do this? hasn't been visited yet
+#if 1
+	// however, some of the aliases connected may have been visited
+	_this.allocate_subinstances();
+	// can also go later...
+#endif
 	// visit each alias in the ring and connect
-	iterator i(_this.begin());	// begin points to next! (ring_node)
+	iterator j(_this.begin());	// begin points to next! (ring_node)
 	// skip itself, the start
-	iterator j(i);
-	j++;
+	iterator i(j++);
 	// j stays one-ahead of i
 	// stop one-short of the end, which points to itself
 	const iterator e(_this.end());
 	for ( ; j!=e; i=j, j++) {
+#if 1
+		if (i->instance_index) {
+			cerr << "Internal compiler error: expected "
+				"instance_index to be 0, but got " <<
+				i->instance_index << endl;
+			this->dump_hierarchical_name(cerr << "this = ") << endl;
+			instance_type::pool[i->instance_index]
+				.get_back_ref()->dump_hierarchical_name(
+					cerr << "alias = ") << endl;
+			THROW_EXIT;
+		}
+#else
 		INVARIANT(!i->instance_index);
-		i->instance_index = this->instance_index;
-#if 0
-		// do stuff here, recursive connections, merging ports.
-		// instance_type::pool[this->instance_index];
 #endif
+		i->instance_index = this->instance_index;
+		// recursive connections, merging ports.
+		_this.create_subinstance_state(*i);
+		// instance_type::pool[this->instance_index] // self
 	}
-	return good_bool(true);
+#if 0
+	// however, some of the aliases connected may have been visited
+	_this.allocate_subinstances();
+	// can also be earlier
+#endif
+	return this->instance_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
+	STACKTRACE_VERBOSE;
+	const size_t ind = this->instance_index;
+	const size_t tind = t.instance_index;
+#if ENABLE_STACKTRACE
+	cerr << "this = " << this << ", &t = " << &t << endl;
+	cerr << "ind = " << ind << ", tind = " << tind << endl;
+#endif
+	INVARIANT(!ind || !tind || ind == tind);
+	if (ind) {
+		if (tind) {
+			// possible both are already connected and allocated
+			INVARIANT(ind == tind);
+		} else {
+			// this already assigned, assign to t
+			t.inherit_subinstances_state(*this);
+		}
+	} else {
+		if (!tind) {
+			// neither has been created yet
+			t.allocate_state();
+		}
+		this->inherit_subinstances_state(t);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Simply copy state_instance indices from source to this destination.  
+	\pre this is not at all state assigned, 
+		and t is completely state assigned.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(!this->instance_index);
+	INVARIANT(t.instance_index);
+	this->instance_index = t.instance_index;
+	substructure_parent_type::inherit_state(
+		instance_type::pool[t.instance_index]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1061,20 +1131,35 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges, 
-		const unroll_context& c) {
+INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges) {
 	STACKTRACE_VERBOSE;
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
-	good_bool err(true);
 	do {
+		// should be iterator, not const_iterator
 		const const_iterator iter(this->collection.find(key_gen));
 		INVARIANT(iter != collection.end());
-		err &= iter->allocate_state(c);
+		iter->allocate_state();
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
-	return err;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Like create_unique_state except it operates on the entire collection.
+	Called from subinstance_manager::create_state.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::allocate_state(void) {
+	STACKTRACE_VERBOSE;
+	iterator i(collection.begin());
+	const iterator e(collection.end());
+	for ( ; i!=e; i++) {
+		i->allocate_state();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1260,6 +1345,57 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
 	else 	return count_ptr<physical_instance_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Merges two instance collections, assigning them the same allocated
+	state.  
+	Called by subinstance_manager::create_state(), 
+		during create-unique phase.  
+	this and t must be port subinstances, 
+		and hence, must be densely packed.  
+	Since collection p was type/size checked during connection, 
+	we can conclude that they have the same size.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++, j++) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		element_type& jj(const_cast<element_type&>(
+			AS_A(const element_type&, *j)));
+		ii.merge_allocate_state(jj);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::inherit_created_state(
+		const physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	const_iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++, j++) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		ii.inherit_subinstances_state(*j);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1486,9 +1622,9 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 		this->the_instance.dump_actuals(o);
 	}
 	this->the_instance.get_next()->dump_alias(o << " = ");
-	this->the_instance.dump_ports(o << ' ');
 	if (this->the_instance.instance_index)
-		o << '(' << this->the_instance.instance_index << ')';
+		o << " (" << this->the_instance.instance_index << ')';
+	this->the_instance.dump_ports(o << ' ');
 	return o;
 }
 
@@ -1532,12 +1668,23 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges, 
-		const unroll_context& c) {
+INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges) {
 	STACKTRACE("instance_array<Tag,0>::create_unique_state()");
 	INVARIANT(ranges.empty());
 	INVARIANT(this->the_instance.valid());
-	return this->the_instance.allocate_state(c);
+	return good_bool(this->the_instance.allocate_state());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as create_unique_state.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::allocate_state(void) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(this->the_instance.valid());
+	this->the_instance.allocate_state();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1633,6 +1780,31 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
 	else 	return count_ptr<physical_instance_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Merges two instances, assigning them the same allocated state.  
+	Called by subinstance_manager::create_state(), 
+		during create-unique phase.  
+	this and t must be port subinstances.
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	this->the_instance.merge_allocate_state(t.the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::inherit_created_state(
+		const physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+	this->the_instance.inherit_subinstances_state(t.the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,6 +2,13 @@
 
 2005-08-07	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-53-unique-01-08:
+	  Implemented recursive state allocation of instances and aliases.  
+		Updated several related method prototypes.  
+	  Enabled a bunch of "hackt create" test cases in test suite.  
+	  Currently working on fixing bug exhibited by parser/connect/031b.in.  
+
+
 	* ARTXX-00-01-04-main-00-53-unique-01-07:
 	  Bug fixed in util/ring_node.h.
 	  Fixed alias iteration in instance_alias_info::allocate.

@@ -3,6 +3,14 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-08-07:
+	KNOWN ISSUE: need to check that all connected aliases (during or after
+		unique-creation phase) have valid and equivalent
+		relaxed template actuals.  Unrolling is insufficient to
+		catch errors, mismatches that occur across the hierarchy.  
+	TODO: fix crash when loading empty object file (easy).
+
+//=============================================================================
 2005-08-05:
 	Unique creation: allocating unique state to aliases.  
 	Considerations of implementation:

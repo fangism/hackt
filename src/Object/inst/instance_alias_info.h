@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.2.4.3 2005/08/06 01:32:20 fang Exp $
+	$Id: instance_alias_info.h,v 1.2.4.4 2005/08/08 02:54:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -194,8 +194,15 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-	good_bool
-	allocate_state(const unroll_context&) const;
+	// really shouldn't be const...
+	size_t
+	allocate_state(void) const;
+
+	void
+	merge_allocate_state(this_type&);
+
+	void
+	inherit_subinstances_state(const this_type&);
 
 	/**
 		Attaches actual parameters to this alias.  

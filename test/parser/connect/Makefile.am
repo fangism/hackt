@@ -1,10 +1,10 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.2 2005/08/07 14:56:13 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.3 2005/08/08 02:54:24 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 ARTC_TEST_FAILURES = \
-	    002 003 004 005 008 009 \
+	002 003 004 005 008 009 \
 	016 \
 	020 023 024 026 028 029 \
 	032 033 034 035 036 037 038 039 \
@@ -19,7 +19,7 @@ ARTC_TEST_PASSES = \
 	001 006 007 \
 	010 011 012 013 014 015 017 018 019 \
 	021 022 025 027 \
-	030 031 \
+	030 031 031a 031b \
 	046 047 049 \
 	051 057 058 \
 	062 063 064 065 067 069 \
@@ -43,11 +43,14 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 HACKT_CREATE_TEST_SUBJECTS = \
 	001 006 007 \
 	010 011 012 013 014 015 017 018 019 \
-	021 022
+	021 022 025 027 \
+	030
+
+# 031 and 031a,b (reduced) crash
 
 # notes:
 # the following connect processes (recursive ports)
-# 025 027 030 031 046 ...
+# 031 046 ...
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077
