@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.2 2005/07/20 21:00:40 fang Exp $
+	$Id: const_param_expr_list.h,v 1.2.10.1 2005/08/10 20:30:55 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -26,12 +26,13 @@ using std::vector;
 	Only scalar expressions allowed, no array indirections or collections.  
  */
 class const_param_expr_list : public param_expr_list, 
-		public vector<count_ptr<const const_param> > {
+		protected vector<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 	typedef	const_param_expr_list			this_type;
 	typedef	param_expr_list				interface_type;
 protected:
 	typedef	vector<count_ptr<const const_param> >	parent_type;
+	typedef	parent_type::value_type			value_type;
 public:
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
@@ -57,6 +58,8 @@ public:
 
 	excl_ptr<param_expr_list>
 	make_copy(void) const;
+
+	using parent_type::front;
 
 	count_ptr<const param_expr>
 	operator [] (const size_t) const;
@@ -95,6 +98,17 @@ public:
 	good_bool
 	must_validate_template_arguments(
 		const template_formals_list_type&) const;
+
+	bool
+	operator < (const this_type&) const;
+
+	/**
+		Dereference and compare (less-than) functor.
+	 */
+	struct less_ptr {
+		bool
+		operator () (const value_type&, const value_type&) const;
+	};	// end struct less
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

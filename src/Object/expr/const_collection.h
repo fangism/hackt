@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.2 2005/07/23 06:52:30 fang Exp $
+	$Id: const_collection.h,v 1.2.8.1 2005/08/10 20:30:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
@@ -25,6 +25,7 @@ namespace entity {
 class const_index_list;
 class const_range_list;
 class unroll_context;
+class const_param;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
@@ -63,6 +64,8 @@ public:
 							array_type;
 	typedef	typename array_type::iterator		iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
+	typedef	typename array_type::reference		reference;
+	typedef	typename array_type::const_reference	const_reference;
 protected:
 	typedef	typename array_type::key_type		key_type;
 protected:
@@ -75,6 +78,9 @@ public:
 	const_collection(const typename array_type::key_type&);
 
 	~const_collection();
+
+	const_reference
+	front(void) const { return values.front(); }
 
 	iterator
 	begin(void) { return values.begin(); }
@@ -163,6 +169,9 @@ public:
 
 	this_type
 	make_value_slice(const const_index_list&) const;
+
+	bool
+	operator < (const const_param&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

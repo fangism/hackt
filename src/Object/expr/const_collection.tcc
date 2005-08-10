@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.3 2005/08/08 23:08:28 fang Exp $
+ 	$Id: const_collection.tcc,v 1.3.2.1 2005/08/10 20:30:54 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -401,6 +401,30 @@ if (il.empty()) {
 	INVARIANT(coll_iter == ret.values.end());
 	return ret;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For two dense value collections to be comparable, they must
+	have the same dimensions.  
+	The rest is just a value-for-value lexicographical compare.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+bool
+CONST_COLLECTION_CLASS::operator < (const const_param& p) const {
+	const this_type* pp(IS_A(const this_type*, &p));
+	if (pp) {
+		INVARIANT(values.size() == pp->values.size());
+		// offsets don't matter, just dimensions
+		return std::lexicographical_compare(
+			this->begin(), this->end(), pp->begin(), pp->end()
+		);
+	} else {
+		// we must have a scalar const_expr_type
+		const const_expr_type& pc(IS_A(const const_expr_type&, p));
+		INVARIANT(!this->dimensions());
+		return this->front() < pc.static_constant_value();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

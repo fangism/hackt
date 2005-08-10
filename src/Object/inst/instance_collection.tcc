@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5 2005/08/08 23:08:29 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.1 2005/08/10 20:30:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -247,6 +247,12 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	state, and if so, just returns.  
 	Otherwise, allocate state and propagate the newly allocated
 	state to all other equivalent aliases (downward).  
+	TODO: bottom up construction of dependent types to form definition
+		footprints.  Bottom up is necessary because external aliases
+		between ports need to take into account internal aliases
+		which are determined by complete definitions.  
+	TODO: add a correct footprint argument as the creation context.  
+	TODO: invoke the correct pool to allocate using the footprint.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 size_t

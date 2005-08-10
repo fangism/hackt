@@ -2,6 +2,18 @@
 
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-01:
+	  This branch is for developing alias and creation footprints
+		per complete type, to be used in hierarchical state
+		construction.  This first revision is setting up
+		some files for upcoming modifications.  
+	  Going to use const_param_expr_list as the sorting key for the
+		footprint_manager.  We've defined the < operator
+		for const_param classes.  
+
+
+2005-08-08	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-55-merged-macros-02:
 	  Merged branch.
 

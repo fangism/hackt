@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.2 2005/07/20 21:00:48 fang Exp $
+	$Id: pbool_const.h,v 1.2.10.1 2005/08/10 20:30:55 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_CONST_H__
@@ -108,6 +108,8 @@ public:
 
 	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const;
+
+	LESS_OPERATOR_PROTO;
 
 private:
 	excl_ptr<param_expression_assignment>

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4 2005/08/08 23:08:28 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.1 2005/08/10 20:30:55 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -432,6 +432,33 @@ if (a_size != f_size) {
 	}
 	return good_bool(true);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dereference and compare.
+	Could go in a standard library.  
+ */
+bool
+const_param_expr_list::less_ptr::operator () (
+		const value_type& l, const value_type& r) const {
+	NEVER_NULL(l);
+	NEVER_NULL(r);
+	return *l < *r;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overriding the default comparison (between 2 vectors lexicographical)
+	Comparison is used by the footprint_manager of definitions.  
+ */
+bool
+const_param_expr_list::operator < (const this_type& t) const {
+	INVARIANT(size() == t.size());
+	const parent_type& l(*this);
+	const parent_type& r(t);
+	return std::lexicographical_compare(
+		begin(), end(), t.begin(), t.end(), less_ptr());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
