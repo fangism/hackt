@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.2 2005/08/08 16:51:10 fang Exp $
+	$Id: state_instance.tcc,v 1.2.4.1 2005/08/11 00:20:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -9,16 +9,18 @@
 
 #include <iostream>
 #include "Object/inst/state_instance.h"
-#include "Object/inst/instance_pool.tcc"
+#include "Object/inst/instance_pool.h"
 // #include "util/persistent_object_manager.h"
 #include "util/stacktrace.h"
-#include "util/IO_utils.h"
+// #include "util/IO_utils.h"
 
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
+#if 0
 using util::write_value;
 using util::read_value;
+#endif
 
 //=============================================================================
 // class state_instance method definitions
@@ -30,7 +32,7 @@ using util::read_value;
  */
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 typename STATE_INSTANCE_CLASS::pool_type
-STATE_INSTANCE_CLASS::pool(1024);
+STATE_INSTANCE_CLASS::pool(class_traits<Tag>::instance_pool_chunk_size);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
@@ -94,6 +96,7 @@ STATE_INSTANCE_CLASS::load_object_base(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Dumps the state of the entire pool of instances.  
 	Displays the unique ID number and each instance's state information.  
@@ -163,6 +166,7 @@ STATE_INSTANCE_CLASS::load_pool_state(const persistent_object_manager& m,
 		// works because this_type is copy-constructible
 	}
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: int_traits.h,v 1.3.4.1 2005/08/11 00:20:21 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_INT_TRAITS_H__
@@ -32,6 +32,7 @@ struct class_traits<int_tag> {
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
+	enum { instance_pool_chunk_size = 512 };
 
 	typedef	int_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;

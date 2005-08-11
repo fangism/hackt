@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.3 2005/08/08 16:51:09 fang Exp $
+	$Id: process_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -62,6 +62,7 @@ namespace entity {
 // explicit template clas instantiations
 
 template class state_instance<process_tag>;
+template class instance_pool<state_instance<process_tag> >;
 template class instance_alias_info<process_tag>;
 template class instance_collection<process_tag>;
 template class instance_array<process_tag, 0>;

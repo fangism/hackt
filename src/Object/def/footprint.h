@@ -1,16 +1,23 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.1 2005/08/10 20:30:53 fang Exp $
+	$Id: footprint.h,v 1.1.2.2 2005/08/11 00:20:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
 #define	__OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
-#include "Object/inst/state_instance.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/traits/classification_tags.h"
+
+#include "Object/inst/process_instance.h"
+#include "Object/inst/channel_instance.h"
+#include "Object/inst/struct_instance.h"
+#include "Object/inst/enum_instance.h"
+#include "Object/inst/int_instance.h"
+#include "Object/inst/bool_instance.h"
+
 #include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
 #include "util/hash_qmap.h"
@@ -24,6 +31,10 @@ using std::istream;
 using std::ostream;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+
+template <class Tag>
+struct footprint_pool_getter;
+
 //=============================================================================
 /**
 	Manages the unroll and creation information for a particular
@@ -42,6 +53,7 @@ using util::persistent_object_manager;
 	specialization definition.  (FAR far future)
  */
 class footprint {
+template <class> friend struct footprint_pool_getter;
 private:
 	/**
 		The type of map used to maintain local copy of instances.  
@@ -50,6 +62,13 @@ private:
 	 */
 	typedef	util::hash_qmap<string, count_ptr<instance_collection_base> >
 					instance_collection_map_type;
+	typedef	state_instance<process_tag>::pool_type	process_pool_type;
+	typedef	state_instance<channel_tag>::pool_type	channel_pool_type;
+	typedef	state_instance<datastruct_tag>::pool_type
+							struct_pool_type;
+	typedef	state_instance<enum_tag>::pool_type	enum_pool_type;
+	typedef	state_instance<int_tag>::pool_type	int_pool_type;
+	typedef	state_instance<bool_tag>::pool_type	bool_pool_type;
 private:
 	// state information
 	// a place to unroll instances and connections
@@ -87,21 +106,22 @@ private:
 		Another options may to make a scopestring class, 
 			a sequence of strings, but hash<> would be interesting.
 	 */
-	instance_collection_map_type	instance_collection_map;
+	instance_collection_map_type		instance_collection_map;
+
+	// footprint should include pools for the various types
+	// will also need some template member accessor
+	process_pool_type			process_pool;
+	channel_pool_type			channel_pool;
+	struct_pool_type			struct_pool;
+	enum_pool_type				enum_pool;
+	int_pool_type				int_pool;
+	bool_pool_type				bool_pool;
+
 #if 0
 	TODO:
 	write an export interface for just the ports
 	so the invoker may determine which ports (if any) 
 	are internally connected.
-
-	// footprint should include pools for the various types
-	// will also need some template member
-	state_instance<process_tag>::pool_type		process_pool;
-	state_instance<channel_tag>::pool_type		channel_pool;
-	state_instance<datastruct_tag>::pool_type	struct_pool;
-	state_instance<enum_tag>::pool_type		enum_pool;
-	state_instance<int_tag>::pool_type		int_pool;
-	state_instance<bool_tag>::pool_type		bool_pool;
 #endif
 public:
 	footprint();
@@ -121,6 +141,9 @@ public:
 	import_instances(const scopespace::used_id_map_type&);
 #endif
 
+	ostream&
+	dump(ostream&) const;
+
 // persistent information management
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -131,6 +154,35 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 };	// end class footprint
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Templated method of accessing member pools.  
+ */
+#define	SPECIALIZE_FOOTPRINT_POOL_GETTER(Tag,Member)			\
+template <>								\
+struct footprint_pool_getter<Tag> {					\
+	typedef	state_instance<Tag>::pool_type	pool_type;		\
+									\
+	inline								\
+	pool_type&							\
+	operator () (footprint& f) const				\
+		{ return f.Member; }					\
+									\
+	inline								\
+	const pool_type&						\
+	operator () (const footprint& f) const				\
+		{ return f.Member; }					\
+};	// end struct pool_getter
+
+SPECIALIZE_FOOTPRINT_POOL_GETTER(process_tag, process_pool)
+SPECIALIZE_FOOTPRINT_POOL_GETTER(channel_tag, channel_pool)
+SPECIALIZE_FOOTPRINT_POOL_GETTER(datastruct_tag, struct_pool)
+SPECIALIZE_FOOTPRINT_POOL_GETTER(enum_tag, enum_pool)
+SPECIALIZE_FOOTPRINT_POOL_GETTER(int_tag, int_pool)
+SPECIALIZE_FOOTPRINT_POOL_GETTER(bool_tag, bool_pool)
+
+#undef	SPECIALIZE_FOOTPRINT_POOL_GETTER
 
 //=============================================================================
 }	// end namespace entity

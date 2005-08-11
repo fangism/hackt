@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.3 2005/08/08 16:51:10 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -56,6 +56,7 @@ namespace entity {
 // explicit template class instantiations
 
 template class state_instance<datastruct_tag>;
+template class instance_pool<state_instance<datastruct_tag> >;
 template class instance_alias_info<datastruct_tag>;
 template class instance_collection<datastruct_tag>;
 template class instance_array<datastruct_tag, 0>;

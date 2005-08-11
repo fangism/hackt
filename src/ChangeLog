@@ -2,6 +2,14 @@
 
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-02:
+	  Made instance_pool class more resuable to footprint class.  
+	  More elaboration of footprint class.  
+	  Created Object/inst/*_instance.h headers for lightweight use
+		in other headers.  
+	  Added instance pool chunk sizes to class_traits.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-01:
 	  This branch is for developing alias and creation footprints
 		per complete type, to be used in hierarchical state

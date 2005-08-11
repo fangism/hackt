@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.1 2005/08/10 20:30:51 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.2 2005/08/11 00:20:15 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -302,6 +302,12 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/instance_pool_fwd.h \
 	Object/inst/instance_pool.h \
 	Object/inst/state_instance.h \
+	Object/inst/bool_instance.h \
+	Object/inst/int_instance.h \
+	Object/inst/enum_instance.h \
+	Object/inst/struct_instance.h \
+	Object/inst/process_instance.h \
+	Object/inst/channel_instance.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \

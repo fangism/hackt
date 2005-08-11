@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.2 2005/08/08 16:51:10 fang Exp $
+	$Id: state_instance.h,v 1.2.4.1 2005/08/11 00:20:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -20,7 +20,6 @@ namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
-using util::persistent_object_manager;
 using util::memory::never_ptr;
 
 #define	STATE_INSTANCE_TEMPLATE_SIGNATURE	template <class Tag>
@@ -39,6 +38,8 @@ class state_instance : public class_traits<Tag>::state_instance_base {
 						alias_info_type;
 	typedef	typename class_traits<Tag>::state_instance_base
 						state_instance_base;
+public:
+	typedef	Tag				tag_type;
 private:
 	never_ptr<const alias_info_type>	back_ref;
 public:
@@ -74,6 +75,7 @@ public:
 	static
 	pool_type				pool;
 
+#if 0
 	static
 	ostream&
 	dump_pool_state(ostream&);
@@ -89,6 +91,7 @@ public:
 	static
 	void
 	load_pool_state(const persistent_object_manager&, istream&);
+#endif
 
 };	// end class state_instance
 

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:18 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -53,6 +53,7 @@ namespace entity {
 // explicit template class instantiations
 
 template class state_instance<channel_tag>;
+template class instance_pool<state_instance<channel_tag> >;
 template class instance_alias_info<channel_tag>;
 template class instance_collection<channel_tag>;
 template class instance_array<channel_tag, 0>;

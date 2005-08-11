@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -56,6 +56,7 @@ namespace entity {
 // explicit class instantiations
 
 template class state_instance<enum_tag>;
+template class instance_pool<state_instance<enum_tag> >;
 template class instance_alias_info<enum_tag>;
 template class instance_collection<enum_tag>;
 template class instance_array<enum_tag, 0>;
