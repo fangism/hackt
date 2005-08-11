@@ -1,6 +1,15 @@
 "ChangeLog"
 
-2005-08-08	David Fang		<fangism@users.sourceforge.net>
+2005-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-04:
+	  More preparation for introducing canonical_type as the 
+		type parameter for instance_collections.  
+	  Striving to give canonical_type same functional interface
+		as fundamental_type_reference for ease of transition.
+
+
+2005-08-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-03:
 	  More untested implementation of footprint_manager facilities.  

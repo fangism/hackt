@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.2.10.2 2005/08/11 03:40:54 fang Exp $
+	$Id: const_param_expr_list.h,v 1.2.10.3 2005/08/11 21:52:51 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -56,6 +56,9 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+	ostream&
+	dump_range(ostream&, const size_t, const size_t) const;
+
 	excl_ptr<param_expr_list>
 	make_copy(void) const;
 
@@ -63,6 +66,9 @@ public:
 
 	count_ptr<const param_expr>
 	operator [] (const size_t) const;
+
+	using parent_type::begin;
+	using parent_type::end;
 
 	bool
 	may_be_initialized(void) const;

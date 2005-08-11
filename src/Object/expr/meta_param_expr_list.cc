@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.2 2005/08/11 03:40:54 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.3 2005/08/11 21:52:51 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -90,13 +90,40 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_param_expr_list::dump(ostream& o) const {
+#if 0
 	if (empty()) return o;
 	// else at least 1 item in list
 	// hint: ostream_iterator
 	const_iterator i(begin());
+	const const_iterator e(end());
 	NEVER_NULL(*i);
 	(*i)->dump(o);
-	for (i++; i!=end(); i++) {
+	for (i++; i!=e; i++) {
+		o << ", ";
+		NEVER_NULL(*i);
+		(*i)->dump(o);
+	}
+	return o;
+#else
+	if (empty())	return o;
+	else		return dump_range(o, 0, size() -1);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dump a slice of the parameter list from index i to j inclusive.  
+ */
+ostream&
+const_param_expr_list::dump_range(ostream& o, 
+		const size_t j, const size_t k) const {
+	INVARIANT(j <= k);
+	INVARIANT(k < size());
+	const_iterator i(begin() +j);
+	const const_iterator e(begin() +k +1);
+	NEVER_NULL(*i);
+	(*i)->dump(o);
+	for (i++; i!=e; i++) {
 		o << ", ";
 		NEVER_NULL(*i);
 		(*i)->dump(o);
