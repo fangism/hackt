@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.2 2005/07/23 06:52:29 fang Exp $
+	$Id: template_formals_manager.h,v 1.2.8.1 2005/08/11 03:40:54 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -97,6 +97,9 @@ protected:
 public:
 	template_formals_manager();
 	~template_formals_manager();
+
+	size_t
+	arity(void) const { return template_formals_map.size(); }
 
 	ostream&
 	dump(ostream& o) const;

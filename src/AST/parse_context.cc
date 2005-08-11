@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.2 2005/07/23 06:51:19 fang Exp $
+ 	$Id: parse_context.cc,v 1.2.8.1 2005/08/11 03:40:52 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -926,6 +926,13 @@ context::add_port_formal(const token_identifier& id,
 never_ptr<const instance_collection_base>
 context::add_port_formal(const token_identifier& id) {
 	return add_port_formal(id, index_collection_item_ptr_type(NULL));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::commit_definition_arity(void) {
+	INVARIANT(current_prototype);
+	current_prototype->commit_arity();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

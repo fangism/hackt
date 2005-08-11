@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.1 2005/08/10 20:30:55 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.2 2005/08/11 03:40:54 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -465,18 +465,31 @@ const_param_expr_list::operator < (const this_type& t) const {
 /**
 	Recursively visits pointer list to register expression
 	objects with the persistent object manager.
+	Does not register itself persistently.  
  */
 void
-const_param_expr_list::collect_transient_info(
+const_param_expr_list::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_param> ip(*i);
 		ip->collect_transient_info(m);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+	Does register itself persistently.  
+ */
+void
+const_param_expr_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
 }
 // else already visited
 }

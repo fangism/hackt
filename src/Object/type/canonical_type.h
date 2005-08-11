@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.1.2.1 2005/08/10 20:30:56 fang Exp $
+	$Id: canonical_type.h,v 1.1.2.2 2005/08/11 03:40:55 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -60,7 +60,12 @@ public:
 
 	~canonical_type();
 
+	operator bool () { return canonical_definition_ptr; }
+
 //	make_unroll_context
+
+	void
+	register_definition_footprint(void) const;
 
 // object persistence
 	void

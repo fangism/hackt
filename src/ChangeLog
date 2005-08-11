@@ -2,6 +2,15 @@
 
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-03:
+	  More untested implementation of footprint_manager facilities.  
+	  Preparing to add footprint_manager persistence to 
+		process_definition.  
+	  TODO: as each canonical type is visited during unroll,
+		register the entry in the footprint_manager
+		of the canonical definition.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-02:
 	  Made instance_pool class more resuable to footprint class.  
 	  More elaboration of footprint class.  

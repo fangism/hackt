@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3 2005/08/08 23:08:27 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.1 2005/08/11 03:40:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -739,6 +739,12 @@ user_def_chan::dump_qualified_name(ostream& o) const {
 never_ptr<const scopespace>
 user_def_chan::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_chan::commit_arity(void) {
+	// nothing until a footoprint_manager is added
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1702,6 +1708,12 @@ user_def_datatype::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::commit_arity(void) {
+	// nothing, until a footprint_manager is added
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const datatype_definition_base>
 user_def_datatype::resolve_canonical_datatype_definition(void) const {
 	return never_ptr<const datatype_definition_base>(this);
@@ -2096,16 +2108,19 @@ process_definition::process_definition() :
 		key(), 
 		parent(), 
 		port_formals(), 
-		prs(), chp() {
+		prs(), chp(), 
+		footprint_map() {
 	// no null check: because of partial reconstruction
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructor for a process definition symbol table entry.  
+	TODO: when is the footprint_map's arity set? after adding 
+		template-formal parameter.  
  */
 process_definition::process_definition(
-		never_ptr<const name_space> o, 
+		const never_ptr<const name_space> o, 
 		const string& s) :
 		definition_base(), 
 		process_definition_base(),
@@ -2114,7 +2129,8 @@ process_definition::process_definition(
 		key(s), 
 		parent(o), 
 		port_formals(), 
-		prs(), chp() {
+		prs(), chp(), 
+		footprint_map() {
 	// fill me in...
 	NEVER_NULL(o);
 }
@@ -2193,6 +2209,12 @@ process_definition::dump_qualified_name(ostream& o) const {
 never_ptr<const scopespace>
 process_definition::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::commit_arity(void) {
+	footprint_map.set_arity(template_formals.arity());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2391,6 +2413,17 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	\pre the arity of the footprint_manager must be set.  
+ */
+void
+process_definition::register_type(
+		const count_ptr<const const_param_expr_list>& i) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2410,6 +2443,9 @@ if (!m.register_transient_object(this,
 	// PRS
 	prs.collect_transient_info_base(m);
 	chp.collect_transient_info_base(m);
+#if USE_FOOTPRINT_MANAGER
+	footprint_map.collect_transient_info_base(m);
+#endif
 }
 }
 
@@ -2430,6 +2466,9 @@ process_definition::write_object(
 	// PRS
 	prs.write_object_base(m, f);
 	chp.write_object_base(m, f);
+#if USE_FOOTPRINT_MANAGER
+	footprint_map.write_object_base(m, f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2446,6 +2485,9 @@ process_definition::load_object(
 	// PRS
 	prs.load_object_base(m, f);
 	chp.load_object_base(m, f);
+#if USE_FOOTPRINT_MANAGER
+	footprint_map.load_object_base(m, f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

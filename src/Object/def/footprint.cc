@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.2 2005/08/11 00:20:17 fang Exp $
+	$Id: footprint.cc,v 1.1.2.3 2005/08/11 03:40:53 fang Exp $
  */
 
 #include "util/hash_specializations.h"
@@ -20,12 +20,13 @@ using util::read_value;
 footprint::footprint() :
 	unrolled(false), created(false),
 	instance_collection_map(), 
-	process_pool(class_traits<process_tag>::instance_pool_chunk_size),
-	channel_pool(class_traits<channel_tag>::instance_pool_chunk_size),
-	struct_pool(class_traits<datastruct_tag>::instance_pool_chunk_size),
-	enum_pool(class_traits<enum_tag>::instance_pool_chunk_size),
-	int_pool(class_traits<int_tag>::instance_pool_chunk_size),
-	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size) {
+	// use half-size pool chunks to reduce memory waste for now
+	process_pool(class_traits<process_tag>::instance_pool_chunk_size >> 1),
+	channel_pool(class_traits<channel_tag>::instance_pool_chunk_size >> 1),
+	struct_pool(class_traits<datastruct_tag>::instance_pool_chunk_size >> 1),
+	enum_pool(class_traits<enum_tag>::instance_pool_chunk_size >> 1),
+	int_pool(class_traits<int_tag>::instance_pool_chunk_size >> 1),
+	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size >> 1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.1.2.1 2005/08/10 20:30:54 fang Exp $
+	$Id: footprint_manager.h,v 1.1.2.2 2005/08/11 03:40:53 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -39,6 +39,7 @@ private:
 private:
 	/**
 		The number of arguments required for the key_type.
+		TODO: explain what happens when comparing keys of length 0.  
 	 */
 	size_t						_arity;
 public:
@@ -52,11 +53,20 @@ public:
 	size_t
 	arity(void) const { return _arity; }
 
+	void
+	set_arity(const size_t);
+
 	ostream&
 	dump(ostream&) const;
 
 	mapped_type&
 	operator [] (const key_type& k);
+
+	mapped_type&
+	only(void);
+
+	const mapped_type&
+	only(void) const;
 
 // map persistence methods
 public:

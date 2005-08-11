@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.2.10.1 2005/08/10 20:30:55 fang Exp $
+	$Id: const_param_expr_list.h,v 1.2.10.2 2005/08/11 03:40:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -18,7 +18,7 @@ namespace entity {
 class const_param;
 class dynamic_param_expr_list;
 using std::vector;
-// using util::persistent_object_manager;	// forward declared
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -111,6 +111,9 @@ public:
 	};	// end struct less
 
 public:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_param_expr_list
 

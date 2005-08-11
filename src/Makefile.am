@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.2 2005/08/11 00:20:15 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.3 2005/08/11 03:40:49 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -516,7 +516,8 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 
 COMMON_FILES = \
 	common/ICE.cc \
-	common/ICE.h
+	common/ICE.h \
+	common/TODO.h
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(ARTXX_PARSE_ROOT)-prefix.cc

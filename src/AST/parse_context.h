@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.2 2005/07/23 06:51:19 fang Exp $
+	$Id: parse_context.h,v 1.2.8.1 2005/08/11 03:40:52 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -402,6 +402,9 @@ public:
 	never_ptr<const instance_collection_base>
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);
+
+	void
+	commit_definition_arity(void);
 
 // repeat for processes and channels...
 

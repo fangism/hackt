@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.2 2005/07/23 06:52:29 fang Exp $
+	$Id: user_def_datatype.h,v 1.2.8.1 2005/08/11 03:40:54 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -32,6 +32,9 @@ protected:
 	port_formals_manager			port_formals;
 	CHP::action_sequence			set_chp;
 	CHP::action_sequence			get_chp;
+#if 0
+	footprint_manager? or can this no have internal aliases?
+#endif
 private:
 	user_def_datatype();
 public:
@@ -62,6 +65,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	void
+	commit_arity(void);
 
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 

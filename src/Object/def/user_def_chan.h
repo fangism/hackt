@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.2 2005/07/23 06:52:29 fang Exp $
+	$Id: user_def_chan.h,v 1.2.8.1 2005/08/11 03:40:54 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_CHAN_H__
@@ -63,6 +63,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	void
+	commit_arity(void);
 
 	const builtin_channel_type_reference&
 	get_builtin_channel_type(void) const {

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.25 2005/07/23 06:51:18 fang Exp $
+	$Id: art_parser_formal.cc,v 1.25.8.1 2005/08/11 03:40:52 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -579,7 +579,6 @@ template_formal_decl_list_pair::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: implement for real.
 	Sequentially check each template formal.  
 	Need to distinguish between strict and relaxed parameters for the sake
 	of creating the appropriate fundamental type reference?
@@ -592,10 +591,11 @@ template_formal_decl_list_pair::check_build(context& c) const {
 	ret = first->check_build(c);
 	if (second) {
 		c.relaxed_template_parameters();
-		return second->check_build(c);
-	} else {
-		return ret;
+		ret = second->check_build(c);
 	}
+	// set the template arity of the definition
+	c.commit_definition_arity();
+	return ret;
 }
 
 //=============================================================================

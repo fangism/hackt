@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.2 2005/07/23 06:52:26 fang Exp $
+	$Id: definition_base.h,v 1.2.8.1 2005/08/11 03:40:53 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -111,6 +111,10 @@ virtual	never_ptr<const scopespace>
 
 	void
 	mark_defined(void) { assert(!defined); defined = true; }
+
+/// overridden by definitions that contain footprint_managers
+virtual	void
+	commit_arity(void) { }
 
 	never_ptr<const param_value_collection>
 	lookup_template_formal(const string& id) const;
