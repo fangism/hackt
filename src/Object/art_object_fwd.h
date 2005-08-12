@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.17.4.1 2005/08/11 21:52:51 fang Exp $
+	$Id: art_object_fwd.h,v 1.17.4.2 2005/08/12 18:16:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -11,8 +11,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/expr/types.h"
-
-#define	USE_CANONICAL_TYPE			0
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -42,7 +41,7 @@ namespace entity {
 	class meta_instance_reference_base;
 	class definition_base;
 	class user_def_chan;
-	class user_def_type;
+	class user_def_datatype;
 	class channel_definition_base;
 	class channel_type_reference_base;
 	class builtin_channel_type_reference;
@@ -58,12 +57,6 @@ namespace entity {
 	class built_in_param_def;
 	class built_in_channel_def;
 	class typedef_base;
-
-	// canonical built-in data type?
-	typedef	canonical_type<user_def_type>	canonical_user_def_data_type;
-	typedef	canonical_type<user_def_chan>	canonical_user_def_chan_type;
-	typedef	canonical_type<process_definition>
-						canonical_process_type;
 
 	// from "Object/art_object_nonmeta_inst_ref.h"
 	// note there are generic (non-meta) abstract base classes from which

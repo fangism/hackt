@@ -1,6 +1,14 @@
 "ChangeLog"
 
-2005-08-10	David Fang		<fangism@users.sourceforge.net>
+2005-08-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05:
+	  Micro commit to synchronize a few added files before
+		sub-branching for some heavy renovation.  
+		Type canonicalization needs some serious work.  
+
+
+2005-08-11	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-04:
 	  More preparation for introducing canonical_type as the 

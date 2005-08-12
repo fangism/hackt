@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.3 2005/08/11 03:40:49 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.4 2005/08/12 18:16:34 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -332,6 +332,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/param_type_reference.h \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
+	Object/type/canonical_type_fwd.h \
 	Object/type/canonical_type.h \
 	Object/unroll/alias_connection.h \
 	Object/unroll/aliases_connection_base.h \
