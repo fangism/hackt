@@ -4,17 +4,19 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.2 2005/07/23 06:52:53 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
 #define	__OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
 
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
 class unroll_context;
+class channel_definition_base;
 class builtin_channel_type_reference;
 using std::ostream;
 
@@ -71,6 +73,11 @@ virtual	never_ptr<const builtin_channel_type_reference>
 
 virtual	unroll_context
 	make_unroll_context(void) const = 0;
+
+	// should be pure virtual, just declare for now
+virtual	canonical_type<channel_definition_base>
+	make_canonical_type(void) const = 0;
+
 protected:
 	using parent_type::collect_transient_info_base;
 

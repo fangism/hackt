@@ -2,7 +2,7 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.3 2005/07/23 06:52:53 fang Exp $
+	$Id: pint_traits.h,v 1.3.10.1 2005/08/13 17:32:01 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PINT_TRAITS_H__
@@ -64,6 +64,7 @@ struct class_traits<pint_tag> {
 	enum { assignment_chunk_size = 32 };
 
 	typedef	void			value_collection_parameter_type;
+	typedef	null_parameter_type	instance_collection_parameter_type;
 
 	class instantiation_statement_type_ref_base;
 

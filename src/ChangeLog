@@ -1,5 +1,29 @@
 "ChangeLog"
 
+2005-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-01:
+	  The goal of this branch is to be able to use these new 
+		canonical types to trigger postorder recursive footprint 
+		generation as each type is unrolled/created.
+	  NOTE: This branch snapshot is unstable: it barely compiles
+		and is certain to break many tests.  I just had to commit 
+		these changes to save away 1000+ LOC, untested.
+		Warning: not all new revisions are wrapped in 
+		#if USE_CANONICAL_TYPE -- sloppy me.  
+	  Summary: implemented (enabled) true canonical type structures, 
+		the replacement for generic fundamental types in 
+		instance collections.  Most affected are instantiation
+		statements, instance collections, and their implementation
+		policies.  Added whole new set of canonicalization methods
+		to definitions and type-reference classes, redundant for now, 
+		intended as a replacement for the existing ones.
+	  Renamed fundamental_type_reference::make_canonical_type_reference
+		-> make_canonical_fundamental_type_reference
+		to distinguish from the new ::make_canonical_type.
+	  Classification tags have been given parent_type member typedef.  
+
+
 2005-08-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-05:

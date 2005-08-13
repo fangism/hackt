@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.3 2005/08/08 23:08:30 fang Exp $
+ 	$Id: type_reference.cc,v 1.3.4.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -30,6 +30,7 @@
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/type/param_type_reference.h"
+#include "Object/type/canonical_type.h"			// or tcc?
 #include "Object/inst/bool_instance_collection.h"
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
@@ -59,6 +60,7 @@
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/subinstance_manager.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 #include "util/sstream.h"
 #include "util/indent.h"
@@ -205,9 +207,9 @@ bool
 fundamental_type_reference::may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const count_ptr<const fundamental_type_reference>
-		lt(make_canonical_type_reference());
+		lt(make_canonical_fundamental_type_reference());
 	const count_ptr<const fundamental_type_reference>
-		rt(t.make_canonical_type_reference());
+		rt(t.make_canonical_fundamental_type_reference());
 	if (!lt || !rt) {
 	ICE(cerr, 
 		cerr << "got null left-type or right-type after canonicalization.  "
@@ -252,9 +254,9 @@ bool
 fundamental_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const count_ptr<const fundamental_type_reference>
-		lt(make_canonical_type_reference());
+		lt(make_canonical_fundamental_type_reference());
 	const count_ptr<const fundamental_type_reference>
-		rt(t.make_canonical_type_reference());
+		rt(t.make_canonical_fundamental_type_reference());
 	if (!lt || !rt) {
 	ICE(cerr, 
 		cerr << "got null left-type or right-type after canonicalization.  "
@@ -301,9 +303,9 @@ bool
 fundamental_type_reference::may_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const count_ptr<const fundamental_type_reference>
-		lt(make_canonical_type_reference());
+		lt(make_canonical_fundamental_type_reference());
 	const count_ptr<const fundamental_type_reference>
-		rt(t.make_canonical_type_reference());
+		rt(t.make_canonical_fundamental_type_reference());
 	if (!lt || !rt) {
 	ICE(cerr, 
 		cerr << "got null left-type or right-type after canonicalization.  "
@@ -352,9 +354,9 @@ bool
 fundamental_type_reference::must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const count_ptr<const fundamental_type_reference>
-		lt(make_canonical_type_reference());
+		lt(make_canonical_fundamental_type_reference());
 	const count_ptr<const fundamental_type_reference>
-		rt(t.make_canonical_type_reference());
+		rt(t.make_canonical_fundamental_type_reference());
 	if (!lt || !rt) {
 	ICE(cerr, 
 		cerr << "got null left-type or right-type after canonicalization.  "
@@ -489,6 +491,16 @@ data_type_reference::data_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Downgrading from canonical to more general type reference.  
+ */
+data_type_reference::data_type_reference(
+		const canonical_user_def_data_type& p) :
+		fundamental_type_reference(p.get_template_params()), 
+		base_type_def(p.get_base_def()) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 data_type_reference::~data_type_reference() {
 	STACKTRACE_DTOR("~data_type_reference()");
 }
@@ -546,7 +558,6 @@ data_type_reference::make_unroll_context(void) const {
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
 	Will eventually require a context-like object.  
-	\todo resolve data-type aliases.  
 	\return a copy of itself, but with type parameters resolved, 
 		if applicable.  Returns NULL if there is error in resolution.  
  */
@@ -701,10 +712,17 @@ data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_type<data_type_reference::definition_type>
+data_type_reference::make_canonical_type(void) const {
+	return base_type_def->make_canonical_type(template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
 data_type_reference::make_canonical_data_type_reference(void) const {
 	// INVARIANT(template_args.is_constant());		// NOT true
-	return base_type_def->make_canonical_type_reference(template_args);
+	return base_type_def->make_canonical_fundamental_type_reference(
+		template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -712,8 +730,8 @@ data_type_reference::make_canonical_data_type_reference(void) const {
 	\return a type reference to a non-typedef data type.  
  */
 count_ptr<const fundamental_type_reference>
-data_type_reference::make_canonical_type_reference(void) const {
-//	return base_type_def->make_canonical_type_reference(template_args);
+data_type_reference::make_canonical_fundamental_type_reference(void) const {
+//	return base_type_def->make_canonical_fundamental_type_reference(template_args);
 	return make_canonical_data_type_reference();
 }
 
@@ -1148,6 +1166,18 @@ builtin_channel_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
+/**
+	This gets complicated...
+ */
+canonical_generic_chan_type
+builtin_channel_type_reference::make_canonical_type(void) const {
+	FINISH_ME(Fang);
+	return canonical_generic_chan_type();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: built-in channel types don't have their own template
 	signatures (template_formals_manager) or home-base definitions, 
@@ -1160,11 +1190,11 @@ builtin_channel_type_reference::make_instance_collection(
 	Use a different signature context?
  */
 count_ptr<const fundamental_type_reference>
-builtin_channel_type_reference::make_canonical_type_reference(void) const {
+builtin_channel_type_reference::make_canonical_fundamental_type_reference(void) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
 #if 0
 	cerr << "Fang, finish builtin_channel_type_reference::"
-		"make_canonical_type_reference()!" << endl;
+		"make_canonical_fundamental_type_reference()!" << endl;
 	return return_type(NULL);
 #else
 	INVARIANT(!template_args);
@@ -1406,9 +1436,18 @@ channel_type_reference::make_instance_collection(
 /**
 	TODO: recursively canonicalize types for data-parameters and ports?
  */
+canonical_type<channel_definition_base>
+channel_type_reference::make_canonical_type(void) const {
+	return base_chan_def->make_canonical_type(template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: recursively canonicalize types for data-parameters and ports?
+ */
 count_ptr<const fundamental_type_reference>
-channel_type_reference::make_canonical_type_reference(void) const {
-	return base_chan_def->make_canonical_type_reference(template_args);
+channel_type_reference::make_canonical_fundamental_type_reference(void) const {
+	return base_chan_def->make_canonical_fundamental_type_reference(template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1475,6 +1514,16 @@ process_type_reference::process_type_reference(
 		fundamental_type_reference(pl), 
 		base_proc_def(pd) {
 	NEVER_NULL(base_proc_def);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Downgrading from canonical to more general type reference.  
+ */
+process_type_reference::process_type_reference(
+		const canonical_process_type& p) :
+		fundamental_type_reference(p.get_template_params()), 
+		base_proc_def(p.get_base_def()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1626,14 +1675,21 @@ process_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_type<process_definition>
+process_type_reference::make_canonical_type(void) const {
+	return base_proc_def->make_canonical_type(template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: we allow canonicalization using non-const expressions
 		in the type actuals.  
  */
 count_ptr<const fundamental_type_reference>
-process_type_reference::make_canonical_type_reference(void) const {
+process_type_reference::make_canonical_fundamental_type_reference(void) const {
 	// INVARIANT(template_args.is_constant());	// not true
-	return base_proc_def->make_canonical_type_reference(template_args);
+	return base_proc_def->make_canonical_fundamental_type_reference(
+		template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1801,11 +1857,17 @@ param_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+null_parameter_type
+param_type_reference::make_canonical_type(void) const {
+	return null_parameter_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre template actuals have beeen resolved to constants.  
  */
 count_ptr<const fundamental_type_reference>
-param_type_reference::make_canonical_type_reference(void) const {
+param_type_reference::make_canonical_fundamental_type_reference(void) const {
 	static const pbool_traits::type_ref_ptr_type&
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&

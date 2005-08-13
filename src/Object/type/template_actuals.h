@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.2.8.1 2005/08/11 21:52:52 fang Exp $
+	$Id: template_actuals.h,v 1.2.8.1.2.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -73,6 +73,9 @@ public:
 
 	const_arg_list_ptr_type
 	get_relaxed_args(void) const;
+
+	count_ptr<const const_param_expr_list>
+	make_const_param_list(void) const;
 
 	bool
 	is_resolved(void) const;

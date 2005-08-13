@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.2 2005/07/23 06:52:54 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -188,11 +188,14 @@ public:
 	NOTE: this requires that template arguments have been resolved
 	to constants!!!
  */
-#define	MAKE_CANONICAL_TYPE_REFERENCE_PROTO				\
+#define	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO			\
 	count_ptr<const fundamental_type_reference>			\
-	make_canonical_type_reference(void) const
+	make_canonical_fundamental_type_reference(void) const
 
-virtual	MAKE_CANONICAL_TYPE_REFERENCE_PROTO = 0;
+/**
+	Virtuall called by equivalent chec methods.  
+ */
+virtual	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
 	static
 	ostream&

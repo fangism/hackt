@@ -4,13 +4,14 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.2 2005/07/23 06:52:54 fang Exp $
+ 	$Id: process_type_reference.h,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
 #define	__OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
 
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -43,6 +44,8 @@ public:
 		const never_ptr<const process_definition_base> td, 
 		const template_actuals&);
 
+	process_type_reference(const canonical_process_type&);
+
 	~process_type_reference();
 
 	ostream&
@@ -69,7 +72,10 @@ public:
 
 	MERGE_RELAXED_ACTUALS_PROTO;
 	UNROLL_PORT_INSTANCES_PROTO;
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	canonical_type<process_definition>
+	make_canonical_type(void) const;
 
 	unroll_context
 	make_unroll_context(void) const;

@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference.h,v 1.2 2005/07/23 06:52:53 fang Exp $
+ 	$Id: channel_type_reference.h,v 1.2.10.1 2005/08/13 17:32:02 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_H__
@@ -72,7 +72,10 @@ public:
 
 	UNROLL_PORT_INSTANCES_PROTO;
 
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	canonical_type<channel_definition_base>
+	make_canonical_type(void) const;
 
 	unroll_context
 	make_unroll_context(void) const;

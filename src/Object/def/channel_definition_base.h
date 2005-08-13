@@ -2,13 +2,14 @@
 	\file "Object/def/channel_definition_base.h"
 	Channel definition-related ART object classes.  
 	This file came from "Object/art_object_definition_chan.h".
-	$Id: channel_definition_base.h,v 1.2 2005/07/23 06:52:25 fang Exp $
+	$Id: channel_definition_base.h,v 1.2.10.1 2005/08/13 17:31:55 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
 #define	__OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
 
 #include "Object/def/definition_base.h"
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -21,6 +22,8 @@ class channel_type_reference;
 class channel_definition_base : virtual public definition_base {
 private:
 	typedef	definition_base			parent_type;
+public:
+	typedef	channel_type_reference_base	type_reference_type;
 protected:
 	channel_definition_base() : parent_type() { }
 public:
@@ -34,9 +37,15 @@ virtual	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 #define	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO			\
 	count_ptr<const channel_type_reference_base>			\
-	make_canonical_type_reference(const template_actuals&) const
+	make_canonical_fundamental_type_reference(const template_actuals&) const
 
 virtual	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO = 0;
+
+#define	MAKE_CANONICAL_CHANNEL_TYPE_PROTO			\
+	canonical_generic_chan_type				\
+	make_canonical_type(const template_actuals&) const
+
+virtual	MAKE_CANONICAL_CHANNEL_TYPE_PROTO = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;

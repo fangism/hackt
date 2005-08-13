@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.3 2005/08/11 21:52:51 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.3.2.1 2005/08/13 17:31:57 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -233,6 +233,10 @@ const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	STACKTRACE("const_expr_list::must_equivalent()");
 if (cpl) {
 	STACKTRACE("const vs. const");
+#if 0
+	// use this
+	return must_be_equivalent(*cpl);
+#else
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -247,6 +251,7 @@ if (cpl) {
 	}
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
+#endif
 } else {
 	STACKTRACE("const vs. dynamic");
 	const dynamic_param_expr_list* dpl =
@@ -267,6 +272,42 @@ if (cpl) {
 	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s the number of strict formal parameters to compare
+		before terminating.  
+ */
+bool
+const_param_expr_list::must_be_equivalent(
+		const this_type& cpl, const size_t s) const {
+	INVARIANT(s < size());
+	INVARIANT(s < cpl.size());
+	if (size() != cpl.size())
+		return false;
+	const_iterator i(begin());
+	const_iterator j(cpl.begin());
+	const_iterator e(begin() +s);
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<const const_param> ip(*i);
+		const count_ptr<const const_param> jp(*j);
+		INVARIANT(ip && jp);
+		if (!ip->must_be_equivalent_generic(*jp))
+			return false;
+		// else continue checking...
+	}
+	INVARIANT(j == cpl.begin() +s);		// sanity
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	All parameters must match.
+ */
+bool
+const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
+	return must_be_equivalent(cpl, size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

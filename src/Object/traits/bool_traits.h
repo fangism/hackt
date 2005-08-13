@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.3.4.1 2005/08/11 00:20:21 fang Exp $
+	$Id: bool_traits.h,v 1.3.4.1.2.1 2005/08/13 17:32:00 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -66,6 +66,14 @@ struct class_traits<bool_tag> {
 	typedef	bool_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	typedef	null_parameter_type		instance_collection_parameter_type;
+#if USE_CANONICAL_TYPE
+#if 0
+	// to be defined in "Object/type/canonical_bool_type.h"
+	// should be null_parameter_type but also derived from 
+	// canonical_type_parent.
+	class canonical_type;
+#endif
+#endif
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;

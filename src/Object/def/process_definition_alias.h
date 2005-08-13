@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_alias.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_alias.h,v 1.2 2005/07/23 06:52:28 fang Exp $
+	$Id: process_definition_alias.h,v 1.2.10.1 2005/08/13 17:31:56 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_ALIAS_H__
@@ -57,6 +57,8 @@ public:
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_PROCESS_TYPE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.2 2005/07/23 06:52:46 fang Exp $
+ 	$Id: instance_reference.cc,v 1.2.10.1 2005/08/13 17:32:00 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -14,6 +14,7 @@
 #include "util/multidimensional_sparse_set.tcc"
 
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/type/canonical_type.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/param_value_collection.h"
@@ -35,6 +36,14 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
+
+#if USE_CANONICAL_TYPE
+// this is unforatunate
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/process_definition.h"
+#endif
+
 #include "util/persistent_object_manager.tcc"
 
 //=============================================================================

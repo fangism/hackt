@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.2 2005/08/11 00:20:19 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.2.2.1 2005/08/13 17:31:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -42,6 +42,7 @@
 #include "Object/expr/const_param_expr_list.h"		// for debug only
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/type/canonical_type.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
@@ -854,7 +855,12 @@ INSTANCE_COLLECTION_CLASS::must_match_type(const this_type& c) const {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::establish_collection_type(
-		const type_ref_ptr_type& t) {
+#if USE_CANONICAL_TYPE
+		const instance_collection_parameter_type& t
+#else
+		const type_ref_ptr_type& t
+#endif
+		) {
 	NEVER_NULL(t);
 	collection_type_manager_parent_type::commit_type_first_time(t);
 }
@@ -877,9 +883,19 @@ INSTANCE_COLLECTION_CLASS::has_relaxed_type(void) const {
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bad_bool
-INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t) {
+#if USE_CANONICAL_TYPE
+INSTANCE_COLLECTION_CLASS::check_established_type(
+		const instance_collection_parameter_type& t) const
+#else
+INSTANCE_COLLECTION_CLASS::commit_type(const type_ref_ptr_type& t)
+#endif
+{
 	// functor, specialized for each class
+#if USE_CANONICAL_TYPE
+	return collection_type_manager_parent_type::check_type(t);
+#else
 	return collection_type_manager_parent_type::commit_type(t);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.3.6.1 2005/08/13 17:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -40,6 +40,8 @@ public:
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
@@ -83,6 +85,18 @@ protected:
 	type_ref_ptr_type
 	get_type(void) const { return type; }
 
+#if USE_CANONICAL_TYPE
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context& c) const {
+		const type_ref_ptr_type t(type->unroll_resolve(c));
+		if (!t) {
+			type->what(cerr << "ERROR: unable to resolve ") <<
+				" during unroll." << endl;
+			return instance_collection_parameter_type();
+		}
+		return t->make_canonical_type();
+	}
+#else
 	type_ref_ptr_type
 	get_resolved_type(const unroll_context& c) const {
 		const type_ref_ptr_type ret(type->unroll_resolve(c));
@@ -102,6 +116,7 @@ protected:
 #endif
 		return ret;
 	}
+#endif
 
 	const_relaxed_args_type
 	get_relaxed_actuals(void) const {
@@ -132,7 +147,12 @@ protected:
 	static
 	void
 	commit_type_first_time(instance_collection_generic_type& v, 
-			const type_ref_ptr_type& t) {
+#if USE_CANONICAL_TYPE
+			const instance_collection_parameter_type& t
+#else
+			const type_ref_ptr_type& t
+#endif
+			) {
 		v.establish_collection_type(t);
 	}
 
@@ -145,9 +165,18 @@ protected:
 	static
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,
-			const type_ref_ptr_type& t) {
+#if USE_CANONICAL_TYPE
+			const instance_collection_parameter_type& t
+#else
+			const type_ref_ptr_type& t
+#endif
+			) {
 		// note: automatic conversion from bad_bool to good_bool :)
+#if USE_CANONICAL_TYPE
+		return v.check_established_type(t);
+#else
 		return v.commit_type(t);
+#endif
 	}
 
 	static

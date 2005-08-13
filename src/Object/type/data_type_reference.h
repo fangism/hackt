@@ -4,13 +4,14 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.2 2005/07/23 06:52:53 fang Exp $
+ 	$Id: data_type_reference.h,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
 #define	__OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
 
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/type/canonical_type_fwd.h"
 #include "Object/expr/types.h"
 
 namespace ART {
@@ -49,6 +50,8 @@ public:
 	data_type_reference(const definition_ptr_type td, 
 		const template_actuals&);
 
+	data_type_reference(const canonical_user_def_data_type&);
+
 	// virtualize if something derives from this
 	~data_type_reference();
 
@@ -80,7 +83,11 @@ public:
 	count_ptr<const this_type>
 	make_canonical_data_type_reference(void) const;
 
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+
+	// should be pure virtual
+	canonical_type<definition_type>
+	make_canonical_type(void) const;
 
 	MERGE_RELAXED_ACTUALS_PROTO;
 

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.3.6.1 2005/08/13 17:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -26,12 +26,16 @@ namespace entity {
  */
 class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
+	typedef	class_traits<pint_tag>			traits_type;
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
+	// probably null_parameter_type
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -45,10 +49,17 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
+#if USE_CANONICAL_TYPE
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context&) const {
+		return instance_collection_parameter_type();
+	}
+#else
 	const type_ref_ptr_type&
 	get_resolved_type(const unroll_context&) const {
 		return built_in_type_ptr;
 	}
+#endif
 
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
@@ -67,7 +78,12 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-		const type_ref_ptr_type& t) {
+#if USE_CANONICAL_TYPE
+		const instance_collection_parameter_type&
+#else
+		const type_ref_ptr_type&
+#endif
+		) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -75,7 +91,12 @@ protected:
 	static
 	void
 	commit_type_first_time(value_collection_generic_type& v, 
-		const type_ref_ptr_type&) {
+#if USE_CANONICAL_TYPE
+		const instance_collection_parameter_type&
+#else
+		const type_ref_ptr_type&
+#endif
+		) {
 		// no-op
 	}
 
@@ -113,9 +134,12 @@ protected:
  */
 class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
+	typedef	class_traits<pbool_tag>			traits_type;
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 protected:
 	typedef	count_ptr<const const_param_expr_list>
@@ -132,10 +156,17 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
+#if USE_CANONICAL_TYPE
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context&) const {
+		return instance_collection_parameter_type();
+	}
+#else
 	const type_ref_ptr_type&
 	get_resolved_type(const unroll_context&) const {
 		return built_in_type_ptr;
 	}
+#endif
 
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
@@ -154,7 +185,12 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-		const type_ref_ptr_type& t) {
+#if USE_CANONICAL_TYPE
+			const instance_collection_parameter_type&
+#else
+			const type_ref_ptr_type&
+#endif
+			) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -162,7 +198,12 @@ protected:
 	static
 	void
 	commit_type_first_time(value_collection_generic_type&, 
-		const type_ref_ptr_type&) {
+#if USE_CANONICAL_TYPE
+			const instance_collection_parameter_type&
+#else
+			const type_ref_ptr_type&
+#endif
+			) {
 		// no-op
 	}
 

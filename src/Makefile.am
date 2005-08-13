@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.4 2005/08/12 18:16:34 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.4.2.1 2005/08/13 17:31:51 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -160,6 +160,8 @@ OBJECT_CC_FILES = \
 	Object/module.cc \
 	Object/state_manager.cc \
 	Object/type/template_actuals.cc \
+	Object/type/canonical_type_base.cc \
+	Object/type/canonical_type.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -333,7 +335,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
 	Object/type/canonical_type_fwd.h \
-	Object/type/canonical_type.h \
 	Object/unroll/alias_connection.h \
 	Object/unroll/aliases_connection_base.h \
 	Object/unroll/channel_instantiation_statement.h \

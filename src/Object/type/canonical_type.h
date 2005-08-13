@@ -1,25 +1,21 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.1.2.3 2005/08/11 21:52:52 fang Exp $
+	$Id: canonical_type.h,v 1.1.2.3.2.1 2005/08/13 17:32:02 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
 #define	__OBJECT_TYPE_CANONICAL_TYPE_H__
 
-#include <iosfwd>
-#include "util/persistent_fwd.h"
+#include "Object/type/canonical_type_fwd.h"
+#include "Object/type/canonical_type_base.h"
 #include "util/memory/excl_ptr.h"
-#include "util/memory/count_ptr.h"
 
 namespace ART {
 namespace entity {
+class unroll_context;
 class definition_base;
-class const_param_expr_list;
-using std::istream;
-using std::ostream;
-using util::memory::count_ptr;
+class template_actuals;
 using util::memory::never_ptr;
-using util::persistent_object_manager;
 
 //=============================================================================
 
@@ -37,32 +33,28 @@ using util::persistent_object_manager;
 		it should probably be a pointer.  
 		This will also be used in footprint lookups.  
 	TODO: import more standard interfaces from fundamental_type_reference
+	TODO: use defintion class traits to determine 
+		conversion policy and whether or not definition needs 
+		assertion check.  
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
-class canonical_type {
+class canonical_type : public canonical_type_base {
 	typedef	CANONICAL_TYPE_CLASS		this_type;
+	typedef	canonical_type_base		base_type;
 public:
 	/**
 		This must be a non-typedef definition.  
 	 */
 	typedef	DefType				canonical_definition_type;
+	/**
+		Generic fundamental type reference derivative.  
+	 */
+	typedef	typename canonical_definition_type::type_reference_type
+						type_reference_type;
 	typedef	never_ptr<const canonical_definition_type>
 						canonical_definition_ptr_type;
-	typedef	const_param_expr_list		param_list_type;
-	/**
-		Consider: template actuals are split into strict
-		and relaxed parameters.  
-		Should this list unify them into one list?
-		Unifying into one list makes it easier to 
-			compare and sort the keys in the footprint_manager.  
-		However will be a little less convenient when
-			the lists are to be split up.  
-	 */
-	typedef	count_ptr<const param_list_type>
-						param_list_ptr_type;
 private:
 	canonical_definition_ptr_type		canonical_definition_ptr;
-	param_list_ptr_type			param_list_ptr;
 public:
 	canonical_type();
 
@@ -72,12 +64,22 @@ public:
 	canonical_type(const canonical_definition_ptr_type, 
 		const param_list_ptr_type&);
 
+	canonical_type(const canonical_definition_ptr_type, 
+		const template_actuals&);
+
+	template <class DefType2>
+	canonical_type(const canonical_type<DefType2>&);
+
 	// default copy-constructor suffices
 
 	~canonical_type();
 
-	never_ptr<const definition_base>
+	// do we need a generic version?
+	canonical_definition_ptr_type
 	get_base_def(void) const { return this->canonical_definition_ptr; }
+
+	template_actuals
+	get_template_params(void) const;
 
 	ostream&
 	what(ostream&) const;
@@ -85,8 +87,8 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-	ostream&
-	dump_template_args(ostream&) const;
+	count_ptr<const type_reference_type>
+	make_type_reference(void) const;
 
 	bool
 	is_strict(void) const;
@@ -94,13 +96,20 @@ public:
 	bool
 	is_relaxed(void) const { return !this->is_strict(); }
 
-	operator bool () { return this->canonical_definition_ptr; }
+	operator bool () const { return this->canonical_definition_ptr; }
+
+	bool
+	must_be_collectibly_type_equivalent(const this_type&) const;
+
+	bool
+	must_be_connectibly_type_equivalent(const this_type&) const;
 
 	static
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
-//	make_unroll_context
+	unroll_context
+	make_unroll_context(void) const;
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	void

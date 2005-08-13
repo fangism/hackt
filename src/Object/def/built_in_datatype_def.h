@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.2 2005/07/23 06:52:24 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.2.10.1 2005/08/13 17:31:54 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -60,6 +60,8 @@ public:
 	// ah, but it is now!
 
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_PROTO;
 
 	never_ptr<const instance_collection_base>
 	add_template_formal(excl_ptr<instance_collection_base>& f);

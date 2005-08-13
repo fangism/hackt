@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3 2005/08/08 23:08:29 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.4.1 2005/08/13 17:31:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -27,6 +27,7 @@
 #include "Object/common/namespace.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "common/TODO.h"
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -639,6 +640,25 @@ datatype_instance_collection::get_type_ref(void) const {
 never_ptr<const const_param_expr_list>
 datatype_instance_collection::get_actual_param_list(void) const {
 	return never_ptr<const const_param_expr_list>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary ugly hack.  :(
+	TODO: implement for real.  
+ */
+void
+datatype_instance_collection::establish_collection_type(
+		const instance_collection_parameter_type& p) {
+	FINISH_ME(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bad_bool
+datatype_instance_collection::check_established_type(
+		const instance_collection_parameter_type& p) const {
+	FINISH_ME(Fang);
+	return bad_bool(true);
 }
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.1 2005/08/11 03:40:53 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.1.2.1 2005/08/13 17:31:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -825,8 +825,16 @@ user_def_chan::certify_port_actuals(const checked_refs_type& cr) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+canonical_generic_chan_type
+user_def_chan::make_canonical_type(const template_actuals& a) const {
+	typedef	canonical_generic_chan_type	return_type;
+	return return_type(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 count_ptr<const channel_type_reference_base>
-user_def_chan::make_canonical_type_reference(const template_actuals& a) const {
+user_def_chan::make_canonical_fundamental_type_reference(
+		const template_actuals& a) const {
 	return make_fundamental_type_reference(a)
 		.is_a<const channel_type_reference_base>();
 }
@@ -961,19 +969,31 @@ channel_definition_alias::assign_typedef(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Canonicalizes channel type to built-in or user-defined.  
+ */
+canonical_generic_chan_type
+channel_definition_alias::make_canonical_type(const template_actuals& a) const {
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_chan_def()->make_canonical_type(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const channel_type_reference_base>
-channel_definition_alias::make_canonical_type_reference(
+channel_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 #if 0
 	typedef count_ptr<const channel_type_reference_base>	return_type;
 	cerr << "Fang, finish channel_definition_alias::"
-		"make_canonical_type_reference()!" << endl;
+		"make_canonical_fundamental_type_reference()!" << endl;
 	return return_type(NULL);
 #else
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_chan_def()->make_canonical_type_reference(ta);
+	return base->get_base_chan_def()->make_canonical_fundamental_type_reference(ta);
 #endif
 }
 
@@ -1148,11 +1168,20 @@ built_in_datatype_def::make_fundamental_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This definition is already canonical.  
+ */
+canonical_generic_datatype
+built_in_datatype_def::make_canonical_type(const template_actuals& a) const {
+	return canonical_generic_datatype(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Q: how much special case handling does this require?
 	For now try the easiest thing, and fix later.  
  */
 count_ptr<const data_type_reference>
-built_in_datatype_def::make_canonical_type_reference(
+built_in_datatype_def::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	// INVARIANT(a.is_constant());	// NOT true
 	return make_fundamental_type_reference(a)
@@ -1450,8 +1479,15 @@ enum_datatype_def::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_generic_datatype
+enum_datatype_def::make_canonical_type(const template_actuals& a) const {
+	INVARIANT(!a);
+	return canonical_generic_datatype(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
-enum_datatype_def::make_canonical_type_reference(
+enum_datatype_def::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	INVARIANT(!a);
 	return make_fundamental_type_reference(a)
@@ -1804,12 +1840,19 @@ user_def_datatype::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_generic_datatype
+user_def_datatype::make_canonical_type(const template_actuals& a) const {
+	INVARIANT(a.is_constant());
+	return canonical_generic_datatype(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Fairly straightforward.  
 	TODO: have make_fundamental_type_reference call this instead.  
  */
 count_ptr<const data_type_reference>
-user_def_datatype::make_canonical_type_reference(
+user_def_datatype::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	INVARIANT(a.is_constant());
 	return make_fundamental_type_reference(a)
@@ -1987,16 +2030,27 @@ datatype_definition_alias::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: error handling
- */
-count_ptr<const data_type_reference>
-datatype_definition_alias::make_canonical_type_reference(
+canonical_generic_datatype
+datatype_definition_alias::make_canonical_type(
 		const template_actuals& a) const {
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_datatype_def()->make_canonical_type_reference(ta);
+	return base->get_base_datatype_def()->make_canonical_type(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: error handling
+ */
+count_ptr<const data_type_reference>
+datatype_definition_alias::make_canonical_fundamental_type_reference(
+		const template_actuals& a) const {
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_datatype_def()
+		->make_canonical_fundamental_type_reference(ta);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2274,13 +2328,19 @@ process_definition::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_process_type
+process_definition::make_canonical_type(const template_actuals& a) const {
+	return canonical_process_type(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	We are at an actual base definition of a process, 
 	just return the fundamental type. which is canonical.  
 	TODO: implement here, have make_fundamental call this.  
  */
 count_ptr<const process_type_reference>
-process_definition::make_canonical_type_reference(
+process_definition::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	return make_fundamental_type_reference(a)
 		.is_a<const process_type_reference>();;
@@ -2588,21 +2648,30 @@ process_definition_alias::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_process_type
+process_definition_alias::make_canonical_type(const template_actuals& a) const {
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_proc_def()->make_canonical_type(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Work to be done here... substitute expressions with local context.
  */
 count_ptr<const process_type_reference>
-process_definition_alias::make_canonical_type_reference(
+process_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 #if 0
 	typedef	count_ptr<const process_type_reference>	return_type;
-	cerr << "Fang. write process_definition_alias::make_canonical_type_reference()!" << endl;
+	cerr << "Fang. write process_definition_alias::make_canonical_fundamental_type_reference()!" << endl;
 	return return_type(NULL);
 #else
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_proc_def()->make_canonical_type_reference(ta);
+	return base->get_base_proc_def()->make_canonical_fundamental_type_reference(ta);
 #endif
 }
 

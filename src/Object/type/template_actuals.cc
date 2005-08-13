@@ -2,15 +2,18 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.2 2005/07/23 06:52:54 fang Exp $
+	$Id: template_actuals.cc,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
+#include <algorithm>
+#include <iterator>
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr.h"
+#include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -18,6 +21,8 @@
 
 namespace ART {
 namespace entity {
+using std::copy;
+using std::back_inserter;
 #include "util/using_ostream.h"
 //=============================================================================
 // class template_actuals method definitions
@@ -73,6 +78,31 @@ template_actuals::dump(ostream& o) const {
 	if (relaxed_template_args)
 		relaxed_template_args->dump(o << '<') << '>';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unifies strict and relaxed parameters into a single list.  
+	\pre strict
+ */
+count_ptr<const const_param_expr_list>
+template_actuals::make_const_param_list(void) const {
+	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
+	if (strict_template_args) {
+		const count_ptr<const const_param_expr_list>
+			csa(strict_template_args.
+				is_a<const const_param_expr_list>());
+		INVARIANT(csa);
+		copy(csa->begin(), csa->end(), back_inserter(*ret));
+	}
+	if (relaxed_template_args) {
+		const count_ptr<const const_param_expr_list>
+			rsa(relaxed_template_args.
+				is_a<const const_param_expr_list>());
+		INVARIANT(rsa);
+		copy(rsa->begin(), rsa->end(), back_inserter(*ret));
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: instance_collection.h,v 1.3.6.1 2005/08/13 17:31:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include <set>
 
+#include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/common/multikey_index.h"
 #include "util/memory/excl_ptr.h"
@@ -149,15 +150,26 @@ virtual	bool
 	// 2005-07-07: intended for first-time type establishment, 
 	// which determines whether or not the collection is relaxed or 
 	// strictly typed.  
+#if USE_CANONICAL_TYPE
+	void
+	establish_collection_type(const instance_collection_parameter_type&);
+#else
 	void
 	establish_collection_type(const type_ref_ptr_type&);
+#endif
 
 	bool
 	has_relaxed_type(void) const;
 
 	// 2005-07-07: now intended for use AFTER collection type is established
+#if USE_CANONICAL_TYPE
+	// shouldn't this be const?
+	bad_bool
+	check_established_type(const instance_collection_parameter_type&) const;
+#else
 	bad_bool
 	commit_type(const type_ref_ptr_type& );
+#endif
 
 	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const;

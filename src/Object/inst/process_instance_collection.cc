@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:20 fang Exp $
+	$Id: process_instance_collection.cc,v 1.3.4.1.2.1 2005/08/13 17:31:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -21,6 +21,7 @@
 #include "Object/inst/process_instance_collection.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/member_meta_instance_reference.h"
+#include "Object/def/process_definition.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/persistent_type_hash.h"

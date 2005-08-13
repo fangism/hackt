@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.2.8.1 2005/08/11 03:40:54 fang Exp $
+	$Id: user_def_datatype.h,v 1.2.8.1.2.1 2005/08/13 17:31:57 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -94,6 +94,8 @@ public:
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_PROTO;
 
 #if 0
 	good_bool

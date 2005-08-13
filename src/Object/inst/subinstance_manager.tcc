@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.3 2005/07/23 06:52:42 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.3.10.1 2005/08/13 17:31:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -54,7 +54,7 @@ subinstance_manager::unroll_port_instances(
 #endif
 	INVARIANT(resolved_super_type->is_resolved());
 	const type_ref_ptr_type canonical_super_type(
-		resolved_super_type->make_canonical_type_reference()
+		resolved_super_type->make_canonical_fundamental_type_reference()
 			.template is_a<const type_ref_pointee_type>());
 	INVARIANT(canonical_super_type->is_canonical());
 	canonical_super_type->unroll_port_instances(c, *this);

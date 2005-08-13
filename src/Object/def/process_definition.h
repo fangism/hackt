@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.2.8.1 2005/08/11 03:40:54 fang Exp $
+	$Id: process_definition.h,v 1.2.8.1.2.1 2005/08/13 17:31:56 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -89,6 +89,8 @@ public:
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_PROCESS_TYPE_PROTO;
 
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
