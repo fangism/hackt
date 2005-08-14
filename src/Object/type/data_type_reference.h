@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
+ 	$Id: data_type_reference.h,v 1.2.10.2 2005/08/14 03:38:20 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -99,6 +99,13 @@ private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;
+
+friend class canonical_definition_load_policy<definition_type>;
+
+	static
+	void
+	intercept_builtin_definition_hack(
+		const persistent_object_manager&, definition_ptr_type&);
 
 public:
 	FRIEND_PERSISTENT_TRAITS

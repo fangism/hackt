@@ -1,60 +1,70 @@
 /**
-	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.1.2.3.2.2 2005/08/14 03:38:20 fang Exp $
+	\file "Object/type/canonical_generic_chan_type.h"
+	$Id: canonical_generic_chan_type.h,v 1.1.2.1 2005/08/14 03:38:20 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
-#define	__OBJECT_TYPE_CANONICAL_TYPE_H__
+#ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
+#define	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 
 #include "Object/type/canonical_type_fwd.h"
+
+#if SPECIALIZE_CANONICAL_CHAN_TYPE
+#include <vector>
 #include "Object/type/canonical_type_base.h"
+#include "Object/def/channel_definition_base.h"
 #include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace entity {
 class unroll_context;
-class definition_base;
 class template_actuals;
+class builtin_channel_type_reference;
+using std::vector;
 using util::memory::never_ptr;
 
 //=============================================================================
 
-#define	CANONICAL_TYPE_TEMPLATE_SIGNATURE	template <class DefType>
-#define	CANONICAL_TYPE_CLASS			canonical_type<DefType>
-
 /**
-	A canonical type references a non-typedef definition
-	with only constant template parameters, if applicable.  
-	SHould be implemented with same interface as 
-		fundamental_type_reference.  
-	Q: use const_param_expr_list or pointer?
-	A: depends on whether or not this is expected to be copied much.  
-		Since it will be used with unroll context actuals, 
-		it should probably be a pointer.  
-		This will also be used in footprint lookups.  
-	TODO: import more standard interfaces from fundamental_type_reference
-	TODO: use defintion class traits to determine 
-		conversion policy and whether or not definition needs 
-		assertion check.  
+	Specialization hack to accomodate both user-defined and
+	built-in channel definitions.
+	Keep this until we distinguish the two collection types.  
+	For now we're keeping single channel_instance_collection.  
  */
-CANONICAL_TYPE_TEMPLATE_SIGNATURE
-class canonical_type : public canonical_type_base {
-	typedef	CANONICAL_TYPE_CLASS		this_type;
+template <>
+class canonical_type<channel_definition_base> : public canonical_type_base {
+	typedef	canonical_type<channel_definition_base>		this_type;
 	typedef	canonical_type_base		base_type;
+friend class builtin_channel_type_reference;
 public:
 	/**
 		This must be a non-typedef definition.  
 	 */
-	typedef	DefType				canonical_definition_type;
+	typedef	channel_definition_base		canonical_definition_type;
 	/**
 		Generic fundamental type reference derivative.  
 	 */
-	typedef	typename canonical_definition_type::type_reference_type
+	typedef	canonical_definition_type::type_reference_type
 						type_reference_type;
 	typedef	never_ptr<const canonical_definition_type>
 						canonical_definition_ptr_type;
+	/**
+		List of canonical data types, for built-in channels only.  
+	 */
+	typedef	vector<canonical_generic_datatype>
+						datatype_list_type;
 private:
 	canonical_definition_ptr_type		canonical_definition_ptr;
+	/**
+		THE HACK:
+		We also include a list of canonical data types 
+		for the case of built-in channel types.  
+		When unused, will be empty.  
+		INVARIANT: canonical_definition_ptr and datatype_list
+		are mutually exclusive.  
+	 */
+	datatype_list_type			datatype_list;
+	/// the channel direction
+	char					direction;
 public:
 	canonical_type();
 
@@ -67,8 +77,10 @@ public:
 	canonical_type(const canonical_definition_ptr_type, 
 		const template_actuals&);
 
+#if 0
 	template <class DefType2>
 	canonical_type(const canonical_type<DefType2>&);
+#endif
 
 	// default copy-constructor suffices
 
@@ -76,10 +88,13 @@ public:
 
 	// do we need a generic version?
 	canonical_definition_ptr_type
-	get_base_def(void) const { return this->canonical_definition_ptr; }
+	get_base_def(void) const { return canonical_definition_ptr; }
 
 	template_actuals
 	get_template_params(void) const;
+
+	const datatype_list_type&
+	get_datatype_list(void) const { return datatype_list; }
 
 	ostream&
 	what(ostream&) const;
@@ -94,9 +109,9 @@ public:
 	is_strict(void) const;
 
 	bool
-	is_relaxed(void) const { return !this->is_strict(); }
+	is_relaxed(void) const { return !is_strict(); }
 
-	operator bool () const { return this->canonical_definition_ptr; }
+	operator bool () const;
 
 	bool
 	must_be_collectibly_type_equivalent(const this_type&) const;
@@ -129,30 +144,6 @@ public:
 };	// end class canonical_type
 
 //=============================================================================
-/**
-	Default action: no-op
- */
-template <class DefType>
-struct canonical_definition_load_policy {
-	typedef	DefType			definition_type;
-	void
-	operator () (const persistent_object_manager&, 
-		never_ptr<const definition_type>&) const { }
-};	// end struct canonical_definition_load_policy
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Specialization defined "Object/type/canonical_type.cc"
- */
-template <>
-struct canonical_definition_load_policy<datatype_definition_base> {
-	typedef	datatype_definition_base		definition_type;
-	void
-	operator () (const persistent_object_manager&, 
-		never_ptr<const definition_type>&) const;
-};	// end struct canonical_definition_load_policy
-
-//=============================================================================
 // possilbly specialize built-in data types, but require same interface
 
 // possilbly specialize built-in channel type, but require same interface
@@ -160,7 +151,7 @@ struct canonical_definition_load_policy<datatype_definition_base> {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+#endif	// SPECIALIZE_CANONICAL_CHAN_TYPE
 
-
-#endif	// __OBJECT_TYPE_CANONICAL_TYPE_H__
+#endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 

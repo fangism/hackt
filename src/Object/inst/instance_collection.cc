@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.4.1 2005/08/13 17:31:58 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.4.2 2005/08/14 03:38:17 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -28,6 +28,21 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "common/TODO.h"
+
+#if USE_CANONICAL_TYPE
+// temporary for the hack in datatype_instance_collection
+#include "Object/def/enum_datatype_def.h"
+#include "Object/expr/pint_expr.h"
+#include "Object/expr/const_param.h"
+#include "Object/type/canonical_type.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/instance_collection.h"
+#include "Object/inst/bool_instance_collection.h"
+#include "Object/inst/int_instance_collection.h"
+#include "Object/inst/enum_instance_collection.h"
+#include "Object/inst/struct_instance_collection.h"
+#endif
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -646,10 +661,46 @@ datatype_instance_collection::get_actual_param_list(void) const {
 /**
 	Temporary ugly hack.  :(
 	TODO: implement for real.  
+	REMARK: want to use a virtual function, but can't because
+		children types expect different argument types!
+	Possible to fake it...?
  */
 void
 datatype_instance_collection::establish_collection_type(
 		const instance_collection_parameter_type& p) {
+{
+	bool_instance_collection* const
+		b(IS_A(bool_instance_collection*, this));
+	if (b) {
+		b->establish_collection_type(
+			bool_instance_collection::instance_collection_parameter_type());
+		return;
+	}
+}{
+	int_instance_collection* const
+		i(IS_A(int_instance_collection*, this));
+	if (i) {
+		const canonical_type_base::const_param_list_ptr_type&
+			pp(p.get_raw_template_params());
+		NEVER_NULL(pp);
+		INVARIANT(pp->size() == 1);
+		const int_instance_collection::instance_collection_parameter_type
+			w = IS_A(const pint_expr&, *pp->front())
+				.static_constant_value();
+		i->establish_collection_type(w);
+		return;
+	}
+}{
+	enum_instance_collection* const
+		e(IS_A(enum_instance_collection*, this));
+	if (e) {
+		const enum_instance_collection::instance_collection_parameter_type
+			d = p.get_base_def().is_a<const enum_datatype_def>();
+		e->establish_collection_type(d);
+		return;
+	}
+}
+	// TODO: user-def-structs
 	FINISH_ME(Fang);
 }
 
@@ -657,6 +708,36 @@ datatype_instance_collection::establish_collection_type(
 bad_bool
 datatype_instance_collection::check_established_type(
 		const instance_collection_parameter_type& p) const {
+{
+	const bool_instance_collection* const
+		b(IS_A(const bool_instance_collection*, this));
+	if (b) {
+		return b->check_established_type(
+			bool_instance_collection::instance_collection_parameter_type());
+	}
+}{
+	const int_instance_collection* const
+		i(IS_A(const int_instance_collection*, this));
+	if (i) {
+		const canonical_type_base::const_param_list_ptr_type&
+			pp(p.get_raw_template_params());
+		NEVER_NULL(pp);
+		INVARIANT(pp->size() == 1);
+		const int_instance_collection::instance_collection_parameter_type
+			w = IS_A(const pint_expr&, *pp->front())
+				.static_constant_value();
+		return i->check_established_type(w);
+	}
+}{
+	const enum_instance_collection* const
+		e(IS_A(const enum_instance_collection*, this));
+	if (e) {
+		const enum_instance_collection::instance_collection_parameter_type
+			d = p.get_base_def().is_a<const enum_datatype_def>();
+		return e->check_established_type(d);
+	}
+}
+	// TODO: user-def-structs
 	FINISH_ME(Fang);
 	return bad_bool(true);
 }

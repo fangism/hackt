@@ -2,13 +2,14 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.1.2.1 2005/08/13 17:31:55 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.1.2.2 2005/08/14 03:38:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
 #define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
+#define	STACKTRACE_DUMPS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
@@ -50,6 +51,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/namespace.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#if SPECIALIZE_CANONICAL_CHAN_TYPE
+#include "Object/type/canonical_generic_chan_type.h"
+#endif
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -58,6 +62,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 
+#if STACKTRACE_DUMPS
+#define	STACKTRACE_DUMP(x)	STACKTRACE(x)
+#else
+#define	STACKTRACE_DUMP(x)
+#endif
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -126,6 +135,7 @@ definition_base::~definition_base() {
  */
 ostream&
 definition_base::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	const string key = get_key();
 	what(o) << ((defined) ? " (defined) " : " (declared) ") << key;
 	return template_formals.dump(o);
@@ -478,6 +488,7 @@ typedef_base::dump_qualified_name(ostream& o) const {
  */
 ostream&
 typedef_base::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	what(o) << ": " << get_key();
 	template_formals.dump(o) << endl;
 	{
@@ -677,6 +688,7 @@ user_def_chan::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	definition_base::dump(o) << endl;	// dump template signature first
 	INDENT_SECTION(o);
 	// the list of datatype(s) carried by this channel
@@ -1118,6 +1130,7 @@ built_in_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	return datatype_definition_base::dump(o);
 }
 
@@ -1415,6 +1428,7 @@ enum_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	what(o) << ": " << key;
 	if (defined) {
 		INDENT_SECTION(o);
@@ -1679,6 +1693,7 @@ user_def_datatype::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 //	return what(o) << ": " << key;
 	definition_base::dump(o) << endl;	// dump template signature first
 	INDENT_SECTION(o);
@@ -2206,6 +2221,7 @@ process_definition::what(ostream& o) const {
  */
 ostream&
 process_definition::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 //	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
 	// unique ID not working with INDENT_SECTION marco... :(

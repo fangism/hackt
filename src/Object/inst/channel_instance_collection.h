@@ -3,7 +3,7 @@
 	Class declarations for channel instance and collections.  
 	This file originated from "Object/art_object_instance_chan.h"
 		in a previous life.  
-	$Id: channel_instance_collection.h,v 1.3.4.1.2.1 2005/08/13 17:31:57 fang Exp $
+	$Id: channel_instance_collection.h,v 1.3.4.1.2.2 2005/08/14 03:38:17 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
@@ -14,7 +14,12 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/general_collection_type_manager.h"
+#include "Object/type/canonical_type_fwd.h"
+#if SPECIALIZE_CANONICAL_CHAN_TYPE
+#include "Object/type/canonical_generic_chan_type.h"
+#else
 #include "Object/type/canonical_type.h"
+#endif
 
 namespace ART {
 namespace entity {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.3.2.1 2005/08/13 17:32:02 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.3.2.2 2005/08/14 03:38:20 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -17,6 +17,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "util/persistent_object_manager.tcc"
 #include "common/TODO.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -84,35 +85,6 @@ CANONICAL_TYPE_CLASS::what(ostream& o) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Prints template actuals in strict-relaxed format, 
-	like template_actuals.  
-	TODO: Most of this code should belong to a const_param_expr_list
-		member function.  
- */
-CANONICAL_TYPE_TEMPLATE_SIGNATURE
-ostream&
-CANONICAL_TYPE_CLASS::dump_template_args(ostream& o) const {
-	// just local definition of const_iterator
-	typedef	param_list_type::const_iterator		const_iterator;
-	NEVER_NULL(canonical_definition_ptr);
-	const size_t num_strict =
-		canonical_definition_ptr->num_strict_formals();
-	o << '<';
-	if (param_list_ptr) {
-		param_list_ptr->dump_range(0, num_strict -1);
-	}
-	o << '>';
-	const size_t s = param_list_ptr->size();
-	if (num_strict < s) {
-		param_list_ptr->dump_range(o << '<', num_strict, s-1) << '>';
-	}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Should print template actuals in the same manner as
 	template_actuals::dump().
@@ -120,8 +92,9 @@ CANONICAL_TYPE_CLASS::dump_template_args(ostream& o) const {
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 ostream&
 CANONICAL_TYPE_CLASS::dump(ostream& o) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
-	o << canonical_definition_ptr->get_name();
+	o << canonical_definition_ptr->get_key();	// get_name()
 	return base_type::dump_template_args(o,
 		canonical_definition_ptr->num_strict_formals());
 }
@@ -160,21 +133,7 @@ CANONICAL_TYPE_CLASS::get_template_params(void) const {
 		return template_actuals();
 	const size_t num_strict =
 		canonical_definition_ptr->num_strict_formals();
-#if 1
 	return base_type::get_template_params(num_strict);
-#else
-	const param_list_ptr_type
-		sp(new param_list_type(
-			param_list_ptr->begin(), 
-			param_list_ptr->begin() +num_strict));
-	const size_t s = param_list_ptr->size();
-	const param_list_ptr_type
-		rp((num_strict < s) ?
-			new param_list_type(
-			param_list_ptr->begin() +num_strict, 
-			param_list_ptr->begin() +s) : NULL);
-	return template_actuals(sp, rp);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,12 +275,26 @@ CANONICAL_TYPE_CLASS::write_object_base(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	AAAARRRRGGG.... CALL THE HACK POLICE.
+	data_type_reference::load_object employs a dirty hack for dealing
+	with built-in definitions (until we implement them the right way).
+ */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer(i, canonical_definition_ptr);
+#if 0
+	// may not be loaded yet
+	if (canonical_definition_ptr) {
+		cerr << "got: " << &*canonical_definition_ptr << " name="
+			<< canonical_definition_ptr->get_name() << endl;
+	}
+#endif
 	m.read_pointer(i, param_list_ptr);
+	canonical_definition_load_policy<DefType>()
+		(m, canonical_definition_ptr);
 }
 
 //=============================================================================

@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: builtin_channel_type_reference.h,v 1.2.10.1 2005/08/13 17:32:02 fang Exp $
+ 	$Id: builtin_channel_type_reference.h,v 1.2.10.2 2005/08/14 03:38:19 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_BUILTIN_CHANNEL_TYPE_REFERENCE_H__
@@ -86,6 +86,7 @@ private:
 	// consider using member function template...
 	struct datatype_resolver;
 	struct datatype_canonicalizer;
+	struct yet_another_datatype_canonicalizer;
 
 public:
 	count_ptr<const channel_type_reference_base>

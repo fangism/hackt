@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.3.4.1 2005/08/13 17:32:03 fang Exp $
+ 	$Id: type_reference.cc,v 1.3.4.2 2005/08/14 03:38:20 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -59,6 +59,9 @@
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/subinstance_manager.h"
+#if SPECIALIZE_CANONICAL_CHAN_TYPE
+#include "Object/type/canonical_generic_chan_type.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 
@@ -689,7 +692,7 @@ data_type_reference::unroll_port_instances(const unroll_context& c,
 	} else if (base_type_def.is_a<const enum_datatype_def>()) {
 		// do nothing
 	} else {
-		cerr << "FANG, finish data_type_reference::unroll_port_instances()!" << endl;
+		FINISH_ME(Fang);
 	}
 #endif
 }
@@ -767,7 +770,7 @@ data_type_reference::load_object(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("data_type_ref::load_object()");
 	m.read_pointer(f, base_type_def);
 	parent_type::load_object_base(m, f);
-
+#if 0
 	// MINOR HACK: shallow recursion and intercept built-in types
 	// TODO: ALERT!!! case where base_type_def is a typedef alias?
 	m.load_object_once(
@@ -780,6 +783,37 @@ data_type_reference::load_object(const persistent_object_manager& m,
 	} else if (base_type_def->get_key() == "int") {
 		m.please_delete(&*base_type_def);	// HACKERY
 		base_type_def = never_ptr<const datatype_definition_base>(
+			&int_traits::built_in_definition);
+		// must flag visit specially
+	}
+	// else leave the base definition as is
+	// reference count will take care of discarded memory :)
+#else
+	intercept_builtin_definition_hack(m, base_type_def);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Factored out this hack into a separate definition
+	for re-use by canonical_generic_datatype.  
+ */
+void
+data_type_reference::intercept_builtin_definition_hack(
+		const persistent_object_manager& m, definition_ptr_type& d) {
+	// MINOR HACK: shallow recursion and intercept built-in types
+	// TODO: ALERT!!! case where base_type_def is a typedef alias?
+	NEVER_NULL(d);
+	m.load_object_once(
+		const_cast<datatype_definition_base*>(&*d));
+	if (d->get_key() == "bool") {
+		m.please_delete(&*d);			// HACKERY
+		d = never_ptr<const datatype_definition_base>(
+			&bool_traits::built_in_definition);
+		// must flag visit specially
+	} else if (d->get_key() == "int") {
+		m.please_delete(&*d);	// HACKERY
+		d = never_ptr<const datatype_definition_base>(
 			&int_traits::built_in_definition);
 		// must flag visit specially
 	}
@@ -798,9 +832,9 @@ channel_type_reference_base::channel_type_reference_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-channel_type_reference_base::dump_direction(ostream& o) const {
-	if (direction == '!' || direction == '?')
-		o << direction;
+channel_type_reference_base::dump_direction(ostream& o, const char d) {
+	if (d == '!' || d == '?')
+		o << d;
 	// else no direction
 	return o;
 }
@@ -855,6 +889,19 @@ struct builtin_channel_type_reference::datatype_canonicalizer {
 };	// end class datatype_canonicalizer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper class functor for transforming data types into
+	canonical types.  
+ */
+struct builtin_channel_type_reference::yet_another_datatype_canonicalizer {
+	canonical_generic_datatype
+	operator () (const datatype_ptr_type& dt) const {
+		NEVER_NULL(dt);
+		return dt->make_canonical_type();
+	}
+};	// end class yet_another_datatype_canonicalizer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 builtin_channel_type_reference::builtin_channel_type_reference() :
 		parent_type(), datatype_list() {
 }
@@ -877,8 +924,9 @@ ostream&
 builtin_channel_type_reference::dump(ostream& o) const {
 //	STACKTRACE_VERBOSE;
 	o << "chan";
-	dump_direction(o);
+	dump_direction(o, direction);
 	o << '(';
+	INVARIANT(datatype_list.size());
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
 	(*i)->dump(o);
@@ -897,11 +945,11 @@ ostream&
 builtin_channel_type_reference::dump_long(ostream& o) const {
 //	STACKTRACE_VERBOSE;
 	o << "chan";
-	if (direction == '!' || direction == '?')
-		o << direction;
+	dump_direction(o, direction);
 	o << '(' << endl;
 	{
 	INDENT_SECTION(o); 
+	INVARIANT(datatype_list.size());
 	datatype_list_type::const_iterator i(datatype_list.begin());
 	const datatype_list_type::const_iterator e(datatype_list.end());
 	for ( ; i!=e; i++) {
@@ -1124,8 +1172,7 @@ builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 #else
 	// NOTE: built-in channel types (currently) cannot have template args
 	// will have to resolve types of various data members
-	cerr << "FANG, finish builtin_channel_type_reference::unroll_resolve()!"
-		<< endl;
+	FINISH_ME(Fang);
 	return return_type(NULL);
 #endif
 }
@@ -1166,16 +1213,20 @@ builtin_channel_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	This gets complicated...
+	Temporary hack: see canonical_generic_chan_type.
  */
 canonical_generic_chan_type
 builtin_channel_type_reference::make_canonical_type(void) const {
-	FINISH_ME(Fang);
-	return canonical_generic_chan_type();
+	canonical_generic_chan_type ret;
+	util::reserve(ret.datatype_list, datatype_list.size());
+	transform(datatype_list.begin(), datatype_list.end(),
+		back_inserter(ret.datatype_list), 
+		yet_another_datatype_canonicalizer()	// helper functor
+	);
+	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1192,11 +1243,6 @@ builtin_channel_type_reference::make_canonical_type(void) const {
 count_ptr<const fundamental_type_reference>
 builtin_channel_type_reference::make_canonical_fundamental_type_reference(void) const {
 	typedef count_ptr<const fundamental_type_reference>	return_type;
-#if 0
-	cerr << "Fang, finish builtin_channel_type_reference::"
-		"make_canonical_fundamental_type_reference()!" << endl;
-	return return_type(NULL);
-#else
 	INVARIANT(!template_args);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
@@ -1206,7 +1252,6 @@ builtin_channel_type_reference::make_canonical_fundamental_type_reference(void) 
 		datatype_canonicalizer()	// helper functor
 	);
 	return ret;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1219,7 +1264,7 @@ void
 builtin_channel_type_reference::unroll_port_instances(
 		const unroll_context& c, 
 		subinstance_manager& sub) const {
-	cerr << "FANG, finish builtin_channel_type_reference::unroll_port_instances()!" << endl;
+	FINISH_ME(Fang);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1297,7 +1342,7 @@ channel_type_reference::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 channel_type_reference::dump(ostream& o) const {
-	return dump_direction(fundamental_type_reference::dump(o));
+	return dump_direction(fundamental_type_reference::dump(o), direction);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1330,8 +1375,8 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 	const never_ptr<const user_def_chan>
 		udc(base_chan_def.is_a<const user_def_chan>());
 	if (!udc) {
-		cerr << "Fang, finish channel_type_reference::resolve_builtin_channel_type(): "
-			"case where base_chan_def is not user_def_chan."
+		FINISH_ME(Fang);
+		cerr << "Case where base_chan_def is not user_def_chan."
 			<< endl;
 		return return_type(NULL);
 	}
@@ -1436,7 +1481,7 @@ channel_type_reference::make_instance_collection(
 /**
 	TODO: recursively canonicalize types for data-parameters and ports?
  */
-canonical_type<channel_definition_base>
+canonical_generic_chan_type
 channel_type_reference::make_canonical_type(void) const {
 	return base_chan_def->make_canonical_type(template_args);
 }
@@ -1455,8 +1500,7 @@ void
 channel_type_reference::unroll_port_instances(
 		const unroll_context& c, 
 		subinstance_manager& sub) const {
-	cerr << "FANG, finish channel_type_reference::unroll_port_instances()!"
-			<< endl;
+	FINISH_ME(Fang);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

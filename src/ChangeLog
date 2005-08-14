@@ -2,6 +2,31 @@
 
 2005-08-13	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-02:
+	  Revisions to make code "work" i.e. produces the same 
+		test results (information-wise), but the binary
+		objects will differ.  This snapshot only checks in the
+		code without updating the tests (so we can come back
+		and check the diffs conveniently).  
+	  Summary:
+		Had to specialize the canonical_generic_chan_type
+			to accommodate both user-defined and generic 
+			channel types.  Later, should really split them off, 
+			but not important for now.  
+		Redefined const_param_expr_list::dump_range(): argument 
+			indices are now half-open instead of inclusive.  
+		datatype_instance_collection::establish_collection_type()
+			implemented in a switch-case fashion as a 
+			temporary workaround.  
+		Implemented canonical_definition_load_policy to allow 
+			for the built-in-definition-interception hack 
+			documented (and condemned) in
+			data_type_reference::load_object_base().
+			Specialized definition appears in
+				"Object/type/canonical_type.cc"
+		Fixed the FINISH_ME macro in "common/TODO.h".
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-01:
 	  The goal of this branch is to be able to use these new 
 		canonical types to trigger postorder recursive footprint 

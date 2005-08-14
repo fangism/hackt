@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.4.2.1 2005/08/13 17:31:51 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.4.2.2 2005/08/14 03:38:14 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -162,6 +162,7 @@ OBJECT_CC_FILES = \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
+	Object/type/canonical_generic_chan_type.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
 	Object/def/footprint.cc \
@@ -519,6 +520,7 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 COMMON_FILES = \
 	common/ICE.cc \
 	common/ICE.h \
+	common/TODO.cc \
 	common/TODO.h
 
 # automake doesn't like macro in generating .Plo, a bug methinks

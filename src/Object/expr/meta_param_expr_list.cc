@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.3.2.1 2005/08/13 17:31:57 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.3.2.2 2005/08/14 03:38:17 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -106,27 +106,28 @@ const_param_expr_list::dump(ostream& o) const {
 	return o;
 #else
 	if (empty())	return o;
-	else		return dump_range(o, 0, size() -1);
+	else		return dump_range(o, 0, size());
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Dump a slice of the parameter list from index i to j inclusive.  
+	Dump a slice of the parameter list from index [j,k).
  */
 ostream&
 const_param_expr_list::dump_range(ostream& o, 
 		const size_t j, const size_t k) const {
 	INVARIANT(j <= k);
-	INVARIANT(k < size());
+	INVARIANT(k <= size());
+	if (j == k)
+		return o;
 	const_iterator i(begin() +j);
-	const const_iterator e(begin() +k +1);
+	const const_iterator e(begin() +k);
 	NEVER_NULL(*i);
 	(*i)->dump(o);
 	for (i++; i!=e; i++) {
-		o << ", ";
 		NEVER_NULL(*i);
-		(*i)->dump(o);
+		(*i)->dump(o << ", ");
 	}
 	return o;
 }
@@ -282,22 +283,33 @@ if (cpl) {
 bool
 const_param_expr_list::must_be_equivalent(
 		const this_type& cpl, const size_t s) const {
-	INVARIANT(s < size());
-	INVARIANT(s < cpl.size());
+	INVARIANT(s <= size());
+	INVARIANT(s <= cpl.size());
 	if (size() != cpl.size())
 		return false;
 	const_iterator i(begin());
 	const_iterator j(cpl.begin());
-	const_iterator e(begin() +s);
+	const const_iterator e(begin() +s);
 	for ( ; i!=e; i++, j++) {
-		const count_ptr<const const_param> ip(*i);
-		const count_ptr<const const_param> jp(*j);
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
 		INVARIANT(ip && jp);
 		if (!ip->must_be_equivalent_generic(*jp))
 			return false;
 		// else continue checking...
 	}
 	INVARIANT(j == cpl.begin() +s);		// sanity
+	// if there more parameters, they should be checked
+	for ( ; i!=end() && j!=cpl.end(); i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		if (ip && jp) {
+			if (!ip->must_be_equivalent_generic(*jp))
+				return false;
+			// else continue
+		}
+		// else at least one of them is NULL, continue comparing
+	}
 	return true;
 }
 
