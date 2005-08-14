@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-03:
+	  Not a revision: just a tag for updated tests in the top test/ dir.
+		This revision should make check / distcheck succesfully again.
+
+
 2005-08-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-02:
