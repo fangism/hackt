@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	proccoll	1	#HEAD#	#TAIL#	144
+	11	##ADDR##	proccoll	1	#HEAD#	#TAIL#	148
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -35,21 +35,19 @@ Persistent Object Manager text dump:
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -84,11 +82,11 @@ In namespace "", we have: {
       [3..4]
     }
       unrolled indices: {
-        0 = ::car[0]
-        1 = ::car[1]
-        2 = ::car[2]
-        3 = ::car[3]
-        4 = ::car[4]
+        0 = ::car[0] 
+        1 = ::car[1] 
+        2 = ::car[2] 
+        3 = ::car[3] 
+        4 = ::car[4] 
       }
 }
 

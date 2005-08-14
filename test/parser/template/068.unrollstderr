@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	proccoll	1	#HEAD#	#TAIL#	144
+	8	##ADDR##	proccoll	1	#HEAD#	#TAIL#	148
 	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -24,11 +24,9 @@ Persistent Object Manager text dump:
 	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -55,11 +53,11 @@ In namespace "", we have: {
       [3..4]
     }
       unrolled indices: {
-        0 = ::car[0]
-        1 = ::car[1]
-        2 = ::car[2]
-        3 = ::car[3]
-        4 = ::car[4]
+        0 = ::car[0] 
+        1 = ::car[1] 
+        2 = ::car[2] 
+        3 = ::car[3] 
+        4 = ::car[4] 
       }
 }
 
