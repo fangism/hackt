@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.1.2.2 2005/08/15 05:39:26 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.1.2.3 2005/08/15 19:58:29 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -11,7 +11,6 @@
 
 #include "Object/type/canonical_generic_chan_type.h"
 
-#if SPECIALIZE_CANONICAL_CHAN_TYPE
 #include <iostream>
 #include "Object/type/canonical_type.h"
 #include "Object/type/builtin_channel_type_reference.h"
@@ -402,7 +401,6 @@ canonical_generic_chan_type::load_object_base(const persistent_object_manager& m
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
-#endif	// SPECIALIZE_CANONICAL_CHAN_TYPE
 
 #endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.3.2.3 2005/08/15 05:39:26 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.3.2.4 2005/08/15 19:58:29 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -301,13 +301,6 @@ void
 CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer(i, canonical_definition_ptr);
-#if 0
-	// may not be loaded yet
-	if (canonical_definition_ptr) {
-		cerr << "got: " << &*canonical_definition_ptr << " name="
-			<< canonical_definition_ptr->get_name() << endl;
-	}
-#endif
 	m.read_pointer(i, param_list_ptr);
 	canonical_definition_load_policy<DefType>()
 		(m, canonical_definition_ptr);

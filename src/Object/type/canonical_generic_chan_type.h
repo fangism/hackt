@@ -1,14 +1,12 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.1.2.2 2005/08/15 05:39:26 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.1.2.3 2005/08/15 19:58:29 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 #define	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 
 #include "Object/type/canonical_type_fwd.h"
-
-#if SPECIALIZE_CANONICAL_CHAN_TYPE
 #include <vector>
 #include "Object/type/canonical_type_base.h"
 #include "Object/def/channel_definition_base.h"
@@ -156,7 +154,6 @@ public:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
-#endif	// SPECIALIZE_CANONICAL_CHAN_TYPE
 
 #endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 

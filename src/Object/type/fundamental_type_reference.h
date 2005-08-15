@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.2.10.3 2005/08/15 18:55:00 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.2.10.4 2005/08/15 19:58:30 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -15,10 +15,6 @@
 #include "Object/type/type_reference_base.h"
 #include "Object/common/util_types.h"
 #include "Object/type/template_actuals.h"
-#include "Object/devel_switches.h"		// temporary
-
-#define	PURE_VIRTUAL_TYPE_EQUIVALENT		1	// want 1
-#define	FUNDAMENTAL_MUST_EQUIVALENT		0	// want 0
 
 namespace ART {
 namespace parser {
@@ -122,11 +118,6 @@ virtual	bool
 	count_ptr<const this_type>					\
 	merge_relaxed_actuals(const const_template_args_ptr_type&) const
 
-#if 0
-// on second thought, this need not be virtual base!
-virtual	MERGE_RELAXED_ACTUALS_PROTO = 0;
-#endif
-
 	static	
 	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement(
@@ -164,47 +155,15 @@ virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 	unroll_port_instances(const unroll_context&, 			\
 		subinstance_manager&) const
 
-#if 0
-virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
-#endif
-
 public:
-#if PURE_VIRTUAL_TYPE_EQUIVALENT
 virtual	bool
 	may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const = 0;
-
-#if FUNDAMENTAL_MUST_EQUIVALENT
-virtual	bool
-	must_be_collectibly_type_equivalent(
-		const fundamental_type_reference& t) const = 0;
-#endif
 
 virtual	bool
 	may_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const = 0;
 
-#if FUNDAMENTAL_MUST_EQUIVALENT
-virtual	bool
-	must_be_connectibly_type_equivalent(
-		const fundamental_type_reference& t) const = 0;
-#endif
-
-#if FUNDAMENTAL_MUST_EQUIVALENT
-#define	TYPE_EQUIVALENT_PROTOS						\
-	bool								\
-	may_be_collectibly_type_equivalent(				\
-		const fundamental_type_reference& t) const;		\
-	bool								\
-	must_be_collectibly_type_equivalent(				\
-		const fundamental_type_reference& t) const;		\
-	bool								\
-	may_be_connectibly_type_equivalent(				\
-		const fundamental_type_reference& t) const;		\
-	bool								\
-	must_be_connectibly_type_equivalent(				\
-		const fundamental_type_reference& t) const;
-#else
 #define	TYPE_EQUIVALENT_PROTOS						\
 	bool								\
 	may_be_collectibly_type_equivalent(				\
@@ -212,44 +171,6 @@ virtual	bool
 	bool								\
 	may_be_connectibly_type_equivalent(				\
 		const fundamental_type_reference& t) const;
-#endif	// FUNDAMENTAL_MUST_EQUIVALENT
-
-#else	// PURE_VIRTUAL_TYPE_EQUIVALENT
-	bool
-	may_be_collectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
-
-	bool
-	must_be_collectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
-
-	bool
-	may_be_connectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
-
-	bool
-	must_be_connectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
-#define	TYPE_EQUIVALENT_PROTOS		// blank
-#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
-
-#if 0
-	// something for resolving typedefs
-	// or return by value? statically would require copy constructor
-	// wth, just allocate one...
-/**
-	NOTE: this requires that template arguments have been resolved
-	to constants!!!
- */
-#define	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO			\
-	count_ptr<const fundamental_type_reference>			\
-	make_canonical_fundamental_type_reference(void) const
-
-/**
-	Virtuall called by equivalent check methods.  
- */
-virtual	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
-#endif
 
 	static
 	ostream&

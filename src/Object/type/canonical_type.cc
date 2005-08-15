@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.1.2.3 2005/08/15 05:39:26 fang Exp $
+	$Id: canonical_type.cc,v 1.1.2.4 2005/08/15 19:58:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -95,11 +95,10 @@ canonical_user_def_data_type::canonical_type(const canonical_generic_datatype&);
 
 template class canonical_type<datatype_definition_base>;
 template class canonical_type<user_def_datatype>;
-#if !SPECIALIZE_CANONICAL_CHAN_TYPE
-template class canonical_type<channel_definition_base>;
-#endif
 template class canonical_type<user_def_chan>;
 template class canonical_type<process_definition>;
+// specialized, defined in "Object/type/canonical_generic_chan_type.cc"
+// template class canonical_type<channel_definition_base>;
 
 //=============================================================================
 }	// end namespace entity

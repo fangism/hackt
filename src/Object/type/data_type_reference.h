@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.2.10.3 2005/08/15 05:39:27 fang Exp $
+ 	$Id: data_type_reference.h,v 1.2.10.4 2005/08/15 19:58:30 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -82,10 +82,6 @@ public:
 	// sub-typed helper
 	count_ptr<const this_type>
 	make_canonical_data_type_reference(void) const;
-
-#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
-	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
-#endif
 
 	// should be pure virtual
 	canonical_type<definition_type>

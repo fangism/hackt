@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference.h,v 1.2.10.2 2005/08/15 05:39:26 fang Exp $
+ 	$Id: channel_type_reference.h,v 1.2.10.3 2005/08/15 19:58:30 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_H__
@@ -84,10 +84,6 @@ public:
 	MERGE_RELAXED_ACTUALS_PROTO;
 
 	UNROLL_PORT_INSTANCES_PROTO;
-
-#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
-	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
-#endif
 
 	// helper function
 	count_ptr<const this_type>

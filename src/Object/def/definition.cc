@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.1.2.2 2005/08/14 03:38:16 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.1.2.3 2005/08/15 19:58:27 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -51,9 +51,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/namespace.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
-#if SPECIALIZE_CANONICAL_CHAN_TYPE
 #include "Object/type/canonical_generic_chan_type.h"
-#endif
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.3.4.1.2.2 2005/08/14 03:38:17 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.3.4.1.2.3 2005/08/15 19:58:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -20,15 +20,12 @@
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/def/definition_base.h"
 #include "Object/def/user_def_chan.h"
-// #include "Object/type/channel_type_reference_base.h"
 #include "Object/type/channel_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
-#if SPECIALIZE_CANONICAL_CHAN_TYPE
 #include "Object/def/datatype_definition_base.h"
-#endif
 
 namespace util {
 

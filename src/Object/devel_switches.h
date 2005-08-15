@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.2.1 2005/08/15 05:39:25 fang Exp $
+	$Id: devel_switches.h,v 1.1.2.2 2005/08/15 19:58:27 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -31,10 +31,7 @@
 //=============================================================================
 // The switches in this section should expire by the end of the
 //	ARTXX-00-01-04-main-00-55-footprint-01-05-canonical branch:
-#define	USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE	0
-
 #define	USE_CANONICAL_TYPE				1
-#define	SPECIALIZE_CANONICAL_CHAN_TYPE			1
 
 //=============================================================================
 

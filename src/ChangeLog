@@ -2,6 +2,10 @@
 
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-06:
+	  Clean-up phase 1: removed all conditionals except USE_CANONICAL_TYPE.
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-05:
 	  Pruned type-equivalence functions (switched off to unused).
 	  Pushed instance_collection_base::template_formal_equivalent
@@ -15,6 +19,8 @@
 		and "Object/type/fundamental_type_reference.h"
 	  Status: branch is nearing maturity.  
 
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-04:
 	  Migrating old use of make_canonical_fundamental_type_reference

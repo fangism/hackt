@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.2.10.1 2005/08/15 18:54:59 fang Exp $
+	$Id: instance_collection_base.h,v 1.2.10.2 2005/08/15 19:58:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -251,25 +251,8 @@ public:
 	bool
 	is_local_to_definition(void) const;
 
-#if 0
-	// param_value_collection only
-	bool
-	template_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const;
-#endif
-
 	bool
 	port_formal_equivalent(const this_type& b) const;
-
-#if 0
-// relocated to param_value_collection
-protected:
-	good_bool
-	may_check_expression_dimensions(const param_expr& pr) const;
-
-	good_bool
-	must_check_expression_dimensions(const const_param& pr) const;
-#endif
 
 public:
 virtual	count_ptr<meta_instance_reference_base>
@@ -281,14 +264,6 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 // return type may become generic...
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
-
-#if 0
-#define	UNROLL_PORT_ONLY_PROTO						\
-	count_ptr<physical_instance_collection>				\
-	unroll_port_only(const unroll_context&) const
-
-virtual	UNROLL_PORT_ONLY_PROTO = 0;
-#endif
 
 private:
 	// utility functions for handling index collection (inlined)

@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.1.2.1.2.3 2005/08/15 05:39:26 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.1.2.1.2.4 2005/08/15 19:58:29 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
@@ -24,14 +24,12 @@ class canonical_type_base;
 template <class>
 class canonical_type;
 
-#if SPECIALIZE_CANONICAL_CHAN_TYPE
 // HACK ALERT:
 // since built-in channels don't exactly conform to the normal
 // meta-type, we need an exception to accommodate them.  To accomplish this, 
 // we forward declare a specialization
 template <>
 class canonical_type<channel_definition_base>;
-#endif
 
 typedef	canonical_type<datatype_definition_base>
 						canonical_generic_datatype;

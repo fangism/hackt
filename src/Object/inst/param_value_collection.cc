@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.2.10.1 2005/08/15 18:54:59 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.2.10.2 2005/08/15 19:58:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -53,15 +53,12 @@ param_value_collection::param_value_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_value_collection::~param_value_collection() {
-	STACKTRACE("~param_value_collection()");
+	STACKTRACE_DTOR("~param_value_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 param_value_collection::dump(ostream& o) const {
-#if 0
-	STACKTRACE("param_value_collection::dump()");
-#endif
 	parent_type::dump(o);
 	const count_ptr<const param_expr>
 		init_def(default_value());
@@ -90,29 +87,6 @@ param_value_collection::dump(ostream& o) const {
 	}
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// OBSOLETE, using parent_type's definition
-/**
-	To determine whether or not this is a formal parameter, 
-	look itself up in the owning namespace.  
- */
-bool
-param_value_collection::is_template_formal(void) const {
-	STACKTRACE("param_value_collection::is_template_formal()");
-	// look itself up in owner namespace
-	const never_ptr<const definition_base>
-		def(owner.is_a<const definition_base>());
-	if (def) {
-		return def->lookup_template_formal(key);
-	} else {
-		INVARIANT(owner.is_a<const name_space>());
-		// is owned by a namespace, i.e. actually instantiated
-		return false;
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

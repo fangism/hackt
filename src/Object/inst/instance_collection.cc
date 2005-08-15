@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.4.3 2005/08/15 18:54:59 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.4.4 2005/08/15 19:58:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -76,21 +76,6 @@ const never_ptr<const instance_collection_base>
 instance_collection_base::null(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Private empty constructor, but with dimension established.
- */
-instance_collection_base::instance_collection_base() :
-		object(), persistent(), 
-		owner(NULL), key(), index_collection()
-#if 0
-		, depth(0)
-#endif
-		{
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiation base constructor.  
 	The first time an instance is declared, its dimensions are
@@ -123,7 +108,6 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump(ostream& o) const {
 	// but we need a version for unrolled and resolved parameters.  
-//	STACKTRACE_VERBOSE;
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
 	} else {
@@ -378,36 +362,6 @@ instance_collection_base::is_local_to_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	For two template formals to be equivalent, their
-	type and size must match, names need not.  
-	Currently allows comparison of parameter and non-parameter
-	formal types.  
-	Is conservative because parameters (in sizes) may be dynamic, 
-	or collective.  
-	TODO: this is only applicable to param_value_collection.  
- */
-bool
-instance_collection_base::template_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const {
-	NEVER_NULL(b);
-	// first make sure base types are equivalent.  
-	const count_ptr<const fundamental_type_reference>
-		this_type(get_type_ref());
-	const count_ptr<const fundamental_type_reference>
-		b_type(b->get_type_ref());
-	// used to be may_be_equivalent...
-	if (!this_type->must_be_connectibly_type_equivalent(*b_type)) {
-		// then their instantiation types differ
-		return false;
-	}
-	// then compare sizes and dimensionality
-	return formal_size_equivalent(b);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Much like equivalence for template formals, except that
 	names also need to match for port formals.  
@@ -634,15 +588,6 @@ datatype_instance_collection::datatype_instance_collection(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::~datatype_instance_collection() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-count_ptr<const fundamental_type_reference>
-datatype_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
