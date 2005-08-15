@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.4.2 2005/08/14 03:38:17 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.4.3 2005/08/15 18:54:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -378,6 +378,7 @@ instance_collection_base::is_local_to_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	For two template formals to be equivalent, their
 	type and size must match, names need not.  
@@ -385,6 +386,7 @@ instance_collection_base::is_local_to_definition(void) const {
 	formal types.  
 	Is conservative because parameters (in sizes) may be dynamic, 
 	or collective.  
+	TODO: this is only applicable to param_value_collection.  
  */
 bool
 instance_collection_base::template_formal_equivalent(
@@ -403,6 +405,7 @@ instance_collection_base::template_formal_equivalent(
 	// then compare sizes and dimensionality
 	return formal_size_equivalent(b);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -413,15 +416,13 @@ instance_collection_base::template_formal_equivalent(
 	and vice versa.  
  */
 bool
-instance_collection_base::port_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const {
-	NEVER_NULL(b);
+instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	// first make sure base types are equivalent.  
 	const count_ptr<const fundamental_type_reference>
-		this_type(get_type_ref());
+		t_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
-		b_type(b->get_type_ref());
-	if (!this_type->may_be_connectibly_type_equivalent(*b_type)) {
+		b_type(b.get_type_ref());
+	if (!t_type->may_be_connectibly_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -429,7 +430,7 @@ instance_collection_base::port_formal_equivalent(
 	if (!formal_size_equivalent(b))
 		return false;
 	// last, but not least, name must match
-	return key == b->get_name();
+	return key == b.get_name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -443,10 +444,8 @@ instance_collection_base::port_formal_equivalent(
 	\return true if dimensionality and sizes are equal.  
  */
 bool
-instance_collection_base::formal_size_equivalent(
-		const never_ptr<const instance_collection_base> b) const {
-	NEVER_NULL(b);
-	if (dimensions != b->dimensions) {
+instance_collection_base::formal_size_equivalent(const this_type& b) const {
+	if (dimensions != b.dimensions) {
 		// useful error message here: dimensions don't match
 		return false;
 	}
@@ -454,7 +453,7 @@ instance_collection_base::formal_size_equivalent(
 	// can't add instances to their collection.
 	// and they must be dense arrays.  
 	const size_t this_coll = index_collection.size();
-	const size_t b_coll = b->index_collection.size();
+	const size_t b_coll = b.index_collection.size();
 	INVARIANT(this_coll <= 1);
 	INVARIANT(b_coll <= 1);
 	if (this_coll != b_coll) {
@@ -466,7 +465,7 @@ instance_collection_base::formal_size_equivalent(
 		const index_collection_type::const_iterator
 			i(index_collection.begin());
 		const index_collection_type::const_iterator
-			j(b->index_collection.begin());
+			j(b.index_collection.begin());
 		// difficult: what if some dimensions are not static?
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
@@ -477,8 +476,8 @@ instance_collection_base::formal_size_equivalent(
 		// equivalence -- expressions referring to earlier
 		// formal parameters.  
 		// is count_ptr<meta_range_list>
-		const index_collection_item_ptr_type ii = (*i)->get_indices();
-		const index_collection_item_ptr_type ji = (*j)->get_indices();
+		const index_collection_item_ptr_type ii((*i)->get_indices());
+		const index_collection_item_ptr_type ji((*j)->get_indices());
 		if (ii && ji) {
 			return ii->must_be_formal_size_equivalent(*ji);
 		} else 	return (!ii && !ji);

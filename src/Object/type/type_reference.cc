@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.3.4.3 2005/08/15 05:39:27 fang Exp $
+ 	$Id: type_reference.cc,v 1.3.4.4 2005/08/15 18:55:00 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -718,6 +718,7 @@ data_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 data_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -728,6 +729,7 @@ data_type_reference::must_be_collectibly_type_equivalent(
 	else	return eq.lt->template_args.must_be_relaxed_equivalent(
 			eq.rt->template_args);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -742,6 +744,7 @@ data_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 data_type_reference::must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -752,8 +755,7 @@ data_type_reference::must_be_connectibly_type_equivalent(
 	else	return eq.lt->template_args.must_be_strict_equivalent(
 			eq.rt->template_args);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif
 #endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1118,13 +1120,14 @@ builtin_channel_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 builtin_channel_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
 	const this_type* const bct(IS_A(const this_type*, &t));
 	return bct ? must_be_collectibly_channel_type_equivalent(*bct) : false;
 }
-
+#endif
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 builtin_channel_type_reference::may_be_connectibly_type_equivalent(
@@ -1134,6 +1137,7 @@ builtin_channel_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 builtin_channel_type_reference::must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const {
@@ -1141,6 +1145,7 @@ builtin_channel_type_reference::must_be_connectibly_type_equivalent(
 	return bct ? must_be_connectibly_channel_type_equivalent(*bct) : false;
 }
 #endif
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct builtin_channel_type_reference::datatype_list_comparison {
@@ -1208,6 +1213,7 @@ builtin_channel_type_reference::may_be_collectibly_channel_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 /**
 	Evaluates whether or not two built-in channel types are
 	collectibly equivalent.  
@@ -1244,6 +1250,7 @@ builtin_channel_type_reference::must_be_collectibly_channel_type_equivalent(
 	// else everything matches
 	return true;
 }
+#endif	// FUNDAMENTAL_MUST_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1284,6 +1291,7 @@ builtin_channel_type_reference::may_be_connectibly_channel_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 /**
 	Evaluates whether or not two built-in channel types are
 	connectibly equivalent.  
@@ -1320,6 +1328,7 @@ builtin_channel_type_reference::must_be_connectibly_channel_type_equivalent(
 	// else everything matches
 	return true;
 }
+#endif	// FUNDAMENTAL_MUST_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const builtin_channel_type_reference>
@@ -1678,6 +1687,7 @@ channel_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 channel_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -1688,6 +1698,7 @@ channel_type_reference::must_be_collectibly_type_equivalent(
 	else	return eq.lt->template_args.must_be_relaxed_equivalent(
 			eq.rt->template_args);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1702,6 +1713,7 @@ channel_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 channel_type_reference::must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -1712,8 +1724,7 @@ channel_type_reference::must_be_connectibly_type_equivalent(
 	else	return eq.lt->template_args.must_be_strict_equivalent(
 			eq.rt->template_args);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif
 #endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2092,6 +2103,7 @@ process_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 process_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -2102,7 +2114,7 @@ process_type_reference::must_be_collectibly_type_equivalent(
 	else	return eq.lt->template_args.must_be_relaxed_equivalent(
 			eq.rt->template_args);
 }
-
+#endif
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 process_type_reference::may_be_connectibly_type_equivalent(
@@ -2116,6 +2128,7 @@ process_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 process_type_reference::must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -2126,6 +2139,7 @@ process_type_reference::must_be_connectibly_type_equivalent(
 	else	return eq.lt->template_args.must_be_strict_equivalent(
 			eq.rt->template_args);
 }
+#endif
 #endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2230,6 +2244,13 @@ param_type_reference::is_canonical(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+#if FUNDAMENTAL_MUST_EQUIVALENT
+// text substitution
+#define	must_be_connectibly_type_equivalent	\
+	may_be_connectibly_type_equivalent
+#endif
+#endif
 /**
 	Returns a newly constructed param instantiation statement object.
  */
@@ -2245,10 +2266,10 @@ param_type_reference::make_instantiation_statement_private(
 		pint_type_ptr(pint_traits::built_in_type_ptr);
 	INVARIANT(t == this);
 	INVARIANT(!a);
-	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr)) {
+	if (must_be_type_equivalent(*pbool_type_ptr)) {
 		return return_type(new pbool_instantiation_statement(
 			pbool_type_ptr, d));
-	} else if (this->must_be_connectibly_type_equivalent(*pint_type_ptr)) {
+	} else if (must_be_type_equivalent(*pint_type_ptr)) {
 		return return_type(new pint_instantiation_statement(
 			pint_type_ptr, d));
 	} else {
@@ -2277,10 +2298,10 @@ param_type_reference::make_instance_collection(
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
 		pint_type_ptr(pint_traits::built_in_type_ptr);
-	if (this->must_be_connectibly_type_equivalent(*pbool_type_ptr))
+	if (must_be_type_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pbool_instance_collection::make_array(*s, id, d));
-	else if (this->must_be_connectibly_type_equivalent(*pint_type_ptr))
+	else if (must_be_type_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pint_instance_collection::make_array(*s, id, d));
 	else {
@@ -2291,6 +2312,9 @@ param_type_reference::make_instance_collection(
 		return excl_ptr<instance_collection_base>(NULL);
 	}
 }
+#if 0
+#undef	must_be_connectibly_type_equivalent
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 null_parameter_type
@@ -2333,13 +2357,14 @@ param_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 param_type_reference::must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	return base_param_def == t.base_param_def;
 }
-
+#endif
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 param_type_reference::may_be_connectibly_type_equivalent(
@@ -2349,15 +2374,22 @@ param_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if FUNDAMENTAL_MUST_EQUIVALENT
 bool
 param_type_reference::must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	return base_param_def == t.base_param_def;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif
 #endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !FUNDAMENTAL_MUST_EQUIVALENT
+bool
+param_type_reference::must_be_type_equivalent(const this_type& t) const {
+	return base_param_def == t.base_param_def;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

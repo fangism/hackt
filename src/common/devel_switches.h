@@ -9,15 +9,17 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.2.1 2005/08/15 05:39:28 fang Exp $
+	$Id: devel_switches.h,v 1.1.2.2 2005/08/15 18:55:01 fang Exp $
  */
 
 #ifndef	__COMMON_DEVEL_SWITCHES_H__
 #define	__COMMON_DEVEL_SWITCHES_H__
 
 // leave this error enabled for released code
-#if 0
-#error	Production code should NOT include this header file.  
+#if 1
+#error	Production code should NOT include this header file. \
+	If you are developing, however, feel free to disable this error \
+	and define custom switches for testing purposes. 
 #endif
 
 // define your project-wide development switches here:

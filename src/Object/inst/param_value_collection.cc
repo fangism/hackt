@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.2 2005/07/23 06:52:38 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.2.10.1 2005/08/15 18:54:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "Object/common/namespace.h"
-#include "Object/type/fundamental_type_reference.h"
+#include "Object/type/param_type_reference.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/unroll/instantiation_statement_base.h"
@@ -170,6 +170,37 @@ param_value_collection::must_be_initialized(void) const {
 		else return false;
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For two template formals to be equivalent, their
+	type and size must match, names need not.  
+	Currently allows comparison of parameter and non-parameter
+	formal types.  
+	Is conservative because parameters (in sizes) may be dynamic, 
+	or collective.  
+	TODO: this is only applicable to param_value_collection.  
+
+	Origin: This was moved from 
+	instance_collection_base::template_formal_equivalent(), and modified.
+ */
+bool
+param_value_collection::template_formal_equivalent(const this_type& b) const {
+	// first make sure base types are equivalent.  
+	const count_ptr<const param_type_reference>
+		t_type(get_param_type_ref());
+	const count_ptr<const param_type_reference>
+		b_type(b.get_param_type_ref());
+	// used to be may_be_equivalent...
+	if (!t_type->must_be_type_equivalent(*b_type)) {
+		// then their instantiation types differ
+		return false;
+	}
+	// then compare sizes and dimensionality
+	return formal_size_equivalent(b);
+}
+
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

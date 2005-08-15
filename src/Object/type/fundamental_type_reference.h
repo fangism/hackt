@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.2.10.2 2005/08/15 05:39:27 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.2.10.3 2005/08/15 18:55:00 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -17,7 +17,8 @@
 #include "Object/type/template_actuals.h"
 #include "Object/devel_switches.h"		// temporary
 
-#define	PURE_VIRTUAL_TYPE_EQUIVALENT		1
+#define	PURE_VIRTUAL_TYPE_EQUIVALENT		1	// want 1
+#define	FUNDAMENTAL_MUST_EQUIVALENT		0	// want 0
 
 namespace ART {
 namespace parser {
@@ -173,18 +174,23 @@ virtual	bool
 	may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const = 0;
 
+#if FUNDAMENTAL_MUST_EQUIVALENT
 virtual	bool
 	must_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const = 0;
+#endif
 
 virtual	bool
 	may_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const = 0;
 
+#if FUNDAMENTAL_MUST_EQUIVALENT
 virtual	bool
 	must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const = 0;
+#endif
 
+#if FUNDAMENTAL_MUST_EQUIVALENT
 #define	TYPE_EQUIVALENT_PROTOS						\
 	bool								\
 	may_be_collectibly_type_equivalent(				\
@@ -198,6 +204,16 @@ virtual	bool
 	bool								\
 	must_be_connectibly_type_equivalent(				\
 		const fundamental_type_reference& t) const;
+#else
+#define	TYPE_EQUIVALENT_PROTOS						\
+	bool								\
+	may_be_collectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;		\
+	bool								\
+	may_be_connectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;
+#endif	// FUNDAMENTAL_MUST_EQUIVALENT
+
 #else	// PURE_VIRTUAL_TYPE_EQUIVALENT
 	bool
 	may_be_collectibly_type_equivalent(

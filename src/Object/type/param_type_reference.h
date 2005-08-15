@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: param_type_reference.h,v 1.2.8.1.2.2 2005/08/15 05:39:27 fang Exp $
+ 	$Id: param_type_reference.h,v 1.2.8.1.2.3 2005/08/15 18:55:00 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
@@ -60,6 +60,10 @@ public:
 
 #if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+#endif
+#if !FUNDAMENTAL_MUST_EQUIVALENT
+	bool
+	must_be_type_equivalent(const this_type&) const;
 #endif
 
 	null_parameter_type

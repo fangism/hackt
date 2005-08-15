@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.2 2005/07/23 06:52:38 fang Exp $
+	$Id: instance_collection_base.h,v 1.2.10.1 2005/08/15 18:54:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -65,6 +65,7 @@ using util::memory::count_ptr;
 	use list of statements that contain indices.  
  */
 class instance_collection_base : public object, public persistent {
+	typedef	instance_collection_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
 	// should be consistent with 
@@ -232,10 +233,11 @@ virtual	string
 	const_range_list
 	add_instantiation_statement(const index_collection_type::value_type& r);
 
-private:
+protected:
+	// to grant access to param_value_collection
 	bool
-	formal_size_equivalent(
-		const never_ptr<const instance_collection_base> b) const;
+	formal_size_equivalent(const this_type& b) const;
+
 public:
 	size_t
 	is_template_formal(void) const;
@@ -249,13 +251,15 @@ public:
 	bool
 	is_local_to_definition(void) const;
 
+#if 0
+	// param_value_collection only
 	bool
 	template_formal_equivalent(
 		const never_ptr<const instance_collection_base> b) const;
+#endif
 
 	bool
-	port_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const;
+	port_formal_equivalent(const this_type& b) const;
 
 #if 0
 // relocated to param_value_collection

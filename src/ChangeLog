@@ -2,6 +2,20 @@
 
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-05:
+	  Pruned type-equivalence functions (switched off to unused).
+	  Pushed instance_collection_base::template_formal_equivalent
+		to param_value_collection member function.  
+	  Updated prototypes of
+		instance_collection_base::port_formal_equivalent() and
+		formal_size_equivalent() to use const& instead of ptr.
+	  Removed fundamental_type_reference must-equivalent methods.  
+		Must-equivalence is reserved for resolved canonical_types.  
+	  TODO: clean up and commit switches in "Object/devel_switches.h"
+		and "Object/type/fundamental_type_reference.h"
+	  Status: branch is nearing maturity.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-04:
 	  Migrating old use of make_canonical_fundamental_type_reference
 		in favor of new make_canonical_type.  

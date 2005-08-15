@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.2 2005/07/23 06:52:27 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.2.10.1 2005/08/15 18:54:58 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -204,7 +204,7 @@ port_formals_manager::equivalent_port_formals(
 		const never_ptr<const instance_collection_base> jpf(*j);
 		NEVER_NULL(ipf);
 		NEVER_NULL(jpf);
-		if (!ipf->port_formal_equivalent(jpf)) {
+		if (!ipf->port_formal_equivalent(*jpf)) {
 			// descriptive error message, please
 			cerr << "ERROR: port formals do not match!" << endl;
 			return false;
