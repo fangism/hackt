@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	78
-	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
 	7	##ADDR##	chandefn	0	#HEAD#	#TAIL#	82
@@ -22,24 +22,24 @@ Persistent Object Manager text dump:
 	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	21	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
 	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
-	29	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	30	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
 	31	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	33	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
-	35	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	36	##ADDR##	chancoll	0	#HEAD#	#TAIL#	50
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
 	37	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20

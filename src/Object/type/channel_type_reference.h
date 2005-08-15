@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference.h,v 1.2 2005/07/23 06:52:53 fang Exp $
+ 	$Id: channel_type_reference.h,v 1.2.8.1 2005/08/15 21:12:23 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_H__
@@ -29,6 +29,14 @@ private:
 	typedef	channel_type_reference_base		parent_type;
 protected:
 	typedef	parent_type::template_args_ptr_type	template_args_ptr_type;
+	/**
+		Can this possibly point to a typedef to a built-in 
+		channel type?	(Type escape?)
+		TODO: introduce a channel_alias_type_reference
+			that resolves into built-in or user-defined.
+			After that, then we can upgrade this
+			to point to a user_def_chan.  
+	 */
 	never_ptr<const channel_definition_base>	base_chan_def;
 private:
 	channel_type_reference();
@@ -68,11 +76,21 @@ public:
 	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const;
 
+private:
+	struct canonical_compare_result_type;
+public:
+	TYPE_EQUIVALENT_PROTOS
+
 	MERGE_RELAXED_ACTUALS_PROTO;
 
 	UNROLL_PORT_INSTANCES_PROTO;
 
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+	// helper function
+	count_ptr<const this_type>
+	make_canonical_channel_type_reference(void) const;
+
+	canonical_type<channel_definition_base>
+	make_canonical_type(void) const;
 
 	unroll_context
 	make_unroll_context(void) const;

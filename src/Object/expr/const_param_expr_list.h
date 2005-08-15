@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.2.10.3 2005/08/11 21:52:51 fang Exp $
+	$Id: const_param_expr_list.h,v 1.2.10.4 2005/08/15 21:12:11 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -34,6 +34,7 @@ protected:
 	typedef	vector<count_ptr<const const_param> >	parent_type;
 	typedef	parent_type::value_type			value_type;
 public:
+	typedef	parent_type::const_reference		const_reference;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
@@ -43,8 +44,18 @@ public:
 
 	explicit
 	const_param_expr_list(const parent_type::value_type&);
+
 // lazy: use default copy constructor
 //	const_param_expr_list(const const_param_expr_list& pl);
+
+	/**
+		uses std::copy to initialize a sequence.  
+	 */
+	template <class InIter>
+	const_param_expr_list(InIter b, InIter e) :
+			interface_type(), parent_type(b, e) {
+	}
+
 	~const_param_expr_list();
 
 	size_t
@@ -70,6 +81,8 @@ public:
 	using parent_type::begin;
 	using parent_type::end;
 
+	using parent_type::push_back;
+
 	bool
 	may_be_initialized(void) const;
 
@@ -81,6 +94,14 @@ public:
 
 	bool
 	must_be_equivalent(const param_expr_list& p) const;
+
+	/// checks equivalence up to the end of the strict argument list
+	bool
+	must_be_equivalent(const this_type&, const size_t s) const;
+
+	/// checks entire list
+	bool
+	must_be_equivalent(const this_type&) const;
 
 	bool
 	is_static_constant(void) const { return true; }

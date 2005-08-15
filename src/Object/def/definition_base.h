@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.2.8.1 2005/08/11 03:40:53 fang Exp $
+	$Id: definition_base.h,v 1.2.8.2 2005/08/15 21:12:08 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -93,6 +93,11 @@ virtual	ostream&
 
 	const template_formals_manager&
 	get_template_formals_manager(void) const { return template_formals; }
+
+	size_t
+	num_strict_formals(void) const {
+		return template_formals.num_strict_formals();
+	}
 
 	ostream&
 	dump_template_formals(ostream& o) const;

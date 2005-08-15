@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.3.4.1 2005/08/11 00:20:22 fang Exp $
+	$Id: struct_traits.h,v 1.3.4.2 2005/08/15 21:12:21 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -45,10 +45,8 @@ struct class_traits<datastruct_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
-#if 1
 	typedef	struct_expr			data_expr_base_type;
 	typedef	struct_value_type		data_value_type;
-#endif
 
 	// later add instantiation_statement support...
 
@@ -70,7 +68,7 @@ struct class_traits<datastruct_tag> {
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	// need real type here!
 	typedef	data_type_reference		type_ref_type;
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
+	typedef	canonical_user_def_data_type	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<datastruct_tag>

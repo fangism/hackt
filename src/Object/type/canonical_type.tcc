@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.3 2005/08/11 21:52:52 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.4 2005/08/15 21:12:22 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -10,10 +10,14 @@
 #include <iostream>
 #include "Object/type/canonical_type.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/def/typedef_base.h"
 #include "Object/def/template_formals_manager.h"
+#include "Object/type/template_actuals.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/unroll/unroll_context.h"
 #include "util/persistent_object_manager.tcc"
 #include "common/TODO.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -23,23 +27,53 @@ namespace entity {
 
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type() :
-		canonical_definition_ptr(NULL), param_list_ptr(NULL) {
+		base_type(), canonical_definition_ptr(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d) :
-		canonical_definition_ptr(d), param_list_ptr(NULL) {
+		base_type(), canonical_definition_ptr(d) {
 	NEVER_NULL(canonical_definition_ptr);
+	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
 		const param_list_ptr_type& p) :
-		canonical_definition_ptr(d), param_list_ptr(p) {
+		base_type(p), canonical_definition_ptr(d) {
+	NEVER_NULL(canonical_definition_ptr);
+	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
+		const template_actuals& p) :
+		base_type(p.make_const_param_list()),
+		canonical_definition_ptr(d) {
+	NEVER_NULL(canonical_definition_ptr);
+	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use checked_cast<>
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+template <class DefType2>
+CANONICAL_TYPE_CLASS::canonical_type(
+		const canonical_type<DefType2>& c) :
+		base_type(c.get_raw_template_params()), 
+		canonical_definition_ptr(c.get_base_def()
+			.template is_a<const canonical_definition_type>()) {
 	NEVER_NULL(canonical_definition_ptr);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+CANONICAL_TYPE_CLASS::~canonical_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -52,43 +86,62 @@ CANONICAL_TYPE_CLASS::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints template actuals in strict-relaxed format, 
-	like template_actuals.  
-	TODO: Most of this code should belong to a const_param_expr_list
-		member function.  
- */
-CANONICAL_TYPE_TEMPLATE_SIGNATURE
-ostream&
-CANONICAL_TYPE_CLASS::dump_template_args(ostream& o) const {
-	// just local definition of const_iterator
-	typedef	param_list_type::const_iterator		const_iterator;
-	NEVER_NULL(canonical_definition_ptr);
-	const size_t num_strict =
-		canonical_definition_ptr->get_template_formals_manager()
-			.num_strict_formals();
-	o << '<';
-	if (param_list_ptr) {
-		param_list_ptr->dump_range(0, num_strict -1);
-	}
-	o << '>';
-	const size_t s = size();
-	if (num_strict < s) {
-		param_list_ptr->dump_range(o << '<', num_strict, s-1) << '>';
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Should print template actuals in the same manner as
 	template_actuals::dump().
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 ostream&
 CANONICAL_TYPE_CLASS::dump(ostream& o) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
-	o << canonical_definition_ptr->get_name();
-	return dump_template_args(o);
+	o << canonical_definition_ptr->get_key();	// get_name()
+	return base_type::dump_template_args(o,
+		canonical_definition_ptr->num_strict_formals());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: FIX ME
+	BUG!? template-params are constructed ephemerally!
+	but unroll context returns by reference!
+	FIX: unroll_context's template_params should make a copy
+		not just a pointer!
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+unroll_context
+CANONICAL_TYPE_CLASS::make_unroll_context(void) const {
+	STACKTRACE_VERBOSE;
+	return unroll_context(this->get_template_params(), 
+		canonical_definition_ptr->get_template_formals_manager());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a generic fundamental type reference from a canonical one.  
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+count_ptr<const typename CANONICAL_TYPE_CLASS::type_reference_type>
+CANONICAL_TYPE_CLASS::make_type_reference(void) const {
+	typedef	count_ptr<const type_reference_type>	return_type;
+	return canonical_definition_ptr->
+		make_canonical_fundamental_type_reference(
+			this->get_template_params())
+			.template is_a<const type_reference_type>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is implemented for the sake of transition compatibility.  
+	\return template params split into strict and relaxed lists.  
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+template_actuals
+CANONICAL_TYPE_CLASS::get_template_params(void) const {
+	if (!param_list_ptr)
+		return template_actuals();
+	const size_t num_strict =
+		canonical_definition_ptr->num_strict_formals();
+	return base_type::get_template_params(num_strict);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -147,6 +200,77 @@ CANONICAL_TYPE_CLASS::register_definition_footprint(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	copy-modified from fundamental_type_reference::must_be_collectibly_type_equivalent
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+bool
+CANONICAL_TYPE_CLASS::must_be_collectibly_type_equivalent(
+		const this_type& t) const {
+	if (this->canonical_definition_ptr != t.canonical_definition_ptr) {
+		// type_mismatch_error(cerr, *this, t);
+		return false;
+	} else {
+		if (this->param_list_ptr && t.param_list_ptr) {
+			const size_t num_strict =
+				canonical_definition_ptr->num_strict_formals();
+			// only strict parameters must match
+			const bool ret(this->param_list_ptr->
+				must_be_equivalent(*t.param_list_ptr, 
+					num_strict));
+			if (!ret) {
+				type_mismatch_error(cerr, *this, t);
+			}
+			return ret;
+		} else {
+			// not sure if this is true
+			INVARIANT(!this->canonical_definition_ptr);
+			INVARIANT(!t.canonical_definition_ptr);
+			return true;
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	copy-modified from fundamental_type_reference::must_be_connectibly_type_equivalent
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+bool
+CANONICAL_TYPE_CLASS::must_be_connectibly_type_equivalent(
+		const this_type& t) const {
+	if (this->canonical_definition_ptr != t.canonical_definition_ptr) {
+		// type_mismatch_error(cerr, *this, t);
+		return false;
+	} else {
+		if (this->param_list_ptr && t.param_list_ptr) {
+			const size_t num_strict =
+				canonical_definition_ptr->num_strict_formals();
+			// all parameters must match
+			const bool ret(this->param_list_ptr->
+				must_be_equivalent(*t.param_list_ptr));
+			if (!ret) {
+				type_mismatch_error(cerr, *this, t);
+			}
+			return ret;
+		} else {
+			// not sure if this is true
+			INVARIANT(!this->canonical_definition_ptr);
+			INVARIANT(!t.canonical_definition_ptr);
+			return true;
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+void
+CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
+		subinstance_manager& sub) const {
+	unroll_port_instances_policy<DefType>()(*this, c, sub);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::collect_transient_info_base(
@@ -167,12 +291,19 @@ CANONICAL_TYPE_CLASS::write_object_base(const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	AAAARRRRGGG.... CALL THE HACK POLICE.
+	data_type_reference::load_object employs a dirty hack for dealing
+	with built-in definitions (until we implement them the right way).
+ */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer(i, canonical_definition_ptr);
 	m.read_pointer(i, param_list_ptr);
+	canonical_definition_load_policy<DefType>()
+		(m, canonical_definition_ptr);
 }
 
 //=============================================================================

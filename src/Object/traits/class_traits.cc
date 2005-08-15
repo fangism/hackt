@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.2 2005/07/20 21:00:57 fang Exp $
+	$Id: class_traits.cc,v 1.2.10.1 2005/08/15 21:12:20 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -18,6 +18,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/struct_traits.h"
+#include "Object/unroll/unroll_context.h"
 
 namespace ART {
 namespace entity {
@@ -59,6 +60,13 @@ class_traits<pfloat_tag>::tag_name[] = "pfloat";
 const char
 class_traits<pfloat_tag>::value_type_name[] = "floating-point";
 #endif
+
+//=============================================================================
+
+unroll_context
+null_parameter_type::make_unroll_context(void) const {
+	return unroll_context();
+}
 
 //=============================================================================
 }	// end namespace entity

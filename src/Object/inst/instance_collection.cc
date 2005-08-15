@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3 2005/08/08 23:08:29 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.2.1 2005/08/15 21:12:13 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -27,6 +27,21 @@
 #include "Object/common/namespace.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "common/TODO.h"
+
+// the following are required by use of canonical_type<>
+// see also the temporary hack in datatype_instance_collection
+#include "Object/def/enum_datatype_def.h"
+#include "Object/expr/pint_expr.h"
+#include "Object/expr/const_param.h"
+#include "Object/type/canonical_type.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/inst/instance_collection.h"
+#include "Object/inst/bool_instance_collection.h"
+#include "Object/inst/int_instance_collection.h"
+#include "Object/inst/enum_instance_collection.h"
+#include "Object/inst/struct_instance_collection.h"
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -58,21 +73,6 @@ using util::read_string;
 
 const never_ptr<const instance_collection_base>
 instance_collection_base::null(NULL);
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Private empty constructor, but with dimension established.
- */
-instance_collection_base::instance_collection_base() :
-		object(), persistent(), 
-		owner(NULL), key(), index_collection()
-#if 0
-		, depth(0)
-#endif
-		{
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -107,7 +107,6 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump(ostream& o) const {
 	// but we need a version for unrolled and resolved parameters.  
-//	STACKTRACE_VERBOSE;
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
 	} else {
@@ -363,33 +362,6 @@ instance_collection_base::is_local_to_definition(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	For two template formals to be equivalent, their
-	type and size must match, names need not.  
-	Currently allows comparison of parameter and non-parameter
-	formal types.  
-	Is conservative because parameters (in sizes) may be dynamic, 
-	or collective.  
- */
-bool
-instance_collection_base::template_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const {
-	NEVER_NULL(b);
-	// first make sure base types are equivalent.  
-	const count_ptr<const fundamental_type_reference>
-		this_type(get_type_ref());
-	const count_ptr<const fundamental_type_reference>
-		b_type(b->get_type_ref());
-	// used to be may_be_equivalent...
-	if (!this_type->must_be_connectibly_type_equivalent(*b_type)) {
-		// then their instantiation types differ
-		return false;
-	}
-	// then compare sizes and dimensionality
-	return formal_size_equivalent(b);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Much like equivalence for template formals, except that
 	names also need to match for port formals.  
 	Rationale: need to be able to refer to the public ports
@@ -397,15 +369,13 @@ instance_collection_base::template_formal_equivalent(
 	and vice versa.  
  */
 bool
-instance_collection_base::port_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const {
-	NEVER_NULL(b);
+instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	// first make sure base types are equivalent.  
 	const count_ptr<const fundamental_type_reference>
-		this_type(get_type_ref());
+		t_type(get_type_ref());
 	const count_ptr<const fundamental_type_reference>
-		b_type(b->get_type_ref());
-	if (!this_type->may_be_connectibly_type_equivalent(*b_type)) {
+		b_type(b.get_type_ref());
+	if (!t_type->may_be_connectibly_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
 	}
@@ -413,7 +383,7 @@ instance_collection_base::port_formal_equivalent(
 	if (!formal_size_equivalent(b))
 		return false;
 	// last, but not least, name must match
-	return key == b->get_name();
+	return key == b.get_name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -427,10 +397,8 @@ instance_collection_base::port_formal_equivalent(
 	\return true if dimensionality and sizes are equal.  
  */
 bool
-instance_collection_base::formal_size_equivalent(
-		const never_ptr<const instance_collection_base> b) const {
-	NEVER_NULL(b);
-	if (dimensions != b->dimensions) {
+instance_collection_base::formal_size_equivalent(const this_type& b) const {
+	if (dimensions != b.dimensions) {
 		// useful error message here: dimensions don't match
 		return false;
 	}
@@ -438,7 +406,7 @@ instance_collection_base::formal_size_equivalent(
 	// can't add instances to their collection.
 	// and they must be dense arrays.  
 	const size_t this_coll = index_collection.size();
-	const size_t b_coll = b->index_collection.size();
+	const size_t b_coll = b.index_collection.size();
 	INVARIANT(this_coll <= 1);
 	INVARIANT(b_coll <= 1);
 	if (this_coll != b_coll) {
@@ -450,7 +418,7 @@ instance_collection_base::formal_size_equivalent(
 		const index_collection_type::const_iterator
 			i(index_collection.begin());
 		const index_collection_type::const_iterator
-			j(b->index_collection.begin());
+			j(b.index_collection.begin());
 		// difficult: what if some dimensions are not static?
 		// depends on some other former parameter?
 		// This is when it would help to walk the 
@@ -461,8 +429,8 @@ instance_collection_base::formal_size_equivalent(
 		// equivalence -- expressions referring to earlier
 		// formal parameters.  
 		// is count_ptr<meta_range_list>
-		const index_collection_item_ptr_type ii = (*i)->get_indices();
-		const index_collection_item_ptr_type ji = (*j)->get_indices();
+		const index_collection_item_ptr_type ii((*i)->get_indices());
+		const index_collection_item_ptr_type ji((*j)->get_indices());
 		if (ii && ji) {
 			return ii->must_be_formal_size_equivalent(*ji);
 		} else 	return (!ii && !ji);
@@ -621,15 +589,6 @@ datatype_instance_collection::~datatype_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-count_ptr<const fundamental_type_reference>
-datatype_instance_collection::get_type_ref(void) const {
-	INVARIANT(!index_collection.empty());
-	return (*index_collection.begin())->get_type_ref();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Default action for request for resolved param list.  
 	This is appropriate for collection types that have no 
@@ -639,6 +598,91 @@ datatype_instance_collection::get_type_ref(void) const {
 never_ptr<const const_param_expr_list>
 datatype_instance_collection::get_actual_param_list(void) const {
 	return never_ptr<const const_param_expr_list>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary ugly hack.  :(
+	TODO: implement for real.  
+	REMARK: want to use a virtual function, but can't because
+		children types expect different argument types!
+	Possible to fake it...?
+ */
+void
+datatype_instance_collection::establish_collection_type(
+		const instance_collection_parameter_type& p) {
+{
+	bool_instance_collection* const
+		b(IS_A(bool_instance_collection*, this));
+	if (b) {
+		b->establish_collection_type(
+			bool_instance_collection::instance_collection_parameter_type());
+		return;
+	}
+}{
+	int_instance_collection* const
+		i(IS_A(int_instance_collection*, this));
+	if (i) {
+		const canonical_type_base::const_param_list_ptr_type&
+			pp(p.get_raw_template_params());
+		NEVER_NULL(pp);
+		INVARIANT(pp->size() == 1);
+		const int_instance_collection::instance_collection_parameter_type
+			w = IS_A(const pint_expr&, *pp->front())
+				.static_constant_value();
+		i->establish_collection_type(w);
+		return;
+	}
+}{
+	enum_instance_collection* const
+		e(IS_A(enum_instance_collection*, this));
+	if (e) {
+		const enum_instance_collection::instance_collection_parameter_type
+			d = p.get_base_def().is_a<const enum_datatype_def>();
+		e->establish_collection_type(d);
+		return;
+	}
+}
+	// TODO: user-def-structs
+	FINISH_ME(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bad_bool
+datatype_instance_collection::check_established_type(
+		const instance_collection_parameter_type& p) const {
+{
+	const bool_instance_collection* const
+		b(IS_A(const bool_instance_collection*, this));
+	if (b) {
+		return b->check_established_type(
+			bool_instance_collection::instance_collection_parameter_type());
+	}
+}{
+	const int_instance_collection* const
+		i(IS_A(const int_instance_collection*, this));
+	if (i) {
+		const canonical_type_base::const_param_list_ptr_type&
+			pp(p.get_raw_template_params());
+		NEVER_NULL(pp);
+		INVARIANT(pp->size() == 1);
+		const int_instance_collection::instance_collection_parameter_type
+			w = IS_A(const pint_expr&, *pp->front())
+				.static_constant_value();
+		return i->check_established_type(w);
+	}
+}{
+	const enum_instance_collection* const
+		e(IS_A(const enum_instance_collection*, this));
+	if (e) {
+		const enum_instance_collection::instance_collection_parameter_type
+			d = p.get_base_def().is_a<const enum_datatype_def>();
+		return e->check_established_type(d);
+	}
+}
+	// TODO: user-def-structs
+	FINISH_ME(Fang);
+	return bad_bool(true);
 }
 
 //=============================================================================

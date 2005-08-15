@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2005/08/08 16:51:16 fang Exp $
+#	$Id: Makefile.am,v 1.12.4.1 2005/08/15 21:12:27 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -32,9 +32,11 @@ EXTRA_DIST += ChangeLog README \
 	$(PRECONFIGURED_TESTSCRIPTS) \
 	state_enum_filter.awk address_filter.sed \
 	POM-header-filter.awk \
+	POM-index-filter.awk \
 	update-artcstderr.sh \
 	update-unrollstderr.sh \
 	update-createstderr.sh \
+	analyze-dump-diff.awk \
 	spacestonewline.awk test.cvsignore
 
 # remove extraneous auto-generated files

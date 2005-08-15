@@ -1,5 +1,35 @@
 # "test/ChangeLog"
 
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-06-merged-canonical-07:
+	  Merged test suite revisions from branch.  
+		Include test-analysis extensions.  
+	  Many tests themselves were updated because of new object binary.
+
+
+2005-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-03:
+	  This revision arrives after having spent considerable effort 
+		reworking the canonical type management in HACKT.
+		The information in the objects remains the same while 
+		the object binaries changed somewhat.  The new scripts
+		introduced aid in the analysis of these "insignficant"
+		differences.  
+	  New: POM-index-filter.awk: takes the output of POM-header-filter.awk
+		and filters out the indices of the object manager header. 
+		Useful for minimizing the differences between object binaries.  
+	  Extended unroll and create test script templates to
+		conditionally perform further analysis on object dump
+		differences, depending on whether or not non-header
+		differences (in the human readable section) were introduced.  
+	  analyze-dump-diff.awk: assess the nature of the object
+		dump's differences.  Takes a diff -u output as input.  
+	  Make.test-tail: updated to reflect script and test additions.  
+		Notable: added check-summaries target.
+
+
 2005-08-06	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-unique-01-06:

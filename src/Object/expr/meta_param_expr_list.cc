@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.3 2005/08/11 21:52:51 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.4 2005/08/15 21:12:11 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -106,27 +106,28 @@ const_param_expr_list::dump(ostream& o) const {
 	return o;
 #else
 	if (empty())	return o;
-	else		return dump_range(o, 0, size() -1);
+	else		return dump_range(o, 0, size());
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Dump a slice of the parameter list from index i to j inclusive.  
+	Dump a slice of the parameter list from index [j,k).
  */
 ostream&
 const_param_expr_list::dump_range(ostream& o, 
 		const size_t j, const size_t k) const {
 	INVARIANT(j <= k);
-	INVARIANT(k < size());
+	INVARIANT(k <= size());
+	if (j == k)
+		return o;
 	const_iterator i(begin() +j);
-	const const_iterator e(begin() +k +1);
+	const const_iterator e(begin() +k);
 	NEVER_NULL(*i);
 	(*i)->dump(o);
 	for (i++; i!=e; i++) {
-		o << ", ";
 		NEVER_NULL(*i);
-		(*i)->dump(o);
+		(*i)->dump(o << ", ");
 	}
 	return o;
 }
@@ -134,6 +135,7 @@ const_param_expr_list::dump_range(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_param_expr_list::size(void) const {
+	STACKTRACE_VERBOSE;
 	return parent_type::size();
 }
 
@@ -233,6 +235,10 @@ const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	STACKTRACE("const_expr_list::must_equivalent()");
 if (cpl) {
 	STACKTRACE("const vs. const");
+#if 0
+	// use this
+	return must_be_equivalent(*cpl);
+#else
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -247,6 +253,7 @@ if (cpl) {
 	}
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
+#endif
 } else {
 	STACKTRACE("const vs. dynamic");
 	const dynamic_param_expr_list* dpl =
@@ -267,6 +274,53 @@ if (cpl) {
 	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s the number of strict formal parameters to compare
+		before terminating.  
+ */
+bool
+const_param_expr_list::must_be_equivalent(
+		const this_type& cpl, const size_t s) const {
+	INVARIANT(s <= size());
+	INVARIANT(s <= cpl.size());
+	if (size() != cpl.size())
+		return false;
+	const_iterator i(begin());
+	const_iterator j(cpl.begin());
+	const const_iterator e(begin() +s);
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		INVARIANT(ip && jp);
+		if (!ip->must_be_equivalent_generic(*jp))
+			return false;
+		// else continue checking...
+	}
+	INVARIANT(j == cpl.begin() +s);		// sanity
+	// if there more parameters, they should be checked
+	for ( ; i!=end() && j!=cpl.end(); i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		if (ip && jp) {
+			if (!ip->must_be_equivalent_generic(*jp))
+				return false;
+			// else continue
+		}
+		// else at least one of them is NULL, continue comparing
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	All parameters must match.
+ */
+bool
+const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
+	return must_be_equivalent(cpl, size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -612,6 +666,7 @@ dynamic_param_expr_list::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_param_expr_list::size(void) const {
+	STACKTRACE_VERBOSE;
 	return parent_type::size();
 }
 

@@ -5,10 +5,10 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	48
-	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
+	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -24,6 +24,6 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<>^0 bar (instantiated) = ::bar
+    bar = process foo<>^0 bar (instantiated) = ::bar 
 }
 

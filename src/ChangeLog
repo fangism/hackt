@@ -1,5 +1,120 @@
 "ChangeLog"
 
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-06-merged-canonical-07:
+	  Merged complete rework of canonical types from -canonical branch.
+	  Summary: canonical_types (templated) now use resolved definitions
+		and constant parameter lists, instead of relying on
+		old fundamental_type_reference derivatives and run-time checks.
+	  Object binary format has been updated as a consequence.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-07:
+	  Clean-up phase 2: removed USE_CANONICAL_TYPE conditional.
+	  Status: branch is ready to merge to parent.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-06:
+	  Clean-up phase 1: removed all conditionals except USE_CANONICAL_TYPE.
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-05:
+	  Pruned type-equivalence functions (switched off to unused).
+	  Pushed instance_collection_base::template_formal_equivalent
+		to param_value_collection member function.  
+	  Updated prototypes of
+		instance_collection_base::port_formal_equivalent() and
+		formal_size_equivalent() to use const& instead of ptr.
+	  Removed fundamental_type_reference must-equivalent methods.  
+		Must-equivalence is reserved for resolved canonical_types.  
+	  TODO: clean up and commit switches in "Object/devel_switches.h"
+		and "Object/type/fundamental_type_reference.h"
+	  Status: branch is nearing maturity.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-04:
+	  Migrating old use of make_canonical_fundamental_type_reference
+		in favor of new make_canonical_type.  
+	  Replaced (switched) non-virtual fundamental_type_reference::
+		equivalence functions with pure virtuals, 
+		implemented in children classes, each using own
+		make_canonical_*_type.  
+		(No more virtual make_canonical_fundamental_type_reference)
+	  Partially implemented canonical_type<>::unroll_port-instances, 
+		to the same extent of completion as before.  
+		Implementation uses policy class for pure specialization.  
+	  unroll_context::template_args is now template_actuals
+		instead of pointer hitherto because new canonical_type's
+		make_unroll_context creates a temporary, and thus
+		cannot outlive the reference.  
+	  Added "common/devel_switches.h" (project-wide) and
+		"Object/devel_switches.h" (module-wide) headers
+		for convenient development preprocessor switches.  
+		(see comments therein for usage.)
+		Much code commented out by switches in this rev.  
+
+
+2005-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-03:
+	  Not a revision: just a tag for updated tests in the top test/ dir.
+		This revision should make check / distcheck succesfully again.
+
+
+2005-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-02:
+	  Revisions to make code "work" i.e. produces the same 
+		test results (information-wise), but the binary
+		objects will differ.  This snapshot only checks in the
+		code without updating the tests (so we can come back
+		and check the diffs conveniently).  
+	  Summary:
+		Had to specialize the canonical_generic_chan_type
+			to accommodate both user-defined and generic 
+			channel types.  Later, should really split them off, 
+			but not important for now.  
+		Redefined const_param_expr_list::dump_range(): argument 
+			indices are now half-open instead of inclusive.  
+		datatype_instance_collection::establish_collection_type()
+			implemented in a switch-case fashion as a 
+			temporary workaround.  
+		Implemented canonical_definition_load_policy to allow 
+			for the built-in-definition-interception hack 
+			documented (and condemned) in
+			data_type_reference::load_object_base().
+			Specialized definition appears in
+				"Object/type/canonical_type.cc"
+		Fixed the FINISH_ME macro in "common/TODO.h".
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-01:
+	  The goal of this branch is to be able to use these new 
+		canonical types to trigger postorder recursive footprint 
+		generation as each type is unrolled/created.
+	  NOTE: This branch snapshot is unstable: it barely compiles
+		and is certain to break many tests.  I just had to commit 
+		these changes to save away 1000+ LOC, untested.
+		Warning: not all new revisions are wrapped in 
+		#if USE_CANONICAL_TYPE -- sloppy me.  
+	  Summary: implemented (enabled) true canonical type structures, 
+		the replacement for generic fundamental types in 
+		instance collections.  Most affected are instantiation
+		statements, instance collections, and their implementation
+		policies.  Added whole new set of canonicalization methods
+		to definitions and type-reference classes, redundant for now, 
+		intended as a replacement for the existing ones.
+	  Renamed fundamental_type_reference::make_canonical_type_reference
+		-> make_canonical_fundamental_type_reference
+		to distinguish from the new ::make_canonical_type.
+	  Classification tags have been given parent_type member typedef.  
+
+
 2005-08-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-05:

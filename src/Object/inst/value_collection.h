@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.2 2005/07/23 06:52:42 fang Exp $
+	$Id: value_collection.h,v 1.2.8.1 2005/08/15 21:12:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -29,6 +29,7 @@ class simple_meta_instance_reference;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
+class param_type_reference;
 class param_expr;
 class const_param;
 class const_range_list;
@@ -118,6 +119,9 @@ virtual	ostream&
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
+
+	count_ptr<const param_type_reference>
+	get_param_type_ref(void) const;
 
 	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const;

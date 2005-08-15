@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.2 2005/07/23 06:52:25 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.2.8.1 2005/08/15 21:12:07 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
@@ -56,6 +56,8 @@ public:
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_DATA_TYPE_PROTO;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;

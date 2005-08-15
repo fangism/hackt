@@ -4,16 +4,16 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	153
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	157
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	49
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	8	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
 	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
@@ -39,16 +39,16 @@ In namespace "", we have: {
       }
 
   Instances:
-    bag = process barf<>^0 bag (instantiated) = ::sack[4]
+    bag = process barf<>^0 bag (instantiated) = ::sack[4] 
     sack = process barf<>^1 sack with indices: {
       [0..4]
     }
       unrolled indices: {
-        0 = ::bag
-        1 = ::sack[1]
-        2 = ::sack[2]
-        3 = ::sack[3]
-        4 = ::sack[0]
+        0 = ::bag 
+        1 = ::sack[1] 
+        2 = ::sack[2] 
+        3 = ::sack[3] 
+        4 = ::sack[0] 
       }
 }
 

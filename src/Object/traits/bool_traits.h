@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.3.4.1 2005/08/11 00:20:21 fang Exp $
+	$Id: bool_traits.h,v 1.3.4.2 2005/08/15 21:12:20 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__

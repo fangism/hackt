@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.3 2005/08/08 23:08:31 fang Exp $
+	$Id: unroll_context.cc,v 1.3.2.1 2005/08/15 21:12:26 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -19,6 +19,9 @@
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
+#if COPY_CONTEXT_ACTUALS
+#include "Object/expr/param_expr_list.h"
+#endif
 #include "common/ICE.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
@@ -38,7 +41,13 @@ unroll_context::unroll_context() :
  */
 unroll_context::unroll_context(const template_actuals& a, 
 		const template_formals_manager& f) :
-		next(), template_args(&a), template_formals(&f) {
+		next(),
+#if COPY_CONTEXT_ACTUALS
+		template_args(a),
+#else
+		template_args(&a),
+#endif
+		template_formals(&f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,7 +58,13 @@ unroll_context::unroll_context(const template_actuals& a,
 unroll_context::unroll_context(const template_actuals& a, 
 		const template_formals_manager& f, 
 		const this_type& c) :
-		next(&c), template_args(&a), template_formals(&f) {
+		next(&c),
+#if COPY_CONTEXT_ACTUALS
+		template_args(a),
+#else
+		template_args(&a),
+#endif
+		template_formals(&f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,9 +91,13 @@ unroll_context::dump(ostream& o) const {
 		template_formals->dump(o);
 	else	o << "(none)";
 	o << endl << "actuals: ";
+#if COPY_CONTEXT_ACTUALS
+	template_args.dump(o);
+#else
 	if (template_args)
 		template_args->dump(o);
 	else	o << "(none)";
+#endif
 	return o;
 }
 
@@ -104,7 +123,9 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());
+#if !COPY_CONTEXT_ACTUALS
 	INVARIANT(template_args);
+#endif
 	INVARIANT(p.is_template_formal());
 	// not the position of the template formal in its own list
 	// but in the current context!!!
@@ -127,7 +148,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 //		cerr << "I got index " << index << "!!!" << endl;
 		// remember, index is 1-indexed, whereas [] is 0-indexed.
 		const count_ptr<const param_expr>
+#if COPY_CONTEXT_ACTUALS
+			ret(template_args[index-1]);
+#else
 			ret((*template_args)[index-1]);
+#endif
 		NEVER_NULL(ret);
 		const return_type const_ret(ret.is_a<const const_param>());
 		// actual may STILL be another formal reference!

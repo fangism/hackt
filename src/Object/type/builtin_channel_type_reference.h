@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: builtin_channel_type_reference.h,v 1.2 2005/07/23 06:52:53 fang Exp $
+ 	$Id: builtin_channel_type_reference.h,v 1.2.8.1 2005/08/15 21:12:21 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_BUILTIN_CHANNEL_TYPE_REFERENCE_H__
@@ -70,6 +70,11 @@ public:
 	datatype_ptr_type
 	index_datatype(const size_t) const;
 
+private:
+	struct datatype_list_comparison;
+public:
+	TYPE_EQUIVALENT_PROTOS
+
 	bool
 	may_be_collectibly_channel_type_equivalent(const this_type&) const;
 
@@ -86,6 +91,7 @@ private:
 	// consider using member function template...
 	struct datatype_resolver;
 	struct datatype_canonicalizer;
+	struct yet_another_datatype_canonicalizer;
 
 public:
 	count_ptr<const channel_type_reference_base>
@@ -96,7 +102,8 @@ public:
 
 	UNROLL_PORT_INSTANCES_PROTO;
 
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+	canonical_type<channel_definition_base>
+	make_canonical_type(void) const;
 
 	unroll_context
 	make_unroll_context(void) const;

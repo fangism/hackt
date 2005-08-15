@@ -4,6 +4,7 @@
 *.lo
 *.loT
 *.la
+*.gch
 core.*
 *.core
 *.artobj

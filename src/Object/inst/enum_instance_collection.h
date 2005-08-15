@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_enum.h"
 		in a previous life.  
-	$Id: enum_instance_collection.h,v 1.3.4.1 2005/08/11 00:20:19 fang Exp $
+	$Id: enum_instance_collection.h,v 1.3.4.2 2005/08/15 21:12:13 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
@@ -14,6 +14,7 @@
 #include "Object/inst/enum_instance.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/parameterless_collection_type_manager.h"
 
 namespace ART {
 namespace entity {

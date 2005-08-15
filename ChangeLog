@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-08-14	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-fotprint-01-05-canonical-03:
+	  Found some autoconf snippets I liked from ngspice
+		regarding readline and editline -- for future CLI use.  
+		Shamelessly copied them over (with attribution).  
+		(Has nothing to do with the branch.)
+
+
 2005-08-04	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-53-merged-configtest-03:

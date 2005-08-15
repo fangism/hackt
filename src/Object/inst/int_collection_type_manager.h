@@ -1,13 +1,14 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.2 2005/07/20 21:00:51 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.2.10.1 2005/08/15 21:12:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 #define	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 
 #include <iosfwd>
+#include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/expr/types.h"		// for pint_value_type
@@ -73,16 +74,15 @@ protected:
 	}
 
 
-	// TODO: rename me!!!
 	bad_bool
-	commit_type(const type_ref_ptr_type&) const;
+	check_type(const instance_collection_parameter_type&) const;
 
 	/**
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
 	void
-	commit_type_first_time(const type_ref_ptr_type& t);
+	commit_type_first_time(const instance_collection_parameter_type& t);
 
 private:
 	static

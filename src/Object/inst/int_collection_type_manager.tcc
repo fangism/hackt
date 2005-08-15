@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.3 2005/07/23 06:52:38 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.3.8.1 2005/08/15 21:12:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -103,11 +103,10 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
  */
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 bad_bool
-INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
-		const type_ref_ptr_type& tp) const {
-	const pint_value_type new_width = get_int_width(tp);
+INT_COLLECTION_TYPE_MANAGER_CLASS::check_type(
+		const instance_collection_parameter_type& tp) const {
 	INVARIANT(this->type_parameter);
-	return bad_bool(new_width != this->type_parameter);
+	return bad_bool(tp != this->type_parameter);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,11 +117,9 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
 INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
-		const type_ref_ptr_type& tp) {
+		const instance_collection_parameter_type& tp) {
 	INVARIANT(!this->type_parameter);
-	INVARIANT(tp->is_resolved());
-	INVARIANT(tp->is_canonical());
-	this->type_parameter = get_int_width(tp);
+	this->type_parameter = tp;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -136,7 +133,7 @@ pint_value_type
 INT_COLLECTION_TYPE_MANAGER_CLASS::get_int_width(
 		const type_ref_ptr_type& tp) {
 	const type_ref_ptr_type
-		t(tp->make_canonical_type_reference()
+		t(tp->make_canonical_fundamental_type_reference()
 			.template is_a<const data_type_reference>());
 	INVARIANT(t->get_base_datatype_def()
 		->resolve_canonical_datatype_definition() ==

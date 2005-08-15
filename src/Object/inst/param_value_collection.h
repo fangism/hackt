@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.2 2005/07/23 06:52:39 fang Exp $
+	$Id: param_value_collection.h,v 1.2.8.1 2005/08/15 21:12:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -17,6 +17,7 @@
 namespace ART {
 namespace entity {
 class const_param;
+class param_type_reference;
 using util::memory::count_ptr;
 // using util::qmap;
 // using util::multikey_map;
@@ -31,7 +32,7 @@ using util::good_bool;
 	TO DO: derive from a interface for template_argument.  
  */
 class param_value_collection : public instance_collection_base {
-private:
+	typedef	param_value_collection		this_type;
 	typedef	instance_collection_base	parent_type;
 public:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
@@ -60,6 +61,9 @@ virtual	ostream&
 
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
+
+virtual	count_ptr<const param_type_reference>
+	get_param_type_ref(void) const = 0;
 
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
@@ -93,6 +97,9 @@ virtual	count_ptr<const param_expr>
 
 virtual	good_bool
 	assign_default_value(const count_ptr<const param_expr>& p) = 0;
+
+	bool
+	template_formal_equivalent(const this_type&) const;
 
 // used by param_expr_list::certify_template_arguments
 virtual	good_bool

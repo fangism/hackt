@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/art_object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.2 2005/07/20 21:00:57 fang Exp $
+	$Id: class_traits.h,v 1.2.10.1 2005/08/15 21:12:20 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -29,10 +29,12 @@ using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
-// defined in "Object/art_object_instance_alias_empty.h"
+class unroll_context;
+
+// defined in "Object/inst/alias_empty.h"
 class instance_alias_info_empty;
 
-// defined in "Object/art_object_instance_alias_actuals.h"
+// defined in "Object/inst/alias_actuals.h"
 class instance_alias_info_actuals;
 
 /**
@@ -162,7 +164,13 @@ template <class>
 class instantiation_statement_type_ref_default;
 
 // for classes without parameter (bool)
-struct null_parameter_type { };
+struct null_parameter_type {
+	/// type is never null, added since canonical_type was used
+	operator bool () const { return true; }
+
+	unroll_context
+	make_unroll_context(void) const;
+};	// end struct null_parameter_type
 
 typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
 typedef	instance_alias_info<int_tag>		int_instance_alias_info;

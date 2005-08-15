@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "artobjunroll-expect.sh.in"
-#	$Id: artobjunroll-expect.sh.in,v 1.2 2005/08/04 23:02:59 fang Exp $
+#	$Id: artobjunroll-expect.sh.in,v 1.2.6.1 2005/08/15 21:12:28 fang Exp $
 # This file came from "artobjunroll-expect.sh" in revision prehistory.
 
 # $1 is the executable for the unroller, expecting 2 arguments
@@ -13,9 +13,13 @@
 # $5 is the filter for ignoring certain difference in output
 #	(for no filter, pass "cat")
 # $6 is the test report log file, summarizing results
+# $7 is a difference analysis script to run on the objdump differences
+#	AFTER the header filter has been run
+# $8 is an additional index filter to be run on the objdump differences, 
+##	but only after the primary header filter ($5) is run
 # other subsequent arguments are ignored
 
-# if [ $# -lt 6 ] ; then exit 1 ; fi
+# if [ $# -lt 8 ] ; then exit 1 ; fi
 
 unroll=$1
 dump=$2
@@ -23,6 +27,8 @@ srcroot=$3/$4
 bldroot=$4
 filter=$5
 logfile=$6
+analdiff=$7
+indfilter=$8
 
 # an pre-unrolled object file must already exist
 if ! [ -e $bldroot.artobj ] ; then exit 1 ; fi
@@ -58,6 +64,21 @@ if [ -s $bldroot.unrolldiff ]
 then
 	@ECHO@ "$bldroot.unrolldiff is non-empty!  See $logfile."
 	@ECHO@ `pwd`/"$bldroot.unrolldiff" >> $logfile
+	$analdiff -v quiet=2 $bldroot.unrolldiff > $bldroot.unrollanal
+	if @GREP@ "OK" $bldroot.unrollanal
+	then
+	# test may JUST be binary difference, we analyze more closely:
+		@CAT@ $srcroot.unrollstderr | \
+			$indfilter > $bldroot.unrollstderr.noindex
+		@CAT@ $bldroot.unrolldump.filter | \
+			$indfilter > $bldroot.unrolldump.noindex
+		@DIFF@ -buw $bldroot.unrollstderr.noindex \
+			$bldroot.unrolldump.noindex 2>&1 | \
+			@CAT@ > $bldroot.unrolldiff.noindex
+		$analdiff -v quiet=0 $bldroot.unrolldiff.noindex
+	# else don't bother with further analysis
+	fi
+	rm -f $bldroot.unrollanal
 	exit 1
 fi
 
