@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.3.6.1 2005/08/13 17:31:58 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.3.6.2 2005/08/15 20:42:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -10,7 +10,6 @@
 
 #include "Object/type/canonical_type_fwd.h"		// for conditional
 #include "Object/inst/physical_instance_collection.h"
-// #include "Object/common/multikey_index.h"
 #include "Object/traits/data_traits.h"
 
 namespace ART {
@@ -52,32 +51,17 @@ virtual	~datatype_instance_collection();
 virtual	ostream&
 	what(ostream& o) const = 0;
 
-#if 0
-	/** returns the type of the first instantiation statement */
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
-#endif
-
 virtual bool
 	is_partially_unrolled(void) const = 0;
 
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
-#if USE_CANONICAL_TYPE
 	void
 	establish_collection_type(const instance_collection_parameter_type&);
 
 	bad_bool
 	check_established_type(const instance_collection_parameter_type&) const;
-#else
-virtual	void
-	establish_collection_type(const type_ref_ptr_type&) = 0;
-
-	// a better return type?
-virtual	bad_bool
-	commit_type(const type_ref_ptr_type& ) = 0;
-#endif
 
 // methods for connection and aliasing?
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.3.10.1 2005/08/13 17:31:59 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.3.10.2 2005/08/15 20:42:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -103,22 +103,10 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
  */
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 bad_bool
-#if USE_CANONICAL_TYPE
 INT_COLLECTION_TYPE_MANAGER_CLASS::check_type(
-		const instance_collection_parameter_type& tp) const
-#else
-INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
-		const type_ref_ptr_type& tp) const
-#endif
-{
-#if USE_CANONICAL_TYPE
+		const instance_collection_parameter_type& tp) const {
 	INVARIANT(this->type_parameter);
 	return bad_bool(tp != this->type_parameter);
-#else
-	const pint_value_type new_width = get_int_width(tp);
-	INVARIANT(this->type_parameter);
-	return bad_bool(new_width != this->type_parameter);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -128,22 +116,10 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
  */
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
-#if USE_CANONICAL_TYPE
 INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
-		const instance_collection_parameter_type& tp)
-#else
-INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
-		const type_ref_ptr_type& tp)
-#endif
-{
+		const instance_collection_parameter_type& tp) {
 	INVARIANT(!this->type_parameter);
-#if USE_CANONICAL_TYPE
 	this->type_parameter = tp;
-#else
-	INVARIANT(tp->is_resolved());
-	INVARIANT(tp->is_canonical());
-	this->type_parameter = get_int_width(tp);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

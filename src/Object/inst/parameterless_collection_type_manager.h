@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.2.12.1 2005/08/13 17:31:59 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.2.12.2 2005/08/15 20:42:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -63,10 +63,8 @@ protected:
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type&) const;
 
-#if USE_CANONICAL_TYPE
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const { return this->type_parameter; }
-#endif
 
 	bool
 	is_relaxed_type(void) const { return false; }
@@ -77,26 +75,15 @@ protected:
 	bool
 	must_match_type(const this_type&) const;
 
-#if USE_CANONICAL_TYPE
 	bad_bool
 	check_type(const instance_collection_parameter_type&) const;
-#else
-	// TODO: rename me!!!
-	bad_bool
-	commit_type(const type_ref_ptr_type&) const;
-#endif
 
 	/**
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
-#if USE_CANONICAL_TYPE
 	void
 	commit_type_first_time(const instance_collection_parameter_type& t);
-#else
-	void
-	commit_type_first_time(const type_ref_ptr_type& t);
-#endif
 
 };	// end struct parameterless_collection_type_manager
 

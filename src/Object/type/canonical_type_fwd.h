@@ -1,13 +1,11 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.1.2.1.2.4 2005/08/15 19:58:29 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.1.2.1.2.5 2005/08/15 20:42:07 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
 #define	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
-
-#include "Object/devel_switches.h"		// temporary
 
 namespace ART {
 namespace entity {

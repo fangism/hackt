@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.2.2 2005/08/15 19:58:27 fang Exp $
+	$Id: devel_switches.h,v 1.1.2.3 2005/08/15 20:42:03 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -22,16 +22,12 @@
 #endif
 
 // leave this error enabled for released code
-#if 0
+#if 1
 #error	Production code should NOT include this header file.  
 #endif
 
-// define your project-wide development switches here:
-
 //=============================================================================
-// The switches in this section should expire by the end of the
-//	ARTXX-00-01-04-main-00-55-footprint-01-05-canonical branch:
-#define	USE_CANONICAL_TYPE				1
+// define your project-wide development switches here:
 
 //=============================================================================
 

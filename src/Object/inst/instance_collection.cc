@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.4.4 2005/08/15 19:58:28 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.4.5 2005/08/15 20:42:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -29,8 +29,8 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "common/TODO.h"
 
-#if USE_CANONICAL_TYPE
-// temporary for the hack in datatype_instance_collection
+// the following are required by use of canonical_type<>
+// see also the temporary hack in datatype_instance_collection
 #include "Object/def/enum_datatype_def.h"
 #include "Object/expr/pint_expr.h"
 #include "Object/expr/const_param.h"
@@ -42,7 +42,6 @@
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
 #include "Object/inst/struct_instance_collection.h"
-#endif
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"

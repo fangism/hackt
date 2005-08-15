@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.3.4.1.2.1 2005/08/13 17:32:00 fang Exp $
+	$Id: chan_traits.h,v 1.3.4.1.2.2 2005/08/15 20:42:06 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -82,7 +82,6 @@ struct class_traits<channel_tag> {
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
 	typedef	channel_type_reference_base	type_ref_type;
-#if USE_CANONICAL_TYPE
 	/**
 		Note: may need to split-off built-in and user-defined
 		channel types: built-in types have no template
@@ -94,9 +93,7 @@ struct class_traits<channel_tag> {
 	 */
 	typedef	canonical_generic_chan_type	instance_collection_parameter_type;
 //	typedef	canonical_user_def_chan_type	instance_collection_parameter_type;
-#else
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
-#endif
+
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<channel_tag>

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.3.6.1 2005/08/13 17:32:04 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.3.6.2 2005/08/15 20:42:07 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -49,17 +49,10 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
-#if USE_CANONICAL_TYPE
 	instance_collection_parameter_type
 	get_canonical_type(const unroll_context&) const {
 		return instance_collection_parameter_type();
 	}
-#else
-	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
-		return built_in_type_ptr;
-	}
-#endif
 
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
@@ -78,12 +71,7 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-#if USE_CANONICAL_TYPE
-		const instance_collection_parameter_type&
-#else
-		const type_ref_ptr_type&
-#endif
-		) {
+			const instance_collection_parameter_type&) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -91,12 +79,7 @@ protected:
 	static
 	void
 	commit_type_first_time(value_collection_generic_type& v, 
-#if USE_CANONICAL_TYPE
-		const instance_collection_parameter_type&
-#else
-		const type_ref_ptr_type&
-#endif
-		) {
+		const instance_collection_parameter_type&) {
 		// no-op
 	}
 
@@ -156,17 +139,10 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
-#if USE_CANONICAL_TYPE
 	instance_collection_parameter_type
 	get_canonical_type(const unroll_context&) const {
 		return instance_collection_parameter_type();
 	}
-#else
-	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
-		return built_in_type_ptr;
-	}
-#endif
 
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
@@ -185,12 +161,7 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-#if USE_CANONICAL_TYPE
-			const instance_collection_parameter_type&
-#else
-			const type_ref_ptr_type&
-#endif
-			) {
+			const instance_collection_parameter_type&) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -198,12 +169,7 @@ protected:
 	static
 	void
 	commit_type_first_time(value_collection_generic_type&, 
-#if USE_CANONICAL_TYPE
-			const instance_collection_parameter_type&
-#else
-			const type_ref_ptr_type&
-#endif
-			) {
+			const instance_collection_parameter_type&) {
 		// no-op
 	}
 

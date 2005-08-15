@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.3.4.1.2.1 2005/08/13 17:32:01 fang Exp $
+	$Id: struct_traits.h,v 1.3.4.1.2.2 2005/08/15 20:42:06 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -68,11 +68,7 @@ struct class_traits<datastruct_tag> {
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	// need real type here!
 	typedef	data_type_reference		type_ref_type;
-#if USE_CANONICAL_TYPE
 	typedef	canonical_user_def_data_type	instance_collection_parameter_type;
-#else
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
-#endif
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<datastruct_tag>

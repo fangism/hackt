@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.3.4.2 2005/08/11 21:52:52 fang Exp $
+	$Id: proc_traits.h,v 1.3.4.2.2.1 2005/08/15 20:42:06 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PROC_TRAITS_H__
@@ -73,11 +73,7 @@ struct class_traits<process_tag> {
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
 	typedef	process_type_reference		type_ref_type;
-#if USE_CANONICAL_TYPE
 	typedef	canonical_process_type	instance_collection_parameter_type;
-#else
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
-#endif
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<process_tag>

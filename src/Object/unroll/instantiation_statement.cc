@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.3.4.1 2005/08/13 17:32:04 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.3.4.2 2005/08/15 20:42:07 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -37,11 +37,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/value_collection.h"
 
-#if USE_CANONICAL_TYPE
+// required by use of canonical_type
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
-#endif
 
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"

@@ -2,6 +2,11 @@
 
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-07:
+	  Clean-up phase 2: removed USE_CANONICAL_TYPE conditional.
+	  Status: branch is ready to merge to parent.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-06:
 	  Clean-up phase 1: removed all conditionals except USE_CANONICAL_TYPE.
 

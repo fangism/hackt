@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.4.1 2005/08/13 17:32:04 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.4.2 2005/08/15 20:42:07 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -177,25 +177,12 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// which will be distinguishably strict or relaxed.  
 	const bool first_time = !this->inst_base->is_partially_unrolled();
 	if (first_time) {
-#if USE_CANONICAL_TYPE
 		const instance_collection_parameter_type
 			cft(type_ref_parent_type::get_canonical_type(c));
 		if (!cft) {
 			// already have error message
 			return good_bool(false);
 		}
-#else
-		const type_ref_ptr_type
-			ft(type_ref_parent_type::get_resolved_type(c));
-		if (!ft) {
-			// already have error message
-			return good_bool(false);
-		}
-		// ft will either be strict or relaxed.  
-		const type_ref_ptr_type
-			cft(ft->make_canonical_fundamental_type_reference()
-				.template is_a<const element_type>());
-#endif
 		type_ref_parent_type::commit_type_first_time(
 			*this->inst_base, cft);
 		// this->inst_base->establish_collection_type(ft);
@@ -211,14 +198,8 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			" during unroll." << endl;
 		return good_bool(false);
 	}
-#if USE_CANONICAL_TYPE
 	const instance_collection_parameter_type
 		final_type_ref(temp_type_ref->make_canonical_type());
-#else
-	const type_ref_ptr_type
-		final_type_ref(temp_type_ref->make_canonical_fundamental_type_reference()
-			.template is_a<const element_type>());
-#endif
 	if (!final_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
@@ -262,11 +243,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				*this->inst_base, crl, 
-#if USE_CANONICAL_TYPE
 				final_type_ref.make_unroll_context(), 
-#else
-				final_type_ref->make_unroll_context(), 
-#endif
 				relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
@@ -299,18 +276,8 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());
-#if USE_CANONICAL_TYPE
 	const instance_collection_parameter_type
 		ft(type_ref_parent_type::get_canonical_type(c));
-#else
-	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
-	if (!ft) {
-		// already have error message
-		return good_bool(false);
-	}
-	INVARIANT(ft->is_resolved());
-	INVARIANT(ft->is_canonical());
-#endif
 	// ft will either be strict or relaxed.  
 	type_ref_parent_type::commit_type_first_time(coll, ft);
 	// no need to re-evaluate type, since get_resolved_type is
@@ -342,11 +309,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-#if USE_CANONICAL_TYPE
 				coll, crl, ft.make_unroll_context(), 
-#else
-				coll, crl, ft->make_unroll_context(), 
-#endif
 				relaxed_const_actuals);
 	} else {
 		// consider different message
