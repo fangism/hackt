@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.3.10.1 2005/08/13 17:31:59 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.3.10.2 2005/08/15 05:39:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/devel_switches.h"		// temporary
 #include "util/stacktrace.h"
 
 namespace ART {
@@ -31,6 +32,8 @@ subinstance_manager::unroll_port_instances(
 	typedef	instance_collection<Tag>	collection_type;
 	typedef	typename collection_type::collection_type_manager_parent_type
 						type_manager_type;
+	typedef	typename collection_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	typedef	typename collection_type::type_ref_ptr_type
 						type_ref_ptr_type;
 	typedef	typename type_ref_ptr_type::element_type
@@ -53,11 +56,18 @@ subinstance_manager::unroll_port_instances(
 	resolved_super_type->dump(cerr << "resolved type:   ") << endl;
 #endif
 	INVARIANT(resolved_super_type->is_resolved());
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 	const type_ref_ptr_type canonical_super_type(
 		resolved_super_type->make_canonical_fundamental_type_reference()
 			.template is_a<const type_ref_pointee_type>());
 	INVARIANT(canonical_super_type->is_canonical());
 	canonical_super_type->unroll_port_instances(c, *this);
+#else
+	const instance_collection_parameter_type
+		canonical_super_type(resolved_super_type->
+			make_canonical_type());
+	canonical_super_type.unroll_port_instances(c, *this);
+#endif
 }
 
 //=============================================================================

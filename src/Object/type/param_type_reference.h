@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: param_type_reference.h,v 1.2.8.1.2.1 2005/08/13 17:32:03 fang Exp $
+ 	$Id: param_type_reference.h,v 1.2.8.1.2.2 2005/08/15 05:39:27 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
@@ -54,9 +54,13 @@ public:
 	is_canonical(void) const;
 
 	void
-	commit_definition_arith(void) { }
+	commit_definition_arity(void) { }
 
+	TYPE_EQUIVALENT_PROTOS
+
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+#endif
 
 	null_parameter_type
 	make_canonical_type(void) const;

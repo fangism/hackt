@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.2.8.1.2.1 2005/08/13 17:32:03 fang Exp $
+	$Id: template_actuals.h,v 1.2.8.1.2.2 2005/08/15 05:39:27 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -56,6 +56,8 @@ public:
 	// special purpose constructor
 	template_actuals(const template_actuals& t, 
 		const const_arg_list_ptr_type&);
+
+	// use default copy-constructor
 
 	~template_actuals();
 

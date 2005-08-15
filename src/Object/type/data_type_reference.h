@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.2.10.2 2005/08/14 03:38:20 fang Exp $
+ 	$Id: data_type_reference.h,v 1.2.10.3 2005/08/15 05:39:27 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -83,13 +83,33 @@ public:
 	count_ptr<const this_type>
 	make_canonical_data_type_reference(void) const;
 
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
+#endif
 
 	// should be pure virtual
 	canonical_type<definition_type>
 	make_canonical_type(void) const;
 
+private:
+	struct canonical_compare_result_type;
+#if 0
+	template <bool (template_actuals::*)(const template_actuals&) const>
+	bool
+	__type_comparator(const this_type&) const;
+
+	canonical_compare_result_type
+	canonical_definition_base_equivalent(const this_type&) const;
+#endif
+public:
+	TYPE_EQUIVALENT_PROTOS
+
 	MERGE_RELAXED_ACTUALS_PROTO;
+
+	static
+	void
+	unroll_port_instances(const never_ptr<const definition_type>, 
+		const unroll_context&, subinstance_manager&);
 
 	UNROLL_PORT_INSTANCES_PROTO;
 
@@ -102,6 +122,7 @@ private:
 
 friend class canonical_definition_load_policy<definition_type>;
 
+	/// TODO: eliminate this once we properly sub-type data types.  
 	static
 	void
 	intercept_builtin_definition_hack(

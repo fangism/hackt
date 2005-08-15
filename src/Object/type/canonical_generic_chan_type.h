@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.1.2.1 2005/08/14 03:38:20 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.1.2.2 2005/08/15 05:39:26 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -19,6 +19,7 @@ namespace entity {
 class unroll_context;
 class template_actuals;
 class builtin_channel_type_reference;
+class subinstance_manager;
 using std::vector;
 using util::memory::never_ptr;
 
@@ -125,6 +126,10 @@ public:
 
 	unroll_context
 	make_unroll_context(void) const;
+
+	void
+	unroll_port_instances(const unroll_context&, 
+		subinstance_manager&) const;
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	void

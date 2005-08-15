@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.3.4.2 2005/08/14 03:38:20 fang Exp $
+ 	$Id: type_reference.cc,v 1.3.4.3 2005/08/15 05:39:27 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -203,6 +203,7 @@ fundamental_type_reference::type_mismatch_error(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !PURE_VIRTUAL_TYPE_EQUIVALENT
 /**
 	TODO: channel type references may have no base definition!
  */
@@ -400,6 +401,7 @@ fundamental_type_reference::must_be_connectibly_type_equivalent(
 		return ret;
 	}
 }
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -673,6 +675,105 @@ data_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct data_type_reference::canonical_compare_result_type {
+	typedef	count_ptr<const this_type>	type_type;
+	type_type				lt, rt;
+	bool					equal;
+
+	canonical_compare_result_type(const this_type&, const this_type&);
+};	// end struct canonical_compare_result_type
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// rather not inline
+data_type_reference::canonical_compare_result_type
+	::canonical_compare_result_type(
+		const this_type& l, const this_type& r) :
+		lt(l.make_canonical_data_type_reference()),
+		rt(r.make_canonical_data_type_reference()) {
+	if (!lt || !rt) {
+	ICE(cerr, 
+		cerr << "got null left-type or right-type "
+			"after canonicalization.  FAAAAANNNNG!" << endl;
+	)
+	}
+	const never_ptr<const datatype_definition_base> ld(lt->base_type_def);
+	const never_ptr<const datatype_definition_base> rd(rt->base_type_def);
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	equal = (ld == rd);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PURE_VIRTUAL_TYPE_EQUIVALENT
+bool
+data_type_reference::may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.may_be_relaxed_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+data_type_reference::must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.must_be_relaxed_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+data_type_reference::may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+data_type_reference::must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.must_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+data_type_reference::unroll_port_instances(
+		const never_ptr<const definition_type> def, 
+		const unroll_context& c, subinstance_manager& sub) {
+	if (def == &bool_traits::built_in_definition) {
+		// do nothing!
+	} else if (def == &bool_traits::built_in_definition) {
+		// do nothing... for now
+		// don't really anticipate expanding bits fields.  
+	} else if (def.is_a<const enum_datatype_def>()) {
+		// do nothing
+	} else {
+		FINISH_ME(Fang);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Transient work around for special cases only.  
 	TODO (2005-07-12): implement for real.
@@ -680,9 +781,8 @@ data_type_reference::make_instance_collection(
 void
 data_type_reference::unroll_port_instances(const unroll_context& c,
 		subinstance_manager& sub) const {
-#if 0
-	INVARIANT(is_canonical());
-	INVARIANT(is_resolved());
+#if 1
+	unroll_port_instances(base_type_def, c, sub);
 #else
 	if (base_type_def == &bool_traits::built_in_definition) {
 		// do nothing!
@@ -729,6 +829,7 @@ data_type_reference::make_canonical_data_type_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 /**
 	\return a type reference to a non-typedef data type.  
  */
@@ -737,6 +838,7 @@ data_type_reference::make_canonical_fundamental_type_reference(void) const {
 //	return base_type_def->make_canonical_fundamental_type_reference(template_args);
 	return make_canonical_data_type_reference();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1007,6 +1109,67 @@ builtin_channel_type_reference::index_datatype(const size_t i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PURE_VIRTUAL_TYPE_EQUIVALENT
+bool
+builtin_channel_type_reference::may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const this_type* const bct(IS_A(const this_type*, &t));
+	return bct ? may_be_collectibly_channel_type_equivalent(*bct) : false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+builtin_channel_type_reference::must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const this_type* const bct(IS_A(const this_type*, &t));
+	return bct ? must_be_collectibly_channel_type_equivalent(*bct) : false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+builtin_channel_type_reference::may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const this_type* const bct(IS_A(const this_type*, &t));
+	return bct ? may_be_connectibly_channel_type_equivalent(*bct) : false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+builtin_channel_type_reference::must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const {
+	const this_type* const bct(IS_A(const this_type*, &t));
+	return bct ? must_be_connectibly_channel_type_equivalent(*bct) : false;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct builtin_channel_type_reference::datatype_list_comparison {
+	typedef this_type				arg_type;
+	typedef datatype_list_type::const_iterator	const_iterator;
+	const_iterator					li, ri;
+	const const_iterator				le;
+	bool						match;
+
+	datatype_list_comparison(const arg_type&, const arg_type&);
+};	// end struct datatyle_list_comparison
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+builtin_channel_type_reference::datatype_list_comparison
+	::datatype_list_comparison(const arg_type& l, const arg_type& r) :
+		li(l.datatype_list.begin()),
+		ri(r.datatype_list.begin()),
+		le(l.datatype_list.end()) {
+	const size_t ls(l.datatype_list.size());
+	const size_t rs(r.datatype_list.size());
+	if (ls != rs) {
+		type_mismatch_error(cerr, l, r);
+		match = false;
+	} else {
+		match = true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Evaluates whether or not two built-in channel types may be
 	collectibly equivalent.  
@@ -1014,6 +1177,8 @@ builtin_channel_type_reference::index_datatype(const size_t i) const {
 bool
 builtin_channel_type_reference::may_be_collectibly_channel_type_equivalent(
 		const this_type& t) const {
+	typedef datatype_list_type::const_iterator	const_iterator;
+#if 0
 	const size_t ls(datatype_list.size());
 	const size_t rs(t.datatype_list.size());
 	if (ls != rs) {
@@ -1022,10 +1187,16 @@ builtin_channel_type_reference::may_be_collectibly_channel_type_equivalent(
 	}
 	// use functional inner_product?
 	// find mismatch?
-	typedef datatype_list_type::const_iterator	const_iterator;
 	const_iterator i(datatype_list.begin());
 	const_iterator j(t.datatype_list.begin());
 	const const_iterator e(datatype_list.end());
+#else
+	datatype_list_comparison c(*this, t);
+	if (!c.match)
+		return false;
+	const_iterator& i(c.li), j(c.ri);
+	const const_iterator& e(c.le);
+#endif
 	for ( ; i!=e; i++, j++) {
 		if (!(*i)->may_be_collectibly_type_equivalent(**j)) {
 			// already have error message
@@ -1044,6 +1215,8 @@ builtin_channel_type_reference::may_be_collectibly_channel_type_equivalent(
 bool
 builtin_channel_type_reference::must_be_collectibly_channel_type_equivalent(
 		const this_type& t) const {
+	typedef datatype_list_type::const_iterator	const_iterator;
+#if 0
 	const size_t ls(datatype_list.size());
 	const size_t rs(t.datatype_list.size());
 	if (ls != rs) {
@@ -1052,10 +1225,16 @@ builtin_channel_type_reference::must_be_collectibly_channel_type_equivalent(
 	}
 	// use functional inner_product?
 	// find mismatch?
-	typedef datatype_list_type::const_iterator	const_iterator;
 	const_iterator i(datatype_list.begin());
 	const_iterator j(t.datatype_list.begin());
 	const const_iterator e(datatype_list.end());
+#else
+	datatype_list_comparison c(*this, t);
+	if (!c.match)
+		return false;
+	const_iterator& i(c.li), j(c.ri);
+	const const_iterator& e(c.le);
+#endif
 	for ( ; i!=e; i++, j++) {
 		if (!(*i)->must_be_collectibly_type_equivalent(**j)) {
 			// already have error message
@@ -1074,6 +1253,8 @@ builtin_channel_type_reference::must_be_collectibly_channel_type_equivalent(
 bool
 builtin_channel_type_reference::may_be_connectibly_channel_type_equivalent(
 		const this_type& t) const {
+	typedef datatype_list_type::const_iterator	const_iterator;
+#if 0
 	const size_t ls(datatype_list.size());
 	const size_t rs(t.datatype_list.size());
 	if (ls != rs) {
@@ -1082,10 +1263,16 @@ builtin_channel_type_reference::may_be_connectibly_channel_type_equivalent(
 	}
 	// use functional inner_product?
 	// find mismatch?
-	typedef datatype_list_type::const_iterator	const_iterator;
 	const_iterator i(datatype_list.begin());
 	const_iterator j(t.datatype_list.begin());
 	const const_iterator e(datatype_list.end());
+#else
+	datatype_list_comparison c(*this, t);
+	if (!c.match)
+		return false;
+	const_iterator& i(c.li), j(c.ri);
+	const const_iterator& e(c.le);
+#endif
 	for ( ; i!=e; i++, j++) {
 		if (!(*i)->may_be_connectibly_type_equivalent(**j)) {
 			// already have error message
@@ -1104,6 +1291,8 @@ builtin_channel_type_reference::may_be_connectibly_channel_type_equivalent(
 bool
 builtin_channel_type_reference::must_be_connectibly_channel_type_equivalent(
 		const this_type& t) const {
+	typedef datatype_list_type::const_iterator	const_iterator;
+#if 0
 	const size_t ls(datatype_list.size());
 	const size_t rs(t.datatype_list.size());
 	if (ls != rs) {
@@ -1112,10 +1301,16 @@ builtin_channel_type_reference::must_be_connectibly_channel_type_equivalent(
 	}
 	// use functional inner_product?
 	// find mismatch?
-	typedef datatype_list_type::const_iterator	const_iterator;
 	const_iterator i(datatype_list.begin());
 	const_iterator j(t.datatype_list.begin());
 	const const_iterator e(datatype_list.end());
+#else
+	datatype_list_comparison c(*this, t);
+	if (!c.match)
+		return false;
+	const_iterator& i(c.li), j(c.ri);
+	const const_iterator& e(c.le);
+#endif
 	for ( ; i!=e; i++, j++) {
 		if (!(*i)->must_be_connectibly_type_equivalent(**j)) {
 			// already have error message
@@ -1229,6 +1424,7 @@ builtin_channel_type_reference::make_canonical_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 /**
 	TODO: built-in channel types don't have their own template
 	signatures (template_formals_manager) or home-base definitions, 
@@ -1241,8 +1437,8 @@ builtin_channel_type_reference::make_canonical_type(void) const {
 	Use a different signature context?
  */
 count_ptr<const fundamental_type_reference>
-builtin_channel_type_reference::make_canonical_fundamental_type_reference(void) const {
-	typedef count_ptr<const fundamental_type_reference>	return_type;
+builtin_channel_type_reference::make_canonical_fundamental_type_reference(
+		void) const {
 	INVARIANT(!template_args);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
@@ -1253,6 +1449,7 @@ builtin_channel_type_reference::make_canonical_fundamental_type_reference(void) 
 	);
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1438,6 +1635,88 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct channel_type_reference::canonical_compare_result_type {
+	typedef	count_ptr<const this_type>	type_type;
+	type_type				lt, rt;
+	bool					equal;
+
+	canonical_compare_result_type(const this_type&, const this_type&);
+};	// end struct canonical_compare_result_type
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// rather not inline
+channel_type_reference::canonical_compare_result_type
+	::canonical_compare_result_type(
+		const this_type& l, const this_type& r) :
+		lt(l.make_canonical_channel_type_reference()),
+		rt(r.make_canonical_channel_type_reference()) {
+	if (!lt || !rt) {
+	ICE(cerr, 
+		cerr << "got null left-type or right-type "
+			"after canonicalization.  FAAAAANNNNG!" << endl;
+	)
+	}
+	const never_ptr<const channel_definition_base> ld(lt->base_chan_def);
+	const never_ptr<const channel_definition_base> rd(rt->base_chan_def);
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	equal = (ld == rd);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PURE_VIRTUAL_TYPE_EQUIVALENT
+bool
+channel_type_reference::may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.may_be_relaxed_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type_reference::must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.must_be_relaxed_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type_reference::may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type_reference::must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.must_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Combines relaxed template arguments to make a complete strict type.  
 	\param a non-NULL relaxed template actuals.
@@ -1487,13 +1766,34 @@ channel_type_reference::make_canonical_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const channel_type_reference>
+channel_type_reference::make_canonical_channel_type_reference(void) const {
+	const count_ptr<const channel_type_reference_base>
+		_ret(base_chan_def->make_canonical_fundamental_type_reference(
+			template_args));
+	const count_ptr<const this_type>
+		ret(_ret.is_a<const this_type>());
+	if (_ret && !ret) {
+		FINISH_ME_EXIT(Fang);
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 /**
 	TODO: recursively canonicalize types for data-parameters and ports?
  */
 count_ptr<const fundamental_type_reference>
 channel_type_reference::make_canonical_fundamental_type_reference(void) const {
-	return base_chan_def->make_canonical_fundamental_type_reference(template_args);
+#if 0
+	return base_chan_def->make_canonical_fundamental_type_reference(
+		template_args);
+#else
+	return make_canonical_channel_type_reference();
+#endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1725,16 +2025,108 @@ process_type_reference::make_canonical_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const process_type_reference>
+process_type_reference::make_canonical_process_type_reference(void) const {
+	return base_proc_def->make_canonical_fundamental_type_reference(
+		template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 /**
 	NOTE: we allow canonicalization using non-const expressions
 		in the type actuals.  
  */
 count_ptr<const fundamental_type_reference>
 process_type_reference::make_canonical_fundamental_type_reference(void) const {
-	// INVARIANT(template_args.is_constant());	// not true
+#if 0
 	return base_proc_def->make_canonical_fundamental_type_reference(
 		template_args);
+#else
+	return make_canonical_process_type_reference();
+#endif
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct process_type_reference::canonical_compare_result_type {
+	typedef	count_ptr<const this_type>	type_type;
+	type_type				lt, rt;
+	bool					equal;
+
+	canonical_compare_result_type(const this_type&, const this_type&);
+};	// end struct canonical_compare_result_type
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// rather not inline
+process_type_reference::canonical_compare_result_type
+	::canonical_compare_result_type(
+		const this_type& l, const this_type& r) :
+		lt(l.make_canonical_process_type_reference()),
+		rt(r.make_canonical_process_type_reference()) {
+	if (!lt || !rt) {
+	ICE(cerr, 
+		cerr << "got null left-type or right-type "
+			"after canonicalization.  FAAAAANNNNG!" << endl;
+	)
+	}
+	const never_ptr<const process_definition_base> ld(lt->base_proc_def);
+	const never_ptr<const process_definition_base> rd(rt->base_proc_def);
+	INVARIANT(ld && rd);
+	INVARIANT(!ld.is_a<const typedef_base>());
+	INVARIANT(!rd.is_a<const typedef_base>());
+	equal = (ld == rd);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PURE_VIRTUAL_TYPE_EQUIVALENT
+bool
+process_type_reference::may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.may_be_relaxed_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+process_type_reference::must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.must_be_relaxed_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+process_type_reference::may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+process_type_reference::must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	else	return eq.lt->template_args.must_be_strict_equivalent(
+			eq.rt->template_args);
+}
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1907,6 +2299,7 @@ param_type_reference::make_canonical_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE
 /**
 	\pre template actuals have beeen resolved to constants.  
  */
@@ -1928,6 +2321,43 @@ param_type_reference::make_canonical_fundamental_type_reference(void) const {
 	else	DIE;
 	return return_type(NULL);
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PURE_VIRTUAL_TYPE_EQUIVALENT
+bool
+param_type_reference::may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	return base_param_def == t.base_param_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_type_reference::must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	return base_param_def == t.base_param_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_type_reference::may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	return base_param_def == t.base_param_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_type_reference::must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& ft) const {
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	return base_param_def == t.base_param_def;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.2.10.2 2005/08/15 05:39:27 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -15,6 +15,9 @@
 #include "Object/type/type_reference_base.h"
 #include "Object/common/util_types.h"
 #include "Object/type/template_actuals.h"
+#include "Object/devel_switches.h"		// temporary
+
+#define	PURE_VIRTUAL_TYPE_EQUIVALENT		1
 
 namespace ART {
 namespace parser {
@@ -165,6 +168,37 @@ virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
 #endif
 
 public:
+#if PURE_VIRTUAL_TYPE_EQUIVALENT
+virtual	bool
+	may_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const = 0;
+
+virtual	bool
+	must_be_collectibly_type_equivalent(
+		const fundamental_type_reference& t) const = 0;
+
+virtual	bool
+	may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const = 0;
+
+virtual	bool
+	must_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const = 0;
+
+#define	TYPE_EQUIVALENT_PROTOS						\
+	bool								\
+	may_be_collectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;		\
+	bool								\
+	must_be_collectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;		\
+	bool								\
+	may_be_connectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;		\
+	bool								\
+	must_be_connectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;
+#else	// PURE_VIRTUAL_TYPE_EQUIVALENT
 	bool
 	may_be_collectibly_type_equivalent(
 		const fundamental_type_reference& t) const;
@@ -180,7 +214,10 @@ public:
 	bool
 	must_be_connectibly_type_equivalent(
 		const fundamental_type_reference& t) const;
+#define	TYPE_EQUIVALENT_PROTOS		// blank
+#endif	// PURE_VIRTUAL_TYPE_EQUIVALENT
 
+#if 0
 	// something for resolving typedefs
 	// or return by value? statically would require copy constructor
 	// wth, just allocate one...
@@ -193,9 +230,10 @@ public:
 	make_canonical_fundamental_type_reference(void) const
 
 /**
-	Virtuall called by equivalent chec methods.  
+	Virtuall called by equivalent check methods.  
  */
 virtual	MAKE_CANONICAL_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
+#endif
 
 	static
 	ostream&

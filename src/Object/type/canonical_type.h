@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.1.2.3.2.2 2005/08/14 03:38:20 fang Exp $
+	$Id: canonical_type.h,v 1.1.2.3.2.3 2005/08/15 05:39:26 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -15,6 +15,7 @@ namespace entity {
 class unroll_context;
 class definition_base;
 class template_actuals;
+class subinstance_manager;
 using util::memory::never_ptr;
 
 //=============================================================================
@@ -111,6 +112,10 @@ public:
 	unroll_context
 	make_unroll_context(void) const;
 
+	void
+	unroll_port_instances(const unroll_context&,
+		subinstance_manager&) const;
+
 	// like fundamental_type_reference::unroll_register_complete_type()
 	void
 	register_definition_footprint(void) const;
@@ -125,6 +130,9 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+private:
+	friend struct unroll_port_instances_policy<DefType>;
 
 };	// end class canonical_type
 

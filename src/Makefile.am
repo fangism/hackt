@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.4.2.2 2005/08/14 03:38:14 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.4.2.3 2005/08/15 05:39:22 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -217,6 +217,7 @@ OBJECT_TCC_FILES = \
 	Object/lang/CHP.tcc
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
+	Object/devel_switches.h \
 	Object/art_object_fwd.h \
 	Object/persistent_type_hash.h \
 	Object/common/multikey_index.h \
@@ -521,7 +522,8 @@ COMMON_FILES = \
 	common/ICE.cc \
 	common/ICE.h \
 	common/TODO.cc \
-	common/TODO.h
+	common/TODO.h \
+	common/devel_switches.h
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(ARTXX_PARSE_ROOT)-prefix.cc
@@ -715,6 +717,12 @@ EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 # what about their dependencies?  
 # automake produces empty placeholders (never updated) for them initially, 
 # so make will not die.
+
+common/devel_switches.hchk:
+	@$(TOUCH) $@
+
+Object/devel_switches.hchk:
+	@$(TOUCH) $@
 
 util/using_istream.hchk:
 	@$(TOUCH) $@

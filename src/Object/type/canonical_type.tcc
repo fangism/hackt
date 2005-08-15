@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.3.2.2 2005/08/14 03:38:20 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.3.2.3 2005/08/15 05:39:26 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -100,9 +100,17 @@ CANONICAL_TYPE_CLASS::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: FIX ME
+	BUG!? template-params are constructed ephemerally!
+	but unroll context returns by reference!
+	FIX: unroll_context's template_params should make a copy
+		not just a pointer!
+ */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 unroll_context
 CANONICAL_TYPE_CLASS::make_unroll_context(void) const {
+	STACKTRACE_VERBOSE;
 	return unroll_context(this->get_template_params(), 
 		canonical_definition_ptr->get_template_formals_manager());
 }
@@ -252,6 +260,14 @@ CANONICAL_TYPE_CLASS::must_be_connectibly_type_equivalent(
 			return true;
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+void
+CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
+		subinstance_manager& sub) const {
+	unroll_port_instances_policy<DefType>()(*this, c, sub);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

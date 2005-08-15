@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.2.10.1 2005/08/13 17:32:03 fang Exp $
+	$Id: template_actuals.cc,v 1.2.10.2 2005/08/15 05:39:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,6 +19,20 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
+#define	ADDRESS_IF_NULL(x)						\
+	if (x) { cerr << &*x; } else { cerr << "(null)"; }
+
+#if ENABLE_STACKTRACE
+#define	CHECK_ARG_ADDRESSES						\
+	cerr << "template_actuals @ " << this << ": ";			\
+	ADDRESS_IF_NULL(strict_template_args);				\
+	cerr << ", ";							\
+	ADDRESS_IF_NULL(relaxed_template_args);				\
+	cerr << endl;
+#else
+#define	CHECK_ARG_ADDRESSES
+#endif
+
 namespace ART {
 namespace entity {
 using std::copy;
@@ -30,6 +44,10 @@ using std::back_inserter;
 
 template_actuals::template_actuals() :
 		strict_template_args(), relaxed_template_args() {
+#if ENABLE_STACKTRACE
+	cerr << "ctor ";
+	CHECK_ARG_ADDRESSES
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -41,6 +59,10 @@ template_actuals::template_actuals() :
 template_actuals::template_actuals(const arg_list_ptr_type& s, 
 		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
+#if ENABLE_STACKTRACE
+	cerr << "ctor ";
+	CHECK_ARG_ADDRESSES
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,10 +80,19 @@ template_actuals::template_actuals(const template_actuals& t,
 		relaxed_template_args(a) {
 	NEVER_NULL(a);
 	INVARIANT(!t.relaxed_template_args);
+#if ENABLE_STACKTRACE
+	cerr << "ctor ";
+	CHECK_ARG_ADDRESSES
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template_actuals::~template_actuals() { }
+template_actuals::~template_actuals() {
+#if ENABLE_STACKTRACE
+	cerr << "dtor ";
+	CHECK_ARG_ADDRESSES
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -127,8 +158,13 @@ template_actuals::operator bool () const {
  */
 count_ptr<const param_expr>
 template_actuals::operator [] (const size_t i) const {
+	STACKTRACE_VERBOSE;
 	if (strict_template_args) {
-		const size_t s(strict_template_args->size());
+#if 1
+		CHECK_ARG_ADDRESSES
+//		strict_template_args->what(cerr) << endl;
+#endif
+		const size_t s = strict_template_args->size();
 		if (i < s) {
 			return (*strict_template_args)[i];
 		} else {

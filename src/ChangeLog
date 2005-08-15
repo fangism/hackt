@@ -1,5 +1,29 @@
 "ChangeLog"
 
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-04:
+	  Migrating old use of make_canonical_fundamental_type_reference
+		in favor of new make_canonical_type.  
+	  Replaced (switched) non-virtual fundamental_type_reference::
+		equivalence functions with pure virtuals, 
+		implemented in children classes, each using own
+		make_canonical_*_type.  
+		(No more virtual make_canonical_fundamental_type_reference)
+	  Partially implemented canonical_type<>::unroll_port-instances, 
+		to the same extent of completion as before.  
+		Implementation uses policy class for pure specialization.  
+	  unroll_context::template_args is now template_actuals
+		instead of pointer hitherto because new canonical_type's
+		make_unroll_context creates a temporary, and thus
+		cannot outlive the reference.  
+	  Added "common/devel_switches.h" (project-wide) and
+		"Object/devel_switches.h" (module-wide) headers
+		for convenient development preprocessor switches.  
+		(see comments therein for usage.)
+		Much code commented out by switches in this rev.  
+
+
 2005-08-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-03:

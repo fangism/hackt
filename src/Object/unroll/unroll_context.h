@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.2 2005/07/23 06:53:04 fang Exp $
+	$Id: unroll_context.h,v 1.2.10.1 2005/08/15 05:39:28 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -11,6 +11,27 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
+
+/**
+	If true, then the template args are a copy of the 
+	template actuals, not just a pointer hitherto.  
+	This is a critical bug fix required by the 
+	canonical_type's implementation of make_unroll_context, 
+	because it creates a temporary list from a single
+	const_param_expr_list from canonical_type_base.  
+
+	The other option is to replace the pointer to template actuals
+	with a pointer to const_param_expr_list, or a const_param_expr_list.  
+
+	PLAN: first conver pointer to template_actuals, 
+	then experiment around with const_param_expr_list.  
+ */
+#define	COPY_CONTEXT_ACTUALS			1
+
+
+#if COPY_CONTEXT_ACTUALS
+#include "Object/type/template_actuals.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -33,6 +54,11 @@ using util::memory::count_ptr;
  */
 class unroll_context {
 	typedef	unroll_context				this_type;
+#if COPY_CONTEXT_ACTUALS
+	typedef	template_actuals			template_args_type;
+#else
+	typedef	never_ptr<const template_actuals>	template_args_type;
+#endif
 private:
 	/**
 		Stack-chain continuation to next context in scope.  
@@ -45,7 +71,7 @@ private:
 		INVARIANT: template_args and template_formals are either
 		both NULL or both valid at all times.  
 	 */
-	never_ptr<const template_actuals>		template_args;
+	template_args_type				template_args;
 	never_ptr<const template_formals_manager>	template_formals;
 public:
 	// parameterless types and entity::modul need this

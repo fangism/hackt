@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.1.2.1 2005/08/14 03:38:19 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.1.2.2 2005/08/15 05:39:26 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -334,6 +334,13 @@ if (canonical_definition_ptr) {
 	// else everything matches
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+canonical_generic_chan_type::unroll_port_instances(
+		const unroll_context& c, subinstance_manager& sub) const {
+	FINISH_ME(Fang);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
