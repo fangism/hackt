@@ -3,7 +3,7 @@
 	Template method definitions for class name_space.  
 	This file was "Object/common/namespace.tcc"
 		in a previous life.  
-	$Id: namespace.tcc,v 1.2 2005/07/23 06:52:22 fang Exp $
+	$Id: namespace.tcc,v 1.2.8.1 2005/08/16 03:47:31 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_TCC__
@@ -33,8 +33,8 @@ void
 name_space::collect(L& l) const {
 	typedef	typename L::value_type			pointer_type;
 	typedef	typename pointer_type::element_type	element_type;
-	used_id_map_type::const_iterator i = used_id_map.begin();
-	const used_id_map_type::const_iterator e = used_id_map.end();
+	used_id_map_type::const_iterator i(used_id_map.begin());
+	const used_id_map_type::const_iterator e(used_id_map.end());
 	for ( ; i!=e; i++) {
 		// const here will check for const-copy-constructibility
 		// where push_back is called.  
