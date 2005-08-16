@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.3.4.1 2005/08/16 20:32:16 fang Exp $
+	$Id: instance_management_base.h,v 1.3.4.2 2005/08/16 21:10:48 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -11,7 +11,6 @@
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"	// temporary
 
 namespace ART {
 namespace entity {
@@ -73,18 +72,12 @@ virtual	UNROLL_META_EVALUATE_PROTO;
 virtual	UNROLL_META_INSTANTIATE_PROTO;
 virtual	UNROLL_META_CONNECT_PROTO;
 
-#if USE_MODULE_FOOTPRINT
 /**
 	Prototype for unique-creation pass.  
  */
 #define	CREATE_UNIQUE_PROTO						\
 	good_bool							\
 	create_unique(const unroll_context&, footprint&) const
-#else
-#define	CREATE_UNIQUE_PROTO						\
-	good_bool							\
-	create_unique(const unroll_context&) const
-#endif
 
 virtual	CREATE_UNIQUE_PROTO;
 

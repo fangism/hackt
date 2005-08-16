@@ -2,6 +2,10 @@
 
 2005-08-16	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-09:
+	  Cleaned up USE_MODULE_FOOTPRINT, committed to 1.
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-08:
 	  Module now contains a footprint!
 		Instead of allocating state in global pools, it now

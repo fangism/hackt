@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.1 2005/08/16 20:32:15 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.2 2005/08/16 21:10:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,7 +10,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -102,7 +101,6 @@ public:
 	connect_ports(const connection_references_type&, 
 		const unroll_context&);
 
-#if USE_MODULE_FOOTPRINT
 	void
 	allocate(footprint&);
 
@@ -112,17 +110,6 @@ public:
 
 	void
 	inherit_state(const this_type&, const footprint&);
-#else
-	void
-	allocate(void);
-
-	// const is bogus here (temporary workaround)
-	void
-	create_state(const this_type&);
-
-	void
-	inherit_state(const this_type&);
-#endif
 
 	// for each entry, re-link
 	void

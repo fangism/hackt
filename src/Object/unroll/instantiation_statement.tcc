@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.2.2 2005/08/16 20:32:16 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.2.3 2005/08/16 21:10:48 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -31,10 +31,7 @@
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
-#include "Object/devel_switches.h"			// temporary
-#if USE_MODULE_FOOTPRINT
 #include "Object/def/footprint.h"
-#endif
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -342,24 +339,14 @@ INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
-#if USE_MODULE_FOOTPRINT
 INSTANTIATION_STATEMENT_CLASS::create_unique(
-		const unroll_context& c, footprint& f) const
-#else
-INSTANTIATION_STATEMENT_CLASS::create_unique(const unroll_context& c) const
-#endif
-{
+		const unroll_context& c, footprint& f) const {
 	STACKTRACE("instantiation_statement::create_unique()");
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	INVARIANT(rr.good);
 	return type_ref_parent_type::create_unique_state(
-#if USE_MODULE_FOOTPRINT
-		*this->inst_base, crl, f
-#else
-		*this->inst_base, crl
-#endif
-	);
+		*this->inst_base, crl, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.1 2005/08/16 20:32:14 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.2 2005/08/16 21:10:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -16,13 +16,10 @@
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
-#if USE_MODULE_FOOTPRINT
-#include "Object/def/footprint.h"
-#endif
 
 namespace ART {
 namespace entity {
+class footprint;
 using std::ostream;
 using std::istream;
 using util::ring_node_derived;
@@ -175,7 +172,6 @@ public:
 	instantiate(const container_ptr_type p, const unroll_context&);
 
 	// really shouldn't be const...
-#if USE_MODULE_FOOTPRINT
 	size_t
 	allocate_state(footprint&) const;
 
@@ -184,16 +180,6 @@ public:
 
 	void
 	inherit_subinstances_state(const this_type&, const footprint&);
-#else
-	size_t
-	allocate_state(void) const;
-
-	void
-	merge_allocate_state(this_type&);
-
-	void
-	inherit_subinstances_state(const this_type&);
-#endif
 
 	/**
 		Attaches actual parameters to this alias.  

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.2 2005/08/16 20:32:14 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.3 2005/08/16 21:10:46 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -15,7 +15,6 @@
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/common/multikey_index.h"
-#include "Object/devel_switches.h"		// temporary
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
@@ -185,19 +184,12 @@ virtual	INSTANTIATE_INDICES_PROTO = 0;
 /**
 	Prototype for allocating unique state during create phase.
  */
-#if USE_MODULE_FOOTPRINT
 #define	CREATE_UNIQUE_STATE_PROTO					\
 	good_bool							\
 	create_unique_state(const const_range_list&, footprint&)
-#else
-#define	CREATE_UNIQUE_STATE_PROTO					\
-	good_bool							\
-	create_unique_state(const const_range_list&)
-#endif
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
-#if USE_MODULE_FOOTPRINT
 virtual	void
 	allocate_state(footprint&) = 0;
 
@@ -207,17 +199,6 @@ virtual	void
 virtual	void
 	inherit_created_state(const physical_instance_collection&, 
 		const footprint&) = 0;
-#else
-virtual	void
-	allocate_state(void) = 0;
-
-virtual	void
-	merge_created_state(physical_instance_collection&) = 0;
-
-virtual	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&) = 0;
-#endif
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -336,7 +317,6 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
-#if USE_MODULE_FOOTPRINT
 	void
 	allocate_state(footprint&);
 
@@ -346,16 +326,6 @@ public:
 	void
 	inherit_created_state(const physical_instance_collection&, 
 		const footprint&);
-#else
-	void
-	allocate_state(void);
-
-	void
-	merge_created_state(physical_instance_collection&);
-
-	void
-	inherit_created_state(const physical_instance_collection&);
-#endif
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -435,7 +405,6 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
-#if USE_MODULE_FOOTPRINT
 	void
 	allocate_state(footprint&);
 
@@ -445,16 +414,6 @@ public:
 	void
 	inherit_created_state(const physical_instance_collection&, 
 		const footprint&);
-#else
-	void
-	allocate_state(void);
-
-	void
-	merge_created_state(physical_instance_collection&);
-
-	void
-	inherit_created_state(const physical_instance_collection&);
-#endif
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

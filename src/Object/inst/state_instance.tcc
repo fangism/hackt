@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.2.4.2 2005/08/16 20:32:15 fang Exp $
+	$Id: state_instance.tcc,v 1.2.4.3 2005/08/16 21:10:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -9,9 +9,6 @@
 
 #include <iostream>
 #include "Object/inst/state_instance.h"
-#if !USE_MODULE_FOOTPRINT
-#include "Object/inst/instance_pool.h"
-#endif
 #include "util/stacktrace.h"
 
 namespace ART {
@@ -20,17 +17,6 @@ namespace entity {
 
 //=============================================================================
 // class state_instance method definitions
-
-#if !USE_MODULE_FOOTPRINT
-/**
-	State instance pool, currently with hard-coded pool chunk size.  
-	This is the static initialization.  
-	TODO: use class_traits to give each pool different chunk size.  
- */
-STATE_INSTANCE_TEMPLATE_SIGNATURE
-typename STATE_INSTANCE_CLASS::pool_type
-STATE_INSTANCE_CLASS::pool(class_traits<Tag>::instance_pool_chunk_size);
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
