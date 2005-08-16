@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.11 2005/08/08 23:08:33 fang Exp $
+	$Id: stacktrace.h,v 1.11.2.1 2005/08/16 03:50:22 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -18,12 +18,18 @@
 #endif
 
 
+#if defined(HAVE_CASSERT) && HAVE_CASSERT
 #include <cassert>
+#else
+#include <assert.h>
+#endif
 
 //=============================================================================
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
 #include "util/cppcat.h"		// for the UNIQUIFY macros
+#include "util/attributes.h"
+
 #define	USING_STACKTRACE	using util::stacktrace;
 /**
 	The macro that keeps track of scope and call stacks.  
@@ -188,7 +194,7 @@ public:
 	static
 	void
 	full_dump(void);
-};	// end class stacktrace
+} __ATTRIBUTE_UNUSED__ ;	// end class stacktrace
 
 //-----------------------------------------------------------------------------
 /**
@@ -226,7 +232,7 @@ public:
 struct stacktrace::echo {
 	echo(const int i = 1);
 	~echo();
-};	// end struct echo
+} __ATTRIBUTE_UNUSED__ ;	// end struct echo
 
 //-----------------------------------------------------------------------------
 /**
@@ -236,7 +242,7 @@ struct stacktrace::echo {
 struct stacktrace::redirect {
 	redirect(ostream&);
 	~redirect();
-};	// end struct redirect
+} __ATTRIBUTE_UNUSED__ ;	// end struct redirect
 
 //=============================================================================
 

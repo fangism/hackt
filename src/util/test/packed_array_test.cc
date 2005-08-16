@@ -1,9 +1,9 @@
 /**
 	\file "packed_array_test.cc"
-	$Id: packed_array_test.cc,v 1.6 2005/07/20 21:01:02 fang Exp $
+	$Id: packed_array_test.cc,v 1.6.10.1 2005/08/16 03:50:37 fang Exp $
  */
 
-#include "packed_array.tcc"
+#include "util/packed_array.tcc"
 
 using util::packed_array;
 using util::packed_array_generic;
@@ -11,7 +11,7 @@ using util::multikey;
 using util::multikey_generic;
 using util::multikey_generator;
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::inner_product;
 
 typedef	multikey_generic<size_t>		generic_key_type;
@@ -20,7 +20,7 @@ typedef	packed_array<3, size_t, bool>		bool_3d;
 typedef	packed_array_generic<size_t, int>	int_3d;
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 {
 	// testing simple construction of scalar using multikey
 	// to specific (0) dimensions.  

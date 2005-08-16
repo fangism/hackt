@@ -1,8 +1,19 @@
 "README"
 
-	$Id: README,v 1.1 2004/12/05 05:07:56 fang Exp $
+	$Id: README,v 1.1.92.1 2005/08/16 03:50:25 fang Exp $
 
 Why the hell is there an STL directory?
+
+New reason:
+
+The location of some Standard Template Library (STL) files has moved
+slightly from one compiler version to the next, especially with
+gcc from 2.95 to 4.x.  (Where is that damn hash_map?)  
+We wrap the headers in our own files, sprinkled with configure magic 
+to make our header files "just work."  
+
+
+Old reason:
 
 The STL files contain both declarations and definitions of the
 standard containers.  Consequentially, code that uses these containers

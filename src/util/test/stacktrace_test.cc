@@ -4,11 +4,11 @@
  */
 
 #include <iostream>
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 #define	ENABLE_STACKTRACE	1
 
-#include "stacktrace.h"
+#include "util/stacktrace.h"
 
 using util::stacktrace;
 
@@ -43,19 +43,19 @@ f_g(void) {
 }
 
 float
-dude_wheres_my_prototype(const char* a, int b[4]) {
+dude_wheres_my_prototype(const char*, int[4]) {
 	STACKTRACE_BRIEF;
 	return 0.0;
 }
 
 float
-verbose_function_trace(const char* a, int b[4]) {
+verbose_function_trace(const char*, int[4]) {
 	STACKTRACE_VERBOSE;
 	return 0.0;
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	STACKTRACE_VERBOSE;
 	static int four[4];
 	{

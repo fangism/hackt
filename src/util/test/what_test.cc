@@ -1,17 +1,17 @@
 /**
 	\file "what_test.cc"
-	$Id: what_test.cc,v 1.4 2005/03/01 04:51:00 fang Exp $
+	$Id: what_test.cc,v 1.4.48.1 2005/08/16 03:50:39 fang Exp $
  */
 
 #include <iostream>
 
 #define	UTIL_WHAT_PARTIAL_SPECIALIZATIONS	1
-#include "what.tcc"
+#include "util/what.tcc"
 
 #define	DEBUG_LIST_VECTOR_POOL		1	// pre-define to enable debug
-#include "memory/list_vector_pool.tcc"
+#include "util/memory/list_vector_pool.tcc"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::what;
 using util::memory::list_vector_pool;
 
@@ -44,7 +44,7 @@ SPECIALIZE_UTIL_WHAT(Bar<Ick>, "Bar<Ick>")
 }
 
 int
-main(int argc, char* argv) {
+main(int, char*[]) {
 	cerr << what<Foo>::name() << endl;
 	cerr << what<Ick>::name() << endl;
 	cerr << what<Yum>::name() << endl;

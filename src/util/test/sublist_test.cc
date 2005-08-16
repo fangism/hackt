@@ -1,14 +1,14 @@
 /**
 	\file "sublist_test.cc"
 	Test for sublist structure.  
-	$Id: sublist_test.cc,v 1.3 2004/12/05 05:08:29 fang Exp $
+	$Id: sublist_test.cc,v 1.3.92.1 2005/08/16 03:50:38 fang Exp $
  */
 
 #include <iostream>
-#include "sublist.tcc"
-#include "STL/list.tcc"
+#include "util/sublist.tcc"
+#include "util/STL/list.tcc"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 USING_LIST
 using namespace	util;
 
@@ -34,7 +34,7 @@ ostream& operator << (ostream& o, const sublist<T>& l) {
 	return o;
 }
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 	list<char> alphabet;
 	{
 	char c = 'a';

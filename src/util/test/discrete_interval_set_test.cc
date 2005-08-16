@@ -1,13 +1,13 @@
 /**
 	\file "discrete_interval_set_test.cc"
 	Testing discrete_interval_set data structure.  
-	$Id: discrete_interval_set_test.cc,v 1.4 2005/02/27 22:54:30 fang Exp $
+	$Id: discrete_interval_set_test.cc,v 1.4.50.1 2005/08/16 03:50:33 fang Exp $
  */
 
 #include <iostream>
-#include "discrete_interval_set.tcc"
+#include "util/discrete_interval_set.tcc"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::map;
 using util::discrete_interval_set;
 
@@ -16,7 +16,7 @@ typedef	discrete_interval_set<long>		long_ranges;
 static void map_test(void);
 static void overlap_test(void);
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 if (0)	map_test();
 if (0)	overlap_test();
 

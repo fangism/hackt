@@ -2,7 +2,7 @@
 	\file "util/memory/thread_lock.cc"
 	Thread lock implementation for allocators.  
 
-	$Id: thread_lock.cc,v 1.4 2005/05/10 04:51:34 fang Exp $
+	$Id: thread_lock.cc,v 1.4.28.1 2005/08/16 03:50:31 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_THREAD_LOCK_CC__
@@ -13,6 +13,7 @@
 #if VERBOSE_LOCK
 #include <iostream>
 #endif
+#include "util/macros.h"
 #include "util/memory/thread_lock.h"
 
 namespace util {
@@ -31,23 +32,23 @@ struct pool_thread_lock<true>::acquire_message {
 	}
 
 	~acquire_message() { cerr << "got it." << endl; }
-};
+} __ATTRIBUTE_UNUSED__ ;
 
 struct pool_thread_lock<true>::release_message {
 	release_message() { cerr << "releasing lock... "; }
 	~release_message() { cerr << "released." << endl; }
-}
+} __ATTRIBUTE_UNUSED__ ;
 #else
 struct pool_thread_lock<true>::acquire_message {
 	acquire_message(mutex_type*) { }
-};
-struct pool_thread_lock<true>::release_message { };
+} __ATTRIBUTE_UNUSED__ ;
+struct pool_thread_lock<true>::release_message { } __ATTRIBUTE_UNUSED__ ;
 #endif
 
 pool_thread_lock<true>::pool_thread_lock(mutex_type* const m) : the_mutex(m) {
 #if THREADED_ALLOC
 	INVARIANT(m);
-	acquire_message msg(the_mutex);
+	const acquire_message msg(the_mutex);
 	// NDEBUG WILL DISABLE THIS! FIX ME!
 	assert(!pthread_mutex_lock(the_mutex));
 #endif
@@ -55,7 +56,7 @@ pool_thread_lock<true>::pool_thread_lock(mutex_type* const m) : the_mutex(m) {
 
 pool_thread_lock<true>::~pool_thread_lock() {
 #if THREADED_ALLOC
-	release_message msg;
+	const release_message msg();
 	// NDEBUG WILL DISABLE THIS! FIX ME!
 	assert(!pthread_mutex_unlock(the_mutex));
 #endif

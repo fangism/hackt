@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.20 2005/08/08 23:08:32 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.20.2.1 2005/08/16 03:50:21 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -31,6 +31,7 @@
 #include "util/new_functor.tcc"
 #include "util/IO_utils.tcc"
 #include "util/what.tcc"
+#include "util/attributes.h"
 
 #if ENABLE_STACKTRACE
 #include "util/sstream.h"
@@ -89,8 +90,9 @@ template <class T>
 int
 persistent_object_manager::register_persistent_type(void) {
 	typedef	persistent_traits<T>	traits_type;
-	reconstruction_function_map_type& m = reconstruction_function_map();
-	const persistent::hash_key& type_key = traits_type::type_key;
+	// need to maek sure map and type key are initialized
+	reconstruction_function_map_type& m __ATTRIBUTE_UNUSED__ =
+		reconstruction_function_map();
 	const aux_alloc_arg_type sub_index = traits_type::sub_index;
 	const reconstruct_function_ptr_type
 		cf = &traits_type::empty_constructor;

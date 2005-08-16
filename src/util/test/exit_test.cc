@@ -2,12 +2,12 @@
 	\file "exit_test.cc"
 	Demonstration that calling exit(1) will result in non-fatal
 	memory leaks, as reported by the static list_vector_pool.  
-	$Id: exit_test.cc,v 1.3 2005/05/19 18:43:38 fang Exp $
+	$Id: exit_test.cc,v 1.3.24.1 2005/08/16 03:50:33 fang Exp $
  */
 
 #include <list>
 #include "pooled_thing.h"
-#include "memory/count_ptr.tcc"
+#include "util/memory/count_ptr.tcc"
 
 using util::memory::count_ptr;
 
@@ -29,7 +29,7 @@ add_to_list(list_type& l, const int v) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	list_type the_list;
 	int i = 0;
 	for ( ; i<20; i++) {

@@ -1,17 +1,17 @@
 /**
 	\file "integer_traits_test.cc"
 	Testing compile-time integer traits facilities.
-	$Id: integer_traits_test.cc,v 1.3 2005/02/27 22:54:30 fang Exp $
+	$Id: integer_traits_test.cc,v 1.3.50.1 2005/08/16 03:50:34 fang Exp $
  */
 
 #include <string>
 #include <iostream>
-#include "numeric/integer_traits.h"
-#include "what.tcc"
+#include "util/numeric/integer_traits.h"
+#include "util/what.tcc"
 
 using std::string;
 using namespace util::numeric;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::what;
 using util::ifthenelse_value;
 
@@ -110,7 +110,7 @@ test_value(void) {
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 
 	test_value<0>();
 	test_value<1>();

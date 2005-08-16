@@ -1,24 +1,24 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.6 2005/03/01 04:51:00 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.6.48.1 2005/08/16 03:50:37 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
 
-#include "memory/excl_ptr.h"
+#include "util/memory/excl_ptr.h"
 #include "var.h"
 
 using std::vector;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using namespace util::memory;
 
 void basic_vector_test(void);
 void polymorph_test(void);
 void const_polymorph_test(void);
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 	basic_vector_test();
 	polymorph_test();
 	const_polymorph_test();

@@ -1,15 +1,15 @@
 /**
 	\file "chunk_map_pool_test.cc"
 	Testing functionality of chunk_map_pool allocator.  
-	$Id: chunk_map_pool_test.cc,v 1.3 2005/08/08 16:51:16 fang Exp $
+	$Id: chunk_map_pool_test.cc,v 1.3.4.1 2005/08/16 03:50:32 fang Exp $
  */
 
-#include "numeric/bigger_ints.h"
-#include "memory/chunk_map_pool.tcc"
-#include "memory/excl_ptr.h"
+#include "util/numeric/bigger_ints.h"
+#include "util/memory/chunk_map_pool.tcc"
+#include "util/memory/excl_ptr.h"
 #include <iostream>
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using util::memory::chunk_map_pool_chunk;
 using util::memory::chunk_map_pool;
 using util::memory::excl_ptr;
@@ -52,9 +52,11 @@ static
 void
 large_chunk_test(void);
 
+#if ENABLE_HUGE_CHUNK
 static
 void
 huge_chunk_test(void);
+#endif
 
 static
 void
@@ -68,12 +70,14 @@ static
 void
 large_pool_test(void);
 
+#if ENABLE_HUGE_CHUNK
 static
 void
 huge_pool_test(void);
+#endif
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	small_chunk_test();
 	medium_chunk_test();
 	large_chunk_test();

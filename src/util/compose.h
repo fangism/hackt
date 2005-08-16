@@ -7,14 +7,19 @@
 	We've kept the original namespace to attribute credit to its source.  
 	The original source can be found at:
 	http://www.acm.caltech.edu/~seanm/projects/ads/html/compose_8h-source.html
-	$Id: compose.h,v 1.7 2005/05/10 04:51:22 fang Exp $
+
+	TODO: use config.h to determine what definitions are missing, 
+		whether or not additional functional headers are available.
+	$Id: compose.h,v 1.7.28.1 2005/08/16 03:50:20 fang Exp $
  */
 
 #ifndef	__UTIL_COMPOSE_H__
 #define	__UTIL_COMPOSE_H__
 
+// #include "config.h"
 #include <functional>
 // note: <ext/functional> contains SGI extensions for some of these...
+// also check for <tr1/functional>
 
 #define	USING_UTIL_COMPOSE						\
 using ADS::unary_compose;						\

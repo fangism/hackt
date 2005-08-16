@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/destruction_policy.tcc"
 	Implementation of policy-specific explicit destructor invokers.  
-	$Id: destruction_policy.tcc,v 1.5 2005/06/21 21:26:40 fang Exp $
+	$Id: destruction_policy.tcc,v 1.5.16.1 2005/08/16 03:50:31 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DESTRUCTION_POLICY_TCC__
@@ -31,14 +31,14 @@ eager_destroy(T* const p, const eager_destruction_tag) {
 template <class T>
 inline
 void
-eager_destroy(T* const p, const lazy_destruction_tag) {
+eager_destroy(T* const, const lazy_destruction_tag) {
 	// do nothing, absolutely nothing!
 }
 
 template <class T>
 inline
 void
-lazy_destroy(T* const p, const eager_destruction_tag) {
+lazy_destroy(T* const, const eager_destruction_tag) {
 	// do nothing, absolutely nothing!
 }
 
@@ -54,13 +54,13 @@ lazy_destroy(T* const p, const lazy_destruction_tag) {
 template <class T>
 inline
 void
-eager_construct(T* const p, const eager_destruction_tag) {
+eager_construct(T* const, const eager_destruction_tag) {
 }
 
 template <class T>
 inline
 void
-eager_construct(T* const p, const lazy_destruction_tag) {
+eager_construct(T* const, const lazy_destruction_tag) {
 }
 
 template <class T>
@@ -73,7 +73,7 @@ lazy_construct(T* const p, const eager_destruction_tag) {
 template <class T>
 inline
 void
-lazy_construct(T* const p, const lazy_destruction_tag) {
+lazy_construct(T* const, const lazy_destruction_tag) {
 }
 
 //-----------------------------------------------------------------------------

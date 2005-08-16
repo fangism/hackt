@@ -1,18 +1,18 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.5 2005/02/27 22:54:31 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.5.50.1 2005/08/16 03:50:35 fang Exp $
  */
 
 #include <iostream>
-#include "qmap.tcc"
+#include "util/qmap.tcc"
 
-#include "multidimensional_sparse_set.tcc"
-#include "memory/excl_ptr.h"
+#include "util/multidimensional_sparse_set.tcc"
+#include "util/memory/excl_ptr.h"
 
-#include "STL/list.tcc"
+#include "util/STL/list.tcc"
 USING_LIST
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 using std::pair;
 using namespace util::memory;
@@ -23,7 +23,7 @@ int
 test(void);
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	test<int, pair<int,int>, list>();
 //	test<int, pair<int,int>, sublist>();
 //	test<const int, pair<const int, const int>, list>();	// nonsense

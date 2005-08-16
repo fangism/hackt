@@ -1,21 +1,22 @@
 /**
 	'static_count_ptr_test.cc"
 	Testing "unsafe" uses of count_ptr.  
-	$Id: static_count_ptr_test.cc,v 1.3 2005/05/19 18:43:39 fang Exp $
+	$Id: static_count_ptr_test.cc,v 1.3.24.1 2005/08/16 03:50:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
 
 #define	ENABLE_STATIC_TRACE		0
-#include "static_trace.h"
+#include "util/static_trace.h"
 STATIC_TRACE_BEGIN("static_count_ptr_test::main")
 
 #include <iostream>
-#include "memory/count_ptr.h"
-#include "memory/list_vector_pool.h"
+#include "util/memory/count_ptr.h"
+#include "util/memory/list_vector_pool.h"
 #include "named_pooled_thing.h"
-#include "stacktrace.h"
-#include "using_ostream.h"
+#include "util/stacktrace.h"
+#include "util/using_ostream.h"
+#include "util/attributes.h"
 
 USING_STACKTRACE
 using namespace util::memory;
@@ -31,12 +32,12 @@ factory_func(void) {
 	static named_thing* local_obj = new named_thing;
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* local_count = NEW_SIZE_T;
-	static const size_t zero = (*local_count = 0);
+	static const size_t zero __ATTRIBUTE_UNUSED__ = (*local_count = 0);
 	return ref_type(local_obj, local_count);
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	STACKTRACE_VERBOSE;
 #if 1
 	static const ref_type static_ref = factory_func();

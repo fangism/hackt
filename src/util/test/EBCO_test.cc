@@ -1,5 +1,5 @@
 #include <iostream>
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 class A { };
 class B { };
@@ -10,7 +10,7 @@ class CD : public C, public D { };
 class ABCD : public AB, public CD { };
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	cout << "sizeof(A) = " << sizeof(A) << endl;
 	cout << "sizeof(B) = " << sizeof(B) << endl;
 	cout << "sizeof(C) = " << sizeof(C) << endl;

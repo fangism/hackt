@@ -1,13 +1,13 @@
 /**
 	\file "link_mod_b.h"
 	Testing ld linker characteristics.
-	$Id: link_mod_b.h,v 1.2 2005/03/01 21:26:49 fang Exp $
+	$Id: link_mod_b.h,v 1.2.46.1 2005/08/16 03:50:34 fang Exp $
  */
 
 #ifndef	__POOL_MODULE_B_H__
 #define	__POOL_MODULE_B_H__
 
-#include "what.h"
+#include "util/what.h"
 
 using util::what;
 

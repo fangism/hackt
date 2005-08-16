@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.10 2005/08/04 23:02:55 fang Exp $
+	$Id: stacktrace.cc,v 1.10.6.1 2005/08/16 03:50:22 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -13,9 +13,7 @@ STATIC_TRACE_BEGIN("stacktrace")
 
 #include "config.h"
 
-#if HAVE_PTHREAD_H
-#include <pthread.h>
-#endif
+#include "util/pthread.h"
 #include <iostream>
 #include <iterator>
 #include <string>
@@ -94,8 +92,9 @@ stacktrace::manager::get_stack_text(void) {
 	static stack_text_type* ptr = new stack_text_type;
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* const count = NEW_SIZE_T;
-	static const size_t zero = (*count = 0);
-	static const int check = (INVARIANT(ptr->empty()), 0);
+	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);
+	static const int check __ATTRIBUTE_UNUSED__ =
+		(INVARIANT(ptr->empty()), 0);
 	return return_type(ptr, count);
 }
 
@@ -107,8 +106,8 @@ stacktrace::manager::get_stack_indent(void) {
 	static stack_text_type* const ptr = new stack_text_type;
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* const count = NEW_SIZE_T;
-	static const size_t zero = (*count = 0);
-	static const int check =
+	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);
+	static const int check __ATTRIBUTE_UNUSED__ =
 		(INVARIANT(ptr->empty()), INVARIANT(!ptr->size()), 0);
 	return return_type(ptr, count);
 }
@@ -124,7 +123,7 @@ stacktrace::manager::get_stack_echo(void) {
 	static const int init_once = (stack_echo->push(1), 1);
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* const count = NEW_SIZE_T;
-	static const size_t zero = (*count = 0);
+	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);
 	static const return_type ret(stack_echo, count);
 	INVARIANT(init_once && !stack_echo->empty());
 	return return_type(stack_echo, count);
@@ -141,7 +140,7 @@ stacktrace::manager::get_stack_streams(void) {
 	static const int init_once = (stack_streams->push(&cerr), 1);
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* const count = NEW_SIZE_T;
-	static const size_t zero = (*count = 0);
+	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);
 	static const return_type ret(stack_streams, count);
 	INVARIANT(init_once && !stack_streams->empty());
 	return return_type(stack_streams, count);

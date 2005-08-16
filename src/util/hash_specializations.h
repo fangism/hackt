@@ -3,21 +3,36 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.7 2005/05/10 04:51:23 fang Exp $
+	$Id: hash_specializations.h,v 1.7.28.1 2005/08/16 03:50:21 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
 #define	__UTIL_HASH_SPECIALIZATIONS_H__
 
-#include "util/STL/hash_map.h"		// wrapper for <hash_map>
+#include "config.h"
 
+#include "util/STL/hash_map_fwd.h"	// needed for namespace definition
 #include <string>
+
+#if defined(HAVE_EXT_STL_HASH_FUN_H) && HAVE_EXT_STL_HASH_FUN_H
+#include <ext/stl_hash_fun.h>		// from gcc-3.x
+#elif defined(HAVE_EXT_HASH_FUN_H) && HAVE_EXT_HASH_FUN_H
+#include <ext/hash_fun.h>		// from gcc-4.x
+#elif defined(HAVE_STL_HASH_FUN_H) && HAVE_STL_HASH_FUN_H
+#include <stl_hash_fun.h>		// from gcc-2.95
+#else	// fallback:
+#include "util/STL/hash_map.h"
+#endif
 
 //=============================================================================
 // template specializations
 
 namespace HASH_MAP_NAMESPACE {
 using std::string;
+
+// forward declare the specialization for const char*
+template <>
+struct hash<const char*>;
 
 /**
 	Explicit template specialization of hash of a string class, 
@@ -34,11 +49,15 @@ struct hash<string> {
 	May want to shuffle around bits because pointers tend to be aligned, 
 	rendering the lower bits useless.  
 	Caution: don't want to make this machine-dependent.
+	TODO: use configure to determin correct size operands for doing this.
+		This will be critical once pointers are 64b.  
+	NOTE: wouldn't unsigned be better?
  */
 template <class T>
 struct hash<const T*> {
 	size_t operator() (const T* x) const {
-		register const long y = long(x);	// C-style cast!
+		// need something with same size as raw pointer
+		register const long y = long(x);
 		return hash<long>()(y ^ (y >> 7));
 	}
 };	// end hash<>

@@ -5,28 +5,26 @@
 	IMPORTANT NOTE:
 	The deprecated <strstream> in older versions of some compilers is 
 	known to suck, because of error-prone memory non-management.  
-	$Id: sstream.h,v 1.4 2005/05/10 04:51:30 fang Exp $
+	$Id: sstream.h,v 1.4.28.1 2005/08/16 03:50:22 fang Exp $
  */
 
 
 #ifndef	__UTIL_SSTREAM_H__
 #define	__UTIL_SSTREAM_H__
 
-// should really be configured...
-// #include "config.h"
+#include "config.h"
 
-// compiler-version dependent location of sstream
-#ifdef  __GNUC__
-#if	(__GNUC__ >= 3)
+#if defined(HAVE_SSTREAM) && HAVE_SSTREAM
 #include <sstream>
-
-#else	// (__GNUC__ <= 2)
+#elif defined(HAVE_STRSTREAM) && HAVE_STRSTREAM
 #include <strstream>		// BAD
-#error	"DO NOT use the deprecated strstream classes!"
+#warn	WARNING: <strstream> is deprecated and suffers from memory mis-management.
+#elif defined(HAVE_STRINGSTRING) && HAVE_STRINGSTREAM
+// reminiscent of some ancient pre-standard compilers and libraries
+#include <stringstream>
+#else
+#error	You asked for "sstream.h" but I could not find a candidate header.
 #endif
-#else	// __GNUC__
-DIE DIE DIE			// your guess is as good as mine
-#endif	// __GNUC__
 
 #endif	// __UTIL_SSTREAM_H__
 

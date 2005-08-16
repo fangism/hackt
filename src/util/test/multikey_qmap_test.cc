@@ -2,19 +2,19 @@
 	\file "multikey_qmap_test.cc"
 	Test for multidimensional, queryable map with multidimensional keys.  
 	Copied from "multidimensional_qmap_test.cc" with a few lines changes
-	$Id: multikey_qmap_test.cc,v 1.7 2005/02/27 22:54:31 fang Exp $
+	$Id: multikey_qmap_test.cc,v 1.7.50.1 2005/08/16 03:50:36 fang Exp $
  */
 
 #include <iostream>
 #include <string>
-#include "sstream.h"
-#include "qmap.tcc"
-#include "multikey_qmap.tcc"
-#include "STL/list.tcc"
+#include "util/sstream.h"
+#include "util/qmap.tcc"
+#include "util/multikey_qmap.tcc"
+#include "util/STL/list.tcc"
 
 USING_LIST
 using std::string;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::ostringstream;
 using util::qmap;
 using util::multikey_map;
@@ -30,7 +30,7 @@ typedef	multikey_map<3, int, string, qmap>	test_map3d_type;
 #endif
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	test_map3d_type	str_map;
 	str_map.dump(cout << endl << "Map: " << endl);
 	cout << "Map's population = " << str_map.population() << endl;

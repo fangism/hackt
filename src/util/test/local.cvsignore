@@ -5,6 +5,8 @@
 Makefile
 Makefile.in
 *.lo
+*.ii
+*.s
 core.*
 *.core
 *.swp

@@ -2,14 +2,13 @@
 	\file "util/numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.7 2005/05/10 04:51:34 fang Exp $
+	$Id: integer_traits.h,v 1.7.28.1 2005/08/16 03:50:32 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
 #define	__UTIL_NUMERIC_INTEGER_TRAITS_H__
 
-#include <cstddef>
-	// for size_t
+#include "util/size_t.h"
 #include "util/ifthenelse.h"
 
 //=============================================================================
