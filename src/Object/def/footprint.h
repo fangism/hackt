@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.2 2005/08/11 00:20:17 fang Exp $
+	$Id: footprint.h,v 1.1.2.3 2005/08/16 03:47:54 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -132,6 +132,12 @@ public:
 
 	bool
 	is_created(void) const { return created; }
+
+	void
+	mark_unrolled(void) { unrolled = true; }
+
+	void
+	mark_created(void) { created = true; }
 
 #if 0
 	/// import instance map from scopespace
