@@ -1,19 +1,13 @@
 /**
 	\file "common/TODO.h"
 	Macros for maintainer's notes in code.  
-	$Id: TODO.h,v 1.1.2.2 2005/08/15 21:12:26 fang Exp $
+	$Id: TODO.h,v 1.1.2.3 2005/08/16 03:48:49 fang Exp $
  */
 
 #ifndef	__COMMON_TODO_H__
 #define	__COMMON_TODO_H__
 
 #include "util/macros.h"
-
-#if 0
-#define	FINISH_ME_WHERE(who, fn, file, line)				\
-	std::cerr << #who ", finish writing " 				\
-		#fn " at " #file ":" #line << std::endl
-#endif
 
 /**
 	Macro for maintainer and developers to remind oneself of TODO.
