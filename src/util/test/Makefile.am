@@ -164,8 +164,8 @@ AM_CPPFLAGS = -I$(srcdir)/../..
 # AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wpointer-arith \
-	-Wcast-qual -Wcast-align -Wconversion -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused-parameter -Wshadow \
+	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
 # C specific warnings
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 	-Wbad-function-cast -Wnested-externs

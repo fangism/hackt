@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.2.4.1 2005/08/11 00:20:19 fang Exp $
+	$Id: instance_pool.tcc,v 1.2.4.2 2005/08/16 04:37:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -17,6 +17,7 @@
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
 //=============================================================================

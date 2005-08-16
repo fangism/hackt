@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.5.4.2 2005/08/16 03:45:12 fang Exp $
+#	$Id: configure.ac,v 1.5.4.3 2005/08/16 04:37:32 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -121,7 +121,8 @@ AC_CHECK_HEADERS([bits/concept_check.h])
 AC_CHECK_HEADERS([bits/type_traits.h tr1/type_traits tr1/type_traits_fwd.h type_traits.h])
 # among these, only sstream should be used, the rest are long gone
 AC_CHECK_HEADERS([sstream strstream stringstream])
-AC_CHECK_HEADERS([tr1/boost_shared_ptr.h tr1/memory])
+# can't include <tr1/boost_shared_ptr.h> directly
+AC_CHECK_HEADERS([tr1/memory])
 AC_CHECK_HEADERS([tr1/tuple tr1/array])
 
 # compiler characteristic checks
