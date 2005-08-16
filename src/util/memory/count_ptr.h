@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.6.2.2 2005/08/16 04:37:34 fang Exp $
+	$Id: count_ptr.h,v 1.6.2.3 2005/08/16 04:44:02 fang Exp $
 
 	TODO:
 		* split into .tcc file
@@ -149,8 +149,8 @@ struct raw_count_ptr {
 	#include "util/attributes.h"
 	#define STATIC_RC_POOL_REF_INIT					\
 		static util::memory::ref_count_pool_type&		\
-		rc_pool_ref __ATTRIBUTE_UNUSED__			\
-		(*util::memory::get_ref_count_allocator_anchor())
+		rc_pool_ref __ATTRIBUTE_UNUSED__ =			\
+		*util::memory::get_ref_count_allocator_anchor()
 	#define	NEW_SIZE_T		rc_pool_ref.allocate()
 	#define	DELETE_SIZE_T(x)	rc_pool_ref.deallocate(x)
 	#define	VALIDATE_SIZE_T(x)	COUNT_PTR_INVARIANT(rc_pool_ref.contains(x))
