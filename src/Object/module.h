@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.3 2005/08/08 16:51:07 fang Exp $
+	$Id: module.h,v 1.3.4.1 2005/08/16 03:47:14 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -11,6 +11,11 @@
 #include "Object/common/util_types.h"
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
+#include "Object/devel_switches.h"
+
+#if USE_MODULE_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -43,6 +48,9 @@ protected:
 	 */
 	excl_ptr<name_space>			global_namespace;
 
+#if USE_MODULE_FOOTPRINT
+	footprint				_footprint;
+#else
 	/**
 		Whether or not this entire module has been 
 		successfully unrolled.
@@ -53,6 +61,7 @@ protected:
 		uniquely allocated.  
 	 */
 	bool					created;
+#endif
 
 private:
 	module();
@@ -83,10 +92,22 @@ public:
 	dump(ostream& o) const;
 
 	bool
-	is_unrolled(void) const { return unrolled; }
+	is_unrolled(void) const {
+#if USE_MODULE_FOOTPRINT
+		return _footprint.is_unrolled();
+#else
+		return unrolled;
+#endif
+	}
 
 	bool
-	is_created(void) const { return created; }
+	is_created(void) const {
+#if USE_MODULE_FOOTPRINT
+		return _footprint.is_created();
+#else
+		return created;
+#endif
+	}
 
 	/**
 		Note: sequential scope has a const-version of this, 

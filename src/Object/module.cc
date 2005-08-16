@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.3 2005/08/08 16:51:07 fang Exp $
+ 	$Id: module.cc,v 1.3.4.1 2005/08/16 03:47:13 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -18,22 +18,11 @@
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
+#if !USE_MODULE_FOOTPRINT
 #include "Object/state_manager.h"
+#endif
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
-
-// conditional defines, after including "stacktrace.h"
-#if STACKTRACE_DESTRUCTORS
-	#define	STACKTRACE_DTOR(x)		STACKTRACE(x)
-#else
-	#define	STACKTRACE_DTOR(x)
-#endif
-
-#if STACKTRACE_PERSISTENTS
-	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
-#else
-	#define	STACKTRACE_PERSISTENT(x)
-#endif
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -61,14 +50,24 @@ using util::persistent_traits;
 module::module() :
 		persistent(), sequential_scope(),
 		name(""), global_namespace(NULL),
-		unrolled(false), created(false) {
+#if USE_MODULE_FOOTPRINT
+		_footprint()
+#else
+		unrolled(false), created(false)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
 		persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")),
-		unrolled(false), created(false) {
+#if USE_MODULE_FOOTPRINT
+		_footprint()
+#else
+		unrolled(false), created(false)
+#endif
+		{
 	NEVER_NULL(global_namespace);
 }
 
@@ -119,21 +118,25 @@ module::what(ostream& o) const {
 ostream&
 module::dump(ostream& o) const {
 	o << "In module created from: " << name;
-	if (unrolled)
+	if (is_unrolled())
 		o << " (unrolled)";
-	if (created)
+	if (is_created())
 		o << " (created)";
 	o << endl;
 
 	global_namespace->dump(o) << endl;
 
-	if (!unrolled) {
+	if (!is_unrolled()) {
 		o << "Sequential instance management (to unroll): " << endl;
 		return sequential_scope::dump(o);
 	}
-	if (created) {
+	if (is_created()) {
 		o << "Created state:" << endl;
+#if USE_MODULE_FOOTPRINT
+		_footprint.dump(o) << endl;
+#else
 		state_manager::dump_state(o) << endl;
+#endif
 	}
 	return o;
 }
@@ -146,7 +149,7 @@ module::dump(ostream& o) const {
 good_bool
 module::unroll_module(void) {
 	STACKTRACE("module::unroll_module()");
-	if (!unrolled) {
+	if (!is_unrolled()) {
 		STACKTRACE("not already unrolled, unrolling...");
 		// start with blank context
 		unroll_context c;
@@ -175,7 +178,11 @@ module::unroll_module(void) {
 			return good_bool(false);
 		}
 #endif
+#if USE_MODULE_FOOTPRINT
+		_footprint.mark_unrolled();
+#else
 		unrolled = true;
+#endif
 	}
 	return good_bool(true);
 }
@@ -193,14 +200,18 @@ module::create_unique(void) {
 	STACKTRACE("module::create_unique()");
 	if (!unroll_module().good)
 		return good_bool(false);
-	if (!created) {
+	if (!is_created()) {
 		STACKTRACE("not already created, creating...");
 		const unroll_context c;	// empty context
 		if (!sequential_scope::create_unique(c).good) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
+#if USE_MODULE_FOOTPRINT
+		_footprint.mark_created();
+#else
 		created = true;
+#endif
 	}
 	return good_bool(true);
 }
@@ -217,7 +228,11 @@ if (!m.register_transient_object(this,
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
+#if USE_MODULE_FOOTPRINT
+	_footprint.collect_transient_info_base(m);
+#else
 	state_manager::collect_state(m);
+#endif
 }
 // else already visited
 }
@@ -228,10 +243,16 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("module::write_object()");
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
+#if !USE_MODULE_FOOTPRINT
 	write_value(f, unrolled);
 	write_value(f, created);
+#endif
 	sequential_scope::write_object_base(m, f);
+#if USE_MODULE_FOOTPRINT
+	_footprint.write_object_base(m, f);
+#else
 	state_manager::write_state(m, f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -240,11 +261,17 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("module::load_object()");
 	read_string(f, name);
 	m.read_pointer(f, global_namespace);
+#if !USE_MODULE_FOOTPRINT
 	read_value(f, unrolled);
 	read_value(f, created);
+#endif
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
+#if USE_MODULE_FOOTPRINT
+	_footprint.load_object_base(m, f);
+#else
 	state_manager::load_state(m, f);
+#endif
 }
 
 //=============================================================================

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.4.2 2005/08/15 21:12:07 fang Exp $
+	$Id: devel_switches.h,v 1.1.4.3 2005/08/16 03:47:13 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -22,12 +22,20 @@
 #endif
 
 // leave this error enabled for released code
-#if 1
+#if 0
 #error	Production code should NOT include this header file.  
 #endif
 
 //=============================================================================
-// define your project-wide development switches here:
+// define your module-wide development switches here:
+
+/**
+	Whether the top-level module uses global instance pools
+	or local pools.  
+	We're striving to use footprint pools.  
+	Goal = 1.
+ */
+#define	USE_MODULE_FOOTPRINT				0
 
 //=============================================================================
 
