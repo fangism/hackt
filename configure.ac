@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.5.4.1 2005/08/15 21:12:03 fang Exp $
+#	$Id: configure.ac,v 1.5.4.2 2005/08/16 03:45:12 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -92,13 +92,37 @@ AC_SUBST(LIBTOOL_DEPS)
 LIBTOOL="$LIBTOOL --silent"
 
 AC_PROG_CXX
+# need to set LANG to C++ to check for C++ headers
+AC_LANG(C++)
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
-# AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
+# C++ wrappers to standard C headers
+AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
+# checking all possible locations of (some equivalent) header files
+# spanning versions gcc-2.95 to 4.x
+# I bet you didn't know some of these locations were ever used!
+# However, you're not supposed to use anything older than gcc-3.3 anyways...
+
+# where is that damn hash_map?
+AC_CHECK_HEADERS([ext/hash_map hash_map])
+# used mainly in "src/util/hash_specializations.h"
+AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
+AC_CHECK_HEADERS([ext/hash_set hash_set])
+AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
+AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
+AC_CHECK_HEADERS([ext/functional tr1/functional])
+# used in "src/util/string_fwd.h"
+AC_CHECK_HEADERS([bits/stringfwd.h])
+AC_CHECK_HEADERS([bits/concept_check.h])
+AC_CHECK_HEADERS([bits/type_traits.h tr1/type_traits tr1/type_traits_fwd.h type_traits.h])
+# among these, only sstream should be used, the rest are long gone
+AC_CHECK_HEADERS([sstream strstream stringstream])
+AC_CHECK_HEADERS([tr1/boost_shared_ptr.h tr1/memory])
+AC_CHECK_HEADERS([tr1/tuple tr1/array])
 
 # compiler characteristic checks
 AC_HEADER_STDBOOL

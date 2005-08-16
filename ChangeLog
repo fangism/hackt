@@ -1,8 +1,17 @@
 "ChangeLog"
 
+2005-08-15	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-07:
+	  configure.ac: added tons of standard C++ header tests.  
+		the src/util library now uses these heavily in 
+		including the right headers, most of which are
+		wrapped into configured headers for ease of use.  
+
+
 2005-08-14	David Fang	<fangism@users.sourceforge.net>
 
-	* ARTXX-00-01-04-main-00-55-fotprint-01-05-canonical-03:
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-03:
 	  Found some autoconf snippets I liked from ngspice
 		regarding readline and editline -- for future CLI use.  
 		Shamelessly copied them over (with attribution).  
