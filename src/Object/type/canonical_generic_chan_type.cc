@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.1.4.2 2005/08/15 21:12:21 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.1.4.3 2005/08/16 03:48:41 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -302,8 +302,6 @@ if (canonical_definition_ptr) {
 		return false;
 	} else {
 		if (param_list_ptr && t.param_list_ptr) {
-			const size_t num_strict =
-				canonical_definition_ptr->num_strict_formals();
 			// all parameters must match
 			const bool ret(param_list_ptr->
 				must_be_equivalent(*t.param_list_ptr));

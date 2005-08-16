@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.4 2005/08/15 21:12:22 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.5 2005/08/16 03:48:41 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -244,8 +244,6 @@ CANONICAL_TYPE_CLASS::must_be_connectibly_type_equivalent(
 		return false;
 	} else {
 		if (this->param_list_ptr && t.param_list_ptr) {
-			const size_t num_strict =
-				canonical_definition_ptr->num_strict_formals();
 			// all parameters must match
 			const bool ret(this->param_list_ptr->
 				must_be_equivalent(*t.param_list_ptr));

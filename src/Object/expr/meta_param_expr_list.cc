@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.4 2005/08/15 21:12:11 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.5 2005/08/16 03:48:37 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -536,8 +536,6 @@ const_param_expr_list::less_ptr::operator () (
 bool
 const_param_expr_list::operator < (const this_type& t) const {
 	INVARIANT(size() == t.size());
-	const parent_type& l(*this);
-	const parent_type& r(t);
 	return std::lexicographical_compare(
 		begin(), end(), t.begin(), t.end(), less_ptr());
 }
