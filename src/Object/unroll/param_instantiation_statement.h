@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.3.4.1 2005/08/15 21:12:26 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.3.4.2 2005/08/16 20:32:16 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -16,6 +16,9 @@
 #include "Object/traits/pbool_traits.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/expr/const_param_expr_list.h"
+#if USE_MODULE_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -101,12 +104,12 @@ protected:
 	static
 	good_bool
 	create_unique_state(value_collection_generic_type& v, 
-			const const_range_list& crl) {
-#if 0
-		return v.create_unique_state(crl);
-#else
-		return good_bool(true);
+			const const_range_list&
+#if USE_MODULE_FOOTPRINT
+			, footprint&
 #endif
+			) {
+		return good_bool(true);
 	}
 
 };      // end class instantiation_statement_type_ref_base
@@ -191,12 +194,12 @@ protected:
 	static
 	good_bool
 	create_unique_state(value_collection_generic_type& v, 
-			const const_range_list& crl) {
-#if 0
-		return v.create_unique_state(crl);
-#else
-		return good_bool(true);
+			const const_range_list&
+#if USE_MODULE_FOOTPRINT
+			, footprint&
 #endif
+			) {
+		return good_bool(true);
 	}
 };      // end class instantiation_statement_type_ref_base
 

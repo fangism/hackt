@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.3 2005/08/15 21:12:14 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.4 2005/08/16 20:32:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -47,6 +47,9 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
+#if USE_MODULE_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -258,7 +261,13 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 size_t
-INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
+INSTANCE_ALIAS_INFO_CLASS::allocate_state(
+#if USE_MODULE_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	if (this->instance_index)
 		return this->instance_index;
@@ -267,7 +276,11 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
 	_this.instance_index =
+#if USE_MODULE_FOOTPRINT
+		footprint_pool_getter<Tag>()(f).allocate(instance_type(*this));
+#else
 		instance_type::pool.allocate(instance_type(*this));
+#endif
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
 	// NOTE: can't _this.allocate_subinstances() yet because there
@@ -296,7 +309,11 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 #endif
 		i->instance_index = this->instance_index;
 		// recursive connections, merging ports.
+#if USE_MODULE_FOOTPRINT
+		_this.create_subinstance_state(*i, f);
+#else
 		_this.create_subinstance_state(*i);
+#endif
 		// instance_type::pool[this->instance_index] // self
 	}
 	// This must be done AFTER processing aliases because
@@ -305,7 +322,11 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
 	// Then remaining unaliased ports may be allocated, 
 	// once we can deduce that no further aliases exist.  
 	// a test case that demonstrates this is parser/connect/111.in
+#if USE_MODULE_FOOTPRINT
+	_this.allocate_subinstances(f);
+#else
 	_this.allocate_subinstances();
+#endif
 	return this->instance_index;
 }
 
@@ -315,7 +336,11 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(void) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
+INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t
+#if USE_MODULE_FOOTPRINT
+		, footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const size_t ind = this->instance_index;
 	const size_t tind = t.instance_index;
@@ -328,15 +353,23 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 			// possible both are already connected and allocated
 #if 1
 			if (ind != tind) {
+			typedef	typename instance_type::pool_type pool_type;
+			const pool_type& the_pool
+#if USE_MODULE_FOOTPRINT
+				// WTF, I can't just use (f) ?
+				(footprint_pool_getter<Tag>().operator()(f));
+#else
+				(instance_type::pool);
+#endif
 			ICE(cerr, 
 				cerr << "connecting "
 					"two instances already assigned to "
 					"different IDs: got " << ind <<
 					" and " << tind << endl;
-				instance_type::pool[ind].get_back_ref()
+				the_pool[ind].get_back_ref()
 					->dump_hierarchical_name(cerr << '\t')
 					<< endl;
-				instance_type::pool[tind].get_back_ref()
+				the_pool[tind].get_back_ref()
 					->dump_hierarchical_name(cerr << '\t')
 					<< endl;
 			)
@@ -346,14 +379,26 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
 #endif
 		} else {
 			// this already assigned, assign to t
+#if USE_MODULE_FOOTPRINT
+			t.inherit_subinstances_state(*this, f);
+#else
 			t.inherit_subinstances_state(*this);
+#endif
 		}
 	} else {
 		if (!tind) {
 			// neither has been created yet
+#if USE_MODULE_FOOTPRINT
+			t.allocate_state(f);
+#else
 			t.allocate_state();
+#endif
 		}
+#if USE_MODULE_FOOTPRINT
+		this->inherit_subinstances_state(t, f);
+#else
 		this->inherit_subinstances_state(t);
+#endif
 	}
 }
 
@@ -365,17 +410,31 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t) {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t) {
+INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t
+#if USE_MODULE_FOOTPRINT
+		, const footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!this->instance_index);
 	INVARIANT(t.instance_index);
 	iterator i(this->begin());
 	const iterator e(this->end());
-	const instance_type& inst(instance_type::pool[t.instance_index]);
+	const instance_type&
+#if USE_MODULE_FOOTPRINT
+		inst(footprint_pool_getter<Tag>()
+			.operator()(f)[t.instance_index]);
+#else
+		inst(instance_type::pool[t.instance_index]);
+#endif
 	for ( ; i!=e; i++) {
 		INVARIANT(!i->instance_index);
 		i->instance_index = t.instance_index;
+#if USE_MODULE_FOOTPRINT
+		i->inherit_state(inst, f);
+#else
 		i->inherit_state(inst);
+#endif
 	}
 }
 
@@ -1126,7 +1185,11 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges) {
+INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges
+#if USE_MODULE_FOOTPRINT
+		, footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	multikey_generator<D, pint_value_type> key_gen;
 	ranges.make_multikey_generator(key_gen);
@@ -1135,7 +1198,11 @@ INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges) {
 		// should be iterator, not const_iterator
 		const const_iterator iter(this->collection.find(key_gen));
 		INVARIANT(iter != collection.end());
+#if USE_MODULE_FOOTPRINT
+		iter->allocate_state(f);
+#else
 		iter->allocate_state();
+#endif
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	return good_bool(true);
@@ -1148,12 +1215,22 @@ INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges) {
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::allocate_state(void) {
+INSTANCE_ARRAY_CLASS::allocate_state(
+#if USE_MODULE_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	iterator i(collection.begin());
 	const iterator e(collection.end());
 	for ( ; i!=e; i++) {
+#if USE_MODULE_FOOTPRINT
+		i->allocate_state(f);
+#else
 		i->allocate_state();
+#endif
 	}
 }
 
@@ -1355,7 +1432,11 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p) {
+INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p
+#if USE_MODULE_FOOTPRINT
+		, footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
@@ -1369,7 +1450,7 @@ INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p) {
 			AS_A(const element_type&, *i)));
 		element_type& jj(const_cast<element_type&>(
 			AS_A(const element_type&, *j)));
-		ii.merge_allocate_state(jj);
+		ii.merge_allocate_state(jj, f);
 	}
 }
 
@@ -1377,7 +1458,11 @@ INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p) {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::inherit_created_state(
-		const physical_instance_collection& p) {
+		const physical_instance_collection& p
+#if USE_MODULE_FOOTPRINT
+		, const footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
@@ -1389,7 +1474,11 @@ INSTANCE_ARRAY_CLASS::inherit_created_state(
 		// we only intend to modify the value without modifying the key
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
+#if USE_MODULE_FOOTPRINT
+		ii.inherit_subinstances_state(*j, f);
+#else
 		ii.inherit_subinstances_state(*j);
+#endif
 	}
 }
 
@@ -1663,11 +1752,19 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges) {
+INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges
+#if USE_MODULE_FOOTPRINT
+		, footprint& f
+#endif
+		) {
 	STACKTRACE("instance_array<Tag,0>::create_unique_state()");
 	INVARIANT(ranges.empty());
 	INVARIANT(this->the_instance.valid());
+#if USE_MODULE_FOOTPRINT
+	return good_bool(this->the_instance.allocate_state(f));
+#else
 	return good_bool(this->the_instance.allocate_state());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1676,10 +1773,20 @@ INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges) {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::allocate_state(void) {
+INSTANCE_SCALAR_CLASS::allocate_state(
+#if USE_MODULE_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->the_instance.valid());
+#if USE_MODULE_FOOTPRINT
+	this->the_instance.allocate_state(f);
+#else
 	this->the_instance.allocate_state();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1786,20 +1893,36 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p) {
+INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p
+#if USE_MODULE_FOOTPRINT
+		, footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+#if USE_MODULE_FOOTPRINT
+	this->the_instance.merge_allocate_state(t.the_instance, f);
+#else
 	this->the_instance.merge_allocate_state(t.the_instance);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::inherit_created_state(
-		const physical_instance_collection& p) {
+		const physical_instance_collection& p
+#if USE_MODULE_FOOTPRINT
+		, const footprint& f
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+#if USE_MODULE_FOOTPRINT
+	this->the_instance.inherit_subinstances_state(t.the_instance, f);
+#else
 	this->the_instance.inherit_subinstances_state(t.the_instance);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

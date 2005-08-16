@@ -2,17 +2,18 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3 2005/08/08 16:51:09 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.1 2005/08/16 20:32:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
-// #include "Object/common/multikey_index.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
+class footprint;
 //=============================================================================
 // class instance_collection_base defined in "Object/inst/instance_collection_base.h"
 
@@ -75,6 +76,16 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
+#if USE_MODULE_FOOTPRINT
+virtual	void
+	allocate_state(footprint&) = 0;
+
+virtual	void
+	merge_created_state(this_type&, footprint&) = 0;
+
+virtual	void
+	inherit_created_state(const this_type&, const footprint&) = 0;
+#else
 virtual	void
 	allocate_state(void) = 0;
 
@@ -83,6 +94,7 @@ virtual	void
 
 virtual	void
 	inherit_created_state(const this_type&) = 0;
+#endif
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

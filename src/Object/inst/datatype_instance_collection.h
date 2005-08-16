@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.3.4.1 2005/08/15 21:12:13 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.3.4.2 2005/08/16 20:32:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -11,10 +11,12 @@
 #include "Object/type/canonical_type_fwd.h"		// for conditional
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/data_traits.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
 class data_type_reference;
+class footprint;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
@@ -76,7 +78,11 @@ virtual good_bool
 		const unroll_context&) = 0;
 
 virtual	good_bool
-	create_unique_state(const const_range_list&) = 0;
+	create_unique_state(const const_range_list&
+#if USE_MODULE_FOOTPRINT
+		, footprint&
+#endif
+		) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.3.4.1 2005/08/15 21:12:25 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.3.4.2 2005/08/16 20:32:16 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -13,6 +13,10 @@
 #include "Object/traits/class_traits.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
+#include "Object/devel_switches.h"
+#if USE_MODULE_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -155,8 +159,16 @@ protected:
 	static
 	good_bool
 	create_unique_state(instance_collection_generic_type& v, 
-			const const_range_list& crl) {
+			const const_range_list& crl
+#if USE_MODULE_FOOTPRINT
+			, footprint& f
+#endif
+			) {
+#if USE_MODULE_FOOTPRINT
+		return v.create_unique_state(crl, f);
+#else
 		return v.create_unique_state(crl);
+#endif
 	}
 
 	void

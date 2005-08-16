@@ -3,13 +3,14 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.3.4.1 2005/08/15 21:12:24 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.3.4.2 2005/08/16 20:32:16 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
 #define	__OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
 
 #include <iostream>
+#include "Object/devel_switches.h"		// temporary
 #include "Object/traits/data_traits.h"
 #include "Object/def/datatype_definition_base.h"
 #include "Object/type/data_type_reference.h"
@@ -18,6 +19,9 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
 #include "Object/inst/alias_empty.h"
+#if USE_MODULE_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -133,8 +137,16 @@ protected:
 	static
 	good_bool
 	create_unique_state(instance_collection_generic_type& v,
-			const const_range_list& crl) {
+			const const_range_list& crl
+#if USE_MODULE_FOOTPRINT
+			, footprint& f
+#endif
+			) {
+#if USE_MODULE_FOOTPRINT
+		return v.create_unique_state(crl, f);
+#else
 		return v.create_unique_state(crl);
+#endif
 	}
 
 	void

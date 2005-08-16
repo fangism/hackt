@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3 2005/08/08 16:51:10 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.1 2005/08/16 20:32:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -10,6 +10,10 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
+#include "Object/devel_switches.h"
+#if USE_MODULE_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -56,6 +60,22 @@ protected:
 		restore_parent_child_links();
 	}
 
+#if USE_MODULE_FOOTPRINT
+	void
+	create_subinstance_state(this_type& t, footprint& f) {
+		subinstances.create_state(t.subinstances, f);
+		// t.get_back_ref()->subinstances.create_state(subinstances);
+	}
+
+	template <class Tag>
+	void
+	inherit_state(const state_instance<Tag>& t, const footprint& f) {
+		subinstances.inherit_state(t.get_back_ref()->subinstances, f);
+	}
+
+	void
+	allocate_subinstances(footprint&);
+#else
 	void
 	create_subinstance_state(this_type& t) {
 		subinstances.create_state(t.subinstances);
@@ -70,6 +90,7 @@ protected:
 
 	void
 	allocate_subinstances(void);
+#endif
 
 public:
 	// just a forwarded call
@@ -123,8 +144,20 @@ protected:
 		Has no substructure, thus does not recur.  
 	 */
 	void
-	create_subinstance_state(const this_type&) const { }
+	create_subinstance_state(const this_type&
+#if USE_MODULE_FOOTPRINT
+		, footprint&
+#endif
+		) const { }
 
+#if USE_MODULE_FOOTPRINT
+	template <class Tag>
+	void
+	inherit_state(const state_instance<Tag>&, const footprint&) const { }
+
+	void
+	allocate_subinstances(footprint&) const { }
+#else
 	/**
 		Nothing to copy recursively.  
 	 */
@@ -134,6 +167,7 @@ protected:
 
 	void
 	allocate_subinstances(void) const { }
+#endif
 
 	/**
 		No-op.  

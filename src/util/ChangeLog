@@ -2,6 +2,12 @@
 
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-08:
+	  util/static_assert.h: uses typedef rather than static const value.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-07:
 	  Using enhanced header configuration, we've "config-ed" many 
 		util headers with the results from "config.h"

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4 2005/08/08 16:51:10 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.1 2005/08/16 20:32:15 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
@@ -39,10 +39,17 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_MODULE_FOOTPRINT
+void
+substructure_alias::allocate_subinstances(footprint& f) {
+	return subinstances.allocate(f);
+}
+#else
 void
 substructure_alias::allocate_subinstances(void) {
 	return subinstances.allocate();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-08-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-08:
+	  Module now contains a footprint!
+		Instead of allocating state in global pools, it now
+		registers them in its footprint, 
+		which contains instance pools.  
+	  Next revision: clean-up conditional USE_MODULE_FOOTPRINT, commit:1.
+	  Next-next revisions: expand defined types recursively, 
+		as they are needed, definitions will unroll into
+		their footprints mapped by the footprint manager.  
+
+
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-07:

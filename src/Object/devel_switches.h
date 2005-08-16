@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.4.3 2005/08/16 03:47:13 fang Exp $
+	$Id: devel_switches.h,v 1.1.4.4 2005/08/16 20:32:13 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -35,7 +35,7 @@
 	We're striving to use footprint pools.  
 	Goal = 1.
  */
-#define	USE_MODULE_FOOTPRINT				0
+#define	USE_MODULE_FOOTPRINT				1
 
 //=============================================================================
 

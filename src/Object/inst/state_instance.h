@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.2.4.1 2005/08/11 00:20:20 fang Exp $
+	$Id: state_instance.h,v 1.2.4.2 2005/08/16 20:32:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include "Object/traits/class_traits.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 #include "Object/inst/instance_pool_fwd.h"
 
 namespace util {
@@ -69,30 +70,13 @@ public:
 
 public:
 	typedef	instance_pool<this_type>	pool_type;
+#if !USE_MODULE_FOOTPRINT
 private:
 	typedef	typename pool_type::const_iterator	const_pool_iterator;
 public:
 	static
 	pool_type				pool;
-
-#if 0
-	static
-	ostream&
-	dump_pool_state(ostream&);
-
-	static
-	void
-	collect_pool_state(persistent_object_manager&);
-
-	static
-	void
-	write_pool_state(const persistent_object_manager&, ostream&);
-
-	static
-	void
-	load_pool_state(const persistent_object_manager&, istream&);
 #endif
-
 };	// end class state_instance
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.3.8.1 2005/08/15 21:12:15 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.3.8.2 2005/08/16 20:32:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -22,6 +22,9 @@ namespace entity {
 /**
 	Expand this instance's ports into this subinstance_manager.  
 	NOTE: this class is granted friendship from instance_collection<>.
+	TODO: Once we don't need friendship, remove from instance_collection.
+	TODO: can't this be greatly simplified after having 
+		migrated to canonical_types?
  */
 template <class Tag>
 void

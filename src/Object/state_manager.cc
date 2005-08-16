@@ -1,10 +1,13 @@
 /**
 	\file "Object/state_manager.cc"
-	$Id: state_manager.cc,v 1.2.4.1 2005/08/11 00:20:17 fang Exp $
+	$Id: state_manager.cc,v 1.2.4.2 2005/08/16 20:32:13 fang Exp $
  */
 
 #include <iostream>
 #include "Object/state_manager.h"
+#include "Object/devel_switches.h"
+
+#if !USE_MODULE_FOOTPRINT
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/alias_empty.h"	// for bool and int
 #include "Object/inst/bool_instance_collection.h"
@@ -80,4 +83,5 @@ state_manager::load_state(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+#endif	// !USE_MODULE_FOOTPRINT
 

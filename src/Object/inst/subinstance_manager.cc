@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5 2005/08/08 23:08:30 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.1 2005/08/16 20:32:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -143,7 +143,13 @@ subinstance_manager::relink_super_instance_alias(
 	Allocates each port entirely.  
  */
 void
-subinstance_manager::allocate(void) {
+subinstance_manager::allocate(
+#if USE_MODULE_FOOTPRINT
+		footprint& f
+#else
+		void
+#endif
+		) {
 	STACKTRACE("subinstance_manager::allocate()");
 	iterator i(subinstance_array.begin());
 	const iterator e(subinstance_array.end());
@@ -154,7 +160,11 @@ subinstance_manager::allocate(void) {
 		const count_ptr<physical_instance_collection>
 			pi(i->is_a<physical_instance_collection>());
 		NEVER_NULL(pi);
+#if USE_MODULE_FOOTPRINT
+		pi->allocate_state(f);
+#else
 		pi->allocate_state();
+#endif
 	}
 }
 
@@ -163,7 +173,11 @@ subinstance_manager::allocate(void) {
 	TODO: clean up the const-hack.  
  */
 void
-subinstance_manager::create_state(const this_type& s) {
+subinstance_manager::create_state(const this_type& s
+#if USE_MODULE_FOOTPRINT
+		, footprint& f
+#endif
+		) {
 	STACKTRACE("subinstance_manager::create_state()");
 	this_type& t(const_cast<this_type&>(s));
 	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
@@ -181,7 +195,11 @@ subinstance_manager::create_state(const this_type& s) {
 			pj(j->is_a<physical_instance_collection>());
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
+#if USE_MODULE_FOOTPRINT
+		pi->merge_created_state(*pj, f);
+#else
 		pi->merge_created_state(*pj);
+#endif
 	}
 }
 
@@ -190,7 +208,11 @@ subinstance_manager::create_state(const this_type& s) {
 	TODO: clean up the const-hack.  
  */
 void
-subinstance_manager::inherit_state(const this_type& s) {
+subinstance_manager::inherit_state(const this_type& s
+#if USE_MODULE_FOOTPRINT
+		, const footprint& f
+#endif
+		) {
 	STACKTRACE("subinstance_manager::inherit_state()");
 	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
 	iterator i(subinstance_array.begin());
@@ -207,7 +229,11 @@ subinstance_manager::inherit_state(const this_type& s) {
 			pj(j->is_a<const physical_instance_collection>());
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
+#if USE_MODULE_FOOTPRINT
+		pi->inherit_created_state(*pj, f);
+#else
 		pi->inherit_created_state(*pj);
+#endif
 	}
 }
 

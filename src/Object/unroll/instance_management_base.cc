@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.4 2005/08/08 23:08:31 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.4.2.1 2005/08/16 20:32:16 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -81,7 +81,13 @@ instance_management_base::unroll_meta_connect(unroll_context& ) const {
 	Only instantiation_statements actually provide a real implementation.  
  */
 good_bool
-instance_management_base::create_unique(const unroll_context&) const {
+#if USE_MODULE_FOOTPRINT
+instance_management_base::create_unique(const unroll_context&,
+		footprint&) const
+#else
+instance_management_base::create_unique(const unroll_context&) const
+#endif
+{
 	return good_bool(true);
 }
 
@@ -208,12 +214,22 @@ sequential_scope::unroll_meta_connect(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-sequential_scope::create_unique(const unroll_context& c) const {
+#if USE_MODULE_FOOTPRINT
+sequential_scope::create_unique(const unroll_context& c, footprint& f) const
+#else
+sequential_scope::create_unique(const unroll_context& c) const
+#endif
+{
 	STACKTRACE("sequential_scope::create_unique()");
 	const_iterator i(instance_management_list.begin());
 	const const_iterator e(instance_management_list.end());
 	for ( ; i!=e; i++) {
-		if (!(*i)->create_unique(c).good) {
+#if USE_MODULE_FOOTPRINT
+		if (!(*i)->create_unique(c, f).good)
+#else
+		if (!(*i)->create_unique(c).good)
+#endif
+		{
 			return good_bool(false);
 		}
 	}

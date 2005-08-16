@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.1 2005/08/15 21:12:13 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.2 2005/08/16 20:32:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -15,6 +15,7 @@
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/common/multikey_index.h"
+#include "Object/devel_switches.h"		// temporary
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
@@ -38,6 +39,7 @@ using util::persistent;
 using util::persistent_object_manager;
 
 class scopespace;
+class footprint;
 class physical_instance_collection;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
@@ -47,7 +49,7 @@ class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
 
-// lazy to include, just copied over from "Object/art_object_instance_base.h"
+// lazy to include, just copied from "Object/inst/instance_collection_base.h"
 #ifndef	UNROLL_PORT_ONLY_PROTO
 #define	UNROLL_PORT_ONLY_PROTO						\
 count_ptr<physical_instance_collection>					\
@@ -183,14 +185,39 @@ virtual	INSTANTIATE_INDICES_PROTO = 0;
 /**
 	Prototype for allocating unique state during create phase.
  */
+#if USE_MODULE_FOOTPRINT
+#define	CREATE_UNIQUE_STATE_PROTO					\
+	good_bool							\
+	create_unique_state(const const_range_list&, footprint&)
+#else
 #define	CREATE_UNIQUE_STATE_PROTO					\
 	good_bool							\
 	create_unique_state(const const_range_list&)
+#endif
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
+#if USE_MODULE_FOOTPRINT
+virtual	void
+	allocate_state(footprint&) = 0;
+
+virtual	void
+	merge_created_state(physical_instance_collection&, footprint&) = 0;
+
+virtual	void
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&) = 0;
+#else
 virtual	void
 	allocate_state(void) = 0;
+
+virtual	void
+	merge_created_state(physical_instance_collection&) = 0;
+
+virtual	void
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&) = 0;
+#endif
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -212,12 +239,6 @@ virtual	const_index_list
 		alias_collection_type&) const
 
 virtual	UNROLL_ALIASES_PROTO = 0;
-
-virtual	void
-	merge_created_state(physical_instance_collection&) = 0;
-
-virtual	void
-	inherit_created_state(const physical_instance_collection&) = 0;
 
 public:
 virtual	instance_alias_base_type&
@@ -315,8 +336,26 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+#if USE_MODULE_FOOTPRINT
+	void
+	allocate_state(footprint&);
+
+	void
+	merge_created_state(physical_instance_collection&, footprint&);
+
+	void
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&);
+#else
 	void
 	allocate_state(void);
+
+	void
+	merge_created_state(physical_instance_collection&);
+
+	void
+	inherit_created_state(const physical_instance_collection&);
+#endif
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -335,12 +374,6 @@ public:
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;
-
-	void
-	merge_created_state(physical_instance_collection&);
-
-	void
-	inherit_created_state(const physical_instance_collection&);
 
 private:
 	class element_collector;
@@ -402,8 +435,26 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+#if USE_MODULE_FOOTPRINT
+	void
+	allocate_state(footprint&);
+
+	void
+	merge_created_state(physical_instance_collection&, footprint&);
+
+	void
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&);
+#else
 	void
 	allocate_state(void);
+
+	void
+	merge_created_state(physical_instance_collection&);
+
+	void
+	inherit_created_state(const physical_instance_collection&);
+#endif
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
@@ -421,12 +472,6 @@ public:
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
-
-	void
-	merge_created_state(physical_instance_collection&);
-
-	void
-	inherit_created_state(const physical_instance_collection&);
 
 public:
 	FRIEND_PERSISTENT_TRAITS
