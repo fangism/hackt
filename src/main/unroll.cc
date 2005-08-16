@@ -3,7 +3,7 @@
 	Unrolls an object file, saves it to another object file.  
 	This file was reincarnated from "artobjunroll.cc" in a previous life.  
 
-	$Id: unroll.cc,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: unroll.cc,v 1.2.4.1 2005/08/16 03:48:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -47,7 +47,7 @@ unroll::unroll() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 unroll::main(const int argc, char* argv[], const global_options&) {
-	options opt;
+	options opt();
 	if (argc != 3) {
 		usage();
 		return 1;
