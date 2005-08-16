@@ -4,6 +4,8 @@
 *.lo
 *.loT
 *.la
+*.ii
+*.s
 *.gch
 core.*
 *.core

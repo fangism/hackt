@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.5 2005/08/15 21:12:06 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.6 2005/08/16 03:46:06 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -408,6 +408,7 @@ UTIL_HEADER_FILES = \
 	util/array_traits.h \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
+	util/attributes.h \
 	util/boolean_types.h \
 	util/const_traits.h \
 	util/cppcat.h \
@@ -453,6 +454,7 @@ UTIL_HEADER_FILES = \
 	util/packed_array_fwd.h \
 	util/persistent_fwd.h \
 	util/persistent.h \
+	util/pthread.h \
 	util/qmap_fwd.h \
 	util/reserve.h \
 	util/ring_node_fwd.h \
@@ -668,8 +670,8 @@ AM_CPPFLAGS = -I$(srcdir)
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
-	-Wcast-qual -Wcast-align -Wconversion -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused-parameter \
+	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 	-Wbad-function-cast -Wnested-externs
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
@@ -680,7 +682,7 @@ MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 # These flags are used to cancel out previous warning flags, 
 # such exceptions are needed for the automatic lexers and parsers
-PARSER_NOWARN_FLAGS = -Wno-old-style-cast -Wno-shadow
+PARSER_NOWARN_FLAGS = -Wno-unused -Wno-old-style-cast -Wno-shadow
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
