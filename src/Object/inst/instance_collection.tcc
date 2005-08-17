@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.5 2005/08/16 21:10:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.6 2005/08/17 03:15:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -254,8 +254,17 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		footprints.  Bottom up is necessary because external aliases
 		between ports need to take into account internal aliases
 		which are determined by complete definitions.  
-	TODO: add a correct footprint argument as the creation context.  
 	TODO: invoke the correct pool to allocate using the footprint.  
+
+	IMPORTANT: 2005-08-16:
+	TODO: unroll the type referenced by this instance.  
+		We need to find the alias in the ring that contains
+		valid relaxed actuals, if applicable, to form a 
+		complete canonical type.  
+		However, the alias with actuals may actually
+		exist only in a ring somewhere else in the hierarchy!
+		This will have to be developed in pieces.  
+		Need to impose temporary limitations.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 size_t
@@ -267,8 +276,10 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
+	typename instance_type::pool_type&
+		the_pool(footprint_pool_getter<Tag>().operator()(f));
 	_this.instance_index =
-		footprint_pool_getter<Tag>()(f).allocate(instance_type(*this));
+		the_pool.allocate(instance_type(*this));
 		// instance_ptr_type(new instance_type(*this));
 	INVARIANT(_this.instance_index);
 	// NOTE: can't _this.allocate_subinstances() yet because there
@@ -287,7 +298,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 			cerr << "expected instance_index to be 0, but got " <<
 				i->instance_index << endl;
 			this->dump_hierarchical_name(cerr << "this = ") << endl;
-			instance_type::pool[i->instance_index]
+			the_pool[i->instance_index]
 				.get_back_ref()->dump_hierarchical_name(
 					cerr << "alias = ") << endl;
 			)
@@ -296,8 +307,19 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 		INVARIANT(!i->instance_index);
 #endif
 		i->instance_index = this->instance_index;
+#if 1
+		// when to propagate relaxed actuals?
+		// it is possible that the first few entries actuals may be NULL
+		// while later actuals are valid in the ring.
+		// should they have been propagated during 
+		// instance_reference_connection::unroll?
+		if (!synchronize_actuals(
+				const_cast<this_type&>(*this), *i).good)
+			return 0;
+#endif
 		// recursive connections, merging ports.
-		_this.create_subinstance_state(*i, f);
+		if (!_this.create_subinstance_state(*i, f).good)
+			return 0;	// 0 means error
 	}
 	// This must be done AFTER processing aliases because
 	// ports may be connected to each other externally
@@ -312,9 +334,12 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Don't forget to merge all aliases too!
+	TODO: compare-and-update relaxed actuals as connections are made!
+		using alias_parent type: spread contagiously!
+	\return good if successful.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 	STACKTRACE_VERBOSE;
 	const size_t ind = this->instance_index;
@@ -355,10 +380,20 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 	} else {
 		if (!tind) {
 			// neither has been created yet
-			t.allocate_state(f);
+			if (!t.allocate_state(f))
+				return good_bool(false);
 		}
 		this->inherit_subinstances_state(t, f);
 	}
+	const good_bool ret(synchronize_actuals(*this, t));
+	if (!ret.good) {
+		// already have partial error message from compare
+		cerr << "Conflicting actuals in hierarchichal connections."
+			<< endl;
+		this->dump_hierarchical_name(cerr << "between: ") << endl;
+		t.dump_hierarchical_name(cerr << "    and: ") << endl;
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -366,6 +401,9 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 	Simply copy state_instance indices from source to this destination.  
 	\pre this is not at all state assigned, 
 		and t is completely state assigned.  
+	Q: in for-loop, what difference between calling inherit_state
+		and merge_allocate_state?
+	A: ?
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -1143,7 +1181,8 @@ INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges,
 		// should be iterator, not const_iterator
 		const const_iterator iter(this->collection.find(key_gen));
 		INVARIANT(iter != collection.end());
-		iter->allocate_state(f);
+		if (!iter->allocate_state(f))
+			return good_bool(false);
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	return good_bool(true);
@@ -1155,14 +1194,16 @@ INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges,
 	Called from subinstance_manager::create_state.
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_ARRAY_CLASS::allocate_state(footprint& f) {
 	STACKTRACE_VERBOSE;
 	iterator i(collection.begin());
 	const iterator e(collection.end());
 	for ( ; i!=e; i++) {
-		i->allocate_state(f);
+		if (!i->allocate_state(f))
+			return good_bool(false);
 	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1362,7 +1403,7 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	we can conclude that they have the same size.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p, 
 		footprint& f) {
 	STACKTRACE_VERBOSE;
@@ -1378,8 +1419,10 @@ INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p,
 			AS_A(const element_type&, *i)));
 		element_type& jj(const_cast<element_type&>(
 			AS_A(const element_type&, *j)));
-		ii.merge_allocate_state(jj, f);
+		if (!ii.merge_allocate_state(jj, f).good)
+			return good_bool(false);
 	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1685,11 +1728,11 @@ INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges,
 	Same as create_unique_state.
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_SCALAR_CLASS::allocate_state(footprint& f) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->the_instance.valid());
-	this->the_instance.allocate_state(f);
+	return good_bool(this->the_instance.allocate_state(f) != 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1795,12 +1838,12 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	this and t must be port subinstances.
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p, 
 		footprint& f) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	this->the_instance.merge_allocate_state(t.the_instance, f);
+	return this->the_instance.merge_allocate_state(t.the_instance, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

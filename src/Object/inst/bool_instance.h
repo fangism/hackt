@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/bool_instance.h"
 	Boolean state instance.  
-	$Id: bool_instance.h,v 1.1.2.1 2005/08/11 00:20:18 fang Exp $
+	$Id: bool_instance.h,v 1.1.2.2 2005/08/17 03:15:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_H__
@@ -14,6 +14,10 @@ namespace ART {
 namespace entity {
 //=============================================================================
 /**
+	ACTUALLY... this is now a placeholder for unique state, 
+		not the state itself.  
+	TODO: update these comments...
+
 	An actual instantiated instance of a bool, 
 	what used to be called "node".
 	These are not constructed until after unrolling.  
@@ -35,9 +39,20 @@ namespace entity {
 	Should be pool allocated for efficiency.  
  */
 class class_traits<bool_tag>::state_instance_base {
+#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
+#if 0
 protected:
 	int						state;
+#endif
 // persistence methods:
+	STATE_INSTANCE_GET_ACTUALS_PROTO {
+		return state_instance_actuals_ptr_type(NULL);
+	}
+
+	STATE_INSTANCE_SET_ACTUALS_PROTO { }
+
+	STATE_INSTANCE_PERSISTENCE_EMPTY_DEFS
+#endif
 };	// end class state_instance_base
 
 //-----------------------------------------------------------------------------

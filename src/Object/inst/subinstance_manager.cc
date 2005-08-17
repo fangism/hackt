@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.2 2005/08/16 21:10:47 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.3 2005/08/17 03:15:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -149,7 +149,6 @@ subinstance_manager::allocate(footprint& f) {
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		// merge created state (instance_collection_bases)
 		// dynamic cast to physical_instance_collection
 		const count_ptr<physical_instance_collection>
 			pi(i->is_a<physical_instance_collection>());
@@ -162,7 +161,7 @@ subinstance_manager::allocate(footprint& f) {
 /**
 	TODO: clean up the const-hack.  
  */
-void
+good_bool
 subinstance_manager::create_state(const this_type& s, footprint& f) {
 	STACKTRACE("subinstance_manager::create_state()");
 	this_type& t(const_cast<this_type&>(s));
@@ -181,8 +180,10 @@ subinstance_manager::create_state(const this_type& s, footprint& f) {
 			pj(j->is_a<physical_instance_collection>());
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
-		pi->merge_created_state(*pj, f);
+		if (!pi->merge_created_state(*pj, f).good)
+			return good_bool(false);
 	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

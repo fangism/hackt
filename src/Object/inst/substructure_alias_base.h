@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.2 2005/08/16 21:10:48 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.3 2005/08/17 03:15:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -57,9 +57,9 @@ protected:
 		restore_parent_child_links();
 	}
 
-	void
+	good_bool
 	create_subinstance_state(this_type& t, footprint& f) {
-		subinstances.create_state(t.subinstances, f);
+		return subinstances.create_state(t.subinstances, f);
 		// t.get_back_ref()->subinstances.create_state(subinstances);
 	}
 
@@ -123,8 +123,10 @@ protected:
 	/**
 		Has no substructure, thus does not recur.  
 	 */
-	void
-	create_subinstance_state(const this_type&, footprint&) const { }
+	good_bool
+	create_subinstance_state(const this_type&, footprint&) const {
+		return good_bool(true);
+	}
 
 	/**
 		Nothing to copy recursively.  

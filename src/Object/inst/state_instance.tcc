@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.2.4.3 2005/08/16 21:10:47 fang Exp $
+	$Id: state_instance.tcc,v 1.2.4.4 2005/08/17 03:15:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -21,12 +21,18 @@ namespace entity {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 STATE_INSTANCE_CLASS::state_instance() :
-		state_instance_base(), back_ref(NULL) { }
+#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
+		state_instance_base(),
+#endif
+		back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 STATE_INSTANCE_CLASS::state_instance(const alias_info_type& a) :
-		state_instance_base(), back_ref(&a) { }
+#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
+		state_instance_base(),
+#endif
+		back_ref(&a) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
@@ -35,12 +41,16 @@ STATE_INSTANCE_CLASS::~state_instance() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For now, just prints the canonical back-link.  
+	Also print relaxed actuals if applicable!
+	No need to check type, a strict type will never have relaxed actuals, 
+		as guaranteed by prior type-checking.  
  */
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 ostream&
 STATE_INSTANCE_CLASS::dump(ostream& o) const {
 	NEVER_NULL(back_ref);
 	back_ref->dump_alias(o);
+	back_ref->dump_actuals(o);
 	return o;
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/process_instance.h"
 	Definition of process instance base class.  
-	$Id: process_instance.h,v 1.1.2.1 2005/08/11 00:20:20 fang Exp $
+	$Id: process_instance.h,v 1.1.2.2 2005/08/17 03:15:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_H__
@@ -20,8 +20,24 @@ namespace entity {
 	Needs to be pool allocated for efficient unique construction. 
  */
 class class_traits<process_tag>::state_instance_base {
+#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
+	typedef	state_instance_actuals_ptr_type		actuals_ptr_type;
 protected:
+	actuals_ptr_type				actuals_ptr;
+public:
+	// default constructor and destructor
 
+	STATE_INSTANCE_GET_ACTUALS_PROTO {
+		return actuals_ptr;
+	}
+
+	STATE_INSTANCE_SET_ACTUALS_PROTO {
+		INVARIANT(!actuals_ptr);
+		actuals_ptr = arg;
+	}
+
+	STATE_INSTANCE_PERSISTENCE_PROTOS
+#endif
 };	// end class state_instance_base
 
 //=============================================================================

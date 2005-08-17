@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.2 2005/07/23 06:52:32 fang Exp $
+	$Id: alias_actuals.cc,v 1.2.8.1 2005/08/17 03:15:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -58,6 +58,8 @@ instance_alias_info_actuals::dump_actuals(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Comparing relaxed actuals for the sake of connection checking.  
+	FYI: called when unrolling connections and from
+		instance_alias_info<>::merge_allocate_state().  
  */
 good_bool
 instance_alias_info_actuals::compare_and_update_actuals(
@@ -85,6 +87,42 @@ instance_alias_info_actuals::compare_and_update_actuals(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Symmetric version of the above, will copy one set of actuals
+	over to the other.  
+ */
+good_bool
+instance_alias_info_actuals::symmetric_compare_and_update_actuals(
+		alias_actuals_type& l, alias_actuals_type& r) {
+	STACKTRACE_VERBOSE;
+	if (l && r) {
+		// then compare them
+		if (!l->must_be_equivalent(*r)) {
+			cerr << "ERROR: attempted to connect instances with "
+				"conflicting relaxed parameters!" << endl;
+			// TODO: report where, more info!
+			l->dump(cerr << "\tgot: ") << endl;
+			r->dump(cerr << "\tand: ") << endl;
+			// for now stop on 1st error
+			return good_bool(false);
+		}
+	} else if (l) {
+		// then set them for the rest of this connection loop.
+#if ENABLE_STACKTRACE
+		l->dump(cerr << "left = ") << endl;
+#endif
+		r = l;
+	} else if (r) {
+#if ENABLE_STACKTRACE
+		r->dump(cerr << "right = ") << endl;
+#endif
+		l = r;
+	}
+	// else both NULL, do nothing
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Comparing relaxed actuals for the sake of connection checking.  
  */
 good_bool
@@ -107,7 +145,7 @@ instance_alias_info_actuals::compare_actuals(
 void
 instance_alias_info_actuals::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (actuals)
 		actuals->collect_transient_info(m);
 }
@@ -116,7 +154,7 @@ instance_alias_info_actuals::collect_transient_info_base(
 void
 instance_alias_info_actuals::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(o, actuals);
 }
 
@@ -124,7 +162,7 @@ instance_alias_info_actuals::write_object_base(
 void
 instance_alias_info_actuals::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(i, actuals);
 }
 

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.2 2005/08/16 21:10:46 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.3 2005/08/17 03:15:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -175,7 +175,7 @@ public:
 	size_t
 	allocate_state(footprint&) const;
 
-	void
+	good_bool
 	merge_allocate_state(this_type&, footprint&);
 
 	void
@@ -192,6 +192,14 @@ public:
 	using actuals_parent_type::compare_and_update_actuals;
 	using actuals_parent_type::compare_actuals;
 
+private:
+	static
+	good_bool
+	synchronize_actuals(this_type& l, this_type& r) {
+		return symmetric_synchronize(l, r);
+	}
+
+public:
 	const relaxed_actuals_type&
 	find_relaxed_actuals(void) const;
 

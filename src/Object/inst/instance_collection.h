@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.3 2005/08/16 21:10:46 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.4 2005/08/17 03:15:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -190,10 +190,10 @@ virtual	INSTANTIATE_INDICES_PROTO = 0;
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
-virtual	void
+virtual	good_bool
 	allocate_state(footprint&) = 0;
 
-virtual	void
+virtual	good_bool
 	merge_created_state(physical_instance_collection&, footprint&) = 0;
 
 virtual	void
@@ -317,10 +317,10 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
-	void
+	good_bool
 	allocate_state(footprint&);
 
-	void
+	good_bool
 	merge_created_state(physical_instance_collection&, footprint&);
 
 	void
@@ -405,10 +405,10 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
-	void
+	good_bool
 	allocate_state(footprint&);
 
-	void
+	good_bool
 	merge_created_state(physical_instance_collection&, footprint&);
 
 	void

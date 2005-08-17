@@ -3,6 +3,55 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-08-16:
+	extension of 2005-08-07 entry:
+	We're ready to unroll and create types encountered during hierarchical
+		creation and allocation.  
+	Some issues stand in the way:
+		Relaxed template actuals may only exist in one place in the
+		connection hierarchy, and may not even be in the same alias
+		ring.  
+		We need to guarantee that: one of the equivalent aliases
+		(and only one) contributes relaxed alias actuals
+		to the allocated instance.  We *must* detect conflicts
+		across the hierarchy.  (This will get complicated once we
+		glue instances and ports.)
+	Proposal: process/chan/struct instance state will contain an optional
+		relaxed const_param_expr_list ptr set from alias_actuals.  
+		Need one pass over all instances with the same ID to collect 
+		these relaxed actuals and check for equivalence and conflicts.  
+		(even replace equivalent pointers as an opt.!)
+		(No need to back-copy the established pointers to the 
+		alias, the alias will just reference the state's
+		actual parameters once its state ID is set.  
+		No need to clobber the pointer either, it's just a reference
+		count that doesn't take any additional storage.)
+		(get_type: if ID set, use actuals if exists, else use own)
+		Note: at each level of the hierarchy, psuedo-allocated 
+		(placeholder) instances are allowed
+		to be missing relaxed actuals, because they may be connected
+		to another instance in a different level.  
+		TODO: run this check first.
+		Need one final check that combines the hierarchical
+		footprints into flat global footprint.  
+		At THAT point should we guarantee that every instance
+		as satisfied (exactly once) unique relaxed actual values.  
+	Hierarchical complications: additional aliases may occur due to 
+		internal connections of the instantiated type --
+		those checks must be deferred.  
+		At each level of the hierarchy, just check for conflicts.  
+		Call this from canonical_type and module,
+			passing in the footprint&.  
+	First, add relaxed actuals pointer to process/chan/struct
+		state instances.  
+	Q: if/when should relaxed actuals be propagated around
+		rings of aliases?
+	A: Earliest possible time is during 
+		instance_reference_connection::unroll.
+		The lastest point should be when state is allocated
+		during the creation phase.  How to do this efficiently?
+
+//=============================================================================
 2005-08-08:
 	In creating unique state, need to process the definition
 	of the thing being instantiated to determine internal connections.

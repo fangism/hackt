@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.2 2005/08/16 21:10:47 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.3 2005/08/17 03:15:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -105,7 +105,7 @@ public:
 	allocate(footprint&);
 
 	// const is bogus here (temporary workaround)
-	void
+	good_bool
 	create_state(const this_type&, footprint&);
 
 	void

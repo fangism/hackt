@@ -89,9 +89,9 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::bar[0]
-2	::bar[1]
-3	::bar[2]
+1	::bar[0]<4>
+2	::bar[1]<4>
+3	::bar[2]<4>
 4	::car[0]
 5	::car[1]
 6	::car[2]

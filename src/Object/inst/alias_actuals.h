@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.2 2005/07/23 06:52:33 fang Exp $
+	$Id: alias_actuals.h,v 1.2.8.1 2005/08/17 03:15:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -33,6 +33,7 @@ using util::persistent_object_manager;
 	individualize to a limited extent.  
  */
 class instance_alias_info_actuals {
+	typedef	instance_alias_info_actuals		this_type;
 protected:
 	typedef	count_ptr<const const_param_expr_list>	alias_actuals_type;
 
@@ -79,6 +80,21 @@ public:
 	compare_and_update_actuals(alias_actuals_type& l, 
 		const alias_actuals_type& r);
 
+private:
+	static
+	good_bool
+	symmetric_compare_and_update_actuals(alias_actuals_type& l, 
+		alias_actuals_type& r);
+
+protected:
+	static
+	good_bool
+	symmetric_synchronize(this_type& l, this_type& r) {
+		return symmetric_compare_and_update_actuals(
+			l.actuals, r.actuals);
+	}
+
+public:
 	static
 	good_bool
 	compare_actuals(const alias_actuals_type&, 

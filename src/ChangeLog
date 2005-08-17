@@ -2,6 +2,35 @@
 
 2005-08-16	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-10:
+	  NOTES: long entry about connection checking during
+		create-unique phase, concerning relaxed alias actuals.  
+	  Amended the hierarchical unique creation process with
+		checking of relaxed actuals as connections are determined.  
+		One set of valid actuals will propagate contagiously
+		during connection.  
+	  Implemented symmetric actuals compare-and-update
+		between two instance_alias_info's.  
+	  Create-dump now prints alias actuals associated with 
+		the state placeholder's back-reference alias, this way 
+		we know immediately if the type is complete.  
+		(small handful of tests updated.)
+	  state_instance classes: no longer have state_instance_base
+		parent classes because they are JUST placeholders now, 
+		i.e. they contain no actual state.  
+		Can clean-up the EMPTY_PLACEHOLDER_STATE_INSTANCE
+		conditional in "Object/inst/state_instance.h".
+	  good_bool return values given to many state-creation methods.  
+	  During creation we now propagate (synchronize) actuals between
+		aliases in the hierarchy.  However, the omniscience of
+		actuals in each ring is not yet guaranteed, which brings us
+		to the next task:
+	  Next revision: address (NOTES) when alias actuals should be 
+		propagated around the alias ring (efficiently?).
+		Is there some invariant we should maintain during unroll,
+		like all or none (in each ring)?
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-09:
 	  Cleaned up USE_MODULE_FOOTPRINT, committed to 1.
 

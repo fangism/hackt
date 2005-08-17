@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.2 2005/08/16 21:10:47 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.3 2005/08/17 03:15:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -75,10 +75,10 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
-virtual	void
+virtual	good_bool
 	allocate_state(footprint&) = 0;
 
-virtual	void
+virtual	good_bool
 	merge_created_state(this_type&, footprint&) = 0;
 
 virtual	void

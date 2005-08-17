@@ -67,6 +67,6 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::bar
-2	::poo
+1	::bar<1>
+2	::poo<2>
 

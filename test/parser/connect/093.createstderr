@@ -56,13 +56,13 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<1>^0 bar (instantiated) = ::ick (1) 
+    bar = process foo<1>^0 bar (instantiated)<1> = ::ick (1) 
     ick = process foo<1>^0 ick (instantiated)<1> = ::bar (1) 
     poo = process foo<1>^0 poo (instantiated)<2> = ::poo (2) 
 }
 
 Created state:
 process instance pool:
-1	::bar
-2	::poo
+1	::bar<1>
+2	::poo<2>
 

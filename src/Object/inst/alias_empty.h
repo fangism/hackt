@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.2 2005/07/23 06:52:33 fang Exp $
+	$Id: alias_empty.h,v 1.2.8.1 2005/08/17 03:15:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -35,6 +35,7 @@ using util::persistent_object_manager;
 	in the unrolled object.  
  */
 class instance_alias_info_empty {
+	typedef	instance_alias_info_empty		this_type;
 protected:
 	typedef	count_ptr<const const_param_expr_list>	alias_actuals_type;
 
@@ -84,6 +85,14 @@ public:
 		return good_bool(true);
 	}
 
+protected:
+	static
+	good_bool
+	symmetric_synchronize(const this_type&, const this_type&) {
+		return good_bool(true);
+	}
+
+public:
 	static
 	good_bool
 	compare_actuals(const alias_actuals_type&,
