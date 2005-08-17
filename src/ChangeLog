@@ -2,6 +2,12 @@
 
 2005-08-17	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-12:
+	  Cleaned-up obsolete code, updated some comments.  
+	  Next: check actuals during hierarchical connections
+		and merges.  Write some test cases for it!
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-11:
 	  Maintaining new invariant:
 		For all aliases types that can have relaxed actuals, 

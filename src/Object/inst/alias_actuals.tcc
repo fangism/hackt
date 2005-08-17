@@ -4,13 +4,13 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.2.8.1 2005/08/17 21:49:24 fang Exp $
+	$Id: alias_actuals.tcc,v 1.2.8.2 2005/08/17 22:34:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 #define	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 
-#include "Object/inst/alias_empty.h"
+// #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias.h"
 
@@ -18,20 +18,6 @@ namespace ART {
 namespace entity {
 //=============================================================================
 // class instance_alias_info_empty method definitions
-
-#if 0
-/**
-	Empty type never has relaxed actuals, so there's no need to
-	walk the connection list to look for actuals!
-	\return NULL relaxed actuals.  
- */
-template <class Tag>
-const instance_alias_info_empty::alias_actuals_type&
-instance_alias_info_empty::find_relaxed_actuals(
-		const instance_alias_info<Tag>& al) {
-	return al.get_relaxed_actuals();
-}
-#endif
 
 //=============================================================================
 // class instance_alias_info_actuals method definitions
@@ -72,30 +58,6 @@ instance_alias_info_actuals::__compare_and_propagate_actuals(
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Walk the alias connection list until valid actuals found.  
-	If not found, then return NULL (last one, e.g).  
- */
-template <class Tag>
-const instance_alias_info_actuals::alias_actuals_type&
-instance_alias_info_actuals::find_relaxed_actuals(
-		const instance_alias_info<Tag>& al) {
-	typedef	instance_alias_info<Tag>	alias_type;
-	typedef	typename alias_type::const_iterator	const_iterator;
-	const const_iterator b(al.begin());	// fixed iterator
-	const_iterator i(b);			// walking iterator copy
-	const const_iterator e(al.end());
-	for ( ; i!=e; i++) {
-		const alias_actuals_type& aa(i->get_relaxed_actuals());
-		if (aa)
-			return aa;
-	}
-	return b->get_relaxed_actuals();	// should be NULL
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

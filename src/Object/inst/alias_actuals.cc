@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.2.8.2 2005/08/17 21:49:24 fang Exp $
+	$Id: alias_actuals.cc,v 1.2.8.3 2005/08/17 22:34:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -56,52 +56,6 @@ instance_alias_info_actuals::dump_actuals(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	If this already has actuals, just compare and return the result.
-	If this has null actuals, propagate the copy of the actuals 
-	around the ring.  
- */
-good_bool
-instance_alias_info_actuals::compare_and_propagate_actuals(
-		const alias_actuals_type& a) {
-
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Comparing relaxed actuals for the sake of connection checking.  
-	FYI: called when unrolling connections and from
-		instance_alias_info<>::merge_allocate_state().  
- */
-good_bool
-instance_alias_info_actuals::compare_and_update_actuals(
-		alias_actuals_type& l, const alias_actuals_type& r) {
-	if (r) {
-	if (l) {
-		// then compare them
-		if (!l->must_be_equivalent(*r)) {
-			cerr << "ERROR: attempted to connect instances with "
-				"conflicting relaxed parameters!" << endl;
-			// TODO: report where, more info!
-			l->dump(cerr << "\tgot: ") << endl;
-			r->dump(cerr << "\tand: ") << endl;
-			// for now stop on 1st error
-			return good_bool(false);
-		}
-		// else good to connect because l is relaxed
-	} else {
-		// then set them for the rest of this connection loop.
-		l = r;
-	}
-	}
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Symmetric version of the above, will copy one set of actuals
 	over to the other.  
@@ -123,14 +77,8 @@ instance_alias_info_actuals::symmetric_compare_and_update_actuals(
 		}
 	} else if (l) {
 		// then set them for the rest of this connection loop.
-#if ENABLE_STACKTRACE
-		l->dump(cerr << "left = ") << endl;
-#endif
 		r = l;
 	} else if (r) {
-#if ENABLE_STACKTRACE
-		r->dump(cerr << "right = ") << endl;
-#endif
 		l = r;
 	}
 	// else both NULL, do nothing

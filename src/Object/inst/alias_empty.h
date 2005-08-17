@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.2.8.2 2005/08/17 21:49:24 fang Exp $
+	$Id: alias_empty.h,v 1.2.8.3 2005/08/17 22:34:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -83,21 +83,6 @@ protected:
 		return good_bool(true);
 	}
 
-#if 0
-public:
-	/**
-		Pray that compiler is smart enough to inline
-		this and optimize away if-true.  
-	 */
-	static
-	good_bool
-	compare_and_update_actuals(const alias_actuals_type&,
-		const alias_actuals_type&) {
-		return good_bool(true);
-	}
-#endif
-
-protected:
 	static
 	good_bool
 	symmetric_synchronize(const this_type&, const this_type&) {
@@ -124,14 +109,6 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&) {
 	}
-
-#if 0
-protected:
-	template <class Tag>
-	static
-	const alias_actuals_type&
-	find_relaxed_actuals(const instance_alias_info<Tag>&);
-#endif
 
 };	// end class instance_alias_info_empty
 

@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.2.8.2 2005/08/17 21:49:24 fang Exp $
+	$Id: alias_actuals.h,v 1.2.8.3 2005/08/17 22:34:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -81,13 +81,6 @@ protected:
 	__compare_and_propagate_actuals(const alias_actuals_type&, 
 		OutIter, OutIter);
 
-#if 0
-public:
-	static
-	good_bool
-	compare_and_update_actuals(alias_actuals_type& l, 
-		const alias_actuals_type& r);
-#endif
 private:
 	static
 	good_bool
@@ -118,13 +111,6 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if 0
-protected:
-	template <class Tag>
-	static
-	const alias_actuals_type&
-	find_relaxed_actuals(const instance_alias_info<Tag>&);
-#endif
 };	// end class instance_alias_info_empty_actuals
 
 //=============================================================================

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.4 2005/08/17 21:49:25 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.5 2005/08/17 22:34:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -109,21 +109,11 @@ protected:
 
 public:
 	/**
-		TODO: the following comment is not true.
-		This constructor initializes the mother container pointer
-		AND (implicitly) recursively instantiates public ports.  
-		TODO: does recursive instantiation require actuals?
-		Called from instance_array<>::instantiate_indices.
-		Perhaps introduce constructor with actuals argument?
+		Plain constructor initializaing with container back-ptr.
 	 */
+	explicit
 	instance_alias_info(const container_ptr_type m) :
 		instance_index(0), container(m) {
-#if 0
-		// cancel this idea:
-		NEVER_NULL(container);
-		substructure_parent_type::unroll_port_instances(
-			*this->container);
-#endif
 	}
 
 public:
@@ -190,8 +180,6 @@ public:
 	 */
 	using actuals_parent_type::get_relaxed_actuals;
 	using actuals_parent_type::attach_actuals;
-//	using actuals_parent_type::compare_and_propagate_actuals;
-//	using actuals_parent_type::compare_and_update_actuals;
 	using actuals_parent_type::compare_actuals;
 
 	good_bool
@@ -205,12 +193,6 @@ private:
 	}
 
 public:
-#if 0
-	// should never have to find actuals again, now that we
-	// maintain an all-or-non policy for relaxed actuals in rings.  
-	const relaxed_actuals_type&
-	find_relaxed_actuals(void) const;
-#endif
 
 	bool
 	must_match_type(const this_type&) const;

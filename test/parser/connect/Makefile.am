@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2005/08/08 16:51:43 fang Exp $
+#	$Id: Makefile.am,v 1.10.4.1 2005/08/17 22:35:00 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -27,7 +27,7 @@ ARTC_TEST_PASSES = \
 	083 084 085 086 087 088 089 \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 104 105 106 107 108 109 \
-	110 111 112 113
+	110 111 112 113 114 115
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -39,7 +39,7 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 
 # note: known unroll rejects (should be excluded from create test)
 # 091 096 097 098
-# 105 108 110
+# 105 108 110 115
 
 # adding tests one-by-one, should be subset of ARTOBJUNROLL_TEST_SUBJECTS
 HACKT_CREATE_TEST_SUBJECTS = \
@@ -54,7 +54,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	083 084 085 088 089 \
 	092 093 094 095 099 \
 	100 102 103 104 106 107 109 \
-	111 112 113
+	111 112 113 114
 
 # notes:
 # the following tests depend channel port subinstances
