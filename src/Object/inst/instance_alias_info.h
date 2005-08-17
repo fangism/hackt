@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.3 2005/08/17 03:15:02 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.4 2005/08/17 21:49:25 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -188,9 +188,14 @@ public:
 			to modify the key.  
 		\return true if successful, didn't collide.
 	 */
+	using actuals_parent_type::get_relaxed_actuals;
 	using actuals_parent_type::attach_actuals;
-	using actuals_parent_type::compare_and_update_actuals;
+//	using actuals_parent_type::compare_and_propagate_actuals;
+//	using actuals_parent_type::compare_and_update_actuals;
 	using actuals_parent_type::compare_actuals;
+
+	good_bool
+	compare_and_propagate_actuals(const relaxed_actuals_type&);
 
 private:
 	static
@@ -200,8 +205,12 @@ private:
 	}
 
 public:
+#if 0
+	// should never have to find actuals again, now that we
+	// maintain an all-or-non policy for relaxed actuals in rings.  
 	const relaxed_actuals_type&
 	find_relaxed_actuals(void) const;
+#endif
 
 	bool
 	must_match_type(const this_type&) const;

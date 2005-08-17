@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.6 2005/08/17 03:15:02 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.7 2005/08/17 21:49:25 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -225,11 +225,13 @@ INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 const typename INSTANCE_ALIAS_INFO_CLASS::relaxed_actuals_type&
 INSTANCE_ALIAS_INFO_CLASS::find_relaxed_actuals(void) const {
 	return actuals_parent_type::find_relaxed_actuals(*this);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
@@ -433,6 +435,20 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
 	return this->container->must_match_type(*a.container);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For aliases with actuals, this compares against the actuals argument.  
+	If this doesn't have actuals yet, then it copies the actuals
+	around the ring, maintaining the all-or-none invariant.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::compare_and_propagate_actuals(
+		const relaxed_actuals_type& a) {
+	return actuals_parent_type::__compare_and_propagate_actuals(
+		a, this->begin(), this->end());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

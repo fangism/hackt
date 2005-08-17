@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.2 2005/07/23 06:52:49 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.1 2005/08/17 21:49:25 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -248,8 +248,15 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		}
 		typedef	typename instance_alias_base_type::relaxed_actuals_type
 					relaxed_actuals_type;
+#if 0
 		const relaxed_actuals_type& la(lp->find_relaxed_actuals());
 		const relaxed_actuals_type& ra(rp->find_relaxed_actuals());
+#else
+		// no need to 'find' anymore, because actuals are copied
+		// around the rings as aliases are connected.  
+		const relaxed_actuals_type& la(lp->get_relaxed_actuals());
+		const relaxed_actuals_type& ra(rp->get_relaxed_actuals());
+#endif
 		// no need to update a cnonical actuals
 		if (!instance_alias_base_type::compare_actuals(la, ra).good) {
 			// already have error message

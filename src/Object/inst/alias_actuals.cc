@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.2.8.1 2005/08/17 03:15:01 fang Exp $
+	$Id: alias_actuals.cc,v 1.2.8.2 2005/08/17 21:49:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -56,6 +56,21 @@ instance_alias_info_actuals::dump_actuals(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	If this already has actuals, just compare and return the result.
+	If this has null actuals, propagate the copy of the actuals 
+	around the ring.  
+ */
+good_bool
+instance_alias_info_actuals::compare_and_propagate_actuals(
+		const alias_actuals_type& a) {
+
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Comparing relaxed actuals for the sake of connection checking.  
 	FYI: called when unrolling connections and from
@@ -84,6 +99,7 @@ instance_alias_info_actuals::compare_and_update_actuals(
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

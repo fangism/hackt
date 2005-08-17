@@ -56,7 +56,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<1>^0 bar (instantiated) = ::ick 
+    bar = process foo<1>^0 bar (instantiated)<1> = ::ick 
     ick = process foo<1>^0 ick (instantiated)<1> = ::bar 
     poo = process foo<1>^0 poo (instantiated)<2> = ::poo 
 }

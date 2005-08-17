@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-08-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-11:
+	  Maintaining new invariant:
+		For all aliases types that can have relaxed actuals, 
+		we keep an 'all-or-none' policy: either all aliases
+		in a ring have equivalent actuals, or all have null.  
+		This eliminates the need for having to search rings
+		for actuals, and will accelerate relaxed algorithms.  
+	  Replaced (static) instance_alias_*::compare_and_update_actuals
+		with (member) compare_and_propagate_actuals.
+	  Added verbose comments to alias_connection::unroll().  
+	  A few tests updated: because as connections are made
+		relaxed actuals are propagated.  
+	  Next: clean-up and comment.
+	  Next-next: check actuals during hierarchical connections
+		and merges.  
+
+
 2005-08-16	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-10:
