@@ -4,18 +4,20 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.2.8.2 2005/08/17 22:34:57 fang Exp $
+	$Id: alias_actuals.tcc,v 1.2.8.3 2005/08/18 00:40:49 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 #define	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 
 // #include "Object/inst/alias_empty.h"
+#include <iostream>
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 //=============================================================================
 // class instance_alias_info_empty method definitions
 
