@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.2.8.3 2005/08/17 22:34:56 fang Exp $
+	$Id: alias_actuals.cc,v 1.2.8.4 2005/08/18 05:33:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -56,6 +56,7 @@ instance_alias_info_actuals::dump_actuals(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Symmetric version of the above, will copy one set of actuals
 	over to the other.  
@@ -84,6 +85,7 @@ instance_alias_info_actuals::symmetric_compare_and_update_actuals(
 	// else both NULL, do nothing
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

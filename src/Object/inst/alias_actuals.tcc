@@ -4,13 +4,12 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.2.8.3 2005/08/18 00:40:49 fang Exp $
+	$Id: alias_actuals.tcc,v 1.2.8.4 2005/08/18 05:33:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 #define	__OBJECT_INST_ALIAS_ACTUALS_TCC__
 
-// #include "Object/inst/alias_empty.h"
 #include <iostream>
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias.h"
@@ -29,35 +28,93 @@ namespace entity {
 		equivalent actuals, though not necesarily the same pointer, 
 		otherwise everything else in this ring has null actuals
 		and should be updated.  
-	\param OutIter iterator over ring node aliases.  
+	\param AliasType the true alias type.  
 	\param a the actuals to compare against or copy.  
 	\param i the start output iterator.
 	\param e the end output iterator.  
  */
-template <class OutIter>
+template <class AliasType>
 good_bool
 instance_alias_info_actuals::__compare_and_propagate_actuals(
-		const alias_actuals_type& a, OutIter i, OutIter e) {
-	if (!a) {
-		return good_bool(true);
-	} else if (this->actuals) {
+		const alias_actuals_type& a, AliasType& alias) {
+if (!a) {
+	return good_bool(true);
+} else if (actuals) {
+	// might as well check pointers first
+	if (actuals != a && !actuals->must_be_equivalent(*a)) {
+		// error message copied from old
+		// instance_alias_info_actuals::compare_and_update_actuals
+		cerr << "ERROR: attempted to connect instances with "
+			"conflicting relaxed parameters!" << endl;
+		actuals->dump(cerr << "\tgot: ") << endl;
+		a->dump(cerr << "\tand: ") << endl;
+		alias.dump_hierarchical_name(cerr << "\tfrom: ")
+			<< endl;
+		return good_bool(false);
+	}
+} else {
+	alias.propagate_actuals(a);
+}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Symmetrically synchronizes two rings' relaxed actual parameters.  
+	If both aliases have valid actuals, the result of the compare is 
+	returned.  If only one has actuals, they are copied to the
+	other alias's ring.  If both are null, nothing happens.  
+
+	CRITICAL: Is it possible to miss connections in the hierarchy?
+		The rings are still disjoint, so when actuals are
+		propagated to one of several equivalently connected rings, 
+		the disconnected rings will be missed!!!
+		The fix: if both are NULL, then merge their rings.  
+		That way NULL rings will never be separated, 
+		whereas it is OK for rings with (equivalent) actuals 
+		to remain separated.  This will form delayed connections.  
+		Do we need to apply this to the asymmetric
+			__compare_and_propagate_actuals?  probably.  
+ */
+template <class AliasType>
+good_bool
+instance_alias_info_actuals::__symmetric_synchronize(
+		AliasType& l, AliasType& r) {
+if (l.actuals) {
+	if (r.actuals) {
 		// might as well check pointers first
-		if (this->actuals != a &&
-				!this->actuals->must_be_equivalent(*a)) {
-			// error message copied from old
-			// instance_alias_info_actuals::compare_and_update_actuals
+		if (l.actuals != r.actuals &&
+			!l.actuals->must_be_equivalent(*r.actuals)) {
+		// error message copied from above
 			cerr << "ERROR: attempted to connect instances with "
 				"conflicting relaxed parameters!" << endl;
-			this->actuals->dump(cerr << "\tgot: ") << endl;
-			a->dump(cerr << "\tand: ") << endl;
+			l.actuals->dump(cerr << "\tgot: ") << endl;
+			r.actuals->dump(cerr << "\tand: ") << endl;
+			l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
+			r.dump_hierarchical_name(cerr << "\tand : ") << endl;
 			return good_bool(false);
 		}
 	} else {
-		for ( ; i!=e; i++) {
-			const bool b = i->attach_actuals(a);
-			INVARIANT(b);
+		r.propagate_actuals(l.actuals);
+	}
+} else {
+	if (r.actuals) {
+		l.propagate_actuals(r.actuals);
+	} else {
+		// only need to merge if their collection's types are relaxed
+		// we know they are at least collectibly equivalent, 
+		// so we can check either type.  
+		if (l.container->is_relaxed_type()) {
+			typedef	typename AliasType::instance_alias_base_type
+					instance_alias_base_type;
+			instance_alias_base_type&
+				ll(AS_A(instance_alias_base_type&, l));
+			instance_alias_base_type&
+				rr(AS_A(instance_alias_base_type&, r));
+			ll.merge(rr);
 		}
 	}
+}
 	return good_bool(true);
 }
 

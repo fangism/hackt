@@ -1,5 +1,28 @@
 "ChangeLog"
 
+2005-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-13:
+	  NOTES: added paragraph about when/why one should merge aliases
+		rings across the hierarchy, related to relaxed actuals.  
+	  Reimplemented connection and compare methods in 
+		instance_alias_info (and actuals/empty parents), 
+		see checked_connect_port and checked_connect_alias
+		static member functions.  
+		Blocks of code replaced in alias_connection::unroll and
+			simple_meta_instance_reference::connect_port.  
+	  Tweaked ICE macros.  
+	  TODO: merge null-relaxed actual rings of aliases for alias_connection
+		(calls instance_alias_info::checked_connect_alias)
+	  TO FIX: discovered bug, in reduced test-case: parser/connect/118.in.
+		Solution is in the comments of the input file:
+		Prior to creation, follow up the top-most super-instance(s)
+		of the referenced alias in the port-hierarchy and create 
+		from there, top-down.  
+	  TODO: verify actuals being correctly checked during create-unique
+		phase.  
+
+
 2005-08-17	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-12:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.3 2005/08/17 03:15:03 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.4 2005/08/18 05:33:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -87,7 +87,7 @@ virtual	ostream&
 	// simply forwarded call
 	good_bool
 	connect_ports(const connection_references_type&, 
-		const unroll_context&);
+			const unroll_context&);
 
 protected:
 	// call forwarding
@@ -147,6 +147,9 @@ protected:
 public:
 	ostream&
 	dump_ports(ostream& o) const { return o; }
+
+	void
+	connect_ports(void) const { }
 
 protected:
 	void

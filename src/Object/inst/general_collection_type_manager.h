@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.2.10.1 2005/08/15 21:12:13 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.2.10.2 2005/08/18 05:33:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -67,12 +67,14 @@ protected:
 		return this->type_parameter.make_type_reference();
 	}
 
+public:
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const { return this->type_parameter; }
 
 	bool
 	is_relaxed_type(void) const;
 
+protected:
 	/**
 		NOTE: called during connection checking.  
 	 */

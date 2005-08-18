@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.8 2005/08/17 22:34:57 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.9 2005/08/18 05:33:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -430,21 +430,114 @@ INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\pre every alias in this ring must have NULL actuals.  
+	\post every alias in this ring has the same valid actuals, 
+		same pointer too.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::propagate_actuals(const relaxed_actuals_type& a) {
+#if 0
+	copy(this->begin(), this->end(), actuals_inserter());
+#else
+	iterator i(this->begin());
+	const iterator e(this->end());
+	for ( ; i!=e; i++) {
+		const bool b = i->attach_actuals(a);
+		INVARIANT(b);
+	}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	For aliases with actuals, this compares against the actuals argument.  
 	If this doesn't have actuals yet, then it copies the actuals
 	around the ring, maintaining the all-or-none invariant.  
+	TODO: specialize this implementation based on policy for
+	actuals-less meta-types.  
+	Specialize through the actuals_base_type.
+	Might also check parent collection type for when this is necessary.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::compare_and_propagate_actuals(
 		const relaxed_actuals_type& a) {
-	const good_bool
-		ret(actuals_parent_type::__compare_and_propagate_actuals(
-			a, this->begin(), this->end()));
+	return actuals_parent_type::__compare_and_propagate_actuals(a, *this);
+#if 0
+	// this error printing has been folded into
+	// actuals_paren_type::__compare_and_propagate_actuals
 	if (!ret.good) {
 		this->dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 	}
 	return ret;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals(this_type& l, this_type& r) {
+	return actuals_parent_type::__symmetric_synchronize(l, r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version of connect is symmetric and tailored to port connections,
+	and is called from simple_meta_instance_reference::connect_port.  
+	This effectively checks for connectible-type-equivalence.  
+	\param l an alias of this type.  
+	\param r an alias of this type.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
+	if (!l.must_match_type(r)) {
+		// already have error message
+		return good_bool(false);
+	}
+	// TODO: this only necessary for types with relaxed actuals
+	// specialize to optimize later.  
+	if (!synchronize_actuals(l, r).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
+	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
+	ll.merge(rr);
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This version of connect is slightly asymmetric and tailored for
+	connecting aliases, called by alias_connection::unroll.  
+	This effectively checks for connectible-type-equivalence.  
+	\param l is the (unchanging) leftmost instance reference, 
+		which always contains relaxed actuals IF anything in
+		the connection list has actuals.  
+	\param r is the varying instance alias referenced (iterating
+		along the list) and may inherit the actuals argument.
+	\param a the designated relaxed actuals pointer used to propagate
+		throughout the alias ring.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r, 
+		const relaxed_actuals_type& a) {
+	if (!l.must_match_type(r)) {
+		// already have error message
+		return good_bool(false);
+	}
+	if (!r.compare_and_propagate_actuals(a).good) {
+		// already have partial error message
+		l.dump_hierarchical_name(cerr << "\tand :") << endl;
+		return good_bool(false);
+	}
+	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
+	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
+	ll.merge(rr);
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

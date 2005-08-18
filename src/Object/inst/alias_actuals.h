@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.2.8.3 2005/08/17 22:34:56 fang Exp $
+	$Id: alias_actuals.h,v 1.2.8.4 2005/08/18 05:33:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -76,24 +76,24 @@ public:
 	dump_actuals(ostream& o) const;
 
 protected:
-	template <class OutIter>
+	template <class AliasType>
 	good_bool
-	__compare_and_propagate_actuals(const alias_actuals_type&, 
-		OutIter, OutIter);
+	__compare_and_propagate_actuals(const alias_actuals_type&,
+		AliasType&);
 
+#if 0
 private:
 	static
 	good_bool
 	symmetric_compare_and_update_actuals(alias_actuals_type& l, 
 		alias_actuals_type& r);
+#endif
 
 protected:
+	template <class AliasType>
 	static
 	good_bool
-	symmetric_synchronize(this_type& l, this_type& r) {
-		return symmetric_compare_and_update_actuals(
-			l.actuals, r.actuals);
-	}
+	__symmetric_synchronize(AliasType& l, AliasType& r);
 
 public:
 	static

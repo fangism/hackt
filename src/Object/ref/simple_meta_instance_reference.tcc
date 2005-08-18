@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.2 2005/08/17 22:34:57 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.3 2005/08/18 05:33:30 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -242,6 +242,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		const never_ptr<instance_alias_base_type> rp(*ri);
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
+#if 0
 		if (!lp->must_match_type(*rp)) {
 			// already have error message
 			return bad_bool(true);
@@ -259,6 +260,13 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		}
 		// else safe to connect
 		lp->merge(*rp);
+#else
+		if (!instance_alias_base_type::checked_connect_port(
+				*lp, *rp).good) {
+			// already have error message
+			return bad_bool(true);
+		}
+#endif
 	}
 	INVARIANT(ri == port_aliases.end());
 	return bad_bool(false);

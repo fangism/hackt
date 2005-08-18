@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.3.2.2 2005/08/17 22:34:58 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.3.2.3 2005/08/18 05:33:32 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -123,6 +123,8 @@ ALIAS_CONNECTION_CLASS::append_meta_instance_reference(
 		smaller objects).  
 		This means when we connect, we don't have to search
 		each ring for aliases.  
+	NOTE: changes made here should also propagate to 
+		simple_meta_instance_reference::connect_port.
  */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 good_bool
@@ -289,6 +291,7 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 			const never_ptr<instance_alias_base_type>
 				connectee(**ref_iter_iter);
 			NEVER_NULL(connectee);
+#if 0
 			// TODO: type-check for connectibility here!!!
 			if (!head->must_match_type(*connectee)) {
 				// already have error message
@@ -312,6 +315,15 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 			// TODO: policy-determined recursive alias connection
 			// checking.  
 			head->merge(*connectee);
+#else
+			// all type-checking is done in this call:
+			if (!instance_alias_base_type::checked_connect_alias(
+					*head, *connectee,
+					first_relaxed_actuals).good) {
+				// already have error message
+				return good_bool(false);
+			}
+#endif
 		}
 		for_each(ref_iter_head, ref_iter_end, 
 			// ambiguous, postfix or prefix (doesn't matter)

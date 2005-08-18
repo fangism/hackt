@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.5 2005/08/17 22:34:57 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.6 2005/08/18 05:33:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -20,6 +20,7 @@
 namespace ART {
 namespace entity {
 class footprint;
+class instance_alias_info_actuals;
 using std::ostream;
 using std::istream;
 using util::ring_node_derived;
@@ -46,8 +47,9 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 class instance_alias_info :
 		public substructure_alias_base<
 			class_traits<Tag>::has_substructure>, 
-		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
+		protected class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
+friend class instance_alias_info_actuals;
 public:
 	typedef	typename class_traits<Tag>::instance_alias_relaxed_actuals_type
 						actuals_parent_type;
@@ -179,18 +181,25 @@ public:
 		\return true if successful, didn't collide.
 	 */
 	using actuals_parent_type::get_relaxed_actuals;
+	using actuals_parent_type::dump_actuals;
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_actuals;
 
+protected:
+	void
+	progagate_actuals(const relaxed_actuals_type&);
+
+public:
 	good_bool
 	compare_and_propagate_actuals(const relaxed_actuals_type&);
 
 private:
 	static
 	good_bool
-	synchronize_actuals(this_type& l, this_type& r) {
-		return symmetric_synchronize(l, r);
-	}
+	synchronize_actuals(this_type& l, this_type& r);
+
+	void
+	propagate_actuals(const relaxed_actuals_type&);
 
 public:
 
@@ -209,12 +218,23 @@ public:
 			&& (this->container == i.container);
 	}
 
-
 virtual	void
 	dump_alias(ostream& o) const;
 
 	ostream&
 	dump_hierarchical_name(ostream&) const;
+
+	using substructure_parent_type::dump_ports;
+	using substructure_parent_type::connect_ports;
+
+	static
+	good_bool
+	checked_connect_port(this_type&, this_type&);
+
+	static
+	good_bool
+	checked_connect_alias(this_type&, this_type&,
+		const relaxed_actuals_type&);
 
 	/**
 		Wants to be pure virtual but can't...

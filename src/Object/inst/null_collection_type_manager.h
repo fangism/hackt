@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.2.10.1 2005/08/15 21:12:15 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.2.10.2 2005/08/18 05:33:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -59,12 +59,14 @@ protected:
 		return this->get_type();
 	}
 
+public:
 	const instance_collection_generic_type&
 	get_canonical_type(void) const { return this->get_type(); }
 
 	bool
 	is_relaxed_type(void) const { return false; }
 
+protected:
 	bool
 	must_match_type(const this_type&) const { return true; }
 

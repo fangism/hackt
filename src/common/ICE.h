@@ -1,36 +1,28 @@
 /**
 	\file "common/ICE.h"
 	Macros for internal compiler errors.  
-	$Id: ICE.h,v 1.2 2005/08/08 23:08:31 fang Exp $
+	$Id: ICE.h,v 1.2.2.1 2005/08/18 05:33:34 fang Exp $
  */
 
 #ifndef	__COMMON_ICE_H__
 #define	__COMMON_ICE_H__
 
+#include <iosfwd>
 #include "util/macros.h"
-
-/**
-	Internal auxiliary macro for stringifcation, don't use this directly.  
- */
-#define	ICE_WHERE(ostr, fn, file, line)					\
-	ostr << ART::ICE_greeting <<					\
-		#fn " at " #file ":" #line ": " << std::endl
+#include "util/attributes.h"
 
 /**
 	Standard greeting for internal compiler errors.  
 	\param ostr the output stream, like cerr.
  */
 #define	ICE_GREET(ostr)							\
-	ICE_WHERE(ostr, __PRETTY_FUNCTION__, __FILE__, __LINE__)
+	ART::__ICE_where(ostr, __PRETTY_FUNCTION__, __FILE__, __LINE__)
 
 /**
-	Print bug report banner.
-	Throws an exception to exit.  
-	\param ostr the output stream, like cerr.
+	Sign off and abort.  
  */
 #define	ICE_EXIT(ostr)							\
-	ostr << ART::ICE_footer << std::endl;				\
-	THROW_EXIT;
+	ART::__ICE_exit(ostr)
 
 /**
 	Standard internal compiler error macro.  
@@ -46,8 +38,13 @@
 
 namespace ART {
 
-extern const char ICE_greeting[];
-extern const char ICE_footer[];
+extern
+void
+__ICE_where(std::ostream&, const char* fn, const char* file, const size_t ln);
+
+extern
+void
+__ICE_exit(std::ostream&) __ATTRIBUTE_NORETURN__ ;
 
 }	// end namespace ART
 

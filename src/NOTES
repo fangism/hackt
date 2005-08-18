@@ -51,6 +51,21 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 		The lastest point should be when state is allocated
 		during the creation phase.  How to do this efficiently?
 
+	Important comment (as if the others aren't):
+		When comparing and propagating actuals during connections:
+		if the two entities being compared have NULL actuals
+		(where they are eventually needed, as required by the type), 
+		then we should merge the two NULL-actual alias rings together.
+		Even if they are connected elsewhere hierarchically.  
+		WHY?  Because when we discover hierarchical connections, 
+		we need to propagate known actuals to all known aliases.  
+		If 'connected' null-actual-rings were kept separate, 
+		then when they are merged with known actuals, 
+		they will not propagate maximally; there will be isolated
+		rings of NULL actuals that should NOT be so.  
+		See CRITICAL comment in "Object/inst/alias_actuals.tcc":
+		instance_alias_info_actuals::__symmetric_synchronize.
+
 //=============================================================================
 2005-08-08:
 	In creating unique state, need to process the definition
