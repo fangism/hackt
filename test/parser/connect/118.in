@@ -1,0 +1,17 @@
+// "118.in" -- testing creation connections, involving relaxed params
+// copy-reduced from "117.in"
+// to trip an ICE in unique creation
+// NOTES:
+// problem: x and y are created prematurely
+// solution: before creating an instance, follow up parent link
+//	to the highest super-instance and create from the top-down.
+
+defproc bar(bool a) { }
+
+bool x;
+bool y;
+bar p, q;
+p(x);
+q(y);
+p = q;	
+
