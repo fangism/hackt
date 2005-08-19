@@ -410,9 +410,9 @@ process instance pool:
 9	::s[3][2]
 10	::s[3][3]
 int instance pool:
-1	::q
-2	::r[0]
-3	::r[1]
+1	::p.i
+2	::p.j[0]
+3	::p.j[1]
 4	::t[0].i
 5	::t[0].j[0]
 6	::t[0].j[1]
@@ -441,11 +441,11 @@ int instance pool:
 29	::s[3][3].j[0]
 30	::s[3][3].j[1]
 bool instance pool:
-1	::a
-2	::x[0]
-3	::x[1]
-4	::x[2]
-5	::x[3]
+1	::p.b
+2	::p.c[0]
+3	::p.c[1]
+4	::p.c[2]
+5	::p.c[3]
 6	::t[0].b
 7	::t[0].c[0]
 8	::t[0].c[1]

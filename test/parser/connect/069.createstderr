@@ -120,7 +120,7 @@ In namespace "", we have: {
       [0..1][0..2]
     }
       unrolled indices: {
-        [0][0] = ::p[0][0] (1) (
+        [0][0] = ::p[0][0] (2) (
           bool^0 b (instantiated) = ::p[0][0].b (6) 
           bool^1 c with indices: {
             [0..3]
@@ -140,7 +140,7 @@ In namespace "", we have: {
               1 = ::p[0][0].j[1] (6) 
             }
         )
-        [0][1] = ::p[0][1] (2) (
+        [0][1] = ::p[0][1] (1) (
           bool^0 b (instantiated) = ::a (1) 
           bool^1 c with indices: {
             [0..3]
@@ -262,16 +262,16 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::p[0][0]
-2	::p[0][1]
+1	::p[0][1]
+2	::p[0][0]
 3	::p[0][2]
 4	::p[1][0]
 5	::p[1][1]
 6	::p[1][2]
 int instance pool:
-1	::q
-2	::r[0]
-3	::r[1]
+1	::p[0][1].i
+2	::p[0][1].j[0]
+3	::p[0][1].j[1]
 4	::p[0][0].i
 5	::p[0][0].j[0]
 6	::p[0][0].j[1]
@@ -288,11 +288,11 @@ int instance pool:
 17	::p[1][2].j[0]
 18	::p[1][2].j[1]
 bool instance pool:
-1	::a
-2	::x[0]
-3	::x[1]
-4	::x[2]
-5	::x[3]
+1	::p[0][1].b
+2	::p[0][1].c[0]
+3	::p[0][1].c[1]
+4	::p[0][1].c[2]
+5	::p[0][1].c[3]
 6	::p[0][0].b
 7	::p[0][0].c[0]
 8	::p[0][0].c[1]

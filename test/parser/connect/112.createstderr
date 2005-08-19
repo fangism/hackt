@@ -89,19 +89,19 @@ In namespace "", we have: {
       }
 
   Instances:
-    j = process wrap<>^0 j (instantiated) = ::k (1) (
+    j = process wrap<>^0 j (instantiated) = ::k (3) (
       bool^0 a (instantiated) = ::k.b (1) 
       bool^0 b (instantiated) = ::j.b (1) 
     )
-    k = process wrap<>^0 k (instantiated) = ::j (1) (
+    k = process wrap<>^0 k (instantiated) = ::j (3) (
       bool^0 a (instantiated) = ::z (1) 
       bool^0 b (instantiated) = ::j.a (1) 
     )
-    l = process wrap<>^0 l (instantiated) = ::l (2) (
+    l = process wrap<>^0 l (instantiated) = ::l (1) (
       bool^0 a (instantiated) = ::x (1) 
       bool^0 b (instantiated) = ::l.a (1) 
     )
-    m = process wrap<>^0 m (instantiated) = ::m (3) (
+    m = process wrap<>^0 m (instantiated) = ::m (2) (
       bool^0 a (instantiated) = ::w (1) 
       bool^0 b (instantiated) = ::l.b (1) 
     )
@@ -113,9 +113,9 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::j
-2	::l
-3	::m
+1	::l
+2	::m
+3	::k
 bool instance pool:
-1	::x
+1	::l.a
 

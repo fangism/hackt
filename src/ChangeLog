@@ -2,6 +2,20 @@
 
 2005-08-19	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-15:
+	  Hierarchical state placeholder allocation bug fixed.  
+	  Case parser/connect/120.in expects to create-fail but doesn't
+		new bug to be fixed, related to actuals checking, 
+		needs to be done recursively in ports.  
+	  Test-case updates: the order of state allocation has been
+		shuffled due to the introduction of the upward 
+		super-instance traversal prior to self allocation.  
+	  TODO: address new bug, aiming to perfect alias actuals
+		type checking of relaxed parameters at creation/connect time.
+		Then start unrolling footprints of complete types, 
+		which was the end-goal of this branch.
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-14:
 	  Summary: in the middle of fixing the recent known bug (ICE).
 		Setting up upward-recursive super-instance state allocation

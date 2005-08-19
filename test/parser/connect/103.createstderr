@@ -82,18 +82,18 @@ In namespace "", we have: {
       }
 
   Instances:
-    p = process foo<1>^0 p (instantiated) = ::w.a (1) 
-    q = process foo<2>^0 q (instantiated) = ::w.b (2) 
-    r = process foo<1>^0 r (instantiated) = ::p (1) 
-    w = process bar<>^0 w (instantiated) = ::w (3) (
-      process foo<1>^0 a (instantiated) = ::r (1) 
-      process foo<2>^0 b (instantiated) = ::q (2) 
+    p = process foo<1>^0 p (instantiated) = ::w.a (2) 
+    q = process foo<2>^0 q (instantiated) = ::w.b (3) 
+    r = process foo<1>^0 r (instantiated) = ::p (2) 
+    w = process bar<>^0 w (instantiated) = ::w (1) (
+      process foo<1>^0 a (instantiated) = ::r (2) 
+      process foo<2>^0 b (instantiated) = ::q (3) 
     )
 }
 
 Created state:
 process instance pool:
-1	::p
-2	::q
-3	::w
+1	::w
+2	::w.a
+3	::w.b
 

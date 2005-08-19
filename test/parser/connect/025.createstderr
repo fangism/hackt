@@ -61,5 +61,5 @@ Created state:
 process instance pool:
 1	::none
 int instance pool:
-1	::foo
+1	::none.a
 

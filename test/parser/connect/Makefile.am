@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.10.4.2 2005/08/18 05:33:48 fang Exp $
+#	$Id: Makefile.am,v 1.10.4.3 2005/08/19 06:57:36 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -27,7 +27,8 @@ ARTC_TEST_PASSES = \
 	083 084 085 086 087 088 089 \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 104 105 106 107 108 109 \
-	110 111 112 113 114 115 116 117 118
+	110 111 112 113 114 115 116 117 118 119 \
+	120
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -54,9 +55,10 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	083 084 085 088 089 \
 	092 093 094 095 099 \
 	100 102 103 104 106 107 109 \
-	111 112 113 114 116
+	111 112 113 114 116 117 118 119
 
-# create tests pending BUG FIX: 117 118
+# 117 passes unrolling, but fails during creat's hierarchical type check, neat!
+# 120 looks suspect...
 
 # notes:
 # the following tests depend channel port subinstances

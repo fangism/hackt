@@ -1,0 +1,176 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	7	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	62	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	74	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	80	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	83	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	84	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	87	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	94	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	95	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	97	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	98	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	99	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	102	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	103	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	106	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  6 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> Z
+      >(
+        foo<pint-inst-ref ::bar::Z> a
+        foo<pint-inst-ref ::bar::Z> b
+      )
+      In definition "bar", we have: {
+        Z = pint<> Z
+        a = foo<pint-inst-ref ::bar::Z> a
+        b = foo<pint-inst-ref ::bar::Z> b
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> X
+      ><
+      pint<> Y
+      >(
+      )
+      In definition "foo", we have: {
+        X = pint<> X
+        Y = pint<> Y
+      }
+
+    ick = process-definition (defined) ick(
+        bar<3> y
+      )
+      In definition "ick", we have: {
+        y = bar<3> y
+      }
+
+  Instances:
+    m = process ick<>^0 m (instantiated) = ::n (
+      process bar<3>^0 y (instantiated) = ::p (
+        process foo<3>^0 a (instantiated) = ::m.y.a 
+        process foo<3>^0 b (instantiated) = ::m.y.b 
+      )
+    )
+    n = process ick<>^0 n (instantiated) = ::m (
+      process bar<3>^0 y (instantiated) = ::q (
+        process foo<3>^0 a (instantiated) = ::n.y.a 
+        process foo<3>^0 b (instantiated) = ::n.y.b 
+      )
+    )
+    p = process bar<3>^0 p (instantiated) = ::m.y (
+      process foo<3>^0 a (instantiated)<2> = ::x 
+      process foo<3>^0 b (instantiated) = ::p.b 
+    )
+    q = process bar<3>^0 q (instantiated) = ::n.y (
+      process foo<3>^0 a (instantiated)<5> = ::y 
+      process foo<3>^0 b (instantiated) = ::q.b 
+    )
+    x = process foo<3>^0 x (instantiated)<2> = ::p.a 
+    y = process foo<3>^0 y (instantiated)<5> = ::q.a 
+}
+

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.10 2005/08/19 05:17:39 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.11 2005/08/19 06:57:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -273,18 +273,20 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(cerr << "allocating: ") << endl;
+	this->dump_aliases(cerr << "aliases: ");
+	cerr << endl;
 #endif
 	this_type& _this = const_cast<this_type&>(*this);
-#if 0
+#if 1
 	// BUG FIX: need to see if aliases have super-instances
 	// upward recursion!
 	// remember, begin starts with the NEXT item
 	// end -1 will point to self, to we need to stop one short
 	iterator i(_this.begin());
-	iterator j(++i);
+	iterator j(i++);
 	const iterator e(_this.end());
 	for ( ; i!=e; i++, j++) {
-		if (!i->create_super_instance(f).good) {
+		if (!j->create_super_instance(f).good) {
 			// already have partial error message
 			cerr << "ERROR creating placeholder state for "
 				"super-instance." << endl;
@@ -386,7 +388,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// a test case that demonstrates this is parser/connect/111.in
 	_this.allocate_subinstances(f);
 	return this->instance_index;
-}
+}	// end method __allocate_state
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -629,6 +631,21 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 	DIE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since begin points to next, self will always be printed last.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	i->dump_alias(o);
+	for (i++; i!=e; i++) {
+		i->dump_alias(o << " = ");
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

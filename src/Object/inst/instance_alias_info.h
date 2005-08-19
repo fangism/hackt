@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.7 2005/08/19 05:17:38 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.8 2005/08/19 06:57:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -244,6 +244,9 @@ public:
 
 virtual	void
 	dump_alias(ostream& o) const;
+
+	void
+	dump_aliases(ostream& o) const;
 
 	ostream&
 	dump_hierarchical_name(ostream&) const;
