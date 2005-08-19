@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.2 2005/08/04 23:02:54 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.2.6.1 2005/08/19 05:17:35 fang Exp $
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
 
@@ -11,11 +11,11 @@
 ###############################################################################
 # EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
-# no need for -MT (already correct target)
+# no need for -MT (if already correct target)
 # no need for -MP for phony targets, awk-script already does it, 
 #	but redundant phony targets are ignored by it anyhow.
 # expects name of temporary file after -MF
-FAST_MAKEDEP_FLAGS = -MMD -MF
+FAST_MAKEDEP_FLAGS = -MMD -MT $@ -MF
 PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
 	-v srcdir=$(srcdir)
 FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g' | $(SED) 's|[^ ]*\.cc||g'
@@ -28,13 +28,13 @@ if am__fastdepCXX
 	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hchk$$||'`; \
 	if $(CXXCOMPILE) -I$(srcdir) -include $< \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thd" \
-		$(EMPTY_SOURCE) -o $@; \
+		-c $(EMPTY_SOURCE) -o $@; \
 	then $(CAT) "$$depbase.Thd" | $(FILTER_HEADER_DEPS) | \
 		$(PROMOTE_HEADER_DEPS) > "$$depbase.hchkd"; \
 		$(RM) "$$depbase.Thd" ; \
 	else $(RM) "$$depbase.Thd"; exit 1; fi
 else
-	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+	@$(CXXCOMPILE) -I$(srcdir) -include $< -c $(EMPTY_SOURCE) -o $@
 endif
 
 .tcc.tccchk:
@@ -43,13 +43,13 @@ if am__fastdepCXX
 	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.tccchk$$||'`; \
 	if $(CXXCOMPILE) -I$(srcdir) -include $< \
 		$(FAST_MAKEDEP_FLAGS) "$$depbase.Ttccd" \
-		$(EMPTY_SOURCE) -o $@; \
+		-c $(EMPTY_SOURCE) -o $@; \
 	then $(CAT) "$$depbase.Ttccd" | $(FILTER_HEADER_DEPS) | \
 		$(PROMOTE_HEADER_DEPS) > "$$depbase.tccchkd"; \
 		$(RM) "$$depbase.Ttccd" ; \
 	else $(RM) "$$depbase.Ttccd"; exit 1; fi
 else
-	@$(CXXCOMPILE) -I$(srcdir) -include $< $(EMPTY_SOURCE) -o $@
+	@$(CXXCOMPILE) -I$(srcdir) -include $< -c $(EMPTY_SOURCE) -o $@
 endif
 
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.4 2005/08/18 05:33:28 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.5 2005/08/19 05:17:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -16,6 +16,7 @@ namespace ART {
 namespace entity {
 class instance_collection_base;
 class unroll_context;
+class footprint;
 template <class> class state_instance;
 using std::istream;
 using std::ostream;
@@ -81,13 +82,15 @@ public:
 virtual	ostream&
 	dump_hierarchical_name(ostream&) const;
 
+virtual	size_t
+	allocate_state(footprint&) const;
+
 	ostream&
 	dump_ports(ostream& o) const { return subinstances.dump(o); }
 
 	// simply forwarded call
 	good_bool
-	connect_ports(const connection_references_type&, 
-			const unroll_context&);
+	connect_ports(const connection_references_type&, const unroll_context&);
 
 protected:
 	// call forwarding

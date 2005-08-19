@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.6 2005/08/18 05:33:27 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.7 2005/08/19 05:17:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -50,6 +50,18 @@ class instance_alias_info :
 		protected class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 friend class instance_alias_info_actuals;
+#if 0
+// want to express this:
+template <size_t D> friend class instance_array<Tag, D>;
+#else
+// for the sake of granting direct access to __allocate_state.
+// but have to write this:
+friend class instance_array<Tag, 0>;
+friend class instance_array<Tag, 1>;
+friend class instance_array<Tag, 2>;
+friend class instance_array<Tag, 3>;
+friend class instance_array<Tag, 4>;
+#endif
 public:
 	typedef	typename class_traits<Tag>::instance_alias_relaxed_actuals_type
 						actuals_parent_type;
@@ -163,9 +175,19 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
+	// this implements the virtual function 
+	// from substructure_alias_base<true>
 	// really shouldn't be const...
 	size_t
 	allocate_state(footprint&) const;
+
+private:
+	// want to allow instance_collection<> to call this directly
+	// so we make it a friend :S
+	size_t
+	__allocate_state(footprint&) const;
+
+public:
 
 	good_bool
 	merge_allocate_state(this_type&, footprint&);
@@ -201,8 +223,10 @@ private:
 	void
 	propagate_actuals(const relaxed_actuals_type&);
 
-public:
+	good_bool
+	create_super_instance(footprint&);
 
+public:
 	bool
 	must_match_type(const this_type&) const;
 

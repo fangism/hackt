@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.9 2005/08/18 05:33:27 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.10 2005/08/19 05:17:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -232,8 +232,67 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
 	this->container = p;
-	substructure_parent_type::unroll_port_instances(
-		*this->container, c);
+	substructure_parent_type::unroll_port_instances(*this->container, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If this container is a port formal, then this will invoke
+	it's parent super-instance's state allocation.  
+	Upward-recursive.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(cerr << "inspecting: ") << endl;
+#endif
+	if (this->container->is_port_formal()) {
+		STACKTRACE("is subinstance");
+		// super_instance is a const substructure_alias*
+		return good_bool(this->container->get_super_instance()
+			->allocate_state(f) != 0);
+	} else {
+		STACKTRACE("is NOT subinstance");
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This (public) variant of state allocation is intended for top-level
+	construction, where we need to check for super-instance of aliases
+	and create them top-down.  
+	We obviously don't want to do that when we're already processing 
+	top-down from a port expansion.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(cerr << "allocating: ") << endl;
+#endif
+	this_type& _this = const_cast<this_type&>(*this);
+#if 0
+	// BUG FIX: need to see if aliases have super-instances
+	// upward recursion!
+	// remember, begin starts with the NEXT item
+	// end -1 will point to self, to we need to stop one short
+	iterator i(_this.begin());
+	iterator j(++i);
+	const iterator e(_this.end());
+	for ( ; i!=e; i++, j++) {
+		if (!i->create_super_instance(f).good) {
+			// already have partial error message
+			cerr << "ERROR creating placeholder state for "
+				"super-instance." << endl;
+			return 0;
+		}
+	}
+#endif
+	return _this.__allocate_state(f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,7 +306,6 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		footprints.  Bottom up is necessary because external aliases
 		between ports need to take into account internal aliases
 		which are determined by complete definitions.  
-	TODO: invoke the correct pool to allocate using the footprint.  
 
 	IMPORTANT: 2005-08-16:
 	TODO: unroll the type referenced by this instance.  
@@ -258,10 +316,17 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 		exist only in a ring somewhere else in the hierarchy!
 		This will have to be developed in pieces.  
 		Need to impose temporary limitations.  
+	UPDATE: 2005-08-18
+		No longer need to search rings, because we enforce
+		that all aliases in a ring have actuals or none.
+		Null-actuals rings are merged when discovered.  
+
+	BUG: test case parser/connect/118.in
+		check aliases for super-instances, must create those first!
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 size_t
-INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
+INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	STACKTRACE_VERBOSE;
 	if (this->instance_index)
 		return this->instance_index;
@@ -274,7 +339,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	_this.instance_index =
 		the_pool.allocate(instance_type(*this));
 		// instance_ptr_type(new instance_type(*this));
-	INVARIANT(_this.instance_index);
+	INVARIANT(this->instance_index);
 	// NOTE: can't _this.allocate_subinstances() yet because there
 	// may be aliases between the ports, see comment below.  
 	// Visit each alias in the ring and connect
@@ -306,8 +371,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 		// while later actuals are valid in the ring.
 		// should they have been propagated during 
 		// instance_reference_connection::unroll?
-		if (!synchronize_actuals(
-				const_cast<this_type&>(*this), *i).good)
+		if (!synchronize_actuals(_this, *i).good)
 			return 0;
 #endif
 		// recursive connections, merging ports.
@@ -373,7 +437,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 	} else {
 		if (!tind) {
 			// neither has been created yet
-			if (!t.allocate_state(f))
+			if (!t.__allocate_state(f))
 				return good_bool(false);
 		}
 		this->inherit_subinstances_state(t, f);
@@ -1305,7 +1369,7 @@ INSTANCE_ARRAY_CLASS::allocate_state(footprint& f) {
 	iterator i(collection.begin());
 	const iterator e(collection.end());
 	for ( ; i!=e; i++) {
-		if (!i->allocate_state(f))
+		if (!i->__allocate_state(f))
 			return good_bool(false);
 	}
 	return good_bool(true);
@@ -1837,7 +1901,7 @@ good_bool
 INSTANCE_SCALAR_CLASS::allocate_state(footprint& f) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->the_instance.valid());
-	return good_bool(this->the_instance.allocate_state(f) != 0);
+	return good_bool(this->the_instance.__allocate_state(f) != 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

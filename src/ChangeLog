@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-08-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-14:
+	  Summary: in the middle of fixing the recent known bug (ICE).
+		Setting up upward-recursive super-instance state allocation
+		traversal to break the ICE.  Ha ha.  
+		New code calling instance_alias_info::create_super_instance
+		is currently disabled and pending other revisions.  
+		So all current tests still behave as before.  
+		old allocate_state has been renamed __allocate_state
+		and does NOT have upward recursion, it is intended to be
+		called recursively top-down.  The *new* allocate_state
+		will conditionally call create_super_instances on aliases
+		in the ring.  
+	  Make.hchk-tail.am: compile only (-c) don't link -- 
+		faster header check.
+
+
 2005-08-18	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-13:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.2 2005/08/16 21:10:48 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.3 2005/08/19 05:17:39 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
@@ -18,6 +18,16 @@ ostream&
 substructure_alias::dump_hierarchical_name(ostream& o) const {
 	DIE;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implemented for real in instance_alias_info.  
+ */
+size_t
+substructure_alias::allocate_state(footprint&) const {
+	DIE;
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

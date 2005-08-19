@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.3 2005/08/17 03:15:03 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.4 2005/08/19 05:17:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -153,7 +153,7 @@ subinstance_manager::allocate(footprint& f) {
 		const count_ptr<physical_instance_collection>
 			pi(i->is_a<physical_instance_collection>());
 		NEVER_NULL(pi);
-		pi->allocate_state(f);
+		pi->allocate_state(f);	// expands the whole collection
 	}
 }
 

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.2.1 2005/08/15 21:12:13 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.2.2 2005/08/19 05:17:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -18,6 +18,7 @@
 #include <algorithm>
 
 #include "Object/def/definition_base.h"
+#include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/ref/simple_meta_instance_reference.h"
@@ -440,6 +441,21 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		return true;
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Upward recursive: find top-most super-instance and allocate 
+	state from there top-down.  
+ */
+good_bool
+instance_collection_base::create_super_instance(footprint& f) {
+	// super-instance corresponds to a substructure alias
+	// some traversal similar to dump_hierarchical_name.
+	INVARIANT(super_instance);
+	return good_bool(super_instance->allocate_state(f) != 0);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
