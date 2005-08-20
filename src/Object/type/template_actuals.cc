@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.2.8.1 2005/08/15 21:12:23 fang Exp $
+	$Id: template_actuals.cc,v 1.2.8.2 2005/08/20 00:31:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -45,7 +45,7 @@ using std::back_inserter;
 template_actuals::template_actuals() :
 		strict_template_args(), relaxed_template_args() {
 #if ENABLE_STACKTRACE
-	cerr << "ctor ";
+	STACKTRACE_INDENT << "ctor ";
 	CHECK_ARG_ADDRESSES
 #endif
 }
@@ -60,7 +60,7 @@ template_actuals::template_actuals(const arg_list_ptr_type& s,
 		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
 #if ENABLE_STACKTRACE
-	cerr << "ctor ";
+	STACKTRACE_INDENT << "ctor ";
 	CHECK_ARG_ADDRESSES
 #endif
 }
@@ -81,7 +81,7 @@ template_actuals::template_actuals(const template_actuals& t,
 	NEVER_NULL(a);
 	INVARIANT(!t.relaxed_template_args);
 #if ENABLE_STACKTRACE
-	cerr << "ctor ";
+	STACKTRACE_INDENT << "ctor ";
 	CHECK_ARG_ADDRESSES
 #endif
 }
@@ -89,7 +89,7 @@ template_actuals::template_actuals(const template_actuals& t,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::~template_actuals() {
 #if ENABLE_STACKTRACE
-	cerr << "dtor ";
+	STACKTRACE_INDENT << "dtor ";
 	CHECK_ARG_ADDRESSES
 #endif
 }

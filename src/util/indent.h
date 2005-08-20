@@ -2,7 +2,7 @@
 	\file "util/indent.h"
 	Utility for semi-automatically indenting output.  
 
-	$Id: indent.h,v 1.6.10.1 2005/08/16 03:50:21 fang Exp $
+	$Id: indent.h,v 1.6.10.2 2005/08/20 00:31:59 fang Exp $
  */
 
 #ifndef	__UTIL_INDENT_H__
@@ -76,7 +76,7 @@ public:
 class auto_indenter { };
 
 // use this like an IO-manipulator like endl
-extern	auto_indenter	auto_indent;
+extern	const auto_indenter	auto_indent;
 
 //=============================================================================
 // public interface functions

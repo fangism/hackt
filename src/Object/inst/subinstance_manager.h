@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.3 2005/08/17 03:15:03 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.4 2005/08/20 00:31:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -103,6 +103,10 @@ public:
 
 	void
 	allocate(footprint&);
+
+	static
+	good_bool
+	synchronize_port_actuals(this_type&, this_type&);
 
 	// const is bogus here (temporary workaround)
 	good_bool

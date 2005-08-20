@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.10.6.1 2005/08/16 03:50:22 fang Exp $
+	$Id: stacktrace.cc,v 1.10.6.2 2005/08/20 00:31:59 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -27,6 +27,7 @@ STATIC_TRACE_BEGIN("stacktrace")
 
 namespace util {
 USING_LIST
+using std::ostream;
 using util::qmap;
 using std::stack;
 using std::ostream_iterator;
@@ -146,6 +147,22 @@ stacktrace::manager::get_stack_streams(void) {
 	return return_type(stack_streams, count);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Stacktrace stream manipulator.  
+ */
+const stacktrace::indent	stacktrace_auto_indent = stacktrace::indent();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses the stacktrace's position to automatically indent.  
+ */
+ostream&
+operator << (ostream& o, const stacktrace::indent&) {
+	// need static initializers?
+	return stacktrace::manager::print_auto_indent(o) << ":  ";
+}
+
 //=============================================================================
 // class stacktrace method definitions
 
@@ -155,12 +172,9 @@ stacktrace::stacktrace(const string& s) {
 	static const char* const
 		default_stack_indent_string = "| ";	// permanent
 	// must be static or else, new ref_counts will be locally released
-	static stack_text_type&
-		stack_text(*manager::get_stack_text());
-	static stack_text_type&
-		stack_indent(*manager::get_stack_indent());
-	static const stack_echo_type&
-		stack_echo(*manager::get_stack_echo());
+	static stack_text_type& stack_text(*manager::get_stack_text());
+	static stack_text_type& stack_indent(*manager::get_stack_indent());
+	static const stack_echo_type& stack_echo(*manager::get_stack_echo());
 	static const stack_streams_type&
 		stack_streams(*manager::get_stack_streams());
 
@@ -185,12 +199,9 @@ stacktrace::stacktrace(const string& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stacktrace::~stacktrace() {
-	static stack_text_type&
-		stack_text(*manager::get_stack_text());
-	static stack_text_type&
-		stack_indent(*manager::get_stack_indent());
-	static const stack_echo_type&
-		stack_echo(*manager::get_stack_echo());
+	static stack_text_type& stack_text(*manager::get_stack_text());
+	static stack_text_type& stack_indent(*manager::get_stack_indent());
+	static const stack_echo_type& stack_echo(*manager::get_stack_echo());
 	static const stack_streams_type&
 		stack_streams(*manager::get_stack_streams());
 

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.4 2005/08/17 03:15:02 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.5 2005/08/20 00:31:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -200,6 +200,9 @@ virtual	void
 	inherit_created_state(const physical_instance_collection&, 
 		const footprint&) = 0;
 
+virtual	good_bool
+	synchronize_actuals(physical_instance_collection&) = 0;
+
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
 
@@ -327,6 +330,9 @@ public:
 	inherit_created_state(const physical_instance_collection&, 
 		const footprint&);
 
+	good_bool
+	synchronize_actuals(physical_instance_collection&);
+
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
@@ -414,6 +420,9 @@ public:
 	void
 	inherit_created_state(const physical_instance_collection&, 
 		const footprint&);
+
+	good_bool
+	synchronize_actuals(physical_instance_collection&);
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

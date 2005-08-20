@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.11 2005/08/19 06:57:31 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.12 2005/08/20 00:31:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -246,7 +246,8 @@ good_bool
 INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(cerr << "inspecting: ") << endl;
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "inspecting: ")
+		<< endl;
 #endif
 	if (this->container->is_port_formal()) {
 		STACKTRACE("is subinstance");
@@ -272,9 +273,8 @@ size_t
 INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(cerr << "allocating: ") << endl;
-	this->dump_aliases(cerr << "aliases: ");
-	cerr << endl;
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "allocating: ");
+	this->dump_aliases(STACKTRACE_STREAM << " with aliases: ") << endl;
 #endif
 	this_type& _this = const_cast<this_type&>(*this);
 #if 1
@@ -351,6 +351,15 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// j stays one-ahead of i
 	// stop one-short of the end, which points to itself
 	const iterator e(_this.end());
+#if 0
+{
+	iterator ii(i), jj(j);
+	for ( ; jj!=e; ii=jj, jj++) {
+		if (!synchronize_actuals_recursive(_this, *ii).good)
+			return 0;
+	}
+}
+#endif
 	for ( ; j!=e; i=j, j++) {
 #if 0
 		if (i->instance_index) {
@@ -404,8 +413,8 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 	const size_t ind = this->instance_index;
 	const size_t tind = t.instance_index;
 #if ENABLE_STACKTRACE
-	cerr << "this = " << this << ", &t = " << &t << endl;
-	cerr << "ind = " << ind << ", tind = " << tind << endl;
+	STACKTRACE_INDENT << "this = " << this << ", &t = " << &t << endl;
+	STACKTRACE_INDENT << "ind = " << ind << ", tind = " << tind << endl;
 #endif
 	if (ind) {
 		if (tind) {
@@ -417,10 +426,9 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 				// WTF, I can't just use (f) ?
 				(footprint_pool_getter<Tag>().operator()(f));
 			ICE(cerr, 
-				cerr << "connecting "
-					"two instances already assigned to "
-					"different IDs: got " << ind <<
-					" and " << tind << endl;
+				cerr << "connecting two instances already "
+					"assigned to different IDs: got " <<
+					ind << " and " << tind << endl;
 				the_pool[ind].get_back_ref()
 					->dump_hierarchical_name(cerr << '\t')
 					<< endl;
@@ -444,16 +452,20 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 		}
 		this->inherit_subinstances_state(t, f);
 	}
-	const good_bool ret(synchronize_actuals(*this, t));
-	if (!ret.good) {
+#if 0
+	return synchronize_actuals_recursive(*this, t);
+#else
+	if (!synchronize_actuals(*this, t).good) {
 		// already have partial error message from compare
 		cerr << "Conflicting actuals in hierarchichal connections."
 			<< endl;
 		this->dump_hierarchical_name(cerr << "between: ") << endl;
 		t.dump_hierarchical_name(cerr << "    and: ") << endl;
+		return good_bool(false);
 	}
-	return ret;
-}
+	return good_bool(true);
+#endif
+}	// end method merge_allocate_state
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -548,6 +560,44 @@ INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals(this_type& l, this_type& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals_recursive(
+		this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	l.dump_hierarchical_name(STACKTRACE_INDENT << "with: ");
+		l.dump_actuals(STACKTRACE_STREAM) << endl;
+	r.dump_hierarchical_name(STACKTRACE_INDENT << "and : ");
+		r.dump_actuals(STACKTRACE_STREAM) << endl;
+#endif
+	if (!synchronize_actuals(l, r).good) {
+		// already have partial error message from compare
+		cerr << "Conflicting actuals in hierarchichal connections."
+			<< endl;
+		l.dump_hierarchical_name(cerr << "between: ") << endl;
+		r.dump_hierarchical_name(cerr << "    and: ") << endl;
+		return good_bool(false);
+	}
+#if 1
+	// need to hierarchically check relaxed actuals of subinstances
+	// in all cases?
+	else if (!synchronize_port_actuals(l, r).good) {
+		cerr << "Conflicting actuals found in implicit port connections"
+			<< endl;
+		l.dump_hierarchical_name(cerr << "between: ") << endl;
+		r.dump_hierarchical_name(cerr << "    and: ") << endl;
+		return good_bool(false);
+	}
+#endif
+#if ENABLE_STACKTRACE
+	l.dump_actuals(STACKTRACE_INDENT << "now : ") << endl;
+	r.dump_actuals(STACKTRACE_INDENT << "and : ") << endl;
+#endif
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This version of connect is symmetric and tailored to port connections,
 	and is called from simple_meta_instance_reference::connect_port.  
@@ -564,6 +614,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 	}
 	// TODO: this only necessary for types with relaxed actuals
 	// specialize to optimize later.  
+	// note: should not be recursive at unroll-time
 	if (!synchronize_actuals(l, r).good) {
 		// already have error message
 		return good_bool(false);
@@ -1633,6 +1684,37 @@ INSTANCE_ARRAY_CLASS::inherit_created_state(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Recursively synchronize relaxed actuals of ports.  
+	Even though this type may not have relaxed actuals, 
+	the ports (and ports-of-ports) might, so recursion is necessary.  
+	This is called at create-time. 
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++, j++) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		element_type& jj(const_cast<element_type&>(
+			AS_A(const element_type&, *j)));
+		if (!element_type::synchronize_actuals_recursive(ii, jj).good) {
+			// error message?
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
  */
@@ -2040,6 +2122,21 @@ INSTANCE_SCALAR_CLASS::inherit_created_state(
 	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
 	this->the_instance.inherit_subinstances_state(t.the_instance, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called at create-time to check that the implicit connections
+	in the port hierarchy are compatible, w.r.t. relaxed actual
+	parameters.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	return instance_type::synchronize_actuals_recursive(this->the_instance,
+		t.the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

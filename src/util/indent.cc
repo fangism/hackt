@@ -2,7 +2,7 @@
 	\file "util/indent.cc"
 	Source for indentation manager.  
 
-	$Id: indent.cc,v 1.6 2005/05/10 04:51:24 fang Exp $
+	$Id: indent.cc,v 1.6.28.1 2005/08/20 00:31:59 fang Exp $
  */
 
 #include <iostream>
@@ -185,7 +185,7 @@ disable_indent::~disable_indent() {
 	The global ostream auto-indenting manipulator.  
 	Indentation is done by calling (ostream) << auto_indent.
  */
-auto_indenter				auto_indent;
+const auto_indenter				auto_indent = auto_indenter();
 
 //=============================================================================
 // function definitions

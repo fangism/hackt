@@ -2,6 +2,18 @@
 
 2005-08-19	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-16:
+	  Valiant attempt to fix bug case parser/connect/120.in, but
+		suspended for the time being.  Resolution: the issue is that
+		relaxed actuals at leaf nodes of hierarchical instances
+		and ports are not being propagated completely.  
+		Doing so adds run-time to either the unroll or creation phase, 
+		but this check would be necessary for type-correctness.  
+		We're punting for now to return to more critical tasks.  
+	  Added bunch of future useful methods for recursive actuals
+		synchronization to "Object/inst/instance_collection.tcc".
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-15:
 	  Hierarchical state placeholder allocation bug fixed.  
 	  Case parser/connect/120.in expects to create-fail but doesn't

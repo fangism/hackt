@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.3 2005/08/17 03:15:03 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.4 2005/08/20 00:31:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -83,6 +83,9 @@ virtual	good_bool
 
 virtual	void
 	inherit_created_state(const this_type&, const footprint&) = 0;
+
+virtual	good_bool
+	synchronize_actuals(this_type&) = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

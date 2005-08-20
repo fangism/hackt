@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.4 2005/08/19 05:17:39 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.5 2005/08/20 00:31:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -111,12 +111,41 @@ subinstance_manager::connect_ports(
 	// const const_ref_iterator re(cr.end());
 	for ( ; pi!=pe; pi++, ri++) {
 	// references may be NULL (no-connect)
-	if (*ri) {
-		if ((*ri)->connect_port(**pi, c).bad) {
-			// already have error message
-			return good_bool(false);
-		}	// else good to continue
+		if (*ri) {
+			if ((*ri)->connect_port(**pi, c).bad) {
+				// already have error message
+				return good_bool(false);
+			}	// else good to continue
+		}
 	}
+	// all connections good
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
+	typedef	connection_references_type::const_iterator
+						const_ref_iterator;
+	array_type& la(l.subinstance_array);
+	array_type& ra(r.subinstance_array);
+	INVARIANT(la.size() == ra.size());
+	iterator li(la.begin());	// instance_collection_base
+	iterator ri(ra.begin());
+	const iterator le(la.end());
+	// const const_ref_iterator re(cr.end());
+	for ( ; li!=le; li++, ri++) {
+	// references may be NULL (no-connect)
+		if (*li && *ri) {
+			
+			if (!IS_A(physical_instance_collection&, **li)
+				.synchronize_actuals(
+				IS_A(physical_instance_collection&, **ri))
+					.good) {
+				// already have error message
+				return good_bool(false);
+			}	// else good to continue
+		}
 	}
 	// all connections good
 	return good_bool(true);
@@ -216,10 +245,10 @@ subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 void
 subinstance_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	cerr << "collected " << subinstance_array.size() << " subinstances."
-		<< endl;
+	STACKTRACE_PERSISTENT_VERBOSE;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "collected " << subinstance_array.size() <<
+		" subinstances." << endl;
 #endif
 	m.collect_pointer_list(subinstance_array);
 }
@@ -228,11 +257,11 @@ subinstance_manager::collect_transient_info_base(
 void
 subinstance_manager::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer_list(o, subinstance_array);
-#if ENABLE_STACKTRACE
-	cerr << "wrote " << subinstance_array.size() << " subinstances."
-		<< endl;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "wrote " << subinstance_array.size() <<
+		" subinstances." << endl;
 #endif
 }
 
@@ -240,11 +269,11 @@ subinstance_manager::write_object_base(const persistent_object_manager& m,
 void
 subinstance_manager::load_object_base(const persistent_object_manager& m,
 		istream& i) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer_list(i, subinstance_array);
-#if ENABLE_STACKTRACE
-	cerr << "loaded " << subinstance_array.size() << " subinstances."
-		<< endl;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "loaded " << subinstance_array.size() <<
+		" subinstances." << endl;
 #endif
 }
 

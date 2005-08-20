@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.3.2.1 2005/08/15 21:12:26 fang Exp $
+	$Id: unroll_context.cc,v 1.3.2.2 2005/08/20 00:31:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -119,7 +119,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE("unroll_context::lookup_actual()");
 #if ENABLE_STACKTRACE
-	cerr << "looking up: " << p.get_name() << endl;
+	STACKTRACE_INDENT << "looking up: " << p.get_name() << endl;
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());
@@ -160,8 +160,8 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			return const_ret;
 		} else {
 #if ENABLE_STACKTRACE
-			ret->what(cerr << "expr (");
-			ret->dump(cerr << ") = ") << endl;
+			ret->what(STACKTRACE_INDENT << "expr (");
+			ret->dump(STACKTRACE_STREAM << ") = ") << endl;
 #endif
 			const count_ptr<const simple_param_meta_value_reference>
 				self(ret.is_a<const simple_param_meta_value_reference>());

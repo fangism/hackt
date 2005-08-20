@@ -1,0 +1,179 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	68
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	63
+	4	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	88	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	90	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	95	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	97	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	99	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  8 instantiation-collections
+  0 sub-namespaces
+  4 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+        mybool<> a
+      )
+      In definition "bar", we have: {
+        a = mybool<> a
+      }
+
+    foo = process-definition (defined) foo(
+        bar<> b
+      )
+      In definition "foo", we have: {
+        b = bar<> b
+      }
+
+    ick = process-definition (defined) ick(
+        foo<> x
+      )
+      In definition "ick", we have: {
+        x = foo<> x
+      }
+
+    mybool = process-definition (defined) mybool<>
+<
+      pbool<> B
+      >(
+      )
+      In definition "mybool", we have: {
+        B = pbool<> B
+      }
+
+  Instances:
+    j = process foo<>^0 j (instantiated) = ::m.x (
+      process bar<>^0 b (instantiated) = ::q (
+        process mybool<>^0 a (instantiated) = ::j.b.a 
+      )
+    )
+    k = process foo<>^0 k (instantiated) = ::n.x (
+      process bar<>^0 b (instantiated) = ::p (
+        process mybool<>^0 a (instantiated) = ::k.b.a 
+      )
+    )
+    m = process ick<>^0 m (instantiated) = ::n (
+      process foo<>^0 x (instantiated) = ::j (
+        process bar<>^0 b (instantiated) = ::m.x.b (
+          process mybool<>^0 a (instantiated) = ::m.x.b.a 
+        )
+      )
+    )
+    n = process ick<>^0 n (instantiated) = ::m (
+      process foo<>^0 x (instantiated) = ::k (
+        process bar<>^0 b (instantiated) = ::n.x.b (
+          process mybool<>^0 a (instantiated) = ::n.x.b.a 
+        )
+      )
+    )
+    p = process bar<>^0 p (instantiated) = ::k.b (
+      process mybool<>^0 a (instantiated)<true> = ::x 
+    )
+    q = process bar<>^0 q (instantiated) = ::j.b (
+      process mybool<>^0 a (instantiated)<false> = ::y 
+    )
+    x = process mybool<>^0 x (instantiated)<true> = ::p.a 
+    y = process mybool<>^0 y (instantiated)<false> = ::q.a 
+}
+

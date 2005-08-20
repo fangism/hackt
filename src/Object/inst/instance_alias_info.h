@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.8 2005/08/19 06:57:31 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.9 2005/08/20 00:31:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -215,10 +215,13 @@ public:
 	good_bool
 	compare_and_propagate_actuals(const relaxed_actuals_type&);
 
+	static
+	good_bool
+	synchronize_actuals_recursive(this_type&, this_type&);
 private:
 	static
 	good_bool
-	synchronize_actuals(this_type& l, this_type& r);
+	synchronize_actuals(this_type&, this_type&);
 
 	void
 	propagate_actuals(const relaxed_actuals_type&);

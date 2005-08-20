@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2005-08-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-16:
+	  Added STACKTRACE_INDENT macro to stacktrace.h to allow users
+		to print stacktrace prefix before diagnostic messages.  
+	  auto_indenter manipulators in indent and stacktrace declared const.
+
+
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-08:

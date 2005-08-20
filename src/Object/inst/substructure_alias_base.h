@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.5 2005/08/19 05:17:40 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.6 2005/08/20 00:31:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -72,6 +72,13 @@ protected:
 
 	void
 	allocate_subinstances(footprint&);
+
+	static
+	good_bool
+	synchronize_port_actuals(this_type& l, this_type& r) {
+		return subinstance_manager::synchronize_port_actuals(
+			l.subinstances, r.subinstances);
+	}
 
 public:
 	// just a forwarded call
@@ -146,6 +153,12 @@ protected:
 	 */
 	void
 	restore_parent_child_links(void) { }
+
+	static
+	good_bool
+	synchronize_port_actuals(const this_type&, const this_type&) {
+		return good_bool(true);
+	}
 
 public:
 	ostream&
