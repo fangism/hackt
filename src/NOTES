@@ -31,6 +31,10 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 	Will need to modify simple_met_instance_reference::unroll_*
 		their inst_collection_ref member (instance_base reference)
 		will need one additional level of translation.  
+	NOTE: this idea was noted in the comments of class footprint
+		some revisions ago, though I don't recall having written it.  
+		Already contains an instance_collection_map_type
+		for the purpose just described.  
 	LATER: what about references to global instances in local scopes?
 
 

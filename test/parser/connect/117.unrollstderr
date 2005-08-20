@@ -7,13 +7,13 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
 	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	72
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37

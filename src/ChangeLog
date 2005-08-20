@@ -2,6 +2,18 @@
 
 2005-08-20	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-18:
+	  Enabled persistence of the footprint manager in process_definition.
+		footprint_manager now saves away hashtable of
+		shadow-owned instance collections (physical and parameter).
+	  Object binary size for procsess_definition increased by 8B.  
+		Unroll and Create tests have been updated accordingly.
+	  Eventually commit the USE_FOOTPRINT_MANAGER switch
+		in "Object/def/process_definition.h".
+	  TODO: modify and use unroll context for instance_reference
+		translation.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-17:
 	  NOTES: important discussion on implementation of definition-scope
 		unrolling, pertaining to footprint management.  

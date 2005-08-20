@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.2.8.1 2005/08/15 21:12:26 fang Exp $
+	$Id: unroll_context.h,v 1.2.8.2 2005/08/20 21:03:47 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -51,6 +51,8 @@ using util::memory::count_ptr;
 	TODO: add flow control stack, etc...
 	TODO: obey lookup rules.  
 	TODO: be able to fake actuals and formal to do loop-context!
+	TODO: add footprint pointer for definition-scope instance
+		reference translation.  
  */
 class unroll_context {
 	typedef	unroll_context				this_type;

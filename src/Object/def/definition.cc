@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.3 2005/08/20 19:17:03 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.4 2005/08/20 21:03:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -68,6 +68,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	STACKTRACE_DUMP(x)
 #endif
 
+/**
+	Temporary development flag, isolated to this translation unit.  
+ */
+#define	REGISTER_PROCESS_FOOTPRINTS	0 && USE_FOOTPRINT_MANAGER
+#define	UNROLL_PROCESS_FOOTPRINTS	0 && REGISTER_PROCESS_FOOTPRINTS
+
+//=============================================================================
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
@@ -2585,7 +2592,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	// this has a fooprint manager
-#if USE_FOOTPRINT_MANAGER
+#if REGISTER_PROCESS_FOOTPRINTS
 	if (p) {
 		INVARIANT(p.size() == footprint_map.arity());
 		footprint_map[*p];
@@ -2608,7 +2615,7 @@ good_bool
 process_definition::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	// unroll using the footprint manager
-#if USE_FOOTPRINT_MANAGER
+#if UNROLL_PROCESS_FOOTPRINTS
 	unroll_context c;
 	if (p) {
 		INVARIANT(p.size() == footprint_map.arity());

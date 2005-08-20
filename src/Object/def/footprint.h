@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.3 2005/08/16 03:47:54 fang Exp $
+	$Id: footprint.h,v 1.1.2.4 2005/08/20 21:03:46 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -59,9 +59,14 @@ private:
 		The type of map used to maintain local copy of instances.  
 		Instances contained herein will have no parent scopespace?
 		How do we distinguish formal instances from actuals?
+		see NOTES:2005-08-20.
+		BTW, using count_ptrs for ease of coy-constructibility.  
+		Q: do we need a separate port_formals_manager?
 	 */
 	typedef	util::hash_qmap<string, count_ptr<instance_collection_base> >
 					instance_collection_map_type;
+	typedef	instance_collection_map_type::const_iterator
+					const_instance_map_iterator;
 	typedef	state_instance<process_tag>::pool_type	process_pool_type;
 	typedef	state_instance<channel_tag>::pool_type	channel_pool_type;
 	typedef	state_instance<datastruct_tag>::pool_type
@@ -105,6 +110,10 @@ private:
 			the flattened names.  
 		Another options may to make a scopestring class, 
 			a sequence of strings, but hash<> would be interesting.
+		Addendum (after NOTES:2005-08-20):
+			top-level module scope doesn't need to use this
+			it can still use top-level instances collections
+			directly without further translation. 
 	 */
 	instance_collection_map_type		instance_collection_map;
 

@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.2.8.3 2005/08/20 19:17:04 fang Exp $
+	$Id: process_definition.h,v 1.2.8.4 2005/08/20 21:03:47 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -16,7 +16,7 @@
 #include "Object/def/footprint_manager.h"
 #include "Object/lang/CHP.h"
 
-#define	USE_FOOTPRINT_MANAGER		0
+#define	USE_FOOTPRINT_MANAGER		1
 
 namespace ART {
 namespace entity {
