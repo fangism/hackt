@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.5 2005/08/16 03:48:41 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.6 2005/08/20 19:17:05 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -11,6 +11,7 @@
 #include "Object/type/canonical_type.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/def/typedef_base.h"
+#include "Object/def/footprint.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -189,13 +190,14 @@ CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o,
 	A: could use a compiler flag to conditionally postpone... oooh.
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
-void
-CANONICAL_TYPE_CLASS::register_definition_footprint(void) const {
-#if 1
+good_bool
+CANONICAL_TYPE_CLASS::unroll_definition_footprint(void) const {
+#if 0
 	FINISH_ME(Fang);
 #else
 	NEVER_NULL(canonical_definition_ptr);
-	canonical_definition_ptr->register_type(param_list_ptr);
+	canonical_definition_ptr->register_complete_type(param_list_ptr);
+	return canonical_definition_ptr->unroll_complete_type(param_list_ptr);
 #endif
 }
 

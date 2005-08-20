@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.1.4.2 2005/08/15 21:12:22 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.1.4.3 2005/08/20 19:17:05 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -130,8 +130,11 @@ public:
 		subinstance_manager&) const;
 
 	// like fundamental_type_reference::unroll_register_complete_type()
-	void
-	register_definition_footprint(void) const;
+	good_bool
+	unroll_definition_footprint(void) const;
+
+	good_bool
+	create_definition_footprint(void) const;
 
 public:
 // object persistence

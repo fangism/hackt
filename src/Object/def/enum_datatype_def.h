@@ -2,7 +2,7 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.2.8.1 2005/08/15 21:12:09 fang Exp $
+	$Id: enum_datatype_def.h,v 1.2.8.2 2005/08/20 19:17:04 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_ENUM_DATATYPE_DEF_H__
@@ -91,6 +91,10 @@ public:
 
 	bool
 	add_member(const token_identifier& em);
+
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.2 2005/08/15 21:12:08 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.3 2005/08/20 19:17:03 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -52,6 +52,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/type/canonical_generic_chan_type.h"
+
+#include "common/ICE.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -851,6 +853,21 @@ user_def_chan::make_canonical_fundamental_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void
+user_def_chan::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing until this has a footprint manager
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+user_def_chan::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing until this has a footprint manager
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+void
 user_def_chan::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
@@ -1005,6 +1022,20 @@ channel_definition_alias::make_canonical_fundamental_type_reference(
 		ta(ba.transform_template_actuals(a, template_formals));
 	return base->get_base_chan_def()->make_canonical_fundamental_type_reference(ta);
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_definition_alias::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_definition_alias::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1237,6 +1268,21 @@ built_in_datatype_def::add_template_formal(
 	INVARIANT(lookup_template_formal(pf->hash_string()));
 	// later return a never_ptr<>
 	return pf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+built_in_datatype_def::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, built-in types have no footprint manater
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+built_in_datatype_def::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, built-in types have no footprint manater
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1565,6 +1611,21 @@ enum_datatype_def::add_member(const token_identifier& em) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_datatype_def::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, doesn't have a footprint manager
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+enum_datatype_def::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, doesn't have a footprint manager
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -1873,6 +1934,21 @@ user_def_datatype::make_canonical_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// doesnt't have a gootprint manager .. yet
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+user_def_datatype::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// doesnt't have a gootprint manager .. yet
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2072,6 +2148,20 @@ datatype_definition_alias::require_signature_match(
 		const never_ptr<const definition_base> d) const {
 	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
 	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datatype_definition_alias::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+datatype_definition_alias::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2487,15 +2577,50 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
+	TODO: finish me
 	\pre the arity of the footprint_manager must be set.  
  */
 void
-process_definition::register_type(
-		const count_ptr<const const_param_expr_list>& i) const {
-}
+process_definition::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// this has a fooprint manager
+#if USE_FOOTPRINT_MANAGER
+	if (p) {
+		INVARIANT(p.size() == footprint_map.arity());
+		footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		// register the only map only if it doesn't exist yet
+		// otherwise will force a comparison of null pointers
+		if (!footprint_map.size()) {
+			footprint_map.only();	// create the one-and-only entry
+		}
+	}
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: finish me.
+ */
+good_bool
+process_definition::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// unroll using the footprint manager
+#if USE_FOOTPRINT_MANAGER
+	unroll_context c;
+	if (p) {
+		INVARIANT(p.size() == footprint_map.arity());
+		footprint& f = footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		footprint& f = footprint_map.only();
+	}
+#else
+	return good_bool(true);
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

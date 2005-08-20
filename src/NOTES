@@ -3,6 +3,38 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-08-20:
+	Considerations for unrolling, in the grand scheme of things.  
+	Top-level unrolling alters the top-level instance_collections
+		that are scattered throughout the namespace hierarchy.  
+	Definition-level unrolling CANNOT alter the instance_collections
+		that reside in the definition's scopespace because they may be 
+		shared by types with different template parameters.  
+	Each definition contains a map of footprints.  
+		Unrolling should work with instance_collections that belong to
+		a particular footprint.  
+		This means, we need to replicate the instance collections
+		in each footprint??  (The ones in the definitions are
+		really skeletal placeholders for unrolling.)
+		But what about the top-level?  It references globally 
+		accessible instances, that are NOT in the same namespace.  
+	Now it seems we may need to extend *unroll_context* to point 
+		to the correct footprint-scope:
+		if NULL, then we are at the global scope, no further 
+		resolution is needed.  
+		otherwise, we are in some definition scope, so
+		all instance_references to the base definition's 
+		instance_collections must be resolved to the 
+		particular complete_type's footprint instance_collection.  
+		The top-level (modules) footprint will just have an 
+		empty instance_collection map.  
+	Will need to modify simple_met_instance_reference::unroll_*
+		their inst_collection_ref member (instance_base reference)
+		will need one additional level of translation.  
+	LATER: what about references to global instances in local scopes?
+
+
+//=============================================================================
 2005-08-16:
 	extension of 2005-08-07 entry:
 	We're ready to unroll and create types encountered during hierarchical

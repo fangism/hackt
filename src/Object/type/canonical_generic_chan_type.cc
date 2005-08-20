@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.1.4.3 2005/08/16 03:48:41 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.1.4.4 2005/08/20 19:17:05 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -229,16 +229,24 @@ canonical_generic_chan_type::type_mismatch_error(ostream& o,
 	A: IMHO, yes, but it is not truly required.  
 	A: could use a compiler flag to conditionally postpone... oooh.
  */
-void
-canonical_generic_chan_type::register_definition_footprint(void) const {
-#if 1
-	FINISH_ME(Fang);
-#else
+good_bool
+canonical_generic_chan_type::unroll_definition_footprint(void) const {
 	if (canonical_definition_ptr) {
-		canonical_definition_ptr->register_type(param_list_ptr);
-	}
+		canonical_definition_ptr->register_complete_type(param_list_ptr);
+		return canonical_definition_ptr->
+			unroll_complete_type(param_list_ptr);
+	} else {
 	// else? does built-in channel have footprint? don't think so...
-#endif
+		typedef	datatype_list_type::const_iterator	const_iterator;
+		const_iterator i(datatype_list.begin());
+		const const_iterator e(datatype_list.end());
+		for ( ; i!=e; i++) {
+			if (!i->unroll_definition_footprint().good)
+				return good_bool(false);
+		}
+		// else everything matches
+		return good_bool(true);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

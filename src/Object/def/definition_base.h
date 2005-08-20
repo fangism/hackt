@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.2.8.2 2005/08/15 21:12:08 fang Exp $
+	$Id: definition_base.h,v 1.2.8.3 2005/08/20 19:17:04 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -36,6 +36,7 @@ class scopespace;
 class instance_collection_base;
 class fundamental_type_reference;
 class template_actuals;
+class const_param_expr_list;
 using std::string;
 using std::istream;
 using util::bad_bool;
@@ -230,6 +231,16 @@ virtual	never_ptr<const instance_collection_base>
 	Really, only some definitions should have ports...
  */
 virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
+
+#define	REGISTER_COMPLETE_TYPE_PROTO					\
+	void								\
+	register_complete_type(						\
+		const count_ptr<const const_param_expr_list>&) const
+
+#define	UNROLL_COMPLETE_TYPE_PROTO					\
+	good_bool							\
+	unroll_complete_type(						\
+		const count_ptr<const const_param_expr_list>&) const
 
 protected:
 	void

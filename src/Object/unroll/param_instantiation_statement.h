@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.3.4.3 2005/08/16 21:10:49 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.3.4.4 2005/08/20 19:17:06 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -77,10 +77,11 @@ protected:
 	}
 
 	static
-	void
+	good_bool
 	commit_type_first_time(value_collection_generic_type& v, 
-		const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&) {
 		// no-op
+		return good_bool(true);
 	}
 
 	static
@@ -163,10 +164,11 @@ protected:
 	}
 
 	static
-	void
+	good_bool
 	commit_type_first_time(value_collection_generic_type&, 
 			const instance_collection_parameter_type&) {
 		// no-op
+		return good_bool(true);
 	}
 
 	static

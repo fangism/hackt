@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.1.2.2 2005/08/11 03:40:53 fang Exp $
+	$Id: footprint_manager.h,v 1.1.2.3 2005/08/20 19:17:04 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -24,6 +24,7 @@ using util::persistent_object_manager;
 	We use std::map instead of util::qmap because we want the
 	operator[] to always return a reference, i.e. default construct
 	a pair if necessary.  
+	Implementation: use const_param_expr_list or pointer thereof?
  */
 class footprint_manager :
 		private std::map<const_param_expr_list, footprint> {

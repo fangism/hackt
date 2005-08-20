@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.1.2.2 2005/08/11 03:40:53 fang Exp $
+	$Id: footprint_manager.cc,v 1.1.2.3 2005/08/20 19:17:04 fang Exp $
  */
 
 #include <iostream>
@@ -66,7 +66,9 @@ footprint_manager::operator [] (const key_type& k) {
 footprint_manager::mapped_type&
 footprint_manager::only(void) {
 	INVARIANT(!_arity);
-	INVARIANT(size() == 1);
+	if (!size()) {
+		(*this)[key_type()];
+	}
 	return begin()->second;
 }
 

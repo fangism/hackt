@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-08-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-17:
+	  NOTES: important discussion on implementation of definition-scope
+		unrolling, pertaining to footprint management.  
+	  Added definition interface methods for registering and unrolling
+		complete types, called by
+		canonical_type::unroll_definition_footprint.
+		Everything BUT process_definition's implementation is no-op.  
+		process_definition's unroll_complete_type is currently
+		disabled until we fix up unroll/footprint management (NOTES).
+	  minor: added ICE_NEVER_CALL macro to "common/ICE.*"
+
+
 2005-08-19	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-16:

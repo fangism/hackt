@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.2.3 2005/08/16 21:10:48 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.2.4 2005/08/20 19:17:05 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -184,8 +184,16 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			// already have error message
 			return good_bool(false);
 		}
-		type_ref_parent_type::commit_type_first_time(
-			*this->inst_base, cft);
+#if 0
+		if (!cft.unroll_definition_footprint().good) {
+			// already have error message
+			return good_bool(false);
+		}
+#endif
+		if (!type_ref_parent_type::commit_type_first_time(
+				*this->inst_base, cft).good) {
+			return good_bool(false);
+		}
 		// this->inst_base->establish_collection_type(ft);
 	}
 	// unroll_type_check is specialized for each tag type.  
@@ -206,6 +214,12 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			" during unroll." << endl;
 		return good_bool(false);
 	}
+#if 0
+	if (!final_type_ref.unroll_definition_footprint().good) {
+		// already have error message
+		return good_bool(false);
+	}
+#endif
 	// TODO: decide what do to about relaxed type parameters
 	// 2005-07-07: answer is above under "HACK"
 	const good_bool

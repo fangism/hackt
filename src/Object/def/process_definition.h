@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.2.8.2 2005/08/15 21:12:09 fang Exp $
+	$Id: process_definition.h,v 1.2.8.3 2005/08/20 19:17:04 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -112,9 +112,8 @@ public:
 	void
 	add_concurrent_chp_body(const count_ptr<CHP::action>&);
 
-	void
-	register_type(const count_ptr<const const_param_expr_list>&) const;
-
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
 // methods for object file I/O
 public:
 	FRIEND_PERSISTENT_TRAITS

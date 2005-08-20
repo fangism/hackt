@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.h"
 	Macros for internal compiler errors.  
-	$Id: ICE.h,v 1.2.2.1 2005/08/18 05:33:34 fang Exp $
+	$Id: ICE.h,v 1.2.2.2 2005/08/20 19:17:06 fang Exp $
  */
 
 #ifndef	__COMMON_ICE_H__
@@ -36,6 +36,11 @@
 	{ diagnostic }							\
 	ICE_EXIT(ostr);
 
+#define	ICE_NEVER_CALL(ostr)						\
+	ICE_GREET(ostr);						\
+	ostr << ICE_never_call << endl;					\
+	ICE_EXIT(ostr)
+
 namespace ART {
 
 extern
@@ -45,6 +50,9 @@ __ICE_where(std::ostream&, const char* fn, const char* file, const size_t ln);
 extern
 void
 __ICE_exit(std::ostream&) __ATTRIBUTE_NORETURN__ ;
+
+extern
+const char ICE_never_call[];
 
 }	// end namespace ART
 

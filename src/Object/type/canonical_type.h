@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.1.2.4 2005/08/15 21:12:22 fang Exp $
+	$Id: canonical_type.h,v 1.1.2.5 2005/08/20 19:17:05 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -8,6 +8,7 @@
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
+#include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
 namespace ART {
@@ -17,6 +18,7 @@ class definition_base;
 class template_actuals;
 class subinstance_manager;
 using util::memory::never_ptr;
+using util::good_bool;
 
 //=============================================================================
 
@@ -117,8 +119,11 @@ public:
 		subinstance_manager&) const;
 
 	// like fundamental_type_reference::unroll_register_complete_type()
-	void
-	register_definition_footprint(void) const;
+	good_bool
+	unroll_definition_footprint(void) const;
+
+	good_bool
+	create_definition_footprint(void) const;
 
 public:
 // object persistence

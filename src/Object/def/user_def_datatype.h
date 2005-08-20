@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.2.8.2 2005/08/15 21:12:10 fang Exp $
+	$Id: user_def_datatype.h,v 1.2.8.3 2005/08/20 19:17:04 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -101,6 +101,9 @@ public:
 	good_bool
 	certify_port_actuals(const object_list& ol) const;
 #endif
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
