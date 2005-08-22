@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.5 2005/08/22 00:44:14 fang Exp $
+	$Id: footprint.h,v 1.1.2.6 2005/08/22 19:59:33 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -56,6 +56,8 @@ struct footprint_pool_getter;
 class footprint {
 template <class> friend struct footprint_pool_getter;
 private:
+	typedef	count_ptr<instance_collection_base>
+					instance_collection_ptr_type;
 	/**
 		The type of map used to maintain local copy of instances.  
 		Instances contained herein will have no parent scopespace?
@@ -64,7 +66,7 @@ private:
 		BTW, using count_ptrs for ease of coy-constructibility.  
 		Q: do we need a separate port_formals_manager?
 	 */
-	typedef	util::hash_qmap<string, count_ptr<instance_collection_base> >
+	typedef	util::hash_qmap<string, instance_collection_ptr_type>
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
@@ -149,13 +151,8 @@ public:
 	void
 	mark_created(void) { created = true; }
 
-#if 0
-	/// import instance map from scopespace
-	// or virtual definition_base::export_instances_to_footprint();
-	// might also be applicable to module::global_namespace
-	void
-	import_instances(const scopespace::used_id_map_type&);
-#endif
+	instance_collection_ptr_type
+	operator [] (const string&) const;
 
 	ostream&
 	dump(ostream&) const;

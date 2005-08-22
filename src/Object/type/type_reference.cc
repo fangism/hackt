@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.3.2.1 2005/08/15 21:12:24 fang Exp $
+ 	$Id: type_reference.cc,v 1.3.2.2 2005/08/22 19:59:34 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -346,6 +346,7 @@ data_type_reference::must_be_valid(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
 	Creates a translation context between formals and actuals.  
  */
@@ -354,6 +355,7 @@ data_type_reference::make_unroll_context(void) const {
 	return unroll_context(template_args,
 		base_type_def->get_template_formals_manager());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

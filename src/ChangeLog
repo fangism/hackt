@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-08-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-20:
+	  devel-switch: USE_UNROLL_CONTEXT_FOOTPRPINT, currently enabled
+		but not yet tested because
+		process_definition::unroll_complete_type is not yet enabled.  
+		That's next on the TOOD list.  
+		Added code to conditionally resolve instance_collection
+		depending on whether or not footprint (of unroll_context)
+		points to a valid footprint.  If not, then use global
+		top-level instance collection, as done in the past.  
+	  *_type_reference::make_unroll_context now all private.
+	  instance_management_base::unroll_* all take 
+		const unroll_context& argument now.  
+
+
 2005-08-21	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-19:

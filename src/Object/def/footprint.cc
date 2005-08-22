@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.5 2005/08/22 00:44:14 fang Exp $
+	$Id: footprint.cc,v 1.1.2.6 2005/08/22 19:59:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -55,6 +55,20 @@ footprint::dump(ostream& o) const {
 	int_pool.dump(o);
 	bool_pool.dump(o);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up instance collection.  
+	\param k the key for the collection, 
+		must be local to this definition scope!
+	TODO: detect handle global references, 
+		probably in simple_meta_instance_reference::unroll
+	\return pointer to the collection.  
+ */
+footprint::instance_collection_ptr_type
+footprint::operator [] (const string& k) const {
+	return instance_collection_map[k];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

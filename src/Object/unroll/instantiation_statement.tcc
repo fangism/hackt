@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.2.4 2005/08/20 19:17:05 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.2.5 2005/08/22 19:59:36 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -32,6 +32,7 @@
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -163,9 +164,16 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
-INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
+INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
-	NEVER_NULL(this->inst_base);
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+	const footprint* const f(c.get_target_footprint());
+	collection_type& _inst(f ? IS_A(collection_type&, 
+			*(*f)[this->inst_base->get_name()])
+		: *this->inst_base);
+#else
+	collection_type& _inst(*this->inst_base);
+#endif
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 
 	// collection, because unroll_type_reference combines the
@@ -176,7 +184,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// Resolution: detect the first time, and do a first-time
 	// commit using the type_ref_parent_type's original type, 
 	// which will be distinguishably strict or relaxed.  
-	const bool first_time = !this->inst_base->is_partially_unrolled();
+	const bool first_time = !_inst.is_partially_unrolled();
 	if (first_time) {
 		const instance_collection_parameter_type
 			cft(type_ref_parent_type::get_canonical_type(c));
@@ -191,10 +199,10 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		}
 #endif
 		if (!type_ref_parent_type::commit_type_first_time(
-				*this->inst_base, cft).good) {
+				_inst, cft).good) {
 			return good_bool(false);
 		}
-		// this->inst_base->establish_collection_type(ft);
+		// _inst.establish_collection_type(ft);
 	}
 	// unroll_type_check is specialized for each tag type.  
 	// NOTE: this results in a "fused" type that combines
@@ -224,7 +232,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// 2005-07-07: answer is above under "HACK"
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
-			*this->inst_base, final_type_ref));
+			_inst, final_type_ref));
 	// should be optimized away where there is no type-check to be done
 	if (!tc.good) {
 		cerr << "ERROR: type-mismatch during " <<
@@ -257,7 +265,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				*this->inst_base, crl, 
+				_inst, crl, 
 				final_type_ref.make_unroll_context(), 
 				relaxed_const_actuals);
 	} else {
@@ -339,7 +347,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	// would've exited already
 	return this->unroll(c);
 }
@@ -350,6 +358,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
 	\pre already unrolled.  
 	TODO: possibly cache the resolved indices from unrolling, 
 		but don't bother saving them persistently.  
+	TODO: translate using footprint from the unroll_context.  
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool

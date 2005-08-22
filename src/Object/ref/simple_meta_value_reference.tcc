@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.3 2005/08/08 23:08:30 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.3.2.1 2005/08/22 19:59:33 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -32,6 +32,9 @@
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/unroll/unroll_context.h"
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 #include "common/ICE.h"
 
 // experimental: suppressing automatic instantiation of template code
@@ -271,13 +274,25 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
-	TODO: need to handle passing template actuals in context?
-	\return good if resolution succeeds
+	Now checks unroll context to see if the referenced
+	value collection belongs to a complete type (definition) scope.  
+	\return good if resolution succeeds.
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+	const footprint* const f(c.get_target_footprint());
+#endif
+	const value_collection_type&
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+		_vals(f ? IS_A(const value_collection_type&, 
+				*(*f)[value_collection_ref->get_name()])
+			: *value_collection_ref);
+#else
+		_vals(*value_collection_ref);
+#endif
 	if (this->array_indices) {
 		const const_index_list
 			indices(this->array_indices->unroll_resolve(c));
@@ -292,16 +307,23 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			}
 			// what if this references a formal parameter?
 			// then we need to get the template actuals
-			return value_collection_ref->lookup_value(i, lower, c);
+			return _vals.lookup_value(i, lower, c);
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!" << endl;
 			return good_bool(false);
 		}
 	} else {
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+		// assert dynamic cast
+		const value_scalar_type&
+			scalar_inst(IS_A(const value_scalar_type&, _vals));
+		return scalar_inst.lookup_value(i, c);
+#else
 		const never_ptr<value_scalar_type>
 			scalar_inst(value_collection_ref.template is_a<value_scalar_type>());
 		NEVER_NULL(scalar_inst);
 		return scalar_inst->lookup_value(i, c);
+#endif
 	}
 }
 
@@ -596,7 +618,7 @@ if (value_collection_ref->is_template_formal()) {
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 excl_ptr<aliases_connection_base>
 SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return excl_ptr<aliases_connection_base>(NULL);
 }
 
@@ -608,7 +630,7 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& ) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return never_ptr<substructure_alias>(NULL);
 }
 
@@ -621,7 +643,7 @@ bad_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::connect_port(
 		instance_collection_base&, 
 		const unroll_context&) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return bad_bool(true);
 }
 

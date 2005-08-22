@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.3 2005/08/08 23:08:31 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.3.2.1 2005/08/22 19:59:36 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -194,7 +194,7 @@ port_connection::append_meta_instance_reference(const generic_inst_ptr_type& i) 
 	Expands and finalizes the connection at unroll time.  
  */
 good_bool
-port_connection::unroll(unroll_context& c) const {
+port_connection::unroll(const unroll_context& c) const {
 	return unroll_meta_connect(c);
 }
 
@@ -203,7 +203,7 @@ port_connection::unroll(unroll_context& c) const {
 	Expands and finalizes the connection at unroll time.  
  */
 good_bool
-port_connection::unroll_meta_connect(unroll_context& c) const {
+port_connection::unroll_meta_connect(const unroll_context& c) const {
 	NEVER_NULL(ported_inst);
 	const never_ptr<substructure_alias>
 		parent_instance(

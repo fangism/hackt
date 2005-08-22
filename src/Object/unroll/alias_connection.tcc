@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.3.2.3 2005/08/18 05:33:32 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.3.2.4 2005/08/22 19:59:35 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -128,7 +128,7 @@ ALIAS_CONNECTION_CLASS::append_meta_instance_reference(
  */
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 good_bool
-ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
+ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	typedef	vector<alias_collection_type>	alias_collection_array_type;
 	typedef	vector<typename alias_collection_type::iterator>
 					alias_collection_iterator_array_type;
@@ -337,7 +337,7 @@ ALIAS_CONNECTION_CLASS::unroll(unroll_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 good_bool
-ALIAS_CONNECTION_CLASS::unroll_meta_connect(unroll_context& c) const {
+ALIAS_CONNECTION_CLASS::unroll_meta_connect(const unroll_context& c) const {
 	return this->unroll(c);
 }
 

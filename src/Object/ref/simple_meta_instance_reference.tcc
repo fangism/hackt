@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.3 2005/08/18 05:33:30 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.4 2005/08/22 19:59:33 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -13,6 +13,10 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/unroll/unroll_context.h"
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 	// will explicitly instantiate
@@ -73,16 +77,28 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Re-usable helper function (also used by member_instance_reference).  
-	\param inst a resolved actual instance (not formal).  
+	TODO: what about global instance references?
+	\param _inst a resolved actual instance (not formal).  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 		const unroll_context& c,
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+		const instance_collection_generic_type& _inst, 
+#else
 		const instance_collection_generic_type& inst, 
+#endif
 		const never_ptr<const index_list_type> ind, 
 		alias_collection_type& a) {
 	// possibly factor this part out into simple_meta_instance_reference_base?
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+	const footprint* const f(c.get_target_footprint());
+	const instance_collection_generic_type&
+		inst(f ? IS_A(const instance_collection_generic_type&, 
+				*(*f)[_inst.get_name()])
+			: _inst);
+#endif
 if (inst.get_dimensions()) {
 	const_index_list cil;
 	if (ind) {

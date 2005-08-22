@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: builtin_channel_type_reference.h,v 1.2.8.1 2005/08/15 21:12:21 fang Exp $
+ 	$Id: builtin_channel_type_reference.h,v 1.2.8.2 2005/08/22 19:59:34 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_BUILTIN_CHANNEL_TYPE_REFERENCE_H__
@@ -105,9 +105,10 @@ public:
 	canonical_type<channel_definition_base>
 	make_canonical_type(void) const;
 
+private:
 	unroll_context
 	make_unroll_context(void) const;
-private:
+
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;

@@ -3,7 +3,7 @@
 	Instance statement classes for ART.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.3.4.1 2005/08/15 21:12:25 fang Exp $
+	$Id: instantiation_statement.h,v 1.3.4.2 2005/08/22 19:59:36 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -117,7 +117,7 @@ public:
 	get_relaxed_actuals(void) const;
 
 	good_bool
-	unroll(unroll_context& ) const;
+	unroll(const unroll_context&) const;
 
 	// careful: not declared virtual here, 
 	// yet overridden by param_instantiation_statement<>

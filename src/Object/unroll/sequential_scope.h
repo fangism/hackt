@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: sequential_scope.h,v 1.3.4.1 2005/08/22 19:59:36 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -93,7 +93,7 @@ public:
 protected:
 // need not be virtual?
 	good_bool
-	unroll(unroll_context& ) const;
+	unroll(const unroll_context& ) const;
 
 	UNROLL_META_EVALUATE_PROTO;
 	UNROLL_META_INSTANTIATE_PROTO;

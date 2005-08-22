@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.3.2.2 2005/08/20 00:31:58 fang Exp $
+	$Id: unroll_context.cc,v 1.3.2.3 2005/08/22 19:59:37 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -14,6 +14,9 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/const_param.h"
 #include "Object/def/definition_base.h"
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 #include "Object/common/scopespace.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
@@ -33,7 +36,11 @@ namespace entity {
 // class unroll_context method definitions
 
 unroll_context::unroll_context() :
-		next(), template_args(), template_formals() { }
+		next(), template_args(), template_formals()
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+		, target_footprint(NULL)
+#endif
+		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -47,7 +54,11 @@ unroll_context::unroll_context(const template_actuals& a,
 #else
 		template_args(&a),
 #endif
-		template_formals(&f) {
+		template_formals(&f)
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+		, target_footprint(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -64,7 +75,11 @@ unroll_context::unroll_context(const template_actuals& a,
 #else
 		template_args(&a),
 #endif
-		template_formals(&f) {
+		template_formals(&f)
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+		, target_footprint(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

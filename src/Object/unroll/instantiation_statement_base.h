@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.3.4.1 2005/08/22 19:59:36 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -52,8 +52,7 @@ protected:
 		indices(NULL) { }
 
 	explicit
-	instantiation_statement_base(
-		const index_collection_item_ptr_type& i);
+	instantiation_statement_base(const index_collection_item_ptr_type& i);
 
 public:
 virtual	~instantiation_statement_base();
@@ -91,7 +90,7 @@ virtual	count_ptr<const fundamental_type_reference>
 
 // should be pure virtual eventually
 virtual	good_bool
-	unroll(unroll_context& ) const;
+	unroll(const unroll_context&) const;
 
 virtual	UNROLL_META_INSTANTIATE_PROTO = 0;
 
