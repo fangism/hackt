@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.2.8.1 2005/08/15 21:12:15 fang Exp $
+	$Id: param_value_collection.h,v 1.2.8.2 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -41,10 +41,17 @@ public:
 
 protected:
 	param_value_collection(const size_t d);
-public:
+
+	param_value_collection(const this_type& t, const footprint& f) :
+		parent_type(t, f) { }
+
 	param_value_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
+public:
 virtual	~param_value_collection();
 
 virtual	ostream&

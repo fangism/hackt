@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.5 2005/08/20 00:31:57 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.6 2005/08/22 00:44:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -14,6 +14,7 @@
 
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -115,6 +116,12 @@ protected:
 	explicit
 	instance_collection(const size_t d) :
 		parent_type(d), collection_type_manager_parent_type() { }
+
+	instance_collection(const this_type&, const footprint&);
+
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
 public:
 	instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
@@ -303,6 +310,11 @@ private:
 	collection_type					collection;
 private:
 	instance_array();
+
+	instance_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+
 public:
 	instance_array(const scopespace& o, const string& n);
 	~instance_array();
@@ -392,6 +404,10 @@ private:
 
 private:
 	instance_array();
+
+	instance_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 
 public:
 	instance_array(const scopespace& o, const string& n);

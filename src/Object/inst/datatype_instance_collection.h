@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.3.4.3 2005/08/16 21:10:46 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.3.4.4 2005/08/22 00:44:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -27,6 +27,7 @@ class footprint;
 class datatype_instance_collection : public physical_instance_collection {
 private:
 	typedef	physical_instance_collection	parent_type;
+	typedef	datatype_instance_collection	this_type;
 	typedef	class_traits<datatype_tag>	traits_type;
 protected:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
@@ -45,6 +46,8 @@ protected:
 	datatype_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
+	datatype_instance_collection(const this_type& t, const footprint& f) :
+		parent_type(t, f) { }
 public:
 
 virtual	~datatype_instance_collection();

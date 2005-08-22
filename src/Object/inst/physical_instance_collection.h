@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.4 2005/08/20 00:31:57 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.5 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -12,7 +12,6 @@
 
 namespace ART {
 namespace entity {
-class footprint;
 //=============================================================================
 // class instance_collection_base defined in "Object/inst/instance_collection_base.h"
 
@@ -37,8 +36,13 @@ protected:
 	physical_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
-public:
+	physical_instance_collection(const this_type& t, const footprint& f) :
+		parent_type(t, f) { }
 
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
+public:
 virtual	~physical_instance_collection();
 
 	ostream&

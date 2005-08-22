@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.2.8.1 2005/08/15 21:12:16 fang Exp $
+	$Id: value_collection.h,v 1.2.8.2 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -13,6 +13,7 @@
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
@@ -98,6 +99,12 @@ protected:
 protected:
 	explicit
 	value_collection(const size_t d);
+
+	value_collection(const this_type& t, const footprint& f);
+
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
 public:
 	value_collection(const scopespace& o, const string& n, 
 		const size_t d);
@@ -225,6 +232,10 @@ private:
 
 	value_array();
 
+	value_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+
 public:
 	value_array(const scopespace& o, const string& n);
 	~value_array();
@@ -298,6 +309,12 @@ public:
 
 	value_array(const scopespace& o, const string& n);
 
+private:
+	value_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+
+public:
 	~value_array();
 
 	ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.20.2.1 2005/08/16 03:50:21 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.20.2.2 2005/08/22 00:44:18 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -218,7 +218,7 @@ persistent_object_manager::__read_pointer(istream& f,
 		const P& ptr, const single_owner_pointer_tag) const {
 #if STACKTRACE_PERSISTENTS
 	static ostringstream oss;
-	static const ostream& oss_ref = 
+	static const ostream& oss_ref __ATTRIBUTE_UNUSED__ = 
 		oss << "__read_pointer-single<" <<
 			what<typename P::element_type>::name() << ">()";
 	STACKTRACE_PERSISTENT(oss.str());
@@ -241,7 +241,7 @@ persistent_object_manager::__read_pointer(istream& f,
 	typedef typename pointer_traits<P>::pointer	pointer_type;
 #if STACKTRACE_PERSISTENTS
 	static ostringstream oss;
-	static const ostream& oss_ref = 
+	static const ostream& oss_ref __ATTRIBUTE_UNUSED__ = 
 		oss << "__read_pointer-shared<" <<
 			what<typename P::element_type>::name() << ">()";
 	STACKTRACE_PERSISTENT(oss.str());

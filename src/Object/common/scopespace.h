@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.2 2005/07/23 06:52:23 fang Exp $
+	$Id: scopespace.h,v 1.2.8.1 2005/08/22 00:44:13 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_SCOPESPACE_H__
@@ -107,7 +107,13 @@ protected:	// typedefs -- keep these here for re-use
 
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  
+public:
+	/**
+		Used by footprint.  
+	 */
+	typedef	used_id_map_type::const_iterator	const_map_iterator;
 
+protected:
 	/** convenience struct for dumping */
 	class bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
@@ -207,6 +213,12 @@ virtual	ostream&
 
 virtual never_ptr<const scopespace>
 	get_parent(void) const = 0;
+
+	const_map_iterator
+	id_map_begin(void) const { return used_id_map.begin(); }
+
+	const_map_iterator
+	id_map_end(void) const { return used_id_map.end(); }
 
 virtual	never_ptr<const object>
 	lookup_object_here(const string& id) const;

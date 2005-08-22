@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2005-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-19:
+	  list_vector: (bug fix) wrote custom copy-constructor because
+		structure contains raw pointers, which must be relinked
+		upon copy.  
+
+
 2005-08-19	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-16:

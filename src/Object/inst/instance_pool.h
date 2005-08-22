@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.2.4.1 2005/08/11 00:20:19 fang Exp $
+	$Id: instance_pool.h,v 1.2.4.2 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_H__
@@ -31,9 +31,20 @@ class instance_pool : private util::list_vector<T> {
 public:
 	typedef	typename parent_type::const_iterator	const_iterator;
 //	typedef	typename parent_type::iterator		iterator;
+private:
+	/**
+		Default chunk size when not specified.  
+	 */
+	enum	{ default_chunk_size = 32 };
 public:
+	// custom default constructor
+	instance_pool();
+
 	explicit
 	instance_pool(const size_t);
+
+	// copy-construction policy
+	instance_pool(const this_type&);
 
 	~instance_pool();
 

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.3.4.2 2005/08/15 21:12:15 fang Exp $
+	$Id: process_instance_collection.cc,v 1.3.4.3 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -13,6 +13,7 @@
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_PERSISTENTS		0
 #define	STACKTRACE_DESTRUCTORS		0
+#define	STACKTRACE_CONSTRUCTORS		0
 
 #include <exception>
 #include <iostream>

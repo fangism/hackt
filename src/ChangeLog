@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-19:
+	  Enabled process_definition (complete type) registration, but
+		not unrolling yet.  
+	  Tests updated because registered types (empty footprints)
+		are all maintained persistently in objects.  
+	  Added interface to import scopespace instance collections
+		into footprint's instance_collection_map, 
+		the local workspace for unrolling and creating placeholders.  
+		Had to implement a virtual partial deep copy-constructor
+		in instance_collection_base and its ultimate children
+		(array and scalars) for physical and parameters.  
+	  also list_vector copy-constructor bug fix in util library.
+	  Next: enable complete_type (process_definition) unrolling
+		and dumping.  
+
+
 2005-08-20	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-18:

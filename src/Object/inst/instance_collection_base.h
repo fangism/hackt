@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.2.8.2 2005/08/19 05:17:39 fang Exp $
+	$Id: instance_collection_base.h,v 1.2.8.3 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -154,12 +154,36 @@ protected:
 		object(), persistent(), owner(), key(), 
 		index_collection(), dimensions(d), super_instance() { }
 
+	/**
+		Partial copy-constructor, copies everything 
+		except the index collection (references to
+		instantiation statements), and the super_instance pointer, 
+		which should be NULL anyhow.  
+	 */
+	instance_collection_base(const this_type& t, const footprint&) :
+		object(), persistent(), owner(t.owner), key(t.key), 
+		index_collection(), dimensions(t.dimensions),
+		super_instance() { }
+
 public:
 	// o should be reference, not pointer
 	instance_collection_base(const scopespace& o, const string& n, 
 		const size_t d);
 
 virtual	~instance_collection_base();
+
+/**
+	Makes a deep copy of the instance collection for
+	the sake of mapping in the footprint's instance collection map.
+	This does not make a precise deep copy of every field, 
+	but enough for the the unroller to work with.  
+	The footprint argument is just for distiguishing constructors.  
+ */
+#define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
+	instance_collection_base*					\
+	make_instance_collection_footprint_copy(const footprint&) const
+
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 
 	size_t
 	get_dimensions(void) const { return dimensions; }

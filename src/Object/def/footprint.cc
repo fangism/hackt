@@ -1,12 +1,16 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.4 2005/08/20 21:03:46 fang Exp $
+	$Id: footprint.cc,v 1.1.2.5 2005/08/22 00:44:14 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
+#include "Object/common/scopespace.h"
 #include "Object/inst/instance_collection_base.h"
+#include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -14,6 +18,7 @@
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
 //=============================================================================
@@ -30,10 +35,13 @@ footprint::footprint() :
 	enum_pool(class_traits<enum_tag>::instance_pool_chunk_size >> 1),
 	int_pool(class_traits<int_tag>::instance_pool_chunk_size >> 1),
 	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size >> 1) {
+	STACKTRACE_CTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-footprint::~footprint() { }
+footprint::~footprint() {
+	STACKTRACE_DTOR_VERBOSE;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -50,8 +58,42 @@ footprint::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This copies instance_collections (physical and parameter)
+	into its own map.  
+	If this scopespace has already been popluated, then it won't actually
+	reload the map, will just exit.  
+ */
+void
+footprint::import_scopespace(const scopespace& s) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
+if (instance_collection_map.empty()) {
+	typedef	scopespace::const_map_iterator	const_map_iterator;
+	const_map_iterator si(s.id_map_begin());
+	const const_map_iterator se(s.id_map_end());
+	for ( ; si!=se; si++) {
+		const never_ptr<const instance_collection_base>
+			icb(si->second.is_a<const instance_collection_base>());
+		if (icb) {
+			// then we need to make a deep copy of it 
+			// in our own footprint's instance collection map
+			const count_ptr<instance_collection_base>
+			fc(icb->make_instance_collection_footprint_copy(*this));
+			NEVER_NULL(fc);
+			instance_collection_map[fc->get_name()] = fc;
+		}
+		// else is not instance collection, we don't care
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 {
 	// instance_collection_map
 	const_instance_map_iterator i(instance_collection_map.begin());
@@ -75,6 +117,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 void
 footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, unrolled);
 	write_value(o, created);
 {
@@ -100,6 +143,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::load_object_base(const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, unrolled);
 	read_value(i, created);
 {

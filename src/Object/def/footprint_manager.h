@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.1.2.3 2005/08/20 19:17:04 fang Exp $
+	$Id: footprint_manager.h,v 1.1.2.4 2005/08/22 00:44:14 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -62,6 +62,9 @@ public:
 
 	mapped_type&
 	operator [] (const key_type& k);
+
+	using parent_type::size;
+	using parent_type::empty;
 
 	mapped_type&
 	only(void);

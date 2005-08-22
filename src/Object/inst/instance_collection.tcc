@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.12 2005/08/20 00:31:57 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.13 2005/08/22 00:44:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -679,9 +679,10 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
+ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 	DIE;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -689,7 +690,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 	Since begin points to next, self will always be printed last.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
+ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
@@ -697,6 +698,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	for (i++; i!=e; i++) {
 		i->dump_alias(o << " = ");
 	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -704,8 +706,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 	// STACKTRACE_VERBOSE;
-	dump_alias(o);	// should call virtually, won't die
-	return o;
+	return dump_alias(o);	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -849,7 +850,7 @@ INSTANCE_ALIAS_CLASS::~instance_alias() {
         Prints out the next instance alias in the connected set.  
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
+ostream&
 INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
@@ -858,6 +859,7 @@ INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
 		// bah, not important
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -967,10 +969,10 @@ KEYLESS_INSTANCE_ALIAS_CLASS::~instance_alias() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
+ostream&
 KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
 	NEVER_NULL(this->container);
-	this->container->dump_hierarchical_name(o);
+	return this->container->dump_hierarchical_name(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1100,6 +1102,14 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), collection_type_manager_parent_type() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+INSTANCE_COLLECTION_CLASS::instance_collection(const this_type& t, 
+		const footprint& f) :
+		parent_type(t, f),
+		collection_type_manager_parent_type(t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1300,8 +1310,29 @@ INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial deep-copy constructor for footprint management.  
+	NOTE: this collection should be empty, but we copy it anyhow.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+INSTANCE_ARRAY_CLASS::instance_array(const this_type& t, const footprint& f) :
+		parent_type(t, f), collection(t.collection) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::~instance_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial deep copy constructor for the footprint.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+instance_collection_base*
+INSTANCE_ARRAY_CLASS::make_instance_collection_footprint_copy(
+		const footprint& f) const {
+	return new this_type(*this, f);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -1910,8 +1941,29 @@ INSTANCE_SCALAR_CLASS::instance_array(const scopespace& o, const string& n) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial deep-copy constructor for footprint management.  
+	NOTE: this collection should be empty, but we copy it anyhow.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+INSTANCE_SCALAR_CLASS::instance_array(const this_type& t, const footprint& f) :
+		parent_type(t, f), the_instance(t.the_instance) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::~instance_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Deep (partial) copy-constructor for footprint.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+instance_collection_base*
+INSTANCE_SCALAR_CLASS::make_instance_collection_footprint_copy(
+		const footprint& f) const {
+	return new this_type(*this, f);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

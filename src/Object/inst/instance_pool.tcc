@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.2.4.2 2005/08/16 04:37:34 fang Exp $
+	$Id: instance_pool.tcc,v 1.2.4.3 2005/08/22 00:44:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -10,7 +10,7 @@
 #include <iostream>
 #include "Object/inst/instance_pool.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "util/persistent_object_manager.h"
+#include "util/persistent_object_manager.tcc"	// for STACKTRACE macros
 #include "util/list_vector.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
@@ -29,13 +29,48 @@ using util::read_value;
  */
 template <class T>
 instance_pool<T>::instance_pool(const size_t s) : parent_type() {
+	STACKTRACE_CTOR_VERBOSE;
+#if STACKTRACE_CONSTRUCTORS
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
 	this->set_chunk_size(s);
 	allocate();
+	INVARIANT(this->size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Default constructor, when we don't care about chunk size.  
+ */
+template <class T>
+instance_pool<T>::instance_pool() : parent_type() {
+	STACKTRACE_CTOR_VERBOSE;
+#if STACKTRACE_CONSTRUCTORS
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
+	this->set_chunk_size(default_chunk_size);
+	allocate();
+	INVARIANT(this->size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
-instance_pool<T>::~instance_pool() { }
+instance_pool<T>::instance_pool(const this_type& t) : parent_type(t) {
+	STACKTRACE_CTOR_VERBOSE;
+#if STACKTRACE_CONSTRUCTORS
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
+	INVARIANT(this->size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+instance_pool<T>::~instance_pool() {
+	STACKTRACE_DTOR_VERBOSE;
+#if STACKTRACE_DESTRUCTORS
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -52,6 +87,7 @@ instance_pool<T>::allocate(void) {
 	STACKTRACE("instance_pool::allocate()");
 	const size_t ret = this->size();
 	push_back(T());
+	INVARIANT(this->size());
 	return ret;
 }
 
@@ -67,6 +103,7 @@ instance_pool<T>::allocate(const T& t) {
 	STACKTRACE("instance_pool::allocate(const T&)");
 	const size_t ret = this->size();
 	push_back(t);
+	INVARIANT(this->size());
 	return ret;
 }
 
@@ -99,6 +136,10 @@ template <class T>
 void
 instance_pool<T>::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
 	INVARIANT(this->size());
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
@@ -112,6 +153,7 @@ template <class T>
 void
 instance_pool<T>::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(++this->begin());	// skip first element (NULL)
 	const const_iterator e(this->end());
 	const size_t s = this->size();
@@ -134,6 +176,7 @@ template <class T>
 void
 instance_pool<T>::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s;
 	read_value(i, s);
 	size_t j=0;

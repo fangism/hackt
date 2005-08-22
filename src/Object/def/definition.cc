@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.4 2005/08/20 21:03:46 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.5 2005/08/22 00:44:13 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -71,7 +71,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 /**
 	Temporary development flag, isolated to this translation unit.  
  */
-#define	REGISTER_PROCESS_FOOTPRINTS	0 && USE_FOOTPRINT_MANAGER
+#define	REGISTER_PROCESS_FOOTPRINTS	1 && USE_FOOTPRINT_MANAGER
 #define	UNROLL_PROCESS_FOOTPRINTS	0 && REGISTER_PROCESS_FOOTPRINTS
 
 //=============================================================================
@@ -2313,6 +2313,7 @@ process_definition::what(ostream& o) const {
 	Spill contents of the used_id_map.
 	\param o the output stream.
 	\return the same output stream.
+	TODO: dump the footprint map.  
  */
 ostream&
 process_definition::dump(ostream& o) const {
@@ -2348,6 +2349,9 @@ process_definition::dump(ostream& o) const {
 			o << auto_indent << "chp:" << endl;
 			chp.dump(o << auto_indent) << endl;
 		}
+#if 0
+		footprint_map.dump(o) << endl;
+#endif
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -2591,18 +2595,31 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
 	// this has a fooprint manager
 #if REGISTER_PROCESS_FOOTPRINTS
 	if (p) {
-		INVARIANT(p.size() == footprint_map.arity());
-		footprint_map[*p];
+		INVARIANT(p->size() == footprint_map.arity());
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "footprint_map.size() = " <<
+			footprint_map.size() << endl;
+#endif
+		footprint& f = footprint_map[*p];
+		f.import_scopespace(*this);
 	} else {
 		INVARIANT(!footprint_map.arity());
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "footprint_map.size() = " <<
+			footprint_map.size() << endl;
+#endif
 		// register the only map only if it doesn't exist yet
 		// otherwise will force a comparison of null pointers
 		if (!footprint_map.size()) {
-			footprint_map.only();	// create the one-and-only entry
+			// create the one-and-only entry
+			footprint& f = footprint_map.only();
+			f.import_scopespace(*this);
 		}
+		// else it was already registered
 	}
 #endif
 }
@@ -2615,6 +2632,7 @@ good_bool
 process_definition::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	// unroll using the footprint manager
+	STACKTRACE_VERBOSE;
 #if UNROLL_PROCESS_FOOTPRINTS
 	unroll_context c;
 	if (p) {

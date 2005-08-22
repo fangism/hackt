@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
 	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -33,25 +33,28 @@ Persistent Object Manager text dump:
 	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
-	39	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
-	40	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	41	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	33	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	34	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	43	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	48	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

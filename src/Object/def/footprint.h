@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.4 2005/08/20 21:03:46 fang Exp $
+	$Id: footprint.h,v 1.1.2.5 2005/08/22 00:44:14 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -26,6 +26,7 @@
 namespace ART {
 namespace entity {
 class instance_collection_base;
+class scopespace;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -158,6 +159,9 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	void
+	import_scopespace(const scopespace&);
 
 // persistent information management
 	void

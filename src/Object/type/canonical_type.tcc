@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.6 2005/08/20 19:17:05 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.7 2005/08/22 00:44:17 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -192,13 +192,9 @@ CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o,
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
 CANONICAL_TYPE_CLASS::unroll_definition_footprint(void) const {
-#if 0
-	FINISH_ME(Fang);
-#else
 	NEVER_NULL(canonical_definition_ptr);
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
 	return canonical_definition_ptr->unroll_complete_type(param_list_ptr);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
