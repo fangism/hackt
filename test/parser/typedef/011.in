@@ -1,4 +1,4 @@
-// should pass: wrapping templates in typedefs
+// "011.in" should pass: wrapping templates in typedefs
 
 template <pint N, M>
 defproc array2d();

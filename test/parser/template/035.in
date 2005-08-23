@@ -2,7 +2,7 @@
 // copy-modified from "031.in"
 
 template <pint N[2]>
-defproc foo();
+defproc foo() { }
 
 pint W[2];
 W[0] = 0;

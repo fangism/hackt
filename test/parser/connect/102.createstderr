@@ -56,7 +56,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    bar = process-definition (declared) bar<
+    bar = process-definition (defined) bar<
       pint<> X
       pint<> Y
       >(
@@ -68,6 +68,14 @@ In namespace "", we have: {
         Y = pint<> Y
         a = int<pint-inst-ref ::bar::X> a
         b = int<pint-inst-ref ::bar::Y> b
+        footprint collection: {
+          <2, 3> {
+            pint^0 X value: ?
+            pint^0 Y value: ?
+            int<2>^0 a (instantiated) = ::bar::a 
+            int<3>^0 b (instantiated) = ::bar::b 
+          }
+        }
       }
 
   Instances:

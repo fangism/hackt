@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
-	11	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -46,7 +46,7 @@ In namespace "", we have: {
         1 = 1
       }
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> N with indices: {
         [0..1]
       }
@@ -58,6 +58,16 @@ In namespace "", we have: {
           [0..1]
         }
 
+        footprint collection: {
+          <{0,1}> {
+            pint^1 N with indices: {
+            }
+              unrolled index-value pairs: {
+                0 = ?
+                1 = ?
+              }
+          }
+        }
       }
 
   Instances:

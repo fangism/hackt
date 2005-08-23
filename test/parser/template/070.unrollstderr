@@ -61,7 +61,7 @@ In namespace "", we have: {
         1 = 3
       }
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> Q
       ><
       pint<> R
@@ -70,6 +70,12 @@ In namespace "", we have: {
       In definition "foo", we have: {
         Q = pint<> Q
         R = pint<> R
+        footprint collection: {
+          <5, 4> {
+            pint^0 Q value: ?
+            pint^0 R value: ?
+          }
+        }
       }
 
   Instances:

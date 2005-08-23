@@ -40,6 +40,12 @@ In namespace "", we have: {
       In definition "foo", we have: {
         N = pint<> N
         a = int<pint-inst-ref ::foo::N> a
+        footprint collection: {
+          <8> {
+            pint^0 N value: ?
+            int<8>^0 a (instantiated) = ::foo::a 
+          }
+        }
       }
 
   Instances:

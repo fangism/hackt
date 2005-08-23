@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	12	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
 	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
@@ -52,6 +52,14 @@ In namespace "", we have: {
           [0..1]
         }
 
+        footprint: {
+          bool^1 a with indices: {
+          }
+            unrolled indices: {
+              0 = ::wrap::a[0] 
+              1 = ::wrap::a[1] 
+            }
+        }
       }
 
   Instances:

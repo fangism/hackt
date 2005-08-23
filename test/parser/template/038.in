@@ -2,7 +2,7 @@
 // copy-modified from "030.in"
 
 template <pint X, Y=X+1, Z=Y*2>
-defproc foo();
+defproc foo() { }
 
 foo<12,,> q;
 foo<12,34,> p;

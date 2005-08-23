@@ -1,5 +1,25 @@
 "ChangeLog"
 
+2005-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-21:
+	  Breakthrough: recursive type unrolling is enabled!
+	  We now also dump process-definitions' footprints.  
+		No creation (state allocation) is done yet.  
+	  From now on, types must be defined before they can be declared
+		or instantiated.  But where, then, are prototypes useful?
+		Consider revoking this policy until creation time?
+		Test *inputs* were updated to give definitions
+		empty bodies for the sake of unrolling tests.  
+		(Consider compiler flag to switch behaviour.)
+	  Unroll context now make full use of footprint pointer
+		during recursive type unrolling.  
+	  TODO: recursively create-unique footprints!
+	  TODO: spawn off more test cases off of existing ones
+		with definition-internal connections.  
+		Actually put instance stuff in the definitions.  
+
+
 2005-08-22	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-20:

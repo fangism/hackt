@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.1.2.3 2005/08/20 19:17:04 fang Exp $
+	$Id: footprint_manager.cc,v 1.1.2.4 2005/08/23 17:10:35 fang Exp $
  */
 
 #include <iostream>
@@ -9,11 +9,15 @@
 #include "Object/def/footprint_manager.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/IO_utils.h"
+#include "util/indent.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using util::auto_indent;
+
 //=============================================================================
 // class footprint_manager method definitions
 
@@ -39,11 +43,36 @@ footprint_manager::set_arity(const size_t a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 ostream&
 footprint_manager::dump(ostream& o) const {
+if (_arity) {
+	o << "footprint collection: {" << endl;
+	{	// indentation scope
+		INDENT_SECTION(o);
+		const_iterator i(begin());
+		const const_iterator e(end());
+		for ( ; i!=e; i++) {
+			i->first.dump(o << auto_indent << '<') << "> {" << endl;
+			{
+				INDENT_SECTION(o);
+				i->second.dump_with_collections(o);
+			}
+			o << auto_indent << '}' << endl;
+		}
+	}
+	return o << auto_indent << '}';
+} else if (size()) {
+	// check size to see of the only complete type has been unrolled
+	o << "footprint: {" << endl;
+	{
+		INDENT_SECTION(o);
+		only().dump_with_collections(o);
+	}
+	return o << auto_indent << '}';
+} else {
+	return o;
 }
-#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -88,6 +88,10 @@ In namespace "", we have: {
       In definition "wrap", we have: {
         a = bool<> a
         b = bool<> b
+        footprint: {
+          bool^0 a (instantiated) = ::wrap::a 
+          bool^0 b (instantiated) = ::wrap::b 
+        }
       }
 
   Instances:

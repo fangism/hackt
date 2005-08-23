@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.5 2005/08/22 00:44:13 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.6 2005/08/23 17:10:34 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -45,6 +45,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/param_instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
@@ -72,7 +73,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 	Temporary development flag, isolated to this translation unit.  
  */
 #define	REGISTER_PROCESS_FOOTPRINTS	1 && USE_FOOTPRINT_MANAGER
-#define	UNROLL_PROCESS_FOOTPRINTS	0 && REGISTER_PROCESS_FOOTPRINTS
+#define	UNROLL_PROCESS_FOOTPRINTS	1 && REGISTER_PROCESS_FOOTPRINTS
 
 //=============================================================================
 namespace util {
@@ -2331,6 +2332,7 @@ process_definition::dump(ostream& o) const {
 		"In definition \"" << key << "\", we have: {" << endl;
 	{	// begin indent level
 		INDENT_SECTION(o);
+		// we dump ports even if body is undefined
 		used_id_map_type::const_iterator i(used_id_map.begin());
 		const used_id_map_type::const_iterator e(used_id_map.end());
 		for ( ; i!=e; i++) {
@@ -2339,21 +2341,25 @@ process_definition::dump(ostream& o) const {
 			// i->second->what(o) << endl;	// 1 level for now
 			i->second->dump(o) << endl;
 		}
-		// PRS
-		if (!prs.empty()) {
-			o << auto_indent << "prs:" << endl;
-			prs.dump(o);	// << endl;
-		}
-		// CHP
-		if (!chp.empty()) {
-			o << auto_indent << "chp:" << endl;
-			chp.dump(o << auto_indent) << endl;
-		}
-#if 0
-		footprint_map.dump(o) << endl;
+		if (defined) {
+			// PRS
+			if (!prs.empty()) {
+				o << auto_indent << "prs:" << endl;
+				prs.dump(o);	// << endl;
+			}
+			// CHP
+			if (!chp.empty()) {
+				o << auto_indent << "chp:" << endl;
+				chp.dump(o << auto_indent) << endl;
+			}
+#if UNROLL_PROCESS_FOOTPRINTS
+			if (footprint_map.size()) {
+				footprint_map.dump(o << auto_indent) << endl;
+			}
 #endif
+		}
 	}	// end indent scope
-	return o << auto_indent << "}" << endl;
+	return o << auto_indent << '}' << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2626,7 +2632,7 @@ process_definition::register_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: finish me.
+	TODO: catch mutual recursion of types?
  */
 good_bool
 process_definition::unroll_complete_type(
@@ -2634,14 +2640,39 @@ process_definition::unroll_complete_type(
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 #if UNROLL_PROCESS_FOOTPRINTS
-	unroll_context c;
+if (defined) {
+	footprint* f;
 	if (p) {
-		INVARIANT(p.size() == footprint_map.arity());
-		footprint& f = footprint_map[*p];
+		INVARIANT(p->size() == footprint_map.arity());
+		f = &footprint_map[*p];
 	} else {
 		INVARIANT(!footprint_map.arity());
-		footprint& f = footprint_map.only();
+		f = &footprint_map.only();
 	}
+	if (!f->is_unrolled()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_process_type
+			cpt(make_canonical_type(canonical_actuals));
+		const unroll_context
+			c(canonical_actuals, template_formals, f);
+		if (sequential_scope::unroll(c).good) {
+			f->mark_unrolled();
+		} else {
+			// already have partial error message
+			cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+} else {
+	cerr << "ERROR: cannot unroll incomplete process type " <<
+			get_qualified_name() << endl;
+	// parent should print: "instantiated from here"
+	return good_bool(false);
+}
 #else
 	return good_bool(true);
 #endif

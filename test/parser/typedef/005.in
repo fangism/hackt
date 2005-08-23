@@ -1,4 +1,4 @@
-// should pass: appropriate cascading typedefs
+// "005.in" should pass: appropriate cascading typedefs
 
 typedef	bool	node;
 typedef node	my_bool;

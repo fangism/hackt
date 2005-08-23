@@ -25,30 +25,36 @@ Persistent Object Manager text dump:
 	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
 	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	66
-	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	66
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -58,25 +64,40 @@ In namespace "", we have: {
   3 definitions
   0 typedefs
   Definitions:
-    basket = process-definition (declared) basket(
+    basket = process-definition (defined) basket(
         egg<> egg_array
       )
       In definition "basket", we have: {
         egg_array = egg<> egg_array
+        footprint: {
+          process egg<>^0 egg_array (instantiated) = ::basket::egg_array (
+            int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk 
+          )
+        }
       }
 
-    bundle = process-definition (declared) bundle(
+    bundle = process-definition (defined) bundle(
         basket<> c
       )
       In definition "bundle", we have: {
         c = basket<> c
+        footprint: {
+          process basket<>^0 c (instantiated) = ::bundle::c (
+            process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (
+              int<32>^0 yolk (instantiated) = ::bundle::c.egg_array.yolk 
+            )
+          )
+        }
       }
 
-    egg = process-definition (declared) egg(
+    egg = process-definition (defined) egg(
         int<32> yolk
       )
       In definition "egg", we have: {
         yolk = int<32> yolk
+        footprint: {
+          int<32>^0 yolk (instantiated) = ::egg::yolk 
+        }
       }
 
   Instances:

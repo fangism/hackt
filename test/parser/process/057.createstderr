@@ -15,15 +15,18 @@ Persistent Object Manager text dump:
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
-	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -44,6 +47,18 @@ In namespace "", we have: {
           [0..1]
         }
 
+        footprint: {
+          process foo<>^1 x with indices: {
+          }
+            unrolled indices: {
+              0 = ::bar::x[0] (
+                bool^0 a (instantiated) = ::bar::x[0].a 
+              )
+              1 = ::bar::x[1] (
+                bool^0 a (instantiated) = ::bar::x[1].a 
+              )
+            }
+        }
       }
 
     foo = process-definition (defined) foo(
@@ -51,6 +66,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
         a = bool<> a
+        footprint: {
+          bool^0 a (instantiated) = ::foo::a 
+        }
       }
 
   Instances:

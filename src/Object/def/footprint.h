@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.6 2005/08/22 19:59:33 fang Exp $
+	$Id: footprint.h,v 1.1.2.7 2005/08/23 17:10:35 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -156,6 +156,9 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	ostream&
+	dump_with_collections(ostream&) const;
 
 	void
 	import_scopespace(const scopespace&);

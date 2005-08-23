@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.3.2.3 2005/08/22 19:59:37 fang Exp $
+	$Id: unroll_context.cc,v 1.3.2.4 2005/08/23 17:10:37 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -43,6 +43,14 @@ unroll_context::unroll_context() :
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+unroll_context::unroll_context(footprint* const f) :
+		next(), template_args(), template_formals(), 
+		target_footprint(f) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Construct a context (translator) between actuals and formals.  
  */
@@ -60,6 +68,20 @@ unroll_context::unroll_context(const template_actuals& a,
 #endif
 		{
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+/**
+	Called in process_definition::unroll_complete_type.
+ */
+unroll_context::unroll_context(const template_actuals& a, 
+		const template_formals_manager& f, footprint* const fp) :
+		next(), 
+		template_args(a), 
+		template_formals(&f), 
+		target_footprint(fp) {
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

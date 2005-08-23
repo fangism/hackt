@@ -22,9 +22,9 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	29
+	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -79,7 +79,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    portaproc = process-definition (declared) portaproc(
+    portaproc = process-definition (defined) portaproc(
         bool<> b
         bool<> c with indices: {
           [0..3]
@@ -102,6 +102,24 @@ In namespace "", we have: {
           [0..1]
         }
 
+        footprint: {
+          bool^0 b (instantiated) = ::portaproc::b 
+          bool^1 c with indices: {
+          }
+            unrolled indices: {
+              0 = ::portaproc::c[0] 
+              1 = ::portaproc::c[1] 
+              2 = ::portaproc::c[2] 
+              3 = ::portaproc::c[3] 
+            }
+          int<32>^0 i (instantiated) = ::portaproc::i 
+          int<32>^1 j with indices: {
+          }
+            unrolled indices: {
+              0 = ::portaproc::j[0] 
+              1 = ::portaproc::j[1] 
+            }
+        }
       }
 
   Instances:

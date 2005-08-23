@@ -42,7 +42,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> Q (default = 5)
       ><
       pint<> R
@@ -51,6 +51,16 @@ In namespace "", we have: {
       In definition "foo", we have: {
         Q = pint<> Q (default = 5)
         R = pint<> R
+        footprint collection: {
+          <5, 23> {
+            pint^0 Q value: ?
+            pint^0 R value: ?
+          }
+          <12, 23> {
+            pint^0 Q value: ?
+            pint^0 R value: ?
+          }
+        }
       }
 
   Instances:

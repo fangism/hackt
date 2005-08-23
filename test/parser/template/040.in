@@ -3,7 +3,7 @@
 pint D;
 
 template <pint Q=D>
-defproc foo();
+defproc foo() { }
 
 D=13;
 

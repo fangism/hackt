@@ -63,7 +63,7 @@ In namespace "", we have: {
   1 definitions
   2 typedefs
   Definitions:
-    array2d = process-definition (declared) array2d<
+    array2d = process-definition (defined) array2d<
       pint<> N
       pint<> M
       >(
@@ -71,6 +71,20 @@ In namespace "", we have: {
       In definition "array2d", we have: {
         M = pint<> M
         N = pint<> N
+        footprint collection: {
+          <1, 12> {
+            pint^0 M value: ?
+            pint^0 N value: ?
+          }
+          <3, 3> {
+            pint^0 M value: ?
+            pint^0 N value: ?
+          }
+          <10, 1> {
+            pint^0 M value: ?
+            pint^0 N value: ?
+          }
+        }
       }
 
   Typedefs:

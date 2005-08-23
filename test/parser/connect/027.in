@@ -2,7 +2,7 @@
 
 int foo;
 
-defproc bar(int a, b[2]);
+defproc bar(int a, b[2]) { }
 
 bar none;
 

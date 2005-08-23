@@ -1,6 +1,6 @@
 // "019.in" should pass: sizes match
 
-defproc fang();
+defproc fang() { }
 
 pint N = 2;
 pint M = 3;

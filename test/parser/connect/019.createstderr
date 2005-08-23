@@ -40,9 +40,11 @@ In namespace "", we have: {
     M = pint^0 M (init = 3) value: 3
     N = pint^0 N (init = 2) value: 2
   Definitions:
-    fang = process-definition (declared) fang(
+    fang = process-definition (defined) fang(
       )
       In definition "fang", we have: {
+        footprint: {
+        }
       }
 
   Instances:

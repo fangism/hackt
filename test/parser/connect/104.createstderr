@@ -55,25 +55,29 @@ Persistent Object Manager text dump:
 	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	66	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	67	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	71	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	72	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -91,21 +95,33 @@ In namespace "", we have: {
         1 = 2
       }
   Definitions:
-    bar = process-definition (declared) bar(
+    bar = process-definition (defined) bar(
         foo<1> a
         foo<2> b
       )
       In definition "bar", we have: {
         a = foo<1> a
         b = foo<2> b
+        footprint: {
+          process foo<1>^0 a (instantiated) = ::bar::a 
+          process foo<2>^0 b (instantiated) = ::bar::b 
+        }
       }
 
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> A
       >(
       )
       In definition "foo", we have: {
         A = pint<> A
+        footprint collection: {
+          <1> {
+            pint^0 A value: ?
+          }
+          <2> {
+            pint^0 A value: ?
+          }
+        }
       }
 
   Instances:

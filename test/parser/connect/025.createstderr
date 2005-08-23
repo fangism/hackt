@@ -42,13 +42,17 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    bar = process-definition (declared) bar(
+    bar = process-definition (defined) bar(
         int<32> a
         int<32> b
       )
       In definition "bar", we have: {
         a = int<32> a
         b = int<32> b
+        footprint: {
+          int<32>^0 a (instantiated) = ::bar::a 
+          int<32>^0 b (instantiated) = ::bar::b 
+        }
       }
 
   Instances:

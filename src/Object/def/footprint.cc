@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.6 2005/08/22 19:59:33 fang Exp $
+	$Id: footprint.cc,v 1.1.2.7 2005/08/23 17:10:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -15,12 +15,15 @@
 #include "util/hash_qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
+#include "util/indent.h"
 
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using util::auto_indent;
+
 //=============================================================================
 // class footprint method definitions
 
@@ -54,6 +57,26 @@ footprint::dump(ostream& o) const {
 	enum_pool.dump(o);
 	int_pool.dump(o);
 	bool_pool.dump(o);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** 
+	TODO: sort map entries or use qmap.
+ */
+ostream&
+footprint::dump_with_collections(ostream& o) const {
+	if (!instance_collection_map.empty()) {
+		// NOTE: hash_map is NOT sorted
+		const_instance_map_iterator
+			i(instance_collection_map.begin());
+		const const_instance_map_iterator
+			e(instance_collection_map.end());
+		for ( ; i!=e; i++) {
+			i->second->dump(o << auto_indent) << endl;
+		}
+		dump(o);
+	}
 	return o;
 }
 

@@ -31,12 +31,17 @@ In namespace "", we have: {
   Parameters:
     D = pint^0 D (init = 13) value: 13
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> Q (default = pint-inst-ref ::D)
       >(
       )
       In definition "foo", we have: {
         Q = pint<> Q (default = pint-inst-ref ::D)
+        footprint collection: {
+          <13> {
+            pint^0 Q value: ?
+          }
+        }
       }
 
   Instances:

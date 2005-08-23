@@ -1,4 +1,4 @@
-// should pass:
+// "013.in" should pass:
 
 template <pint W>
 typedef	int<2*W>	double_int;

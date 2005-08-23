@@ -25,26 +25,28 @@ Persistent Object Manager text dump:
 	21	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
 	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	24	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
-	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	34	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
-	38	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	40	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	schnmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -54,16 +56,20 @@ In namespace "", we have: {
   2 definitions
   0 typedefs
   Definitions:
-    chan_proc = process-definition (declared) chan_proc(
+    chan_proc = process-definition (defined) chan_proc(
         fake_chan<> L
         fake_chan<> R
       )
       In definition "chan_proc", we have: {
         L = fake_chan<> L
         R = fake_chan<> R
+        footprint: {
+          channel fake_chan<>^0 L (instantiated) = ::chan_proc::L 
+          channel fake_chan<>^0 R (instantiated) = ::chan_proc::R 
+        }
       }
 
-    fake_chan = user-def-chan (declared) fake_chan
+    fake_chan = user-def-chan (defined) fake_chan
       chan(
         int<32>
       )

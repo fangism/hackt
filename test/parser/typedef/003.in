@@ -1,4 +1,4 @@
-// should pass:
+// "003.in" should pass:
 // aliases the *type*
 
 typedef	int<>		int32;

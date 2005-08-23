@@ -25,12 +25,17 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> N (default = 7)
       >(
       )
       In definition "foo", we have: {
         N = pint<> N (default = 7)
+        footprint collection: {
+          <13> {
+            pint^0 N value: ?
+          }
+        }
       }
 
   Instances:

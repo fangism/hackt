@@ -1,7 +1,7 @@
 // "009.in" should pass: appropriate use of template type
 
 template <pint N>
-defproc foo();
+defproc foo() { }
 
 pint W = 42;
 

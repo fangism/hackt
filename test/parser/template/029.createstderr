@@ -40,7 +40,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> X
       pint<> Y (default = pint-inst-ref ::foo::X)
       >(
@@ -48,6 +48,16 @@ In namespace "", we have: {
       In definition "foo", we have: {
         X = pint<> X
         Y = pint<> Y (default = pint-inst-ref ::foo::X)
+        footprint collection: {
+          <12, 12> {
+            pint^0 X value: ?
+            pint^0 Y value: ?
+          }
+          <12, 34> {
+            pint^0 X value: ?
+            pint^0 Y value: ?
+          }
+        }
       }
 
   Instances:

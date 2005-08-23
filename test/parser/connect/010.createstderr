@@ -25,9 +25,11 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    foo = process-definition (declared) foo(
+    foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+        footprint: {
+        }
       }
 
   Instances:

@@ -1,6 +1,6 @@
 // "013.in" should pass: equivalent types and sizes
 
-defproc foo();
+defproc foo() { }
 
 foo bar[0..2];
 foo blah[3];

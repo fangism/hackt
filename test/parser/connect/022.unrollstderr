@@ -29,9 +29,11 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    barf = process-definition (declared) barf(
+    barf = process-definition (defined) barf(
       )
       In definition "barf", we have: {
+        footprint: {
+        }
       }
 
   Instances:

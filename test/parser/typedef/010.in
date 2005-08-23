@@ -1,4 +1,4 @@
-// should fail:
+// "010'in" should fail:
 // aliases the type correctly, but instantiation wrongly used template
 
 typedef	int<32>		int32;

@@ -48,6 +48,9 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
         a = bool<> a
+        footprint: {
+          bool^0 a (instantiated) = ::bar::a 
+        }
       }
 
   Instances:

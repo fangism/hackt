@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.2.8.3 2005/08/22 00:44:16 fang Exp $
+	$Id: instance_collection_base.h,v 1.2.8.4 2005/08/23 17:10:36 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -209,11 +209,17 @@ virtual	bool
 	is_partially_unrolled(void) const = 0;
 
 virtual	ostream&
-	what(ostream& o) const = 0;
+	what(ostream&) const = 0;
 
+// bas eimplementation built-upon
 virtual	ostream&
-	dump(ostream& o) const;	// temporary
+	dump(ostream&) const;	// temporary
 
+private:
+	ostream&
+	dump_collection_only(ostream&) const;
+
+public:
 	/**
 		Depending on whether the collection is partially unrolled, 
 		print the type.  

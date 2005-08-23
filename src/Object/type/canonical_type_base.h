@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.h,v 1.1.4.2 2005/08/15 21:12:23 fang Exp $
+	$Id: canonical_type_base.h,v 1.1.4.3 2005/08/23 17:10:37 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
@@ -24,6 +24,7 @@ using util::persistent_object_manager;
 /**
 	Base class with just const_param_list.
 	Not polymorphic.  
+	This is actually useful for process_definition::unroll_complete_type.
  */
 class canonical_type_base {
 	typedef	canonical_type_base		this_type;
@@ -57,7 +58,8 @@ public:
 	const const_param_list_ptr_type&
 	get_raw_template_params(void) const { return param_list_ptr; }
 
-protected:
+// protected:
+// grant public access and use
 	template_actuals
 	get_template_params(const size_t) const;
 

@@ -1,7 +1,7 @@
 // "029.in" testing default arguments that depend on other parameters
 
 template <pint X, Y=X>
-defproc foo();
+defproc foo() { }
 
 foo<12,> q;
 foo<12,34> p;

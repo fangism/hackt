@@ -1,4 +1,4 @@
-// should fail:
+// "008.in" should fail:
 // aliases the type correctly, but use is wrong b/c is not a template
 
 typedef	int<32>		int32;

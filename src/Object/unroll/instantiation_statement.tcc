@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.2.6 2005/08/23 08:36:32 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.2.7 2005/08/23 17:10:37 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -167,6 +167,7 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
+	STACKTRACE_VERBOSE;
 #if USE_UNROLL_CONTEXT_FOOTPRINT
 	const footprint* const f(c.get_target_footprint());
 	collection_type& _inst(f ? IS_A(collection_type&, 
@@ -201,6 +202,8 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 		if (!type_ref_parent_type::commit_type_first_time(
 				_inst, cft).good) {
+			type_ref_parent_type::get_type()->dump(
+				cerr << "Instantiated from: ") << endl;
 			return good_bool(false);
 		}
 		// _inst.establish_collection_type(ft);
@@ -244,6 +247,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
 	const_range_list crl;
+#if 0
+	c.dump(STACKTRACE_INDENT) << endl;
+#endif
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!

@@ -34,9 +34,9 @@ Persistent Object Manager text dump:
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
-	33	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
-	34	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	33	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	34	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
 	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -100,6 +100,29 @@ In namespace "", we have: {
           [0..::foo::N[1]-1]
         }
 
+        footprint collection: {
+          <{2,3}> {
+            pint^1 N with indices: {
+            }
+              unrolled index-value pairs: {
+                0 = ?
+                1 = ?
+              }
+            bool^1 a with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::a[0] 
+                1 = ::foo::a[1] 
+              }
+            bool^1 b with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::b[0] 
+                1 = ::foo::b[1] 
+                2 = ::foo::b[2] 
+              }
+          }
+        }
       }
 
   Instances:

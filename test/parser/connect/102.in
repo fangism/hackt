@@ -2,7 +2,7 @@
 // copy-modified from "101.in"
 
 template <pint X,Y>
-defproc bar(int<X> a; int<Y> b);
+defproc bar(int<X> a; int<Y> b) { }
 
 bar<2,3> w, z;
 w.a = z.a;

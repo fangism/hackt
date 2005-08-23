@@ -34,31 +34,35 @@ Persistent Object Manager text dump:
 	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
-	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	59	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -68,7 +72,7 @@ In namespace "", we have: {
   2 definitions
   0 typedefs
   Definitions:
-    bar = process-definition (declared) bar<
+    bar = process-definition (defined) bar<
       pint<> X
       pint<> Y
       >(
@@ -80,14 +84,30 @@ In namespace "", we have: {
         Y = pint<> Y
         a = foo<pint-inst-ref ::bar::X> a
         b = foo<pint-inst-ref ::bar::Y> b
+        footprint collection: {
+          <2, 3> {
+            pint^0 X value: ?
+            pint^0 Y value: ?
+            process foo<2>^0 a (instantiated) = ::bar::a 
+            process foo<3>^0 b (instantiated) = ::bar::b 
+          }
+        }
       }
 
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> A
       >(
       )
       In definition "foo", we have: {
         A = pint<> A
+        footprint collection: {
+          <2> {
+            pint^0 A value: ?
+          }
+          <3> {
+            pint^0 A value: ?
+          }
+        }
       }
 
   Instances:

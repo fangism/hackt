@@ -1,9 +1,10 @@
 // "008.in" should pass: appropriate use of template type
 
 template <pint N>
-defproc foo();
+defproc foo() { }
 
 foo<13> bar;
 
 // for type-checking ok if foo undefined
+// however will die at unroll time
 

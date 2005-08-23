@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.3.2.1 2005/08/22 19:59:33 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.3.2.2 2005/08/23 17:10:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -282,6 +282,7 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
+	STACKTRACE_VERBOSE;
 #if USE_UNROLL_CONTEXT_FOOTPRINT
 	const footprint* const f(c.get_target_footprint());
 #endif
@@ -317,6 +318,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		// assert dynamic cast
 		const value_scalar_type&
 			scalar_inst(IS_A(const value_scalar_type&, _vals));
+		// c.dump(STACKTRACE_INDENT) << endl;
 		return scalar_inst.lookup_value(i, c);
 #else
 		const never_ptr<value_scalar_type>

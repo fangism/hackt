@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
 	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
 	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	28	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -47,18 +47,23 @@ Persistent Object Manager text dump:
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	46	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	56	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	46	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	62	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -84,6 +89,36 @@ In namespace "", we have: {
           [0..::bar::N-1]
         }
 
+        footprint collection: {
+          <3, 2> {
+            pint^0 M value: ?
+            pint^0 N value: ?
+            process foo<3, 4>^1 x with indices: {
+            }
+              unrolled indices: {
+                0 = ::bar::x[0] (
+                  bool^1 a with indices: {
+                    [0..::foo::D-1]
+                  }
+                    unrolled indices: {
+                      0 = ::bar::x[0].a[0] 
+                      1 = ::bar::x[0].a[1] 
+                      2 = ::bar::x[0].a[2] 
+                    }
+                )
+                1 = ::bar::x[1] (
+                  bool^1 a with indices: {
+                    [0..::foo::D-1]
+                  }
+                    unrolled indices: {
+                      0 = ::bar::x[1].a[0] 
+                      1 = ::bar::x[1].a[1] 
+                      2 = ::bar::x[1].a[2] 
+                    }
+                )
+              }
+          }
+        }
       }
 
     foo = process-definition (defined) foo<
@@ -102,6 +137,19 @@ In namespace "", we have: {
           [0..::foo::D-1]
         }
 
+        footprint collection: {
+          <3, 4> {
+            pint^0 D value: ?
+            pint^0 E value: ?
+            bool^1 a with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::a[0] 
+                1 = ::foo::a[1] 
+                2 = ::foo::a[2] 
+              }
+          }
+        }
       }
 
   Instances:

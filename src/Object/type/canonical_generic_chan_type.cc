@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.1.4.4 2005/08/20 19:17:05 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.1.4.5 2005/08/23 17:10:37 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -31,6 +31,7 @@ namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+
 //=============================================================================
 // class canonical_type method definitions
 
@@ -342,10 +343,23 @@ if (canonical_definition_ptr) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Are channel members considered ports?
+	They cannot be referenced as subinstances, only as fields 
+	in CHP communcation statements.  
+	For now, just no-op.  
+	TODO: finalize the behavior of this.  
+ */
 void
 canonical_generic_chan_type::unroll_port_instances(
 		const unroll_context& c, subinstance_manager& sub) const {
+#if 0
 	FINISH_ME(Fang);
+#else
+if (canonical_definition_ptr) {
+} else {
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

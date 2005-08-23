@@ -1,7 +1,8 @@
-// "012.in" should pass: wrapping templates in typedefs
+// "014.in" should pass: wrapping templates in typedefs
+// copy-modified from "012.in"
 
 template <pint N, M>
-defproc array2d() { }
+defproc array2d();			// die on unrolling on incomplete type
 
 template <pint Q>
 typedef	array2d<1,Q>	row;

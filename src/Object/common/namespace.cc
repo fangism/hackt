@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.3 2005/08/08 23:08:27 fang Exp $
+ 	$Id: namespace.cc,v 1.3.2.1 2005/08/23 17:10:34 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -349,7 +349,7 @@ scopespace::add_instance(
 		NEVER_NULL(ret);
 		return ret;
 	}
-}
+}	// end method add_instance
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -48,17 +48,21 @@ Persistent Object Manager text dump:
 	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	54	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -68,21 +72,33 @@ In namespace "", we have: {
   2 definitions
   0 typedefs
   Definitions:
-    bar = process-definition (declared) bar(
+    bar = process-definition (defined) bar(
         foo<1> a
         foo<2> b
       )
       In definition "bar", we have: {
         a = foo<1> a
         b = foo<2> b
+        footprint: {
+          process foo<1>^0 a (instantiated) = ::bar::a 
+          process foo<2>^0 b (instantiated) = ::bar::b 
+        }
       }
 
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> A
       >(
       )
       In definition "foo", we have: {
         A = pint<> A
+        footprint collection: {
+          <1> {
+            pint^0 A value: ?
+          }
+          <2> {
+            pint^0 A value: ?
+          }
+        }
       }
 
   Instances:

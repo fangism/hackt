@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.2.2 2005/08/19 05:17:38 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.2.3 2005/08/23 17:10:36 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -103,10 +103,28 @@ instance_collection_base::~instance_collection_base() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Dumps the collection excluding the index collection 
+	list from instantiation statements.  
+ */
+ostream&
+instance_collection_base::dump_collection_only(ostream& o) const {
+	if (is_partially_unrolled()) {
+		type_dump(o);		// pure virtual
+	} else {
+		// this dump is appropriate for pre-unrolled, unresolved dumping
+		// get_type_ref just grabs the type of the first statement
+		get_type_ref()->dump(o);
+	}
+	return o << ' ' << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Overridden by param_value_collection.  
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
+#if 0
 	// but we need a version for unrolled and resolved parameters.  
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
@@ -115,10 +133,17 @@ instance_collection_base::dump(ostream& o) const {
 		// get_type_ref just grabs the type of the first statement
 		get_type_ref()->dump(o);
 	}
-	o << " " << key;
+	o << ' ' << key;
+#else
+	dump_collection_only(o);
+#endif
 
 	if (dimensions) {
+#if 0
+		// invariant not true for instance_collections that belong
+		// to footprints' workspaces
 		INVARIANT(!index_collection.empty());
+#endif
 		o << " with indices: {" << endl;
 	{	// indentation scope
 		INDENT_SECTION(o);
@@ -135,9 +160,13 @@ instance_collection_base::dump(ostream& o) const {
 			ind->dump(o << auto_indent) << endl;
 		}
 	}	// end indentation scope
-		o << auto_indent << "}" << endl;
+		o << auto_indent << '}' << endl;
 	} else {
+#if 0
+		// invariant not true for instance_collections that belong
+		// to footprints' workspaces
 		INVARIANT(index_collection.size() == 1);
+#endif
 		// the list contains exactly one instantiation statement
 	}
 	return o;
