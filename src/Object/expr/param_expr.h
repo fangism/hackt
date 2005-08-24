@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.2 2005/07/20 21:00:47 fang Exp $
+	$Id: param_expr.h,v 1.2.10.1 2005/08/24 02:46:26 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_H__
@@ -75,6 +75,9 @@ virtual bool
 
 virtual bool
 	is_relaxed_formal_dependent(void) const = 0;
+
+virtual bool
+	is_template_dependent(void) const = 0;
 
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const = 0;

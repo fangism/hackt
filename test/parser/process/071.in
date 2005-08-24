@@ -1,0 +1,11 @@
+// "071.in" should fail, error instantiating type with connection error
+// copy-modified from "070.in"
+// now with some internal aliases!
+
+template <pint N>
+defproc foo(bool a[N]) {
+	a[0] = a[4];
+}
+
+foo<3> poo;
+

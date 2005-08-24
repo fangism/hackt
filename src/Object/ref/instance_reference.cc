@@ -2,11 +2,13 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.2.8.1 2005/08/15 21:12:17 fang Exp $
+ 	$Id: instance_reference.cc,v 1.2.8.2 2005/08/24 02:46:29 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
 #define	__OBJECT_REF_INSTANCE_REFERENCE_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 
@@ -37,7 +39,7 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 
-// introduced by useing canonical_types
+// introduced by using canonical_types
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
@@ -322,9 +324,16 @@ simple_meta_instance_reference_base::get_base_def(void) const {
 bool
 simple_meta_instance_reference_base::is_relaxed_formal_dependent(void) const {
 	return get_inst_base()->is_relaxed_template_formal() ||
-		(array_indices ?
-		array_indices->is_relaxed_formal_dependent()
-		: false);
+		(array_indices ? array_indices->is_relaxed_formal_dependent()
+			: false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+simple_meta_instance_reference_base::is_template_dependent(void) const {
+	return get_inst_base()->is_template_formal() ||
+		(array_indices ? array_indices->is_template_dependent()
+			: false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -400,15 +409,15 @@ simple_meta_instance_reference_base::has_static_constant_dimensions(void) const 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Preconditions: 
-	If any instance additions are dynamic, 
-	conservatively return true.  
+	\pre If any instance additions are dynamic, 
+		conservatively return true.  
 	Cases: {collective, scalar} x {non-indexed, partial, fully-indexed}
 	In the conservative case, return true.  
  */
 bool
 simple_meta_instance_reference_base::may_be_densely_packed(void) const {
-	const size_t base_dim = get_inst_base()->get_dimensions();
+	const instance_collection_base& _inst(*get_inst_base());
+	const size_t base_dim = _inst.get_dimensions();
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
 		return true;
@@ -437,9 +446,15 @@ simple_meta_instance_reference_base::may_be_densely_packed(void) const {
 			// array indices are fully specified, and constant
 			return true;
 		}
+	} else if (_inst.is_template_dependent()) {
+		// check whether or not the referenced collection
+		// depends on any template parameters.
+		// if so, conservatively return true
+		return true;
 	} else {
+
 		// not indexed, implicitly refers to entire collection
-		// TO DO: unpack instance collection into
+		// TODO: unpack instance collection into
 		// multidimensional_sparse_set
 		const excl_ptr<const mset_base>
 			fui = unroll_static_instances(base_dim)
@@ -449,7 +464,7 @@ simple_meta_instance_reference_base::may_be_densely_packed(void) const {
 			rl(fui->compact_dimensions());
 		return !rl.empty();
 	}
-}
+}	// end method may_be_densely_packed
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -457,7 +472,8 @@ simple_meta_instance_reference_base::may_be_densely_packed(void) const {
  */
 bool
 simple_meta_instance_reference_base::must_be_densely_packed(void) const {
-	const size_t base_dim = get_inst_base()->get_dimensions();
+	const instance_collection_base& _inst(*get_inst_base());
+	const size_t base_dim = _inst.get_dimensions();
 	// if not collective, then return true (not really applicable)
 	if (base_dim == 0)
 		return true;
@@ -485,6 +501,11 @@ simple_meta_instance_reference_base::must_be_densely_packed(void) const {
 			// array indices are fully specified, and constant
 			return true;
 		}
+	} else if (_inst.is_template_dependent()) {
+		// check whether or not the referenced collection
+		// depends on any template parameters.
+		// if so, conservatively return false
+		return false;
 	} else {
 		// not indexed, implicitly refers to entire collection
 		// TO DO: unpack instance collection into
@@ -886,7 +907,7 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 	// Here, we know we can obtain the implicit packed indices, 
 	// and then compare them.  
 
-	const simple_meta_instance_reference_base*
+	const simple_meta_instance_reference_base* const
 		sir = IS_A(const simple_meta_instance_reference_base*, &i);
 	if (!sir) {
 		// then is not a simple_meta_instance_reference_base, 
@@ -898,10 +919,8 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 	const const_index_list rindex(sir->implicit_static_constant_indices());
 
 	// or just collapse these to ranges directly?
-	const const_range_list ldim = 
-		lindex.collapsed_dimension_ranges();
-	const const_range_list rdim = 
-		rindex.collapsed_dimension_ranges();
+	const const_range_list ldim(lindex.collapsed_dimension_ranges());
+	const const_range_list rdim(rindex.collapsed_dimension_ranges());
 
 	const bool ret = ldim.is_size_equivalent(rdim);
 	if (!ret) {

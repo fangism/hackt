@@ -2,11 +2,13 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.2.8.1 2005/08/15 21:12:19 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.2.8.2 2005/08/24 02:46:29 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
 #define	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/bool_instance_collection.h"

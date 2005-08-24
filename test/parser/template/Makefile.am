@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2005/08/08 16:52:01 fang Exp $
+#	$Id: Makefile.am,v 1.10.4.1 2005/08/24 02:46:45 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,14 +12,14 @@ ARTC_TEST_FAILURES = \
 	060 065 066 067 069
 
 ARTC_TEST_PASSES = \
-	001 002 004 006 007 008 009 \
+	001 002 004 006 007 008 008a 009 \
 	011 012 015 016 017 018 \
 	021 022 026 029 \
-	030 031 032 033 034 035 036 037 038 039 \
+	030 031 032 033 033a 034 035 036 037 038 038a 039 \
 	040 041 043 044 045 046 049 \
 	055 056 057 058 059 \
 	061 062 063 064 068 \
-	070 071 072 073
+	070 071 072 073 073a
 
 # KNOWN BUGS:
 # should fail at unroll-time:

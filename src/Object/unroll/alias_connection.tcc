@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.3.2.4 2005/08/22 19:59:35 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.3.2.5 2005/08/24 02:46:31 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -180,9 +180,10 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			cref_size(cref_iter->size());
 		if (cref_size != head_size) {
 			what(cerr << "ERROR: unrolling packed instance "
-				"aliases in ") << ": size of reference " <<
-				j << " = " << cref_size << endl;
-			cerr << "\tsize of reference 1 = " << head_size << endl;
+				"aliases in ") << ':'  << endl <<
+				"\tsize of reference " <<
+				j << " = " << cref_size << endl <<
+				"\tsize of reference 1 = " << head_size << endl;
 			err = true;
 		}
 	}
@@ -291,31 +292,6 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			const never_ptr<instance_alias_base_type>
 				connectee(**ref_iter_iter);
 			NEVER_NULL(connectee);
-#if 0
-			// TODO: type-check for connectibility here!!!
-			if (!head->must_match_type(*connectee)) {
-				// already have error message
-				return good_bool(false);
-			}
-#if 1
-			// need to compare relaxed actuals if applicable!
-			// this is util::ring_node::merge()
-			// 2005-07-09: added actuals check
-			// TODO: factors this out into a policy so that
-			// meta-types that don't have relaxed actuals
-			// may pass through this as a No-op!
-			if (!connectee->compare_and_propagate_actuals(
-					first_relaxed_actuals).good) {
-				// already have partial error message
-				head->dump_hierarchical_name(cerr << "\tand : ")
-					<< endl;
-				return good_bool(false);
-			}
-#endif	// 1
-			// TODO: policy-determined recursive alias connection
-			// checking.  
-			head->merge(*connectee);
-#else
 			// all type-checking is done in this call:
 			if (!instance_alias_base_type::checked_connect_alias(
 					*head, *connectee,
@@ -323,7 +299,6 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 				// already have error message
 				return good_bool(false);
 			}
-#endif
 		}
 		for_each(ref_iter_head, ref_iter_end, 
 			// ambiguous, postfix or prefix (doesn't matter)

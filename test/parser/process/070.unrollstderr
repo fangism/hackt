@@ -1,0 +1,92 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	119
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	107
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> N
+      >(
+        bool<> a with indices: {
+          [0..::foo::N-1]
+        }
+
+      )
+      In definition "foo", we have: {
+        N = pint<> N
+        a = bool<> a with indices: {
+          [0..::foo::N-1]
+        }
+
+        footprint collection: {
+          <6> {
+            pint^0 N value: ?
+            bool^1 a with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::a[4] 
+                1 = ::foo::a[1] 
+                2 = ::foo::a[2] 
+                3 = ::foo::a[3] 
+                4 = ::foo::a[0] 
+                5 = ::foo::a[5] 
+              }
+          }
+        }
+      }
+
+  Instances:
+    poo = process foo<6>^0 poo (instantiated) = ::poo (
+      bool^1 a with indices: {
+        [0..::foo::N-1]
+      }
+        unrolled indices: {
+          0 = ::poo.a[0] 
+          1 = ::poo.a[1] 
+          2 = ::poo.a[2] 
+          3 = ::poo.a[3] 
+          4 = ::poo.a[4] 
+          5 = ::poo.a[5] 
+        }
+    )
+}
+

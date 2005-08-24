@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.2.8.4 2005/08/23 17:10:36 fang Exp $
+	$Id: instance_collection_base.h,v 1.2.8.5 2005/08/24 02:46:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -295,6 +295,9 @@ public:
 
 	bool
 	port_formal_equivalent(const this_type& b) const;
+
+	bool
+	is_template_dependent(void) const;
 
 public:
 virtual	count_ptr<meta_instance_reference_base>

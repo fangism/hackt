@@ -1,0 +1,12 @@
+// "076.in" should fail, failed to meet internal constraints
+// copy-modified from "075.in"
+
+template <pint M, N>
+defproc bar(int<M> x[N]) {
+	int<N> y[M];
+	x = y;		// constraint: M == N
+}
+
+bar<2,2> glu;
+bar<3,2> poo;		// this will die
+

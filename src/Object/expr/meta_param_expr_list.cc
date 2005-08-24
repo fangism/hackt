@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.5 2005/08/16 03:48:37 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.6 2005/08/24 02:46:25 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -713,6 +713,20 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 				"relaxed formal parameter." << endl;
 			return true;
 		}
+		// else continue checking...
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+dynamic_param_expr_list::is_template_dependent(void) const {
+	const_iterator i(begin());
+	for ( ; i!=end(); i++) {
+		const count_ptr<const param_expr> ip(*i);
+		NEVER_NULL(ip);	// nothing may be NULL at this point!
+		if (ip->is_template_dependent())
+			return true;
 		// else continue checking...
 	}
 	return false;

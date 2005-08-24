@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.3.2.3 2005/08/23 17:10:36 fang Exp $
+ 	$Id: instance_collection.cc,v 1.3.2.4 2005/08/24 02:46:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -469,6 +469,27 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		// both are scalar, single instances
 		return true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if any of the instantiation statements
+		contain parameters that are dependent on 
+		template formal parameters.  
+ */
+bool
+instance_collection_base::is_template_dependent(void) const {
+	typedef	index_collection_type::const_iterator	const_index_iterator;
+	const_index_iterator i(index_collection.begin());
+	const const_index_iterator e(index_collection.end());
+	for ( ; i!=e; i++) {
+		const index_collection_item_ptr_type ii((*i)->get_indices());
+		if (ii && ii->is_template_dependent()) {
+			return true;
+		}
+		// else keep checking
+	}
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

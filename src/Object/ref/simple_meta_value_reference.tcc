@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.3.2.2 2005/08/23 17:10:36 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.3.2.3 2005/08/24 02:46:30 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -195,6 +195,13 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {
 	return common_base_type::is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::is_template_dependent(void) const {
+	return common_base_type::is_template_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

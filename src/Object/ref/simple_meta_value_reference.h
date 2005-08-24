@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.2 2005/07/23 06:52:50 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.2.8.1 2005/08/24 02:46:30 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -127,6 +127,9 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
+
+	bool
+	is_template_dependent(void) const;
 
 	bool
 	is_unconditional(void) const;

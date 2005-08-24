@@ -1,5 +1,5 @@
 // "065.in" should pass, will recursively instantiate ports
-// copy-modified from "065.in"
+// copy-modified from "064.in"
 // slightly crazy... but combines the major complicated issues
 
 template <pint D, E=D+1>

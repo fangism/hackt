@@ -1,0 +1,12 @@
+// "072.in" should pass, will recursively instantiate ports
+// copy-modified from "060.in"
+
+template <pint N>
+defproc foo(int<N> a) {
+	int<N> b;
+	a = b;			// local alias
+}
+
+foo<8> poo;
+foo<16> pew;
+

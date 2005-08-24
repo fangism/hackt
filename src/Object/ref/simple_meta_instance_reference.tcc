@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.4 2005/08/22 19:59:33 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.2.8.5 2005/08/24 02:46:30 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -24,6 +24,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/ref/inst_ref_implementation.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -92,13 +93,24 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 		const never_ptr<const index_list_type> ind, 
 		alias_collection_type& a) {
 	// possibly factor this part out into simple_meta_instance_reference_base?
+	STACKTRACE_VERBOSE;
 #if USE_UNROLL_CONTEXT_FOOTPRINT
 	const footprint* const f(c.get_target_footprint());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "checkpoint A" << endl;
+	_inst.dump(cerr << "_inst: ") << endl;
+	if (f) {
+		f->dump_with_collections(cerr << "footprint: ") << endl;
+	}
+#endif
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&, 
 				*(*f)[_inst.get_name()])
 			: _inst);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "checkpoint B" << endl;
 #endif
+#endif	// USE_UNROLL_CONTEXT_FOOTPRINT
 if (inst.get_dimensions()) {
 	const_index_list cil;
 	if (ind) {
@@ -165,6 +177,7 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 		const unroll_context& c, alias_collection_type& a) const {
+	STACKTRACE_VERBOSE;
 	return unroll_references_helper(c, *this->inst_collection_ref,
 		this->array_indices, a);
 }
@@ -182,6 +195,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template unroll_generic_scalar_reference<Tag>(
 			*this->inst_collection_ref, this->array_indices, c);
@@ -204,9 +218,17 @@ bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		instance_collection_base& cl, 
 		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ckpt 0" << endl;
+#endif
 	// assert checked-cast, will throw bad_cast upon error
 	instance_collection_generic_type&
 		coll(IS_A(instance_collection_generic_type&, cl));
+
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ckpt 1" << endl;
+#endif
 	alias_collection_type this_aliases;
 	const bad_bool unroll_err(this->unroll_references(c, this_aliases));
 		// calls unroll_reference virtually, thus
@@ -228,9 +250,21 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	const instance_collection_ptr_type temp_ptr(&coll);
 	const this_type temp_ref(temp_ptr);
 #endif
-		// reference the whole port if it is collective (array)
-		// by not attaching indices
-	const bad_bool port_err(temp_ref.unroll_references(c, port_aliases));
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ckpt 2" << endl;
+#endif
+#if 1
+	// just like member_instance_reference::unroll
+	// we suppress the footprint of the unroll context
+	// when looking up ports.
+	const unroll_context cc(c.make_member_context());
+#endif
+	// reference the whole port if it is collective (array)
+	// by not attaching indices
+	const bad_bool port_err(temp_ref.unroll_references(cc, port_aliases));
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ckpt 3" << endl;
+#endif
 		// will automatically size the array
 	if (unroll_err.bad) {
 		cerr << "ERROR unrolling member instance reference "
@@ -258,31 +292,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		const never_ptr<instance_alias_base_type> rp(*ri);
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
-#if 0
-		if (!lp->must_match_type(*rp)) {
-			// already have error message
-			return bad_bool(true);
-		}
-		typedef	typename instance_alias_base_type::relaxed_actuals_type
-					relaxed_actuals_type;
-		// no need to 'find' anymore, because actuals are copied
-		// around the rings as aliases are connected.  
-		const relaxed_actuals_type& la(lp->get_relaxed_actuals());
-		const relaxed_actuals_type& ra(rp->get_relaxed_actuals());
-		// no need to update a cnonical actuals
-		if (!instance_alias_base_type::compare_actuals(la, ra).good) {
-			// already have error message
-			return bad_bool(true);
-		}
-		// else safe to connect
-		lp->merge(*rp);
-#else
 		if (!instance_alias_base_type::checked_connect_port(
 				*lp, *rp).good) {
 			// already have error message
 			return bad_bool(true);
 		}
-#endif
 	}
 	INVARIANT(ri == port_aliases.end());
 	return bad_bool(false);

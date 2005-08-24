@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.2 2005/07/23 06:52:47 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.2.8.1 2005/08/24 02:46:29 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -15,7 +15,9 @@
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/unroll/unroll_context.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/stacktrace.h"
 
 //=============================================================================
 namespace ART {
@@ -58,12 +60,20 @@ MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves the parent (super) instance first.  
+ */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_collection_generic_type>
 MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		const unroll_context& c) const {
 	typedef	count_ptr<instance_collection_generic_type>	return_type;
-	if (this->base_inst_ref->dimensions()) {
+	STACKTRACE_VERBOSE;
+	// this also include member_meta_instance_references
+	const base_inst_type& _parent_inst_ref(
+		IS_A(const simple_meta_instance_reference_base&, 
+			*this->base_inst_ref));
+	if (_parent_inst_ref.dimensions()) {
 		cerr << "ERROR: parent instance reference of a "
 			"member reference must be scalar." << endl <<
 			"However, non-scalar member-parent references "
@@ -72,10 +82,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		return return_type(NULL);
 	}
 	const never_ptr<substructure_alias>
-		parent_struct(this->base_inst_ref->
-			unroll_generic_scalar_reference(c));
+		parent_struct(
+			_parent_inst_ref.unroll_generic_scalar_reference(c));
 	if (!parent_struct) {
-		base_inst_ref->dump(
+		_parent_inst_ref.dump(
 			cerr << "ERROR resolving member reference parent ")
 			<< endl;
 		return return_type(NULL);
@@ -108,16 +118,24 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 		const unroll_context& c, alias_collection_type& a) const {
+	STACKTRACE_VERBOSE;
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {
 		// already have error message
 		return bad_bool(true);
 	}
-	return unroll_references_helper(c, *inst_base, this->array_indices, a);
+	// do not look up the member using the footprint!
+	// only the ultimate parent of the reference should use the footprint
+	// copy the unroll_context *except* for the footprint pointer
+	const unroll_context cc(c.make_member_context());
+	return unroll_references_helper(cc, *inst_base, this->array_indices, a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a hierarchical instance alias.  
+ */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
@@ -125,6 +143,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
 	if (!inst_base) {

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.6 2005/08/23 17:10:34 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.7 2005/08/24 02:46:22 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2662,7 +2662,7 @@ if (defined) {
 			f->mark_unrolled();
 		} else {
 			// already have partial error message
-			cpt.dump(cerr << "Instantiated from ") << endl;
+			// cpt.dump(cerr << "Instantiated from ") << endl;
 			return good_bool(false);
 		}
 	}

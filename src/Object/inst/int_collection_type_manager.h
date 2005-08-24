@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.2.10.2 2005/08/18 05:33:28 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.2.10.3 2005/08/24 02:46:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -75,7 +75,14 @@ protected:
 	 */
 	bool
 	must_match_type(const this_type& t) const {
-		return type_parameter == t.type_parameter;
+		if (type_parameter == t.type_parameter) {
+			return true;
+		} else {
+			cerr << "ERROR: integer widths do not match!  "
+				"have: " << type_parameter << " vs. " <<
+				t.type_parameter << endl;
+			return false;
+		}
 	}
 
 

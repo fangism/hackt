@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.2.8.1 2005/08/10 20:30:54 fang Exp $
+	$Id: const_collection.h,v 1.2.8.2 2005/08/24 02:46:23 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
@@ -111,6 +111,9 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
+
+	bool
+	is_template_dependent(void) const { return false; }
 
 	count_ptr<const parent_const_type>
 	static_constant_param(void) const;

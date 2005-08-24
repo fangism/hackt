@@ -3,7 +3,7 @@
 	Unary negation of meta boolean.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_unary_expr.h,v 1.2 2005/07/20 21:00:48 fang Exp $
+	$Id: pbool_unary_expr.h,v 1.2.10.1 2005/08/24 02:46:27 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_UNARY_EXPR_H__
@@ -65,6 +65,9 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
+
+	bool
+	is_template_dependent(void) const;
 
 	bool
 	is_loop_independent(void) const;

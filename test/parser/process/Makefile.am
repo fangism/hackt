@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2005/08/08 16:51:53 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.1 2005/08/24 02:46:43 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,9 @@ ARTC_TEST_PASSES = \
 	030 035 036 037 \
 	040 042 043 049 \
 	051 054 055 056 057 058 059 \
-	060 061 062 063 064 065
+	060 061 062 063 064 065 066 067 068 069 \
+	070 071 072 073 074 075 076 077 078 079 \
+	080 081 081a 082 083
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -27,6 +29,7 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 	$(ARTOBJ_TEST_SUBJECTS)
 
 # the omitted unroll tests either have no instances or are just uninteresting
+# TODO: add 066 - 080
 HACKT_CREATE_TEST_SUBJECTS = \
 	024 \
 	054 055 056 057 058 059 \

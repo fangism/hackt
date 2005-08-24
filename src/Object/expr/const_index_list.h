@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.3 2005/07/23 06:52:30 fang Exp $
+	$Id: const_index_list.h,v 1.3.8.1 2005/08/24 02:46:23 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -98,6 +98,9 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
+
+	bool
+	is_template_dependent(void) const { return false; }
 
 	bool
 	is_loop_independent(void) const;

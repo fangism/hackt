@@ -2,6 +2,26 @@
 
 2005-08-23	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-22:
+	  Status: each definition can unroll it's own sequential scope!
+		Significant progress shown in this revision.  
+	  Implemented meta_expr's is_template_dependent().  
+	  Bug fixed: simple_meta_instance_reference_base now checks
+		for template dependence when deducing packed-ness
+		if referenced instance collections.  
+	  Bug fixed: in resolving member instance reference, 
+		only use footprint in the lookup for the top-most level
+		of the scope, not any of the members.
+		(same principle applies to
+			simple_member_instance_reference::connect_port)
+	  Bunch of new test cases based on existing one, 
+		but onw definitions have internal instantiations
+		and connections to unroll.  
+		Mostly added to parser/process.
+	  Minor updates to error messages during unroll.  
+	  TODO: bottom-up footprint construction during the create phase, oooo!
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-21:
 	  Breakthrough: recursive type unrolling is enabled!
 	  We now also dump process-definitions' footprints.  
@@ -60,7 +80,7 @@
 	  Enabled persistence of the footprint manager in process_definition.
 		footprint_manager now saves away hashtable of
 		shadow-owned instance collections (physical and parameter).
-	  Object binary size for procsess_definition increased by 8B.  
+	  Object binary size for process_definition increased by 8B.  
 		Unroll and Create tests have been updated accordingly.
 	  Eventually commit the USE_FOOTPRINT_MANAGER switch
 		in "Object/def/process_definition.h".

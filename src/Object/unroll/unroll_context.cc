@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.3.2.4 2005/08/23 17:10:37 fang Exp $
+	$Id: unroll_context.cc,v 1.3.2.5 2005/08/24 02:46:31 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -135,8 +135,27 @@ unroll_context::dump(ostream& o) const {
 		template_args->dump(o);
 	else	o << "(none)";
 #endif
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+	if (target_footprint)
+		target_footprint->dump_with_collections(
+			cerr << endl << "footprint: ");
+#endif
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+/**
+	\return a copy of the context with footprint pointer nullified.  
+	Calledn by member_instance_reference::unroll_reference.
+ */
+unroll_context
+unroll_context::make_member_context(void) const {
+	unroll_context ret(*this);
+	ret.target_footprint = NULL;
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
