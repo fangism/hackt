@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.2.8.2 2005/08/20 19:17:02 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.2.8.3 2005/08/24 22:36:58 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -73,6 +73,7 @@ public:
 
 	REGISTER_COMPLETE_TYPE_PROTO;
 	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object

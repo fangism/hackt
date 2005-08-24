@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.13 2005/08/22 00:44:15 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.14 2005/08/24 22:37:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -252,8 +252,15 @@ INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 	if (this->container->is_port_formal()) {
 		STACKTRACE("is subinstance");
 		// super_instance is a const substructure_alias*
-		return good_bool(this->container->get_super_instance()
-			->allocate_state(f) != 0);
+		if (!this->container->get_super_instance()
+				->allocate_state(f)) {
+			this->dump_hierarchical_name(
+				cerr << "ERROR creating placeholder state "
+				"for super-instance of ") << endl;
+			return good_bool(false);
+		} else {
+			return good_bool(true);
+		}
 	} else {
 		STACKTRACE("is NOT subinstance");
 		return good_bool(true);
@@ -288,8 +295,6 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	for ( ; i!=e; i++, j++) {
 		if (!j->create_super_instance(f).good) {
 			// already have partial error message
-			cerr << "ERROR creating placeholder state for "
-				"super-instance." << endl;
 			return 0;
 		}
 	}
@@ -353,6 +358,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	const iterator e(_this.end());
 #if 0
 {
+	// PUNTING this BUG FIX
 	iterator ii(i), jj(j);
 	for ( ; jj!=e; ii=jj, jj++) {
 		if (!synchronize_actuals_recursive(_this, *ii).good)
@@ -389,6 +395,33 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 		if (!_this.create_subinstance_state(*i, f).good)
 			return 0;	// 0 means error
 	}
+#if 1
+	// after having synchronized relaxed actuals
+	// create footprints of dependent types bottom up
+	// this must be done before allocating subinstances
+	// because of possible internal aliases
+	// 1) get complete type first and merge in relaxed actuals
+	//	if type is still relaxed (incomplete), this is an error
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	const complete_type_type
+		_type(actuals_parent_type::complete_type_actuals(
+			*this->container));
+	if (!_type) {
+		// already have error message
+		this->dump_hierarchical_name(cerr << "Failed to instantiate ")
+			<< endl;
+		return 0;
+	}
+#if 0
+	else if (!_type.create_definition_footprint()) {
+		// have error message already
+		this->dump_hierarchical_name(cerr << "Instantiated by: ")
+			<< endl;
+		return 0;
+	}
+#endif
+#endif
 	// This must be done AFTER processing aliases because
 	// ports may be connected to each other externally
 	// Postponing guarantees that port aliases are resolved first.
@@ -499,6 +532,7 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 /**
 	Compares collection types of the two instances and then
 	(TODO) compares their relaxed actuals (if applicable).
+	NOTE: relaxed actuals are compared by synchronize/compare_actuals().  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool

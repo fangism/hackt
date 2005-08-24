@@ -1,12 +1,11 @@
 // "114.in" should pass connection, one reference is relaxed. 
 // copy-modified from "093.in"
 // testing propagation of relaxed actuals in rings.  
-// will die on snu/gnu having incomplete types during create phase
 
 template <pint A><pint B>
 defproc foo();
 
-foo<1> bar, ick<1>, poo, goo, snu, gnu, glu;
+foo<1> bar, ick<1>, poo, goo, snu<1>, gnu, glu;
 
 bar = ick;	// relaxed connecting to specified, OK
 poo = glu;

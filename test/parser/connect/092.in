@@ -1,4 +1,5 @@
 // "092.in" should pass connection, both references are relaxed. 
+// will die during creation because type are incomplete
 // copy-modified from "088.in"
 
 template <pint A><pint B>

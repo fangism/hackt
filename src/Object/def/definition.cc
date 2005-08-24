@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.7 2005/08/24 02:46:22 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.8 2005/08/24 22:36:59 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -74,6 +74,7 @@ DEFAULT_STATIC_TRACE_BEGIN
  */
 #define	REGISTER_PROCESS_FOOTPRINTS	1 && USE_FOOTPRINT_MANAGER
 #define	UNROLL_PROCESS_FOOTPRINTS	1 && REGISTER_PROCESS_FOOTPRINTS
+#define	CREATE_PROCESS_FOOTPRINTS	1 && UNROLL_PROCESS_FOOTPRINTS
 
 //=============================================================================
 namespace util {
@@ -875,6 +876,14 @@ user_def_chan::unroll_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+user_def_chan::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing until this has a footprint manager
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void
 user_def_chan::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1042,6 +1051,13 @@ channel_definition_alias::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 channel_definition_alias::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_definition_alias::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	ICE_NEVER_CALL(cerr);
 }
@@ -1288,6 +1304,14 @@ built_in_datatype_def::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 built_in_datatype_def::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, built-in types have no footprint manater
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+built_in_datatype_def::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	// nothing, built-in types have no footprint manater
 	return good_bool(true);
@@ -1634,6 +1658,14 @@ enum_datatype_def::unroll_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+enum_datatype_def::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, doesn't have a footprint manager
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -1957,6 +1989,14 @@ user_def_datatype::unroll_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+user_def_datatype::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// doesnt't have a gootprint manager .. yet
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2168,6 +2208,13 @@ datatype_definition_alias::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 datatype_definition_alias::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+datatype_definition_alias::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	ICE_NEVER_CALL(cerr);
 }
@@ -2669,6 +2716,60 @@ if (defined) {
 	return good_bool(true);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<
+			get_qualified_name() << endl;
+	// parent should print: "instantiated from here"
+	return good_bool(false);
+}
+#else
+	return good_bool(true);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create the definition footprint fr a complete process_type.  
+ */
+good_bool
+process_definition::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
+#if CREATE_PROCESS_FOOTPRINTS
+if (defined) {
+	footprint* f;
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		f = &footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		f = &footprint_map.only();
+	}
+	// will automatically unroll first if not already unrolled
+	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	if (!f->is_created()) {
+#if 1
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_process_type
+			cpt(make_canonical_type(canonical_actuals));
+		const unroll_context
+			c(canonical_actuals, template_formals, f);
+#endif
+		if (sequential_scope::create_unique(c, *f).good) {
+			f->mark_created();
+		} else {
+			// already have partial error message
+			// cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+} else {
+	cerr << "ERROR: cannot create incomplete process type " <<
 			get_qualified_name() << endl;
 	// parent should print: "instantiated from here"
 	return good_bool(false);

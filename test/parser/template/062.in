@@ -1,4 +1,5 @@
 // "062.in" should pass, ok to put relaxed actuals after identifier
+// will die during creation because of incomplete type (at dar)
 // copy-modified from "061.in" (just equivalent ranges)
 
 template <pint Q><pint R>

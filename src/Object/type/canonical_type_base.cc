@@ -1,8 +1,10 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.1.4.2 2005/08/15 21:12:22 fang Exp $
+	$Id: canonical_type_base.cc,v 1.1.4.3 2005/08/24 22:37:02 fang Exp $
  */
 
+#include <algorithm>
+#include <iterator>
 #include "Object/type/canonical_type_base.h"
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param.h"
@@ -67,6 +69,29 @@ canonical_type_base::dump_template_args(ostream& o,
 		param_list_ptr->dump_range(o << '<', num_strict, s) << '>';
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre the actuals for this type are incomplete.
+	\post the actuals for this type will be complete.  
+	This is not checked locally, is caller's responsibility to check.
+	\see instance_alias_info_actuals::complete_type_actuals().  
+ */
+void
+canonical_type_base::combine_relaxed_actuals(
+		const const_param_list_ptr_type& p) {
+if (p) {
+	if (!param_list_ptr) {
+		param_list_ptr = p;
+	} else if (param_list_ptr->size()) {
+		// need to make a deep copy: copy-on-write
+		param_list_ptr_type pp(new param_list_type(*param_list_ptr));
+		std::copy(p->begin(), p->end(), std::back_inserter(*pp));
+		param_list_ptr = pp;
+	}
+}
+// else nothing to add
 }
 
 //=============================================================================

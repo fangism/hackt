@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.h,v 1.1.4.3 2005/08/23 17:10:37 fang Exp $
+	$Id: canonical_type_base.h,v 1.1.4.4 2005/08/24 22:37:02 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
@@ -44,7 +44,7 @@ public:
 	typedef	count_ptr<param_list_type>
 						param_list_ptr_type;
 protected:
-	const_param_list_ptr_type		param_list_ptr;
+	const_param_list_ptr_type			param_list_ptr;
 public:
 	canonical_type_base();
 
@@ -65,6 +65,10 @@ public:
 
 	ostream&
 	dump_template_args(ostream&, const size_t) const;
+
+protected:
+	void
+	combine_relaxed_actuals(const const_param_list_ptr_type&);
 
 #if 0
 // object persistence

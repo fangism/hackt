@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-23:
+	  Set up type-merge for canonical types prior to
+		creating definition footprints.  
+	  Implemented definitions' create_complete_type(), 
+		with only process_definition's being non-trivial.  
+	  TODO: consistency check for propagated relaxed actuals
+		against those of an already complete type.
+	  Test updates: some connections tests which passed before 
+		now fail (progression!) rejecting instantiation of
+		objects without complete (strict) type, 
+		after merging relaxed actuals (where applicable).  
+	  TODO: enable create_definition_footprint in
+		"Object/inst/instance_collection.tcc"
+	  TODO: write import/export interface for globals state ID
+		assignment.  
+
+
 2005-08-23	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-22:

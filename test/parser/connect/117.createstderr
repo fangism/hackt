@@ -6,6 +6,6 @@ ERROR: attempted to connect instances with conflicting relaxed parameters!
 Conflicting actuals in hierarchichal connections.
 between: ::p.a
     and: ::q.a
-ERROR creating placeholder state for super-instance.
+ERROR creating placeholder state for super-instance of ::p.a
 Error during create_unique.
 ERROR in creating.  Aborting.

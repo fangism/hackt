@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.2.8.3 2005/08/20 19:17:04 fang Exp $
+	$Id: user_def_datatype.h,v 1.2.8.4 2005/08/24 22:37:00 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -103,6 +103,7 @@ public:
 #endif
 	REGISTER_COMPLETE_TYPE_PROTO;
 	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

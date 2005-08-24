@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.2.8.4 2005/08/18 05:33:27 fang Exp $
+	$Id: alias_empty.h,v 1.2.8.5 2005/08/24 22:37:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -96,6 +96,17 @@ public:
 	compare_actuals(const alias_actuals_type&,
 		const alias_actuals_type&) {
 		return good_bool(true);
+	}
+
+protected:
+	/**
+		Since type has no relaxed actuals, 
+		just return the canonical type of the collection. 
+	 */
+	template <class InstColl>
+	typename InstColl::instance_collection_parameter_type
+	complete_type_actuals(const InstColl& _inst) const {
+		return _inst.get_canonical_type();
 	}
 
 protected:

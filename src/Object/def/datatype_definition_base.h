@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_base.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.2.8.2 2005/08/20 19:17:03 fang Exp $
+	$Id: datatype_definition_base.h,v 1.2.8.3 2005/08/24 22:36:58 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
@@ -65,6 +65,7 @@ virtual	good_bool
 
 virtual	REGISTER_COMPLETE_TYPE_PROTO = 0;
 virtual	UNROLL_COMPLETE_TYPE_PROTO = 0;
+virtual	CREATE_COMPLETE_TYPE_PROTO = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;

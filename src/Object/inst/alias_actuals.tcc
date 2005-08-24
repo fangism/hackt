@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.2.8.4 2005/08/18 05:33:27 fang Exp $
+	$Id: alias_actuals.tcc,v 1.2.8.5 2005/08/24 22:37:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -116,6 +116,43 @@ if (l.actuals) {
 	}
 }
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Completes the type by combining the collection's canonical type
+	with the relaxed parameters from the instance.  
+ */
+template <class InstColl>
+typename InstColl::instance_collection_parameter_type
+instance_alias_info_actuals::complete_type_actuals(
+		const InstColl& _inst) const {
+	typedef	typename InstColl::instance_collection_parameter_type
+						canonical_type_type;
+	canonical_type_type _type(_inst.get_canonical_type());
+	if (_type.is_relaxed()) {
+		if (actuals) {
+			// then merge actuals and return
+			_type.combine_relaxed_actuals(actuals);
+			return _type;
+		} else {
+			// ERROR: missing actuals for complete type
+			cerr << "ERROR: complete type required "
+				"for instantiation" << endl;
+			_type.dump(cerr << "\thave: ") << endl;
+			return canonical_type_type();
+		}
+	} else {
+		if (actuals) {
+			cerr << "ERROR: collection type is already complete, "
+				"cannot merge relaxed actuals." << endl;
+			_type.dump(cerr << "\thave: ");
+			actuals->dump(cerr << " with <") << '>' << endl;
+			return canonical_type_type();
+		} else {
+			return _type;
+		}
+	}
 }
 
 //=============================================================================

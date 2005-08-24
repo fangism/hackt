@@ -1,4 +1,5 @@
 // "064.in" should pass, relaxed actuals differ in same relaxed collection
+// will die during create phase on incomplete type of bar members.  
 // copy-modified from "063.in"
 
 template <pint Q><pint R>

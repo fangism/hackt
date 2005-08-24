@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.10.4.5 2005/08/24 02:46:33 fang Exp $
+#	$Id: Makefile.am,v 1.10.4.6 2005/08/24 22:37:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -27,7 +27,7 @@ ARTC_TEST_PASSES = \
 	083 084 085 086 086a 086b 087 088 089 \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 103a 104 105 106 107 108 109 \
-	110 111 112 113 114 115 116 117 118 119 \
+	110 111 112 113 114 114a 115 116 117 118 119 \
 	120 121
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
@@ -55,7 +55,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	083 084 085 088 089 \
 	092 093 094 095 099 \
 	100 102 103 104 106 107 109 \
-	111 112 113 114 116 117 118 119
+	111 112 113 114 114a 116 117 118 119
 
 # 117 passes unrolling, but fails during creat's hierarchical type check, neat!
 # KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)

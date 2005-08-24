@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.2.8.4 2005/08/18 05:33:27 fang Exp $
+	$Id: alias_actuals.h,v 1.2.8.5 2005/08/24 22:37:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -100,6 +100,11 @@ public:
 	good_bool
 	compare_actuals(const alias_actuals_type&, 
 		const alias_actuals_type&);
+
+protected:
+	template <class InstColl>
+	typename InstColl::instance_collection_parameter_type
+	complete_type_actuals(const InstColl& _inst) const;
 
 protected:
 	void

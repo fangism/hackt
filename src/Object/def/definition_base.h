@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.2.8.3 2005/08/20 19:17:04 fang Exp $
+	$Id: definition_base.h,v 1.2.8.4 2005/08/24 22:36:59 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -240,6 +240,11 @@ virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 #define	UNROLL_COMPLETE_TYPE_PROTO					\
 	good_bool							\
 	unroll_complete_type(						\
+		const count_ptr<const const_param_expr_list>&) const
+
+#define	CREATE_COMPLETE_TYPE_PROTO					\
+	good_bool							\
+	create_complete_type(						\
 		const count_ptr<const const_param_expr_list>&) const
 
 protected:

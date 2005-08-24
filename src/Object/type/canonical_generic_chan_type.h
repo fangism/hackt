@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.1.4.3 2005/08/20 19:17:05 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.1.4.4 2005/08/24 22:37:01 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -135,6 +135,8 @@ public:
 
 	good_bool
 	create_definition_footprint(void) const;
+
+	using base_type::combine_relaxed_actuals;
 
 public:
 // object persistence
