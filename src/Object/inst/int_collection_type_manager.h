@@ -1,13 +1,13 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.2.10.3 2005/08/24 02:46:29 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.2.10.4 2005/08/24 03:17:07 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 #define	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 
-#include <iosfwd>
+#include <iostream>
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
@@ -17,6 +17,7 @@ namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
+#include "util/using_ostream.h"
 using util::bad_bool;
 using util::persistent_object_manager;
 template <class> class class_traits;
