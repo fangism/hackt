@@ -3,7 +3,7 @@
 	Class declarations for built-in boolean data instances
 	and instance collections.  
 	This file was "Object/art_object_instance_bool.h" in a previous life.  
-	$Id: bool_instance_collection.h,v 1.3.4.2 2005/08/15 21:12:12 fang Exp $
+	$Id: bool_instance_collection.h,v 1.3.4.3 2005/08/24 04:04:43 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_H__
@@ -12,6 +12,7 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/null_collection_type_manager.h"
 
