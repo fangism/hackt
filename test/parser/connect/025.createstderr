@@ -18,7 +18,7 @@ Persistent Object Manager text dump:
 	14	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
 	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
@@ -50,8 +50,11 @@ In namespace "", we have: {
         a = int<32> a
         b = int<32> b
         footprint: {
-          int<32>^0 a (instantiated) = ::bar::a 
-          int<32>^0 b (instantiated) = ::bar::b 
+          int<32>^0 a (instantiated) = ::bar::a (1) 
+          int<32>^0 b (instantiated) = ::bar::b (2) 
+          int instance pool:
+          1	::bar::a
+          2	::bar::b
         }
       }
 

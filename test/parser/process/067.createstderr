@@ -1,0 +1,145 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	118
+	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	146
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+        foo<> x
+        foo<> y
+      )
+      In definition "bar", we have: {
+        x = foo<> x
+        y = foo<> y
+        footprint: {
+          process foo<>^0 x (instantiated) = ::bar::y (1) (
+            bool^1 a with indices: {
+              [0..1]
+            }
+              unrolled indices: {
+                0 = ::bar::x.a[0] (1) 
+                1 = ::bar::x.a[1] (2) 
+              }
+          )
+          process foo<>^0 y (instantiated) = ::bar::x (1) (
+            bool^1 a with indices: {
+              [0..1]
+            }
+              unrolled indices: {
+                0 = ::bar::y.a[0] (1) 
+                1 = ::bar::y.a[1] (2) 
+              }
+          )
+          process instance pool:
+          1	::bar::x
+          bool instance pool:
+          1	::bar::y.a[0]
+          2	::bar::y.a[1]
+        }
+      }
+
+    foo = process-definition (defined) foo(
+        bool<> a with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "foo", we have: {
+        a = bool<> a with indices: {
+          [0..1]
+        }
+
+        footprint: {
+          bool^1 a with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::a[1] (1) 
+              1 = ::foo::a[0] (1) 
+            }
+          bool instance pool:
+          1	::foo::a[0]
+        }
+      }
+
+  Instances:
+    poo = process bar<>^0 poo (instantiated) = ::poo (1) (
+      process foo<>^0 x (instantiated) = ::poo.x (2) (
+        bool^1 a with indices: {
+          [0..1]
+        }
+          unrolled indices: {
+            0 = ::poo.x.a[0] (1) 
+            1 = ::poo.x.a[1] (2) 
+          }
+      )
+      process foo<>^0 y (instantiated) = ::poo.y (3) (
+        bool^1 a with indices: {
+          [0..1]
+        }
+          unrolled indices: {
+            0 = ::poo.y.a[0] (3) 
+            1 = ::poo.y.a[1] (4) 
+          }
+      )
+    )
+}
+
+Created state:
+process instance pool:
+1	::poo
+2	::poo.x
+3	::poo.y
+bool instance pool:
+1	::poo.x.a[0]
+2	::poo.x.a[1]
+3	::poo.y.a[0]
+4	::poo.y.a[1]
+

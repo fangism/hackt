@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	126
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	158
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
@@ -75,11 +75,16 @@ In namespace "", we have: {
             bool^1 a with indices: {
             }
               unrolled indices: {
-                0 = ::foo::a[0] 
-                1 = ::foo::a[1] 
-                2 = ::foo::a[2] 
-                3 = ::foo::a[3] 
+                0 = ::foo::a[0] (1) 
+                1 = ::foo::a[1] (2) 
+                2 = ::foo::a[2] (3) 
+                3 = ::foo::a[3] (4) 
               }
+            bool instance pool:
+            1	::foo::a[0]
+            2	::foo::a[1]
+            3	::foo::a[2]
+            4	::foo::a[3]
           }
         }
       }

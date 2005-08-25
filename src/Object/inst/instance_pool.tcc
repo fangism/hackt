@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.2.4.3 2005/08/22 00:44:16 fang Exp $
+	$Id: instance_pool.tcc,v 1.2.4.4 2005/08/25 21:30:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -14,12 +14,14 @@
 #include "util/list_vector.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
+#include "util/indent.h"
 
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using util::auto_indent;
 //=============================================================================
 // class instance_pool method definitions
 
@@ -111,17 +113,21 @@ instance_pool<T>::allocate(const T& t) {
 /**
 	Dumps the state of the entire pool of instances.  
 	Displays the unique ID number and each instance's state information.  
+	NOTE: this will print the terminating end-line, 
+		the caller need not call it.  
+		This also includes the first auto_indent.  
  */
 template <class T>
 ostream&
 instance_pool<T>::dump(ostream& o) const {
 if (this->size() > 1) {
-	o << class_traits<tag_type>::tag_name << " instance pool:" << endl;
+	o << auto_indent << class_traits<tag_type>::tag_name <<
+		" instance pool:" << endl;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	size_t j = 1;
 	for ( ; i!=e; i++, j++) {
-		i->dump(o << j << '\t') << endl;
+		i->dump(o << auto_indent << j << '\t') << endl;
 	}
 }
 	// else pool is empty

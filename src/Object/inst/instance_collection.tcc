@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.14 2005/08/24 22:37:00 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.15 2005/08/25 21:30:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -240,6 +240,9 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	If this container is a port formal, then this will invoke
 	it's parent super-instance's state allocation.  
 	Upward-recursive.  
+	Inside a definition scope however, the top-most instances
+	should not invoke allocation of their canonical parents.  
+	Q: how do we know our contect?
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
@@ -251,6 +254,15 @@ INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 #endif
 	if (this->container->is_port_formal()) {
 		STACKTRACE("is subinstance");
+#if 1
+		// check if this collection is top-level in the current
+		// scope.  if so, then terminate upward recursion.  
+		// this should be able to replace the is_port_formal() check.  
+		if (f[this->container->get_name()] == this->container) {
+			STACKTRACE("is top-level in current scope");
+			return good_bool(true);
+		}
+#endif
 		// super_instance is a const substructure_alias*
 		if (!this->container->get_super_instance()
 				->allocate_state(f)) {
@@ -413,14 +425,13 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 			<< endl;
 		return 0;
 	}
-#if 0
-	else if (!_type.create_definition_footprint()) {
+	else if (!container_type::collection_type_manager_parent_type
+			::create_definition_footprint(_type).good) {
 		// have error message already
 		this->dump_hierarchical_name(cerr << "Instantiated by: ")
 			<< endl;
 		return 0;
 	}
-#endif
 #endif
 	// This must be done AFTER processing aliases because
 	// ports may be connected to each other externally

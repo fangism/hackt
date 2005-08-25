@@ -48,7 +48,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> A
       ><
       pint<> B

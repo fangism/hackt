@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.2.10.3 2005/08/24 22:37:01 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.2.10.4 2005/08/25 21:30:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -16,6 +16,7 @@ namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
 
@@ -60,21 +61,21 @@ protected:
 	}
 
 public:
-#if 0
-	const instance_collection_parameter_type&
-#else
 	instance_collection_parameter_type
-#endif
 	get_canonical_type(void) const {
-#if 0
-		return this->get_type();
-#else
 		return instance_collection_parameter_type();
-#endif
 	}
 
 	bool
 	is_relaxed_type(void) const { return false; }
+
+	// bool doesn't have a footprint
+	static
+	good_bool
+	create_definition_footprint(
+			const instance_collection_parameter_type& t) {
+		return good_bool(true);
+	}
 
 protected:
 	bool

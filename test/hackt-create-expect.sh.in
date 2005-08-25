@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-create-expect.sh.in"
-#	$Id: hackt-create-expect.sh.in,v 1.2.4.1 2005/08/15 21:12:28 fang Exp $
+#	$Id: hackt-create-expect.sh.in,v 1.2.4.2 2005/08/25 21:30:24 fang Exp $
 
 # $1 is the executable for the creator (hackt create), expecting 2 arguments
 # $2 is the executable for reading in the object file, (probably artobjdump)
@@ -30,7 +30,11 @@ analdiff=$7
 indfilter=$8
 
 # an pre-created (already unrolled) object file must already exist
-if ! [ -e $bldroot.artobjunroll ] ; then exit 1 ; fi
+if ! [ -s $bldroot.artobjunroll ]
+then
+	@ECHO@ "$bldroot.artobjunroll doesn't exist or is empty."
+	exit 1
+fi
 
 # see if it crashes first
 $create $bldroot.artobjunroll $bldroot.hacktobjcreate 2> $bldroot.createdump

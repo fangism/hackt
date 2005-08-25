@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	106
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
 	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	162
 	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -50,24 +50,32 @@ In namespace "", we have: {
         x = foo<> x
         y = foo<> y
         footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (
+          process foo<>^0 x (instantiated) = ::bar::x (1) (
             bool^1 a with indices: {
               [0..1]
             }
               unrolled indices: {
-                0 = ::bar::x.a[0] 
-                1 = ::bar::x.a[1] 
+                0 = ::bar::x.a[0] (1) 
+                1 = ::bar::x.a[1] (2) 
               }
           )
-          process foo<>^0 y (instantiated) = ::bar::y (
+          process foo<>^0 y (instantiated) = ::bar::y (2) (
             bool^1 a with indices: {
               [0..1]
             }
               unrolled indices: {
-                0 = ::bar::y.a[0] 
-                1 = ::bar::y.a[1] 
+                0 = ::bar::y.a[0] (3) 
+                1 = ::bar::y.a[1] (4) 
               }
           )
+          process instance pool:
+          1	::bar::x
+          2	::bar::y
+          bool instance pool:
+          1	::bar::x.a[0]
+          2	::bar::x.a[1]
+          3	::bar::y.a[0]
+          4	::bar::y.a[1]
         }
       }
 
@@ -86,9 +94,12 @@ In namespace "", we have: {
           bool^1 a with indices: {
           }
             unrolled indices: {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
+              0 = ::foo::a[0] (1) 
+              1 = ::foo::a[1] (2) 
             }
+          bool instance pool:
+          1	::foo::a[0]
+          2	::foo::a[1]
         }
       }
 

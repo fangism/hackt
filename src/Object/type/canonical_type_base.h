@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.h,v 1.1.4.4 2005/08/24 22:37:02 fang Exp $
+	$Id: canonical_type_base.h,v 1.1.4.5 2005/08/25 21:30:23 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
@@ -69,6 +69,9 @@ public:
 protected:
 	void
 	combine_relaxed_actuals(const const_param_list_ptr_type&);
+
+	bool
+	match_relaxed_actuals(const const_param_list_ptr_type&) const;
 
 #if 0
 // object persistence

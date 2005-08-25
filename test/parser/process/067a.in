@@ -1,0 +1,16 @@
+// "067a.in" should pass, will recursively instantiate ports
+// copy-modified from "067.in"
+// includes internal aliasing
+
+defproc foo(bool a, b) {
+	a = b;
+}
+
+defproc bar(foo x[2]) {
+	x[0] = x[1];
+}
+
+bar poo;
+
+// after connection flattening, there should be only one of each type
+

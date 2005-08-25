@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	236
 	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -101,14 +101,20 @@ In namespace "", we have: {
           <2, 3> {
             pint^0 X value: ?
             pint^0 Y value: ?
-            process foo<2>^0 a (instantiated) = ::bar::a 
-            process foo<3>^0 b (instantiated) = ::bar::b 
+            process foo<2>^0 a (instantiated) = ::bar::a (1) 
+            process foo<3>^0 b (instantiated) = ::bar::b (2) 
+            process instance pool:
+            1	::bar::a
+            2	::bar::b
           }
           <3, 4> {
             pint^0 X value: ?
             pint^0 Y value: ?
-            process foo<3>^0 a (instantiated) = ::bar::a 
-            process foo<4>^0 b (instantiated) = ::bar::b 
+            process foo<3>^0 a (instantiated) = ::bar::a (1) 
+            process foo<4>^0 b (instantiated) = ::bar::b (2) 
+            process instance pool:
+            1	::bar::a
+            2	::bar::b
           }
         }
       }

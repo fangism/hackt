@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.2.10.4 2005/08/24 03:17:07 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.2.10.5 2005/08/25 21:30:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -18,6 +18,7 @@ namespace entity {
 using std::istream;
 using std::ostream;
 #include "util/using_ostream.h"
+using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
 template <class> class class_traits;
@@ -69,6 +70,16 @@ public:
 
 	bool
 	is_relaxed_type(void) const { return false; }
+
+	/**
+		ints don't have footprints.
+	 */
+	static
+	good_bool
+	create_definition_footprint(
+			const instance_collection_parameter_type& t) {
+		return good_bool(true);
+	}
 
 protected:
 	/**

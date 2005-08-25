@@ -3,6 +3,18 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-08-25:
+	In final phase of creation checking:
+		every unique instance whose collection type is relaxed
+		must have relaxed actuals.  
+		Definitions however are allowed to defer this because
+		relaxed actuals may be passed in from the public ports.  
+		Top-level instances however, MUST meet this criterion.  
+		Intelligent: if instance placeholder is not aliased
+		to a public port, and it is missing, then can complain.  
+
+
+//=============================================================================
 2005-08-20:
 	Considerations for unrolling, in the grand scheme of things.  
 	Top-level unrolling alters the top-level instance_collections

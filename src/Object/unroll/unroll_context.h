@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.2.8.5 2005/08/24 02:46:31 fang Exp $
+	$Id: unroll_context.h,v 1.2.8.6 2005/08/25 21:30:23 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -118,6 +118,9 @@ public:
 	// not sure if const is good enough
 	const footprint*
 	get_target_footprint(void) const { return target_footprint; }
+
+	bool
+	in_definition_context(void) const { return target_footprint; }
 
 	this_type
 	make_member_context(void) const;

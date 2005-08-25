@@ -1,0 +1,12 @@
+// "066a.in" should pass, will recursively instantiate ports
+// copy-reduced from "06.in"
+// has internal aliases!
+
+defproc foo(bool a, b) {
+	a = b;
+}
+
+foo poo;
+
+// after hierarchical flattening, there is only one of each type
+

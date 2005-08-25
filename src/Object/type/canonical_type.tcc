@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.8 2005/08/24 22:37:01 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.9 2005/08/25 21:30:23 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -199,7 +199,6 @@ CANONICAL_TYPE_CLASS::unroll_definition_footprint(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Creates definition footprint (and those of dependent types, 
 	recursively) from the bottom-up.  
@@ -210,9 +209,8 @@ CANONICAL_TYPE_CLASS::create_definition_footprint(void) const {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(this->is_strict());
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
-	return canonical_definition_ptr->create...
+	return canonical_definition_ptr->create_complete_type(param_list_ptr);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

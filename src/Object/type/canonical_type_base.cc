@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.1.4.3 2005/08/24 22:37:02 fang Exp $
+	$Id: canonical_type_base.cc,v 1.1.4.4 2005/08/25 21:30:23 fang Exp $
  */
 
 #include <algorithm>
@@ -92,6 +92,17 @@ if (p) {
 	}
 }
 // else nothing to add
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+canonical_type_base::match_relaxed_actuals(
+		const const_param_list_ptr_type& p) const {
+	if (param_list_ptr) {
+		return p && param_list_ptr->is_tail_equivalent(*p);
+	} else {
+		return !p || p->empty();
+	}
 }
 
 //=============================================================================

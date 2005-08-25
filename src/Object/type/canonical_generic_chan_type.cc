@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.1.4.5 2005/08/23 17:10:37 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.1.4.6 2005/08/25 21:30:22 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -360,6 +360,16 @@ if (canonical_definition_ptr) {
 } else {
 }
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Channels don't have footprints yet...
+	but when they do... TODO!
+ */
+good_bool
+canonical_generic_chan_type::create_definition_footprint(void) const {
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

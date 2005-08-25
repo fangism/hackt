@@ -53,7 +53,7 @@ Persistent Object Manager text dump:
 	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	52	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
 	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -103,8 +103,11 @@ In namespace "", we have: {
         a = foo<1> a
         b = foo<2> b
         footprint: {
-          process foo<1>^0 a (instantiated) = ::bar::a 
-          process foo<2>^0 b (instantiated) = ::bar::b 
+          process foo<1>^0 a (instantiated) = ::bar::a (1) 
+          process foo<2>^0 b (instantiated) = ::bar::b (2) 
+          process instance pool:
+          1	::bar::a
+          2	::bar::b
         }
       }
 

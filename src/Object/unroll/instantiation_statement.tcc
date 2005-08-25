@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.2.7 2005/08/23 17:10:37 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.2.8 2005/08/25 21:30:23 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -375,8 +375,18 @@ INSTANTIATION_STATEMENT_CLASS::create_unique(
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	INVARIANT(rr.good);
-	return type_ref_parent_type::create_unique_state(
-		*this->inst_base, crl, f);
+#if USE_UNROLL_CONTEXT_FOOTPRINT
+	// _f determines whether or not we are in a definition context
+	const footprint* const _f(c.get_target_footprint());
+	if (_f)
+		INVARIANT(_f == &f);
+	collection_type& _inst(_f ? IS_A(collection_type&, 
+			*f[this->inst_base->get_name()])
+		: *this->inst_base);
+#else
+	collection_type& _inst(*this->inst_base);
+#endif
+	return type_ref_parent_type::create_unique_state(_inst, crl, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

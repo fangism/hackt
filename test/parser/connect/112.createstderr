@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	123
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
 	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -89,8 +89,11 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         footprint: {
-          bool^0 a (instantiated) = ::wrap::a 
-          bool^0 b (instantiated) = ::wrap::b 
+          bool^0 a (instantiated) = ::wrap::a (1) 
+          bool^0 b (instantiated) = ::wrap::b (2) 
+          bool instance pool:
+          1	::wrap::a
+          2	::wrap::b
         }
       }
 

@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2005-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-24:
+	  Unroll and create test scripts now check for input file existence
+		and non-zero size before executing.  
+
+
 2005-08-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-06-merged-canonical-07:

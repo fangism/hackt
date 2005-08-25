@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.2.10.5 2005/08/24 02:46:23 fang Exp $
+	$Id: const_param_expr_list.h,v 1.2.10.6 2005/08/25 21:30:20 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -80,7 +80,7 @@ public:
 
 	using parent_type::begin;
 	using parent_type::end;
-
+	using parent_type::empty;
 	using parent_type::push_back;
 
 	bool
@@ -98,6 +98,10 @@ public:
 	/// checks equivalence up to the end of the strict argument list
 	bool
 	must_be_equivalent(const this_type&, const size_t s) const;
+
+	/// only checks the relaxed parameters of this list against the argument
+	bool
+	is_tail_equivalent(const this_type&) const;
 
 	/// checks entire list
 	bool

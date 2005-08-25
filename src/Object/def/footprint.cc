@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.7 2005/08/23 17:10:35 fang Exp $
+	$Id: footprint.cc,v 1.1.2.8 2005/08/25 21:30:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -131,6 +131,7 @@ if (instance_collection_map.empty()) {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
+	// no need to visit def_back_ref
 {
 	// instance_collection_map
 	const_instance_map_iterator i(instance_collection_map.begin());

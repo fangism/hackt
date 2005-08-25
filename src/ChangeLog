@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-24:
+	  Bug fix: only check relaxed actuals
+	  Enabled definition footprint creation!
+		Each complete type now creates (instantiates) its own
+		footprint, expanded into placeholder pools.  
+	  Tests added and updated.  
+	  TODO: hierarchical instance allocation with 
+		definition import/export.  
+
+
 2005-08-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-23:

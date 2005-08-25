@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.2.10.2 2005/08/18 05:33:27 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.2.10.3 2005/08/25 21:30:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -16,6 +16,7 @@ namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
 template <class> class class_traits;
@@ -73,6 +74,13 @@ public:
 
 	bool
 	is_relaxed_type(void) const;
+
+	static
+	good_bool
+	create_definition_footprint(
+			const instance_collection_parameter_type& t) {
+		return t.create_definition_footprint();
+	}
 
 protected:
 	/**

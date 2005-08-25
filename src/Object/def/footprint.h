@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.7 2005/08/23 17:10:35 fang Exp $
+	$Id: footprint.h,v 1.1.2.8 2005/08/25 21:30:20 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -81,16 +81,16 @@ private:
 	// state information
 	// a place to unroll instances and connections
 	// a place to create state pseudo-footprint
-	// back-reference to definition?
+	// back-reference to definition?  NO, instance_collection_map suffices
 	/**
 		Whether or not this definition footprint has been unrolled.
 	 */
-	bool				unrolled;
+	bool					unrolled;
 	/**
 		Whether or not the footprint has created unique state
 		(WITHOUT external connectivity context).
 	 */
-	bool				created;
+	bool					created;
 	/**
 		The working space collection of instances.  
 		Should be imported from the base definition.  

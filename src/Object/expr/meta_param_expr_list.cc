@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4.2.6 2005/08/24 02:46:25 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.4.2.7 2005/08/25 21:30:20 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -228,6 +228,9 @@ if (cpl) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if all parameters are equivalent.  
+ */
 bool
 const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
@@ -311,6 +314,34 @@ const_param_expr_list::must_be_equivalent(
 		}
 		// else at least one of them is NULL, continue comparing
 	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compares the actuals starting with the relaxed actuals only
+	against the argument list.  
+	\pre the number of relaxed actuals is consistent with the 
+		argument.  
+ */
+bool
+const_param_expr_list::is_tail_equivalent(const this_type& cpl) const {
+	const size_t arg_size = cpl.size();
+	const size_t t_size  = size();
+	INVARIANT(arg_size <= t_size);
+	const size_t skip = t_size -arg_size;
+	const_iterator i(begin() +skip);
+	const_iterator j(cpl.begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		INVARIANT(ip && jp);
+		if (!ip->must_be_equivalent_generic(*jp))
+			return false;
+		// else continue checking...
+	}
+	INVARIANT(j == cpl.end());
 	return true;
 }
 

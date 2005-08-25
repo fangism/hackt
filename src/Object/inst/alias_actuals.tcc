@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.2.8.5 2005/08/24 22:37:00 fang Exp $
+	$Id: alias_actuals.tcc,v 1.2.8.6 2005/08/25 21:30:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -122,6 +122,9 @@ if (l.actuals) {
 /**
 	Completes the type by combining the collection's canonical type
 	with the relaxed parameters from the instance.  
+	TODO: if container's type is strict and is being merged with
+		relaxed actuals, then make sure the relaxed actuals
+		match up, otherwise, is an error.  
  */
 template <class InstColl>
 typename InstColl::instance_collection_parameter_type
@@ -143,7 +146,8 @@ instance_alias_info_actuals::complete_type_actuals(
 			return canonical_type_type();
 		}
 	} else {
-		if (actuals) {
+		if (actuals && !_type.match_relaxed_actuals(actuals)) {
+			// TODO: this is wrong, see comment TODO
 			cerr << "ERROR: collection type is already complete, "
 				"cannot merge relaxed actuals." << endl;
 			_type.dump(cerr << "\thave: ");
