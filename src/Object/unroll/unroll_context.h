@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.2.8.6 2005/08/25 21:30:23 fang Exp $
+	$Id: unroll_context.h,v 1.2.8.7 2005/08/26 00:49:22 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -11,11 +11,7 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
-#include "Object/devel_switches.h"
-
-#if COPY_CONTEXT_ACTUALS
 #include "Object/type/template_actuals.h"
-#endif
 
 namespace ART {
 namespace entity {
@@ -41,7 +37,6 @@ using util::memory::count_ptr;
  */
 class unroll_context {
 	typedef	unroll_context				this_type;
-#if COPY_CONTEXT_ACTUALS
 	/**
 		If true, then the template args are a copy of the 
 		template actuals, not just a pointer hitherto.  
@@ -58,9 +53,6 @@ class unroll_context {
 		then experiment around with const_param_expr_list.  
 	 */
 	typedef	template_actuals			template_args_type;
-#else
-	typedef	never_ptr<const template_actuals>	template_args_type;
-#endif
 private:
 	/**
 		Stack-chain continuation to next context in scope.  
@@ -76,22 +68,18 @@ private:
 	template_args_type				template_args;
 	never_ptr<const template_formals_manager>	template_formals;
 
-#if USE_UNROLL_CONTEXT_FOOTPRINT
 	/**
 		If set to non-NULL, this is used to translate
 		from placeholder instance collection reference 
 		to definition-footprint's actual instance-collection.  
 	 */
 	footprint*					target_footprint;
-#endif
 public:
 	// parameterless types and entity::modul need this
 	unroll_context();
 
-#if USE_UNROLL_CONTEXT_FOOTPRINT
 	explicit
 	unroll_context(footprint* const);
-#endif
 
 	unroll_context(const template_actuals&,
 		const template_formals_manager&);
@@ -101,11 +89,7 @@ public:
 
 	unroll_context(const template_actuals&,
 		const template_formals_manager&, const this_type&);
-#if 0
-	// so I don't have to think about which order of arguments
-	unroll_context(const template_formals_manager&,
-		const template_actuals&);
-#endif
+
 	~unroll_context();
 
 	bool
@@ -114,8 +98,6 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-#if USE_UNROLL_CONTEXT_FOOTPRINT
-	// not sure if const is good enough
 	const footprint*
 	get_target_footprint(void) const { return target_footprint; }
 
@@ -124,7 +106,6 @@ public:
 
 	this_type
 	make_member_context(void) const;
-#endif
 
 	void
 	chain_context(const this_type&);

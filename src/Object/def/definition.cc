@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.8 2005/08/24 22:36:59 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.9 2005/08/26 00:49:19 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -68,13 +68,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #else
 #define	STACKTRACE_DUMP(x)
 #endif
-
-/**
-	Temporary development flag, isolated to this translation unit.  
- */
-#define	REGISTER_PROCESS_FOOTPRINTS	1 && USE_FOOTPRINT_MANAGER
-#define	UNROLL_PROCESS_FOOTPRINTS	1 && REGISTER_PROCESS_FOOTPRINTS
-#define	CREATE_PROCESS_FOOTPRINTS	1 && UNROLL_PROCESS_FOOTPRINTS
 
 //=============================================================================
 namespace util {
@@ -2399,11 +2392,9 @@ process_definition::dump(ostream& o) const {
 				o << auto_indent << "chp:" << endl;
 				chp.dump(o << auto_indent) << endl;
 			}
-#if UNROLL_PROCESS_FOOTPRINTS
 			if (footprint_map.size()) {
 				footprint_map.dump(o << auto_indent) << endl;
 			}
-#endif
 		}
 	}	// end indent scope
 	return o << auto_indent << '}' << endl;
@@ -2650,21 +2641,12 @@ process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 	// this has a fooprint manager
-#if REGISTER_PROCESS_FOOTPRINTS
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "footprint_map.size() = " <<
-			footprint_map.size() << endl;
-#endif
 		footprint& f = footprint_map[*p];
 		f.import_scopespace(*this);
 	} else {
 		INVARIANT(!footprint_map.arity());
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "footprint_map.size() = " <<
-			footprint_map.size() << endl;
-#endif
 		// register the only map only if it doesn't exist yet
 		// otherwise will force a comparison of null pointers
 		if (!footprint_map.size()) {
@@ -2674,7 +2656,6 @@ process_definition::register_complete_type(
 		}
 		// else it was already registered
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2686,7 +2667,6 @@ process_definition::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
-#if UNROLL_PROCESS_FOOTPRINTS
 if (defined) {
 	footprint* f;
 	if (p) {
@@ -2720,9 +2700,6 @@ if (defined) {
 	// parent should print: "instantiated from here"
 	return good_bool(false);
 }
-#else
-	return good_bool(true);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2733,7 +2710,6 @@ good_bool
 process_definition::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-#if CREATE_PROCESS_FOOTPRINTS
 if (defined) {
 	footprint* f;
 	if (p) {
@@ -2749,7 +2725,6 @@ if (defined) {
 		return good_bool(false);
 	}
 	if (!f->is_created()) {
-#if 1
 		const canonical_type_base canonical_params(p);
 		const template_actuals
 			canonical_actuals(canonical_params.get_template_params(
@@ -2758,7 +2733,6 @@ if (defined) {
 			cpt(make_canonical_type(canonical_actuals));
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
-#endif
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->mark_created();
 		} else {
@@ -2774,9 +2748,6 @@ if (defined) {
 	// parent should print: "instantiated from here"
 	return good_bool(false);
 }
-#else
-	return good_bool(true);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2799,9 +2770,7 @@ if (!m.register_transient_object(this,
 	// PRS
 	prs.collect_transient_info_base(m);
 	chp.collect_transient_info_base(m);
-#if USE_FOOTPRINT_MANAGER
 	footprint_map.collect_transient_info_base(m);
-#endif
 }
 }
 
@@ -2822,9 +2791,7 @@ process_definition::write_object(
 	// PRS
 	prs.write_object_base(m, f);
 	chp.write_object_base(m, f);
-#if USE_FOOTPRINT_MANAGER
 	footprint_map.write_object_base(m, f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2841,9 +2808,7 @@ process_definition::load_object(
 	// PRS
 	prs.load_object_base(m, f);
 	chp.load_object_base(m, f);
-#if USE_FOOTPRINT_MANAGER
 	footprint_map.load_object_base(m, f);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

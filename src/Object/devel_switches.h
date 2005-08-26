@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.4.6 2005/08/22 19:59:32 fang Exp $
+	$Id: devel_switches.h,v 1.1.4.7 2005/08/26 00:49:15 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -22,18 +22,13 @@
 #endif
 
 // leave this error enabled for released code
-#if 0
+#if 1
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
 
 //=============================================================================
 // define your module-wide development switches here:
-
-#define	USE_UNROLL_CONTEXT_FOOTPRINT		1
-
-// done, ready to commit a while ago
-#define	COPY_CONTEXT_ACTUALS			1
 
 //=============================================================================
 

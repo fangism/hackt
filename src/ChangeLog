@@ -2,6 +2,11 @@
 
 2005-08-25	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-25:
+	  Cleaned up all conditional switches from this branch.  
+	  TODO: hierarchical import/exporting of aliases per complete type.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-24:
 	  Bug fix: only check relaxed actuals
 	  Enabled definition footprint creation!

@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4.2.8 2005/08/25 21:30:23 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.4.2.9 2005/08/26 00:49:22 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -33,7 +33,6 @@
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/def/footprint.h"
-#include "Object/devel_switches.h"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -168,14 +167,10 @@ good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
-#if USE_UNROLL_CONTEXT_FOOTPRINT
 	const footprint* const f(c.get_target_footprint());
 	collection_type& _inst(f ? IS_A(collection_type&, 
 			*(*f)[this->inst_base->get_name()])
 		: *this->inst_base);
-#else
-	collection_type& _inst(*this->inst_base);
-#endif
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 
 	// collection, because unroll_type_reference combines the
@@ -375,7 +370,6 @@ INSTANTIATION_STATEMENT_CLASS::create_unique(
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	INVARIANT(rr.good);
-#if USE_UNROLL_CONTEXT_FOOTPRINT
 	// _f determines whether or not we are in a definition context
 	const footprint* const _f(c.get_target_footprint());
 	if (_f)
@@ -383,9 +377,6 @@ INSTANTIATION_STATEMENT_CLASS::create_unique(
 	collection_type& _inst(_f ? IS_A(collection_type&, 
 			*f[this->inst_base->get_name()])
 		: *this->inst_base);
-#else
-	collection_type& _inst(*this->inst_base);
-#endif
 	return type_ref_parent_type::create_unique_state(_inst, crl, f);
 }
 

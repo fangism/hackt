@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/enum_instance.h"
 	Enumeration instance state.  
-	$Id: enum_instance.h,v 1.1.2.2 2005/08/17 03:15:02 fang Exp $
+	$Id: enum_instance.h,v 1.1.2.3 2005/08/26 00:49:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_H__
@@ -20,19 +20,6 @@ namespace entity {
 	A final pass is required to construct the instances.  
  */
 class class_traits<enum_tag>::state_instance_base {
-#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
-#if 0
-protected:
-	int				state;
-#endif
-	STATE_INSTANCE_GET_ACTUALS_PROTO {
-		return state_instance_actuals_ptr_type(NULL);
-	}
-
-	STATE_INSTANCE_SET_ACTUALS_PROTO { }
-
-	STATE_INSTANCE_PERSISTENCE_EMPTY_DEFS
-#endif
 };	// end class state_instance_base
 
 //=============================================================================

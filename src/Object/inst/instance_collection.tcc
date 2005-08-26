@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.15 2005/08/25 21:30:21 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.16 2005/08/26 00:49:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -394,7 +394,6 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 		INVARIANT(!i->instance_index);
 #endif
 		i->instance_index = this->instance_index;
-#if 1
 		// when to propagate relaxed actuals?
 		// it is possible that the first few entries actuals may be NULL
 		// while later actuals are valid in the ring.
@@ -402,12 +401,10 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 		// instance_reference_connection::unroll?
 		if (!synchronize_actuals(_this, *i).good)
 			return 0;
-#endif
 		// recursive connections, merging ports.
 		if (!_this.create_subinstance_state(*i, f).good)
 			return 0;	// 0 means error
 	}
-#if 1
 	// after having synchronized relaxed actuals
 	// create footprints of dependent types bottom up
 	// this must be done before allocating subinstances
@@ -432,7 +429,6 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 			<< endl;
 		return 0;
 	}
-#endif
 	// This must be done AFTER processing aliases because
 	// ports may be connected to each other externally
 	// Postponing guarantees that port aliases are resolved first.
@@ -497,6 +493,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 		this->inherit_subinstances_state(t, f);
 	}
 #if 0
+	// punting possible bug fix
 	return synchronize_actuals_recursive(*this, t);
 #else
 	if (!synchronize_actuals(*this, t).good) {
@@ -587,14 +584,6 @@ good_bool
 INSTANCE_ALIAS_INFO_CLASS::compare_and_propagate_actuals(
 		const relaxed_actuals_type& a) {
 	return actuals_parent_type::__compare_and_propagate_actuals(a, *this);
-#if 0
-	// this error printing has been folded into
-	// actuals_paren_type::__compare_and_propagate_actuals
-	if (!ret.good) {
-		this->dump_hierarchical_name(cerr << "\tfrom: ") << endl;
-	}
-	return ret;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -624,7 +613,6 @@ INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals_recursive(
 		r.dump_hierarchical_name(cerr << "    and: ") << endl;
 		return good_bool(false);
 	}
-#if 1
 	// need to hierarchically check relaxed actuals of subinstances
 	// in all cases?
 	else if (!synchronize_port_actuals(l, r).good) {
@@ -634,7 +622,6 @@ INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals_recursive(
 		r.dump_hierarchical_name(cerr << "    and: ") << endl;
 		return good_bool(false);
 	}
-#endif
 #if ENABLE_STACKTRACE
 	l.dump_actuals(STACKTRACE_INDENT << "now : ") << endl;
 	r.dump_actuals(STACKTRACE_INDENT << "and : ") << endl;
@@ -758,7 +745,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return const_iterator(NULL);
 }
 
@@ -766,7 +753,7 @@ INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::end(void) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return const_iterator(NULL);
 }
 
@@ -774,7 +761,7 @@ INSTANCE_ALIAS_INFO_CLASS::end(void) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::iterator
 INSTANCE_ALIAS_INFO_CLASS::begin(void) {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return iterator(NULL);
 }
 
@@ -782,7 +769,7 @@ INSTANCE_ALIAS_INFO_CLASS::begin(void) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::iterator
 INSTANCE_ALIAS_INFO_CLASS::end(void) {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return iterator(NULL);
 }
 
@@ -796,7 +783,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 		const persistent_object_manager&, ostream&) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -807,7 +794,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 		const persistent_object_manager&, istream&) {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

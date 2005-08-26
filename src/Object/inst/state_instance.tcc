@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.2.4.4 2005/08/17 03:15:03 fang Exp $
+	$Id: state_instance.tcc,v 1.2.4.5 2005/08/26 00:49:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -21,17 +21,11 @@ namespace entity {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 STATE_INSTANCE_CLASS::state_instance() :
-#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
-		state_instance_base(),
-#endif
 		back_ref(NULL) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 STATE_INSTANCE_CLASS::state_instance(const alias_info_type& a) :
-#if !EMPTY_PLACEHOLDER_STATE_INSTANCE
-		state_instance_base(),
-#endif
 		back_ref(&a) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
