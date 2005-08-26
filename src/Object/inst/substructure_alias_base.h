@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.6 2005/08/20 00:31:58 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.7 2005/08/26 21:11:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -15,6 +15,7 @@
 namespace ART {
 namespace entity {
 class instance_collection_base;
+class physical_instance_collection;
 class unroll_context;
 class footprint;
 template <class> class state_instance;
@@ -31,6 +32,11 @@ private:
 	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
+#if PHYSICAL_PORTS
+	typedef	physical_instance_collection	port_type;
+#else
+	typedef	instance_collection_base	port_type;
+#endif
 protected:
 	/**
 		Container of sub-instances.  
@@ -83,7 +89,7 @@ protected:
 public:
 	// just a forwarded call
 	subinstance_manager::value_type
-	lookup_port_instance(const instance_collection_base& i) const;
+	lookup_port_instance(const port_type& i) const;
 
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&

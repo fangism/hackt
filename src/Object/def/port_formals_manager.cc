@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.2.8.1 2005/08/15 21:12:09 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.2.8.2 2005/08/26 21:11:03 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -95,7 +95,7 @@ port_formals_manager::dump(ostream& o) const {
 	Override's definition_base's port formal lookup.  
 	\return pointer to port's instantiation if found, else NULL.  
  */
-never_ptr<const instance_collection_base>
+port_formals_manager::port_formals_value_type
 port_formals_manager::lookup_port_formal(const string& id) const {
 	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
 }
@@ -107,7 +107,7 @@ port_formals_manager::lookup_port_formal(const string& id) const {
  */
 size_t
 port_formals_manager::lookup_port_formal_position(const string& id) const {
-	const never_ptr<const instance_collection_base>
+	const port_formals_value_type
 		probe(lookup_port_formal(id));
 	if (probe) {
 		const port_formals_list_type::const_iterator
@@ -146,8 +146,7 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 	for ( ; f_iter!=f_end; f_iter++, a_iter++, i++) {
 		const count_ptr<const meta_instance_reference_base> a_iref(*a_iter);
 		if (a_iref) {
-			const never_ptr<const instance_collection_base>
-				f_inst(*f_iter);
+			const port_formals_value_type f_inst(*f_iter);
 			// FINISH ME
 			const count_ptr<const meta_instance_reference_base>
 				f_iref(f_inst->make_meta_instance_reference());
@@ -174,8 +173,7 @@ port_formals_manager::certify_port_actuals(const checked_refs_type& ol) const {
 	Adds a port formal instance to this process definition.  
  */
 void
-port_formals_manager::add_port_formal(
-		const never_ptr<const instance_collection_base> pf) {
+port_formals_manager::add_port_formal(const port_formals_value_type pf) {
 	// since we already checked used_id_map, there cannot be a repeat
 	// in the port_formals_list!
 	port_formals_list.push_back(pf);
@@ -200,8 +198,7 @@ port_formals_manager::equivalent_port_formals(
 	port_formals_list_type::const_iterator i(port_formals_list.begin());
 	port_formals_list_type::const_iterator j(pports.begin());
 	for ( ; i!=port_formals_list.end() && j!=pports.end(); i++, j++) {
-		const never_ptr<const instance_collection_base> ipf(*i);
-		const never_ptr<const instance_collection_base> jpf(*j);
+		const port_formals_value_type ipf(*i), jpf(*j);
 		NEVER_NULL(ipf);
 		NEVER_NULL(jpf);
 		if (!ipf->port_formal_equivalent(*jpf)) {
@@ -231,11 +228,15 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 	port_formals_list_type::const_iterator i(port_formals_list.begin());
 	const port_formals_list_type::const_iterator e(port_formals_list.end());
 	for ( ; i!=e; i++) {
-		const never_ptr<const instance_collection_base> icb(*i);
+#if PHYSICAL_PORTS
+		const port_formals_value_type pcb(*i);
+#else
+		const port_formals_value_type icb(*i);
 		NEVER_NULL(icb);
 		// because parameter collections are forbidden in ports:
 		const never_ptr<const physical_instance_collection>
 			pcb(icb.is_a<const physical_instance_collection>());
+#endif
 		NEVER_NULL(pcb);
 		// supposed to return a new copy of instance-collection
 		const count_ptr<physical_instance_collection>
@@ -287,13 +288,13 @@ port_formals_manager::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	m.read_pointer_list(f, port_formals_list);
 	port_formals_list_type::const_iterator
-		iter(port_formals_list.begin());
+		i(port_formals_list.begin());
 	const port_formals_list_type::const_iterator
-		end(port_formals_list.end());
-	for ( ; iter!=end; iter++) {
-		const port_formals_value_type inst_ptr = *iter;
+		e(port_formals_list.end());
+	for ( ; i!=e; i++) {
+		const port_formals_value_type inst_ptr(*i);
 		NEVER_NULL(inst_ptr);
-		m.load_object_once(const_cast<instance_collection_base*>(
+		m.load_object_once(const_cast<instance_collection_type*>(
 			&*inst_ptr));
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}

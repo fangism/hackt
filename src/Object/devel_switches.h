@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.4.7 2005/08/26 00:49:15 fang Exp $
+	$Id: devel_switches.h,v 1.1.4.8 2005/08/26 21:11:02 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -22,13 +22,20 @@
 #endif
 
 // leave this error enabled for released code
-#if 1
+#if 0
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
 
 //=============================================================================
 // define your module-wide development switches here:
+
+/**
+	Upgrade port_formals and subinstance_manager members to
+	physical_instance_collections instead of instance_collection_base.
+	Goal: 1
+ */
+#define	PHYSICAL_PORTS				1
 
 //=============================================================================
 

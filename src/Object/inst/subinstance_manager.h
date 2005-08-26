@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.4 2005/08/20 00:31:58 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.5 2005/08/26 21:11:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,6 +10,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -47,8 +48,13 @@ using util::persistent_object_manager;
 class subinstance_manager {
 friend class substructure_manager;
 	typedef	subinstance_manager			this_type;
+#if PHYSICAL_PORTS
+	typedef	physical_instance_collection	instance_collection_type;
+#else
+	typedef	instance_collection_base	instance_collection_type;
+#endif
 public:
-	typedef	count_ptr<instance_collection_base>	entry_value_type;
+	typedef	count_ptr<instance_collection_type>	entry_value_type;
 	// just a synonym
 	typedef	entry_value_type			value_type;
 	typedef	vector<value_type>			array_type;
@@ -76,19 +82,17 @@ public:
 	size(void) const { return subinstance_array.size(); }
 
 	void
-	reserve(const size_t s) { subinstance_array.reserve(s); }
+	reserve(const size_t);
 
 	void
-	push_back(const entry_value_type& v) {
-		subinstance_array.push_back(v);
-	}
+	push_back(const entry_value_type&);
 
 	ostream&
 	dump(ostream&) const;
 
 	// TODO: assertion check that arg is a port member of this type?
 	value_type
-	lookup_port_instance(const instance_collection_base&) const;
+	lookup_port_instance(const instance_collection_type&) const;
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>

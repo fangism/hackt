@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-08-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-26:
+	  Updated port_formals_manager and subinstance_manager to 
+		use physical_instance_collection rather than the 
+		more general instance_collection_base.  
+		This results in tighter type constraining (good).  
+	  Introduced auxiliary class port_alias_signature, 
+		constructed from port_formals_manager and footprint.  
+		Going to use this to replay aliases up the
+		instance hierarchy *before* creation.  
+
+
 2005-08-25	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-25:

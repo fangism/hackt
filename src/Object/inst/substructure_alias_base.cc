@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.3 2005/08/19 05:17:39 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.4 2005/08/26 21:11:05 fang Exp $
  */
 
 #include "Object/inst/substructure_alias_base.h"
@@ -32,8 +32,7 @@ substructure_alias::allocate_state(footprint&) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subinstance_manager::value_type
-substructure_alias::lookup_port_instance(
-		const instance_collection_base& inst) const {
+substructure_alias::lookup_port_instance(const port_type& inst) const {
 	return subinstances.lookup_port_instance(inst);
 }
 

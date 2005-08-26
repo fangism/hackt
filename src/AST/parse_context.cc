@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.2.8.1 2005/08/11 03:40:52 fang Exp $
+ 	$Id: parse_context.cc,v 1.2.8.2 2005/08/26 21:11:01 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -30,7 +30,7 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
-#include "Object/inst/instance_collection_base.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/module.h"
 
@@ -45,6 +45,7 @@ USING_STACKTRACE
 using entity::object_handle;
 using entity::enum_datatype_def;
 using entity::instantiation_statement_base;
+using entity::physical_instance_collection;
 using entity::param_type_reference;
 using entity::param_value_collection;
 using entity::process_definition;
@@ -898,7 +899,11 @@ context::add_port_formal(const token_identifier& id,
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
+#if PHYSICAL_PORTS
+	const never_ptr<const physical_instance_collection>
+#else
 	const never_ptr<const instance_collection_base>
+#endif
 		inst_base(current_prototype->add_port_formal(inst_stmt, id));
 		// same as current_named_scope? perhaps assert check?
 

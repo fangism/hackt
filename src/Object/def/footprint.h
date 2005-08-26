@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.8 2005/08/25 21:30:20 fang Exp $
+	$Id: footprint.h,v 1.1.2.9 2005/08/26 21:11:03 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -56,6 +56,10 @@ struct footprint_pool_getter;
 class footprint {
 template <class> friend struct footprint_pool_getter;
 private:
+	/**
+		This must remain an instance_collection_base because
+		this manages parameter values as well as physical instances.  
+	 */
 	typedef	count_ptr<instance_collection_base>
 					instance_collection_ptr_type;
 	/**

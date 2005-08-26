@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.2.8.1 2005/08/24 02:46:29 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.2.8.2 2005/08/26 21:11:06 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -11,7 +11,7 @@
 #include <iostream>
 #include "util/what.h"
 #include "util/persistent_object_manager.h"
-#include "Object/inst/instance_collection_base.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
@@ -92,7 +92,14 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	}
 	const count_ptr<instance_collection_base>
 		resolved_instance(parent_struct->lookup_port_instance(
-			*this->get_inst_base()));
+#if PHYSICAL_PORTS
+			// assert dynamic cast
+			IS_A(const physical_instance_collection&, 
+				*this->get_inst_base())
+#else
+			*this->get_inst_base()
+#endif
+		));
 	if (!resolved_instance) {
 		cerr << "ERROR resolving port instance." << endl;
 		return return_type(NULL);

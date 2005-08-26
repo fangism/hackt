@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.16 2005/08/26 00:49:20 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.17 2005/08/26 21:11:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -355,9 +355,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// for now the creator will be the canonical back-reference
 	typename instance_type::pool_type&
 		the_pool(footprint_pool_getter<Tag>().operator()(f));
-	_this.instance_index =
-		the_pool.allocate(instance_type(*this));
-		// instance_ptr_type(new instance_type(*this));
+	_this.instance_index = the_pool.allocate(instance_type(*this));
 	INVARIANT(this->instance_index);
 	// NOTE: can't _this.allocate_subinstances() yet because there
 	// may be aliases between the ports, see comment below.  

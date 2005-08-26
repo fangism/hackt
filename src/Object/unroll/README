@@ -4,4 +4,8 @@ This class is for classes that pertain to sequential instance management,
 i.e. records that are played sequentially.  This includes instantiation
 statements, expression assignments, alias- and port-connections.  
 
+Another program phase appropriate for this directory is the
+create-unique phase that establishes footprints of placeholders
+for state allocation.  
+
 

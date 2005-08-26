@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.9 2005/08/26 00:49:19 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.10 2005/08/26 21:11:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -42,6 +42,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/param_value_collection.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/unroll/param_instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
@@ -55,6 +56,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/canonical_generic_chan_type.h"
 
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -409,12 +411,15 @@ definition_base::add_relaxed_template_formal(
 	Only temporary.
 	Override in appropriate subclasses.  
  */
+#if PHYSICAL_PORTS
+never_ptr<const physical_instance_collection>
+#else
 never_ptr<const instance_collection_base>
+#endif
 definition_base::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& i) {
-	DIE;
-	return never_ptr<const instance_collection_base>(NULL);
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -781,10 +786,18 @@ user_def_chan::attach_base_channel_type(
 	Ripped off from process_definition's.
 	Last touched: 2005-05-25.
  */
+#if PHYSICAL_PORTS
+never_ptr<const physical_instance_collection>
+#else
 never_ptr<const instance_collection_base>
+#endif
 user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+#if PHYSICAL_PORTS
+	typedef	never_ptr<const physical_instance_collection>	return_type;
+#else
 	typedef	never_ptr<const instance_collection_base>	return_type;
+#endif
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -797,7 +810,12 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	}
 	}
 
+#if PHYSICAL_PORTS
+	const return_type pf(add_instance(f, id)
+		.is_a<const physical_instance_collection>());
+#else
 	const return_type pf(add_instance(f, id));
+#endif
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -1021,17 +1039,11 @@ channel_definition_alias::make_canonical_type(const template_actuals& a) const {
 count_ptr<const channel_type_reference_base>
 channel_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
-#if 0
-	typedef count_ptr<const channel_type_reference_base>	return_type;
-	cerr << "Fang, finish channel_definition_alias::"
-		"make_canonical_fundamental_type_reference()!" << endl;
-	return return_type(NULL);
-#else
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_chan_def()->make_canonical_fundamental_type_reference(ta);
-#endif
+	return base->get_base_chan_def()
+		->make_canonical_fundamental_type_reference(ta);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1363,19 +1375,13 @@ built_in_datatype_def::write_object(
 void
 built_in_datatype_def::load_object(
 		const persistent_object_manager& m, istream& f) {
-	cerr << "ERROR: built_in_datatype_def::load_object() "
-		"should never be called!" << endl;
-	DIE;
-	THROW_EXIT;
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 built_in_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
-	cerr << "ERROR: built_in_datatype_def::load_used_id_map_object() "
-		"should never be called!" << endl;
-	DIE;
-	THROW_EXIT;
+	ICE_NEVER_CALL(cerr);
 }
 
 //=============================================================================
@@ -1423,7 +1429,7 @@ built_in_param_def::get_parent(void) const {
 excl_ptr<definition_base>
 built_in_param_def::make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return excl_ptr<definition_base>(NULL);
 }
 
@@ -1438,9 +1444,7 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 definition_base::type_ref_ptr_type
 built_in_param_def::make_fundamental_type_reference(
 		make_type_arg_type ta) const {
-	cerr << "built_in_param_def::make_fundamental_type_reference(): "
-		"Fang, don\'t ever call me again!" << endl;
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return type_ref_ptr_type(NULL);
 }
 
@@ -1736,9 +1740,7 @@ enum_datatype_def::load_object(const persistent_object_manager& m, istream& f) {
  */
 void
 enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
-	cerr << "ERROR: not supposed to call "
-		"enum_datatype_def::load_used_id_map_object()!" << endl;
-	DIE;
+	ICE_NEVER_CALL(cerr);
 }
 
 //=============================================================================
@@ -1882,11 +1884,19 @@ user_def_datatype::attach_base_data_type(
 	Shamelessly ripped off from user_def_chan's, 
 	Ripped off from process_definition's.
  */
+#if PHYSICAL_PORTS
+never_ptr<const physical_instance_collection>
+#else
 never_ptr<const instance_collection_base>
+#endif
 user_def_datatype::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+#if PHYSICAL_PORTS
+	typedef	never_ptr<const physical_instance_collection>	return_type;
+#else
 	typedef	never_ptr<const instance_collection_base>	return_type;
+#endif
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -1899,7 +1909,12 @@ user_def_datatype::add_port_formal(
 	}
 	}
 
+#if PHYSICAL_PORTS
+	const return_type pf(add_instance(f, id)
+		.is_a<const physical_instance_collection>());
+#else
 	const return_type pf(add_instance(f, id));
+#endif
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -2187,7 +2202,7 @@ datatype_definition_alias::make_canonical_fundamental_type_reference(
 good_bool
 datatype_definition_alias::require_signature_match(
 		const never_ptr<const definition_base> d) const {
-	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
+	FINISH_ME(Fang);
 	return good_bool(false);
 }
 
@@ -2203,6 +2218,7 @@ good_bool
 datatype_definition_alias::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2210,6 +2226,7 @@ good_bool
 datatype_definition_alias::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2509,10 +2526,19 @@ process_definition::make_canonical_fundamental_type_reference(
 /**
 	Adds a port formal instance to this process definition.  
  */
+#if PHYSICAL_PORTS
+never_ptr<const physical_instance_collection>
+#else
 never_ptr<const instance_collection_base>
+#endif
 process_definition::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+#if PHYSICAL_PORTS
+	typedef	never_ptr<const physical_instance_collection>	return_type;
+#else
+	typedef	never_ptr<const instance_collection_base>	return_type;
+#endif
 	NEVER_NULL(f);
 	INVARIANT(!f.is_a<param_instantiation_statement_base>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -2521,12 +2547,16 @@ process_definition::add_port_formal(
 	probe(lookup_object_here(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
-		return never_ptr<const instance_collection_base>(NULL);
+		return return_type(NULL);
 	}
 	}
 
-	const never_ptr<const instance_collection_base>
-		pf(add_instance(f, id));
+#if PHYSICAL_PORTS
+	const return_type pf(add_instance(f, id)
+		.is_a<const physical_instance_collection>());
+#else
+	const return_type pf(add_instance(f, id));
+#endif
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -2633,7 +2663,6 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: finish me
 	\pre the arity of the footprint_manager must be set.  
  */
 void

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.5 2005/08/20 00:31:57 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.6 2005/08/26 21:11:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -64,6 +64,18 @@ if (subinstance_array.empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::push_back(const entry_value_type& v) {
+	subinstance_array.push_back(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::reserve(const size_t s) {
+	subinstance_array.reserve(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param i reference to formal instance, to be translated to an
 		actual (unrolled) instance reference.  
@@ -71,7 +83,7 @@ if (subinstance_array.empty()) {
  */
 subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
-		const instance_collection_base& i) const {
+		const instance_collection_type& i) const {
 	const size_t index = i.is_port_formal();
 	if (index > subinstance_array.size()) {
 	ICE(cerr, 
@@ -105,7 +117,7 @@ subinstance_manager::connect_ports(
 	typedef	connection_references_type::const_iterator
 						const_ref_iterator;
 	INVARIANT(subinstance_array.size() == cr.size());
-	iterator pi(subinstance_array.begin());	// instance_collection_base
+	iterator pi(subinstance_array.begin());	// instance_collection_type
 	const iterator pe(subinstance_array.end());
 	const_ref_iterator ri(cr.begin());
 	// const const_ref_iterator re(cr.end());
@@ -130,14 +142,19 @@ subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
 	array_type& la(l.subinstance_array);
 	array_type& ra(r.subinstance_array);
 	INVARIANT(la.size() == ra.size());
-	iterator li(la.begin());	// instance_collection_base
+	iterator li(la.begin());	// instance_collection_type
 	iterator ri(ra.begin());
 	const iterator le(la.end());
 	// const const_ref_iterator re(cr.end());
 	for ( ; li!=le; li++, ri++) {
 	// references may be NULL (no-connect)
 		if (*li && *ri) {
-			
+#if PHYSICAL_PORTS
+			if (!(*li)->synchronize_actuals(**ri).good) {
+				// already have error message
+				return good_bool(false);
+			}	// else good to continue
+#else
 			if (!IS_A(physical_instance_collection&, **li)
 				.synchronize_actuals(
 				IS_A(physical_instance_collection&, **ri))
@@ -145,6 +162,7 @@ subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
 				// already have error message
 				return good_bool(false);
 			}	// else good to continue
+#endif
 		}
 	}
 	// all connections good
@@ -178,11 +196,15 @@ subinstance_manager::allocate(footprint& f) {
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
+#if PHYSICAL_PORTS
+		(*i)->allocate_state(f);	// expands the whole collection
+#else
 		// dynamic cast to physical_instance_collection
 		const count_ptr<physical_instance_collection>
 			pi(i->is_a<physical_instance_collection>());
 		NEVER_NULL(pi);
 		pi->allocate_state(f);	// expands the whole collection
+#endif
 	}
 }
 
@@ -201,12 +223,16 @@ subinstance_manager::create_state(const this_type& s, footprint& f) {
 	for ( ; i!=e; i++, j++) {
 		NEVER_NULL(*i);
 		NEVER_NULL(*j);
-		// merge created state (instance_collection_bases)
+		// merge created state (instance_collection_types)
+#if PHYSICAL_PORTS
+		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
+#else
 		// dynamic cast to physical_instance_collection
 		const count_ptr<physical_instance_collection>
 			pi(i->is_a<physical_instance_collection>());
 		const count_ptr<physical_instance_collection>
 			pj(j->is_a<physical_instance_collection>());
+#endif
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
 		if (!pi->merge_created_state(*pj, f).good)
@@ -229,12 +255,16 @@ subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 	for ( ; i!=e; i++, j++) {
 		NEVER_NULL(*i);
 		NEVER_NULL(*j);
-		// merge created state (instance_collection_bases)
+		// merge created state (instance_collection_types)
+#if PHYSICAL_PORTS
+		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
+#else
 		// dynamic cast to physical_instance_collection
 		const count_ptr<physical_instance_collection>
 			pi(i->is_a<physical_instance_collection>());
 		const count_ptr<const physical_instance_collection>
 			pj(j->is_a<const physical_instance_collection>());
+#endif
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
 		pi->inherit_created_state(*pj, f);
