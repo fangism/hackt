@@ -2,6 +2,20 @@
 
 2005-08-26	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-27:
+	  Implemented (untested) routines to retrace aliases in internal 
+		(definition-local) contexts in external contexts for the 
+		sake of replaying internal aliases externally.  
+		see instance_collection<>::replay_internal_alias, 
+			retrace_collection, and retrace_alias.  
+	  TODO: insert dependent type creation pass before create_unique, 
+		this will handle bottom-up creation of substructure types
+		and replay their internal port aliases in the 
+		external context.  
+
+
+2005-08-26	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-26:
 	  Updated port_formals_manager and subinstance_manager to 
 		use physical_instance_collection rather than the 

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.10 2005/08/22 00:44:15 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.11 2005/08/28 20:40:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -42,6 +42,7 @@ instance_alias_info<Tag>
 	Each object of this type represents a unique qualified name.  
 	TODO: parent type that determines whether or not
 	this contains relaxed actual parameters, and how they are stored.  
+	TODO: factor out the template-independent members/methods of this class.
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 class instance_alias_info :
@@ -114,6 +115,8 @@ public:
 	/**
 		Back-reference to the mother container.
 		Consider using this to determine "instantiated" state.  
+		NOTE: this could be pushed to children, and replaced
+			with virtual interface.  
 	 */
 	container_ptr_type				container;
 
@@ -121,29 +124,34 @@ protected:
 	// constructors only intended for children classes
 	instance_alias_info() : instance_index(0), container(NULL) { }
 
-public:
 	/**
-		Plain constructor initializaing with container back-ptr.
+		Plain constructor initializing with container back-ptr.
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
 		instance_index(0), container(m) {
 	}
 
-public:
-
 	// default copy-constructor
 
-	// default destructor, non-virtual?
+	// default destructor, non-virtual? yes, but protected.
 virtual	~instance_alias_info();
 
 	// default assignment
 
+public:
 	/**
 		container is inherited from instance_alias_info
 	 */
 	bool
 	valid(void) const { return this->container; }
+
+	// don't inline this virtual
+	never_ptr<const physical_instance_collection>
+	get_container_base(void) const;
+
+	never_ptr<const physical_instance_collection>
+	get_supermost_collection(void) const;
 
 	void
 	check(const container_type* p) const;
@@ -168,9 +176,6 @@ public:
 		Instantiates officially by linking to parent collection.  
 		FYI: This is only called by instance_array<0> (scalar)
 			in instantiate_indices().
-		TODO (2005-07-12): 
-			recursively unroll public ports, using 
-			subinstance_manager
 	 */
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
@@ -206,6 +211,25 @@ public:
 	using actuals_parent_type::dump_actuals;
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_actuals;
+
+protected:
+	physical_instance_collection&
+	retrace_collection(physical_instance_collection&) const;
+
+public:
+#define	RETRACE_ALIAS_BASE_PROTO					\
+	typename instance_alias_info<Tag>::substructure_parent_type&	\
+	retrace_alias_base(physical_instance_collection&) const
+
+#define	RETRACE_ALIAS_PROTO						\
+	instance_alias_info<Tag>&					\
+	retrace_alias(physical_instance_collection&) const
+
+virtual	RETRACE_ALIAS_BASE_PROTO;
+virtual	RETRACE_ALIAS_PROTO;
+
+	good_bool
+	replay_internal_alias(const this_type&);
 
 protected:
 	void
@@ -244,6 +268,9 @@ public:
 		return (this->instance_index == i.instance_index)
 			&& (this->container == i.container);
 	}
+
+	bool
+	is_port_alias(void) const;
 
 virtual	ostream&
 	dump_alias(ostream& o) const;

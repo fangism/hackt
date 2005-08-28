@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.7 2005/08/26 21:11:05 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.8 2005/08/28 20:40:24 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -91,6 +91,9 @@ public:
 	subinstance_manager::value_type
 	lookup_port_instance(const port_type& i) const;
 
+virtual	never_ptr<const physical_instance_collection>
+	get_container_base(void) const;
+
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&
 	dump_hierarchical_name(ostream&) const;
@@ -104,6 +107,9 @@ virtual	size_t
 	// simply forwarded call
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
+
+virtual	this_type&
+	retrace_alias_base(physical_instance_collection&) const;
 
 protected:
 	// call forwarding

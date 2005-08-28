@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.4.2.3 2005/08/22 19:59:35 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.4.2.4 2005/08/28 20:40:24 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -208,6 +208,9 @@ sequential_scope::unroll_meta_connect(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: need a pass for hierarchical gluing.  
+ */
 good_bool
 sequential_scope::create_unique(const unroll_context& c, footprint& f) const {
 	STACKTRACE("sequential_scope::create_unique()");

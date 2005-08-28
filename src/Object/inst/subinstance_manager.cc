@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.6 2005/08/26 21:11:05 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.7 2005/08/28 20:40:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/port_alias_signature.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "common/ICE.h"
@@ -131,6 +132,29 @@ subinstance_manager::connect_ports(
 		}
 	}
 	// all connections good
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Instance-for-instance, converts impleicit internal aliases
+	into explicit aliases.  
+	This re-plays internal aliases externally.  
+	\pre signatures must match identically.  
+ */
+good_bool
+subinstance_manager::connect_port_aliases(const port_alias_signature& sig) {
+	INVARIANT(size() == sig.size());
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	port_alias_signature::const_iterator j(sig.begin());
+	for ( ; i!=e ; i++, j++) {
+#if 1
+		if  (!(*i)->replay_internal_aliases_base(**j).good) {
+			return good_bool(false);
+		}
+#endif
+	}
 	return good_bool(true);
 }
 

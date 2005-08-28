@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.3.4.1 2005/08/22 00:44:15 fang Exp $
+	$Id: instance_alias.h,v 1.3.4.2 2005/08/28 20:40:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -136,6 +136,9 @@ public:
 	dump_hierarchical_name(ostream&) const;
 #endif
 
+	RETRACE_ALIAS_BASE_PROTO;
+	RETRACE_ALIAS_PROTO;
+
 	/**
 		Use with maplikeset_element requires comparison operator.  
 		Not sure if this is the correct thing to do.  
@@ -163,9 +166,9 @@ class instance_alias<Tag,0> :
 	public class_traits<Tag>::instance_alias_base_type {
 private:
 	typedef	KEYLESS_INSTANCE_ALIAS_CLASS		this_type;
+public:
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 							parent_type;
-public:
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 					instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
@@ -200,6 +203,10 @@ private:
 
 	iterator
 	end(void);
+
+public:
+	RETRACE_ALIAS_BASE_PROTO;
+	RETRACE_ALIAS_PROTO;
 
 public:
 	void

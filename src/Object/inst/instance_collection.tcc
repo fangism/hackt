@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.17 2005/08/26 21:11:04 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.18 2005/08/28 20:40:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -203,6 +203,15 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 //=============================================================================
 // class instance_alias_info method definitions
 
+/**
+	NOTE: this destructor is non-virtual (protected too) because 
+	deleting this type directly is strictly forbidden and prevented.  
+	It is only ever invoked by children classes' destructors.  
+	NOTE: not making it non-virtual because warning flags 
+		catch this and Werror rejects it.  
+		(Is there an attribute for such exceptions?)
+	Playing with fire here.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 // inline
 INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() { }
@@ -215,16 +224,21 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::check(const container_type* p) const {
 	if (this->container && this->container != p) {
-		cerr << "FATAL: Inconsistent instance_alias_info parent-child!" << endl;
+	ICE(cerr, 
+		cerr << "FATAL: Inconsistent instance_alias_info parent-child!"
+			<< endl;
 		cerr << "this->container = " << &*this->container << endl;
 		this->container->dump(cerr) << endl;
 		cerr << "should point to: " << p << endl;
 		p->dump(cerr) << endl;
-		DIE;
+	);
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively expands the public ports of the instance hierarchy.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p, 
@@ -234,6 +248,127 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	this->container = p;
 	substructure_parent_type::unroll_port_instances(*this->container, c);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+never_ptr<const physical_instance_collection>
+INSTANCE_ALIAS_INFO_CLASS::get_container_base(void) const {
+	return this->container;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the owner of the top-most instance of which this is 
+	a member.  So a.b.c will return the owner of a.  
+	NOTE: this is pretty much template independent, except for the 
+		first initialization.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+never_ptr<const physical_instance_collection>
+INSTANCE_ALIAS_INFO_CLASS::get_supermost_collection(void) const {
+	never_ptr<const physical_instance_collection> c(this->container);
+	NEVER_NULL(c);
+{
+	// substructure_alias
+	instance_collection_base::super_instance_ptr_type
+		p(c->get_super_instance());
+	while (p) {
+		c = p->get_container_base();
+		NEVER_NULL(c);
+		p = c->get_super_instance();
+	}
+}
+	NEVER_NULL(c);
+	return c;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if this hierarchical alias is a port of the current
+		scope or is a subinstance of a port.  
+	NOTE: this is pretty much template independent.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ALIAS_INFO_CLASS::is_port_alias(void) const {
+	const never_ptr<const physical_instance_collection>
+		c(this->get_supermost_collection());
+	const never_ptr<const definition_base>
+		def(c->get_owner(). template is_a<const definition_base>());
+	if (def) {
+		return def->lookup_port_formal(c->get_name());
+	} else {
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
+/**
+	Follows an identical hierarchy to find the matching corresponding 
+	instance alias.  
+	Useful for reproducing internal aliases externally.  
+	NOTE: this is entirely template independent.  
+		Factor this shit out later.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+physical_instance_collection&
+INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
+		physical_instance_collection& sup) const {
+	const instance_collection_base::super_instance_ptr_type
+		p(this->container->get_super_instance());
+	if (p) {
+		// need to lookup parent instance first
+		// p points to a substructured alias
+		substructure_alias& pp(p->retrace_alias_base(sup));
+		return *pp.lookup_port_instance(*this->container);
+	} else {
+		// then we are at top-most level, terminate recursion
+		return sup;
+	}
+	// then alias type (indexed or keyless) should lookup
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
+/**
+	Replay an internal alias externally.  
+	May need a footprint argument, or port_alias_signature?
+	Walk the connection list to find the first alias to another port,
+		if any.  If found, replay the connection.  
+	TODO: method for find_port_alias.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::replay_internal_alias(const this_type& pa) {
+	// find next port alias, skipping internal aliases
+	// how do we know if it is a port alias?
+	const_iterator i(pa.begin());	// recall: begin points to next
+	const_iterator j(i++);		// j is 1 behind i
+	const const_iterator e(pa.end());
+	if (i==e)
+		return good_bool(true);
+	// reach top-most super instance and check against parent scopespace
+	for ( ; !j->is_port_alias() && i!=e; j=i, i++) { }	// empty
+	if (i==e) {
+		// we didn't find a port alias, we're done
+		return good_bool(true);
+	} else {
+		// we've found a valid port_alias (pointed by j)
+		// how de we replay the connection?
+		// need to find the corresponding alias in the top-level
+		// trace the path from j to the top, but in reverse order
+		// TODO: fix concst_cast
+		const never_ptr<const physical_instance_collection>
+			c(this->get_supermost_collection());
+		this_type& new_alias(j->retrace_alias(
+			const_cast<physical_instance_collection&>(*c)));
+		// symmetric connection
+		return checked_connect_port(*this, new_alias);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -254,7 +389,6 @@ INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 #endif
 	if (this->container->is_port_formal()) {
 		STACKTRACE("is subinstance");
-#if 1
 		// check if this collection is top-level in the current
 		// scope.  if so, then terminate upward recursion.  
 		// this should be able to replace the is_port_formal() check.  
@@ -262,7 +396,6 @@ INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 			STACKTRACE("is top-level in current scope");
 			return good_bool(true);
 		}
-#endif
 		// super_instance is a const substructure_alias*
 		if (!this->container->get_super_instance()
 				->allocate_state(f)) {
@@ -296,7 +429,6 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	this->dump_aliases(STACKTRACE_STREAM << " with aliases: ") << endl;
 #endif
 	this_type& _this = const_cast<this_type&>(*this);
-#if 1
 	// BUG FIX: need to see if aliases have super-instances
 	// upward recursion!
 	// remember, begin starts with the NEXT item
@@ -310,7 +442,6 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 			return 0;
 		}
 	}
-#endif
 	return _this.__allocate_state(f);
 }
 
@@ -772,6 +903,21 @@ INSTANCE_ALIAS_INFO_CLASS::end(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename instance_alias_info<Tag>::substructure_parent_type&
+INSTANCE_ALIAS_INFO_CLASS::retrace_alias_base(
+		physical_instance_collection&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_INFO_CLASS::retrace_alias(physical_instance_collection&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Virtually pure virtual.  Never supposed to be called, 
 	yet this definition must exist to allow construction
@@ -922,6 +1068,32 @@ INSTANCE_ALIAS_CLASS::end(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Uses self key to retrace an indentical hierarchical structure.
+	\pre type-checked.  
+ */
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_CLASS::retrace_alias(physical_instance_collection& p) const {
+	physical_instance_collection& pp(this->retrace_collection(p));
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, pp));
+	return *c.lookup_instance(this->key);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses self key to retrace an indentical hierarchical structure.
+	\pre type-checked.  
+ */
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
+INSTANCE_ALIAS_CLASS::retrace_alias_base(
+		physical_instance_collection& p) const {
+	return this->retrace_alias(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Saves alias connection information persistently.  
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -1031,6 +1203,31 @@ KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 	return instance_alias_base_type::end();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: physical instance collection is not const in this case.  
+ */
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+KEYLESS_INSTANCE_ALIAS_CLASS::retrace_alias(
+		physical_instance_collection& p) const {
+	physical_instance_collection& pp(this->retrace_collection(p));
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, pp));
+	return c.get_the_instance();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: physical instance collection is not const in this case.  
+ */
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
+KEYLESS_INSTANCE_ALIAS_CLASS::retrace_alias_base(
+		physical_instance_collection& p) const {
+	return this->retrace_alias(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1776,6 +1973,34 @@ INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param p a reference to a definition-local port instance collection, 
+		which contains internal alias information.  
+	This takes the internal alias information of p and replays it 
+		in this (external) context.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::replay_internal_aliases_base(
+		const physical_instance_collection& p) {
+	// assert dynamic cast
+	const this_type& t(IS_A(const this_type&, p));
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++, j++) {
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		if (!ii.replay_internal_alias(*j).good) {
+			// error message?
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
  */
@@ -2219,6 +2444,15 @@ INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	return instance_type::synchronize_actuals_recursive(this->the_instance,
 		t.the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::replay_internal_aliases_base(
+		const physical_instance_collection& p) {
+	const this_type& t(IS_A(const this_type&, p));
+	return this->the_instance.replay_internal_alias(t.the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

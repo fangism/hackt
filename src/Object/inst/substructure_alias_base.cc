@@ -1,14 +1,17 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.4 2005/08/26 21:11:05 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.5 2005/08/28 20:40:23 fang Exp $
  */
 
+#include <iostream>
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
+#include "common/ICE.h"
 #include "util/macros.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 //=============================================================================
 
 /**
@@ -16,7 +19,7 @@ namespace entity {
  */
 ostream&
 substructure_alias::dump_hierarchical_name(ostream& o) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return o;
 }
 
@@ -26,7 +29,7 @@ substructure_alias::dump_hierarchical_name(ostream& o) const {
  */
 size_t
 substructure_alias::allocate_state(footprint&) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return 0;
 }
 
@@ -34,6 +37,18 @@ substructure_alias::allocate_state(footprint&) const {
 subinstance_manager::value_type
 substructure_alias::lookup_port_instance(const port_type& inst) const {
 	return subinstances.lookup_port_instance(inst);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const physical_instance_collection>
+substructure_alias::get_container_base(void) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+substructure_alias&
+substructure_alias::retrace_alias_base(physical_instance_collection&) const {
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

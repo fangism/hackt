@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2005-08-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-27:
+	  Added explicit instantiation macro to mutikey_generic
+		constructor (from non-generic multikey).  
+
+
 2005-08-21	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-19:

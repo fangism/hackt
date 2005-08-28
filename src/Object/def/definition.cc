@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.10 2005/08/26 21:11:02 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.11 2005/08/28 20:40:21 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2762,6 +2762,10 @@ if (defined) {
 			cpt(make_canonical_type(canonical_actuals));
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#if 1
+		// TODO: need to create dependent types first
+		// to replay internal aliases!
+#endif
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->mark_created();
 		} else {

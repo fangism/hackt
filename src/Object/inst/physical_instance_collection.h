@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.5 2005/08/22 00:44:16 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.6 2005/08/28 20:40:23 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -90,6 +90,12 @@ virtual	void
 
 virtual	good_bool
 	synchronize_actuals(this_type&) = 0;
+
+#define	REPLAY_INTERNAL_ALIASES_BASE_PROTO				\
+	good_bool							\
+	replay_internal_aliases_base(const physical_instance_collection&)
+
+virtual	REPLAY_INTERNAL_ALIASES_BASE_PROTO = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

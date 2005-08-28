@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.5 2005/08/26 21:11:05 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.6 2005/08/28 20:40:23 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -20,6 +20,7 @@ class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
 class meta_instance_reference_base;
+class port_alias_signature;
 template <class> class instance_collection;
 using std::ostream;
 using std::istream;
@@ -118,6 +119,9 @@ public:
 
 	void
 	inherit_state(const this_type&, const footprint&);
+
+	good_bool
+	connect_port_aliases(const port_alias_signature&);
 
 	// for each entry, re-link
 	void

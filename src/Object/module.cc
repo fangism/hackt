@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.3.4.3 2005/08/16 21:10:46 fang Exp $
+ 	$Id: module.cc,v 1.3.4.4 2005/08/28 20:40:20 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -182,6 +182,10 @@ module::create_unique(void) {
 	if (!is_created()) {
 		STACKTRACE("not already created, creating...");
 		const unroll_context c;	// empty context
+#if 1
+		// TODO: need to create dependent types first
+		// to replay internal aliases
+#endif
 		if (!sequential_scope::create_unique(c, _footprint).good)
 		{
 			cerr << "Error during create_unique." << endl;
