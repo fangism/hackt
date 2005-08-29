@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.2.8.6 2005/08/25 21:30:21 fang Exp $
+	$Id: alias_actuals.tcc,v 1.2.8.7 2005/08/29 21:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -157,6 +157,34 @@ instance_alias_info_actuals::complete_type_actuals(
 			return _type;
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Completes tyoe and creates the dependent type.  
+ */
+template <class AliasType>
+good_bool
+instance_alias_info_actuals::create_dependent_types(const AliasType& _alias) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	if (!_type) {
+		// already have error message
+		_alias.dump_hierarchical_name(cerr << "Failed to instantiate ")
+			<< endl;
+		return good_bool(false);
+	}
+	else if (!container_type::collection_type_manager_parent_type
+			::create_definition_footprint(_type).good) {
+		// have error message already
+		_alias.dump_hierarchical_name(cerr << "Instantiated by: ")
+			<< endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //=============================================================================

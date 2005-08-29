@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.3.4.2 2005/08/15 21:12:12 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.3.4.3 2005/08/29 21:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -15,7 +15,7 @@
 #include <algorithm>
 
 #include "Object/inst/channel_instance_collection.h"
-#include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_actuals.tcc"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/def/definition_base.h"

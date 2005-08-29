@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.2.8.5 2005/08/24 22:37:00 fang Exp $
+	$Id: alias_empty.h,v 1.2.8.6 2005/08/29 21:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -97,6 +97,11 @@ public:
 		const alias_actuals_type&) {
 		return good_bool(true);
 	}
+
+	template <class AliasType>
+	static
+	good_bool
+	create_dependent_types(const AliasType&);
 
 protected:
 	/**

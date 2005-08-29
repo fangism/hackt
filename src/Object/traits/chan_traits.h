@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.3.4.2 2005/08/15 21:12:20 fang Exp $
+	$Id: chan_traits.h,v 1.3.4.3 2005/08/29 21:32:06 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -32,6 +32,7 @@ struct class_traits<channel_tag> {
 						instance_alias_base_ptr_type;
 	typedef	channel_instance_alias_info	instance_alias_info_type;
 	static const bool		has_substructure = true;
+	static const bool		can_internally_alias = false;
 	/**
 		Actually, this may have to be split into 
 		sub-tags, one for built-in, one for user-defined.  

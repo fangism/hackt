@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:18 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.3.4.2 2005/08/29 21:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -23,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/inst/bool_instance_collection.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"

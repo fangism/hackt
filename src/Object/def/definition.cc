@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.11 2005/08/28 20:40:21 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.12 2005/08/29 21:32:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2662,6 +2662,18 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const footprint&
+process_definition::get_footprint(
+		const count_ptr<const const_param_expr_list>& p) const {
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		return footprint_map[*p];
+	} else {
+		return footprint_map.only();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre the arity of the footprint_manager must be set.  
  */
@@ -2762,9 +2774,13 @@ if (defined) {
 			cpt(make_canonical_type(canonical_actuals));
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
-#if 1
+#if CREATE_DEPENDENT_TYPES_FIRST
 		// TODO: need to create dependent types first
 		// to replay internal aliases!
+		if (!f->create_dependent_types().good) {
+			// error message
+			return good_bool(false);
+		}
 #endif
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->mark_created();

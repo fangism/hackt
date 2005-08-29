@@ -1,6 +1,17 @@
 "ChangeLog"
 
-2005-08-26	David Fang		<fangism@users.sourceforge.net>
+2005-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-28:
+	  Still working towards bottom-up construction of dependent types.  
+		Inserted a pass before creating unique (after unroll)
+		to create dependent types bottom-up.  Currently disabled.  
+		Much stacktrace debugging needed.  
+	  Added class_trait: can_internall_alias, for which it's
+		currently only true for process types.  
+
+
+2005-08-28	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-27:
 	  Implemented (untested) routines to retrace aliases in internal 

@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.3.4.1 2005/08/11 00:20:21 fang Exp $
+	$Id: int_traits.h,v 1.3.4.2 2005/08/29 21:32:07 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_INT_TRAITS_H__
@@ -23,6 +23,7 @@ struct class_traits<int_tag> {
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
 	static const bool		has_substructure = false;
+	static const bool		can_internally_alias = false;
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	typedef	int_instance_alias_info	instance_alias_info_type;

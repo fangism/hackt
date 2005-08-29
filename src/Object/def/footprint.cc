@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.8 2005/08/25 21:30:20 fang Exp $
+	$Id: footprint.cc,v 1.1.2.9 2005/08/29 21:32:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,7 +9,7 @@
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
-#include "Object/inst/instance_collection_base.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
@@ -125,6 +125,20 @@ if (instance_collection_map.empty()) {
 		// else is not instance collection, we don't care
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+footprint::create_dependent_types(void) const {
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
+	for ( ; i!=e; i++) {
+		const count_ptr<const physical_instance_collection>
+			pic(i->second.is_a<const physical_instance_collection>());
+		if (pic && !pic->create_dependent_types().good)
+			return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

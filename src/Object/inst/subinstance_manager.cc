@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.7 2005/08/28 20:40:23 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.8 2005/08/29 21:32:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -140,6 +140,9 @@ subinstance_manager::connect_ports(
 	Instance-for-instance, converts impleicit internal aliases
 	into explicit aliases.  
 	This re-plays internal aliases externally.  
+	\param sig a collection of port instance collections
+		with possible aliases to each other, sliced from the
+		footprint of the owning definition.  
 	\pre signatures must match identically.  
  */
 good_bool

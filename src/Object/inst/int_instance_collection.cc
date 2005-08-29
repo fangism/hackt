@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.3.4.1 2005/08/11 00:20:20 fang Exp $
+	$Id: int_instance_collection.cc,v 1.3.4.2 2005/08/29 21:32:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -23,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/inst/int_instance_collection.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"

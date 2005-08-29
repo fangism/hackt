@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.7 2005/08/26 21:10:59 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.8 2005/08/29 21:31:59 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -198,7 +198,9 @@ OBJECT_TCC_FILES = \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
+	Object/inst/alias_empty.tcc \
 	Object/inst/instance_collection.tcc \
+	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc \
@@ -302,6 +304,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/datatype_instance_collection.h \
 	Object/inst/instance_alias_info.h \
 	Object/inst/instance_alias.h \
+	Object/inst/internal_aliases_policy.h \
 	Object/inst/alias_empty.h \
 	Object/inst/value_collection.h \
 	Object/inst/instance_pool_fwd.h \

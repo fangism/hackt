@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.3.4.4 2005/08/28 20:40:20 fang Exp $
+ 	$Id: module.cc,v 1.3.4.5 2005/08/29 21:32:02 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -13,12 +13,14 @@
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
+#include "Object/module.tcc"
 #include <iostream>
-#include "Object/module.h"
 #include "Object/common/namespace.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "util/persistent_object_manager.tcc"
+#include "Object/devel_switches.h"
 #include "util/stacktrace.h"
 
 namespace util {
@@ -168,6 +170,30 @@ module::unroll_module(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Creates placeholder footprints depedent types bottom up.
+ */
+good_bool
+module::create_dependent_types(void) {
+	typedef list<never_ptr<physical_instance_collection> >
+			collection_list_type;
+	typedef collection_list_type::const_iterator
+			const_collection_iterator;
+	collection_list_type collections;
+	collect(collections);
+	const_collection_iterator i(collections.begin());
+	const const_collection_iterator e(collections.end());
+	for ( ; i!=e; i++) {
+		if (!(*i)->create_dependent_types().good) {
+			// error message
+			cerr << "Error during create_unique." << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Replays all instantiation statements and allocates unique
 	space to each alias recursively.  
 	Will automatically unroll the object if it hasn't already 
@@ -182,9 +208,14 @@ module::create_unique(void) {
 	if (!is_created()) {
 		STACKTRACE("not already created, creating...");
 		const unroll_context c;	// empty context
-#if 1
+#if CREATE_DEPENDENT_TYPES_FIRST
 		// TODO: need to create dependent types first
-		// to replay internal aliases
+		// to replay internal aliases, need to visit all
+		// top-level instances recursively
+		if (!create_dependent_types().good) {
+			// alraedy have error mesage
+			return good_bool(false);
+		}
 #endif
 		if (!sequential_scope::create_unique(c, _footprint).good)
 		{

@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.3.4.2 2005/08/15 21:12:20 fang Exp $
+	$Id: bool_traits.h,v 1.3.4.3 2005/08/29 21:32:06 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -26,6 +26,7 @@ struct class_traits<bool_tag> {
 					instance_alias_relaxed_actuals_type;
 	typedef	bool_instance_alias_info	instance_alias_info_type;
 	static const bool		has_substructure = false;
+	static const bool		can_internally_alias = false;
 	/// defined in "Object/inst/bool_instance_collection.h"
 	class state_instance_base;
 	template <size_t D>

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.7 2005/08/28 20:40:22 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.8 2005/08/29 21:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -279,9 +279,9 @@ class instance_array :
 	public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
+public:
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							parent_type;
-public:
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
@@ -300,6 +300,8 @@ public:
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
+	typedef	typename parent_type::collection_type_manager_parent_type
+					collection_type_manager_parent_type;
 private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
@@ -366,6 +368,8 @@ public:
 
 	REPLAY_INTERNAL_ALIASES_BASE_PROTO;
 
+	CREATE_DEPENDENT_TYPES_PROTO;
+
 private:
 	class element_collector;
 	class element_writer;
@@ -402,6 +406,8 @@ public:
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_alias<0>::type
 							instance_type;
+	typedef	typename parent_type::collection_type_manager_parent_type
+					collection_type_manager_parent_type;
 private:
 	instance_type					the_instance;
 
@@ -464,6 +470,8 @@ public:
 	get_the_instance(void) { return the_instance; }
 
 	REPLAY_INTERNAL_ALIASES_BASE_PROTO;
+
+	CREATE_DEPENDENT_TYPES_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.3.4.2 2005/08/15 21:12:13 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.3.4.3 2005/08/29 21:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -15,7 +15,7 @@
 #include <algorithm>
 
 #include "Object/inst/enum_instance_collection.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"

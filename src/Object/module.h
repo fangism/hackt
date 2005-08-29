@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.3.4.2 2005/08/16 21:10:46 fang Exp $
+	$Id: module.h,v 1.3.4.3 2005/08/29 21:32:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -98,6 +98,10 @@ public:
 
 	good_bool
 	create_unique(void);
+
+private:
+	good_bool
+	create_dependent_types(void);
 
 public:
 	FRIEND_PERSISTENT_TRAITS

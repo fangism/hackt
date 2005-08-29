@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.18 2005/08/28 20:40:22 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.19 2005/08/29 21:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -37,6 +37,7 @@
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
+#include "Object/inst/internal_aliases_policy.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"		// for debug only
@@ -303,7 +304,6 @@ INSTANCE_ALIAS_INFO_CLASS::is_port_alias(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Follows an identical hierarchy to find the matching corresponding 
 	instance alias.  
@@ -328,10 +328,8 @@ INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
 	}
 	// then alias type (indexed or keyless) should lookup
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Replay an internal alias externally.  
 	May need a footprint argument, or port_alias_signature?
@@ -368,7 +366,6 @@ INSTANCE_ALIAS_INFO_CLASS::replay_internal_alias(const this_type& pa) {
 		return checked_connect_port(*this, new_alias);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -540,6 +537,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// because of possible internal aliases
 	// 1) get complete type first and merge in relaxed actuals
 	//	if type is still relaxed (incomplete), this is an error
+#if 0
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	const complete_type_type
@@ -558,6 +556,12 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 			<< endl;
 		return 0;
 	}
+#else
+	if (!create_dependent_types(*this).good) {
+		// already have error message
+		return 0;
+	}
+#endif
 	// This must be done AFTER processing aliases because
 	// ports may be connected to each other externally
 	// Postponing guarantees that port aliases are resolved first.
@@ -2001,6 +2005,49 @@ INSTANCE_ARRAY_CLASS::replay_internal_aliases_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Walks the entire collection and create definition footprints of
+	constitutent types.  
+	TODO: optimize with specialization for non-recursive types.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::create_dependent_types(void) const {
+	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+				internal_alias_policy;
+	iterator i(this->collection.begin());
+	const iterator e(this->collection.end());
+if (this->has_relaxed_type()) {
+	for ( ; i!=e; i++) {
+		if (!element_type::create_dependent_types(*i).good)
+			return good_bool(false);
+#if CREATE_DEPENDENT_TYPES_FIRST
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		if (!internal_alias_policy::connect(ii).good) {
+			return good_bool(false);
+		}
+#endif
+	}
+} else {
+	const typename parent_type::instance_collection_parameter_type
+		t(collection_type_manager_parent_type::get_canonical_type());
+	if (!create_definition_footprint(t).good)
+		return good_bool(false);
+#if CREATE_DEPENDENT_TYPES_FIRST
+	for ( ; i!=e; i++) {
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		if (!internal_alias_policy::connect(ii).good) {
+			return good_bool(false);
+		}
+	}
+#endif
+}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
  */
@@ -2453,6 +2500,32 @@ INSTANCE_SCALAR_CLASS::replay_internal_aliases_base(
 		const physical_instance_collection& p) {
 	const this_type& t(IS_A(const this_type&, p));
 	return this->the_instance.replay_internal_alias(t.the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively creates footprints of complete types bottom-up.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::create_dependent_types(void) const {
+if (this->has_relaxed_type()) {
+	if (!instance_type::create_dependent_types(this->the_instance).good) {
+		return good_bool(false);
+	}
+} else {
+	const typename parent_type::instance_collection_parameter_type
+		t(collection_type_manager_parent_type::get_canonical_type());
+	if (!create_definition_footprint(t).good) {
+		return good_bool(false);
+	}
+}
+#if CREATE_DEPENDENT_TYPES_FIRST
+	if (!internal_alias_policy::connect(this->the_instance).good) {
+		return good_bool(false);
+	}
+#endif
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

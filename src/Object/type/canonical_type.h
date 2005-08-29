@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.1.2.7 2005/08/25 21:30:22 fang Exp $
+	$Id: canonical_type.h,v 1.1.2.8 2005/08/29 21:32:07 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -17,6 +17,7 @@ class unroll_context;
 class definition_base;
 class template_actuals;
 class subinstance_manager;
+class footprint;
 using util::memory::never_ptr;
 using util::good_bool;
 
@@ -117,6 +118,9 @@ public:
 	void
 	unroll_port_instances(const unroll_context&,
 		subinstance_manager&) const;
+
+	const footprint&
+	get_definition_footprint(void) const;
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	good_bool

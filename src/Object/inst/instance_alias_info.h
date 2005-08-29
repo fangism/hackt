@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.11 2005/08/28 20:40:22 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.12 2005/08/29 21:32:04 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -48,7 +48,8 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 class instance_alias_info :
 		public substructure_alias_base<
 			class_traits<Tag>::has_substructure>, 
-		protected class_traits<Tag>::instance_alias_relaxed_actuals_type {
+		// was protected
+		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 friend class instance_alias_info_actuals;
 #if 0
@@ -211,6 +212,7 @@ public:
 	using actuals_parent_type::dump_actuals;
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_actuals;
+	using actuals_parent_type::create_dependent_types;
 
 protected:
 	physical_instance_collection&

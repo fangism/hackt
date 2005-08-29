@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.1.2.9 2005/08/25 21:30:23 fang Exp $
+	$Id: canonical_type.tcc,v 1.1.2.10 2005/08/29 21:32:08 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -180,6 +180,15 @@ CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o,
 	r.dump(o << "\tand: ") << endl;
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+const footprint&
+CANONICAL_TYPE_CLASS::get_definition_footprint(void) const {
+	return canonical_definition_ptr->get_footprint(param_list_ptr);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

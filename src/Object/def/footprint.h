@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.9 2005/08/26 21:11:03 fang Exp $
+	$Id: footprint.h,v 1.1.2.10 2005/08/29 21:32:03 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -18,6 +18,7 @@
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
 
+#include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
 #include "util/hash_qmap.h"
@@ -30,6 +31,7 @@ class scopespace;
 using std::string;
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
@@ -166,6 +168,9 @@ public:
 
 	void
 	import_scopespace(const scopespace&);
+
+	good_bool
+	create_dependent_types(void) const;
 
 // persistent information management
 	void
