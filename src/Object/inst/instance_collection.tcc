@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.19 2005/08/29 21:32:04 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.20 2005/08/30 16:03:13 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -43,6 +43,7 @@
 #include "Object/expr/const_param_expr_list.h"		// for debug only
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/def/definition_base.h"
 #include "Object/type/canonical_type.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"

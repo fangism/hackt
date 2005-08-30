@@ -1,15 +1,17 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.1.2.1 2005/08/29 21:32:04 fang Exp $
+	$Id: alias_empty.tcc,v 1.1.2.2 2005/08/30 16:03:13 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_TCC__
 #define	__OBJECT_INST_ALIAS_EMPTY_TCC__
 
+#include <iostream>
 #include "Object/inst/alias_empty.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
 //=============================================================================
 // class instance_alias_info_empty method definitions
 
