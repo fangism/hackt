@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.12 2005/08/29 21:32:02 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.13 2005/08/31 06:19:25 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2772,6 +2772,9 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
+#if ENABLE_STACKTRACE
+		cpt.dump(STACKTRACE_INDENT << "proc type: ") << endl;
+#endif
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
 #if CREATE_DEPENDENT_TYPES_FIRST

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.8 2005/08/29 21:32:06 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.9 2005/08/31 06:19:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -147,16 +147,37 @@ subinstance_manager::connect_ports(
  */
 good_bool
 subinstance_manager::connect_port_aliases(const port_alias_signature& sig) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(size() == sig.size());
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	port_alias_signature::const_iterator j(sig.begin());
+#if ENABLE_STACKTRACE
+	dump(STACKTRACE_STREAM << "subinstances: " << endl) << endl;
+	sig.dump(STACKTRACE_STREAM << "signature: " << endl) << endl;
+#endif
 	for ( ; i!=e ; i++, j++) {
-#if 1
 		if  (!(*i)->replay_internal_aliases_base(**j).good) {
 			return good_bool(false);
 		}
-#endif
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copied from footprint::create_dependent_types
+	and module::create_dependent_types.
+ */
+good_bool
+subinstance_manager::replay_internal_aliases(void) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e ; i++) {
+		// creating dependent types also connects internal aliases
+		if (!(*i)->create_dependent_types().good)
+			return good_bool(false);
 	}
 	return good_bool(true);
 }

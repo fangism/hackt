@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.8 2005/08/29 21:31:59 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.9 2005/08/31 06:19:20 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -304,6 +304,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/datatype_instance_collection.h \
 	Object/inst/instance_alias_info.h \
 	Object/inst/instance_alias.h \
+	Object/inst/internal_aliases_policy_fwd.h \
 	Object/inst/internal_aliases_policy.h \
 	Object/inst/alias_empty.h \
 	Object/inst/value_collection.h \

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1.4.9 2005/08/29 21:32:01 fang Exp $
+	$Id: devel_switches.h,v 1.1.4.10 2005/08/31 06:19:25 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -37,7 +37,7 @@
  */
 #define	PHYSICAL_PORTS				1
 /// Goal: 1
-#define	CREATE_DEPENDENT_TYPES_FIRST		0
+#define	CREATE_DEPENDENT_TYPES_FIRST		1
 
 //=============================================================================
 

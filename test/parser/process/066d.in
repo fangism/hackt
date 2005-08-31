@@ -1,0 +1,15 @@
+// "066d.in" should pass, will recursively instantiate ports
+// copy-reduced from "066c.in"
+// has internal aliases!
+
+defproc foo(bool a, b) {
+}
+
+defproc bar(foo x, y) {
+	x.a = y.b;
+}
+
+bar poo;
+
+// after hierarchical flattening, there are 3 bools and 1 proc
+

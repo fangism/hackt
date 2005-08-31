@@ -1,4 +1,5 @@
-ERROR: cannot create incomplete process type ::foo
-Instantiated by: ::bar
+ERROR: complete type required for instantiation
+	have: foo<1>
+Failed to instantiate ::snu
 Error during create_unique.
 ERROR in creating.  Aborting.

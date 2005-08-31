@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.12 2005/08/29 21:32:04 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.13 2005/08/31 06:19:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -16,6 +16,7 @@
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/inst/internal_aliases_policy_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -69,6 +70,8 @@ public:
 						actuals_parent_type;
 	typedef	substructure_alias_base<class_traits<Tag>::has_substructure>
 						substructure_parent_type;
+	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+						internal_alias_policy;
 	typedef	typename class_traits<Tag>::instance_type
 						instance_type;
 	/**
@@ -81,7 +84,8 @@ public:
 		Container type.
 	 */
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
-						container_type;
+					instance_collection_generic_type;
+	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
 
@@ -154,6 +158,9 @@ public:
 	never_ptr<const physical_instance_collection>
 	get_supermost_collection(void) const;
 
+	never_ptr<const substructure_alias>
+	get_supermost_substructure(void) const;
+
 	void
 	check(const container_type* p) const;
 
@@ -214,21 +221,38 @@ public:
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;
 
+#if 0
+#define	RETRACE_ALIAS_ARG_TYPE		physical_instance_collection&
+#else
+#define	RETRACE_ALIAS_BASE_ARG_TYPE		const substructure_alias&
+#define	RETRACE_ALIAS_ARG_TYPE		const instance_alias_info<Tag>&
+#if 0
+#define	RETRACE_ALIAS_ARG_TYPE						\
+	const typename instance_alias_info<Tag>::substructure_parent_type&
+#endif
+#endif
 protected:
 	physical_instance_collection&
-	retrace_collection(physical_instance_collection&) const;
+	retrace_collection(RETRACE_ALIAS_ARG_TYPE) const;
 
+#if 0
+	this_type&
+	__retrace_alias(const this_type&) const;
+#endif
 public:
+
 #define	RETRACE_ALIAS_BASE_PROTO					\
 	typename instance_alias_info<Tag>::substructure_parent_type&	\
-	retrace_alias_base(physical_instance_collection&) const
+	__retrace_alias_base(RETRACE_ALIAS_BASE_ARG_TYPE) const
 
 #define	RETRACE_ALIAS_PROTO						\
 	instance_alias_info<Tag>&					\
-	retrace_alias(physical_instance_collection&) const
+	retrace_alias(RETRACE_ALIAS_ARG_TYPE) const
 
 virtual	RETRACE_ALIAS_BASE_PROTO;
 virtual	RETRACE_ALIAS_PROTO;
+
+public:
 
 	good_bool
 	replay_internal_alias(const this_type&);
@@ -285,6 +309,8 @@ virtual	ostream&
 
 	using substructure_parent_type::dump_ports;
 	using substructure_parent_type::connect_ports;
+	// using substructure_parent_type::lookup_port_instance;
+	using substructure_parent_type::replay_substructure_aliases;
 
 	static
 	good_bool

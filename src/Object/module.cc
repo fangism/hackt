@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.3.4.5 2005/08/29 21:32:02 fang Exp $
+ 	$Id: module.cc,v 1.3.4.6 2005/08/31 06:19:25 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -178,6 +178,7 @@ module::create_dependent_types(void) {
 			collection_list_type;
 	typedef collection_list_type::const_iterator
 			const_collection_iterator;
+	STACKTRACE_VERBOSE;
 	collection_list_type collections;
 	collect(collections);
 	const_collection_iterator i(collections.begin());

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.9 2005/08/29 21:32:06 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.10 2005/08/31 06:19:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -87,6 +87,9 @@ protected:
 			l.subinstances, r.subinstances);
 	}
 
+	good_bool
+	replay_substructure_aliases(void) const;
+
 public:
 	// just a forwarded call
 	subinstance_manager::value_type
@@ -118,7 +121,13 @@ virtual	size_t
 	}
 
 virtual	this_type&
-	retrace_alias_base(physical_instance_collection&) const;
+	__retrace_alias_base(
+#if 0
+		physical_instance_collection&
+#else
+		const this_type&
+#endif
+		) const;
 
 protected:
 	// call forwarding
@@ -181,12 +190,30 @@ protected:
 		return good_bool(true);
 	}
 
+	/**
+		No-op, because this has no substructure.  
+	 */
+	good_bool
+	replay_substructure_aliases(void) const {
+		return good_bool(true);
+	}
+
 public:
 	ostream&
 	dump_ports(ostream& o) const { return o; }
 
 	void
 	connect_ports(void) const { }
+
+#if 0
+	/**
+		Subinstanceless has no subinstances!
+	 */
+	subinstance_manager::value_type
+	lookup_port_instance(const physical_instance_collection& i) const {
+		return subinstance_manager::value_type(NULL);
+	}
+#endif
 
 protected:
 	void

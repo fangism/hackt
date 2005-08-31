@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.6 2005/08/28 20:40:23 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.7 2005/08/31 06:19:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -122,6 +122,9 @@ public:
 
 	good_bool
 	connect_port_aliases(const port_alias_signature&);
+
+	good_bool
+	replay_internal_aliases(void) const;
 
 	// for each entry, re-link
 	void

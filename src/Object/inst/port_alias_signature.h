@@ -1,11 +1,12 @@
 /**
 	\file "Object/inst/port_alias_signature.h"
-	$Id: port_alias_signature.h,v 1.1.2.2 2005/08/28 20:40:23 fang Exp $
+	$Id: port_alias_signature.h,v 1.1.2.3 2005/08/31 06:19:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_SIGNATURE_H__
 #define	__OBJECT_INST_PORT_ALIAS_SIGNATURE_H__
 
+#include <iosfwd>
 #include <vector>
 #include "util/memory/count_ptr.h"
 
@@ -14,6 +15,7 @@ namespace entity {
 class physical_instance_collection;
 class footprint;
 class port_formals_manager;
+using std::ostream;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -45,6 +47,9 @@ public:
 
 	const_iterator
 	end(void) const { return port_array.end(); }
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end class port_alias_signature
 

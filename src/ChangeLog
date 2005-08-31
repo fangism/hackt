@@ -1,5 +1,25 @@
 "ChangeLog"
 
+2005-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-29:
+	  Victory!!!  (almost) 
+		Bottom-up recursion of connecting internal port aliases
+		seems to work, even with some crazy cases.  
+		Enabled creating of dependent types first.  
+	  Added bunch of elementary test cases for replaying internal aliases
+		in process/066*.in
+	  BUG FIXED: in looking up instance_collection's corresponding
+		alias, using the alias's key_type (special case for D = 1!)
+		fixed in instance_alias<>::retrace_alias.
+	  TODO: massive clean up of debugging code littered
+		in "Object/inst/instance_collection.tcc".
+	  TODO: write a TON of test cases, start to involve definition-local
+		non-port aliases (which should be skipped).  
+	  KNOWN BUGS to FIX: process/066 (fatal), 066d (wrong),
+		connect/116, 117 (advanced handling of relaxed params)
+
+
 2005-08-29	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-28:

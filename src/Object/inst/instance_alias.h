@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.3.4.2 2005/08/28 20:40:22 fang Exp $
+	$Id: instance_alias.h,v 1.3.4.3 2005/08/31 06:19:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -65,6 +65,8 @@ public:
 
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 					instance_alias_base_type;
+	typedef	typename class_traits<Tag>::instance_alias_info_type
+					instance_alias_info_type;
 private:
 	/**
 		grandparent_type is maplikeset_element_derived.
@@ -74,12 +76,14 @@ private:
 		great_grandparent_type is ring_node_derived
 	 */
 	typedef	typename grandparent_type::parent_type	great_grandparent_type;
+	typedef	typename instance_alias_info_type::internal_alias_policy
+							internal_alias_policy;
 public:
 	typedef	typename parent_type::key_type		key_type;
 	// or simple_type?
-	typedef	typename instance_alias_info<Tag>::const_iterator
+	typedef	typename instance_alias_info_type::const_iterator
 							const_iterator;
-	typedef	typename instance_alias_info<Tag>::iterator
+	typedef	typename instance_alias_info_type::iterator
 							iterator;
 public:
 	instance_alias() : parent_type() { }

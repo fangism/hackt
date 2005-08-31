@@ -1,6 +1,7 @@
-// "114.in" should pass connection, one reference is relaxed. 
-// copy-modified from "093.in"
+// "114a.in" should pass connection, one reference is relaxed. 
+// copy-modified from "114.in"
 // testing propagation of relaxed actuals in rings.  
+// will die during create on incomplete type
 
 template <pint A><pint B>
 defproc foo();

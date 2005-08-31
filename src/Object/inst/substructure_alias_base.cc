@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.5 2005/08/28 20:40:23 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.6 2005/08/31 06:19:28 fang Exp $
  */
 
 #include <iostream>
@@ -12,7 +12,19 @@
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
+
 //=============================================================================
+// class substructure_alias_base<false> method definitions
+
+#if 0
+never_ptr<const physical_instance_collection>
+substructure_alias_base<false>::get_container_base(void) const {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
+
+//=============================================================================
+// class substructure_alias_base<true> method definitions
 
 /**
 	Virtually pure virtual.
@@ -47,7 +59,13 @@ substructure_alias::get_container_base(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 substructure_alias&
-substructure_alias::retrace_alias_base(physical_instance_collection&) const {
+substructure_alias::__retrace_alias_base(
+#if 0
+		physical_instance_collection&
+#else
+		const this_type&
+#endif
+		) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -66,6 +84,12 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 void
 substructure_alias::allocate_subinstances(footprint& f) {
 	return subinstances.allocate(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+substructure_alias::replay_substructure_aliases(void) const {
+	return subinstances.replay_internal_aliases();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

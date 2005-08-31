@@ -1,21 +1,18 @@
 /**
 	\file "Object/inst/internal_aliases_policy.h"
+	$Id: internal_aliases_policy.h,v 1.1.2.2 2005/08/31 06:19:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_H__
 #define	__OBJECT_INST_INTERNAL_ALIASES_POLICY_H__
 
+#include "Object/inst/internal_aliases_policy_fwd.h"
 #include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
+class port_alias_signature;
 using util::good_bool;
-
-//=============================================================================
-// forward declaration
-
-template <bool CanAlias>
-struct internal_aliases_policy;
 
 //=============================================================================
 /**
@@ -40,6 +37,7 @@ struct internal_aliases_policy {
 	connect(const AliasType&, const CanonicalType&) {
 		return good_bool(true);
 	}
+
 };
 
 //-----------------------------------------------------------------------------
@@ -62,6 +60,11 @@ struct internal_aliases_policy<true> {
 	static
 	good_bool
 	connect(AliasType&, const CanonicalType&);
+
+	template <class AliasType>
+	static
+	good_bool
+	connect(AliasType&, const port_alias_signature&);
 
 };	// end struct_internal_aliases_policy
 

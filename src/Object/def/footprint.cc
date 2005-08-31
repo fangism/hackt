@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.9 2005/08/29 21:32:03 fang Exp $
+	$Id: footprint.cc,v 1.1.2.10 2005/08/31 06:19:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -128,8 +128,12 @@ if (instance_collection_map.empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For all instance collections, expand their canonical types.  
+ */
 good_bool
 footprint::create_dependent_types(void) const {
+	STACKTRACE_VERBOSE;
 	const_instance_map_iterator i(instance_collection_map.begin());
 	const const_instance_map_iterator e(instance_collection_map.end());
 	for ( ; i!=e; i++) {

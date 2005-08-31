@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.2 2005/08/25 21:30:38 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.3 2005/08/31 06:19:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,9 @@ ARTC_TEST_PASSES = \
 	030 035 036 037 \
 	040 042 043 049 \
 	051 054 055 056 057 058 059 \
-	060 061 062 063 064 065 066 066a 067 067a 068 069 \
+	060 061 062 063 064 065 \
+	066 066a 066b 066c 066d 066e 066f 066g 066h \
+	067 067a 068 069 \
 	070 071 072 073 074 075 076 077 078 079 \
 	080 081 081a 082 083
 
@@ -31,13 +33,18 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 # should be a subset of $(ARTOBJUNROLL_TEST_SUBJECTS)
 # the omitted unroll tests either have no instances, 
 # fail unrolling, or are just uninteresting
-# TODO: add 066 - 080
 HACKT_CREATE_TEST_SUBJECTS = \
 	024 \
 	054 055 056 057 058 059 \
-	060 061 062 063 064 065 066 066a 067 067a 068 069 \
+	060 061 062 063 064 065 \
+	066a 066b 066c 066e 066f 066g 066h \
+	067 067a 068 069 \
 	070 072 075 077 079 \
 	080 081 081a 082 083
+
+# BUG NOTES: (create tests)
+# 066 crashes
+# 066d is wrong
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \

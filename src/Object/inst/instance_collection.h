@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.8 2005/08/29 21:32:04 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.9 2005/08/31 06:19:27 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -49,6 +49,7 @@ class const_range_list;
 class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
+template <bool> class internal_aliases_policy;
 
 // lazy to include, just copied from "Object/inst/instance_collection_base.h"
 #ifndef	UNROLL_PORT_ONLY_PROTO
@@ -89,6 +90,8 @@ public:
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
+	typedef	typename class_traits<Tag>::instance_alias_info_type
+						instance_alias_info_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
@@ -113,6 +116,8 @@ protected:
 						instance_relaxed_actuals_type;
 	// type parameter, if applicable is inherited from
 	// collection_type_manager_parent_type
+	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+						internal_alias_policy;
 protected:
 	explicit
 	instance_collection(const size_t d) :
@@ -284,6 +289,8 @@ public:
 							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+	typedef	typename parent_type::internal_alias_policy
+						internal_alias_policy;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 //	typedef	typename parent_type::instance_alias_base_ptr_type
@@ -391,12 +398,14 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 class instance_array<Tag,0> :
 		public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection<Tag>;
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
-							parent_type;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+	typedef	typename parent_type::internal_alias_policy
+						internal_alias_policy;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
