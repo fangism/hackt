@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.1.2.2 2005/08/31 06:19:28 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.1.2.3 2005/08/31 22:29:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
@@ -21,11 +21,13 @@ namespace entity {
 // class internal_aliases_policy method definitions
 
 /**
+	THIS IS WRONG AND OBSOLETE.
 	Replays a structure's internal aliases explicitly.  
 	\param AliasType must have substructure.  
 	\param _alias must be a top-most in scope alias, 
 		either top-level overall or top-level inside a definition.  
 	Pretty much only used for processes.  
+	TODO: apply alias's parent_types' signatures.
  */
 template <class AliasType>
 good_bool
@@ -40,8 +42,27 @@ internal_aliases_policy<true>::connect(AliasType& _alias) {
 	const container_type& c(*_alias.container);
 	const canonical_type_type
 		_type(_alias.complete_type_actuals(c));
+#if ENABLE_STACKTRACE
+	_type.dump(STACKTRACE_INDENT << "canonical-type: ") << endl;
+#endif
 	return connect(_alias, _type);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	\param _alias the top-level alias to apply and mirror 
+		implicit internal port aliases.  
+	\param _ref reference instance that belongs to a 
+		footprint's port alias signature.  
+ */
+template <class AliasType>
+good_bool
+internal_aliases_policy<true>::connect(AliasType& _alias, 
+		const AliasType& _ref) {
+	typedef	typename AliasType::instance_collection_generic_type
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -53,7 +74,7 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 		const CanonicalType& _type) {
 	typedef	typename CanonicalType::canonical_definition_type
 			definition_type;
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	const never_ptr<const definition_type> def(_type.get_base_def());
 	const footprint&
 		fp(def->get_footprint(_type.get_raw_template_params()));
@@ -63,11 +84,14 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: connect subinstances!
+ */
 template <class AliasType>
 good_bool
 internal_aliases_policy<true>::connect(AliasType& _alias, 
 		const port_alias_signature& ps) {
-	STACKTRACE_VERBOSE;
+//	STACKTRACE_VERBOSE;
 	return _alias.connect_port_aliases(ps);
 }
 

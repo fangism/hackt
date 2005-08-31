@@ -11,5 +11,5 @@ defproc bar(foo x, y) {
 
 bar poo;
 
-// after hierarchical flattening, there are 3 bools and 1 proc
+// after hierarchical flattening, there are 3 bools and 3 proc
 

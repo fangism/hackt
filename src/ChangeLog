@@ -2,6 +2,17 @@
 
 2005-08-31	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-30:
+	  BUG FIXED: 066d.in -- now port_alias_signature is used
+		recursively to replay internal collections.  
+		Previous mistake was that was only applying port alias
+		signature of leaf-most types, thereby missing connections
+		imposed by parent types.  (Now we only use the parents'
+		port alias signatures.)  
+	  TODO: BUG process/066.in is next on the hit list.  
+	  TODO: massive clean-up after bug fix.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-29:
 	  Victory!!!  (almost) 
 		Bottom-up recursion of connecting internal port aliases

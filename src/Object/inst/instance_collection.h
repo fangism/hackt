@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.9 2005/08/31 06:19:27 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.10 2005/08/31 22:29:36 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -374,6 +374,9 @@ public:
 	load_reference(istream& i) const;
 
 	REPLAY_INTERNAL_ALIASES_BASE_PROTO;
+#if USE_RECURSIVE_REPLAY_ALIASES
+	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO;
+#endif
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 
@@ -479,6 +482,9 @@ public:
 	get_the_instance(void) { return the_instance; }
 
 	REPLAY_INTERNAL_ALIASES_BASE_PROTO;
+#if USE_RECURSIVE_REPLAY_ALIASES
+	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO;
+#endif
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 

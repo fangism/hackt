@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.3.4.3 2005/08/31 06:19:26 fang Exp $
+	$Id: instance_alias.h,v 1.3.4.4 2005/08/31 22:29:36 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -142,6 +142,7 @@ public:
 
 	RETRACE_ALIAS_BASE_PROTO;
 	RETRACE_ALIAS_PROTO;
+//	REPLAY_INTERNAL_ALIAS_RECURSIVE_PROTO;
 
 	/**
 		Use with maplikeset_element requires comparison operator.  
@@ -211,6 +212,7 @@ private:
 public:
 	RETRACE_ALIAS_BASE_PROTO;
 	RETRACE_ALIAS_PROTO;
+//	REPLAY_INTERNAL_ALIAS_RECURSIVE_PROTO;
 
 public:
 	void

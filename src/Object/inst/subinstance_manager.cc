@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.9 2005/08/31 06:19:28 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.10 2005/08/31 22:29:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -148,24 +148,33 @@ subinstance_manager::connect_ports(
 good_bool
 subinstance_manager::connect_port_aliases(const port_alias_signature& sig) {
 	STACKTRACE_VERBOSE;
-	INVARIANT(size() == sig.size());
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
-	port_alias_signature::const_iterator j(sig.begin());
 #if ENABLE_STACKTRACE
 	dump(STACKTRACE_STREAM << "subinstances: " << endl) << endl;
 	sig.dump(STACKTRACE_STREAM << "signature: " << endl) << endl;
 #endif
+#if USE_RECURSIVE_REPLAY_ALIASES
+	for ( ; i!=e ; i++) {
+		if ((*i)->replay_internal_aliases_recursive(sig).good) {
+			return good_bool(false);
+		}
+	}
+#else
+	INVARIANT(size() == sig.size());
+	port_alias_signature::const_iterator j(sig.begin());
 	for ( ; i!=e ; i++, j++) {
 		if  (!(*i)->replay_internal_aliases_base(**j).good) {
 			return good_bool(false);
 		}
 	}
+#endif
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	OBSOLETE?
 	Copied from footprint::create_dependent_types
 	and module::create_dependent_types.
  */
@@ -177,6 +186,24 @@ subinstance_manager::replay_internal_aliases(void) const {
 	for ( ; i!=e ; i++) {
 		// creating dependent types also connects internal aliases
 		if (!(*i)->create_dependent_types().good)
+			return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+subinstance_manager::replay_internal_aliases(const this_type& ref) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(subinstance_array.size() == ref.subinstance_array.size());
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	const_iterator j(ref.subinstance_array.begin());
+	for ( ; i!=e ; i++, j++) {
+		// creating dependent types also connects internal aliases
+		if (!(*i)->create_dependent_types().good)
+			return good_bool(false);
+		if (!(*i)->replay_internal_aliases_base(**j).good)
 			return good_bool(false);
 	}
 	return good_bool(true);

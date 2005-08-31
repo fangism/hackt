@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.7 2005/08/31 06:19:28 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.8 2005/08/31 22:29:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -125,6 +125,9 @@ public:
 
 	good_bool
 	replay_internal_aliases(void) const;
+
+	good_bool
+	replay_internal_aliases(const this_type&);
 
 	// for each entry, re-link
 	void

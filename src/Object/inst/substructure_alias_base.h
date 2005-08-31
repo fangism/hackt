@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.10 2005/08/31 06:19:28 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.11 2005/08/31 22:29:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -113,7 +113,7 @@ virtual	size_t
 	connect_ports(const connection_references_type&, const unroll_context&);
 
 	/**
-		Forwarded call to cnnect internal aliases explicitly.  
+		Forwarded call to connect internal aliases explicitly.  
 	 */
 	good_bool
 	connect_port_aliases(const port_alias_signature& p) {
@@ -121,13 +121,11 @@ virtual	size_t
 	}
 
 virtual	this_type&
-	__retrace_alias_base(
-#if 0
-		physical_instance_collection&
-#else
-		const this_type&
-#endif
-		) const;
+	__retrace_alias_base(const this_type&) const;
+
+	static
+	good_bool
+	replay_internal_aliases(this_type&, const this_type&);
 
 protected:
 	// call forwarding
@@ -205,15 +203,11 @@ public:
 	void
 	connect_ports(void) const { }
 
-#if 0
-	/**
-		Subinstanceless has no subinstances!
-	 */
-	subinstance_manager::value_type
-	lookup_port_instance(const physical_instance_collection& i) const {
-		return subinstance_manager::value_type(NULL);
+	static
+	good_bool
+	replay_internal_aliases(const this_type&, const this_type&) {
+		return good_bool(true);
 	}
-#endif
 
 protected:
 	void
