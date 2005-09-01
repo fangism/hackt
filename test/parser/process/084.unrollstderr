@@ -1,0 +1,75 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	7	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        bool<> r with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "foo", we have: {
+        r = bool<> r with indices: {
+          [0..1]
+        }
+
+        x = int<32> x
+        y = bool<> y
+        footprint: {
+          bool^1 r with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::r[0] 
+              1 = ::foo::r[1] 
+            }
+          int<32>^0 x (instantiated) = ::foo::x 
+          bool^0 y (instantiated) = ::foo::y 
+        }
+      }
+
+  Instances:
+    burp = process foo<>^0 burp (instantiated) = ::burp (
+      bool^1 r with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::burp.r[0] 
+          1 = ::burp.r[1] 
+        }
+    )
+}
+

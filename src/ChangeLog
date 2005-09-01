@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-32:
+	  Test cases added only, no code revision.  
+	  The no-known-critical-bug status didn't last very long.
+	  BUG: process/086,087.in (create: wrong top-level allocation, 
+		failure to replay internal connection)
+		Check out the port-alias walking code.  
+	  BUG: process/099 (fatal) -- mismatch in retrace hierarchy
+
+
 2005-08-31	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-31:
@@ -10,6 +21,7 @@
 	  Sprinkled with more debugging code.  
 	  Who's you're bug-slaying daddy?
 	  TODO: write TONS of test cases before cleaning up code.  
+	  Status: no known *critical* bugs in this branch.
 
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-30:
@@ -48,7 +60,7 @@
 		Inserted a pass before creating unique (after unroll)
 		to create dependent types bottom-up.  Currently disabled.  
 		Much stacktrace debugging needed.  
-	  Added class_trait: can_internall_alias, for which it's
+	  Added class_trait: can_internally_alias, for which it's
 		currently only true for process types.  
 
 

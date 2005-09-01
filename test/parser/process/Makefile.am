@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.5 2005/09/01 03:30:36 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.6 2005/09/01 05:11:28 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,7 +20,10 @@ ARTC_TEST_PASSES = \
 	066 066a 066b 066c 066d 066e 066f 066g 066h 066i \
 	067 067a 068 069 \
 	070 071 072 073 074 075 076 077 078 079 \
-	080 081 081a 082 083
+	080 081 081a 082 083 084 085 086 087 088 \
+	094 095 096 097 098 099
+
+# 089-093: known bugs, haven't decided when to reject
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -40,7 +43,11 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	066 066a 066b 066c 066d 066e 066f 066g 066h 066i \
 	067 067a 068 069 \
 	070 072 075 077 079 \
-	080 081 081a 082 083
+	080 081 081a 082 083 084 085 088 \
+	094 095 096 097 098
+
+# 086, 087: haven't decided when to reject
+# 099: BUG in create (replay of internal aliases)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \
