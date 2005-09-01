@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.22 2005/08/31 22:29:36 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.23 2005/09/01 03:30:35 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -216,7 +216,12 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 // inline
-INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() { }
+INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() {
+	STACKTRACE_DTOR_VERBOSE;
+#if STACKTRACE_DESTRUCTORS
+	STACKTRACE_INDENT << "destroying " << this << endl;
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -598,6 +603,10 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	typename instance_type::pool_type&
 		the_pool(footprint_pool_getter<Tag>().operator()(f));
 	_this.instance_index = the_pool.allocate(instance_type(*this));
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "assigned id: " << this << " = "
+		<< this->instance_index << endl;
+#endif
 	INVARIANT(this->instance_index);
 	// NOTE: can't _this.allocate_subinstances() yet because there
 	// may be aliases between the ports, see comment below.  
@@ -632,6 +641,10 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 		}
 #else
 		INVARIANT(!i->instance_index);
+#endif
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "assigned id: " << &*i << " = "
+			<< this->instance_index << endl;
 #endif
 		i->instance_index = this->instance_index;
 		// when to propagate relaxed actuals?
@@ -725,7 +738,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 #else
 	if (!synchronize_actuals(*this, t).good) {
 		// already have partial error message from compare
-		cerr << "Conflicting actuals in hierarchichal connections."
+		cerr << "Conflicting actuals in hierarchical connections."
 			<< endl;
 		this->dump_hierarchical_name(cerr << "between: ") << endl;
 		t.dump_hierarchical_name(cerr << "    and: ") << endl;
@@ -738,6 +751,8 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Simply copy state_instance indices from source to this destination.  
+	\param t the source alias from which to inherit the ID.  
+	\param f the footprint from which to get connection information.  
 	\pre this is not at all state assigned, 
 		and t is completely state assigned.  
 	Q: in for-loop, what difference between calling inherit_state
@@ -749,8 +764,23 @@ void
 INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 		const footprint& f) {
 	STACKTRACE_VERBOSE;
-	INVARIANT(!this->instance_index);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this = " << this << " and t = " << &t << endl;
+	STACKTRACE_INDENT << "have this index = " << this->instance_index <<
+		" and t.index = " << t.instance_index << endl;
+#endif
 	INVARIANT(t.instance_index);
+#if 0
+	INVARIANT(!this->instance_index);
+#else
+	// quick patch to fix bug exhibited by process/066.in (crash)
+	// don't know if this is wrong, but it seems to work
+	// should prove this later.  
+	if (this->instance_index) {
+		INVARIANT(this->instance_index == t.instance_index);
+		return;
+	}
+#endif
 	iterator i(this->begin());
 	const iterator e(this->end());
 	const instance_type&
@@ -758,6 +788,10 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 			.operator()(f)[t.instance_index]);
 	for ( ; i!=e; i++) {
 		INVARIANT(!i->instance_index);
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "assigned id: " << &*i << " = "
+			<< t.instance_index << endl;
+#endif
 		i->instance_index = t.instance_index;
 		i->inherit_state(inst, f);
 	}

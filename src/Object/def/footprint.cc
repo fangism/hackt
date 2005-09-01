@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.10 2005/08/31 06:19:26 fang Exp $
+	$Id: footprint.cc,v 1.1.2.11 2005/09/01 03:30:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -142,6 +142,10 @@ footprint::create_dependent_types(void) const {
 		if (pic && !pic->create_dependent_types().good)
 			return good_bool(false);
 	}
+#if ENABLE_STACKTRACE
+	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl)
+		<< endl;
+#endif
 	return good_bool(true);
 }
 

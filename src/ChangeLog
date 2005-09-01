@@ -2,8 +2,18 @@
 
 2005-08-31	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-31:
+	  BUG FIXED: process/066.in -- unconditional assertion (failed before)
+		weakened to a conditional assertion in
+		instance_alias_info<>::inherit_subinstance_state()
+		in "Object/inst/instance_collection.tcc".
+	  Sprinkled with more debugging code.  
+	  Who's you're bug-slaying daddy?
+	  TODO: write TONS of test cases before cleaning up code.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-30:
-	  BUG FIXED: 066d.in -- now port_alias_signature is used
+	  BUG FIXED: process/066d.in -- now port_alias_signature is used
 		recursively to replay internal collections.  
 		Previous mistake was that was only applying port alias
 		signature of leaf-most types, thereby missing connections

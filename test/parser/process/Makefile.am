@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.4 2005/08/31 22:29:39 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.5 2005/09/01 03:30:36 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -37,13 +37,10 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	024 \
 	054 055 056 057 058 059 \
 	060 061 062 063 064 065 \
-	066a 066b 066c 066d 066e 066f 066g 066h 066i \
+	066 066a 066b 066c 066d 066e 066f 066g 066h 066i \
 	067 067a 068 069 \
 	070 072 075 077 079 \
 	080 081 081a 082 083
-
-# BUG NOTES: (create tests)
-# 066 crashes
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \
