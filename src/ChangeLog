@@ -5,7 +5,7 @@
 	* ARTXX-00-01-04-main-00-55-footprint-01-32:
 	  Test cases added only, no code revision.  
 	  The no-known-critical-bug status didn't last very long.
-	  BUG: process/086,087.in (create: wrong top-level allocation, 
+	  BUG: process/086.in (create: wrong top-level allocation, 
 		failure to replay internal connection)
 		Check out the port-alias walking code.  
 	  BUG: process/099 (fatal) -- mismatch in retrace hierarchy

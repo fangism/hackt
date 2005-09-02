@@ -3,6 +3,47 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-09-01: ARTXX-00-01-04-main-00-55-footprint-01-32:
+	Notes on algorithm for replaying internal port aliases:
+	had: detect whether or not instance in question is a 
+		a direct member of a port, and if so, replay the connection.
+		(in instance_alias_info::replay_internal_aliases)
+		WRONG: this misses *aliases* of ports.  
+	then: tried to replace with instance_alias_info::retrace_port_alias, 
+		if the instance in question (or any of its parents)
+		are aliased to a port, then replay its connection.
+		WRONG: this only finds the first port connection, 
+			but an instance may be a public port to *multiple*
+			types, and thus ALL port-aliases must be replayed.  
+	SOLUTION: replay all port-aliases at all levels of instance 
+		hierarchy, i.e. given x.y.z, replay aliases
+		of the .z level and those of the .y, and then the .x level.  
+		Is upward recursive in hierarchy.  
+	Q: is there a top-down only solution, since replay already traverses
+		top-down?  it sucks to have to inspect upward...
+		A top-down solution would involve playing aliases
+		between subinstances of aliases explicitly because
+		x.y (x port) could alias to z.y (z internal), which
+		could then alias to another port -- only discovered 
+		by upward inspection.  
+	TODO: save a compact record of internal aliases for each
+		complete type and replay from that without having
+		to check the same hierarchies over and over.  
+		(like instance reference connections)
+	UPDATE (2005-09-02):
+		above is STILL insufficient.
+		consider w.x.y whose formal alias is W::x.y 
+		and aliased to port W::p,
+		X (y, z) has X::y = X::z, and W contains
+		X x,a,b; with x.z = a.y, a.z = b.z;
+		W::q = W::b.y;
+		Then p is alias to q, but only discovered through
+		visiting up and down aliases...
+		Thus we need a traversal to visit ALL equivalent aliases
+		that walks both up and down hierarchies because
+		connections are not flattened.  
+
+//=============================================================================
 2005-08-25:
 	In final phase of creation checking:
 		every unique instance whose collection type is relaxed
