@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.11 2005/08/31 22:29:38 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.11.2.1 2005/09/02 19:50:18 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -123,9 +123,15 @@ virtual	size_t
 virtual	this_type&
 	__retrace_alias_base(const this_type&) const;
 
+virtual	never_ptr<this_type>
+	__retrace_port_alias_base(const this_type&) const;
+
 	static
 	good_bool
 	replay_internal_aliases(this_type&, const this_type&);
+
+virtual	bool
+	is_port_alias(void) const;
 
 protected:
 	// call forwarding

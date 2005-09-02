@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.14 2005/08/31 22:29:36 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.14.2.1 2005/09/02 19:50:17 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -17,6 +17,8 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
+
+#define	USE_RETRACE_ALIAS_NONRECURSIVE			0
 
 namespace ART {
 namespace entity {
@@ -226,15 +228,25 @@ public:
 #define	RETRACE_ALIAS_ARG_TYPE		physical_instance_collection&
 #else
 #define	RETRACE_ALIAS_BASE_ARG_TYPE		const substructure_alias&
+#define	RETRACE_PORT_ALIAS_BASE_ARG_TYPE	const substructure_alias&
 #define	RETRACE_ALIAS_ARG_TYPE		const instance_alias_info<Tag>&
+#define	RETRACE_PORT_ALIAS_ARG_TYPE	const instance_alias_info<Tag>&
 #if 0
 #define	RETRACE_ALIAS_ARG_TYPE						\
 	const typename instance_alias_info<Tag>::substructure_parent_type&
 #endif
 #endif
 protected:
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+	physical_instance_collection&
+	retrace_collection_nonrecursive(const substructure_alias&) const;
+#endif
+
 	physical_instance_collection&
 	retrace_collection(RETRACE_ALIAS_ARG_TYPE) const;
+
+	never_ptr<physical_instance_collection>
+	retrace_port_collection(RETRACE_PORT_ALIAS_ARG_TYPE) const;
 
 public:
 
@@ -246,8 +258,34 @@ public:
 	instance_alias_info<Tag>&					\
 	retrace_alias(RETRACE_ALIAS_ARG_TYPE) const
 
+#define	RETRACE_PORT_ALIAS_BASE_PROTO					\
+	never_ptr<typename instance_alias_info<Tag>::substructure_parent_type>\
+	__retrace_port_alias_base(RETRACE_PORT_ALIAS_BASE_ARG_TYPE) const
+
+#define	RETRACE_PORT_ALIAS_PROTO					\
+	never_ptr<instance_alias_info<Tag> >				\
+	retrace_port_alias(RETRACE_PORT_ALIAS_ARG_TYPE) const
+
 virtual	RETRACE_ALIAS_BASE_PROTO;
 virtual	RETRACE_ALIAS_PROTO;
+	RETRACE_PORT_ALIAS_BASE_PROTO;
+	RETRACE_PORT_ALIAS_PROTO;
+
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+private:
+#define	RETRACE_ALIAS_NONRECURSIVE_PROTO				\
+	instance_alias_info<Tag>&					\
+	retrace_alias_nonrecursive(const substructure_alias&) const
+
+virtual	RETRACE_ALIAS_NONRECURSIVE_PROTO;
+#endif
+
+private:
+#define	REPLAY_ALL_PORT_ALIASES_PROTO					\
+	good_bool							\
+	replay_all_port_aliases(const instance_alias_info<Tag>&)
+
+	REPLAY_ALL_PORT_ALIASES_PROTO;
 
 public:
 
@@ -300,6 +338,9 @@ public:
 		return (this->instance_index == i.instance_index)
 			&& (this->container == i.container);
 	}
+
+	bool
+	is_port(void) const;
 
 	bool
 	is_port_alias(void) const;

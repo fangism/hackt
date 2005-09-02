@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.23 2005/09/01 03:30:35 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.23.2.1 2005/09/02 19:50:18 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -313,13 +313,66 @@ INSTANCE_ALIAS_INFO_CLASS::get_supermost_substructure(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Non-recursive check for whether or not this container is
+	a port in the current scope.  
+	Is a port if it has no super instance, 
+	and it is a port member of its parent scope type.  
+	\pre instances in question must belong to definition scope.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+bool
+INSTANCE_ALIAS_INFO_CLASS::is_port(void) const {
+#if ENABLE_STACKTRACE && 0
+	STACKTRACE_VERBOSE;
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "is (")
+		<< ") a port? ";
+#endif
+	const instance_collection_base::super_instance_ptr_type
+		p(this->container->get_super_instance());
+	if (p) {
+#if ENABLE_STACKTRACE && 0
+		STACKTRACE_STREAM << "no." << endl;
+#endif
+		return false;
+	} else {
+		const never_ptr<const definition_base>
+			def(this->container->get_owner()
+				.template is_a<const definition_base>());
+		// can this be called outside of a definition scope's context?
+		if (def) {
+			const bool
+				ret(def->lookup_port_formal(
+					this->container->get_name()));
+#if ENABLE_STACKTRACE && 0
+			STACKTRACE_STREAM << (ret ? "yes." : "no.") << endl;
+#endif
+			return ret;
+		} else {
+#if ENABLE_STACKTRACE && 0
+			STACKTRACE_STREAM << "no." << endl;
+#endif
+			return false;
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return true if this hierarchical alias is a port of the current
 		scope or is a subinstance of a port.  
+		Basically true if any parents are aliased to some port.  
 	NOTE: this is pretty much template independent.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ALIAS_INFO_CLASS::is_port_alias(void) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "is (")
+		<< ") a port-alias? ";
+#endif
+#if 0
+	// seems wrong
 	const never_ptr<const physical_instance_collection>
 		c(this->get_supermost_collection());
 	const never_ptr<const definition_base>
@@ -329,7 +382,257 @@ INSTANCE_ALIAS_INFO_CLASS::is_port_alias(void) const {
 	} else {
 		return false;
 	}
+#else
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		// non-recursive
+		if (i->is_port()) {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "yes." << endl;
+#endif
+			return true;
+		}
+	}
+	// check super instances and their aliases
+	const instance_collection_base::super_instance_ptr_type
+		p(this->container->get_super_instance());
+	if (p) {
+		return p->is_port_alias();
+	} else {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "no." << endl;
+#endif
+		return false;
+	}
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+never_ptr<physical_instance_collection>
+INSTANCE_ALIAS_INFO_CLASS::retrace_port_collection(
+		RETRACE_PORT_ALIAS_ARG_TYPE sup) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+never_ptr<typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type>
+INSTANCE_ALIAS_INFO_CLASS::__retrace_port_alias_base(
+		RETRACE_PORT_ALIAS_BASE_ARG_TYPE sup) const {
+	return this->retrace_port_alias(IS_A(RETRACE_PORT_ALIAS_ARG_TYPE, sup));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_INFO_CLASS::retrace_alias_nonrecursive(
+		const substructure_alias&) const {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param a definition-local alias.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+never_ptr<INSTANCE_ALIAS_INFO_CLASS>
+INSTANCE_ALIAS_INFO_CLASS::retrace_port_alias(
+		RETRACE_PORT_ALIAS_ARG_TYPE a) const {
+	typedef	never_ptr<this_type>	return_type;
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
+	a.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ") << endl;
+#endif
+	// check all aliases in ring, if any of them are ports
+#if 1
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+#else
+	const_iterator i(a.begin());
+	const const_iterator e(a.end());
+#endif
+	for ( ; i!=e; i++) {
+		// non-recursive
+		if (i->is_port_alias()) {
+#if ENABLE_STACKTRACE
+			i->dump_hierarchical_name(
+				STACKTRACE_INDENT << "found port: ") << endl;
+#endif
+			return return_type(&i->retrace_alias(a));
+		}
+	}
+	// else we didn't find a port alias at this level, we check parents
+	const instance_collection_base::super_instance_ptr_type
+		p(this->container->get_super_instance());
+	NEVER_NULL(p);
+	const never_ptr<const physical_instance_collection>
+		ac(a.get_container_base());
+	NEVER_NULL(ac);
+	const instance_collection_base::super_instance_ptr_type
+		ap(ac->get_super_instance());
+	if (ap) {
+		const never_ptr<substructure_alias>
+			pp(p->__retrace_port_alias_base(*ap));
+		if (pp) {
+#if ENABLE_STACKTRACE
+			pp->dump_hierarchical_name(
+				STACKTRACE_INDENT << "port-parent: ") << endl;
+#endif
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+			// WRONG: mismatched hierarchy
+			return return_type(
+				&this->retrace_alias_nonrecursive(*pp));
+#else
+			physical_instance_collection&
+				pc(*pp->lookup_port_instance(*this->container));
+			instance_collection_generic_type&
+				ic(IS_A(instance_collection_generic_type&, pc));
+			return ic.retrace_instance_alias(*this);
+#endif
+		} else {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "no port-parent." << endl;
+#endif
+			return return_type(NULL);
+		}
+	} else if (ac->is_port_formal()) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "!ap && ac->is_port_formal" << endl;
+#endif
+		physical_instance_collection&
+			pc(*p->lookup_port_instance(*ac));
+		instance_collection_generic_type&
+			ic(IS_A(instance_collection_generic_type&, pc));
+		return ic.retrace_instance_alias(a);
+	}
+	// we didn't find a port-equivalent alias
+	return return_type(NULL);
+}	// end method retrace_port_alias
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Keeper.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::replay_all_port_aliases(const this_type& a) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
+	a.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ") << endl;
+#endif
+	iterator i(this->begin());
+	const iterator e(this->end());
+	for ( ; i!=e; i++) {
+		// non-recursive
+		if (i->is_port()) {
+#if ENABLE_STACKTRACE
+			i->dump_hierarchical_name(
+				STACKTRACE_INDENT << "found port: ") << endl;
+#endif
+			this_type& pa(i->retrace_alias(a));
+			if (!checked_connect_port(*this, pa).good) {
+#if ENABLE_STACKTRACE
+STACKTRACE_INDENT << "Doh1." << endl;
+#endif
+				return good_bool(false);
+			}
+		}
+	}
+	// else we didn't find a port alias at this level, we check parents
+	const instance_collection_base::super_instance_ptr_type
+		p(this->container->get_super_instance());
+	NEVER_NULL(p);	// true???
+	const never_ptr<const physical_instance_collection>
+		ac(a.container);
+	NEVER_NULL(ac);
+	const instance_collection_base::super_instance_ptr_type
+		ap(ac->get_super_instance());
+	if (ap) {
+		const never_ptr<substructure_alias>
+			pp(p->__retrace_port_alias_base(*ap));
+		if (pp) {
+#if ENABLE_STACKTRACE
+			pp->dump_hierarchical_name(
+				STACKTRACE_INDENT << "port-parent: ") << endl;
+#endif
+			physical_instance_collection&
+				pc(*pp->lookup_port_instance(*this->container));
+			instance_collection_generic_type&
+				ic(IS_A(instance_collection_generic_type&, pc));
+			this_type& pa(*ic.retrace_instance_alias(*this));
+			if (!checked_connect_port(*this, pa).good) {
+#if ENABLE_STACKTRACE
+STACKTRACE_INDENT << "Doh2." << endl;
+#endif
+				return good_bool(false);
+			}
+		} else {
+#if ENABLE_STACKTRACE
+STACKTRACE_INDENT << "Doh4." << endl;
+#endif
+			return good_bool(true);
+		}
+	} else if (ac->is_port_formal()) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "!ap && ac->is_port_formal" << endl;
+#endif
+		physical_instance_collection&
+			pc(*p->lookup_port_instance(*ac));
+		instance_collection_generic_type&
+			ic(IS_A(instance_collection_generic_type&, pc));
+		this_type& pa(*ic.retrace_instance_alias(a));
+		if (!checked_connect_port(*this, pa).good) {
+#if ENABLE_STACKTRACE
+STACKTRACE_INDENT << "Doh3." << endl;
+#endif
+			return good_bool(false);
+		}
+	}
+#if ENABLE_STACKTRACE
+STACKTRACE_INDENT << "Doh5." << endl;
+#endif
+	// we didn't find a port-equivalent alias, also ok
+	return good_bool(true);
+}	// end method replay_all_port_aliases
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+physical_instance_collection&
+INSTANCE_ALIAS_INFO_CLASS::retrace_collection_nonrecursive(
+		const substructure_alias& sup) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
+	sup.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ") << endl;
+#endif
+	const instance_collection_base::super_instance_ptr_type
+		thisp(this->container->get_super_instance());
+	const never_ptr<const physical_instance_collection>
+		supc(sup.get_container_base());
+	NEVER_NULL(supc);
+	const instance_collection_base::super_instance_ptr_type
+		supp(supc->get_super_instance());
+	NEVER_NULL(supp);
+	// This case cannot be reached when this is 
+	// a subinstanceless type.
+	// then we are at top-most level, terminate recursion
+	// from the type of sup, lookup the member
+	physical_instance_collection&
+		ret(*supp->lookup_port_instance(*this->container));
+#if ENABLE_STACKTRACE
+	ret.dump(STACKTRACE_INDENT << "ret: ") << endl;
+#endif
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -411,66 +714,92 @@ INSTANCE_ALIAS_INFO_CLASS::replay_internal_alias(const this_type& pa) {
 	however, the current algorithm will do this for every
 	equivalent alias in the ring, which is wasteful.  
 	TODO: (2005-08-30) optimize this to perform this once-only per ring.  
+		will involve simple loop-hoisting transformation.
 ***/
 	// the canonical type used, must be that of a top-most instance
-#if 0
-	if (!internal_alias_policy::connect(*this).good) {
+	if (!substructure_parent_type::replay_internal_aliases(
+			*this, pa).good) {
 		return good_bool(false);
 	}
-#else
-	if (!substructure_parent_type::replay_internal_aliases(*this, pa).good) {
-		return good_bool(false);
-	}
-#endif
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "done with internal connection "
 		"of subinstance types." << endl;
-#endif
-#if 0
-	if (!substructure_parent_type::connect_port_aliases(*this).good) {
-		return good_bool(false);
-	}
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "done with internal connection "
-		"of this members." << endl;
-#endif
 #endif
 	// find next port alias, skipping internal aliases
 	// how do we know if it is a port alias?
 	const_iterator i(pa.begin());	// recall: begin points to next
 	const_iterator j(i++);		// j is 1 behind i
 	const const_iterator e(pa.end());
-	if (i==e) {
-		return good_bool(true);
-	}
 	// reach top-most super instance and check against parent scopespace
-	for ( ; !j->is_port_alias() && i!=e; j=i, i++) { }	// empty
+	for ( ; i!=e; j=i, i++) {
+#if 0	//--------------------//
+		// wrong... see NOTES:2005-09-01
+		if (j->is_port_alias()) {
+		/***
+			we've found a valid port_alias (pointed by j)
+			how de we replay the connection?
+			need to find the corresponding alias in the top-level
+			trace the path from j to the top, 
+			but in reverse order
+			BUT, even if it IS a port alias, the call to
+			retrace_alias requires a reference that IS a port
+			for the sake of retracing.  Thus we need a 
+			port-equivalent-alias!
+			need function that combines is_port_alias
+			with retrace_alias
+		***/
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "ckpt 1" << endl;
+			j->dump_hierarchical_name(
+				STACKTRACE_INDENT << "resolving: ") << endl;
 #endif
-	if (i==e) {
-		// we didn't find a port alias, we're done
-		return good_bool(true);
-	} else {
-		// we've found a valid port_alias (pointed by j)
-		// how de we replay the connection?
-		// need to find the corresponding alias in the top-level
-		// trace the path from j to the top, but in reverse order
+			this_type& new_alias(j->retrace_alias(*this));
 #if ENABLE_STACKTRACE
-		// STACKTRACE_INDENT << "ckpt 2" << endl;
-		j->dump_hierarchical_name(
-			STACKTRACE_INDENT << "resolving: ") << endl;
+			this->dump_hierarchical_name(
+				STACKTRACE_INDENT << "replaying connection: ");
+			new_alias.dump_hierarchical_name(
+				STACKTRACE_STREAM << " and ") << endl;
 #endif
-		this_type& new_alias(j->retrace_alias(*this));
+			// symmetric connection
+			return checked_connect_port(*this, new_alias);
+		}
 #if ENABLE_STACKTRACE
-		this->dump_hierarchical_name(
-			STACKTRACE_INDENT << "replaying connection: ");
-		new_alias.dump_hierarchical_name(
-			STACKTRACE_STREAM << " and ") << endl;
+		else {
+			j->dump_hierarchical_name(
+				STACKTRACE_INDENT << "skipping: ") << endl;
+		}
 #endif
-		// symmetric connection
-		return checked_connect_port(*this, new_alias);
-	}
+#else	//--------------------//
+#if 1
+		// almost... see NOTES:2005-09-01
+		const never_ptr<this_type>
+			new_alias(j->retrace_port_alias(*this));
+		if (new_alias) {
+#if ENABLE_STACKTRACE
+			this->dump_hierarchical_name(
+				STACKTRACE_INDENT << "replaying connection: ");
+			new_alias->dump_hierarchical_name(
+				STACKTRACE_STREAM << " and ") << endl;
+#endif
+			// symmetric connection
+			if (new_alias != this)
+				return checked_connect_port(*this, *new_alias);
+			else	return good_bool(true);
+		}
+#if ENABLE_STACKTRACE
+		else {
+			j->dump_hierarchical_name(
+				STACKTRACE_INDENT << "skipping: ") << endl;
+		}
+#endif
+#else	//--------------------//
+		// replay ALL aliases at all levels of hierarchy
+		if (!this->replay_all_port_aliases(*j).good) {
+			return good_bool(false);
+		}
+#endif
+#endif	//--------------------//
+	}	// end for
+	return good_bool(true);
 }	// end method replay_internal_alias
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -901,6 +1230,16 @@ INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals_recursive(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	l.dump_hierarchical_name(STACKTRACE_INDENT << "connecting ");
+	r.dump_hierarchical_name(STACKTRACE_STREAM << " to ") << endl;
+#endif
+#if 1
+	if (&l == &r) {
+		return good_bool(true);
+	}
+#endif
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
@@ -1199,6 +1538,123 @@ INSTANCE_ALIAS_CLASS::end(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Combines functionality of finding a port alias with retracing it.  
+	Duplicate comment from retrace_alias().  
+	BUG FIXED: (2005-08-30) this looks up an instance with a key_type, 
+		where multikey_index_type is expected.  This works fine
+		EXCEPT for the case where D = 1, because the key_type
+		has been specialized to a POD scalar (size_t), 
+		which uses a completely different multikey_generic
+		constructor!
+ */
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+never_ptr<INSTANCE_ALIAS_INFO_CLASS>
+INSTANCE_ALIAS_CLASS::retrace_port_alias(RETRACE_PORT_ALIAS_ARG_TYPE p) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		// non-recursive
+		if (i->is_port()) {
+
+
+	const never_ptr<physical_instance_collection>
+		pp(i->retrace_port_collection(p));
+if (pp) {
+#if ENABLE_STACKTRACE
+	pp->dump(STACKTRACE_INDENT << "got: ") << endl;
+	STACKTRACE_INDENT << "key: " << i->key << endl;
+#endif
+	// this seems wasteful but is required for correctness, 
+	// as explained in the comments.  
+	const multikey<D, pint_value_type> kk(i->key);
+	const multikey_index_type k(kk);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "k: " << k << endl;
+#endif
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, *pp));
+	const never_ptr<this_type>
+		ret(c.lookup_instance(k).template is_a<this_type>());
+	NEVER_NULL(ret);
+#if ENABLE_STACKTRACE
+	ret->dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
+#endif
+	return ret;
+}
+
+	}
+	return never_ptr<INSTANCE_ALIAS_INFO_CLASS>(NULL);
+#if 0
+	const never_ptr<physical_instance_collection>
+		pp(this->retrace_port_collection(p));
+if (pp) {
+#if ENABLE_STACKTRACE
+	pp->dump(STACKTRACE_INDENT << "got: ") << endl;
+	STACKTRACE_INDENT << "key: " << this->key << endl;
+#endif
+	// this seems wasteful but is required for correctness, 
+	// as explained in the comments.  
+	const multikey<D, pint_value_type> kk(this->key);
+	const multikey_index_type k(kk);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "k: " << k << endl;
+#endif
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, *pp));
+	const never_ptr<this_type>
+		ret(c.lookup_instance(k).template is_a<this_type>());
+	NEVER_NULL(ret);
+#if ENABLE_STACKTRACE
+	ret->dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
+#endif
+	return ret;
+} else {
+	return never_ptr<INSTANCE_ALIAS_INFO_CLASS>(NULL);
+}
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_CLASS::retrace_alias_nonrecursive(
+		const substructure_alias& p) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	physical_instance_collection&
+		pp(this->retrace_collection_nonrecursive(p));
+#if ENABLE_STACKTRACE
+	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
+	STACKTRACE_INDENT << "key: " << this->key << endl;
+#endif
+	// this seems wasteful but is required for correctness, 
+	// as explained in the comments.  
+	const multikey<D, pint_value_type> kk(this->key);
+	const multikey_index_type k(kk);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "k: " << k << endl;
+#endif
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, pp));
+	this_type& ret(IS_A(this_type&, *c.lookup_instance(k))); // this->key
+#if ENABLE_STACKTRACE
+	ret.dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
+#endif
+	return ret;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Uses self key to retrace an indentical hierarchical structure.
 	\pre type-checked.  
@@ -1373,6 +1829,55 @@ typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 	return instance_alias_base_type::end();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+never_ptr<INSTANCE_ALIAS_INFO_CLASS>
+KEYLESS_INSTANCE_ALIAS_CLASS::retrace_port_alias(
+		RETRACE_PORT_ALIAS_ARG_TYPE p) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	const never_ptr<physical_instance_collection>
+		pp(this->retrace_port_collection(p));
+	// assert dynamic cast
+if (pp) {
+#if ENABLE_STACKTRACE
+	pp->dump(STACKTRACE_INDENT << "got: ") << endl;
+#endif
+	container_type& c(IS_A(container_type&, *pp));
+	return never_ptr<INSTANCE_ALIAS_INFO_CLASS>(&c.get_the_instance());
+} else {
+	return never_ptr<INSTANCE_ALIAS_INFO_CLASS>(NULL);
+}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RETRACE_ALIAS_NONRECURSIVE
+/**
+	NOTE: physical instance collection is not const in this case.  
+ */
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+KEYLESS_INSTANCE_ALIAS_CLASS::retrace_alias_nonrecursive(
+		const substructure_alias& p) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	physical_instance_collection&
+		pp(this->retrace_collection_nonrecursive(p));
+	// assert dynamic cast
+#if ENABLE_STACKTRACE
+	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
+#endif
+	container_type& c(IS_A(container_type&, pp));
+	return c.get_the_instance();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1924,6 +2429,21 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	);
 	return const_index_list(l,
 		collection.is_compact_slice(lower_list, upper_list));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+never_ptr<typename INSTANCE_ARRAY_CLASS::instance_alias_info_type>
+INSTANCE_ARRAY_CLASS::retrace_instance_alias(
+		const instance_alias_info_type& i) {
+	typedef	never_ptr<instance_alias_info_type>	return_type;
+	STACKTRACE_VERBOSE;
+	// assert dynamic cast
+	const element_type& ii(IS_A(const element_type&, i));
+	const const_iterator it(this->collection.find(ii.key));
+	INVARIANT(it != this->collection.end());
+	const element_type& b(*it);
+	return return_type(const_cast<element_type*>(&b));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2578,6 +3098,16 @@ INSTANCE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
 	cerr << "WARNING: instance_array<Tag,0>::resolve_indices(const_index_list) "
 		"always returns an empty list!" << endl;
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+never_ptr<typename INSTANCE_SCALAR_CLASS::instance_alias_info_type>
+INSTANCE_SCALAR_CLASS::retrace_instance_alias(
+		const instance_alias_info_type& i) {
+	typedef	never_ptr<instance_alias_info_type>	return_type;
+	IS_A(const instance_type&, i);
+	return return_type(&this->the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

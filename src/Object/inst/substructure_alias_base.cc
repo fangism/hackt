@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.7 2005/08/31 22:29:37 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.7.2.1 2005/09/02 19:50:18 fang Exp $
  */
 
 #include <iostream>
@@ -58,14 +58,20 @@ substructure_alias::get_container_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+substructure_alias::is_port_alias(void) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 substructure_alias&
-substructure_alias::__retrace_alias_base(
-#if 0
-		physical_instance_collection&
-#else
-		const this_type&
-#endif
-		) const {
+substructure_alias::__retrace_alias_base(const this_type&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<substructure_alias>
+substructure_alias::__retrace_port_alias_base(const this_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 

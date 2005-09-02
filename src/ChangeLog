@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-09-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-32-broken-01:
+	  Dead branch of abandaoned revisions, but kept here for 
+		historical reference, because a lot of thought went into
+		this, even though much of it is wrong.  
+		This revision is completely broken, don't even bother with
+		running tests.  
+
+
 2005-09-01	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-32:

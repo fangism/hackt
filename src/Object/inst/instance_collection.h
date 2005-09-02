@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.10 2005/08/31 22:29:36 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.10.2.1 2005/09/02 19:50:17 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -226,6 +226,12 @@ virtual	bool
 	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const = 0;
 
+#define	RETRACE_INSTANCE_ALIAS_PROTO					\
+	never_ptr<instance_alias_info_type>				\
+	retrace_instance_alias(const instance_alias_info_type&)
+
+virtual	RETRACE_INSTANCE_ALIAS_PROTO = 0;
+
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
@@ -291,6 +297,8 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
+	typedef	typename class_traits<Tag>::instance_alias_info_type
+						instance_alias_info_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 //	typedef	typename parent_type::instance_alias_base_ptr_type
@@ -366,6 +374,8 @@ public:
 	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const;
 
+	RETRACE_INSTANCE_ALIAS_PROTO;
+
 	UNROLL_ALIASES_PROTO;
 
 	UNROLL_PORT_ONLY_PROTO;
@@ -409,6 +419,8 @@ public:
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
+	typedef	typename class_traits<Tag>::instance_alias_info_type
+						instance_alias_info_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
@@ -467,6 +479,8 @@ public:
 	bool
 	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
 		const const_range_list& r) const;
+
+	RETRACE_INSTANCE_ALIAS_PROTO;
 
 	UNROLL_ALIASES_PROTO;
 
