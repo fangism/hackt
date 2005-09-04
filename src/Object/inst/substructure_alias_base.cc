@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.10 2005/09/04 18:10:45 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.11 2005/09/04 19:37:19 fang Exp $
  */
 
 #include <iostream>
@@ -52,7 +52,7 @@ substructure_alias::get_container_base(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 substructure_alias&
-substructure_alias::__trace_alias_base(this_type&) const {
+substructure_alias::__trace_alias_base(const this_type&) const {
 	ICE_NEVER_CALL(cerr);
 }
 

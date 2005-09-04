@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.14 2005/09/04 18:10:45 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.15 2005/09/04 19:37:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -33,11 +33,7 @@ private:
 	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
-#if PHYSICAL_PORTS
 	typedef	physical_instance_collection	port_type;
-#else
-	typedef	instance_collection_base	port_type;
-#endif
 protected:
 	/**
 		Container of sub-instances.  
@@ -116,7 +112,7 @@ virtual	size_t
 	collect_port_aliases(port_alias_tracker&) const;
 
 virtual	this_type&
-	__trace_alias_base(this_type&) const;
+	__trace_alias_base(const this_type&) const;
 
 protected:
 	// call forwarding

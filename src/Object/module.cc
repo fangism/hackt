@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.3.4.6 2005/08/31 06:19:25 fang Exp $
+ 	$Id: module.cc,v 1.3.4.7 2005/09/04 19:37:16 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -20,7 +20,6 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "util/persistent_object_manager.tcc"
-#include "Object/devel_switches.h"
 #include "util/stacktrace.h"
 
 namespace util {
@@ -208,16 +207,12 @@ module::create_unique(void) {
 		return good_bool(false);
 	if (!is_created()) {
 		STACKTRACE("not already created, creating...");
-		const unroll_context c;	// empty context
-#if CREATE_DEPENDENT_TYPES_FIRST
-		// TODO: need to create dependent types first
-		// to replay internal aliases, need to visit all
-		// top-level instances recursively
+		// this replays all internal aliases recursively
 		if (!create_dependent_types().good) {
 			// alraedy have error mesage
 			return good_bool(false);
 		}
-#endif
+		const unroll_context c;	// empty top-level context
 		if (!sequential_scope::create_unique(c, _footprint).good)
 		{
 			cerr << "Error during create_unique." << endl;

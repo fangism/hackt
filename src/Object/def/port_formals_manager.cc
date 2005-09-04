@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.2.8.2 2005/08/26 21:11:03 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.2.8.3 2005/09/04 19:37:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -228,15 +228,7 @@ port_formals_manager::unroll_ports(const unroll_context& c,
 	port_formals_list_type::const_iterator i(port_formals_list.begin());
 	const port_formals_list_type::const_iterator e(port_formals_list.end());
 	for ( ; i!=e; i++) {
-#if PHYSICAL_PORTS
 		const port_formals_value_type pcb(*i);
-#else
-		const port_formals_value_type icb(*i);
-		NEVER_NULL(icb);
-		// because parameter collections are forbidden in ports:
-		const never_ptr<const physical_instance_collection>
-			pcb(icb.is_a<const physical_instance_collection>());
-#endif
 		NEVER_NULL(pcb);
 		// supposed to return a new copy of instance-collection
 		const count_ptr<physical_instance_collection>

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.17 2005/09/04 18:10:43 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.18 2005/09/04 19:37:18 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -223,22 +223,22 @@ public:
 
 protected:
 	physical_instance_collection&
-	trace_collection(substructure_alias&) const;
+	trace_collection(const substructure_alias&) const;
 
 #if 0
 	physical_instance_collection&
-	retrace_collection(substructure_alias&) const;
+	retrace_collection(const substructure_alias&) const;
 #endif
 
 public:
 
 #define	TRACE_ALIAS_BASE_PROTO						\
 	typename instance_alias_info<Tag>::substructure_parent_type&	\
-	__trace_alias_base(substructure_alias&) const
+	__trace_alias_base(const substructure_alias&) const
 
 #define	TRACE_ALIAS_PROTO						\
 	instance_alias_info<Tag>&					\
-	trace_alias(substructure_alias&) const
+	trace_alias(const substructure_alias&) const
 
 virtual	TRACE_ALIAS_BASE_PROTO;
 virtual	TRACE_ALIAS_PROTO;

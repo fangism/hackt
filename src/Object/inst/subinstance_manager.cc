@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.13 2005/09/04 18:10:45 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.14 2005/09/04 19:37:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -178,20 +178,10 @@ subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
 	for ( ; li!=le; li++, ri++) {
 	// references may be NULL (no-connect)
 		if (*li && *ri) {
-#if PHYSICAL_PORTS
 			if (!(*li)->synchronize_actuals(**ri).good) {
 				// already have error message
 				return good_bool(false);
 			}	// else good to continue
-#else
-			if (!IS_A(physical_instance_collection&, **li)
-				.synchronize_actuals(
-				IS_A(physical_instance_collection&, **ri))
-					.good) {
-				// already have error message
-				return good_bool(false);
-			}	// else good to continue
-#endif
 		}
 	}
 	// all connections good
@@ -225,15 +215,7 @@ subinstance_manager::allocate(footprint& f) {
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-#if PHYSICAL_PORTS
 		(*i)->allocate_state(f);	// expands the whole collection
-#else
-		// dynamic cast to physical_instance_collection
-		const count_ptr<physical_instance_collection>
-			pi(i->is_a<physical_instance_collection>());
-		NEVER_NULL(pi);
-		pi->allocate_state(f);	// expands the whole collection
-#endif
 	}
 }
 
@@ -253,15 +235,7 @@ subinstance_manager::create_state(const this_type& s, footprint& f) {
 		NEVER_NULL(*i);
 		NEVER_NULL(*j);
 		// merge created state (instance_collection_types)
-#if PHYSICAL_PORTS
 		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
-#else
-		// dynamic cast to physical_instance_collection
-		const count_ptr<physical_instance_collection>
-			pi(i->is_a<physical_instance_collection>());
-		const count_ptr<physical_instance_collection>
-			pj(j->is_a<physical_instance_collection>());
-#endif
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
 		if (!pi->merge_created_state(*pj, f).good)
@@ -285,15 +259,7 @@ subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 		NEVER_NULL(*i);
 		NEVER_NULL(*j);
 		// merge created state (instance_collection_types)
-#if PHYSICAL_PORTS
 		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
-#else
-		// dynamic cast to physical_instance_collection
-		const count_ptr<physical_instance_collection>
-			pi(i->is_a<physical_instance_collection>());
-		const count_ptr<const physical_instance_collection>
-			pj(j->is_a<const physical_instance_collection>());
-#endif
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
 		pi->inherit_created_state(*pj, f);

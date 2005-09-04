@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_aliases_policy.h"
-	$Id: internal_aliases_policy.h,v 1.1.2.5 2005/09/04 18:10:44 fang Exp $
+	$Id: internal_aliases_policy.h,v 1.1.2.6 2005/09/04 19:37:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_H__
@@ -28,6 +28,13 @@ struct internal_aliases_policy {
 		return good_bool(true);
 	}
 
+	template <class AliasType, class CanonicalType>
+	static
+	good_bool
+	connect(const AliasType&, const CanonicalType&) {
+		return good_bool(true);
+	}
+
 };	// end struct internal_aliases_policy
 
 //-----------------------------------------------------------------------------
@@ -43,7 +50,6 @@ struct internal_aliases_policy<true> {
 	good_bool
 	connect(AliasType&);
 
-private:
 	/**
 		Variant where the canonical type is already evaluated, 
 		and need not be re-evaluated.  

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.14 2005/09/04 01:58:08 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.15 2005/09/04 19:37:16 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -411,11 +411,7 @@ definition_base::add_relaxed_template_formal(
 	Only temporary.
 	Override in appropriate subclasses.  
  */
-#if PHYSICAL_PORTS
 never_ptr<const physical_instance_collection>
-#else
-never_ptr<const instance_collection_base>
-#endif
 definition_base::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& i) {
@@ -786,18 +782,10 @@ user_def_chan::attach_base_channel_type(
 	Ripped off from process_definition's.
 	Last touched: 2005-05-25.
  */
-#if PHYSICAL_PORTS
 never_ptr<const physical_instance_collection>
-#else
-never_ptr<const instance_collection_base>
-#endif
 user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
-#if PHYSICAL_PORTS
 	typedef	never_ptr<const physical_instance_collection>	return_type;
-#else
-	typedef	never_ptr<const instance_collection_base>	return_type;
-#endif
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -810,12 +798,8 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	}
 	}
 
-#if PHYSICAL_PORTS
 	const return_type pf(add_instance(f, id)
 		.is_a<const physical_instance_collection>());
-#else
-	const return_type pf(add_instance(f, id));
-#endif
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -1119,10 +1103,6 @@ channel_definition_alias::load_object(
  */
 void
 channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
-#if 0
-	cerr << "WARNING: didn't expect to call "
-		"channel_definition_alias::load_used_id_map_object()." << endl;
-#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -1884,19 +1864,11 @@ user_def_datatype::attach_base_data_type(
 	Shamelessly ripped off from user_def_chan's, 
 	Ripped off from process_definition's.
  */
-#if PHYSICAL_PORTS
 never_ptr<const physical_instance_collection>
-#else
-never_ptr<const instance_collection_base>
-#endif
 user_def_datatype::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
-#if PHYSICAL_PORTS
 	typedef	never_ptr<const physical_instance_collection>	return_type;
-#else
-	typedef	never_ptr<const instance_collection_base>	return_type;
-#endif
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -1909,12 +1881,8 @@ user_def_datatype::add_port_formal(
 	}
 	}
 
-#if PHYSICAL_PORTS
 	const return_type pf(add_instance(f, id)
 		.is_a<const physical_instance_collection>());
-#else
-	const return_type pf(add_instance(f, id));
-#endif
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -2282,10 +2250,6 @@ datatype_definition_alias::load_object(
  */
 void
 datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
-#if 0
-	cerr << "WARNING: didn't expect to call "
-		"datatype_definition_alias::load_used_id_map_object()." << endl;
-#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -2471,9 +2435,6 @@ size_t
 process_definition::lookup_port_formal_position(
 		const instance_collection_base& i) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	dump(cerr) << endl;
-#endif
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
 
@@ -2526,19 +2487,11 @@ process_definition::make_canonical_fundamental_type_reference(
 /**
 	Adds a port formal instance to this process definition.  
  */
-#if PHYSICAL_PORTS
 never_ptr<const physical_instance_collection>
-#else
-never_ptr<const instance_collection_base>
-#endif
 process_definition::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
-#if PHYSICAL_PORTS
 	typedef	never_ptr<const physical_instance_collection>	return_type;
-#else
-	typedef	never_ptr<const instance_collection_base>	return_type;
-#endif
 	NEVER_NULL(f);
 	INVARIANT(!f.is_a<param_instantiation_statement_base>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -2551,12 +2504,8 @@ process_definition::add_port_formal(
 	}
 	}
 
-#if PHYSICAL_PORTS
 	const return_type pf(add_instance(f, id)
 		.is_a<const physical_instance_collection>());
-#else
-	const return_type pf(add_instance(f, id));
-#endif
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -2772,19 +2721,13 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
-#if ENABLE_STACKTRACE
-		cpt.dump(STACKTRACE_INDENT << "proc type: ") << endl;
-#endif
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
-#if CREATE_DEPENDENT_TYPES_FIRST
-		// TODO: need to create dependent types first
-		// to replay internal aliases!
+		// this replays internal aliases of all instances in this scope
 		if (!f->create_dependent_types().good) {
 			// error message
 			return good_bool(false);
 		}
-#endif
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->evaluate_port_aliases(port_formals);
 			f->mark_created();
@@ -2977,16 +2920,10 @@ process_definition_alias::make_canonical_type(const template_actuals& a) const {
 count_ptr<const process_type_reference>
 process_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
-#if 0
-	typedef	count_ptr<const process_type_reference>	return_type;
-	cerr << "Fang. write process_definition_alias::make_canonical_fundamental_type_reference()!" << endl;
-	return return_type(NULL);
-#else
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
 	return base->get_base_proc_def()->make_canonical_fundamental_type_reference(ta);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

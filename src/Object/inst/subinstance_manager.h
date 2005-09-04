@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.11 2005/09/04 18:10:45 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.12 2005/09/04 19:37:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,7 +10,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -49,11 +48,7 @@ using util::persistent_object_manager;
 class subinstance_manager {
 friend class substructure_manager;
 	typedef	subinstance_manager			this_type;
-#if PHYSICAL_PORTS
 	typedef	physical_instance_collection	instance_collection_type;
-#else
-	typedef	instance_collection_base	instance_collection_type;
-#endif
 public:
 	typedef	count_ptr<instance_collection_type>	entry_value_type;
 	// just a synonym

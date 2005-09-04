@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.12 2005/09/04 06:22:59 fang Exp $
+	$Id: footprint.h,v 1.1.2.13 2005/09/04 19:37:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -39,8 +39,6 @@ using util::persistent_object_manager;
 
 template <class Tag>
 struct footprint_pool_getter;
-
-#define	USE_PORT_ALIAS_TRACKER				1
 
 //=============================================================================
 /**
@@ -139,15 +137,10 @@ private:
 	int_pool_type				int_pool;
 	bool_pool_type				bool_pool;
 
-#if 0
-	TODO:
-	write an export interface for just the ports
-	so the invoker may determine which ports (if any) 
-	are internally connected.
-#endif
-#if USE_PORT_ALIAS_TRACKER
+	/**
+		This keeps track which port members are internally aliased.
+	 */
 	port_alias_tracker			port_aliases;
-#endif
 public:
 	footprint();
 	~footprint();
@@ -173,12 +166,10 @@ public:
 	ostream&
 	dump_with_collections(ostream&) const;
 
-#if USE_PORT_ALIAS_TRACKER
 	const port_alias_tracker&
 	get_port_alias_tracker(void) const {
 		return port_aliases;
 	}
-#endif
 
 	void
 	import_scopespace(const scopespace&);

@@ -2,6 +2,17 @@
 
 2005-09-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-36:
+	  Clean-up phase 2: committed PHYSICAL_PORTS, USE_PORT_ALIAS_TRACKER
+		(in footprint), and CREATE_DEPENDENT_TYPES_FIRST.  
+		"Object/devel_switches.h" is empty once again.  
+	  Enhancements: trace_alias argument const-ified, 
+		instance_array::create_dependent_types uses faster 
+		call to internal_alias_policy::connect when collection's
+		canonical_type is already strict.  
+	  Branch is mature, ready to merge to trunk.  
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-35:
 	  Clean-up: committed USE_NEW_REPLAY_INTERNAL_ALIAS, 
 		obliterated traces of port_alias_signature (removed).

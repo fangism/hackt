@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.2.8.1 2005/08/26 21:11:03 fang Exp $
+	$Id: port_formals_manager.h,v 1.2.8.2 2005/09/04 19:37:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -13,7 +13,6 @@
 #include <vector>
 #include "util/macros.h"
 #include "Object/common/util_types.h"	// for checked_refs_type
-#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -52,11 +51,7 @@ using util::memory::never_ptr;
 	TODO: upgrade port_formals_value to physical_instance_collection?
  */
 class port_formals_manager {
-#if PHYSICAL_PORTS
 	typedef	physical_instance_collection	instance_collection_type;
-#else
-	typedef	instance_collection_base	instance_collection_type;
-#endif
 public:
 	typedef	never_ptr<const instance_collection_type>
 						port_formals_value_type;

@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.2.8.5 2005/08/26 21:11:03 fang Exp $
+	$Id: definition_base.h,v 1.2.8.6 2005/09/04 19:37:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -12,7 +12,6 @@
 #include "util/macros.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
-#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
@@ -224,17 +223,10 @@ virtual	never_ptr<const instance_collection_base>
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
-#if PHYSICAL_PORTS
 #define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
 	never_ptr<const physical_instance_collection>			\
 	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
 		const token_identifier&)
-#else
-#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
-	never_ptr<const instance_collection_base>			\
-	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
-		const token_identifier&)
-#endif
 
 /**
 	Really, only some definitions should have ports...

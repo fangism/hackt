@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.26 2005/09/04 18:10:43 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.27 2005/09/04 19:37:18 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -339,7 +339,8 @@ INSTANCE_ALIAS_INFO_CLASS::is_port_alias(void) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 physical_instance_collection&
-INSTANCE_ALIAS_INFO_CLASS::trace_collection(substructure_alias& sup) const {
+INSTANCE_ALIAS_INFO_CLASS::trace_collection(
+		const substructure_alias& sup) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
@@ -393,7 +394,7 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(substructure_alias& sup) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 physical_instance_collection&
 INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
-		RETRACE_ALIAS_ARG_TYPE sup) const {
+		const substructure_alias& sup) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
@@ -989,14 +990,14 @@ INSTANCE_ALIAS_INFO_CLASS::end(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename instance_alias_info<Tag>::substructure_parent_type&
-INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(substructure_alias&) const {
+INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(const substructure_alias&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_INFO_CLASS::trace_alias(substructure_alias&) const {
+INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1152,7 +1153,7 @@ INSTANCE_ALIAS_CLASS::end(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& a) const {
+INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& a) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
@@ -1187,7 +1188,7 @@ INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& a) const {
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
-INSTANCE_ALIAS_CLASS::__trace_alias_base(substructure_alias& p) const {
+INSTANCE_ALIAS_CLASS::__trace_alias_base(const substructure_alias& p) const {
 	// NOTE: this will never be called for non-structured types (like bool)
 	// because it is always called through parent (substructure_alias)
 	return this->trace_alias(p);
@@ -1309,7 +1310,7 @@ KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
-KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& p) const {
+KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& p) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
@@ -1328,7 +1329,8 @@ KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& p) const {
  */
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
-KEYLESS_INSTANCE_ALIAS_CLASS::__trace_alias_base(substructure_alias& p) const {
+KEYLESS_INSTANCE_ALIAS_CLASS::__trace_alias_base(
+		const substructure_alias& p) const {
 	// NOTE: this will never be called for non-structured types (like bool)
 	// because it is always called through parent (substructure_alias)
 	return this->trace_alias(p);
@@ -2095,28 +2097,27 @@ if (this->has_relaxed_type()) {
 	for ( ; i!=e; i++) {
 		if (!element_type::create_dependent_types(*i).good)
 			return good_bool(false);
-#if CREATE_DEPENDENT_TYPES_FIRST
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
 		if (!internal_alias_policy::connect(ii).good) {
 			return good_bool(false);
 		}
-#endif
 	}
 } else {
+	// type of container is already strict, 
+	// evalueate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::get_canonical_type());
 	if (!create_definition_footprint(t).good)
 		return good_bool(false);
-#if CREATE_DEPENDENT_TYPES_FIRST
 	for ( ; i!=e; i++) {
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
-		if (!internal_alias_policy::connect(ii).good) {
+		// shouldn't we pass in the canonical type 't'?
+		if (!internal_alias_policy::connect(ii, t).good) {
 			return good_bool(false);
 		}
 	}
-#endif
 }
 	return good_bool(true);
 }
@@ -2606,12 +2607,10 @@ if (this->has_relaxed_type()) {
 		return good_bool(false);
 	}
 }
-#if CREATE_DEPENDENT_TYPES_FIRST
 	if (!internal_alias_policy::connect(
 			const_cast<instance_type&>(this->the_instance)).good) {
 		return good_bool(false);
 	}
-#endif
 	return good_bool(true);
 }
 
