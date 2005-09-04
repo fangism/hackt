@@ -2,7 +2,7 @@
 	file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.10 2005/08/08 16:51:14 fang Exp $
+	$Id: list_vector.tcc,v 1.11 2005/09/04 21:15:07 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -30,7 +30,65 @@ using std::inner_product;
 using std::ptr_fun;
 
 //=============================================================================
+// class list_vector::list_map_checker definition
+
+LIST_VECTOR_TEMPLATE_SIGNATURE
+struct LIST_VECTOR_CLASS::list_map_checker {
+	size_type list_size;
+	size_type map_size;
+
+	list_map_checker() : list_size(0), map_size(0) { }
+	list_map_checker(const size_type l, const size_type m) :
+		list_size(l), map_size(m) { }
+
+	bool
+	valid(void) const {
+		return (list_size == map_size);
+	}
+
+	/// "multiplication" defined for inner_product algorithm
+	static
+	list_map_checker
+	mul(const typename vec_map_type::value_type& m,
+		const vector_type& v) {
+		return list_map_checker(v.size(), m.first);
+	}
+
+	/// "addition" defined for inner_product algorithm
+	static
+	list_map_checker
+	add(const list_map_checker& c1, const list_map_checker& c2) {
+		INVARIANT(c1.valid());
+		return list_map_checker(c1.list_size +c2.list_size,
+			c2.map_size);
+	}
+};      // end struct list_map_checker
+
+//=============================================================================
 // class list_vector method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Custom copy-constructor because the map of pointers (vec_map)
+	needs to be reconstructed.  
+	If we want to be smart, we can resize and re-chunk
+	upon copy construction, possibly even flatten.
+ */
+LIST_VECTOR_TEMPLATE_SIGNATURE
+LIST_VECTOR_CLASS::list_vector(const this_type& t) :
+		current_chunk_size(t.current_chunk_size), 
+		vec_list(t.vec_list), 
+		vec_map() {
+	size_t cumulative_size = 0;
+	const_vec_map_iterator vmi(t.vec_map.begin());
+	const const_vec_map_iterator vme(t.vec_map.end());
+	list_iterator li(++vec_list.begin());
+	for ( ; vmi!=vme; vmi++, li++) {
+		INVARIANT(vmi->first == cumulative_size);
+		this->vec_map[vmi->first] = &*li;
+		cumulative_size += li->size();
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

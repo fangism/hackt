@@ -1,0 +1,11 @@
+// "081a.in" should pass, will recursively instantiate ports
+// copy-reduced from "081.in"
+// definition bar was just flattened
+
+defproc foo(bool a[3]) { }
+
+foo x[3];
+x[0].a[0] = x[2].a[0]
+	= x[0].a[2]
+	= x[2].a[2];
+

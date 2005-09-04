@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.4 2005/08/08 23:08:28 fang Exp $
+ 	$Id: basic_param.cc,v 1.5 2005/09/04 21:14:44 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -27,6 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/const_collection.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
@@ -461,6 +462,24 @@ pint_const::unroll_resolve_index(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param p const parameter integer.
+	\pre p must be pint_const or pint_const_collection.
+ */
+bool
+pint_const::operator < (const const_param& p) const {
+	const pint_const* pp(IS_A(const pint_const*, &p));
+	if (pp) {
+		return val < pp->val;
+	} else {
+		const pint_const_collection&
+			pc(IS_A(const pint_const_collection&, p));
+		INVARIANT(!pc.dimensions());	// must be scalar
+		return val < pc.front();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Does nothing, no pointers to visit.  
  */
 void
@@ -560,6 +579,24 @@ pbool_const::unroll_resolve(const unroll_context& c) const {
 bool
 pbool_const::must_be_equivalent(const pbool_expr& b) const {
 	return b.is_static_constant() && (val == b.static_constant_value());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param p const parameter integer.
+	\pre p must be pint_const or pint_const_collection.
+ */
+bool
+pbool_const::operator < (const const_param& p) const {
+	const pbool_const* pp(IS_A(const pbool_const*, &p));
+	if (pp) {
+		return val < pp->val;
+	} else {
+		const pbool_const_collection&
+			pc(IS_A(const pbool_const_collection&, p));
+		INVARIANT(!pc.dimensions());	// must be scalar
+		return val < pc.front();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

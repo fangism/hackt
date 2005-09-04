@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.4 2005/09/04 21:14:48 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -15,15 +15,17 @@
 #include <algorithm>
 
 #include "Object/inst/channel_instance_collection.h"
-#include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_actuals.tcc"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/def/definition_base.h"
-#include "Object/type/channel_type_reference_base.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/type/channel_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
+#include "Object/def/datatype_definition_base.h"
 
 namespace util {
 
@@ -53,6 +55,7 @@ namespace entity {
 // explicit template class instantiations
 
 template class state_instance<channel_tag>;
+template class instance_pool<state_instance<channel_tag> >;
 template class instance_alias_info<channel_tag>;
 template class instance_collection<channel_tag>;
 template class instance_array<channel_tag, 0>;

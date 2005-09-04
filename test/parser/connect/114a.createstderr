@@ -1,0 +1,4 @@
+ERROR: cannot create incomplete process type ::foo
+Instantiated by: ::snu
+Error during create_unique.
+ERROR in creating.  Aborting.

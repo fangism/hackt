@@ -1,13 +1,14 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.2 2005/07/20 21:00:52 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.3 2005/09/04 21:14:51 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
 #define	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
 
 #include <iosfwd>
+#include "Object/type/canonical_type_fwd.h"	// just for conditional
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
@@ -15,6 +16,7 @@ namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
 
@@ -57,23 +59,39 @@ protected:
 	get_type(const instance_collection_generic_type&) const {
 		return this->get_type();
 	}
-	
+
+public:
+	instance_collection_parameter_type
+	get_canonical_type(void) const {
+		return instance_collection_parameter_type();
+	}
+
 	bool
 	is_relaxed_type(void) const { return false; }
 
+	// bool doesn't have a footprint
+	static
+	good_bool
+	create_definition_footprint(
+			const instance_collection_parameter_type& t) {
+		return good_bool(true);
+	}
+
+protected:
 	bool
 	must_match_type(const this_type&) const { return true; }
 
-	// TODO: rename me!!!
 	bad_bool
-	commit_type(const type_ref_ptr_type&) const { return bad_bool(false); }
+	check_type(const instance_collection_parameter_type&) const
+		{ return bad_bool(false); }
 
 	/**
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
 	void
-	commit_type_first_time(const type_ref_ptr_type& t) const { }
+	commit_type_first_time(
+		const instance_collection_parameter_type& t) const { }
 
 };	// end struct null_collection_type_manager
 

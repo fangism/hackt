@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.2 2005/07/23 06:52:27 fang Exp $
+	$Id: port_formals_manager.h,v 1.3 2005/09/04 21:14:43 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -26,6 +26,7 @@ namespace parser {
 //=============================================================================
 namespace entity {
 class instance_collection_base;
+class physical_instance_collection;
 class unroll_context;
 class subinstance_manager;		// basically, the port_actuals
 using std::string;
@@ -44,10 +45,15 @@ using util::memory::never_ptr;
 //=============================================================================
 /**
 	General definition public port instance manager.  
+	Note: these are just placeholders for definitions;
+	unrolling and creation are done with complete_types' private
+	copies of the collections maintained in the footprint.  
+	TODO: upgrade port_formals_value to physical_instance_collection?
  */
 class port_formals_manager {
+	typedef	physical_instance_collection	instance_collection_type;
 public:
-	typedef	never_ptr<const instance_collection_base>
+	typedef	never_ptr<const instance_collection_type>
 						port_formals_value_type;
 	/**
 		Table of port formals.
@@ -60,7 +66,8 @@ public:
 	typedef vector<port_formals_value_type>	port_formals_list_type;
 	typedef hash_qmap<string, port_formals_value_type>
 						port_formals_map_type;
-
+	typedef	port_formals_list_type::const_iterator
+						const_list_iterator;
 	// List of language bodies, separate or merged?
 
 protected:
@@ -79,15 +86,21 @@ public:
 	size_t
 	size(void) const { return port_formals_list.size(); }
 
+	const_list_iterator
+	begin(void) const { return port_formals_list.begin(); }
+
+	const_list_iterator
+	end(void) const { return port_formals_list.end(); }
+
 	/** overrides definition_base's */
-	never_ptr<const instance_collection_base>
+	port_formals_value_type
 	lookup_port_formal(const string& id) const;
 
 	size_t
 	lookup_port_formal_position(const string& id) const;
 
 	void
-	add_port_formal(const never_ptr<const instance_collection_base>);
+	add_port_formal(const port_formals_value_type);
 
 	good_bool
 	certify_port_actuals(const checked_refs_type& ol) const;
@@ -108,7 +121,7 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-};	// end class process_definition
+};	// end class port_formals_manager
 
 //=============================================================================
 }	// end namespace entity

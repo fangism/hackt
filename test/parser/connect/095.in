@@ -2,10 +2,10 @@
 // copy-modified from "094.in"
 
 template <pint A><pint B>
-defproc foo();
+defproc foo() { }
 
 foo<1> bar<1>, ick, poo<1>;
 
-bar = ick;	// matching relaxd actuals
+bar = ick;	// matching relaxed actuals
 ick = poo;
 

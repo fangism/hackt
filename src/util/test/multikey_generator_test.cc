@@ -2,18 +2,18 @@
 	\file "multikey_generator_test.cc"
 	Test for multidimensional key generator, which steps 
 	through rings of values of an N-dimensional cube slice.
-	$Id: multikey_generator_test.cc,v 1.4 2005/02/27 22:54:31 fang Exp $
+	$Id: multikey_generator_test.cc,v 1.5 2005/09/04 21:15:12 fang Exp $
  */
 
 #include <iostream>
-#include "multikey.tcc"
+#include "util/multikey.tcc"
 
 using namespace std;
 using util::multikey;
 using util::multikey_generator;
 
 int
-main (int argc, char* argv[]) {
+main (int, char*[]) {
 	typedef	multikey<3,int>			key_type;
 	typedef	multikey_generator<3,int>	generator_type;
 	key_type min, max;

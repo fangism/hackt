@@ -1,10 +1,16 @@
 #!/usr/bin/awk -f
 # "POM-header-filter.awk"
+#	$Id: POM-header-filter.awk,v 1.3 2005/09/04 21:15:14 fang Exp $
 # filter for text dump of persistent_object_manager's object header
 
 # NOTE: when used as a pipe redirected from stdout combined with stderr,
 #	it may crash on particular print statements.  
 #	This is probably some problem with an implementation of awk itself.  
+
+# input:
+# -v noindex={0,1}
+#	default 0.  if 1, masks out the index when rewriting the header entry
+
 
 {
 if (match($0,"^Persistent Object Manager")) {
@@ -30,8 +36,12 @@ function rewrite_header() {
 }
 
 function rewrite_header_entry(ind,addr,type,arg,hd,tl) {
-	printf("\t" ind "\t##ADDR##\t" type "\t" arg "\t");
-	printf("#HEAD#\t#TAIL#\t");
+	if (noindex) {
+		printf("\t##ID##");
+	} else {
+		printf("\t" ind);
+	}
+	printf("\t##ADDR##\t" type "\t" arg "\t#HEAD#\t#TAIL#\t");
 	if (match(type,"module"))
 		print "##SIZE##";
 	else	print tl-hd;

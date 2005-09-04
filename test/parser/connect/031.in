@@ -1,8 +1,8 @@
 // "031.in" should pass: nested member
 
-defproc egg(bool white; int yolk);
-defproc basket(egg egg_array[12]);
-defproc bundle(basket a, b, c[6]);
+defproc egg(bool white; int yolk) { }
+defproc basket(egg egg_array[12]) { }
+defproc bundle(basket a, b, c[6]) { }
 
 bundle load;
 

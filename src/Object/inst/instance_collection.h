@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: instance_collection.h,v 1.4 2005/09/04 21:14:49 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -12,7 +12,9 @@
 #include <iosfwd>
 #include <set>
 
+#include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -37,6 +39,7 @@ using util::persistent;
 using util::persistent_object_manager;
 
 class scopespace;
+class footprint;
 class physical_instance_collection;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
@@ -45,13 +48,7 @@ class const_range_list;
 class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
-
-// lazy to include, just copied over from "Object/art_object_instance_base.h"
-#ifndef	UNROLL_PORT_ONLY_PROTO
-#define	UNROLL_PORT_ONLY_PROTO						\
-count_ptr<physical_instance_collection>					\
-unroll_port_only(const unroll_context&) const
-#endif
+template <bool> class internal_aliases_policy;
 
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -85,6 +82,8 @@ public:
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
+	typedef	typename class_traits<Tag>::instance_alias_info_type
+						instance_alias_info_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
@@ -109,10 +108,18 @@ protected:
 						instance_relaxed_actuals_type;
 	// type parameter, if applicable is inherited from
 	// collection_type_manager_parent_type
+	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+						internal_alias_policy;
 protected:
 	explicit
 	instance_collection(const size_t d) :
 		parent_type(d), collection_type_manager_parent_type() { }
+
+	instance_collection(const this_type&, const footprint&);
+
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
 public:
 	instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
@@ -150,14 +157,14 @@ virtual	bool
 	// which determines whether or not the collection is relaxed or 
 	// strictly typed.  
 	void
-	establish_collection_type(const type_ref_ptr_type&);
+	establish_collection_type(const instance_collection_parameter_type&);
 
 	bool
 	has_relaxed_type(void) const;
 
 	// 2005-07-07: now intended for use AFTER collection type is established
 	bad_bool
-	commit_type(const type_ref_ptr_type& );
+	check_established_type(const instance_collection_parameter_type&) const;
 
 	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const;
@@ -184,12 +191,22 @@ virtual	INSTANTIATE_INDICES_PROTO = 0;
  */
 #define	CREATE_UNIQUE_STATE_PROTO					\
 	good_bool							\
-	create_unique_state(const const_range_list&)
+	create_unique_state(const const_range_list&, footprint&)
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
+virtual	good_bool
+	allocate_state(footprint&) = 0;
+
+virtual	good_bool
+	merge_created_state(physical_instance_collection&, footprint&) = 0;
+
 virtual	void
-	allocate_state(void) = 0;
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&) = 0;
+
+virtual	good_bool
+	synchronize_actuals(physical_instance_collection&) = 0;
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -212,11 +229,7 @@ virtual	const_index_list
 
 virtual	UNROLL_ALIASES_PROTO = 0;
 
-virtual	void
-	merge_created_state(physical_instance_collection&) = 0;
-
-virtual	void
-	inherit_created_state(const physical_instance_collection&) = 0;
+virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
 public:
 virtual	instance_alias_base_type&
@@ -265,11 +278,13 @@ class instance_array :
 	public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
+public:
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 							parent_type;
-public:
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+	typedef	typename parent_type::internal_alias_policy
+						internal_alias_policy;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 //	typedef	typename parent_type::instance_alias_base_ptr_type
@@ -286,6 +301,8 @@ public:
 	typedef	multikey_set<D, element_type>		collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
+	typedef	typename parent_type::collection_type_manager_parent_type
+					collection_type_manager_parent_type;
 private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
@@ -297,6 +314,11 @@ private:
 	collection_type					collection;
 private:
 	instance_array();
+
+	instance_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+
 public:
 	instance_array(const scopespace& o, const string& n);
 	~instance_array();
@@ -314,8 +336,18 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+	good_bool
+	allocate_state(footprint&);
+
+	good_bool
+	merge_created_state(physical_instance_collection&, footprint&);
+
 	void
-	allocate_state(void);
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&);
+
+	good_bool
+	synchronize_actuals(physical_instance_collection&);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -335,11 +367,9 @@ public:
 	instance_alias_base_type&
 	load_reference(istream& i) const;
 
-	void
-	merge_created_state(physical_instance_collection&);
+	CREATE_DEPENDENT_TYPES_PROTO;
 
-	void
-	inherit_created_state(const physical_instance_collection&);
+	COLLECT_PORT_ALIASES_PROTO;
 
 private:
 	class element_collector;
@@ -362,12 +392,14 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 class instance_array<Tag,0> :
 		public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection<Tag>;
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
-							parent_type;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
+	typedef	typename class_traits<Tag>::instance_collection_generic_type
+							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+	typedef	typename parent_type::internal_alias_policy
+						internal_alias_policy;
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
@@ -377,11 +409,17 @@ public:
 	// template explicitly required by g++-4.0
 	typedef	typename class_traits<Tag>::template instance_alias<0>::type
 							instance_type;
+	typedef	typename parent_type::collection_type_manager_parent_type
+					collection_type_manager_parent_type;
 private:
 	instance_type					the_instance;
 
 private:
 	instance_array();
+
+	instance_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 
 public:
 	instance_array(const scopespace& o, const string& n);
@@ -401,8 +439,18 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+	good_bool
+	allocate_state(footprint&);
+
+	good_bool
+	merge_created_state(physical_instance_collection&, footprint&);
+
 	void
-	allocate_state(void);
+	inherit_created_state(const physical_instance_collection&, 
+		const footprint&);
+
+	good_bool
+	synchronize_actuals(physical_instance_collection&);
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
@@ -421,12 +469,12 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
-	void
-	merge_created_state(physical_instance_collection&);
+	typename instance_type::parent_type&
+	get_the_instance(void) { return the_instance; }
 
-	void
-	inherit_created_state(const physical_instance_collection&);
+	CREATE_DEPENDENT_TYPES_PROTO;
 
+	COLLECT_PORT_ALIASES_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC

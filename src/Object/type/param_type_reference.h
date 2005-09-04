@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: param_type_reference.h,v 1.2 2005/07/23 06:52:54 fang Exp $
+ 	$Id: param_type_reference.h,v 1.3 2005/09/04 21:14:59 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
@@ -16,6 +16,7 @@ namespace ART {
 namespace entity {
 class unroll_context;
 class built_in_param_def;
+class null_parameter_type;	// from "Object/traits/class_traits.h"
 
 //=============================================================================
 /**
@@ -52,7 +53,16 @@ public:
 	bool
 	is_canonical(void) const;
 
-	MAKE_CANONICAL_TYPE_REFERENCE_PROTO;
+	void
+	commit_definition_arity(void) { }
+
+	TYPE_EQUIVALENT_PROTOS
+
+	bool
+	must_be_type_equivalent(const this_type&) const;
+
+	null_parameter_type
+	make_canonical_type(void) const;
 
 	unroll_context
 	make_unroll_context(void) const;

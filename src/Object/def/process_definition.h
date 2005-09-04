@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.2 2005/07/23 06:52:27 fang Exp $
+	$Id: process_definition.h,v 1.3 2005/09/04 21:14:43 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -13,6 +13,7 @@
 #include "Object/unroll/sequential_scope.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/def/port_formals_manager.h"
+#include "Object/def/footprint_manager.h"
 #include "Object/lang/CHP.h"
 
 namespace ART {
@@ -41,10 +42,12 @@ protected:
 	// list language bodies
 	PRS::rule_set				prs;
 	CHP::concurrent_actions			chp;
+	mutable footprint_manager		footprint_map;
 private:
 	process_definition();
 public:
-	process_definition(never_ptr<const name_space> o, const string& s); 
+	process_definition(const never_ptr<const name_space> o,
+		const string& s); 
 	~process_definition();
 
 	ostream&
@@ -68,6 +71,9 @@ public:
 	const port_formals_manager&
 	get_port_formals(void) const { return port_formals; }
 
+	void
+	commit_arity(void);
+
 	/** overrides definition_base's */
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
@@ -81,6 +87,8 @@ public:
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_PROCESS_TYPE_PROTO;
 
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
@@ -102,6 +110,12 @@ public:
 	void
 	add_concurrent_chp_body(const count_ptr<CHP::action>&);
 
+	const footprint&
+	get_footprint(const count_ptr<const const_param_expr_list>&) const;
+
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
 // methods for object file I/O
 public:
 	FRIEND_PERSISTENT_TRAITS

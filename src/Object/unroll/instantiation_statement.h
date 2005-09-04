@@ -3,7 +3,7 @@
 	Instance statement classes for ART.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: instantiation_statement.h,v 1.4 2005/09/04 21:15:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -70,6 +70,8 @@ public:
 	typedef	never_ptr<collection_type>		collection_ptr_type;
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
+	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
 #if 0
 	typedef	instantiation_statement_base::relaxed_args_type
 							relaxed_args_type;
@@ -115,7 +117,7 @@ public:
 	get_relaxed_actuals(void) const;
 
 	good_bool
-	unroll(unroll_context& ) const;
+	unroll(const unroll_context&) const;
 
 	// careful: not declared virtual here, 
 	// yet overridden by param_instantiation_statement<>

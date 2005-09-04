@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	185
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -21,45 +21,49 @@ Persistent Object Manager text dump:
 	17	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	33
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
-	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
-	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
-	35	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
-	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	44	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
-	45	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	46	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
-	47	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
-	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
-	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	66
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
+	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	66
+	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
+	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	50	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	51	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	57	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	58	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
+	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -69,7 +73,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    portaproc = process-definition (declared) portaproc(
+    portaproc = process-definition (defined) portaproc(
         bool<> b
         bool<> c with indices: {
           [0..3]
@@ -92,6 +96,24 @@ In namespace "", we have: {
           [0..1]
         }
 
+        footprint: {
+          bool^0 b (instantiated) = ::portaproc::b 
+          bool^1 c with indices: {
+          }
+            unrolled indices: {
+              0 = ::portaproc::c[0] 
+              1 = ::portaproc::c[1] 
+              2 = ::portaproc::c[2] 
+              3 = ::portaproc::c[3] 
+            }
+          int<32>^0 i (instantiated) = ::portaproc::i 
+          int<32>^1 j with indices: {
+          }
+            unrolled indices: {
+              0 = ::portaproc::j[0] 
+              1 = ::portaproc::j[1] 
+            }
+        }
       }
 
   Instances:

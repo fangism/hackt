@@ -2,7 +2,7 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.2 2005/07/23 06:52:26 fang Exp $
+	$Id: enum_datatype_def.h,v 1.3 2005/09/04 21:14:42 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_ENUM_DATATYPE_DEF_H__
@@ -84,11 +84,18 @@ public:
 
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
+	MAKE_CANONICAL_DATA_TYPE_PROTO;
+
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;
 
 	bool
 	add_member(const token_identifier& em);
+
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
+
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

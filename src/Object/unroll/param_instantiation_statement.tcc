@@ -3,7 +3,7 @@
 	Template method definitions for param_instantiation_statement.  
 	This file came from "Object/art_object_inst_stmt_param.tcc"
 		in a previous life.  
-	$Id: param_instantiation_statement.tcc,v 1.2 2005/07/23 06:53:02 fang Exp $
+	$Id: param_instantiation_statement.tcc,v 1.3 2005/09/04 21:15:04 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
@@ -41,7 +41,7 @@ PARAM_INSTANTIATION_STATEMENT_CLASS::~param_instantiation_statement() { }
 PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_evaluate(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	return parent_type::unroll(c);
 }
 
@@ -52,7 +52,7 @@ PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_evaluate(
 PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	return good_bool(true);
 }
 

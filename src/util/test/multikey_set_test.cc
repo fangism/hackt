@@ -1,16 +1,16 @@
 /**
 	\file "multikey_set_test.cc"
 	Test for multikey_set template class.  
-	$Id: multikey_set_test.cc,v 1.2 2005/02/27 22:54:32 fang Exp $
+	$Id: multikey_set_test.cc,v 1.3 2005/09/04 21:15:12 fang Exp $
  */
 
 #include <string>
 #include <iostream>
-#include "multikey_set.tcc"
-#include "sstream.h"
+#include "util/multikey_set.tcc"
+#include "util/sstream.h"
 #include <set>
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 using std::string;
 using util::multikey;
@@ -30,7 +30,7 @@ typedef	multikey_set<1, string_element_1d>	string_set_1d_type;
 template class multikey_set<3, string_element_3d>;
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 {
 	string_set_3d_type a;
 	string_set_2d_type b;

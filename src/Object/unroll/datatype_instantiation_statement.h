@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.4 2005/09/04 21:15:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -11,11 +11,14 @@
 
 #include <iostream>
 #include "Object/traits/data_traits.h"
+#include "Object/def/datatype_definition_base.h"
 #include "Object/type/data_type_reference.h"
+#include "Object/type/canonical_type.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/def/footprint.h"
 
 namespace ART {
 namespace entity {
@@ -37,12 +40,15 @@ using util::persistent_object_manager;
 		or user-defined data-struct-types.  
  */
 class class_traits<datatype_tag>::instantiation_statement_type_ref_base {
+	typedef class_traits<datatype_tag>		traits_type;
 	typedef instantiation_statement_type_ref_base	this_type;
 public:
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 protected:
 	type_ref_ptr_type				type;
 	const_relaxed_args_type				relaxed_args;
@@ -62,21 +68,15 @@ protected:
 	type_ref_ptr_type
 	get_type(void) const { return type; }
 
-	type_ref_ptr_type
-	get_resolved_type(const unroll_context& c) const {
-		const type_ref_ptr_type ret(type->unroll_resolve(c));
-		if (!ret) {
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context& c) const {
+		const type_ref_ptr_type t(type->unroll_resolve(c));
+		if (!t) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
+			return instance_collection_parameter_type();
 		}
-#if 0
-		// enable optimization later
-		else {
-			const_cast<this_type*>(this)->type = ret;
-			// cache the equivalent resolved type
-		}
-#endif
-		return ret;
+		return t->make_canonical_type();
 	}
 
 	const_relaxed_args_type
@@ -103,17 +103,21 @@ protected:
 	}
 
 	static
-	void
+	good_bool
 	commit_type_first_time(instance_collection_generic_type& v,
-			const type_ref_ptr_type& t) {
+			const instance_collection_parameter_type& t) {
+		if (t.is_strict() && !t.unroll_definition_footprint().good) {
+			return good_bool(false);
+		}
 		v.establish_collection_type(t);
+		return good_bool(true);
 	}
 
 	static
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,
-			const type_ref_ptr_type& t) {
-		return v.commit_type(t);
+			const instance_collection_parameter_type& t) {
+		return v.check_established_type(t);
 	}
 
 	static
@@ -134,8 +138,8 @@ protected:
 	static
 	good_bool
 	create_unique_state(instance_collection_generic_type& v,
-			const const_range_list& crl) {
-		return v.create_unique_state(crl);
+			const const_range_list& crl, footprint& f) {
+		return v.create_unique_state(crl, f);
 	}
 
 	void

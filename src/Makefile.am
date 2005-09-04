@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73 2005/08/08 23:08:24 fang Exp $
+#	$Id: Makefile.am,v 1.74 2005/09/04 21:14:38 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -139,6 +139,7 @@ OBJECT_CC_FILES = \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
+	Object/inst/port_alias_tracker.cc \
 	Object/inst/alias_actuals.cc \
 	Object/inst/instance_collection.cc \
 	Object/inst/param_value_collection.cc \
@@ -160,8 +161,13 @@ OBJECT_CC_FILES = \
 	Object/module.cc \
 	Object/state_manager.cc \
 	Object/type/template_actuals.cc \
+	Object/type/canonical_type_base.cc \
+	Object/type/canonical_type.cc \
+	Object/type/canonical_generic_chan_type.cc \
 	Object/def/template_formals_manager.cc \
 	Object/def/port_formals_manager.cc \
+	Object/def/footprint.cc \
+	Object/def/footprint_manager.cc \
 	Object/lang/PRS.cc \
 	Object/lang/CHP.cc
 
@@ -192,7 +198,9 @@ OBJECT_TCC_FILES = \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
+	Object/inst/alias_empty.tcc \
 	Object/inst/instance_collection.tcc \
+	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc \
@@ -201,6 +209,7 @@ OBJECT_TCC_FILES = \
 	Object/ref/member_meta_instance_reference.tcc \
 	Object/ref/simple_meta_value_reference.tcc \
 	Object/ref/simple_nonmeta_value_reference.tcc \
+	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
 	Object/unroll/instantiation_statement.tcc \
@@ -211,6 +220,7 @@ OBJECT_TCC_FILES = \
 	Object/lang/CHP.tcc
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
+	Object/devel_switches.h \
 	Object/art_object_fwd.h \
 	Object/persistent_type_hash.h \
 	Object/common/multikey_index.h \
@@ -294,11 +304,19 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/datatype_instance_collection.h \
 	Object/inst/instance_alias_info.h \
 	Object/inst/instance_alias.h \
+	Object/inst/internal_aliases_policy_fwd.h \
+	Object/inst/internal_aliases_policy.h \
 	Object/inst/alias_empty.h \
 	Object/inst/value_collection.h \
 	Object/inst/instance_pool_fwd.h \
 	Object/inst/instance_pool.h \
 	Object/inst/state_instance.h \
+	Object/inst/bool_instance.h \
+	Object/inst/int_instance.h \
+	Object/inst/enum_instance.h \
+	Object/inst/struct_instance.h \
+	Object/inst/process_instance.h \
+	Object/inst/channel_instance.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \
@@ -323,6 +341,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/param_type_reference.h \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
+	Object/type/canonical_type_fwd.h \
 	Object/unroll/alias_connection.h \
 	Object/unroll/aliases_connection_base.h \
 	Object/unroll/channel_instantiation_statement.h \
@@ -394,9 +413,11 @@ UTIL_HEADER_FILES = \
 	util/array_traits.h \
 	util/assoc_traits_fwd.h \
 	util/assoc_traits.h \
+	util/attributes.h \
 	util/boolean_types.h \
 	util/const_traits.h \
 	util/cppcat.h \
+	util/counter.h \
 	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \
@@ -439,6 +460,7 @@ UTIL_HEADER_FILES = \
 	util/packed_array_fwd.h \
 	util/persistent_fwd.h \
 	util/persistent.h \
+	util/pthread.h \
 	util/qmap_fwd.h \
 	util/reserve.h \
 	util/ring_node_fwd.h \
@@ -506,7 +528,10 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 
 COMMON_FILES = \
 	common/ICE.cc \
-	common/ICE.h
+	common/ICE.h \
+	common/TODO.cc \
+	common/TODO.h \
+	common/devel_switches.h
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(ARTXX_PARSE_ROOT)-prefix.cc
@@ -651,8 +676,8 @@ AM_CPPFLAGS = -I$(srcdir)
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
-	-Wcast-qual -Wcast-align -Wconversion -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused-parameter \
+	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 	-Wbad-function-cast -Wnested-externs
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
@@ -663,7 +688,7 @@ MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 # These flags are used to cancel out previous warning flags, 
 # such exceptions are needed for the automatic lexers and parsers
-PARSER_NOWARN_FLAGS = -Wno-old-style-cast -Wno-shadow
+PARSER_NOWARN_FLAGS = -Wno-unused -Wno-old-style-cast -Wno-shadow
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
@@ -700,6 +725,12 @@ EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 # what about their dependencies?  
 # automake produces empty placeholders (never updated) for them initially, 
 # so make will not die.
+
+common/devel_switches.hchk:
+	@$(TOUCH) $@
+
+Object/devel_switches.hchk:
+	@$(TOUCH) $@
 
 util/using_istream.hchk:
 	@$(TOUCH) $@
@@ -747,6 +778,8 @@ EXTRA_DIST += local.cvsignore \
 	ChangeLog \
 	README \
 	NOTES \
+	BUGS \
+	TODO \
 	wc-l
 
 TESTS = art_persistent_table.sh test/getopt_test.test

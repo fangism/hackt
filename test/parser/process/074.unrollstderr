@@ -1,0 +1,4 @@
+ERROR: integer widths do not match!  have: 9 vs. 8
+Instantiated from: foo<9>
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

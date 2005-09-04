@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: struct_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -25,6 +25,7 @@ struct class_traits<datastruct_tag> {
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
 	static const bool		has_substructure = true;
+	static const bool		can_internally_alias = false;
 	typedef	instance_alias_info_actuals
 					instance_alias_relaxed_actuals_type;
 	typedef	datastruct_instance_alias_info	instance_alias_info_type;
@@ -34,6 +35,7 @@ struct class_traits<datastruct_tag> {
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
+	enum { instance_pool_chunk_size = 64 };
 
 	typedef	struct_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
@@ -44,10 +46,8 @@ struct class_traits<datastruct_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
-#if 1
 	typedef	struct_expr			data_expr_base_type;
 	typedef	struct_value_type		data_value_type;
-#endif
 
 	// later add instantiation_statement support...
 
@@ -69,7 +69,7 @@ struct class_traits<datastruct_tag> {
 	typedef	data_alias_connection_base	alias_connection_parent_type;
 	// need real type here!
 	typedef	data_type_reference		type_ref_type;
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
+	typedef	canonical_user_def_data_type	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<datastruct_tag>

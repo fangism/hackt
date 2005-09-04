@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.3 2005/08/08 23:08:31 fang Exp $
+	$Id: unroll_context.cc,v 1.4 2005/09/04 21:15:04 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -14,11 +14,13 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/const_param.h"
 #include "Object/def/definition_base.h"
+#include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
+#include "Object/expr/param_expr_list.h"
 #include "common/ICE.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
@@ -30,7 +32,15 @@ namespace entity {
 // class unroll_context method definitions
 
 unroll_context::unroll_context() :
-		next(), template_args(), template_formals() { }
+		next(), template_args(), template_formals(),
+		target_footprint(NULL)
+		{ }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+unroll_context::unroll_context(footprint* const f) :
+		next(), template_args(), template_formals(), 
+		target_footprint(f) {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -38,7 +48,23 @@ unroll_context::unroll_context() :
  */
 unroll_context::unroll_context(const template_actuals& a, 
 		const template_formals_manager& f) :
-		next(), template_args(&a), template_formals(&f) {
+		next(),
+		template_args(a),
+		template_formals(&f), 
+		target_footprint(NULL)
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called in process_definition::unroll_complete_type.
+ */
+unroll_context::unroll_context(const template_actuals& a, 
+		const template_formals_manager& f, footprint* const fp) :
+		next(), 
+		template_args(a), 
+		template_formals(&f), 
+		target_footprint(fp) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,7 +75,10 @@ unroll_context::unroll_context(const template_actuals& a,
 unroll_context::unroll_context(const template_actuals& a, 
 		const template_formals_manager& f, 
 		const this_type& c) :
-		next(&c), template_args(&a), template_formals(&f) {
+		next(&c),
+		template_args(a),
+		template_formals(&f), 
+		target_footprint(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -76,10 +105,23 @@ unroll_context::dump(ostream& o) const {
 		template_formals->dump(o);
 	else	o << "(none)";
 	o << endl << "actuals: ";
-	if (template_args)
-		template_args->dump(o);
-	else	o << "(none)";
+	template_args.dump(o);
+	if (target_footprint)
+		target_footprint->dump_with_collections(
+			cerr << endl << "footprint: ");
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a copy of the context with footprint pointer nullified.  
+	Calledn by member_instance_reference::unroll_reference.
+ */
+unroll_context
+unroll_context::make_member_context(void) const {
+	unroll_context ret(*this);
+	ret.target_footprint = NULL;
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -100,11 +142,10 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE("unroll_context::lookup_actual()");
 #if ENABLE_STACKTRACE
-	cerr << "looking up: " << p.get_name() << endl;
+	STACKTRACE_INDENT << "looking up: " << p.get_name() << endl;
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());
-	INVARIANT(template_args);
 	INVARIANT(p.is_template_formal());
 	// not the position of the template formal in its own list
 	// but in the current context!!!
@@ -127,7 +168,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 //		cerr << "I got index " << index << "!!!" << endl;
 		// remember, index is 1-indexed, whereas [] is 0-indexed.
 		const count_ptr<const param_expr>
-			ret((*template_args)[index-1]);
+			ret(template_args[index-1]);
 		NEVER_NULL(ret);
 		const return_type const_ret(ret.is_a<const const_param>());
 		// actual may STILL be another formal reference!
@@ -135,8 +176,8 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			return const_ret;
 		} else {
 #if ENABLE_STACKTRACE
-			ret->what(cerr << "expr (");
-			ret->dump(cerr << ") = ") << endl;
+			ret->what(STACKTRACE_INDENT << "expr (");
+			ret->dump(STACKTRACE_STREAM << ") = ") << endl;
 #endif
 			const count_ptr<const simple_param_meta_value_reference>
 				self(ret.is_a<const simple_param_meta_value_reference>());

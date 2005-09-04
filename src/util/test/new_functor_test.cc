@@ -1,14 +1,14 @@
 /**
 	\file "new_functortest.cc"
-	$Id: new_functor_test.cc,v 1.2 2005/03/04 03:17:42 fang Exp $
+	$Id: new_functor_test.cc,v 1.3 2005/09/04 21:15:13 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
-#include "memory/excl_ptr.h"
-#include "new_functor.tcc"
+#include "util/memory/excl_ptr.h"
+#include "util/new_functor.tcc"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::vector;
 using util::new_functor;
 using util::binder_new_functor;
@@ -54,7 +54,7 @@ public:
 typedef	nullary_function_virtual<Base*>		new_functor_base;
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	typedef	vector<new_functor_base*> new_func_vec_type;
 	new_func_vec_type func_vec;
 	new_functor<A,Base> A_ctor;

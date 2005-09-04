@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/ref_count_pool.cc"
 	Implementation of reference count pool allocator.  
-	$Id: ref_count_pool.cc,v 1.3 2005/06/21 21:26:41 fang Exp $
+	$Id: ref_count_pool.cc,v 1.4 2005/09/04 21:15:09 fang Exp $
  */
 
 /**
@@ -51,7 +51,7 @@ get_ref_count_allocator_anchor(void) {
 
 	// this is good, uses new pool to get it's own count!
 	static size_t* const			count = pool->allocate();
-	static const size_t			zero = (*count = 0);
+	static const size_t	zero __ATTRIBUTE_UNUSED__ = (*count = 0);
 
 	// the following is no good because the method of deletion depends
 	// on who the last count-holder is!

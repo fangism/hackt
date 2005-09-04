@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.3 2005/07/23 06:52:39 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.4 2005/09/04 21:14:52 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -116,10 +116,10 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::must_match_type(
  */
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 bad_bool
-PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
-		const type_ref_ptr_type& t) const {
+PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::check_type(
+		const instance_collection_parameter_type& t) const {
 	INVARIANT(this->type_parameter);
-	return bad_bool(this->type_parameter != t->get_base_def());
+	return bad_bool(this->type_parameter != t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -131,17 +131,9 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type(
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
-		const type_ref_ptr_type& t) {
+		const instance_collection_parameter_type& t) {
 	INVARIANT(!this->type_parameter);
-#if 0
-	INVARIANT(t->is_resolved());
-	INVARIANT(t->is_canonical());
-#endif
-	this->type_parameter =
-		t->get_base_def().template is_a<
-			const typename class_traits<Tag>::
-				instance_collection_parameter_type::
-				element_type>();
+	this->type_parameter = t;
 }
 
 //=============================================================================

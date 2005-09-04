@@ -1,18 +1,18 @@
 /**
 	\file "ptrs_test.cc"
 	Test for exclusive pointer classes.  
-	$Id: ptrs_test.cc,v 1.5 2004/12/05 05:08:29 fang Exp $
+	$Id: ptrs_test.cc,v 1.6 2005/09/04 21:15:13 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
 
-#include "obsolete/ptrs.h"
+#include "util/obsolete/ptrs.h"
 #include "var.h"
 #include "func.h"
 
 using std::vector;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using namespace PTRS_NAMESPACE;
 
 
@@ -20,7 +20,7 @@ void basic_vector_test(void);
 void polymorph_test(void);
 void const_polymorph_test(void);
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 	basic_vector_test();
 	polymorph_test();
 	const_polymorph_test();

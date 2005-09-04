@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.3 2005/08/08 23:08:31 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.4 2005/09/04 21:15:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -37,6 +37,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/value_collection.h"
 
+// required by use of canonical_type
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/process_definition.h"
+
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/channel_instantiation_statement.h"
@@ -44,6 +49,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/instantiation_statement.tcc"
 #include "Object/unroll/param_instantiation_statement.tcc"
 
+#include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
@@ -205,8 +211,8 @@ instantiation_statement_base::dimensions(void) const {
 	Temporary, should be pure virtual in the end.
  */
 good_bool
-instantiation_statement_base::unroll(unroll_context& c) const {
-	cerr << "instantiation_statement_base::unroll(): Fang, finish me!" << endl;
+instantiation_statement_base::unroll(const unroll_context& c) const {
+	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
 

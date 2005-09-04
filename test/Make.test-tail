@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.5 2005/08/08 16:51:16 fang Exp $
+#	$Id: Make.test-tail,v 1.6 2005/09/04 21:15:14 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -18,8 +18,10 @@ HACKT_CREATE_TEST_SH = $(top_builddir)/test/hackt-create-expect.sh
 
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
 POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
+POM_INDEX_FILTER = $(AWK) -f $(top_srcdir)/test/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
 ARTOBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
+ANALYZE_DIFF_AWK = $(AWK) -f $(top_srcdir)/test/analyze-dump-diff.awk
 
 TEST_REPORT = $(top_builddir)/test/test-report.txt
 
@@ -54,7 +56,9 @@ subdir.not_a_test:
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(ARTOBJUNROLL_TEST_SH) "\"$(ARTOBJUNROLL_EXE)\"" \
 		"\"$(ARTOBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
+		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) \
+		"\"$(ANALYZE_DIFF_AWK)\"" \
+		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
 .in.hacktcreatetest:
@@ -62,8 +66,34 @@ subdir.not_a_test:
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
 		"\"$(ARTOBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
+		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) \
+		"\"$(ANALYZE_DIFF_AWK)\"" \
+		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
+
+CHECK_SUMMARIES = artcdiffs objdiffs unrolldiffs creatediffs \
+	unrolldiffs.noindex creatediffs.noindex
+
+artcdiffs: force
+	-$(CAT) *.diff > $@
+
+objdiffs: force
+	-$(CAT) *.objdiff > $@
+
+unrolldiffs: force
+	-$(CAT) *.unrolldiff > $@
+
+creatediffs: force
+	-$(CAT) *.creatediff > $@
+
+unrolldiffs.noindex: force
+	-$(CAT) *.unrolldiff.noindex > $@
+
+creatediffs.noindex: force
+	-$(CAT) *.creatediff.noindex > $@
+
+check-summaries: $(CHECK_SUMMARIES)
+	@ls -l $(CHECK_SUMMARIES)
 
 # must be previously defined to use +=
 # assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
@@ -82,7 +112,7 @@ TESTS += $(ARTC_TEST_SUBJECTS:=.artctest) \
 #	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
 
 # must be previously defined
-CLEANFILES += $(TESTS) \
+CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(ARTC_TEST_SUBJECTS:=.diff) \
 	$(ARTC_TEST_SUBJECTS:=.test) \
 	$(ARTC_TEST_SUBJECTS:=.test.filter) \
@@ -114,7 +144,8 @@ all-local: .cvsignore subdir.not_a_test \
 AUTO_IGNORE += local.cvsignore \
 	$(ARTC_TEST_PASSES:=.stderr) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest) \
-	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest)
+	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
+	$(CHECK_SUMMARIES)
 
 # we generate all the local.cvsignore's in the test directories
 local.cvsignore: $(top_srcdir)/test/test.cvsignore
@@ -123,9 +154,26 @@ local.cvsignore: $(top_srcdir)/test/test.cvsignore
 # additional dependence
 .cvsignore: $(top_srcdir)/test/Make.test-tail
 
+# clean tests only
+clean-tests: clean-tests-recursive
+	-$(RM) $(TESTS)
+
+# doesn't work... consider recursive automake for EXTRA_RECURSIVE_TARGETS
+# RECURSIVE_TARGETS += clean-tests-recursive
+
+clean-tests-recursive:
+	@for d in $(SUBDIRS) ; do \
+		if [ $$d != . ] ; then \
+			if [ -d $$d ] ; then \
+				$(MAKE) -C $$d clean-tests ; \
+			fi ; \
+		fi ; \
+	done
+
 # automatically removes $(CLEANFILES)
 clean-local:
 	-$(RM) *.core core.*
+	-$(RM) *.noindex
 
 # really remove these files!
 cleaner: clean cleaner-recursive
@@ -134,6 +182,7 @@ cleaner: clean cleaner-recursive
 	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.artobjunroll *.unrolldump *.unrolldiff
 	-$(RM) *.hacktobjcreate *.createdump *.creatediff
+	-$(RM) *.noindex
 
 cleaner-recursive:
 	@for d in $(SUBDIRS) ; do \

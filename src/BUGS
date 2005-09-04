@@ -1,0 +1,23 @@
+"BUGS"
+The jar of known bugs and issues.  
+	$Id: BUGS,v 1.1 2005/09/04 21:14:37 fang Exp $
+
+Hierarchical connections:
+	Instance aliases with relaxed actuals may have NULL actuals
+	only if they are connected to a port.  Internal instances
+	must be strictly specified.  
+	(see test cases: )
+
+	For simplicity, aliases of relaxed types should be explicitly
+	connected into a single alias ring (flat) because of the
+	new method for symmetrically merging rings and the 
+	strict equivalence requirement between aliases (explicit
+	or hierarchical).  
+
+Relaxed actuals:
+	Since strict parameters may not depend on relaxed parameters we 
+	must keep track of the *origin* of values, like a poison bit
+	per value.  This will prevent relaxed parameters from leaking
+	to places where their use is forbidden.  
+	(see test case: )
+

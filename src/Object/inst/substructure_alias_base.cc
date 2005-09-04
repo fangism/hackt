@@ -1,30 +1,59 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4 2005/08/08 16:51:10 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5 2005/09/04 21:14:54 fang Exp $
  */
 
+#include <iostream>
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
+#include "common/ICE.h"
 #include "util/macros.h"
 
 namespace ART {
 namespace entity {
+#include "util/using_ostream.h"
+
 //=============================================================================
+// class substructure_alias_base<false> method definitions
+
+//=============================================================================
+// class substructure_alias_base<true> method definitions
 
 /**
 	Virtually pure virtual.
  */
 ostream&
 substructure_alias::dump_hierarchical_name(ostream& o) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implemented for real in instance_alias_info.  
+ */
+size_t
+substructure_alias::allocate_state(footprint&) const {
+	ICE_NEVER_CALL(cerr);
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subinstance_manager::value_type
-substructure_alias::lookup_port_instance(
-		const instance_collection_base& inst) const {
+substructure_alias::lookup_port_instance(const port_type& inst) const {
 	return subinstances.lookup_port_instance(inst);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const physical_instance_collection>
+substructure_alias::get_container_base(void) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+substructure_alias&
+substructure_alias::__trace_alias_base(const this_type&) const {
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,8 +69,21 @@ substructure_alias::connect_ports(const connection_references_type& cr,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-substructure_alias::allocate_subinstances(void) {
-	return subinstances.allocate();
+substructure_alias::collect_port_aliases(port_alias_tracker& p) const {
+	return subinstances.collect_port_aliases(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+substructure_alias::allocate_subinstances(footprint& f) {
+	return subinstances.allocate(f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// OBSOLETE?
+good_bool
+substructure_alias::replay_substructure_aliases(void) const {
+	return subinstances.replay_internal_aliases();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

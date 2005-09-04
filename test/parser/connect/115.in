@@ -1,0 +1,16 @@
+// "115.in" should fail connection, incompatible relaxed actuals
+// copy-modified from "114.in"
+// testing propagation of relaxed actuals in rings.  
+
+template <pint A><pint B>
+defproc foo();
+
+foo<1> bar, ick<1>, poo, goo, snu<3>, gnu, glu;
+
+bar = ick;	// relaxed connecting to specified, OK
+poo = glu;
+snu = gnu;
+glu = ick;
+ick = goo;
+snu = bar;	// connecting two incompatible alias rings!
+

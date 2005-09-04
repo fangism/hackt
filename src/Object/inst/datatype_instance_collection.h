@@ -2,18 +2,20 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.4 2005/09/04 21:14:48 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 
+#include "Object/type/canonical_type_fwd.h"		// for conditional
 #include "Object/inst/physical_instance_collection.h"
-// #include "Object/common/multikey_index.h"
+#include "Object/traits/data_traits.h"
 
 namespace ART {
 namespace entity {
 class data_type_reference;
+class footprint;
 
 //=============================================================================
 // class instance_collection_base declared in "art_object_instance_base.h"
@@ -25,6 +27,8 @@ class data_type_reference;
 class datatype_instance_collection : public physical_instance_collection {
 private:
 	typedef	physical_instance_collection	parent_type;
+	typedef	datatype_instance_collection	this_type;
+	typedef	class_traits<datatype_tag>	traits_type;
 protected:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type	
@@ -32,6 +36,9 @@ protected:
 	typedef	count_ptr<const data_type_reference>	type_ref_ptr_type;
 	typedef	parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+	// is not a true canonical type, rather, a base type.  
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 protected:
 	explicit
 	datatype_instance_collection(const size_t d) : parent_type(d) { }
@@ -39,6 +46,8 @@ protected:
 	datatype_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
+	datatype_instance_collection(const this_type& t, const footprint& f) :
+		parent_type(t, f) { }
 public:
 
 virtual	~datatype_instance_collection();
@@ -46,24 +55,17 @@ virtual	~datatype_instance_collection();
 virtual	ostream&
 	what(ostream& o) const = 0;
 
-#if 0
-	/** returns the type of the first instantiation statement */
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
-#endif
-
 virtual bool
 	is_partially_unrolled(void) const = 0;
 
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
-virtual	void
-	establish_collection_type(const type_ref_ptr_type&) = 0;
+	void
+	establish_collection_type(const instance_collection_parameter_type&);
 
-	// a better return type?
-virtual	bad_bool
-	commit_type(const type_ref_ptr_type& ) = 0;
+	bad_bool
+	check_established_type(const instance_collection_parameter_type&) const;
 
 // methods for connection and aliasing?
 
@@ -78,7 +80,7 @@ virtual good_bool
 		const unroll_context&) = 0;
 
 virtual	good_bool
-	create_unique_state(const const_range_list&) = 0;
+	create_unique_state(const const_range_list&, footprint&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;

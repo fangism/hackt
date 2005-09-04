@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.4 2005/09/04 21:15:02 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -13,6 +13,7 @@
 #include "Object/traits/class_traits.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
+#include "Object/def/footprint.h"
 
 namespace ART {
 namespace entity {
@@ -40,6 +41,8 @@ public:
 							type_ref_ptr_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
@@ -83,24 +86,15 @@ protected:
 	type_ref_ptr_type
 	get_type(void) const { return type; }
 
-	type_ref_ptr_type
-	get_resolved_type(const unroll_context& c) const {
-		const type_ref_ptr_type ret(type->unroll_resolve(c));
-		if (!ret) {
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context& c) const {
+		const type_ref_ptr_type t(type->unroll_resolve(c));
+		if (!t) {
 			type->what(cerr << "ERROR: unable to resolve ") <<
 				" during unroll." << endl;
+			return instance_collection_parameter_type();
 		}
-#if 0
-		else {
-			// enable later when things are more stable
-			// cache the equivalent resolved type
-			const_cast<this_type*>(this)->type = ret;
-			// NOTE: caching won't work if the type
-			// is loop-dependent!!!
-			// need smarter handling...
-		}
-#endif
-		return ret;
+		return t->make_canonical_type();
 	}
 
 	const_relaxed_args_type
@@ -130,10 +124,16 @@ protected:
 	}
 
 	static
-	void
+	good_bool
 	commit_type_first_time(instance_collection_generic_type& v, 
-			const type_ref_ptr_type& t) {
+			const instance_collection_parameter_type& t) {
+#if 1
+		if (t.is_strict() && !t.unroll_definition_footprint().good) {
+			return good_bool(false);
+		}
+#endif
 		v.establish_collection_type(t);
+		return good_bool(true);
 	}
 
 	/**
@@ -145,9 +145,14 @@ protected:
 	static
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,
-			const type_ref_ptr_type& t) {
+			const instance_collection_parameter_type& t) {
 		// note: automatic conversion from bad_bool to good_bool :)
-		return v.commit_type(t);
+#if 1
+		if (t.is_strict() && !t.unroll_definition_footprint().good) {
+			return good_bool(false);
+		}
+#endif
+		return v.check_established_type(t);
 	}
 
 	static
@@ -162,8 +167,8 @@ protected:
 	static
 	good_bool
 	create_unique_state(instance_collection_generic_type& v, 
-			const const_range_list& crl) {
-		return v.create_unique_state(crl);
+			const const_range_list& crl, footprint& f) {
+		return v.create_unique_state(crl, f);
 	}
 
 	void

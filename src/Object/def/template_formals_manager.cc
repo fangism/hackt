@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.2 2005/07/23 06:52:28 fang Exp $
+	$Id: template_formals_manager.cc,v 1.3 2005/09/04 21:14:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -245,7 +245,7 @@ template_formals_manager::equivalent_template_formals_lists(
 		NEVER_NULL(itf);        // template formals not optional
 		NEVER_NULL(jtf);        // template formals not optional
 		// only type and size need to be equal, not name
-		if (!itf->template_formal_equivalent(jtf)) {
+		if (!itf->template_formal_equivalent(*jtf)) {
 			// useful error message goes here
 			cerr << err_msg << endl;
 			// specifically, which one?

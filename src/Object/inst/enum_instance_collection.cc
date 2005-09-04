@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.4 2005/09/04 21:14:49 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -15,7 +15,7 @@
 #include <algorithm>
 
 #include "Object/inst/enum_instance_collection.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
@@ -23,6 +23,8 @@
 #include "Object/def/enum_datatype_def.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/persistent_type_hash.h"
+
+#include "Object/def/user_def_datatype.h"	// needed by canonical_type
 
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
@@ -56,6 +58,7 @@ namespace entity {
 // explicit class instantiations
 
 template class state_instance<enum_tag>;
+template class instance_pool<state_instance<enum_tag> >;
 template class instance_alias_info<enum_tag>;
 template class instance_collection<enum_tag>;
 template class instance_array<enum_tag, 0>;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3 2005/08/08 16:51:10 fang Exp $
+	$Id: subinstance_manager.h,v 1.4 2005/09/04 21:14:53 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -14,10 +14,12 @@
 namespace ART {
 namespace entity {
 class substructure_manager;
+class footprint;
 class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
 class meta_instance_reference_base;
+class port_alias_tracker;
 template <class> class instance_collection;
 using std::ostream;
 using std::istream;
@@ -46,8 +48,9 @@ using util::persistent_object_manager;
 class subinstance_manager {
 friend class substructure_manager;
 	typedef	subinstance_manager			this_type;
+	typedef	physical_instance_collection	instance_collection_type;
 public:
-	typedef	count_ptr<instance_collection_base>	entry_value_type;
+	typedef	count_ptr<instance_collection_type>	entry_value_type;
 	// just a synonym
 	typedef	entry_value_type			value_type;
 	typedef	vector<value_type>			array_type;
@@ -75,19 +78,17 @@ public:
 	size(void) const { return subinstance_array.size(); }
 
 	void
-	reserve(const size_t s) { subinstance_array.reserve(s); }
+	reserve(const size_t);
 
 	void
-	push_back(const entry_value_type& v) {
-		subinstance_array.push_back(v);
-	}
+	push_back(const entry_value_type&);
 
 	ostream&
 	dump(ostream&) const;
 
 	// TODO: assertion check that arg is a port member of this type?
 	value_type
-	lookup_port_instance(const instance_collection_base&) const;
+	lookup_port_instance(const instance_collection_type&) const;
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>
@@ -96,19 +97,29 @@ public:
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
 
+	void
+	collect_port_aliases(port_alias_tracker&) const;
+
 	good_bool
 	connect_ports(const connection_references_type&, 
 		const unroll_context&);
 
 	void
-	allocate(void);
+	allocate(footprint&);
+
+	static
+	good_bool
+	synchronize_port_actuals(this_type&, this_type&);
 
 	// const is bogus here (temporary workaround)
-	void
-	create_state(const this_type&);
+	good_bool
+	create_state(const this_type&, footprint&);
 
 	void
-	inherit_state(const this_type&);
+	inherit_state(const this_type&, const footprint&);
+
+	good_bool
+	replay_internal_aliases(void) const;
 
 	// for each entry, re-link
 	void

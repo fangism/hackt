@@ -1,4 +1,4 @@
-// should fail: mismatch of port formal name
+// "006.in" should fail: mismatch of port formal name
 
 typedef	bool	node;
 typedef node	my_bool;

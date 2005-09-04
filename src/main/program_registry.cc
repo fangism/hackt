@@ -1,13 +1,14 @@
 /**
 	\file "main/program_registry.cc"
 	Implementation of core hackt program registration interface.  
-	$Id: program_registry.cc,v 1.2 2005/07/25 14:55:06 fang Exp $
+	$Id: program_registry.cc,v 1.3 2005/09/04 21:15:06 fang Exp $
  */
 
 #include <iostream>
 #include "main/program_registry.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "util/attributes.h"
 
 namespace ART {
 #include "util/using_ostream.h"
@@ -24,7 +25,7 @@ program_entry::get_program_registry(void) {
 	static program_registry_type*	reg = new program_registry_type();
 	STATIC_RC_POOL_REF_INIT;	// defined in "util/memory/count_ptr.h"
 	static size_t*			count = NEW_SIZE_T;
-	static const size_t		zero = (*count = 0);
+	static const size_t	zero __ATTRIBUTE_UNUSED__ = (*count = 0);
 	return util::memory::raw_count_ptr<program_registry_type>(reg, count);
 }
 

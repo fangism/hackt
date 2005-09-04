@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_alias.h"
 	Definition-related ART object classes.  
 	This file came from "art_object_definition_chan.h".
-	$Id: channel_definition_alias.h,v 1.2 2005/07/23 06:52:24 fang Exp $
+	$Id: channel_definition_alias.h,v 1.3 2005/09/04 21:14:41 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
@@ -53,6 +53,11 @@ public:
 
 	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO;
 
+	MAKE_CANONICAL_CHANNEL_TYPE_PROTO;
+
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

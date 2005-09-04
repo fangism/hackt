@@ -1,22 +1,22 @@
 /**
 	\file "deque_iterator_test.cc"
 	Testing if we can save away iterators of a deque.
-	$Id: deque_iterator_test.cc,v 1.4 2004/12/05 05:08:28 fang Exp $
+	$Id: deque_iterator_test.cc,v 1.5 2005/09/04 21:15:10 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 #include <deque>
-#include "memory/pointer_classes.h"
+#include "util/memory/pointer_classes.h"
 
 using std::deque;
 using std::string;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using namespace util::memory;
 
 typedef	deque<count_ptr<string> >		string_deck;
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 	string_deck foo;
 	foo.push_front(count_ptr<string>(new string("first")));
 	string_deck::const_iterator one = foo.begin();

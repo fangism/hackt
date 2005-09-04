@@ -3,32 +3,19 @@
 	Class declarations for process instance and collections.  
 	This file originated from "Object/art_object_instance_proc.h"
 		in a previous life.
-	$Id: process_instance_collection.h,v 1.3 2005/08/08 16:51:10 fang Exp $
+	$Id: process_instance_collection.h,v 1.4 2005/09/04 21:14:53 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/physical_instance_collection.h"
-#include "Object/traits/proc_traits.h"
+#include "Object/inst/process_instance.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
-#include "Object/inst/state_instance.h"
 
 namespace ART {
 namespace entity {
-//=============================================================================
-/**
-	An actual instantiated instance of an process.
-	These are not constructed until after unrolling.  
-	A final pass is required to construct the instances.  
-	Needs to be pool allocated for efficient unique construction. 
- */
-class class_traits<process_tag>::state_instance_base {
-protected:
-
-};	// end class state_instance_base
-
 //=============================================================================
 // convenient typedefs
 

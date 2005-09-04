@@ -6,7 +6,7 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.6 2005/05/10 04:51:25 fang Exp $
+	$Id: macros.h,v 1.7 2005/09/04 21:15:07 fang Exp $
  */
 
 #ifndef	__UTIL_MACROS_H__
@@ -16,7 +16,11 @@
 #define	NULL			0
 #endif
 
+#if defined(HAVE_CASSERT) && HAVE_CASSERT
 #include <cassert>
+#else
+#include <assert.h>
+#endif
 
 //=============================================================================
 /**
@@ -63,7 +67,8 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Abbreviation for reinterpret_cast.
-	Please don't use reinterpret_cast, they are distasteful and dangerous. 
+	Please minimize use of reinterpret_cast,
+	they are distasteful and dangerous (and rarely necessary). 
  */
 #define	TO_A(type, id)		reinterpret_cast<type>(id)
 

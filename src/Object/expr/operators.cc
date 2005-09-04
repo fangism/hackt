@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.4 2005/08/08 23:08:29 fang Exp $
+ 	$Id: operators.cc,v 1.5 2005/09/04 21:14:46 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -131,6 +131,12 @@ pint_unary_expr::is_static_constant(void) const {
 bool
 pint_unary_expr::is_relaxed_formal_dependent(void) const {
 	return ex->is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_unary_expr::is_template_dependent(void) const {
+	return ex->is_template_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,6 +322,12 @@ pbool_unary_expr::is_static_constant(void) const {
 bool
 pbool_unary_expr::is_relaxed_formal_dependent(void) const {
 	return ex->is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_unary_expr::is_template_dependent(void) const {
+	return ex->is_template_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -529,6 +541,13 @@ bool
 pint_arith_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_arith_expr::is_template_dependent(void) const {
+	return lx->is_template_dependent() ||
+		rx->is_template_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -841,6 +860,14 @@ pint_relational_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pint_relational_expr::is_template_dependent(void) const {
+	return lx->is_template_dependent() ||
+		rx->is_template_dependent();
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_relational_expr::is_loop_independent(void) const {
@@ -1090,6 +1117,13 @@ bool
 pbool_logical_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_logical_expr::is_template_dependent(void) const {
+	return lx->is_template_dependent() ||
+		rx->is_template_dependent();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

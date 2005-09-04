@@ -17,6 +17,7 @@ core.*
 *.hacktobjcreate
 *.createdump
 *.creatediff
+*.noindex
 ignore
 Makefile
 Makefile.in

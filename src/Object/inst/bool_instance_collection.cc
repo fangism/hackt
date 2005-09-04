@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.4 2005/09/04 21:14:48 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -23,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/inst/bool_instance_collection.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
@@ -84,6 +84,7 @@ operator << (ostream& o, const bool_instance_alias_base& b) {
 // explicit instantiations
 
 template class state_instance<bool_tag>;
+template class instance_pool<state_instance<bool_tag> >;
 template class instance_alias_info<bool_tag>;
 template class instance_collection<bool_tag>;
 template class instance_array<bool_tag, 0>;

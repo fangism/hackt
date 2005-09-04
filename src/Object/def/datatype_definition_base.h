@@ -2,13 +2,14 @@
 	\file "Object/def/datatype_definition_base.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.2 2005/07/23 06:52:25 fang Exp $
+	$Id: datatype_definition_base.h,v 1.3 2005/09/04 21:14:42 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
 #define	__OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
 
 #include "Object/def/definition_base.h"
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -20,6 +21,8 @@ class data_type_reference;
 class datatype_definition_base : virtual public definition_base {
 private:
 	typedef	definition_base				parent_type;
+public:
+	typedef	data_type_reference			type_reference_type;
 public:
 	datatype_definition_base() : definition_base() { }
 
@@ -46,13 +49,23 @@ virtual	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
 #define	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO			\
 	count_ptr<const data_type_reference>				\
-	make_canonical_type_reference(const template_actuals&) const
+	make_canonical_fundamental_type_reference(const template_actuals&) const
 
 virtual	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO = 0;
+
+#define	MAKE_CANONICAL_DATA_TYPE_PROTO					\
+	canonical_generic_datatype					\
+	make_canonical_type(const template_actuals&) const
+
+virtual	MAKE_CANONICAL_DATA_TYPE_PROTO = 0;
 
 virtual	good_bool
 	require_signature_match(
 		const never_ptr<const definition_base> d) const = 0;
+
+virtual	REGISTER_COMPLETE_TYPE_PROTO = 0;
+virtual	UNROLL_COMPLETE_TYPE_PROTO = 0;
+virtual	CREATE_COMPLETE_TYPE_PROTO = 0;
 
 protected:
 	using parent_type::collect_transient_info_base;

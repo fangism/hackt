@@ -2,14 +2,14 @@
 	\file "util/memory/thread_lock.h"
 	Thread locking.  
 
-	$Id: thread_lock.h,v 1.3 2005/05/10 04:51:34 fang Exp $
+	$Id: thread_lock.h,v 1.4 2005/09/04 21:15:09 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_THREAD_LOCK_H__
 #define	__UTIL_MEMORY_THREAD_LOCK_H__
 
-#include "util/macros.h"
-#include <pthread.h>
+#include "util/pthread.h"
+#include "util/attributes.h"
 
 // because FreeBSD's <pthreads.h> defines initializer as NULL
 // and I haven't figured out a workaround yet.
@@ -29,7 +29,6 @@ namespace memory {
 
 template <bool>
 class pool_thread_lock;
-// may need __attribute__ ((__unused__))
 
 /**
 	Null lock, not-a-lock.  
@@ -41,7 +40,7 @@ public:
 	pool_thread_lock(mutex_type* const) { }
 
 	~pool_thread_lock() { }
-};
+} __ATTRIBUTE_UNUSED__ ;
 
 template <>
 class pool_thread_lock<true> {
@@ -54,7 +53,7 @@ public:
 	pool_thread_lock(mutex_type* const);
 
 	~pool_thread_lock();
-};
+} __ATTRIBUTE_UNUSED__ ;
 
 //=============================================================================
 }	// end namespace memory

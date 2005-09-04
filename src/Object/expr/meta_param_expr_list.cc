@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.4 2005/08/08 23:08:28 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.5 2005/09/04 21:14:45 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -90,16 +90,44 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_param_expr_list::dump(ostream& o) const {
+#if 0
 	if (empty()) return o;
 	// else at least 1 item in list
 	// hint: ostream_iterator
 	const_iterator i(begin());
+	const const_iterator e(end());
 	NEVER_NULL(*i);
 	(*i)->dump(o);
-	for (i++; i!=end(); i++) {
+	for (i++; i!=e; i++) {
 		o << ", ";
 		NEVER_NULL(*i);
 		(*i)->dump(o);
+	}
+	return o;
+#else
+	if (empty())	return o;
+	else		return dump_range(o, 0, size());
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dump a slice of the parameter list from index [j,k).
+ */
+ostream&
+const_param_expr_list::dump_range(ostream& o, 
+		const size_t j, const size_t k) const {
+	INVARIANT(j <= k);
+	INVARIANT(k <= size());
+	if (j == k)
+		return o;
+	const_iterator i(begin() +j);
+	const const_iterator e(begin() +k);
+	NEVER_NULL(*i);
+	(*i)->dump(o);
+	for (i++; i!=e; i++) {
+		NEVER_NULL(*i);
+		(*i)->dump(o << ", ");
 	}
 	return o;
 }
@@ -107,6 +135,7 @@ const_param_expr_list::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 const_param_expr_list::size(void) const {
+	STACKTRACE_VERBOSE;
 	return parent_type::size();
 }
 
@@ -199,6 +228,9 @@ if (cpl) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if all parameters are equivalent.  
+ */
 bool
 const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	const const_param_expr_list* cpl =
@@ -206,6 +238,10 @@ const_param_expr_list::must_be_equivalent(const param_expr_list& p) const {
 	STACKTRACE("const_expr_list::must_equivalent()");
 if (cpl) {
 	STACKTRACE("const vs. const");
+#if 0
+	// use this
+	return must_be_equivalent(*cpl);
+#else
 	if (size() != cpl->size())
 		return false;
 	const_iterator i(begin());
@@ -220,6 +256,7 @@ if (cpl) {
 	}
 	INVARIANT(j == cpl->end());		// sanity
 	return true;
+#endif
 } else {
 	STACKTRACE("const vs. dynamic");
 	const dynamic_param_expr_list* dpl =
@@ -240,6 +277,81 @@ if (cpl) {
 	INVARIANT(j == dpl->end());		// sanity
 	return true;
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s the number of strict formal parameters to compare
+		before terminating.  
+ */
+bool
+const_param_expr_list::must_be_equivalent(
+		const this_type& cpl, const size_t s) const {
+	INVARIANT(s <= size());
+	INVARIANT(s <= cpl.size());
+	if (size() != cpl.size())
+		return false;
+	const_iterator i(begin());
+	const_iterator j(cpl.begin());
+	const const_iterator e(begin() +s);
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		INVARIANT(ip && jp);
+		if (!ip->must_be_equivalent_generic(*jp))
+			return false;
+		// else continue checking...
+	}
+	INVARIANT(j == cpl.begin() +s);		// sanity
+	// if there more parameters, they should be checked
+	for ( ; i!=end() && j!=cpl.end(); i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		if (ip && jp) {
+			if (!ip->must_be_equivalent_generic(*jp))
+				return false;
+			// else continue
+		}
+		// else at least one of them is NULL, continue comparing
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Compares the actuals starting with the relaxed actuals only
+	against the argument list.  
+	\pre the number of relaxed actuals is consistent with the 
+		argument.  
+ */
+bool
+const_param_expr_list::is_tail_equivalent(const this_type& cpl) const {
+	const size_t arg_size = cpl.size();
+	const size_t t_size  = size();
+	INVARIANT(arg_size <= t_size);
+	const size_t skip = t_size -arg_size;
+	const_iterator i(begin() +skip);
+	const_iterator j(cpl.begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++, j++) {
+		const count_ptr<const const_param>& ip(*i);
+		const count_ptr<const const_param>& jp(*j);
+		INVARIANT(ip && jp);
+		if (!ip->must_be_equivalent_generic(*jp))
+			return false;
+		// else continue checking...
+	}
+	INVARIANT(j == cpl.end());
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	All parameters must match.
+ */
+bool
+const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
+	return must_be_equivalent(cpl, size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -436,20 +548,58 @@ if (a_size != f_size) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Dereference and compare.
+	Could go in a standard library.  
+ */
+bool
+const_param_expr_list::less_ptr::operator () (
+		const value_type& l, const value_type& r) const {
+	NEVER_NULL(l);
+	NEVER_NULL(r);
+	return *l < *r;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overriding the default comparison (between 2 vectors lexicographical)
+	Comparison is used by the footprint_manager of definitions.  
+ */
+bool
+const_param_expr_list::operator < (const this_type& t) const {
+	INVARIANT(size() == t.size());
+	return std::lexicographical_compare(
+		begin(), end(), t.begin(), t.end(), less_ptr());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursively visits pointer list to register expression
 	objects with the persistent object manager.
+	Does not register itself persistently.  
  */
 void
-const_param_expr_list::collect_transient_info(
+const_param_expr_list::collect_transient_info_base(
 		persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const const_param> ip(*i);
 		ip->collect_transient_info(m);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively visits pointer list to register expression
+	objects with the persistent object manager.
+	Does register itself persistently.  
+ */
+void
+const_param_expr_list::collect_transient_info(
+		persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
 }
 // else already visited
 }
@@ -545,6 +695,7 @@ dynamic_param_expr_list::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_param_expr_list::size(void) const {
+	STACKTRACE_VERBOSE;
 	return parent_type::size();
 }
 
@@ -593,6 +744,20 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 				"relaxed formal parameter." << endl;
 			return true;
 		}
+		// else continue checking...
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+dynamic_param_expr_list::is_template_dependent(void) const {
+	const_iterator i(begin());
+	for ( ; i!=end(); i++) {
+		const count_ptr<const param_expr> ip(*i);
+		NEVER_NULL(ip);	// nothing may be NULL at this point!
+		if (ip->is_template_dependent())
+			return true;
 		// else continue checking...
 	}
 	return false;

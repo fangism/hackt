@@ -1,0 +1,43 @@
+// "120.in" -- testing creation connections, involving relaxed params
+// copy-modified from "117.in"
+// should fail during creation when we discover the error:
+// NOTE: This is a KNOWN BUG (2005-08-18)
+// KNOWN FIX(?): in instance_collection.tcc: when synchronizing actuals
+//	recursively, need to collect the actuals from the subinstances
+//	ALIASES not just it's own.  
+// see the expected trace below
+
+template <pint X><pint Y>
+defproc foo() { }
+
+template <pint Z>
+defproc bar(foo<Z> a, b) { }
+
+defproc ick(bar<3> y) { }
+
+foo<3> x<2>;
+foo<3> y<5>;
+bar<3> p, q;
+p(x, );
+q(y, );
+ick m(p), n(q);
+m = n;
+// error: ports are connected to aliases with different relaxed actuals!
+
+/***
+expected trace:
+super-instance connection invocation finds m = n
+implicitly m.y (= p) = n.y (= q)
+	synchronize m.y and p (aliases)
+		m.y.a = p.a (=x<2>)
+	synchronize n.y and q (aliases)
+		n.y.a = q.a (=x<5>)
+back to m.y = n.y with internally updated aliases
+	then m.y.a = n.y.a should find conflict <2> vs. <5>
+CONCERN: is alias synchronization going to be invoked repeatedly redundantly?
+	should be top-down only...
+	should it be done at __allocate_state time?  YES, will only happen once
+		call synchronize_alias_actuals_recursive at allocation time.
+		should happen BEFORE recursive allocation?
+***/
+

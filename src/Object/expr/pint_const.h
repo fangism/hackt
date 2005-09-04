@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.2 2005/07/20 21:00:49 fang Exp $
+	$Id: pint_const.h,v 1.3 2005/09/04 21:14:47 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_CONST_H__
@@ -86,6 +86,9 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
 
+	bool
+	is_template_dependent(void) const { return false; }
+
 	count_ptr<const const_param>
 	static_constant_param(void) const;
 
@@ -131,6 +134,8 @@ public:
 
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
+
+	LESS_OPERATOR_PROTO;
 
 private:
 	excl_ptr<param_expression_assignment>

@@ -1,15 +1,14 @@
 /**
 	\file "pooled_thing.h"
 	Example of a simple pool-allocated class, using the util library.  
-	$Id: pooled_thing.h,v 1.2 2005/03/06 04:36:50 fang Exp $
+	$Id: pooled_thing.h,v 1.3 2005/09/04 21:15:13 fang Exp $
  */
 
 #ifndef	__POOLED_THING_H__
 #define	__POOLED_THING_H__
 
-#include <cstddef>		// for size_t
-// forward declarations is enough
-#include "memory/list_vector_pool_fwd.h"
+#include "util/size_t.h"	// "util/size_t.h"
+#include "util/memory/list_vector_pool_fwd.h"
 
 using util::memory::list_vector_pool;
 

@@ -3,17 +3,39 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.5 2005/08/08 16:51:02 fang Exp $
+#	$Id: configure.ac,v 1.6 2005/09/04 21:14:35 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20050808, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20050904, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
+
+# ripped from ngspice's configure.in
+# TODO: rip the library and header checks too, to be invoked later
+# It would be a good idea to see how they handled compatiblity between the two
+dnl --with-readline:  Includes GNU readline support into CLI.  Default is "no".
+dnl Including readline into ngspice is a violation of GPL license. It's use
+dnl is discouraged.
+AC_ARG_WITH(readline,
+	AS_HELP_STRING([--with-readline[=yes/no]],
+		[Enable GNU readline support for CLI.  Default=no.]))
+
+dnl --with-editline:  Includes BSD Editline support into CLI.  Default is "no".
+AC_ARG_WITH(editline,
+	AS_HELP_STRING([--with-editline[=yes/no]],
+		[Enable BSD editline support for CLI.  Default=no.]))
+
+dnl readline and editline cannot both be enabled
+if test "$with_editline" = "yes"; then
+	if test "$with_readline" = "yes"; then
+		AC_MSG_ERROR(Readline and editline cannot both be enabled)
+	fi
+fi
 
 AC_CANONICAL_HOST
 AC_CHECK_PROG([SH], sh, sh)
@@ -70,13 +92,39 @@ AC_SUBST(LIBTOOL_DEPS)
 LIBTOOL="$LIBTOOL --silent"
 
 AC_PROG_CXX
+# need to set LANG to C++ to check for C++ headers
+# TODO: should use AC_SAVE_LANG and AC_RESTORE_LANG
+AC_LANG(C++)
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
-# AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
+# C++ wrappers to standard C headers
+AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
+# checking all possible locations of (some equivalent) header files
+# spanning versions gcc-2.95 to 4.x
+# I bet you didn't know some of these locations were ever used!
+# However, you're not supposed to use anything older than gcc-3.3 anyways...
+
+# where is that damn hash_map?
+AC_CHECK_HEADERS([ext/hash_map hash_map])
+# used mainly in "src/util/hash_specializations.h"
+AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
+AC_CHECK_HEADERS([ext/hash_set hash_set])
+AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
+AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
+AC_CHECK_HEADERS([ext/functional tr1/functional])
+# used in "src/util/string_fwd.h"
+AC_CHECK_HEADERS([bits/stringfwd.h])
+AC_CHECK_HEADERS([bits/concept_check.h])
+AC_CHECK_HEADERS([bits/type_traits.h tr1/type_traits tr1/type_traits_fwd.h type_traits.h])
+# among these, only sstream should be used, the rest are long gone
+AC_CHECK_HEADERS([sstream strstream stringstream])
+# can't include <tr1/boost_shared_ptr.h> directly
+AC_CHECK_HEADERS([tr1/memory])
+AC_CHECK_HEADERS([tr1/tuple tr1/array])
 
 # compiler characteristic checks
 AC_HEADER_STDBOOL
@@ -186,6 +234,50 @@ else
 	AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
 
+
+
+# shamelessly copied autoconf snippet from ngspige's configure.in
+dnl	Option to include GNU readline support in ngspice CLI
+dnl	Default: disabled.
+dnl	Hope to see in the future readline replacement.
+if test "$with_readline" != "yes"; then
+	AC_MSG_RESULT(GNU readline disabled.)
+else
+	AC_MSG_RESULT(Checking for readline:)
+	AC_CHECK_HEADERS([readline/readline.h readline/history.h],
+		[AC_DEFINE(HAVE_GNUREADLINE,[],
+			[Define if we have GNU readline])],
+		[AC_MSG_ERROR(Couldn't find GNU readline headers.)])
+	AC_SEARCH_LIBS(tputs,ncurses termcap,
+		AC_DEFINE(HAVE_TERMCAP,[],
+			[Define if we have ncurses or termcap]),
+		AC_MSG_ERROR(Found neither ncurses or termcap))
+	AC_CHECK_LIB(readline, readline,
+		[LIBS="$LIBS -lreadline"],
+		[AC_MSG_ERROR(Couldn't find readline libraries.)])
+fi
+
+dnl	Option to include BSD editline support in ngspice CLI
+dnl	Default: disabled.
+if test "$with_editline" != "yes"; then
+	AC_MSG_RESULT(BSD editline disabled.)
+else
+	AC_MSG_RESULT(Checking for editline:)
+	AC_CHECK_HEADERS([editline/readline.h],
+		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
+			[Define to enable BSD editline])],
+		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
+	AC_SEARCH_LIBS(tputs,ncurses termcap,
+		AC_DEFINE(HAVE_TERMCAP,[],
+			[Define if we have ncurses or termcap]),
+		AC_MSG_ERROR(Found neither ncurses or termcap))
+	AC_CHECK_LIB(edit, readline,
+		[LIBS="$LIBS -ledit"],
+		[AC_MSG_ERROR(Couldn't find editline libraries.)],
+		-lncurses )
+fi
+# end shameless copying from ngspice::configure.in
+
 AC_CONFIG_FILES([
 	Makefile
 	src/Makefile
@@ -222,6 +314,8 @@ AC_CONFIG_FILES([
 AC_OUTPUT
 
 # make configure-generated scripts executable
+# NOTE: auto-reconf will not re-execute these commands, so you may
+# have to re-run configure -C to rexecute these to make the scripts executable.
 chmod +x src/util/test/test-expect.sh
 chmod +x test/test-series.sh
 chmod +x test/artc-expect.sh

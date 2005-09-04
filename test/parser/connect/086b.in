@@ -1,0 +1,11 @@
+// "086b.in" should pass, because we accept declared but undefined
+// channel types during unrolling (they have no internal aliases)
+
+defchan fake_chan <: chan(int) (int d; bool e);
+
+defproc chan_proc(fake_chan L, R) { }
+
+fake_chan X, Y;
+
+chan_proc P(X, Y);
+

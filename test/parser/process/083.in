@@ -1,0 +1,13 @@
+// "083.in" should pass, will recursively instantiate ports
+// copy-reduced from "082.in"
+
+defproc foo(bool a, b, c) { }
+
+defproc bar(foo x, y, z) {
+	// internally alias the 4 corners
+	x(z.a, , z.c);
+	z(x.c, , z.a);
+}
+
+bar poo;
+

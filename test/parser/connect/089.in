@@ -2,7 +2,7 @@
 // copy-modified from "088.in"
 
 template <pint A>
-defproc foo();
+defproc foo() { }
 
 foo<1> bar[2], ick, poo[2];
 

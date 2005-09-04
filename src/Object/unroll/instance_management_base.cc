@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.4 2005/08/08 23:08:31 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.5 2005/09/04 21:15:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -49,7 +49,7 @@ USING_STACKTRACE
 	Default action does nothing.  
  */
 good_bool
-instance_management_base::unroll_meta_evaluate(unroll_context& ) const {
+instance_management_base::unroll_meta_evaluate(const unroll_context&) const {
 	return good_bool(true);
 }
 
@@ -60,7 +60,7 @@ instance_management_base::unroll_meta_evaluate(unroll_context& ) const {
 	Default action does nothing.  
  */
 good_bool
-instance_management_base::unroll_meta_instantiate(unroll_context& ) const {
+instance_management_base::unroll_meta_instantiate(const unroll_context&) const {
 	return good_bool(true);
 }
 
@@ -71,7 +71,7 @@ instance_management_base::unroll_meta_instantiate(unroll_context& ) const {
 	Default action does nothing.  
  */
 good_bool
-instance_management_base::unroll_meta_connect(unroll_context& ) const {
+instance_management_base::unroll_meta_connect(const unroll_context&) const {
 	return good_bool(true);
 }
 
@@ -81,7 +81,8 @@ instance_management_base::unroll_meta_connect(unroll_context& ) const {
 	Only instantiation_statements actually provide a real implementation.  
  */
 good_bool
-instance_management_base::create_unique(const unroll_context&) const {
+instance_management_base::create_unique(const unroll_context&,
+		footprint&) const {
 	return good_bool(true);
 }
 
@@ -141,7 +142,7 @@ sequential_scope::append_instance_management(
 	This may be temporary.  
  */
 good_bool
-sequential_scope::unroll(unroll_context& c) const {
+sequential_scope::unroll(const unroll_context& c) const {
 	STACKTRACE("sequential_scope::unroll()");
 #if 0
 	for_each(instance_management_list.begin(), 
@@ -166,7 +167,7 @@ sequential_scope::unroll(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-sequential_scope::unroll_meta_evaluate(unroll_context& c) const {
+sequential_scope::unroll_meta_evaluate(const unroll_context& c) const {
 	STACKTRACE("sequential_scope::unroll_meta_evaluate()");
 	const_iterator i(instance_management_list.begin());
 	const const_iterator e(instance_management_list.end());
@@ -180,7 +181,7 @@ sequential_scope::unroll_meta_evaluate(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-sequential_scope::unroll_meta_instantiate(unroll_context& c) const {
+sequential_scope::unroll_meta_instantiate(const unroll_context& c) const {
 	STACKTRACE("sequential_scope::unroll_meta_instantiate()");
 	const_iterator i(instance_management_list.begin());
 	const const_iterator e(instance_management_list.end());
@@ -194,7 +195,7 @@ sequential_scope::unroll_meta_instantiate(unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-sequential_scope::unroll_meta_connect(unroll_context& c) const {
+sequential_scope::unroll_meta_connect(const unroll_context& c) const {
 	STACKTRACE("sequential_scope::unroll_meta_connect()");
 	const_iterator i(instance_management_list.begin());
 	const const_iterator e(instance_management_list.end());
@@ -207,13 +208,16 @@ sequential_scope::unroll_meta_connect(unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: need a pass for hierarchical gluing.  
+ */
 good_bool
-sequential_scope::create_unique(const unroll_context& c) const {
+sequential_scope::create_unique(const unroll_context& c, footprint& f) const {
 	STACKTRACE("sequential_scope::create_unique()");
 	const_iterator i(instance_management_list.begin());
 	const const_iterator e(instance_management_list.end());
 	for ( ; i!=e; i++) {
-		if (!(*i)->create_unique(c).good) {
+		if (!(*i)->create_unique(c, f).good) {
 			return good_bool(false);
 		}
 	}

@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.2 2005/07/23 06:52:24 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.3 2005/09/04 21:14:41 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -61,6 +61,8 @@ public:
 
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
+	MAKE_CANONICAL_DATA_TYPE_PROTO;
+
 	never_ptr<const instance_collection_base>
 	add_template_formal(excl_ptr<instance_collection_base>& f);
 
@@ -68,6 +70,10 @@ public:
 	require_signature_match(const never_ptr<const definition_base> d) const
 		{ assert(d); return good_bool(key == d->get_name()); }
 		// really, this should never be called...
+
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
 public:
 	// actually going to de/serialize built-in type, only to be
 	// intercepted and replaced by data_type_reference::load_object

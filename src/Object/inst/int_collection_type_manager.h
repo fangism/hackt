@@ -1,13 +1,14 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.2 2005/07/20 21:00:51 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.3 2005/09/04 21:14:50 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 #define	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 
-#include <iosfwd>
+#include <iostream>
+#include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/expr/types.h"		// for pint_value_type
@@ -16,6 +17,8 @@ namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
+#include "util/using_ostream.h"
+using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
 template <class> class class_traits;
@@ -60,29 +63,50 @@ protected:
 	// because we may need to extract from the index_collection
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type&) const;
-	
+
+public:
+	const instance_collection_parameter_type&
+	get_canonical_type(void) const { return type_parameter; }
+
 	bool
 	is_relaxed_type(void) const { return false; }
 
+	/**
+		ints don't have footprints.
+	 */
+	static
+	good_bool
+	create_definition_footprint(
+			const instance_collection_parameter_type& t) {
+		return good_bool(true);
+	}
+
+protected:
 	/**
 		NOTE: called during connection checking.  
 	 */
 	bool
 	must_match_type(const this_type& t) const {
-		return type_parameter == t.type_parameter;
+		if (type_parameter == t.type_parameter) {
+			return true;
+		} else {
+			cerr << "ERROR: integer widths do not match!  "
+				"have: " << type_parameter << " vs. " <<
+				t.type_parameter << endl;
+			return false;
+		}
 	}
 
 
-	// TODO: rename me!!!
 	bad_bool
-	commit_type(const type_ref_ptr_type&) const;
+	check_type(const instance_collection_parameter_type&) const;
 
 	/**
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
 	void
-	commit_type_first_time(const type_ref_ptr_type& t);
+	commit_type_first_time(const instance_collection_parameter_type& t);
 
 private:
 	static

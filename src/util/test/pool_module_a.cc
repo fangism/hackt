@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.3 2005/06/21 21:26:42 fang Exp $
+	$Id: pool_module_a.cc,v 1.4 2005/09/04 21:15:13 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -10,14 +10,14 @@
 #define	ENABLE_STATIC_TRACE				1
 
 #include <iostream>
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 #include "pool_module_a.h"
 #include "pool_module_b.h"
-#include "stacktrace.h"
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool.tcc"
-#include "static_trace.h"
+#include "util/stacktrace.h"
+#include "util/memory/pointer_classes.h"
+#include "util/memory/list_vector_pool.tcc"
+#include "util/static_trace.h"
 
 USING_STACKTRACE
 using util::memory::count_ptr;

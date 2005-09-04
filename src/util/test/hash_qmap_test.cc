@@ -1,17 +1,17 @@
 /**
 	\file "hash_qmap_test.cc"
 	Test for queryable hash map.
-	$Id: hash_qmap_test.cc,v 1.6 2005/02/27 22:54:30 fang Exp $
+	$Id: hash_qmap_test.cc,v 1.7 2005/09/04 21:15:11 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
-#include "hash_qmap.tcc"
-#include "memory/excl_ptr.h"
-#include "hash_specializations.h"
+#include "util/hash_qmap.tcc"
+#include "util/memory/excl_ptr.h"
+#include "util/hash_specializations.h"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::string;
 using util::hash_qmap;
 using namespace util::memory;
@@ -31,7 +31,7 @@ ostream& operator << (ostream& o, const test_map_type& map) {
 	return o;
 }
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 	test_map_type m;
 	cout << m << endl;
 	excl_ptr<string> s0(new string("one"));

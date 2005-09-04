@@ -1,17 +1,17 @@
 /**
 	\file "count_ptr_test.cc"
 	Test program for checking reference-counted pointers.  
-	$Id: count_ptr_test.cc,v 1.6 2005/05/19 18:43:38 fang Exp $
+	$Id: count_ptr_test.cc,v 1.7 2005/09/04 21:15:10 fang Exp $
  */
 
 #include <iostream>
 #include <string>
 
 #include "var.h"
-#include "memory/count_ptr.tcc"
+#include "util/memory/count_ptr.tcc"
 
 using std::string;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using namespace util::memory;
 
 
@@ -19,7 +19,7 @@ static void test0(void);
 static void test1(void);
 static void test2(void);
 
-int main(int argc, char* argv[]) {
+int main(int, char*[]) {
 	test0();
 	test1();
 	test2();

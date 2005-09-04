@@ -2,17 +2,18 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3 2005/08/08 16:51:09 fang Exp $
+	$Id: physical_instance_collection.h,v 1.4 2005/09/04 21:14:52 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
-// #include "Object/common/multikey_index.h"
 
 namespace ART {
 namespace entity {
+class port_alias_tracker;
+
 //=============================================================================
 // class instance_collection_base defined in "Object/inst/instance_collection_base.h"
 
@@ -37,8 +38,13 @@ protected:
 	physical_instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 
-public:
+	physical_instance_collection(const this_type& t, const footprint& f) :
+		parent_type(t, f) { }
 
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
+public:
 virtual	~physical_instance_collection();
 
 	ostream&
@@ -61,11 +67,9 @@ virtual	~physical_instance_collection();
 #endif
 
 // macro co-defined in "Object/art_object_instance_collection.h"
-#ifndef	UNROLL_PORT_ONLY_PROTO
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
-#endif
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
 
@@ -75,14 +79,29 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream& o) const = 0;
 
-virtual	void
-	allocate_state(void) = 0;
+virtual	good_bool
+	allocate_state(footprint&) = 0;
+
+virtual	good_bool
+	merge_created_state(this_type&, footprint&) = 0;
 
 virtual	void
-	merge_created_state(this_type&) = 0;
+	inherit_created_state(const this_type&, const footprint&) = 0;
 
-virtual	void
-	inherit_created_state(const this_type&) = 0;
+virtual	good_bool
+	synchronize_actuals(this_type&) = 0;
+
+#define	CREATE_DEPENDENT_TYPES_PROTO					\
+	good_bool							\
+	create_dependent_types(void) const
+
+virtual	CREATE_DEPENDENT_TYPES_PROTO = 0;
+
+#define	COLLECT_PORT_ALIASES_PROTO					\
+	void								\
+	collect_port_aliases(port_alias_tracker&) const
+
+virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

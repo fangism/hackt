@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.2 2005/07/20 21:00:40 fang Exp $
+	$Id: const_param_expr_list.h,v 1.3 2005/09/04 21:14:45 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -18,7 +18,7 @@ namespace entity {
 class const_param;
 class dynamic_param_expr_list;
 using std::vector;
-// using util::persistent_object_manager;	// forward declared
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -26,13 +26,15 @@ using std::vector;
 	Only scalar expressions allowed, no array indirections or collections.  
  */
 class const_param_expr_list : public param_expr_list, 
-		public vector<count_ptr<const const_param> > {
+		protected vector<count_ptr<const const_param> > {
 friend class dynamic_param_expr_list;
 	typedef	const_param_expr_list			this_type;
 	typedef	param_expr_list				interface_type;
 protected:
 	typedef	vector<count_ptr<const const_param> >	parent_type;
+	typedef	parent_type::value_type			value_type;
 public:
+	typedef	parent_type::const_reference		const_reference;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
@@ -42,8 +44,18 @@ public:
 
 	explicit
 	const_param_expr_list(const parent_type::value_type&);
+
 // lazy: use default copy constructor
 //	const_param_expr_list(const const_param_expr_list& pl);
+
+	/**
+		uses std::copy to initialize a sequence.  
+	 */
+	template <class InIter>
+	const_param_expr_list(InIter b, InIter e) :
+			interface_type(), parent_type(b, e) {
+	}
+
 	~const_param_expr_list();
 
 	size_t
@@ -55,11 +67,21 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+	ostream&
+	dump_range(ostream&, const size_t, const size_t) const;
+
 	excl_ptr<param_expr_list>
 	make_copy(void) const;
 
+	using parent_type::front;
+
 	count_ptr<const param_expr>
 	operator [] (const size_t) const;
+
+	using parent_type::begin;
+	using parent_type::end;
+	using parent_type::empty;
+	using parent_type::push_back;
 
 	bool
 	may_be_initialized(void) const;
@@ -73,11 +95,26 @@ public:
 	bool
 	must_be_equivalent(const param_expr_list& p) const;
 
+	/// checks equivalence up to the end of the strict argument list
+	bool
+	must_be_equivalent(const this_type&, const size_t s) const;
+
+	/// only checks the relaxed parameters of this list against the argument
+	bool
+	is_tail_equivalent(const this_type&) const;
+
+	/// checks entire list
+	bool
+	must_be_equivalent(const this_type&) const;
+
 	bool
 	is_static_constant(void) const { return true; }
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
+
+	bool
+	is_template_dependent(void) const { return false; }
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -96,7 +133,21 @@ public:
 	must_validate_template_arguments(
 		const template_formals_list_type&) const;
 
+	bool
+	operator < (const this_type&) const;
+
+	/**
+		Dereference and compare (less-than) functor.
+	 */
+	struct less_ptr {
+		bool
+		operator () (const value_type&, const value_type&) const;
+	};	// end struct less
+
 public:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class const_param_expr_list
 

@@ -2,16 +2,17 @@
 	\file "main/prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: prsobjdemo.cc,v 1.3 2005/09/04 21:15:06 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 
+// this needs to be first because it includes "util/hash_specializations.h"
+#include "Object/module.tcc"	// for template method definitions
 #include "main/prsobjdemo.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
-#include "Object/module.tcc"	// for template method definitions
 #include "Object/def/process_definition.h"
 
 // using declarations

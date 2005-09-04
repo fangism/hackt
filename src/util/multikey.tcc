@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.9 2005/07/20 21:01:01 fang Exp $
+	$Id: multikey.tcc,v 1.10 2005/09/04 21:15:07 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -37,6 +37,9 @@ template multikey<D,K >::multikey(const L<K >&, const K);
 
 #define	INSTANTIATE_MULTIKEY_GENERATOR(D,K)				\
 template class multikey_generator<D, K >;
+
+#define	INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(D,K)			\
+template multikey_generic<K >::multikey_generic(const multikey<D,K >&);
 
 namespace util {
 using util::write_value;
@@ -264,7 +267,8 @@ MULTIKEY_CLASS::ones = multikey<D,K,1>();
 
 MULTIKEY_GENERIC_TEMPLATE_SIGNATURE
 template <size_t D>
-MULTIKEY_GENERIC_CLASS::multikey_generic(const MULTIKEY_CLASS& m) : impl_type(D) {
+MULTIKEY_GENERIC_CLASS::multikey_generic(const MULTIKEY_CLASS& m) :
+		impl_type(D) {
 	// valarray doesn't have a sequence-copy constructor like vector
 	copy(m.begin(), m.end(), begin());
 }

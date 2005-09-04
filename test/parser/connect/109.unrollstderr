@@ -4,68 +4,81 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	270
 	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	269
 	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
-	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
-	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	71	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	74	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	77	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -75,7 +88,7 @@ In namespace "", we have: {
   2 definitions
   0 typedefs
   Definitions:
-    bar = process-definition (declared) bar<
+    bar = process-definition (defined) bar<
       pint<> X
       pint<> Y
       >(
@@ -87,14 +100,39 @@ In namespace "", we have: {
         Y = pint<> Y
         a = foo<pint-inst-ref ::bar::X> a
         b = foo<pint-inst-ref ::bar::Y> b
+        footprint collection: {
+          <2, 3> {
+            pint^0 X value: ?
+            pint^0 Y value: ?
+            process foo<2>^0 a (instantiated) = ::bar::a 
+            process foo<3>^0 b (instantiated) = ::bar::b 
+          }
+          <3, 4> {
+            pint^0 X value: ?
+            pint^0 Y value: ?
+            process foo<3>^0 a (instantiated) = ::bar::a 
+            process foo<4>^0 b (instantiated) = ::bar::b 
+          }
+        }
       }
 
-    foo = process-definition (declared) foo<
+    foo = process-definition (defined) foo<
       pint<> A
       >(
       )
       In definition "foo", we have: {
         A = pint<> A
+        footprint collection: {
+          <2> {
+            pint^0 A value: ?
+          }
+          <3> {
+            pint^0 A value: ?
+          }
+          <4> {
+            pint^0 A value: ?
+          }
+        }
       }
 
   Instances:

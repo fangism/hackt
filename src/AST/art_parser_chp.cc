@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.20 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_chp.cc,v 1.21 2005/09/04 21:14:39 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_CHP_CC__
@@ -379,8 +379,6 @@ guarded_command::return_type
 guarded_command::check_guarded_action(context& c) const {
 	typedef stmt_list::checked_stmts_type	checked_stmts_type;
 	typedef	entity::bool_traits	bool_traits;
-	static const bool_traits::type_ref_ptr_type&
-		bool_type_ptr(bool_traits::built_in_type_ptr);
 	// will need to be more general non-meta (bool) expression
 	const never_ptr<const token_else>
 		have_else(guard.is_a<const token_else>());
@@ -404,6 +402,8 @@ guarded_command::check_guarded_action(context& c) const {
 		return return_type(NULL);
 	}
 #else
+	static const bool_traits::type_ref_ptr_type&
+		bool_type_ptr(bool_traits::built_in_type_ptr);
 	const count_ptr<const data_type_reference>
 		gtype(checked_guard->get_data_type_ref());
 	if (!gtype) {

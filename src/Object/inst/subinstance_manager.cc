@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5 2005/08/08 23:08:30 fang Exp $
+	$Id: subinstance_manager.cc,v 1.6 2005/09/04 21:14:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/port_alias_tracker.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "common/ICE.h"
@@ -64,6 +65,18 @@ if (subinstance_array.empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::push_back(const entry_value_type& v) {
+	subinstance_array.push_back(v);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::reserve(const size_t s) {
+	subinstance_array.reserve(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param i reference to formal instance, to be translated to an
 		actual (unrolled) instance reference.  
@@ -71,7 +84,7 @@ if (subinstance_array.empty()) {
  */
 subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
-		const instance_collection_base& i) const {
+		const instance_collection_type& i) const {
 	const size_t index = i.is_port_formal();
 	if (index > subinstance_array.size()) {
 	ICE(cerr, 
@@ -90,6 +103,16 @@ subinstance_manager::lookup_port_instance(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::collect_port_aliases(port_alias_tracker& t) const {
+	const_iterator pi(subinstance_array.begin());
+	const const_iterator pe(subinstance_array.end());
+	for ( ; pi!=pe; pi++) {
+		(*pi)->collect_port_aliases(t);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param cr sequence of meta instance references to resolve and 
 		connect to ports.  
@@ -105,18 +128,61 @@ subinstance_manager::connect_ports(
 	typedef	connection_references_type::const_iterator
 						const_ref_iterator;
 	INVARIANT(subinstance_array.size() == cr.size());
-	iterator pi(subinstance_array.begin());	// instance_collection_base
+	iterator pi(subinstance_array.begin());	// instance_collection_type
 	const iterator pe(subinstance_array.end());
 	const_ref_iterator ri(cr.begin());
 	// const const_ref_iterator re(cr.end());
 	for ( ; pi!=pe; pi++, ri++) {
 	// references may be NULL (no-connect)
-	if (*ri) {
-		if ((*ri)->connect_port(**pi, c).bad) {
-			// already have error message
-			return good_bool(false);
-		}	// else good to continue
+		if (*ri) {
+			if ((*ri)->connect_port(**pi, c).bad) {
+				// already have error message
+				return good_bool(false);
+			}	// else good to continue
+		}
 	}
+	// all connections good
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copied from footprint::create_dependent_types
+	and module::create_dependent_types.
+ */
+good_bool
+subinstance_manager::replay_internal_aliases(void) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e ; i++) {
+		// creating dependent types also connects internal aliases
+		if (!(*i)->create_dependent_types().good)
+			return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
+	typedef	connection_references_type::const_iterator
+						const_ref_iterator;
+	array_type& la(l.subinstance_array);
+	array_type& ra(r.subinstance_array);
+	INVARIANT(la.size() == ra.size());
+	iterator li(la.begin());	// instance_collection_type
+	iterator ri(ra.begin());
+	const iterator le(la.end());
+	// const const_ref_iterator re(cr.end());
+	for ( ; li!=le; li++, ri++) {
+	// references may be NULL (no-connect)
+		if (*li && *ri) {
+			if (!(*li)->synchronize_actuals(**ri).good) {
+				// already have error message
+				return good_bool(false);
+			}	// else good to continue
+		}
 	}
 	// all connections good
 	return good_bool(true);
@@ -143,18 +209,13 @@ subinstance_manager::relink_super_instance_alias(
 	Allocates each port entirely.  
  */
 void
-subinstance_manager::allocate(void) {
+subinstance_manager::allocate(footprint& f) {
 	STACKTRACE("subinstance_manager::allocate()");
 	iterator i(subinstance_array.begin());
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		// merge created state (instance_collection_bases)
-		// dynamic cast to physical_instance_collection
-		const count_ptr<physical_instance_collection>
-			pi(i->is_a<physical_instance_collection>());
-		NEVER_NULL(pi);
-		pi->allocate_state();
+		(*i)->allocate_state(f);	// expands the whole collection
 	}
 }
 
@@ -162,8 +223,8 @@ subinstance_manager::allocate(void) {
 /**
 	TODO: clean up the const-hack.  
  */
-void
-subinstance_manager::create_state(const this_type& s) {
+good_bool
+subinstance_manager::create_state(const this_type& s, footprint& f) {
 	STACKTRACE("subinstance_manager::create_state()");
 	this_type& t(const_cast<this_type&>(s));
 	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
@@ -173,16 +234,14 @@ subinstance_manager::create_state(const this_type& s) {
 	for ( ; i!=e; i++, j++) {
 		NEVER_NULL(*i);
 		NEVER_NULL(*j);
-		// merge created state (instance_collection_bases)
-		// dynamic cast to physical_instance_collection
-		const count_ptr<physical_instance_collection>
-			pi(i->is_a<physical_instance_collection>());
-		const count_ptr<physical_instance_collection>
-			pj(j->is_a<physical_instance_collection>());
+		// merge created state (instance_collection_types)
+		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
-		pi->merge_created_state(*pj);
+		if (!pi->merge_created_state(*pj, f).good)
+			return good_bool(false);
 	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,7 +249,7 @@ subinstance_manager::create_state(const this_type& s) {
 	TODO: clean up the const-hack.  
  */
 void
-subinstance_manager::inherit_state(const this_type& s) {
+subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 	STACKTRACE("subinstance_manager::inherit_state()");
 	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
 	iterator i(subinstance_array.begin());
@@ -199,15 +258,11 @@ subinstance_manager::inherit_state(const this_type& s) {
 	for ( ; i!=e; i++, j++) {
 		NEVER_NULL(*i);
 		NEVER_NULL(*j);
-		// merge created state (instance_collection_bases)
-		// dynamic cast to physical_instance_collection
-		const count_ptr<physical_instance_collection>
-			pi(i->is_a<physical_instance_collection>());
-		const count_ptr<const physical_instance_collection>
-			pj(j->is_a<const physical_instance_collection>());
+		// merge created state (instance_collection_types)
+		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
-		pi->inherit_created_state(*pj);
+		pi->inherit_created_state(*pj, f);
 	}
 }
 
@@ -215,10 +270,10 @@ subinstance_manager::inherit_state(const this_type& s) {
 void
 subinstance_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	cerr << "collected " << subinstance_array.size() << " subinstances."
-		<< endl;
+	STACKTRACE_PERSISTENT_VERBOSE;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "collected " << subinstance_array.size() <<
+		" subinstances." << endl;
 #endif
 	m.collect_pointer_list(subinstance_array);
 }
@@ -227,11 +282,11 @@ subinstance_manager::collect_transient_info_base(
 void
 subinstance_manager::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer_list(o, subinstance_array);
-#if ENABLE_STACKTRACE
-	cerr << "wrote " << subinstance_array.size() << " subinstances."
-		<< endl;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "wrote " << subinstance_array.size() <<
+		" subinstances." << endl;
 #endif
 }
 
@@ -239,11 +294,11 @@ subinstance_manager::write_object_base(const persistent_object_manager& m,
 void
 subinstance_manager::load_object_base(const persistent_object_manager& m,
 		istream& i) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer_list(i, subinstance_array);
-#if ENABLE_STACKTRACE
-	cerr << "loaded " << subinstance_array.size() << " subinstances."
-		<< endl;
+#if STACKTRACE_PERSISTENTS
+	STACKTRACE_INDENT << "loaded " << subinstance_array.size() <<
+		" subinstances." << endl;
 #endif
 }
 

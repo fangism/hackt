@@ -1,0 +1,10 @@
+// "084.in" -- should pass
+// internal collections without alias to ports
+
+defproc foo(bool r[2]) {
+	int x;
+	bool y;
+}
+
+foo burp;
+

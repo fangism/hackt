@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.2 2005/07/23 06:52:54 fang Exp $
+	$Id: template_actuals.h,v 1.3 2005/09/04 21:14:59 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -21,6 +21,7 @@ namespace ART {
 namespace entity {
 class unroll_context;
 class param_expr_list;
+class const_param_expr_list;
 class fundamental_type_reference;
 class template_formals_manager;
 class param_expr;
@@ -56,6 +57,8 @@ public:
 	template_actuals(const template_actuals& t, 
 		const const_arg_list_ptr_type&);
 
+	// use default copy-constructor
+
 	~template_actuals();
 
 	string
@@ -72,6 +75,9 @@ public:
 
 	const_arg_list_ptr_type
 	get_relaxed_args(void) const;
+
+	count_ptr<const const_param_expr_list>
+	make_const_param_list(void) const;
 
 	bool
 	is_resolved(void) const;
@@ -122,6 +128,33 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end class template_actuals
+
+//=============================================================================
+#if 0
+/**
+	Template parameters resolved to constants.  
+	Used by canonical_type.  
+	Needs to be comparable.  
+	NOTE: making resolved parameters one list make it easier
+		to compare and sort them.  
+ */
+class resolved_template_actuals {
+	typedef	resolved_template_actuals	this_type;
+public:
+	typedef	count_ptr<const const_param_expr_list>	const_arg_list_ptr_type;
+private:
+	const_arg_list_ptr_type		strict_template_args;
+	const_arg_list_ptr_type		relaxed_template_args;
+public:
+	resolved_template_actuals();
+
+	resolved_template_actuals(const const_arg_list_ptr_type&, 
+		const const_arg_list_ptr_type&);
+
+	~resolved_template_actuals();
+
+};	// end class resolved_template_actuals
+#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.2 2005/07/23 06:52:49 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.3 2005/09/04 21:14:55 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -13,6 +13,8 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/unroll/unroll_context.h"
+#include "Object/def/footprint.h"
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 	// will explicitly instantiate
@@ -20,6 +22,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/ref/inst_ref_implementation.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -73,16 +76,23 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Re-usable helper function (also used by member_instance_reference).  
-	\param inst a resolved actual instance (not formal).  
+	TODO: what about global instance references?
+	\param _inst a resolved actual instance (not formal).  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 		const unroll_context& c,
-		const instance_collection_generic_type& inst, 
+		const instance_collection_generic_type& _inst, 
 		const never_ptr<const index_list_type> ind, 
 		alias_collection_type& a) {
 	// possibly factor this part out into simple_meta_instance_reference_base?
+	STACKTRACE_VERBOSE;
+	const footprint* const f(c.get_target_footprint());
+	const instance_collection_generic_type&
+		inst(f ? IS_A(const instance_collection_generic_type&, 
+				*(*f)[_inst.get_name()])
+			: _inst);
 if (inst.get_dimensions()) {
 	const_index_list cil;
 	if (ind) {
@@ -149,6 +159,7 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 		const unroll_context& c, alias_collection_type& a) const {
+	STACKTRACE_VERBOSE;
 	return unroll_references_helper(c, *this->inst_collection_ref,
 		this->array_indices, a);
 }
@@ -166,6 +177,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template unroll_generic_scalar_reference<Tag>(
 			*this->inst_collection_ref, this->array_indices, c);
@@ -188,9 +200,11 @@ bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		instance_collection_base& cl, 
 		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	// assert checked-cast, will throw bad_cast upon error
 	instance_collection_generic_type&
 		coll(IS_A(instance_collection_generic_type&, cl));
+
 	alias_collection_type this_aliases;
 	const bad_bool unroll_err(this->unroll_references(c, this_aliases));
 		// calls unroll_reference virtually, thus
@@ -212,9 +226,13 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	const instance_collection_ptr_type temp_ptr(&coll);
 	const this_type temp_ref(temp_ptr);
 #endif
-		// reference the whole port if it is collective (array)
-		// by not attaching indices
-	const bad_bool port_err(temp_ref.unroll_references(c, port_aliases));
+	// just like member_instance_reference::unroll
+	// we suppress the footprint of the unroll context
+	// when looking up ports.
+	const unroll_context cc(c.make_member_context());
+	// reference the whole port if it is collective (array)
+	// by not attaching indices
+	const bad_bool port_err(temp_ref.unroll_references(cc, port_aliases));
 		// will automatically size the array
 	if (unroll_err.bad) {
 		cerr << "ERROR unrolling member instance reference "
@@ -242,21 +260,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		const never_ptr<instance_alias_base_type> rp(*ri);
 		NEVER_NULL(lp);
 		NEVER_NULL(rp);
-		if (!lp->must_match_type(*rp)) {
+		if (!instance_alias_base_type::checked_connect_port(
+				*lp, *rp).good) {
 			// already have error message
 			return bad_bool(true);
 		}
-		typedef	typename instance_alias_base_type::relaxed_actuals_type
-					relaxed_actuals_type;
-		const relaxed_actuals_type& la(lp->find_relaxed_actuals());
-		const relaxed_actuals_type& ra(rp->find_relaxed_actuals());
-		// no need to update a cnonical actuals
-		if (!instance_alias_base_type::compare_actuals(la, ra).good) {
-			// already have error message
-			return bad_bool(true);
-		}
-		// else safe to connect
-		lp->merge(*rp);
 	}
 	INVARIANT(ri == port_aliases.end());
 	return bad_bool(false);

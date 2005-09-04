@@ -1,22 +1,22 @@
 /**
 	\file "multidimensional_qmap_test.cc"
  	Test for multidimensional, queryable map.
-	$Id: multidimensional_qmap_test.cc,v 1.5 2005/02/27 22:54:31 fang Exp $
+	$Id: multidimensional_qmap_test.cc,v 1.6 2005/09/04 21:15:12 fang Exp $
  */
 
 #include <iostream>
 #include <string>
-#include "sstream.h"
+#include "util/sstream.h"
 using std::ostringstream;
 
-#include "STL/list.tcc"
+#include "util/STL/list.tcc"
 USING_LIST
 using std::string;
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 // later separate the following into declarations and definitions
-#include "multidimensional_qmap.tcc"
+#include "util/multidimensional_qmap.tcc"
 
 using util::multidimensional_qmap;
 using util::make_iter_range;
@@ -24,7 +24,7 @@ using util::make_iter_range;
 typedef	multidimensional_qmap<3, int, string>	test_map3d_type;
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	test_map3d_type	str_map;
 	str_map.dump(cout << endl << "Map: " << endl);
 	cout << "Map's population = " << str_map.population() << endl;

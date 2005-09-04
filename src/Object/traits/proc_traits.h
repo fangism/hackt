@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: proc_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PROC_TRAITS_H__
@@ -28,6 +28,7 @@ struct class_traits<process_tag> {
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
 	static const bool		has_substructure = true;
+	static const bool		can_internally_alias = true;
 	typedef	instance_alias_info_actuals
 					instance_alias_relaxed_actuals_type;
 	typedef	process_instance_alias_info	instance_alias_info_type;
@@ -37,6 +38,7 @@ struct class_traits<process_tag> {
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
+	enum { instance_pool_chunk_size = 256 };
 
 	typedef	process_instance_collection	instance_collection_generic_type;
 	typedef	physical_instance_collection	instance_collection_parent_type;
@@ -72,7 +74,7 @@ struct class_traits<process_tag> {
 	typedef	aliases_connection_base		alias_connection_parent_type;
 	// need real type here!
 	typedef	process_type_reference		type_ref_type;
-	typedef	count_ptr<const type_ref_type>	instance_collection_parameter_type;
+	typedef	canonical_process_type	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<process_tag>

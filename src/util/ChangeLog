@@ -1,5 +1,49 @@
 # "src/util/ChangeLog"
 
+2005-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-56-merged-footprint-01-26:
+	  Merged fixes and enhancements from -footprint branch.  
+
+
+2005-08-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-27:
+	  Added explicit instantiation macro to mutikey_generic
+		constructor (from non-generic multikey).  
+
+
+2005-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-19:
+	  list_vector: (bug fix) wrote custom copy-constructor because
+		structure contains raw pointers, which must be relinked
+		upon copy.  
+
+
+2005-08-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-16:
+	  Added STACKTRACE_INDENT macro to stacktrace.h to allow users
+		to print stacktrace prefix before diagnostic messages.  
+	  auto_indenter manipulators in indent and stacktrace declared const.
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-08:
+	  util/static_assert.h: uses typedef rather than static const value.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-07:
+	  Using enhanced header configuration, we've "config-ed" many 
+		util headers with the results from "config.h"
+		header existence and usability tests.  
+	  Also now enforcing -Wunnused except for -Wno-unused-parameter.
+
+
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-54-macros-02:

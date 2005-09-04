@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: instance_alias_info.h,v 1.4 2005/09/04 21:14:49 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -16,9 +16,12 @@
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/inst/internal_aliases_policy_fwd.h"
 
 namespace ART {
 namespace entity {
+class footprint;
+class instance_alias_info_actuals;
 using std::ostream;
 using std::istream;
 using util::ring_node_derived;
@@ -40,18 +43,35 @@ instance_alias_info<Tag>
 	Each object of this type represents a unique qualified name.  
 	TODO: parent type that determines whether or not
 	this contains relaxed actual parameters, and how they are stored.  
+	TODO: factor out the template-independent members/methods of this class.
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 class instance_alias_info :
 		public substructure_alias_base<
 			class_traits<Tag>::has_substructure>, 
+		// was protected
 		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
+friend class instance_alias_info_actuals;
+#if 0
+// want to express this:
+template <size_t D> friend class instance_array<Tag, D>;
+#else
+// for the sake of granting direct access to __allocate_state.
+// but have to write this:
+friend class instance_array<Tag, 0>;
+friend class instance_array<Tag, 1>;
+friend class instance_array<Tag, 2>;
+friend class instance_array<Tag, 3>;
+friend class instance_array<Tag, 4>;
+#endif
 public:
 	typedef	typename class_traits<Tag>::instance_alias_relaxed_actuals_type
 						actuals_parent_type;
 	typedef	substructure_alias_base<class_traits<Tag>::has_substructure>
 						substructure_parent_type;
+	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+						internal_alias_policy;
 	typedef	typename class_traits<Tag>::instance_type
 						instance_type;
 	/**
@@ -64,7 +84,8 @@ public:
 		Container type.
 	 */
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
-						container_type;
+					instance_collection_generic_type;
+	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
 
@@ -99,6 +120,8 @@ public:
 	/**
 		Back-reference to the mother container.
 		Consider using this to determine "instantiated" state.  
+		NOTE: this could be pushed to children, and replaced
+			with virtual interface.  
 	 */
 	container_ptr_type				container;
 
@@ -106,39 +129,37 @@ protected:
 	// constructors only intended for children classes
 	instance_alias_info() : instance_index(0), container(NULL) { }
 
-public:
 	/**
-		TODO: the following comment is not true.
-		This constructor initializes the mother container pointer
-		AND (implicitly) recursively instantiates public ports.  
-		TODO: does recursive instantiation require actuals?
-		Called from instance_array<>::instantiate_indices.
-		Perhaps introduce constructor with actuals argument?
+		Plain constructor initializing with container back-ptr.
 	 */
+	explicit
 	instance_alias_info(const container_ptr_type m) :
 		instance_index(0), container(m) {
-#if 0
-		// cancel this idea:
-		NEVER_NULL(container);
-		substructure_parent_type::unroll_port_instances(
-			*this->container);
-#endif
 	}
-
-public:
 
 	// default copy-constructor
 
-	// default destructor, non-virtual?
+	// default destructor, non-virtual? yes, but protected.
 virtual	~instance_alias_info();
 
 	// default assignment
 
+public:
 	/**
 		container is inherited from instance_alias_info
 	 */
 	bool
 	valid(void) const { return this->container; }
+
+	// don't inline this virtual
+	never_ptr<const physical_instance_collection>
+	get_container_base(void) const;
+
+	never_ptr<const physical_instance_collection>
+	get_supermost_collection(void) const;
+
+	never_ptr<const substructure_alias>
+	get_supermost_substructure(void) const;
 
 	void
 	check(const container_type* p) const;
@@ -163,22 +184,29 @@ public:
 		Instantiates officially by linking to parent collection.  
 		FYI: This is only called by instance_array<0> (scalar)
 			in instantiate_indices().
-		TODO (2005-07-12): 
-			recursively unroll public ports, using 
-			subinstance_manager
 	 */
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
+	// this implements the virtual function 
+	// from substructure_alias_base<true>
 	// really shouldn't be const...
 	size_t
-	allocate_state(void) const;
+	allocate_state(footprint&) const;
+
+private:
+	// want to allow instance_collection<> to call this directly
+	// so we make it a friend :S
+	size_t
+	__allocate_state(footprint&) const;
+
+public:
+
+	good_bool
+	merge_allocate_state(this_type&, footprint&);
 
 	void
-	merge_allocate_state(this_type&);
-
-	void
-	inherit_subinstances_state(const this_type&);
+	inherit_subinstances_state(const this_type&, const footprint&);
 
 	/**
 		Attaches actual parameters to this alias.  
@@ -187,13 +215,57 @@ public:
 			to modify the key.  
 		\return true if successful, didn't collide.
 	 */
+	using actuals_parent_type::get_relaxed_actuals;
+	using actuals_parent_type::dump_actuals;
 	using actuals_parent_type::attach_actuals;
-	using actuals_parent_type::compare_and_update_actuals;
 	using actuals_parent_type::compare_actuals;
+	using actuals_parent_type::create_dependent_types;
 
-	const relaxed_actuals_type&
-	find_relaxed_actuals(void) const;
+protected:
+	physical_instance_collection&
+	trace_collection(const substructure_alias&) const;
 
+#if 0
+	physical_instance_collection&
+	retrace_collection(const substructure_alias&) const;
+#endif
+
+public:
+
+#define	TRACE_ALIAS_BASE_PROTO						\
+	typename instance_alias_info<Tag>::substructure_parent_type&	\
+	__trace_alias_base(const substructure_alias&) const
+
+#define	TRACE_ALIAS_PROTO						\
+	instance_alias_info<Tag>&					\
+	trace_alias(const substructure_alias&) const
+
+virtual	TRACE_ALIAS_BASE_PROTO;
+virtual	TRACE_ALIAS_PROTO;
+
+protected:
+	void
+	progagate_actuals(const relaxed_actuals_type&);
+
+public:
+	good_bool
+	compare_and_propagate_actuals(const relaxed_actuals_type&);
+
+	static
+	good_bool
+	synchronize_actuals_recursive(this_type&, this_type&);
+private:
+	static
+	good_bool
+	synchronize_actuals(this_type&, this_type&);
+
+	void
+	propagate_actuals(const relaxed_actuals_type&);
+
+	good_bool
+	create_super_instance(footprint&);
+
+public:
 	bool
 	must_match_type(const this_type&) const;
 
@@ -209,16 +281,34 @@ public:
 			&& (this->container == i.container);
 	}
 
+	bool
+	is_port_alias(void) const;
 
-virtual	void
+virtual	ostream&
 	dump_alias(ostream& o) const;
+
+	ostream&
+	dump_aliases(ostream& o) const;
 
 	ostream&
 	dump_hierarchical_name(ostream&) const;
 
-	/**
-		Wants to be pure virtual but can't...
-	 */
+	using substructure_parent_type::dump_ports;
+	using substructure_parent_type::collect_port_aliases;
+	using substructure_parent_type::connect_ports;
+	// using substructure_parent_type::lookup_port_instance;
+	using substructure_parent_type::replay_substructure_aliases;
+
+	static
+	good_bool
+	checked_connect_port(this_type&, this_type&);
+
+	static
+	good_bool
+	checked_connect_alias(this_type&, this_type&,
+		const relaxed_actuals_type&);
+
+	/// counterpart to load_alias_reference (should be pure virtual)
 virtual	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
@@ -228,6 +318,7 @@ virtual	void
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
 
+	/// counterpart to write_next_connection
 	static
 	instance_alias_base_type&
 	load_alias_reference(const persistent_object_manager& m, istream& i);

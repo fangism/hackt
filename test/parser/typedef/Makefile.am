@@ -1,5 +1,5 @@
 # "test/parser/typedef/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2005/08/08 16:52:01 fang Exp $
+#	$Id: Makefile.am,v 1.9 2005/09/04 21:16:32 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,7 +9,7 @@ ARTC_TEST_FAILURES = \
 
 ARTC_TEST_PASSES = \
 	002 003 004 005 \
-	011 012 013
+	011 012 013 014
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 

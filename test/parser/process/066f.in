@@ -1,0 +1,14 @@
+// "066f.in" should pass, will recursively instantiate ports
+// copy-modified from "066a.in"
+// has internal aliases!
+
+defproc ick() { }
+
+defproc foo(ick a, b) {
+	a = b;
+}
+
+foo poo;
+
+// after hierarchical flattening, there is only one of each type
+

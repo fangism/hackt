@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.2 2005/07/20 21:00:40 fang Exp $
+	$Id: const_range.h,v 1.3 2005/09/04 21:14:45 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_RANGE_H__
@@ -120,6 +120,12 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const {
+		INVARIANT(!empty());
+		return false;
+	}
+
+	bool
+	is_template_dependent(void) const {
 		INVARIANT(!empty());
 		return false;
 	}

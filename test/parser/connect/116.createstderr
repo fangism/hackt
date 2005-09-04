@@ -1,0 +1,6 @@
+ERROR: complete type required for instantiation
+	have: foo<3>
+Failed to instantiate ::q.a
+ERROR creating placeholder state for super-instance of ::p.a
+Error during create_unique.
+ERROR in creating.  Aborting.

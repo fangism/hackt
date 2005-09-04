@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.2 2005/07/20 21:00:49 fang Exp $
+	$Id: pint_range.h,v 1.3 2005/09/04 21:14:47 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_RANGE_H__
@@ -69,6 +69,9 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
+
+	bool
+	is_template_dependent(void) const;
 
 	// for now just return false, don't bother checking recursively...
 	bool

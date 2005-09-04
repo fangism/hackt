@@ -159,11 +159,13 @@ multikey_set_derived_test.stderr: multikey_set_test.stderr
 	$(CP) $? $@
 
 # the util/ source directory
-AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
+AM_CPPFLAGS = -I$(srcdir)/../..
+# excluding .. from now on
+# AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused -Wpointer-arith \
-	-Wcast-qual -Wcast-align -Wconversion -Werror
+GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused-parameter -Wshadow \
+	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
 # C specific warnings
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 	-Wbad-function-cast -Wnested-externs

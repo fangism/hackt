@@ -1,0 +1,11 @@
+// "069.in" should pass, will recursively instantiate ports
+// copy-modified from "059.in"
+// now with some internal aliases!
+
+template <pint N>
+defproc foo(bool a[N]) {
+	a[0] = a[N-1];	// alias first and last
+}
+
+foo<3> poo;
+

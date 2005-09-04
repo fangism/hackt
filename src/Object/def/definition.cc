@@ -2,13 +2,14 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3 2005/08/08 23:08:27 fang Exp $
+ 	$Id: definition.cc,v 1.4 2005/09/04 21:14:42 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
 #define	__OBJECT_ART_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
+#define	STACKTRACE_DUMPS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
@@ -41,15 +42,21 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/param_value_collection.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/unroll/param_instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/common/namespace.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/type/canonical_generic_chan_type.h"
+
+#include "common/ICE.h"
+#include "common/TODO.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -58,7 +65,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 
+#if STACKTRACE_DUMPS
+#define	STACKTRACE_DUMP(x)	STACKTRACE(x)
+#else
+#define	STACKTRACE_DUMP(x)
+#endif
 
+//=============================================================================
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
@@ -126,6 +139,7 @@ definition_base::~definition_base() {
  */
 ostream&
 definition_base::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	const string key = get_key();
 	what(o) << ((defined) ? " (defined) " : " (declared) ") << key;
 	return template_formals.dump(o);
@@ -397,12 +411,11 @@ definition_base::add_relaxed_template_formal(
 	Only temporary.
 	Override in appropriate subclasses.  
  */
-never_ptr<const instance_collection_base>
+never_ptr<const physical_instance_collection>
 definition_base::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& i) {
-	DIE;
-	return never_ptr<const instance_collection_base>(NULL);
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -478,6 +491,7 @@ typedef_base::dump_qualified_name(ostream& o) const {
  */
 ostream&
 typedef_base::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	what(o) << ": " << get_key();
 	template_formals.dump(o) << endl;
 	{
@@ -677,6 +691,7 @@ user_def_chan::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	definition_base::dump(o) << endl;	// dump template signature first
 	INDENT_SECTION(o);
 	// the list of datatype(s) carried by this channel
@@ -742,6 +757,12 @@ user_def_chan::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_chan::commit_arity(void) {
+	// nothing until a footoprint_manager is added
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 user_def_chan::lookup_object_here(const string& id) const {
 	return scopespace::lookup_object_here(id);
@@ -761,10 +782,10 @@ user_def_chan::attach_base_channel_type(
 	Ripped off from process_definition's.
 	Last touched: 2005-05-25.
  */
-never_ptr<const instance_collection_base>
+never_ptr<const physical_instance_collection>
 user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
-	typedef	never_ptr<const instance_collection_base>	return_type;
+	typedef	never_ptr<const physical_instance_collection>	return_type;
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -777,7 +798,8 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	}
 	}
 
-	const return_type pf(add_instance(f, id));
+	const return_type pf(add_instance(f, id)
+		.is_a<const physical_instance_collection>());
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -819,10 +841,41 @@ user_def_chan::certify_port_actuals(const checked_refs_type& cr) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+canonical_generic_chan_type
+user_def_chan::make_canonical_type(const template_actuals& a) const {
+	typedef	canonical_generic_chan_type	return_type;
+	return return_type(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 count_ptr<const channel_type_reference_base>
-user_def_chan::make_canonical_type_reference(const template_actuals& a) const {
+user_def_chan::make_canonical_fundamental_type_reference(
+		const template_actuals& a) const {
 	return make_fundamental_type_reference(a)
 		.is_a<const channel_type_reference_base>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+void
+user_def_chan::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing until this has a footprint manager
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+user_def_chan::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing until this has a footprint manager
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+user_def_chan::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing until this has a footprint manager
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -955,20 +1008,47 @@ channel_definition_alias::assign_typedef(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const channel_type_reference_base>
-channel_definition_alias::make_canonical_type_reference(
-		const template_actuals& a) const {
-#if 0
-	typedef count_ptr<const channel_type_reference_base>	return_type;
-	cerr << "Fang, finish channel_definition_alias::"
-		"make_canonical_type_reference()!" << endl;
-	return return_type(NULL);
-#else
+/**
+	Canonicalizes channel type to built-in or user-defined.  
+ */
+canonical_generic_chan_type
+channel_definition_alias::make_canonical_type(const template_actuals& a) const {
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_chan_def()->make_canonical_type_reference(ta);
-#endif
+	return base->get_base_chan_def()->make_canonical_type(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const channel_type_reference_base>
+channel_definition_alias::make_canonical_fundamental_type_reference(
+		const template_actuals& a) const {
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_chan_def()
+		->make_canonical_fundamental_type_reference(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+channel_definition_alias::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_definition_alias::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+channel_definition_alias::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1023,10 +1103,6 @@ channel_definition_alias::load_object(
  */
 void
 channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
-#if 0
-	cerr << "WARNING: didn't expect to call "
-		"channel_definition_alias::load_used_id_map_object()." << endl;
-#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -1092,6 +1168,7 @@ built_in_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 built_in_datatype_def::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	return datatype_definition_base::dump(o);
 }
 
@@ -1142,11 +1219,20 @@ built_in_datatype_def::make_fundamental_type_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This definition is already canonical.  
+ */
+canonical_generic_datatype
+built_in_datatype_def::make_canonical_type(const template_actuals& a) const {
+	return canonical_generic_datatype(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Q: how much special case handling does this require?
 	For now try the easiest thing, and fix later.  
  */
 count_ptr<const data_type_reference>
-built_in_datatype_def::make_canonical_type_reference(
+built_in_datatype_def::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	// INVARIANT(a.is_constant());	// NOT true
 	return make_fundamental_type_reference(a)
@@ -1191,6 +1277,29 @@ built_in_datatype_def::add_template_formal(
 	INVARIANT(lookup_template_formal(pf->hash_string()));
 	// later return a never_ptr<>
 	return pf;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+built_in_datatype_def::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, built-in types have no footprint manater
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+built_in_datatype_def::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, built-in types have no footprint manater
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+built_in_datatype_def::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, built-in types have no footprint manater
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1246,19 +1355,13 @@ built_in_datatype_def::write_object(
 void
 built_in_datatype_def::load_object(
 		const persistent_object_manager& m, istream& f) {
-	cerr << "ERROR: built_in_datatype_def::load_object() "
-		"should never be called!" << endl;
-	DIE;
-	THROW_EXIT;
+	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 built_in_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
-	cerr << "ERROR: built_in_datatype_def::load_used_id_map_object() "
-		"should never be called!" << endl;
-	DIE;
-	THROW_EXIT;
+	ICE_NEVER_CALL(cerr);
 }
 
 //=============================================================================
@@ -1306,7 +1409,7 @@ built_in_param_def::get_parent(void) const {
 excl_ptr<definition_base>
 built_in_param_def::make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const {
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return excl_ptr<definition_base>(NULL);
 }
 
@@ -1321,9 +1424,7 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 definition_base::type_ref_ptr_type
 built_in_param_def::make_fundamental_type_reference(
 		make_type_arg_type ta) const {
-	cerr << "built_in_param_def::make_fundamental_type_reference(): "
-		"Fang, don\'t ever call me again!" << endl;
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return type_ref_ptr_type(NULL);
 }
 
@@ -1380,6 +1481,7 @@ enum_datatype_def::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	what(o) << ": " << key;
 	if (defined) {
 		INDENT_SECTION(o);
@@ -1444,8 +1546,15 @@ enum_datatype_def::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_generic_datatype
+enum_datatype_def::make_canonical_type(const template_actuals& a) const {
+	INVARIANT(!a);
+	return canonical_generic_datatype(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
-enum_datatype_def::make_canonical_type_reference(
+enum_datatype_def::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	INVARIANT(!a);
 	return make_fundamental_type_reference(a)
@@ -1508,6 +1617,29 @@ enum_datatype_def::add_member(const token_identifier& em) {
 #endif
 		return true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+enum_datatype_def::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, doesn't have a footprint manager
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+enum_datatype_def::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, doesn't have a footprint manager
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+enum_datatype_def::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// nothing, doesn't have a footprint manager
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1588,9 +1720,7 @@ enum_datatype_def::load_object(const persistent_object_manager& m, istream& f) {
  */
 void
 enum_datatype_def::load_used_id_map_object(excl_ptr<persistent>& o) {
-	cerr << "ERROR: not supposed to call "
-		"enum_datatype_def::load_used_id_map_object()!" << endl;
-	DIE;
+	ICE_NEVER_CALL(cerr);
 }
 
 //=============================================================================
@@ -1637,6 +1767,7 @@ user_def_datatype::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 //	return what(o) << ": " << key;
 	definition_base::dump(o) << endl;	// dump template signature first
 	INDENT_SECTION(o);
@@ -1702,6 +1833,12 @@ user_def_datatype::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::commit_arity(void) {
+	// nothing, until a footprint_manager is added
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const datatype_definition_base>
 user_def_datatype::resolve_canonical_datatype_definition(void) const {
 	return never_ptr<const datatype_definition_base>(this);
@@ -1727,11 +1864,11 @@ user_def_datatype::attach_base_data_type(
 	Shamelessly ripped off from user_def_chan's, 
 	Ripped off from process_definition's.
  */
-never_ptr<const instance_collection_base>
+never_ptr<const physical_instance_collection>
 user_def_datatype::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
-	typedef	never_ptr<const instance_collection_base>	return_type;
+	typedef	never_ptr<const physical_instance_collection>	return_type;
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -1744,7 +1881,8 @@ user_def_datatype::add_port_formal(
 	}
 	}
 
-	const return_type pf(add_instance(f, id));
+	const return_type pf(add_instance(f, id)
+		.is_a<const physical_instance_collection>());
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -1792,16 +1930,46 @@ user_def_datatype::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_generic_datatype
+user_def_datatype::make_canonical_type(const template_actuals& a) const {
+	INVARIANT(a.is_constant());
+	return canonical_generic_datatype(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Fairly straightforward.  
 	TODO: have make_fundamental_type_reference call this instead.  
  */
 count_ptr<const data_type_reference>
-user_def_datatype::make_canonical_type_reference(
+user_def_datatype::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	INVARIANT(a.is_constant());
 	return make_fundamental_type_reference(a)
 		.is_a<const data_type_reference>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+user_def_datatype::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// doesnt't have a gootprint manager .. yet
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+user_def_datatype::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// doesnt't have a gootprint manager .. yet
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+user_def_datatype::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// doesnt't have a gootprint manager .. yet
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1975,23 +2143,57 @@ datatype_definition_alias::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: error handling
- */
-count_ptr<const data_type_reference>
-datatype_definition_alias::make_canonical_type_reference(
+canonical_generic_datatype
+datatype_definition_alias::make_canonical_type(
 		const template_actuals& a) const {
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_datatype_def()->make_canonical_type_reference(ta);
+	return base->get_base_datatype_def()->make_canonical_type(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: error handling
+ */
+count_ptr<const data_type_reference>
+datatype_definition_alias::make_canonical_fundamental_type_reference(
+		const template_actuals& a) const {
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_datatype_def()
+		->make_canonical_fundamental_type_reference(ta);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 datatype_definition_alias::require_signature_match(
 		const never_ptr<const definition_base> d) const {
-	cerr << "TO DO: finish datatype_definition_alias::require_signature_match()!" << endl;
+	FINISH_ME(Fang);
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+datatype_definition_alias::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+datatype_definition_alias::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+datatype_definition_alias::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
 
@@ -2048,10 +2250,6 @@ datatype_definition_alias::load_object(
  */
 void
 datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
-#if 0
-	cerr << "WARNING: didn't expect to call "
-		"datatype_definition_alias::load_used_id_map_object()." << endl;
-#endif
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -2096,16 +2294,19 @@ process_definition::process_definition() :
 		key(), 
 		parent(), 
 		port_formals(), 
-		prs(), chp() {
+		prs(), chp(), 
+		footprint_map() {
 	// no null check: because of partial reconstruction
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructor for a process definition symbol table entry.  
+	TODO: when is the footprint_map's arity set? after adding 
+		template-formal parameter.  
  */
 process_definition::process_definition(
-		never_ptr<const name_space> o, 
+		const never_ptr<const name_space> o, 
 		const string& s) :
 		definition_base(), 
 		process_definition_base(),
@@ -2114,7 +2315,8 @@ process_definition::process_definition(
 		key(s), 
 		parent(o), 
 		port_formals(), 
-		prs(), chp() {
+		prs(), chp(), 
+		footprint_map() {
 	// fill me in...
 	NEVER_NULL(o);
 }
@@ -2133,9 +2335,11 @@ process_definition::what(ostream& o) const {
 	Spill contents of the used_id_map.
 	\param o the output stream.
 	\return the same output stream.
+	TODO: dump the footprint map.  
  */
 ostream&
 process_definition::dump(ostream& o) const {
+	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 //	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
 	// unique ID not working with INDENT_SECTION marco... :(
@@ -2149,6 +2353,7 @@ process_definition::dump(ostream& o) const {
 		"In definition \"" << key << "\", we have: {" << endl;
 	{	// begin indent level
 		INDENT_SECTION(o);
+		// we dump ports even if body is undefined
 		used_id_map_type::const_iterator i(used_id_map.begin());
 		const used_id_map_type::const_iterator e(used_id_map.end());
 		for ( ; i!=e; i++) {
@@ -2157,18 +2362,23 @@ process_definition::dump(ostream& o) const {
 			// i->second->what(o) << endl;	// 1 level for now
 			i->second->dump(o) << endl;
 		}
-		// PRS
-		if (!prs.empty()) {
-			o << auto_indent << "prs:" << endl;
-			prs.dump(o);	// << endl;
-		}
-		// CHP
-		if (!chp.empty()) {
-			o << auto_indent << "chp:" << endl;
-			chp.dump(o << auto_indent) << endl;
+		if (defined) {
+			// PRS
+			if (!prs.empty()) {
+				o << auto_indent << "prs:" << endl;
+				prs.dump(o);	// << endl;
+			}
+			// CHP
+			if (!chp.empty()) {
+				o << auto_indent << "chp:" << endl;
+				chp.dump(o << auto_indent) << endl;
+			}
+			if (footprint_map.size()) {
+				footprint_map.dump(o << auto_indent) << endl;
+			}
 		}
 	}	// end indent scope
-	return o << auto_indent << "}" << endl;
+	return o << auto_indent << '}' << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2196,6 +2406,12 @@ process_definition::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::commit_arity(void) {
+	footprint_map.set_arity(template_formals.arity());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 process_definition::lookup_object_here(const string& s) const {
 	return scopespace::lookup_object_here(s);
@@ -2219,9 +2435,6 @@ size_t
 process_definition::lookup_port_formal_position(
 		const instance_collection_base& i) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	dump(cerr) << endl;
-#endif
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
 
@@ -2252,13 +2465,19 @@ process_definition::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_process_type
+process_definition::make_canonical_type(const template_actuals& a) const {
+	return canonical_process_type(never_ptr<const this_type>(this), a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	We are at an actual base definition of a process, 
 	just return the fundamental type. which is canonical.  
 	TODO: implement here, have make_fundamental call this.  
  */
 count_ptr<const process_type_reference>
-process_definition::make_canonical_type_reference(
+process_definition::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
 	return make_fundamental_type_reference(a)
 		.is_a<const process_type_reference>();;
@@ -2268,10 +2487,11 @@ process_definition::make_canonical_type_reference(
 /**
 	Adds a port formal instance to this process definition.  
  */
-never_ptr<const instance_collection_base>
+never_ptr<const physical_instance_collection>
 process_definition::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+	typedef	never_ptr<const physical_instance_collection>	return_type;
 	NEVER_NULL(f);
 	INVARIANT(!f.is_a<param_instantiation_statement_base>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -2280,12 +2500,12 @@ process_definition::add_port_formal(
 	probe(lookup_object_here(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
-		return never_ptr<const instance_collection_base>(NULL);
+		return return_type(NULL);
 	}
 	}
 
-	const never_ptr<const instance_collection_base>
-		pf(add_instance(f, id));
+	const return_type pf(add_instance(f, id)
+		.is_a<const physical_instance_collection>());
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -2391,6 +2611,142 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const footprint&
+process_definition::get_footprint(
+		const count_ptr<const const_param_expr_list>& p) const {
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		return footprint_map[*p];
+	} else {
+		return footprint_map.only();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre the arity of the footprint_manager must be set.  
+ */
+void
+process_definition::register_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
+	// this has a fooprint manager
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		footprint& f = footprint_map[*p];
+		f.import_scopespace(*this);
+	} else {
+		INVARIANT(!footprint_map.arity());
+		// register the only map only if it doesn't exist yet
+		// otherwise will force a comparison of null pointers
+		if (!footprint_map.size()) {
+			// create the one-and-only entry
+			footprint& f = footprint_map.only();
+			f.import_scopespace(*this);
+		}
+		// else it was already registered
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: catch mutual recursion of types?
+ */
+good_bool
+process_definition::unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	// unroll using the footprint manager
+	STACKTRACE_VERBOSE;
+if (defined) {
+	footprint* f;
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		f = &footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		f = &footprint_map.only();
+	}
+	if (!f->is_unrolled()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_process_type
+			cpt(make_canonical_type(canonical_actuals));
+		const unroll_context
+			c(canonical_actuals, template_formals, f);
+		if (sequential_scope::unroll(c).good) {
+			f->mark_unrolled();
+		} else {
+			// already have partial error message
+			// cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+} else {
+	cerr << "ERROR: cannot unroll incomplete process type " <<
+			get_qualified_name() << endl;
+	// parent should print: "instantiated from here"
+	return good_bool(false);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create the definition footprint fr a complete process_type.  
+ */
+good_bool
+process_definition::create_complete_type(
+		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
+if (defined) {
+	footprint* f;
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		f = &footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		f = &footprint_map.only();
+	}
+	// will automatically unroll first if not already unrolled
+	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	if (!f->is_created()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_process_type
+			cpt(make_canonical_type(canonical_actuals));
+		const unroll_context
+			c(canonical_actuals, template_formals, f);
+		// this replays internal aliases of all instances in this scope
+		if (!f->create_dependent_types().good) {
+			// error message
+			return good_bool(false);
+		}
+		if (sequential_scope::create_unique(c, *f).good) {
+			f->evaluate_port_aliases(port_formals);
+			f->mark_created();
+		} else {
+			// already have partial error message
+			// cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+} else {
+	cerr << "ERROR: cannot create incomplete process type " <<
+			get_qualified_name() << endl;
+	// parent should print: "instantiated from here"
+	return good_bool(false);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively collects reachable pointers and register them
 	with the persistent object manager.  
@@ -2410,6 +2766,7 @@ if (!m.register_transient_object(this,
 	// PRS
 	prs.collect_transient_info_base(m);
 	chp.collect_transient_info_base(m);
+	footprint_map.collect_transient_info_base(m);
 }
 }
 
@@ -2430,6 +2787,7 @@ process_definition::write_object(
 	// PRS
 	prs.write_object_base(m, f);
 	chp.write_object_base(m, f);
+	footprint_map.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2446,6 +2804,7 @@ process_definition::load_object(
 	// PRS
 	prs.load_object_base(m, f);
 	chp.load_object_base(m, f);
+	footprint_map.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2546,22 +2905,25 @@ process_definition_alias::make_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+canonical_process_type
+process_definition_alias::make_canonical_type(const template_actuals& a) const {
+	const template_actuals& ba(base->get_template_params());
+	const template_actuals
+		ta(ba.transform_template_actuals(a, template_formals));
+	return base->get_base_proc_def()->make_canonical_type(ta);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Work to be done here... substitute expressions with local context.
  */
 count_ptr<const process_type_reference>
-process_definition_alias::make_canonical_type_reference(
+process_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
-#if 0
-	typedef	count_ptr<const process_type_reference>	return_type;
-	cerr << "Fang. write process_definition_alias::make_canonical_type_reference()!" << endl;
-	return return_type(NULL);
-#else
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
-	return base->get_base_proc_def()->make_canonical_type_reference(ta);
-#endif
+	return base->get_base_proc_def()->make_canonical_fundamental_type_reference(ta);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

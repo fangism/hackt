@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.9 2005/08/08 16:51:14 fang Exp $
+	$Id: list_vector.h,v 1.10 2005/09/04 21:15:07 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -59,6 +59,7 @@ using util::qmap;
  */
 template <class T, class ValAlloc, class VecAlloc>
 class list_vector {
+	typedef	LIST_VECTOR_CLASS		this_type;
 public:
 	typedef	T				value_type;
 	typedef	T*				pointer;
@@ -276,7 +277,8 @@ public:
 		// first_chunk(c, v);
 	}
 
-	// use default copy-constructor
+	// cannot use default copy-constructor because of pointers
+	list_vector(const this_type&);
 
 	/// construct from a sequence of values
 	template <class InIter>
@@ -744,7 +746,7 @@ public:
 		\param l the list_vector to swap with.
 	 */
 	void
-	swap(list_vector& l) {
+	swap(this_type& l) {
 		vec_list.swap(l.vec_list);
 		vec_map.swap(l.vec_map);
 		// yeah, I know can also swap without intermediate...
@@ -771,38 +773,7 @@ private:
 	/**
 		Helper class for quickly checking invariants.  
 	 */
-	struct list_map_checker {
-		size_type list_size;
-		size_type map_size;
-
-		list_map_checker() : list_size(0), map_size(0) { }
-		list_map_checker(const size_type l, const size_type m) :
-			list_size(l), map_size(m) { }
-
-		bool
-		valid(void) const {
-			return (list_size == map_size);
-		}
-
-		/// "multiplication" defined for inner_product algorithm
-		static
-		list_map_checker
-		mul(const typename vec_map_type::value_type& m, 
-			const vector_type& v) {
-			return list_map_checker(v.size(), m.first);
-		}
-
-		/// "addition" defined for inner_product algorithm
-		static
-		list_map_checker
-		add(const list_map_checker& c1, const list_map_checker& c2) {
-			INVARIANT(c1.valid());
-			return list_map_checker(c1.list_size +c2.list_size, 
-				c2.map_size);
-		}
-	
-	};	// end struct list_map_checker
-
+	struct list_map_checker;
 
 public:
 	ostream&

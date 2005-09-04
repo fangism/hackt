@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_thing.h"
 	Named, pooled object for testing.  
-	$Id: named_pooled_thing.h,v 1.3 2005/06/21 21:26:42 fang Exp $
+	$Id: named_pooled_thing.h,v 1.4 2005/09/04 21:15:12 fang Exp $
  */
 
 #ifndef	__NAMED_POOLED_THING_H__
@@ -9,9 +9,9 @@
 
 #include <iosfwd>
 #include <string>
-#include "memory/list_vector_pool_fwd.h"
-#include "memory/pointer_classes.h"
-#include "what.h"
+#include "util/memory/list_vector_pool_fwd.h"
+#include "util/memory/pointer_classes.h"
+#include "util/what.h"
 
 #define	ENABLE_POOL			1
 // DEBUG memory pool using stacktrace, seeing double destruction!

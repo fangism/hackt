@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.2 2005/07/23 06:52:32 fang Exp $
+	$Id: alias_actuals.cc,v 1.3 2005/09/04 21:14:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -56,14 +56,16 @@ instance_alias_info_actuals::dump_actuals(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
-	Comparing relaxed actuals for the sake of connection checking.  
+	Symmetric version of the above, will copy one set of actuals
+	over to the other.  
  */
 good_bool
-instance_alias_info_actuals::compare_and_update_actuals(
-		alias_actuals_type& l, const alias_actuals_type& r) {
-	if (r) {
-	if (l) {
+instance_alias_info_actuals::symmetric_compare_and_update_actuals(
+		alias_actuals_type& l, alias_actuals_type& r) {
+	STACKTRACE_VERBOSE;
+	if (l && r) {
 		// then compare them
 		if (!l->must_be_equivalent(*r)) {
 			cerr << "ERROR: attempted to connect instances with "
@@ -74,14 +76,16 @@ instance_alias_info_actuals::compare_and_update_actuals(
 			// for now stop on 1st error
 			return good_bool(false);
 		}
-		// else good to connect because l is relaxed
-	} else {
+	} else if (l) {
 		// then set them for the rest of this connection loop.
+		r = l;
+	} else if (r) {
 		l = r;
 	}
-	}
+	// else both NULL, do nothing
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -107,7 +111,7 @@ instance_alias_info_actuals::compare_actuals(
 void
 instance_alias_info_actuals::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (actuals)
 		actuals->collect_transient_info(m);
 }
@@ -116,7 +120,7 @@ instance_alias_info_actuals::collect_transient_info_base(
 void
 instance_alias_info_actuals::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(o, actuals);
 }
 
@@ -124,7 +128,7 @@ instance_alias_info_actuals::write_object_base(
 void
 instance_alias_info_actuals::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(i, actuals);
 }
 

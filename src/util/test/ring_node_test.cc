@@ -1,14 +1,14 @@
 /**
 	\file "ring_node_test.cc"
 	Test for ring_node structures.  
-	$Id: ring_node_test.cc,v 1.2 2005/02/27 22:54:33 fang Exp $
+	$Id: ring_node_test.cc,v 1.3 2005/09/04 21:15:13 fang Exp $
  */
 
 #include <iostream>
 #include <string>
-#include "ring_node.tcc"
+#include "util/ring_node.tcc"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::string;
 using util::ring_node;
 using util::ring_node_derived;
@@ -33,7 +33,7 @@ ring_type_test(void);
 
 //=============================================================================
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	cout << "========= testing ring_node<string> =========" << endl;
 	ring_type_test<ring_node>();
 	cout << "===== testing ring_node_derived<string> =====" << endl;

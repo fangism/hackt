@@ -1,9 +1,9 @@
 // "031a.in" should pass: nested member
 // copy-reduced from "031.in"
 
-defproc egg(int yolk);
-defproc basket(egg egg_array[2]);
-defproc bundle(basket c[2]);
+defproc egg(int yolk) { }
+defproc basket(egg egg_array[2]) { }
+defproc bundle(basket c[2]) { }
 
 bundle load;
 

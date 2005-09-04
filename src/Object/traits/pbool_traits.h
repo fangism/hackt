@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.3 2005/07/23 06:52:52 fang Exp $
+	$Id: pbool_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -64,6 +64,7 @@ struct class_traits<pbool_tag> {
 	enum { assignment_chunk_size = 64 };
 
 	typedef	void			value_collection_parameter_type;
+	typedef	null_parameter_type	instance_collection_parameter_type;
 
 	class instantiation_statement_type_ref_base;
 

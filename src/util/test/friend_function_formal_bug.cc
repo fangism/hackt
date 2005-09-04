@@ -1,7 +1,7 @@
 /**
 	\file "friend_function_formal_bug.cc"
 	Example of a major bug in gcc-3.3, and its workaround.  
-	$Id: friend_function_formal_bug.cc,v 1.2 2005/01/28 19:58:54 fang Exp $
+	$Id: friend_function_formal_bug.cc,v 1.3 2005/09/04 21:15:11 fang Exp $
  */
 
 #include <vector>
@@ -82,13 +82,13 @@ thing::pool_type
 thing::pool;
 
 void*
-thing::operator new (size_t s) {
+thing::operator new (size_t) {
 	return pool.allocate();
 }
 
 #if 1
 void*
-thing::operator new (size_t s, void*& p) {
+thing::operator new (size_t, void*& p) {
 	return p;
 }
 
@@ -100,7 +100,7 @@ thing::operator delete (void* p) {
 #endif
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	return 0;
 }
 

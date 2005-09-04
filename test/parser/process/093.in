@@ -1,0 +1,15 @@
+// "093.in" don't know what to do about this yet
+// global node reference
+// UNRESOLVED ISSUE: haven't descided what to do about global nodes yet
+
+bool G;
+
+defproc foo(bool a) {
+prs {
+	G -> a-
+	~G -> a+
+}
+}
+
+foo f;
+

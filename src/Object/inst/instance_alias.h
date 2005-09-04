@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.3 2005/08/08 16:51:08 fang Exp $
+	$Id: instance_alias.h,v 1.4 2005/09/04 21:14:49 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -65,6 +65,8 @@ public:
 
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 					instance_alias_base_type;
+	typedef	typename class_traits<Tag>::instance_alias_info_type
+					instance_alias_info_type;
 private:
 	/**
 		grandparent_type is maplikeset_element_derived.
@@ -74,12 +76,14 @@ private:
 		great_grandparent_type is ring_node_derived
 	 */
 	typedef	typename grandparent_type::parent_type	great_grandparent_type;
+	typedef	typename instance_alias_info_type::internal_alias_policy
+							internal_alias_policy;
 public:
 	typedef	typename parent_type::key_type		key_type;
 	// or simple_type?
-	typedef	typename instance_alias_info<Tag>::const_iterator
+	typedef	typename instance_alias_info_type::const_iterator
 							const_iterator;
-	typedef	typename instance_alias_info<Tag>::iterator
+	typedef	typename instance_alias_info_type::iterator
 							iterator;
 public:
 	instance_alias() : parent_type() { }
@@ -128,13 +132,11 @@ public:
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
 
-	void
+	ostream&
 	dump_alias(ostream& o) const;
 
-#if 0
-	ostream&
-	dump_hierarchical_name(ostream&) const;
-#endif
+	TRACE_ALIAS_BASE_PROTO;
+	TRACE_ALIAS_PROTO;
 
 	/**
 		Use with maplikeset_element requires comparison operator.  
@@ -163,9 +165,9 @@ class instance_alias<Tag,0> :
 	public class_traits<Tag>::instance_alias_base_type {
 private:
 	typedef	KEYLESS_INSTANCE_ALIAS_CLASS		this_type;
+public:
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 							parent_type;
-public:
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 					instance_alias_base_type;
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
@@ -180,13 +182,8 @@ public:
 public:
 	~instance_alias();
 
-	void
-	dump_alias(ostream& o) const;
-
-#if 0
 	ostream&
-	dump_hierarchical_name(ostream&) const;
-#endif
+	dump_alias(ostream& o) const;
 
 	const_iterator
 	begin(void) const;
@@ -200,6 +197,10 @@ private:
 
 	iterator
 	end(void);
+
+public:
+	TRACE_ALIAS_BASE_PROTO;
+	TRACE_ALIAS_PROTO;
 
 public:
 	void

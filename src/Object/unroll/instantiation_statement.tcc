@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.4 2005/08/08 23:08:31 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.5 2005/09/04 21:15:01 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -29,8 +29,10 @@
 
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
+#include "Object/def/footprint.h"
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -162,8 +164,13 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
-INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
-	NEVER_NULL(this->inst_base);
+INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
+	typedef	typename type_ref_ptr_type::element_type	element_type;
+	STACKTRACE_VERBOSE;
+	const footprint* const f(c.get_target_footprint());
+	collection_type& _inst(f ? IS_A(collection_type&, 
+			*(*f)[this->inst_base->get_name()])
+		: *this->inst_base);
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 
 	// collection, because unroll_type_reference combines the
@@ -174,21 +181,27 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// Resolution: detect the first time, and do a first-time
 	// commit using the type_ref_parent_type's original type, 
 	// which will be distinguishably strict or relaxed.  
-	const bool first_time = !this->inst_base->is_partially_unrolled();
+	const bool first_time = !_inst.is_partially_unrolled();
 	if (first_time) {
-		const type_ref_ptr_type
-			ft(type_ref_parent_type::get_resolved_type(c));
-		if (!ft) {
+		const instance_collection_parameter_type
+			cft(type_ref_parent_type::get_canonical_type(c));
+		if (!cft) {
 			// already have error message
 			return good_bool(false);
 		}
-		// ft will either be strict or relaxed.  
-		const type_ref_ptr_type
-			cft(ft->make_canonical_type_reference()
-				.template is_a<const typename type_ref_ptr_type::element_type>());
-		type_ref_parent_type::commit_type_first_time(
-			*this->inst_base, cft);
-		// this->inst_base->establish_collection_type(ft);
+#if 0
+		if (!cft.unroll_definition_footprint().good) {
+			// already have error message
+			return good_bool(false);
+		}
+#endif
+		if (!type_ref_parent_type::commit_type_first_time(
+				_inst, cft).good) {
+			type_ref_parent_type::get_type()->dump(
+				cerr << "Instantiated from: ") << endl;
+			return good_bool(false);
+		}
+		// _inst.establish_collection_type(ft);
 	}
 	// unroll_type_check is specialized for each tag type.  
 	// NOTE: this results in a "fused" type that combines
@@ -201,19 +214,24 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 			" during unroll." << endl;
 		return good_bool(false);
 	}
-	const type_ref_ptr_type
-		final_type_ref(temp_type_ref->make_canonical_type_reference()
-			.template is_a<const typename type_ref_ptr_type::element_type>());
+	const instance_collection_parameter_type
+		final_type_ref(temp_type_ref->make_canonical_type());
 	if (!final_type_ref) {
 		this->get_type()->what(cerr << "ERROR: unable to resolve ") <<
 			" during unroll." << endl;
 		return good_bool(false);
 	}
+#if 0
+	if (!final_type_ref.unroll_definition_footprint().good) {
+		// already have error message
+		return good_bool(false);
+	}
+#endif
 	// TODO: decide what do to about relaxed type parameters
 	// 2005-07-07: answer is above under "HACK"
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
-			*this->inst_base, final_type_ref));
+			_inst, final_type_ref));
 	// should be optimized away where there is no type-check to be done
 	if (!tc.good) {
 		cerr << "ERROR: type-mismatch during " <<
@@ -224,6 +242,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
 	const_range_list crl;
+#if 0
+	c.dump(STACKTRACE_INDENT) << endl;
+#endif
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
@@ -246,8 +267,8 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				*this->inst_base, crl, 
-				final_type_ref->make_unroll_context(), 
+				_inst, crl, 
+				final_type_ref.make_unroll_context(), 
 				relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
@@ -255,7 +276,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(unroll_context& c) const {
 		return good_bool(false);
 	}
 	return good_bool(true);
-}
+}	// end instantiation_statement<>::unroll
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -280,13 +301,8 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());
-	const type_ref_ptr_type ft(type_ref_parent_type::get_resolved_type(c));
-	if (!ft) {
-		// already have error message
-		return good_bool(false);
-	}
-	INVARIANT(ft->is_resolved());
-	INVARIANT(ft->is_canonical());
+	const instance_collection_parameter_type
+		ft(type_ref_parent_type::get_canonical_type(c));
 	// ft will either be strict or relaxed.  
 	type_ref_parent_type::commit_type_first_time(coll, ft);
 	// no need to re-evaluate type, since get_resolved_type is
@@ -318,7 +334,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				coll, crl, ft->make_unroll_context(), 
+				coll, crl, ft.make_unroll_context(), 
 				relaxed_const_actuals);
 	} else {
 		// consider different message
@@ -333,7 +349,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
-		unroll_context& c) const {
+		const unroll_context& c) const {
 	// would've exited already
 	return this->unroll(c);
 }
@@ -344,16 +360,24 @@ INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
 	\pre already unrolled.  
 	TODO: possibly cache the resolved indices from unrolling, 
 		but don't bother saving them persistently.  
+	TODO: translate using footprint from the unroll_context.  
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
-INSTANTIATION_STATEMENT_CLASS::create_unique(const unroll_context& c) const {
+INSTANTIATION_STATEMENT_CLASS::create_unique(
+		const unroll_context& c, footprint& f) const {
 	STACKTRACE("instantiation_statement::create_unique()");
 	const_range_list crl;
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	INVARIANT(rr.good);
-	return type_ref_parent_type::create_unique_state(
-		*this->inst_base, crl);
+	// _f determines whether or not we are in a definition context
+	const footprint* const _f(c.get_target_footprint());
+	if (_f)
+		INVARIANT(_f == &f);
+	collection_type& _inst(_f ? IS_A(collection_type&, 
+			*f[this->inst_base->get_name()])
+		: *this->inst_base);
+	return type_ref_parent_type::create_unique_state(_inst, crl, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

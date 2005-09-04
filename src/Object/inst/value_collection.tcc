@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.2 2005/07/23 06:52:42 fang Exp $
+ 	$Id: value_collection.tcc,v 1.3 2005/09/04 21:14:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -117,9 +117,19 @@ VALUE_COLLECTION_CLASS::value_collection(const scopespace& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial copy constructor.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::value_collection(const this_type& t, 
+		const footprint& f) :
+		parent_type(t, f), ival(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS::~value_collection() {
-//	STACKTRACE("~value_collection()");
+//	STACKTRACE_DTOR("~value_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,11 +154,18 @@ VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<const fundamental_type_reference>
-VALUE_COLLECTION_CLASS::get_type_ref(void) const {
+count_ptr<const param_type_reference>
+VALUE_COLLECTION_CLASS::get_param_type_ref(void) const {
 	return class_traits<Tag>::built_in_type_ptr;
 		// declared in "traits/class_traits.h"
 		// initialized in "art_built_ins.cc"
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<const fundamental_type_reference>
+VALUE_COLLECTION_CLASS::get_type_ref(void) const {
+	return get_param_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -388,8 +405,29 @@ VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial copy constructor for the footprint use.  
+ */
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+VALUE_ARRAY_CLASS::value_array(const this_type& t, const footprint& f) :
+		parent_type(t, f), collection(t.collection), 
+		cached_values(D) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::~value_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial deep copy for footprint map.  
+ */
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+instance_collection_base*
+VALUE_ARRAY_CLASS::make_instance_collection_footprint_copy(
+		const footprint& f) const {
+	return new this_type(*this, f);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
@@ -606,10 +644,33 @@ VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial copy-constructor for footprint use.  
+ */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+VALUE_SCALAR_CLASS::value_array(const this_type& t, const footprint& f) :
+		parent_type(t, f),
+		the_instance(t.the_instance), 
+		cached_value(const_expr_type::default_value), 
+		cache_validity(false) {
+}
+		
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::~value_array() {
-	STACKTRACE("~value_scalar()");
+	STACKTRACE_DTOR("~value_scalar()");
 //	STACKTRACE_STREAM << "@ " << this << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Deep copy-constructor for making a footprint copy of this collection.  
+ */
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+instance_collection_base*
+VALUE_SCALAR_CLASS::make_instance_collection_footprint_copy(
+		const footprint& f) const {
+	return new this_type(*this, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,0 +1,206 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	151
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	175
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	23	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	proccoll	1	#HEAD#	#TAIL#	37
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	28
+	36	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	48	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	53	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	59	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	61	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	66	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	72	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	84
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	84
+	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	87	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> M
+      pint<> N
+      >(
+        foo<pint-inst-ref ::bar::M> x with indices: {
+          [0..::bar::N-1]
+        }
+
+      )
+      In definition "bar", we have: {
+        M = pint<> M
+        N = pint<> N
+        x = foo<pint-inst-ref ::bar::M> x with indices: {
+          [0..::bar::N-1]
+        }
+
+        footprint collection: {
+          <3, 2> {
+            pint^0 M value: ?
+            pint^0 N value: ?
+            process foo<3>^1 x with indices: {
+            }
+              unrolled indices: {
+                0 = ::bar::x[0] (
+                  bool^1 a with indices: {
+                    [0..::foo::D-1]
+                  }
+                    unrolled indices: {
+                      0 = ::bar::x[0].a[2] 
+                      1 = ::bar::x[0].a[1] 
+                      2 = ::bar::x[1].a[2] 
+                    }
+                )
+                1 = ::bar::x[1] (
+                  bool^1 a with indices: {
+                    [0..::foo::D-1]
+                  }
+                    unrolled indices: {
+                      0 = ::bar::x[0].a[0] 
+                      1 = ::bar::x[1].a[1] 
+                      2 = ::bar::x[1].a[0] 
+                    }
+                )
+              }
+          }
+        }
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> D
+      >(
+        bool<> a with indices: {
+          [0..::foo::D-1]
+        }
+
+      )
+      In definition "foo", we have: {
+        D = pint<> D
+        a = bool<> a with indices: {
+          [0..::foo::D-1]
+        }
+
+        footprint collection: {
+          <3> {
+            pint^0 D value: ?
+            bool^1 a with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::a[0] 
+                1 = ::foo::a[1] 
+                2 = ::foo::a[2] 
+              }
+          }
+        }
+      }
+
+  Instances:
+    poo = process bar<3, 2>^0 poo (instantiated) = ::poo (
+      process foo<3>^1 x with indices: {
+        [0..::bar::N-1]
+      }
+        unrolled indices: {
+          0 = ::poo.x[0] (
+            bool^1 a with indices: {
+              [0..::foo::D-1]
+            }
+              unrolled indices: {
+                0 = ::poo.x[0].a[0] 
+                1 = ::poo.x[0].a[1] 
+                2 = ::poo.x[0].a[2] 
+              }
+          )
+          1 = ::poo.x[1] (
+            bool^1 a with indices: {
+              [0..::foo::D-1]
+            }
+              unrolled indices: {
+                0 = ::poo.x[1].a[0] 
+                1 = ::poo.x[1].a[1] 
+                2 = ::poo.x[1].a[2] 
+              }
+          )
+        }
+    )
+}
+

@@ -1,0 +1,51 @@
+"TODO"
+	$Id: TODO,v 1.1 2005/09/04 21:14:39 fang Exp $
+
+===============================================================================
+recursive create-unique!
+	done, except for private internal structures.  
+
+creation: reject unique instances that are missing relaxed actuals
+	(that should have them), only after complete hierarchical merge.
+
+===============================================================================
+big stuff:
+
+*** loops and conditionals ***
+
+CFLAT
+
+compare memory usage between using flattened production rule arrays
+vs. arrays of definitions (like logic gates).
+
+in general check memory usage of large arrays of things
+	make benchmarks directory.
+
+===============================================================================
+enhancements:
+
+consider using instance_collection_placeholders in definitions' scopespace.  
+	(done)
+
+introduce true resolved, canonical type references
+instance collections should use them, not the fundamental derivatives
+
+Library/Utilities:
+stacktrace.h:
+	add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
+ICE.h:
+	add ICE_ASSERT combined INVARIANT with ICE macro
+
+===============================================================================
+PRS and CHP
+
+pass-gates:
+
+===============================================================================
+KNOWN BUGS
+
+test cases:
+parser/connect/120.in, 121.in
+	regarding hierarchical propagation and checking of relaxed actuals
+	(2005-08-18: punting)
+

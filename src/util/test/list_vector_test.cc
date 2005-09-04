@@ -1,16 +1,16 @@
 /**
 	\file "list_vector_test.cc"
 	Example for using the list_vector class.  
-	$Id: list_vector_test.cc,v 1.3 2004/12/05 05:08:28 fang Exp $
+	$Id: list_vector_test.cc,v 1.4 2005/09/04 21:15:11 fang Exp $
  */
 
 #include <iostream>
 #include <numeric>
 #include <algorithm>
 #include <functional>
-#include "list_vector.tcc"
+#include "util/list_vector.tcc"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::ostream_iterator;
 using std::copy;
 using std::reverse_copy;
@@ -105,7 +105,7 @@ check_empty_list_vector(vec_type& v) {
 }
 
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	vec_type v;
 	check_empty_list_vector(v);
 

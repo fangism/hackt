@@ -1,0 +1,106 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
+	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
+	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+        foo<> x
+      )
+      In definition "bar", we have: {
+        x = foo<> x
+        footprint: {
+          process foo<>^0 x (instantiated) = ::bar::x (1) (
+            process ick<>^0 a (instantiated) = ::bar::x.b (2) 
+            process ick<>^0 b (instantiated) = ::bar::x.a (2) 
+          )
+          process instance pool:
+          1	::bar::x
+          2	::bar::x.a
+          process port aliases:
+          2: ::bar::x.a = ::bar::x.b
+        }
+      }
+
+    foo = process-definition (defined) foo(
+        ick<> a
+        ick<> b
+      )
+      In definition "foo", we have: {
+        a = ick<> a
+        b = ick<> b
+        footprint: {
+          process ick<>^0 a (instantiated) = ::foo::b (1) 
+          process ick<>^0 b (instantiated) = ::foo::a (1) 
+          process instance pool:
+          1	::foo::a
+          process port aliases:
+          1: ::foo::a = ::foo::b
+        }
+      }
+
+    ick = process-definition (defined) ick(
+      )
+      In definition "ick", we have: {
+        footprint: {
+        }
+      }
+
+  Instances:
+    poo = process bar<>^0 poo (instantiated) = ::poo (1) (
+      process foo<>^0 x (instantiated) = ::poo.x (2) (
+        process ick<>^0 a (instantiated) = ::poo.x.b (3) 
+        process ick<>^0 b (instantiated) = ::poo.x.a (3) 
+      )
+    )
+}
+
+Created state:
+process instance pool:
+1	::poo
+2	::poo.x
+3	::poo.x.a
+

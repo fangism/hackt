@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.3 2005/08/08 16:51:07 fang Exp $
+	$Id: module.h,v 1.4 2005/09/04 21:14:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -11,6 +11,7 @@
 #include "Object/common/util_types.h"
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
+#include "Object/def/footprint.h"
 
 namespace ART {
 namespace entity {
@@ -44,15 +45,10 @@ protected:
 	excl_ptr<name_space>			global_namespace;
 
 	/**
-		Whether or not this entire module has been 
-		successfully unrolled.
+		The resulting state of unique instances after unrolling
+		and creation.  
 	 */
-	bool					unrolled;
-	/**
-		Whether or not this object has had state space
-		uniquely allocated.  
-	 */
-	bool					created;
+	footprint				_footprint;
 
 private:
 	module();
@@ -83,10 +79,14 @@ public:
 	dump(ostream& o) const;
 
 	bool
-	is_unrolled(void) const { return unrolled; }
+	is_unrolled(void) const {
+		return _footprint.is_unrolled();
+	}
 
 	bool
-	is_created(void) const { return created; }
+	is_created(void) const {
+		return _footprint.is_created();
+	}
 
 	/**
 		Note: sequential scope has a const-version of this, 
@@ -98,6 +98,10 @@ public:
 
 	good_bool
 	create_unique(void);
+
+private:
+	good_bool
+	create_dependent_types(void);
 
 public:
 	FRIEND_PERSISTENT_TRAITS

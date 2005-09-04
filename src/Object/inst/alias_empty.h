@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.2 2005/07/23 06:52:33 fang Exp $
+	$Id: alias_empty.h,v 1.3 2005/09/04 21:14:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -35,6 +35,7 @@ using util::persistent_object_manager;
 	in the unrolled object.  
  */
 class instance_alias_info_empty {
+	typedef	instance_alias_info_empty		this_type;
 protected:
 	typedef	count_ptr<const const_param_expr_list>	alias_actuals_type;
 
@@ -73,22 +74,44 @@ public:
 		return o;
 	}
 
-	/**
-		Pray that compiler is smart enough to inline
-		this and optimize away if-true.  
-	 */
-	static
+protected:
+	/// No-op
+	template <class AliasType>
 	good_bool
-	compare_and_update_actuals(const alias_actuals_type&,
-		const alias_actuals_type&) {
+	__compare_and_propagate_actuals(const alias_actuals_type&, 
+			const AliasType&) const {
 		return good_bool(true);
 	}
 
+	template <class AliasType>
+	static
+	good_bool
+	__symmetric_synchronize(const AliasType&, const AliasType&) {
+		return good_bool(true);
+	}
+
+public:
 	static
 	good_bool
 	compare_actuals(const alias_actuals_type&,
 		const alias_actuals_type&) {
 		return good_bool(true);
+	}
+
+	template <class AliasType>
+	static
+	good_bool
+	create_dependent_types(const AliasType&);
+
+protected:
+	/**
+		Since type has no relaxed actuals, 
+		just return the canonical type of the collection. 
+	 */
+	template <class InstColl>
+	typename InstColl::instance_collection_parameter_type
+	complete_type_actuals(const InstColl& _inst) const {
+		return _inst.get_canonical_type();
 	}
 
 protected:
@@ -103,12 +126,6 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&) {
 	}
-
-protected:
-	template <class Tag>
-	static
-	const alias_actuals_type&
-	find_relaxed_actuals(const instance_alias_info<Tag>&);
 
 };	// end class instance_alias_info_empty
 

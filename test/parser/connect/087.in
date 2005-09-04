@@ -1,8 +1,11 @@
 // "087.in" should pass -- testing port connections with user-defined types
 
-defchan fake_chan <: chan(int) (int d; bool e);
+defchan fake_chan <: chan(int) (int d; bool e) {
+	send { }
+	recv { }
+}
 
-defproc chan_proc(fake_chan? L; fake_chan! R);
+defproc chan_proc(fake_chan? L; fake_chan! R) { }
 
 fake_chan X, Y;
 

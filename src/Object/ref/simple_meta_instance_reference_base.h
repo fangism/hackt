@@ -3,7 +3,7 @@
 	Base class family for instance references in ART.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_meta_instance_reference_base.h,v 1.2 2005/07/23 06:52:49 fang Exp $
+	$Id: simple_meta_instance_reference_base.h,v 1.3 2005/09/04 21:14:55 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
@@ -110,6 +110,9 @@ virtual	~simple_meta_instance_reference_base();
 
 	bool
 	is_relaxed_formal_dependent(void) const;
+
+	bool
+	is_template_dependent(void) const;
 
 	const_range_list
 	static_constant_dimensions(void) const;

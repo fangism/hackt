@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.4 2005/08/04 23:02:50 fang Exp $
+#	$Id: Make.global,v 1.5 2005/09/04 21:14:34 fang Exp $
 
 
 # list of files to automatically CVS ignore, accumulated over Makefile
@@ -69,7 +69,9 @@ check.log: force
 	@$(ECHO) Tests started `$(DATE)` > $@.tmp
 	$(MAKE) -k check 2>&1 | cat >> $@.tmp
 	-$(MV) $@.tmp $@
+# dump failures
 	-$(GREP) -v ^PASS $@
+#	@$(ECHO) `$(GREP) "Abort trap" $@ | wc -l` cases crashed.
 	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 
 if HAVE_CVS

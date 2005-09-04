@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.2 2005/07/23 06:52:42 fang Exp $
+	$Id: value_collection.h,v 1.3 2005/09/04 21:14:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -13,6 +13,7 @@
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
@@ -29,6 +30,7 @@ class simple_meta_instance_reference;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
+class param_type_reference;
 class param_expr;
 class const_param;
 class const_range_list;
@@ -97,6 +99,12 @@ protected:
 protected:
 	explicit
 	value_collection(const size_t d);
+
+	value_collection(const this_type& t, const footprint& f);
+
+private:
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
 public:
 	value_collection(const scopespace& o, const string& n, 
 		const size_t d);
@@ -118,6 +126,9 @@ virtual	ostream&
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
+
+	count_ptr<const param_type_reference>
+	get_param_type_ref(void) const;
 
 	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const;
@@ -221,6 +232,10 @@ private:
 
 	value_array();
 
+	value_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+
 public:
 	value_array(const scopespace& o, const string& n);
 	~value_array();
@@ -294,6 +309,12 @@ public:
 
 	value_array(const scopespace& o, const string& n);
 
+private:
+	value_array(const this_type&, const footprint&);
+
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+
+public:
 	~value_array();
 
 	ostream&

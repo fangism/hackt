@@ -1,6 +1,6 @@
 // "010.in" should pass: connecting two equivalent procs
 
-defproc foo();
+defproc foo() { }
 
 foo bar;
 foo blah = bar;

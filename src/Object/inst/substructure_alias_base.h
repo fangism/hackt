@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3 2005/08/08 16:51:10 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4 2005/09/04 21:14:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -10,11 +10,15 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
+#include "Object/def/footprint.h"
 
 namespace ART {
 namespace entity {
 class instance_collection_base;
+class physical_instance_collection;
 class unroll_context;
+class port_alias_tracker;
+class footprint;
 template <class> class state_instance;
 using std::istream;
 using std::ostream;
@@ -29,6 +33,7 @@ private:
 	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
+	typedef	physical_instance_collection	port_type;
 protected:
 	/**
 		Container of sub-instances.  
@@ -56,37 +61,58 @@ protected:
 		restore_parent_child_links();
 	}
 
-	void
-	create_subinstance_state(this_type& t) {
-		subinstances.create_state(t.subinstances);
+	good_bool
+	create_subinstance_state(this_type& t, footprint& f) {
+		return subinstances.create_state(t.subinstances, f);
 		// t.get_back_ref()->subinstances.create_state(subinstances);
 	}
 
 	template <class Tag>
 	void
-	inherit_state(const state_instance<Tag>& t) {
-		subinstances.inherit_state(t.get_back_ref()->subinstances);
+	inherit_state(const state_instance<Tag>& t, const footprint& f) {
+		subinstances.inherit_state(t.get_back_ref()->subinstances, f);
 	}
 
 	void
-	allocate_subinstances(void);
+	allocate_subinstances(footprint&);
+
+	static
+	good_bool
+	synchronize_port_actuals(this_type& l, this_type& r) {
+		return subinstance_manager::synchronize_port_actuals(
+			l.subinstances, r.subinstances);
+	}
+
+	good_bool
+	replay_substructure_aliases(void) const;
 
 public:
 	// just a forwarded call
 	subinstance_manager::value_type
-	lookup_port_instance(const instance_collection_base& i) const;
+	lookup_port_instance(const port_type& i) const;
+
+virtual	never_ptr<const physical_instance_collection>
+	get_container_base(void) const;
 
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&
 	dump_hierarchical_name(ostream&) const;
+
+virtual	size_t
+	allocate_state(footprint&) const;
 
 	ostream&
 	dump_ports(ostream& o) const { return subinstances.dump(o); }
 
 	// simply forwarded call
 	good_bool
-	connect_ports(const connection_references_type&, 
-		const unroll_context&);
+	connect_ports(const connection_references_type&, const unroll_context&);
+
+	void
+	collect_port_aliases(port_alias_tracker&) const;
+
+virtual	this_type&
+	__trace_alias_base(const this_type&) const;
 
 protected:
 	// call forwarding
@@ -122,18 +148,20 @@ protected:
 	/**
 		Has no substructure, thus does not recur.  
 	 */
-	void
-	create_subinstance_state(const this_type&) const { }
+	good_bool
+	create_subinstance_state(const this_type&, footprint&) const {
+		return good_bool(true);
+	}
 
 	/**
 		Nothing to copy recursively.  
 	 */
 	template <class Tag>
 	void
-	inherit_state(const state_instance<Tag>&) const { }
+	inherit_state(const state_instance<Tag>&, const footprint&) const { }
 
 	void
-	allocate_subinstances(void) const { }
+	allocate_subinstances(footprint&) const { }
 
 	/**
 		No-op.  
@@ -141,9 +169,29 @@ protected:
 	void
 	restore_parent_child_links(void) { }
 
+	static
+	good_bool
+	synchronize_port_actuals(const this_type&, const this_type&) {
+		return good_bool(true);
+	}
+
+	/**
+		No-op, because this has no substructure.  
+	 */
+	good_bool
+	replay_substructure_aliases(void) const {
+		return good_bool(true);
+	}
+
 public:
 	ostream&
 	dump_ports(ostream& o) const { return o; }
+
+	void
+	collect_port_aliases(const port_alias_tracker&) const { }
+
+	void
+	connect_ports(void) const { }
 
 protected:
 	void

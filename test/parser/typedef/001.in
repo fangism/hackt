@@ -1,4 +1,4 @@
-// should fail: can't typedef params
+// "001.in" should fail: can't typedef params
 
 typedef	pbool	param_bool;
 

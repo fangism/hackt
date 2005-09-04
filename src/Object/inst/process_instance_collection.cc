@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.3 2005/08/08 16:51:09 fang Exp $
+	$Id: process_instance_collection.cc,v 1.4 2005/09/04 21:14:53 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -13,6 +13,7 @@
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_PERSISTENTS		0
 #define	STACKTRACE_DESTRUCTORS		0
+#define	STACKTRACE_CONSTRUCTORS		0
 
 #include <exception>
 #include <iostream>
@@ -21,13 +22,14 @@
 #include "Object/inst/process_instance_collection.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/member_meta_instance_reference.h"
+#include "Object/def/process_definition.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/persistent_type_hash.h"
-
 #include "Object/inst/instance_collection.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
+#include "Object/inst/internal_aliases_policy.tcc"
 
 
 namespace util {
@@ -62,6 +64,7 @@ namespace entity {
 // explicit template clas instantiations
 
 template class state_instance<process_tag>;
+template class instance_pool<state_instance<process_tag> >;
 template class instance_alias_info<process_tag>;
 template class instance_collection<process_tag>;
 template class instance_array<process_tag, 0>;

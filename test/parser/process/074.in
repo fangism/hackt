@@ -1,0 +1,12 @@
+// "074.in" should fail, will recursively instantiate ports
+// copy-modified from "072.in"
+
+template <pint N>
+defproc foo(int<N> a) {
+	int<8> b;		// hard-coded
+	a = b;			// local alias
+}
+
+foo<8> poo;
+foo<9> wrong;			// will die instantiating this footprint
+

@@ -1,7 +1,7 @@
 // "088.in" should pass, connecting equivalent template types
 
 template <pint A>
-defproc foo();
+defproc foo() { }
 
 foo<1> bar, ick, poo;
 

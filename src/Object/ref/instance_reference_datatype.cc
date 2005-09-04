@@ -2,11 +2,13 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.2 2005/07/23 06:52:46 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.3 2005/09/04 21:14:55 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
 #define	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
+
+#define	ENABLE_STACKTRACE			0
 
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/bool_instance_collection.h"
@@ -24,6 +26,11 @@
 #include "Object/expr/enum_expr.h"
 #include "Object/expr/struct_expr.h"
 #include "Object/expr/const_range.h"
+
+// intriduced by canonical_type
+#include "Object/def/user_def_datatype.h"
+#include "Object/def/user_def_chan.h"
+#include "Object/def/process_definition.h"
 
 #include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"

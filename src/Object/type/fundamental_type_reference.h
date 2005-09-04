@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.2 2005/07/23 06:52:54 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.3 2005/09/04 21:14:59 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -118,11 +118,6 @@ virtual	bool
 	count_ptr<const this_type>					\
 	merge_relaxed_actuals(const const_template_args_ptr_type&) const
 
-#if 0
-// on second thought, this need not be virtual base!
-virtual	MERGE_RELAXED_ACTUALS_PROTO = 0;
-#endif
-
 	static	
 	excl_ptr<instantiation_statement_base>
 	make_instantiation_statement(
@@ -160,39 +155,22 @@ virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 	unroll_port_instances(const unroll_context&, 			\
 		subinstance_manager&) const
 
-#if 0
-virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
-#endif
-
 public:
-	bool
+virtual	bool
 	may_be_collectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
+		const fundamental_type_reference& t) const = 0;
 
-	bool
-	must_be_collectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
-
-	bool
+virtual	bool
 	may_be_connectibly_type_equivalent(
+		const fundamental_type_reference& t) const = 0;
+
+#define	TYPE_EQUIVALENT_PROTOS						\
+	bool								\
+	may_be_collectibly_type_equivalent(				\
+		const fundamental_type_reference& t) const;		\
+	bool								\
+	may_be_connectibly_type_equivalent(				\
 		const fundamental_type_reference& t) const;
-
-	bool
-	must_be_connectibly_type_equivalent(
-		const fundamental_type_reference& t) const;
-
-	// something for resolving typedefs
-	// or return by value? statically would require copy constructor
-	// wth, just allocate one...
-/**
-	NOTE: this requires that template arguments have been resolved
-	to constants!!!
- */
-#define	MAKE_CANONICAL_TYPE_REFERENCE_PROTO				\
-	count_ptr<const fundamental_type_reference>			\
-	make_canonical_type_reference(void) const
-
-virtual	MAKE_CANONICAL_TYPE_REFERENCE_PROTO = 0;
 
 	static
 	ostream&

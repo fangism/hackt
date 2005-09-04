@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.11 2005/08/08 23:08:33 fang Exp $
+	$Id: stacktrace.h,v 1.12 2005/09/04 21:15:08 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -18,12 +18,18 @@
 #endif
 
 
+#if defined(HAVE_CASSERT) && HAVE_CASSERT
 #include <cassert>
+#else
+#include <assert.h>
+#endif
 
 //=============================================================================
 // This is the macro interface intended for the programmer.  
 #if ENABLE_STACKTRACE
 #include "util/cppcat.h"		// for the UNIQUIFY macros
+#include "util/attributes.h"
+
 #define	USING_STACKTRACE	using util::stacktrace;
 /**
 	The macro that keeps track of scope and call stacks.  
@@ -51,6 +57,11 @@
 	const util::stacktrace::echo UNIQUIFY(__echo_stacktrace__) (0)
 #define	STACKTRACE_STREAM						\
 		util::stacktrace::stream()
+/**
+	Indents and returns the current stream used by stacktrace.  
+ */
+#define STACKTRACE_INDENT						\
+		STACKTRACE_STREAM << util::stacktrace_auto_indent
 #define REDIRECT_STACKTRACE(os)						\
 	const util::stacktrace::redirect UNIQUIFY(__redir_stacktrace__) (os)
 #define	ASSERT_STACKTRACE(expr)						\
@@ -68,6 +79,7 @@
 #define STACKTRACE_ECHO_ON
 #define STACKTRACE_ECHO_OFF
 #define	STACKTRACE_STREAM		std::cerr
+#define STACKTRACE_INDENT		STACKTRACE_STREAM << ""
 #define REDIRECT_STACKTRACE(os)
 #define	ASSERT_STACKTRACE(expr)		assert(expr)
 #define	REQUIRES_STACKTRACE_STATIC_INIT	
@@ -136,7 +148,6 @@
 
 namespace util {
 USING_LIST
-using std::ostream;
 using std::string;
 using memory::count_ptr;
 
@@ -156,13 +167,13 @@ public:
 	/// the type of stack used to track on/off mode
 	typedef DEFAULT_STACK(int)	stack_echo_type;
 	/// the type of stack used to track stream redirections
-	typedef DEFAULT_STACK(ostream*)	stack_streams_type;
+	typedef DEFAULT_STACK(std::ostream*)	stack_streams_type;
 
 public:
 	class manager;
 	struct echo;
 	struct redirect;
-
+	struct indent { };
 	class init_token;
 
 private:
@@ -174,7 +185,7 @@ public:
 	~stacktrace();
 public:
 	static
-	ostream&
+	std::ostream&
 	stream(void);
 
 	static
@@ -188,7 +199,13 @@ public:
 	static
 	void
 	full_dump(void);
-};	// end class stacktrace
+} __ATTRIBUTE_UNUSED__ ;	// end class stacktrace
+
+//-----------------------------------------------------------------------------
+extern const stacktrace::indent	stacktrace_auto_indent;
+
+std::ostream&
+operator << (std::ostream&, const stacktrace::indent&);
 
 //-----------------------------------------------------------------------------
 /**
@@ -226,7 +243,7 @@ public:
 struct stacktrace::echo {
 	echo(const int i = 1);
 	~echo();
-};	// end struct echo
+} __ATTRIBUTE_UNUSED__ ;	// end struct echo
 
 //-----------------------------------------------------------------------------
 /**
@@ -234,9 +251,9 @@ struct stacktrace::echo {
 	Lasts for the duration of the scope where this is called.  
  */
 struct stacktrace::redirect {
-	redirect(ostream&);
+	redirect(std::ostream&);
 	~redirect();
-};	// end struct redirect
+} __ATTRIBUTE_UNUSED__ ;	// end struct redirect
 
 //=============================================================================
 

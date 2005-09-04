@@ -2,7 +2,7 @@
 	\file "util/indent.h"
 	Utility for semi-automatically indenting output.  
 
-	$Id: indent.h,v 1.6 2005/07/20 21:01:00 fang Exp $
+	$Id: indent.h,v 1.7 2005/09/04 21:15:07 fang Exp $
  */
 
 #ifndef	__UTIL_INDENT_H__
@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include <string>
 #include "util/cppcat.h"		// for UNIQUIFY macro
+#include "util/attributes.h"
 
 /**
 	Handy macro for declaring an indented section.  
@@ -49,7 +50,7 @@ public:
 	indent(const ostream& o, const string& s);
 	~indent();
 
-};	// end class indent
+} __ATTRIBUTE_UNUSED__ ;	// end class indent
 
 //=============================================================================
 // utilities to control indentation
@@ -60,7 +61,7 @@ private:
 public:
 	enable_indent(const ostream& o);
 	~enable_indent();
-};	// end struct enable_indent
+} __ATTRIBUTE_UNUSED__ ;	// end struct enable_indent
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class disable_indent {
@@ -69,13 +70,13 @@ private:
 public:
 	disable_indent(const ostream& o);
 	~disable_indent();
-};	// end struct disable_indent
+} __ATTRIBUTE_UNUSED__ ;	// end struct disable_indent
 
 //=============================================================================
 class auto_indenter { };
 
 // use this like an IO-manipulator like endl
-extern	auto_indenter	auto_indent;
+extern	const auto_indenter	auto_indent;
 
 //=============================================================================
 // public interface functions

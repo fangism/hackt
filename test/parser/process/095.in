@@ -1,0 +1,18 @@
+// "095.in" should pass, will recursively instantiate ports
+// copy-modified from "094.in"
+// has internal aliases!
+
+defproc foo(bool a, b) {
+}
+
+defproc bar(foo x, y) {
+	foo w, z;
+	w = x;
+	z = y;
+	w = z;
+}
+
+bar poo;
+
+// should end up with only 2 bools, 2 per foo
+

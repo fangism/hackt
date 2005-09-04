@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	48
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	217
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -21,49 +21,53 @@ Persistent Object Manager text dump:
 	17	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	33
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
-	29	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
-	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
-	35	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
-	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	44	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
-	45	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	46	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
-	47	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
-	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
-	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	66
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	113
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	66
+	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	50	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
+	51	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
+	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
+	66	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -73,7 +77,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    portaproc = process-definition (declared) portaproc(
+    portaproc = process-definition (defined) portaproc(
         bool<> b
         bool<> c with indices: {
           [0..3]
@@ -96,19 +100,47 @@ In namespace "", we have: {
           [0..1]
         }
 
+        footprint: {
+          bool^0 b (instantiated) = ::portaproc::b (1) 
+          bool^1 c with indices: {
+          }
+            unrolled indices: {
+              0 = ::portaproc::c[0] (2) 
+              1 = ::portaproc::c[1] (3) 
+              2 = ::portaproc::c[2] (4) 
+              3 = ::portaproc::c[3] (5) 
+            }
+          int<32>^0 i (instantiated) = ::portaproc::i (1) 
+          int<32>^1 j with indices: {
+          }
+            unrolled indices: {
+              0 = ::portaproc::j[0] (2) 
+              1 = ::portaproc::j[1] (3) 
+            }
+          int instance pool:
+          1	::portaproc::i
+          2	::portaproc::j[0]
+          3	::portaproc::j[1]
+          bool instance pool:
+          1	::portaproc::b
+          2	::portaproc::c[0]
+          3	::portaproc::c[1]
+          4	::portaproc::c[2]
+          5	::portaproc::c[3]
+        }
       }
 
   Instances:
     a = bool^0 a (instantiated) = ::a (1) 
     p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::x[2] (4) 
+      bool^0 b (instantiated) = ::x[2] (2) 
       bool^1 c with indices: {
         [0..3]
       }
         unrolled indices: {
-          0 = ::x[0] (2) 
-          1 = ::x[1] (3) 
-          2 = ::p.b (4) 
+          0 = ::x[0] (3) 
+          1 = ::x[1] (4) 
+          2 = ::p.b (2) 
           3 = ::x[3] (5) 
         }
       int<32>^0 i (instantiated) = ::q (1) 
@@ -152,9 +184,9 @@ In namespace "", we have: {
       [0..3]
     }
       unrolled indices: {
-        0 = ::p.c[0] (2) 
-        1 = ::p.c[1] (3) 
-        2 = ::p.c[2] (4) 
+        0 = ::p.c[0] (3) 
+        1 = ::p.c[1] (4) 
+        2 = ::p.c[2] (2) 
         3 = ::p.c[3] (5) 
       }
 }
@@ -164,18 +196,18 @@ process instance pool:
 1	::p
 2	::s
 int instance pool:
-1	::q
-2	::r[0]
-3	::r[1]
+1	::p.i
+2	::p.j[0]
+3	::p.j[1]
 4	::s.i
 5	::s.j[0]
 6	::s.j[1]
 bool instance pool:
 1	::a
-2	::x[0]
-3	::x[1]
-4	::x[2]
-5	::x[3]
+2	::p.b
+3	::p.c[0]
+4	::p.c[1]
+5	::p.c[3]
 6	::s.b
 7	::s.c[0]
 8	::s.c[1]

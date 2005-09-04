@@ -1,14 +1,14 @@
 /**
 	\file "bogus_stacktrace.cc"
 	Implementation of bogus_stacktrace class.
-	$Id: bogus_stacktrace.cc,v 1.2 2005/03/01 21:26:48 fang Exp $
+	$Id: bogus_stacktrace.cc,v 1.3 2005/09/04 21:15:10 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
 #define	ENABLE_STACKTRACE	1
 
 #include "bogus_stacktrace.h"
-#include "static_trace.h"
+#include "util/static_trace.h"
 
 STATIC_TRACE_BEGIN("bogus_stacktrace")
 
@@ -19,7 +19,7 @@ REQUIRES_BOGUS_STACKTRACE_STATIC_INIT
 //=============================================================================
 // class bogus_stacktrace method definitions
 
-bogus_stacktrace::bogus_stacktrace(const string& s) { }
+bogus_stacktrace::bogus_stacktrace(const string&) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bogus_stacktrace::~bogus_stacktrace() { }

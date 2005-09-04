@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: instance_management_base.h,v 1.4 2005/09/04 21:15:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -18,6 +18,7 @@ using std::ostream;
 using util::persistent;
 using util::good_bool;
 class unroll_context;
+class footprint;
 
 //=============================================================================
 /**
@@ -51,21 +52,21 @@ virtual ostream&
 
 #define	UNROLL_META_EVALUATE_PROTO					\
 	good_bool							\
-	unroll_meta_evaluate(unroll_context& ) const
+	unroll_meta_evaluate(const unroll_context& ) const
 
 #define	UNROLL_META_INSTANTIATE_PROTO					\
 	good_bool							\
-	unroll_meta_instantiate(unroll_context& ) const
+	unroll_meta_instantiate(const unroll_context& ) const
 
 #define	UNROLL_META_CONNECT_PROTO					\
 	good_bool							\
-	unroll_meta_connect(unroll_context& ) const
+	unroll_meta_connect(const unroll_context& ) const
 
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
 	// possible single-pass unroll may be phased out...
 virtual good_bool
-	unroll(unroll_context& ) const = 0;
+	unroll(const unroll_context& ) const = 0;
 
 virtual	UNROLL_META_EVALUATE_PROTO;
 virtual	UNROLL_META_INSTANTIATE_PROTO;
@@ -76,7 +77,7 @@ virtual	UNROLL_META_CONNECT_PROTO;
  */
 #define	CREATE_UNIQUE_PROTO						\
 	good_bool							\
-	create_unique(const unroll_context&) const
+	create_unique(const unroll_context&, footprint&) const
 
 virtual	CREATE_UNIQUE_PROTO;
 

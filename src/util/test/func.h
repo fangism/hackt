@@ -3,10 +3,10 @@
 	Some test functions for pointer classes, not used for ART.
 	This file is now obsolete.
 
-	$Id: func.h,v 1.4 2004/11/30 01:26:40 fang Exp $
+	$Id: func.h,v 1.5 2005/09/04 21:15:11 fang Exp $
  */
 
-#include "obsolete/ptrs.h"
+#include "util/obsolete/ptrs.h"
 
 using namespace PTRS_NAMESPACE;
 

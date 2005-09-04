@@ -1,7 +1,7 @@
 /**
 	\file "link_mod_b.cc"
 	Testing ld linker characteristics.  
-	$Id: link_mod_b.cc,v 1.2 2005/03/01 21:26:49 fang Exp $
+	$Id: link_mod_b.cc,v 1.3 2005/09/04 21:15:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				1
@@ -9,16 +9,16 @@
 #define	USE_BOGUS					1
 
 #include <iostream>
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 
 // #include "link_mod_a.h"
 #include "link_mod_b.h"
 #if USE_BOGUS
 #include "bogus_stacktrace.h"
 #else
-#include "stacktrace.h"
+#include "util/stacktrace.h"
 #endif
-#include "static_trace.h"
+#include "util/static_trace.h"
 
 USING_STACKTRACE
 

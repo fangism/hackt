@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.2 2005/07/23 06:52:38 fang Exp $
+	$Id: instance_collection_base.h,v 1.3 2005/09/04 21:14:50 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -27,6 +27,7 @@ namespace ART {
 namespace entity {
 //=============================================================================
 class definition_base;
+class footprint;
 class scopespace;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
@@ -65,6 +66,7 @@ using util::memory::count_ptr;
 	use list of statements that contain indices.  
  */
 class instance_collection_base : public object, public persistent {
+	typedef	instance_collection_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
 	// should be consistent with 
@@ -152,6 +154,17 @@ protected:
 		object(), persistent(), owner(), key(), 
 		index_collection(), dimensions(d), super_instance() { }
 
+	/**
+		Partial copy-constructor, copies everything 
+		except the index collection (references to
+		instantiation statements), and the super_instance pointer, 
+		which should be NULL anyhow.  
+	 */
+	instance_collection_base(const this_type& t, const footprint&) :
+		object(), persistent(), owner(t.owner), key(t.key), 
+		index_collection(), dimensions(t.dimensions),
+		super_instance() { }
+
 public:
 	// o should be reference, not pointer
 	instance_collection_base(const scopespace& o, const string& n, 
@@ -159,8 +172,27 @@ public:
 
 virtual	~instance_collection_base();
 
+/**
+	Makes a deep copy of the instance collection for
+	the sake of mapping in the footprint's instance collection map.
+	This does not make a precise deep copy of every field, 
+	but enough for the the unroller to work with.  
+	The footprint argument is just for distiguishing constructors.  
+ */
+#define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
+	instance_collection_base*					\
+	make_instance_collection_footprint_copy(const footprint&) const
+
+virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+
 	size_t
 	get_dimensions(void) const { return dimensions; }
+
+	bool
+	is_subinstance(void) const { return super_instance; }
+
+	const super_instance_ptr_type&
+	get_super_instance(void) const { return super_instance; }
 
 	void
 	relink_super_instance(const substructure_alias& a) {
@@ -168,15 +200,26 @@ virtual	~instance_collection_base();
 		super_instance = super_instance_ptr_type(&a);
 	}
 
+#if 0
+	good_bool
+	create_super_instance(footprint&);
+#endif
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
 virtual	ostream&
-	what(ostream& o) const = 0;
+	what(ostream&) const = 0;
 
+// bas eimplementation built-upon
 virtual	ostream&
-	dump(ostream& o) const;	// temporary
+	dump(ostream&) const;	// temporary
 
+private:
+	ostream&
+	dump_collection_only(ostream&) const;
+
+public:
 	/**
 		Depending on whether the collection is partially unrolled, 
 		print the type.  
@@ -232,10 +275,11 @@ virtual	string
 	const_range_list
 	add_instantiation_statement(const index_collection_type::value_type& r);
 
-private:
+protected:
+	// to grant access to param_value_collection
 	bool
-	formal_size_equivalent(
-		const never_ptr<const instance_collection_base> b) const;
+	formal_size_equivalent(const this_type& b) const;
+
 public:
 	size_t
 	is_template_formal(void) const;
@@ -250,22 +294,10 @@ public:
 	is_local_to_definition(void) const;
 
 	bool
-	template_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const;
+	port_formal_equivalent(const this_type& b) const;
 
 	bool
-	port_formal_equivalent(
-		const never_ptr<const instance_collection_base> b) const;
-
-#if 0
-// relocated to param_value_collection
-protected:
-	good_bool
-	may_check_expression_dimensions(const param_expr& pr) const;
-
-	good_bool
-	must_check_expression_dimensions(const const_param& pr) const;
-#endif
+	is_template_dependent(void) const;
 
 public:
 virtual	count_ptr<meta_instance_reference_base>
@@ -277,14 +309,6 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 // return type may become generic...
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
-
-#if 0
-#define	UNROLL_PORT_ONLY_PROTO						\
-	count_ptr<physical_instance_collection>				\
-	unroll_port_only(const unroll_context&) const
-
-virtual	UNROLL_PORT_ONLY_PROTO = 0;
-#endif
 
 private:
 	// utility functions for handling index collection (inlined)

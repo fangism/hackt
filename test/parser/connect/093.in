@@ -2,7 +2,7 @@
 // copy-modified from "092.in"
 
 template <pint A><pint B>
-defproc foo();
+defproc foo() { }
 
 foo<1> bar, ick<1>, poo<2>;
 

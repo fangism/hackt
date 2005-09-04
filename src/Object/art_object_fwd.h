@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_fwd.h"
 	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.17 2005/08/08 16:51:07 fang Exp $
+	$Id: art_object_fwd.h,v 1.18 2005/09/04 21:14:40 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_FWD_H__
@@ -11,6 +11,7 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/expr/types.h"
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -30,6 +31,8 @@ namespace entity {
 	class sequential_scope;
 	class name_space;
 	class built_in_datatype_def;
+	class type_reference_base;
+	template <class> class canonical_type; // "Object/type/canonical_type.h"
 	class fundamental_type_reference;
 	class simple_meta_instance_reference_base;
 	class simple_nonmeta_instance_reference_base;
@@ -38,7 +41,7 @@ namespace entity {
 	class meta_instance_reference_base;
 	class definition_base;
 	class user_def_chan;
-	class user_def_type;
+	class user_def_datatype;
 	class channel_definition_base;
 	class channel_type_reference_base;
 	class builtin_channel_type_reference;

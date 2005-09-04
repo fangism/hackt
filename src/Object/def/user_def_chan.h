@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.2 2005/07/23 06:52:29 fang Exp $
+	$Id: user_def_chan.h,v 1.3 2005/09/04 21:14:44 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_CHAN_H__
@@ -16,6 +16,7 @@
 
 namespace ART {
 namespace entity {
+class channel_type_reference;
 //=============================================================================
 /**
 	Generalizable user-defined channel type, which can (eventually) 
@@ -28,6 +29,8 @@ private:
 	typedef channel_definition_base		definition_parent_type;
 	typedef	scopespace			scope_parent_type;
 	typedef	sequential_scope		sequential_parent_type;
+public:
+	typedef	channel_type_reference		type_reference_type;
 protected:
 	// list of other type definitions
 	const string				key;
@@ -64,6 +67,9 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+	void
+	commit_arity(void);
+
 	const builtin_channel_type_reference&
 	get_builtin_channel_type(void) const {
 		return *base_chan_type_ref;
@@ -92,6 +98,12 @@ public:
 	certify_port_actuals(const checked_refs_type&) const;
 
 	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO;
+
+	MAKE_CANONICAL_CHANNEL_TYPE_PROTO;
+
+	REGISTER_COMPLETE_TYPE_PROTO;
+	UNROLL_COMPLETE_TYPE_PROTO;
+	CREATE_COMPLETE_TYPE_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

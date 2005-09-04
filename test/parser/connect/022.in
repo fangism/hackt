@@ -1,6 +1,6 @@
 // "022.in" should pass: size matches after dimension collapsing
 
-defproc barf();
+defproc barf() { }
 
 barf bag[5];
 barf sack[5][5];

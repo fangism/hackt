@@ -1,0 +1,4 @@
+ERROR: cannot unroll incomplete process type ::foo
+Instantiated from: foo<pint-inst-ref ::W[::W[::W[::W[0]]]]>
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

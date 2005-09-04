@@ -2,22 +2,41 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.2 2005/07/23 06:52:54 fang Exp $
+	$Id: template_actuals.cc,v 1.3 2005/09/04 21:14:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
+#include <algorithm>
+#include <iterator>
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr.h"
+#include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
+#define	ADDRESS_IF_NULL(x)						\
+	if (x) { cerr << &*x; } else { cerr << "(null)"; }
+
+#if ENABLE_STACKTRACE
+#define	CHECK_ARG_ADDRESSES						\
+	cerr << "template_actuals @ " << this << ": ";			\
+	ADDRESS_IF_NULL(strict_template_args);				\
+	cerr << ", ";							\
+	ADDRESS_IF_NULL(relaxed_template_args);				\
+	cerr << endl;
+#else
+#define	CHECK_ARG_ADDRESSES
+#endif
+
 namespace ART {
 namespace entity {
+using std::copy;
+using std::back_inserter;
 #include "util/using_ostream.h"
 //=============================================================================
 // class template_actuals method definitions
@@ -25,6 +44,10 @@ namespace entity {
 
 template_actuals::template_actuals() :
 		strict_template_args(), relaxed_template_args() {
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ctor ";
+	CHECK_ARG_ADDRESSES
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -36,6 +59,10 @@ template_actuals::template_actuals() :
 template_actuals::template_actuals(const arg_list_ptr_type& s, 
 		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ctor ";
+	CHECK_ARG_ADDRESSES
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -53,10 +80,19 @@ template_actuals::template_actuals(const template_actuals& t,
 		relaxed_template_args(a) {
 	NEVER_NULL(a);
 	INVARIANT(!t.relaxed_template_args);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "ctor ";
+	CHECK_ARG_ADDRESSES
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template_actuals::~template_actuals() { }
+template_actuals::~template_actuals() {
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "dtor ";
+	CHECK_ARG_ADDRESSES
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -73,6 +109,31 @@ template_actuals::dump(ostream& o) const {
 	if (relaxed_template_args)
 		relaxed_template_args->dump(o << '<') << '>';
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unifies strict and relaxed parameters into a single list.  
+	\pre strict
+ */
+count_ptr<const const_param_expr_list>
+template_actuals::make_const_param_list(void) const {
+	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
+	if (strict_template_args) {
+		const count_ptr<const const_param_expr_list>
+			csa(strict_template_args.
+				is_a<const const_param_expr_list>());
+		INVARIANT(csa);
+		copy(csa->begin(), csa->end(), back_inserter(*ret));
+	}
+	if (relaxed_template_args) {
+		const count_ptr<const const_param_expr_list>
+			rsa(relaxed_template_args.
+				is_a<const const_param_expr_list>());
+		INVARIANT(rsa);
+		copy(rsa->begin(), rsa->end(), back_inserter(*ret));
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,8 +158,13 @@ template_actuals::operator bool () const {
  */
 count_ptr<const param_expr>
 template_actuals::operator [] (const size_t i) const {
+	STACKTRACE_VERBOSE;
 	if (strict_template_args) {
-		const size_t s(strict_template_args->size());
+#if 1
+		CHECK_ARG_ADDRESSES
+//		strict_template_args->what(cerr) << endl;
+#endif
+		const size_t s = strict_template_args->size();
 		if (i < s) {
 			return (*strict_template_args)[i];
 		} else {

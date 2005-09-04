@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.2 2005/07/23 06:52:58 fang Exp $
+	$Id: expression_assignment.h,v 1.3 2005/09/04 21:15:00 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -74,7 +74,7 @@ public:
 		const typename parent_type::dest_ptr_type& e);
 
 	good_bool
-	unroll(unroll_context& ) const;
+	unroll(const unroll_context&) const;
 
 	UNROLL_META_EVALUATE_PROTO;
 

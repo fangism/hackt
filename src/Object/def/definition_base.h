@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.2 2005/07/23 06:52:26 fang Exp $
+	$Id: definition_base.h,v 1.3 2005/09/04 21:14:42 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -34,8 +34,10 @@ using parser::token_identifier;
 namespace entity {
 class scopespace;
 class instance_collection_base;
+class physical_instance_collection;
 class fundamental_type_reference;
 class template_actuals;
+class const_param_expr_list;
 using std::string;
 using std::istream;
 using util::bad_bool;
@@ -94,6 +96,11 @@ virtual	ostream&
 	const template_formals_manager&
 	get_template_formals_manager(void) const { return template_formals; }
 
+	size_t
+	num_strict_formals(void) const {
+		return template_formals.num_strict_formals();
+	}
+
 	ostream&
 	dump_template_formals(ostream& o) const;
 
@@ -111,6 +118,10 @@ virtual	never_ptr<const scopespace>
 
 	void
 	mark_defined(void) { assert(!defined); defined = true; }
+
+/// overridden by definitions that contain footprint_managers
+virtual	void
+	commit_arity(void) { }
 
 	never_ptr<const param_value_collection>
 	lookup_template_formal(const string& id) const;
@@ -213,7 +224,7 @@ virtual	never_ptr<const instance_collection_base>
 		const token_identifier& id);
 
 #define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
-	never_ptr<const instance_collection_base>			\
+	never_ptr<const physical_instance_collection>			\
 	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
 		const token_identifier&)
 
@@ -221,6 +232,21 @@ virtual	never_ptr<const instance_collection_base>
 	Really, only some definitions should have ports...
  */
 virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
+
+#define	REGISTER_COMPLETE_TYPE_PROTO					\
+	void								\
+	register_complete_type(						\
+		const count_ptr<const const_param_expr_list>&) const
+
+#define	UNROLL_COMPLETE_TYPE_PROTO					\
+	good_bool							\
+	unroll_complete_type(						\
+		const count_ptr<const const_param_expr_list>&) const
+
+#define	CREATE_COMPLETE_TYPE_PROTO					\
+	good_bool							\
+	create_complete_type(						\
+		const count_ptr<const const_param_expr_list>&) const
 
 protected:
 	void

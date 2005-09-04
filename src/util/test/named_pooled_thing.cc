@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_ting.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.4 2005/06/21 21:26:42 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.5 2005/09/04 21:15:12 fang Exp $
  */
 
 #define ENABLE_STATIC_TRACE				1
@@ -9,19 +9,19 @@
 #define	DEBUG_LIST_VECTOR_POOL				1
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		1
 
-#include "static_trace.h"
+#include "util/static_trace.h"
 STATIC_TRACE_BEGIN("named_pooled_thing.o")
 
 #include "named_pooled_thing.h"
-#include "memory/count_ptr.tcc"
+#include "util/memory/count_ptr.tcc"
 
 #include <iostream>
 #include <string>
-#include "using_ostream.h"
-#include "what.h"
-#include "stacktrace.h"
+#include "util/using_ostream.h"
+#include "util/what.h"
+#include "util/stacktrace.h"
 
-#include "memory/list_vector_pool.tcc"
+#include "util/memory/list_vector_pool.tcc"
 
 USING_STACKTRACE
 
@@ -44,7 +44,7 @@ named_thing::named_thing() {
 	STACKTRACE("empty ctor");
 	cout << this << endl;
 }
-named_thing::named_thing(const string& s) {
+named_thing::named_thing(const string&) {
 	STACKTRACE("dummy ctor");
 	cout << this << endl;
 }

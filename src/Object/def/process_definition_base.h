@@ -2,13 +2,14 @@
 	\file "Object/def/process_definition_base.h"
 	Process-definition-related ART object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_base.h,v 1.2 2005/07/23 06:52:28 fang Exp $
+	$Id: process_definition_base.h,v 1.3 2005/09/04 21:14:44 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
 #define	__OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
 
 #include "Object/def/definition_base.h"
+#include "Object/type/canonical_type_fwd.h"
 
 namespace ART {
 namespace entity {
@@ -21,6 +22,8 @@ class process_type_reference;
 class process_definition_base : virtual public definition_base {
 private:
 	typedef	definition_base		parent_type;
+public:
+	typedef	process_type_reference	type_reference_type;
 protected:
 	// no new members?
 protected:
@@ -35,9 +38,15 @@ virtual	~process_definition_base() { }
 
 #define	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO			\
 	count_ptr<const process_type_reference>				\
-	make_canonical_type_reference(const template_actuals&) const
+	make_canonical_fundamental_type_reference(const template_actuals&) const
 
 virtual	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO = 0;
+
+#define	MAKE_CANONICAL_PROCESS_TYPE_PROTO				\
+	canonical_process_type						\
+	make_canonical_type(const template_actuals&) const
+
+virtual	MAKE_CANONICAL_PROCESS_TYPE_PROTO = 0;
 
 // inherited pure virtuals are still pure virtuals
 protected:

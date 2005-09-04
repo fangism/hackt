@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -21,17 +21,19 @@ Persistent Object Manager text dump:
 	17	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
 	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	24	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	59
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -57,6 +59,18 @@ In namespace "", we have: {
           [0..::bar::N-1]
         }
 
+        footprint collection: {
+          <3, 2> {
+            pint^0 M value: ?
+            pint^0 N value: ?
+            int<3>^1 x with indices: {
+            }
+              unrolled indices: {
+                0 = ::bar::x[0] 
+                1 = ::bar::x[1] 
+              }
+          }
+        }
       }
 
   Instances:

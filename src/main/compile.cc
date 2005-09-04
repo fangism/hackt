@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.3 2005/08/08 16:51:12 fang Exp $
+	$Id: compile.cc,v 1.4 2005/09/04 21:15:05 fang Exp $
  */
 
 #include <iostream>
@@ -52,7 +52,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 	options opt;
 	if (parse_command_options(argc, argv, opt))
 		return 1;
-	int index = optind;
+//	int index = optind;
 	if (argc -optind > 2 || argc -optind <= 0) {
 		usage();
 		return 0;

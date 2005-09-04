@@ -1,0 +1,14 @@
+// "092.in" don't know what to do about this yet
+// global node reference
+// UNRESOLVED ISSUE: haven't decided what to do about global nodes yet
+// KNOWN BUG (2005-08-31): currently crashes
+
+bool G;
+
+defproc foo(bool a) {
+	bool b;
+	b = G;
+}
+
+foo f;
+

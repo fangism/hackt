@@ -1,5 +1,624 @@
 "ChangeLog"
 
+2005-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-56-merged-footprint-01-36:
+	  Major branch merge (-footprint-01-36), summary:
+	  Each complete type now maintains its own footprint (new class), 
+		so templated definitions will have multiple footprints, 
+		one for each set of parameters with which it is instantiated.
+		Footprints are made as each type 'plays' its sequential scope.  
+	  Footprints contain the unique-creation information for each
+		structured type.  For definitions, they describe 
+		(without external context) the uniqueness of the subinstances
+		of the internal structure.  The unique instances, however, 
+		are merely empty placeholders for actual state, because
+		external connections may change the actual footprint.
+		Even the top-level module has a footprint.  
+		TODO: replay internal subinstance aliases top-down
+			in the final state-allocation.  Extend subinstance
+			managers to include non-ports.  
+	  Introduction of canonical_types for tighter type-control checking.  
+		Instance collections now use these instead of 
+		derivative of fundamental types, which are established
+		upon instantiation.  Relaxed parameters are still
+		maintained in each alias's parameters (if applicable).
+		Results in far fewer run-time checks.  
+	  Creation of dependent types of subinstances (on-demand) before
+		super instance types are created.  Type creation is managed 
+		through canonical_types and their corresponding footprints.  
+	  Efficient internal alias replay mechanism to make implicit
+		internal aliases explicit in hierarchy.  
+	  includes a few critical bugs fixes in util/ library.
+
+
+2005-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-36:
+	  Clean-up phase 2: committed PHYSICAL_PORTS, USE_PORT_ALIAS_TRACKER
+		(in footprint), and CREATE_DEPENDENT_TYPES_FIRST.  
+		"Object/devel_switches.h" is empty once again.  
+	  Enhancements: trace_alias argument const-ified, 
+		instance_array::create_dependent_types uses faster 
+		call to internal_alias_policy::connect when collection's
+		canonical_type is already strict.  
+	  Branch is mature, ready to merge to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-35:
+	  Clean-up: committed USE_NEW_REPLAY_INTERNAL_ALIAS, 
+		obliterated traces of port_alias_signature (removed).
+		600+ LOC deleted, good riddance.  
+	  More clean-up coming...
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-34:
+	  2-for-1 BUGS SLAIN: process/086,099 fixed.  REJOICE!
+	  Introduced completely new replay mechanism for replaying
+		internal aliases, using just the port_alias_tracker.  
+		Currently enabled by USE_NEW_REPLAY_INTERNAL_ALIAS switch.  
+	  Completed implementation of port_alias_tracker methods.  
+	  Few tests updated because different canonical names were chosen
+		by the new algorithm (we don't care yet).  
+	  TODO: erase traces of port_alias_signature, now obsolete.
+	  TODO: expurgate hundreds of lines of dead (switched off) code, 
+		rendered obsolete by new connection replay mechanism.  
+	  Status: branch is in good shape! just needs severe cleaning.  
+
+
+2005-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-33:
+	  Wrote port_alias_tracker intended as replacement for 
+		port_alias_signature.  After evaluating a complete type's
+		unique instances (create) the definition analyzes
+		the port instance collections for aliases among the ports.  
+		Aliases are recorded in the tracker.
+	  Each footprint contains a port_alias_tracker, which affects
+		the binary object sizes for all footprint.  
+		Test dump outcomes have been updated to reflect this.  
+	  TODO: replay the instance aliases using the trackers,	
+		instead of the broken mechanism currently in place.  
+	  Note: 1.5 days of code was abandoned, but saved onto the
+		ARTXX-00-01-04-main-00-55-footprint-01-32-broken branch.  
+
+
+2005-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-32:
+	  Test cases added only, no code revision.  
+	  The no-known-critical-bug status didn't last very long.
+	  BUG: process/086.in (create: wrong top-level allocation, 
+		failure to replay internal connection)
+		Check out the port-alias walking code.  
+	  BUG: process/099 (fatal) -- mismatch in retrace hierarchy
+
+
+2005-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-31:
+	  BUG FIXED: process/066.in -- unconditional assertion (failed before)
+		weakened to a conditional assertion in
+		instance_alias_info<>::inherit_subinstance_state()
+		in "Object/inst/instance_collection.tcc".
+	  Sprinkled with more debugging code.  
+	  Who's you're bug-slaying daddy?
+	  TODO: write TONS of test cases before cleaning up code.  
+	  Status: no known *critical* bugs in this branch.
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-30:
+	  BUG FIXED: process/066d.in -- now port_alias_signature is used
+		recursively to replay internal collections.  
+		Previous mistake was that was only applying port alias
+		signature of leaf-most types, thereby missing connections
+		imposed by parent types.  (Now we only use the parents'
+		port alias signatures.)  
+	  TODO: BUG process/066.in is next on the hit list.  
+	  TODO: massive clean-up after bug fix.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-29:
+	  Victory!!!  (almost) 
+		Bottom-up recursion of connecting internal port aliases
+		seems to work, even with some crazy cases.  
+		Enabled creating of dependent types first.  
+	  Added bunch of elementary test cases for replaying internal aliases
+		in process/066*.in
+	  BUG FIXED: in looking up instance_collection's corresponding
+		alias, using the alias's key_type (special case for D = 1!)
+		fixed in instance_alias<>::retrace_alias.
+	  TODO: massive clean up of debugging code littered
+		in "Object/inst/instance_collection.tcc".
+	  TODO: write a TON of test cases, start to involve definition-local
+		non-port aliases (which should be skipped).  
+	  KNOWN BUGS to FIX: process/066 (fatal), 066d (wrong),
+		connect/116, 117 (advanced handling of relaxed params)
+
+
+2005-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-28:
+	  Still working towards bottom-up construction of dependent types.  
+		Inserted a pass before creating unique (after unroll)
+		to create dependent types bottom-up.  Currently disabled.  
+		Much stacktrace debugging needed.  
+	  Added class_trait: can_internally_alias, for which it's
+		currently only true for process types.  
+
+
+2005-08-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-27:
+	  Implemented (untested) routines to retrace aliases in internal 
+		(definition-local) contexts in external contexts for the 
+		sake of replaying internal aliases externally.  
+		see instance_collection<>::replay_internal_alias, 
+			retrace_collection, and retrace_alias.  
+	  TODO: insert dependent type creation pass before create_unique, 
+		this will handle bottom-up creation of substructure types
+		and replay their internal port aliases in the 
+		external context.  
+
+
+2005-08-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-26:
+	  Updated port_formals_manager and subinstance_manager to 
+		use physical_instance_collection rather than the 
+		more general instance_collection_base.  
+		This results in tighter type constraining (good).  
+	  Introduced auxiliary class port_alias_signature, 
+		constructed from port_formals_manager and footprint.  
+		Going to use this to replay aliases up the
+		instance hierarchy *before* creation.  
+
+
+2005-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-25:
+	  Cleaned up all conditional switches from this branch.  
+	  TODO: hierarchical import/exporting of aliases per complete type.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-24:
+	  Bug fix: only check relaxed actuals
+	  Enabled definition footprint creation!
+		Each complete type now creates (instantiates) its own
+		footprint, expanded into placeholder pools.  
+	  Tests added and updated.  
+	  TODO: hierarchical instance allocation with 
+		definition import/export.  
+
+
+2005-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-23:
+	  Set up type-merge for canonical types prior to
+		creating definition footprints.  
+	  Implemented definitions' create_complete_type(), 
+		with only process_definition's being non-trivial.  
+	  TODO: consistency check for propagated relaxed actuals
+		against those of an already complete type.
+	  Test updates: some connections tests which passed before 
+		now fail (progression!) rejecting instantiation of
+		objects without complete (strict) type, 
+		after merging relaxed actuals (where applicable).  
+	  TODO: enable create_definition_footprint in
+		"Object/inst/instance_collection.tcc"
+	  TODO: write import/export interface for globals state ID
+		assignment.  
+
+
+2005-08-23	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-22:
+	  Status: each definition can unroll it's own sequential scope!
+		Significant progress shown in this revision.  
+	  Implemented meta_expr's is_template_dependent().  
+	  Bug fixed: simple_meta_instance_reference_base now checks
+		for template dependence when deducing packed-ness
+		if referenced instance collections.  
+	  Bug fixed: in resolving member instance reference, 
+		only use footprint in the lookup for the top-most level
+		of the scope, not any of the members.
+		(same principle applies to
+			simple_member_instance_reference::connect_port)
+	  Bunch of new test cases based on existing one, 
+		but onw definitions have internal instantiations
+		and connections to unroll.  
+		Mostly added to parser/process.
+	  Minor updates to error messages during unroll.  
+	  TODO: bottom-up footprint construction during the create phase, oooo!
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-21:
+	  Breakthrough: recursive type unrolling is enabled!
+	  We now also dump process-definitions' footprints.  
+		No creation (state allocation) is done yet.  
+	  From now on, types must be defined before they can be declared
+		or instantiated.  But where, then, are prototypes useful?
+		Consider revoking this policy until creation time?
+		Test *inputs* were updated to give definitions
+		empty bodies for the sake of unrolling tests.  
+		(Consider compiler flag to switch behaviour.)
+	  Unroll context now make full use of footprint pointer
+		during recursive type unrolling.  
+	  TODO: recursively create-unique footprints!
+	  TODO: spawn off more test cases off of existing ones
+		with definition-internal connections.  
+		Actually put instance stuff in the definitions.  
+
+
+2005-08-22	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-20:
+	  devel-switch: USE_UNROLL_CONTEXT_FOOTPRPINT, currently enabled
+		but not yet tested because
+		process_definition::unroll_complete_type is not yet enabled.  
+		That's next on the TOOD list.  
+		Added code to conditionally resolve instance_collection
+		depending on whether or not footprint (of unroll_context)
+		points to a valid footprint.  If not, then use global
+		top-level instance collection, as done in the past.  
+	  *_type_reference::make_unroll_context now all private.
+	  instance_management_base::unroll_* all take 
+		const unroll_context& argument now.  
+
+
+2005-08-21	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-19:
+	  Enabled process_definition (complete type) registration, but
+		not unrolling yet.  
+	  Tests updated because registered types (empty footprints)
+		are all maintained persistently in objects.  
+	  Added interface to import scopespace instance collections
+		into footprint's instance_collection_map, 
+		the local workspace for unrolling and creating placeholders.  
+		Had to implement a virtual partial deep copy-constructor
+		in instance_collection_base and its ultimate children
+		(array and scalars) for physical and parameters.  
+	  also list_vector copy-constructor bug fix in util library.
+	  Next: enable complete_type (process_definition) unrolling
+		and dumping.  
+
+
+2005-08-20	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-18:
+	  Enabled persistence of the footprint manager in process_definition.
+		footprint_manager now saves away hashtable of
+		shadow-owned instance collections (physical and parameter).
+	  Object binary size for process_definition increased by 8B.  
+		Unroll and Create tests have been updated accordingly.
+	  Eventually commit the USE_FOOTPRINT_MANAGER switch
+		in "Object/def/process_definition.h".
+	  TODO: modify and use unroll context for instance_reference
+		translation.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-17:
+	  NOTES: important discussion on implementation of definition-scope
+		unrolling, pertaining to footprint management.  
+	  Added definition interface methods for registering and unrolling
+		complete types, called by
+		canonical_type::unroll_definition_footprint.
+		Everything BUT process_definition's implementation is no-op.  
+		process_definition's unroll_complete_type is currently
+		disabled until we fix up unroll/footprint management (NOTES).
+	  minor: added ICE_NEVER_CALL macro to "common/ICE.*"
+
+
+2005-08-19	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-16:
+	  Valiant attempt to fix bug case parser/connect/120.in, but
+		suspended for the time being.  Resolution: the issue is that
+		relaxed actuals at leaf nodes of hierarchical instances
+		and ports are not being propagated completely.  
+		Doing so adds run-time to either the unroll or creation phase, 
+		but this check would be necessary for type-correctness.  
+		We're punting for now to return to more critical tasks.  
+	  Added bunch of future useful methods for recursive actuals
+		synchronization to "Object/inst/instance_collection.tcc".
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-15:
+	  Hierarchical state placeholder allocation bug fixed.  
+	  Case parser/connect/120.in expects to create-fail but doesn't
+		new bug to be fixed, related to actuals checking, 
+		needs to be done recursively in ports.  
+	  Test-case updates: the order of state allocation has been
+		shuffled due to the introduction of the upward 
+		super-instance traversal prior to self allocation.  
+	  TODO: address new bug, aiming to perfect alias actuals
+		type checking of relaxed parameters at creation/connect time.
+		Then start unrolling footprints of complete types, 
+		which was the end-goal of this branch.
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-14:
+	  Summary: in the middle of fixing the recent known bug (ICE).
+		Setting up upward-recursive super-instance state allocation
+		traversal to break the ICE.  Ha ha.  
+		New code calling instance_alias_info::create_super_instance
+		is currently disabled and pending other revisions.  
+		So all current tests still behave as before.  
+		old allocate_state has been renamed __allocate_state
+		and does NOT have upward recursion, it is intended to be
+		called recursively top-down.  The *new* allocate_state
+		will conditionally call create_super_instances on aliases
+		in the ring.  
+	  Make.hchk-tail.am: compile only (-c) don't link -- 
+		faster header check.
+
+
+2005-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-13:
+	  NOTES: added paragraph about when/why one should merge aliases
+		rings across the hierarchy, related to relaxed actuals.  
+	  Reimplemented connection and compare methods in 
+		instance_alias_info (and actuals/empty parents), 
+		see checked_connect_port and checked_connect_alias
+		static member functions.  
+		Blocks of code replaced in alias_connection::unroll and
+			simple_meta_instance_reference::connect_port.  
+	  Tweaked ICE macros.  
+	  TODO: merge null-relaxed actual rings of aliases for alias_connection
+		(calls instance_alias_info::checked_connect_alias)
+	  TO FIX: discovered bug, in reduced test-case: parser/connect/118.in.
+		Solution is in the comments of the input file:
+		Prior to creation, follow up the top-most super-instance(s)
+		of the referenced alias in the port-hierarchy and create 
+		from there, top-down.  
+	  TODO: verify actuals being correctly checked during create-unique
+		phase.  
+
+
+2005-08-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-12:
+	  Cleaned-up obsolete code, updated some comments.  
+	  Next: check actuals during hierarchical connections
+		and merges.  Write some test cases for it!
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-11:
+	  Maintaining new invariant:
+		For all aliases types that can have relaxed actuals, 
+		we keep an 'all-or-none' policy: either all aliases
+		in a ring have equivalent actuals, or all have null.  
+		This eliminates the need for having to search rings
+		for actuals, and will accelerate relaxed algorithms.  
+	  Replaced (static) instance_alias_*::compare_and_update_actuals
+		with (member) compare_and_propagate_actuals.
+	  Added verbose comments to alias_connection::unroll().  
+	  A few tests updated: because as connections are made
+		relaxed actuals are propagated.  
+	  Next: clean-up and comment.
+	  Next-next: check actuals during hierarchical connections
+		and merges.  
+
+
+2005-08-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-10:
+	  NOTES: long entry about connection checking during
+		create-unique phase, concerning relaxed alias actuals.  
+	  Amended the hierarchical unique creation process with
+		checking of relaxed actuals as connections are determined.  
+		One set of valid actuals will propagate contagiously
+		during connection.  
+	  Implemented symmetric actuals compare-and-update
+		between two instance_alias_info's.  
+	  Create-dump now prints alias actuals associated with 
+		the state placeholder's back-reference alias, this way 
+		we know immediately if the type is complete.  
+		(small handful of tests updated.)
+	  state_instance classes: no longer have state_instance_base
+		parent classes because they are JUST placeholders now, 
+		i.e. they contain no actual state.  
+		Can clean-up the EMPTY_PLACEHOLDER_STATE_INSTANCE
+		conditional in "Object/inst/state_instance.h".
+	  good_bool return values given to many state-creation methods.  
+	  During creation we now propagate (synchronize) actuals between
+		aliases in the hierarchy.  However, the omniscience of
+		actuals in each ring is not yet guaranteed, which brings us
+		to the next task:
+	  Next revision: address (NOTES) when alias actuals should be 
+		propagated around the alias ring (efficiently?).
+		Is there some invariant we should maintain during unroll,
+		like all or none (in each ring)?
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-09:
+	  Cleaned up USE_MODULE_FOOTPRINT, committed to 1.
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-08:
+	  Module now contains a footprint!
+		Instead of allocating state in global pools, it now
+		registers them in its footprint, 
+		which contains instance pools.  
+	  Next revision: clean-up conditional USE_MODULE_FOOTPRINT, commit:1.
+	  Next-next revisions: expand defined types recursively, 
+		as they are needed, definitions will unroll into
+		their footprints mapped by the footprint manager.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-07:
+	  Configure-mania!!!
+	  Added ton of C++ header tests to configure.ac, and applied them
+		to the util library headers.  Most changes in util/.
+	  A few insignificant fixes in the rest of the source code, 
+		mostly cleaning up unused variables.  
+	  Preparing to replace global instance pool with footprint's pool
+		in the module class.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-06-merged-canonical-07:
+	  Merged complete rework of canonical types from -canonical branch.
+	  Summary: canonical_types (templated) now use resolved definitions
+		and constant parameter lists, instead of relying on
+		old fundamental_type_reference derivatives and run-time checks.
+	  Object binary format has been updated as a consequence.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-07:
+	  Clean-up phase 2: removed USE_CANONICAL_TYPE conditional.
+	  Status: branch is ready to merge to parent.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-06:
+	  Clean-up phase 1: removed all conditionals except USE_CANONICAL_TYPE.
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-05:
+	  Pruned type-equivalence functions (switched off to unused).
+	  Pushed instance_collection_base::template_formal_equivalent
+		to param_value_collection member function.  
+	  Updated prototypes of
+		instance_collection_base::port_formal_equivalent() and
+		formal_size_equivalent() to use const& instead of ptr.
+	  Removed fundamental_type_reference must-equivalent methods.  
+		Must-equivalence is reserved for resolved canonical_types.  
+	  TODO: clean up and commit switches in "Object/devel_switches.h"
+		and "Object/type/fundamental_type_reference.h"
+	  Status: branch is nearing maturity.  
+
+
+2005-08-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-04:
+	  Migrating old use of make_canonical_fundamental_type_reference
+		in favor of new make_canonical_type.  
+	  Replaced (switched) non-virtual fundamental_type_reference::
+		equivalence functions with pure virtuals, 
+		implemented in children classes, each using own
+		make_canonical_*_type.  
+		(No more virtual make_canonical_fundamental_type_reference)
+	  Partially implemented canonical_type<>::unroll_port-instances, 
+		to the same extent of completion as before.  
+		Implementation uses policy class for pure specialization.  
+	  unroll_context::template_args is now template_actuals
+		instead of pointer hitherto because new canonical_type's
+		make_unroll_context creates a temporary, and thus
+		cannot outlive the reference.  
+	  Added "common/devel_switches.h" (project-wide) and
+		"Object/devel_switches.h" (module-wide) headers
+		for convenient development preprocessor switches.  
+		(see comments therein for usage.)
+		Much code commented out by switches in this rev.  
+
+
+2005-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-03:
+	  Not a revision: just a tag for updated tests in the top test/ dir.
+		This revision should make check / distcheck successfully again.
+
+
+2005-08-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-02:
+	  Revisions to make code "work" i.e. produces the same 
+		test results (information-wise), but the binary
+		objects will differ.  This snapshot only checks in the
+		code without updating the tests (so we can come back
+		and check the diffs conveniently).  
+	  Summary:
+		Had to specialize the canonical_generic_chan_type
+			to accommodate both user-defined and generic 
+			channel types.  Later, should really split them off, 
+			but not important for now.  
+		Redefined const_param_expr_list::dump_range(): argument 
+			indices are now half-open instead of inclusive.  
+		datatype_instance_collection::establish_collection_type()
+			implemented in a switch-case fashion as a 
+			temporary workaround.  
+		Implemented canonical_definition_load_policy to allow 
+			for the built-in-definition-interception hack 
+			documented (and condemned) in
+			data_type_reference::load_object_base().
+			Specialized definition appears in
+				"Object/type/canonical_type.cc"
+		Fixed the FINISH_ME macro in "common/TODO.h".
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05-canonical-01:
+	  The goal of this branch is to be able to use these new 
+		canonical types to trigger postorder recursive footprint 
+		generation as each type is unrolled/created.
+	  NOTE: This branch snapshot is unstable: it barely compiles
+		and is certain to break many tests.  I just had to commit 
+		these changes to save away 1000+ LOC, untested.
+		Warning: not all new revisions are wrapped in 
+		#if USE_CANONICAL_TYPE -- sloppy me.  
+	  Summary: implemented (enabled) true canonical type structures, 
+		the replacement for generic fundamental types in 
+		instance collections.  Most affected are instantiation
+		statements, instance collections, and their implementation
+		policies.  Added whole new set of canonicalization methods
+		to definitions and type-reference classes, redundant for now, 
+		intended as a replacement for the existing ones.
+	  Renamed fundamental_type_reference::make_canonical_type_reference
+		-> make_canonical_fundamental_type_reference
+		to distinguish from the new ::make_canonical_type.
+	  Classification tags have been given parent_type member typedef.  
+
+
+2005-08-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-05:
+	  Micro commit to synchronize a few added files before
+		sub-branching for some heavy renovation.  
+		Type canonicalization needs some serious work.  
+
+
+2005-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-04:
+	  More preparation for introducing canonical_type as the 
+		type parameter for instance_collections.  
+	  Striving to give canonical_type same functional interface
+		as fundamental_type_reference for ease of transition.
+
+
+2005-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-03:
+	  More untested implementation of footprint_manager facilities.  
+	  Preparing to add footprint_manager persistence to 
+		process_definition.  
+	  TODO: as each canonical type is visited during unroll,
+		register the entry in the footprint_manager
+		of the canonical definition.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-02:
+	  Made instance_pool class more resuable to footprint class.  
+	  More elaboration of footprint class.  
+	  Created Object/inst/*_instance.h headers for lightweight use
+		in other headers.  
+	  Added instance pool chunk sizes to class_traits.  
+
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-01:
+	  This branch is for developing alias and creation footprints
+		per complete type, to be used in hierarchical state
+		construction.  This first revision is setting up
+		some files for upcoming modifications.  
+	  Going to use const_param_expr_list as the sorting key for the
+		footprint_manager.  We've defined the < operator
+		for const_param classes.  
+
+
 2005-08-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-merged-macros-02:

@@ -1,22 +1,22 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.5 2005/02/27 22:54:30 fang Exp $
+	$Id: cube_slice.h,v 1.6 2005/09/04 21:15:10 fang Exp $
  */
 
 #include <assert.h>
 #include <string>
-#include "STL/list.tcc"
+#include "util/STL/list.tcc"
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include "sstream.h"
-#include "multikey_qmap.tcc"
+#include "util/sstream.h"
+#include "util/multikey_qmap.tcc"
 
 namespace testing {
 USING_LIST
 using std::string;
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::pair;
 using std::accumulate;
 using std::ostringstream;

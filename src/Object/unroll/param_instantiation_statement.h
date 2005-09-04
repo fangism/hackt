@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.3 2005/08/08 16:51:11 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.4 2005/09/04 21:15:03 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -19,19 +19,23 @@
 
 namespace ART {
 namespace entity {
-
+class footprint;
 //=============================================================================
 /**
 	Specialization of type-reference for parameter integers.  
  */
 class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
+	typedef	class_traits<pint_tag>			traits_type;
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
+	// probably null_parameter_type
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 protected:
 	instantiation_statement_type_ref_base() { }
 
@@ -45,9 +49,9 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
-	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
-		return built_in_type_ptr;
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context&) const {
+		return instance_collection_parameter_type();
 	}
 
 	/**
@@ -67,16 +71,17 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-		const type_ref_ptr_type& t) {
+			const instance_collection_parameter_type&) {
 		// no need to type-check
 		return good_bool(true);
 	}
 
 	static
-	void
+	good_bool
 	commit_type_first_time(value_collection_generic_type& v, 
-		const type_ref_ptr_type&) {
+			const instance_collection_parameter_type&) {
 		// no-op
+		return good_bool(true);
 	}
 
 	static
@@ -97,12 +102,8 @@ protected:
 	static
 	good_bool
 	create_unique_state(value_collection_generic_type& v, 
-			const const_range_list& crl) {
-#if 0
-		return v.create_unique_state(crl);
-#else
+			const const_range_list&, footprint&) {
 		return good_bool(true);
-#endif
 	}
 
 };      // end class instantiation_statement_type_ref_base
@@ -113,9 +114,12 @@ protected:
  */
 class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 	public empty_instantiation_statement_type_ref_base {
+	typedef	class_traits<pbool_tag>			traits_type;
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
+	typedef	traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 protected:
 	typedef	count_ptr<const const_param_expr_list>
@@ -132,9 +136,9 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
-	const type_ref_ptr_type&
-	get_resolved_type(const unroll_context&) const {
-		return built_in_type_ptr;
+	instance_collection_parameter_type
+	get_canonical_type(const unroll_context&) const {
+		return instance_collection_parameter_type();
 	}
 
 	/**
@@ -154,16 +158,17 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-		const type_ref_ptr_type& t) {
+			const instance_collection_parameter_type&) {
 		// no need to type-check
 		return good_bool(true);
 	}
 
 	static
-	void
+	good_bool
 	commit_type_first_time(value_collection_generic_type&, 
-		const type_ref_ptr_type&) {
+			const instance_collection_parameter_type&) {
 		// no-op
+		return good_bool(true);
 	}
 
 	static
@@ -184,12 +189,8 @@ protected:
 	static
 	good_bool
 	create_unique_state(value_collection_generic_type& v, 
-			const const_range_list& crl) {
-#if 0
-		return v.create_unique_state(crl);
-#else
+			const const_range_list&, footprint&) {
 		return good_bool(true);
-#endif
 	}
 };      // end class instantiation_statement_type_ref_base
 

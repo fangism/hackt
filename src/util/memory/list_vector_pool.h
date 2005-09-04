@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.13 2005/05/19 18:43:37 fang Exp $
+	$Id: list_vector_pool.h,v 1.14 2005/09/04 21:15:09 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -13,20 +13,12 @@
 #include "util/memory/thread_lock.h"
 #include "util/memory/destruction_policy.h"
 #include "util/macros.h"
+#include "util/attributes.h"
 
 #include <queue>
 #include <list>
 #include <vector>
 #include <iosfwd>
-
-// because FreeBSD's <pthreads.h> defines initializer as NULL
-// and I haven't figured out a workaround yet.
-#if defined(__FreeBSD__)
-// #warn	"This allocator will not be thread-safe in FreeBSD... yet."
-#define	THREADED_ALLOC		0
-#else
-#define	THREADED_ALLOC		1
-#endif
 
 
 #define	LIST_VECTOR_POOL_TEMPLATE_SIGNATURE				\
@@ -156,7 +148,7 @@ T::get_pool(void) {							\
 	static pool_type*	pool = new pool_type(C);		\
 	STATIC_RC_POOL_REF_INIT;					\
 	static size_t*		count = NEW_SIZE_T;			\
-	static const size_t	zero = (*count = 0);			\
+	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);	\
 	return pool_ref_ref_type(pool, count);				\
 }									\
 									\

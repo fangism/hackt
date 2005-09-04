@@ -1,4 +1,4 @@
-// should pass:
+// "002.in" should pass:
 // aliases the *definition*
 
 typedef	int		my_int;

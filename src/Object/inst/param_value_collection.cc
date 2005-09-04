@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.2 2005/07/23 06:52:38 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.3 2005/09/04 21:14:51 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -14,7 +14,7 @@
 #include <iostream>
 
 #include "Object/common/namespace.h"
-#include "Object/type/fundamental_type_reference.h"
+#include "Object/type/param_type_reference.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/unroll/instantiation_statement_base.h"
@@ -53,15 +53,12 @@ param_value_collection::param_value_collection(const scopespace& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_value_collection::~param_value_collection() {
-	STACKTRACE("~param_value_collection()");
+	STACKTRACE_DTOR("~param_value_collection()");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 param_value_collection::dump(ostream& o) const {
-#if 0
-	STACKTRACE("param_value_collection::dump()");
-#endif
 	parent_type::dump(o);
 	const count_ptr<const param_expr>
 		init_def(default_value());
@@ -90,29 +87,6 @@ param_value_collection::dump(ostream& o) const {
 	}
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// OBSOLETE, using parent_type's definition
-/**
-	To determine whether or not this is a formal parameter, 
-	look itself up in the owning namespace.  
- */
-bool
-param_value_collection::is_template_formal(void) const {
-	STACKTRACE("param_value_collection::is_template_formal()");
-	// look itself up in owner namespace
-	const never_ptr<const definition_base>
-		def(owner.is_a<const definition_base>());
-	if (def) {
-		return def->lookup_template_formal(key);
-	} else {
-		INVARIANT(owner.is_a<const name_space>());
-		// is owned by a namespace, i.e. actually instantiated
-		return false;
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -170,6 +144,37 @@ param_value_collection::must_be_initialized(void) const {
 		else return false;
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For two template formals to be equivalent, their
+	type and size must match, names need not.  
+	Currently allows comparison of parameter and non-parameter
+	formal types.  
+	Is conservative because parameters (in sizes) may be dynamic, 
+	or collective.  
+	TODO: this is only applicable to param_value_collection.  
+
+	Origin: This was moved from 
+	instance_collection_base::template_formal_equivalent(), and modified.
+ */
+bool
+param_value_collection::template_formal_equivalent(const this_type& b) const {
+	// first make sure base types are equivalent.  
+	const count_ptr<const param_type_reference>
+		t_type(get_param_type_ref());
+	const count_ptr<const param_type_reference>
+		b_type(b.get_param_type_ref());
+	// used to be may_be_equivalent...
+	if (!t_type->must_be_type_equivalent(*b_type)) {
+		// then their instantiation types differ
+		return false;
+	}
+	// then compare sizes and dimensionality
+	return formal_size_equivalent(b);
+}
+
+
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

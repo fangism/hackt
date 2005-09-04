@@ -3,7 +3,7 @@
 	Classes related to constant parameter expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param.h,v 1.2 2005/07/20 21:00:40 fang Exp $
+	$Id: const_param.h,v 1.3 2005/09/04 21:14:45 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_H__
@@ -73,6 +73,21 @@ virtual	count_ptr<const const_param>
 
 virtual	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const = 0;
+
+#define	LESS_OPERATOR_PROTO						\
+	bool								\
+	operator < (const const_param&) const
+
+#define	EQUAL_OPERATOR_PROTO						\
+	bool								\
+	operator == (const const_param&) const
+
+/**
+	\pre the type being compared to must have 'same' type, 
+		as defined in each implementation.  
+ */
+virtual	LESS_OPERATOR_PROTO = 0;
+
 };	// end class const_param
 
 //=============================================================================

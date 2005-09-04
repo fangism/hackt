@@ -1,15 +1,15 @@
 /**
 	\file "pool_module_b.h"
 	Header for one module of a multimodule memory pool test.
-	$Id: pool_module_b.h,v 1.3 2005/03/01 21:26:50 fang Exp $
+	$Id: pool_module_b.h,v 1.4 2005/09/04 21:15:13 fang Exp $
  */
 
 #ifndef	__POOL_MODULE_B_H__
 #define	__POOL_MODULE_B_H__
 
-#include "memory/pointer_classes.h"
-#include "memory/list_vector_pool_fwd.h"
-#include "what.h"
+#include "util/memory/pointer_classes.h"
+#include "util/memory/list_vector_pool_fwd.h"
+#include "util/what.h"
 
 USING_CONSTRUCT
 using util::what;

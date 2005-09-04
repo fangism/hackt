@@ -1,0 +1,25 @@
+// "121.in" -- testing creation connections, involving relaxed params
+// copy-extended from "119.in"
+// should fail creation
+
+template <><pbool B>
+defproc mybool() { }
+
+defproc bar(mybool a) { }
+defproc foo(bar b) { }
+defproc ick(foo x) { }
+
+mybool x<true>;
+mybool y<false>;
+bar p, q;
+p(x);
+q(y);
+foo j(q), k(p);
+ick m, n;
+m.x = j;
+n.x = k;
+m = n;		// effectively x = y, which is clearly incompatible
+
+// there should be only 1 unique mybool
+// and one of each proces type (3 processes total)
+

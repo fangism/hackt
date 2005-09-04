@@ -6,9 +6,9 @@
 #include <iostream>
 #include <string>
 #include <set>
-#include "maplikeset.h"
+#include "util/maplikeset.h"
 
-#include "using_ostream.h"
+#include "util/using_ostream.h"
 using std::string;
 using std::set;
 using util::maplikeset;
@@ -52,7 +52,7 @@ maplikeset_test(void);
 
 //=============================================================================
 int
-main(int argc, char* argv[]) {
+main(int, char*[]) {
 	cout << "======= testing maplikeset with non-derived element ======" << endl;
 	maplikeset_test<test_set_type_1>();
 	cout << "========= testing maplikeset with derived element ========" << endl;

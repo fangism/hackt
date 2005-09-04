@@ -3,6 +3,159 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2005-09-01: ARTXX-00-01-04-main-00-55-footprint-01-32:
+	Notes on algorithm for replaying internal port aliases:
+	had: detect whether or not instance in question is a 
+		a direct member of a port, and if so, replay the connection.
+		(in instance_alias_info::replay_internal_aliases)
+		WRONG: this misses *aliases* of ports.  
+	then: tried to replace with instance_alias_info::retrace_port_alias, 
+		if the instance in question (or any of its parents)
+		are aliased to a port, then replay its connection.
+		WRONG: this only finds the first port connection, 
+			but an instance may be a public port to *multiple*
+			types, and thus ALL port-aliases must be replayed.  
+	SOLUTION: replay all port-aliases at all levels of instance 
+		hierarchy, i.e. given x.y.z, replay aliases
+		of the .z level and those of the .y, and then the .x level.  
+		Is upward recursive in hierarchy.  
+	Q: is there a top-down only solution, since replay already traverses
+		top-down?  it sucks to have to inspect upward...
+		A top-down solution would involve playing aliases
+		between subinstances of aliases explicitly because
+		x.y (x port) could alias to z.y (z internal), which
+		could then alias to another port -- only discovered 
+		by upward inspection.  
+	TODO: save a compact record of internal aliases for each
+		complete type and replay from that without having
+		to check the same hierarchies over and over.  
+		(like instance reference connections)
+	UPDATE (2005-09-02):
+		above is STILL insufficient.
+		consider w.x.y whose formal alias is W::x.y 
+		and aliased to port W::p,
+		X (y, z) has X::y = X::z, and W contains
+		X x,a,b; with x.z = a.y, a.z = b.z;
+		W::q = W::b.y;
+		Then p is alias to q, but only discovered through
+		visiting up and down aliases...
+		Thus we need a traversal to visit ALL equivalent aliases
+		that walks both up and down hierarchies because
+		connections are not flattened.  
+
+//=============================================================================
+2005-08-25:
+	In final phase of creation checking:
+		every unique instance whose collection type is relaxed
+		must have relaxed actuals.  
+		Definitions however are allowed to defer this because
+		relaxed actuals may be passed in from the public ports.  
+		Top-level instances however, MUST meet this criterion.  
+		Intelligent: if instance placeholder is not aliased
+		to a public port, and it is missing, then can complain.  
+
+
+//=============================================================================
+2005-08-20:
+	Considerations for unrolling, in the grand scheme of things.  
+	Top-level unrolling alters the top-level instance_collections
+		that are scattered throughout the namespace hierarchy.  
+	Definition-level unrolling CANNOT alter the instance_collections
+		that reside in the definition's scopespace because they may be 
+		shared by types with different template parameters.  
+	Each definition contains a map of footprints.  
+		Unrolling should work with instance_collections that belong to
+		a particular footprint.  
+		This means, we need to replicate the instance collections
+		in each footprint??  (The ones in the definitions are
+		really skeletal placeholders for unrolling.)
+		But what about the top-level?  It references globally 
+		accessible instances, that are NOT in the same namespace.  
+	Now it seems we may need to extend *unroll_context* to point 
+		to the correct footprint-scope:
+		if NULL, then we are at the global scope, no further 
+		resolution is needed.  
+		otherwise, we are in some definition scope, so
+		all instance_references to the base definition's 
+		instance_collections must be resolved to the 
+		particular complete_type's footprint instance_collection.  
+		The top-level (modules) footprint will just have an 
+		empty instance_collection map.  
+	Will need to modify simple_met_instance_reference::unroll_*
+		their inst_collection_ref member (instance_base reference)
+		will need one additional level of translation.  
+	NOTE: this idea was noted in the comments of class footprint
+		some revisions ago, though I don't recall having written it.  
+		Already contains an instance_collection_map_type
+		for the purpose just described.  
+	LATER: what about references to global instances in local scopes?
+
+
+//=============================================================================
+2005-08-16:
+	extension of 2005-08-07 entry:
+	We're ready to unroll and create types encountered during hierarchical
+		creation and allocation.  
+	Some issues stand in the way:
+		Relaxed template actuals may only exist in one place in the
+		connection hierarchy, and may not even be in the same alias
+		ring.  
+		We need to guarantee that: one of the equivalent aliases
+		(and only one) contributes relaxed alias actuals
+		to the allocated instance.  We *must* detect conflicts
+		across the hierarchy.  (This will get complicated once we
+		glue instances and ports.)
+	Proposal: process/chan/struct instance state will contain an optional
+		relaxed const_param_expr_list ptr set from alias_actuals.  
+		Need one pass over all instances with the same ID to collect 
+		these relaxed actuals and check for equivalence and conflicts.  
+		(even replace equivalent pointers as an opt.!)
+		(No need to back-copy the established pointers to the 
+		alias, the alias will just reference the state's
+		actual parameters once its state ID is set.  
+		No need to clobber the pointer either, it's just a reference
+		count that doesn't take any additional storage.)
+		(get_type: if ID set, use actuals if exists, else use own)
+		Note: at each level of the hierarchy, psuedo-allocated 
+		(placeholder) instances are allowed
+		to be missing relaxed actuals, because they may be connected
+		to another instance in a different level.  
+		TODO: run this check first.
+		Need one final check that combines the hierarchical
+		footprints into flat global footprint.  
+		At THAT point should we guarantee that every instance
+		as satisfied (exactly once) unique relaxed actual values.  
+	Hierarchical complications: additional aliases may occur due to 
+		internal connections of the instantiated type --
+		those checks must be deferred.  
+		At each level of the hierarchy, just check for conflicts.  
+		Call this from canonical_type and module,
+			passing in the footprint&.  
+	First, add relaxed actuals pointer to process/chan/struct
+		state instances.  
+	Q: if/when should relaxed actuals be propagated around
+		rings of aliases?
+	A: Earliest possible time is during 
+		instance_reference_connection::unroll.
+		The lastest point should be when state is allocated
+		during the creation phase.  How to do this efficiently?
+
+	Important comment (as if the others aren't):
+		When comparing and propagating actuals during connections:
+		if the two entities being compared have NULL actuals
+		(where they are eventually needed, as required by the type), 
+		then we should merge the two NULL-actual alias rings together.
+		Even if they are connected elsewhere hierarchically.  
+		WHY?  Because when we discover hierarchical connections, 
+		we need to propagate known actuals to all known aliases.  
+		If 'connected' null-actual-rings were kept separate, 
+		then when they are merged with known actuals, 
+		they will not propagate maximally; there will be isolated
+		rings of NULL actuals that should NOT be so.  
+		See CRITICAL comment in "Object/inst/alias_actuals.tcc":
+		instance_alias_info_actuals::__symmetric_synchronize.
+
+//=============================================================================
 2005-08-08:
 	In creating unique state, need to process the definition
 	of the thing being instantiated to determine internal connections.

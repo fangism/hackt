@@ -1,0 +1,146 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	179
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+        foo<> x
+        foo<> y
+      )
+      In definition "bar", we have: {
+        w = foo<> w
+        x = foo<> x
+        y = foo<> y
+        z = foo<> z
+        footprint: {
+          process foo<>^0 w (instantiated) = ::bar::x (1) (
+            bool^0 a (instantiated) = ::bar::w.a (1) 
+            bool^0 b (instantiated) = ::bar::w.b (2) 
+          )
+          process foo<>^0 x (instantiated) = ::bar::w (1) (
+            bool^0 a (instantiated) = ::bar::x.a (1) 
+            bool^0 b (instantiated) = ::bar::x.b (2) 
+          )
+          process foo<>^0 y (instantiated) = ::bar::z (2) (
+            bool^0 a (instantiated) = ::bar::y.a (3) 
+            bool^0 b (instantiated) = ::bar::y.b (4) 
+          )
+          process foo<>^0 z (instantiated) = ::bar::y (2) (
+            bool^0 a (instantiated) = ::bar::z.a (3) 
+            bool^0 b (instantiated) = ::bar::z.b (4) 
+          )
+          process instance pool:
+          1	::bar::x
+          2	::bar::y
+          bool instance pool:
+          1	::bar::w.a
+          2	::bar::w.b
+          3	::bar::z.a
+          4	::bar::z.b
+        }
+      }
+
+    foo = process-definition (defined) foo(
+        bool<> a
+        bool<> b
+      )
+      In definition "foo", we have: {
+        a = bool<> a
+        b = bool<> b
+        footprint: {
+          bool^0 a (instantiated) = ::foo::a (1) 
+          bool^0 b (instantiated) = ::foo::b (2) 
+          bool instance pool:
+          1	::foo::a
+          2	::foo::b
+        }
+      }
+
+  Instances:
+    poo = process bar<>^0 poo (instantiated) = ::poo (1) (
+      process foo<>^0 x (instantiated) = ::poo.x (2) (
+        bool^0 a (instantiated) = ::poo.x.a (1) 
+        bool^0 b (instantiated) = ::poo.x.b (2) 
+      )
+      process foo<>^0 y (instantiated) = ::poo.y (3) (
+        bool^0 a (instantiated) = ::poo.y.a (3) 
+        bool^0 b (instantiated) = ::poo.y.b (4) 
+      )
+    )
+}
+
+Created state:
+process instance pool:
+1	::poo
+2	::poo.x
+3	::poo.y
+bool instance pool:
+1	::poo.x.a
+2	::poo.x.b
+3	::poo.y.a
+4	::poo.y.b
+
