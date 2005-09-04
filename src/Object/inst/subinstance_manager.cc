@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.12 2005/09/04 06:23:01 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.13 2005/09/04 18:10:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,7 +9,6 @@
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/port_alias_signature.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
@@ -147,47 +146,7 @@ subinstance_manager::connect_ports(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
-	Instance-for-instance, converts impleicit internal aliases
-	into explicit aliases.  
-	This re-plays internal aliases externally.  
-	\param sig a collection of port instance collections
-		with possible aliases to each other, sliced from the
-		footprint of the owning definition.  
-	\pre signatures must match identically.  
- */
-good_bool
-subinstance_manager::connect_port_aliases(const port_alias_signature& sig) {
-	STACKTRACE_VERBOSE;
-	const_iterator i(subinstance_array.begin());
-	const const_iterator e(subinstance_array.end());
-#if ENABLE_STACKTRACE
-	dump(STACKTRACE_STREAM << "subinstances: " << endl) << endl;
-	sig.dump(STACKTRACE_STREAM << "signature: " << endl) << endl;
-#endif
-#if USE_RECURSIVE_REPLAY_ALIASES
-	for ( ; i!=e ; i++) {
-		if ((*i)->replay_internal_aliases_recursive(sig).good) {
-			return good_bool(false);
-		}
-	}
-#else
-	INVARIANT(size() == sig.size());
-	port_alias_signature::const_iterator j(sig.begin());
-	for ( ; i!=e ; i++, j++) {
-		if  (!(*i)->replay_internal_aliases_base(**j).good) {
-			return good_bool(false);
-		}
-	}
-#endif
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	OBSOLETE?
 	Copied from footprint::create_dependent_types
 	and module::create_dependent_types.
  */
@@ -203,26 +162,6 @@ subinstance_manager::replay_internal_aliases(void) const {
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-good_bool
-subinstance_manager::replay_internal_aliases(const this_type& ref) {
-	STACKTRACE_VERBOSE;
-	INVARIANT(subinstance_array.size() == ref.subinstance_array.size());
-	const_iterator i(subinstance_array.begin());
-	const const_iterator e(subinstance_array.end());
-	const_iterator j(ref.subinstance_array.begin());
-	for ( ; i!=e ; i++, j++) {
-		// creating dependent types also connects internal aliases
-		if (!(*i)->create_dependent_types().good)
-			return good_bool(false);
-		if (!(*i)->replay_internal_aliases_base(**j).good)
-			return good_bool(false);
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool

@@ -2,20 +2,16 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.10 2005/09/04 06:23:01 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.11 2005/09/04 18:10:44 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
-#include "Object/devel_switches.h"
-
-#define	USE_RECURSIVE_REPLAY_ALIASES			0
 
 namespace ART {
 namespace entity {
-class port_alias_signature;
 class port_alias_tracker;
 
 //=============================================================================
@@ -71,11 +67,9 @@ virtual	~physical_instance_collection();
 #endif
 
 // macro co-defined in "Object/art_object_instance_collection.h"
-#ifndef	UNROLL_PORT_ONLY_PROTO
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
-#endif
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
 
@@ -96,24 +90,6 @@ virtual	void
 
 virtual	good_bool
 	synchronize_actuals(this_type&) = 0;
-
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-// this may become obsolete...
-#define	REPLAY_INTERNAL_ALIASES_BASE_PROTO				\
-	good_bool							\
-	replay_internal_aliases_base(const physical_instance_collection&)
-
-virtual	REPLAY_INTERNAL_ALIASES_BASE_PROTO = 0;
-
-#if USE_RECURSIVE_REPLAY_ALIASES
-// intended as a replacement for the above
-#define	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO				\
-	good_bool							\
-	replay_internal_aliases_recursive(const port_alias_signature&)
-
-virtual	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO = 0;
-#endif
-#endif
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\

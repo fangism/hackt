@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.3.4.5 2005/09/04 06:22:59 fang Exp $
+	$Id: instance_alias.h,v 1.3.4.6 2005/09/04 18:10:43 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -135,16 +135,6 @@ public:
 	ostream&
 	dump_alias(ostream& o) const;
 
-#if 0
-	ostream&
-	dump_hierarchical_name(ostream&) const;
-#endif
-
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-	RETRACE_ALIAS_BASE_PROTO;
-	RETRACE_ALIAS_PROTO;
-//	REPLAY_INTERNAL_ALIAS_RECURSIVE_PROTO;
-#endif
 	TRACE_ALIAS_BASE_PROTO;
 	TRACE_ALIAS_PROTO;
 
@@ -195,11 +185,6 @@ public:
 	ostream&
 	dump_alias(ostream& o) const;
 
-#if 0
-	ostream&
-	dump_hierarchical_name(ostream&) const;
-#endif
-
 	const_iterator
 	begin(void) const;
 
@@ -214,11 +199,6 @@ private:
 	end(void);
 
 public:
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-	RETRACE_ALIAS_BASE_PROTO;
-	RETRACE_ALIAS_PROTO;
-//	REPLAY_INTERNAL_ALIAS_RECURSIVE_PROTO;
-#endif
 	TRACE_ALIAS_BASE_PROTO;
 	TRACE_ALIAS_PROTO;
 

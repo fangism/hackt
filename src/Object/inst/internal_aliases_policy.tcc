@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.1.2.4 2005/09/04 06:23:01 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.1.2.5 2005/09/04 18:10:44 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
@@ -8,11 +8,9 @@
 
 #include "Object/inst/internal_aliases_policy.h"
 #include "Object/inst/substructure_alias_base.h"
-#include "Object/inst/port_alias_signature.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/def/footprint.h"
 #include "Object/type/canonical_type.h"
-#include "Object/def/port_formals_manager.h"
 #include "util/memory/excl_ptr.h"
 #include "util/stacktrace.h"
 
@@ -50,22 +48,6 @@ internal_aliases_policy<true>::connect(AliasType& _alias) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\param _alias the top-level alias to apply and mirror 
-		implicit internal port aliases.  
-	\param _ref reference instance that belongs to a 
-		footprint's port alias signature.  
- */
-template <class AliasType>
-good_bool
-internal_aliases_policy<true>::connect(AliasType& _alias, 
-		const AliasType& _ref) {
-	typedef	typename AliasType::instance_collection_generic_type
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Overloaded with canonical type already specified.  
  */
@@ -79,30 +61,9 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 	const never_ptr<const definition_type> def(_type.get_base_def());
 	const footprint&
 		fp(def->get_footprint(_type.get_raw_template_params()));
-#if USE_NEW_REPLAY_INTERNAL_ALIAS
 	const port_alias_tracker& pt(fp.get_port_alias_tracker());
 	return pt.replay_internal_aliases(_alias);
-#else
-	const port_formals_manager& pfm(def->get_port_formals());
-	const port_alias_signature asig(pfm, fp);
-	return connect(_alias, asig);
-#endif
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: connect subinstances!
- */
-template <class AliasType>
-good_bool
-internal_aliases_policy<true>::connect(AliasType& _alias, 
-		const port_alias_signature& ps) {
-//	STACKTRACE_VERBOSE;
-	return _alias.connect_port_aliases(ps);
-}
-#endif
 
 //=============================================================================
 }	// end namespace enity

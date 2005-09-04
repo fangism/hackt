@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.25 2005/09/04 06:23:00 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.26 2005/09/04 18:10:43 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -377,8 +377,12 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(substructure_alias& sup) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
+#if 0
 /**
+	OBSOLETE.
+	This is retained for historical record of how up-and-down
+	instance alias retracing worked.  
+
 	Follows an identical hierarchy to find the matching corresponding 
 	instance alias.  
 	\param sup will determine when recursion ends.
@@ -431,107 +435,6 @@ INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
 		return ret;
 	}
 	// then alias type (indexed or keyless) should lookup
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-/**
-	Replay an internal alias externally.  
-	May need a footprint argument, or port_alias_signature?
-	Walk the connection list to find the first alias to another port,
-		if any.  If found, replay the connection.  
-	TODO: method for find_port_alias.  
-	TODO: connect members of this alias, not just itself!
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ALIAS_INFO_CLASS::replay_internal_alias(const this_type& pa) {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
-	pa.dump_aliases(STACKTRACE_INDENT << "aliases: ") << endl;
-#endif
-/***
-	Bottom-up recursion: replay the internal aliases of this
-	alias's local substructures, if applicable.  
-	NOTE: This only needs to be done once per alias ring, 
-	however, the current algorithm will do this for every
-	equivalent alias in the ring, which is wasteful.  
-	TODO: (2005-08-30) optimize this to perform this once-only per ring.  
-***/
-	// the canonical type used, must be that of a top-most instance
-#if 0
-	if (!internal_alias_policy::connect(*this).good) {
-		return good_bool(false);
-	}
-#else
-	if (!substructure_parent_type::replay_internal_aliases(*this, pa).good) {
-		return good_bool(false);
-	}
-#endif
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "done with internal connection "
-		"of subinstance types." << endl;
-#endif
-#if 0
-	if (!substructure_parent_type::connect_port_aliases(*this).good) {
-		return good_bool(false);
-	}
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "done with internal connection "
-		"of this members." << endl;
-#endif
-#endif
-	// find next port alias, skipping internal aliases
-	// how do we know if it is a port alias?
-	const_iterator i(pa.begin());	// recall: begin points to next
-	const_iterator j(i++);		// j is 1 behind i
-	const const_iterator e(pa.end());
-	if (i==e) {
-		return good_bool(true);
-	}
-	// reach top-most super instance and check against parent scopespace
-	for ( ; !j->is_port_alias() && i!=e; j=i, i++) { }	// empty
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "ckpt 1" << endl;
-#endif
-	if (i==e) {
-		// we didn't find a port alias, we're done
-		return good_bool(true);
-	} else {
-		// we've found a valid port_alias (pointed by j)
-		// how de we replay the connection?
-		// need to find the corresponding alias in the top-level
-		// trace the path from j to the top, but in reverse order
-#if ENABLE_STACKTRACE
-		// STACKTRACE_INDENT << "ckpt 2" << endl;
-		j->dump_hierarchical_name(
-			STACKTRACE_INDENT << "resolving: ") << endl;
-#endif
-		this_type& new_alias(j->retrace_alias(*this));
-#if ENABLE_STACKTRACE
-		this->dump_hierarchical_name(
-			STACKTRACE_INDENT << "replaying connection: ");
-		new_alias.dump_hierarchical_name(
-			STACKTRACE_STREAM << " and ") << endl;
-#endif
-		// symmetric connection
-		return checked_connect_port(*this, new_alias);
-	}
-}	// end method replay_internal_alias
-#endif	// USE_NEW_REPLAY_INTERNAL_ALIAS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RECURSIVE_REPLAY_ALIASES
-/**
-	Pure virtual placeholder.  
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ALIAS_INFO_CLASS::replay_internal_alias_recursive(
-		const port_alias_signature&) {
-	ICE_NEVER_CALL(cerr);
 }
 #endif
 
@@ -1091,23 +994,6 @@ INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(substructure_alias&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-typename instance_alias_info<Tag>::substructure_parent_type&
-INSTANCE_ALIAS_INFO_CLASS::__retrace_alias_base(
-		RETRACE_ALIAS_BASE_ARG_TYPE) const {
-	ICE_NEVER_CALL(cerr);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_INFO_CLASS::retrace_alias(RETRACE_ALIAS_ARG_TYPE) const {
-	ICE_NEVER_CALL(cerr);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::trace_alias(substructure_alias&) const {
@@ -1285,6 +1171,7 @@ INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& a) const {
 #endif
 	// assert dynamic cast
 	container_type& c(IS_A(container_type&, pp));
+	// HERE
 	this_type& ret(IS_A(this_type&, *c.lookup_instance(k))); // this->key
 	// this_type& ret(c[this->key]);
 #if ENABLE_STACKTRACE
@@ -1292,47 +1179,6 @@ INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& a) const {
 #endif
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-/**
-	Uses self key to retrace an indentical hierarchical structure.
-	\pre type-checked.  
-	BUG FIXED: (2005-08-30) this looks up an instance with a key_type, 
-		where multikey_index_type is expected.  This works fine
-		EXCEPT for the case where D = 1, because the key_type
-		has been specialized to a POD scalar (size_t), 
-		which uses a completely different multikey_generic
-		constructor!
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-INSTANCE_ALIAS_INFO_CLASS&
-INSTANCE_ALIAS_CLASS::retrace_alias(RETRACE_ALIAS_ARG_TYPE p) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
-#endif
-	physical_instance_collection& pp(this->retrace_collection(p));
-#if ENABLE_STACKTRACE
-	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
-	STACKTRACE_INDENT << "key: " << this->key << endl;
-#endif
-	// this seems wasteful but is required for correctness, 
-	// as explained in the comments.  
-	const multikey<D, pint_value_type> kk(this->key);
-	const multikey_index_type k(kk);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "k: " << k << endl;
-#endif
-	// assert dynamic cast
-	container_type& c(IS_A(container_type&, pp));
-	this_type& ret(IS_A(this_type&, *c.lookup_instance(k))); // this->key
-#if ENABLE_STACKTRACE
-	ret.dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
-#endif
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1346,32 +1192,6 @@ INSTANCE_ALIAS_CLASS::__trace_alias_base(substructure_alias& p) const {
 	// because it is always called through parent (substructure_alias)
 	return this->trace_alias(p);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-/**
-	Uses self key to retrace an indentical hierarchical structure.
-	\pre type-checked.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
-INSTANCE_ALIAS_CLASS::__retrace_alias_base(
-		RETRACE_ALIAS_BASE_ARG_TYPE p) const {
-	// NOTE: this will never be called for non-structured types (like bool)
-	// because it is always called through parent (substructure_alias)
-	return this->retrace_alias(IS_A(RETRACE_ALIAS_ARG_TYPE, p));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RECURSIVE_REPLAY_ALIASES
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ALIAS_CLASS::replay_internal_alias_recursive(
-		const port_alias_signature& p) {
-
-}
-#endif
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1503,29 +1323,6 @@ KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-/**
-	NOTE: physical instance collection is not const in this case.  
- */
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-INSTANCE_ALIAS_INFO_CLASS&
-KEYLESS_INSTANCE_ALIAS_CLASS::retrace_alias(
-		RETRACE_ALIAS_ARG_TYPE p) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
-#endif
-	physical_instance_collection& pp(this->retrace_collection(p));
-	// assert dynamic cast
-#if ENABLE_STACKTRACE
-	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
-#endif
-	container_type& c(IS_A(container_type&, pp));
-	return c.get_the_instance();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: physical instance collection is not const in this case.  
  */
@@ -1536,30 +1333,6 @@ KEYLESS_INSTANCE_ALIAS_CLASS::__trace_alias_base(substructure_alias& p) const {
 	// because it is always called through parent (substructure_alias)
 	return this->trace_alias(p);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-/**
-	NOTE: physical instance collection is not const in this case.  
- */
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
-KEYLESS_INSTANCE_ALIAS_CLASS::__retrace_alias_base(
-		RETRACE_ALIAS_BASE_ARG_TYPE p) const {
-	// NOTE: this will never be called for non-structured types (like bool)
-	// because it is always called through parent (substructure_alias)
-	return this->retrace_alias(IS_A(RETRACE_ALIAS_ARG_TYPE, p));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RECURSIVE_REPLAY_ALIASES
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-good_bool
-KEYLESS_INSTANCE_ALIAS_CLASS::replay_internal_alias_recursive(
-		const port_alias_signature& p) {
-}
-#endif
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -2307,59 +2080,6 @@ INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-/**
-	\param p a reference to a definition-local port instance collection, 
-		which contains internal alias information.  
-	This takes the internal alias information of p and replays it 
-		in this (external) context.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::replay_internal_aliases_base(
-		const physical_instance_collection& p) {
-	// assert dynamic cast
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));
-	INVARIANT(this->collection.size() == t.collection.size());
-	iterator i(this->collection.begin());
-	iterator j(t.collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		if (!ii.replay_internal_alias(*j).good) {
-			// error message?
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RECURSIVE_REPLAY_ALIASES
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::replay_internal_aliases_recursive(
-		const port_alias_signature& p) {
-	// assert dynamic cast
-	STACKTRACE_VERBOSE;
-	iterator i(this->collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++) {
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		if (!ii.replay_internal_alias_recursive(p).good) {
-			// error message?
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-#endif
-#endif	// USE_NEW_REPLAY_INTERNAL_ALIAS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Walks the entire collection and create definition footprints of
 	constitutent types.  
@@ -2866,29 +2586,6 @@ INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
 	return instance_type::synchronize_actuals_recursive(this->the_instance,
 		t.the_instance);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::replay_internal_aliases_base(
-		const physical_instance_collection& p) {
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));
-	return this->the_instance.replay_internal_alias(t.the_instance);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RECURSIVE_REPLAY_ALIASES
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::replay_internal_aliases_recursive(
-		const port_alias_signature& p) {
-	STACKTRACE_VERBOSE;
-	return this->the_instance.replay_internal_alias_recursive(p);
-}
-#endif
-#endif	// USE_NEW_REPLAY_INTERNAL_ALIAS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

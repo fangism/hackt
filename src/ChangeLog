@@ -2,6 +2,13 @@
 
 2005-09-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-55-footprint-01-35:
+	  Clean-up: committed USE_NEW_REPLAY_INTERNAL_ALIAS, 
+		obliterated traces of port_alias_signature (removed).
+		600+ LOC deleted, good riddance.  
+	  More clean-up coming...
+
+
 	* ARTXX-00-01-04-main-00-55-footprint-01-34:
 	  2-for-1 BUGS SLAIN: process/086,099 fixed.  REJOICE!
 	  Introduced completely new replay mechanism for replaying

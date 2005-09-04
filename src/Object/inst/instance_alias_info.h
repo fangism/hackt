@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.16 2005/09/04 06:22:59 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.17 2005/09/04 18:10:43 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -22,7 +22,6 @@ namespace ART {
 namespace entity {
 class footprint;
 class instance_alias_info_actuals;
-class port_alias_signature;
 using std::ostream;
 using std::istream;
 using util::ring_node_derived;
@@ -222,34 +221,16 @@ public:
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;
 
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-#define	RETRACE_ALIAS_BASE_ARG_TYPE		const substructure_alias&
-#define	RETRACE_ALIAS_ARG_TYPE		const instance_alias_info<Tag>&
-#if 0
-#define	RETRACE_ALIAS_ARG_TYPE						\
-	const typename instance_alias_info<Tag>::substructure_parent_type&
-#endif
-#endif
 protected:
 	physical_instance_collection&
 	trace_collection(substructure_alias&) const;
 
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
+#if 0
 	physical_instance_collection&
-	retrace_collection(RETRACE_ALIAS_ARG_TYPE) const;
+	retrace_collection(substructure_alias&) const;
 #endif
 
 public:
-
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-#define	RETRACE_ALIAS_BASE_PROTO					\
-	typename instance_alias_info<Tag>::substructure_parent_type&	\
-	__retrace_alias_base(RETRACE_ALIAS_BASE_ARG_TYPE) const
-
-#define	RETRACE_ALIAS_PROTO						\
-	instance_alias_info<Tag>&					\
-	retrace_alias(RETRACE_ALIAS_ARG_TYPE) const
-#endif
 
 #define	TRACE_ALIAS_BASE_PROTO						\
 	typename instance_alias_info<Tag>::substructure_parent_type&	\
@@ -259,28 +240,8 @@ public:
 	instance_alias_info<Tag>&					\
 	trace_alias(substructure_alias&) const
 
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-virtual	RETRACE_ALIAS_BASE_PROTO;
-virtual	RETRACE_ALIAS_PROTO;
-#endif
 virtual	TRACE_ALIAS_BASE_PROTO;
 virtual	TRACE_ALIAS_PROTO;
-
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-public:
-
-	good_bool
-	replay_internal_alias(const this_type&);
-#endif
-
-#if 0
-// used by replay_internal_aliases_recursive
-#define	REPLAY_INTERNAL_ALIAS_RECURSIVE_PROTO				\
-	good_bool							\
-	replay_internal_alias_recursive(const port_alias_signature&)
-
-virtual	REPLAY_INTERNAL_ALIAS_RECURSIVE_PROTO;
-#endif
 
 protected:
 	void

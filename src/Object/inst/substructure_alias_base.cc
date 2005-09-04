@@ -1,12 +1,11 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.9 2005/09/04 06:23:01 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.10 2005/09/04 18:10:45 fang Exp $
  */
 
 #include <iostream>
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
-// #include "Object/inst/port_alias_tracker.h"
 #include "common/ICE.h"
 #include "util/macros.h"
 
@@ -16,13 +15,6 @@ namespace entity {
 
 //=============================================================================
 // class substructure_alias_base<false> method definitions
-
-#if 0
-never_ptr<const physical_instance_collection>
-substructure_alias_base<false>::get_container_base(void) const {
-	ICE_NEVER_CALL(cerr);
-}
-#endif
 
 //=============================================================================
 // class substructure_alias_base<true> method definitions
@@ -65,20 +57,6 @@ substructure_alias::__trace_alias_base(this_type&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-substructure_alias&
-substructure_alias::__retrace_alias_base(
-#if 0
-		physical_instance_collection&
-#else
-		const this_type&
-#endif
-		) const {
-	ICE_NEVER_CALL(cerr);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param cr sequence of meta_instance_reference_base to connect
 		to ports in order.
@@ -107,15 +85,6 @@ good_bool
 substructure_alias::replay_substructure_aliases(void) const {
 	return subinstances.replay_internal_aliases();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-good_bool
-substructure_alias::replay_internal_aliases(
-		this_type& a, const this_type& ref) {
-	return a.subinstances.replay_internal_aliases(ref.subinstances);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

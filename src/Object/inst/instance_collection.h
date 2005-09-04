@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.12 2005/09/04 06:22:59 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.13 2005/09/04 18:10:43 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -49,13 +49,6 @@ class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
-
-// lazy to include, just copied from "Object/inst/instance_collection_base.h"
-#ifndef	UNROLL_PORT_ONLY_PROTO
-#define	UNROLL_PORT_ONLY_PROTO						\
-count_ptr<physical_instance_collection>					\
-unroll_port_only(const unroll_context&) const
-#endif
 
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -374,13 +367,6 @@ public:
 	instance_alias_base_type&
 	load_reference(istream& i) const;
 
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-	REPLAY_INTERNAL_ALIASES_BASE_PROTO;
-#if USE_RECURSIVE_REPLAY_ALIASES
-	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO;
-#endif
-#endif
-
 	CREATE_DEPENDENT_TYPES_PROTO;
 
 	COLLECT_PORT_ALIASES_PROTO;
@@ -485,13 +471,6 @@ public:
 
 	typename instance_type::parent_type&
 	get_the_instance(void) { return the_instance; }
-
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-	REPLAY_INTERNAL_ALIASES_BASE_PROTO;
-#if USE_RECURSIVE_REPLAY_ALIASES
-	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO;
-#endif
-#endif
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 

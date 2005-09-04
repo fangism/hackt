@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.10 2005/09/04 06:23:01 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.11 2005/09/04 18:10:45 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -20,7 +20,6 @@ class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
 class meta_instance_reference_base;
-class port_alias_signature;
 class port_alias_tracker;
 template <class> class instance_collection;
 using std::ostream;
@@ -123,14 +122,6 @@ public:
 
 	void
 	inherit_state(const this_type&, const footprint&);
-
-#if !USE_NEW_REPLAY_INTERNAL_ALIAS
-	good_bool
-	connect_port_aliases(const port_alias_signature&);
-
-	good_bool
-	replay_internal_aliases(const this_type&);
-#endif
 
 	good_bool
 	replay_internal_aliases(void) const;
