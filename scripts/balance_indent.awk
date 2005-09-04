@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 # "balance_indent.awk"
+#	$Id: balance_indent.awk,v 1.1 2005/09/04 22:13:48 fang Exp $
 
 # for all those unreadable template error messages in the C++ standard library
 

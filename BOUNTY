@@ -10,6 +10,9 @@ Rewards:
 One standard unit of reward will be a snack or drink from the CSL fridge, 
 whose monetary value is capped at $.50.
 
+Positive feedback:
+Reports that everything is working (build, check) are worth one unit.  
+
 Positive bugs: Classification
 build-failure: package fails to build on a platform/system that is NOT
 	on the list of unsupported platforms/compilers, worth 3 units.

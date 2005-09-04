@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.6 2005/09/04 21:14:35 fang Exp $
+#	$Id: configure.ac,v 1.7 2005/09/04 22:13:46 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -280,6 +280,7 @@ fi
 
 AC_CONFIG_FILES([
 	Makefile
+	scripts/Makefile
 	src/Makefile
 	src/util/test/Makefile
 	src/util/test/test-expect.sh
@@ -303,11 +304,14 @@ AC_CONFIG_FILES([
 	test/parser/template/Makefile
 	test/parser/typedef/Makefile
 	test/parser/connect/Makefile
+	test/benchmarks/Makefile
 	dox/Makefile
 	dox/mk/Makefile
 	dox/lang/Makefile
 	dox/util/Makefile
 	dox/objfmt/Makefile
+	dox/man/Makefile
+	dox/tutorial/Makefile
 	hackt.doxygen.config
 	])
 

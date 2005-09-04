@@ -1,12 +1,12 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.1 2005/09/04 21:14:37 fang Exp $
+	$Id: BUGS,v 1.2 2005/09/04 22:13:49 fang Exp $
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals
 	only if they are connected to a port.  Internal instances
 	must be strictly specified.  
-	(see test cases: )
+	(see test cases: connect/116,117,120,121)
 
 	For simplicity, aliases of relaxed types should be explicitly
 	connected into a single alias ring (flat) because of the
@@ -19,5 +19,5 @@ Relaxed actuals:
 	must keep track of the *origin* of values, like a poison bit
 	per value.  This will prevent relaxed parameters from leaking
 	to places where their use is forbidden.  
-	(see test case: )
+	(see test cases: template/056,057)
 

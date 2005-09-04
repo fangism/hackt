@@ -2,14 +2,14 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.17 2005/07/25 02:10:01 fang Exp $
+#	$Id: Makefile.am,v 1.18 2005/09/04 22:13:45 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = src test . dox
+SUBDIRS = scripts src test . dox
 
 DOXYGEN_CONFIG = hackt.doxygen.config
 
@@ -36,9 +36,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap maintainerclobber \
 	BOUNTY \
 	$(DOXYGEN_CONFIG).in \
-	DevelopmentPlan.dot \
-	readable_gcc_errors.sed \
-	balance_indent.awk
+	DevelopmentPlan.dot
 
 
 if HAVE_DOT

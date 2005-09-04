@@ -1,10 +1,10 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2005/09/04 21:15:14 fang Exp $
+#	$Id: Makefile.am,v 1.14 2005/09/04 22:13:49 fang Exp $
 
 include $(srcdir)/Make.test-head
 
 # this directory first, to clean the test-report
-SUBDIRS = . lexer parser
+SUBDIRS = . lexer parser benchmarks
 
 clean-test:
 	@$(ECHO) "#!$(SHELL)" > $@

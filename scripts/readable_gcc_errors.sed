@@ -1,5 +1,6 @@
 #!/usr/bin/sed -f
 # "readable_gcc_errors.sed"
+#	$Id: readable_gcc_errors.sed,v 1.1 2005/09/04 22:13:49 fang Exp $
 
 # inserts newlines between separate errors
 # to use this, redirect the stderr of make into this script
