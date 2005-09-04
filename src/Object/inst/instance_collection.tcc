@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.24 2005/09/04 01:58:12 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.25 2005/09/04 06:23:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -334,6 +334,51 @@ INSTANCE_ALIAS_INFO_CLASS::is_port_alias(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Unlike retrace, this does NOT follow super-instances
+	of the argument.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+physical_instance_collection&
+INSTANCE_ALIAS_INFO_CLASS::trace_collection(substructure_alias& sup) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
+	sup.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ") << endl;
+#endif
+	const instance_collection_base::super_instance_ptr_type
+		thisp(this->container->get_super_instance());
+	if (thisp) {
+#if ENABLE_STACKTRACE
+		thisp->dump_hierarchical_name(STACKTRACE_INDENT << "parent: ")
+			<< endl;
+#endif
+		// need to lookup parent instance first
+		// p points to a substructured alias
+		const substructure_alias&
+			pp(thisp->__trace_alias_base(sup));
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "looking up member: " <<
+			this->container->get_name() << endl;
+#endif
+		return *pp.lookup_port_instance(*this->container);
+	} else {
+		// This case cannot be reached when this is 
+		// a subinstanceless type.
+		// then we are at top-most level, terminate recursion
+		// from the type of sup, lookup the member
+		physical_instance_collection&
+			ret(*sup.lookup_port_instance(*this->container));
+#if ENABLE_STACKTRACE
+		ret.dump(STACKTRACE_INDENT << "ret: ") << endl;
+#endif
+		return ret;
+	}
+	// then alias type (indexed or keyless) should lookup
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
+/**
 	Follows an identical hierarchy to find the matching corresponding 
 	instance alias.  
 	\param sup will determine when recursion ends.
@@ -387,8 +432,10 @@ INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
 	}
 	// then alias type (indexed or keyless) should lookup
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	Replay an internal alias externally.  
 	May need a footprint argument, or port_alias_signature?
@@ -473,6 +520,7 @@ INSTANCE_ALIAS_INFO_CLASS::replay_internal_alias(const this_type& pa) {
 		return checked_connect_port(*this, new_alias);
 	}
 }	// end method replay_internal_alias
+#endif	// USE_NEW_REPLAY_INTERNAL_ALIAS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_RECURSIVE_REPLAY_ALIASES
@@ -1038,6 +1086,14 @@ INSTANCE_ALIAS_INFO_CLASS::end(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename instance_alias_info<Tag>::substructure_parent_type&
+INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(substructure_alias&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename instance_alias_info<Tag>::substructure_parent_type&
 INSTANCE_ALIAS_INFO_CLASS::__retrace_alias_base(
 		RETRACE_ALIAS_BASE_ARG_TYPE) const {
 	ICE_NEVER_CALL(cerr);
@@ -1047,6 +1103,14 @@ INSTANCE_ALIAS_INFO_CLASS::__retrace_alias_base(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::retrace_alias(RETRACE_ALIAS_ARG_TYPE) const {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_INFO_CLASS::trace_alias(substructure_alias&) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1200,6 +1264,37 @@ INSTANCE_ALIAS_CLASS::end(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& a) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	physical_instance_collection& pp(this->trace_collection(a));
+#if ENABLE_STACKTRACE
+	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
+	STACKTRACE_INDENT << "key: " << this->key << endl;
+#endif
+	// this seems wasteful but is required for correctness, 
+	// as explained in the comments.  
+	const multikey<D, pint_value_type> kk(this->key);
+	const multikey_index_type k(kk);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "k: " << k << endl;
+#endif
+	// assert dynamic cast
+	container_type& c(IS_A(container_type&, pp));
+	this_type& ret(IS_A(this_type&, *c.lookup_instance(k))); // this->key
+	// this_type& ret(c[this->key]);
+#if ENABLE_STACKTRACE
+	ret.dump_hierarchical_name(STACKTRACE_INDENT << "is: ") << endl;
+#endif
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	Uses self key to retrace an indentical hierarchical structure.
 	\pre type-checked.  
@@ -1237,8 +1332,23 @@ INSTANCE_ALIAS_CLASS::retrace_alias(RETRACE_ALIAS_ARG_TYPE p) const {
 #endif
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Uses self key to retrace an indentical hierarchical structure.
+	\pre type-checked.  
+ */
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
+INSTANCE_ALIAS_CLASS::__trace_alias_base(substructure_alias& p) const {
+	// NOTE: this will never be called for non-structured types (like bool)
+	// because it is always called through parent (substructure_alias)
+	return this->trace_alias(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	Uses self key to retrace an indentical hierarchical structure.
 	\pre type-checked.  
@@ -1260,6 +1370,7 @@ INSTANCE_ALIAS_CLASS::replay_internal_alias_recursive(
 		const port_alias_signature& p) {
 
 }
+#endif
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1376,6 +1487,23 @@ KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS&
+KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(substructure_alias& p) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "at: ") << endl;
+#endif
+	physical_instance_collection& pp(this->trace_collection(p));
+#if ENABLE_STACKTRACE
+	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
+#endif
+	container_type& c(IS_A(container_type&, pp));
+	return c.get_the_instance();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	NOTE: physical instance collection is not const in this case.  
  */
@@ -1395,8 +1523,22 @@ KEYLESS_INSTANCE_ALIAS_CLASS::retrace_alias(
 	container_type& c(IS_A(container_type&, pp));
 	return c.get_the_instance();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: physical instance collection is not const in this case.  
+ */
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::substructure_parent_type&
+KEYLESS_INSTANCE_ALIAS_CLASS::__trace_alias_base(substructure_alias& p) const {
+	// NOTE: this will never be called for non-structured types (like bool)
+	// because it is always called through parent (substructure_alias)
+	return this->trace_alias(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	NOTE: physical instance collection is not const in this case.  
  */
@@ -1417,6 +1559,8 @@ KEYLESS_INSTANCE_ALIAS_CLASS::replay_internal_alias_recursive(
 		const port_alias_signature& p) {
 }
 #endif
+#endif
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
@@ -2163,6 +2307,7 @@ INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	\param p a reference to a definition-local port instance collection, 
 		which contains internal alias information.  
@@ -2212,6 +2357,7 @@ INSTANCE_ARRAY_CLASS::replay_internal_aliases_recursive(
 	return good_bool(true);
 }
 #endif
+#endif	// USE_NEW_REPLAY_INTERNAL_ALIAS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2722,6 +2868,7 @@ INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::replay_internal_aliases_base(
@@ -2741,6 +2888,7 @@ INSTANCE_SCALAR_CLASS::replay_internal_aliases_recursive(
 	return this->the_instance.replay_internal_alias_recursive(p);
 }
 #endif
+#endif	// USE_NEW_REPLAY_INTERNAL_ALIAS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

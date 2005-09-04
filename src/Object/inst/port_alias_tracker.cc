@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.1.2.1 2005/09/04 01:58:12 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.1.2.2 2005/09/04 06:23:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -10,6 +10,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/substructure_alias_base.h"
 
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
@@ -75,6 +76,32 @@ alias_reference_set<Tag>::dump(ostream& o) const {
 		}
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s the structured instance in which to resolve and 
+		connect internal aliases of this type.  
+ */
+template <class Tag>
+good_bool
+alias_reference_set<Tag>::replay_internal_aliases(substructure_alias& s) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(alias_array.size() > 1);
+	// alias_type& _alias(IS_A(alias_type&, s));	// assert dynamic_cast
+	const_iterator i(alias_array.begin());
+	const const_iterator e(alias_array.end());
+	// resolve each formal subinstance reference in the alias ring
+	// to the corresponding actual instance reference 
+	// in the substructure argument
+	alias_type& head((*i)->trace_alias(s));
+	for (i++; i!=e; i++) {
+		alias_type& _inst((*i)->trace_alias(s));
+		// symmetric connection
+		if (!alias_type::checked_connect_port(head, _inst).good)
+			return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -162,8 +189,8 @@ port_alias_tracker::filter_unique(M& m) {
 template <class M>
 ostream&
 port_alias_tracker::dump_map(const M& m, ostream& o) {
-	typedef	typename M::const_iterator	const_iterator;
 if (!m.empty()) {
+	typedef	typename M::const_iterator	const_iterator;
 	typedef	typename M::mapped_type::tag_type	tag_type;
 	o << auto_indent << class_traits<tag_type>::tag_name
 		<< " port aliases:" << endl;
@@ -174,6 +201,22 @@ if (!m.empty()) {
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class M>
+good_bool
+port_alias_tracker::__replay_aliases(const M& m, substructure_alias& s) {
+	typedef	typename M::const_iterator	const_iterator;
+	typedef	typename M::mapped_type::tag_type	tag_type;
+	STACKTRACE_VERBOSE;
+	const_iterator i(m.begin());
+	const const_iterator e(m.end());
+	for ( ; i!=e; i++) {
+		if (!i->second.replay_internal_aliases(s).good)
+			return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,6 +238,22 @@ port_alias_tracker::filter_uniques(void) {
 		!enum_ids.empty() ||
 		!int_ids.empty() ||
 		!bool_ids.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+port_alias_tracker::replay_internal_aliases(substructure_alias& s) const {
+	STACKTRACE_VERBOSE;
+	if (has_internal_aliases) {
+		return __replay_aliases(process_ids, s) &&
+			__replay_aliases(channel_ids, s) &&
+			__replay_aliases(struct_ids, s) &&
+			__replay_aliases(enum_ids, s) &&
+			__replay_aliases(int_ids, s) &&
+			__replay_aliases(bool_ids, s);
+	} else {
+		return good_bool(true);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

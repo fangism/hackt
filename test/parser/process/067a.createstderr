@@ -113,11 +113,11 @@ In namespace "", we have: {
         unrolled indices: {
           0 = ::poo.x[1] (2) (
             bool^0 a (instantiated) = ::poo.x[0].b (1) 
-            bool^0 b (instantiated) = ::poo.x[0].a (1) 
+            bool^0 b (instantiated) = ::poo.x[1].a (1) 
           )
           1 = ::poo.x[0] (2) (
             bool^0 a (instantiated) = ::poo.x[1].b (1) 
-            bool^0 b (instantiated) = ::poo.x[1].a (1) 
+            bool^0 b (instantiated) = ::poo.x[0].a (1) 
           )
         }
     )

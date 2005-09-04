@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-34:
+	  2-for-1 BUGS SLAIN: process/086,099 fixed.  REJOICE!
+	  Introduced completely new replay mechanism for replaying
+		internal aliases, using just the port_alias_tracker.  
+		Currently enabled by USE_NEW_REPLAY_INTERNAL_ALIAS switch.  
+	  Completed implementation of port_alias_tracker methods.  
+	  Few tests updated because different canonical names were chosen
+		by the new algorithm (we don't care yet).  
+	  TODO: erase traces of port_alias_signature, now obsolete.
+	  TODO: expurgate hundreds of lines of dead (switched off) code, 
+		rendered obsolete by new connection replay mechanism.  
+	  Status: branch is in good shape! just needs severe cleaning.  
+
+
 2005-09-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-33:

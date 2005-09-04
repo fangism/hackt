@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.11 2005/09/04 01:58:13 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.12 2005/09/04 06:23:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -147,6 +147,7 @@ subinstance_manager::connect_ports(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 /**
 	Instance-for-instance, converts impleicit internal aliases
 	into explicit aliases.  
@@ -182,6 +183,7 @@ subinstance_manager::connect_port_aliases(const port_alias_signature& sig) {
 #endif
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -203,6 +205,7 @@ subinstance_manager::replay_internal_aliases(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 good_bool
 subinstance_manager::replay_internal_aliases(const this_type& ref) {
 	STACKTRACE_VERBOSE;
@@ -219,6 +222,7 @@ subinstance_manager::replay_internal_aliases(const this_type& ref) {
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool

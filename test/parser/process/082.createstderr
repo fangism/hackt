@@ -142,7 +142,7 @@ In namespace "", we have: {
       process foo<>^0 x (instantiated) = ::poo.x (2) (
         bool^0 a (instantiated) = ::poo.x.c (1) 
         bool^0 b (instantiated) = ::poo.x.b (2) 
-        bool^0 c (instantiated) = ::poo.z.c (1) 
+        bool^0 c (instantiated) = ::poo.z.a (1) 
       )
       process foo<>^0 y (instantiated) = ::poo.y (3) (
         bool^0 a (instantiated) = ::poo.y.a (3) 
@@ -150,9 +150,9 @@ In namespace "", we have: {
         bool^0 c (instantiated) = ::poo.y.c (5) 
       )
       process foo<>^0 z (instantiated) = ::poo.z (4) (
-        bool^0 a (instantiated) = ::poo.x.a (1) 
+        bool^0 a (instantiated) = ::poo.z.c (1) 
         bool^0 b (instantiated) = ::poo.z.b (6) 
-        bool^0 c (instantiated) = ::poo.z.a (1) 
+        bool^0 c (instantiated) = ::poo.x.a (1) 
       )
     )
 }

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.8 2005/09/04 01:58:13 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.9 2005/09/04 06:23:01 fang Exp $
  */
 
 #include <iostream>
@@ -60,6 +60,13 @@ substructure_alias::get_container_base(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 substructure_alias&
+substructure_alias::__trace_alias_base(this_type&) const {
+	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
+substructure_alias&
 substructure_alias::__retrace_alias_base(
 #if 0
 		physical_instance_collection&
@@ -69,6 +76,7 @@ substructure_alias::__retrace_alias_base(
 		) const {
 	ICE_NEVER_CALL(cerr);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -101,11 +109,13 @@ substructure_alias::replay_substructure_aliases(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 good_bool
 substructure_alias::replay_internal_aliases(
 		this_type& a, const this_type& ref) {
 	return a.subinstances.replay_internal_aliases(ref.subinstances);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

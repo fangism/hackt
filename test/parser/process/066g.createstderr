@@ -42,15 +42,15 @@ Persistent Object Manager text dump:
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -114,12 +114,12 @@ In namespace "", we have: {
   Instances:
     poo = process foo<>^0 poo (instantiated) = ::poo (1) (
       process ick<>^0 a (instantiated) = ::poo.b (2) (
-        process oof<>^0 m (instantiated) = ::poo.a.m (3) 
-        process oof<>^0 n (instantiated) = ::poo.a.n (4) 
-      )
-      process ick<>^0 b (instantiated) = ::poo.a (2) (
         process oof<>^0 m (instantiated) = ::poo.b.m (3) 
         process oof<>^0 n (instantiated) = ::poo.b.n (4) 
+      )
+      process ick<>^0 b (instantiated) = ::poo.a (2) (
+        process oof<>^0 m (instantiated) = ::poo.a.m (3) 
+        process oof<>^0 n (instantiated) = ::poo.a.n (4) 
       )
     )
 }

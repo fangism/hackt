@@ -55,12 +55,12 @@ Persistent Object Manager text dump:
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	58	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -128,12 +128,12 @@ In namespace "", we have: {
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^0 x (instantiated) = ::poo.y (2) (
-        bool^0 a (instantiated) = ::poo.x.a (1) 
-        bool^0 b (instantiated) = ::poo.x.b (2) 
-      )
-      process foo<>^0 y (instantiated) = ::poo.x (2) (
         bool^0 a (instantiated) = ::poo.y.a (1) 
         bool^0 b (instantiated) = ::poo.y.b (2) 
+      )
+      process foo<>^0 y (instantiated) = ::poo.x (2) (
+        bool^0 a (instantiated) = ::poo.x.a (1) 
+        bool^0 b (instantiated) = ::poo.x.b (2) 
       )
     )
 }

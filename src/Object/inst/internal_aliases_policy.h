@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_aliases_policy.h"
-	$Id: internal_aliases_policy.h,v 1.1.2.3 2005/08/31 22:29:37 fang Exp $
+	$Id: internal_aliases_policy.h,v 1.1.2.4 2005/09/04 06:23:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_H__
@@ -8,6 +8,7 @@
 
 #include "Object/inst/internal_aliases_policy_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -39,6 +40,7 @@ struct internal_aliases_policy {
 	}
 #endif
 
+#if 0
 private:
 	/**
 		Variant where the canonical type is already evaluated.
@@ -49,7 +51,7 @@ private:
 	connect(const AliasType&, const CanonicalType&) {
 		return good_bool(true);
 	}
-
+#endif
 };
 
 //-----------------------------------------------------------------------------

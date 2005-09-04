@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.15 2005/09/04 01:58:11 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.16 2005/09/04 06:22:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -222,9 +222,7 @@ public:
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;
 
-#if 0
-#define	RETRACE_ALIAS_ARG_TYPE		physical_instance_collection&
-#else
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 #define	RETRACE_ALIAS_BASE_ARG_TYPE		const substructure_alias&
 #define	RETRACE_ALIAS_ARG_TYPE		const instance_alias_info<Tag>&
 #if 0
@@ -234,10 +232,16 @@ public:
 #endif
 protected:
 	physical_instance_collection&
+	trace_collection(substructure_alias&) const;
+
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
+	physical_instance_collection&
 	retrace_collection(RETRACE_ALIAS_ARG_TYPE) const;
+#endif
 
 public:
 
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 #define	RETRACE_ALIAS_BASE_PROTO					\
 	typename instance_alias_info<Tag>::substructure_parent_type&	\
 	__retrace_alias_base(RETRACE_ALIAS_BASE_ARG_TYPE) const
@@ -245,14 +249,29 @@ public:
 #define	RETRACE_ALIAS_PROTO						\
 	instance_alias_info<Tag>&					\
 	retrace_alias(RETRACE_ALIAS_ARG_TYPE) const
+#endif
 
+#define	TRACE_ALIAS_BASE_PROTO						\
+	typename instance_alias_info<Tag>::substructure_parent_type&	\
+	__trace_alias_base(substructure_alias&) const
+
+#define	TRACE_ALIAS_PROTO						\
+	instance_alias_info<Tag>&					\
+	trace_alias(substructure_alias&) const
+
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 virtual	RETRACE_ALIAS_BASE_PROTO;
 virtual	RETRACE_ALIAS_PROTO;
+#endif
+virtual	TRACE_ALIAS_BASE_PROTO;
+virtual	TRACE_ALIAS_PROTO;
 
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 public:
 
 	good_bool
 	replay_internal_alias(const this_type&);
+#endif
 
 #if 0
 // used by replay_internal_aliases_recursive

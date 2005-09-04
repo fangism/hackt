@@ -56,10 +56,10 @@ Persistent Object Manager text dump:
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -119,11 +119,11 @@ In namespace "", we have: {
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^0 x (instantiated) = ::poo.y (2) (
-        bool^0 a (instantiated) = ::poo.y.b (1) 
-        bool^0 b (instantiated) = ::poo.x.b (1) 
+        bool^0 a (instantiated) = ::poo.x.b (1) 
+        bool^0 b (instantiated) = ::poo.y.a (1) 
       )
       process foo<>^0 y (instantiated) = ::poo.x (2) (
-        bool^0 a (instantiated) = ::poo.y.a (1) 
+        bool^0 a (instantiated) = ::poo.y.b (1) 
         bool^0 b (instantiated) = ::poo.x.a (1) 
       )
     )

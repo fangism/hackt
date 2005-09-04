@@ -2,13 +2,14 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.9 2005/09/04 01:58:12 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.10 2005/09/04 06:23:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
+#include "Object/devel_switches.h"
 
 #define	USE_RECURSIVE_REPLAY_ALIASES			0
 
@@ -96,6 +97,7 @@ virtual	void
 virtual	good_bool
 	synchronize_actuals(this_type&) = 0;
 
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 // this may become obsolete...
 #define	REPLAY_INTERNAL_ALIASES_BASE_PROTO				\
 	good_bool							\
@@ -110,6 +112,7 @@ virtual	REPLAY_INTERNAL_ALIASES_BASE_PROTO = 0;
 	replay_internal_aliases_recursive(const port_alias_signature&)
 
 virtual	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO = 0;
+#endif
 #endif
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\

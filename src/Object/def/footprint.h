@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.11 2005/09/04 01:58:08 fang Exp $
+	$Id: footprint.h,v 1.1.2.12 2005/09/04 06:22:59 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -172,6 +172,13 @@ public:
 
 	ostream&
 	dump_with_collections(ostream&) const;
+
+#if USE_PORT_ALIAS_TRACKER
+	const port_alias_tracker&
+	get_port_alias_tracker(void) const {
+		return port_aliases;
+	}
+#endif
 
 	void
 	import_scopespace(const scopespace&);

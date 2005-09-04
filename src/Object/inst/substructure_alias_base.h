@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.12 2005/09/04 01:58:13 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.13 2005/09/04 06:23:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -116,6 +116,7 @@ virtual	size_t
 	void
 	collect_port_aliases(port_alias_tracker&) const;
 
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 	/**
 		Forwarded call to connect internal aliases explicitly.  
 	 */
@@ -126,10 +127,16 @@ virtual	size_t
 
 virtual	this_type&
 	__retrace_alias_base(const this_type&) const;
+#endif
 
+virtual	this_type&
+	__trace_alias_base(this_type&) const;
+
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 	static
 	good_bool
 	replay_internal_aliases(this_type&, const this_type&);
+#endif
 
 protected:
 	// call forwarding
@@ -210,11 +217,13 @@ public:
 	void
 	connect_ports(void) const { }
 
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 	static
 	good_bool
 	replay_internal_aliases(const this_type&, const this_type&) {
 		return good_bool(true);
 	}
+#endif
 
 protected:
 	void

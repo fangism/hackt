@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.1.2.1 2005/09/04 01:58:13 fang Exp $
+	$Id: port_alias_tracker.h,v 1.1.2.2 2005/09/04 06:23:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -14,12 +14,15 @@
 #include "util/size_t.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/excl_ptr.h"
+#include "util/boolean_types.h"
 #include "Object/traits/classification_tags.h"
+#include "Object/inst/substructure_alias_fwd.h"
 
 namespace ART {
 namespace entity {
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 
@@ -57,6 +60,9 @@ public:
 
 	bool
 	is_unique(void) const { return alias_array.size() <= 1; }
+
+	good_bool
+	replay_internal_aliases(substructure_alias&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -119,6 +125,11 @@ private:
 
 	template <class M>
 	static
+	good_bool
+	__replay_aliases(const M&, substructure_alias&);
+
+	template <class M>
+	static
 	void
 	write_map(const M&, const persistent_object_manager&, ostream&);
 
@@ -131,6 +142,10 @@ public:
 	void
 	filter_uniques(void);
 
+	good_bool
+	replay_internal_aliases(substructure_alias&) const;
+
+public:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 

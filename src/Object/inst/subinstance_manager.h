@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.9 2005/09/04 01:58:13 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.10 2005/09/04 06:23:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -124,14 +124,16 @@ public:
 	void
 	inherit_state(const this_type&, const footprint&);
 
+#if !USE_NEW_REPLAY_INTERNAL_ALIAS
 	good_bool
 	connect_port_aliases(const port_alias_signature&);
 
 	good_bool
-	replay_internal_aliases(void) const;
+	replay_internal_aliases(const this_type&);
+#endif
 
 	good_bool
-	replay_internal_aliases(const this_type&);
+	replay_internal_aliases(void) const;
 
 	// for each entry, re-link
 	void
