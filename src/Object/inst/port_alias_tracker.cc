@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.1.2.2 2005/09/04 06:23:01 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.1.2.3 2005/09/04 16:20:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -365,12 +365,12 @@ if (has_internal_aliases) {
 template void alias_reference_set<Tag>::push_back(			\
 		never_ptr<const instance_alias_info<Tag> >);
 
-INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(process_tag);
-INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(channel_tag);
-INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag);
-INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag);
-INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag);
-INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag);
+INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(process_tag)
+INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(channel_tag)
+INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag)
+INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
+INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
+INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
 
 //=============================================================================
 }	// end namespace entity
