@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.9.4.7 2005/09/02 19:41:50 fang Exp $
+#	$Id: Makefile.am,v 1.9.4.8 2005/09/04 01:59:48 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -46,7 +46,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	080 081 081a 082 083 084 085 087 088 \
 	094 095 096 097 098
 
-# 086, 087: haven't decided when to reject
+# 086: haven't decided when to reject
 # 099: BUG in create (replay of internal aliases)
 
 # more output expectation files for when bison is used

@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	162
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	235
 	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -126,6 +126,9 @@ In namespace "", we have: {
             bool instance pool:
             1	::foo::a[0]
             2	::foo::a[1]
+            bool port aliases:
+            1: ::foo::a[0] = ::foo::b[0]
+            2: ::foo::a[1] = ::foo::b[1]
           }
         }
       }

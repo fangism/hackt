@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	170
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	235
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -93,6 +93,10 @@ In namespace "", we have: {
           1	::bar::x
           bool instance pool:
           1	::bar::y.a
+          process port aliases:
+          1: ::bar::x = ::bar::y
+          bool port aliases:
+          1: ::bar::x.a = ::bar::x.b = ::bar::y.a = ::bar::y.b
         }
       }
 

@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -16,11 +16,11 @@ Persistent Object Manager text dump:
 	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	243
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	199
 	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -115,6 +115,10 @@ In namespace "", we have: {
           1	::bar::x
           bool instance pool:
           1	::bar::y.a
+          process port aliases:
+          1: ::bar::x = ::bar::y
+          bool port aliases:
+          1: ::bar::x.a = ::bar::x.b = ::bar::y.a = ::bar::y.b
         }
       }
 
@@ -130,6 +134,8 @@ In namespace "", we have: {
           bool^0 b (instantiated) = ::foo::a (1) 
           bool instance pool:
           1	::foo::a
+          bool port aliases:
+          1: ::foo::a = ::foo::b
         }
       }
 
@@ -166,6 +172,11 @@ In namespace "", we have: {
           2	::ick::q.x
           bool instance pool:
           1	::ick::q.y.a
+          process port aliases:
+          1: ::ick::p = ::ick::q
+          2: ::ick::p.x = ::ick::p.y = ::ick::q.x = ::ick::q.y
+          bool port aliases:
+          1: ::ick::p.x.a = ::ick::p.x.b = ::ick::p.y.a = ::ick::p.y.b = ::ick::q.x.a = ::ick::q.x.b = ::ick::q.y.a = ::ick::q.y.b
         }
       }
 

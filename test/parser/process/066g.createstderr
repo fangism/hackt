@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	138
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	211
 	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	130
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
 	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	90
+	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
 	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
@@ -81,6 +81,10 @@ In namespace "", we have: {
           1	::foo::a
           2	::foo::b.m
           3	::foo::b.n
+          process port aliases:
+          1: ::foo::a = ::foo::b
+          2: ::foo::a.m = ::foo::b.m
+          3: ::foo::a.n = ::foo::b.n
         }
       }
 
