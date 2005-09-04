@@ -1,11 +1,12 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.4.4.7 2005/08/31 22:29:37 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.4.4.8 2005/09/04 01:58:13 fang Exp $
  */
 
 #include <iostream>
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
+// #include "Object/inst/port_alias_tracker.h"
 #include "common/ICE.h"
 #include "util/macros.h"
 
@@ -78,6 +79,12 @@ good_bool
 substructure_alias::connect_ports(const connection_references_type& cr, 
 		const unroll_context& c) {
 	return subinstances.connect_ports(cr, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+substructure_alias::collect_port_aliases(port_alias_tracker& p) const {
+	return subinstances.collect_port_aliases(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

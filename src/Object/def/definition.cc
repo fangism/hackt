@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.3.2.13 2005/08/31 06:19:25 fang Exp $
+ 	$Id: definition.cc,v 1.3.2.14 2005/09/04 01:58:08 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2786,6 +2786,7 @@ if (defined) {
 		}
 #endif
 		if (sequential_scope::create_unique(c, *f).good) {
+			f->evaluate_port_aliases(port_formals);
 			f->mark_created();
 		} else {
 			// already have partial error message

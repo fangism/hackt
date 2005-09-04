@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.73.2.9 2005/08/31 06:19:20 fang Exp $
+#	$Id: Makefile.am,v 1.73.2.10 2005/09/04 01:58:04 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -140,6 +140,7 @@ OBJECT_CC_FILES = \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
 	Object/inst/port_alias_signature.cc \
+	Object/inst/port_alias_tracker.cc \
 	Object/inst/alias_actuals.cc \
 	Object/inst/instance_collection.cc \
 	Object/inst/param_value_collection.cc \
@@ -417,6 +418,7 @@ UTIL_HEADER_FILES = \
 	util/boolean_types.h \
 	util/const_traits.h \
 	util/cppcat.h \
+	util/counter.h \
 	util/dereference.h \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \

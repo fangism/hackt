@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.5.2.23 2005/09/01 03:30:35 fang Exp $
+	$Id: instance_collection.tcc,v 1.5.2.24 2005/09/04 01:58:12 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
@@ -38,6 +38,7 @@
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"
+#include "Object/inst/port_alias_tracker.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"		// for debug only
@@ -2256,6 +2257,25 @@ if (this->has_relaxed_type()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\pre already called create_dependent_types.
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
+	const_iterator i(this->collection.begin());
+	const const_iterator e(this->collection.end());
+	for ( ; i!=e; i++) {
+		const element_type& ii(*i);
+		INVARIANT(ii.instance_index);
+		// 0 is not an acceptable index
+		port_alias_tracker_getter<Tag>()(t)[ii.instance_index]
+			.push_back(never_ptr<const element_type>(&ii));
+		ii.collect_port_aliases(t);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
  */
@@ -2748,6 +2768,17 @@ if (this->has_relaxed_type()) {
 	}
 #endif
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
+	INVARIANT(this->the_instance.instance_index);
+	// 0 is not an acceptable index
+	port_alias_tracker_getter<Tag>()(t)[this->the_instance.instance_index]
+		.push_back(never_ptr<const instance_type>(&this->the_instance));
+	this->the_instance.collect_port_aliases(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

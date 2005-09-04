@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.1.2.10 2005/08/29 21:32:03 fang Exp $
+	$Id: footprint.h,v 1.1.2.11 2005/09/04 01:58:08 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -17,6 +17,7 @@
 #include "Object/inst/enum_instance.h"
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
+#include "Object/inst/port_alias_tracker.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -27,6 +28,7 @@
 namespace ART {
 namespace entity {
 class instance_collection_base;
+class port_formals_manager;
 class scopespace;
 using std::string;
 using std::istream;
@@ -37,6 +39,8 @@ using util::persistent_object_manager;
 
 template <class Tag>
 struct footprint_pool_getter;
+
+#define	USE_PORT_ALIAS_TRACKER				1
 
 //=============================================================================
 /**
@@ -141,6 +145,9 @@ private:
 	so the invoker may determine which ports (if any) 
 	are internally connected.
 #endif
+#if USE_PORT_ALIAS_TRACKER
+	port_alias_tracker			port_aliases;
+#endif
 public:
 	footprint();
 	~footprint();
@@ -171,6 +178,9 @@ public:
 
 	good_bool
 	create_dependent_types(void) const;
+
+	void
+	evaluate_port_aliases(const port_formals_manager&);
 
 // persistent information management
 	void

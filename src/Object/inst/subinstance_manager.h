@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.3.4.8 2005/08/31 22:29:37 fang Exp $
+	$Id: subinstance_manager.h,v 1.3.4.9 2005/09/04 01:58:13 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -21,6 +21,7 @@ class physical_instance_collection;
 class unroll_context;
 class meta_instance_reference_base;
 class port_alias_signature;
+class port_alias_tracker;
 template <class> class instance_collection;
 using std::ostream;
 using std::istream;
@@ -101,6 +102,9 @@ public:
 	unroll_port_instances(const instance_collection<Tag>&, 
 		const unroll_context&);
 	// unroll_port_instances(const physical_instance_collection&);
+
+	void
+	collect_port_aliases(port_alias_tracker&) const;
 
 	good_bool
 	connect_ports(const connection_references_type&, 

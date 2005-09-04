@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.3.4.11 2005/08/31 22:29:38 fang Exp $
+	$Id: substructure_alias_base.h,v 1.3.4.12 2005/09/04 01:58:13 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -18,6 +18,7 @@ class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
 class port_alias_signature;
+class port_alias_tracker;
 class footprint;
 template <class> class state_instance;
 using std::istream;
@@ -112,6 +113,9 @@ virtual	size_t
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
 
+	void
+	collect_port_aliases(port_alias_tracker&) const;
+
 	/**
 		Forwarded call to connect internal aliases explicitly.  
 	 */
@@ -199,6 +203,9 @@ protected:
 public:
 	ostream&
 	dump_ports(ostream& o) const { return o; }
+
+	void
+	collect_port_aliases(const port_alias_tracker&) const { }
 
 	void
 	connect_ports(void) const { }

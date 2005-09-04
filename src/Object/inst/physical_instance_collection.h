@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.3.4.8 2005/08/31 22:29:37 fang Exp $
+	$Id: physical_instance_collection.h,v 1.3.4.9 2005/09/04 01:58:12 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -15,6 +15,7 @@
 namespace ART {
 namespace entity {
 class port_alias_signature;
+class port_alias_tracker;
 
 //=============================================================================
 // class instance_collection_base defined in "Object/inst/instance_collection_base.h"
@@ -116,6 +117,12 @@ virtual	REPLAY_INTERNAL_ALIASES_RECURSIVE_PROTO = 0;
 	create_dependent_types(void) const
 
 virtual	CREATE_DEPENDENT_TYPES_PROTO = 0;
+
+#define	COLLECT_PORT_ALIASES_PROTO					\
+	void								\
+	collect_port_aliases(port_alias_tracker&) const
+
+virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.3.4.10 2005/08/31 22:29:36 fang Exp $
+	$Id: instance_collection.h,v 1.3.4.11 2005/09/04 01:58:11 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -14,7 +14,6 @@
 
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
-// #include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "util/memory/excl_ptr.h"
@@ -237,6 +236,8 @@ virtual	const_index_list
 
 virtual	UNROLL_ALIASES_PROTO = 0;
 
+virtual	COLLECT_PORT_ALIASES_PROTO = 0;
+
 public:
 virtual	instance_alias_base_type&
 	load_reference(istream& i) const = 0;
@@ -380,6 +381,8 @@ public:
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 
+	COLLECT_PORT_ALIASES_PROTO;
+
 private:
 	class element_collector;
 	class element_writer;
@@ -488,6 +491,7 @@ public:
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 
+	COLLECT_PORT_ALIASES_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC

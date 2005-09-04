@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.5.2.10 2005/08/31 22:29:37 fang Exp $
+	$Id: subinstance_manager.cc,v 1.5.2.11 2005/09/04 01:58:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -10,6 +10,7 @@
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/port_alias_signature.h"
+#include "Object/inst/port_alias_tracker.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "common/ICE.h"
@@ -100,6 +101,16 @@ subinstance_manager::lookup_port_instance(
 	INVARIANT(index);
 	INVARIANT(index <= subinstance_array.size());
 	return subinstance_array[index-1];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::collect_port_aliases(port_alias_tracker& t) const {
+	const_iterator pi(subinstance_array.begin());
+	const const_iterator pe(subinstance_array.end());
+	for ( ; pi!=pe; pi++) {
+		(*pi)->collect_port_aliases(t);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.3.4.14 2005/08/31 22:29:36 fang Exp $
+	$Id: instance_alias_info.h,v 1.3.4.15 2005/09/04 01:58:11 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -314,6 +314,7 @@ virtual	ostream&
 	dump_hierarchical_name(ostream&) const;
 
 	using substructure_parent_type::dump_ports;
+	using substructure_parent_type::collect_port_aliases;
 	using substructure_parent_type::connect_ports;
 	// using substructure_parent_type::lookup_port_instance;
 	using substructure_parent_type::replay_substructure_aliases;
@@ -327,9 +328,7 @@ virtual	ostream&
 	checked_connect_alias(this_type&, this_type&,
 		const relaxed_actuals_type&);
 
-	/**
-		Wants to be pure virtual but can't...
-	 */
+	/// counterpart to load_alias_reference (should be pure virtual)
 virtual	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
@@ -339,6 +338,7 @@ virtual	void
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
 
+	/// counterpart to write_next_connection
 	static
 	instance_alias_base_type&
 	load_alias_reference(const persistent_object_manager& m, istream& i);

@@ -1,13 +1,14 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.1.2.11 2005/09/01 03:30:32 fang Exp $
+	$Id: footprint.cc,v 1.1.2.12 2005/09/04 01:58:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
+#include "Object/def/port_formals_manager.h"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "util/stacktrace.h"
@@ -37,7 +38,11 @@ footprint::footprint() :
 	struct_pool(class_traits<datastruct_tag>::instance_pool_chunk_size >> 1),
 	enum_pool(class_traits<enum_tag>::instance_pool_chunk_size >> 1),
 	int_pool(class_traits<int_tag>::instance_pool_chunk_size >> 1),
-	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size >> 1) {
+	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size >> 1)
+#if USE_PORT_ALIAS_TRACKER
+	, port_aliases()
+#endif
+	{
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -76,6 +81,9 @@ footprint::dump_with_collections(ostream& o) const {
 			i->second->dump(o << auto_indent) << endl;
 		}
 		dump(o);
+#if USE_PORT_ALIAS_TRACKER
+		port_aliases.dump(o);
+#endif
 	}
 	return o;
 }
@@ -150,6 +158,30 @@ footprint::create_dependent_types(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre the sequential scope was already played for creation.  
+ */
+void
+footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
+	STACKTRACE_VERBOSE;
+#if USE_PORT_ALIAS_TRACKER
+	// find port aliases
+	// work out const-cast-ness
+	typedef port_formals_manager::const_list_iterator
+						const_list_iterator;
+	const_list_iterator i(pfm.begin());
+	const const_list_iterator e(pfm.end());
+	for ( ; i!=e; i++) {
+		// includes assertions
+		instance_collection_map[(*i)->get_name()]
+			.is_a<const physical_instance_collection>()
+			->collect_port_aliases(port_aliases);
+	}
+	port_aliases.filter_uniques();
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
@@ -171,6 +203,9 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	enum_pool.collect_transient_info_base(m);
 	int_pool.collect_transient_info_base(m);
 	bool_pool.collect_transient_info_base(m);
+#if USE_PORT_ALIAS_TRACKER
+	port_aliases.collect_transient_info_base(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -198,6 +233,9 @@ footprint::write_object_base(const persistent_object_manager& m,
 	enum_pool.write_object_base(m, o);
 	int_pool.write_object_base(m, o);
 	bool_pool.write_object_base(m, o);
+#if USE_PORT_ALIAS_TRACKER
+	port_aliases.write_object_base(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -226,6 +264,9 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	enum_pool.load_object_base(m, i);
 	int_pool.load_object_base(m, i);
 	bool_pool.load_object_base(m, i);
+#if USE_PORT_ALIAS_TRACKER
+	port_aliases.load_object_base(m, i);
+#endif
 }
 
 //=============================================================================

@@ -1,5 +1,22 @@
 "ChangeLog"
 
+2005-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-55-footprint-01-33:
+	  Wrote port_alias_tracker intended as replacement for 
+		port_alias_signature.  After evaluating a complete type's
+		unique instances (create) the definition analyzes
+		the port instance collections for aliases among the ports.  
+		Aliases are recorded in the tracker.
+	  Each footprint contains a port_alias_tracker, which affects
+		the binary object sizes for all footprint.  
+		Test dump outcomes have been updated to reflect this.  
+	  TODO: replay the instance aliases using the trackers,	
+		instead of the broken mechanism currently in place.  
+	  Note: 1.5 days of code was abandoned, but saved onto the
+		ARTXX-00-01-04-main-00-55-footprint-01-32-broken branch.  
+
+
 2005-09-01	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-55-footprint-01-32:
