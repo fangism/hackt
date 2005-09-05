@@ -1,8 +1,8 @@
 /**
-	file "util/list_vector.tcc"
+	\file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.11 2005/09/04 21:15:07 fang Exp $
+	$Id: list_vector.tcc,v 1.12 2005/09/05 05:04:51 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__

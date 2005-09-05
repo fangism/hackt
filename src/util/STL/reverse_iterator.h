@@ -1,8 +1,8 @@
 /**
-	"util/STL/reverse_iterator.h"
+	\file "util/STL/reverse_iterator.h"
 	Extensions to the standard reverse_iterator template operations.  
 	Ideally this is not needed, but there are always shortcomings...
-	$Id: reverse_iterator.h,v 1.3 2005/05/10 04:51:32 fang Exp $
+	$Id: reverse_iterator.h,v 1.4 2005/09/05 05:04:53 fang Exp $
  */
 
 #ifndef	__UTIL_STL_REVERSE_ITERATOR_H__

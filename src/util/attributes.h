@@ -1,8 +1,8 @@
 /**
-	"util/attributes.h"
+	\file "util/attributes.h"
 	Configure-dependent use of compiler attributes.  
 	This file is highly dependent on compiler characteristics.  
-	$Id: attributes.h,v 1.2 2005/09/04 21:15:06 fang Exp $
+	$Id: attributes.h,v 1.3 2005/09/05 05:04:51 fang Exp $
  */
 
 #ifndef	__UTIL_ATTRIBUTES_H__

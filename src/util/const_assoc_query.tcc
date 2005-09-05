@@ -1,7 +1,7 @@
 /**
-	"util/const_assoc_query.tcc"
+	\file "util/const_assoc_query.tcc"
 	Definition for map-like class adapter with const-semantics lookup.
-	$Id: const_assoc_query.tcc,v 1.4 2005/06/21 21:26:36 fang Exp $
+	$Id: const_assoc_query.tcc,v 1.5 2005/09/05 05:04:51 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_ASSOC_QUERY_TCC__

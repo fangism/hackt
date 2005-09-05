@@ -1,8 +1,8 @@
 /**
-	"util/const_assoc_query.h"
+	\file "util/const_assoc_query.h"
 	Adapter around map-like classes to alter the semantics of 
 	the associative lookup operator [].
-	$Id: const_assoc_query.h,v 1.3 2005/05/10 04:51:22 fang Exp $
+	$Id: const_assoc_query.h,v 1.4 2005/09/05 05:04:51 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_ASSOC_QUERY_H__

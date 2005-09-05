@@ -1,7 +1,7 @@
 /**
-	"util/multikey_set_fwd.h"
+	\file "util/multikey_set_fwd.h"
 	Forward declarations for multikey set.
-	$Id: multikey_set_fwd.h,v 1.4 2005/05/22 06:24:21 fang Exp $
+	$Id: multikey_set_fwd.h,v 1.5 2005/09/05 05:04:51 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_FWD_H__

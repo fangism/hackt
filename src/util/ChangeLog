@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2005-09-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58:
+	  Fixed some \file doxygen commands in comments in a few headers.  
+
+
 2005-09-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-56-merged-footprint-01-26:
