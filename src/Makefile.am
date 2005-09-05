@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.74 2005/09/04 21:14:38 fang Exp $
+#	$Id: Makefile.am,v 1.75 2005/09/05 05:04:28 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -199,6 +199,7 @@ OBJECT_TCC_FILES = \
 	Object/inst/subinstance_manager.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
+	Object/inst/instance_alias.tcc \
 	Object/inst/instance_collection.tcc \
 	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \

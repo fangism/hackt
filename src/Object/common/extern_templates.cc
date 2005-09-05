@@ -4,7 +4,7 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.3 2005/09/04 21:14:41 fang Exp $
+	$Id: extern_templates.cc,v 1.4 2005/09/05 05:04:30 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
@@ -37,10 +37,12 @@ INSTANTIATE_MULTIKEY_GENERATOR(2, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERATOR(3, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERATOR(4, pint_value_type)
 
+#if 0
 INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(1, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(2, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(3, pint_value_type)
 INSTANTIATE_MULTIKEY_GENERIC_MULTIKEY_CTOR(4, pint_value_type)
+#endif
 
 template class packed_array_generic<pint_value_type, pint_value_type>;
 template class packed_array_generic<pint_value_type, pbool_value_type>;

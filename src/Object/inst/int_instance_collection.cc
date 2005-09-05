@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.4 2005/09/04 21:14:50 fang Exp $
+	$Id: int_instance_collection.cc,v 1.5 2005/09/05 05:04:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/data_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
+#include "Object/inst/instance_alias.tcc"
 #include "Object/inst/int_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
 

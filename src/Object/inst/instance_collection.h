@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.4 2005/09/04 21:14:49 fang Exp $
+	$Id: instance_collection.h,v 1.5 2005/09/05 05:04:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -354,6 +354,9 @@ public:
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
+
+	never_ptr<element_type>
+	operator [] (const key_type&) const;
 
 	// is this used? or can it be replaced by unroll_aliases?
 	bool

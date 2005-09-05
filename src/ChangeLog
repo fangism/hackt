@@ -1,6 +1,19 @@
 "ChangeLog"
 
+2005-09-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58:
+	  Split "Object/inst/instance_collection.tcc" into
+		"Object/inst/instance_alias.tcc".
+	  Replaced wasteful connection to generic multikey in trace_alias
+		using native container key_type directly.  
+
+
 2005-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-57:
+	  Organization only, no code revision.  
+
 
 	* ARTXX-00-01-04-main-00-56-merged-footprint-01-36:
 	  Major branch merge (-footprint-01-36), summary:
