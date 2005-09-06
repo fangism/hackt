@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.5 2005/09/04 21:14:54 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5.2.1 2005/09/06 05:56:48 fang Exp $
  */
 
 #include <iostream>
@@ -80,10 +80,18 @@ substructure_alias::allocate_subinstances(footprint& f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// OBSOLETE?
 good_bool
 substructure_alias::replay_substructure_aliases(void) const {
 	return subinstances.replay_internal_aliases();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: finish me.
+ */
+good_bool
+substructure_alias::allocate_subinstance_footprint(footprint& f) const {
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

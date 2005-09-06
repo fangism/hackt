@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.4 2005/09/04 21:14:40 fang Exp $
+	$Id: module.h,v 1.4.2.1 2005/09/06 05:56:46 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -12,6 +12,12 @@
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
+
+#define	USE_STATE_MANAGER		1
+
+#if USE_STATE_MANAGER
+#include "Object/state_manager.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -49,6 +55,10 @@ protected:
 		and creation.  
 	 */
 	footprint				_footprint;
+
+#if USE_STATE_MANAGER
+	state_manager				global_state;
+#endif
 
 private:
 	module();

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.75 2005/09/05 05:04:28 fang Exp $
+#	$Id: Makefile.am,v 1.75.2.1 2005/09/06 05:56:38 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -159,6 +159,7 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_instance_reference_connection.cc \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
+	Object/global_entry.cc \
 	Object/state_manager.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
@@ -217,6 +218,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/param_instantiation_statement.tcc \
 	Object/unroll/unroll_context.tcc \
 	Object/module.tcc \
+	Object/global_entry.tcc \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
 

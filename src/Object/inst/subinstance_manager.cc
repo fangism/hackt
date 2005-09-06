@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.6 2005/09/04 21:14:53 fang Exp $
+	$Id: subinstance_manager.cc,v 1.6.2.1 2005/09/06 05:56:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -41,7 +41,7 @@ subinstance_manager::subinstance_manager(const this_type& s) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subinstance_manager::~subinstance_manager() {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_DTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +73,7 @@ subinstance_manager::push_back(const entry_value_type& v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subinstance_manager::reserve(const size_t s) {
-	subinstance_array.reserve(s);
+	util::reserve(subinstance_array, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

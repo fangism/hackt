@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.2 2005/09/04 21:14:42 fang Exp $
+	$Id: footprint.h,v 1.2.2.1 2005/09/06 05:56:46 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -180,6 +180,17 @@ public:
 	void
 	evaluate_port_aliases(const port_formals_manager&);
 
+	good_bool
+	expand_unique_subinstances(void);
+
+#if 0
+private:
+	template <class Tag>
+	good_bool
+	__expand_pool_subinstances(void);
+#endif
+
+public:
 // persistent information management
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

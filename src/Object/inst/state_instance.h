@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.3 2005/09/04 21:14:53 fang Exp $
+	$Id: state_instance.h,v 1.3.2.1 2005/09/06 05:56:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -63,16 +63,6 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-#if 0
-#define	STATE_INSTANCE_GET_ACTUALS_PROTO				\
-	state_instance_actuals_ptr_type					\
-	get_actuals(void) const
-
-#define	STATE_INSTANCE_SET_ACTUALS_PROTO				\
-	void								\
-	set_actuals(const state_instance_actuals_ptr_type& arg) const
-#endif
-
 #define	STATE_INSTANCE_PERSISTENCE_PROTOS				\
 	void								\
 	collect_transient_info_base(persistent_object_manager&) const;	\
@@ -80,17 +70,6 @@ public:
 	write_object_base(const persistent_object_manager&, ostream&) const; \
 	void								\
 	load_object_base(const persistent_object_manager&, istream&);
-
-#if 0
-#define	STATE_INSTANCE_PERSISTENCE_EMPTY_DEFS				\
-	void								\
-	collect_transient_info_base(persistent_object_manager&) const { } \
-	void								\
-	write_object_base(const persistent_object_manager&,		\
-		ostream&) const { }					\
-	void								\
-	load_object_base(const persistent_object_manager&, istream&) { }
-#endif
 
 	STATE_INSTANCE_PERSISTENCE_PROTOS
 

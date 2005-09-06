@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4 2005/09/04 21:14:54 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4.2.1 2005/09/06 05:56:48 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -114,6 +114,9 @@ virtual	size_t
 virtual	this_type&
 	__trace_alias_base(const this_type&) const;
 
+	good_bool
+	allocate_subinstance_footprint(footprint&) const;
+
 protected:
 	// call forwarding
 	void
@@ -192,6 +195,11 @@ public:
 
 	void
 	connect_ports(void) const { }
+
+	good_bool
+	allocate_subinstance_footprint(const footprint&) const {
+		return good_bool(true);
+	}
 
 protected:
 	void

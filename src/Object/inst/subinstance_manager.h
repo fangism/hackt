@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.4 2005/09/04 21:14:53 fang Exp $
+	$Id: subinstance_manager.h,v 1.4.2.1 2005/09/06 05:56:48 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -34,7 +34,6 @@ using util::persistent_object_manager;
 	Contains an array of sub-instances, children collection of aliases.  
 	Definitions will cache canonical maps containing already 
 	instantiated types.  
-	TODO: make them copy-able, reproducing internal connections!
 	NOTE: this only applies to public ports, 
 		not any of the private internals!
 	This will be tied closely to the port_formals_manager class.  
@@ -43,7 +42,6 @@ using util::persistent_object_manager;
 		the list of names in the port formals list, not their sizes.
 		The types/sizes of the port actual entries will, however, 
 		depend on the template parameters.  
-	TODO: rename this to port_actuals_manager.
  */
 class subinstance_manager {
 friend class substructure_manager;

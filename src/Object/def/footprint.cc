@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2 2005/09/04 21:14:42 fang Exp $
+	$Id: footprint.cc,v 1.2.2.1 2005/09/06 05:56:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -172,6 +172,21 @@ footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
 			->collect_port_aliases(port_aliases);
 	}
 	port_aliases.filter_uniques();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by the top-level module.  
+	This expands unique subinstances in each pool.  
+ */
+good_bool
+footprint::expand_unique_subinstances(void) {
+	// only processes, channels, and data structures need to be expanded
+	// nothing else has substructure.  
+	if (!process_pool.expand_footprint(*this).good)	return good_bool(false);
+	if (!channel_pool.expand_footprint(*this).good)	return good_bool(false);
+	if (!struct_pool.expand_footprint(*this).good)	return good_bool(false);
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

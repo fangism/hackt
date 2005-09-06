@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.4 2005/09/04 21:14:40 fang Exp $
+ 	$Id: module.cc,v 1.4.2.1 2005/09/06 05:56:46 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -48,14 +48,22 @@ using util::persistent_traits;
 module::module() :
 		persistent(), sequential_scope(),
 		name(""), global_namespace(NULL),
-		_footprint() {
+		_footprint()
+#if USE_STATE_MANAGER
+		, global_state()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
 		persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")),
-		_footprint() {
+		_footprint()
+#if USE_STATE_MANAGER
+		, global_state()
+#endif
+		{
 	NEVER_NULL(global_namespace);
 }
 
@@ -218,6 +226,14 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
+#if 0
+		// we've established uniqueness among public ports
+		// now go through footprint and recursively allocate
+		// substructures in the footprint.  
+		if (!_footprint.expand_unique_subinstances(global_state).good) {
+			return good_bool(false);
+		}
+#endif
 		_footprint.mark_created();
 	}
 	return good_bool(true);
