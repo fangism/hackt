@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.3.2.1 2005/09/06 05:56:47 fang Exp $
+	$Id: instance_pool.h,v 1.3.2.2 2005/09/06 20:55:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_H__
@@ -66,9 +66,6 @@ public:
 
 	ostream&
 	dump(ostream&) const;
-
-	good_bool
-	expand_footprint(footprint&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

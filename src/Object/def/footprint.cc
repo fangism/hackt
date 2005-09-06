@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.1 2005/09/06 05:56:46 fang Exp $
+	$Id: footprint.cc,v 1.2.2.2 2005/09/06 20:55:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,6 +11,7 @@
 #include "Object/def/port_formals_manager.h"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/state_manager.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
@@ -26,19 +27,31 @@ using util::read_value;
 using util::auto_indent;
 
 //=============================================================================
+// class footprint_base method definitions
+
+template <class Tag>
+footprint_base<Tag>::footprint_base() :
+		_pool(class_traits<Tag>::instance_pool_chunk_size >> 1) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+footprint_base<Tag>::~footprint_base() { }
+
+//=============================================================================
 // class footprint method definitions
 
 footprint::footprint() :
+	footprint_base<process_tag>(), 
+	footprint_base<channel_tag>(), 
+	footprint_base<datastruct_tag>(), 
+	footprint_base<enum_tag>(), 
+	footprint_base<int_tag>(), 
+	footprint_base<bool_tag>(), 
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
-	process_pool(class_traits<process_tag>::instance_pool_chunk_size >> 1),
-	channel_pool(class_traits<channel_tag>::instance_pool_chunk_size >> 1),
-	struct_pool(class_traits<datastruct_tag>::instance_pool_chunk_size >> 1),
-	enum_pool(class_traits<enum_tag>::instance_pool_chunk_size >> 1),
-	int_pool(class_traits<int_tag>::instance_pool_chunk_size >> 1),
-	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size >> 1), 
 	port_aliases() {
 	STACKTRACE_CTOR_VERBOSE;
 }
@@ -53,12 +66,12 @@ ostream&
 footprint::dump(ostream& o) const {
 	// unrolled? created?
 	// instance_collection_map ?
-	process_pool.dump(o);
-	channel_pool.dump(o);
-	struct_pool.dump(o);
-	enum_pool.dump(o);
-	int_pool.dump(o);
-	bool_pool.dump(o);
+	footprint_base<process_tag>::_pool.dump(o);
+	footprint_base<channel_tag>::_pool.dump(o);
+	footprint_base<datastruct_tag>::_pool.dump(o);
+	footprint_base<enum_tag>::_pool.dump(o);
+	footprint_base<int_tag>::_pool.dump(o);
+	footprint_base<bool_tag>::_pool.dump(o);
 	return o;
 }
 
@@ -180,12 +193,14 @@ footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
 	This expands unique subinstances in each pool.  
  */
 good_bool
-footprint::expand_unique_subinstances(void) {
+footprint::expand_unique_subinstances(state_manager& sm) const {
+#if 0
 	// only processes, channels, and data structures need to be expanded
 	// nothing else has substructure.  
 	if (!process_pool.expand_footprint(*this).good)	return good_bool(false);
 	if (!channel_pool.expand_footprint(*this).good)	return good_bool(false);
 	if (!struct_pool.expand_footprint(*this).good)	return good_bool(false);
+#endif
 	return good_bool(true);
 }
 
@@ -205,13 +220,12 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 		coll_ptr->collect_transient_info(m);
 	}
 }
-	process_pool.collect_transient_info_base(m);
-	channel_pool.collect_transient_info_base(m);
-	struct_pool.collect_transient_info_base(m);
-	enum_pool.collect_transient_info_base(m);
-	int_pool.collect_transient_info_base(m);
-	bool_pool.collect_transient_info_base(m);
-	port_aliases.collect_transient_info_base(m);
+	footprint_base<process_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<channel_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<datastruct_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<enum_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,12 +247,12 @@ footprint::write_object_base(const persistent_object_manager& m,
 		m.write_pointer(o, coll_ptr);
 	}
 }
-	process_pool.write_object_base(m, o);
-	channel_pool.write_object_base(m, o);
-	struct_pool.write_object_base(m, o);
-	enum_pool.write_object_base(m, o);
-	int_pool.write_object_base(m, o);
-	bool_pool.write_object_base(m, o);
+	footprint_base<process_tag>::_pool.write_object_base(m, o);
+	footprint_base<channel_tag>::_pool.write_object_base(m, o);
+	footprint_base<datastruct_tag>::_pool.write_object_base(m, o);
+	footprint_base<enum_tag>::_pool.write_object_base(m, o);
+	footprint_base<int_tag>::_pool.write_object_base(m, o);
+	footprint_base<bool_tag>::_pool.write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
 }
 
@@ -262,12 +276,12 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		instance_collection_map[coll_ptr->get_name()] = coll_ptr;
 	}
 }
-	process_pool.load_object_base(m, i);
-	channel_pool.load_object_base(m, i);
-	struct_pool.load_object_base(m, i);
-	enum_pool.load_object_base(m, i);
-	int_pool.load_object_base(m, i);
-	bool_pool.load_object_base(m, i);
+	footprint_base<process_tag>::_pool.load_object_base(m, i);
+	footprint_base<channel_tag>::_pool.load_object_base(m, i);
+	footprint_base<datastruct_tag>::_pool.load_object_base(m, i);
+	footprint_base<enum_tag>::_pool.load_object_base(m, i);
+	footprint_base<int_tag>::_pool.load_object_base(m, i);
+	footprint_base<bool_tag>::_pool.load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
 }
 

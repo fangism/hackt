@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1 2005/09/05 05:04:32 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.1 2005/09/06 20:55:37 fang Exp $
 	TODO: trim includes
  */
 
@@ -433,8 +433,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
-	typename instance_type::pool_type&
-		the_pool(footprint_pool_getter<Tag>().operator()(f));
+	typename instance_type::pool_type& the_pool(f.template get_pool<Tag>());
 	_this.instance_index = the_pool.allocate(instance_type(*this));
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "assigned id: " << this << " = "
@@ -535,9 +534,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 #if 1
 			if (ind != tind) {
 			typedef	typename instance_type::pool_type pool_type;
-			const pool_type& the_pool
-				// WTF, I can't just use (f) ?
-				(footprint_pool_getter<Tag>().operator()(f));
+			const pool_type& the_pool(f.template get_pool<Tag>());
 			ICE(cerr, 
 				cerr << "connecting two instances already "
 					"assigned to different IDs: got " <<
@@ -617,8 +614,7 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 	iterator i(this->begin());
 	const iterator e(this->end());
 	const instance_type&
-		inst(footprint_pool_getter<Tag>()
-			.operator()(f)[t.instance_index]);
+		inst(f.template get_pool<Tag>()[t.instance_index]);
 	for ( ; i!=e; i++) {
 		INVARIANT(!i->instance_index);
 #if ENABLE_STACKTRACE

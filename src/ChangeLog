@@ -2,6 +2,11 @@
 
 2005-09-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-02:
+	  Replaced the silly getter template-specialized functors 
+		with template base classes in footprint and port_alias_tracker. 
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-01:
 	  This branch is for creating top-level global unique instances.
 	  This revision set up part of the framework for traversing the 

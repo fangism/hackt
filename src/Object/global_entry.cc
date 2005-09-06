@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.1.2.1 2005/09/06 05:56:45 fang Exp $
+	$Id: global_entry.cc,v 1.1.2.2 2005/09/06 20:55:36 fang Exp $
  */
 
 #include "Object/global_entry.tcc"
@@ -23,7 +23,7 @@ footprint_frame_map<Tag>::footprint_frame_map() : id_map() { }
  */
 template <class Tag>
 footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
-		id_map(footprint_pool_getter<Tag>()(f).size() -1) {
+		id_map(f.template get_pool<Tag>().size() -1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

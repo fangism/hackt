@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.2.2.1 2005/09/06 05:56:46 fang Exp $
+	$Id: footprint.h,v 1.2.2.2 2005/09/06 20:55:37 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -30,6 +30,7 @@ namespace entity {
 class instance_collection_base;
 class port_formals_manager;
 class scopespace;
+class state_manager;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -37,8 +38,17 @@ using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
 
+//=============================================================================
 template <class Tag>
-struct footprint_pool_getter;
+class footprint_base {
+protected:
+	typedef	typename state_instance<Tag>::pool_type	pool_type;
+	pool_type					_pool;
+
+	footprint_base();
+	~footprint_base();
+
+};	// end class footprint_base
 
 //=============================================================================
 /**
@@ -57,8 +67,13 @@ struct footprint_pool_getter;
 	may want a back-reference pointer to the referenced 
 	specialization definition.  (FAR far future)
  */
-class footprint {
-template <class> friend struct footprint_pool_getter;
+class footprint :
+	private	footprint_base<process_tag>, 
+	private	footprint_base<channel_tag>, 
+	private	footprint_base<datastruct_tag>, 
+	private	footprint_base<enum_tag>, 
+	private	footprint_base<int_tag>, 
+	private	footprint_base<bool_tag> {
 private:
 	/**
 		This must remain an instance_collection_base because
@@ -78,13 +93,13 @@ private:
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
-	typedef	state_instance<process_tag>::pool_type	process_pool_type;
-	typedef	state_instance<channel_tag>::pool_type	channel_pool_type;
-	typedef	state_instance<datastruct_tag>::pool_type
+	typedef	footprint_base<process_tag>::pool_type	process_pool_type;
+	typedef	footprint_base<channel_tag>::pool_type	channel_pool_type;
+	typedef	footprint_base<datastruct_tag>::pool_type
 							struct_pool_type;
-	typedef	state_instance<enum_tag>::pool_type	enum_pool_type;
-	typedef	state_instance<int_tag>::pool_type	int_pool_type;
-	typedef	state_instance<bool_tag>::pool_type	bool_pool_type;
+	typedef	footprint_base<enum_tag>::pool_type	enum_pool_type;
+	typedef	footprint_base<int_tag>::pool_type	int_pool_type;
+	typedef	footprint_base<bool_tag>::pool_type	bool_pool_type;
 private:
 	// state information
 	// a place to unroll instances and connections
@@ -128,15 +143,6 @@ private:
 	 */
 	instance_collection_map_type		instance_collection_map;
 
-	// footprint should include pools for the various types
-	// will also need some template member accessor
-	process_pool_type			process_pool;
-	channel_pool_type			channel_pool;
-	struct_pool_type			struct_pool;
-	enum_pool_type				enum_pool;
-	int_pool_type				int_pool;
-	bool_pool_type				bool_pool;
-
 	/**
 		This keeps track which port members are internally aliased.
 	 */
@@ -171,6 +177,18 @@ public:
 		return port_aliases;
 	}
 
+	template <class Tag>
+	typename state_instance<Tag>::pool_type&
+	get_pool(void) {
+		return footprint_base<Tag>::_pool;
+	}
+
+	template <class Tag>
+	const typename state_instance<Tag>::pool_type&
+	get_pool(void) const {
+		return footprint_base<Tag>::_pool;
+	}
+
 	void
 	import_scopespace(const scopespace&);
 
@@ -181,14 +199,7 @@ public:
 	evaluate_port_aliases(const port_formals_manager&);
 
 	good_bool
-	expand_unique_subinstances(void);
-
-#if 0
-private:
-	template <class Tag>
-	good_bool
-	__expand_pool_subinstances(void);
-#endif
+	expand_unique_subinstances(state_manager&) const;
 
 public:
 // persistent information management
@@ -201,35 +212,6 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 };	// end class footprint
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Templated method of accessing member pools.  
- */
-#define	SPECIALIZE_FOOTPRINT_POOL_GETTER(Tag,Member)			\
-template <>								\
-struct footprint_pool_getter<Tag> {					\
-	typedef	state_instance<Tag>::pool_type	pool_type;		\
-									\
-	inline								\
-	pool_type&							\
-	operator () (footprint& f) const				\
-		{ return f.Member; }					\
-									\
-	inline								\
-	const pool_type&						\
-	operator () (const footprint& f) const				\
-		{ return f.Member; }					\
-};	// end struct pool_getter
-
-SPECIALIZE_FOOTPRINT_POOL_GETTER(process_tag, process_pool)
-SPECIALIZE_FOOTPRINT_POOL_GETTER(channel_tag, channel_pool)
-SPECIALIZE_FOOTPRINT_POOL_GETTER(datastruct_tag, struct_pool)
-SPECIALIZE_FOOTPRINT_POOL_GETTER(enum_tag, enum_pool)
-SPECIALIZE_FOOTPRINT_POOL_GETTER(int_tag, int_pool)
-SPECIALIZE_FOOTPRINT_POOL_GETTER(bool_tag, bool_pool)
-
-#undef	SPECIALIZE_FOOTPRINT_POOL_GETTER
 
 //=============================================================================
 }	// end namespace entity

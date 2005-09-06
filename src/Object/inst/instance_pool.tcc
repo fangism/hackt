@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.3.2.1 2005/09/06 05:56:47 fang Exp $
+	$Id: instance_pool.tcc,v 1.3.2.2 2005/09/06 20:55:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -136,6 +136,7 @@ if (this->size() > 1) {
 }
 
 //-----------------------------------------------------------------------------
+#if 0
 template <class T>
 good_bool
 instance_pool<T>::expand_footprint(footprint& f) const {
@@ -151,6 +152,7 @@ if (this->size() > 1) {
 }
 	return good_bool(true);
 }
+#endif
 
 //-----------------------------------------------------------------------------
 /**

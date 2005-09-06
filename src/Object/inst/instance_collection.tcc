@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7 2005/09/05 05:04:32 fang Exp $
+	$Id: instance_collection.tcc,v 1.7.2.1 2005/09/06 20:55:37 fang Exp $
 	TODO: trim includes
  */
 
@@ -904,7 +904,7 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		const element_type& ii(*i);
 		INVARIANT(ii.instance_index);
 		// 0 is not an acceptable index
-		port_alias_tracker_getter<Tag>()(t)[ii.instance_index]
+		t.template get_id_map<Tag>()[ii.instance_index]
 			.push_back(never_ptr<const element_type>(&ii));
 		ii.collect_port_aliases(t);
 	}
@@ -1385,7 +1385,7 @@ void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
-	port_alias_tracker_getter<Tag>()(t)[this->the_instance.instance_index]
+	t.template get_id_map<Tag>()[this->the_instance.instance_index]
 		.push_back(never_ptr<const instance_type>(&this->the_instance));
 	this->the_instance.collect_port_aliases(t);
 }
