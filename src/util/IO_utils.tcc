@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.10 2005/06/21 21:26:36 fang Exp $
+	$Id: IO_utils.tcc,v 1.10.22.1 2005/09/07 19:21:05 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -112,8 +112,8 @@ write_sequence(ostream& f, const S& l) {
 	);
 #else
 	// explicit for-loop
-	const_iterator i = l.begin();
-	const const_iterator e = l.end();
+	const_iterator i(l.begin());
+	const const_iterator e(l.end());
 	for ( ; i!=e; i++)
 		write_value<value_type>(f, *i);
 #endif
@@ -170,7 +170,7 @@ read_sequence_in_place(istream& f, S& l) {
 #else
 	// alternative, explicit for-loop
 	size_t j = 0;
-	iterator i = l.begin();
+	iterator i(l.begin());
 	for ( ; j < size; j++, i++)
 		read_value<value_type>(f, *i);
 	// if sizes were asserted equal
@@ -292,8 +292,8 @@ write_map(ostream& f, const M& m) {
 		bind1st_argval(ptr_fun(write_key_value_pair<K,T>), f)
 	);
 #else
-	const_iterator i = m.begin();
-	const const_iterator e = m.end();
+	const_iterator i(m.begin());
+	const const_iterator e(m.end());
 	for ( ; i!=e; i++)
 		write_key_value_pair<key_type,mapped_type>(f, *i);
 #endif

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.2.10.1 2005/09/06 05:56:46 fang Exp $
+	$Id: state_manager.h,v 1.2.10.2 2005/09/07 19:21:04 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -22,15 +22,19 @@ using util::persistent_object_manager;
 template <class Tag> struct global_entry;
 
 //=============================================================================
+/**
+	Global state allocation pool.  
+ */
 template <class Tag>
-class global_entry_pool : private util::list_vector<global_entry<Tag> > {
+class global_entry_pool : protected util::list_vector<global_entry<Tag> > {
 public:
 	typedef	global_entry<Tag>			entry_type;
+	typedef	util::list_vector<entry_type>		pool_type;
 private:
 	typedef	global_entry_pool<Tag>			this_type;
 	typedef	Tag					tag_type;
-	typedef	util::list_vector<entry_type>		pool_type;
 	typedef	typename pool_type::const_iterator	const_iterator;
+	typedef	typename pool_type::iterator		iterator;
 public:
 	global_entry_pool();
 	~global_entry_pool();
@@ -50,6 +54,17 @@ public:
 	size_t
 	allocate(const entry_type&);
 
+	ostream&
+	dump(ostream&) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 };	// end class global_entry_pool
 
 //=============================================================================
@@ -58,12 +73,13 @@ public:
 	Most simulators will interact with this.  
  */
 class state_manager :
-	public global_entry_pool<process_tag>, 
-	public global_entry_pool<channel_tag>, 
-	public global_entry_pool<datastruct_tag>, 
-	public global_entry_pool<enum_tag>, 
-	public global_entry_pool<int_tag>, 
-	public global_entry_pool<bool_tag> {
+	private global_entry_pool<process_tag>, 
+	private global_entry_pool<channel_tag>, 
+	private global_entry_pool<datastruct_tag>, 
+	private global_entry_pool<enum_tag>, 
+	private global_entry_pool<int_tag>, 
+	private global_entry_pool<bool_tag> {
+	typedef	state_manager				this_type;
 	typedef	global_entry_pool<process_tag>		process_pool_type;
 	typedef	global_entry_pool<channel_tag>		channel_pool_type;
 	typedef	global_entry_pool<datastruct_tag>	struct_pool_type;
@@ -75,6 +91,20 @@ public:
 	state_manager();
 	~state_manager();
 
+	/**
+		Just static cast to one of the base types.  
+	 */
+	template <class Tag>
+	typename global_entry_pool<Tag>::pool_type&
+	get_pool(void) { return *this; }
+
+	/**
+		Just static cast to one of the base types (const).  
+	 */
+	template <class Tag>
+	const typename global_entry_pool<Tag>::pool_type&
+	get_pool(void) const { return *this; }
+
 	template <class Tag>
 	size_t
 	allocate(void);
@@ -83,7 +113,22 @@ public:
 	size_t
 	allocate(const typename global_entry_pool<Tag>::entry_type&);
 
+	ostream&
+	dump(ostream&) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
 private:
+	explicit
+	state_manager(const this_type&);
+
 	/// never actually called
 	template <class Tag>
 	void

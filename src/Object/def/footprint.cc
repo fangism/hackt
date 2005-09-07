@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.2 2005/09/06 20:55:36 fang Exp $
+	$Id: footprint.cc,v 1.2.2.3 2005/09/07 19:21:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -12,6 +12,7 @@
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/state_manager.h"
+#include "Object/global_entry.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
@@ -37,6 +38,31 @@ footprint_base<Tag>::footprint_base() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 footprint_base<Tag>::~footprint_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+good_bool
+footprint_base<Tag>::__allocate_global_state(state_manager& s) const {
+	size_t k = 1;
+	const_iterator i(++_pool.begin());
+	const const_iterator e(_pool.end());
+	for ( ; i!=e; i++, k++) {
+		const size_t j = s.template allocate<Tag>();
+		global_entry<Tag>& g(s.template get_pool<Tag>()[j]);
+		g.parent_tag_value = 0;
+		g.parent_id = 0;
+		g.local_offset = k;
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+template <class Tag>
+good_bool
+footprint_base<Tag>::__expand_unique_subinstances(state_manager& s) const {
+}
+#endif
 
 //=============================================================================
 // class footprint method definitions
@@ -191,17 +217,28 @@ footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
 /**
 	Called by the top-level module.  
 	This expands unique subinstances in each pool.  
+	Expand everything in this footprint at this level first
+	before recursing into subinstances' ports.  
  */
 good_bool
 footprint::expand_unique_subinstances(state_manager& sm) const {
-#if 0
 	// only processes, channels, and data structures need to be expanded
 	// nothing else has substructure.  
-	if (!process_pool.expand_footprint(*this).good)	return good_bool(false);
-	if (!channel_pool.expand_footprint(*this).good)	return good_bool(false);
-	if (!struct_pool.expand_footprint(*this).good)	return good_bool(false);
+	return good_bool(
+		footprint_base<process_tag>::__allocate_global_state(sm).good &&
+		footprint_base<channel_tag>::__allocate_global_state(sm).good &&
+		footprint_base<datastruct_tag>::__allocate_global_state(sm).good &&
+		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
+		footprint_base<int_tag>::__allocate_global_state(sm).good &&
+		footprint_base<bool_tag>::__allocate_global_state(sm).good &&
+#if 0
+		footprint_base<process_tag>::__expand_unique_subinstances(sm).good &&
+		footprint_base<channel_tag>::__expand_unique_subinstances(sm).good &&
+		footprint_base<datastruct_tag>::__expand_unique_subinstances(sm).good
+#else
+		true
 #endif
-	return good_bool(true);
+		);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

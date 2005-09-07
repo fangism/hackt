@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.3.2.1 2005/09/06 05:56:46 fang Exp $
+	$Id: state_manager.cc,v 1.3.2.2 2005/09/07 19:21:04 fang Exp $
  */
 
 #include <iostream>
@@ -15,9 +15,12 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "util/list_vector.tcc"
+#include "util/IO_utils.h"
 
 namespace ART {
 namespace entity {
+using util::write_value;
+using util::read_value;
 #include "util/using_ostream.h"
 //=============================================================================
 // class global_entry_pool method definitions
@@ -31,6 +34,22 @@ global_entry_pool<Tag>::global_entry_pool() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 global_entry_pool<Tag>::~global_entry_pool() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+ostream&
+global_entry_pool<Tag>::dump(ostream& o) const {
+if (this->size()) {
+	o << "global " << class_traits<Tag>::tag_name << " entries" << endl;
+	size_t j = 0;
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++, j++) {
+		i->dump(o << j << '\t') << endl;
+	}
+}
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -50,6 +69,46 @@ global_entry_pool<Tag>::allocate(const entry_type& t) {
 	return ret;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+global_entry_pool<Tag>::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	// nothing yet
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		i->collect_transient_info_base(m);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_value(o, this->size());
+	const_iterator i(this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		i->write_object_base(m, o);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	size_t s;
+	read_value(i, s);
+	// consider setting chunk size to s+1 for optimization
+	size_t j = 0;
+	for ( ; j<s; j++) {
+		(*this)[this->allocate()].load_object_base(m, i);
+	}
+}
+
 //=============================================================================
 // class state_manager method definitions
 
@@ -61,6 +120,18 @@ state_manager::state_manager() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 state_manager::~state_manager() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+state_manager::dump(ostream& o) const {
+	global_entry_pool<process_tag>::dump(o);
+	global_entry_pool<channel_tag>::dump(o);
+	global_entry_pool<datastruct_tag>::dump(o);
+	global_entry_pool<enum_tag>::dump(o);
+	global_entry_pool<int_tag>::dump(o);
+	global_entry_pool<bool_tag>::dump(o);
+	return o;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -99,6 +170,44 @@ state_manager::allocate_test(void) {
 	__allocate_test<enum_tag>();
 	__allocate_test<int_tag>();
 	__allocate_test<bool_tag>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+state_manager::collect_transient_info_base(persistent_object_manager& m) const {
+	// for now, pools contain no pointers.  
+#if 0
+	global_entry_pool<process_tag>::collect_transient_info_base(m);
+	global_entry_pool<datastruct_tag>::collect_transient_info_base(m);
+	global_entry_pool<channel_tag>::collect_transient_info_base(m);
+	global_entry_pool<enum_tag>::collect_transient_info_base(m);
+	global_entry_pool<int_tag>::collect_transient_info_base(m);
+	global_entry_pool<bool_tag>::collect_transient_info_base(m);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+state_manager::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	global_entry_pool<process_tag>::write_object_base(m, o);
+	global_entry_pool<datastruct_tag>::write_object_base(m, o);
+	global_entry_pool<channel_tag>::write_object_base(m, o);
+	global_entry_pool<enum_tag>::write_object_base(m, o);
+	global_entry_pool<int_tag>::write_object_base(m, o);
+	global_entry_pool<bool_tag>::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+state_manager::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	global_entry_pool<process_tag>::load_object_base(m, i);
+	global_entry_pool<datastruct_tag>::load_object_base(m, i);
+	global_entry_pool<channel_tag>::load_object_base(m, i);
+	global_entry_pool<enum_tag>::load_object_base(m, i);
+	global_entry_pool<int_tag>::load_object_base(m, i);
+	global_entry_pool<bool_tag>::load_object_base(m, i);
 }
 
 //=============================================================================

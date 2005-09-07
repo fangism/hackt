@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.4.2.1 2005/09/06 05:56:46 fang Exp $
+ 	$Id: module.cc,v 1.4.2.2 2005/09/07 19:21:04 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -129,6 +129,9 @@ module::dump(ostream& o) const {
 	if (is_created()) {
 		o << "Created state:" << endl;
 		_footprint.dump(o) << endl;
+#if USE_STATE_MANAGER
+		global_state.dump(o);
+#endif
 	}
 	return o;
 }
@@ -221,8 +224,7 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 		const unroll_context c;	// empty top-level context
-		if (!sequential_scope::create_unique(c, _footprint).good)
-		{
+		if (!sequential_scope::create_unique(c, _footprint).good) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
@@ -252,6 +254,9 @@ if (!m.register_transient_object(this,
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
 	_footprint.collect_transient_info_base(m);
+#if USE_STATE_MANAGER
+	global_state.collect_transient_info_base(m);
+#endif
 }
 // else already visited
 }
@@ -264,6 +269,9 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, global_namespace);
 	sequential_scope::write_object_base(m, f);
 	_footprint.write_object_base(m, f);
+#if USE_STATE_MANAGER
+	global_state.write_object_base(m, f);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -275,6 +283,9 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
 	_footprint.load_object_base(m, f);
+#if USE_STATE_MANAGER
+	global_state.load_object_base(m, f);
+#endif
 }
 
 //=============================================================================

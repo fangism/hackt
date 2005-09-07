@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.2.2.2 2005/09/06 20:55:37 fang Exp $
+	$Id: footprint.h,v 1.2.2.3 2005/09/07 19:21:05 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -43,10 +43,19 @@ template <class Tag>
 class footprint_base {
 protected:
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
+private:
+	typedef	typename pool_type::const_iterator	const_iterator;
+protected:
 	pool_type					_pool;
 
 	footprint_base();
 	~footprint_base();
+
+	good_bool
+	__allocate_global_state(state_manager&) const;
+
+	good_bool
+	__expand_unique_subinstances(state_manager&) const;
 
 };	// end class footprint_base
 
