@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.2 2005/09/04 21:14:58 fang Exp $
+	$Id: canonical_type.tcc,v 1.2.2.1 2005/09/08 05:47:38 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -16,6 +16,7 @@
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/global_entry.h"
 #include "util/persistent_object_manager.tcc"
 #include "common/TODO.h"
 #include "util/stacktrace.h"

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.2.2.3 2005/09/07 19:21:05 fang Exp $
+	$Id: footprint.h,v 1.2.2.4 2005/09/08 05:47:34 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -55,7 +55,7 @@ protected:
 	__allocate_global_state(state_manager&) const;
 
 	good_bool
-	__expand_unique_subinstances(state_manager&) const;
+	__expand_unique_subinstances(state_manager&, const size_t) const;
 
 };	// end class footprint_base
 
@@ -220,6 +220,17 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+#if 0
+private:
+	/**
+		Don't want footprint to be copy-constructed.  
+		But std::pair requires it in the footprint_manager.
+		TODO: allow only a few friends in STL to use it.  
+	 */
+	explicit
+	footprint(const footprint&);
+#endif
 };	// end class footprint
 
 //=============================================================================

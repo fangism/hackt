@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: alias_actuals.tcc,v 1.3.2.1 2005/09/08 05:47:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -185,6 +185,33 @@ instance_alias_info_actuals::create_dependent_types(const AliasType& _alias) {
 		return good_bool(false);
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates the complete canonical type based on the
+	container's type and the relaxed actuals.  
+	Uses the corresponding footprint of the canonical type
+	to initialize the footprint_frame, basically size-copying.  
+	\param _alias the instance alias used to extrace the type.  
+	\param ff the footprint frame in which global substructure 
+		information will be retained.  
+	\return good upon success.  
+ */
+template <class AliasType>
+good_bool
+instance_alias_info_actuals::__initialize_footprint_frame(
+		const AliasType& _alias, footprint_frame& ff) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+				canonical_definition_type;
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	INVARIANT(_type);
+	return initialize_footprint_frame_policy<canonical_definition_type>()
+		(_type, ff);
 }
 
 //=============================================================================

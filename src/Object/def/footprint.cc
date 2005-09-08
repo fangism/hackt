@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.3 2005/09/07 19:21:04 fang Exp $
+	$Id: footprint.cc,v 1.2.2.4 2005/09/08 05:47:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,6 +11,9 @@
 #include "Object/def/port_formals_manager.h"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "util/stacktrace.h"
@@ -19,6 +22,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
+#include "util/wtf.h"
 
 namespace ART {
 namespace entity {
@@ -57,10 +61,34 @@ footprint_base<Tag>::__allocate_global_state(state_manager& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
+#if 1
+/**
+	Iterate over local footprint of structured entries.  
+	\param s the global state allocator.
+	\param o the offset from which to start in the global state allocator.
+ */
 template <class Tag>
 good_bool
-footprint_base<Tag>::__expand_unique_subinstances(state_manager& s) const {
+footprint_base<Tag>::__expand_unique_subinstances(state_manager& s, 
+		const size_t o) const {
+	// const footprint& f(static_cast<const footprint&>(*this));
+	size_t j = o;
+	typedef	typename global_entry_pool<Tag>::pool_type	global_pool_type;
+	global_pool_type& gpool(s.template get_pool<Tag>());
+	const_iterator i(++_pool.begin());
+	const const_iterator e(_pool.end());
+	for ( ; i!=e; i++, j++) {
+		global_entry<Tag>& ref(gpool[j]);
+		footprint_frame& frame(ref._frame);
+		// construct port_context
+		// util::wtf_is(*i->get_back_ref());
+		// frame has not been initialized yet
+		if (!i->get_back_ref()->
+				allocate_subinstance_footprint(frame, s).good) {
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
 }
 #endif
 
@@ -224,21 +252,33 @@ good_bool
 footprint::expand_unique_subinstances(state_manager& sm) const {
 	// only processes, channels, and data structures need to be expanded
 	// nothing else has substructure.  
-	return good_bool(
+	const size_t process_offset = sm.get_pool<process_tag>().size();
+	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
+	const good_bool a(
 		footprint_base<process_tag>::__allocate_global_state(sm).good &&
 		footprint_base<channel_tag>::__allocate_global_state(sm).good &&
 		footprint_base<datastruct_tag>::__allocate_global_state(sm).good &&
 		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
 		footprint_base<int_tag>::__allocate_global_state(sm).good &&
-		footprint_base<bool_tag>::__allocate_global_state(sm).good &&
-#if 0
-		footprint_base<process_tag>::__expand_unique_subinstances(sm).good &&
-		footprint_base<channel_tag>::__expand_unique_subinstances(sm).good &&
-		footprint_base<datastruct_tag>::__expand_unique_subinstances(sm).good
-#else
-		true
-#endif
+		footprint_base<bool_tag>::__allocate_global_state(sm).good);
+	if (a.good) {
+		const good_bool b(
+			footprint_base<process_tag>::
+				__expand_unique_subinstances(
+					sm, process_offset).good &&
+			footprint_base<channel_tag>::
+				__expand_unique_subinstances(
+					sm, channel_offset).good &&
+			footprint_base<datastruct_tag>::
+				__expand_unique_subinstances(
+					sm, struct_offset).good
 		);
+		return b;
+	} else {
+		// error
+		return a;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

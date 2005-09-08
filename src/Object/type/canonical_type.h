@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.2 2005/09/04 21:14:58 fang Exp $
+	$Id: canonical_type.h,v 1.2.2.1 2005/09/08 05:47:37 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -18,6 +18,7 @@ class definition_base;
 class template_actuals;
 class subinstance_manager;
 class footprint;
+class footprint_frame;
 using util::memory::never_ptr;
 using util::good_bool;
 
@@ -171,6 +172,22 @@ struct canonical_definition_load_policy<datatype_definition_base> {
 	operator () (const persistent_object_manager&, 
 		never_ptr<const definition_type>&) const;
 };	// end struct canonical_definition_load_policy
+
+//-----------------------------------------------------------------------------
+template <class DefType>
+struct initialize_footprint_frame_policy {
+	good_bool
+	operator () (const canonical_type<DefType>&, footprint_frame&) {
+		return good_bool(true);
+	}
+};      // end struct initialize_footprint_frame_policy
+
+//-----------------------------------------------------------------------------
+template <>
+struct initialize_footprint_frame_policy<process_definition> {
+	good_bool
+	operator () (const canonical_process_type& cpt, footprint_frame& ff);
+};      // end struct initialize_footprint_frame_policy
 
 //=============================================================================
 // possilbly specialize built-in data types, but require same interface

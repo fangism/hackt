@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4.2.1 2005/09/06 05:56:48 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4.2.2 2005/09/08 05:47:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -19,6 +19,8 @@ class physical_instance_collection;
 class unroll_context;
 class port_alias_tracker;
 class footprint;
+class footprint_frame;
+class state_manager;
 template <class> class state_instance;
 using std::istream;
 using std::ostream;
@@ -114,8 +116,14 @@ virtual	size_t
 virtual	this_type&
 	__trace_alias_base(const this_type&) const;
 
+protected:
 	good_bool
-	allocate_subinstance_footprint(footprint&) const;
+	__allocate_subinstance_footprint(
+		footprint_frame&, state_manager&) const;
+
+	void
+	__construct_port_context(port_member_context&, const footprint_frame&,
+		const state_manager&) const;
 
 protected:
 	// call forwarding
@@ -196,9 +204,17 @@ public:
 	void
 	connect_ports(void) const { }
 
+protected:
 	good_bool
-	allocate_subinstance_footprint(const footprint&) const {
+	__allocate_subinstance_footprint(const footprint_frame&, 
+			const state_manager&) const {
 		return good_bool(true);
+	}
+
+	void
+	__construct_port_context(port_member_context&, const footprint_frame&,
+		const state_manager&) const {
+		// No-op.
 	}
 
 protected:

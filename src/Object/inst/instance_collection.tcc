@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7.2.1 2005/09/06 20:55:37 fang Exp $
+	$Id: instance_collection.tcc,v 1.7.2.2 2005/09/08 05:47:35 fang Exp $
 	TODO: trim includes
  */
 
@@ -45,6 +45,8 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
+#include "Object/global_entry.h"
+#include "Object/port_context.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -1027,6 +1029,25 @@ INSTANCE_ARRAY_CLASS::connection_loader::operator() (const element_type& e) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates port formal placeholders to actual global IDs.  
+	\pre footprint_frame has already been constructed.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
+		const footprint_frame& ff, const state_manager& sm) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(this->collection.begin());
+	const const_iterator e(this->collection.end());
+	pcc.resize(this->collection.size());
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		i->construct_port_context(pcc, ff, sm, j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_transient_info(
@@ -1400,6 +1421,20 @@ INSTANCE_SCALAR_CLASS::load_reference(istream& i) const {
 	// which is semantically allowed because we allow the alias pointers
 	// to be mutable.  
 	return const_cast<instance_type&>(this->the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates port formal placeholders to actual global IDs.  
+	\pre footprint_frame has already been constructed.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::construct_port_context(port_collection_context& pcc, 
+		const footprint_frame& ff, const state_manager& sm) const {
+	STACKTRACE_VERBOSE;
+	pcc.resize(1);
+	this->the_instance.construct_port_context(pcc, ff, sm, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

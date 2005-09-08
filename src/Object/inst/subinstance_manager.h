@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.4.2.1 2005/09/06 05:56:48 fang Exp $
+	$Id: subinstance_manager.h,v 1.4.2.2 2005/09/08 05:47:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -20,6 +20,9 @@ class physical_instance_collection;
 class unroll_context;
 class meta_instance_reference_base;
 class port_alias_tracker;
+class port_member_context;
+class state_manager;
+class footprint_frame;
 template <class> class instance_collection;
 using std::ostream;
 using std::istream;
@@ -118,6 +121,10 @@ public:
 
 	good_bool
 	replay_internal_aliases(void) const;
+
+	void
+	construct_port_context(port_member_context&, 
+		const footprint_frame&, const state_manager&) const;
 
 	// for each entry, re-link
 	void

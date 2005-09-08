@@ -1,13 +1,17 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.5.2.1 2005/09/06 05:56:48 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5.2.2 2005/09/08 05:47:37 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/instance_collection_base.h"
+#include "Object/port_context.h"
 #include "common/ICE.h"
 #include "util/macros.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -86,12 +90,32 @@ substructure_alias::replay_substructure_aliases(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1
 /**
 	TODO: finish me.
+	NOTE: subinstance_manager only has public ports.  
+	First, construct ports.  
  */
 good_bool
-substructure_alias::allocate_subinstance_footprint(footprint& f) const {
+substructure_alias::__allocate_subinstance_footprint(footprint_frame& ff, 
+		state_manager& sm) const {
+	STACKTRACE_VERBOSE;
+	port_member_context pmc;
+	subinstances.construct_port_context(pmc, ff, sm);
+	// HERE
+	// pass port context to allocator for this instance.  
 	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called recursively through substrcuture hierarchy.  
+ */
+void
+substructure_alias::__construct_port_context(port_member_context& pmc, 
+		const footprint_frame& ff, const state_manager& sm) const {
+	subinstances.construct_port_context(pmc, ff, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

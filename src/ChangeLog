@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-04:
+	  Added port_context class as a helper for passing globally
+		allocated ids in a structure down through recursive
+		structure instantiations.  
+	  Global enrty pool allocator now reserves the 0th entry of each
+		type in advance as a NULL placeholder.  
+	  Partial implementations of subinstance expansion and 
+		footprint_frame assignment.  
+	  TODO: guarantee footprint pointer pseudo-persistence
+		and reconstructibility.  
+
+
 2005-09-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-58-unique-02-03:

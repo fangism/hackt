@@ -1,9 +1,11 @@
 "TODO"
-	$Id: TODO,v 1.1 2005/09/04 21:14:39 fang Exp $
+	$Id: TODO,v 1.1.2.1 2005/09/08 05:47:31 fang Exp $
 
 ===============================================================================
-recursive create-unique!
+recursive create-unique! (in progress)
 	done, except for private internal structures.  
+
+footprint pointer persistence may be complicated in footprint_frame.
 
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.

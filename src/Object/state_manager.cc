@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.3.2.2 2005/09/07 19:21:04 fang Exp $
+	$Id: state_manager.cc,v 1.3.2.3 2005/09/08 05:47:33 fang Exp $
  */
 
 #include <iostream>
@@ -29,6 +29,7 @@ template <class Tag>
 global_entry_pool<Tag>::global_entry_pool() :
 		pool_type() {
 	this->set_chunk_size(class_traits<Tag>::instance_pool_chunk_size);
+	this->allocate();	// reserve the 0-index as NULL
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -39,10 +40,10 @@ global_entry_pool<Tag>::~global_entry_pool() { }
 template <class Tag>
 ostream&
 global_entry_pool<Tag>::dump(ostream& o) const {
-if (this->size()) {
+if (this->size() > 1) {
 	o << "global " << class_traits<Tag>::tag_name << " entries" << endl;
-	size_t j = 0;
-	const_iterator i(this->begin());
+	size_t j = 1;
+	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++, j++) {
 		i->dump(o << j << '\t') << endl;
@@ -75,7 +76,7 @@ void
 global_entry_pool<Tag>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// nothing yet
-	const_iterator i(this->begin());
+	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
 		i->collect_transient_info_base(m);
@@ -87,8 +88,8 @@ template <class Tag>
 void
 global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
-	write_value(o, this->size());
-	const_iterator i(this->begin());
+	write_value(o, this->size() -1);
+	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
 		i->write_object_base(m, o);

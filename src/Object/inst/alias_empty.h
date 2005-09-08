@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: alias_empty.h,v 1.3.2.1 2005/09/08 05:47:35 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -19,6 +19,7 @@
 namespace ART {
 namespace entity {
 class const_param_expr_list;
+class footprint_frame;
 template <class> class instance_alias_info;
 using std::istream;
 using std::ostream;
@@ -87,6 +88,14 @@ protected:
 	static
 	good_bool
 	__symmetric_synchronize(const AliasType&, const AliasType&) {
+		return good_bool(true);
+	}
+
+	template <class AliasType>
+	static
+	good_bool
+	__initialize_footprint_frame(const AliasType&,
+			const footprint_frame&) {
 		return good_bool(true);
 	}
 

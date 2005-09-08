@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.1 2005/09/06 20:55:37 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.2 2005/09/08 05:47:35 fang Exp $
 	TODO: trim includes
  */
 
@@ -46,6 +46,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
+#include "Object/global_entry.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -780,6 +781,23 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: actually recursively allocate.
+	\param ff the footprint frame to initialize using this
+		instance's canonical type.  
+	\param sm the global state allocation manager.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::allocate_subinstance_footprint(
+		footprint_frame& ff, const state_manager& sm) const {
+	if (!__initialize_footprint_frame(*this, ff).good)
+		return good_bool(false);
+	// HERE
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
@@ -875,6 +893,24 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias&) const {
 	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	First lookup canonical placeholder ID, assigned by create phase.
+	Then lookup
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
+		port_collection_context& pcc, const footprint_frame& ff,
+		const state_manager& sm, const size_t ind) const {
+	STACKTRACE_VERBOSE;
+	const size_t local_placeholder_id = this->instance_index -1;
+	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	// don't we use the global map ID somewhere???
+	pcc.id_map[ind] = fm[local_placeholder_id];
+	this->__construct_port_context(pcc.substructure_array[ind], ff, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
