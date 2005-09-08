@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.h,v 1.1.2.1 2005/09/08 05:47:33 fang Exp $
+	$Id: port_context.h,v 1.1.2.2 2005/09/08 16:19:52 fang Exp $
  */
 
 #ifndef	__OBJECT_PORT_CONTEXT_H__
@@ -25,7 +25,7 @@ struct port_collection_context;
 	Each member collection may contain several array members.  
  */
 struct port_member_context {
-	typedef	std::vector<port_collection_context>	member_array_type;;
+	typedef	std::vector<port_collection_context>	member_array_type;
 	member_array_type				member_array;
 
 	typedef	member_array_type::const_iterator	const_iterator;

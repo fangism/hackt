@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.2 2005/09/08 05:47:35 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.3 2005/09/08 16:19:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -314,7 +314,7 @@ virtual	ostream&
 
 private:
 	using substructure_parent_type::__allocate_subinstance_footprint;
-	using substructure_parent_type::__construct_port_context;;
+	using substructure_parent_type::__construct_port_context;
 
 public:
 	static

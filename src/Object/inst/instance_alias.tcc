@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.2 2005/09/08 05:47:35 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.3 2005/09/08 16:19:53 fang Exp $
 	TODO: trim includes
  */
 
@@ -47,6 +47,7 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
 #include "Object/global_entry.h"
+#include "Object/port_context.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
