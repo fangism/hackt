@@ -1,10 +1,11 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.1.2.3 2005/09/07 19:21:03 fang Exp $
+	$Id: global_entry.cc,v 1.1.2.4 2005/09/09 20:12:30 fang Exp $
  */
 
 #include "Object/global_entry.tcc"
 #include "Object/def/footprint.h"
+#include "Object/port_context.h"
 #include "util/IO_utils.tcc"
 
 namespace ART {
@@ -30,6 +31,20 @@ footprint_frame_map<Tag>::footprint_frame_map(const footprint& f) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 footprint_frame_map<Tag>::~footprint_frame_map() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In the top-level domain, the frame has offset 1.
+ */
+template <class Tag>
+void
+footprint_frame_map<Tag>::__init_top_level(void) {
+	const size_t s = id_map.size();
+	size_t i = 0;
+	for ( ; i<s; i++) {
+		id_map[i] = i+1;
+	}
+}
 
 //=============================================================================
 // class footprint_frame method definitions
@@ -113,6 +128,25 @@ footprint_frame::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+footprint_frame::init_top_level(void) {
+	footprint_frame_map<process_tag>::__init_top_level();
+	footprint_frame_map<channel_tag>::__init_top_level();
+	footprint_frame_map<datastruct_tag>::__init_top_level();
+	footprint_frame_map<enum_tag>::__init_top_level();
+	footprint_frame_map<int_tag>::__init_top_level();
+	footprint_frame_map<bool_tag>::__init_top_level();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+void
+footprint_frame::assign_from_context(const footprint& f, 
+		const state_manager& sm, const port_member_context& pmc) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 footprint_frame::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// footprint pointer is not persistently managed, 
@@ -149,6 +183,22 @@ footprint_frame::load_object_base(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Testing instantiation.  
+	Non-const versions.  
+ */
+void
+footprint_frame::get_frame_map_test(void) {
+	get_frame_map<process_tag>();
+	get_frame_map<channel_tag>();
+	get_frame_map<datastruct_tag>();
+	get_frame_map<enum_tag>();
+	get_frame_map<int_tag>();
+	get_frame_map<bool_tag>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Testing instantiation.  
+	Const versions.  
  */
 void
 footprint_frame::get_frame_map_test(void) const {

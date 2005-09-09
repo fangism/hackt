@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.h,v 1.1.2.2 2005/09/08 16:19:52 fang Exp $
+	$Id: port_context.h,v 1.1.2.3 2005/09/09 20:12:30 fang Exp $
  */
 
 #ifndef	__OBJECT_PORT_CONTEXT_H__
@@ -54,6 +54,7 @@ struct port_member_context {
 //-----------------------------------------------------------------------------
 /**
 	Array for each member of a collection.  
+	TODO: consider using vector of pair<size_t, port_member_context>
  */
 struct port_collection_context {
 	typedef	std::vector<size_t>			id_map_type;

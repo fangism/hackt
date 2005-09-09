@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.4 2005/09/08 05:47:34 fang Exp $
+	$Id: footprint.cc,v 1.2.2.5 2005/09/09 20:12:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,6 +16,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
+#include "Object/port_context.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
@@ -44,53 +45,108 @@ template <class Tag>
 footprint_base<Tag>::~footprint_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Top-level global state allocation.  
+ */
 template <class Tag>
 good_bool
-footprint_base<Tag>::__allocate_global_state(state_manager& s) const {
+footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	size_t k = 1;
+	STACKTRACE_VERBOSE;
 	const_iterator i(++_pool.begin());
 	const const_iterator e(_pool.end());
 	for ( ; i!=e; i++, k++) {
-		const size_t j = s.template allocate<Tag>();
-		global_entry<Tag>& g(s.template get_pool<Tag>()[j]);
+		const size_t j = sm.template allocate<Tag>();
+		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
 		g.parent_tag_value = 0;
+		/***
+			The parent_tag_value is
+		***/
 		g.parent_id = 0;
 		g.local_offset = k;
+		/***
+			The local offset corresponds to the relative position
+			in the footprint of origin.  
+		***/
 	}
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
 /**
 	Iterate over local footprint of structured entries.  
 	\param s the global state allocator.
 	\param o the offset from which to start in the global state allocator.
+	TODO: combine allocate_subinstance_footprint() and
+		assign_footprint_frame() into same function, one step, 
+		construct_port_context *first*.
  */
 template <class Tag>
 good_bool
-footprint_base<Tag>::__expand_unique_subinstances(state_manager& s, 
-		const size_t o) const {
-	// const footprint& f(static_cast<const footprint&>(*this));
+footprint_base<Tag>::__expand_unique_subinstances(
+		const footprint_frame& gframe,
+		state_manager& sm, const size_t o) const {
+	typedef	typename global_entry_pool<Tag>::pool_type
+							global_pool_type;
+	STACKTRACE_VERBOSE;
 	size_t j = o;
-	typedef	typename global_entry_pool<Tag>::pool_type	global_pool_type;
-	global_pool_type& gpool(s.template get_pool<Tag>());
+	global_pool_type& gpool(sm.template get_pool<Tag>());
 	const_iterator i(++_pool.begin());
 	const const_iterator e(_pool.end());
 	for ( ; i!=e; i++, j++) {
 		global_entry<Tag>& ref(gpool[j]);
+		/***
+			The footprint frame has not yet been initialized, 
+			it is just empty.  allocate_subinstance_footprint()
+			will initialize it (resize) for itself automatically.  
+		***/
 		footprint_frame& frame(ref._frame);
+		const instance_alias_info<Tag>&
+			formal_alias(*i->get_back_ref());
 		// construct port_context
 		// util::wtf_is(*i->get_back_ref());
 		// frame has not been initialized yet
-		if (!i->get_back_ref()->
-				allocate_subinstance_footprint(frame, s).good) {
+		// NOTE: the following call does not use the state_manager
+		if (!formal_alias.allocate_subinstance_footprint(
+				frame, sm).good) {
 			return good_bool(false);
 		}
+#if ENABLE_STACKTRACE
+		frame.dump(STACKTRACE_INDENT << "empty frame: ") << endl;
+#endif
+#if 1
+		/***
+			Frame is initialized but not asssigned.  
+			Now we assign!
+			We need the state_manager's global ID info.  
+			Construct a port_context, and pass it in.  
+			The frame passed in should be a top-level
+			master footprint_frame.  
+		***/
+		port_member_context pmc;
+		/***
+			TODO: extract partial frame from global context frame.
+			Not construct, but project/factor.
+		***/
+		formal_alias.__construct_port_context(pmc, gframe, sm);
+		// formal_alias.construct_port_context(pmc, gframe, sm);
+		// WRONG: don't use all of parent's frame
+		// need to extract partial frame, projected
+#if ENABLE_STACKTRACE
+		pmc.dump(STACKTRACE_INDENT << "port-member-context: ") << endl;
+		// recursively create private remaining internal state?
+		// formal_alias is wrong level of hierarchy
+		formal_alias.dump_hierarchical_name(STACKTRACE_INDENT) << endl;
+#endif
+		formal_alias.assign_footprint_frame(frame, sm, pmc);
+#if ENABLE_STACKTRACE
+		frame.dump(STACKTRACE_INDENT << "filled frame: ") << endl;
+#endif
+#endif
+		// the allocate private subinstances
 	}
 	return good_bool(true);
 }
-#endif
 
 //=============================================================================
 // class footprint method definitions
@@ -250,6 +306,7 @@ footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
  */
 good_bool
 footprint::expand_unique_subinstances(state_manager& sm) const {
+	STACKTRACE_VERBOSE;
 	// only processes, channels, and data structures need to be expanded
 	// nothing else has substructure.  
 	const size_t process_offset = sm.get_pool<process_tag>().size();
@@ -262,22 +319,62 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
 		footprint_base<int_tag>::__allocate_global_state(sm).good &&
 		footprint_base<bool_tag>::__allocate_global_state(sm).good);
+#if 1
+	/***
+		Possibly construct footprint_frame(*this);
+	***/
+	footprint_frame ff(*this);
+	ff.init_top_level();
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_STREAM << "this: ") << endl;
+	ff.dump(STACKTRACE_STREAM << "frame: ") << endl;
+#endif
+#endif
+	// this is empty, needs to be assigned before passing down...
+	// construct frame using offset?
 	if (a.good) {
 		const good_bool b(
 			footprint_base<process_tag>::
 				__expand_unique_subinstances(
-					sm, process_offset).good &&
+					ff, sm, process_offset).good &&
 			footprint_base<channel_tag>::
 				__expand_unique_subinstances(
-					sm, channel_offset).good &&
+					ff, sm, channel_offset).good &&
 			footprint_base<datastruct_tag>::
 				__expand_unique_subinstances(
-					sm, struct_offset).good
+					ff, sm, struct_offset).good
 		);
 		return b;
 	} else {
 		// error
 		return a;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: comment please
+ */
+void
+footprint::assign_footprint_frame(footprint_frame& ff, 
+		const state_manager& sm, const port_member_context& pmc) const {
+	STACKTRACE_VERBOSE;
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
+	for ( ; i!=e; i++) {
+		const count_ptr<const physical_instance_collection>
+		coll_ptr(i->second.is_a<const physical_instance_collection>());
+		if (coll_ptr) {
+			// note: port formal is 1-indexed
+			// where as member array is 0-indexed
+			const size_t pfp = coll_ptr->is_port_formal();
+			if (pfp) {
+				coll_ptr->assign_footprint_frame(
+					ff, sm, pmc.member_array[pfp -1]);
+			}
+			// else is not port formal, skip
+		}
+		// else is a param_value_collection, skip
 	}
 }
 

@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.3.2.1 2005/09/08 05:47:34 fang Exp $
+	$Id: alias_actuals.tcc,v 1.3.2.2 2005/09/09 20:12:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -212,6 +212,28 @@ instance_alias_info_actuals::__initialize_footprint_frame(
 	INVARIANT(_type);
 	return initialize_footprint_frame_policy<canonical_definition_type>()
 		(_type, ff);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Fills in the footprint frame with global ID as resolved
+	in the port_member_context structure.  
+ */
+template <class AliasType>
+void
+instance_alias_info_actuals::__assign_footprint_frame(
+		const AliasType& _alias, footprint_frame& ff, 
+		const state_manager& sm, const port_member_context& pmc) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+				canonical_definition_type;
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	INVARIANT(_type);
+	assign_footprint_frame_policy<canonical_definition_type>()
+		(_type, ff, sm, pmc);
 }
 
 //=============================================================================

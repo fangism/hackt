@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.5.2.1 2005/09/08 05:47:35 fang Exp $
+	$Id: instance_collection.h,v 1.5.2.2 2005/09/09 20:12:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -233,6 +233,8 @@ virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
 virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 
+virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
+
 public:
 virtual	instance_alias_base_type&
 	load_reference(istream& i) const = 0;
@@ -378,6 +380,8 @@ public:
 
 	CONSTRUCT_PORT_CONTEXT_PROTO;
 
+	ASSIGN_FOOTPRINT_FRAME_PROTO;
+
 private:
 	class element_collector;
 	class element_writer;
@@ -484,6 +488,8 @@ public:
 	COLLECT_PORT_ALIASES_PROTO;
 
 	CONSTRUCT_PORT_CONTEXT_PROTO;
+
+	ASSIGN_FOOTPRINT_FRAME_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

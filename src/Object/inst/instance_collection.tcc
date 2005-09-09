@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7.2.2 2005/09/08 05:47:35 fang Exp $
+	$Id: instance_collection.tcc,v 1.7.2.3 2005/09/09 20:12:32 fang Exp $
 	TODO: trim includes
  */
 
@@ -1048,6 +1048,25 @@ INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns...
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
+		const state_manager& sm,
+		const port_collection_context& pcc) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(this->collection.size() == pcc.size());
+	const_iterator i(this->collection.begin());
+	const const_iterator e(this->collection.end());
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		i->assign_footprint_frame(ff, sm, pcc, j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_transient_info(
@@ -1435,6 +1454,17 @@ INSTANCE_SCALAR_CLASS::construct_port_context(port_collection_context& pcc,
 	STACKTRACE_VERBOSE;
 	pcc.resize(1);
 	this->the_instance.construct_port_context(pcc, ff, sm, 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
+		const state_manager& sm,
+		const port_collection_context& pcc) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(pcc.size() == 1);
+	this->the_instance.assign_footprint_frame(ff, sm, pcc, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

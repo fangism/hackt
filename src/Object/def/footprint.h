@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.2.2.4 2005/09/08 05:47:34 fang Exp $
+	$Id: footprint.h,v 1.2.2.5 2005/09/09 20:12:31 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -31,6 +31,8 @@ class instance_collection_base;
 class port_formals_manager;
 class scopespace;
 class state_manager;
+class footprint_frame;
+class port_member_context;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -55,7 +57,8 @@ protected:
 	__allocate_global_state(state_manager&) const;
 
 	good_bool
-	__expand_unique_subinstances(state_manager&, const size_t) const;
+	__expand_unique_subinstances(const footprint_frame&,
+		state_manager&, const size_t) const;
 
 };	// end class footprint_base
 
@@ -95,7 +98,7 @@ private:
 		Instances contained herein will have no parent scopespace?
 		How do we distinguish formal instances from actuals?
 		see NOTES:2005-08-20.
-		BTW, using count_ptrs for ease of coy-constructibility.  
+		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
 	 */
 	typedef	util::hash_qmap<string, instance_collection_ptr_type>
@@ -209,6 +212,10 @@ public:
 
 	good_bool
 	expand_unique_subinstances(state_manager&) const;
+
+	void
+	assign_footprint_frame(footprint_frame&, 
+		const state_manager&, const port_member_context&) const;
 
 public:
 // persistent information management

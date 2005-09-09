@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.2.2.1 2005/09/08 05:47:37 fang Exp $
+	$Id: canonical_type.h,v 1.2.2.2 2005/09/09 20:12:34 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -19,6 +19,8 @@ class template_actuals;
 class subinstance_manager;
 class footprint;
 class footprint_frame;
+class state_manager;
+class port_member_context;
 using util::memory::never_ptr;
 using util::good_bool;
 
@@ -182,11 +184,28 @@ struct initialize_footprint_frame_policy {
 	}
 };      // end struct initialize_footprint_frame_policy
 
-//-----------------------------------------------------------------------------
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct initialize_footprint_frame_policy<process_definition> {
 	good_bool
 	operator () (const canonical_process_type& cpt, footprint_frame& ff);
+};      // end struct initialize_footprint_frame_policy
+
+//-----------------------------------------------------------------------------
+template <class DefType>
+struct assign_footprint_frame_policy {
+	void
+	operator () (const canonical_type<DefType>&, footprint_frame&, 
+			const state_manager&, const port_member_context&) {
+	}
+};      // end struct initialize_footprint_frame_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct assign_footprint_frame_policy<process_definition> {
+	void
+	operator () (const canonical_process_type&, footprint_frame&, 
+			const state_manager&, const port_member_context&);
 };      // end struct initialize_footprint_frame_policy
 
 //=============================================================================

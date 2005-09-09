@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.3 2005/09/08 16:19:53 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.4 2005/09/09 20:12:32 fang Exp $
 	TODO: trim includes
  */
 
@@ -48,6 +48,7 @@
 #include "Object/def/footprint.h"
 #include "Object/global_entry.h"
 #include "Object/port_context.h"
+#include "Object/state_manager.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -783,19 +784,69 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: actually recursively allocate.
+	This reserves the space required by the footprint corresponding
+		to this instance's complete canonical type.
 	\param ff the footprint frame to initialize using this
 		instance's canonical type.  
-	\param sm the global state allocation manager.  
+	\param sm the global state allocation manager, probably not needed.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_subinstance_footprint(
 		footprint_frame& ff, const state_manager& sm) const {
+	STACKTRACE_VERBOSE;
 	if (!__initialize_footprint_frame(*this, ff).good)
 		return good_bool(false);
 	// HERE
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by top-level.  
+	TODO: after assigning globally assigned ports, 
+	allocate the remaining unassigned internal substructures.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
+		footprint_frame& ff, state_manager& sm,
+		const port_member_context& pmc) const {
+	STACKTRACE_VERBOSE;
+	// need to go one scope-down
+#if 0
+	substructure_parent_type::__assign_footprint_frame(ff, sm, pmc);
+#else
+	actuals_parent_type::__assign_footprint_frame(*this, ff, sm, pmc);
+#endif
+	// scan footprint_frame for unallocated subinstances, and create them!
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called recusrively.  
+	NOTE: state_manager is thus far unused.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
+		footprint_frame& ff, const state_manager& sm,
+		const port_collection_context& pcc, const size_t ind) const {
+	STACKTRACE_VERBOSE;
+	const size_t local_offset = this->instance_index -1;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "local_offset = " << local_offset << endl;
+	STACKTRACE_INDENT << "global_id = " << pcc.id_map[ind] << endl;
+#endif
+	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	INVARIANT(ind < pcc.size());
+	INVARIANT(local_offset < fm.size());
+	fm[local_offset] = pcc.id_map[ind];
+#if ENABLE_STACKTRACE
+	ff.dump(STACKTRACE_STREAM) << endl;
+#endif
+	substructure_parent_type::__assign_footprint_frame(
+		ff, sm, pcc.substructure_array[ind]);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -897,9 +948,23 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
+		port_member_context& pmc, const footprint_frame& ff,
+		const state_manager& sm) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	First lookup canonical placeholder ID, assigned by create phase.
-	Then lookup
+	Then lookup...
+	\param pcc the port context to assign to.  
+	\param ff the reference footprint_frame.
+	\param sm the global state allocation manager.
+	\param ind
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
@@ -909,7 +974,16 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 	STACKTRACE_VERBOSE;
 	const size_t local_placeholder_id = this->instance_index -1;
 	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+#if 0
 	// don't we use the global map ID somewhere???
+	pcc.id_map[ind] = fm[local_placeholder_id];
+#else
+//	const global_entry_pool<Tag>& pl(sm.template get_pool<Tag>());
+#endif
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "local_id = " << local_placeholder_id << endl;
+	STACKTRACE_INDENT << "global_id = " << fm[local_placeholder_id] << endl;
+#endif
 	pcc.id_map[ind] = fm[local_placeholder_id];
 	this->__construct_port_context(pcc.substructure_array[ind], ff, sm);
 }

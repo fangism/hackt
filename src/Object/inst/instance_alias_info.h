@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.3 2005/09/08 16:19:54 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.4 2005/09/09 20:12:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -22,6 +22,7 @@ namespace ART {
 namespace entity {
 class footprint;
 class port_collection_context;
+class port_member_context;
 class instance_alias_info_actuals;
 using std::ostream;
 using std::istream;
@@ -307,6 +308,22 @@ virtual	ostream&
 	allocate_subinstance_footprint(footprint_frame&, 
 		const state_manager&) const;
 
+	/// called by top-level
+	void
+	assign_footprint_frame(footprint_frame&, 
+		state_manager&, const port_member_context&) const;
+
+	/// called recursively
+	void
+	assign_footprint_frame(footprint_frame&, const state_manager&,
+		const port_collection_context&, const size_t) const;
+
+#if 0
+	void
+	construct_port_context(port_member_context&, 
+		const footprint_frame&, const state_manager&) const;
+#endif
+
 	void
 	construct_port_context(port_collection_context&, 
 		const footprint_frame&, const state_manager&, 
@@ -314,6 +331,7 @@ virtual	ostream&
 
 private:
 	using substructure_parent_type::__allocate_subinstance_footprint;
+public:
 	using substructure_parent_type::__construct_port_context;
 
 public:

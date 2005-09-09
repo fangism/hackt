@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4.2.2 2005/09/08 05:47:37 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4.2.3 2005/09/09 20:12:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -20,6 +20,7 @@ class unroll_context;
 class port_alias_tracker;
 class footprint;
 class footprint_frame;
+class port_member_context;
 class state_manager;
 template <class> class state_instance;
 using std::istream;
@@ -122,6 +123,10 @@ protected:
 		footprint_frame&, state_manager&) const;
 
 	void
+	__assign_footprint_frame(footprint_frame&, const state_manager&, 
+		const port_member_context&) const;
+
+	void
 	__construct_port_context(port_member_context&, const footprint_frame&,
 		const state_manager&) const;
 
@@ -209,6 +214,11 @@ protected:
 	__allocate_subinstance_footprint(const footprint_frame&, 
 			const state_manager&) const {
 		return good_bool(true);
+	}
+
+	void
+	__assign_footprint_frame(const footprint_frame&, const state_manager&, 
+		const port_member_context&) const {
 	}
 
 	void

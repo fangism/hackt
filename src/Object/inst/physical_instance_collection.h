@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.4.2.1 2005/09/08 05:47:36 fang Exp $
+	$Id: physical_instance_collection.h,v 1.4.2.2 2005/09/09 20:12:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -112,6 +112,13 @@ virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 		const footprint_frame&, const state_manager&) const
 
 virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
+
+#define	ASSIGN_FOOTPRINT_FRAME_PROTO					\
+	void								\
+	assign_footprint_frame(footprint_frame&, const state_manager&, 	\
+		const port_collection_context&) const
+
+virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

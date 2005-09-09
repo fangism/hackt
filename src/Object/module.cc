@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.4.2.2 2005/09/07 19:21:04 fang Exp $
+ 	$Id: module.cc,v 1.4.2.3 2005/09/09 20:12:30 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -12,6 +12,8 @@
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+
+#define ENABLE_STATE_MANAGER		0
 
 #include "Object/module.tcc"
 #include <iostream>
@@ -129,7 +131,8 @@ module::dump(ostream& o) const {
 	if (is_created()) {
 		o << "Created state:" << endl;
 		_footprint.dump(o) << endl;
-#if USE_STATE_MANAGER
+#if ENABLE_STATE_MANAGER
+		o << "Globally allocated state:" << endl;
 		global_state.dump(o);
 #endif
 	}
@@ -228,13 +231,16 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
-#if 0
+#if ENABLE_STATE_MANAGER
 		// we've established uniqueness among public ports
 		// now go through footprint and recursively allocate
 		// substructures in the footprint.  
 		if (!_footprint.expand_unique_subinstances(global_state).good) {
 			return good_bool(false);
 		}
+#if 1
+		global_state.dump(cerr) << endl;
+#endif
 #endif
 		_footprint.mark_created();
 	}

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.4.2.2 2005/09/08 05:47:37 fang Exp $
+	$Id: subinstance_manager.h,v 1.4.2.3 2005/09/09 20:12:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -125,6 +125,10 @@ public:
 	void
 	construct_port_context(port_member_context&, 
 		const footprint_frame&, const state_manager&) const;
+
+	void
+	assign_footprint_frame(footprint_frame&, const state_manager&, 
+		const port_member_context& pmc) const;
 
 	// for each entry, re-link
 	void

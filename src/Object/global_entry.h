@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.1.2.2 2005/09/07 19:21:03 fang Exp $
+	$Id: global_entry.h,v 1.1.2.3 2005/09/09 20:12:30 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -19,6 +19,8 @@ using std::istream;
 using util::persistent_object_manager;
 
 class footprint;
+class state_manager;
+class port_member_context;
 typedef	std::vector<size_t>		footprint_frame_map_type;
 
 //=============================================================================
@@ -48,6 +50,11 @@ struct footprint_frame_map {
 	footprint_frame_map(const footprint&);
 
 	~footprint_frame_map();
+
+protected:
+	void
+	__init_top_level(void);
+
 };	// end struct footprint_frame_mao
 
 //=============================================================================
@@ -96,8 +103,17 @@ struct footprint_frame :
 	const footprint_frame_map_type&
 	get_frame_map(void) const;
 
+	void
+	init_top_level(void);
+
 	ostream&
 	dump(ostream&) const;
+
+#if 0
+	void
+	assign_from_context(const footprint&, const state_manager&, 
+		const port_member_context&);
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -121,6 +137,9 @@ private:
 	static
 	void
 	load_id_map(footprint_frame_map_type&, istream&);
+
+	void
+	get_frame_map_test(void);
 
 	void
 	get_frame_map_test(void) const;

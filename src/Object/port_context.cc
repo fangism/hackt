@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.cc,v 1.1.2.1 2005/09/08 05:47:33 fang Exp $
+	$Id: port_context.cc,v 1.1.2.2 2005/09/09 20:12:30 fang Exp $
  */
 
 #include <iostream>
@@ -83,7 +83,7 @@ if (id_map.size()) {
 		for ( ; i<s; i++) {
 			substructure_array[i].dump(
 				o << auto_indent << i <<
-				"->" << id_map[i]<< ": ") << endl;
+				" -> " << id_map[i]<< ": ") << endl;
 		}
 	}
 	return o << auto_indent << '}';

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.5.2.2 2005/09/08 05:47:37 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5.2.3 2005/09/09 20:12:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -90,10 +90,11 @@ substructure_alias::replay_substructure_aliases(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
+#if 0
 /**
 	TODO: finish me.
 	NOTE: subinstance_manager only has public ports.  
+		Somewhere else will take care of private subinstances.  
 	First, construct ports.  
  */
 good_bool
@@ -103,10 +104,17 @@ substructure_alias::__allocate_subinstance_footprint(footprint_frame& ff,
 	port_member_context pmc;
 	subinstances.construct_port_context(pmc, ff, sm);
 	// HERE
-	// pass port context to allocator for this instance.  
+	// pass port context to allocator for this instance.  (?)
 	return good_bool(true);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+substructure_alias::__assign_footprint_frame(footprint_frame& ff, 
+		const state_manager& sm, const port_member_context& pmc) const {
+	subinstances.assign_footprint_frame(ff, sm, pmc);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

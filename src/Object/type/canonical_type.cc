@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.2.2.1 2005/09/08 05:47:37 fang Exp $
+	$Id: canonical_type.cc,v 1.2.2.2 2005/09/09 20:12:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -96,14 +96,20 @@ initialize_footprint_frame_policy<process_definition>::operator () (
 }
 
 //=============================================================================
-#if 0
-template
-canonical_type<user_def_datatype>::canonical_type(
-	const canonical_type<datatype_definition_base>&);
-#else
+void
+assign_footprint_frame_policy<process_definition>::operator () (
+		const canonical_process_type& cpt, footprint_frame& ff, 
+		const state_manager& sm, const port_member_context& pmc) {
+	STACKTRACE_VERBOSE;
+	const footprint&
+		f(cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params()));
+	f.assign_footprint_frame(ff, sm, pmc);
+}
+
+//=============================================================================
 template
 canonical_user_def_data_type::canonical_type(const canonical_generic_datatype&);
-#endif
 
 template class canonical_type<datatype_definition_base>;
 template class canonical_type<user_def_datatype>;

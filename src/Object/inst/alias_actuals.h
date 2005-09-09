@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.3.2.1 2005/09/08 05:47:34 fang Exp $
+	$Id: alias_actuals.h,v 1.3.2.2 2005/09/09 20:12:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -21,6 +21,8 @@ namespace ART {
 namespace entity {
 class const_param_expr_list;
 class footprint_frame;
+class port_member_context;
+class state_manager;
 template <class> class instance_alias_info;
 using std::istream;
 using std::ostream;
@@ -107,6 +109,13 @@ public:
 	template <class InstColl>
 	typename InstColl::instance_collection_parameter_type
 	complete_type_actuals(const InstColl& _inst) const;
+
+protected:
+	template <class AliasType>
+	static
+	void
+	__assign_footprint_frame(const AliasType&, footprint_frame&, 
+		const state_manager&, const port_member_context&);
 
 protected:
 	void
