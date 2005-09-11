@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.5 2005/09/09 20:12:31 fang Exp $
+	$Id: footprint.cc,v 1.2.2.6 2005/09/11 18:49:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -103,18 +103,6 @@ footprint_base<Tag>::__expand_unique_subinstances(
 		footprint_frame& frame(ref._frame);
 		const instance_alias_info<Tag>&
 			formal_alias(*i->get_back_ref());
-		// construct port_context
-		// util::wtf_is(*i->get_back_ref());
-		// frame has not been initialized yet
-		// NOTE: the following call does not use the state_manager
-		if (!formal_alias.allocate_subinstance_footprint(
-				frame, sm).good) {
-			return good_bool(false);
-		}
-#if ENABLE_STACKTRACE
-		frame.dump(STACKTRACE_INDENT << "empty frame: ") << endl;
-#endif
-#if 1
 		/***
 			Frame is initialized but not asssigned.  
 			Now we assign!
@@ -125,10 +113,12 @@ footprint_base<Tag>::__expand_unique_subinstances(
 		***/
 		port_member_context pmc;
 		/***
-			TODO: extract partial frame from global context frame.
-			Not construct, but project/factor.
+			__construct_port_context projects the context
+			global actual IDs into this unique instance's
+			ports.  (Passing top-down).
+			NOTE: this shouldn't require the state_manager.
 		***/
-		formal_alias.__construct_port_context(pmc, gframe, sm);
+		formal_alias.__construct_port_context(pmc, gframe);
 		// formal_alias.construct_port_context(pmc, gframe, sm);
 		// WRONG: don't use all of parent's frame
 		// need to extract partial frame, projected
@@ -138,10 +128,18 @@ footprint_base<Tag>::__expand_unique_subinstances(
 		// formal_alias is wrong level of hierarchy
 		formal_alias.dump_hierarchical_name(STACKTRACE_INDENT) << endl;
 #endif
+		// frame has not been initialized yet
+		// NOTE: the following call does not use the state_manager
+		if (!formal_alias.allocate_subinstance_footprint(
+				frame, sm).good) {
+			return good_bool(false);
+		}
+#if ENABLE_STACKTRACE
+		frame.dump(STACKTRACE_INDENT << "empty frame: ") << endl;
+#endif
 		formal_alias.assign_footprint_frame(frame, sm, pmc);
 #if ENABLE_STACKTRACE
 		frame.dump(STACKTRACE_INDENT << "filled frame: ") << endl;
-#endif
 #endif
 		// the allocate private subinstances
 	}

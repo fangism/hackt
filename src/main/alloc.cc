@@ -1,9 +1,8 @@
 /**
-	\file "main/unroll.cc"
-	Unrolls an object file, saves it to another object file.  
-	This file was reincarnated from "artobjunroll.cc" in a previous life.  
+	\file "main/alloc.cc"
+	Allocates global unique state.  
 
-	$Id: unroll.cc,v 1.3.2.1 2005/09/11 18:50:04 fang Exp $
+	$Id: alloc.cc,v 1.1.2.1 2005/09/11 18:50:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,7 +10,7 @@
 #include <iostream>
 #include <cstring>
 
-#include "main/unroll.h"
+#include "main/alloc.h"
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
@@ -25,28 +24,28 @@ using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
 //=============================================================================
-class unroll::options {
+class alloc::options {
 	// none
 };	// end class options
 
 //=============================================================================
-// class unroll static initializers
+// class alloc static initializers
 
 const char
-unroll::name[] = "unroll";
+alloc::name[] = "alloc";
 
 const char
-unroll::brief_str[] = "Unrolls an object file, saving to another object file";
+alloc::brief_str[] = "Globally allocates unique state for simulation";
 
 const size_t
-unroll::program_id = register_hackt_program_class<unroll>();
+alloc::program_id = register_hackt_program_class<alloc>();
 
 //=============================================================================
-unroll::unroll() { }
+alloc::alloc() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
-unroll::main(const int argc, char* argv[], const global_options&) {
+alloc::main(const int argc, char* argv[], const global_options&) {
 	options opt();
 	if (argc != 3) {
 		usage();
@@ -71,13 +70,12 @@ unroll::main(const int argc, char* argv[], const global_options&) {
 		return 1;
 
 //	the_module->dump(cerr);
-	if (the_module->is_unrolled()) {
-		cerr << "Module is already unrolled, skipping..." << endl;
+	if (the_module->is_allocated()) {
+		cerr << "Module is already allocated, skipping..." << endl;
 	} else {
-		STACKTRACE("main: try unrolling.");
-		if (!the_module->unroll_module().good) {
-			cerr << "ERROR in unrolling.  Aborting." << endl;
-			// although an empty unroll file was already created
+		STACKTRACE("main: try allocing.");
+		if (!the_module->allocate_unique().good) {
+			cerr << "ERROR in allocating.  Aborting." << endl;
 			return 1;
 		}
 //		the_module->dump(cerr);
@@ -90,7 +88,7 @@ unroll::main(const int argc, char* argv[], const global_options&) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-unroll::usage(void) {
+alloc::usage(void) {
 	cerr << "Usage: " << name <<
 		" <hackt-obj-infile> <hackt-obj-outfile>" << endl;
 }

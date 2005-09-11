@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.6.2.3 2005/09/09 20:12:33 fang Exp $
+	$Id: subinstance_manager.cc,v 1.6.2.4 2005/09/11 18:50:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -266,14 +266,14 @@ subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subinstance_manager::construct_port_context(port_member_context& pmc, 
-		const footprint_frame& ff, const state_manager& sm) const {
+		const footprint_frame& ff) const {
 	STACKTRACE_VERBOSE;
 	pmc.resize(size());
 	size_t j = 0;
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++, j++) {
-		(*i)->construct_port_context(pmc[j], ff, sm);
+		(*i)->construct_port_context(pmc[j], ff);
 	}
 }
 

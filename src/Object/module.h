@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.4.2.1 2005/09/06 05:56:46 fang Exp $
+	$Id: module.h,v 1.4.2.2 2005/09/11 18:49:58 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -57,6 +57,7 @@ protected:
 	footprint				_footprint;
 
 #if USE_STATE_MANAGER
+	bool					allocated;
 	state_manager				global_state;
 #endif
 
@@ -98,6 +99,11 @@ public:
 		return _footprint.is_created();
 	}
 
+	bool
+	is_allocated(void) const {
+		return allocated;
+	}
+
 	/**
 		Note: sequential scope has a const-version of this, 
 		and is non-virtual.  
@@ -108,6 +114,9 @@ public:
 
 	good_bool
 	create_unique(void);
+
+	good_bool
+	allocate_unique(void);
 
 private:
 	good_bool

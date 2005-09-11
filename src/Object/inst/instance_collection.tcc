@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7.2.3 2005/09/09 20:12:32 fang Exp $
+	$Id: instance_collection.tcc,v 1.7.2.4 2005/09/11 18:49:59 fang Exp $
 	TODO: trim includes
  */
 
@@ -1036,14 +1036,14 @@ INSTANCE_ARRAY_CLASS::connection_loader::operator() (const element_type& e) {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
-		const footprint_frame& ff, const state_manager& sm) const {
+		const footprint_frame& ff) const {
 	STACKTRACE_VERBOSE;
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	pcc.resize(this->collection.size());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		i->construct_port_context(pcc, ff, sm, j);
+		i->construct_port_context(pcc, ff, j);
 	}
 }
 
@@ -1450,10 +1450,10 @@ INSTANCE_SCALAR_CLASS::load_reference(istream& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::construct_port_context(port_collection_context& pcc, 
-		const footprint_frame& ff, const state_manager& sm) const {
+		const footprint_frame& ff) const {
 	STACKTRACE_VERBOSE;
 	pcc.resize(1);
-	this->the_instance.construct_port_context(pcc, ff, sm, 0);
+	this->the_instance.construct_port_context(pcc, ff, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

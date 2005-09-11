@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4.2.3 2005/09/09 20:12:34 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4.2.4 2005/09/11 18:50:03 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -127,8 +127,8 @@ protected:
 		const port_member_context&) const;
 
 	void
-	__construct_port_context(port_member_context&, const footprint_frame&,
-		const state_manager&) const;
+	__construct_port_context(port_member_context&,
+		const footprint_frame&) const;
 
 protected:
 	// call forwarding
@@ -218,12 +218,12 @@ protected:
 
 	void
 	__assign_footprint_frame(const footprint_frame&, const state_manager&, 
-		const port_member_context&) const {
+			const port_member_context&) const {
 	}
 
 	void
-	__construct_port_context(port_member_context&, const footprint_frame&,
-		const state_manager&) const {
+	__construct_port_context(const port_member_context&, 
+			const footprint_frame&) const {
 		// No-op.
 	}
 

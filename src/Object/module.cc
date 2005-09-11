@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.4.2.3 2005/09/09 20:12:30 fang Exp $
+ 	$Id: module.cc,v 1.4.2.4 2005/09/11 18:49:58 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -13,7 +13,8 @@
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 
-#define ENABLE_STATE_MANAGER		0
+// Goal: 1
+#define ENABLE_STATE_MANAGER		1
 
 #include "Object/module.tcc"
 #include <iostream>
@@ -52,7 +53,7 @@ module::module() :
 		name(""), global_namespace(NULL),
 		_footprint()
 #if USE_STATE_MANAGER
-		, global_state()
+		, allocated(false), global_state()
 #endif
 		{
 }
@@ -63,7 +64,7 @@ module::module(const string& s) :
 		name(s), global_namespace(new name_space("")),
 		_footprint()
 #if USE_STATE_MANAGER
-		, global_state()
+		, allocated(false), global_state()
 #endif
 		{
 	NEVER_NULL(global_namespace);
@@ -131,6 +132,8 @@ module::dump(ostream& o) const {
 	if (is_created()) {
 		o << "Created state:" << endl;
 		_footprint.dump(o) << endl;
+	}
+	if (is_allocated()) {
 #if ENABLE_STATE_MANAGER
 		o << "Globally allocated state:" << endl;
 		global_state.dump(o);
@@ -231,6 +234,18 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
+		_footprint.mark_created();
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+module::allocate_unique(void) {
+	if (!create_unique().good)
+		return good_bool(false);
+	if (!is_allocated()) {
+		STACKTRACE("not already allcoated, allocating...");
 #if ENABLE_STATE_MANAGER
 		// we've established uniqueness among public ports
 		// now go through footprint and recursively allocate
@@ -242,7 +257,7 @@ module::create_unique(void) {
 		global_state.dump(cerr) << endl;
 #endif
 #endif
-		_footprint.mark_created();
+		allocated = true;
 	}
 	return good_bool(true);
 }
@@ -276,6 +291,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	sequential_scope::write_object_base(m, f);
 	_footprint.write_object_base(m, f);
 #if USE_STATE_MANAGER
+	write_value(f, allocated);
 	global_state.write_object_base(m, f);
 #endif
 }
@@ -290,6 +306,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	sequential_scope::load_object_base(m, f);
 	_footprint.load_object_base(m, f);
 #if USE_STATE_MANAGER
+	read_value(f, allocated);
 	global_state.load_object_base(m, f);
 #endif
 }

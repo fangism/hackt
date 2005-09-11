@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.4.2.3 2005/09/09 20:12:33 fang Exp $
+	$Id: subinstance_manager.h,v 1.4.2.4 2005/09/11 18:50:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -102,8 +102,7 @@ public:
 	collect_port_aliases(port_alias_tracker&) const;
 
 	good_bool
-	connect_ports(const connection_references_type&, 
-		const unroll_context&);
+	connect_ports(const connection_references_type&, const unroll_context&);
 
 	void
 	allocate(footprint&);
@@ -124,7 +123,7 @@ public:
 
 	void
 	construct_port_context(port_member_context&, 
-		const footprint_frame&, const state_manager&) const;
+		const footprint_frame&) const;
 
 	void
 	assign_footprint_frame(footprint_frame&, const state_manager&, 

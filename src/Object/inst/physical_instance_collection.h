@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.4.2.2 2005/09/09 20:12:33 fang Exp $
+	$Id: physical_instance_collection.h,v 1.4.2.3 2005/09/11 18:50:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -109,7 +109,7 @@ virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 #define	CONSTRUCT_PORT_CONTEXT_PROTO					\
 	void								\
 	construct_port_context(port_collection_context&, 		\
-		const footprint_frame&, const state_manager&) const
+		const footprint_frame&) const
 
 virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 

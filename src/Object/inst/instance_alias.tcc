@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.4 2005/09/09 20:12:32 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.5 2005/09/11 18:49:59 fang Exp $
 	TODO: trim includes
  */
 
@@ -948,16 +948,6 @@ INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
-		port_member_context& pmc, const footprint_frame& ff,
-		const state_manager& sm) const {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	First lookup canonical placeholder ID, assigned by create phase.
 	Then lookup...
@@ -970,22 +960,16 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 		port_collection_context& pcc, const footprint_frame& ff,
-		const state_manager& sm, const size_t ind) const {
+		const size_t ind) const {
 	STACKTRACE_VERBOSE;
 	const size_t local_placeholder_id = this->instance_index -1;
 	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
-#if 0
-	// don't we use the global map ID somewhere???
-	pcc.id_map[ind] = fm[local_placeholder_id];
-#else
-//	const global_entry_pool<Tag>& pl(sm.template get_pool<Tag>());
-#endif
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "local_id = " << local_placeholder_id << endl;
 	STACKTRACE_INDENT << "global_id = " << fm[local_placeholder_id] << endl;
 #endif
 	pcc.id_map[ind] = fm[local_placeholder_id];
-	this->__construct_port_context(pcc.substructure_array[ind], ff, sm);
+	this->__construct_port_context(pcc.substructure_array[ind], ff);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

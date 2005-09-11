@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.4 2005/09/09 20:12:32 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.5 2005/09/11 18:49:59 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -318,16 +318,9 @@ virtual	ostream&
 	assign_footprint_frame(footprint_frame&, const state_manager&,
 		const port_collection_context&, const size_t) const;
 
-#if 0
-	void
-	construct_port_context(port_member_context&, 
-		const footprint_frame&, const state_manager&) const;
-#endif
-
 	void
 	construct_port_context(port_collection_context&, 
-		const footprint_frame&, const state_manager&, 
-		const size_t) const;
+		const footprint_frame&, const size_t) const;
 
 private:
 	using substructure_parent_type::__allocate_subinstance_footprint;

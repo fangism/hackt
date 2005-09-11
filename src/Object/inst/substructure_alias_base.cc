@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.5.2.3 2005/09/09 20:12:34 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5.2.4 2005/09/11 18:50:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -122,8 +122,8 @@ substructure_alias::__assign_footprint_frame(footprint_frame& ff,
  */
 void
 substructure_alias::__construct_port_context(port_member_context& pmc, 
-		const footprint_frame& ff, const state_manager& sm) const {
-	subinstances.construct_port_context(pmc, ff, sm);
+		const footprint_frame& ff) const {
+	subinstances.construct_port_context(pmc, ff);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
