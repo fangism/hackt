@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4.2.4 2005/09/11 18:50:03 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4.2.5 2005/09/13 04:43:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,6 +11,7 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -123,7 +124,10 @@ protected:
 		footprint_frame&, state_manager&) const;
 
 	void
-	__assign_footprint_frame(footprint_frame&, const state_manager&, 
+	__assign_footprint_frame(footprint_frame&,
+#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+		const state_manager&, 
+#endif
 		const port_member_context&) const;
 
 	void
@@ -216,8 +220,12 @@ protected:
 		return good_bool(true);
 	}
 
+
 	void
-	__assign_footprint_frame(const footprint_frame&, const state_manager&, 
+	__assign_footprint_frame(const footprint_frame&,
+#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+			const state_manager&, 
+#endif
 			const port_member_context&) const {
 	}
 

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.6 2005/09/13 01:14:47 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.7 2005/09/13 04:43:32 fang Exp $
 	TODO: trim includes
  */
 
@@ -783,6 +783,35 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+/**
+	Called by top-level.  
+	This reserves the space required by the footprint corresponding
+		to this instance's complete canonical type.
+	\param ff the footprint frame to initialize using this
+		instance's canonical type.  
+	\param sm the global state allocation manager, probably not needed.  
+	TODO: after assigning globally assigned ports, 
+	allocate the remaining unassigned internal substructures.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
+		footprint_frame& ff, state_manager& sm,
+		const port_member_context& pmc) const {
+	STACKTRACE_VERBOSE;
+	if (!actuals_parent_type::__initialize_assign_footprint_frame(
+			*this, ff, /* sm, */ pmc).good) {
+		cerr << "Error alloc_assign_subinstance_footprint_frame."
+			<< endl;
+		return good_bool(false);
+	}
+	// TODO: HERE
+	// scan footprint_frame for unallocated subinstances, and create them!
+	return good_bool(true);
+}
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This reserves the space required by the footprint corresponding
 		to this instance's complete canonical type.
@@ -809,13 +838,14 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_subinstance_footprint(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
-		footprint_frame& ff, state_manager& sm,
+		footprint_frame& ff,state_manager& sm,
 		const port_member_context& pmc) const {
 	STACKTRACE_VERBOSE;
 	actuals_parent_type::__assign_footprint_frame(*this, ff, sm, pmc);
 	// HERE
 	// scan footprint_frame for unallocated subinstances, and create them!
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -825,7 +855,10 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
-		footprint_frame& ff, const state_manager& sm,
+		footprint_frame& ff,
+#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+		const state_manager& sm,
+#endif
 		const port_collection_context& pcc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
 	const size_t local_offset = this->instance_index -1;
@@ -840,8 +873,13 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
 #if ENABLE_STACKTRACE
 	ff.dump(STACKTRACE_STREAM) << endl;
 #endif
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	substructure_parent_type::__assign_footprint_frame(
+		ff, pcc.substructure_array[ind]);
+#else
 	substructure_parent_type::__assign_footprint_frame(
 		ff, sm, pcc.substructure_array[ind]);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

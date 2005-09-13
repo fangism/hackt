@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.2.2.3 2005/09/13 01:14:48 fang Exp $
+	$Id: canonical_type.h,v 1.2.2.4 2005/09/13 04:43:34 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -176,6 +176,37 @@ struct canonical_definition_load_policy<datatype_definition_base> {
 };	// end struct canonical_definition_load_policy
 
 //-----------------------------------------------------------------------------
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+template <class DefType>
+struct initialize_assign_footprint_frame_policy {
+	static
+	void
+	initialize_frame_pointer_only(const canonical_type<DefType>&,
+		const footprint* const) {
+	}
+
+	good_bool
+	operator () (const canonical_type<DefType>&, const footprint_frame&,
+			const port_member_context&) const {
+		return good_bool(true);
+	}
+};      // end struct initialize_footprint_frame_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct initialize_assign_footprint_frame_policy<process_definition> {
+	static
+	void
+	initialize_frame_pointer_only(const canonical_process_type&,
+		const footprint*&);
+
+	good_bool
+	operator () (const canonical_process_type&, footprint_frame&, 
+			const port_member_context&) const;
+};      // end struct initialize_footprint_frame_policy
+
+//-----------------------------------------------------------------------------
+#else
 template <class DefType>
 struct initialize_footprint_frame_policy {
 	good_bool
@@ -207,6 +238,7 @@ struct assign_footprint_frame_policy<process_definition> {
 	operator () (const canonical_process_type&, footprint_frame&, 
 			const state_manager&, const port_member_context&);
 };      // end struct initialize_footprint_frame_policy
+#endif
 
 //-----------------------------------------------------------------------------
 template <class DefType>

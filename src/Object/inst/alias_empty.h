@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.3.2.3 2005/09/13 01:14:47 fang Exp $
+	$Id: alias_empty.h,v 1.3.2.4 2005/09/13 04:43:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -15,6 +15,7 @@
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -94,6 +95,18 @@ protected:
 		return good_bool(true);
 	}
 
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	template <class AliasType>
+	static
+	good_bool
+	__initialize_assign_footprint_frame(const AliasType&,
+			const footprint_frame&,
+			// const state_manager&,
+			const port_member_context&) {
+		// no-op.
+		return good_bool(true);
+	}
+#else
 	/**
 		Thus far, no meta types without alias actuals can have 
 		substructure.  
@@ -105,6 +118,15 @@ protected:
 			const footprint_frame&) {
 		return good_bool(true);
 	}
+
+	template <class AliasType>
+	static
+	void
+	__assign_footprint_frame(const AliasType&, const footprint_frame&,
+			const state_manager&, const port_member_context&) {
+		// no-op.
+	}
+#endif
 
 public:
 	static
@@ -134,14 +156,6 @@ protected:
 	typename InstColl::instance_collection_parameter_type
 	complete_type_actuals(const InstColl& _inst) const {
 		return _inst.get_canonical_type();
-	}
-
-	template <class AliasType>
-	static
-	void
-	__assign_footprint_frame(const AliasType&, const footprint_frame&,
-			const state_manager&, const port_member_context&) {
-		// no-op.
 	}
 
 protected:

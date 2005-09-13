@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.3.2.3 2005/09/13 01:14:47 fang Exp $
+	$Id: alias_actuals.tcc,v 1.3.2.4 2005/09/13 04:43:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -212,6 +212,26 @@ instance_alias_info_actuals::dump_complete_type(const AliasType& _alias,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+template <class AliasType>
+good_bool
+instance_alias_info_actuals::__initialize_assign_footprint_frame(
+		const AliasType& _alias, footprint_frame& ff, 
+		// const state_manager& sm,
+		const port_member_context& pmc) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+				canonical_definition_type;
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	INVARIANT(_type);
+	return initialize_assign_footprint_frame_policy<
+			canonical_definition_type>()(_type, ff, pmc);
+}
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Evaluates the complete canonical type based on the
 	container's type and the relaxed actuals.  
@@ -259,6 +279,7 @@ instance_alias_info_actuals::__assign_footprint_frame(
 	assign_footprint_frame_policy<canonical_definition_type>()
 		(_type, ff, sm, pmc);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -297,9 +318,14 @@ instance_alias_info_actuals::restore_canonical_footprint(
 	_type.load_object_base(m, i);
 	// temporary ugly hack
 	footprint_frame _frame;
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	initialize_assign_footprint_frame_policy<canonical_definition_type>
+		::initialize_frame_pointer_only(_type, _f);
+#else
 	initialize_footprint_frame_policy<canonical_definition_type>()
 		(_type, _frame);
 	_f = _frame._footprint;
+#endif
 }
 
 //=============================================================================

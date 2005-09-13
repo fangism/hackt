@@ -1,0 +1,9 @@
+globID	super		localID	footprint-frame
+[global process entries]
+1	(top)	-	1	foo<8>
+	int: 1
+2	(top)	-	2	foo<16>
+	int: 2
+[global int entries]
+1	(top)	-	1	
+2	(top)	-	2	

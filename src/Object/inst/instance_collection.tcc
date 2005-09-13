@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7.2.4 2005/09/11 18:49:59 fang Exp $
+	$Id: instance_collection.tcc,v 1.7.2.5 2005/09/13 04:43:33 fang Exp $
 	TODO: trim includes
  */
 
@@ -1054,7 +1054,9 @@ INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc,
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
+#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 		const state_manager& sm,
+#endif
 		const port_collection_context& pcc) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->collection.size() == pcc.size());
@@ -1062,7 +1064,11 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 	const const_iterator e(this->collection.end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+		i->assign_footprint_frame(ff, pcc, j);
+#else
 		i->assign_footprint_frame(ff, sm, pcc, j);
+#endif
 	}
 }
 
@@ -1460,11 +1466,17 @@ INSTANCE_SCALAR_CLASS::construct_port_context(port_collection_context& pcc,
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
+#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 		const state_manager& sm,
+#endif
 		const port_collection_context& pcc) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(pcc.size() == 1);
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	this->the_instance.assign_footprint_frame(ff, pcc, 0);
+#else
 	this->the_instance.assign_footprint_frame(ff, sm, pcc, 0);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

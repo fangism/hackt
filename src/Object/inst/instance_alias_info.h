@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.6 2005/09/13 01:14:48 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.7 2005/09/13 04:43:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -17,6 +17,7 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -225,7 +226,11 @@ public:
 	using actuals_parent_type::create_dependent_types;
 
 private:
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	using actuals_parent_type::__initialize_assign_footprint_frame;
+#else
 	using actuals_parent_type::__initialize_footprint_frame;
+#endif
 
 protected:
 	physical_instance_collection&
@@ -305,6 +310,11 @@ virtual	ostream&
 	// using substructure_parent_type::lookup_port_instance;
 	using substructure_parent_type::replay_substructure_aliases;
 
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	good_bool
+	allocate_assign_subinstance_footprint_frame(footprint_frame&, 
+		state_manager&, const port_member_context&) const;
+#else
 	good_bool
 	allocate_subinstance_footprint(footprint_frame&, 
 		const state_manager&) const;
@@ -313,11 +323,18 @@ virtual	ostream&
 	void
 	assign_footprint_frame(footprint_frame&, 
 		state_manager&, const port_member_context&) const;
+#endif
 
 	/// called recursively
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+	void
+	assign_footprint_frame(footprint_frame&,
+		const port_collection_context&, const size_t) const;
+#else
 	void
 	assign_footprint_frame(footprint_frame&, const state_manager&,
 		const port_collection_context&, const size_t) const;
+#endif
 
 	void
 	construct_port_context(port_collection_context&, 

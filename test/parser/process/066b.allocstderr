@@ -1,0 +1,6 @@
+globID	super		localID	footprint-frame
+[global process entries]
+1	(top)	-	1	foo<>
+	bool: 1
+[global bool entries]
+1	(top)	-	1	

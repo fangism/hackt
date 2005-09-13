@@ -2,6 +2,12 @@
 
 2005-09-12	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-08:
+	  Fused footprint_frame allocation and assignment together 
+		into one method call.  (TODO: clean up conditional)
+	  More test cases added for state allocation.  
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-07:
 	  Have allocated-state persistence working for top-level allocated
 		public ports.  Need to do recursive allocation, 

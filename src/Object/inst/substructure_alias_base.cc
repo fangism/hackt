@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.5.2.4 2005/09/11 18:50:02 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5.2.5 2005/09/13 04:43:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -110,11 +110,19 @@ substructure_alias::__allocate_subinstance_footprint(footprint_frame& ff,
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+void
+substructure_alias::__assign_footprint_frame(footprint_frame& ff, 
+		const port_member_context& pmc) const {
+	subinstances.assign_footprint_frame(ff, pmc);
+}
+#else
 void
 substructure_alias::__assign_footprint_frame(footprint_frame& ff, 
 		const state_manager& sm, const port_member_context& pmc) const {
 	subinstances.assign_footprint_frame(ff, sm, pmc);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
