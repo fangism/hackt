@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.2.2.1 2005/09/06 20:55:38 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.2.2.2 2005/09/13 08:11:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -371,7 +371,7 @@ INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
 
-#undef	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(Tag)
+#undef	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK
 
 //=============================================================================
 }	// end namespace entity
