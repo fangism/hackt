@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.1.2.4 2005/09/09 20:12:30 fang Exp $
+	$Id: global_entry.cc,v 1.1.2.5 2005/09/13 01:14:44 fang Exp $
  */
 
 #include "Object/global_entry.tcc"
@@ -109,8 +109,11 @@ footprint_frame::load_id_map(footprint_frame_map_type& m, istream& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param o the output stream.
+ */
 ostream&
-footprint_frame::dump(ostream& o) const {
+footprint_frame::dump_frame(ostream& o) const {
 	dump_id_map(footprint_frame_map<process_tag>::id_map, o, 
 		class_traits<process_tag>::tag_name);
 	dump_id_map(footprint_frame_map<channel_tag>::id_map, o, 
@@ -127,6 +130,26 @@ footprint_frame::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	TODO: dump the source of the footprint, the canonical type.
+	Use topfp to resolve...
+	\param o the output stream.
+	\param ind the global id number of this entry.  
+	\param topfp is the top-level footprint.
+	Need info: top-level footprint, this local index (from entry), 
+ */
+ostream&
+footprint_frame::dump_footprint(ostream& o, const size_t ind, 
+		const footprint& topfp) const {
+	INVARIANT(_footprint);
+	// HERE, do stuff
+	// check if index is in range of top-level footprint's pool.
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_frame::init_top_level(void) {
 	footprint_frame_map<process_tag>::__init_top_level();
@@ -138,20 +161,13 @@ footprint_frame::init_top_level(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-footprint_frame::assign_from_context(const footprint& f, 
-		const state_manager& sm, const port_member_context& pmc) {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_frame::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// footprint pointer is not persistently managed, 
 	// and thus needs to be reconstructed by other means
 	// need to infer canonical_type and go from there.
+	STACKTRACE_PERSISTENT_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,6 +175,7 @@ void
 footprint_frame::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	// see note in collect_transient_info: footprint pointer reconstruction
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_id_map(footprint_frame_map<process_tag>::id_map, o);
 	write_id_map(footprint_frame_map<channel_tag>::id_map, o);
 	write_id_map(footprint_frame_map<datastruct_tag>::id_map, o);
@@ -172,6 +189,7 @@ void
 footprint_frame::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
 	// see note in collect_transient_info: footprint pointer reconstruction
+	STACKTRACE_PERSISTENT_VERBOSE;
 	load_id_map(footprint_frame_map<process_tag>::id_map, i);
 	load_id_map(footprint_frame_map<channel_tag>::id_map, i);
 	load_id_map(footprint_frame_map<datastruct_tag>::id_map, i);
@@ -213,9 +231,11 @@ footprint_frame::get_frame_map_test(void) const {
 //=============================================================================
 // class global_entry_base method definitions
 
+#if 0
 ostream&
-global_entry_base<true>::dump(ostream& o) const {
-	return _frame.dump(o);
+global_entry_base<true>::dump(ostream& o, const size_t ind, 
+		const footprint& topfp, const state_manager& sm) const {
+	return _frame.dump(o, ind, topfp, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -231,6 +251,7 @@ global_entry_base<true>::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	_frame.load_object_base(m, i);
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

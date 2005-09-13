@@ -1,0 +1,88 @@
+#!@SH_PATH@
+# "hackt-alloc-expect.sh.in"
+#	$Id: hackt-alloc-expect.sh.in,v 1.1.2.1 2005/09/13 01:14:50 fang Exp $
+
+# NOTE: tepomrarily just uses stdout dump during execution
+# will updated later...
+
+# $1 is the executable for the creator (hackt alloc), expecting 2 arguments
+# $2 is the executable for reading in the object file, (probably hacktobjcreate)
+#	and producing a textual dump to stderr.
+
+# $3 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $4 is the input file name WITHOUT the .in extension
+# $5 is the filter for ignoring certain difference in output
+#	(for no filter, pass "cat") (currently unused)
+# $6 is the test report log file, summarizing results
+# $7 is a difference analysis script to run on the objdump differences
+#	AFTER the header filter has been run (currently unused)
+# $8 is an additional index filter to be run on the objdump differences,
+#	but only after the primary header filter ($5) is run (currently unused)
+# other subsequent arguments are ignored
+
+# if [ $# -lt 8 ] ; then exit 1 ; fi
+
+alloc=$1
+dump=$2
+srcroot=$3/$4
+bldroot=$4
+filter=$5
+logfile=$6
+analdiff=$7
+indfilter=$8
+
+# a pre-created (already created) object file must already exist
+if ! [ -s $bldroot.hacktobjcreate ]
+then
+	@ECHO@ "$bldroot.hacktobjcreate doesn't exist or is empty."
+	exit 1
+fi
+
+# see if it crashes first
+$alloc $bldroot.hacktobjcreate $bldroot.hacktobjalloc 2> $bldroot.allocdump
+
+# depending on exit status, take action
+case $? in
+	0) 
+		$dump $bldroot.hacktobjalloc 2>&1 | @CAT@ > $bldroot.allocdump
+		break ;;
+	1) break ;;
+	*) exit 1 ;;
+esac
+
+@CAT@ $bldroot.allocdump | $filter > $bldroot.allocdump.filter
+
+# .allocstderr comparison file must exist
+if ! [ -f $srcroot.allocstderr ]
+then
+	@ECHO@ "Missing $srcroot.allocstderr."
+	exit 1
+fi
+
+# ignore whitespace differences
+@DIFF@ -buw $srcroot.allocstderr $bldroot.allocdump.filter 2>&1 | \
+	@CAT@ > $bldroot.allocdiff
+
+if [ -s $bldroot.allocdiff ]
+then
+	@ECHO@ "$bldroot.allocdiff is non-empty!  See $logfile."
+	@ECHO@ `pwd`/"$bldroot.allocdiff" >> $logfile
+#	$analdiff -v quiet=2 $bldroot.allocdiff > $bldroot.createanal
+#
+#	# see if is candidate for further difference analysis
+#	if @GREP@ "OK" $bldroot.createanal
+#	then
+#		@CAT@ $srcroot.allocstderr | \
+#			$indfilter > $bldroot.allocstderr.noindex
+#		@CAT@ $bldroot.allocdump.filter | \
+#			$indfilter > $bldroot.allocdump.noindex
+#		@DIFF@ -buw $bldroot.allocstderr.noindex \
+#			$bldroot.allocdump.noindex 2>&1 | \
+#			@CAT@ > $bldroot.allocdiff.noindex
+#		$analdiff -v quiet=0 $bldroot.allocdiff.noindex
+#	fi
+#	rm -f $bldroot.allocanal
+#	exit 1
+fi
+

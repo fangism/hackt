@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.5 2005/09/11 18:49:59 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.6 2005/09/13 01:14:48 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -219,6 +219,7 @@ public:
 	 */
 	using actuals_parent_type::get_relaxed_actuals;
 	using actuals_parent_type::dump_actuals;
+	using actuals_parent_type::dump_complete_type;
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;

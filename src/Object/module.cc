@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.4.2.4 2005/09/11 18:49:58 fang Exp $
+ 	$Id: module.cc,v 1.4.2.5 2005/09/13 01:14:45 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -12,9 +12,6 @@
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
-
-// Goal: 1
-#define ENABLE_STATE_MANAGER		1
 
 #include "Object/module.tcc"
 #include <iostream>
@@ -134,10 +131,8 @@ module::dump(ostream& o) const {
 		_footprint.dump(o) << endl;
 	}
 	if (is_allocated()) {
-#if ENABLE_STATE_MANAGER
 		o << "Globally allocated state:" << endl;
-		global_state.dump(o);
-#endif
+		global_state.dump(o, _footprint);
 	}
 	return o;
 }
@@ -246,7 +241,6 @@ module::allocate_unique(void) {
 		return good_bool(false);
 	if (!is_allocated()) {
 		STACKTRACE("not already allcoated, allocating...");
-#if ENABLE_STATE_MANAGER
 		// we've established uniqueness among public ports
 		// now go through footprint and recursively allocate
 		// substructures in the footprint.  
@@ -254,8 +248,7 @@ module::allocate_unique(void) {
 			return good_bool(false);
 		}
 #if 1
-		global_state.dump(cerr) << endl;
-#endif
+		global_state.dump(cerr, _footprint) << endl;
 #endif
 		allocated = true;
 	}
@@ -292,7 +285,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	_footprint.write_object_base(m, f);
 #if USE_STATE_MANAGER
 	write_value(f, allocated);
-	global_state.write_object_base(m, f);
+	global_state.write_object_base(m, f, _footprint);
 #endif
 }
 
@@ -307,7 +300,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	_footprint.load_object_base(m, f);
 #if USE_STATE_MANAGER
 	read_value(f, allocated);
-	global_state.load_object_base(m, f);
+	global_state.load_object_base(m, f, _footprint);
 #endif
 }
 

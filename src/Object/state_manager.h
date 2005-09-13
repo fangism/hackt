@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.2.10.2 2005/09/07 19:21:04 fang Exp $
+	$Id: state_manager.h,v 1.2.10.3 2005/09/13 01:14:45 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -10,11 +10,12 @@
 #include <iosfwd>
 #include "util/persistent_fwd.h"
 #include "Object/traits/classification_tags.h"
-// #include "Object/global_entry.h"
 #include "util/list_vector.h"
 
 namespace ART {
 namespace entity {
+class footprint;
+class state_manager;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -55,16 +56,19 @@ public:
 	allocate(const entry_type&);
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const footprint&, const state_manager&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const persistent_object_manager&, ostream&, 
+		const footprint&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&, 
+		const footprint&);
+
 };	// end class global_entry_pool
 
 //=============================================================================
@@ -114,16 +118,18 @@ public:
 	allocate(const typename global_entry_pool<Tag>::entry_type&);
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const footprint&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const persistent_object_manager&, ostream&, 
+		const footprint&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&, 
+		const footprint&);
 
 private:
 	explicit

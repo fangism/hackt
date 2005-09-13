@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.2.2.2 2005/09/09 20:12:34 fang Exp $
+	$Id: canonical_type.h,v 1.2.2.3 2005/09/13 01:14:48 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -160,7 +160,7 @@ struct canonical_definition_load_policy {
 	typedef	DefType			definition_type;
 	void
 	operator () (const persistent_object_manager&, 
-		never_ptr<const definition_type>&) const { }
+		never_ptr<const definition_type>&) const;
 };	// end struct canonical_definition_load_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -207,6 +207,24 @@ struct assign_footprint_frame_policy<process_definition> {
 	operator () (const canonical_process_type&, footprint_frame&, 
 			const state_manager&, const port_member_context&);
 };      // end struct initialize_footprint_frame_policy
+
+//-----------------------------------------------------------------------------
+template <class DefType>
+struct check_footprint_policy {
+	void
+	operator () (const canonical_type<DefType>&,
+		const footprint* const) const {
+	// no-op
+	}
+};	// end struct check_footprint_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct check_footprint_policy<process_definition> {
+	void
+	operator () (const canonical_process_type&,
+		const footprint* const) const;
+};	// end struct check_footprint_policy
 
 //=============================================================================
 // possilbly specialize built-in data types, but require same interface

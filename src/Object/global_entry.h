@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.1.2.3 2005/09/09 20:12:30 fang Exp $
+	$Id: global_entry.h,v 1.1.2.4 2005/09/13 01:14:45 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -107,13 +107,12 @@ struct footprint_frame :
 	init_top_level(void);
 
 	ostream&
-	dump(ostream&) const;
+	dump_frame(ostream&) const;
 
-#if 0
-	void
-	assign_from_context(const footprint&, const state_manager&, 
-		const port_member_context&);
-#endif
+	template <class Tag>
+	ostream&
+	dump_footprint(ostream&, const size_t, const footprint&, 
+		const state_manager&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -154,17 +153,23 @@ private:
 template <bool B>
 struct global_entry_base {
 
+	template <class Tag>
 	ostream&
-	dump(ostream& o) const { return o; }
+	dump(ostream& o, const size_t, const footprint&, 
+		const state_manager&) const { return o; }
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const { }
 
+	template <class Tag>
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const { }
+	write_object_base(const persistent_object_manager&, ostream&, 
+		const size_t, const footprint&, const state_manager&) const { }
 
+	template <class Tag>
 	void
-	load_object_base(const persistent_object_manager&, istream&) { }
+	load_object_base(const persistent_object_manager&, istream&,
+		const size_t, const footprint&, const state_manager&) { }
 
 };	// end struct global_entry_base
 
@@ -176,17 +181,24 @@ template <>
 struct global_entry_base<true> {
 	footprint_frame			_frame;
 
+	template <class Tag>
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const size_t, const footprint&, 
+		const state_manager&) const;
 
+	// unused, thus far
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
+	template <class Tag>
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const persistent_object_manager&, ostream&, 
+		const size_t, const footprint&, const state_manager&) const;
 
+	template <class Tag>
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&,
+		const size_t, const footprint&, const state_manager&);
 };	// end struct global_entry_base
 
 //=============================================================================
@@ -223,15 +235,18 @@ public:
 	~global_entry();
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const size_t, const footprint&, 
+		const state_manager&) const;
 
 	using parent_type::collect_transient_info_base;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
+	write_object_base(const persistent_object_manager&, ostream&, 
+		const size_t, const footprint&, const state_manager&) const;
 
 	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object_base(const persistent_object_manager&, istream&, 
+		const size_t, const footprint&, const state_manager&);
 
 };	// end struct global_entry
 

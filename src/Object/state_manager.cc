@@ -2,8 +2,11 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.3.2.3 2005/09/08 05:47:33 fang Exp $
+	$Id: state_manager.cc,v 1.3.2.4 2005/09/13 01:14:45 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include <iostream>
 #include "Object/state_manager.h"
@@ -14,6 +17,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
+#include "util/stacktrace.h"
 #include "util/list_vector.tcc"
 #include "util/IO_utils.h"
 
@@ -37,16 +41,20 @@ template <class Tag>
 global_entry_pool<Tag>::~global_entry_pool() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param topfp the top-level footprint of the module.  
+ */
 template <class Tag>
 ostream&
-global_entry_pool<Tag>::dump(ostream& o) const {
+global_entry_pool<Tag>::dump(ostream& o, const footprint& topfp, 
+		const state_manager& sm) const {
 if (this->size() > 1) {
-	o << "global " << class_traits<Tag>::tag_name << " entries" << endl;
+	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
 	size_t j = 1;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++, j++) {
-		i->dump(o << j << '\t') << endl;
+		i->dump(o, j, topfp, sm) << endl;
 	}
 }
 	return o;
@@ -76,6 +84,7 @@ void
 global_entry_pool<Tag>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// nothing yet
+	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
@@ -87,12 +96,15 @@ global_entry_pool<Tag>::collect_transient_info_base(
 template <class Tag>
 void
 global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
+		ostream& o, const footprint& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, this->size() -1);
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
-		i->write_object_base(m, o);
+	size_t j = 1;
+	for ( ; i!=e; i++, j++) {
+		i->write_object_base(m, o, j, f,
+			AS_A(const state_manager&, *this));
 	}
 }
 
@@ -100,13 +112,15 @@ global_entry_pool<Tag>::write_object_base(const persistent_object_manager& m,
 template <class Tag>
 void
 global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
+		istream& i, const footprint& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	size_t s;
 	read_value(i, s);
 	// consider setting chunk size to s+1 for optimization
-	size_t j = 0;
-	for ( ; j<s; j++) {
-		(*this)[this->allocate()].load_object_base(m, i);
+	size_t j = 1;
+	for ( ; j<=s; j++) {
+		(*this)[this->allocate()].load_object_base(m, i, j, f, 
+			AS_A(const state_manager&, *this));
 	}
 }
 
@@ -123,14 +137,18 @@ state_manager::state_manager() :
 state_manager::~state_manager() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param topfp the top-level footprint of the module.  
+ */
 ostream&
-state_manager::dump(ostream& o) const {
-	global_entry_pool<process_tag>::dump(o);
-	global_entry_pool<channel_tag>::dump(o);
-	global_entry_pool<datastruct_tag>::dump(o);
-	global_entry_pool<enum_tag>::dump(o);
-	global_entry_pool<int_tag>::dump(o);
-	global_entry_pool<bool_tag>::dump(o);
+state_manager::dump(ostream& o, const footprint& topfp) const {
+	o << "globID\tsuper\t\tlocalID\tfootprint-frame" << endl;
+	global_entry_pool<process_tag>::dump(o, topfp, *this);
+	global_entry_pool<channel_tag>::dump(o, topfp, *this);
+	global_entry_pool<datastruct_tag>::dump(o, topfp, *this);
+	global_entry_pool<enum_tag>::dump(o, topfp, *this);
+	global_entry_pool<int_tag>::dump(o, topfp, *this);
+	global_entry_pool<bool_tag>::dump(o, topfp, *this);
 	return o;
 }
 
@@ -176,6 +194,7 @@ state_manager::allocate_test(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 state_manager::collect_transient_info_base(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	// for now, pools contain no pointers.  
 #if 0
 	global_entry_pool<process_tag>::collect_transient_info_base(m);
@@ -190,25 +209,27 @@ state_manager::collect_transient_info_base(persistent_object_manager& m) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 state_manager::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-	global_entry_pool<process_tag>::write_object_base(m, o);
-	global_entry_pool<datastruct_tag>::write_object_base(m, o);
-	global_entry_pool<channel_tag>::write_object_base(m, o);
-	global_entry_pool<enum_tag>::write_object_base(m, o);
-	global_entry_pool<int_tag>::write_object_base(m, o);
-	global_entry_pool<bool_tag>::write_object_base(m, o);
+		ostream& o, const footprint& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	global_entry_pool<process_tag>::write_object_base(m, o, f);
+	global_entry_pool<datastruct_tag>::write_object_base(m, o, f);
+	global_entry_pool<channel_tag>::write_object_base(m, o, f);
+	global_entry_pool<enum_tag>::write_object_base(m, o, f);
+	global_entry_pool<int_tag>::write_object_base(m, o, f);
+	global_entry_pool<bool_tag>::write_object_base(m, o, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 state_manager::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-	global_entry_pool<process_tag>::load_object_base(m, i);
-	global_entry_pool<datastruct_tag>::load_object_base(m, i);
-	global_entry_pool<channel_tag>::load_object_base(m, i);
-	global_entry_pool<enum_tag>::load_object_base(m, i);
-	global_entry_pool<int_tag>::load_object_base(m, i);
-	global_entry_pool<bool_tag>::load_object_base(m, i);
+		istream& i, const footprint& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
+	global_entry_pool<process_tag>::load_object_base(m, i, f);
+	global_entry_pool<datastruct_tag>::load_object_base(m, i, f);
+	global_entry_pool<channel_tag>::load_object_base(m, i, f);
+	global_entry_pool<enum_tag>::load_object_base(m, i, f);
+	global_entry_pool<int_tag>::load_object_base(m, i, f);
+	global_entry_pool<bool_tag>::load_object_base(m, i, f);
 }
 
 //=============================================================================

@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2005/09/04 22:13:49 fang Exp $
+#	$Id: Makefile.am,v 1.14.2.1 2005/09/13 01:14:49 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -20,6 +20,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	artobj-diff.sh.in \
 	artobjunroll-expect.sh.in \
 	hackt-create-expect.sh.in \
+	hackt-alloc-expect.sh.in \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
@@ -31,11 +32,13 @@ EXTRA_DIST += ChangeLog README \
 	Make.test-head Make.test-tail \
 	$(PRECONFIGURED_TESTSCRIPTS) \
 	state_enum_filter.awk address_filter.sed \
+	alloc_filter.sed \
 	POM-header-filter.awk \
 	POM-index-filter.awk \
 	update-artcstderr.sh \
 	update-unrollstderr.sh \
 	update-createstderr.sh \
+	update-allocstderr.sh \
 	analyze-dump-diff.awk \
 	spacestonewline.awk test.cvsignore
 

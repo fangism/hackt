@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.7 2005/09/04 22:13:46 fang Exp $
+#	$Id: configure.ac,v 1.7.2.1 2005/09/13 01:14:41 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -289,6 +289,7 @@ AC_CONFIG_FILES([
 	test/artobj-diff.sh
 	test/artobjunroll-expect.sh
 	test/hackt-create-expect.sh
+	test/hackt-alloc-expect.sh
 	test/test-series.sh
 	test/lexer/Makefile
 	test/parser/Makefile
@@ -326,4 +327,5 @@ chmod +x test/artc-expect.sh
 chmod +x test/artobj-diff.sh
 chmod +x test/artobjunroll-expect.sh
 chmod +x test/hackt-create-expect.sh
+chmod +x test/hackt-alloc-expect.sh
 

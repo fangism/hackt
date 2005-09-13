@@ -1,16 +1,17 @@
 "TODO"
-	$Id: TODO,v 1.1.2.2 2005/09/09 20:12:28 fang Exp $
+	$Id: TODO,v 1.1.2.3 2005/09/13 01:14:44 fang Exp $
 
 ===============================================================================
 recursive create-unique! (in progress)
 	done, except for private internal structures.  
 
 footprint pointer persistence may be complicated in footprint_frame.
+	(partially done, for top-level state)
 
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 
-consider one more phase after create: alloc
+consider one more phase after create: alloc (done)
 
 ===============================================================================
 new class_trait:

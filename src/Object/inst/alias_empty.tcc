@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.2 2005/09/04 21:14:47 fang Exp $
+	$Id: alias_empty.tcc,v 1.2.2.1 2005/09/13 01:14:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -15,6 +15,29 @@ namespace entity {
 //=============================================================================
 // class instance_alias_info_empty method definitions
 
+#if 0
+// need not be defined, never used or called.  
+/**
+	\param _alias the instance alias to dump type info.  
+	\param o the output stream.
+	\param f the footprint is just used for consistency checking.  
+		However, no meta types without relaxed actuals have
+		footprints, so it is just ignored (should be null).
+ */
+template <class AliasType>
+ostream&
+instance_alias_info_empty::dump_complete_type(const AliasType& _alias, 
+		ostream& o, const footprint* const f) {
+	const complete_type_type
+		_type(_alias.container->get_canonical_type());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param _alias the instance alias whose type is to be unrolled
+		and created.  
+ */
 template <class AliasType>
 good_bool
 instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {

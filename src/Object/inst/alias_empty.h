@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.3.2.2 2005/09/09 20:12:31 fang Exp $
+	$Id: alias_empty.h,v 1.3.2.3 2005/09/13 01:14:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -19,6 +19,7 @@
 namespace ART {
 namespace entity {
 class const_param_expr_list;
+class footprint;
 class footprint_frame;
 class state_manager;
 class port_member_context;
@@ -117,6 +118,12 @@ public:
 	static
 	good_bool
 	create_dependent_types(const AliasType&);
+
+	// called by footprint_frame::dump_footprint.
+	template <class AliasType>
+	static
+	ostream&
+	dump_complete_type(const AliasType&, ostream&, const footprint* const);
 
 protected:
 	/**

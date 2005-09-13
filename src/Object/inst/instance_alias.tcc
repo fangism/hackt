@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.5 2005/09/11 18:49:59 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.6 2005/09/13 01:14:47 fang Exp $
 	TODO: trim includes
  */
 
@@ -797,7 +797,6 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_subinstance_footprint(
 	STACKTRACE_VERBOSE;
 	if (!__initialize_footprint_frame(*this, ff).good)
 		return good_bool(false);
-	// HERE
 	return good_bool(true);
 }
 
@@ -813,12 +812,8 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
 		footprint_frame& ff, state_manager& sm,
 		const port_member_context& pmc) const {
 	STACKTRACE_VERBOSE;
-	// need to go one scope-down
-#if 0
-	substructure_parent_type::__assign_footprint_frame(ff, sm, pmc);
-#else
 	actuals_parent_type::__assign_footprint_frame(*this, ff, sm, pmc);
-#endif
+	// HERE
 	// scan footprint_frame for unallocated subinstances, and create them!
 }
 

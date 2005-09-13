@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.2.2.2 2005/09/09 20:12:34 fang Exp $
+	$Id: canonical_type.cc,v 1.2.2.3 2005/09/13 01:14:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,10 +24,16 @@ namespace entity {
 // specialized definitions
 
 void
-canonical_definition_load_policy<datatype_definition_base>::operator ()
-		(const persistent_object_manager& m,
+canonical_definition_load_policy<datatype_definition_base>::operator () (
+		const persistent_object_manager& m,
 		never_ptr<const definition_type>& d) const {
 	data_type_reference::intercept_builtin_definition_hack(m, d);
+	const never_ptr<const user_def_datatype>
+		uddef(d.is_a<const user_def_datatype>());
+	if (uddef) {
+		m.load_object_once(&const_cast<user_def_datatype&>(*uddef));
+	}
+	// else don't bother with built-in types or parameterless types.  
 }
 
 //-----------------------------------------------------------------------------
@@ -105,6 +111,23 @@ assign_footprint_frame_policy<process_definition>::operator () (
 		f(cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params()));
 	f.assign_footprint_frame(ff, sm, pmc);
+}
+
+//=============================================================================
+/**
+	\param cpt the canonical_process_type whose footprint is checked.  
+	\param f the footprint pointer to be checked against. 
+	\pre the footprint argument pointer should point to the
+		looked-up footprint, according to the complete type.  
+ */
+void
+check_footprint_policy<process_definition>::operator () (
+		const canonical_process_type& cpt,
+		const footprint* const f) const {
+	const footprint&
+		_f(cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params()));
+	INVARIANT(f == &_f);
 }
 
 //=============================================================================

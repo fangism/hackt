@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.3.2.2 2005/09/09 20:12:31 fang Exp $
+	$Id: alias_actuals.tcc,v 1.3.2.3 2005/09/13 01:14:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -13,6 +13,7 @@
 #include <iostream>
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias.h"
+#include "Object/type/canonical_type.h"
 
 namespace ART {
 namespace entity {
@@ -189,6 +190,29 @@ instance_alias_info_actuals::create_dependent_types(const AliasType& _alias) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Prints the complete-type to which the footprint belongs.  
+	\param _alias the instance alias whose type should be dumped.  
+	\param o the output stream.  
+	\param f is only used for assertion checking.  
+ */
+template <class AliasType>
+ostream&
+instance_alias_info_actuals::dump_complete_type(const AliasType& _alias, 
+		ostream& o, const footprint* const f) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+				canonical_definition_type;
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	_type.dump(o);
+	check_footprint_policy<canonical_definition_type>()(_type, f);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Evaluates the complete canonical type based on the
 	container's type and the relaxed actuals.  
 	Uses the corresponding footprint of the canonical type
@@ -234,6 +258,48 @@ instance_alias_info_actuals::__assign_footprint_frame(
 	INVARIANT(_type);
 	assign_footprint_frame_policy<canonical_definition_type>()
 		(_type, ff, sm, pmc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: is there a way to save/restore the footprint without
+		writing the canonical type, but rather inferring
+		it from the hierarchical position?  Probably.  
+ */
+template <class AliasType>
+void
+instance_alias_info_actuals::save_canonical_footprint(const AliasType& _alias, 
+		const persistent_object_manager& m, ostream& o, 
+		const footprint* const _f) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+				canonical_definition_type;
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	check_footprint_policy<canonical_definition_type>()(_type, _f);
+	_type.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class AliasType>
+void
+instance_alias_info_actuals::restore_canonical_footprint(
+		const AliasType& _alias, const persistent_object_manager& m, 
+		istream& i, const footprint*& _f) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	typedef	typename complete_type_type::canonical_definition_type
+				canonical_definition_type;
+	complete_type_type _type;
+	_type.load_object_base(m, i);
+	// temporary ugly hack
+	footprint_frame _frame;
+	initialize_footprint_frame_policy<canonical_definition_type>()
+		(_type, _frame);
+	_f = _frame._footprint;
 }
 
 //=============================================================================

@@ -1,10 +1,11 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.6 2005/09/11 18:49:59 fang Exp $
+	$Id: footprint.cc,v 1.2.2.7 2005/09/13 01:14:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
@@ -135,11 +136,11 @@ footprint_base<Tag>::__expand_unique_subinstances(
 			return good_bool(false);
 		}
 #if ENABLE_STACKTRACE
-		frame.dump(STACKTRACE_INDENT << "empty frame: ") << endl;
+		frame.dump_frame(STACKTRACE_INDENT << "empty frame: ") << endl;
 #endif
 		formal_alias.assign_footprint_frame(frame, sm, pmc);
 #if ENABLE_STACKTRACE
-		frame.dump(STACKTRACE_INDENT << "filled frame: ") << endl;
+		frame.dump_frame(STACKTRACE_INDENT << "filled frame: ") << endl;
 #endif
 		// the allocate private subinstances
 	}
@@ -325,7 +326,7 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 	ff.init_top_level();
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_STREAM << "this: ") << endl;
-	ff.dump(STACKTRACE_STREAM << "frame: ") << endl;
+	ff.dump_frame(STACKTRACE_STREAM << "frame: ") << endl;
 #endif
 #endif
 	// this is empty, needs to be assigned before passing down...
