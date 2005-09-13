@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.6.2.5 2005/09/13 04:43:33 fang Exp $
+	$Id: subinstance_manager.cc,v 1.6.2.6 2005/09/13 05:18:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -280,20 +280,13 @@ subinstance_manager::construct_port_context(port_member_context& pmc,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subinstance_manager::assign_footprint_frame(footprint_frame& ff, 
-#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
-		const state_manager& sm,
-#endif
 		const port_member_context& pmc) const {
 	INVARIANT(pmc.size() == subinstance_array.size());
 	size_t j = 0;
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++, j++) {
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 		(*i)->assign_footprint_frame(ff, pmc[j]);
-#else
-		(*i)->assign_footprint_frame(ff, sm, pmc[j]);
-#endif
 	}
 }
 

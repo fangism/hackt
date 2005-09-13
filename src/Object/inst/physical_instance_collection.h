@@ -2,14 +2,13 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.4.2.4 2005/09/13 04:43:33 fang Exp $
+	$Id: physical_instance_collection.h,v 1.4.2.5 2005/09/13 05:18:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -114,17 +113,10 @@ virtual	COLLECT_PORT_ALIASES_PROTO = 0;
 
 virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 #define	ASSIGN_FOOTPRINT_FRAME_PROTO					\
 	void								\
 	assign_footprint_frame(footprint_frame&,			\
 		const port_collection_context&) const
-#else
-#define	ASSIGN_FOOTPRINT_FRAME_PROTO					\
-	void								\
-	assign_footprint_frame(footprint_frame&, const state_manager&, 	\
-		const port_collection_context&) const
-#endif
 
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 

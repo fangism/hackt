@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.3.2.4 2005/09/13 04:43:32 fang Exp $
+	$Id: alias_actuals.h,v 1.3.2.5 2005/09/13 05:18:45 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -16,7 +16,6 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -91,25 +90,11 @@ protected:
 	good_bool
 	__symmetric_synchronize(AliasType& l, AliasType& r);
 
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 	template <class AliasType>
 	static
 	good_bool
 	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
-		// const state_manager&,
 		const port_member_context&);
-#else
-	template <class AliasType>
-	static
-	good_bool
-	__initialize_footprint_frame(const AliasType&, footprint_frame&);
-
-	template <class AliasType>
-	static
-	void
-	__assign_footprint_frame(const AliasType&, footprint_frame&, 
-		const state_manager&, const port_member_context&);
-#endif
 
 public:
 	static

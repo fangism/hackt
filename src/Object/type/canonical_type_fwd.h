@@ -1,13 +1,11 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.2.2.4 2005/09/13 04:43:35 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.2.2.5 2005/09/13 05:18:48 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
 #define	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
-
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -54,27 +52,11 @@ template <class>
 struct unroll_port_instances_policy;
 
 //-----------------------------------------------------------------------------
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 template <class>
 struct initialize_assign_footprint_frame_policy;
 
 template <>
 struct initialize_assign_footprint_frame_policy<process_definition>;
-//-----------------------------------------------------------------------------
-#else
-template <class>
-struct initialize_footprint_frame_policy;
-
-template <>
-struct initialize_footprint_frame_policy<process_definition>;
-
-//-----------------------------------------------------------------------------
-template <class>
-struct assign_footprint_frame_policy;
-
-template <>
-struct assign_footprint_frame_policy<process_definition>;
-#endif
 
 //-----------------------------------------------------------------------------
 template <class>

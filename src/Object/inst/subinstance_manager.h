@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.4.2.5 2005/09/13 04:43:34 fang Exp $
+	$Id: subinstance_manager.h,v 1.4.2.6 2005/09/13 05:18:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,7 +10,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -128,9 +127,6 @@ public:
 
 	void
 	assign_footprint_frame(footprint_frame&,
-#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
-		const state_manager&, 
-#endif
 		const port_member_context&) const;
 
 	// for each entry, re-link

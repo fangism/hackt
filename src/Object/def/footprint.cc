@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.8 2005/09/13 04:43:31 fang Exp $
+	$Id: footprint.cc,v 1.2.2.9 2005/09/13 05:18:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -78,9 +78,6 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	Iterate over local footprint of structured entries.  
 	\param s the global state allocator.
 	\param o the offset from which to start in the global state allocator.
-	TODO: combine allocate_subinstance_footprint() and
-		assign_footprint_frame() into same function, one step, 
-		construct_port_context *first*.
  */
 template <class Tag>
 good_bool
@@ -120,29 +117,17 @@ footprint_base<Tag>::__expand_unique_subinstances(
 			NOTE: this shouldn't require the state_manager.
 		***/
 		formal_alias.__construct_port_context(pmc, gframe);
-		// formal_alias.construct_port_context(pmc, gframe, sm);
-		// WRONG: don't use all of parent's frame
-		// need to extract partial frame, projected
 #if ENABLE_STACKTRACE
 		formal_alias.dump_hierarchical_name(STACKTRACE_INDENT) << endl;
 		pmc.dump(STACKTRACE_INDENT << "port-member-context: ") << endl;
-		// recursively create private remaining internal state?
 		// formal_alias is wrong level of hierarchy
 #endif
-		// frame has not been initialized yet
-		// NOTE: the following call does not use the state_manager
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
+		// initialize (allocate) frame and assign at the same time.  
+		// recursively create private remaining internal state
 		if (!formal_alias.allocate_assign_subinstance_footprint_frame(
 				frame, sm, pmc).good) {
 			return good_bool(false);
 		}
-#else
-		if (!formal_alias.allocate_subinstance_footprint(
-				frame, sm).good) {
-			return good_bool(false);
-		}
-		formal_alias.assign_footprint_frame(frame, sm, pmc);
-#endif
 #if ENABLE_STACKTRACE
 		frame.dump_frame(STACKTRACE_INDENT << "filled frame: ") << endl;
 #endif
@@ -363,9 +348,6 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
  */
 void
 footprint::assign_footprint_frame(footprint_frame& ff, 
-#if !MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
-		const state_manager& sm,
-#endif
 		const port_member_context& pmc) const {
 	STACKTRACE_VERBOSE;
 	const_instance_map_iterator i(instance_collection_map.begin());
@@ -378,13 +360,8 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 			// where as member array is 0-indexed
 			const size_t pfp = coll_ptr->is_port_formal();
 			if (pfp) {
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 				coll_ptr->assign_footprint_frame(
 					ff, pmc.member_array[pfp -1]);
-#else
-				coll_ptr->assign_footprint_frame(
-					ff, sm, pmc.member_array[pfp -1]);
-#endif
 			}
 			// else is not port formal, skip
 		}

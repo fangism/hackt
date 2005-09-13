@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.2.2.6 2005/09/13 04:43:31 fang Exp $
+	$Id: footprint.h,v 1.2.2.7 2005/09/13 05:18:45 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -18,7 +18,6 @@
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/port_alias_tracker.h"
-#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -214,15 +213,9 @@ public:
 	good_bool
 	expand_unique_subinstances(state_manager&) const;
 
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
-#else
-	void
-	assign_footprint_frame(footprint_frame&, 
-		const state_manager&, const port_member_context&) const;
-#endif
 
 public:
 // persistent information management

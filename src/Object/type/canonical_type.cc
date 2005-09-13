@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.2.2.4 2005/09/13 04:43:34 fang Exp $
+	$Id: canonical_type.cc,v 1.2.2.5 2005/09/13 05:18:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -90,7 +90,6 @@ struct unroll_port_instances_policy<process_definition> {
 };	// end struct unroll_port_instances_policy
 
 //=============================================================================
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 good_bool
 initialize_assign_footprint_frame_policy<process_definition>::operator () (
 		const canonical_process_type& cpt, footprint_frame& ff, 
@@ -113,31 +112,6 @@ initialize_assign_footprint_frame_policy<process_definition>::
 			cpt.get_raw_template_params()));
 	f = &_f;
 }
-#else
-//=============================================================================
-good_bool
-initialize_footprint_frame_policy<process_definition>::operator () (
-		const canonical_process_type& cpt, footprint_frame& ff) {
-//	return cpt.initialize_footprint_frame(ff);
-	const footprint&
-		f(cpt.get_base_def()->get_footprint(
-			cpt.get_raw_template_params()));
-	new (&ff) footprint_frame(f);
-	return good_bool(true);
-}
-
-//=============================================================================
-void
-assign_footprint_frame_policy<process_definition>::operator () (
-		const canonical_process_type& cpt, footprint_frame& ff, 
-		const state_manager& sm, const port_member_context& pmc) {
-	STACKTRACE_VERBOSE;
-	const footprint&
-		f(cpt.get_base_def()->get_footprint(
-			cpt.get_raw_template_params()));
-	f.assign_footprint_frame(ff, sm, pmc);
-}
-#endif
 
 //=============================================================================
 /**

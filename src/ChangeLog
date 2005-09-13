@@ -2,6 +2,10 @@
 
 2005-09-12	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-09:
+	  Merely clean-up of previous revision.  
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-08:
 	  Fused footprint_frame allocation and assignment together 
 		into one method call.  (TODO: clean up conditional)

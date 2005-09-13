@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.2.2.4 2005/09/13 04:43:34 fang Exp $
+	$Id: canonical_type.h,v 1.2.2.5 2005/09/13 05:18:48 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -176,7 +176,6 @@ struct canonical_definition_load_policy<datatype_definition_base> {
 };	// end struct canonical_definition_load_policy
 
 //-----------------------------------------------------------------------------
-#if MERGE_ALLOCATE_ASSIGN_FOOTPRINT_FRAME
 template <class DefType>
 struct initialize_assign_footprint_frame_policy {
 	static
@@ -204,41 +203,6 @@ struct initialize_assign_footprint_frame_policy<process_definition> {
 	operator () (const canonical_process_type&, footprint_frame&, 
 			const port_member_context&) const;
 };      // end struct initialize_footprint_frame_policy
-
-//-----------------------------------------------------------------------------
-#else
-template <class DefType>
-struct initialize_footprint_frame_policy {
-	good_bool
-	operator () (const canonical_type<DefType>&, footprint_frame&) {
-		return good_bool(true);
-	}
-};      // end struct initialize_footprint_frame_policy
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <>
-struct initialize_footprint_frame_policy<process_definition> {
-	good_bool
-	operator () (const canonical_process_type& cpt, footprint_frame& ff);
-};      // end struct initialize_footprint_frame_policy
-
-//-----------------------------------------------------------------------------
-template <class DefType>
-struct assign_footprint_frame_policy {
-	void
-	operator () (const canonical_type<DefType>&, footprint_frame&, 
-			const state_manager&, const port_member_context&) {
-	}
-};      // end struct initialize_footprint_frame_policy
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <>
-struct assign_footprint_frame_policy<process_definition> {
-	void
-	operator () (const canonical_process_type&, footprint_frame&, 
-			const state_manager&, const port_member_context&);
-};      // end struct initialize_footprint_frame_policy
-#endif
 
 //-----------------------------------------------------------------------------
 template <class DefType>
