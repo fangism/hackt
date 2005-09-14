@@ -22,7 +22,6 @@ noinst_PROGRAMS = \
 	stacktrace_test \
 	friend_function_formal_bug \
 	link_test \
-	ptrs_test \
 	pointer_classes_test \
 	count_ptr_test \
 	sublist_test \
@@ -62,7 +61,6 @@ AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc \
 	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
-ptrs_test_SOURCES = ptrs_test.cc var.h func.h
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
 count_ptr_test_LDADD = libfangutil.la

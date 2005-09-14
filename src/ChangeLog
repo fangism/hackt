@@ -2,6 +2,13 @@
 
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-15:
+	  Some clean-ups as a result of checking other compilers and
+		platforms.  
+	  Removed util/obsolete headers and tests from distribution, 
+		although they remain in CVS.  
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-14:
 	  Introduced dump_flags structure for customizing hierarchical dumps, 
 		will be extremely useful for cflat formatting.  

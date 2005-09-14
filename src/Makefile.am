@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.75.2.5 2005/09/14 13:23:10 fang Exp $
+#	$Id: Makefile.am,v 1.75.2.6 2005/09/14 14:07:07 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -484,11 +484,7 @@ UTIL_HEADER_FILES = \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
-	util/ptrs_functional.h \
-	util/obsolete/ptrs.h \
-	util/obsolete/ptrs_fwd.h \
-	util/obsolete/count_ptr.h \
-	util/obsolete/count_ptr_fwd.h
+	util/ptrs_functional.h
 
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
