@@ -1,12 +1,17 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.1.2.5 2005/09/13 01:14:44 fang Exp $
+	$Id: global_entry.cc,v 1.1.2.6 2005/09/14 00:17:08 fang Exp $
  */
 
+#define	ENABLE_STACKTRACE			0
+
+#include <algorithm>
 #include "Object/global_entry.tcc"
 #include "Object/def/footprint.h"
 #include "Object/port_context.h"
+#include "Object/state_manager.h"
 #include "util/IO_utils.tcc"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -43,6 +48,76 @@ footprint_frame_map<Tag>::__init_top_level(void) {
 	size_t i = 0;
 	for ( ; i<s; i++) {
 		id_map[i] = i+1;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	See also footprint_base<Tag>::__allocate_global_state.
+ */
+template <class Tag>
+void
+footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& fp, 
+		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
+	typedef	typename state_instance<Tag>::pool_type	pool_type;
+	typedef	footprint_frame_map_type::iterator	iterator;
+	// placeholder pool in the footprint
+//	const pool_type& php(fp.template get_pool<Tag>());
+	global_entry_pool<Tag>& _pool(sm.template get_pool<Tag>());
+	const iterator b(id_map.begin());
+	const iterator e(id_map.end());
+	iterator i(std::find(b, e, size_t(0)));
+	for ( ; i!=e; i = std::find(++i, e, size_t(0))) {
+		const size_t ind = std::distance(b, i);
+#if ENABLE_STACKTRACE
+		STACKTRACE_STREAM << "Got a zero at index " << ind << endl;
+#endif
+		*i = _pool.allocate();
+		global_entry<Tag>& g(_pool[*i]);
+		g.parent_tag_value = pt;
+		g.parent_id = pid;
+		g.local_offset = ind+1;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	See also footprint_base<Tag>::__expand_unique_subinstances().
+ */
+template <class Tag>
+void
+footprint_frame_map<Tag>::__expand_subinstances(const footprint& fp, 
+		state_manager& sm, const size_t offset, const size_t end) {
+	typedef	global_entry_pool<Tag>	global_pool_type;
+	typedef	typename state_instance<Tag>::pool_type	placeholder_pool_type;
+	typedef	typename placeholder_pool_type::const_iterator
+						const_iterator;
+	STACKTRACE_VERBOSE;
+	INVARIANT(offset <= end);
+	size_t j = offset;
+	const footprint_frame& extframe(AS_A(const footprint_frame&, *this));
+	global_pool_type& gpool(sm.template get_pool<Tag>());
+	const placeholder_pool_type& ppool(fp.template get_pool<Tag>());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "offset = " << offset << endl;
+	fp.dump(cerr << "fp: ");
+#endif
+#if 0
+	const_iterator i(++ppool.begin());
+	const const_iterator e(ppool.end());
+#endif
+	for ( ; j!=end; j++) {
+		global_entry<Tag>& ref(gpool[j]);
+		footprint_frame& frame(ref._frame);
+		const instance_alias_info<Tag>&
+			formal_alias(*ppool[ref.local_offset].get_back_ref());
+		port_member_context pmc;
+		formal_alias.__construct_port_context(pmc, extframe);
+		// feel the recursion!
+		if (!formal_alias.allocate_assign_subinstance_footprint_frame(
+				frame, sm, pmc, j).good) {
+			THROW_EXIT;
+		}
 	}
 }
 
@@ -158,6 +233,46 @@ footprint_frame::init_top_level(void) {
 	footprint_frame_map<enum_tag>::__init_top_level();
 	footprint_frame_map<int_tag>::__init_top_level();
 	footprint_frame_map<bool_tag>::__init_top_level();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	See also footprint::expand_unique_subinstances.  
+	\param fp the footprint that corresponds to this frame.  
+	\param sm the global state allocator.
+	\param pt the parent type id enum.
+	\param pid the parent's globally assigned id.  
+ */
+void
+footprint_frame::allocate_remaining_subinstances(const footprint& fp, 
+		state_manager& sm, const parent_tag_enum pt, const size_t pid) {
+	const size_t process_offset = sm.get_pool<process_tag>().size();
+	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
+	// First just allocate the entries.
+	footprint_frame_map<process_tag>::
+		__allocate_remaining_sub(fp, sm, pt, pid);
+	footprint_frame_map<channel_tag>::
+		__allocate_remaining_sub(fp, sm, pt, pid);
+	footprint_frame_map<datastruct_tag>::
+		__allocate_remaining_sub(fp, sm, pt, pid);
+	footprint_frame_map<enum_tag>::
+		__allocate_remaining_sub(fp, sm, pt, pid);
+	footprint_frame_map<int_tag>::
+		__allocate_remaining_sub(fp, sm, pt, pid);
+	footprint_frame_map<bool_tag>::
+		__allocate_remaining_sub(fp, sm, pt, pid);
+	// Now this footprint_frame should be good to pass down to subinstances
+	// end expand subinstances...
+	const size_t process_end = sm.get_pool<process_tag>().size();
+	const size_t channel_end = sm.get_pool<channel_tag>().size();
+	const size_t struct_end = sm.get_pool<datastruct_tag>().size();
+	footprint_frame_map<process_tag>::
+		__expand_subinstances(fp, sm, process_offset, process_end);
+	footprint_frame_map<channel_tag>::
+		__expand_subinstances(fp, sm, channel_offset, channel_end);
+	footprint_frame_map<datastruct_tag>::
+		__expand_subinstances(fp, sm, struct_offset, struct_end);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

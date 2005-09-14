@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.3.2.5 2005/09/13 05:18:45 fang Exp $
+	$Id: alias_actuals.tcc,v 1.3.2.6 2005/09/14 00:17:10 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -14,6 +14,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/instance_alias.h"
 #include "Object/type/canonical_type.h"
+#include "util/stacktrace.h"
 
 namespace ART {
 namespace entity {
@@ -170,6 +171,7 @@ instance_alias_info_actuals::create_dependent_types(const AliasType& _alias) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
+	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.complete_type_actuals(*_alias.container));
 	if (!_type) {
@@ -222,24 +224,27 @@ instance_alias_info_actuals::dump_complete_type(const AliasType& _alias,
 	\param _alias the instance alias used to extrace the type.  
 	\param ff the footprint frame in which global substructure 
 		information will be retained.  
+	\param ind the global index of the alias's for sake
+		of making parent back-reference.  
 	\return good upon success.  
  */
 template <class AliasType>
 good_bool
 instance_alias_info_actuals::__initialize_assign_footprint_frame(
 		const AliasType& _alias, footprint_frame& ff, 
-		// const state_manager& sm,
-		const port_member_context& pmc) {
+		state_manager& sm, const port_member_context& pmc, 
+		const size_t ind) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type
 				canonical_definition_type;
+	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.complete_type_actuals(*_alias.container));
 	INVARIANT(_type);
-	return initialize_assign_footprint_frame_policy<
-			canonical_definition_type>()(_type, ff, pmc);
+	return canonical_type_footprint_frame_policy<canonical_definition_type>
+		::initialize_and_assign(_type, ff, sm, pmc, ind);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,6 +252,12 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 	TODO: is there a way to save/restore the footprint without
 		writing the canonical type, but rather inferring
 		it from the hierarchical position?  Probably.  
+	Enhancement request:
+	TODO: (alternate) use another pass during reconstruction
+		to deduce the footprint types from the hierarchy
+		to restore the footprint pointers.  
+		This is preferable because it eliminates having to save
+		away redundant canonical type information.  
  */
 template <class AliasType>
 void
@@ -279,7 +290,7 @@ instance_alias_info_actuals::restore_canonical_footprint(
 	_type.load_object_base(m, i);
 	// temporary ugly hack
 	footprint_frame _frame;
-	initialize_assign_footprint_frame_policy<canonical_definition_type>
+	canonical_type_footprint_frame_policy<canonical_definition_type>
 		::initialize_frame_pointer_only(_type, _f);
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.1.2.3 2005/09/13 01:14:45 fang Exp $
+	$Id: global_entry.tcc,v 1.1.2.4 2005/09/14 00:17:09 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -17,10 +17,14 @@
 #include <iostream>
 #include "util/macros.h"
 #include "Object/global_entry.h"
+#include "Object/state_manager.h"
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_actuals.tcc"	// for dump_complete_type
 #include "Object/inst/instance_collection.h"
+#include "Object/traits/type_tag_enum.h"
+// #include "Object/traits/classification_tags.h"
+// #include "Object/traits/proc_traits.h"
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
@@ -37,6 +41,33 @@ namespace entity {
 #include "util/using_ostream.h"
 using util::read_value;
 using util::write_value;
+
+//=============================================================================
+/**
+	Resolves a global parent instance reference.
+	\param Tag must be the tag of a meta type with substructure, 
+		such as process_tag, channel_tag, datastruct_tag.  
+	\param sm the global state allocator.  
+	\param pfp the parent instances footprint.
+	\param parent_id the global id of the parent instance.
+	\param local_offset the position of the corresponding
+		formal instance alias in the parent's footprint.  
+ */
+template <class Tag>
+const instance_alias_info<Tag>&
+extract_parent_formal_instance_alias(const state_manager& sm, 
+		const global_entry_common& gec) {
+	const global_entry_pool<Tag>&
+		gproc_pool(sm.template get_pool<Tag>());
+	const global_entry<Tag>&
+		p_ent(gproc_pool[gec.parent_id]);
+	const footprint& pfp(*p_ent._frame._footprint);
+	const typename state_instance<Tag>::pool_type&
+		local_placeholder_pool(pfp.template get_pool<Tag>());
+	const state_instance<Tag>&
+		_inst(local_placeholder_pool[gec.local_offset]);
+	return *_inst.get_back_ref();
+}
 
 //=============================================================================
 // class footprint_frame method definitions
@@ -56,9 +87,24 @@ footprint_frame::dump_footprint(ostream& o, const size_t ind,
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	if (ind >= _pool.size()) {
 		// then this isn't top-level
-		// don't do anything yet
-		FINISH_ME(Fang);
-		// TODO: trace super instances
+		const global_entry_pool<Tag>&
+			gpool(sm.template get_pool<Tag>());
+		const global_entry<Tag>& ent(gpool[ind]);
+		INVARIANT(ent.parent_tag_value);
+		INVARIANT(ent.parent_id);
+		switch (ent.parent_tag_value) {
+		case PROCESS: {
+			instance_alias_info<process_tag>::dump_complete_type(
+				extract_parent_formal_instance_alias<
+					process_tag>(sm, ent),
+				o, _footprint);
+			break;
+		}
+		default:
+			// for now, the only thing that can be parent
+			// is process, append cases later...
+			FINISH_ME_EXIT(Fang);
+		}
 	} else {
 		// then it is top-level, can index the top-level footprint
 		const state_instance<Tag>& _inst(_pool[ind]);
@@ -95,20 +141,36 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 		ostream& o, const size_t ind, const footprint& topfp,
 		const state_manager& sm) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if 1
 	// save away _footprint pointer some how
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
 	INVARIANT(_frame._footprint);
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	if (ind >= _pool.size()) {
-		FINISH_ME(Fang);
+		const global_entry_pool<Tag>&
+			gpool(sm.template get_pool<Tag>());
+		const global_entry<Tag>& ent(gpool[ind]);
+		INVARIANT(ent.parent_tag_value);
+		INVARIANT(ent.parent_id);
+		switch (ent.parent_tag_value) {
+		case PROCESS: {
+			instance_alias_info<process_tag>::
+				save_canonical_footprint(
+				extract_parent_formal_instance_alias<
+					process_tag>(sm, ent),
+				m, o, _frame._footprint);
+			break;
+		}
+		default:
+			// for now, the only thing that can be parent
+			// is process, append cases later...
+			FINISH_ME_EXIT(Fang);
+		}
 	} else {
 		const state_instance<Tag>& _inst(_pool[ind]);
 		alias_type::save_canonical_footprint(*_inst.get_back_ref(),
 			m, o, _frame._footprint);
 	}
-#endif
 	_frame.write_object_base(m, o);
 }
 
@@ -128,19 +190,35 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 		const state_manager& sm) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	// restore _footprint pointer some how
-#if 1
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	if (ind >= _pool.size()) {
-		FINISH_ME(Fang);
+		const global_entry_pool<Tag>&
+			gpool(sm.template get_pool<Tag>());
+		const global_entry<Tag>& ent(gpool[ind]);
+		INVARIANT(ent.parent_tag_value);
+		INVARIANT(ent.parent_id);
+		switch (ent.parent_tag_value) {
+		case PROCESS: {
+			instance_alias_info<process_tag>::
+				restore_canonical_footprint(
+				extract_parent_formal_instance_alias<
+					process_tag>(sm, ent),
+				m, i, _frame._footprint);
+			break;
+		}
+		default:
+			// for now, the only thing that can be parent
+			// is process, append cases later...
+			FINISH_ME_EXIT(Fang);
+		}
 	} else {
 		const state_instance<Tag>& _inst(_pool[ind]);
 		// restores _footprint
 		alias_type::restore_canonical_footprint(*_inst.get_back_ref(),
 			m, i, _frame._footprint);
 	}
-#endif
 	_frame.load_object_base(m, i);
 }
 
@@ -148,9 +226,7 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 // class global_entry method definitions
 
 template <class Tag>
-global_entry<Tag>::global_entry() : parent_type(), parent_tag_value(0), 
-		parent_id(0), local_offset(0) {
-}
+global_entry<Tag>::global_entry() : parent_type(), global_entry_common() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -192,23 +268,28 @@ global_entry<Tag>::write_object_base(const persistent_object_manager& m,
 		ostream& o, const size_t ind, const footprint& f, 
 		const state_manager& sm) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	parent_type::template write_object_base<Tag>(m, o, ind, f, sm);
 	write_value(o, parent_tag_value);
 	write_value(o, parent_id);
 	write_value(o, local_offset);
+	parent_type::template write_object_base<Tag>(m, o, ind, f, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ordering matters because parent_type::load_object_base
+		depends on parent_id and parent_tag_value
+		in reconstructing the footprint pointer.  
+ */
 template <class Tag>
 void
 global_entry<Tag>::load_object_base(const persistent_object_manager& m, 
 		istream& i, const size_t ind, const footprint& f, 
 		const state_manager& sm) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	parent_type::template load_object_base<Tag>(m, i, ind, f, sm);
 	read_value(i, parent_tag_value);
 	read_value(i, parent_id);
 	read_value(i, local_offset);
+	parent_type::template load_object_base<Tag>(m, i, ind, f, sm);
 }
 
 //=============================================================================

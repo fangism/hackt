@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2.2.9 2005/09/13 05:18:45 fang Exp $
+	$Id: footprint.cc,v 1.2.2.10 2005/09/14 00:17:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -48,15 +48,15 @@ footprint_base<Tag>::~footprint_base() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Top-level global state allocation.  
+	Parent tag and id are all zero.  
  */
 template <class Tag>
 good_bool
 footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
-	size_t k = 1;
 	STACKTRACE_VERBOSE;
 	const_iterator i(++_pool.begin());
 	const const_iterator e(_pool.end());
-	for ( ; i!=e; i++, k++) {
+	for ( ; i!=e; i++) {
 		const size_t j = sm.template allocate<Tag>();
 		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
 		g.parent_tag_value = 0;
@@ -64,10 +64,12 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 			The parent_tag_value is
 		***/
 		g.parent_id = 0;
-		g.local_offset = k;
+		g.local_offset = j;
 		/***
 			The local offset corresponds to the relative position
 			in the footprint of origin.  
+			Remember, the footprint is 1-indexed, 
+			while the frame is 0-indexed.  
 		***/
 	}
 	return good_bool(true);
@@ -84,8 +86,7 @@ good_bool
 footprint_base<Tag>::__expand_unique_subinstances(
 		const footprint_frame& gframe,
 		state_manager& sm, const size_t o) const {
-	typedef	typename global_entry_pool<Tag>::pool_type
-							global_pool_type;
+	typedef	global_entry_pool<Tag>		global_pool_type;
 	STACKTRACE_VERBOSE;
 	size_t j = o;
 	global_pool_type& gpool(sm.template get_pool<Tag>());
@@ -125,7 +126,7 @@ footprint_base<Tag>::__expand_unique_subinstances(
 		// initialize (allocate) frame and assign at the same time.  
 		// recursively create private remaining internal state
 		if (!formal_alias.allocate_assign_subinstance_footprint_frame(
-				frame, sm, pmc).good) {
+				frame, sm, pmc, j).good) {
 			return good_bool(false);
 		}
 #if ENABLE_STACKTRACE
@@ -307,7 +308,6 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
 		footprint_base<int_tag>::__allocate_global_state(sm).good &&
 		footprint_base<bool_tag>::__allocate_global_state(sm).good);
-#if 1
 	/***
 		Possibly construct footprint_frame(*this);
 	***/
@@ -316,7 +316,6 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_STREAM << "this: ") << endl;
 	ff.dump_frame(STACKTRACE_STREAM << "frame: ") << endl;
-#endif
 #endif
 	// this is empty, needs to be assigned before passing down...
 	// construct frame using offset?

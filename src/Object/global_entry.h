@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.1.2.4 2005/09/13 01:14:45 fang Exp $
+	$Id: global_entry.h,v 1.1.2.5 2005/09/14 00:17:09 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -11,6 +11,7 @@
 #include "util/persistent_fwd.h"
 // #include <valarray>		// may be more efficient
 #include "Object/traits/class_traits.h"
+#include "Object/traits/type_tag_enum.h"
 
 namespace ART {
 namespace entity {
@@ -22,18 +23,6 @@ class footprint;
 class state_manager;
 class port_member_context;
 typedef	std::vector<size_t>		footprint_frame_map_type;
-
-//=============================================================================
-/**
-	Oh, no!  Heaven forbid, I have to use an enum and switch-case
-	in my code.  
- */
-typedef	enum {
-	NONE = 0,
-	PROCESS = 1,
-	CHANNEL = 2, 
-	STRUCT = 3
-}	parent_tag_enum;
 
 //=============================================================================
 /**
@@ -54,6 +43,14 @@ struct footprint_frame_map {
 protected:
 	void
 	__init_top_level(void);
+
+	void
+	__allocate_remaining_sub(const footprint&, state_manager&, 
+		const parent_tag_enum, const size_t);
+
+	void
+	__expand_subinstances(const footprint&, state_manager&,
+		const size_t, const size_t);
 
 };	// end struct footprint_frame_mao
 
@@ -113,6 +110,10 @@ struct footprint_frame :
 	ostream&
 	dump_footprint(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
+
+	void
+	allocate_remaining_subinstances(const footprint&, state_manager&, 
+		const parent_tag_enum, const size_t);
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -202,13 +203,7 @@ struct global_entry_base<true> {
 };	// end struct global_entry_base
 
 //=============================================================================
-/**
- */
-template <class Tag>
-struct global_entry :
-	public global_entry_base<class_traits<Tag>::has_substructure> {
-	typedef	global_entry_base<class_traits<Tag>::has_substructure>
-						parent_type;
+struct global_entry_common {
 	/**
 		Uses parent_tag_enum.
 	 */
@@ -230,6 +225,20 @@ struct global_entry :
 	 */
 	size_t		local_offset;
 
+	global_entry_common() : parent_tag_value(0), parent_id(0),
+			local_offset(0) { }
+};
+
+//=============================================================================
+/**
+	Globally allocated entry for unique instance.  
+ */
+template <class Tag>
+struct global_entry :
+	public global_entry_base<class_traits<Tag>::has_substructure>, 
+	public global_entry_common {
+	typedef	global_entry_base<class_traits<Tag>::has_substructure>
+						parent_type;
 public:
 	global_entry();
 	~global_entry();
@@ -249,6 +258,13 @@ public:
 		const size_t, const footprint&, const state_manager&);
 
 };	// end struct global_entry
+
+//=============================================================================
+// Tag must be the tag of a meta-type with subinstances.  
+template <class Tag>
+const instance_alias_info<Tag>&
+extract_parent_formal_instance_alias(const state_manager&, 
+	const global_entry_common&);
 
 //=============================================================================
 }	// end namespace entity

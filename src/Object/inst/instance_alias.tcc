@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.8 2005/09/13 05:18:46 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.9 2005/09/14 00:17:10 fang Exp $
 	TODO: trim includes
  */
 
@@ -792,6 +792,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 	\param sm the global state allocation manager, 
 		used to allocate private subinstances not covered
 		by the port aliases.  
+	\param is the globally assigned id for this particular instance
+		used to identify this as a parent to subinstances.  
 	TODO: after assigning globally assigned ports, 
 	allocate the remaining unassigned internal substructures.  
  */
@@ -799,15 +801,17 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 		footprint_frame& ff, state_manager& sm,
-		const port_member_context& pmc) const {
+		const port_member_context& pmc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
+	// this recursively fills up the footprint frame with indices
+	// assigned from the external context, mapped onto this
+	// instance's public ports.  
 	if (!actuals_parent_type::__initialize_assign_footprint_frame(
-			*this, ff, /* sm, */ pmc).good) {
+			*this, ff, sm, pmc, ind).good) {
 		cerr << "Error alloc_assign_subinstance_footprint_frame."
 			<< endl;
 		return good_bool(false);
 	}
-	// TODO: HERE
 	// scan footprint_frame for unallocated subinstances, and create them!
 	return good_bool(true);
 }

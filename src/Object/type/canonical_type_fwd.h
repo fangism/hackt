@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.2.2.5 2005/09/13 05:18:48 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.2.2.6 2005/09/14 00:17:12 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
@@ -53,10 +53,10 @@ struct unroll_port_instances_policy;
 
 //-----------------------------------------------------------------------------
 template <class>
-struct initialize_assign_footprint_frame_policy;
+struct canonical_type_footprint_frame_policy;
 
 template <>
-struct initialize_assign_footprint_frame_policy<process_definition>;
+struct canonical_type_footprint_frame_policy<process_definition>;
 
 //-----------------------------------------------------------------------------
 template <class>

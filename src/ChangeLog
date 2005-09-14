@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-09-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-10:
+	  Breaking news!
+	  Recursive hierarchical subinstance allocation seems to be working
+		for the existing test-cases, but more test cases are needed.  
+		TODO: test cases with deep recursion of private subinstances.  
+	  Re-ordered global_entry reconstruction ordering because footprint 
+		restoration depends on parent_id and local_offset fields.
+
+
 2005-09-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-58-unique-02-09:

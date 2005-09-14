@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.3.2.5 2005/09/13 05:18:46 fang Exp $
+	$Id: alias_empty.h,v 1.3.2.6 2005/09/14 00:17:10 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -102,9 +102,8 @@ protected:
 	static
 	good_bool
 	__initialize_assign_footprint_frame(const AliasType&,
-			const footprint_frame&,
-			// const state_manager&,
-			const port_member_context&) {
+			const footprint_frame&, const state_manager&,
+			const port_member_context&, const size_t) {
 		// no-op.
 		return good_bool(true);
 	}

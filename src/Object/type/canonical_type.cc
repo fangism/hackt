@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.2.2.5 2005/09/13 05:18:48 fang Exp $
+	$Id: canonical_type.cc,v 1.2.2.6 2005/09/14 00:17:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,6 +16,7 @@
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/subinstance_manager.h"
+#include "Object/traits/proc_traits.h"
 #include "common/TODO.h"
 
 namespace ART {
@@ -90,21 +91,34 @@ struct unroll_port_instances_policy<process_definition> {
 };	// end struct unroll_port_instances_policy
 
 //=============================================================================
+/**
+	First, this recursively assigns the subinstances inherited from
+	the external context through public ports.  
+	Then, it allocates the remaining (unaassigned) private subinstances.  
+	\param ind the globally assigned index of this instance.  
+	\pre ff is not yet initialized or assigned.  
+ */
 good_bool
-initialize_assign_footprint_frame_policy<process_definition>::operator () (
-		const canonical_process_type& cpt, footprint_frame& ff, 
-		const port_member_context& pmc) const {
+canonical_type_footprint_frame_policy<process_definition>::
+		initialize_and_assign(const canonical_process_type& cpt,
+		footprint_frame& ff, state_manager& sm, 
+		const port_member_context& pmc, const size_t ind) {
 	STACKTRACE_VERBOSE;
 	const footprint&
 		f(cpt.get_base_def()->get_footprint(
 			cpt.get_raw_template_params()));
-	new (&ff) footprint_frame(f);
+	new (&ff) footprint_frame(f);	// placement construct
 	f.assign_footprint_frame(ff, pmc);
+	// allocate the rest with the state_manager
+	ff.allocate_remaining_subinstances(f, sm,
+		parent_tag_enum(class_traits<process_tag>::type_tag_enum_value),
+		ind);
 	return good_bool(true);
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-initialize_assign_footprint_frame_policy<process_definition>::
+canonical_type_footprint_frame_policy<process_definition>::
 		initialize_frame_pointer_only(
 		const canonical_process_type& cpt, const footprint*& f) {
 	const footprint&

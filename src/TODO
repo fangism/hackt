@@ -1,5 +1,9 @@
 "TODO"
-	$Id: TODO,v 1.1.2.3 2005/09/13 01:14:44 fang Exp $
+	$Id: TODO,v 1.1.2.4 2005/09/14 00:17:07 fang Exp $
+
+IMMEDIATE:
+add static method to canonical_type_footprint_frame_policy
+	for allocating private subinstances of the footprint.  
 
 ===============================================================================
 recursive create-unique! (in progress)

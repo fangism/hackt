@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.8 2005/09/13 05:18:46 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.9 2005/09/14 00:17:10 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -308,7 +308,8 @@ virtual	ostream&
 	/// called by top-level
 	good_bool
 	allocate_assign_subinstance_footprint_frame(footprint_frame&, 
-		state_manager&, const port_member_context&) const;
+		state_manager&, const port_member_context&, 
+		const size_t) const;
 
 	/// called recursively
 	void

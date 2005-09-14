@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.75.2.3 2005/09/11 18:49:56 fang Exp $
+#	$Id: Makefile.am,v 1.75.2.4 2005/09/14 00:17:06 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -242,6 +242,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
+	Object/traits/type_tag_enum.h \
 	Object/def/built_in_datatype_def.h \
 	Object/def/channel_definition_alias.h \
 	Object/def/channel_definition_base.h \

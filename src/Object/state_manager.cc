@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.3.2.4 2005/09/13 01:14:45 fang Exp $
+	$Id: state_manager.cc,v 1.3.2.5 2005/09/14 00:17:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -119,6 +119,9 @@ global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m,
 	// consider setting chunk size to s+1 for optimization
 	size_t j = 1;
 	for ( ; j<=s; j++) {
+#if STACKTRACE_PERSISTENTS
+		STACKTRACE_INDENT << "loading entry " << j << endl;
+#endif
 		(*this)[this->allocate()].load_object_base(m, i, j, f, 
 			AS_A(const state_manager&, *this));
 	}

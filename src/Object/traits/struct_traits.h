@@ -2,13 +2,14 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
+	$Id: struct_traits.h,v 1.4.2.1 2005/09/14 00:17:11 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_STRUCT_TRAITS_H__
 #define	__OBJECT_TRAITS_STRUCT_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
+#include "Object/traits/type_tag_enum.h"
 
 namespace ART {
 namespace entity {
@@ -18,6 +19,7 @@ template <>
 struct class_traits<datastruct_tag> {
 	typedef	datastruct_tag			tag_type;
 	static const char			tag_name[];
+	enum { type_tag_enum_value = STRUCT };
 	typedef	struct_instance			instance_type;
 
 	typedef	struct_instance_alias_base	instance_alias_base_type;

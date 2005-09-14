@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.2.10.4 2005/09/13 16:56:37 fang Exp $
+	$Id: state_manager.h,v 1.2.10.5 2005/09/14 00:17:09 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -101,14 +101,14 @@ public:
 		Just static cast to one of the base types.  
 	 */
 	template <class Tag>
-	typename global_entry_pool<Tag>::pool_type&
+	global_entry_pool<Tag>&
 	get_pool(void) { return *this; }
 
 	/**
 		Just static cast to one of the base types (const).  
 	 */
 	template <class Tag>
-	const typename global_entry_pool<Tag>::pool_type&
+	const global_entry_pool<Tag>&
 	get_pool(void) const { return *this; }
 
 	template <class Tag>
