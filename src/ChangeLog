@@ -2,6 +2,13 @@
 
 2005-09-13	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-11:
+	  No code revision, just added a handful of tests to parser/process/.
+	  ... and stopped because critical BUG was discovered in cases:
+		process/107,109(reduced)
+		Must fix this before proceeding.  
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-10:
 	  Breaking news!
 	  Recursive hierarchical subinstance allocation seems to be working

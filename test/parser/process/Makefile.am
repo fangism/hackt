@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.10.2.3 2005/09/14 00:17:15 fang Exp $
+#	$Id: Makefile.am,v 1.10.2.4 2005/09/14 03:14:25 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -21,8 +21,10 @@ ARTC_TEST_PASSES = \
 	067 067a 068 069 \
 	070 071 072 073 074 075 076 077 078 079 \
 	080 081 081a 082 083 084 085 086 087 088 \
-	094 095 096 097 098 099
+	094 095 096 097 098 099 \
+	100 101 102 103 104 105 106 108
 
+# 107,109: known bugs in progress
 # 089-093: known bugs, haven't decided when to reject
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
@@ -44,7 +46,8 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	067 067a 068 069 \
 	070 072 075 077 079 \
 	080 081 081a 082 083 084 085 086 087 088 \
-	094 095 096 097 098 099
+	094 095 096 097 098 099 \
+	100 101 102 103 104 105 106 108
 
 # should be a subset of $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_ALLOC_TEST_SUBJECTS = \
@@ -55,7 +58,8 @@ HACKT_ALLOC_TEST_SUBJECTS = \
 	067 067a 068 069 \
 	070 072 075 077 079 \
 	080 081 081a 082 083 084 085 086 087 088 \
-	094 095 096 097 098 099
+	094 095 096 097 098 099 \
+	100 101 102 103 104 105 106 108
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \

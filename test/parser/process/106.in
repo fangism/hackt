@@ -1,0 +1,13 @@
+// "106.in" should pass, will recursively instantiate ports
+// copy-modified from "059.in"
+
+template <pint N>
+defproc foo(bool a[N]) {
+	bool q[N/2];
+	q[0] = a[0] = a[N/2];
+}
+
+foo<3> blinky;
+foo<4> inky;
+foo<5> clyde;
+
