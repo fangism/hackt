@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.5.2.1 2005/09/14 19:20:01 fang Exp $
+ 	$Id: module.cc,v 1.5.2.2 2005/09/14 23:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -221,6 +221,7 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
+		_footprint.evaluate_scope_aliases();
 		_footprint.mark_created();
 	}
 	return good_bool(true);

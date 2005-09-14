@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3 2005/09/14 15:30:28 fang Exp $
+	$Id: footprint.cc,v 1.3.2.1 2005/09/14 23:15:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,7 +9,9 @@
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
+#if !USE_SCOPE_ALIASES
 #include "Object/def/port_formals_manager.h"
+#endif
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
@@ -191,6 +193,10 @@ footprint::dump_with_collections(ostream& o) const {
 		}
 		dump(o);
 		port_aliases.dump(o);
+#if 0
+		// don't bother dumping
+		scope_aliases.dump(o);
+#endif
 	}
 	return o;
 }
@@ -265,6 +271,33 @@ footprint::create_dependent_types(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_SCOPE_ALIASES
+/**
+	Collects all aliases in this scope.  
+	\pre the sequential scope was already played for creation.  
+ */
+void
+footprint::evaluate_scope_aliases(void) {
+	STACKTRACE_VERBOSE;
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
+	for ( ; i!=e; i++) {
+		const count_ptr<const physical_instance_collection>
+			pic(i->second.is_a<const physical_instance_collection>());
+		if (pic) {
+			// method is called collect_port,
+			// but it collects everything in scope
+			// good re-use of function!
+			pic->collect_port_aliases(scope_aliases);
+			if (pic->is_port_formal())
+				pic->collect_port_aliases(port_aliases);
+		}
+	}
+	scope_aliases.filter_uniques();
+	port_aliases.filter_uniques();
+}
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre the sequential scope was already played for creation.  
  */
@@ -285,6 +318,7 @@ footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
 	}
 	port_aliases.filter_uniques();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -418,6 +452,9 @@ footprint::write_object_base(const persistent_object_manager& m,
 	footprint_base<int_tag>::_pool.write_object_base(m, o);
 	footprint_base<bool_tag>::_pool.write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
+#if USE_SCOPE_ALIASES
+	scope_aliases.write_object_base(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -447,6 +484,9 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	footprint_base<int_tag>::_pool.load_object_base(m, i);
 	footprint_base<bool_tag>::_pool.load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
+#if USE_SCOPE_ALIASES
+	scope_aliases.load_object_base(m, i);
+#endif
 }
 
 //=============================================================================

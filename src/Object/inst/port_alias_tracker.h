@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.3 2005/09/14 15:30:31 fang Exp $
+	$Id: port_alias_tracker.h,v 1.3.2.1 2005/09/14 23:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -73,6 +73,10 @@ public:
 };	// end class alias_reference_set
 
 //=============================================================================
+/**
+	Meta-class specific base class for tracking collections of aliases.  
+	Contains a map from index to instance alias set.  
+ */
 template <class Tag>
 class port_alias_tracker_base {
 protected:
@@ -108,8 +112,12 @@ protected:
 
 //=============================================================================
 /**
-	Used to count aliases over strucutres whose connections have been
+	Used to count aliases over structres whose connections have been
 	played and unique placeholder ID numbers have been assigned.  
+	Note: this can be reused to for tracking both internal aliases
+	and port aliases.  
+	This is kept to make looking up all aliases in each scope
+	instantaneous, basically a cache of alias results.  
 	Also keep track of instance references?
  */
 class port_alias_tracker :

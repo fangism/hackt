@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.3 2005/09/14 15:30:28 fang Exp $
+	$Id: footprint.h,v 1.3.2.1 2005/09/14 23:15:40 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -18,6 +18,7 @@
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/port_alias_tracker.h"
+#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -155,6 +156,12 @@ private:
 	 */
 	instance_collection_map_type		instance_collection_map;
 
+#if USE_SCOPE_ALIASES
+	/**
+		Fast lookup map of ALL aliases in this scope.  
+	 */
+	port_alias_tracker			scope_aliases;
+#endif
 	/**
 		This keeps track which port members are internally aliased.
 	 */
@@ -207,8 +214,13 @@ public:
 	good_bool
 	create_dependent_types(void) const;
 
+#if USE_SCOPE_ALIASES
+	void
+	evaluate_scope_aliases(void);
+#else
 	void
 	evaluate_port_aliases(const port_formals_manager&);
+#endif
 
 	good_bool
 	expand_unique_subinstances(state_manager&) const;

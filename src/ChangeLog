@@ -2,6 +2,16 @@
 
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-59-cflat-01-02:
+	  We reuse the port_alias_tracker to track all aliases in 
+		a scope for each footprint, which is useful for
+		instantaneous alias lookup.  The extra information
+		will be used to print cflat connect aliases.  
+		Aliases are also collated at the top-level.
+		Consequentially, the object binaries grow as a result
+		of this new addition.  Tests updated accordingly.  
+
+
 	* ARTXX-00-01-04-main-00-59-cflat-01-01:
 	  This branch is devoted to cflat -connect functionality.  
 	  This initial revision set up the method calls and basic interface.  
