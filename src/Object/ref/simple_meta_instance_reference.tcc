@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.3 2005/09/04 21:14:55 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.4 2005/09/14 15:30:33 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -89,6 +89,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 	// possibly factor this part out into simple_meta_instance_reference_base?
 	STACKTRACE_VERBOSE;
 	const footprint* const f(c.get_target_footprint());
+#if 0
+	if (f) {
+		INVARIANT((*f)[_inst.get_name()]);
+	}
+#endif
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&, 
 				*(*f)[_inst.get_name()])

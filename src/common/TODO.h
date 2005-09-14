@@ -1,13 +1,14 @@
 /**
 	\file "common/TODO.h"
 	Macros for maintainer's notes in code.  
-	$Id: TODO.h,v 1.2 2005/09/04 21:15:05 fang Exp $
+	$Id: TODO.h,v 1.3 2005/09/14 15:30:35 fang Exp $
  */
 
 #ifndef	__COMMON_TODO_H__
 #define	__COMMON_TODO_H__
 
 #include "util/macros.h"
+#include "util/size_t.h"
 
 /**
 	Macro for maintainer and developers to remind oneself of TODO.

@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.2 2005/09/04 21:14:57 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.3 2005/09/14 15:30:34 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -18,6 +18,7 @@ class unroll_context;
 class template_actuals;
 class builtin_channel_type_reference;
 class subinstance_manager;
+class footprint_frame;
 using std::vector;
 using util::memory::never_ptr;
 
@@ -138,6 +139,9 @@ public:
 
 	using base_type::combine_relaxed_actuals;
 	using base_type::match_relaxed_actuals;
+
+	good_bool
+	initialize_footprint_frame(footprint_frame&) const;
 
 public:
 // object persistence

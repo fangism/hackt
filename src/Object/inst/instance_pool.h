@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.3 2005/09/04 21:14:50 fang Exp $
+	$Id: instance_pool.h,v 1.4 2005/09/14 15:30:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_H__
@@ -10,12 +10,15 @@
 #include <iosfwd>
 #include "Object/inst/instance_pool_fwd.h"
 #include "util/list_vector.h"
+#include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 
 namespace ART {
 namespace entity {
+class footprint;
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::persistent_object_manager;
 //=============================================================================
 /**

@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.4 2005/09/04 21:15:05 fang Exp $
+	$Id: compile.cc,v 1.5 2005/09/14 15:30:36 fang Exp $
  */
 
 #include <iostream>
@@ -112,7 +112,7 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 void
 compile::usage(void) {
 	cerr << "compile: compiles input file to module object file" << endl;
-	cerr << "usage: compile [-dh] <art-source-file> [art-obj-file]" << endl;
+	cerr << "usage: compile [-dh] <hackt-source-file> [hackt-obj-file]"			<< endl;
 	cerr << "\t-d: produces text dump of compiled module" << endl
 		<< "\t-h: gives this usage messsage" << endl;
 	cerr << "\tIf output target is not given, module will not be saved."

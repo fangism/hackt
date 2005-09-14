@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.4 2005/09/04 21:14:49 fang Exp $
+ 	$Id: instance_collection.cc,v 1.5 2005/09/14 15:30:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -43,6 +43,7 @@
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
 #include "Object/inst/struct_instance_collection.h"
+#include "Object/common/dump_flags.h"
 
 #include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -201,9 +202,24 @@ ostream&
 instance_collection_base::dump_hierarchical_name(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	if (super_instance) {
-		return super_instance->dump_hierarchical_name(o) << '.' << key;
+		return super_instance->dump_hierarchical_name(o,
+			dump_flags::default_value) << '.' << key;
 	} else {
 		return dump_qualified_name(o);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_hierarchical_name(ostream& o, 
+		const dump_flags& df) const {
+	STACKTRACE_VERBOSE;
+	if (super_instance) {
+		return super_instance->dump_hierarchical_name(o, df)
+			<< '.' << key;
+	} else {
+		return (df.show_definition_owner) ?
+			dump_qualified_name(o) : o << key;
 	}
 }
 

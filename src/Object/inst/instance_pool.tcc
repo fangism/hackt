@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.3 2005/09/04 21:14:50 fang Exp $
+	$Id: instance_pool.tcc,v 1.4 2005/09/14 15:30:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Object/inst/instance_pool.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/def/footprint.h"
 #include "util/persistent_object_manager.tcc"	// for STACKTRACE macros
 #include "util/list_vector.tcc"
 #include "util/stacktrace.h"
@@ -133,6 +134,25 @@ if (this->size() > 1) {
 	// else pool is empty
 	return o;
 }
+
+//-----------------------------------------------------------------------------
+#if 0
+template <class T>
+good_bool
+instance_pool<T>::expand_footprint(footprint& f) const {
+if (this->size() > 1) {
+	const_iterator i(++this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		if (!i->get_back_ref()->
+				allocate_subinstance_footprint(f).good) {
+			return good_bool(false);
+		}
+	}
+}
+	return good_bool(true);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 /**

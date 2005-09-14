@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4 2005/09/04 21:14:49 fang Exp $
+	$Id: instance_alias_info.h,v 1.5 2005/09/14 15:30:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -20,7 +20,10 @@
 
 namespace ART {
 namespace entity {
+struct dump_flags;
 class footprint;
+class port_collection_context;
+class port_member_context;
 class instance_alias_info_actuals;
 using std::ostream;
 using std::istream;
@@ -217,9 +220,13 @@ public:
 	 */
 	using actuals_parent_type::get_relaxed_actuals;
 	using actuals_parent_type::dump_actuals;
+	using actuals_parent_type::dump_complete_type;
 	using actuals_parent_type::attach_actuals;
 	using actuals_parent_type::compare_actuals;
 	using actuals_parent_type::create_dependent_types;
+
+private:
+	using actuals_parent_type::__initialize_assign_footprint_frame;
 
 protected:
 	physical_instance_collection&
@@ -285,7 +292,7 @@ public:
 	is_port_alias(void) const;
 
 virtual	ostream&
-	dump_alias(ostream& o) const;
+	dump_alias(ostream& o, const dump_flags&) const;
 
 	ostream&
 	dump_aliases(ostream& o) const;
@@ -293,12 +300,36 @@ virtual	ostream&
 	ostream&
 	dump_hierarchical_name(ostream&) const;
 
+	ostream&
+	dump_hierarchical_name(ostream&, const dump_flags&) const;
+
 	using substructure_parent_type::dump_ports;
 	using substructure_parent_type::collect_port_aliases;
 	using substructure_parent_type::connect_ports;
 	// using substructure_parent_type::lookup_port_instance;
 	using substructure_parent_type::replay_substructure_aliases;
 
+	/// called by top-level
+	good_bool
+	allocate_assign_subinstance_footprint_frame(footprint_frame&, 
+		state_manager&, const port_member_context&, 
+		const size_t) const;
+
+	/// called recursively
+	void
+	assign_footprint_frame(footprint_frame&,
+		const port_collection_context&, const size_t) const;
+
+	void
+	construct_port_context(port_collection_context&, 
+		const footprint_frame&, const size_t) const;
+
+private:
+	using substructure_parent_type::__allocate_subinstance_footprint;
+public:
+	using substructure_parent_type::__construct_port_context;
+
+public:
 	static
 	good_bool
 	checked_connect_port(this_type&, this_type&);

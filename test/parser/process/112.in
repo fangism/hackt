@@ -1,0 +1,15 @@
+// "112.in" should pass, will recursively instantiate ports
+// copy-modified from "068.in"
+
+defproc foo() {
+	bool a[2][2];
+	a[0][0] = a[1][1];
+}
+
+defproc bar() {
+	foo x[2][2];
+	x[0][1] = x[1][0];
+}
+
+bar poo;
+

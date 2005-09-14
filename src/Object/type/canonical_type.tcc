@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.2 2005/09/04 21:14:58 fang Exp $
+	$Id: canonical_type.tcc,v 1.3 2005/09/14 15:30:34 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -16,6 +16,7 @@
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/global_entry.h"
 #include "util/persistent_object_manager.tcc"
 #include "common/TODO.h"
 #include "util/stacktrace.h"
@@ -23,6 +24,19 @@
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
+//=============================================================================
+// struct canonical_definition_load_policy method definitions
+
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+void
+canonical_definition_load_policy<DefType>::operator () (
+		const persistent_object_manager& m,
+		never_ptr<const definition_type>& d) const {
+	if (d) {
+		m.load_object_once(&const_cast<definition_type&>(*d));
+	}
+}
+
 //=============================================================================
 // class canonical_type method definitions
 
@@ -295,6 +309,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (canonical_definition_ptr)
 		canonical_definition_ptr->collect_transient_info(m);
 	if (param_list_ptr)
@@ -306,6 +321,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer(o, canonical_definition_ptr);
 	m.write_pointer(o, param_list_ptr);
 }
@@ -320,10 +336,21 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m, 
 		istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer(i, canonical_definition_ptr);
 	m.read_pointer(i, param_list_ptr);
 	canonical_definition_load_policy<DefType>()
 		(m, canonical_definition_ptr);
+{
+	// TODO: also do this in canonical_generic_chan_type.  
+	// need to load expression list because canonical type might
+	// be used right away, and thus expressions cannot be deferred.  
+	// FYI: this is called by
+	// instance_alias_info_actuals::restore_canonical_footprint().
+	if (param_list_ptr)
+		m.load_object_once(&const_cast<param_list_type&>(
+			*param_list_ptr));
+}
 }
 
 //=============================================================================

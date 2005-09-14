@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.3 2005/09/04 21:14:55 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.4 2005/09/14 15:30:32 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -153,9 +153,14 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		// already have error message
 		return never_ptr<substructure_alias>(NULL);
 	}
+	const unroll_context cc(c.make_member_context());
+	// FYI: the above line was added too fix case process/107,109
+	// should remove the footprint from the context
+	// only the ultimate parent of the reference should use the footprint
+	// copy the unroll_context *except* for the footprint pointer
 	return substructure_implementation_policy::
 		template unroll_generic_scalar_reference<Tag>(
-			*inst_base, this->array_indices, c);
+			*inst_base, this->array_indices, cc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

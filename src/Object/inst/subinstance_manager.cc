@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.6 2005/09/04 21:14:53 fang Exp $
+	$Id: subinstance_manager.cc,v 1.7 2005/09/14 15:30:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,6 +12,7 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
+#include "Object/port_context.h"
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -41,7 +42,7 @@ subinstance_manager::subinstance_manager(const this_type& s) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subinstance_manager::~subinstance_manager() {
-	STACKTRACE_VERBOSE;
+	STACKTRACE_DTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +74,7 @@ subinstance_manager::push_back(const entry_value_type& v) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subinstance_manager::reserve(const size_t s) {
-	subinstance_array.reserve(s);
+	util::reserve(subinstance_array, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -232,8 +233,6 @@ subinstance_manager::create_state(const this_type& s, footprint& f) {
 	iterator j(t.subinstance_array.begin());
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++, j++) {
-		NEVER_NULL(*i);
-		NEVER_NULL(*j);
 		// merge created state (instance_collection_types)
 		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
 		NEVER_NULL(pi);
@@ -246,7 +245,7 @@ subinstance_manager::create_state(const this_type& s, footprint& f) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: clean up the const-hack.  
+	TODO: write comment
  */
 void
 subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
@@ -256,13 +255,38 @@ subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 	const_iterator j(s.subinstance_array.begin());
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++, j++) {
-		NEVER_NULL(*i);
-		NEVER_NULL(*j);
 		// merge created state (instance_collection_types)
 		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
 		NEVER_NULL(pi);
 		NEVER_NULL(pj);
 		pi->inherit_created_state(*pj, f);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::construct_port_context(port_member_context& pmc, 
+		const footprint_frame& ff) const {
+	STACKTRACE_VERBOSE;
+	pmc.resize(size());
+	size_t j = 0;
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e; i++, j++) {
+		(*i)->construct_port_context(pmc[j], ff);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+subinstance_manager::assign_footprint_frame(footprint_frame& ff, 
+		const port_member_context& pmc) const {
+	INVARIANT(pmc.size() == subinstance_array.size());
+	size_t j = 0;
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e; i++, j++) {
+		(*i)->assign_footprint_frame(ff, pmc[j]);
 	}
 }
 

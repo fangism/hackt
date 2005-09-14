@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7 2005/09/05 05:04:32 fang Exp $
+	$Id: instance_collection.tcc,v 1.8 2005/09/14 15:30:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -45,6 +45,8 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
+#include "Object/global_entry.h"
+#include "Object/port_context.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -459,7 +461,7 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 		p.dump_actuals(os);
 	os << " = ";
 	NEVER_NULL(p.get_next());
-	p.get_next()->dump_alias(os);
+	p.get_next()->dump_hierarchical_name(os);
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ');
@@ -904,7 +906,7 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		const element_type& ii(*i);
 		INVARIANT(ii.instance_index);
 		// 0 is not an acceptable index
-		port_alias_tracker_getter<Tag>()(t)[ii.instance_index]
+		t.template get_id_map<Tag>()[ii.instance_index]
 			.push_back(never_ptr<const element_type>(&ii));
 		ii.collect_port_aliases(t);
 	}
@@ -1024,6 +1026,43 @@ INSTANCE_ARRAY_CLASS::connection_loader::operator() (const element_type& e) {
 	}
 	// else just leave it pointing to itself, 
 	// which was how it was constructed
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates port formal placeholders to actual global IDs.  
+	\pre footprint_frame has already been constructed.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::construct_port_context(port_collection_context& pcc, 
+		const footprint_frame& ff) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(this->collection.begin());
+	const const_iterator e(this->collection.end());
+	pcc.resize(this->collection.size());
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		i->construct_port_context(pcc, ff, j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns...
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
+		const port_collection_context& pcc) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(this->collection.size() == pcc.size());
+	const_iterator i(this->collection.begin());
+	const const_iterator e(this->collection.end());
+	size_t j = 0;
+	for ( ; i!=e; i++, j++) {
+		i->assign_footprint_frame(ff, pcc, j);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1150,7 +1189,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 	if (this->the_instance.container->has_relaxed_type()) {
 		this->the_instance.dump_actuals(o);
 	}
-	this->the_instance.get_next()->dump_alias(o << " = ");
+	this->the_instance.get_next()->dump_hierarchical_name(o << " = ");
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ');
@@ -1385,7 +1424,7 @@ void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
-	port_alias_tracker_getter<Tag>()(t)[this->the_instance.instance_index]
+	t.template get_id_map<Tag>()[this->the_instance.instance_index]
 		.push_back(never_ptr<const instance_type>(&this->the_instance));
 	this->the_instance.collect_port_aliases(t);
 }
@@ -1400,6 +1439,30 @@ INSTANCE_SCALAR_CLASS::load_reference(istream& i) const {
 	// which is semantically allowed because we allow the alias pointers
 	// to be mutable.  
 	return const_cast<instance_type&>(this->the_instance);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates port formal placeholders to actual global IDs.  
+	\pre footprint_frame has already been constructed.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::construct_port_context(port_collection_context& pcc, 
+		const footprint_frame& ff) const {
+	STACKTRACE_VERBOSE;
+	pcc.resize(1);
+	this->the_instance.construct_port_context(pcc, ff, 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
+		const port_collection_context& pcc) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(pcc.size() == 1);
+	this->the_instance.assign_footprint_frame(ff, pcc, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,149 @@
 "ChangeLog"
 
+2005-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-merged-unique-02-15:
+	  Branch summary: Implemented 'alloc' pass which creates
+		global hierarchical structures for unique instances.  
+	  Includes critical bug fix in unrolling.  
+	  Reasonably tested -- bunch of test cases added and hand-verified.  
+	  This revision will allow the continuation of cflat.  
+	  Next branch for cflat connect.  
+
+
+2005-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-15:
+	  Some clean-ups as a result of checking other compilers and
+		platforms.  
+	  Removed util/obsolete headers and tests from distribution, 
+		although they remain in CVS.  
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-14:
+	  Introduced dump_flags structure for customizing hierarchical dumps, 
+		will be extremely useful for cflat formatting.  
+	  Extended instance alias dump to take a dump_flags argument.
+		Re-using dump_hiearchical_name to print the flattened
+		canonical_names after unique allocation.  
+	  This branch is mature, and ready to merge to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-13:
+	  No code revision, just more test cases...
+	  We interrupt test-case writing to add more information to 
+		the global state dump: canonical name field.  
+	  TODO: update hackt-alloc-expect.sh test script.  
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-12:
+	  BUG FIXED: forgot to remove footprint pointer from unroll_context
+		in the tail-recursive path of member instance reference
+		resolution during unroll phase.  (one-line fix)
+	  Added test-cases process/107,109.
+
+
+2005-09-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-11:
+	  No code revision, just added a handful of tests to parser/process/.
+	  ... and stopped because critical BUG was discovered in cases:
+		process/107,109(reduced)
+		Must fix this before proceeding.  
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-10:
+	  Breaking news!
+	  Recursive hierarchical subinstance allocation seems to be working
+		for the existing test-cases, but more test cases are needed.  
+		TODO: test cases with deep recursion of private subinstances.  
+	  Re-ordered global_entry reconstruction ordering because footprint 
+		restoration depends on parent_id and local_offset fields.
+
+
+2005-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-09:
+	  Merely clean-up of previous revision.  
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-08:
+	  Fused footprint_frame allocation and assignment together 
+		into one method call.  (TODO: clean up conditional)
+	  More test cases added for state allocation.  
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-07:
+	  Have allocated-state persistence working for top-level allocated
+		public ports.  Need to do recursive allocation, 
+		and persistence throughout deep hierarchy.  
+		Footprint pointers are effectively saved and restored
+		through use of canonical types.  
+	  State printing/dumping enhanced.  
+	  First batch of state allocation test cases in parser/process
+		are working.  See also test/ChangeLog.
+	  TODO: enable deep recursion for private subinstance allocation.  
+
+
+2005-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-06:
+	  Factored out allocation into separate compilation phase 'alloc'.  
+		Run 'hackt alloc' to allocate unique global state.  
+	  Eliminated unused state_manager argument from construct_port_context.
+	  Updated sub-program usage messages.  
+
+
+2005-09-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-05:
+	  Have top-level state allocation and frame assignment working, 
+		need to enable recursion.  Currently result is visible
+		only from the stdout dump of hackt create <unrolled obj>.
+	  TODO: enable deep recursion for private subinstance allocation.  
+	  TODO: introduce alloc/cflat phase.  
+
+
+2005-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-04:
+	  Added port_context class as a helper for passing globally
+		allocated ids in a structure down through recursive
+		structure instantiations.  
+	  Global enrty pool allocator now reserves the 0th entry of each
+		type in advance as a NULL placeholder.  
+	  Partial implementations of subinstance expansion and 
+		footprint_frame assignment.  
+	  TODO: guarantee footprint pointer pseudo-persistence
+		and reconstructibility.  
+
+
+2005-09-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-03:
+	  Implemented persistence (partial) and dumping of global
+		state structures. 
+	  Haven't enabled global creation yet.  
+
+
+2005-09-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-02:
+	  Replaced the silly getter template-specialized functors 
+		with template base classes in footprint and port_alias_tracker. 
+
+
+	* ARTXX-00-01-04-main-00-58-unique-02-01:
+	  This branch is for creating top-level global unique instances.
+	  This revision set up part of the framework for traversing the 
+		hierarchy to allocate unique instances in the global
+		pool, now managed by the state_manager class.  
+		The state_manager resembles a footprint, except that the
+		entries are not just placeholders.  
+	  Code execution has not changed, because the final allocation
+		has not been enabled yet.  
+
+
 2005-09-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-58:

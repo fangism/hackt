@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.4 2005/09/04 21:14:40 fang Exp $
+	$Id: module.h,v 1.5 2005/09/14 15:30:26 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -12,6 +12,12 @@
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
+
+#define	USE_STATE_MANAGER		1
+
+#if USE_STATE_MANAGER
+#include "Object/state_manager.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -49,6 +55,11 @@ protected:
 		and creation.  
 	 */
 	footprint				_footprint;
+
+#if USE_STATE_MANAGER
+	bool					allocated;
+	state_manager				global_state;
+#endif
 
 private:
 	module();
@@ -88,6 +99,11 @@ public:
 		return _footprint.is_created();
 	}
 
+	bool
+	is_allocated(void) const {
+		return allocated;
+	}
+
 	/**
 		Note: sequential scope has a const-version of this, 
 		and is non-virtual.  
@@ -98,6 +114,9 @@ public:
 
 	good_bool
 	create_unique(void);
+
+	good_bool
+	allocate_unique(void);
 
 private:
 	good_bool

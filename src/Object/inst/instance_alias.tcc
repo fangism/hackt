@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1 2005/09/05 05:04:32 fang Exp $
+	$Id: instance_alias.tcc,v 1.2 2005/09/14 15:30:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -46,6 +46,10 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/def/footprint.h"
+#include "Object/global_entry.h"
+#include "Object/port_context.h"
+#include "Object/state_manager.h"
+#include "Object/common/dump_flags.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -433,8 +437,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// hideous const_cast :S consider mutability?
 	this_type& _this = const_cast<this_type&>(*this);
 	// for now the creator will be the canonical back-reference
-	typename instance_type::pool_type&
-		the_pool(footprint_pool_getter<Tag>().operator()(f));
+	typename instance_type::pool_type& the_pool(f.template get_pool<Tag>());
 	_this.instance_index = the_pool.allocate(instance_type(*this));
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "assigned id: " << this << " = "
@@ -535,9 +538,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 #if 1
 			if (ind != tind) {
 			typedef	typename instance_type::pool_type pool_type;
-			const pool_type& the_pool
-				// WTF, I can't just use (f) ?
-				(footprint_pool_getter<Tag>().operator()(f));
+			const pool_type& the_pool(f.template get_pool<Tag>());
 			ICE(cerr, 
 				cerr << "connecting two instances already "
 					"assigned to different IDs: got " <<
@@ -617,8 +618,7 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 	iterator i(this->begin());
 	const iterator e(this->end());
 	const instance_type&
-		inst(footprint_pool_getter<Tag>()
-			.operator()(f)[t.instance_index]);
+		inst(f.template get_pool<Tag>()[t.instance_index]);
 	for ( ; i!=e; i++) {
 		INVARIANT(!i->instance_index);
 #if ENABLE_STACKTRACE
@@ -784,6 +784,67 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by top-level.  
+	This reserves the space required by the footprint corresponding
+		to this instance's complete canonical type.
+	\param ff the footprint frame to initialize using this
+		instance's canonical type.  
+	\param sm the global state allocation manager, 
+		used to allocate private subinstances not covered
+		by the port aliases.  
+	\param is the globally assigned id for this particular instance
+		used to identify this as a parent to subinstances.  
+	TODO: after assigning globally assigned ports, 
+	allocate the remaining unassigned internal substructures.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
+		footprint_frame& ff, state_manager& sm,
+		const port_member_context& pmc, const size_t ind) const {
+	STACKTRACE_VERBOSE;
+	// this recursively fills up the footprint frame with indices
+	// assigned from the external context, mapped onto this
+	// instance's public ports.  
+	if (!actuals_parent_type::__initialize_assign_footprint_frame(
+			*this, ff, sm, pmc, ind).good) {
+		cerr << "Error alloc_assign_subinstance_footprint_frame."
+			<< endl;
+		return good_bool(false);
+	}
+	// scan footprint_frame for unallocated subinstances, and create them!
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called recusrively.  
+	NOTE: state_manager is thus far unused.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
+		footprint_frame& ff,
+		const port_collection_context& pcc, const size_t ind) const {
+	STACKTRACE_VERBOSE;
+	const size_t local_offset = this->instance_index -1;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "local_offset = " << local_offset << endl;
+	STACKTRACE_INDENT << "global_id = " << pcc.id_map[ind] << endl;
+#endif
+	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+	INVARIANT(ind < pcc.size());
+	INVARIANT(local_offset < fm.size());
+	fm[local_offset] = pcc.id_map[ind];
+#if ENABLE_STACKTRACE
+	ff.dump(STACKTRACE_STREAM) << endl;
+#endif
+	substructure_parent_type::__assign_footprint_frame(
+		ff, pcc.substructure_array[ind]);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
@@ -806,7 +867,7 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
+INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o, const dump_flags&) const {
 	ICE_NEVER_CALL(cerr);
 	return o;
 }
@@ -814,15 +875,16 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Since begin points to next, self will always be printed last.  
+	NOTE: always prints with default dump_flags.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
-	i->dump_alias(o);
+	i->dump_hierarchical_name(o);
 	for (i++; i!=e; i++) {
-		i->dump_alias(o << " = ");
+		i->dump_hierarchical_name(o << " = ");
 	}
 	return o;
 }
@@ -830,9 +892,18 @@ INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
+INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o,
+		const dump_flags& df) const {
+	return dump_alias(o, df);
+	// should call virtually, won't die
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
-	// STACKTRACE_VERBOSE;
-	return dump_alias(o);	// should call virtually, won't die
+	return dump_alias(o, dump_flags::default_value);
+	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -879,6 +950,31 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_INFO_CLASS::trace_alias(const substructure_alias&) const {
 	ICE_NEVER_CALL(cerr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	First lookup canonical placeholder ID, assigned by create phase.
+	Then lookup...
+	\param pcc the port context to assign to.  
+	\param ff the reference footprint_frame.
+	\param sm the global state allocation manager.
+	\param ind
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
+		port_collection_context& pcc, const footprint_frame& ff,
+		const size_t ind) const {
+	STACKTRACE_VERBOSE;
+	const size_t local_placeholder_id = this->instance_index -1;
+	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "local_id = " << local_placeholder_id << endl;
+	STACKTRACE_INDENT << "global_id = " << fm[local_placeholder_id] << endl;
+#endif
+	pcc.id_map[ind] = fm[local_placeholder_id];
+	this->__construct_port_context(pcc.substructure_array[ind], ff);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -991,10 +1087,10 @@ INSTANCE_ALIAS_CLASS::~instance_alias() {
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
+INSTANCE_ALIAS_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
 	// STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
-	this->container->dump_hierarchical_name(o) <<
+	this->container->dump_hierarchical_name(o, df) <<
 		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
@@ -1147,9 +1243,10 @@ KEYLESS_INSTANCE_ALIAS_CLASS::~instance_alias() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
-KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
+KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o,
+		const dump_flags& df) const {
 	NEVER_NULL(this->container);
-	return this->container->dump_hierarchical_name(o);
+	return this->container->dump_hierarchical_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

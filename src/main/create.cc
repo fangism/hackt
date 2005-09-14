@@ -2,7 +2,7 @@
 	\file "main/create.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: create.cc,v 1.3 2005/09/04 21:15:05 fang Exp $
+	$Id: create.cc,v 1.4 2005/09/14 15:30:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -90,7 +90,7 @@ create::main(const int argc, char* argv[], const global_options&) {
 void
 create::usage(void) {
 	cerr << "Usage: " << name <<
-		" <art-obj-infile> <art-obj-outfile>" << endl;
+		" <hackt-obj-infile> <hackt-obj-outfile>" << endl;
 }
 
 //=============================================================================

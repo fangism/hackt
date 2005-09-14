@@ -17,6 +17,9 @@ core.*
 *.hacktobjcreate
 *.createdump
 *.creatediff
+*.hacktobjalloc
+*.allocdump
+*.allocdiff
 *.noindex
 ignore
 Makefile

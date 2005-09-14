@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.4 2005/09/04 21:14:53 fang Exp $
+	$Id: subinstance_manager.h,v 1.5 2005/09/14 15:30:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -20,6 +20,9 @@ class physical_instance_collection;
 class unroll_context;
 class meta_instance_reference_base;
 class port_alias_tracker;
+class port_member_context;
+class state_manager;
+class footprint_frame;
 template <class> class instance_collection;
 using std::ostream;
 using std::istream;
@@ -34,7 +37,6 @@ using util::persistent_object_manager;
 	Contains an array of sub-instances, children collection of aliases.  
 	Definitions will cache canonical maps containing already 
 	instantiated types.  
-	TODO: make them copy-able, reproducing internal connections!
 	NOTE: this only applies to public ports, 
 		not any of the private internals!
 	This will be tied closely to the port_formals_manager class.  
@@ -43,7 +45,6 @@ using util::persistent_object_manager;
 		the list of names in the port formals list, not their sizes.
 		The types/sizes of the port actual entries will, however, 
 		depend on the template parameters.  
-	TODO: rename this to port_actuals_manager.
  */
 class subinstance_manager {
 friend class substructure_manager;
@@ -101,8 +102,7 @@ public:
 	collect_port_aliases(port_alias_tracker&) const;
 
 	good_bool
-	connect_ports(const connection_references_type&, 
-		const unroll_context&);
+	connect_ports(const connection_references_type&, const unroll_context&);
 
 	void
 	allocate(footprint&);
@@ -120,6 +120,14 @@ public:
 
 	good_bool
 	replay_internal_aliases(void) const;
+
+	void
+	construct_port_context(port_member_context&, 
+		const footprint_frame&) const;
+
+	void
+	assign_footprint_frame(footprint_frame&,
+		const port_member_context&) const;
 
 	// for each entry, re-link
 	void

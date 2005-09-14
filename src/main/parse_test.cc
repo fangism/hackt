@@ -6,7 +6,7 @@
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.3 2005/08/08 16:51:13 fang Exp $
+	$Id: parse_test.cc,v 1.4 2005/09/14 15:30:36 fang Exp $
  */
 
 #include <iostream>
@@ -116,7 +116,7 @@ void
 parse_test::usage(void) {
 	cout << "parse_test: parse and compile input file, and run self-test."
 		<< endl
-		<< "usage: artc [-dh] [file]" << endl
+		<< "usage: parse_test [-dh] [file]" << endl
 		<< "\t-d: produces text dump of compiled module" << endl
 		<< "\t-h: gives this usage messsage" << endl
 		<< "\tif no input file is given, then reads from stdin."

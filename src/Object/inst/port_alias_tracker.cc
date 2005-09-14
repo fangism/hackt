@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.2 2005/09/04 21:14:52 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.3 2005/09/14 15:30:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -142,60 +142,47 @@ alias_reference_set<Tag>::load_object_base(
 }
 
 //=============================================================================
-// class port_alias_tracker method definitions
+// class port_alias_tracker_base method definitions
 
-port_alias_tracker::port_alias_tracker() :
-		process_ids(), channel_ids(), struct_ids(), 
-		enum_ids(), int_ids(), bool_ids(), 
-		has_internal_aliases(true) {
-}
+template <class Tag>
+port_alias_tracker_base<Tag>::port_alias_tracker_base() : _ids() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-port_alias_tracker::~port_alias_tracker() { }
+template <class Tag>
+port_alias_tracker_base<Tag>::~port_alias_tracker_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Removes all unique entries of the alias map, i.e. all alias sets
 	with only one alias.  
-	\param M map type to filter.
  */
-template <class M>
+template <class Tag>
 void
-port_alias_tracker::filter_unique(M& m) {
-#if 0
-	// can't do this because remove_copy_if requires assignability
-	std::remove_if(m.begin(), m.end(),
-		second_is_unique<typename M::value_type>()
-	);
-#else
+port_alias_tracker_base<Tag>::filter_unique(void) {
 	// iterate and erase
-	typedef	typename M::iterator	iterator;
-	iterator i(m.begin());
-	const iterator e(m.end());
+	iterator i(_ids.begin());
+	const iterator e(_ids.end());
 	for ( ; i!=e; ) {
 		if (i->second.is_unique()) {
 			iterator j(i);
 			j++;
-			m.erase(i);
+			_ids.erase(i);
 			i = j;
 		} else {
 			i++;
 		}
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class M>
+template <class Tag>
 ostream&
-port_alias_tracker::dump_map(const M& m, ostream& o) {
-if (!m.empty()) {
-	typedef	typename M::const_iterator	const_iterator;
-	typedef	typename M::mapped_type::tag_type	tag_type;
-	o << auto_indent << class_traits<tag_type>::tag_name
+port_alias_tracker_base<Tag>::dump_map(ostream& o) const {
+if (!_ids.empty()) {
+	o << auto_indent << class_traits<Tag>::tag_name
 		<< " port aliases:" << endl;
-	const_iterator i(m.begin());
-	const const_iterator e(m.end());
+	const_iterator i(_ids.begin());
+	const const_iterator e(_ids.end());
 	for ( ; i!=e; i++) {
 		i->second.dump(o << auto_indent << i->first << ": ") << endl;
 	}
@@ -204,14 +191,12 @@ if (!m.empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class M>
+template <class Tag>
 good_bool
-port_alias_tracker::__replay_aliases(const M& m, substructure_alias& s) {
-	typedef	typename M::const_iterator	const_iterator;
-	typedef	typename M::mapped_type::tag_type	tag_type;
+port_alias_tracker_base<Tag>::__replay_aliases(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
-	const_iterator i(m.begin());
-	const const_iterator e(m.end());
+	const_iterator i(_ids.begin());
+	const const_iterator e(_ids.end());
 	for ( ; i!=e; i++) {
 		if (!i->second.replay_internal_aliases(s).good)
 			return good_bool(false);
@@ -220,77 +205,24 @@ port_alias_tracker::__replay_aliases(const M& m, substructure_alias& s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Removes all unique aliases from all sets.  
- */
+template <class Tag>
 void
-port_alias_tracker::filter_uniques(void) {
-	filter_unique(process_ids);
-	filter_unique(channel_ids);
-	filter_unique(struct_ids);
-	filter_unique(enum_ids);
-	filter_unique(int_ids);
-	filter_unique(bool_ids);
-	has_internal_aliases =
-		!process_ids.empty() ||
-		!channel_ids.empty() ||
-		!struct_ids.empty() ||
-		!enum_ids.empty() ||
-		!int_ids.empty() ||
-		!bool_ids.empty();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-port_alias_tracker::replay_internal_aliases(substructure_alias& s) const {
-	STACKTRACE_VERBOSE;
-	if (has_internal_aliases) {
-		return __replay_aliases(process_ids, s) &&
-			__replay_aliases(channel_ids, s) &&
-			__replay_aliases(struct_ids, s) &&
-			__replay_aliases(enum_ids, s) &&
-			__replay_aliases(int_ids, s) &&
-			__replay_aliases(bool_ids, s);
-	} else {
-		return good_bool(true);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-port_alias_tracker::dump(ostream& o) const {
-if (has_internal_aliases) {
-	dump_map(process_ids, o);
-	dump_map(channel_ids, o);
-	dump_map(struct_ids, o);
-	dump_map(enum_ids, o);
-	dump_map(int_ids, o);
-	dump_map(bool_ids, o);
-}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class M>
-void
-port_alias_tracker::collect_map(const M& am, persistent_object_manager& m) {
-	typedef	typename M::const_iterator	const_iterator;
-	const_iterator i(am.begin());
-	const const_iterator e(am.end());
+port_alias_tracker_base<Tag>::collect_map(persistent_object_manager& m) const {
+	const_iterator i(_ids.begin());
+	const const_iterator e(_ids.end());
 	for ( ; i!=e; i++) {
 		i->second.collect_transient_info_base(m);
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class M>
+template <class Tag>
 void
-port_alias_tracker::write_map(const M& am, const persistent_object_manager& m, 
-		ostream& o) {
-	typedef	typename M::const_iterator	const_iterator;
-	write_value(o, am.size());
-	const_iterator i(am.begin());
-	const const_iterator e(am.end());
+port_alias_tracker_base<Tag>::write_map(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_value(o, _ids.size());
+	const_iterator i(_ids.begin());
+	const const_iterator e(_ids.end());
 	for ( ; i!=e; i++) {
 		write_value(o, i->first);
 		i->second.write_object_base(m, o);
@@ -298,19 +230,86 @@ port_alias_tracker::write_map(const M& am, const persistent_object_manager& m,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class M>
+template <class Tag>
 void
-port_alias_tracker::load_map(M& am, const persistent_object_manager& m, 
+port_alias_tracker_base<Tag>::load_map(const persistent_object_manager& m, 
 		istream& i) {
 	size_t s;
 	read_value(i, s);
 	size_t j = 0;
 	for ( ; j<s; j++) {
-		typename M::key_type k;
+		typename map_type::key_type k;
 		read_value(i, k);
-		am[k].load_object_base(m, i);
+		_ids[k].load_object_base(m, i);
 	}
-	INVARIANT(am.size() == s);
+	INVARIANT(_ids.size() == s);
+}
+
+//=============================================================================
+// class port_alias_tracker method definitions
+
+port_alias_tracker::port_alias_tracker() :
+		port_alias_tracker_base<process_tag>(),
+		port_alias_tracker_base<channel_tag>(),
+		port_alias_tracker_base<datastruct_tag>(),
+		port_alias_tracker_base<enum_tag>(),
+		port_alias_tracker_base<int_tag>(),
+		port_alias_tracker_base<bool_tag>(),
+		has_internal_aliases(true) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+port_alias_tracker::~port_alias_tracker() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Removes all unique aliases from all sets.  
+ */
+void
+port_alias_tracker::filter_uniques(void) {
+	port_alias_tracker_base<process_tag>::filter_unique();
+	port_alias_tracker_base<channel_tag>::filter_unique();
+	port_alias_tracker_base<datastruct_tag>::filter_unique();
+	port_alias_tracker_base<enum_tag>::filter_unique();
+	port_alias_tracker_base<int_tag>::filter_unique();
+	port_alias_tracker_base<bool_tag>::filter_unique();
+	has_internal_aliases =
+		!port_alias_tracker_base<process_tag>::_ids.empty() ||
+		!port_alias_tracker_base<channel_tag>::_ids.empty() ||
+		!port_alias_tracker_base<datastruct_tag>::_ids.empty() ||
+		!port_alias_tracker_base<enum_tag>::_ids.empty() ||
+		!port_alias_tracker_base<int_tag>::_ids.empty() ||
+		!port_alias_tracker_base<bool_tag>::_ids.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+port_alias_tracker::replay_internal_aliases(substructure_alias& s) const {
+	STACKTRACE_VERBOSE;
+if (has_internal_aliases) {
+	return port_alias_tracker_base<process_tag>::__replay_aliases(s) &&
+		port_alias_tracker_base<channel_tag>::__replay_aliases(s) &&
+		port_alias_tracker_base<datastruct_tag>::__replay_aliases(s) &&
+		port_alias_tracker_base<enum_tag>::__replay_aliases(s) &&
+		port_alias_tracker_base<int_tag>::__replay_aliases(s) &&
+		port_alias_tracker_base<bool_tag>::__replay_aliases(s);
+} else {
+	return good_bool(true);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+port_alias_tracker::dump(ostream& o) const {
+if (has_internal_aliases) {
+	port_alias_tracker_base<process_tag>::dump_map(o);
+	port_alias_tracker_base<channel_tag>::dump_map(o);
+	port_alias_tracker_base<datastruct_tag>::dump_map(o);
+	port_alias_tracker_base<enum_tag>::dump_map(o);
+	port_alias_tracker_base<int_tag>::dump_map(o);
+	port_alias_tracker_base<bool_tag>::dump_map(o);
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -319,12 +318,12 @@ port_alias_tracker::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	// these are all no-ops
 if (has_internal_aliases) {
-	collect_map(process_ids, m);
-	collect_map(channel_ids, m);
-	collect_map(struct_ids, m);
-	collect_map(enum_ids, m);
-	collect_map(int_ids, m);
-	collect_map(bool_ids, m);
+	port_alias_tracker_base<process_tag>::collect_map(m);
+	port_alias_tracker_base<channel_tag>::collect_map(m);
+	port_alias_tracker_base<datastruct_tag>::collect_map(m);
+	port_alias_tracker_base<enum_tag>::collect_map(m);
+	port_alias_tracker_base<int_tag>::collect_map(m);
+	port_alias_tracker_base<bool_tag>::collect_map(m);
 }
 }
 
@@ -334,12 +333,12 @@ port_alias_tracker::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	write_value(o, has_internal_aliases);
 if (has_internal_aliases) {
-	write_map(process_ids, m, o);
-	write_map(channel_ids, m, o);
-	write_map(struct_ids, m, o);
-	write_map(enum_ids, m, o);
-	write_map(int_ids, m, o);
-	write_map(bool_ids, m, o);
+	port_alias_tracker_base<process_tag>::write_map(m, o);
+	port_alias_tracker_base<channel_tag>::write_map(m, o);
+	port_alias_tracker_base<datastruct_tag>::write_map(m, o);
+	port_alias_tracker_base<enum_tag>::write_map(m, o);
+	port_alias_tracker_base<int_tag>::write_map(m, o);
+	port_alias_tracker_base<bool_tag>::write_map(m, o);
 }
 }
 
@@ -349,12 +348,12 @@ port_alias_tracker::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	read_value(i, has_internal_aliases);
 if (has_internal_aliases) {
-	load_map(process_ids, m, i);
-	load_map(channel_ids, m, i);
-	load_map(struct_ids, m, i);
-	load_map(enum_ids, m, i);
-	load_map(int_ids, m, i);
-	load_map(bool_ids, m, i);
+	port_alias_tracker_base<process_tag>::load_map(m, i);
+	port_alias_tracker_base<channel_tag>::load_map(m, i);
+	port_alias_tracker_base<datastruct_tag>::load_map(m, i);
+	port_alias_tracker_base<enum_tag>::load_map(m, i);
+	port_alias_tracker_base<int_tag>::load_map(m, i);
+	port_alias_tracker_base<bool_tag>::load_map(m, i);
 }
 }
 
@@ -371,6 +370,8 @@ INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
+
+#undef	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK
 
 //=============================================================================
 }	// end namespace entity

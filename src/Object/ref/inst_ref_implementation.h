@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.3 2005/07/23 06:52:46 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.4 2005/09/14 15:30:32 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INST_REF_IMPLEMENTATION__
@@ -15,6 +15,7 @@
 #include "Object/inst/instance_alias.h"
 #include "Object/inst/alias_actuals.h"
 
+#include "util/stacktrace.h"
 #include "util/packed_array.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
@@ -52,6 +53,7 @@ unroll_generic_scalar_reference(
 	typedef	typename inst_ref_type::alias_collection_type
 						alias_collection_type;
 	typedef	never_ptr<substructure_alias>		return_type;
+	STACKTRACE_VERBOSE;
 	alias_collection_type aliases;
 	const bad_bool
 		bad(inst_ref_type::unroll_references_helper(
@@ -89,6 +91,7 @@ unroll_generic_scalar_reference(
 			class_traits<Tag>::instance_collection_generic_type& inst,
 		const never_ptr<const simple_meta_instance_reference_base::index_list_type> ind, 
 		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
 

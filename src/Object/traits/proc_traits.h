@@ -2,13 +2,14 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
+	$Id: proc_traits.h,v 1.5 2005/09/14 15:30:33 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PROC_TRAITS_H__
 #define	__OBJECT_TRAITS_PROC_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
+#include "Object/traits/type_tag_enum.h"
 
 namespace ART {
 namespace entity {
@@ -21,6 +22,7 @@ template <>
 struct class_traits<process_tag> {
 	typedef	process_tag			tag_type;
 	static const char			tag_name[];
+	enum { type_tag_enum_value = PROCESS };
 	typedef	process_instance		instance_type;
 
 	typedef	process_instance_alias_base	instance_alias_base_type;

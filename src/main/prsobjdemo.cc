@@ -2,7 +2,7 @@
 	\file "main/prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.3 2005/09/04 21:15:06 fang Exp $
+	$Id: prsobjdemo.cc,v 1.4 2005/09/14 15:30:36 fang Exp $
  */
 
 #include <iostream>
@@ -88,7 +88,7 @@ void
 prsobjdemo::usage(void) {
 	cerr << name << ": manipulates prs in process definitions." << endl;
 	cerr << "Usage: " << name <<
-		" <art-obj-infile> <art-obj-outfile>" << endl;
+		" <hackt-obj-infile> <hackt-obj-outfile>" << endl;
 }
 
 //=============================================================================

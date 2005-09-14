@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.4 2005/09/04 21:15:04 fang Exp $
+	$Id: unroll_context.cc,v 1.5 2005/09/14 15:30:34 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -51,8 +51,7 @@ unroll_context::unroll_context(const template_actuals& a,
 		next(),
 		template_args(a),
 		template_formals(&f), 
-		target_footprint(NULL)
-		{
+		target_footprint(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -119,6 +118,7 @@ unroll_context::dump(ostream& o) const {
  */
 unroll_context
 unroll_context::make_member_context(void) const {
+	STACKTRACE_VERBOSE;
 	unroll_context ret(*this);
 	ret.target_footprint = NULL;
 	return ret;

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.75 2005/09/05 05:04:28 fang Exp $
+#	$Id: Makefile.am,v 1.76 2005/09/14 15:30:24 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -136,6 +136,7 @@ OBJECT_CC_FILES = \
 	Object/common/object_base.cc \
 	Object/common/namespace.cc \
 	Object/common/extern_templates.cc \
+	Object/common/dump_flags.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
@@ -159,6 +160,8 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_instance_reference_connection.cc \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
+	Object/global_entry.cc \
+	Object/port_context.cc \
 	Object/state_manager.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
@@ -217,6 +220,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/param_instantiation_statement.tcc \
 	Object/unroll/unroll_context.tcc \
 	Object/module.tcc \
+	Object/global_entry.tcc \
 	Object/common/namespace.tcc \
 	Object/lang/CHP.tcc
 
@@ -239,6 +243,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
+	Object/traits/type_tag_enum.h \
 	Object/def/built_in_datatype_def.h \
 	Object/def/channel_definition_alias.h \
 	Object/def/channel_definition_base.h \
@@ -479,11 +484,7 @@ UTIL_HEADER_FILES = \
 	util/binders.h \
 	util/compose.h \
 	util/conditional.h \
-	util/ptrs_functional.h \
-	util/obsolete/ptrs.h \
-	util/obsolete/ptrs_fwd.h \
-	util/obsolete/count_ptr.h \
-	util/obsolete/count_ptr_fwd.h
+	util/ptrs_functional.h
 
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
@@ -519,6 +520,7 @@ MAIN_EXEC_CC_FILES = \
 	main/compile.cc \
 	main/unroll.cc \
 	main/create.cc \
+	main/alloc.cc \
 	main/prsobjdemo.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc

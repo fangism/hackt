@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: alias_empty.h,v 1.4 2005/09/14 15:30:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
@@ -19,6 +19,10 @@
 namespace ART {
 namespace entity {
 class const_param_expr_list;
+class footprint;
+class footprint_frame;
+class state_manager;
+class port_member_context;
 template <class> class instance_alias_info;
 using std::istream;
 using std::ostream;
@@ -90,6 +94,20 @@ protected:
 		return good_bool(true);
 	}
 
+	/**
+		Thus far, no meta types without alias actuals can have 
+		substructure.  
+	 */
+	template <class AliasType>
+	static
+	good_bool
+	__initialize_assign_footprint_frame(const AliasType&,
+			const footprint_frame&, const state_manager&,
+			const port_member_context&, const size_t) {
+		// no-op.
+		return good_bool(true);
+	}
+
 public:
 	static
 	good_bool
@@ -102,6 +120,12 @@ public:
 	static
 	good_bool
 	create_dependent_types(const AliasType&);
+
+	// called by footprint_frame::dump_footprint.
+	template <class AliasType>
+	static
+	ostream&
+	dump_complete_type(const AliasType&, ostream&, const footprint* const);
 
 protected:
 	/**

@@ -2,13 +2,14 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
+	$Id: chan_traits.h,v 1.5 2005/09/14 15:30:33 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
 #define	__OBJECT_TRAITS_CHAN_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
+#include "Object/traits/type_tag_enum.h"
 
 namespace ART {
 namespace entity {
@@ -24,6 +25,7 @@ template <>
 struct class_traits<channel_tag> {
 	typedef	channel_tag			tag_type;
 	static const char			tag_name[];
+	enum { type_tag_enum_value = CHANNEL };
 	typedef	channel_instance		instance_type;
 
 	typedef	channel_instance_alias_base	instance_alias_base_type;

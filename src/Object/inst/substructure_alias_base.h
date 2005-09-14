@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4 2005/09/04 21:14:54 fang Exp $
+	$Id: substructure_alias_base.h,v 1.5 2005/09/14 15:30:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -14,11 +14,15 @@
 
 namespace ART {
 namespace entity {
+struct dump_flags;
 class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
 class port_alias_tracker;
 class footprint;
+class footprint_frame;
+class port_member_context;
+class state_manager;
 template <class> class state_instance;
 using std::istream;
 using std::ostream;
@@ -96,7 +100,7 @@ virtual	never_ptr<const physical_instance_collection>
 
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&
-	dump_hierarchical_name(ostream&) const;
+	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
 virtual	size_t
 	allocate_state(footprint&) const;
@@ -113,6 +117,19 @@ virtual	size_t
 
 virtual	this_type&
 	__trace_alias_base(const this_type&) const;
+
+protected:
+	good_bool
+	__allocate_subinstance_footprint(
+		footprint_frame&, state_manager&) const;
+
+	void
+	__assign_footprint_frame(footprint_frame&,
+		const port_member_context&) const;
+
+	void
+	__construct_port_context(port_member_context&,
+		const footprint_frame&) const;
 
 protected:
 	// call forwarding
@@ -192,6 +209,25 @@ public:
 
 	void
 	connect_ports(void) const { }
+
+protected:
+	good_bool
+	__allocate_subinstance_footprint(const footprint_frame&, 
+			const state_manager&) const {
+		return good_bool(true);
+	}
+
+
+	void
+	__assign_footprint_frame(const footprint_frame&,
+			const port_member_context&) const {
+	}
+
+	void
+	__construct_port_context(const port_member_context&, 
+			const footprint_frame&) const {
+		// No-op.
+	}
 
 protected:
 	void

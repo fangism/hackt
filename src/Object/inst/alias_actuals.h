@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: alias_actuals.h,v 1.4 2005/09/14 15:30:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -20,6 +20,10 @@
 namespace ART {
 namespace entity {
 class const_param_expr_list;
+class footprint;
+class footprint_frame;
+class port_member_context;
+class state_manager;
 template <class> class instance_alias_info;
 using std::istream;
 using std::ostream;
@@ -81,19 +85,16 @@ protected:
 	__compare_and_propagate_actuals(const alias_actuals_type&,
 		AliasType&);
 
-#if 0
-private:
-	static
-	good_bool
-	symmetric_compare_and_update_actuals(alias_actuals_type& l, 
-		alias_actuals_type& r);
-#endif
-
-protected:
 	template <class AliasType>
 	static
 	good_bool
 	__symmetric_synchronize(AliasType& l, AliasType& r);
+
+	template <class AliasType>
+	static
+	good_bool
+	__initialize_assign_footprint_frame(const AliasType&, footprint_frame&, 
+		state_manager&, const port_member_context&, const size_t);
 
 public:
 	static
@@ -110,6 +111,26 @@ public:
 	template <class InstColl>
 	typename InstColl::instance_collection_parameter_type
 	complete_type_actuals(const InstColl& _inst) const;
+
+	// called by footprint_frame::dump_footprint.
+	template <class AliasType>
+	static
+	ostream&
+	dump_complete_type(const AliasType&, ostream&, const footprint* const);
+
+	template <class AliasType>
+	static
+	void
+	save_canonical_footprint(const AliasType&,
+		const persistent_object_manager&, 
+		ostream&, const footprint* const);
+
+	template <class AliasType>
+	static
+	void
+	restore_canonical_footprint(const AliasType&,
+		const persistent_object_manager&, 
+		istream&, const footprint*&);
 
 protected:
 	void

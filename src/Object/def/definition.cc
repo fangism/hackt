@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.4 2005/09/04 21:14:42 fang Exp $
+ 	$Id: definition.cc,v 1.5 2005/09/14 15:30:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -425,6 +425,7 @@ definition_base::add_port_formal(
 void
 definition_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	template_formals.collect_transient_info_base(m);
 }
 
@@ -438,6 +439,7 @@ definition_base::write_object_base_fake(
 	static const template_formals_list_type dummy;
 	// this is a non-member function, emulating write_object_base
 	static const bool fake_defined = false;	// value doesn't matter
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, fake_defined);
 	template_formals_manager::write_object_base_fake(m, o);
 }
@@ -446,6 +448,7 @@ definition_base::write_object_base_fake(
 void
 definition_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, defined);
 	template_formals.write_object_base(m, o);
 }
@@ -454,6 +457,7 @@ definition_base::write_object_base(
 void
 definition_base::load_object_base(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(f, defined);
 	template_formals.load_object_base(m, f);
 }
@@ -881,6 +885,7 @@ user_def_chan::create_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 void
 user_def_chan::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	definition_base::collect_transient_info_base(m);
@@ -904,6 +909,7 @@ if (!m.register_transient_object(this,
 void
 user_def_chan::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -922,6 +928,7 @@ user_def_chan::write_object(
  */
 void
 user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -937,6 +944,7 @@ user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -1059,6 +1067,7 @@ channel_definition_alias::create_complete_type(
 void
 channel_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
@@ -1075,6 +1084,7 @@ if (!m.register_transient_object(this,
 void
 channel_definition_alias::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
@@ -1087,6 +1097,7 @@ channel_definition_alias::write_object(
 void
 channel_definition_alias::load_object(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
@@ -1650,6 +1661,7 @@ enum_datatype_def::create_complete_type(
 void
 enum_datatype_def::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	definition_base::collect_transient_info_base(m);
@@ -1667,6 +1679,7 @@ if (!m.register_transient_object(this,
 void
 enum_datatype_def::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -1692,6 +1705,7 @@ enum_datatype_def::write_object(
  */
 void
 enum_datatype_def::load_object(const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -2205,6 +2219,7 @@ datatype_definition_alias::create_complete_type(
 void
 datatype_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
@@ -2250,6 +2265,7 @@ datatype_definition_alias::load_object(
  */
 void
 datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -2614,8 +2630,19 @@ process_definition::add_concurrent_chp_body(const count_ptr<CHP::action>& a) {
 const footprint&
 process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
 	if (p) {
+#if 1
+		if (p->size() != footprint_map.arity()) {
+			ICE(cerr, 
+				cerr << "p->size() == " << p->size() <<
+					", while footprint_map._arity == " <<
+					footprint_map.arity() << endl;
+			);
+		}
+#else
 		INVARIANT(p->size() == footprint_map.arity());
+#endif
 		return footprint_map[*p];
 	} else {
 		return footprint_map.only();
@@ -2753,6 +2780,7 @@ if (defined) {
  */
 void
 process_definition::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	// no need to visit template formals, port formals, separately, 
@@ -2777,6 +2805,7 @@ if (!m.register_transient_object(this,
 void
 process_definition::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
@@ -2794,6 +2823,7 @@ process_definition::write_object(
 void
 process_definition::load_object(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
@@ -2810,6 +2840,7 @@ process_definition::load_object(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
@@ -2934,6 +2965,7 @@ process_definition_alias::make_canonical_fundamental_type_reference(
 void
 process_definition_alias::collect_transient_info(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	base->collect_transient_info(m);
@@ -2950,6 +2982,7 @@ if (!m.register_transient_object(this,
 void
 process_definition_alias::write_object(
 		const persistent_object_manager& m, ostream& f) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	m.write_pointer(f, base);
@@ -2962,6 +2995,7 @@ process_definition_alias::write_object(
 void
 process_definition_alias::load_object(
 		const persistent_object_manager& m, istream& f) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	m.read_pointer(f, base);
@@ -2976,6 +3010,7 @@ process_definition_alias::load_object(
  */
 void
 process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 #if 0
 	cerr << "WARNING: didn't expect to call "
 		"process_definition_alias::load_used_id_map_object()." << endl;

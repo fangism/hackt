@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.2 2005/09/04 21:14:52 fang Exp $
+	$Id: port_alias_tracker.h,v 1.3 2005/09/14 15:30:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -28,9 +28,6 @@ using util::memory::never_ptr;
 
 template <class Tag>
 class instance_alias_info;
-
-template <class Tag>
-struct port_alias_tracker_getter;
 
 //=============================================================================
 /**
@@ -76,13 +73,52 @@ public:
 };	// end class alias_reference_set
 
 //=============================================================================
+template <class Tag>
+class port_alias_tracker_base {
+protected:
+	typedef	Tag						tag_type;
+	typedef	std::map<size_t, alias_reference_set<Tag> >	map_type;
+	typedef	typename map_type::const_iterator		const_iterator;
+	typedef	typename map_type::iterator			iterator;
+
+	map_type					_ids;
+
+	port_alias_tracker_base();
+	~port_alias_tracker_base();
+
+	void
+	filter_unique(void);
+
+	ostream&
+	dump_map(ostream&) const;
+
+	good_bool
+	__replay_aliases(substructure_alias&) const;
+
+	void
+	collect_map(persistent_object_manager&) const;
+
+	void
+	write_map(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_map(const persistent_object_manager&, istream&);
+
+};	// end class port_alias_tracker_base
+
+//=============================================================================
 /**
 	Used to count aliases over strucutres whose connections have been
 	played and unique placeholder ID numbers have been assigned.  
 	Also keep track of instance references?
  */
-class port_alias_tracker {
-template <class> friend struct port_alias_tracker_getter;
+class port_alias_tracker :
+	private port_alias_tracker_base<process_tag>,
+	private port_alias_tracker_base<channel_tag>,
+	private port_alias_tracker_base<datastruct_tag>,
+	private port_alias_tracker_base<enum_tag>,
+	private port_alias_tracker_base<int_tag>,
+	private port_alias_tracker_base<bool_tag> {
 public:
 	/**
 		Map used to track number of occurrences of indices.  
@@ -93,12 +129,6 @@ public:
 	};
 
 private:
-	tracker_map_type<process_tag>::type		process_ids;
-	tracker_map_type<channel_tag>::type		channel_ids;
-	tracker_map_type<datastruct_tag>::type		struct_ids;
-	tracker_map_type<enum_tag>::type		enum_ids;
-	tracker_map_type<int_tag>::type			int_ids;
-	tracker_map_type<bool_tag>::type		bool_ids;
 	bool						has_internal_aliases;
 public:
 	port_alias_tracker();
@@ -107,36 +137,13 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-private:
-	template <class M>
-	static
-	void
-	filter_unique(M&);
+	template <class Tag>
+	typename port_alias_tracker_base<Tag>::map_type&
+	get_id_map(void) { return port_alias_tracker_base<Tag>::_ids; }
 
-	template <class M>
-	static
-	ostream&
-	dump_map(const M&, ostream&);
-
-	template <class M>
-	static
-	void
-	collect_map(const M&, persistent_object_manager&);
-
-	template <class M>
-	static
-	good_bool
-	__replay_aliases(const M&, substructure_alias&);
-
-	template <class M>
-	static
-	void
-	write_map(const M&, const persistent_object_manager&, ostream&);
-
-	template <class M>
-	static
-	void
-	load_map(M&, const persistent_object_manager&, istream&);
+	template <class Tag>
+	const typename port_alias_tracker_base<Tag>::map_type&
+	get_id_map(void) const { return port_alias_tracker_base<Tag>::_ids; }
 
 public:
 	void
@@ -156,35 +163,6 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct port_alias_tracker
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#define	SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(Tag,Member)		\
-template <>								\
-struct port_alias_tracker_getter<Tag> {					\
-	typedef	port_alias_tracker::tracker_map_type<Tag>::type		\
-							map_type;	\
-									\
-	inline								\
-	map_type&							\
-	operator () (port_alias_tracker& p) const {			\
-		return p.Member;					\
-	}								\
-									\
-	inline								\
-	const map_type&							\
-	operator () (const port_alias_tracker& p) const {		\
-		return p.Member;					\
-	}								\
-};	// end struct port_alias_tracker_getter
-	
-SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(process_tag, process_ids)
-SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(channel_tag, channel_ids)
-SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(datastruct_tag, struct_ids)
-SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(enum_tag, enum_ids)
-SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(int_tag, int_ids)
-SPECIALIZE_PORT_ALIAS_TRACKER_GETTER(bool_tag, bool_ids)
-
-#undef	SPECIALIZE_PORT_ALIAS_TRACKER_GETTER
 
 //=============================================================================
 #if 0

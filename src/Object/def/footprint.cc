@@ -1,22 +1,30 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.2 2005/09/04 21:14:42 fang Exp $
+	$Id: footprint.cc,v 1.3 2005/09/14 15:30:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
 #include "Object/def/port_formals_manager.h"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_actuals.h"
+#include "Object/state_manager.h"
+#include "Object/global_entry.h"
+#include "Object/port_context.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
+#include "util/wtf.h"
 
 namespace ART {
 namespace entity {
@@ -26,19 +34,123 @@ using util::read_value;
 using util::auto_indent;
 
 //=============================================================================
+// class footprint_base method definitions
+
+template <class Tag>
+footprint_base<Tag>::footprint_base() :
+		_pool(class_traits<Tag>::instance_pool_chunk_size >> 1) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+footprint_base<Tag>::~footprint_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Top-level global state allocation.  
+	Parent tag and id are all zero.  
+ */
+template <class Tag>
+good_bool
+footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(++_pool.begin());
+	const const_iterator e(_pool.end());
+	for ( ; i!=e; i++) {
+		const size_t j = sm.template allocate<Tag>();
+		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
+		g.parent_tag_value = 0;
+		/***
+			The parent_tag_value is
+		***/
+		g.parent_id = 0;
+		g.local_offset = j;
+		/***
+			The local offset corresponds to the relative position
+			in the footprint of origin.  
+			Remember, the footprint is 1-indexed, 
+			while the frame is 0-indexed.  
+		***/
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Iterate over local footprint of structured entries.  
+	\param s the global state allocator.
+	\param o the offset from which to start in the global state allocator.
+ */
+template <class Tag>
+good_bool
+footprint_base<Tag>::__expand_unique_subinstances(
+		const footprint_frame& gframe,
+		state_manager& sm, const size_t o) const {
+	typedef	global_entry_pool<Tag>		global_pool_type;
+	STACKTRACE_VERBOSE;
+	size_t j = o;
+	global_pool_type& gpool(sm.template get_pool<Tag>());
+	const_iterator i(++_pool.begin());
+	const const_iterator e(_pool.end());
+	for ( ; i!=e; i++, j++) {
+		global_entry<Tag>& ref(gpool[j]);
+		/***
+			The footprint frame has not yet been initialized, 
+			it is just empty.  allocate_subinstance_footprint()
+			will initialize it (resize) for itself automatically.  
+		***/
+		footprint_frame& frame(ref._frame);
+		const instance_alias_info<Tag>&
+			formal_alias(*i->get_back_ref());
+		/***
+			Frame is initialized but not asssigned.  
+			Now we assign!
+			We need the state_manager's global ID info.  
+			Construct a port_context, and pass it in.  
+			The frame passed in should be a top-level
+			master footprint_frame.  
+		***/
+		port_member_context pmc;
+		/***
+			__construct_port_context projects the context
+			global actual IDs into this unique instance's
+			ports.  (Passing top-down).
+			NOTE: this shouldn't require the state_manager.
+		***/
+		formal_alias.__construct_port_context(pmc, gframe);
+#if ENABLE_STACKTRACE
+		formal_alias.dump_hierarchical_name(STACKTRACE_INDENT) << endl;
+		pmc.dump(STACKTRACE_INDENT << "port-member-context: ") << endl;
+		// formal_alias is wrong level of hierarchy
+#endif
+		// initialize (allocate) frame and assign at the same time.  
+		// recursively create private remaining internal state
+		if (!formal_alias.allocate_assign_subinstance_footprint_frame(
+				frame, sm, pmc, j).good) {
+			return good_bool(false);
+		}
+#if ENABLE_STACKTRACE
+		frame.dump_frame(STACKTRACE_INDENT << "filled frame: ") << endl;
+#endif
+		// the allocate private subinstances
+	}
+	return good_bool(true);
+}
+
+//=============================================================================
 // class footprint method definitions
 
 footprint::footprint() :
+	footprint_base<process_tag>(), 
+	footprint_base<channel_tag>(), 
+	footprint_base<datastruct_tag>(), 
+	footprint_base<enum_tag>(), 
+	footprint_base<int_tag>(), 
+	footprint_base<bool_tag>(), 
 	unrolled(false), created(false),
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
-	process_pool(class_traits<process_tag>::instance_pool_chunk_size >> 1),
-	channel_pool(class_traits<channel_tag>::instance_pool_chunk_size >> 1),
-	struct_pool(class_traits<datastruct_tag>::instance_pool_chunk_size >> 1),
-	enum_pool(class_traits<enum_tag>::instance_pool_chunk_size >> 1),
-	int_pool(class_traits<int_tag>::instance_pool_chunk_size >> 1),
-	bool_pool(class_traits<bool_tag>::instance_pool_chunk_size >> 1), 
 	port_aliases() {
 	STACKTRACE_CTOR_VERBOSE;
 }
@@ -53,12 +165,12 @@ ostream&
 footprint::dump(ostream& o) const {
 	// unrolled? created?
 	// instance_collection_map ?
-	process_pool.dump(o);
-	channel_pool.dump(o);
-	struct_pool.dump(o);
-	enum_pool.dump(o);
-	int_pool.dump(o);
-	bool_pool.dump(o);
+	footprint_base<process_tag>::_pool.dump(o);
+	footprint_base<channel_tag>::_pool.dump(o);
+	footprint_base<datastruct_tag>::_pool.dump(o);
+	footprint_base<enum_tag>::_pool.dump(o);
+	footprint_base<int_tag>::_pool.dump(o);
+	footprint_base<bool_tag>::_pool.dump(o);
 	return o;
 }
 
@@ -175,6 +287,88 @@ footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by the top-level module.  
+	This expands unique subinstances in each pool.  
+	Expand everything in this footprint at this level first
+	before recursing into subinstances' ports.  
+ */
+good_bool
+footprint::expand_unique_subinstances(state_manager& sm) const {
+	STACKTRACE_VERBOSE;
+	// only processes, channels, and data structures need to be expanded
+	// nothing else has substructure.  
+	const size_t process_offset = sm.get_pool<process_tag>().size();
+	const size_t channel_offset = sm.get_pool<channel_tag>().size();
+	const size_t struct_offset = sm.get_pool<datastruct_tag>().size();
+	const good_bool a(
+		footprint_base<process_tag>::__allocate_global_state(sm).good &&
+		footprint_base<channel_tag>::__allocate_global_state(sm).good &&
+		footprint_base<datastruct_tag>::__allocate_global_state(sm).good &&
+		footprint_base<enum_tag>::__allocate_global_state(sm).good &&
+		footprint_base<int_tag>::__allocate_global_state(sm).good &&
+		footprint_base<bool_tag>::__allocate_global_state(sm).good);
+	/***
+		Possibly construct footprint_frame(*this);
+	***/
+	footprint_frame ff(*this);
+	ff.init_top_level();
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_STREAM << "this: ") << endl;
+	ff.dump_frame(STACKTRACE_STREAM << "frame: ") << endl;
+#endif
+	// this is empty, needs to be assigned before passing down...
+	// construct frame using offset?
+	if (a.good) {
+		const good_bool b(
+			footprint_base<process_tag>::
+				__expand_unique_subinstances(
+					ff, sm, process_offset).good &&
+			footprint_base<channel_tag>::
+				__expand_unique_subinstances(
+					ff, sm, channel_offset).good &&
+			footprint_base<datastruct_tag>::
+				__expand_unique_subinstances(
+					ff, sm, struct_offset).good
+		);
+		return b;
+	} else {
+		// error
+		return a;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This recursively transforms a port_member_context to local
+	frame.  This copies globally assigned indices passed in
+	external context into the corresponding (internal) footprint frame.  
+	TODO: English, please?
+ */
+void
+footprint::assign_footprint_frame(footprint_frame& ff, 
+		const port_member_context& pmc) const {
+	STACKTRACE_VERBOSE;
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
+	for ( ; i!=e; i++) {
+		const count_ptr<const physical_instance_collection>
+		coll_ptr(i->second.is_a<const physical_instance_collection>());
+		if (coll_ptr) {
+			// note: port formal is 1-indexed
+			// where as member array is 0-indexed
+			const size_t pfp = coll_ptr->is_port_formal();
+			if (pfp) {
+				coll_ptr->assign_footprint_frame(
+					ff, pmc.member_array[pfp -1]);
+			}
+			// else is not port formal, skip
+		}
+		// else is a param_value_collection, skip
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
@@ -190,13 +384,12 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 		coll_ptr->collect_transient_info(m);
 	}
 }
-	process_pool.collect_transient_info_base(m);
-	channel_pool.collect_transient_info_base(m);
-	struct_pool.collect_transient_info_base(m);
-	enum_pool.collect_transient_info_base(m);
-	int_pool.collect_transient_info_base(m);
-	bool_pool.collect_transient_info_base(m);
-	port_aliases.collect_transient_info_base(m);
+	footprint_base<process_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<channel_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<datastruct_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<enum_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
+	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -218,12 +411,12 @@ footprint::write_object_base(const persistent_object_manager& m,
 		m.write_pointer(o, coll_ptr);
 	}
 }
-	process_pool.write_object_base(m, o);
-	channel_pool.write_object_base(m, o);
-	struct_pool.write_object_base(m, o);
-	enum_pool.write_object_base(m, o);
-	int_pool.write_object_base(m, o);
-	bool_pool.write_object_base(m, o);
+	footprint_base<process_tag>::_pool.write_object_base(m, o);
+	footprint_base<channel_tag>::_pool.write_object_base(m, o);
+	footprint_base<datastruct_tag>::_pool.write_object_base(m, o);
+	footprint_base<enum_tag>::_pool.write_object_base(m, o);
+	footprint_base<int_tag>::_pool.write_object_base(m, o);
+	footprint_base<bool_tag>::_pool.write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
 }
 
@@ -247,12 +440,12 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		instance_collection_map[coll_ptr->get_name()] = coll_ptr;
 	}
 }
-	process_pool.load_object_base(m, i);
-	channel_pool.load_object_base(m, i);
-	struct_pool.load_object_base(m, i);
-	enum_pool.load_object_base(m, i);
-	int_pool.load_object_base(m, i);
-	bool_pool.load_object_base(m, i);
+	footprint_base<process_tag>::_pool.load_object_base(m, i);
+	footprint_base<channel_tag>::_pool.load_object_base(m, i);
+	footprint_base<datastruct_tag>::_pool.load_object_base(m, i);
+	footprint_base<enum_tag>::_pool.load_object_base(m, i);
+	footprint_base<int_tag>::_pool.load_object_base(m, i);
+	footprint_base<bool_tag>::_pool.load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
 }
 

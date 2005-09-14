@@ -3,7 +3,7 @@
 	Unrolls an object file, saves it to another object file.  
 	This file was reincarnated from "artobjunroll.cc" in a previous life.  
 
-	$Id: unroll.cc,v 1.3 2005/09/04 21:15:06 fang Exp $
+	$Id: unroll.cc,v 1.4 2005/09/14 15:30:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -92,7 +92,7 @@ unroll::main(const int argc, char* argv[], const global_options&) {
 void
 unroll::usage(void) {
 	cerr << "Usage: " << name <<
-		" <art-obj-infile> <art-obj-outfile>" << endl;
+		" <hackt-obj-infile> <hackt-obj-outfile>" << endl;
 }
 
 //=============================================================================

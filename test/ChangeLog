@@ -1,5 +1,19 @@
 # "test/ChangeLog"
 
+2005-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-merged-unique-02-15:
+	  Branch merge.  
+
+
+2005-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-07:
+	  Added test support for unique state allocation (alloc) phase.  
+	  Expected output format is only tentative, until a complete
+		implementation of objdump for state comes along (soon).  
+
+
 2005-09-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-56-merged-footprint-01-36:

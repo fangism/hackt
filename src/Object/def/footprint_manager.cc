@@ -1,13 +1,17 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.2 2005/09/04 21:14:43 fang Exp $
+	$Id: footprint_manager.cc,v 1.3 2005/09/14 15:30:29 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include <iostream>
 #include "util/macros.h"
 #include "Object/def/footprint_manager.h"
 #include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
 
@@ -120,6 +124,7 @@ footprint_manager::only(void) const {
 void
 footprint_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -135,6 +140,7 @@ footprint_manager::collect_transient_info_base(
 void
 footprint_manager::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	write_value(o, _arity);
 	write_value(o, size());
 	const_iterator i(begin());
@@ -152,6 +158,7 @@ footprint_manager::write_object_base(
 void
 footprint_manager::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+	STACKTRACE_PERSISTENT_VERBOSE;
 	read_value(i, _arity);
 	size_t s;
 	read_value(i, s);
@@ -161,6 +168,7 @@ footprint_manager::load_object_base(
 		key_type temp_key;
 		temp_key.load_object(m, i);
 		// load value in-place
+		INVARIANT(temp_key.size() == _arity);
 		(*this)[temp_key].load_object_base(m, i);
 	}
 	INVARIANT(size() == s);
