@@ -1,10 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.2.2.1 2005/09/14 03:14:14 fang Exp $
-
-BUGS under attack:
-	2005-09-13: process/107,109.in --
-		death in member instance reference resolution.  
+	$Id: BUGS,v 1.2.2.2 2005/09/14 05:40:06 fang Exp $
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals

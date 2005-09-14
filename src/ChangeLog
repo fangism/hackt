@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-58-unique-02-12:
+	  BUG FIXED: forgot to remove footprint pointer from unroll_context
+		in the tail-recursive path of member instance reference
+		resolution during unroll phase.  (one-line fix)
+	  Added test-cases process/107,109.
+
+
 2005-09-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-58-unique-02-11:
