@@ -2,6 +2,13 @@
 
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-13:
+	  No code revision, just more test cases...
+	  We interrupt test-case writing to add more information to 
+		the global state dump: canonical name field.  
+	  TODO: update hackt-alloc-expect.sh test script.  
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-12:
 	  BUG FIXED: forgot to remove footprint pointer from unroll_context
 		in the tail-recursive path of member instance reference

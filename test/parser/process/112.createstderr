@@ -1,0 +1,105 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	143
+	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	29
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	117
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	143
+	20	##ADDR##	proccoll	2	#HEAD#	#TAIL#	37
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	proccoll	2	#HEAD#	#TAIL#	157
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+      )
+      In definition "bar", we have: {
+        x = foo<> x with indices: {
+          [0..1][0..1]
+        }
+
+        footprint: {
+          process foo<>^2 x with indices: {
+          }
+            unrolled indices: {
+              [0][0] = ::bar::x[0][0] (1) 
+              [0][1] = ::bar::x[1][0] (2) 
+              [1][0] = ::bar::x[0][1] (2) 
+              [1][1] = ::bar::x[1][1] (3) 
+            }
+          process instance pool:
+          1	::bar::x[0][0]
+          2	::bar::x[0][1]
+          3	::bar::x[1][1]
+        }
+      }
+
+    foo = process-definition (defined) foo(
+      )
+      In definition "foo", we have: {
+        a = bool<> a with indices: {
+          [0..1][0..1]
+        }
+
+        footprint: {
+          bool^2 a with indices: {
+          }
+            unrolled indices: {
+              [0][0] = ::foo::a[1][1] (1) 
+              [0][1] = ::foo::a[0][1] (2) 
+              [1][0] = ::foo::a[1][0] (3) 
+              [1][1] = ::foo::a[0][0] (1) 
+            }
+          bool instance pool:
+          1	::foo::a[0][0]
+          2	::foo::a[0][1]
+          3	::foo::a[1][0]
+        }
+      }
+
+  Instances:
+    poo = process bar<>^0 poo (instantiated) = ::poo (1) 
+}
+
+Created state:
+process instance pool:
+1	::poo
+
