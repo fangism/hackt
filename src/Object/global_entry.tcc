@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.2 2005/09/14 15:30:26 fang Exp $
+	$Id: global_entry.tcc,v 1.2.2.1 2005/09/14 19:20:00 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -14,8 +14,10 @@
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 #endif
 
+#include <string>
 #include <iostream>
 #include "util/macros.h"
+#include "util/sstream.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/def/footprint.h"
@@ -39,6 +41,7 @@
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
+using std::ostringstream;
 using util::read_value;
 using util::write_value;
 
@@ -251,7 +254,7 @@ global_entry<Tag>::~global_entry() { }
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::dump_canonical_name(ostream& o, const dump_flags& df, 
+global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df, 
 		const size_t ind, const footprint& topfp,
 		const state_manager& sm) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
@@ -263,7 +266,7 @@ global_entry<Tag>::dump_canonical_name(ostream& o, const dump_flags& df,
 		INVARIANT(ind >= _pool.size());
 		const global_entry<process_tag>&
 			p_ent(extract_parent_entry<process_tag>(sm, *this));
-		p_ent.dump_canonical_name(o, df, parent_id, topfp, sm) << '.';
+		p_ent.__dump_canonical_name(o, df, parent_id, topfp, sm) << '.';
 		// partial, omit formal type parent
 		const pool_type&
 			_lpool(p_ent._frame._footprint
@@ -274,8 +277,20 @@ global_entry<Tag>::dump_canonical_name(ostream& o, const dump_flags& df,
 		_inst = &_pool[ind];
 	}
 	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
-	_alias.dump_hierarchical_name(o, df);
-	return o;
+	return _alias.dump_hierarchical_name(o, df);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call that formats properly.  
+ */
+template <class Tag>
+ostream&
+global_entry<Tag>::dump_canonical_name(ostream& o, const size_t ind,
+		const footprint& topfp, const state_manager& sm) const {
+	dump_flags df;
+	df.show_definition_owner = false;
+	return __dump_canonical_name(o, df, ind, topfp, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -304,12 +319,22 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 		THROW_EXIT;
 	}
 	o << local_offset << '\t';
-	{
-	dump_flags df;
-	df.show_definition_owner = false;
-	dump_canonical_name(o, df, ind, topfp, sm) << '\t';
-	}
+	dump_canonical_name(o, ind, topfp, sm) << '\t';
 	return parent_type::template dump<Tag>(o, ind, topfp, sm);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print out all equivalent aliases in the hierarchy.  
+ */
+template <class Tag>
+ostream&
+global_entry<Tag>::cflat_connect(ostream& o, const size_t ind,
+		const footprint& topfp, const state_manager& sm) const {
+	ostringstream canonical;
+	dump_canonical_name(canonical, ind, topfp, sm);
+	// collect all aliases at all levels of hierarchy...
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

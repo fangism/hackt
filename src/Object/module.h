@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.5 2005/09/14 15:30:26 fang Exp $
+	$Id: module.h,v 1.5.2.1 2005/09/14 19:20:02 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -12,12 +12,7 @@
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
-
-#define	USE_STATE_MANAGER		1
-
-#if USE_STATE_MANAGER
 #include "Object/state_manager.h"
-#endif
 
 namespace ART {
 namespace entity {
@@ -56,10 +51,15 @@ protected:
 	 */
 	footprint				_footprint;
 
-#if USE_STATE_MANAGER
+	/**
+		Whether or not the global instances have been allocated
+		in the state_manager.  
+	 */
 	bool					allocated;
+	/**
+		Global unique instance manager.  
+	 */
 	state_manager				global_state;
-#endif
 
 private:
 	module();
@@ -117,6 +117,10 @@ public:
 
 	good_bool
 	allocate_unique(void);
+
+	/// later add cflat options argument
+	good_bool
+	cflat(ostream&) const;
 
 private:
 	good_bool

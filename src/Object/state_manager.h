@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.3 2005/09/14 15:30:27 fang Exp $
+	$Id: state_manager.h,v 1.3.2.1 2005/09/14 19:20:03 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -11,6 +11,7 @@
 #include "util/persistent_fwd.h"
 #include "Object/traits/classification_tags.h"
 #include "util/list_vector.h"
+#include "util/boolean_types.h"
 
 namespace ART {
 namespace entity {
@@ -18,6 +19,7 @@ class footprint;
 class state_manager;
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::persistent_object_manager;
 
 template <class Tag> struct global_entry;
@@ -56,7 +58,10 @@ public:
 	allocate(const entry_type&);
 
 	ostream&
-	dump(ostream&, const footprint&, const state_manager&) const;
+	dump(ostream&, const footprint&) const;
+
+	ostream&
+	cflat_connect(ostream&, const footprint&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -121,6 +126,9 @@ public:
 
 	ostream&
 	dump(ostream&, const footprint&) const;
+
+	good_bool
+	cflat(ostream&, const footprint&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

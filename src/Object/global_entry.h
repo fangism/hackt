@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.2 2005/09/14 15:30:25 fang Exp $
+	$Id: global_entry.h,v 1.2.2.1 2005/09/14 19:20:00 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -249,7 +249,15 @@ public:
 		const state_manager&) const;
 
 	ostream&
-	dump_canonical_name(ostream&, const dump_flags&,
+	cflat_connect(ostream&, const size_t, const footprint&, 
+		const state_manager&) const;
+
+	ostream&
+	dump_canonical_name(ostream&, const size_t, const footprint&,
+		const state_manager&) const;
+
+	ostream&
+	__dump_canonical_name(ostream&, const dump_flags&,
 		const size_t, const footprint&, const state_manager&) const;
 
 	using parent_type::collect_transient_info_base;

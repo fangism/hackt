@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.5 2005/09/14 15:30:26 fang Exp $
+ 	$Id: module.cc,v 1.5.2.1 2005/09/14 19:20:01 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -48,22 +48,14 @@ using util::persistent_traits;
 module::module() :
 		persistent(), sequential_scope(),
 		name(""), global_namespace(NULL),
-		_footprint()
-#if USE_STATE_MANAGER
-		, allocated(false), global_state()
-#endif
-		{
+		_footprint(), allocated(false), global_state() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
 		persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")),
-		_footprint()
-#if USE_STATE_MANAGER
-		, allocated(false), global_state()
-#endif
-		{
+		_footprint(), allocated(false), global_state() {
 	NEVER_NULL(global_namespace);
 }
 
@@ -240,7 +232,7 @@ module::allocate_unique(void) {
 	if (!create_unique().good)
 		return good_bool(false);
 	if (!is_allocated()) {
-		STACKTRACE("not already allcoated, allocating...");
+		STACKTRACE("not already allocated, allocating...");
 		// we've established uniqueness among public ports
 		// now go through footprint and recursively allocate
 		// substructures in the footprint.  
@@ -256,6 +248,18 @@ module::allocate_unique(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+module::cflat(ostream& o) const {
+if (allocated) {
+	return global_state.cflat(o, _footprint);
+} else {
+	cerr << "ERROR: Module is not globally allocated, "
+		"as required by cflat." << endl;
+	return good_bool(false);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sweeps entire module structure for persistently managed objects.  
  */
@@ -268,9 +272,7 @@ if (!m.register_transient_object(this,
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
 	_footprint.collect_transient_info_base(m);
-#if USE_STATE_MANAGER
 	global_state.collect_transient_info_base(m);
-#endif
 }
 // else already visited
 }
@@ -283,10 +285,8 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, global_namespace);
 	sequential_scope::write_object_base(m, f);
 	_footprint.write_object_base(m, f);
-#if USE_STATE_MANAGER
 	write_value(f, allocated);
 	global_state.write_object_base(m, f, _footprint);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -298,10 +298,8 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
 	_footprint.load_object_base(m, f);
-#if USE_STATE_MANAGER
 	read_value(f, allocated);
 	global_state.load_object_base(m, f, _footprint);
-#endif
 }
 
 //=============================================================================

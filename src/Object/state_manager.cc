@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.4 2005/09/14 15:30:27 fang Exp $
+	$Id: state_manager.cc,v 1.4.2.1 2005/09/14 19:20:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -46,15 +46,35 @@ global_entry_pool<Tag>::~global_entry_pool() { }
  */
 template <class Tag>
 ostream&
-global_entry_pool<Tag>::dump(ostream& o, const footprint& topfp, 
-		const state_manager& sm) const {
+global_entry_pool<Tag>::dump(ostream& o, const footprint& topfp) const {
 if (this->size() > 1) {
+	const state_manager& sm(AS_A(const state_manager&, *this));
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
 	size_t j = 1;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++, j++) {
 		i->dump(o, j, topfp, sm) << endl;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints all aliases with their canonical names.  
+ */
+template <class Tag>
+ostream&
+global_entry_pool<Tag>::cflat_connect(ostream& o,
+		const footprint& topfp) const {
+if (this->size() > 1) {
+	const state_manager& sm(AS_A(const state_manager&, *this));
+	size_t j = 1;
+	const_iterator i(++this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++, j++) {
+		i->cflat_connect(o, j, topfp, sm) << endl;
 	}
 }
 	return o;
@@ -146,13 +166,26 @@ state_manager::~state_manager() { }
 ostream&
 state_manager::dump(ostream& o, const footprint& topfp) const {
 	o << "globID\tsuper\t\tlocalID\tcanonical\tfootprint-frame" << endl;
-	global_entry_pool<process_tag>::dump(o, topfp, *this);
-	global_entry_pool<channel_tag>::dump(o, topfp, *this);
-	global_entry_pool<datastruct_tag>::dump(o, topfp, *this);
-	global_entry_pool<enum_tag>::dump(o, topfp, *this);
-	global_entry_pool<int_tag>::dump(o, topfp, *this);
-	global_entry_pool<bool_tag>::dump(o, topfp, *this);
+	global_entry_pool<process_tag>::dump(o, topfp);
+	global_entry_pool<channel_tag>::dump(o, topfp);
+	global_entry_pool<datastruct_tag>::dump(o, topfp);
+	global_entry_pool<enum_tag>::dump(o, topfp);
+	global_entry_pool<int_tag>::dump(o, topfp);
+	global_entry_pool<bool_tag>::dump(o, topfp);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prototype cflat.  
+	Connections first.  
+ */
+good_bool
+state_manager::cflat(ostream& o, const footprint& topfp) const {
+	// dump connections
+	global_entry_pool<bool_tag>::cflat_connect(o, topfp);
+	// dump prs
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

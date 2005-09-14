@@ -2,6 +2,14 @@
 
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-59-cflat-01-01:
+	  This branch is devoted to cflat -connect functionality.  
+	  This initial revision set up the method calls and basic interface.  
+	  TODO: keep track of all aliases, in addition to port aliases.  
+
+
+2005-09-14	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-59-merged-unique-02-15:
 	  Branch summary: Implemented 'alloc' pass which creates
 		global hierarchical structures for unique instances.  

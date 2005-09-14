@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.76 2005/09/14 15:30:24 fang Exp $
+#	$Id: Makefile.am,v 1.76.2.1 2005/09/14 19:19:57 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -521,6 +521,7 @@ MAIN_EXEC_CC_FILES = \
 	main/unroll.cc \
 	main/create.cc \
 	main/alloc.cc \
+	main/cflat.cc \
 	main/prsobjdemo.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc
