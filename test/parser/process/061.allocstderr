@@ -1,7 +1,7 @@
-globID	super		localID	footprint-frame
+globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	bar<3, 2>
+1	(top)	-	1	poo	bar<3, 2>
 	int: 1,2
 [global int entries]
-1	(top)	-	1	
-2	(top)	-	2	
+1	(top)	-	1	poo.x[0]	
+2	(top)	-	2	poo.x[1]	

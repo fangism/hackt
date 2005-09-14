@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2005/09/04 21:15:42 fang Exp $
+#	$Id: Makefile.am,v 1.11.2.1 2005/09/14 13:23:21 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -61,6 +61,16 @@ HACKT_CREATE_TEST_SUBJECTS = \
 #	because no relaxed actual is passed in as a formal parameter.
 # 117 passes unrolling, but fails during create's hierarchical type check, neat!
 # KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)
+
+HACKT_ALLOC_TEST_SUBJECTS = \
+	001 006 007 \
+	010 011 014 017 018 019 \
+	021 022 025 027 \
+	030 \
+	046 047 049
+
+# add 031a,b later... too tired to hand-verify
+# add most CREATE tests to ALLOC tests later...
 
 # notes:
 # the following tests depend channel port subinstances

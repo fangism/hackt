@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.7.2.6 2005/09/13 05:18:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.7.2.7 2005/09/14 13:23:15 fang Exp $
 	TODO: trim includes
  */
 
@@ -461,7 +461,7 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 		p.dump_actuals(os);
 	os << " = ";
 	NEVER_NULL(p.get_next());
-	p.get_next()->dump_alias(os);
+	p.get_next()->dump_hierarchical_name(os);
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ');
@@ -1189,7 +1189,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
 	if (this->the_instance.container->has_relaxed_type()) {
 		this->the_instance.dump_actuals(o);
 	}
-	this->the_instance.get_next()->dump_alias(o << " = ");
+	this->the_instance.get_next()->dump_hierarchical_name(o << " = ");
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ');

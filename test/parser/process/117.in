@@ -1,0 +1,18 @@
+// "117.in" should pass, will recursively instantiate ports
+// copy-modified from "079.in"
+// slightly crazy...
+
+template <pint D>
+defproc foo(bool a[D]) { }
+
+template <pint M, N>
+defproc bar() {
+	foo<M> x[N];
+	// internally alias the 4 corners
+	x[0].a[0] = x[N-1].a[0]
+		= x[0].a[M-1]
+		= x[N-1].a[M-1];
+}
+
+bar<3,3> poo;
+

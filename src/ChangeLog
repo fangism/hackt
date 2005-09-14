@@ -2,6 +2,15 @@
 
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-58-unique-02-14:
+	  Introduced dump_flags structure for customizing hierarchical dumps, 
+		will be extremely useful for cflat formatting.  
+	  Extended instance alias dump to take a dump_flags argument.
+		Re-using dump_hiearchical_name to print the flattened
+		canonical_names after unique allocation.  
+	  This branch is mature, and ready to merge to trunk.  
+
+
 	* ARTXX-00-01-04-main-00-58-unique-02-13:
 	  No code revision, just more test cases...
 	  We interrupt test-case writing to add more information to 

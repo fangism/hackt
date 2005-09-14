@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.3.2.5 2005/09/14 00:17:09 fang Exp $
+	$Id: state_manager.cc,v 1.3.2.6 2005/09/14 13:23:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -145,7 +145,7 @@ state_manager::~state_manager() { }
  */
 ostream&
 state_manager::dump(ostream& o, const footprint& topfp) const {
-	o << "globID\tsuper\t\tlocalID\tfootprint-frame" << endl;
+	o << "globID\tsuper\t\tlocalID\tcanonical\tfootprint-frame" << endl;
 	global_entry_pool<process_tag>::dump(o, topfp, *this);
 	global_entry_pool<channel_tag>::dump(o, topfp, *this);
 	global_entry_pool<datastruct_tag>::dump(o, topfp, *this);

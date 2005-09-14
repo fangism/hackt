@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.1.2.9 2005/09/14 00:17:10 fang Exp $
+	$Id: instance_alias.tcc,v 1.1.2.10 2005/09/14 13:23:15 fang Exp $
 	TODO: trim includes
  */
 
@@ -49,6 +49,7 @@
 #include "Object/global_entry.h"
 #include "Object/port_context.h"
 #include "Object/state_manager.h"
+#include "Object/common/dump_flags.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -866,7 +867,7 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
+INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o, const dump_flags&) const {
 	ICE_NEVER_CALL(cerr);
 	return o;
 }
@@ -874,15 +875,16 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Since begin points to next, self will always be printed last.  
+	NOTE: always prints with default dump_flags.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
-	i->dump_alias(o);
+	i->dump_hierarchical_name(o);
 	for (i++; i!=e; i++) {
-		i->dump_alias(o << " = ");
+		i->dump_hierarchical_name(o << " = ");
 	}
 	return o;
 }
@@ -890,9 +892,18 @@ INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
+INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o,
+		const dump_flags& df) const {
+	return dump_alias(o, df);
+	// should call virtually, won't die
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
-	// STACKTRACE_VERBOSE;
-	return dump_alias(o);	// should call virtually, won't die
+	return dump_alias(o, dump_flags::default_value);
+	// should call virtually, won't die
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1076,10 +1087,10 @@ INSTANCE_ALIAS_CLASS::~instance_alias() {
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
+INSTANCE_ALIAS_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
 	// STACKTRACE_VERBOSE;
 	NEVER_NULL(this->container);
-	this->container->dump_hierarchical_name(o) <<
+	this->container->dump_hierarchical_name(o, df) <<
 		multikey<D, pint_value_type>(this->key);
 		// casting to multikey for the sake of printing [i] for D==1.
 		// could use specialization to accomplish this...
@@ -1232,9 +1243,10 @@ KEYLESS_INSTANCE_ALIAS_CLASS::~instance_alias() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
-KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o) const {
+KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o,
+		const dump_flags& df) const {
 	NEVER_NULL(this->container);
-	return this->container->dump_hierarchical_name(o);
+	return this->container->dump_hierarchical_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

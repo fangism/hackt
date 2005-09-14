@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.1.2.6 2005/09/14 00:17:08 fang Exp $
+	$Id: global_entry.cc,v 1.1.2.7 2005/09/14 13:23:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -54,6 +54,8 @@ footprint_frame_map<Tag>::__init_top_level(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	See also footprint_base<Tag>::__allocate_global_state.
+	TODO: see if we can replace the other call with this
+		to reduce code duplication.  
  */
 template <class Tag>
 void
@@ -69,9 +71,6 @@ footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& fp,
 	iterator i(std::find(b, e, size_t(0)));
 	for ( ; i!=e; i = std::find(++i, e, size_t(0))) {
 		const size_t ind = std::distance(b, i);
-#if ENABLE_STACKTRACE
-		STACKTRACE_STREAM << "Got a zero at index " << ind << endl;
-#endif
 		*i = _pool.allocate();
 		global_entry<Tag>& g(_pool[*i]);
 		g.parent_tag_value = pt;
@@ -83,6 +82,8 @@ footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& fp,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	See also footprint_base<Tag>::__expand_unique_subinstances().
+	TODO: see if we can replace the other call with this
+		to reduce code duplication.  
  */
 template <class Tag>
 void
@@ -101,10 +102,6 @@ footprint_frame_map<Tag>::__expand_subinstances(const footprint& fp,
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "offset = " << offset << endl;
 	fp.dump(cerr << "fp: ");
-#endif
-#if 0
-	const_iterator i(++ppool.begin());
-	const const_iterator e(ppool.end());
 #endif
 	for ( ; j!=end; j++) {
 		global_entry<Tag>& ref(gpool[j]);
@@ -345,28 +342,6 @@ footprint_frame::get_frame_map_test(void) const {
 
 //=============================================================================
 // class global_entry_base method definitions
-
-#if 0
-ostream&
-global_entry_base<true>::dump(ostream& o, const size_t ind, 
-		const footprint& topfp, const state_manager& sm) const {
-	return _frame.dump(o, ind, topfp, sm);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-global_entry_base<true>::write_object_base(
-		const persistent_object_manager& m, ostream& o) const {
-	_frame.write_object_base(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-global_entry_base<true>::load_object_base(
-		const persistent_object_manager& m, istream& i) {
-	_frame.load_object_base(m, i);
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

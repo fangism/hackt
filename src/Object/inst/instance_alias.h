@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.4 2005/09/04 21:14:49 fang Exp $
+	$Id: instance_alias.h,v 1.4.2.1 2005/09/14 13:23:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -133,7 +133,7 @@ public:
 		istream& i);
 
 	ostream&
-	dump_alias(ostream& o) const;
+	dump_alias(ostream& o, const dump_flags&) const;
 
 	TRACE_ALIAS_BASE_PROTO;
 	TRACE_ALIAS_PROTO;
@@ -183,7 +183,7 @@ public:
 	~instance_alias();
 
 	ostream&
-	dump_alias(ostream& o) const;
+	dump_alias(ostream& o, const dump_flags&) const;
 
 	const_iterator
 	begin(void) const;

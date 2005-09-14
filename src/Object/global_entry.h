@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.1.2.5 2005/09/14 00:17:09 fang Exp $
+	$Id: global_entry.h,v 1.1.2.6 2005/09/14 13:23:13 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -19,6 +19,7 @@ using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
 
+struct dump_flags;
 class footprint;
 class state_manager;
 class port_member_context;
@@ -247,6 +248,10 @@ public:
 	dump(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
 
+	ostream&
+	dump_canonical_name(ostream&, const dump_flags&,
+		const size_t, const footprint&, const state_manager&) const;
+
 	using parent_type::collect_transient_info_base;
 
 	void
@@ -261,6 +266,11 @@ public:
 
 //=============================================================================
 // Tag must be the tag of a meta-type with subinstances.  
+
+template <class Tag>
+const global_entry<Tag>&
+extract_parent_entry(const state_manager&, const global_entry_common&);
+
 template <class Tag>
 const instance_alias_info<Tag>&
 extract_parent_formal_instance_alias(const state_manager&, 

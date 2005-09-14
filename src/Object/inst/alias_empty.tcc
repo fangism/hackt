@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.2.2.1 2005/09/13 01:14:47 fang Exp $
+	$Id: alias_empty.tcc,v 1.2.2.2 2005/09/14 13:23:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "Object/inst/alias_empty.h"
+#include "Object/common/dump_flags.h"
 
 namespace ART {
 namespace entity {
@@ -48,15 +49,15 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
 		_type(_alias.container->get_canonical_type());
 	if (!_type) {
 		// already have error message
-		_alias.dump_hierarchical_name(cerr << "Failed to instantiate ")
-			<< endl;
+		_alias.dump_hierarchical_name(cerr << "Failed to instantiate ", 
+			dump_flags::default_value) << endl;
 		return good_bool(false);
 	}
 	else if (!container_type::collection_type_manager_parent_type
 			::create_definition_footprint(_type).good) {
 		// have error message already
-		_alias.dump_hierarchical_name(cerr << "Instantiated by: ")
-			<< endl;
+		_alias.dump_hierarchical_name(cerr << "Instantiated by: ", 
+			dump_flags::default_value) << endl;
 		return good_bool(false);
 	}
 	return good_bool(true);

@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.4.2.9 2005/09/14 00:17:10 fang Exp $
+	$Id: instance_alias_info.h,v 1.4.2.10 2005/09/14 13:23:15 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -20,6 +20,7 @@
 
 namespace ART {
 namespace entity {
+struct dump_flags;
 class footprint;
 class port_collection_context;
 class port_member_context;
@@ -291,13 +292,16 @@ public:
 	is_port_alias(void) const;
 
 virtual	ostream&
-	dump_alias(ostream& o) const;
+	dump_alias(ostream& o, const dump_flags&) const;
 
 	ostream&
 	dump_aliases(ostream& o) const;
 
 	ostream&
 	dump_hierarchical_name(ostream&) const;
+
+	ostream&
+	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
 	using substructure_parent_type::dump_ports;
 	using substructure_parent_type::collect_port_aliases;

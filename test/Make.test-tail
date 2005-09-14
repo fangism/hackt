@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.6.2.1 2005/09/13 01:14:49 fang Exp $
+#	$Id: Make.test-tail,v 1.6.2.2 2005/09/14 13:23:17 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -84,8 +84,8 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
-CHECK_SUMMARIES = artcdiffs objdiffs unrolldiffs creatediffs \
-	unrolldiffs.noindex creatediffs.noindex
+CHECK_SUMMARIES = artcdiffs objdiffs unrolldiffs creatediffs allocdiffs \
+	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex
 
 artcdiffs: force
 	-$(CAT) *.diff > $@
@@ -99,11 +99,17 @@ unrolldiffs: force
 creatediffs: force
 	-$(CAT) *.creatediff > $@
 
+allocdiffs: force
+	-$(CAT) *.allocdiff > $@
+
 unrolldiffs.noindex: force
 	-$(CAT) *.unrolldiff.noindex > $@
 
 creatediffs.noindex: force
 	-$(CAT) *.creatediff.noindex > $@
+
+allocdiffs.noindex: force
+	-$(CAT) *.allocdiff.noindex > $@
 
 check-summaries: $(CHECK_SUMMARIES)
 	@ls -l $(CHECK_SUMMARIES)

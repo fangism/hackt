@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.1.2.4 2005/09/14 00:17:09 fang Exp $
+	$Id: global_entry.tcc,v 1.1.2.5 2005/09/14 13:23:13 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -20,11 +20,11 @@
 #include "Object/state_manager.h"
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.tcc"	// for dump_complete_type
 #include "Object/inst/instance_collection.h"
 #include "Object/traits/type_tag_enum.h"
-// #include "Object/traits/classification_tags.h"
-// #include "Object/traits/proc_traits.h"
+#include "Object/common/dump_flags.h"
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
@@ -44,23 +44,36 @@ using util::write_value;
 
 //=============================================================================
 /**
+	\param sm the global state allocator.  
+	\param gec the referencing entry with parent_id, and local_offset.
+	\return reference to the parent super-instance global entry.  
+ */
+template <class Tag>
+const global_entry<Tag>&
+extract_parent_entry(const state_manager& sm, 
+		const global_entry_common& gec) {
+	const global_entry_pool<Tag>&
+		gproc_pool(sm.template get_pool<Tag>());
+	return gproc_pool[gec.parent_id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Resolves a global parent instance reference.
 	\param Tag must be the tag of a meta type with substructure, 
 		such as process_tag, channel_tag, datastruct_tag.  
 	\param sm the global state allocator.  
-	\param pfp the parent instances footprint.
-	\param parent_id the global id of the parent instance.
-	\param local_offset the position of the corresponding
+	\param gec the referencing entry with parent_id, and local_offset.
+		The parent_id member is the global id of the parent instance.
+		The local_offset member the position of the corresponding
 		formal instance alias in the parent's footprint.  
  */
 template <class Tag>
 const instance_alias_info<Tag>&
 extract_parent_formal_instance_alias(const state_manager& sm, 
 		const global_entry_common& gec) {
-	const global_entry_pool<Tag>&
-		gproc_pool(sm.template get_pool<Tag>());
 	const global_entry<Tag>&
-		p_ent(gproc_pool[gec.parent_id]);
+		p_ent(extract_parent_entry<Tag>(sm, gec));
 	const footprint& pfp(*p_ent._frame._footprint);
 	const typename state_instance<Tag>::pool_type&
 		local_placeholder_pool(pfp.template get_pool<Tag>());
@@ -233,6 +246,42 @@ template <class Tag>
 global_entry<Tag>::~global_entry() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursively prints canonical name.  
+ */
+template <class Tag>
+ostream&
+global_entry<Tag>::dump_canonical_name(ostream& o, const dump_flags& df, 
+		const size_t ind, const footprint& topfp,
+		const state_manager& sm) const {
+	typedef	typename state_instance<Tag>::pool_type	pool_type;
+	const pool_type& _pool(topfp.template get_pool<Tag>());
+	// dump canonical name
+	const state_instance<Tag>* _inst;
+	if (parent_tag_value) {
+		INVARIANT(parent_tag_value == PROCESS);
+		INVARIANT(ind >= _pool.size());
+		const global_entry<process_tag>&
+			p_ent(extract_parent_entry<process_tag>(sm, *this));
+		p_ent.dump_canonical_name(o, df, parent_id, topfp, sm) << '.';
+		// partial, omit formal type parent
+		const pool_type&
+			_lpool(p_ent._frame._footprint
+				->template get_pool<Tag>());
+		_inst = &_lpool[local_offset];
+	} else {
+		INVARIANT(ind < _pool.size());
+		_inst = &_pool[ind];
+	}
+	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
+	_alias.dump_hierarchical_name(o, df);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: currently, only processes are ever super instances.  
+ */
 template <class Tag>
 ostream&
 global_entry<Tag>::dump(ostream& o, const size_t ind,
@@ -243,21 +292,23 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 		o << "(top)\t-\t";
 		break;
 	case PROCESS:
-		o << "process\t";
+		o << "process\t" << parent_id << '\t';
 		break;
 	case CHANNEL:
-		o << "channel\t";
+		o << "channel\t" << parent_id << '\t';
 		break;
 	case STRUCT:
-		o << "struct\t";
+		o << "struct\t" << parent_id << '\t';
 		break;
 	default:
 		THROW_EXIT;
 	}
-	if (parent_tag_value) {
-		o << parent_id << '\t';
-	}
 	o << local_offset << '\t';
+	{
+	dump_flags df;
+	df.show_definition_owner = false;
+	dump_canonical_name(o, df, ind, topfp, sm) << '\t';
+	}
 	return parent_type::template dump<Tag>(o, ind, topfp, sm);
 }
 

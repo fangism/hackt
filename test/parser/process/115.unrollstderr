@@ -1,0 +1,123 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	163
+	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	14	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	36	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    Q = pint^1 Q with indices: {
+      [0..1]
+    }
+      unrolled index-value pairs: {
+        0 = 2
+        1 = 2
+      }
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> N with indices: {
+        [0..1]
+      }
+
+      >(
+      )
+      In definition "foo", we have: {
+        N = pint<> N with indices: {
+          [0..1]
+        }
+
+        a = bool<> a with indices: {
+          [0..::foo::N[0]-1]
+        }
+
+        b = bool<> b with indices: {
+          [0..::foo::N[1]-1]
+        }
+
+        footprint collection: {
+          <{2,2}> {
+            pint^1 N with indices: {
+            }
+              unrolled index-value pairs: {
+                0 = ?
+                1 = ?
+              }
+            bool^1 a with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::b[0] 
+                1 = ::foo::b[1] 
+              }
+            bool^1 b with indices: {
+            }
+              unrolled indices: {
+                0 = ::foo::a[0] 
+                1 = ::foo::a[1] 
+              }
+          }
+        }
+      }
+
+  Instances:
+    poo = process foo<{2,2}>^0 poo (instantiated) = ::poo 
+}
+

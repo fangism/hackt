@@ -1,13 +1,16 @@
 "TODO"
-	$Id: TODO,v 1.1.2.4 2005/09/14 00:17:07 fang Exp $
-
-IMMEDIATE:
-add static method to canonical_type_footprint_frame_policy
-	for allocating private subinstances of the footprint.  
+	$Id: TODO,v 1.1.2.5 2005/09/14 13:23:11 fang Exp $
 
 ===============================================================================
 recursive create-unique! (in progress)
 	done, except for private internal structures.  
+
+add another member to footprint to track ALL aliases, not just ports.  
+	(another port_alias_tracker) evaluate all aliases, 
+		and perform filtering to get port aliases.  
+		Should result in much code simplification.  
+		Want to keep all aliases around for fast lookup
+		of all aliases at each level of hierarchy for cflat.  
 
 footprint pointer persistence may be complicated in footprint_frame.
 	(partially done, for top-level state)
@@ -16,6 +19,8 @@ creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 
 consider one more phase after create: alloc (done)
+
+common class: dump_modifier for formatted printing and variations.  
 
 ===============================================================================
 new class_trait:

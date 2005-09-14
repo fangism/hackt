@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.3 2005/09/04 21:14:50 fang Exp $
+	$Id: instance_collection_base.h,v 1.3.2.1 2005/09/14 13:23:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -26,6 +26,7 @@
 namespace ART {
 namespace entity {
 //=============================================================================
+struct dump_flags;
 class definition_base;
 class footprint;
 class scopespace;
@@ -241,6 +242,9 @@ virtual	string
 
 	ostream&
 	dump_hierarchical_name(ostream&) const;
+
+	ostream&
+	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
 virtual	string
 	hash_string(void) const { return key; }

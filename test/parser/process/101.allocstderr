@@ -1,25 +1,25 @@
-globID	super		localID	footprint-frame
+globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	ick<>
+1	(top)	-	1	poo	ick<>
 	process: 2,3
-2	process	1	1	bar<>
+2	process	1	1	poo.p	bar<>
 	process: 4,5
-3	process	1	2	bar<>
+3	process	1	2	poo.q	bar<>
 	process: 6,7
-4	process	2	1	foo<>
+4	process	2	1	poo.p.x	foo<>
 	bool: 1,2
-5	process	2	2	foo<>
+5	process	2	2	poo.p.y	foo<>
 	bool: 3,4
-6	process	3	1	foo<>
+6	process	3	1	poo.q.x	foo<>
 	bool: 5,6
-7	process	3	2	foo<>
+7	process	3	2	poo.q.y	foo<>
 	bool: 7,8
 [global bool entries]
-1	process	4	1	
-2	process	4	2	
-3	process	5	1	
-4	process	5	2	
-5	process	6	1	
-6	process	6	2	
-7	process	7	1	
-8	process	7	2	
+1	process	4	1	poo.p.x.a	
+2	process	4	2	poo.p.x.b	
+3	process	5	1	poo.p.y.a	
+4	process	5	2	poo.p.y.b	
+5	process	6	1	poo.q.x.a	
+6	process	6	2	poo.q.x.b	
+7	process	7	1	poo.q.y.a	
+8	process	7	2	poo.q.y.b	

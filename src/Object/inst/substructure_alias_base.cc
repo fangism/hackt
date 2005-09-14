@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.5.2.6 2005/09/13 05:18:48 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.5.2.7 2005/09/14 13:23:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,7 +27,8 @@ namespace entity {
 	Virtually pure virtual.
  */
 ostream&
-substructure_alias::dump_hierarchical_name(ostream& o) const {
+substructure_alias::dump_hierarchical_name(ostream& o,
+		const dump_flags&) const {
 	ICE_NEVER_CALL(cerr);
 	return o;
 }

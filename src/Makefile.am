@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.75.2.4 2005/09/14 00:17:06 fang Exp $
+#	$Id: Makefile.am,v 1.75.2.5 2005/09/14 13:23:10 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -136,6 +136,7 @@ OBJECT_CC_FILES = \
 	Object/common/object_base.cc \
 	Object/common/namespace.cc \
 	Object/common/extern_templates.cc \
+	Object/common/dump_flags.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \

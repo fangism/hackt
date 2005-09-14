@@ -1,11 +1,11 @@
-globID	super		localID	footprint-frame
+globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	bar<>
+1	(top)	-	1	poo	bar<>
 	process: 2,3
 	bool: 1
-2	(top)	-	2	foo<>
+2	(top)	-	2	poo.x	foo<>
 	bool: 1
-3	(top)	-	3	foo<>
+3	(top)	-	3	poo.y	foo<>
 	bool: 1
 [global bool entries]
-1	(top)	-	1	
+1	(top)	-	1	poo.x.a	

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.3 2005/09/04 21:14:53 fang Exp $
+	$Id: state_instance.tcc,v 1.3.2.1 2005/09/14 13:23:16 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -43,7 +43,7 @@ STATE_INSTANCE_TEMPLATE_SIGNATURE
 ostream&
 STATE_INSTANCE_CLASS::dump(ostream& o) const {
 	NEVER_NULL(back_ref);
-	back_ref->dump_alias(o);
+	back_ref->dump_hierarchical_name(o);
 	back_ref->dump_actuals(o);
 	return o;
 }

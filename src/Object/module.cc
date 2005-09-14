@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.4.2.5 2005/09/13 01:14:45 fang Exp $
+ 	$Id: module.cc,v 1.4.2.6 2005/09/14 13:23:13 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -247,7 +247,7 @@ module::allocate_unique(void) {
 		if (!_footprint.expand_unique_subinstances(global_state).good) {
 			return good_bool(false);
 		}
-#if 1
+#if 0
 		global_state.dump(cerr, _footprint) << endl;
 #endif
 		allocated = true;

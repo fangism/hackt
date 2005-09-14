@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.4.2.6 2005/09/13 05:18:48 fang Exp $
+	$Id: substructure_alias_base.h,v 1.4.2.7 2005/09/14 13:23:17 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -14,6 +14,7 @@
 
 namespace ART {
 namespace entity {
+struct dump_flags;
 class instance_collection_base;
 class physical_instance_collection;
 class unroll_context;
@@ -99,7 +100,7 @@ virtual	never_ptr<const physical_instance_collection>
 
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&
-	dump_hierarchical_name(ostream&) const;
+	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
 virtual	size_t
 	allocate_state(footprint&) const;
