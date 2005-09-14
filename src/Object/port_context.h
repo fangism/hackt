@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.h,v 1.1.2.3 2005/09/09 20:12:30 fang Exp $
+	$Id: port_context.h,v 1.1.2.4 2005/09/14 13:57:36 fang Exp $
  */
 
 #ifndef	__OBJECT_PORT_CONTEXT_H__
@@ -34,8 +34,9 @@ struct port_member_context {
 	port_member_context();
 	~port_member_context();
 
+	/// gcc-3.3 dies on inline definition b/c use of forward declaration
 	size_t
-	size(void) const { return member_array.size(); }
+	size(void) const;
 
 	void
 	resize(const size_t);

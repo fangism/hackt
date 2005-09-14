@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.cc,v 1.1.2.2 2005/09/09 20:12:30 fang Exp $
+	$Id: port_context.cc,v 1.1.2.3 2005/09/14 13:57:35 fang Exp $
  */
 
 #include <iostream>
@@ -40,6 +40,12 @@ if (!member_array.empty()) {
 	}
 	return o << auto_indent << '}';
 } else	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+port_member_context::size(void) const {
+	return member_array.size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
