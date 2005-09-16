@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.2.2.1 2005/09/14 19:20:00 fang Exp $
+	$Id: global_entry.h,v 1.2.2.2 2005/09/16 07:19:35 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -20,6 +20,7 @@ using std::istream;
 using util::persistent_object_manager;
 
 struct dump_flags;
+class alias_string_set;
 class footprint;
 class state_manager;
 class port_member_context;
@@ -249,16 +250,20 @@ public:
 		const state_manager&) const;
 
 	ostream&
-	cflat_connect(ostream&, const size_t, const footprint&, 
-		const state_manager&) const;
+	cflat_connect(ostream&, // const size_t,
+		const footprint&, const state_manager&) const;
 
 	ostream&
-	dump_canonical_name(ostream&, const size_t, const footprint&,
-		const state_manager&) const;
+	dump_canonical_name(ostream&, // const size_t,
+		const footprint&, const state_manager&) const;
 
 	ostream&
-	__dump_canonical_name(ostream&, const dump_flags&,
-		const size_t, const footprint&, const state_manager&) const;
+	__dump_canonical_name(ostream&, const dump_flags&, // const size_t,
+		const footprint&, const state_manager&) const;
+
+	void
+	collect_hierarchical_aliases(alias_string_set&, 
+		const footprint&, const state_manager&) const;
 
 	using parent_type::collect_transient_info_base;
 
@@ -269,6 +274,9 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const size_t, const footprint&, const state_manager&);
+
+private:
+	struct alias_to_string_transformer;
 
 };	// end struct global_entry
 

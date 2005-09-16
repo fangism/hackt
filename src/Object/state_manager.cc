@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.4.2.1 2005/09/14 19:20:03 fang Exp $
+	$Id: state_manager.cc,v 1.4.2.2 2005/09/16 07:19:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -70,11 +70,10 @@ global_entry_pool<Tag>::cflat_connect(ostream& o,
 		const footprint& topfp) const {
 if (this->size() > 1) {
 	const state_manager& sm(AS_A(const state_manager&, *this));
-	size_t j = 1;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
-	for ( ; i!=e; i++, j++) {
-		i->cflat_connect(o, j, topfp, sm) << endl;
+	for ( ; i!=e; i++) {
+		i->cflat_connect(o, topfp, sm) << endl;
 	}
 }
 	return o;

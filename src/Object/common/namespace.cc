@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.4 2005/09/04 21:14:41 fang Exp $
+ 	$Id: namespace.cc,v 1.4.4.1 2005/09/16 07:19:36 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -754,10 +754,13 @@ name_space::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: if df.no_global_namespace, then omit leading ::
+ */
 ostream&
-name_space::dump_qualified_name(ostream& o) const {
+name_space::dump_qualified_name(ostream& o, const dump_flags& df) const {
 	if (parent)
-		return parent->dump_qualified_name(o) << scope << key;
+		return parent->dump_qualified_name(o, df) << scope << key;
 	else	return o;
 }
 

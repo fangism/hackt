@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.3.2.1 2005/09/14 23:15:40 fang Exp $
+	$Id: footprint.h,v 1.3.2.2 2005/09/16 07:19:39 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -196,6 +196,13 @@ public:
 		return port_aliases;
 	}
 
+#if USE_SCOPE_ALIASES
+	const port_alias_tracker&
+	get_scope_alias_tracker(void) const {
+		return scope_aliases;
+	}
+#endif
+
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&
 	get_pool(void) {
@@ -210,6 +217,12 @@ public:
 
 	void
 	import_scopespace(const scopespace&);
+
+	void
+	import_hierarchical_scopespace(const scopespace&);
+
+	void
+	clear_instance_collection_map(void);
 
 	good_bool
 	create_dependent_types(void) const;

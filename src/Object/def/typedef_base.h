@@ -2,7 +2,7 @@
 	\file "Object/def/typedef_base.h"
 	Definition-related ART object classes.  
 	This file originated from "Object/art_object_definition.h",  
-	$Id: typedef_base.h,v 1.2 2005/07/23 06:52:29 fang Exp $
+	$Id: typedef_base.h,v 1.2.16.1 2005/09/16 07:19:39 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_TYPEDEF_BASE_H__
@@ -70,7 +70,7 @@ virtual	const string&
 	get_qualified_name(void) const;
 
 	ostream&
-	dump_qualified_name(ostream&) const;
+	dump_qualified_name(ostream&, const dump_flags&) const;
 
 virtual	ostream&
 	what(ostream& o) const = 0;

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.5 2005/09/14 15:30:30 fang Exp $
+ 	$Id: instance_collection.cc,v 1.5.2.1 2005/09/16 07:19:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -190,10 +190,21 @@ instance_collection_base::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// not needed
 ostream&
 instance_collection_base::dump_qualified_name(ostream& o) const {
 	if (owner)
-		return owner->dump_qualified_name(o) << "::" << key;
+		return owner->dump_qualified_name(o, 
+			dump_flags::default_value) << "::" << key;
+	else	return o << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_qualified_name(ostream& o, 
+		const dump_flags& df) const {
+	if (owner && df.show_owner)
+		return owner->dump_qualified_name(o, df) << "::" << key;
 	else	return o << key;
 }
 
@@ -205,7 +216,7 @@ instance_collection_base::dump_hierarchical_name(ostream& o) const {
 		return super_instance->dump_hierarchical_name(o,
 			dump_flags::default_value) << '.' << key;
 	} else {
-		return dump_qualified_name(o);
+		return dump_qualified_name(o, dump_flags::default_value);
 	}
 }
 
@@ -218,8 +229,7 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 		return super_instance->dump_hierarchical_name(o, df)
 			<< '.' << key;
 	} else {
-		return (df.show_definition_owner) ?
-			dump_qualified_name(o) : o << key;
+		return dump_qualified_name(o, df);
 	}
 }
 

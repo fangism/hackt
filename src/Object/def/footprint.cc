@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3.2.1 2005/09/14 23:15:40 fang Exp $
+	$Id: footprint.cc,v 1.3.2.2 2005/09/16 07:19:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -193,7 +193,7 @@ footprint::dump_with_collections(ostream& o) const {
 		}
 		dump(o);
 		port_aliases.dump(o);
-#if 0
+#if ENABLE_STACKTRACE
 		// don't bother dumping
 		scope_aliases.dump(o);
 #endif
@@ -221,6 +221,11 @@ footprint::operator [] (const string& k) const {
 	into its own map.  
 	If this scopespace has already been popluated, then it won't actually
 	reload the map, will just exit.  
+	NOTE: This is entended for importing from definitions' scopespaces
+		because templated types need to work with their own copies
+		of instance collections; the definitions' instance
+		collections are merely placeholders.  
+		We make a deep copy of the collections (while they're empty).  
  */
 void
 footprint::import_scopespace(const scopespace& s) {
@@ -246,6 +251,63 @@ if (instance_collection_map.empty()) {
 		// else is not instance collection, we don't care
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The difference is that the key used for the collection
+	map is a hierarchical (qualified) name to avoid collisions
+	as a result of collating over all namespaces.  
+	Called by top-level module only.
+	TODO: Arg -- code duplication -- clean later.  
+ */
+void
+footprint::import_hierarchical_scopespace(const scopespace& s) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
+if (instance_collection_map.empty()) {
+	typedef	scopespace::const_map_iterator	const_map_iterator;
+	const_map_iterator si(s.id_map_begin());
+	const const_map_iterator se(s.id_map_end());
+	for ( ; si!=se; si++) {
+		const never_ptr<const physical_instance_collection>
+		pc(si->second.is_a<const physical_instance_collection>());
+		if (pc) {
+		/***
+			DIRTY HACK ALERT:
+			collection wants count_ptr, but shallow pointer copy
+			comes from never_ptr!  can't mix oil and wanter!
+			The hack, initialize the count_ptr with count 1
+			instead of 0.  The last and only weak reference
+			will never delete.  
+			const_cast is safe: we promise to never modify
+			the contents from the top-level module.  
+
+			ACTUALLY, this won't work, persistent object manager
+			will restore and detect inconsistent pointer
+			ownership (owned and shared), resulting in 
+			fatal error.  FOILED by my own protective measures!
+		***/
+			static size_t one = 1;
+			instance_collection_map[pc->get_qualified_name()] =
+				count_ptr<instance_collection_base>(
+				&const_cast<physical_instance_collection&>(*pc), &one);
+		}
+		// else is not instance collection, we don't care
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Why would you ever want to clear the collection map?
+	See import_hierarchical_scopespace comments about hack.  
+ */
+void
+footprint::clear_instance_collection_map(void) {
+	instance_collection_map.clear();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -279,12 +341,19 @@ footprint::create_dependent_types(void) const {
 void
 footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "got " << instance_collection_map.size()
+		<< " entries." << endl;
+#endif
 	const_instance_map_iterator i(instance_collection_map.begin());
 	const const_instance_map_iterator e(instance_collection_map.end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const physical_instance_collection>
 			pic(i->second.is_a<const physical_instance_collection>());
 		if (pic) {
+#if ENABLE_STACKTRACE
+			pic->dump(STACKTRACE_INDENT << "collecting: ") << endl;
+#endif
 			// method is called collect_port,
 			// but it collects everything in scope
 			// good re-use of function!
@@ -293,7 +362,11 @@ footprint::evaluate_scope_aliases(void) {
 				pic->collect_port_aliases(port_aliases);
 		}
 	}
-	scope_aliases.filter_uniques();
+	// scope_aliases.filter_uniques();
+#if ENABLE_STACKTRACE
+	scope_aliases.dump(cerr << "footprint::scope_aliases: " << endl) << endl;
+#endif
+	// NOTE: don't filter uniques for scope_aliases, needed for aliases
 	port_aliases.filter_uniques();
 }
 #else

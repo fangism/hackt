@@ -1,7 +1,7 @@
 /**
 	\file "Object/common/dump_flags.h"
 	Dump attributes class.  
-	$Id: dump_flags.h,v 1.2 2005/09/14 15:30:27 fang Exp $
+	$Id: dump_flags.h,v 1.2.2.1 2005/09/16 07:19:36 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_DUMP_FLAGS_H__
@@ -22,17 +22,24 @@ struct dump_flags {
 		canonical names, see global_entry::dump_canonical_name().  
 		See use in instance_collection_base::dump_hierarchical_name.
 	 */
-	bool	show_definition_owner;
+	bool	show_owner;
 
-	dump_flags() : show_definition_owner(true) { }
-
+	dump_flags() : show_owner(true) { }
+private:
+	explicit
+	dump_flags(const bool _show_owner);
+public:
 	~dump_flags() { }
 
 	/**
 		Static const global default values.  
 		(Shouldn't be used before the end of global initialization.)
+		None of these should be referenced until main begins.  
 	 */
 	static const dump_flags			default_value;
+	/**
+	 */
+	static const dump_flags			no_owner;
 };	// end class dump_flags
 
 }	// end namespace entity

@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.3.2.1 2005/09/14 23:15:41 fang Exp $
+	$Id: port_alias_tracker.h,v 1.3.2.2 2005/09/16 07:19:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -57,6 +57,12 @@ public:
 
 	bool
 	is_unique(void) const { return alias_array.size() <= 1; }
+
+	const_iterator
+	begin(void) const { return alias_array.begin(); }
+
+	const_iterator
+	end(void) const { return alias_array.end(); }
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;

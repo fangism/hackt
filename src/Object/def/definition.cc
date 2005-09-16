@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.5.2.1 2005/09/14 23:15:39 fang Exp $
+ 	$Id: definition.cc,v 1.5.2.2 2005/09/16 07:19:37 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -51,6 +51,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/common/namespace.h"
+#include "Object/common/dump_flags.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/type/canonical_generic_chan_type.h"
@@ -262,12 +263,14 @@ definition_base::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-definition_base::dump_qualified_name(ostream& o) const {
+definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
-		parent->dump_qualified_name(o) << scope;
+		parent->dump_qualified_name(o, df) << scope;
 	return o << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -485,8 +488,8 @@ typedef_base::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-typedef_base::dump_qualified_name(ostream& o) const {
-	return definition_base::dump_qualified_name(o);
+typedef_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
+	return definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -748,10 +751,12 @@ user_def_chan::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-user_def_chan::dump_qualified_name(ostream& o) const {
+user_def_chan::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	if (parent)
-		parent->dump_qualified_name(o);
+		parent->dump_qualified_name(o, df);
 	return o << scope << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1197,8 +1202,9 @@ built_in_datatype_def::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-built_in_datatype_def::dump_qualified_name(ostream& o) const {
-	return datatype_definition_base::dump_qualified_name(o);
+built_in_datatype_def::dump_qualified_name(ostream& o,
+		const dump_flags& df) const {
+	return datatype_definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1525,10 +1531,12 @@ enum_datatype_def::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-enum_datatype_def::dump_qualified_name(ostream& o) const {
+enum_datatype_def::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	if (parent)
-		parent->dump_qualified_name(o);
+		parent->dump_qualified_name(o, df);
 	return o << scope << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1834,10 +1842,12 @@ user_def_datatype::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-user_def_datatype::dump_qualified_name(ostream& o) const {
+user_def_datatype::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	if (parent)
-		parent->dump_qualified_name(o);
+		parent->dump_qualified_name(o, df);
 	return o << scope << key;
+}	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2411,8 +2421,11 @@ process_definition::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-process_definition::dump_qualified_name(ostream& o) const {
-	return parent->dump_qualified_name(o) << scope << key;
+process_definition::dump_qualified_name(ostream& o,
+		const dump_flags& df) const {
+if (df.show_owner) {
+	return parent->dump_qualified_name(o, df) << scope << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

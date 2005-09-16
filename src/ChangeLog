@@ -1,5 +1,26 @@
 "ChangeLog"
 
+2005-09-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-03:
+	  Removed unnecessary ind argument from global_entry::dump_*.
+	  Implemeted collection of hierachical aliases with sets of
+		strings of aliases per scope.
+	  Extended dump_flags, added new static const member.  
+	  module::create_unique() now temporarily imports the scopespace
+		of all namespace, copying pointers to the top-level 
+		footprint's instance_collection_map.  The map ss only needed
+		for the sake of evaluating aliases.  Before function returns
+		The collection map is cleared, because it cannot be maintained
+		persistently, due to various invariants and pointer 
+		incompatibility.  
+	  Implementers of scopespace::dump_qualified_name now all require
+		an additional dump_flags argument for formatting.  
+	  All footprints now preserve singletons in their scope_aliases
+		list for efficient generation of alias names for cflat.  
+	  TODO: iterator over aliases and print for cflat connect!
+
+
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-cflat-01-02:

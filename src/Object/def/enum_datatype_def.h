@@ -2,7 +2,7 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.3 2005/09/04 21:14:42 fang Exp $
+	$Id: enum_datatype_def.h,v 1.3.4.1 2005/09/16 07:19:38 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_ENUM_DATATYPE_DEF_H__
@@ -72,7 +72,7 @@ public:
 	get_qualified_name(void) const;
 
 	ostream&
-	dump_qualified_name(ostream&) const;
+	dump_qualified_name(ostream&, const dump_flags&) const;
 
 	never_ptr<const scopespace>
 	get_parent(void) const;

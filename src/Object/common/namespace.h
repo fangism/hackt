@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/namespace.h"
 		in its previous life.  
-	$Id: namespace.h,v 1.2 2005/07/23 06:52:22 fang Exp $
+	$Id: namespace.h,v 1.2.16.1 2005/09/16 07:19:37 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_H__
@@ -111,8 +111,12 @@ public:
 	string
 	get_qualified_name(void) const;
 
+#if 0
 	ostream&
 	dump_qualified_name(ostream&) const;
+#endif
+	ostream&
+	dump_qualified_name(ostream&, const dump_flags&) const;
 
 	never_ptr<const name_space>
 	get_global_namespace(void) const;

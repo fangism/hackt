@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.5.2.2 2005/09/14 23:15:39 fang Exp $
+ 	$Id: module.cc,v 1.5.2.3 2005/09/16 07:19:35 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -121,6 +121,9 @@ module::dump(ostream& o) const {
 	if (is_created()) {
 		o << "Created state:" << endl;
 		_footprint.dump(o) << endl;
+#if 0 && ENABLE_STACKTRACE
+		_footprint.get_scope_alias_tracker().dump(o << "BUH: ");
+#endif
 	}
 	if (is_allocated()) {
 		o << "Globally allocated state:" << endl;
@@ -206,7 +209,7 @@ module::create_dependent_types(void) {
  */
 good_bool
 module::create_unique(void) {
-	STACKTRACE("module::create_unique()");
+	STACKTRACE_VERBOSE;
 	if (!unroll_module().good)
 		return good_bool(false);
 	if (!is_created()) {
@@ -221,7 +224,26 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
+#if 1
+		// this is needed for evaluating scope_aliases, 
+		// bus cannot be maintained persistently because
+		// of memory pointer hack (see implementation of 
+		// footprint::import_hierarchical_scopespace.
+		// Plan B: destroy after evaluating aliases!
+		{
+		namespace_collection_type nsl;
+		collect_namespaces(nsl);
+		namespace_collection_type::const_iterator i(nsl.begin());
+		const namespace_collection_type::const_iterator e(nsl.end());
+		for ( ; i!=e; i++) {
+			_footprint.import_hierarchical_scopespace(**i);
+		}
+		}
+#endif
 		_footprint.evaluate_scope_aliases();
+#if 1
+		_footprint.clear_instance_collection_map();
+#endif
 		_footprint.mark_created();
 	}
 	return good_bool(true);
