@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.2.2.2 2005/09/16 07:19:35 fang Exp $
+	$Id: global_entry.h,v 1.2.2.3 2005/09/17 04:48:53 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -14,6 +14,8 @@
 #include "Object/traits/type_tag_enum.h"
 
 namespace ART {
+class cflat_options;
+
 namespace entity {
 using std::ostream;
 using std::istream;
@@ -250,15 +252,15 @@ public:
 		const state_manager&) const;
 
 	ostream&
-	cflat_connect(ostream&, // const size_t,
+	cflat_connect(ostream&, const cflat_options&, 
 		const footprint&, const state_manager&) const;
 
 	ostream&
-	dump_canonical_name(ostream&, // const size_t,
+	dump_canonical_name(ostream&,
 		const footprint&, const state_manager&) const;
 
 	ostream&
-	__dump_canonical_name(ostream&, const dump_flags&, // const size_t,
+	__dump_canonical_name(ostream&, const dump_flags&,
 		const footprint&, const state_manager&) const;
 
 	void

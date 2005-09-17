@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.1.2.1 2005/09/14 19:20:04 fang Exp $
+	$Id: cflat.h,v 1.1.2.2 2005/09/17 04:48:55 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_H__
@@ -10,15 +10,17 @@
 #include "main/hackt_fwd.h"
 
 namespace ART {
-
+class cflat_options;
+//=============================================================================
 /**
 	Instance-less class.  
 	Yes, most everything is private, not supposed to use this directly, 
 	but rather, through program registration.  
  */
 class cflat {
-private:
-	class options;
+public:
+	/// defined in "main/cflat_options.h"
+	typedef	cflat_options			options;
 
 public:
 	static const char		name[];
@@ -35,17 +37,16 @@ private:
 	void
 	usage(void);
 
-#if 0
 	static
 	int
 	parse_command_options(const int, char*[], options&);
-#endif
 
 	static
 	const size_t
 	program_id;
 };	// end class cflat
 
+//=============================================================================
 }	// end namespace ART
 
 #endif	// __MAIN_CFLAT_H__

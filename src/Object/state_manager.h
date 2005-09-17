@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.3.2.1 2005/09/14 19:20:03 fang Exp $
+	$Id: state_manager.h,v 1.3.2.2 2005/09/17 04:48:54 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -14,6 +14,8 @@
 #include "util/boolean_types.h"
 
 namespace ART {
+class cflat_options;
+
 namespace entity {
 class footprint;
 class state_manager;
@@ -61,7 +63,7 @@ public:
 	dump(ostream&, const footprint&) const;
 
 	ostream&
-	cflat_connect(ostream&, const footprint&) const;
+	cflat_connect(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -128,7 +130,7 @@ public:
 	dump(ostream&, const footprint&) const;
 
 	good_bool
-	cflat(ostream&, const footprint&) const;
+	cflat(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.4.2.2 2005/09/16 07:19:35 fang Exp $
+	$Id: state_manager.cc,v 1.4.2.3 2005/09/17 04:48:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -67,13 +67,13 @@ if (this->size() > 1) {
 template <class Tag>
 ostream&
 global_entry_pool<Tag>::cflat_connect(ostream& o,
-		const footprint& topfp) const {
+		const footprint& topfp, const cflat_options& cf) const {
 if (this->size() > 1) {
 	const state_manager& sm(AS_A(const state_manager&, *this));
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++) {
-		i->cflat_connect(o, topfp, sm) << endl;
+		i->cflat_connect(o, cf, topfp, sm);
 	}
 }
 	return o;
@@ -180,9 +180,11 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 	Connections first.  
  */
 good_bool
-state_manager::cflat(ostream& o, const footprint& topfp) const {
+state_manager::cflat(ostream& o, const footprint& topfp,
+		const cflat_options& cf) const {
 	// dump connections
-	global_entry_pool<bool_tag>::cflat_connect(o, topfp);
+	global_entry_pool<bool_tag>::cflat_connect(o, topfp, cf);
+	// check options for non-bools
 	// dump prs
 	return good_bool(true);
 }

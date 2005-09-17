@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.5.2.1 2005/09/14 19:20:02 fang Exp $
+	$Id: module.h,v 1.5.2.2 2005/09/17 04:48:53 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_MODULE_H__
@@ -15,8 +15,9 @@
 #include "Object/state_manager.h"
 
 namespace ART {
-namespace entity {
+class cflat_options;
 
+namespace entity {
 using std::string;
 using std::ostream;
 using util::persistent;
@@ -120,7 +121,7 @@ public:
 
 	/// later add cflat options argument
 	good_bool
-	cflat(ostream&) const;
+	cflat(ostream&, const cflat_options&) const;
 
 private:
 	good_bool

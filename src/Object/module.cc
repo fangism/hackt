@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.5.2.3 2005/09/16 07:19:35 fang Exp $
+ 	$Id: module.cc,v 1.5.2.4 2005/09/17 04:48:53 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -272,9 +272,9 @@ module::allocate_unique(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-module::cflat(ostream& o) const {
+module::cflat(ostream& o, const cflat_options& cf) const {
 if (allocated) {
-	return global_state.cflat(o, _footprint);
+	return global_state.cflat(o, _footprint, cf);
 } else {
 	cerr << "ERROR: Module is not globally allocated, "
 		"as required by cflat." << endl;

@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.1.2.1 2005/09/14 19:20:03 fang Exp $
+	$Id: cflat.cc,v 1.1.2.2 2005/09/17 04:48:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,6 +11,7 @@
 // #include <cstring>
 
 #include "main/cflat.h"
+#include "main/cflat_options.h"
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
@@ -22,11 +23,6 @@ using util::persistent;
 using util::persistent_object_manager;
 
 #include "util/using_ostream.h"
-
-//=============================================================================
-class cflat::options {
-	// none
-};	// end class options
 
 //=============================================================================
 // class cflat static initializers
@@ -64,9 +60,10 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 
+	cflat_options cf;
 	// cflat here!!!
 	// based on mode, set the options to pass into the module.
-	if (!the_module->cflat(cout).good) {
+	if (!the_module->cflat(cout, cf).good) {
 		cerr << "Error during cflat." << endl;
 		return 1;
 	}

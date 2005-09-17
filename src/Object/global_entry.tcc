@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.2.2.2 2005/09/16 07:19:35 fang Exp $
+	$Id: global_entry.tcc,v 1.2.2.3 2005/09/17 04:48:53 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -335,24 +335,24 @@ global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 	const tracker_map_type&	// a map<size_t, alias_reference_set<Tag> >
 		tm(_alias_tracker->template get_id_map<Tag>());
 	const const_map_iterator a(tm.find(local_offset));
-#if 1
+#if 0
 	_alias_tracker->dump(cerr << "alias_tracker: ") << endl;
 #endif
 	al.push_back();		// empty entry, new list
-	if (a != tm.end()) {
-#if 1
-		a->second.dump(cerr << "a has: ") << endl;
+	/***
+		Since we keep track of singletons in the scope_alias_tracker, 
+		all lookups should be valid.  
+	***/
+	INVARIANT(a != tm.end());
+#if 0
+	a->second.dump(cerr << "a has: ") << endl;
 #endif
-		// a->second is an alias_reference_set
-		transform(a->second.begin(), a->second.end(),
-			back_inserter(al.back()), 
-			alias_to_string_transformer()
-		);
+	// a->second is an alias_reference_set
+	transform(a->second.begin(), a->second.end(),
+		back_inserter(al.back()), 
+		alias_to_string_transformer()
+	);
 		// transform, back_inserter... aliases to strings
-	} else {
-		// not found, alias is singleton
-		al.back().push_back(string("loner"));
-	}
 }	// end method collect_hierarchical_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -407,14 +407,16 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::cflat_connect(ostream& o, // const size_t ind,
+global_entry<Tag>::cflat_connect(ostream& o, const cflat_options& cf,
 		const footprint& topfp, const state_manager& sm) const {
 	ostringstream canonical;
 	dump_canonical_name(canonical, topfp, sm);
 	// collect all aliases at all levels of hierarchy...
 	alias_string_set _aliases;
 	collect_hierarchical_aliases(_aliases, topfp, sm);
-	_aliases.dump(o) << endl;
+	// compact representation for debugging
+	// _aliases.dump(o) << endl;	
+	_aliases.dump_aliases(o, canonical.str(), cf);
 	return o;
 }
 

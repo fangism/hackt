@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.76.2.2 2005/09/16 07:19:32 fang Exp $
+#	$Id: Makefile.am,v 1.76.2.3 2005/09/17 04:48:50 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -529,7 +529,8 @@ MAIN_EXEC_CC_FILES = \
 
 MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
-	main/hackt_fwd.h
+	main/hackt_fwd.h \
+	main/cflat_options.h
 
 COMMON_FILES = \
 	common/ICE.cc \

@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2005-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-04:
+	  I think cflat prsim (connect only) is working.  Only spot-checked.
+		Implemented recursive alias dumper.  
+	  Drafted some early cflat options.  
+	  TODO: implement some preset modes (prsim, prlint, connect...)
+
+
 2005-09-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-cflat-01-03:
@@ -18,6 +27,8 @@
 		an additional dump_flags argument for formatting.  
 	  All footprints now preserve singletons in their scope_aliases
 		list for efficient generation of alias names for cflat.  
+		As a result, object binaries have grown a bit in size
+		per footprint (complete definition, module).
 	  TODO: iterator over aliases and print for cflat connect!
 
 
