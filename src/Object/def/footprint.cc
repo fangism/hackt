@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3.2.2 2005/09/16 07:19:38 fang Exp $
+	$Id: footprint.cc,v 1.3.2.3 2005/10/04 21:24:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -153,7 +153,14 @@ footprint::footprint() :
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
-	port_aliases() {
+#if USE_SCOPE_ALIASES
+	scope_aliases(), 
+#endif
+	port_aliases()
+#if USE_PRS_FOOTPRINT
+	, prs_footprint()
+#endif
+	{
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -194,8 +201,11 @@ footprint::dump_with_collections(ostream& o) const {
 		dump(o);
 		port_aliases.dump(o);
 #if ENABLE_STACKTRACE
-		// don't bother dumping
+		// don't bother dumping, unless debugging
 		scope_aliases.dump(o);
+#endif
+#if USE_PRS_FOOTPRINT
+		prs_footprint.dump(o, *this);
 #endif
 	}
 	return o;
@@ -528,6 +538,9 @@ footprint::write_object_base(const persistent_object_manager& m,
 #if USE_SCOPE_ALIASES
 	scope_aliases.write_object_base(m, o);
 #endif
+#if USE_PRS_FOOTPRINT
+	prs_footprint.write_object_base(o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -559,6 +572,9 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	port_aliases.load_object_base(m, i);
 #if USE_SCOPE_ALIASES
 	scope_aliases.load_object_base(m, i);
+#endif
+#if USE_PRS_FOOTPRINT
+	prs_footprint.load_object_base(i);
 #endif
 }
 

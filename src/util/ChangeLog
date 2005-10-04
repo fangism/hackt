@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2005-10-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-05:
+	  Fixed typo in list_vector::swap().  
+	  IO_utils.{h,tcc}: added util::read_sequence_prealloc
+		specially for valarray reconstruction (uses placement ctor).  
+
+
 2005-09-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-58:

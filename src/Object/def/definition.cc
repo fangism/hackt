@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.5.2.2 2005/09/16 07:19:37 fang Exp $
+ 	$Id: definition.cc,v 1.5.2.3 2005/10/04 21:24:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2773,6 +2773,10 @@ if (defined) {
 			f->evaluate_scope_aliases();
 #else
 			f->evaluate_port_aliases(port_formals);
+#endif
+#if USE_PRS_FOOTPRINT
+			prs.unroll(c, f->get_pool<bool_tag>(), 
+				f->get_prs_footprint());
 #endif
 			f->mark_created();
 		} else {

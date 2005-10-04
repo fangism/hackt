@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.3.2.1 2005/09/14 23:15:39 fang Exp $
+	$Id: devel_switches.h,v 1.3.2.2 2005/10/04 21:24:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -30,7 +30,10 @@
 //=============================================================================
 // define your module-wide development switches here:
 
+// ready to commit 1
 #define	USE_SCOPE_ALIASES			1
+
+#define	USE_PRS_FOOTPRINT			1
 
 //=============================================================================
 

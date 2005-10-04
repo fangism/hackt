@@ -1,9 +1,11 @@
 "TODO"
-	$Id: TODO,v 1.2 2005/09/14 15:30:24 fang Exp $
+	$Id: TODO,v 1.2.2.1 2005/10/04 21:24:16 fang Exp $
 
 ===============================================================================
-recursive create-unique! (in progress)
-	done, except for private internal structures.  
+PRS: in cflat
+	1) pull_up/dn::unroll: check for complement and generate it
+	2) generate process_entries' unrolled production rules!
+	3) test cases instantiating processes with PRS, hierarchically!!!
 
 add another member to footprint to track ALL aliases, not just ports.  
 	(another port_alias_tracker) evaluate all aliases, 
@@ -11,14 +13,15 @@ add another member to footprint to track ALL aliases, not just ports.
 		Should result in much code simplification.  
 		Want to keep all aliases around for fast lookup
 		of all aliases at each level of hierarchy for cflat.  
+	DONE: added scope_aliases, for all aliases in scope
+	(can purge this entry...)
 
 footprint pointer persistence may be complicated in footprint_frame.
 	(partially done, for top-level state)
+	possibly simplify by having each footprint contain back-reference?
 
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
-
-consider one more phase after create: alloc (done)
 
 common class: dump_modifier for formatted printing and variations.  
 

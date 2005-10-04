@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-05:
+	  Preliminary work for unrolling production rules of processes.  
+	  Introduced PRS::footprint as tracker for rules and expressions
+		within scope of each canonical process type.  
+		(Not used by prs-less meta-types)
+	  As a result, all footprint grew in size by at least 8B, 
+		accounting for PRS::footprint addition.  
+		(Object binary size grew for all definitions.)
+	  Privatized helper functorns of PRS::prs_expr.  
+	  Implemented prs_expr::unroll() and PRS::rule::unroll()
+		using new PRS::footprint.  
+	  Minor fixes described in util/ChangeLog.  
+
+
 2005-09-16	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-cflat-01-04:

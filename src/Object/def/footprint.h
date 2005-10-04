@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.3.2.2 2005/09/16 07:19:39 fang Exp $
+	$Id: footprint.h,v 1.3.2.3 2005/10/04 21:24:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -19,6 +19,9 @@
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/devel_switches.h"
+#if USE_PRS_FOOTPRINT
+#include "Object/lang/PRS_footprint.h"
+#endif
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -74,11 +77,13 @@ protected:
 
 	Q: how does a footprint track hierarchical connections?
 	A: needs its own set/copy of the instances contained by 
-	the parent definition.  
+	the parent definition.  This is done with instance_collection_map.  
 
 	NOTE: future, when partial specializations are introduced, 
 	may want a back-reference pointer to the referenced 
 	specialization definition.  (FAR far future)
+
+	CONSIDER: adding definition/canonical type back reference?
  */
 class footprint :
 	private	footprint_base<process_tag>, 
@@ -166,6 +171,14 @@ private:
 		This keeps track which port members are internally aliased.
 	 */
 	port_alias_tracker			port_aliases;
+
+#if USE_PRS_FOOTPRINT
+	/**
+		The set of unrolled production rules, local to this scope.  
+	 */
+	PRS::footprint				prs_footprint;
+#endif
+
 public:
 	footprint();
 	~footprint();
@@ -233,6 +246,11 @@ public:
 #else
 	void
 	evaluate_port_aliases(const port_formals_manager&);
+#endif
+
+#if USE_PRS_FOOTPRINT
+	PRS::footprint&
+	get_prs_footprint(void) { return prs_footprint; }
 #endif
 
 	good_bool

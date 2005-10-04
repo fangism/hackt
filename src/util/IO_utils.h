@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.h"
 	General-purpose handy utilities.
-	$Id: IO_utils.h,v 1.6 2005/05/10 04:51:22 fang Exp $
+	$Id: IO_utils.h,v 1.6.36.1 2005/10/04 21:24:29 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_H__
@@ -100,6 +100,9 @@ void	write_array(ostream&, const S& );
 
 template <class S>
 void	read_sequence_in_place(istream& f, S& s);
+
+template <class S>
+void	read_sequence_prealloc(istream& f, S& s);
 
 template <class S>
 void	read_sequence_resize(istream& f, S& s);

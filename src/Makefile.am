@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.76.2.3 2005/09/17 04:48:50 fang Exp $
+#	$Id: Makefile.am,v 1.76.2.4 2005/10/04 21:24:16 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -173,6 +173,7 @@ OBJECT_CC_FILES = \
 	Object/def/footprint.cc \
 	Object/def/footprint_manager.cc \
 	Object/lang/PRS.cc \
+	Object/lang/PRS_footprint.cc \
 	Object/lang/CHP.cc
 
 # these source files have no .h file (use other name)

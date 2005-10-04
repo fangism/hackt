@@ -1,11 +1,12 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.2 2005/07/23 06:52:44 fang Exp $
+	$Id: PRS.h,v 1.2.16.1 2005/10/04 21:24:24 fang Exp $
+	TODO: support loop expressions of AND and OR.  
  */
 
-#ifndef	__OBJECT_ART_OBJECT_PRS_H__
-#define	__OBJECT_ART_OBJECT_PRS_H__
+#ifndef	__OBJECT_LANG_PRS_H__
+#define	__OBJECT_LANG_PRS_H__
 
 #include "Object/art_object_fwd.h"
 #include "Object/lang/PRS_base.h"
@@ -21,6 +22,13 @@ using std::vector;
 
 typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
 
+enum {
+	PRS_LITERAL_TYPE_ENUM = 0,
+	PRS_NOT_EXPR_TYPE_ENUM = 1,
+	PRS_AND_EXPR_TYPE_ENUM = 2,
+	PRS_OR_EXPR_TYPE_ENUM = 3
+};
+
 //=============================================================================
 /**
 	Literal expression.  
@@ -30,7 +38,7 @@ class literal : public prs_expr {
 private:
 	literal_base_ptr_type			var;
 private:
-	enum { print_stamp = 0 };
+	enum { print_stamp = PRS_LITERAL_TYPE_ENUM };
 public:
 	literal();
 
@@ -50,6 +58,9 @@ public:
 	ostream&
 	dump(ostream& o) const { return dump(o, 0); }
 
+	const literal_base_ptr_type&
+	get_bool_var(void) const { return var; }
+
 	void
 	check(void) const;
 
@@ -58,6 +69,8 @@ public:
 
 	prs_expr_ptr_type
 	negation_normalize(void);
+
+	PRS_UNROLL_EXPR_PROTO;
 
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS
@@ -104,6 +117,8 @@ public:
 	excl_ptr<rule>
 	expand_complement(void);
 
+	PRS_UNROLL_RULE_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class pull-up
@@ -144,6 +159,8 @@ public:
 	excl_ptr<rule>
 	expand_complement(void);
 
+	PRS_UNROLL_RULE_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class pull_dn
@@ -176,6 +193,8 @@ public:
 	excl_ptr<rule>
 	expand_complement(void);
 
+	PRS_UNROLL_RULE_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// and class pass
@@ -188,7 +207,7 @@ class and_expr : public prs_expr, public prs_expr::expr_sequence_type {
 	typedef	and_expr			this_type;
 	typedef	prs_expr::expr_sequence_type	sequence_type;
 private:
-	enum { print_stamp = 2 };
+	enum { print_stamp = PRS_AND_EXPR_TYPE_ENUM };
 public:
 	and_expr();
 	~and_expr();
@@ -208,6 +227,8 @@ public:
 	prs_expr_ptr_type
 	negation_normalize(void);
 
+	PRS_UNROLL_EXPR_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class and_expr
@@ -220,7 +241,7 @@ class or_expr : public prs_expr, public prs_expr::expr_sequence_type {
 	typedef	or_expr				this_type;
 	typedef	prs_expr::expr_sequence_type	sequence_type;
 private:
-	enum { print_stamp = 3 };
+	enum { print_stamp = PRS_OR_EXPR_TYPE_ENUM };
 public:
 	or_expr();
 	~or_expr();
@@ -240,6 +261,8 @@ public:
 	prs_expr_ptr_type
 	negation_normalize(void);
 
+	PRS_UNROLL_EXPR_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class or_expr
@@ -253,7 +276,7 @@ class not_expr : public prs_expr {
 private:
 	prs_expr_ptr_type			var;
 private:
-	enum { print_stamp = 1 };
+	enum { print_stamp = PRS_NOT_EXPR_TYPE_ENUM };
 public:
 	not_expr();
 
@@ -276,6 +299,8 @@ public:
 	prs_expr_ptr_type
 	negation_normalize(void);
 
+	PRS_UNROLL_EXPR_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class not_expr
@@ -285,5 +310,5 @@ public:
 }	// end namespace entity
 }	// end namespace ART
 
-#endif	// __OBJECT_ART_OBJECT_PRS_H__
+#endif	// __OBJECT_LANG_PRS_H__
 
