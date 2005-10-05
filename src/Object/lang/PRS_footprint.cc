@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.1.2.1 2005/10/04 21:24:24 fang Exp $
+	$Id: PRS_footprint.cc,v 1.1.2.2 2005/10/05 23:10:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,7 +13,10 @@
 #include "Object/def/footprint.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/state_manager.h"
+#include "Object/global_entry.h"
 #include "Object/common/dump_flags.h"
+#include "main/cflat_options.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/list_vector.tcc"
@@ -80,7 +83,7 @@ footprint::dump_expr(const expr_node& e, ostream& o, const node_pool_type& np,
 #if STACKTRACE_DUMPS
 			STACKTRACE_INDENT << "Not ";
 #endif
-			INVARIANT(e.size() == 1);
+			INVARIANT(one == 1);
 			dump_expr(ep[e[1]-1], o << '~', np, ep, e.type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
@@ -131,6 +134,92 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Prints production rule expression suitable for a cflat tool.  
+	TODO: convert method to take template functor argument.  
+ */
+void
+footprint::cflat_expr(const expr_node& e, ostream& o, 
+		const footprint_frame_map<bool_tag>& bfm,
+		const entity::footprint& topfp, const cflat_options& cf, 
+		const state_manager& sm, 
+		const expr_pool_type& ep, const char ps) {
+#if STACKTRACE_DUMPS
+	STACKTRACE("PRS::footprint::cflat_expr()");
+	STACKTRACE_INDENT << " at " << &e << ":" << endl;
+#endif
+	const size_t one = e.size();
+	switch (e.type) {
+		case PRS_LITERAL_TYPE_ENUM:
+			INVARIANT(one == 1);
+			if (cf.enquote_names) o << '\"';
+			sm.get_pool<bool_tag>()[bfm[e[1]-1]]
+				.dump_canonical_name(o, topfp, sm);
+			if (cf.enquote_names) o << '\"';
+			break;
+		case PRS_NOT_EXPR_TYPE_ENUM:
+			INVARIANT(one == 1);
+			cflat_expr(ep[e[1]-1], o << '~', bfm, topfp, cf, 
+				sm, ep, e.type);
+			break;
+		case PRS_AND_EXPR_TYPE_ENUM:
+			// yes, fall-through
+		case PRS_OR_EXPR_TYPE_ENUM: {
+			const bool paren = ps && (e.type != ps);
+			if (paren) o << '(';
+			if (e.size()) {
+				cflat_expr(ep[e[1]-1], o, bfm, 
+					topfp, cf, sm, ep, e.type);
+				const char* const op = 
+					(e.type == PRS_AND_EXPR_TYPE_ENUM) ?
+						" & " : " | ";
+				int i = 2;
+				const int s = e.size();
+				for ( ; i<=s; i++) {
+					cflat_expr(ep[e[i]-1],
+						o << op, bfm, topfp, cf, 
+						sm, ep, e.type);
+				}
+			}
+			if (paren) o << ')';
+			break;
+		}
+		default:
+			ICE(cerr, 
+			cerr << "Invalid PRS expr type enumeration: "
+				<< e.type << endl;
+			)
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints production rule suitable for a cflat tool.  
+ */
+void
+footprint::cflat_rule(const rule& r, ostream& o, 
+		const footprint_frame_map<bool_tag>& bfm,
+		const entity::footprint& topfp, const cflat_options& cf, 
+		const state_manager& sm, const expr_pool_type& ep) {
+#if STACKTRACE_DUMPS
+	STACKTRACE("PRS::footprint::cflat_rule()");
+	STACKTRACE_INDENT << " at " << &e << ":" << endl;
+#endif
+	cflat_expr(ep[r.expr_index-1],
+		o, bfm, topfp, cf, sm, ep, PRS_LITERAL_TYPE_ENUM);
+	o << " -> ";
+	// r.output_index gives the local unique ID, 
+	// which needs to be translated to global ID.  
+	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
+	// const size_t j = bfm[r.output_index-1];
+	if (cf.enquote_names) o << '\"';
+	sm.get_pool<bool_tag>()[bfm[r.output_index-1]]
+		.dump_canonical_name(o, topfp, sm);
+	if (cf.enquote_names) o << '\"';
+	o << (r.dir ? '+' : '-');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Need the footprint, which contains the node pool information.  
  */
 ostream&
@@ -173,6 +262,24 @@ footprint::rule&
 footprint::push_back_rule(const int e, const int o, const bool d) {
 	rule_pool.push_back(rule(e, o, d));
 	return rule_pool.back();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Iterates over each local production rule, and replaces
+	local literals with globally allocated node IDs.  
+ */
+void
+footprint::cflat_prs(ostream& o, const footprint_frame_map<bool_tag>& bfm, 
+		const entity::footprint& topfp, const cflat_options& cf, 
+		const state_manager& sm) const {
+	typedef	rule_pool_type::const_iterator	const_rule_iterator;
+	const_rule_iterator i(rule_pool.begin());
+	const const_rule_iterator e(rule_pool.end());
+	for ( ; i!=e; i++) {
+		cflat_rule(*i, o, bfm, topfp, cf, sm, expr_pool);
+		o << endl;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

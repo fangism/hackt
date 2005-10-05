@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.3.2.3 2005/10/04 21:24:21 fang Exp $
+	$Id: footprint.h,v 1.3.2.4 2005/10/05 23:10:20 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -37,6 +37,7 @@ class scopespace;
 class state_manager;
 class footprint_frame;
 class port_member_context;
+
 using std::string;
 using std::istream;
 using std::ostream;
@@ -45,6 +46,9 @@ using util::memory::count_ptr;
 using util::persistent_object_manager;
 
 //=============================================================================
+/**
+	Meta-type specific base class.  
+ */
 template <class Tag>
 class footprint_base {
 protected:
@@ -63,6 +67,10 @@ protected:
 	good_bool
 	__expand_unique_subinstances(const footprint_frame&,
 		state_manager&, const size_t) const;
+
+	good_bool
+	__expand_production_rules(const footprint_frame&, 
+		state_manager&) const;
 
 };	// end class footprint_base
 
@@ -251,6 +259,9 @@ public:
 #if USE_PRS_FOOTPRINT
 	PRS::footprint&
 	get_prs_footprint(void) { return prs_footprint; }
+
+	const PRS::footprint&
+	get_prs_footprint(void) const { return prs_footprint; }
 #endif
 
 	good_bool

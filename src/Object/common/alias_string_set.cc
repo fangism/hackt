@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/alia_string_set.cc"
-	$Id: alias_string_set.cc,v 1.1.2.2 2005/09/17 04:48:54 fang Exp $
+	$Id: alias_string_set.cc,v 1.1.2.3 2005/10/05 23:10:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -97,7 +97,7 @@ if (ob == oe) {
 				break;
 		}
 		if (cf.enquote_names) {
-			o << "\"" << canonical << "\" \"" << prefix << "\"";
+			o << '\"' << canonical << "\" \"" << prefix << '\"';
 		} else {
 			o << canonical << ' ' << prefix;
 		}

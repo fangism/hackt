@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3.2.3 2005/10/04 21:24:21 fang Exp $
+	$Id: footprint.cc,v 1.3.2.4 2005/10/05 23:10:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -138,6 +138,35 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	}
 	return good_bool(true);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 1 && 0
+/**
+	NOTE: this is only need for simulation, not needed for cflattening.
+	Expands each unique process' local production rules, 
+	according to its footprint.  
+	This should only be instantiated with Tag = process_tag.
+	Is footprint_frame needed?
+ */
+template <class Tag>
+good_bool
+footprint_base::__expand_production_rules(const footprint_frame& ff, 
+		state_manager& sm) const {
+	typedef	typename global_entry_pool<Tag>::entry_type	entry_type;
+	const global_entry_pool<bool_tag>&
+		bpool(sm.get_pool<bool_tag>());
+	global_entry_pool<Tag>&
+		proc_pool(sm.get_pool<Tag>());
+	size_t i = 1;
+	const size_t s = proc_pool.size();
+	for ( ; i<=s; i++) {
+		entry_type& pe(proc_pool[i]);
+		// inherited from production_rule_substructure
+		pe.allocate_prs();
+	}
+	return good_bool(true);
+}
+#endif
 
 //=============================================================================
 // class footprint method definitions
@@ -448,7 +477,17 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 				__expand_unique_subinstances(
 					ff, sm, struct_offset).good
 		);
+#if 0
+		if (!b.good)
+			return b;
+		// now expand the processes' production rules
+		// creating a map per process_entry
+		// only needed for simulation, not cflattening
+		return footprint_base<process_tag>::
+			__expand_production_rules(ff, sm);
+#else
 		return b;
+#endif
 	} else {
 		// error
 		return a;

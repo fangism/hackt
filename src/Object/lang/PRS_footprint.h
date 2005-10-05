@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.1.2.1 2005/10/04 21:24:25 fang Exp $
+	$Id: PRS_footprint.h,v 1.1.2.2 2005/10/05 23:10:20 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -12,15 +12,20 @@
 #include "Object/inst/instance_pool_fwd.h"
 #include "util/macros.h"
 #include "util/list_vector.h"
-// #include "util/persistent_fwd.h"
 
 namespace ART {
+struct cflat_options;
+
 namespace entity {
 class footprint;
 struct bool_tag;
+class state_manager;
 
-template <class>
+template <class Tag>
 class state_instance;
+
+template <class Tag>
+class footprint_frame_map;
 
 namespace PRS {
 using std::ostream;
@@ -59,6 +64,7 @@ public:
 			If it is a literal, then nodes[0] is the bool index.
 			Otherwise, index is used for other expr_nodes.  
 			NOTE: valarray just contains size_t and pointer.  
+			Values are 1-indexed.  
 		 */
 		node_array_type			nodes;
 
@@ -111,9 +117,15 @@ public:
 		Compact and resolved representation of production rule.  
 	 */
 	struct rule {
-		/// index to root expression for this node
+		/**
+			index to root expression for this node.
+			1-indexed.
+		 */
 		int				expr_index;
-		/// index to output node (local to this definition)
+		/**
+			index to output node (local to this definition).
+			1-indexed.  
+		 */
 		int				output_index;
 		/**
 			Whether or not is pull-up or down.
@@ -163,6 +175,19 @@ private:
 	dump_rule(const rule&, ostream&, const node_pool_type&, 
 		const expr_pool_type&);
 
+	static
+	void
+	cflat_expr(const expr_node&, ostream&,
+		const footprint_frame_map<bool_tag>&, 
+		const entity::footprint&, const cflat_options&,
+		const state_manager&, const expr_pool_type&, const char);
+
+	static
+	void
+	cflat_rule(const rule&, ostream&, const footprint_frame_map<bool_tag>&, 
+		const entity::footprint&, const cflat_options&, 
+		const state_manager&, const expr_pool_type&);
+
 public:
 	// returns reference to new expression node
 	expr_node&
@@ -175,6 +200,11 @@ public:
 	current_expr_index(void) const {
 		return expr_pool.size();
 	}
+
+	void
+	cflat_prs(ostream&, const footprint_frame_map<bool_tag>&, 
+		const entity::footprint&, const cflat_options&, 
+		const state_manager&) const;
 
 public:
 	// requires no persistent object manager

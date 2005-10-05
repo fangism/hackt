@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.3.2.2 2005/09/17 04:48:54 fang Exp $
+	$Id: state_manager.h,v 1.3.2.3 2005/10/05 23:10:19 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -29,6 +29,7 @@ template <class Tag> struct global_entry;
 //=============================================================================
 /**
 	Global state allocation pool.  
+	Is 1-indexed, because first entry is null in the pool.  
  */
 template <class Tag>
 class global_entry_pool : protected util::list_vector<global_entry<Tag> > {

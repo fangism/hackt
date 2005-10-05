@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.4.2.3 2005/09/17 04:48:53 fang Exp $
+	$Id: state_manager.cc,v 1.4.2.4 2005/10/05 23:10:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -183,9 +183,18 @@ good_bool
 state_manager::cflat(ostream& o, const footprint& topfp,
 		const cflat_options& cf) const {
 	// dump connections
-	global_entry_pool<bool_tag>::cflat_connect(o, topfp, cf);
+	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
+	bool_entry_pool.cflat_connect(o, topfp, cf);
 	// check options for non-bools
 	// dump prs
+	// for each process entry
+	size_t pid = 1;		// 0-indexed, but skipping first null entry
+	const global_entry_pool<process_tag>& proc_entry_pool(*this);
+	const size_t plim = proc_entry_pool.size();
+	for ( ; pid < plim; pid++) {
+		production_rule_substructure::cflat_prs(o, 
+			proc_entry_pool[pid], topfp, cf, *this);
+	}
 	return good_bool(true);
 }
 

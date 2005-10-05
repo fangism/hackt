@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.5.2.4 2005/09/17 04:48:53 fang Exp $
+ 	$Id: module.cc,v 1.5.2.5 2005/10/05 23:10:18 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -224,12 +224,12 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
-#if 1
 		// this is needed for evaluating scope_aliases, 
 		// bus cannot be maintained persistently because
 		// of memory pointer hack (see implementation of 
 		// footprint::import_hierarchical_scopespace.
 		// Plan B: destroy after evaluating aliases!
+		// we call clear_instance_collection_map after we're done.
 		{
 		namespace_collection_type nsl;
 		collect_namespaces(nsl);
@@ -239,11 +239,8 @@ module::create_unique(void) {
 			_footprint.import_hierarchical_scopespace(**i);
 		}
 		}
-#endif
 		_footprint.evaluate_scope_aliases();
-#if 1
 		_footprint.clear_instance_collection_map();
-#endif
 		_footprint.mark_created();
 	}
 	return good_bool(true);

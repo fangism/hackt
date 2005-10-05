@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.2.2.3 2005/09/17 04:48:53 fang Exp $
+	$Id: global_entry.tcc,v 1.2.2.4 2005/10/05 23:10:18 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -246,10 +246,32 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class production_rule_substructure method definitions
+
+/**
+	Only ever instantiated for processes.  
+	might need state_manager...
+ */
+template <class Tag>
+void
+production_rule_substructure::cflat_prs(ostream& o,
+		const global_entry<Tag>& _this, const footprint& topfp,
+		const cflat_options& cf, const state_manager& sm) {
+	// the footprint_frame will translate from local
+	// to global
+	const PRS::footprint&
+		pfp(_this._frame._footprint->get_prs_footprint());
+	const footprint_frame_map<bool_tag>& bfm(_this._frame);
+	pfp.cflat_prs(o, bfm, topfp, cf, sm);
+}
+
+//=============================================================================
 // class global_entry method definitions
 
 template <class Tag>
-global_entry<Tag>::global_entry() : parent_type(), global_entry_common() { }
+global_entry<Tag>::global_entry() : parent_type(), prs_parent_type(),
+		global_entry_common() {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -262,28 +284,22 @@ global_entry<Tag>::~global_entry() { }
 template <class Tag>
 ostream&
 global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df, 
-		// const size_t ind,
-		const footprint& topfp,
-		const state_manager& sm) const {
+		const footprint& topfp, const state_manager& sm) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	// dump canonical name
 	const state_instance<Tag>* _inst;
 	if (parent_tag_value) {
 		INVARIANT(parent_tag_value == PROCESS);
-		// INVARIANT(ind >= _pool.size());
 		const global_entry<process_tag>&
 			p_ent(extract_parent_entry<process_tag>(sm, *this));
-		p_ent.__dump_canonical_name(o, df, // parent_id,
-			topfp, sm) << '.';
+		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
 		// partial, omit formal type parent
 		const pool_type&
 			_lpool(p_ent._frame._footprint
 				->template get_pool<Tag>());
 		_inst = &_lpool[local_offset];
 	} else {
-		// INVARIANT(ind < _pool.size());
-		// INVARIANT(ind == local_offset);
 		_inst = &_pool[local_offset];
 	}
 	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
@@ -335,18 +351,12 @@ global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 	const tracker_map_type&	// a map<size_t, alias_reference_set<Tag> >
 		tm(_alias_tracker->template get_id_map<Tag>());
 	const const_map_iterator a(tm.find(local_offset));
-#if 0
-	_alias_tracker->dump(cerr << "alias_tracker: ") << endl;
-#endif
 	al.push_back();		// empty entry, new list
 	/***
 		Since we keep track of singletons in the scope_alias_tracker, 
 		all lookups should be valid.  
 	***/
 	INVARIANT(a != tm.end());
-#if 0
-	a->second.dump(cerr << "a has: ") << endl;
-#endif
 	// a->second is an alias_reference_set
 	transform(a->second.begin(), a->second.end(),
 		back_inserter(al.back()), 
