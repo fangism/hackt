@@ -1,5 +1,17 @@
 # "src/util/ChangeLog"
 
+2005-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-08:
+	  util/ptrs_functional.h: changed inline mem_fun (const versions)
+		to take argument of type const P<const T> instead of
+		just const P<T>.  (Likewise in the functor classes.)
+		g++-3.3 through 4.0.1 accepted this, but 4.0.2 rejected 
+		(no match found).  This revision make the code more correct, 
+		and is accepted by all versions to date.  
+		(FYI: case was submitted as PR 24243 to gcc-bugzilla)
+
+
 2005-10-05	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-cflat-01-06:

@@ -3,7 +3,7 @@
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
- *	$Id: ptrs_functional.h,v 1.8 2005/05/24 02:38:13 fang Exp $
+ *	$Id: ptrs_functional.h,v 1.8.32.1 2005/10/06 22:16:39 fang Exp $
  */
 
 #ifndef	__UTIL_PTRS_FUNCTIONAL_H__
@@ -20,10 +20,11 @@ using std::binary_function;
 //=============================================================================
 /**
 	Unary function adaptor, base on std::mem_fun_t.
-	Type R is the return type, T is the class type.  
-	Type P is the pointer-class.  
+	\param R is the return type, T is the class type.  
+	\param P is the pointer-class template class.  
+	\param T is the underlying element type.  
 	The only requirement for class P is that indirection
-	via * and -> are implemented.
+		via * and -> are implemented.
  */
 template <class R, template <class> class P, class T>
 class mem_fun_p_t : public unary_function<P<T>, R> {
@@ -70,14 +71,14 @@ mem_fun(R (T::*f)(), const P<T>& null) {
 		but then what would be parent unary_function?
  */
 template <class R, template <class> class P, class T>
-class const_mem_fun_p_t : public unary_function<P<T>, R> {
+class const_mem_fun_p_t : public unary_function<P<const T>, R> {
 private:
 	/** pointer to const member function of T */
 	R (T::*pmf) () const;
 public:
 	// without pointer-class argument, constructor knows nothing about P!
 explicit	const_mem_fun_p_t(R (T::*p)() const) : pmf(p) { }
-	R operator () (const P<T>& p) const { return (*p.*pmf)(); }
+	R operator () (const P<const T>& p) const { return (*p.*pmf)(); }
 };	// end class const_mem_fun_p_t
 
 //-----------------------------------------------------------------------------
@@ -85,13 +86,13 @@ explicit	const_mem_fun_p_t(R (T::*p)() const) : pmf(p) { }
 	Specialization for void return type.  
  */
 template <template <class> class P, class T>
-class const_mem_fun_p_t<void, P, T> : public unary_function<P<T>, void> {
+class const_mem_fun_p_t<void, P, T> : public unary_function<P<const T>, void> {
 private:
 	/** pointer to member function of T */
 	void (T::*pmf) () const;
 public:
 explicit	const_mem_fun_p_t(void (T::*p)() const) : pmf(p) { }
-	void operator () (const P<T>& p) const { (*p.*pmf)(); }
+	void operator () (const P<const T>& p) const { (*p.*pmf)(); }
 };	// end class specialization const_mem_fun_p_t
 
 //-----------------------------------------------------------------------------
@@ -101,16 +102,16 @@ explicit	const_mem_fun_p_t(void (T::*p)() const) : pmf(p) { }
 	Note that this is overloaded with 2 arguments, whereas the 
 		original mem_fun only required one argument.  
 	\param f is the pointer to the member function of T.
-	\param nul is an ignored pointer whose sole purpose is to 
+	\param null is an ignored pointer whose sole purpose is to 
 		identify the pointer class type of P.  Rather than having the
 		user supply all three template arguments, this reduces the 
 		inconvenience to adding one additional argument, 
-		to allow all template arguments to be inferred.  
+		to allow all template arguments to be deduced.  
  */
 template <class R, template <class> class P, class T>
 inline
 const_mem_fun_p_t<R, P, T>
-mem_fun(R (T::*f)() const, const P<T>& null) {
+mem_fun(R (T::*f)() const, const P<const T>& null) {
 	return const_mem_fun_p_t<R, P, T>(f);
 }
 
@@ -162,13 +163,13 @@ mem_fun(R (T::*f)(A), const P<T>& null) {
 	class A is the argument type.  
  */
 template <class R, template <class> class P, class T, class A>
-class const_mem_fun1_p_t : public binary_function<P<T>, A, R> {
+class const_mem_fun1_p_t : public binary_function<P<const T>, A, R> {
 private:
 	/** pointer to unary member function of T */
 	R (T::*pmf) (A) const;
 public:
 explicit	const_mem_fun1_p_t(R (T::*p)(A) const) : pmf(p) { }
-	R operator () (const P<T>& p, A a) const { return (*p.*pmf)(a); }
+	R operator () (const P<const T>& p, A a) const { return (*p.*pmf)(a); }
 };	// end class const_mem_fun1_p_t
 
 //-----------------------------------------------------------------------------
@@ -177,13 +178,13 @@ explicit	const_mem_fun1_p_t(R (T::*p)(A) const) : pmf(p) { }
  */
 template <template <class> class P, class T, class A>
 class const_mem_fun1_p_t<void, P, T, A> :
-		public binary_function<P<T>, A, void> {
+		public binary_function<P<const T>, A, void> {
 private:
 	/** pointer to member function of T */
 	void (T::*pmf) (A) const;
 public:
 explicit	const_mem_fun1_p_t(void (T::*p)(A) const) : pmf(p) { }
-	void operator () (const P<T>& p, A a) const { (*p.*pmf)(a); }
+	void operator () (const P<const T>& p, A a) const { (*p.*pmf)(a); }
 };	// end class specialization const_mem_fun1_p_t
 
 //-----------------------------------------------------------------------------
@@ -191,7 +192,7 @@ explicit	const_mem_fun1_p_t(void (T::*p)(A) const) : pmf(p) { }
 template <class R, template <class> class P, class T, class A>
 inline
 const_mem_fun1_p_t<R, P, T, A>
-mem_fun(R (T::*f)(A) const, const P<T>& null) {
+mem_fun(R (T::*f)(A) const, const P<const T>& null) {
 	return const_mem_fun1_p_t<R, P, T, A>(f);
 }
 
