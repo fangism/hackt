@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.1.2.2 2005/10/05 23:10:20 fang Exp $
+	$Id: PRS_footprint.cc,v 1.1.2.3 2005/10/06 16:38:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -401,8 +401,14 @@ footprint::rule::load_object_base(istream& i) {
 // explicit template instantiations
 // really, only need to instantiate copy-constructures, nothing else referenced
 
+// Apple gcc-4 rejects, probably fixed on the 4.0 branch...
+#if 0 
 template class footprint::rule_pool_type;
 template class footprint::expr_pool_type;
+#else
+template class util::list_vector<footprint::expr_node>;
+template class util::list_vector<footprint::rule>;
+#endif
 
 //=============================================================================
 }	// end namespace PRS
