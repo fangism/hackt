@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.76 2005/09/14 15:30:24 fang Exp $
+#	$Id: Makefile.am,v 1.76.4.1 2005/10/06 21:47:52 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -176,6 +176,7 @@ OBJECT_CC_FILES = \
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
+	Object/common/lookup-bug.cc \
 	Object/traits/class_traits_types.cc \
 	Object/def/definition.cc \
 	Object/expr/basic_param.cc \

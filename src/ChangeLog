@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-gcc40rejectsvalid:
+	  Added a semi-reduced test case exhibiting a behavioral
+		difference in lookup between g++-4.0.1 and 4.0.2.  
+		Diagnosed a fix in our own code however.  
+
+
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-merged-unique-02-15:
