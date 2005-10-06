@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.7 2005/09/14 15:30:38 fang Exp $
+#	$Id: Make.test-tail,v 1.7.2.1 2005/10/06 04:41:30 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -10,6 +10,7 @@ ARTOBJDUMP_EXE = $(top_builddir)/src/hackt objdump
 ARTOBJUNROLL_EXE = $(top_builddir)/src/hackt unroll
 HACKT_CREATE_EXE = $(top_builddir)/src/hackt create
 HACKT_ALLOC_EXE = $(top_builddir)/src/hackt alloc
+HACKT_CFLAT_EXE = $(top_builddir)/src/hackt cflat prsim
 
 # NOTE: these scripts are configure-generated from their .in files.  
 ARTC_TEST_SH = $(top_builddir)/test/artc-expect.sh
@@ -17,6 +18,7 @@ ARTOBJ_TEST_SH = $(top_builddir)/test/artobj-diff.sh
 ARTOBJUNROLL_TEST_SH = $(top_builddir)/test/artobjunroll-expect.sh
 HACKT_CREATE_TEST_SH = $(top_builddir)/test/hackt-create-expect.sh
 HACKT_ALLOC_TEST_SH = $(top_builddir)/test/hackt-alloc-expect.sh
+HACKT_CFLAT_TEST_SH = $(top_builddir)/test/hackt-cflat-expect.sh
 
 STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
 POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
@@ -28,8 +30,9 @@ ANALYZE_DIFF_AWK = $(AWK) -f $(top_srcdir)/test/analyze-dump-diff.awk
 
 TEST_REPORT = $(top_builddir)/test/test-report.txt
 
-# This needs to be specified in Makefile.am to take effect
+# These needs to be specified in Makefile.am to take effect
 # SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
+#	.hacktcreatetest .hacktalloctest .hacktcflattest
 
 .in.stderr:
 	@$(TOUCH) $@
@@ -84,8 +87,16 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
+.in.hacktcflattest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_EXE)\"" \
+		$(srcdir) $* $(TEST_REPORT) >> $@
+	@$(CHMOD) +x $@
+
 CHECK_SUMMARIES = artcdiffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex
+# need prs summaries? nah...
 
 artcdiffs: force
 	-$(CAT) *.diff > $@
@@ -121,13 +132,15 @@ EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) \
 	$(BISON_OUTPUTS:=.stderr.bison) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocstderr) 
+	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocstderr) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs) 
 
 TESTS += $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(ARTOBJ_TEST_SUBJECTS:=.artobjtest) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) 
+	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) 
 
 # filter-out is GNUMake feature
 #	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
@@ -158,7 +171,9 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktobjalloc) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdump) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdump.filter) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdiff)
+	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdiff) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff)
 
 DISTCLEANFILES += local.cvsignore subdir.not_a_test
 
@@ -171,6 +186,7 @@ AUTO_IGNORE += local.cvsignore \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.artobjunrolltest) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
 	$(CHECK_SUMMARIES)
 
 # we generate all the local.cvsignore's in the test directories
@@ -209,6 +225,7 @@ cleaner: clean cleaner-recursive
 	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.artobjunroll *.unrolldump *.unrolldiff
 	-$(RM) *.hacktobjcreate *.createdump *.creatediff
+	-$(RM) *.prs *.prsdiff
 	-$(RM) *.noindex
 
 cleaner-recursive:

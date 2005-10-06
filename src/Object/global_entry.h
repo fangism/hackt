@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.2.2.4 2005/10/05 23:10:18 fang Exp $
+	$Id: global_entry.h,v 1.2.2.5 2005/10/06 04:41:27 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -261,6 +261,8 @@ struct global_entry_common {
 /**
 	Substructure of processes, which may contain production rules.  
 	Need to keep hierarchical substructure to propagate up.  
+	TODO: for simulation state allocation, allocate expression
+		tree structures with back-links for up propagation.  
  */
 class production_rule_substructure {
 public:

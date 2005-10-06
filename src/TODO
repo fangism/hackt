@@ -1,11 +1,13 @@
 "TODO"
-	$Id: TODO,v 1.2.2.1 2005/10/04 21:24:16 fang Exp $
+#	$Id: TODO,v 1.2.2.2 2005/10/06 04:41:26 fang Exp $
 
 ===============================================================================
 PRS: in cflat
-	1) pull_up/dn::unroll: check for complement and generate it
 	2) generate process_entries' unrolled production rules!
+		only needed for simulation, not flattening [PUNT]
 	3) test cases instantiating processes with PRS, hierarchically!!!
+
+PRS parser needs to support rule loops...
 
 add another member to footprint to track ALL aliases, not just ports.  
 	(another port_alias_tracker) evaluate all aliases, 
@@ -19,6 +21,7 @@ add another member to footprint to track ALL aliases, not just ports.
 footprint pointer persistence may be complicated in footprint_frame.
 	(partially done, for top-level state)
 	possibly simplify by having each footprint contain back-reference?
+	(not critical, can do later...)
 
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
@@ -33,6 +36,7 @@ new class_trait:
 big stuff:
 
 *** loops and conditionals ***
+*** global and out-of-scope references? ***
 
 CFLAT
 

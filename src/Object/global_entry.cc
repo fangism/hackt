@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.2 2005/09/14 15:30:25 fang Exp $
+	$Id: global_entry.cc,v 1.2.2.1 2005/10/06 04:41:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -64,7 +64,6 @@ footprint_frame_map<Tag>::__allocate_remaining_sub(const footprint& fp,
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	footprint_frame_map_type::iterator	iterator;
 	// placeholder pool in the footprint
-//	const pool_type& php(fp.template get_pool<Tag>());
 	global_entry_pool<Tag>& _pool(sm.template get_pool<Tag>());
 	const iterator b(id_map.begin());
 	const iterator e(id_map.end());

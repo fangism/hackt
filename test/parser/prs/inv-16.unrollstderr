@@ -1,0 +1,105 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	188
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  7 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+        a = bool<> a
+        b = bool<> b
+        prs:
+        a -> b-
+        ~a -> b+
+        footprint: {
+          bool^0 a (instantiated) = ::inv::a 
+          bool^0 b (instantiated) = ::inv::b 
+        }
+      }
+
+  Instances:
+    i1 = process inv<>^0 i1 (instantiated) = ::i1 (
+      bool^0 a (instantiated) = ::x 
+      bool^0 b (instantiated) = ::y 
+    )
+    i2 = process inv<>^0 i2 (instantiated) = ::i2 (
+      bool^0 a (instantiated) = ::p 
+      bool^0 b (instantiated) = ::i2.b 
+    )
+    i3 = process inv<>^0 i3 (instantiated) = ::i3 (
+      bool^0 a (instantiated) = ::i3.a 
+      bool^0 b (instantiated) = ::q 
+    )
+    p = bool^0 p (instantiated) = ::i2.a 
+    q = bool^0 q (instantiated) = ::i3.b 
+    x = bool^0 x (instantiated) = ::i1.a 
+    y = bool^0 y (instantiated) = ::i1.b 
+}
+

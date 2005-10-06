@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.5.2.3 2005/10/04 21:24:20 fang Exp $
+ 	$Id: definition.cc,v 1.5.2.4 2005/10/06 04:41:28 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2769,15 +2769,10 @@ if (defined) {
 			return good_bool(false);
 		}
 		if (sequential_scope::create_unique(c, *f).good) {
-#if USE_SCOPE_ALIASES
 			f->evaluate_scope_aliases();
-#else
-			f->evaluate_port_aliases(port_formals);
-#endif
-#if USE_PRS_FOOTPRINT
+			// also resolve copy of production rules
 			prs.unroll(c, f->get_pool<bool_tag>(), 
 				f->get_prs_footprint());
-#endif
 			f->mark_created();
 		} else {
 			// already have partial error message

@@ -1,0 +1,73 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	241
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	64
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+        a = bool<> a
+        b = bool<> b
+        prs:
+        a -> b-
+        ~a -> b+
+        footprint: {
+          bool^0 a (instantiated) = ::inv::a (1) 
+          bool^0 b (instantiated) = ::inv::b (2) 
+          bool instance pool:
+          1	::inv::a
+          2	::inv::b
+          resolved prs:
+          a -> b-
+          ~a -> b+
+        }
+      }
+
+  Instances:
+    __inv__ = process inv<>^0 __inv__ (instantiated) = ::__inv__ (1) (
+      bool^0 a (instantiated) = ::__inv__.a (1) 
+      bool^0 b (instantiated) = ::__inv__.b (2) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::__inv__
+bool instance pool:
+1	::__inv__.a
+2	::__inv__.b
+

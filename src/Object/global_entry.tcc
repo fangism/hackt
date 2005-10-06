@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.2.2.4 2005/10/05 23:10:18 fang Exp $
+	$Id: global_entry.tcc,v 1.2.2.5 2005/10/06 04:41:27 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -328,6 +328,10 @@ struct global_entry<Tag>::alias_to_string_transformer :
 };	// end struct alias_to_string_transformer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Accumulates aliases at each level of the instance hierarchy
+	in the alias_string_set for alias generation.  
+ */
 template <class Tag>
 void
 global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,

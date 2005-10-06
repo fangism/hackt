@@ -1,0 +1,14 @@
+// "inv-17.in" should pass
+// copy-modified from "inv-14.in"
+// just instantiating an inverter.  
+
+defproc silly_inv() {
+bool a, b;
+prs {
+	a -> b-
+	~a -> b+
+}
+}
+
+silly_inv __inv__;
+

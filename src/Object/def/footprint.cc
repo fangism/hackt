@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3.2.4 2005/10/05 23:10:19 fang Exp $
+	$Id: footprint.cc,v 1.3.2.5 2005/10/06 04:41:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,9 +9,6 @@
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
-#if !USE_SCOPE_ALIASES
-#include "Object/def/port_formals_manager.h"
-#endif
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
@@ -140,7 +137,8 @@ footprint_base<Tag>::__expand_unique_subinstances(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1 && 0
+#if 0
+// not ready to unveil until simulation engine is ready...
 /**
 	NOTE: this is only need for simulation, not needed for cflattening.
 	Expands each unique process' local production rules, 
@@ -150,7 +148,7 @@ footprint_base<Tag>::__expand_unique_subinstances(
  */
 template <class Tag>
 good_bool
-footprint_base::__expand_production_rules(const footprint_frame& ff, 
+footprint_base<Tag>::__expand_production_rules(const footprint_frame& ff, 
 		state_manager& sm) const {
 	typedef	typename global_entry_pool<Tag>::entry_type	entry_type;
 	const global_entry_pool<bool_tag>&
@@ -182,14 +180,9 @@ footprint::footprint() :
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
-#if USE_SCOPE_ALIASES
 	scope_aliases(), 
-#endif
-	port_aliases()
-#if USE_PRS_FOOTPRINT
-	, prs_footprint()
-#endif
-	{
+	port_aliases(),
+	prs_footprint() {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -233,9 +226,7 @@ footprint::dump_with_collections(ostream& o) const {
 		// don't bother dumping, unless debugging
 		scope_aliases.dump(o);
 #endif
-#if USE_PRS_FOOTPRINT
 		prs_footprint.dump(o, *this);
-#endif
 	}
 	return o;
 }
@@ -372,7 +363,6 @@ footprint::create_dependent_types(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_SCOPE_ALIASES
 /**
 	Collects all aliases in this scope.  
 	\pre the sequential scope was already played for creation.  
@@ -408,29 +398,6 @@ footprint::evaluate_scope_aliases(void) {
 	// NOTE: don't filter uniques for scope_aliases, needed for aliases
 	port_aliases.filter_uniques();
 }
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\pre the sequential scope was already played for creation.  
- */
-void
-footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
-	STACKTRACE_VERBOSE;
-	// find port aliases
-	// work out const-cast-ness
-	typedef port_formals_manager::const_list_iterator
-						const_list_iterator;
-	const_list_iterator i(pfm.begin());
-	const const_list_iterator e(pfm.end());
-	for ( ; i!=e; i++) {
-		// includes assertions
-		instance_collection_map[(*i)->get_name()]
-			.is_a<const physical_instance_collection>()
-			->collect_port_aliases(port_aliases);
-	}
-	port_aliases.filter_uniques();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -574,12 +541,8 @@ footprint::write_object_base(const persistent_object_manager& m,
 	footprint_base<int_tag>::_pool.write_object_base(m, o);
 	footprint_base<bool_tag>::_pool.write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
-#if USE_SCOPE_ALIASES
 	scope_aliases.write_object_base(m, o);
-#endif
-#if USE_PRS_FOOTPRINT
 	prs_footprint.write_object_base(o);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -609,12 +572,8 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	footprint_base<int_tag>::_pool.load_object_base(m, i);
 	footprint_base<bool_tag>::_pool.load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
-#if USE_SCOPE_ALIASES
 	scope_aliases.load_object_base(m, i);
-#endif
-#if USE_PRS_FOOTPRINT
 	prs_footprint.load_object_base(i);
-#endif
 }
 
 //=============================================================================

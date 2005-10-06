@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2005/09/14 15:30:38 fang Exp $
+#	$Id: Makefile.am,v 1.15.2.1 2005/10/06 04:41:30 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -21,6 +21,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	artobjunroll-expect.sh.in \
 	hackt-create-expect.sh.in \
 	hackt-alloc-expect.sh.in \
+	hackt-cflat-expect.sh.in \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
@@ -28,7 +29,7 @@ AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
 
 DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
 
-EXTRA_DIST += ChangeLog README \
+EXTRA_DIST += ChangeLog README TODO \
 	Make.test-head Make.test-tail \
 	$(PRECONFIGURED_TESTSCRIPTS) \
 	state_enum_filter.awk address_filter.sed \
@@ -39,6 +40,7 @@ EXTRA_DIST += ChangeLog README \
 	update-unrollstderr.sh \
 	update-createstderr.sh \
 	update-allocstderr.sh \
+	update-expectprs.sh \
 	analyze-dump-diff.awk \
 	spacestonewline.awk test.cvsignore
 

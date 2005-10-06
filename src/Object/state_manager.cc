@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.4.2.4 2005/10/05 23:10:19 fang Exp $
+	$Id: state_manager.cc,v 1.4.2.5 2005/10/06 04:41:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
+#include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
 #include "util/IO_utils.h"
@@ -176,25 +177,28 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prototype cflat.  
-	Connections first.  
+	Prototype cflat -- strictly for backwards compatibility.  
+	Connections should come after production rules.  (CAST tools)
+	Check of ordering mattes for various tools.
  */
 good_bool
 state_manager::cflat(ostream& o, const footprint& topfp,
 		const cflat_options& cf) const {
-	// dump connections
 	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
-	bool_entry_pool.cflat_connect(o, topfp, cf);
-	// check options for non-bools
+if (cf.include_prs) {
 	// dump prs
 	// for each process entry
-	size_t pid = 1;		// 0-indexed, but skipping first null entry
+	size_t pid = 1;		// 0-indexed, but 0th entry is null
 	const global_entry_pool<process_tag>& proc_entry_pool(*this);
 	const size_t plim = proc_entry_pool.size();
 	for ( ; pid < plim; pid++) {
 		production_rule_substructure::cflat_prs(o, 
 			proc_entry_pool[pid], topfp, cf, *this);
 	}
+}
+	// dump connections
+	bool_entry_pool.cflat_connect(o, topfp, cf);
+	// check options for non-bools
 	return good_bool(true);
 }
 
