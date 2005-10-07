@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.5.2.4 2005/10/06 04:41:28 fang Exp $
+ 	$Id: definition.cc,v 1.5.2.5 2005/10/07 05:28:18 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -696,6 +696,9 @@ user_def_chan::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: dump members alphabetically.
+ */
 ostream&
 user_def_chan::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
@@ -1496,6 +1499,9 @@ enum_datatype_def::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: sort enum members alphabetically?
+ */
 ostream&
 enum_datatype_def::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
@@ -1787,6 +1793,9 @@ user_def_datatype::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: dump members alphabetically.
+ */
 ostream&
 user_def_datatype::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
@@ -2361,12 +2370,11 @@ process_definition::what(ostream& o) const {
 	Spill contents of the used_id_map.
 	\param o the output stream.
 	\return the same output stream.
-	TODO: dump the footprint map.  
+	TODO: sort used_id_map entries alphabetically... at least in dumping
  */
 ostream&
 process_definition::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
-//	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
 	// unique ID not working with INDENT_SECTION marco... :(
 	INDENT_SECTION(o);	

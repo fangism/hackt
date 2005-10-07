@@ -2,6 +2,12 @@
 
 2005-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-59-cflat-01-09:
+	  Fixed false positive warning condition at the end of
+		persistent_object_manager loading.  
+		Allow shared visit to classify as owning an entry.  
+
+
 	* ARTXX-00-01-04-main-00-59-cflat-01-08:
 	  util/ptrs_functional.h: changed inline mem_fun (const versions)
 		to take argument of type const P<const T> instead of

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in ART.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.2 2005/07/23 06:52:49 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.2.16.1 2005/10/07 05:28:19 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -80,6 +80,9 @@ virtual	~simple_meta_instance_reference();
 	what(ostream&) const;
 
 	using parent_type::dump;
+
+virtual	ostream&
+	dump_briefer(ostream&, const never_ptr<const scopespace>) const;
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;

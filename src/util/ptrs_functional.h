@@ -3,7 +3,7 @@
  *	This file contains specializations and extensions
  *	for member function adaptors
  *	base on the standard set found in <functional>.
- *	$Id: ptrs_functional.h,v 1.8.32.1 2005/10/06 22:16:39 fang Exp $
+ *	$Id: ptrs_functional.h,v 1.8.32.2 2005/10/07 05:28:21 fang Exp $
  */
 
 #ifndef	__UTIL_PTRS_FUNCTIONAL_H__
@@ -32,7 +32,9 @@ private:
 	/** pointer to member function of T */
 	R (T::*pmf) ();
 public:
-	mem_fun_p_t(R (T::*p)(), const P<T>& d) : pmf(p) { }
+	explicit
+	mem_fun_p_t(R (T::*p)()) : pmf(p) { }
+
 	R operator () (const P<T>& p) const { return (*p.*pmf)(); }
 };	// end class mem_fun_p_t
 
@@ -46,7 +48,9 @@ private:
 	/** pointer to member function of T */
 	void (T::*pmf) ();
 public:
+	explicit
 	mem_fun_p_t(void (T::*p)()) : pmf(p) { }
+
 	void operator () (const P<T>& p) const { (*p.*pmf)(); }
 };	// end class specialization mem_fun_p_t
 
@@ -77,7 +81,9 @@ private:
 	R (T::*pmf) () const;
 public:
 	// without pointer-class argument, constructor knows nothing about P!
-explicit	const_mem_fun_p_t(R (T::*p)() const) : pmf(p) { }
+	explicit
+	const_mem_fun_p_t(R (T::*p)() const) : pmf(p) { }
+
 	R operator () (const P<const T>& p) const { return (*p.*pmf)(); }
 };	// end class const_mem_fun_p_t
 
@@ -91,7 +97,9 @@ private:
 	/** pointer to member function of T */
 	void (T::*pmf) () const;
 public:
-explicit	const_mem_fun_p_t(void (T::*p)() const) : pmf(p) { }
+	explicit
+	const_mem_fun_p_t(void (T::*p)() const) : pmf(p) { }
+
 	void operator () (const P<const T>& p) const { (*p.*pmf)(); }
 };	// end class specialization const_mem_fun_p_t
 
@@ -130,7 +138,9 @@ private:
 	/** pointer to unary member function of T */
 	R (T::*pmf) (A);
 public:
-explicit	mem_fun1_p_t(R (T::*p)(A)) : pmf(p) { }
+	explicit
+	mem_fun1_p_t(R (T::*p)(A)) : pmf(p) { }
+
 	R operator () (const P<T>& p, A a) const { return (*p.*pmf)(a); }
 };	// end class mem_fun1_p_t
 
@@ -144,7 +154,9 @@ private:
 	/** pointer to member function of T */
 	void (T::*pmf) (A);
 public:
-explicit	mem_fun1_p_t(void (T::*p)(A)) : pmf(p) { }
+	explicit
+	mem_fun1_p_t(void (T::*p)(A)) : pmf(p) { }
+
 	void operator () (const P<T>& p, A a) const { (*p.*pmf)(a); }
 };	// end class specialization mem_fun1_p_t
 
@@ -168,7 +180,9 @@ private:
 	/** pointer to unary member function of T */
 	R (T::*pmf) (A) const;
 public:
-explicit	const_mem_fun1_p_t(R (T::*p)(A) const) : pmf(p) { }
+	explicit
+	const_mem_fun1_p_t(R (T::*p)(A) const) : pmf(p) { }
+
 	R operator () (const P<const T>& p, A a) const { return (*p.*pmf)(a); }
 };	// end class const_mem_fun1_p_t
 
@@ -183,7 +197,9 @@ private:
 	/** pointer to member function of T */
 	void (T::*pmf) (A) const;
 public:
-explicit	const_mem_fun1_p_t(void (T::*p)(A) const) : pmf(p) { }
+	explicit
+	const_mem_fun1_p_t(void (T::*p)(A) const) : pmf(p) { }
+
 	void operator () (const P<const T>& p, A a) const { (*p.*pmf)(a); }
 };	// end class specialization const_mem_fun1_p_t
 

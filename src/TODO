@@ -1,13 +1,21 @@
 "TODO"
-#	$Id: TODO,v 1.2.2.2 2005/10/06 04:41:26 fang Exp $
+#	$Id: TODO,v 1.2.2.3 2005/10/07 05:28:15 fang Exp $
 
 ===============================================================================
+
+Fix print ordering to be alphabetical by bins in definitions' scopespace.
+	noted in Object/def/definition.cc, sort used_id_map, maybe cache
+	the alphabetized maps (non-persistently).  
+
 PRS: in cflat
 	2) generate process_entries' unrolled production rules!
 		only needed for simulation, not flattening [PUNT]
 	3) test cases instantiating processes with PRS, hierarchically!!!
 
 PRS parser needs to support rule loops...
+
+Enhancement:
+	choose better canonical names, based on shallowest hierarchy...
 
 add another member to footprint to track ALL aliases, not just ports.  
 	(another port_alias_tracker) evaluate all aliases, 
@@ -45,6 +53,10 @@ vs. arrays of definitions (like logic gates).
 
 in general check memory usage of large arrays of things
 	make benchmarks directory.
+
+===============================================================================
+Library stuff:
+util: use new ptrs_functional_proposed.h with const_traits.h
 
 ===============================================================================
 enhancements:

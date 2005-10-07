@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in ART.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.2 2005/07/23 06:52:46 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.2.16.1 2005/10/07 05:28:19 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -13,6 +13,7 @@
 
 namespace ART {
 namespace entity {
+class scopespace;
 class unroll_context;
 using std::ostream;
 using std::istream;
@@ -70,6 +71,9 @@ public:
 
 	ostream&
 	what(ostream&) const;
+
+	ostream&
+	dump_briefer(ostream&, const never_ptr<const scopespace>) const;
 
 	// overrides parent's implementation.  
 	bad_bool

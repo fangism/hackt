@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-09:
+	  Fixed printing of instance_references' dump_briefer
+		to use dump_hierarchical_name, using dump_flags::no_owner,
+		and also implemented as virtual function so 
+		member instance references would be printed correctly, 
+		not just the leaf-most instance name of hierarchy.  
+		(was only exhibited in intermediate-form dumping)
+	  Library fix for persistent_object_manager summarized
+		in "src/util/ChangeLog", eliminating false positive warning.  
+		Also minor clean-up in "ptrs_functional.h"
+	  Added a few new test cases.  
+	  TODO: sort member dumping of definitions for deterministic ordering.
+
+
 2005-10-06	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-cflat-01-08:

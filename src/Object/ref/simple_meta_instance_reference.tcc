@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.4 2005/09/14 15:30:33 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.4.2.1 2005/10/07 05:28:19 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -71,6 +71,17 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just wrapped around common base class implmentation.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+ostream&
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o, 
+		const never_ptr<const scopespace> s) const {
+	return simple_meta_instance_reference_base::dump_briefer(o, s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
