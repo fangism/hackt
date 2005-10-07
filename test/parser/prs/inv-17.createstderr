@@ -38,21 +38,22 @@ In namespace "", we have: {
     silly_inv = process-definition (defined) silly_inv(
       )
       In definition "silly_inv", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        prs:
+      prs:
         a -> b-
         ~a -> b+
-        footprint: {
-          bool^0 a (instantiated) = ::silly_inv::a (1) 
-          bool^0 b (instantiated) = ::silly_inv::b (2) 
-          bool instance pool:
-          1	::silly_inv::a
-          2	::silly_inv::b
-          resolved prs:
-          a -> b-
-          ~a -> b+
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::silly_inv::a (1) 
+        bool^0 b (instantiated) = ::silly_inv::b (2) 
+        bool instance pool:
+        1	::silly_inv::a
+        2	::silly_inv::b
+        resolved prs:
+        a -> b-
+        ~a -> b+
+      }
       }
 
   Instances:

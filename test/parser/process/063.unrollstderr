@@ -64,24 +64,26 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N
+      Instances:
         a = bool<> a with indices: {
           [0..::foo::N-1]
         }
 
-        footprint collection: {
-          <4> {
-            pint^0 N value: ?
-            bool^1 a with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] 
-                1 = ::foo::a[1] 
-                2 = ::foo::a[2] 
-                3 = ::foo::a[3] 
-              }
+      footprint collection: {
+        <4> {
+          pint^0 N value: ?
+          bool^1 a with indices: {
           }
+            unrolled indices: {
+              0 = ::foo::a[0] 
+              1 = ::foo::a[1] 
+              2 = ::foo::a[2] 
+              3 = ::foo::a[3] 
+            }
         }
+      }
       }
 
   Typedefs:

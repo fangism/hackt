@@ -84,10 +84,11 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "nor2_ver1", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         c = bool<> c
-        prs:
+      prs:
         a | b -> c-
         ~a & ~b -> c+
       }
@@ -98,10 +99,11 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "nor2_ver2", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         c = bool<> c
-        prs:
+      prs:
         a | b -> c-
         ~a & ~b -> c+
       }
@@ -112,10 +114,11 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "nor2_ver3", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         c = bool<> c
-        prs:
+      prs:
         ~a & ~b -> c+
         a | b -> c-
       }

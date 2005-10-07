@@ -220,24 +220,25 @@ In namespace "", we have: {
         bool<> e
       )
       In definition "e1of2", we have: {
+      Instances:
         d = bool<> d with indices: {
           [0..1]
         }
 
         e = bool<> e
-        footprint: {
-          bool^1 d with indices: {
-          }
-            unrolled indices: {
-              0 = ::e1of2::d[0] (1) 
-              1 = ::e1of2::d[1] (2) 
-            }
-          bool^0 e (instantiated) = ::e1of2::e (3) 
-          bool instance pool:
-          1	::e1of2::d[0]
-          2	::e1of2::d[1]
-          3	::e1of2::e
+      footprint: {
+        bool^1 d with indices: {
         }
+          unrolled indices: {
+            0 = ::e1of2::d[0] (1) 
+            1 = ::e1of2::d[1] (2) 
+          }
+        bool^0 e (instantiated) = ::e1of2::e (3) 
+        bool instance pool:
+        1	::e1of2::d[0]
+        2	::e1of2::d[1]
+        3	::e1of2::e
+      }
       }
 
     inv = process-definition (defined) inv(
@@ -245,21 +246,22 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "inv", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        prs:
+      prs:
         a -> b-
         ~a -> b+
-        footprint: {
-          bool^0 a (instantiated) = ::inv::a (1) 
-          bool^0 b (instantiated) = ::inv::b (2) 
-          bool instance pool:
-          1	::inv::a
-          2	::inv::b
-          resolved prs:
-          a -> b-
-          ~a -> b+
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::inv::a (1) 
+        bool^0 b (instantiated) = ::inv::b (2) 
+        bool instance pool:
+        1	::inv::a
+        2	::inv::b
+        resolved prs:
+        a -> b-
+        ~a -> b+
+      }
       }
 
     wchb_e1of2 = process-definition (defined) wchb_e1of2(
@@ -267,87 +269,88 @@ In namespace "", we have: {
         e1of2<> R
       )
       In definition "wchb_e1of2", we have: {
+      Instances:
+        L = e1of2<> L
+        R = e1of2<> R
         _r = bool<> _r with indices: {
           [0..1]
         }
 
         r0 = inv<> r0
         r1 = inv<> r1
-        L = e1of2<> L
-        R = e1of2<> R
         re = inv<> re
         rv = bool<> rv
-        prs:
+      prs:
         L.d[0] & R.e -> _r[0]-
         L.d[1] & R.e -> _r[1]-
         ~_r[0] | ~_r[1] -> rv+
         ~L.d[0] & ~R.e -> _r[0]+
         ~L.d[1] & ~R.e -> _r[1]+
         _r[0] & _r[1] -> rv-
-        footprint: {
-          bool^1 _r with indices: {
+      footprint: {
+        bool^1 _r with indices: {
+        }
+          unrolled indices: {
+            0 = ::wchb_e1of2::r0.a (7) 
+            1 = ::wchb_e1of2::r1.a (8) 
+          }
+        process inv<>^0 r0 (instantiated) = ::wchb_e1of2::r0 (3) (
+          bool^0 a (instantiated) = ::wchb_e1of2::_r[0] (7) 
+          bool^0 b (instantiated) = ::wchb_e1of2::R.d[0] (4) 
+        )
+        process inv<>^0 r1 (instantiated) = ::wchb_e1of2::r1 (4) (
+          bool^0 a (instantiated) = ::wchb_e1of2::_r[1] (8) 
+          bool^0 b (instantiated) = ::wchb_e1of2::R.d[1] (5) 
+        )
+        process e1of2<>^0 L (instantiated) = ::wchb_e1of2::L (1) (
+          bool^1 d with indices: {
+            [0..1]
           }
             unrolled indices: {
-              0 = ::wchb_e1of2::r0.a (7) 
-              1 = ::wchb_e1of2::r1.a (8) 
+              0 = ::wchb_e1of2::L.d[0] (1) 
+              1 = ::wchb_e1of2::L.d[1] (2) 
             }
-          process inv<>^0 r0 (instantiated) = ::wchb_e1of2::r0 (3) (
-            bool^0 a (instantiated) = ::wchb_e1of2::_r[0] (7) 
-            bool^0 b (instantiated) = ::wchb_e1of2::R.d[0] (4) 
-          )
-          process inv<>^0 r1 (instantiated) = ::wchb_e1of2::r1 (4) (
-            bool^0 a (instantiated) = ::wchb_e1of2::_r[1] (8) 
-            bool^0 b (instantiated) = ::wchb_e1of2::R.d[1] (5) 
-          )
-          process e1of2<>^0 L (instantiated) = ::wchb_e1of2::L (1) (
-            bool^1 d with indices: {
-              [0..1]
+          bool^0 e (instantiated) = ::wchb_e1of2::re.b (3) 
+        )
+        process e1of2<>^0 R (instantiated) = ::wchb_e1of2::R (2) (
+          bool^1 d with indices: {
+            [0..1]
+          }
+            unrolled indices: {
+              0 = ::wchb_e1of2::r0.b (4) 
+              1 = ::wchb_e1of2::r1.b (5) 
             }
-              unrolled indices: {
-                0 = ::wchb_e1of2::L.d[0] (1) 
-                1 = ::wchb_e1of2::L.d[1] (2) 
-              }
-            bool^0 e (instantiated) = ::wchb_e1of2::re.b (3) 
-          )
-          process e1of2<>^0 R (instantiated) = ::wchb_e1of2::R (2) (
-            bool^1 d with indices: {
-              [0..1]
-            }
-              unrolled indices: {
-                0 = ::wchb_e1of2::r0.b (4) 
-                1 = ::wchb_e1of2::r1.b (5) 
-              }
-            bool^0 e (instantiated) = ::wchb_e1of2::R.e (6) 
-          )
-          process inv<>^0 re (instantiated) = ::wchb_e1of2::re (5) (
-            bool^0 a (instantiated) = ::wchb_e1of2::rv (9) 
-            bool^0 b (instantiated) = ::wchb_e1of2::L.e (3) 
-          )
-          bool^0 rv (instantiated) = ::wchb_e1of2::re.a (9) 
-          process instance pool:
-          1	::wchb_e1of2::L
-          2	::wchb_e1of2::R
-          3	::wchb_e1of2::r0
-          4	::wchb_e1of2::r1
-          5	::wchb_e1of2::re
-          bool instance pool:
-          1	::wchb_e1of2::L.d[0]
-          2	::wchb_e1of2::L.d[1]
-          3	::wchb_e1of2::L.e
-          4	::wchb_e1of2::R.d[0]
-          5	::wchb_e1of2::R.d[1]
-          6	::wchb_e1of2::R.e
-          7	::wchb_e1of2::r0.a
-          8	::wchb_e1of2::r1.a
-          9	::wchb_e1of2::re.a
-          resolved prs:
-          L.d[0] & R.e -> r0.a-
-          L.d[1] & R.e -> r1.a-
-          ~r0.a | ~r1.a -> re.a+
-          ~L.d[0] & ~R.e -> r0.a+
-          ~L.d[1] & ~R.e -> r1.a+
-          r0.a & r1.a -> re.a-
-        }
+          bool^0 e (instantiated) = ::wchb_e1of2::R.e (6) 
+        )
+        process inv<>^0 re (instantiated) = ::wchb_e1of2::re (5) (
+          bool^0 a (instantiated) = ::wchb_e1of2::rv (9) 
+          bool^0 b (instantiated) = ::wchb_e1of2::L.e (3) 
+        )
+        bool^0 rv (instantiated) = ::wchb_e1of2::re.a (9) 
+        process instance pool:
+        1	::wchb_e1of2::L
+        2	::wchb_e1of2::R
+        3	::wchb_e1of2::r0
+        4	::wchb_e1of2::r1
+        5	::wchb_e1of2::re
+        bool instance pool:
+        1	::wchb_e1of2::L.d[0]
+        2	::wchb_e1of2::L.d[1]
+        3	::wchb_e1of2::L.e
+        4	::wchb_e1of2::R.d[0]
+        5	::wchb_e1of2::R.d[1]
+        6	::wchb_e1of2::R.e
+        7	::wchb_e1of2::r0.a
+        8	::wchb_e1of2::r1.a
+        9	::wchb_e1of2::re.a
+        resolved prs:
+        L.d[0] & R.e -> r0.a-
+        L.d[1] & R.e -> r1.a-
+        ~r0.a | ~r1.a -> re.a+
+        ~L.d[0] & ~R.e -> r0.a+
+        ~L.d[1] & ~R.e -> r1.a+
+        r0.a & r1.a -> re.a-
+      }
       }
 
   Instances:

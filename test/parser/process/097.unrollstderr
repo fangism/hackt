@@ -71,22 +71,23 @@ In namespace "", we have: {
         foo<> y
       )
       In definition "bar", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         x = foo<> x
         y = foo<> y
-        footprint: {
-          bool^0 a (instantiated) = ::bar::x.a 
-          bool^0 b (instantiated) = ::bar::y.b 
-          process foo<>^0 x (instantiated) = ::bar::x (
-            bool^0 a (instantiated) = ::bar::b 
-            bool^0 b (instantiated) = ::bar::x.b 
-          )
-          process foo<>^0 y (instantiated) = ::bar::y (
-            bool^0 a (instantiated) = ::bar::y.a 
-            bool^0 b (instantiated) = ::bar::a 
-          )
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::bar::x.a 
+        bool^0 b (instantiated) = ::bar::y.b 
+        process foo<>^0 x (instantiated) = ::bar::x (
+          bool^0 a (instantiated) = ::bar::b 
+          bool^0 b (instantiated) = ::bar::x.b 
+        )
+        process foo<>^0 y (instantiated) = ::bar::y (
+          bool^0 a (instantiated) = ::bar::y.a 
+          bool^0 b (instantiated) = ::bar::a 
+        )
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -94,12 +95,13 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a 
-          bool^0 b (instantiated) = ::foo::b 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
+      }
       }
 
   Instances:

@@ -75,28 +75,29 @@ In namespace "", we have: {
         foo<> y
       )
       In definition "bar", we have: {
+      Instances:
         w = foo<> w
         x = foo<> x
         y = foo<> y
         z = foo<> z
-        footprint: {
-          process foo<>^0 w (instantiated) = ::bar::x (
-            bool^0 a (instantiated) = ::bar::w.a 
-            bool^0 b (instantiated) = ::bar::w.b 
-          )
-          process foo<>^0 x (instantiated) = ::bar::z (
-            bool^0 a (instantiated) = ::bar::x.a 
-            bool^0 b (instantiated) = ::bar::x.b 
-          )
-          process foo<>^0 y (instantiated) = ::bar::w (
-            bool^0 a (instantiated) = ::bar::y.a 
-            bool^0 b (instantiated) = ::bar::y.b 
-          )
-          process foo<>^0 z (instantiated) = ::bar::y (
-            bool^0 a (instantiated) = ::bar::z.a 
-            bool^0 b (instantiated) = ::bar::z.b 
-          )
-        }
+      footprint: {
+        process foo<>^0 w (instantiated) = ::bar::x (
+          bool^0 a (instantiated) = ::bar::w.a 
+          bool^0 b (instantiated) = ::bar::w.b 
+        )
+        process foo<>^0 x (instantiated) = ::bar::z (
+          bool^0 a (instantiated) = ::bar::x.a 
+          bool^0 b (instantiated) = ::bar::x.b 
+        )
+        process foo<>^0 y (instantiated) = ::bar::w (
+          bool^0 a (instantiated) = ::bar::y.a 
+          bool^0 b (instantiated) = ::bar::y.b 
+        )
+        process foo<>^0 z (instantiated) = ::bar::y (
+          bool^0 a (instantiated) = ::bar::z.a 
+          bool^0 b (instantiated) = ::bar::z.b 
+        )
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -104,12 +105,13 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a 
-          bool^0 b (instantiated) = ::foo::b 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
+      }
       }
 
   Instances:

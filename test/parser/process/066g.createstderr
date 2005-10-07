@@ -66,26 +66,27 @@ In namespace "", we have: {
         ick<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = ick<> a
         b = ick<> b
-        footprint: {
-          process ick<>^0 a (instantiated) = ::foo::b (1) (
-            process oof<>^0 m (instantiated) = ::foo::a.m (2) 
-            process oof<>^0 n (instantiated) = ::foo::a.n (3) 
-          )
-          process ick<>^0 b (instantiated) = ::foo::a (1) (
-            process oof<>^0 m (instantiated) = ::foo::b.m (2) 
-            process oof<>^0 n (instantiated) = ::foo::b.n (3) 
-          )
-          process instance pool:
-          1	::foo::a
-          2	::foo::b.m
-          3	::foo::b.n
-          process port aliases:
-          1: ::foo::a = ::foo::b
-          2: ::foo::a.m = ::foo::b.m
-          3: ::foo::a.n = ::foo::b.n
-        }
+      footprint: {
+        process ick<>^0 a (instantiated) = ::foo::b (1) (
+          process oof<>^0 m (instantiated) = ::foo::a.m (2) 
+          process oof<>^0 n (instantiated) = ::foo::a.n (3) 
+        )
+        process ick<>^0 b (instantiated) = ::foo::a (1) (
+          process oof<>^0 m (instantiated) = ::foo::b.m (2) 
+          process oof<>^0 n (instantiated) = ::foo::b.n (3) 
+        )
+        process instance pool:
+        1	::foo::a
+        2	::foo::b.m
+        3	::foo::b.n
+        process port aliases:
+        1: ::foo::a = ::foo::b
+        2: ::foo::a.m = ::foo::b.m
+        3: ::foo::a.n = ::foo::b.n
+      }
       }
 
     ick = process-definition (defined) ick(
@@ -93,22 +94,23 @@ In namespace "", we have: {
         oof<> n
       )
       In definition "ick", we have: {
+      Instances:
         m = oof<> m
         n = oof<> n
-        footprint: {
-          process oof<>^0 m (instantiated) = ::ick::m (1) 
-          process oof<>^0 n (instantiated) = ::ick::n (2) 
-          process instance pool:
-          1	::ick::m
-          2	::ick::n
-        }
+      footprint: {
+        process oof<>^0 m (instantiated) = ::ick::m (1) 
+        process oof<>^0 n (instantiated) = ::ick::n (2) 
+        process instance pool:
+        1	::ick::m
+        2	::ick::n
+      }
       }
 
     oof = process-definition (defined) oof(
       )
       In definition "oof", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:

@@ -91,10 +91,12 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N with indices: {
           [0..1]
         }
 
+      Instances:
         a = bool<> a with indices: {
           [0..::foo::N[0]-1]
         }
@@ -103,34 +105,34 @@ In namespace "", we have: {
           [0..::foo::N[1]-1]
         }
 
-        footprint collection: {
-          <{2,2}> {
-            pint^1 N with indices: {
-            }
-              unrolled index-value pairs: {
-                0 = ?
-                1 = ?
-              }
-            bool^1 a with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::b[0] (1) 
-                1 = ::foo::b[1] (2) 
-              }
-            bool^1 b with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] (1) 
-                1 = ::foo::a[1] (2) 
-              }
-            bool instance pool:
-            1	::foo::a[0]
-            2	::foo::a[1]
-            bool port aliases:
-            1: ::foo::a[0] = ::foo::b[0]
-            2: ::foo::a[1] = ::foo::b[1]
+      footprint collection: {
+        <{2,2}> {
+          pint^1 N with indices: {
           }
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+            }
+          bool^1 a with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::b[0] (1) 
+              1 = ::foo::b[1] (2) 
+            }
+          bool^1 b with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::a[0] (1) 
+              1 = ::foo::a[1] (2) 
+            }
+          bool instance pool:
+          1	::foo::a[0]
+          2	::foo::a[1]
+          bool port aliases:
+          1: ::foo::a[0] = ::foo::b[0]
+          2: ::foo::a[1] = ::foo::b[1]
         }
+      }
       }
 
   Instances:

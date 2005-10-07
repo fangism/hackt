@@ -62,12 +62,13 @@ In namespace "", we have: {
         fake_chan<>! R
       )
       In definition "chan_proc", we have: {
+      Instances:
         L = fake_chan<>? L
         R = fake_chan<>! R
-        footprint: {
-          channel fake_chan<>^0 L (instantiated) = ::chan_proc::L 
-          channel fake_chan<>^0 R (instantiated) = ::chan_proc::R 
-        }
+      footprint: {
+        channel fake_chan<>^0 L (instantiated) = ::chan_proc::L 
+        channel fake_chan<>^0 R (instantiated) = ::chan_proc::R 
+      }
       }
 
     fake_chan = user-def-chan (defined) fake_chan
@@ -79,6 +80,7 @@ In namespace "", we have: {
         bool<> e
       )
       In channel definition "fake_chan", we have: {
+      Instances:
         d = int<32> d
         e = bool<> e
       }

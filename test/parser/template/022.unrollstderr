@@ -33,6 +33,7 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pint<> A with indices: {
           [0..::foo::N-1]
         }

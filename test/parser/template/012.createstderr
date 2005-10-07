@@ -50,15 +50,16 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N (default = 7)
-        footprint collection: {
-          <6> {
-            pint^0 N value: ?
-          }
-          <7> {
-            pint^0 N value: ?
-          }
+      footprint collection: {
+        <6> {
+          pint^0 N value: ?
         }
+        <7> {
+          pint^0 N value: ?
+        }
+      }
       }
 
   Instances:

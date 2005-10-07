@@ -42,7 +42,9 @@ In namespace "", we have: {
         int<pint-inst-ref ::bar::N> ick
       )
       In definition "bar", we have: {
+      Parameters:
         N = pint<> N
+      Instances:
         ick = int<pint-inst-ref ::bar::N> ick
       }
 
@@ -55,11 +57,13 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
         arg = int<32> arg with indices: {
           [0..::foo::N-1]
         }
 
-        N = pint<> N
       }
 
 }

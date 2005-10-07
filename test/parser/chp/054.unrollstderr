@@ -57,13 +57,14 @@ In namespace "", we have: {
         chan!(bool<>) Z
       )
       In definition "split_bool_soup", we have: {
+      Instances:
         A = chan?(bool<>) A
         B = chan?(bool<>) B
         G = chan?(bool<>) G
         Z = chan!(bool<>) Z
         g = bool<> g
         x = bool<> x
-        chp:
+      chp:
         concurrent: {
           *[
             sequential: {

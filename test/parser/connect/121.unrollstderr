@@ -128,36 +128,39 @@ In namespace "", we have: {
         mybool<> a
       )
       In definition "bar", we have: {
+      Instances:
         a = mybool<> a
-        footprint: {
-          process mybool<>^0 a (instantiated) = ::bar::a 
-        }
+      footprint: {
+        process mybool<>^0 a (instantiated) = ::bar::a 
+      }
       }
 
     foo = process-definition (defined) foo(
         bar<> b
       )
       In definition "foo", we have: {
+      Instances:
         b = bar<> b
-        footprint: {
-          process bar<>^0 b (instantiated) = ::foo::b (
-            process mybool<>^0 a (instantiated) = ::foo::b.a 
-          )
-        }
+      footprint: {
+        process bar<>^0 b (instantiated) = ::foo::b (
+          process mybool<>^0 a (instantiated) = ::foo::b.a 
+        )
+      }
       }
 
     ick = process-definition (defined) ick(
         foo<> x
       )
       In definition "ick", we have: {
+      Instances:
         x = foo<> x
-        footprint: {
-          process foo<>^0 x (instantiated) = ::ick::x (
-            process bar<>^0 b (instantiated) = ::ick::x.b (
-              process mybool<>^0 a (instantiated) = ::ick::x.b.a 
-            )
+      footprint: {
+        process foo<>^0 x (instantiated) = ::ick::x (
+          process bar<>^0 b (instantiated) = ::ick::x.b (
+            process mybool<>^0 a (instantiated) = ::ick::x.b.a 
           )
-        }
+        )
+      }
       }
 
     mybool = process-definition (defined) mybool<>
@@ -166,6 +169,7 @@ In namespace "", we have: {
       >(
       )
       In definition "mybool", we have: {
+      Parameters:
         B = pbool<> B
       }
 

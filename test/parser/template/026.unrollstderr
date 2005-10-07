@@ -37,6 +37,7 @@ In namespace "", we have: {
       >(
       )
       In definition "bar", we have: {
+      Parameters:
         J = pint<> J (init = pint-inst-ref ::bar::K)
         K = pint<> K
       }
@@ -48,6 +49,7 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pbool<> A
         J = pint<> J (init = pint-inst-ref ::foo::K)
         K = pint<> K

@@ -58,40 +58,43 @@ In namespace "", we have: {
     bar = process-definition (defined) bar(
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::y (1) 
-          process foo<>^0 y (instantiated) = ::bar::x (1) 
-          process instance pool:
-          1	::bar::x
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::y (1) 
+        process foo<>^0 y (instantiated) = ::bar::x (1) 
+        process instance pool:
+        1	::bar::x
+      }
       }
 
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::b (1) 
-          bool^0 b (instantiated) = ::foo::a (1) 
-          bool instance pool:
-          1	::foo::a
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::b (1) 
+        bool^0 b (instantiated) = ::foo::a (1) 
+        bool instance pool:
+        1	::foo::a
+      }
       }
 
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
+      Instances:
         p = bar<> p
         q = bar<> q
-        footprint: {
-          process bar<>^0 p (instantiated) = ::ick::q (1) 
-          process bar<>^0 q (instantiated) = ::ick::p (1) 
-          process instance pool:
-          1	::ick::p
-        }
+      footprint: {
+        process bar<>^0 p (instantiated) = ::ick::q (1) 
+        process bar<>^0 q (instantiated) = ::ick::p (1) 
+        process instance pool:
+        1	::ick::p
+      }
       }
 
   Instances:

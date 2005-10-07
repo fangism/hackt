@@ -43,6 +43,7 @@ In namespace "", we have: {
         chan!(bool<>) R
       )
       In definition "one_shot", we have: {
+      Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
         b = bool<> b with indices: {
@@ -50,7 +51,7 @@ In namespace "", we have: {
         }
 
         x = int<32> x
-        chp:
+      chp:
         concurrent: {
           R!(b[x])
         }

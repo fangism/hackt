@@ -91,7 +91,9 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N
+      Instances:
         a = bool<> a with indices: {
           [0..::foo::N-1]
         }
@@ -100,58 +102,58 @@ In namespace "", we have: {
           [0..::foo::N/2-1]
         }
 
-        footprint collection: {
-          <3> {
-            pint^0 N value: ?
-            bool^1 a with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[1] 
-                1 = ::foo::q[0] 
-                2 = ::foo::a[2] 
-              }
-            bool^1 q with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] 
-              }
+      footprint collection: {
+        <3> {
+          pint^0 N value: ?
+          bool^1 a with indices: {
           }
-          <4> {
-            pint^0 N value: ?
-            bool^1 a with indices: {
+            unrolled indices: {
+              0 = ::foo::a[1] 
+              1 = ::foo::q[0] 
+              2 = ::foo::a[2] 
             }
-              unrolled indices: {
-                0 = ::foo::a[2] 
-                1 = ::foo::a[1] 
-                2 = ::foo::q[0] 
-                3 = ::foo::a[3] 
-              }
-            bool^1 q with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] 
-                1 = ::foo::q[1] 
-              }
+          bool^1 q with indices: {
           }
-          <5> {
-            pint^0 N value: ?
-            bool^1 a with indices: {
+            unrolled indices: {
+              0 = ::foo::a[0] 
             }
-              unrolled indices: {
-                0 = ::foo::a[2] 
-                1 = ::foo::a[1] 
-                2 = ::foo::q[0] 
-                3 = ::foo::a[3] 
-                4 = ::foo::a[4] 
-              }
-            bool^1 q with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] 
-                1 = ::foo::q[1] 
-              }
-          }
         }
+        <4> {
+          pint^0 N value: ?
+          bool^1 a with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::a[2] 
+              1 = ::foo::a[1] 
+              2 = ::foo::q[0] 
+              3 = ::foo::a[3] 
+            }
+          bool^1 q with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::a[0] 
+              1 = ::foo::q[1] 
+            }
+        }
+        <5> {
+          pint^0 N value: ?
+          bool^1 a with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::a[2] 
+              1 = ::foo::a[1] 
+              2 = ::foo::q[0] 
+              3 = ::foo::a[3] 
+              4 = ::foo::a[4] 
+            }
+          bool^1 q with indices: {
+          }
+            unrolled indices: {
+              0 = ::foo::a[0] 
+              1 = ::foo::q[1] 
+            }
+        }
+      }
       }
 
   Instances:

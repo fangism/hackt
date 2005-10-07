@@ -38,15 +38,16 @@ In namespace "", we have: {
     silly_inv = process-definition (defined) silly_inv(
       )
       In definition "silly_inv", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        prs:
+      prs:
         a -> b-
         ~a -> b+
-        footprint: {
-          bool^0 a (instantiated) = ::silly_inv::a 
-          bool^0 b (instantiated) = ::silly_inv::b 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::silly_inv::a 
+        bool^0 b (instantiated) = ::silly_inv::b 
+      }
       }
 
   Instances:

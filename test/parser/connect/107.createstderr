@@ -93,30 +93,32 @@ In namespace "", we have: {
         foo<pint-inst-ref ::bar::Y> b
       )
       In definition "bar", we have: {
+      Parameters:
         X = pint<> X
         Y = pint<> Y
+      Instances:
         a = foo<pint-inst-ref ::bar::X> a
         b = foo<pint-inst-ref ::bar::Y> b
-        footprint collection: {
-          <2, 3> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-            process foo<2>^0 a (instantiated) = ::bar::a (1) 
-            process foo<3>^0 b (instantiated) = ::bar::b (2) 
-            process instance pool:
-            1	::bar::a
-            2	::bar::b
-          }
-          <3, 4> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-            process foo<3>^0 a (instantiated) = ::bar::a (1) 
-            process foo<4>^0 b (instantiated) = ::bar::b (2) 
-            process instance pool:
-            1	::bar::a
-            2	::bar::b
-          }
+      footprint collection: {
+        <2, 3> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
+          process foo<2>^0 a (instantiated) = ::bar::a (1) 
+          process foo<3>^0 b (instantiated) = ::bar::b (2) 
+          process instance pool:
+          1	::bar::a
+          2	::bar::b
         }
+        <3, 4> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
+          process foo<3>^0 a (instantiated) = ::bar::a (1) 
+          process foo<4>^0 b (instantiated) = ::bar::b (2) 
+          process instance pool:
+          1	::bar::a
+          2	::bar::b
+        }
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -124,18 +126,19 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pint<> A
-        footprint collection: {
-          <2> {
-            pint^0 A value: ?
-          }
-          <3> {
-            pint^0 A value: ?
-          }
-          <4> {
-            pint^0 A value: ?
-          }
+      footprint collection: {
+        <2> {
+          pint^0 A value: ?
         }
+        <3> {
+          pint^0 A value: ?
+        }
+        <4> {
+          pint^0 A value: ?
+        }
+      }
       }
 
   Instances:

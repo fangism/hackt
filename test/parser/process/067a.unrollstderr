@@ -60,24 +60,25 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x with indices: {
           [0..1]
         }
 
-        footprint: {
-          process foo<>^1 x with indices: {
-          }
-            unrolled indices: {
-              0 = ::bar::x[1] (
-                bool^0 a (instantiated) = ::bar::x[0].a 
-                bool^0 b (instantiated) = ::bar::x[0].b 
-              )
-              1 = ::bar::x[0] (
-                bool^0 a (instantiated) = ::bar::x[1].a 
-                bool^0 b (instantiated) = ::bar::x[1].b 
-              )
-            }
+      footprint: {
+        process foo<>^1 x with indices: {
         }
+          unrolled indices: {
+            0 = ::bar::x[1] (
+              bool^0 a (instantiated) = ::bar::x[0].a 
+              bool^0 b (instantiated) = ::bar::x[0].b 
+            )
+            1 = ::bar::x[0] (
+              bool^0 a (instantiated) = ::bar::x[1].a 
+              bool^0 b (instantiated) = ::bar::x[1].b 
+            )
+          }
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -85,12 +86,13 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::b 
-          bool^0 b (instantiated) = ::foo::a 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::b 
+        bool^0 b (instantiated) = ::foo::a 
+      }
       }
 
   Instances:

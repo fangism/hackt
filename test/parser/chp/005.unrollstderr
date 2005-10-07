@@ -31,9 +31,10 @@ In namespace "", we have: {
         chan!(bool<>) R
       )
       In definition "one_shot", we have: {
+      Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
-        chp:
+      chp:
         concurrent: {
           R!(false)
         }

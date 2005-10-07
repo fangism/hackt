@@ -52,22 +52,23 @@ In namespace "", we have: {
         bool<> y
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = bool<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (1) (
-            bool^0 a (instantiated) = ::bar::y (1) 
-            bool^0 b (instantiated) = ::bar::x.b (2) 
-          )
-          bool^0 y (instantiated) = ::bar::x.a (1) 
-          process instance pool:
-          1	::bar::x
-          bool instance pool:
-          1	::bar::x.a
-          2	::bar::x.b
-          bool port aliases:
-          1: ::bar::x.a = ::bar::y
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (1) (
+          bool^0 a (instantiated) = ::bar::y (1) 
+          bool^0 b (instantiated) = ::bar::x.b (2) 
+        )
+        bool^0 y (instantiated) = ::bar::x.a (1) 
+        process instance pool:
+        1	::bar::x
+        bool instance pool:
+        1	::bar::x.a
+        2	::bar::x.b
+        bool port aliases:
+        1: ::bar::x.a = ::bar::y
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -75,15 +76,16 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a (1) 
-          bool^0 b (instantiated) = ::foo::b (2) 
-          bool instance pool:
-          1	::foo::a
-          2	::foo::b
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (2) 
+        bool instance pool:
+        1	::foo::a
+        2	::foo::b
+      }
       }
 
   Instances:

@@ -32,6 +32,7 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         Q = pint<> Q (default = 5)
         R = pint<> R
       }

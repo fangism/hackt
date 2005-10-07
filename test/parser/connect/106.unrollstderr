@@ -81,12 +81,13 @@ In namespace "", we have: {
         foo<2> b
       )
       In definition "bar", we have: {
+      Instances:
         a = foo<1> a
         b = foo<2> b
-        footprint: {
-          process foo<1>^0 a (instantiated) = ::bar::a 
-          process foo<2>^0 b (instantiated) = ::bar::b 
-        }
+      footprint: {
+        process foo<1>^0 a (instantiated) = ::bar::a 
+        process foo<2>^0 b (instantiated) = ::bar::b 
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -94,15 +95,16 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pint<> A
-        footprint collection: {
-          <1> {
-            pint^0 A value: ?
-          }
-          <2> {
-            pint^0 A value: ?
-          }
+      footprint collection: {
+        <1> {
+          pint^0 A value: ?
         }
+        <2> {
+          pint^0 A value: ?
+        }
+      }
       }
 
   Instances:

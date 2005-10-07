@@ -36,16 +36,17 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::b (1) 
-          bool^0 b (instantiated) = ::foo::a (1) 
-          bool instance pool:
-          1	::foo::a
-          bool port aliases:
-          1: ::foo::a = ::foo::b
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::b (1) 
+        bool^0 b (instantiated) = ::foo::a (1) 
+        bool instance pool:
+        1	::foo::a
+        bool port aliases:
+        1: ::foo::a = ::foo::b
+      }
       }
 
   Instances:

@@ -64,21 +64,23 @@ In namespace "", we have: {
         int<pint-inst-ref ::bar::Y> b
       )
       In definition "bar", we have: {
+      Parameters:
         X = pint<> X
         Y = pint<> Y
+      Instances:
         a = int<pint-inst-ref ::bar::X> a
         b = int<pint-inst-ref ::bar::Y> b
-        footprint collection: {
-          <2, 3> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-            int<2>^0 a (instantiated) = ::bar::a (1) 
-            int<3>^0 b (instantiated) = ::bar::b (2) 
-            int instance pool:
-            1	::bar::a
-            2	::bar::b
-          }
+      footprint collection: {
+        <2, 3> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
+          int<2>^0 a (instantiated) = ::bar::a (1) 
+          int<3>^0 b (instantiated) = ::bar::b (2) 
+          int instance pool:
+          1	::bar::a
+          2	::bar::b
         }
+      }
       }
 
   Instances:

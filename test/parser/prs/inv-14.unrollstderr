@@ -42,15 +42,16 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "inv", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        prs:
+      prs:
         a -> b-
         ~a -> b+
-        footprint: {
-          bool^0 a (instantiated) = ::inv::a 
-          bool^0 b (instantiated) = ::inv::b 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::inv::a 
+        bool^0 b (instantiated) = ::inv::b 
+      }
       }
 
   Instances:

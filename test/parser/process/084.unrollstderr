@@ -43,22 +43,23 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         r = bool<> r with indices: {
           [0..1]
         }
 
         x = int<32> x
         y = bool<> y
-        footprint: {
-          bool^1 r with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::r[0] 
-              1 = ::foo::r[1] 
-            }
-          int<32>^0 x (instantiated) = ::foo::x 
-          bool^0 y (instantiated) = ::foo::y 
+      footprint: {
+        bool^1 r with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::r[0] 
+            1 = ::foo::r[1] 
+          }
+        int<32>^0 x (instantiated) = ::foo::x 
+        bool^0 y (instantiated) = ::foo::y 
+      }
       }
 
   Instances:

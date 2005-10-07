@@ -72,36 +72,37 @@ In namespace "", we have: {
         foo<> y
       )
       In definition "bar", we have: {
+      Instances:
         w = foo<> w
         x = foo<> x
         y = foo<> y
         z = foo<> z
-        footprint: {
-          process foo<>^0 w (instantiated) = ::bar::x (1) (
-            bool^0 a (instantiated) = ::bar::w.a (1) 
-            bool^0 b (instantiated) = ::bar::w.b (2) 
-          )
-          process foo<>^0 x (instantiated) = ::bar::w (1) (
-            bool^0 a (instantiated) = ::bar::x.a (1) 
-            bool^0 b (instantiated) = ::bar::x.b (2) 
-          )
-          process foo<>^0 y (instantiated) = ::bar::z (2) (
-            bool^0 a (instantiated) = ::bar::y.a (3) 
-            bool^0 b (instantiated) = ::bar::y.b (4) 
-          )
-          process foo<>^0 z (instantiated) = ::bar::y (2) (
-            bool^0 a (instantiated) = ::bar::z.a (3) 
-            bool^0 b (instantiated) = ::bar::z.b (4) 
-          )
-          process instance pool:
-          1	::bar::x
-          2	::bar::y
-          bool instance pool:
-          1	::bar::w.a
-          2	::bar::w.b
-          3	::bar::z.a
-          4	::bar::z.b
-        }
+      footprint: {
+        process foo<>^0 w (instantiated) = ::bar::x (1) (
+          bool^0 a (instantiated) = ::bar::w.a (1) 
+          bool^0 b (instantiated) = ::bar::w.b (2) 
+        )
+        process foo<>^0 x (instantiated) = ::bar::w (1) (
+          bool^0 a (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::x.b (2) 
+        )
+        process foo<>^0 y (instantiated) = ::bar::z (2) (
+          bool^0 a (instantiated) = ::bar::y.a (3) 
+          bool^0 b (instantiated) = ::bar::y.b (4) 
+        )
+        process foo<>^0 z (instantiated) = ::bar::y (2) (
+          bool^0 a (instantiated) = ::bar::z.a (3) 
+          bool^0 b (instantiated) = ::bar::z.b (4) 
+        )
+        process instance pool:
+        1	::bar::x
+        2	::bar::y
+        bool instance pool:
+        1	::bar::w.a
+        2	::bar::w.b
+        3	::bar::z.a
+        4	::bar::z.b
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -109,15 +110,16 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a (1) 
-          bool^0 b (instantiated) = ::foo::b (2) 
-          bool instance pool:
-          1	::foo::a
-          2	::foo::b
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (2) 
+        bool instance pool:
+        1	::foo::a
+        2	::foo::b
+      }
       }
 
   Instances:

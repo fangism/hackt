@@ -24,6 +24,7 @@ In namespace "", we have: {
         int<32> sleep
       )
       In definition "food", we have: {
+      Instances:
         sleep = int<32> sleep
       }
 

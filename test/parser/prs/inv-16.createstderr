@@ -73,21 +73,22 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "inv", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        prs:
+      prs:
         a -> b-
         ~a -> b+
-        footprint: {
-          bool^0 a (instantiated) = ::inv::a (1) 
-          bool^0 b (instantiated) = ::inv::b (2) 
-          bool instance pool:
-          1	::inv::a
-          2	::inv::b
-          resolved prs:
-          a -> b-
-          ~a -> b+
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::inv::a (1) 
+        bool^0 b (instantiated) = ::inv::b (2) 
+        bool instance pool:
+        1	::inv::a
+        2	::inv::b
+        resolved prs:
+        a -> b-
+        ~a -> b+
+      }
       }
 
   Instances:

@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.4.12.3 2005/10/07 05:28:21 fang Exp $
+#	$Id: Makefile.am,v 1.4.12.4 2005/10/07 21:22:37 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -8,10 +8,7 @@ ARTC_TEST_FAILURES = inv-01 inv-04 inv-05 inv-10 inv-11
 ARTC_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	nand-01 nand-02 nand-03 nor-01 xor-01 \
-	wchb-01 wchb-02
-
-# TODO: fix the following
-# wchb-03,04 exhibit identifier re-ordering in .objdiff
+	wchb-01 wchb-02 wchb-03 wchb-04
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -20,7 +17,7 @@ ARTOBJ_TEST_SUBJECTS = $(ARTC_TEST_PASSES)
 ARTOBJUNROLL_TEST_SUBJECTS = $(ARTOBJ_TEST_SUBJECTS)
 
 HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
-	wchb-01 wchb-02
+	wchb-01 wchb-02 wchb-03 wchb-04
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 

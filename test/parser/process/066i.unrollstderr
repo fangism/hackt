@@ -74,18 +74,19 @@ In namespace "", we have: {
         foo<> y
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (
-            bool^0 a (instantiated) = ::bar::y.b 
-            bool^0 b (instantiated) = ::bar::x.b 
-          )
-          process foo<>^0 y (instantiated) = ::bar::y (
-            bool^0 a (instantiated) = ::bar::y.a 
-            bool^0 b (instantiated) = ::bar::x.a 
-          )
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (
+          bool^0 a (instantiated) = ::bar::y.b 
+          bool^0 b (instantiated) = ::bar::x.b 
+        )
+        process foo<>^0 y (instantiated) = ::bar::y (
+          bool^0 a (instantiated) = ::bar::y.a 
+          bool^0 b (instantiated) = ::bar::x.a 
+        )
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -93,31 +94,33 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a 
-          bool^0 b (instantiated) = ::foo::b 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
+      }
       }
 
     ick = process-definition (defined) ick(
         bar<> q
       )
       In definition "ick", we have: {
+      Instances:
         q = bar<> q
-        footprint: {
-          process bar<>^0 q (instantiated) = ::ick::q (
-            process foo<>^0 x (instantiated) = ::ick::q.x (
-              bool^0 a (instantiated) = ::ick::q.x.a 
-              bool^0 b (instantiated) = ::ick::q.x.b 
-            )
-            process foo<>^0 y (instantiated) = ::ick::q.y (
-              bool^0 a (instantiated) = ::ick::q.y.a 
-              bool^0 b (instantiated) = ::ick::q.y.b 
-            )
+      footprint: {
+        process bar<>^0 q (instantiated) = ::ick::q (
+          process foo<>^0 x (instantiated) = ::ick::q.x (
+            bool^0 a (instantiated) = ::ick::q.x.a 
+            bool^0 b (instantiated) = ::ick::q.x.b 
           )
-        }
+          process foo<>^0 y (instantiated) = ::ick::q.y (
+            bool^0 a (instantiated) = ::ick::q.y.a 
+            bool^0 b (instantiated) = ::ick::q.y.b 
+          )
+        )
+      }
       }
 
   Instances:

@@ -55,8 +55,10 @@ In namespace "", we have: {
 
       )
       In definition "fangism", we have: {
+      Parameters:
         K = pint<> K
         N = pint<> N
+      Instances:
         ick = int<pint-inst-ref ::fangism::K> ick with indices: {
           [0..::fangism::N-1]
         }

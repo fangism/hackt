@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.4.4.2 2005/10/07 05:28:17 fang Exp $
+ 	$Id: namespace.cc,v 1.4.4.3 2005/10/07 21:21:48 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -186,6 +186,77 @@ if (id.is_absolute()) {
 		return ns->lookup_object(**(--id.end()));
 	else return return_type(NULL);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Standard formatted dump for definitions.  
+	Prints members by section, and alphabetically sorted.  
+ */
+ostream&
+scopespace::dump_for_definitions(ostream& o) const {
+	// to canonicalize the dump, we bin and sort into maps
+	const_bin_sort bins;
+	const_bin_sort& bins_ref = bins;
+	bins_ref =
+#if 1
+	for_each_if(used_id_map.begin(), used_id_map.end(), 
+		not1(bind1st(mem_fun(&scopespace::exclude_object_val), this)),
+		bins_ref	// explicitly pass by REFERENCE not VALUE
+	);
+#else
+	// unpredicated
+	for_each(used_id_map.begin(), used_id_map.end(), bins_ref);
+#endif
+
+	// indentation scope
+	// INDENT_SECTION(o);
+	// bins.stats(o);
+
+	// maps are already sorted by key
+	if (!bins.param_bin.empty()) {
+		o << auto_indent << "Parameters:" << endl;
+		INDENT_SECTION(o);
+		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&instance_collection_base::pair_dump, 
+					instance_collection_base::null), 
+				o), 
+			_Select2nd<const_bin_sort::param_bin_type::value_type>()
+		)
+		);
+	}
+#if 0	
+	// consider nested typedefs later...
+	if (!bins.alias_bin.empty()) {
+		o << auto_indent << "Typedefs:" << endl;
+		INDENT_SECTION(o);
+		for_each(bins.alias_bin.begin(), bins.alias_bin.end(), 
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&definition_base::pair_dump,
+					definition_base::null),
+				o), 
+			_Select2nd<const_bin_sort::alias_bin_type::value_type>()
+		)
+		);
+	}
+#endif
+	if (!bins.inst_bin.empty()) {
+		o << auto_indent << "Instances:" << endl;
+		INDENT_SECTION(o);
+		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
+		unary_compose(
+			bind2nd_argval(
+				mem_fun(&instance_collection_base::pair_dump,
+					instance_collection_base::null),
+				o), 
+			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
+		)
+		);
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

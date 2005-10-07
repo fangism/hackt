@@ -27,8 +27,9 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
-        blah = pint<> blah
+      Parameters:
         bar = pint<> bar
+        blah = pint<> blah
         none = pint<> none
       }
 

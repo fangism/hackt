@@ -36,12 +36,13 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         Q = pint<> Q (default = pint-inst-ref ::D)
-        footprint collection: {
-          <13> {
-            pint^0 Q value: ?
-          }
+      footprint collection: {
+        <13> {
+          pint^0 Q value: ?
         }
+      }
       }
 
   Instances:

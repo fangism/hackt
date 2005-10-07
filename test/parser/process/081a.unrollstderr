@@ -60,19 +60,20 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..2]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
-              2 = ::foo::a[2] 
-            }
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::a[0] 
+            1 = ::foo::a[1] 
+            2 = ::foo::a[2] 
+          }
+      }
       }
 
   Instances:

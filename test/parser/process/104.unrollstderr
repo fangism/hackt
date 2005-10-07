@@ -63,23 +63,25 @@ In namespace "", we have: {
         foo<> x
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x 
-          process foo<>^0 y (instantiated) = ::bar::y 
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x 
+        process foo<>^0 y (instantiated) = ::bar::y 
+      }
       }
 
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a 
-          bool^0 b (instantiated) = ::foo::b 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
+      }
       }
 
     ick = process-definition (defined) ick(
@@ -87,16 +89,17 @@ In namespace "", we have: {
         bar<> q
       )
       In definition "ick", we have: {
+      Instances:
         p = bar<> p
         q = bar<> q
-        footprint: {
-          process bar<>^0 p (instantiated) = ::ick::p (
-            process foo<>^0 x (instantiated) = ::ick::p.x 
-          )
-          process bar<>^0 q (instantiated) = ::ick::q (
-            process foo<>^0 x (instantiated) = ::ick::q.x 
-          )
-        }
+      footprint: {
+        process bar<>^0 p (instantiated) = ::ick::p (
+          process foo<>^0 x (instantiated) = ::ick::p.x 
+        )
+        process bar<>^0 q (instantiated) = ::ick::q (
+          process foo<>^0 x (instantiated) = ::ick::q.x 
+        )
+      }
       }
 
   Instances:

@@ -47,28 +47,29 @@ In namespace "", we have: {
         foo<> y
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (
-            bool^1 a with indices: {
-              [0..1]
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (
+          bool^1 a with indices: {
+            [0..1]
+          }
+            unrolled indices: {
+              0 = ::bar::x.a[0] 
+              1 = ::bar::x.a[1] 
             }
-              unrolled indices: {
-                0 = ::bar::x.a[0] 
-                1 = ::bar::x.a[1] 
-              }
-          )
-          process foo<>^0 y (instantiated) = ::bar::y (
-            bool^1 a with indices: {
-              [0..1]
+        )
+        process foo<>^0 y (instantiated) = ::bar::y (
+          bool^1 a with indices: {
+            [0..1]
+          }
+            unrolled indices: {
+              0 = ::bar::y.a[0] 
+              1 = ::bar::y.a[1] 
             }
-              unrolled indices: {
-                0 = ::bar::y.a[0] 
-                1 = ::bar::y.a[1] 
-              }
-          )
-        }
+        )
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -78,18 +79,19 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..1]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
-            }
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::a[0] 
+            1 = ::foo::a[1] 
+          }
+      }
       }
 
   Instances:

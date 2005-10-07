@@ -47,12 +47,13 @@ In namespace "", we have: {
         int<32> b
       )
       In definition "bar", we have: {
+      Instances:
         a = int<32> a
         b = int<32> b
-        footprint: {
-          int<32>^0 a (instantiated) = ::bar::a 
-          int<32>^0 b (instantiated) = ::bar::b 
-        }
+      footprint: {
+        int<32>^0 a (instantiated) = ::bar::a 
+        int<32>^0 b (instantiated) = ::bar::b 
+      }
       }
 
   Instances:

@@ -71,46 +71,47 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x with indices: {
           [0..2]
         }
 
-        footprint: {
-          process foo<>^1 x with indices: {
-          }
-            unrolled indices: {
-              0 = ::bar::x[0] (
-                bool^1 a with indices: {
-                  [0..2]
-                }
-                  unrolled indices: {
-                    0 = ::bar::x[0].a[2] 
-                    1 = ::bar::x[0].a[1] 
-                    2 = ::bar::x[2].a[2] 
-                  }
-              )
-              1 = ::bar::x[1] (
-                bool^1 a with indices: {
-                  [0..2]
-                }
-                  unrolled indices: {
-                    0 = ::bar::x[1].a[0] 
-                    1 = ::bar::x[1].a[1] 
-                    2 = ::bar::x[1].a[2] 
-                  }
-              )
-              2 = ::bar::x[2] (
-                bool^1 a with indices: {
-                  [0..2]
-                }
-                  unrolled indices: {
-                    0 = ::bar::x[0].a[0] 
-                    1 = ::bar::x[2].a[1] 
-                    2 = ::bar::x[2].a[0] 
-                  }
-              )
-            }
+      footprint: {
+        process foo<>^1 x with indices: {
         }
+          unrolled indices: {
+            0 = ::bar::x[0] (
+              bool^1 a with indices: {
+                [0..2]
+              }
+                unrolled indices: {
+                  0 = ::bar::x[0].a[2] 
+                  1 = ::bar::x[0].a[1] 
+                  2 = ::bar::x[2].a[2] 
+                }
+            )
+            1 = ::bar::x[1] (
+              bool^1 a with indices: {
+                [0..2]
+              }
+                unrolled indices: {
+                  0 = ::bar::x[1].a[0] 
+                  1 = ::bar::x[1].a[1] 
+                  2 = ::bar::x[1].a[2] 
+                }
+            )
+            2 = ::bar::x[2] (
+              bool^1 a with indices: {
+                [0..2]
+              }
+                unrolled indices: {
+                  0 = ::bar::x[0].a[0] 
+                  1 = ::bar::x[2].a[1] 
+                  2 = ::bar::x[2].a[0] 
+                }
+            )
+          }
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -120,19 +121,20 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..2]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
-              2 = ::foo::a[2] 
-            }
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::a[0] 
+            1 = ::foo::a[1] 
+            2 = ::foo::a[2] 
+          }
+      }
       }
 
   Instances:

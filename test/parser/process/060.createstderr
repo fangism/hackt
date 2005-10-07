@@ -38,16 +38,18 @@ In namespace "", we have: {
         int<pint-inst-ref ::foo::N> a
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N
+      Instances:
         a = int<pint-inst-ref ::foo::N> a
-        footprint collection: {
-          <8> {
-            pint^0 N value: ?
-            int<8>^0 a (instantiated) = ::foo::a (1) 
-            int instance pool:
-            1	::foo::a
-          }
+      footprint collection: {
+        <8> {
+          pint^0 N value: ?
+          int<8>^0 a (instantiated) = ::foo::a (1) 
+          int instance pool:
+          1	::foo::a
         }
+      }
       }
 
   Instances:

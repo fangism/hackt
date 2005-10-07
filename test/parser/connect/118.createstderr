@@ -47,12 +47,13 @@ In namespace "", we have: {
         bool<> a
       )
       In definition "bar", we have: {
+      Instances:
         a = bool<> a
-        footprint: {
-          bool^0 a (instantiated) = ::bar::a (1) 
-          bool instance pool:
-          1	::bar::a
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::bar::a (1) 
+        bool instance pool:
+        1	::bar::a
+      }
       }
 
   Instances:

@@ -48,18 +48,19 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         X = pint<> X
         Y = pint<> Y (default = pint-inst-ref ::foo::X+1)
-        footprint collection: {
-          <12, 13> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-          }
-          <12, 34> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-          }
+      footprint collection: {
+        <12, 13> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
         }
+        <12, 34> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
+        }
+      }
       }
 
   Instances:

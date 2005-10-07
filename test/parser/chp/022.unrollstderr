@@ -67,11 +67,12 @@ In namespace "", we have: {
         chan!(bool<>) R
       )
       In definition "one_shot", we have: {
+      Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
         x = int<32> x
         z = int<32> z
-        chp:
+      chp:
         concurrent: {
           sequential: {
             R!(x==z)

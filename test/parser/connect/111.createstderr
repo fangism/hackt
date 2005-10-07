@@ -46,15 +46,16 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "wrap", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::wrap::a (1) 
-          bool^0 b (instantiated) = ::wrap::b (2) 
-          bool instance pool:
-          1	::wrap::a
-          2	::wrap::b
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::wrap::a (1) 
+        bool^0 b (instantiated) = ::wrap::b (2) 
+        bool instance pool:
+        1	::wrap::a
+        2	::wrap::b
+      }
       }
 
   Instances:

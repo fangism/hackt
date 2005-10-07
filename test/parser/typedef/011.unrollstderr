@@ -38,6 +38,7 @@ In namespace "", we have: {
       >(
       )
       In definition "array2d", we have: {
+      Parameters:
         M = pint<> M
         N = pint<> N
       }

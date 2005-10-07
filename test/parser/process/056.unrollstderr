@@ -34,25 +34,26 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x with indices: {
           [0..1]
         }
 
-        footprint: {
-          process foo<>^1 x with indices: {
-          }
-            unrolled indices: {
-              0 = ::bar::x[0] 
-              1 = ::bar::x[1] 
-            }
+      footprint: {
+        process foo<>^1 x with indices: {
         }
+          unrolled indices: {
+            0 = ::bar::x[0] 
+            1 = ::bar::x[1] 
+          }
+      }
       }
 
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:

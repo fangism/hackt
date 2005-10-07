@@ -51,13 +51,14 @@ In namespace "", we have: {
         foo<> x
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (
-            process ick<>^0 a (instantiated) = ::bar::x.a 
-            process ick<>^0 b (instantiated) = ::bar::x.b 
-          )
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (
+          process ick<>^0 a (instantiated) = ::bar::x.a 
+          process ick<>^0 b (instantiated) = ::bar::x.b 
+        )
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -65,19 +66,20 @@ In namespace "", we have: {
         ick<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = ick<> a
         b = ick<> b
-        footprint: {
-          process ick<>^0 a (instantiated) = ::foo::b 
-          process ick<>^0 b (instantiated) = ::foo::a 
-        }
+      footprint: {
+        process ick<>^0 a (instantiated) = ::foo::b 
+        process ick<>^0 b (instantiated) = ::foo::a 
+      }
       }
 
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:

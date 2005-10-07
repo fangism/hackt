@@ -41,10 +41,11 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "nand2", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         c = bool<> c
-        prs:
+      prs:
         a & b -> c-
         ~a | ~b -> c+
       }

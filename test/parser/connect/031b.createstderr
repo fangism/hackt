@@ -68,47 +68,50 @@ In namespace "", we have: {
         egg<> egg_array
       )
       In definition "basket", we have: {
+      Instances:
         egg_array = egg<> egg_array
-        footprint: {
-          process egg<>^0 egg_array (instantiated) = ::basket::egg_array (1) (
-            int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk (1) 
-          )
-          process instance pool:
-          1	::basket::egg_array
-          int instance pool:
-          1	::basket::egg_array.yolk
-        }
+      footprint: {
+        process egg<>^0 egg_array (instantiated) = ::basket::egg_array (1) (
+          int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk (1) 
+        )
+        process instance pool:
+        1	::basket::egg_array
+        int instance pool:
+        1	::basket::egg_array.yolk
+      }
       }
 
     bundle = process-definition (defined) bundle(
         basket<> c
       )
       In definition "bundle", we have: {
+      Instances:
         c = basket<> c
-        footprint: {
-          process basket<>^0 c (instantiated) = ::bundle::c (1) (
-            process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (2) (
-              int<32>^0 yolk (instantiated) = ::bundle::c.egg_array.yolk (1) 
-            )
+      footprint: {
+        process basket<>^0 c (instantiated) = ::bundle::c (1) (
+          process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (2) (
+            int<32>^0 yolk (instantiated) = ::bundle::c.egg_array.yolk (1) 
           )
-          process instance pool:
-          1	::bundle::c
-          2	::bundle::c.egg_array
-          int instance pool:
-          1	::bundle::c.egg_array.yolk
-        }
+        )
+        process instance pool:
+        1	::bundle::c
+        2	::bundle::c.egg_array
+        int instance pool:
+        1	::bundle::c.egg_array.yolk
+      }
       }
 
     egg = process-definition (defined) egg(
         int<32> yolk
       )
       In definition "egg", we have: {
+      Instances:
         yolk = int<32> yolk
-        footprint: {
-          int<32>^0 yolk (instantiated) = ::egg::yolk (1) 
-          int instance pool:
-          1	::egg::yolk
-        }
+      footprint: {
+        int<32>^0 yolk (instantiated) = ::egg::yolk (1) 
+        int instance pool:
+        1	::egg::yolk
+      }
       }
 
   Instances:

@@ -35,6 +35,7 @@ In namespace "", we have: {
       >(
       )
       In definition "bar", we have: {
+      Parameters:
         A = pint<> A
         B = pint<> B
       }
@@ -45,8 +46,10 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
-        my_bar = bar<0><pint-inst-ref ::foo::W> my_bar
+      Parameters:
         W = pint<> W
+      Instances:
+        my_bar = bar<0><pint-inst-ref ::foo::W> my_bar
       }
 
 }

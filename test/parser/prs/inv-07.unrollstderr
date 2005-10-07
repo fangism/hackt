@@ -47,11 +47,12 @@ In namespace "", we have: {
 
       )
       In definition "inv", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..0][0..1]
         }
 
-        prs:
+      prs:
         a[0][0] -> a[0][1]-
         ~a[0][0] -> a[0][1]+
       }

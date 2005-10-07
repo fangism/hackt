@@ -32,7 +32,9 @@ In namespace "", we have: {
       >(
       )
       In definition "something_wide", we have: {
+      Parameters:
         W = pint<> W (default = pint-inst-ref ::default_width)
+      Instances:
         wide_int = int<pint-inst-ref ::something_wide::W> wide_int
       }
 

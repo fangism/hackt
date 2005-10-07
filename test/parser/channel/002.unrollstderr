@@ -31,6 +31,7 @@ In namespace "", we have: {
         int<32> i
       )
       In channel definition "mychan", we have: {
+      Instances:
         i = int<32> i
       }
 

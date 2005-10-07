@@ -52,12 +52,13 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N
-        footprint collection: {
-          <1> {
-            pint^0 N value: ?
-          }
+      footprint collection: {
+        <1> {
+          pint^0 N value: ?
         }
+      }
       }
 
   Instances:

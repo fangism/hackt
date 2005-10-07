@@ -46,10 +46,11 @@ In namespace "", we have: {
         chan!(bool<>) T
       )
       In definition "buffer", we have: {
+      Instances:
         S = chan?(bool<>) S
         T = chan!(bool<>) T
         b = bool<> b
-        chp:
+      chp:
         concurrent: {
           sequential: {
             b := true

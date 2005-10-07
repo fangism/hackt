@@ -74,14 +74,15 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         Q = pint<> Q
         R = pint<> R
-        footprint collection: {
-          <5, 4> {
-            pint^0 Q value: ?
-            pint^0 R value: ?
-          }
+      footprint collection: {
+        <5, 4> {
+          pint^0 Q value: ?
+          pint^0 R value: ?
         }
+      }
       }
 
   Instances:

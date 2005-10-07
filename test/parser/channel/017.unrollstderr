@@ -61,17 +61,18 @@ In namespace "", we have: {
         bool<> e
       )
       In channel definition "my_vewwy_first_e1of2", we have: {
+      Instances:
         e = bool<> e
         f = bool<> f
         t = bool<> t
-        send-CHP:
+      send-CHP:
         sequential: {
           [e]
           t := true
           [~e]
           t := false
         }
-        recv-CHP:
+      recv-CHP:
         sequential: {
           [t|f]
           e := false

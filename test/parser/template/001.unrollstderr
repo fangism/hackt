@@ -33,6 +33,7 @@ In namespace "", we have: {
       >(
       )
       In definition "array_me", we have: {
+      Parameters:
         A = pint<> A with indices: {
           [0..::array_me::N-1]
         }

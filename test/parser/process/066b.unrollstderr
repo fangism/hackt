@@ -39,18 +39,19 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..1]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::a[1] 
-              1 = ::foo::a[0] 
-            }
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::a[1] 
+            1 = ::foo::a[0] 
+          }
+      }
       }
 
   Instances:
