@@ -23,11 +23,11 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    fool = bool^0 fool (instantiated) = ::frodo (1)
-    frodo = bool^0 frodo (instantiated) = ::fool (1)
+    fool = bool^0 fool (instantiated) = ::frodo (1) 
+    frodo = bool^0 frodo (instantiated) = ::fool (1) 
 }
 
 Created state:
 bool instance pool:
-1	::fool
+1	::frodo
 

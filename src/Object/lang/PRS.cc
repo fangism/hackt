@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.2 2005/07/23 06:52:44 fang Exp $
+	$Id: PRS.cc,v 1.3 2005/10/08 01:39:58 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_PRS_CC__
-#define	__OBJECT_ART_OBJECT_PRS_CC__
+#ifndef	__OBJECT_LANG_PRS_CC__
+#define	__OBJECT_LANG_PRS_CC__
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -13,18 +13,23 @@ DEFAULT_STATIC_TRACE_BEGIN
 #define	ENABLE_STACKTRACE		0
 
 #include "Object/lang/PRS.h"
+#include "Object/lang/PRS_footprint.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/inst/alias_empty.h"
+#include "Object/inst/instance_alias_info.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/persistent_type_hash.h"
 
+#include "common/TODO.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
+#include "util/packed_array.h"	// for bool_alias_collection_type
 #include "util/likely.h"
 #include "util/stacktrace.h"
 
@@ -54,6 +59,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace ART {
 namespace entity {
 namespace PRS {
+using std::copy;
 using util::persistent_traits;
 using util::auto_indent;
 #include "util/using_ostream.h"
@@ -66,56 +72,91 @@ using util::read_value;
 //=============================================================================
 // class rule::dumper method definitions
 
-template <class P>
-void
-rule::dumper::operator () (const P& r) {
-	NEVER_NULL(r);
-	r->dump(os) << endl;
-}
+
+struct rule::checker {
+	template <class P>
+	void
+	operator () (const P& r) const {
+		STACKTRACE("rule::checker::operator()");
+		NEVER_NULL(r);
+		r->check();
+	}
+};	// end struct rule::checker
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class P>
-void
-rule::checker::operator () (const P& r) const {
-	STACKTRACE("rule::checker::operator()");
-	NEVER_NULL(r);
-	r->check();
-}
+struct rule::dumper {
+	ostream& os;
+	dumper(ostream& o) : os(o) { }
+
+	template <class P>
+	void
+	operator () (const P& r) {
+		NEVER_NULL(r);
+		r->dump(os) << endl;
+	}
+};      // end struct rule::dumper
 
 //=============================================================================
 // class prs_expr::negation_normalizer method definitions
 
-void
-prs_expr::checker::operator () (const const_prs_expr_ptr_type& e) const {
-	STACKTRACE("prs_expr::checker::operator ()");
-	assert(e);
-	e->check();
-}
+struct prs_expr::checker {
+	void
+	operator () (const const_prs_expr_ptr_type& e) const {
+		STACKTRACE("prs_expr::checker::operator ()");
+		assert(e);
+		e->check();
+	}
+};	// end struct checker
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-prs_expr_ptr_type
-prs_expr::negater::operator () (const const_prs_expr_ptr_type& e) const {
-	STACKTRACE("prs_expr::negater::operator ()");
-	NEVER_NULL(e);
-	return e->negate();
-}
+struct prs_expr::negater {
+	prs_expr_ptr_type
+	operator () (const const_prs_expr_ptr_type& e) const {
+		STACKTRACE("prs_expr::negater::operator ()");
+		NEVER_NULL(e);
+		return e->negate();
+	}
+};	// end struct negation_normalizer
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct prs_expr::negation_normalizer {
+	const bool nb;
+	negation_normalizer(const bool b) : nb(b) { }
+
 /**
 	\return modified (normalized) expression if changed, else
 		pointer to the original expression.  
  */
-prs_expr_ptr_type
-prs_expr::negation_normalizer::operator () (const prs_expr_ptr_type& e) const {
-	STACKTRACE("prs_expr::negation_normalizer::operator ()");
-	NEVER_NULL(e);
-	if (nb) {
-		return e->negate();
-	} else {
-		const prs_expr_ptr_type ret(e->negation_normalize());
-		return (ret ? ret : e);
+	prs_expr_ptr_type
+	operator () (const prs_expr_ptr_type& e) const {
+		STACKTRACE("prs_expr::negation_normalizer::operator ()");
+		NEVER_NULL(e);
+		if (nb) {
+			return e->negate();
+		} else {
+			const prs_expr_ptr_type ret(e->negation_normalize());
+			return (ret ? ret : e);
+		}
 	}
-}
+};	// end struct negation_normalizer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct prs_expr::unroller {
+	const unroll_context& _context;
+	const node_pool_type& _node_pool;
+	PRS::footprint& _fpf;
+
+	unroller(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& fpf) : _context(c), _node_pool(np), _fpf(fpf) {
+	}
+
+	size_t
+	operator () (const prs_expr_ptr_type& e) const {
+		NEVER_NULL(e);
+		return e->unroll(_context, _node_pool, _fpf);
+	}
+
+};	// end struct unroller
 
 //=============================================================================
 // class rule_set method definitions
@@ -146,8 +187,8 @@ rule_set::compact_references(void) {
  */
 void
 rule_set::expand_complements(void) {
-	iterator i = begin();
-	const iterator e = end();
+	iterator i(begin());
+	const iterator e(end());
 	for ( ; i!=e; i++) {
 		excl_ptr<rule> cmpl = (*i)->expand_complement();
 		if (cmpl) {
@@ -155,6 +196,23 @@ rule_set::expand_complements(void) {
 			INVARIANT(!cmpl);	// transferred ownership
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls the collection of un-resolved production rules
+	into production rule footprint.  
+ */
+good_bool
+rule_set::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		if (!(*i)->unroll(c, np, pfp).good)
+			return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -200,8 +258,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pull_up::dump(ostream& o) const {
-	static const char* norm_arrow = " -> ";
-	static const char* comp_arrow = " => ";
+	static const char* const norm_arrow = " -> ";
+	static const char* const comp_arrow = " => ";
 	return output.dump(
 		guard->dump(o << auto_indent) <<
 			((cmpl) ? comp_arrow : norm_arrow)) << "+";
@@ -229,6 +287,43 @@ pull_up::expand_complement(void) {
 		return excl_ptr<rule>(
 			new pull_dn(guard->negate(), output, false));
 	} else	return excl_ptr<rule>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a production rule into a footprint template form.  
+	\param c the context in which this production rule is unrolled.
+	\param np the node pool from which to lookup unique local nodes.  
+	\param pfp the production rule footprint in which to add
+		newly resolved production rules.  
+	TODO: check for complement bit
+ */
+good_bool
+pull_up::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	size_t guard_expr_index = guard->unroll(c, np, pfp);
+	if (!guard_expr_index) {
+		this->dump(cerr << "Error unrolling production rule: "
+			<< endl << '\t') << endl;
+		// dump context too?
+		return good_bool(false);
+	}
+	typedef literal_base_ptr_type::element_type::alias_collection_type
+			bool_instance_alias_collection_type;
+	bool_instance_alias_collection_type bc;
+	if (output.get_bool_var()->unroll_references(c, bc).bad) {
+		output.dump(cerr <<
+			"Error resolving output node of production rule: ")
+			<< endl;
+		return good_bool(false);
+	}
+	INVARIANT(!bc.dimensions());		// must be scalar
+	const instance_alias_info<bool_tag>& bi(*bc.front());
+	const size_t output_node_index = bi.instance_index;
+	INVARIANT(output_node_index);
+	pfp.push_back_rule(guard_expr_index, output_node_index, true);	// up
+	// check auto-complement, and unroll it
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -309,6 +404,43 @@ pull_dn::expand_complement(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a production rule into a footprint template form.  
+	\param c the context in which this production rule is unrolled.
+	\param np the node pool from which to lookup unique local nodes.  
+	\param pfp the production rule footprint in which to add
+		newly resolved production rules.  
+	TODO: check for complement bit
+ */
+good_bool
+pull_dn::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	size_t guard_expr_index = guard->unroll(c, np, pfp);
+	if (!guard_expr_index) {
+		this->dump(cerr << "Error unrolling production rule: "
+			<< endl << '\t') << endl;
+		// dump context too?
+		return good_bool(false);
+	}
+	typedef literal_base_ptr_type::element_type::alias_collection_type
+			bool_instance_alias_collection_type;
+	bool_instance_alias_collection_type bc;
+	if (output.get_bool_var()->unroll_references(c, bc).bad) {
+		output.dump(cerr <<
+			"Error resolving output node of production rule: ")
+			<< endl;
+		return good_bool(false);
+	}
+	INVARIANT(!bc.dimensions());		// must be scalar
+	const instance_alias_info<bool_tag>& bi(*bc.front());
+	const size_t output_node_index = bi.instance_index;
+	INVARIANT(output_node_index);
+	pfp.push_back_rule(guard_expr_index, output_node_index, false);	// down
+	// check auto-complement, and unroll it
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pull_dn::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -373,6 +505,14 @@ pass::expand_complement(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pass::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	FINISH_ME(Fang);
+	return good_bool(false);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pass::collect_transient_info(persistent_object_manager& m) const {
 	// FINISH ME!
@@ -411,8 +551,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 ostream&
 and_expr::dump(ostream& o, const int stamp) const {
 	const bool paren = stamp && (stamp != print_stamp);
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
 	(*i)->dump(o, print_stamp);
@@ -450,6 +590,38 @@ and_expr::negation_normalize(void) {
 	transform(begin(), end(), begin(),
 		prs_expr::negation_normalizer(false));
 	return prs_expr_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs expressions bottom-up.  
+	\return index > 0 if successful, else 0.
+ */
+size_t
+and_expr::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	list<size_t> expr_indices;
+	transform(begin(), end(), back_inserter(expr_indices), 
+		prs_expr::unroller(c, np, pfp));
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(
+			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
+	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
+	// find index of first error
+	const size_t err = new_expr.first_error();
+	if (err) {
+		cerr << "Error resolving production rule expression at:"
+			<< endl;
+#if 0
+		// WTF, not working?
+		const sequence_type::const_iterator
+			b(sequence_type::begin());
+		(b +err -1)->dump(cerr << '\t') << endl;
+#endif
+		return 0;
+	} else {
+		return pfp.current_expr_index();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -491,8 +663,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
 ostream&
 or_expr::dump(ostream& o, const int stamp) const {
 	const bool paren = stamp && (stamp != print_stamp);
-	const_iterator i = begin();
-	const const_iterator e = end();
+	const_iterator i(begin());
+	const const_iterator e(end());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
 	(*i)->dump(o, print_stamp);
@@ -515,7 +687,7 @@ or_expr::check(void) const {
 prs_expr_ptr_type
 or_expr::negate(void) const {
 	STACKTRACE("or_expr::negate()");
-	count_ptr<and_expr> ret(new and_expr);
+	const count_ptr<and_expr> ret(new and_expr);
 	transform(begin(), end(), back_inserter(*ret), prs_expr::negater());
 	return ret;
 }
@@ -527,6 +699,38 @@ or_expr::negation_normalize(void) {
 	transform(begin(), end(), begin(), 
 		prs_expr::negation_normalizer(false));
 	return prs_expr_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs expressions bottom-up.  
+	\return index > 0 if successful, else 0.
+ */
+size_t
+or_expr::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	list<size_t> expr_indices;
+	transform(begin(), end(), back_inserter(expr_indices), 
+		prs_expr::unroller(c, np, pfp));
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(
+			PRS_OR_EXPR_TYPE_ENUM, expr_indices.size()));
+	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
+	// find index of first error
+	const size_t err = new_expr.first_error();
+	if (err) {
+		cerr << "Error resolving production rule expression at:"
+			<< endl;
+#if 0
+		// WTF, not working?
+		const sequence_type::const_iterator
+			b(sequence_type::begin());
+		(b +err -1)->dump(cerr << '\t') << endl;
+#endif
+		return 0;
+	} else {
+		return pfp.current_expr_index();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -612,6 +816,25 @@ not_expr::negation_normalize(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a production rule expression.  
+ */
+size_t
+not_expr::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	const size_t expr_ind = var->unroll(c, np, pfp);
+	if (!expr_ind) {
+		cerr << "Error unrolling production rule expression." << endl;
+		var->dump(cerr << '\t') << endl;
+		return 0;
+	}
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(PRS_NOT_EXPR_TYPE_ENUM, 1));
+	new_expr[1] = expr_ind;
+	return pfp.current_expr_index();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 not_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -692,6 +915,32 @@ literal::negation_normalize(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: factor out common code.
+	Has code in common with pull_up/pull_dn...
+ */
+size_t
+literal::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	typedef literal_base_ptr_type::element_type::alias_collection_type
+			bool_instance_alias_collection_type;
+	bool_instance_alias_collection_type bc;
+	if (var->unroll_references(c, bc).bad) {
+		var->dump(cerr << "Error resolving production rule literal: ")
+			<< endl;
+		return 0;
+	}
+	INVARIANT(!bc.dimensions());		// must be scalar
+	const instance_alias_info<bool_tag>& bi(*bc.front());
+	const size_t node_index = bi.instance_index;
+	INVARIANT(node_index);
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
+	new_expr[1] = node_index;
+	return pfp.current_expr_index();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Doesn't register itself as a dynamically allocated object.  
  */
 void
@@ -730,5 +979,5 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_PRS_CC__
+#endif	// __OBJECT_LANG_PRS_CC__
 

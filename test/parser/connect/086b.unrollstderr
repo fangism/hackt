@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	153
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	186
 	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
@@ -61,12 +61,13 @@ In namespace "", we have: {
         fake_chan<> R
       )
       In definition "chan_proc", we have: {
+      Instances:
         L = fake_chan<> L
         R = fake_chan<> R
-        footprint: {
-          channel fake_chan<>^0 L (instantiated) = ::chan_proc::L 
-          channel fake_chan<>^0 R (instantiated) = ::chan_proc::R 
-        }
+      footprint: {
+        channel fake_chan<>^0 L (instantiated) = ::chan_proc::L 
+        channel fake_chan<>^0 R (instantiated) = ::chan_proc::R 
+      }
       }
 
     fake_chan = user-def-chan (declared) fake_chan
@@ -78,6 +79,7 @@ In namespace "", we have: {
         bool<> e
       )
       In channel definition "fake_chan", we have: {
+      Instances:
         d = int<32> d
         e = bool<> e
       }

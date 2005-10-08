@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related ART object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.3 2005/09/04 21:14:44 fang Exp $
+	$Id: user_def_chan.h,v 1.4 2005/10/08 01:39:57 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_CHAN_H__
@@ -53,7 +53,7 @@ public:
 	get_qualified_name(void) const;
 
 	ostream&
-	dump_qualified_name(ostream&) const;
+	dump_qualified_name(ostream&, const dump_flags&) const;
 
 	never_ptr<const scopespace>
 	get_parent(void) const;

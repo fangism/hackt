@@ -39,8 +39,10 @@ In namespace "", we have: {
         int<pint-inst-ref ::mychan::K> i
       )
       In channel definition "mychan", we have: {
+      Parameters:
         J = pint<> J
         K = pint<> K
+      Instances:
         i = int<pint-inst-ref ::mychan::K> i
       }
 

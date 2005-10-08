@@ -52,11 +52,13 @@ In namespace "", we have: {
         int<pint-inst-ref ::mychan::J[1]> i
       )
       In channel definition "mychan", we have: {
+      Parameters:
         J = pint<> J with indices: {
           [0..::mychan::K-1]
         }
 
         K = pint<> K
+      Instances:
         i = int<pint-inst-ref ::mychan::J[1]> i
       }
 

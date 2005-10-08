@@ -37,13 +37,14 @@ In namespace "", we have: {
         chan!(bool<>) R
       )
       In definition "one_shot", we have: {
+      Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
         b = bool<> b with indices: {
           [0..3]
         }
 
-        chp:
+      chp:
         concurrent: {
           R!(b[0])
         }

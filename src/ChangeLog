@@ -1,5 +1,131 @@
 "ChangeLog"
 
+2005-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-merged-cflat-01-11:
+	  Merged cflat branch to trunk.  
+	  Also includes critical library fixes in util/.  
+
+
+2005-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-11:
+	  Canonical names are now chosen to be the shortest, in terms of 
+		hierarchy depth.  Ties are arbitrarily broken at the moment.  
+		Test cases have been updated with newer canonical names.  
+	  Branch is ready to commit to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-10:
+	  Hierarchical dump of instances and definitions is now binned
+		and alphabetized to produce stable dumps, 
+		without depending on hashing.  Tons of test-expects updated.
+
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-09:
+	  Fixed printing of instance_references' dump_briefer
+		to use dump_hierarchical_name, using dump_flags::no_owner,
+		and also implemented as virtual function so 
+		member instance references would be printed correctly, 
+		not just the leaf-most instance name of hierarchy.  
+		(was only exhibited in intermediate-form dumping)
+	  Library fix for persistent_object_manager summarized
+		in "src/util/ChangeLog", eliminating false positive warning.  
+		Also minor clean-up in "ptrs_functional.h"
+	  Added a few new test cases.  
+	  TODO: sort member dumping of definitions for deterministic ordering.
+
+
+2005-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-08:
+	  Critical library fix to "util/ptrs_functional.h",
+		details in "src/util/ChangeLog".  (g++-4.0.2-ism)
+
+
+2005-10-05	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-07:
+	  cflat prsim works for first set of trivial test cases.  
+	  Augmented test suite Makefiles for cflat prsim testing.  
+	  Updated TODO list... arg.
+	  Implemented cflat mode (functor-style) registration.  
+	  Committed UES_SCOPE_ALIASES and USE_PRS_FOOTPRINT devel-switches. 
+
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-06:
+	  Working cflat prsim with prs, so far...
+	  TODO: extensive testing of cflat prsim -- test suite.
+		defining other cflat modes. 
+	  Implemented production_rule_substructure::cflat_prs().
+
+
+2005-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-05:
+	  Preliminary work for unrolling production rules of processes.  
+	  Introduced PRS::footprint as tracker for rules and expressions
+		within scope of each canonical process type.  
+		(Not used by prs-less meta-types)
+	  As a result, all footprint grew in size by at least 8B, 
+		accounting for PRS::footprint addition.  
+		(Object binary size grew for all definitions.)
+	  Privatized helper functorns of PRS::prs_expr.  
+	  Implemented prs_expr::unroll() and PRS::rule::unroll()
+		using new PRS::footprint.  
+	  Minor fixes described in util/ChangeLog.  
+
+
+2005-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-04:
+	  I think cflat prsim (connect only) is working.  Only spot-checked.
+		Implemented recursive alias dumper.  
+	  Drafted some early cflat options.  
+	  TODO: implement some preset modes (prsim, prlint, connect...)
+
+
+2005-09-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-03:
+	  Removed unnecessary ind argument from global_entry::dump_*.
+	  Implemeted collection of hierachical aliases with sets of
+		strings of aliases per scope.
+	  Extended dump_flags, added new static const member.  
+	  module::create_unique() now temporarily imports the scopespace
+		of all namespace, copying pointers to the top-level 
+		footprint's instance_collection_map.  The map ss only needed
+		for the sake of evaluating aliases.  Before function returns
+		The collection map is cleared, because it cannot be maintained
+		persistently, due to various invariants and pointer 
+		incompatibility.  
+	  Implementers of scopespace::dump_qualified_name now all require
+		an additional dump_flags argument for formatting.  
+	  All footprints now preserve singletons in their scope_aliases
+		list for efficient generation of alias names for cflat.  
+		As a result, object binaries have grown a bit in size
+		per footprint (complete definition, module).
+	  TODO: iterator over aliases and print for cflat connect!
+
+
+2005-09-14	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-02:
+	  We reuse the port_alias_tracker to track all aliases in 
+		a scope for each footprint, which is useful for
+		instantaneous alias lookup.  The extra information
+		will be used to print cflat connect aliases.  
+		Aliases are also collated at the top-level.
+		Consequentially, the object binaries grow as a result
+		of this new addition.  Tests updated accordingly.  
+
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-01:
+	  This branch is devoted to cflat -connect functionality.  
+	  This initial revision set up the method calls and basic interface.  
+	  TODO: keep track of all aliases, in addition to port aliases.  
+
+
 2005-09-14	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-59-merged-unique-02-15:

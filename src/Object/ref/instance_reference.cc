@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.3 2005/09/04 21:14:54 fang Exp $
+ 	$Id: instance_reference.cc,v 1.4 2005/10/08 01:39:59 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -21,6 +21,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/common/namespace.h"
+#include "Object/common/dump_flags.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_meta_instance_reference.tcc"
@@ -672,7 +673,7 @@ simple_meta_instance_reference_base::dump_brief(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Even briefer, without fully-qualified name.  
-	Make it smart, use qualiied name if referring outside of
+	Make it smart, use qualified name if referring outside of
 	a particular definition or scope (another argument).  
 	\param loc the local scope, used to determine whether or not
 		to print the qualified or abbreviated name.  
@@ -681,13 +682,9 @@ simple_meta_instance_reference_base::dump_brief(ostream& o) const {
 ostream&
 simple_meta_instance_reference_base::dump_briefer(ostream& o, 
 		const never_ptr<const scopespace> loc) const {
-	never_ptr<const instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		ib(get_inst_base());
-	if (loc && loc == ib->get_owner()) {
-		o << ib->get_qualified_name();
-	} else {
-		o << ib->get_name();
-	}
+	ib->dump_hierarchical_name(o, dump_flags::no_owner);
 	if (array_indices) {
 		array_indices->dump(o);
 	}
@@ -1133,13 +1130,9 @@ simple_nonmeta_instance_reference_base::dump(ostream& o) const {
 ostream&
 simple_nonmeta_instance_reference_base::dump_briefer(ostream& o, 
 		const never_ptr<const scopespace> loc) const {
-	never_ptr<const instance_collection_base>
+	const never_ptr<const instance_collection_base>
 		ib(get_inst_base());
-	if (loc && loc == ib->get_owner()) {
-		o << ib->get_qualified_name();
-	} else {
-		o << ib->get_name();
-	}
+	ib->dump_hierarchical_name(o, dump_flags::no_owner);
 	if (array_indices) {
 		array_indices->dump(o);
 	}

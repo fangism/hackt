@@ -31,12 +31,13 @@ In namespace "", we have: {
       >(
       )
       In definition "barbar", we have: {
+      Parameters:
+        milk = pint<> milk
         tea = pint<> tea
         water = pbool<> water with indices: {
           [0..3]
         }
 
-        milk = pint<> milk
       }
 
 }

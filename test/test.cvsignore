@@ -21,6 +21,8 @@ core.*
 *.allocdump
 *.allocdiff
 *.noindex
+*.prs
+*.prsdiff
 ignore
 Makefile
 Makefile.in

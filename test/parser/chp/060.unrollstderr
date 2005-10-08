@@ -71,6 +71,7 @@ In namespace "", we have: {
         chan!(bool<>) Z
       )
       In definition "foo", we have: {
+      Instances:
         A = chan?(bool<>) A
         B = chan?(bool<>) B
         G = chan?(bool<>) G
@@ -78,7 +79,7 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         g = bool<> g
-        chp:
+      chp:
         concurrent: {
           *[
             sequential: {

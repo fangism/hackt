@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	143
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -16,11 +16,11 @@ Persistent Object Manager text dump:
 	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	143
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	143
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
 	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -58,34 +58,37 @@ In namespace "", we have: {
     bar = process-definition (defined) bar(
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::y 
-          process foo<>^0 y (instantiated) = ::bar::x 
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::y 
+        process foo<>^0 y (instantiated) = ::bar::x 
+      }
       }
 
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::b 
-          bool^0 b (instantiated) = ::foo::a 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::b 
+        bool^0 b (instantiated) = ::foo::a 
+      }
       }
 
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
+      Instances:
         p = bar<> p
         q = bar<> q
-        footprint: {
-          process bar<>^0 p (instantiated) = ::ick::q 
-          process bar<>^0 q (instantiated) = ::ick::p 
-        }
+      footprint: {
+        process bar<>^0 p (instantiated) = ::ick::q 
+        process bar<>^0 q (instantiated) = ::ick::p 
+      }
       }
 
   Instances:

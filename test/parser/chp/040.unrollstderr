@@ -39,9 +39,10 @@ In namespace "", we have: {
         chan(bool<>) S
       )
       In definition "sink", we have: {
+      Instances:
         S = chan(bool<>) S
         b = bool<> b
-        chp:
+      chp:
         concurrent: {
           *[
             S?(b)
@@ -53,8 +54,9 @@ In namespace "", we have: {
         chan(bool<>) S
       )
       In definition "source", we have: {
+      Instances:
         S = chan(bool<>) S
-        chp:
+      chp:
         concurrent: {
           *[
             S!(false)

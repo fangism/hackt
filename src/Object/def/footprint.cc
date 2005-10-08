@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3 2005/09/14 15:30:28 fang Exp $
+	$Id: footprint.cc,v 1.4 2005/10/08 01:39:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,7 +9,6 @@
 
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
-#include "Object/def/port_formals_manager.h"
 #include "Object/common/scopespace.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
@@ -137,6 +136,36 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	return good_bool(true);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// not ready to unveil until simulation engine is ready...
+/**
+	NOTE: this is only need for simulation, not needed for cflattening.
+	Expands each unique process' local production rules, 
+	according to its footprint.  
+	This should only be instantiated with Tag = process_tag.
+	Is footprint_frame needed?
+ */
+template <class Tag>
+good_bool
+footprint_base<Tag>::__expand_production_rules(const footprint_frame& ff, 
+		state_manager& sm) const {
+	typedef	typename global_entry_pool<Tag>::entry_type	entry_type;
+	const global_entry_pool<bool_tag>&
+		bpool(sm.get_pool<bool_tag>());
+	global_entry_pool<Tag>&
+		proc_pool(sm.get_pool<Tag>());
+	size_t i = 1;
+	const size_t s = proc_pool.size();
+	for ( ; i<=s; i++) {
+		entry_type& pe(proc_pool[i]);
+		// inherited from production_rule_substructure
+		pe.allocate_prs();
+	}
+	return good_bool(true);
+}
+#endif
+
 //=============================================================================
 // class footprint method definitions
 
@@ -151,7 +180,9 @@ footprint::footprint() :
 	instance_collection_map(), 
 	// use half-size pool chunks to reduce memory waste for now
 	// maybe even quarter-size...
-	port_aliases() {
+	scope_aliases(), 
+	port_aliases(),
+	prs_footprint() {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -191,6 +222,11 @@ footprint::dump_with_collections(ostream& o) const {
 		}
 		dump(o);
 		port_aliases.dump(o);
+#if ENABLE_STACKTRACE
+		// don't bother dumping, unless debugging
+		scope_aliases.dump(o);
+#endif
+		prs_footprint.dump(o, *this);
 	}
 	return o;
 }
@@ -215,6 +251,11 @@ footprint::operator [] (const string& k) const {
 	into its own map.  
 	If this scopespace has already been popluated, then it won't actually
 	reload the map, will just exit.  
+	NOTE: This is entended for importing from definitions' scopespaces
+		because templated types need to work with their own copies
+		of instance collections; the definitions' instance
+		collections are merely placeholders.  
+		We make a deep copy of the collections (while they're empty).  
  */
 void
 footprint::import_scopespace(const scopespace& s) {
@@ -244,6 +285,63 @@ if (instance_collection_map.empty()) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	The difference is that the key used for the collection
+	map is a hierarchical (qualified) name to avoid collisions
+	as a result of collating over all namespaces.  
+	Called by top-level module only.
+	TODO: Arg -- code duplication -- clean later.  
+ */
+void
+footprint::import_hierarchical_scopespace(const scopespace& s) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "at: " << this << endl;
+#endif
+if (instance_collection_map.empty()) {
+	typedef	scopespace::const_map_iterator	const_map_iterator;
+	const_map_iterator si(s.id_map_begin());
+	const const_map_iterator se(s.id_map_end());
+	for ( ; si!=se; si++) {
+		const never_ptr<const physical_instance_collection>
+		pc(si->second.is_a<const physical_instance_collection>());
+		if (pc) {
+		/***
+			DIRTY HACK ALERT:
+			collection wants count_ptr, but shallow pointer copy
+			comes from never_ptr!  can't mix oil and wanter!
+			The hack, initialize the count_ptr with count 1
+			instead of 0.  The last and only weak reference
+			will never delete.  
+			const_cast is safe: we promise to never modify
+			the contents from the top-level module.  
+
+			ACTUALLY, this won't work, persistent object manager
+			will restore and detect inconsistent pointer
+			ownership (owned and shared), resulting in 
+			fatal error.  FOILED by my own protective measures!
+		***/
+			static size_t one = 1;
+			instance_collection_map[pc->get_qualified_name()] =
+				count_ptr<instance_collection_base>(
+				&const_cast<physical_instance_collection&>(*pc), &one);
+		}
+		// else is not instance collection, we don't care
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Why would you ever want to clear the collection map?
+	See import_hierarchical_scopespace comments about hack.  
+ */
+void
+footprint::clear_instance_collection_map(void) {
+	instance_collection_map.clear();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	For all instance collections, expand their canonical types.  
  */
 good_bool
@@ -266,24 +364,44 @@ footprint::create_dependent_types(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Collects all aliases in this scope.  
 	\pre the sequential scope was already played for creation.  
  */
 void
-footprint::evaluate_port_aliases(const port_formals_manager& pfm) {
+footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
-	// find port aliases
-	// work out const-cast-ness
-	typedef port_formals_manager::const_list_iterator
-						const_list_iterator;
-	const_list_iterator i(pfm.begin());
-	const const_list_iterator e(pfm.end());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "got " << instance_collection_map.size()
+		<< " entries." << endl;
+#endif
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
 	for ( ; i!=e; i++) {
-		// includes assertions
-		instance_collection_map[(*i)->get_name()]
-			.is_a<const physical_instance_collection>()
-			->collect_port_aliases(port_aliases);
+		const count_ptr<const physical_instance_collection>
+			pic(i->second.is_a<const physical_instance_collection>());
+		if (pic) {
+#if ENABLE_STACKTRACE
+			pic->dump(STACKTRACE_INDENT << "collecting: ") << endl;
+#endif
+			// method is called collect_port,
+			// but it collects everything in scope
+			// good re-use of function!
+			pic->collect_port_aliases(scope_aliases);
+			if (pic->is_port_formal())
+				pic->collect_port_aliases(port_aliases);
+		}
 	}
+	// don't filter for scope, want to keep around unique entries
+	// scope_aliases.filter_uniques();
+#if ENABLE_STACKTRACE
+	scope_aliases.dump(cerr << "footprint::scope_aliases: " << endl) << endl;
+#endif
+	// NOTE: don't filter uniques for scope_aliases, needed for aliases
 	port_aliases.filter_uniques();
+	// TODO: pick better canonical names
+#if 1
+	scope_aliases.shorten_canonical_aliases(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -331,7 +449,17 @@ footprint::expand_unique_subinstances(state_manager& sm) const {
 				__expand_unique_subinstances(
 					ff, sm, struct_offset).good
 		);
+#if 0
+		if (!b.good)
+			return b;
+		// now expand the processes' production rules
+		// creating a map per process_entry
+		// only needed for simulation, not cflattening
+		return footprint_base<process_tag>::
+			__expand_production_rules(ff, sm);
+#else
 		return b;
+#endif
 	} else {
 		// error
 		return a;
@@ -418,6 +546,8 @@ footprint::write_object_base(const persistent_object_manager& m,
 	footprint_base<int_tag>::_pool.write_object_base(m, o);
 	footprint_base<bool_tag>::_pool.write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
+	scope_aliases.write_object_base(m, o);
+	prs_footprint.write_object_base(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -447,6 +577,8 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	footprint_base<int_tag>::_pool.load_object_base(m, i);
 	footprint_base<bool_tag>::_pool.load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
+	scope_aliases.load_object_base(m, i);
+	prs_footprint.load_object_base(i);
 }
 
 //=============================================================================

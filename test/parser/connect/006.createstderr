@@ -37,12 +37,12 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    blah = int<32>^0 blah (instantiated) = ::copier (1)
-    copier = int<32>^0 copier (instantiated) = ::sneeze (1)
-    sneeze = int<32>^0 sneeze (instantiated) = ::blah (1)
+    blah = int<32>^0 blah (instantiated) = ::copier (1) 
+    copier = int<32>^0 copier (instantiated) = ::sneeze (1) 
+    sneeze = int<32>^0 sneeze (instantiated) = ::blah (1) 
 }
 
 Created state:
 int instance pool:
-1	::blah
+1	::sneeze
 

@@ -1,26 +1,22 @@
 "TODO"
-	$Id: TODO,v 1.2 2005/09/14 15:30:24 fang Exp $
+#	$Id: TODO,v 1.3 2005/10/08 01:39:53 fang Exp $
 
 ===============================================================================
-recursive create-unique! (in progress)
-	done, except for private internal structures.  
 
-add another member to footprint to track ALL aliases, not just ports.  
-	(another port_alias_tracker) evaluate all aliases, 
-		and perform filtering to get port aliases.  
-		Should result in much code simplification.  
-		Want to keep all aliases around for fast lookup
-		of all aliases at each level of hierarchy for cflat.  
+PRS: in cflat
+	3) test cases instantiating processes with PRS, hierarchically!!!
+
+PRS parser needs to support rule loops...
+	need to extend intermediate form in Object/lang/PRS.  
 
 footprint pointer persistence may be complicated in footprint_frame.
 	(partially done, for top-level state)
+	possibly simplify by having each footprint contain back-reference?
+	(not critical, can do later...)
 
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
-
-consider one more phase after create: alloc (done)
-
-common class: dump_modifier for formatted printing and variations.  
+	can be classified as known bug.  
 
 ===============================================================================
 new class_trait:
@@ -30,14 +26,19 @@ new class_trait:
 big stuff:
 
 *** loops and conditionals ***
+*** global and out-of-scope references? ***
 
 CFLAT
 
 compare memory usage between using flattened production rule arrays
-vs. arrays of definitions (like logic gates).
+	vs. arrays of definitions (like logic gates).
 
 in general check memory usage of large arrays of things
 	make benchmarks directory.
+
+===============================================================================
+Library stuff:
+util: use new ptrs_functional_proposed.h with const_traits.h
 
 ===============================================================================
 enhancements:
@@ -53,6 +54,12 @@ stacktrace.h:
 	add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
 ICE.h:
 	add ICE_ASSERT combined INVARIANT with ICE macro
+
+===============================================================================
+Simulation:
+	generate process_entries' unrolled production rules!
+		only needed for simulation, not flattening [PUNT]
+		state information of expressions not needed yet
 
 ===============================================================================
 PRS and CHP

@@ -7,11 +7,11 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	147
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
 	7	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	202
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	268
 	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -69,12 +69,13 @@ In namespace "", we have: {
         foo<2> b
       )
       In definition "bar", we have: {
+      Instances:
         a = foo<1> a
         b = foo<2> b
-        footprint: {
-          process foo<1>^0 a (instantiated) = ::bar::a 
-          process foo<2>^0 b (instantiated) = ::bar::b 
-        }
+      footprint: {
+        process foo<1>^0 a (instantiated) = ::bar::a 
+        process foo<2>^0 b (instantiated) = ::bar::b 
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -82,15 +83,16 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pint<> A
-        footprint collection: {
-          <1> {
-            pint^0 A value: ?
-          }
-          <2> {
-            pint^0 A value: ?
-          }
+      footprint collection: {
+        <1> {
+          pint^0 A value: ?
         }
+        <2> {
+          pint^0 A value: ?
+        }
+      }
       }
 
   Instances:

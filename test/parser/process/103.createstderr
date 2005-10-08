@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	188
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -13,11 +13,11 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	147
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	276
 	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	143
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	248
 	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -63,26 +63,27 @@ In namespace "", we have: {
         foo<> x
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (1) (
-            bool^0 a (instantiated) = ::bar::x.a (1) 
-            bool^0 b (instantiated) = ::bar::x.b (2) 
-          )
-          process foo<>^0 y (instantiated) = ::bar::y (2) (
-            bool^0 a (instantiated) = ::bar::y.a (3) 
-            bool^0 b (instantiated) = ::bar::y.b (4) 
-          )
-          process instance pool:
-          1	::bar::x
-          2	::bar::y
-          bool instance pool:
-          1	::bar::x.a
-          2	::bar::x.b
-          3	::bar::y.a
-          4	::bar::y.b
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (1) (
+          bool^0 a (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::x.b (2) 
+        )
+        process foo<>^0 y (instantiated) = ::bar::y (2) (
+          bool^0 a (instantiated) = ::bar::y.a (3) 
+          bool^0 b (instantiated) = ::bar::y.b (4) 
+        )
+        process instance pool:
+        1	::bar::x
+        2	::bar::y
+        bool instance pool:
+        1	::bar::x.a
+        2	::bar::x.b
+        3	::bar::y.a
+        4	::bar::y.b
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -90,46 +91,48 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a (1) 
-          bool^0 b (instantiated) = ::foo::b (2) 
-          bool instance pool:
-          1	::foo::a
-          2	::foo::b
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (2) 
+        bool instance pool:
+        1	::foo::a
+        2	::foo::b
+      }
       }
 
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
+      Instances:
         p = bar<> p
         q = bar<> q
-        footprint: {
-          process bar<>^0 p (instantiated) = ::ick::p (1) (
-            process foo<>^0 x (instantiated) = ::ick::p.x (2) (
-              bool^0 a (instantiated) = ::ick::p.x.a (1) 
-              bool^0 b (instantiated) = ::ick::p.x.b (2) 
-            )
+      footprint: {
+        process bar<>^0 p (instantiated) = ::ick::p (1) (
+          process foo<>^0 x (instantiated) = ::ick::p.x (2) (
+            bool^0 a (instantiated) = ::ick::p.x.a (1) 
+            bool^0 b (instantiated) = ::ick::p.x.b (2) 
           )
-          process bar<>^0 q (instantiated) = ::ick::q (3) (
-            process foo<>^0 x (instantiated) = ::ick::q.x (4) (
-              bool^0 a (instantiated) = ::ick::q.x.a (3) 
-              bool^0 b (instantiated) = ::ick::q.x.b (4) 
-            )
+        )
+        process bar<>^0 q (instantiated) = ::ick::q (3) (
+          process foo<>^0 x (instantiated) = ::ick::q.x (4) (
+            bool^0 a (instantiated) = ::ick::q.x.a (3) 
+            bool^0 b (instantiated) = ::ick::q.x.b (4) 
           )
-          process instance pool:
-          1	::ick::p
-          2	::ick::p.x
-          3	::ick::q
-          4	::ick::q.x
-          bool instance pool:
-          1	::ick::p.x.a
-          2	::ick::p.x.b
-          3	::ick::q.x.a
-          4	::ick::q.x.b
-        }
+        )
+        process instance pool:
+        1	::ick::p
+        2	::ick::p.x
+        3	::ick::q
+        4	::ick::q.x
+        bool instance pool:
+        1	::ick::p.x.a
+        2	::ick::p.x.b
+        3	::ick::q.x.a
+        4	::ick::q.x.b
+      }
       }
 
   Instances:

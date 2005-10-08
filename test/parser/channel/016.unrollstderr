@@ -34,6 +34,7 @@ In namespace "", we have: {
         bool<> e
       )
       In channel definition "my_vewwy_first_e1of2", we have: {
+      Instances:
         e = bool<> e
         f = bool<> f
         t = bool<> t

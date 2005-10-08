@@ -187,9 +187,10 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "inv", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        prs:
+      prs:
         a -> b-
         ~a -> b+
       }
@@ -200,12 +201,13 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "xor2_ver1", we have: {
-        a_ = bool<> a_
-        b_ = bool<> b_
+      Instances:
         a = bool<> a
+        a_ = bool<> a_
         b = bool<> b
+        b_ = bool<> b_
         c = bool<> c
-        prs:
+      prs:
         a -> a_-
         ~a -> a_+
         b -> b_-
@@ -220,14 +222,15 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "xor2_ver2", we have: {
-        a_ = bool<> a_
-        b_ = bool<> b_
-        ai = inv<> ai
-        bi = inv<> bi
+      Instances:
         a = bool<> a
+        a_ = bool<> a_
+        ai = inv<> ai
         b = bool<> b
+        b_ = bool<> b_
+        bi = inv<> bi
         c = bool<> c
-        prs:
+      prs:
         (a & b) | (b_ & a_) -> c-
         (~a | ~b) & (~b_ | ~a_) -> c+
       }
@@ -238,14 +241,15 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "xor2_ver3", we have: {
-        a_ = bool<> a_
-        b_ = bool<> b_
-        ai = inv<> ai
-        bi = inv<> bi
+      Instances:
         a = bool<> a
+        a_ = bool<> a_
+        ai = inv<> ai
         b = bool<> b
+        b_ = bool<> b_
+        bi = inv<> bi
         c = bool<> c
-        prs:
+      prs:
         (~a & ~b_) | (~a_ & ~b) -> c+
         (a | b_) & (a_ | b) -> c-
       }

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.4 2005/09/14 15:30:32 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.5 2005/10/08 01:40:00 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -57,6 +57,19 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	return o << util::what<this_type>::name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dump brief, but dump parent instances too, 
+	just omit the ultimate owner definition.  
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+ostream&
+MEMBER_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o, 
+		const never_ptr<const scopespace> s) const {
+	base_inst_ref->dump_briefer(o, s);
+	return simple_meta_instance_reference_base::dump_briefer(o << '.', s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

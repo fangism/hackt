@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	188
 	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -68,14 +68,15 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         Q = pint<> Q
         R = pint<> R
-        footprint collection: {
-          <5, 4> {
-            pint^0 Q value: ?
-            pint^0 R value: ?
-          }
+      footprint collection: {
+        <5, 4> {
+          pint^0 Q value: ?
+          pint^0 R value: ?
         }
+      }
       }
 
   Instances:

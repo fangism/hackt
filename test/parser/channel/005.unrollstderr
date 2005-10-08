@@ -42,6 +42,7 @@ In namespace "", we have: {
         int<16> k
       )
       In channel definition "mychan", we have: {
+      Instances:
         i = int<32> i
         j = int<32> j
         k = int<16> k

@@ -1,0 +1,32 @@
+// "wchb-02.in"
+// should pass
+// copy-modified from "wchb-01.in", added inverter definitions
+
+defproc e1of2(bool d[2], e) { }
+
+defproc inv(bool a, b) {
+prs {
+	a			-> b-
+	~a			-> b+
+}
+}
+
+defproc wchb_e1of2(e1of2 L, R) {
+bool _r[2];
+bool rv;
+inv	r0(_r[0], R.d[0]),
+	r1(_r[1], R.d[1]),
+	re(rv, L.e);
+prs {
+	L.d[0] & R.e		-> _r[0]-
+	L.d[1] & R.e		-> _r[1]-
+	~_r[0] | ~_r[1]		-> rv+
+	~L.d[0] & ~R.e		-> _r[0]+
+	~L.d[1] & ~R.e		-> _r[1]+
+	_r[0] & _r[1]		-> rv-
+}
+}
+
+e1of2 L, R;
+wchb_e1of2 b(L, R);
+

@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
 	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	29
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	117
-	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
 	20	##ADDR##	proccoll	2	#HEAD#	#TAIL#	37
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -52,39 +52,41 @@ In namespace "", we have: {
     bar = process-definition (defined) bar(
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x with indices: {
           [0..1][0..1]
         }
 
-        footprint: {
-          process foo<>^2 x with indices: {
-          }
-            unrolled indices: {
-              [0][0] = ::bar::x[0][0] 
-              [0][1] = ::bar::x[1][0] 
-              [1][0] = ::bar::x[0][1] 
-              [1][1] = ::bar::x[1][1] 
-            }
+      footprint: {
+        process foo<>^2 x with indices: {
         }
+          unrolled indices: {
+            [0][0] = ::bar::x[0][0] 
+            [0][1] = ::bar::x[1][0] 
+            [1][0] = ::bar::x[0][1] 
+            [1][1] = ::bar::x[1][1] 
+          }
+      }
       }
 
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..1][0..1]
         }
 
-        footprint: {
-          bool^2 a with indices: {
-          }
-            unrolled indices: {
-              [0][0] = ::foo::a[1][1] 
-              [0][1] = ::foo::a[0][1] 
-              [1][0] = ::foo::a[1][0] 
-              [1][1] = ::foo::a[0][0] 
-            }
+      footprint: {
+        bool^2 a with indices: {
         }
+          unrolled indices: {
+            [0][0] = ::foo::a[1][1] 
+            [0][1] = ::foo::a[0][1] 
+            [1][0] = ::foo::a[1][0] 
+            [1][1] = ::foo::a[0][0] 
+          }
+      }
       }
 
   Instances:

@@ -36,6 +36,7 @@ In namespace "", we have: {
 
       )
       In channel definition "mychan", we have: {
+      Instances:
         i = int<16> i with indices: {
           [0..1]
         }

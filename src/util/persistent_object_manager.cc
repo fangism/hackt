@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.24 2005/07/20 21:01:01 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.25 2005/10/08 01:40:03 fang Exp $
  */
 
 // flags and switches
@@ -361,11 +361,13 @@ if (recon_addr) {
 			}
 		}
 		}
-		if (visits.raw_visits > 1 && !visits.owned_visits) {
+		// if (visits.raw_visits > 1 && !visits.owned_visits)
+		if (visits.raw_visits && !visits.owned_visits
+				&& !visits.shared_visits) {
 			cerr << "WARNING: object at " << recon_addr <<
 				" was loaded as a raw pointer " <<
 				visits.raw_visits << " times without "
-				"having been claimed by an owner, "
+				"having been claimed by an owner or sharer, "
 				"which means the programmer is either "
 				"1) lazy or 2) made a grave mistake.  "
 				"It is my duty to strongly suggest using "

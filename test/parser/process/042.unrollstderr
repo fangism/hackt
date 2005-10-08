@@ -29,8 +29,9 @@ In namespace "", we have: {
         bool<> now
       )
       In definition "fang", we have: {
-        now = bool<> now
+      Instances:
         food = int<32> food
+        now = bool<> now
       }
 
 }

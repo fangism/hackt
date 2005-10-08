@@ -6,4 +6,4 @@ globID	super		localID	canonical	footprint-frame
 2	(top)	-	2	poo.x	foo<>
 	bool: 1
 [global bool entries]
-1	(top)	-	1	poo.y.a[0]	
+1	(top)	-	1	poo.x.a[0]	

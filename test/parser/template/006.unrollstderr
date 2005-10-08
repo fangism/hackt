@@ -33,7 +33,9 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N
+      Instances:
         bar = int<32> bar with indices: {
           [0..::foo::N-1]
         }

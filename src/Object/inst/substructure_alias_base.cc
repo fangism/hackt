@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.6 2005/09/14 15:30:32 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.7 2005/10/08 01:39:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -31,6 +31,16 @@ substructure_alias::dump_hierarchical_name(ostream& o,
 		const dump_flags&) const {
 	ICE_NEVER_CALL(cerr);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Virtually pure virtual.
+ */
+size_t
+substructure_alias::hierarchical_depth(void) const {
+	ICE_NEVER_CALL(cerr);
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

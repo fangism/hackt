@@ -15,15 +15,15 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	167
 	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	167
 	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
 	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
 	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -68,36 +68,39 @@ In namespace "", we have: {
         egg<> egg_array
       )
       In definition "basket", we have: {
+      Instances:
         egg_array = egg<> egg_array
-        footprint: {
-          process egg<>^0 egg_array (instantiated) = ::basket::egg_array (
-            int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk 
-          )
-        }
+      footprint: {
+        process egg<>^0 egg_array (instantiated) = ::basket::egg_array (
+          int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk 
+        )
+      }
       }
 
     bundle = process-definition (defined) bundle(
         basket<> c
       )
       In definition "bundle", we have: {
+      Instances:
         c = basket<> c
-        footprint: {
-          process basket<>^0 c (instantiated) = ::bundle::c (
-            process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (
-              int<32>^0 yolk (instantiated) = ::bundle::c.egg_array.yolk 
-            )
+      footprint: {
+        process basket<>^0 c (instantiated) = ::bundle::c (
+          process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (
+            int<32>^0 yolk (instantiated) = ::bundle::c.egg_array.yolk 
           )
-        }
+        )
+      }
       }
 
     egg = process-definition (defined) egg(
         int<32> yolk
       )
       In definition "egg", we have: {
+      Instances:
         yolk = int<32> yolk
-        footprint: {
-          int<32>^0 yolk (instantiated) = ::egg::yolk 
-        }
+      footprint: {
+        int<32>^0 yolk (instantiated) = ::egg::yolk 
+      }
       }
 
   Instances:

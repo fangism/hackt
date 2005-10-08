@@ -4,11 +4,11 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
 	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
 	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
@@ -18,7 +18,7 @@ Persistent Object Manager text dump:
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	155
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	216
 	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -51,18 +51,19 @@ In namespace "", we have: {
         foo<> x
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (1) (
-            process ick<>^0 a (instantiated) = ::bar::x.b (2) 
-            process ick<>^0 b (instantiated) = ::bar::x.a (2) 
-          )
-          process instance pool:
-          1	::bar::x
-          2	::bar::x.a
-          process port aliases:
-          2: ::bar::x.a = ::bar::x.b
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (1) (
+          process ick<>^0 a (instantiated) = ::bar::x.b (2) 
+          process ick<>^0 b (instantiated) = ::bar::x.a (2) 
+        )
+        process instance pool:
+        1	::bar::x
+        2	::bar::x.a
+        process port aliases:
+        2: ::bar::x.a = ::bar::x.b
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -70,23 +71,24 @@ In namespace "", we have: {
         ick<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = ick<> a
         b = ick<> b
-        footprint: {
-          process ick<>^0 a (instantiated) = ::foo::b (1) 
-          process ick<>^0 b (instantiated) = ::foo::a (1) 
-          process instance pool:
-          1	::foo::a
-          process port aliases:
-          1: ::foo::a = ::foo::b
-        }
+      footprint: {
+        process ick<>^0 a (instantiated) = ::foo::b (1) 
+        process ick<>^0 b (instantiated) = ::foo::a (1) 
+        process instance pool:
+        1	::foo::a
+        process port aliases:
+        1: ::foo::a = ::foo::b
+      }
       }
 
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:

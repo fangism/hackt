@@ -23,15 +23,15 @@ Persistent Object Manager text dump:
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	199
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	167
 	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	45
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	147
+	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
 	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -618,64 +618,65 @@ In namespace "", we have: {
 
       )
       In definition "basket", we have: {
+      Instances:
         egg_array = egg<> egg_array with indices: {
           [0..11]
         }
 
-        footprint: {
-          process egg<>^1 egg_array with indices: {
-          }
-            unrolled indices: {
-              0 = ::basket::egg_array[0] (
-                bool^0 white (instantiated) = ::basket::egg_array[0].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[0].yolk 
-              )
-              1 = ::basket::egg_array[1] (
-                bool^0 white (instantiated) = ::basket::egg_array[1].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[1].yolk 
-              )
-              2 = ::basket::egg_array[2] (
-                bool^0 white (instantiated) = ::basket::egg_array[2].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[2].yolk 
-              )
-              3 = ::basket::egg_array[3] (
-                bool^0 white (instantiated) = ::basket::egg_array[3].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[3].yolk 
-              )
-              4 = ::basket::egg_array[4] (
-                bool^0 white (instantiated) = ::basket::egg_array[4].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[4].yolk 
-              )
-              5 = ::basket::egg_array[5] (
-                bool^0 white (instantiated) = ::basket::egg_array[5].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[5].yolk 
-              )
-              6 = ::basket::egg_array[6] (
-                bool^0 white (instantiated) = ::basket::egg_array[6].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[6].yolk 
-              )
-              7 = ::basket::egg_array[7] (
-                bool^0 white (instantiated) = ::basket::egg_array[7].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[7].yolk 
-              )
-              8 = ::basket::egg_array[8] (
-                bool^0 white (instantiated) = ::basket::egg_array[8].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[8].yolk 
-              )
-              9 = ::basket::egg_array[9] (
-                bool^0 white (instantiated) = ::basket::egg_array[9].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[9].yolk 
-              )
-              10 = ::basket::egg_array[10] (
-                bool^0 white (instantiated) = ::basket::egg_array[10].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[10].yolk 
-              )
-              11 = ::basket::egg_array[11] (
-                bool^0 white (instantiated) = ::basket::egg_array[11].white 
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[11].yolk 
-              )
-            }
+      footprint: {
+        process egg<>^1 egg_array with indices: {
         }
+          unrolled indices: {
+            0 = ::basket::egg_array[0] (
+              bool^0 white (instantiated) = ::basket::egg_array[0].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[0].yolk 
+            )
+            1 = ::basket::egg_array[1] (
+              bool^0 white (instantiated) = ::basket::egg_array[1].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[1].yolk 
+            )
+            2 = ::basket::egg_array[2] (
+              bool^0 white (instantiated) = ::basket::egg_array[2].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[2].yolk 
+            )
+            3 = ::basket::egg_array[3] (
+              bool^0 white (instantiated) = ::basket::egg_array[3].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[3].yolk 
+            )
+            4 = ::basket::egg_array[4] (
+              bool^0 white (instantiated) = ::basket::egg_array[4].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[4].yolk 
+            )
+            5 = ::basket::egg_array[5] (
+              bool^0 white (instantiated) = ::basket::egg_array[5].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[5].yolk 
+            )
+            6 = ::basket::egg_array[6] (
+              bool^0 white (instantiated) = ::basket::egg_array[6].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[6].yolk 
+            )
+            7 = ::basket::egg_array[7] (
+              bool^0 white (instantiated) = ::basket::egg_array[7].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[7].yolk 
+            )
+            8 = ::basket::egg_array[8] (
+              bool^0 white (instantiated) = ::basket::egg_array[8].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[8].yolk 
+            )
+            9 = ::basket::egg_array[9] (
+              bool^0 white (instantiated) = ::basket::egg_array[9].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[9].yolk 
+            )
+            10 = ::basket::egg_array[10] (
+              bool^0 white (instantiated) = ::basket::egg_array[10].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[10].yolk 
+            )
+            11 = ::basket::egg_array[11] (
+              bool^0 white (instantiated) = ::basket::egg_array[11].white 
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[11].yolk 
+            )
+          }
+      }
       }
 
     bundle = process-definition (defined) bundle(
@@ -687,458 +688,459 @@ In namespace "", we have: {
 
       )
       In definition "bundle", we have: {
+      Instances:
         a = basket<> a
         b = basket<> b
         c = basket<> c with indices: {
           [0..5]
         }
 
-        footprint: {
-          process basket<>^0 a (instantiated) = ::bundle::a (
-            process egg<>^1 egg_array with indices: {
-              [0..11]
-            }
-              unrolled indices: {
-                0 = ::bundle::a.egg_array[0] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[0].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[0].yolk 
-                )
-                1 = ::bundle::a.egg_array[1] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[1].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[1].yolk 
-                )
-                2 = ::bundle::a.egg_array[2] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[2].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[2].yolk 
-                )
-                3 = ::bundle::a.egg_array[3] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[3].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[3].yolk 
-                )
-                4 = ::bundle::a.egg_array[4] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[4].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[4].yolk 
-                )
-                5 = ::bundle::a.egg_array[5] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[5].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[5].yolk 
-                )
-                6 = ::bundle::a.egg_array[6] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[6].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[6].yolk 
-                )
-                7 = ::bundle::a.egg_array[7] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[7].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[7].yolk 
-                )
-                8 = ::bundle::a.egg_array[8] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[8].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[8].yolk 
-                )
-                9 = ::bundle::a.egg_array[9] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[9].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[9].yolk 
-                )
-                10 = ::bundle::a.egg_array[10] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[10].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[10].yolk 
-                )
-                11 = ::bundle::a.egg_array[11] (
-                  bool^0 white (instantiated) = ::bundle::a.egg_array[11].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[11].yolk 
-                )
-              }
-          )
-          process basket<>^0 b (instantiated) = ::bundle::b (
-            process egg<>^1 egg_array with indices: {
-              [0..11]
-            }
-              unrolled indices: {
-                0 = ::bundle::b.egg_array[0] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[0].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[0].yolk 
-                )
-                1 = ::bundle::b.egg_array[1] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[1].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[1].yolk 
-                )
-                2 = ::bundle::b.egg_array[2] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[2].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[2].yolk 
-                )
-                3 = ::bundle::b.egg_array[3] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[3].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[3].yolk 
-                )
-                4 = ::bundle::b.egg_array[4] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[4].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[4].yolk 
-                )
-                5 = ::bundle::b.egg_array[5] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[5].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[5].yolk 
-                )
-                6 = ::bundle::b.egg_array[6] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[6].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[6].yolk 
-                )
-                7 = ::bundle::b.egg_array[7] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[7].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[7].yolk 
-                )
-                8 = ::bundle::b.egg_array[8] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[8].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[8].yolk 
-                )
-                9 = ::bundle::b.egg_array[9] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[9].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[9].yolk 
-                )
-                10 = ::bundle::b.egg_array[10] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[10].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[10].yolk 
-                )
-                11 = ::bundle::b.egg_array[11] (
-                  bool^0 white (instantiated) = ::bundle::b.egg_array[11].white 
-                  int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[11].yolk 
-                )
-              }
-          )
-          process basket<>^1 c with indices: {
+      footprint: {
+        process basket<>^0 a (instantiated) = ::bundle::a (
+          process egg<>^1 egg_array with indices: {
+            [0..11]
           }
             unrolled indices: {
-              0 = ::bundle::c[0] (
-                process egg<>^1 egg_array with indices: {
-                  [0..11]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[0].egg_array[0] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[0].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[0].yolk 
-                    )
-                    1 = ::bundle::c[0].egg_array[1] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[1].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[1].yolk 
-                    )
-                    2 = ::bundle::c[0].egg_array[2] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[2].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[2].yolk 
-                    )
-                    3 = ::bundle::c[0].egg_array[3] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[3].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[3].yolk 
-                    )
-                    4 = ::bundle::c[0].egg_array[4] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[4].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[4].yolk 
-                    )
-                    5 = ::bundle::c[0].egg_array[5] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[5].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[5].yolk 
-                    )
-                    6 = ::bundle::c[0].egg_array[6] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[6].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[6].yolk 
-                    )
-                    7 = ::bundle::c[0].egg_array[7] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[7].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[7].yolk 
-                    )
-                    8 = ::bundle::c[0].egg_array[8] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[8].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[8].yolk 
-                    )
-                    9 = ::bundle::c[0].egg_array[9] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[9].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[9].yolk 
-                    )
-                    10 = ::bundle::c[0].egg_array[10] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[10].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[10].yolk 
-                    )
-                    11 = ::bundle::c[0].egg_array[11] (
-                      bool^0 white (instantiated) = ::bundle::c[0].egg_array[11].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[11].yolk 
-                    )
-                  }
+              0 = ::bundle::a.egg_array[0] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[0].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[0].yolk 
               )
-              1 = ::bundle::c[1] (
-                process egg<>^1 egg_array with indices: {
-                  [0..11]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[1].egg_array[0] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[0].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[0].yolk 
-                    )
-                    1 = ::bundle::c[1].egg_array[1] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[1].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[1].yolk 
-                    )
-                    2 = ::bundle::c[1].egg_array[2] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[2].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[2].yolk 
-                    )
-                    3 = ::bundle::c[1].egg_array[3] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[3].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[3].yolk 
-                    )
-                    4 = ::bundle::c[1].egg_array[4] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[4].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[4].yolk 
-                    )
-                    5 = ::bundle::c[1].egg_array[5] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[5].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[5].yolk 
-                    )
-                    6 = ::bundle::c[1].egg_array[6] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[6].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[6].yolk 
-                    )
-                    7 = ::bundle::c[1].egg_array[7] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[7].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[7].yolk 
-                    )
-                    8 = ::bundle::c[1].egg_array[8] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[8].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[8].yolk 
-                    )
-                    9 = ::bundle::c[1].egg_array[9] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[9].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[9].yolk 
-                    )
-                    10 = ::bundle::c[1].egg_array[10] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[10].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[10].yolk 
-                    )
-                    11 = ::bundle::c[1].egg_array[11] (
-                      bool^0 white (instantiated) = ::bundle::c[1].egg_array[11].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[11].yolk 
-                    )
-                  }
+              1 = ::bundle::a.egg_array[1] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[1].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[1].yolk 
               )
-              2 = ::bundle::c[2] (
-                process egg<>^1 egg_array with indices: {
-                  [0..11]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[2].egg_array[0] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[0].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[0].yolk 
-                    )
-                    1 = ::bundle::c[2].egg_array[1] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[1].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[1].yolk 
-                    )
-                    2 = ::bundle::c[2].egg_array[2] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[2].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[2].yolk 
-                    )
-                    3 = ::bundle::c[2].egg_array[3] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[3].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[3].yolk 
-                    )
-                    4 = ::bundle::c[2].egg_array[4] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[4].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[4].yolk 
-                    )
-                    5 = ::bundle::c[2].egg_array[5] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[5].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[5].yolk 
-                    )
-                    6 = ::bundle::c[2].egg_array[6] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[6].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[6].yolk 
-                    )
-                    7 = ::bundle::c[2].egg_array[7] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[7].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[7].yolk 
-                    )
-                    8 = ::bundle::c[2].egg_array[8] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[8].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[8].yolk 
-                    )
-                    9 = ::bundle::c[2].egg_array[9] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[9].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[9].yolk 
-                    )
-                    10 = ::bundle::c[2].egg_array[10] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[10].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[10].yolk 
-                    )
-                    11 = ::bundle::c[2].egg_array[11] (
-                      bool^0 white (instantiated) = ::bundle::c[2].egg_array[11].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[11].yolk 
-                    )
-                  }
+              2 = ::bundle::a.egg_array[2] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[2].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[2].yolk 
               )
-              3 = ::bundle::c[3] (
-                process egg<>^1 egg_array with indices: {
-                  [0..11]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[3].egg_array[0] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[0].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[0].yolk 
-                    )
-                    1 = ::bundle::c[3].egg_array[1] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[1].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[1].yolk 
-                    )
-                    2 = ::bundle::c[3].egg_array[2] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[2].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[2].yolk 
-                    )
-                    3 = ::bundle::c[3].egg_array[3] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[3].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[3].yolk 
-                    )
-                    4 = ::bundle::c[3].egg_array[4] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[4].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[4].yolk 
-                    )
-                    5 = ::bundle::c[3].egg_array[5] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[5].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[5].yolk 
-                    )
-                    6 = ::bundle::c[3].egg_array[6] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[6].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[6].yolk 
-                    )
-                    7 = ::bundle::c[3].egg_array[7] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[7].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[7].yolk 
-                    )
-                    8 = ::bundle::c[3].egg_array[8] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[8].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[8].yolk 
-                    )
-                    9 = ::bundle::c[3].egg_array[9] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[9].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[9].yolk 
-                    )
-                    10 = ::bundle::c[3].egg_array[10] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[10].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[10].yolk 
-                    )
-                    11 = ::bundle::c[3].egg_array[11] (
-                      bool^0 white (instantiated) = ::bundle::c[3].egg_array[11].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[11].yolk 
-                    )
-                  }
+              3 = ::bundle::a.egg_array[3] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[3].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[3].yolk 
               )
-              4 = ::bundle::c[4] (
-                process egg<>^1 egg_array with indices: {
-                  [0..11]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[4].egg_array[0] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[0].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[0].yolk 
-                    )
-                    1 = ::bundle::c[4].egg_array[1] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[1].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[1].yolk 
-                    )
-                    2 = ::bundle::c[4].egg_array[2] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[2].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[2].yolk 
-                    )
-                    3 = ::bundle::c[4].egg_array[3] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[3].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[3].yolk 
-                    )
-                    4 = ::bundle::c[4].egg_array[4] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[4].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[4].yolk 
-                    )
-                    5 = ::bundle::c[4].egg_array[5] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[5].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[5].yolk 
-                    )
-                    6 = ::bundle::c[4].egg_array[6] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[6].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[6].yolk 
-                    )
-                    7 = ::bundle::c[4].egg_array[7] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[7].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[7].yolk 
-                    )
-                    8 = ::bundle::c[4].egg_array[8] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[8].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[8].yolk 
-                    )
-                    9 = ::bundle::c[4].egg_array[9] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[9].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[9].yolk 
-                    )
-                    10 = ::bundle::c[4].egg_array[10] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[10].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[10].yolk 
-                    )
-                    11 = ::bundle::c[4].egg_array[11] (
-                      bool^0 white (instantiated) = ::bundle::c[4].egg_array[11].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[11].yolk 
-                    )
-                  }
+              4 = ::bundle::a.egg_array[4] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[4].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[4].yolk 
               )
-              5 = ::bundle::c[5] (
-                process egg<>^1 egg_array with indices: {
-                  [0..11]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[5].egg_array[0] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[0].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[0].yolk 
-                    )
-                    1 = ::bundle::c[5].egg_array[1] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[1].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[1].yolk 
-                    )
-                    2 = ::bundle::c[5].egg_array[2] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[2].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[2].yolk 
-                    )
-                    3 = ::bundle::c[5].egg_array[3] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[3].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[3].yolk 
-                    )
-                    4 = ::bundle::c[5].egg_array[4] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[4].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[4].yolk 
-                    )
-                    5 = ::bundle::c[5].egg_array[5] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[5].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[5].yolk 
-                    )
-                    6 = ::bundle::c[5].egg_array[6] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[6].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[6].yolk 
-                    )
-                    7 = ::bundle::c[5].egg_array[7] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[7].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[7].yolk 
-                    )
-                    8 = ::bundle::c[5].egg_array[8] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[8].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[8].yolk 
-                    )
-                    9 = ::bundle::c[5].egg_array[9] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[9].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[9].yolk 
-                    )
-                    10 = ::bundle::c[5].egg_array[10] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[10].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[10].yolk 
-                    )
-                    11 = ::bundle::c[5].egg_array[11] (
-                      bool^0 white (instantiated) = ::bundle::c[5].egg_array[11].white 
-                      int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[11].yolk 
-                    )
-                  }
+              5 = ::bundle::a.egg_array[5] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[5].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[5].yolk 
+              )
+              6 = ::bundle::a.egg_array[6] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[6].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[6].yolk 
+              )
+              7 = ::bundle::a.egg_array[7] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[7].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[7].yolk 
+              )
+              8 = ::bundle::a.egg_array[8] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[8].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[8].yolk 
+              )
+              9 = ::bundle::a.egg_array[9] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[9].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[9].yolk 
+              )
+              10 = ::bundle::a.egg_array[10] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[10].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[10].yolk 
+              )
+              11 = ::bundle::a.egg_array[11] (
+                bool^0 white (instantiated) = ::bundle::a.egg_array[11].white 
+                int<32>^0 yolk (instantiated) = ::bundle::a.egg_array[11].yolk 
               )
             }
+        )
+        process basket<>^0 b (instantiated) = ::bundle::b (
+          process egg<>^1 egg_array with indices: {
+            [0..11]
+          }
+            unrolled indices: {
+              0 = ::bundle::b.egg_array[0] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[0].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[0].yolk 
+              )
+              1 = ::bundle::b.egg_array[1] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[1].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[1].yolk 
+              )
+              2 = ::bundle::b.egg_array[2] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[2].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[2].yolk 
+              )
+              3 = ::bundle::b.egg_array[3] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[3].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[3].yolk 
+              )
+              4 = ::bundle::b.egg_array[4] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[4].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[4].yolk 
+              )
+              5 = ::bundle::b.egg_array[5] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[5].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[5].yolk 
+              )
+              6 = ::bundle::b.egg_array[6] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[6].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[6].yolk 
+              )
+              7 = ::bundle::b.egg_array[7] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[7].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[7].yolk 
+              )
+              8 = ::bundle::b.egg_array[8] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[8].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[8].yolk 
+              )
+              9 = ::bundle::b.egg_array[9] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[9].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[9].yolk 
+              )
+              10 = ::bundle::b.egg_array[10] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[10].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[10].yolk 
+              )
+              11 = ::bundle::b.egg_array[11] (
+                bool^0 white (instantiated) = ::bundle::b.egg_array[11].white 
+                int<32>^0 yolk (instantiated) = ::bundle::b.egg_array[11].yolk 
+              )
+            }
+        )
+        process basket<>^1 c with indices: {
         }
+          unrolled indices: {
+            0 = ::bundle::c[0] (
+              process egg<>^1 egg_array with indices: {
+                [0..11]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[0].egg_array[0] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[0].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[0].yolk 
+                  )
+                  1 = ::bundle::c[0].egg_array[1] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[1].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[1].yolk 
+                  )
+                  2 = ::bundle::c[0].egg_array[2] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[2].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[2].yolk 
+                  )
+                  3 = ::bundle::c[0].egg_array[3] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[3].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[3].yolk 
+                  )
+                  4 = ::bundle::c[0].egg_array[4] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[4].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[4].yolk 
+                  )
+                  5 = ::bundle::c[0].egg_array[5] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[5].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[5].yolk 
+                  )
+                  6 = ::bundle::c[0].egg_array[6] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[6].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[6].yolk 
+                  )
+                  7 = ::bundle::c[0].egg_array[7] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[7].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[7].yolk 
+                  )
+                  8 = ::bundle::c[0].egg_array[8] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[8].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[8].yolk 
+                  )
+                  9 = ::bundle::c[0].egg_array[9] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[9].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[9].yolk 
+                  )
+                  10 = ::bundle::c[0].egg_array[10] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[10].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[10].yolk 
+                  )
+                  11 = ::bundle::c[0].egg_array[11] (
+                    bool^0 white (instantiated) = ::bundle::c[0].egg_array[11].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[11].yolk 
+                  )
+                }
+            )
+            1 = ::bundle::c[1] (
+              process egg<>^1 egg_array with indices: {
+                [0..11]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[1].egg_array[0] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[0].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[0].yolk 
+                  )
+                  1 = ::bundle::c[1].egg_array[1] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[1].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[1].yolk 
+                  )
+                  2 = ::bundle::c[1].egg_array[2] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[2].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[2].yolk 
+                  )
+                  3 = ::bundle::c[1].egg_array[3] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[3].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[3].yolk 
+                  )
+                  4 = ::bundle::c[1].egg_array[4] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[4].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[4].yolk 
+                  )
+                  5 = ::bundle::c[1].egg_array[5] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[5].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[5].yolk 
+                  )
+                  6 = ::bundle::c[1].egg_array[6] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[6].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[6].yolk 
+                  )
+                  7 = ::bundle::c[1].egg_array[7] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[7].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[7].yolk 
+                  )
+                  8 = ::bundle::c[1].egg_array[8] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[8].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[8].yolk 
+                  )
+                  9 = ::bundle::c[1].egg_array[9] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[9].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[9].yolk 
+                  )
+                  10 = ::bundle::c[1].egg_array[10] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[10].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[10].yolk 
+                  )
+                  11 = ::bundle::c[1].egg_array[11] (
+                    bool^0 white (instantiated) = ::bundle::c[1].egg_array[11].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[11].yolk 
+                  )
+                }
+            )
+            2 = ::bundle::c[2] (
+              process egg<>^1 egg_array with indices: {
+                [0..11]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[2].egg_array[0] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[0].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[0].yolk 
+                  )
+                  1 = ::bundle::c[2].egg_array[1] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[1].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[1].yolk 
+                  )
+                  2 = ::bundle::c[2].egg_array[2] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[2].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[2].yolk 
+                  )
+                  3 = ::bundle::c[2].egg_array[3] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[3].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[3].yolk 
+                  )
+                  4 = ::bundle::c[2].egg_array[4] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[4].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[4].yolk 
+                  )
+                  5 = ::bundle::c[2].egg_array[5] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[5].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[5].yolk 
+                  )
+                  6 = ::bundle::c[2].egg_array[6] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[6].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[6].yolk 
+                  )
+                  7 = ::bundle::c[2].egg_array[7] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[7].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[7].yolk 
+                  )
+                  8 = ::bundle::c[2].egg_array[8] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[8].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[8].yolk 
+                  )
+                  9 = ::bundle::c[2].egg_array[9] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[9].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[9].yolk 
+                  )
+                  10 = ::bundle::c[2].egg_array[10] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[10].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[10].yolk 
+                  )
+                  11 = ::bundle::c[2].egg_array[11] (
+                    bool^0 white (instantiated) = ::bundle::c[2].egg_array[11].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[2].egg_array[11].yolk 
+                  )
+                }
+            )
+            3 = ::bundle::c[3] (
+              process egg<>^1 egg_array with indices: {
+                [0..11]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[3].egg_array[0] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[0].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[0].yolk 
+                  )
+                  1 = ::bundle::c[3].egg_array[1] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[1].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[1].yolk 
+                  )
+                  2 = ::bundle::c[3].egg_array[2] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[2].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[2].yolk 
+                  )
+                  3 = ::bundle::c[3].egg_array[3] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[3].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[3].yolk 
+                  )
+                  4 = ::bundle::c[3].egg_array[4] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[4].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[4].yolk 
+                  )
+                  5 = ::bundle::c[3].egg_array[5] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[5].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[5].yolk 
+                  )
+                  6 = ::bundle::c[3].egg_array[6] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[6].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[6].yolk 
+                  )
+                  7 = ::bundle::c[3].egg_array[7] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[7].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[7].yolk 
+                  )
+                  8 = ::bundle::c[3].egg_array[8] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[8].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[8].yolk 
+                  )
+                  9 = ::bundle::c[3].egg_array[9] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[9].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[9].yolk 
+                  )
+                  10 = ::bundle::c[3].egg_array[10] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[10].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[10].yolk 
+                  )
+                  11 = ::bundle::c[3].egg_array[11] (
+                    bool^0 white (instantiated) = ::bundle::c[3].egg_array[11].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[3].egg_array[11].yolk 
+                  )
+                }
+            )
+            4 = ::bundle::c[4] (
+              process egg<>^1 egg_array with indices: {
+                [0..11]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[4].egg_array[0] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[0].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[0].yolk 
+                  )
+                  1 = ::bundle::c[4].egg_array[1] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[1].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[1].yolk 
+                  )
+                  2 = ::bundle::c[4].egg_array[2] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[2].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[2].yolk 
+                  )
+                  3 = ::bundle::c[4].egg_array[3] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[3].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[3].yolk 
+                  )
+                  4 = ::bundle::c[4].egg_array[4] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[4].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[4].yolk 
+                  )
+                  5 = ::bundle::c[4].egg_array[5] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[5].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[5].yolk 
+                  )
+                  6 = ::bundle::c[4].egg_array[6] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[6].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[6].yolk 
+                  )
+                  7 = ::bundle::c[4].egg_array[7] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[7].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[7].yolk 
+                  )
+                  8 = ::bundle::c[4].egg_array[8] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[8].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[8].yolk 
+                  )
+                  9 = ::bundle::c[4].egg_array[9] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[9].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[9].yolk 
+                  )
+                  10 = ::bundle::c[4].egg_array[10] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[10].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[10].yolk 
+                  )
+                  11 = ::bundle::c[4].egg_array[11] (
+                    bool^0 white (instantiated) = ::bundle::c[4].egg_array[11].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[4].egg_array[11].yolk 
+                  )
+                }
+            )
+            5 = ::bundle::c[5] (
+              process egg<>^1 egg_array with indices: {
+                [0..11]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[5].egg_array[0] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[0].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[0].yolk 
+                  )
+                  1 = ::bundle::c[5].egg_array[1] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[1].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[1].yolk 
+                  )
+                  2 = ::bundle::c[5].egg_array[2] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[2].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[2].yolk 
+                  )
+                  3 = ::bundle::c[5].egg_array[3] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[3].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[3].yolk 
+                  )
+                  4 = ::bundle::c[5].egg_array[4] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[4].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[4].yolk 
+                  )
+                  5 = ::bundle::c[5].egg_array[5] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[5].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[5].yolk 
+                  )
+                  6 = ::bundle::c[5].egg_array[6] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[6].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[6].yolk 
+                  )
+                  7 = ::bundle::c[5].egg_array[7] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[7].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[7].yolk 
+                  )
+                  8 = ::bundle::c[5].egg_array[8] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[8].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[8].yolk 
+                  )
+                  9 = ::bundle::c[5].egg_array[9] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[9].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[9].yolk 
+                  )
+                  10 = ::bundle::c[5].egg_array[10] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[10].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[10].yolk 
+                  )
+                  11 = ::bundle::c[5].egg_array[11] (
+                    bool^0 white (instantiated) = ::bundle::c[5].egg_array[11].white 
+                    int<32>^0 yolk (instantiated) = ::bundle::c[5].egg_array[11].yolk 
+                  )
+                }
+            )
+          }
+      }
       }
 
     egg = process-definition (defined) egg(
@@ -1146,12 +1148,13 @@ In namespace "", we have: {
         int<32> yolk
       )
       In definition "egg", we have: {
-        yolk = int<32> yolk
+      Instances:
         white = bool<> white
-        footprint: {
-          int<32>^0 yolk (instantiated) = ::egg::yolk 
-          bool^0 white (instantiated) = ::egg::white 
-        }
+        yolk = int<32> yolk
+      footprint: {
+        int<32>^0 yolk (instantiated) = ::egg::yolk 
+        bool^0 white (instantiated) = ::egg::white 
+      }
       }
 
   Instances:

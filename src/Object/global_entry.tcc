@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.2 2005/09/14 15:30:26 fang Exp $
+	$Id: global_entry.tcc,v 1.3 2005/10/08 01:39:54 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -14,8 +14,13 @@
 #define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
 #endif
 
+#include <string>
 #include <iostream>
+#include <algorithm>
+#include <functional>
+#include <iterator>
 #include "util/macros.h"
+#include "util/sstream.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/def/footprint.h"
@@ -23,8 +28,10 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.tcc"	// for dump_complete_type
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/port_alias_tracker.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
+#include "Object/common/alias_string_set.h"
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
@@ -39,6 +46,9 @@
 namespace ART {
 namespace entity {
 #include "util/using_ostream.h"
+using std::ostringstream;
+using std::transform;
+using std::back_inserter;
 using util::read_value;
 using util::write_value;
 
@@ -236,10 +246,32 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class production_rule_substructure method definitions
+
+/**
+	Only ever instantiated for processes.  
+	might need state_manager...
+ */
+template <class Tag>
+void
+production_rule_substructure::cflat_prs(ostream& o,
+		const global_entry<Tag>& _this, const footprint& topfp,
+		const cflat_options& cf, const state_manager& sm) {
+	// the footprint_frame will translate from local
+	// to global
+	const PRS::footprint&
+		pfp(_this._frame._footprint->get_prs_footprint());
+	const footprint_frame_map<bool_tag>& bfm(_this._frame);
+	pfp.cflat_prs(o, bfm, topfp, cf, sm);
+}
+
+//=============================================================================
 // class global_entry method definitions
 
 template <class Tag>
-global_entry<Tag>::global_entry() : parent_type(), global_entry_common() { }
+global_entry<Tag>::global_entry() : parent_type(), prs_parent_type(),
+		global_entry_common() {
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -251,31 +283,102 @@ global_entry<Tag>::~global_entry() { }
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::dump_canonical_name(ostream& o, const dump_flags& df, 
-		const size_t ind, const footprint& topfp,
-		const state_manager& sm) const {
+global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df, 
+		const footprint& topfp, const state_manager& sm) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	// dump canonical name
 	const state_instance<Tag>* _inst;
 	if (parent_tag_value) {
 		INVARIANT(parent_tag_value == PROCESS);
-		INVARIANT(ind >= _pool.size());
 		const global_entry<process_tag>&
 			p_ent(extract_parent_entry<process_tag>(sm, *this));
-		p_ent.dump_canonical_name(o, df, parent_id, topfp, sm) << '.';
+		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
 		// partial, omit formal type parent
 		const pool_type&
 			_lpool(p_ent._frame._footprint
 				->template get_pool<Tag>());
 		_inst = &_lpool[local_offset];
 	} else {
-		INVARIANT(ind < _pool.size());
-		_inst = &_pool[ind];
+		_inst = &_pool[local_offset];
 	}
 	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
-	_alias.dump_hierarchical_name(o, df);
-	return o;
+	return _alias.dump_hierarchical_name(o, df);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Could derive from unary_function...
+ */
+template <class Tag>
+struct global_entry<Tag>::alias_to_string_transformer : 
+	public std::unary_function<
+		never_ptr<const instance_alias_info<Tag> >,
+		string> {
+	typedef	std::unary_function<
+		never_ptr<const instance_alias_info<Tag> >, string>
+				parent_type;
+	typename parent_type::result_type
+	operator () (const typename parent_type::argument_type a) const {
+		INVARIANT(a);
+		ostringstream o;
+		a->dump_hierarchical_name(o, dump_flags::no_owner);
+		return o.str();
+	}
+};	// end struct alias_to_string_transformer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Accumulates aliases at each level of the instance hierarchy
+	in the alias_string_set for alias generation.  
+ */
+template <class Tag>
+void
+global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
+		const footprint& topfp, const state_manager& sm) const {
+	const port_alias_tracker* _alias_tracker;
+	if (parent_tag_value) {
+		INVARIANT(parent_tag_value == PROCESS);
+		const global_entry<process_tag>&
+			p_ent(extract_parent_entry<process_tag>(sm, *this));
+		// recurse: outermost levels of hierarchy first
+		p_ent.collect_hierarchical_aliases(al, topfp, sm);
+		_alias_tracker = &p_ent._frame._footprint
+				->get_scope_alias_tracker();
+	} else {
+		_alias_tracker = &topfp.get_scope_alias_tracker();
+	}
+	typedef	typename port_alias_tracker::tracker_map_type<Tag>::type
+						tracker_map_type;
+	typedef	typename tracker_map_type::const_iterator
+						const_map_iterator;
+	const tracker_map_type&	// a map<size_t, alias_reference_set<Tag> >
+		tm(_alias_tracker->template get_id_map<Tag>());
+	const const_map_iterator a(tm.find(local_offset));
+	al.push_back();		// empty entry, new list
+	/***
+		Since we keep track of singletons in the scope_alias_tracker, 
+		all lookups should be valid.  
+	***/
+	INVARIANT(a != tm.end());
+	// a->second is an alias_reference_set
+	transform(a->second.begin(), a->second.end(),
+		back_inserter(al.back()), 
+		alias_to_string_transformer()
+	);
+		// transform, back_inserter... aliases to strings
+}	// end method collect_hierarchical_aliases
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped call that formats properly.  
+ */
+template <class Tag>
+ostream&
+global_entry<Tag>::dump_canonical_name(ostream& o, // const size_t ind,
+		const footprint& topfp, const state_manager& sm) const {
+	return __dump_canonical_name(o, dump_flags::no_owner,
+		topfp, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -304,12 +407,31 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 		THROW_EXIT;
 	}
 	o << local_offset << '\t';
-	{
-	dump_flags df;
-	df.show_definition_owner = false;
-	dump_canonical_name(o, df, ind, topfp, sm) << '\t';
-	}
+	dump_canonical_name(o, topfp, sm) << '\t';
 	return parent_type::template dump<Tag>(o, ind, topfp, sm);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print out all equivalent aliases in the hierarchy.  
+	TODO: cache the results of visiting the hierarchy to avoid
+		repetitious string evaluation.  
+		Perhaps cache in parallel structure in footprint?
+		Shadowing the scope_alias_tracker.  
+ */
+template <class Tag>
+ostream&
+global_entry<Tag>::cflat_connect(ostream& o, const cflat_options& cf,
+		const footprint& topfp, const state_manager& sm) const {
+	ostringstream canonical;
+	dump_canonical_name(canonical, topfp, sm);
+	// collect all aliases at all levels of hierarchy...
+	alias_string_set _aliases;
+	collect_hierarchical_aliases(_aliases, topfp, sm);
+	// compact representation for debugging
+	// _aliases.dump(o) << endl;	
+	_aliases.dump_aliases(o, canonical.str(), cf);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

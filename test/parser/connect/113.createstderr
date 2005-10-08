@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	124
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	189
 	7	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -48,21 +48,22 @@ In namespace "", we have: {
 
       )
       In definition "wrap", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..1]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::wrap::a[0] (1) 
-              1 = ::wrap::a[1] (2) 
-            }
-          bool instance pool:
-          1	::wrap::a[0]
-          2	::wrap::a[1]
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::wrap::a[0] (1) 
+            1 = ::wrap::a[1] (2) 
+          }
+        bool instance pool:
+        1	::wrap::a[0]
+        2	::wrap::a[1]
+      }
       }
 
   Instances:
@@ -90,5 +91,5 @@ Created state:
 process instance pool:
 1	::j
 bool instance pool:
-1	::k.a[0]
+1	::j.a[0]
 

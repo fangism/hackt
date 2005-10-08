@@ -25,6 +25,7 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         bar = pint<> bar with indices: {
           [0..4]
         }

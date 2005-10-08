@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	248
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -55,18 +55,19 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pint<> A
         B = pint<> B
-        footprint collection: {
-          <1, 1> {
-            pint^0 A value: ?
-            pint^0 B value: ?
-          }
-          <1, 2> {
-            pint^0 A value: ?
-            pint^0 B value: ?
-          }
+      footprint collection: {
+        <1, 1> {
+          pint^0 A value: ?
+          pint^0 B value: ?
         }
+        <1, 2> {
+          pint^0 A value: ?
+          pint^0 B value: ?
+        }
+      }
       }
 
   Instances:
@@ -77,6 +78,6 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::bar<1>
+1	::ick<1>
 2	::poo<2>
 

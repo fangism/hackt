@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	154
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
 	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	28
@@ -53,7 +53,7 @@ Persistent Object Manager text dump:
 	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	52	##ADDR##	procdefn	0	#HEAD#	#TAIL#	188
 	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -100,15 +100,16 @@ In namespace "", we have: {
         foo<2> b
       )
       In definition "bar", we have: {
+      Instances:
         a = foo<1> a
         b = foo<2> b
-        footprint: {
-          process foo<1>^0 a (instantiated) = ::bar::a (1) 
-          process foo<2>^0 b (instantiated) = ::bar::b (2) 
-          process instance pool:
-          1	::bar::a
-          2	::bar::b
-        }
+      footprint: {
+        process foo<1>^0 a (instantiated) = ::bar::a (1) 
+        process foo<2>^0 b (instantiated) = ::bar::b (2) 
+        process instance pool:
+        1	::bar::a
+        2	::bar::b
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -116,15 +117,16 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         A = pint<> A
-        footprint collection: {
-          <1> {
-            pint^0 A value: ?
-          }
-          <2> {
-            pint^0 A value: ?
-          }
+      footprint collection: {
+        <1> {
+          pint^0 A value: ?
         }
+        <2> {
+          pint^0 A value: ?
+        }
+      }
       }
 
   Instances:
@@ -140,6 +142,6 @@ In namespace "", we have: {
 Created state:
 process instance pool:
 1	::w
-2	::w.a
-3	::w.b
+2	::p
+3	::q
 

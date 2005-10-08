@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	175
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	208
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -38,7 +38,7 @@ Persistent Object Manager text dump:
 	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	35	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	36	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
-	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
+	37	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
 	38	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	39	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -94,42 +94,44 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Parameters:
         M = pint<> M
         N = pint<> N
+      Instances:
         x = foo<pint-inst-ref ::bar::M, pint-inst-ref ::foo::D+1> x with indices: {
           [0..::bar::N-1]
         }
 
-        footprint collection: {
-          <3, 2> {
-            pint^0 M value: ?
-            pint^0 N value: ?
-            process foo<3, 4>^1 x with indices: {
-            }
-              unrolled indices: {
-                0 = ::bar::x[0] (
-                  bool^1 a with indices: {
-                    [0..::foo::D-1]
-                  }
-                    unrolled indices: {
-                      0 = ::bar::x[0].a[0] 
-                      1 = ::bar::x[0].a[1] 
-                      2 = ::bar::x[0].a[2] 
-                    }
-                )
-                1 = ::bar::x[1] (
-                  bool^1 a with indices: {
-                    [0..::foo::D-1]
-                  }
-                    unrolled indices: {
-                      0 = ::bar::x[1].a[0] 
-                      1 = ::bar::x[1].a[1] 
-                      2 = ::bar::x[1].a[2] 
-                    }
-                )
-              }
+      footprint collection: {
+        <3, 2> {
+          pint^0 M value: ?
+          pint^0 N value: ?
+          process foo<3, 4>^1 x with indices: {
           }
+            unrolled indices: {
+              0 = ::bar::x[0] (
+                bool^1 a with indices: {
+                  [0..::foo::D-1]
+                }
+                  unrolled indices: {
+                    0 = ::bar::x[0].a[0] 
+                    1 = ::bar::x[0].a[1] 
+                    2 = ::bar::x[0].a[2] 
+                  }
+              )
+              1 = ::bar::x[1] (
+                bool^1 a with indices: {
+                  [0..::foo::D-1]
+                }
+                  unrolled indices: {
+                    0 = ::bar::x[1].a[0] 
+                    1 = ::bar::x[1].a[1] 
+                    2 = ::bar::x[1].a[2] 
+                  }
+              )
+            }
         }
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -142,25 +144,27 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Parameters:
         D = pint<> D
         E = pint<> E (default = pint-inst-ref ::foo::D+1)
+      Instances:
         a = bool<> a with indices: {
           [0..::foo::D-1]
         }
 
-        footprint collection: {
-          <3, 4> {
-            pint^0 D value: ?
-            pint^0 E value: ?
-            bool^1 a with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] 
-                1 = ::foo::a[2] 
-                2 = ::foo::a[1] 
-              }
+      footprint collection: {
+        <3, 4> {
+          pint^0 D value: ?
+          pint^0 E value: ?
+          bool^1 a with indices: {
           }
+            unrolled indices: {
+              0 = ::foo::a[0] 
+              1 = ::foo::a[2] 
+              2 = ::foo::a[1] 
+            }
         }
+      }
       }
 
   Instances:

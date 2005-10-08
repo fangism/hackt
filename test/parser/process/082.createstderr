@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	151
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	227
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	380
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -82,39 +82,40 @@ In namespace "", we have: {
         foo<> z
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
         z = foo<> z
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::x (1) (
-            bool^0 a (instantiated) = ::bar::z.c (1) 
-            bool^0 b (instantiated) = ::bar::x.b (2) 
-            bool^0 c (instantiated) = ::bar::z.a (1) 
-          )
-          process foo<>^0 y (instantiated) = ::bar::y (2) (
-            bool^0 a (instantiated) = ::bar::y.a (3) 
-            bool^0 b (instantiated) = ::bar::y.b (4) 
-            bool^0 c (instantiated) = ::bar::y.c (5) 
-          )
-          process foo<>^0 z (instantiated) = ::bar::z (3) (
-            bool^0 a (instantiated) = ::bar::x.a (1) 
-            bool^0 b (instantiated) = ::bar::z.b (6) 
-            bool^0 c (instantiated) = ::bar::x.c (1) 
-          )
-          process instance pool:
-          1	::bar::x
-          2	::bar::y
-          3	::bar::z
-          bool instance pool:
-          1	::bar::x.a
-          2	::bar::x.b
-          3	::bar::y.a
-          4	::bar::y.b
-          5	::bar::y.c
-          6	::bar::z.b
-          bool port aliases:
-          1: ::bar::x.a = ::bar::x.c = ::bar::z.a = ::bar::z.c
-        }
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::x (1) (
+          bool^0 a (instantiated) = ::bar::z.c (1) 
+          bool^0 b (instantiated) = ::bar::x.b (2) 
+          bool^0 c (instantiated) = ::bar::z.a (1) 
+        )
+        process foo<>^0 y (instantiated) = ::bar::y (2) (
+          bool^0 a (instantiated) = ::bar::y.a (3) 
+          bool^0 b (instantiated) = ::bar::y.b (4) 
+          bool^0 c (instantiated) = ::bar::y.c (5) 
+        )
+        process foo<>^0 z (instantiated) = ::bar::z (3) (
+          bool^0 a (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::z.b (6) 
+          bool^0 c (instantiated) = ::bar::x.c (1) 
+        )
+        process instance pool:
+        1	::bar::x
+        2	::bar::y
+        3	::bar::z
+        bool instance pool:
+        1	::bar::x.a
+        2	::bar::x.b
+        3	::bar::y.a
+        4	::bar::y.b
+        5	::bar::y.c
+        6	::bar::z.b
+        bool port aliases:
+        1: ::bar::x.a = ::bar::x.c = ::bar::z.a = ::bar::z.c
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -123,18 +124,19 @@ In namespace "", we have: {
         bool<> c
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         c = bool<> c
-        footprint: {
-          bool^0 a (instantiated) = ::foo::a (1) 
-          bool^0 b (instantiated) = ::foo::b (2) 
-          bool^0 c (instantiated) = ::foo::c (3) 
-          bool instance pool:
-          1	::foo::a
-          2	::foo::b
-          3	::foo::c
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (2) 
+        bool^0 c (instantiated) = ::foo::c (3) 
+        bool instance pool:
+        1	::foo::a
+        2	::foo::b
+        3	::foo::c
+      }
       }
 
   Instances:

@@ -4,11 +4,11 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	151
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
 	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	115
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	148
 	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
@@ -40,19 +40,20 @@ In namespace "", we have: {
         ick<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = ick<> a
         b = ick<> b
-        footprint: {
-          process ick<>^0 a (instantiated) = ::foo::b 
-          process ick<>^0 b (instantiated) = ::foo::a 
-        }
+      footprint: {
+        process ick<>^0 a (instantiated) = ::foo::b 
+        process ick<>^0 b (instantiated) = ::foo::a 
+      }
       }
 
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:

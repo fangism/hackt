@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.5 2005/09/14 15:30:32 fang Exp $
+	$Id: substructure_alias_base.h,v 1.6 2005/10/08 01:39:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -101,6 +101,9 @@ virtual	never_ptr<const physical_instance_collection>
 // want to be pure virtual, but cannot be, :S
 virtual	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
+
+virtual	size_t
+	hierarchical_depth(void) const;
 
 virtual	size_t
 	allocate_state(footprint&) const;

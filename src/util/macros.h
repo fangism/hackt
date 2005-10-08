@@ -6,7 +6,7 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.7 2005/09/04 21:15:07 fang Exp $
+	$Id: macros.h,v 1.8 2005/10/08 01:40:03 fang Exp $
  */
 
 #ifndef	__UTIL_MACROS_H__
@@ -17,8 +17,10 @@
 #endif
 
 #if defined(HAVE_CASSERT) && HAVE_CASSERT
+// C++ wrapped header
 #include <cassert>
 #else
+// standard C header
 #include <assert.h>
 #endif
 
@@ -61,6 +63,7 @@
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Abbreviation for static_cast.  
+	type argument must be pointer or reference, of course.  
  */
 #define	AS_A(type, id)		static_cast<type>(id)
 
@@ -95,6 +98,18 @@
 #else
 #define	NEVER_NULL(x)		assert(x)
 #define	MUST_BE_NULL(x)		assert(!(x))
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#ifdef	DISABLE_BOUNDS_CHECK
+/**
+	Assertion macro specifically for bounds-checking.  
+	Can be disabled by predefining BOUNDS_CHECK or
+	defining DISABLE_BOUNDS_CHECK.
+ */
+#define	BOUNDS_CHECK(x)
+#elif	!defined(BOUNDS_CHECK)
+#define	BOUNDS_CHECK(x)		assert(x)
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

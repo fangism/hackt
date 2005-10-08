@@ -43,6 +43,7 @@ In namespace "", we have: {
             bool<> c
           )
           In definition "foo", we have: {
+          Instances:
             a = bool<> a
             b = bool<> b
             c = bool<> c

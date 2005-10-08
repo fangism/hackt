@@ -1,0 +1,11 @@
+"test/TODO"
+
+Detect presence of certain old cast-based tools? like prsim?
+	Would be nice to conditionally run them as regression tests.  
+	To be done with autoconf.  
+	list: prsim, ...
+
+Trivial:
+rename object files, eliminate 'art' from names
+	also in Makefiles, purge ART from names.
+

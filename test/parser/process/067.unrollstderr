@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	135
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
 	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -18,7 +18,7 @@ Persistent Object Manager text dump:
 	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	151
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
 	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -57,28 +57,29 @@ In namespace "", we have: {
         foo<> y
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x
         y = foo<> y
-        footprint: {
-          process foo<>^0 x (instantiated) = ::bar::y (
-            bool^1 a with indices: {
-              [0..1]
+      footprint: {
+        process foo<>^0 x (instantiated) = ::bar::y (
+          bool^1 a with indices: {
+            [0..1]
+          }
+            unrolled indices: {
+              0 = ::bar::x.a[0] 
+              1 = ::bar::x.a[1] 
             }
-              unrolled indices: {
-                0 = ::bar::x.a[0] 
-                1 = ::bar::x.a[1] 
-              }
-          )
-          process foo<>^0 y (instantiated) = ::bar::x (
-            bool^1 a with indices: {
-              [0..1]
+        )
+        process foo<>^0 y (instantiated) = ::bar::x (
+          bool^1 a with indices: {
+            [0..1]
+          }
+            unrolled indices: {
+              0 = ::bar::y.a[0] 
+              1 = ::bar::y.a[1] 
             }
-              unrolled indices: {
-                0 = ::bar::y.a[0] 
-                1 = ::bar::y.a[1] 
-              }
-          )
-        }
+        )
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -88,18 +89,19 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..1]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::a[1] 
-              1 = ::foo::a[0] 
-            }
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::a[1] 
+            1 = ::foo::a[0] 
+          }
+      }
       }
 
   Instances:

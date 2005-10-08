@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.2 2005/09/14 15:30:25 fang Exp $
+	$Id: global_entry.h,v 1.3 2005/10/08 01:39:53 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -12,17 +12,29 @@
 // #include <valarray>		// may be more efficient
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "util/macros.h"
 
 namespace ART {
+class cflat_options;
+
 namespace entity {
 using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
 
+struct bool_tag;
 struct dump_flags;
+class alias_string_set;
 class footprint;
 class state_manager;
 class port_member_context;
+
+template <class Tag>
+struct  global_entry;
+
+template <class Tag>
+class global_entry_pool;
+
 typedef	std::vector<size_t>		footprint_frame_map_type;
 
 //=============================================================================
@@ -33,6 +45,9 @@ typedef	std::vector<size_t>		footprint_frame_map_type;
  */
 template <class Tag>
 struct footprint_frame_map {
+	/**
+		0-indexed translation table from local to global ID.  
+	 */
 	footprint_frame_map_type			id_map;
 	footprint_frame_map();
 
@@ -40,6 +55,18 @@ struct footprint_frame_map {
 	footprint_frame_map(const footprint&);
 
 	~footprint_frame_map();
+
+	footprint_frame_map_type::reference
+	operator [] (const size_t i) {
+		BOUNDS_CHECK(i < id_map.size());
+		return id_map[i];
+	}
+
+	footprint_frame_map_type::const_reference
+	operator [] (const size_t i) const {
+		BOUNDS_CHECK(i < id_map.size());
+		return id_map[i];
+	}
 
 protected:
 	void
@@ -232,14 +259,55 @@ struct global_entry_common {
 
 //=============================================================================
 /**
+	Substructure of processes, which may contain production rules.  
+	Need to keep hierarchical substructure to propagate up.  
+	TODO: for simulation state allocation, allocate expression
+		tree structures with back-links for up propagation.  
+ */
+class production_rule_substructure {
+public:
+	// need a pool for rules
+	// and a pool for sub-expressions, just like PRS::footprint
+	template <class Tag>
+	static
+	void
+	cflat_prs(ostream&, const global_entry<Tag>&, const footprint&,
+		const cflat_options&, const state_manager&);
+
+};	// end class production_rule_substructure
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <bool>
+struct production_rule_parent_policy {
+	/**
+		Dummy type, used as an empty base class for meta-types
+		without production rule members.  
+	 */
+	struct type {
+	};
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct production_rule_parent_policy<true> {
+	typedef	production_rule_substructure		type;
+};
+
+//=============================================================================
+/**
 	Globally allocated entry for unique instance.  
  */
 template <class Tag>
 struct global_entry :
 	public global_entry_base<class_traits<Tag>::has_substructure>, 
+	public production_rule_parent_policy<
+		class_traits<Tag>::has_production_rules>::type, 
 	public global_entry_common {
 	typedef	global_entry_base<class_traits<Tag>::has_substructure>
 						parent_type;
+	typedef	typename production_rule_parent_policy<
+		class_traits<Tag>::has_production_rules>::type
+						prs_parent_type;
 public:
 	global_entry();
 	~global_entry();
@@ -249,8 +317,20 @@ public:
 		const state_manager&) const;
 
 	ostream&
-	dump_canonical_name(ostream&, const dump_flags&,
-		const size_t, const footprint&, const state_manager&) const;
+	cflat_connect(ostream&, const cflat_options&, 
+		const footprint&, const state_manager&) const;
+
+	ostream&
+	dump_canonical_name(ostream&,
+		const footprint&, const state_manager&) const;
+
+	ostream&
+	__dump_canonical_name(ostream&, const dump_flags&,
+		const footprint&, const state_manager&) const;
+
+	void
+	collect_hierarchical_aliases(alias_string_set&, 
+		const footprint&, const state_manager&) const;
 
 	using parent_type::collect_transient_info_base;
 
@@ -261,6 +341,9 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const size_t, const footprint&, const state_manager&);
+
+private:
+	struct alias_to_string_transformer;
 
 };	// end struct global_entry
 

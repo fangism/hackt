@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.8 2005/09/14 15:30:19 fang Exp $
+#	$Id: configure.ac,v 1.9 2005/10/08 01:39:48 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20050914, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051007, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -234,7 +234,12 @@ else
 	AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
 
-
+# checking for old CAST tools for regression and backwards compatibility tests
+# no big deal if they don't exist...
+# NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
+#	just use @VAR_TRUE@ instead of the if ... version in automake
+AC_CHECK_PROG([PRSIM], prsim, prsim)
+AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
 
 # shamelessly copied autoconf snippet from ngspige's configure.in
 dnl	Option to include GNU readline support in ngspice CLI
@@ -283,14 +288,7 @@ AC_CONFIG_FILES([
 	scripts/Makefile
 	src/Makefile
 	src/util/test/Makefile
-	src/util/test/test-expect.sh
 	test/Makefile
-	test/artc-expect.sh
-	test/artobj-diff.sh
-	test/artobjunroll-expect.sh
-	test/hackt-create-expect.sh
-	test/hackt-alloc-expect.sh
-	test/test-series.sh
 	test/lexer/Makefile
 	test/parser/Makefile
 	test/parser/basic/Makefile
@@ -314,18 +312,23 @@ AC_CONFIG_FILES([
 	dox/man/Makefile
 	dox/tutorial/Makefile
 	hackt.doxygen.config
-	])
+])
+AC_CONFIG_FILES([src/util/test/test-expect.sh],
+	[chmod +x src/util/test/test-expect.sh])
+AC_CONFIG_FILES([test/artc-expect.sh],
+	[chmod +x test/artc-expect.sh])
+AC_CONFIG_FILES([test/artobj-diff.sh],
+	[chmod +x test/artobj-diff.sh])
+AC_CONFIG_FILES([test/artobjunroll-expect.sh],
+	[chmod +x test/artobjunroll-expect.sh])
+AC_CONFIG_FILES([test/hackt-create-expect.sh],
+	[chmod +x test/hackt-create-expect.sh])
+AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
+	[chmod +x test/hackt-alloc-expect.sh])
+AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
+	[chmod +x test/hackt-cflat-expect.sh])
+AC_CONFIG_FILES([test/test-series.sh],
+	[chmod +x test/test-series.sh])
 
 AC_OUTPUT
-
-# make configure-generated scripts executable
-# NOTE: auto-reconf will not re-execute these commands, so you may
-# have to re-run configure -C to rexecute these to make the scripts executable.
-chmod +x src/util/test/test-expect.sh
-chmod +x test/test-series.sh
-chmod +x test/artc-expect.sh
-chmod +x test/artobj-diff.sh
-chmod +x test/artobjunroll-expect.sh
-chmod +x test/hackt-create-expect.sh
-chmod +x test/hackt-alloc-expect.sh
 

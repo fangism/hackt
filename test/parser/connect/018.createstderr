@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	725
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	138
@@ -39,8 +39,8 @@ In namespace "", we have: {
     barf = process-definition (defined) barf(
       )
       In definition "barf", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:
@@ -86,9 +86,9 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::bag[2]
-2	::bag[3]
-3	::bag[4]
+1	::sack[1][0]
+2	::sack[2][0]
+3	::sack[3][0]
 4	::sack[0][0]
 5	::sack[0][1]
 6	::sack[0][2]

@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	202
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	300
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
@@ -58,25 +58,27 @@ In namespace "", we have: {
         int<pint-inst-ref ::foo::N> a
       )
       In definition "foo", we have: {
+      Parameters:
         N = pint<> N
+      Instances:
         a = int<pint-inst-ref ::foo::N> a
         b = int<pint-inst-ref ::foo::N> b
-        footprint collection: {
-          <8> {
-            pint^0 N value: ?
-            int<8>^0 a (instantiated) = ::foo::b (1) 
-            int<8>^0 b (instantiated) = ::foo::a (1) 
-            int instance pool:
-            1	::foo::a
-          }
-          <16> {
-            pint^0 N value: ?
-            int<16>^0 a (instantiated) = ::foo::b (1) 
-            int<16>^0 b (instantiated) = ::foo::a (1) 
-            int instance pool:
-            1	::foo::a
-          }
+      footprint collection: {
+        <8> {
+          pint^0 N value: ?
+          int<8>^0 a (instantiated) = ::foo::b (1) 
+          int<8>^0 b (instantiated) = ::foo::a (1) 
+          int instance pool:
+          1	::foo::a
         }
+        <16> {
+          pint^0 N value: ?
+          int<16>^0 a (instantiated) = ::foo::b (1) 
+          int<16>^0 b (instantiated) = ::foo::a (1) 
+          int instance pool:
+          1	::foo::a
+        }
+      }
       }
 
   Instances:

@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	163
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	228
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -53,27 +53,29 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Parameters:
         M = pint<> M
         N = pint<> N
+      Instances:
         x = int<pint-inst-ref ::bar::M> x with indices: {
           [0..::bar::N-1]
         }
 
-        footprint collection: {
-          <3, 2> {
-            pint^0 M value: ?
-            pint^0 N value: ?
-            int<3>^1 x with indices: {
-            }
-              unrolled indices: {
-                0 = ::bar::x[0] (1) 
-                1 = ::bar::x[1] (2) 
-              }
-            int instance pool:
-            1	::bar::x[0]
-            2	::bar::x[1]
+      footprint collection: {
+        <3, 2> {
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<3>^1 x with indices: {
           }
+            unrolled indices: {
+              0 = ::bar::x[0] (1) 
+              1 = ::bar::x[1] (2) 
+            }
+          int instance pool:
+          1	::bar::x[0]
+          2	::bar::x[1]
         }
+      }
       }
 
   Instances:

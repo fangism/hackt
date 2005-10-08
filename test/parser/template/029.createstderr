@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	248
 	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -46,18 +46,19 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         X = pint<> X
         Y = pint<> Y (default = pint-inst-ref ::foo::X)
-        footprint collection: {
-          <12, 12> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-          }
-          <12, 34> {
-            pint^0 X value: ?
-            pint^0 Y value: ?
-          }
+      footprint collection: {
+        <12, 12> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
         }
+        <12, 34> {
+          pint^0 X value: ?
+          pint^0 Y value: ?
+        }
+      }
       }
 
   Instances:

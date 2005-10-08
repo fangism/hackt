@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.4 2005/09/14 15:30:27 fang Exp $
+	$Id: state_manager.cc,v 1.5 2005/10/08 01:39:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
+#include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
 #include "util/IO_utils.h"
@@ -46,15 +47,34 @@ global_entry_pool<Tag>::~global_entry_pool() { }
  */
 template <class Tag>
 ostream&
-global_entry_pool<Tag>::dump(ostream& o, const footprint& topfp, 
-		const state_manager& sm) const {
+global_entry_pool<Tag>::dump(ostream& o, const footprint& topfp) const {
 if (this->size() > 1) {
+	const state_manager& sm(AS_A(const state_manager&, *this));
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
 	size_t j = 1;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++, j++) {
 		i->dump(o, j, topfp, sm) << endl;
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints all aliases with their canonical names.  
+ */
+template <class Tag>
+ostream&
+global_entry_pool<Tag>::cflat_connect(ostream& o,
+		const footprint& topfp, const cflat_options& cf) const {
+if (this->size() > 1) {
+	const state_manager& sm(AS_A(const state_manager&, *this));
+	const_iterator i(++this->begin());
+	const const_iterator e(this->end());
+	for ( ; i!=e; i++) {
+		i->cflat_connect(o, cf, topfp, sm);
 	}
 }
 	return o;
@@ -146,13 +166,40 @@ state_manager::~state_manager() { }
 ostream&
 state_manager::dump(ostream& o, const footprint& topfp) const {
 	o << "globID\tsuper\t\tlocalID\tcanonical\tfootprint-frame" << endl;
-	global_entry_pool<process_tag>::dump(o, topfp, *this);
-	global_entry_pool<channel_tag>::dump(o, topfp, *this);
-	global_entry_pool<datastruct_tag>::dump(o, topfp, *this);
-	global_entry_pool<enum_tag>::dump(o, topfp, *this);
-	global_entry_pool<int_tag>::dump(o, topfp, *this);
-	global_entry_pool<bool_tag>::dump(o, topfp, *this);
+	global_entry_pool<process_tag>::dump(o, topfp);
+	global_entry_pool<channel_tag>::dump(o, topfp);
+	global_entry_pool<datastruct_tag>::dump(o, topfp);
+	global_entry_pool<enum_tag>::dump(o, topfp);
+	global_entry_pool<int_tag>::dump(o, topfp);
+	global_entry_pool<bool_tag>::dump(o, topfp);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prototype cflat -- strictly for backwards compatibility.  
+	Connections should come after production rules.  (CAST tools)
+	Check of ordering mattes for various tools.
+ */
+good_bool
+state_manager::cflat(ostream& o, const footprint& topfp,
+		const cflat_options& cf) const {
+	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
+if (cf.include_prs) {
+	// dump prs
+	// for each process entry
+	size_t pid = 1;		// 0-indexed, but 0th entry is null
+	const global_entry_pool<process_tag>& proc_entry_pool(*this);
+	const size_t plim = proc_entry_pool.size();
+	for ( ; pid < plim; pid++) {
+		production_rule_substructure::cflat_prs(o, 
+			proc_entry_pool[pid], topfp, cf, *this);
+	}
+}
+	// dump connections
+	bool_entry_pool.cflat_connect(o, topfp, cf);
+	// check options for non-bools
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

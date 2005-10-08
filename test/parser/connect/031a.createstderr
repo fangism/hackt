@@ -15,15 +15,15 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	174
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	351
 	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	37
 	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	223
 	19	##ADDR##	proccoll	1	#HEAD#	#TAIL#	45
 	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	111
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
 	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
 	24	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
@@ -88,28 +88,29 @@ In namespace "", we have: {
 
       )
       In definition "basket", we have: {
+      Instances:
         egg_array = egg<> egg_array with indices: {
           [0..1]
         }
 
-        footprint: {
-          process egg<>^1 egg_array with indices: {
-          }
-            unrolled indices: {
-              0 = ::basket::egg_array[0] (1) (
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[0].yolk (1) 
-              )
-              1 = ::basket::egg_array[1] (2) (
-                int<32>^0 yolk (instantiated) = ::basket::egg_array[1].yolk (2) 
-              )
-            }
-          process instance pool:
-          1	::basket::egg_array[0]
-          2	::basket::egg_array[1]
-          int instance pool:
-          1	::basket::egg_array[0].yolk
-          2	::basket::egg_array[1].yolk
+      footprint: {
+        process egg<>^1 egg_array with indices: {
         }
+          unrolled indices: {
+            0 = ::basket::egg_array[0] (1) (
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[0].yolk (1) 
+            )
+            1 = ::basket::egg_array[1] (2) (
+              int<32>^0 yolk (instantiated) = ::basket::egg_array[1].yolk (2) 
+            )
+          }
+        process instance pool:
+        1	::basket::egg_array[0]
+        2	::basket::egg_array[1]
+        int instance pool:
+        1	::basket::egg_array[0].yolk
+        2	::basket::egg_array[1].yolk
+      }
       }
 
     bundle = process-definition (defined) bundle(
@@ -119,66 +120,68 @@ In namespace "", we have: {
 
       )
       In definition "bundle", we have: {
+      Instances:
         c = basket<> c with indices: {
           [0..1]
         }
 
-        footprint: {
-          process basket<>^1 c with indices: {
-          }
-            unrolled indices: {
-              0 = ::bundle::c[0] (1) (
-                process egg<>^1 egg_array with indices: {
-                  [0..1]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[0].egg_array[0] (2) (
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[0].yolk (1) 
-                    )
-                    1 = ::bundle::c[0].egg_array[1] (3) (
-                      int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[1].yolk (2) 
-                    )
-                  }
-              )
-              1 = ::bundle::c[1] (4) (
-                process egg<>^1 egg_array with indices: {
-                  [0..1]
-                }
-                  unrolled indices: {
-                    0 = ::bundle::c[1].egg_array[0] (5) (
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[0].yolk (3) 
-                    )
-                    1 = ::bundle::c[1].egg_array[1] (6) (
-                      int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[1].yolk (4) 
-                    )
-                  }
-              )
-            }
-          process instance pool:
-          1	::bundle::c[0]
-          2	::bundle::c[0].egg_array[0]
-          3	::bundle::c[0].egg_array[1]
-          4	::bundle::c[1]
-          5	::bundle::c[1].egg_array[0]
-          6	::bundle::c[1].egg_array[1]
-          int instance pool:
-          1	::bundle::c[0].egg_array[0].yolk
-          2	::bundle::c[0].egg_array[1].yolk
-          3	::bundle::c[1].egg_array[0].yolk
-          4	::bundle::c[1].egg_array[1].yolk
+      footprint: {
+        process basket<>^1 c with indices: {
         }
+          unrolled indices: {
+            0 = ::bundle::c[0] (1) (
+              process egg<>^1 egg_array with indices: {
+                [0..1]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[0].egg_array[0] (2) (
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[0].yolk (1) 
+                  )
+                  1 = ::bundle::c[0].egg_array[1] (3) (
+                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[1].yolk (2) 
+                  )
+                }
+            )
+            1 = ::bundle::c[1] (4) (
+              process egg<>^1 egg_array with indices: {
+                [0..1]
+              }
+                unrolled indices: {
+                  0 = ::bundle::c[1].egg_array[0] (5) (
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[0].yolk (3) 
+                  )
+                  1 = ::bundle::c[1].egg_array[1] (6) (
+                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[1].yolk (4) 
+                  )
+                }
+            )
+          }
+        process instance pool:
+        1	::bundle::c[0]
+        2	::bundle::c[0].egg_array[0]
+        3	::bundle::c[0].egg_array[1]
+        4	::bundle::c[1]
+        5	::bundle::c[1].egg_array[0]
+        6	::bundle::c[1].egg_array[1]
+        int instance pool:
+        1	::bundle::c[0].egg_array[0].yolk
+        2	::bundle::c[0].egg_array[1].yolk
+        3	::bundle::c[1].egg_array[0].yolk
+        4	::bundle::c[1].egg_array[1].yolk
+      }
       }
 
     egg = process-definition (defined) egg(
         int<32> yolk
       )
       In definition "egg", we have: {
+      Instances:
         yolk = int<32> yolk
-        footprint: {
-          int<32>^0 yolk (instantiated) = ::egg::yolk (1) 
-          int instance pool:
-          1	::egg::yolk
-        }
+      footprint: {
+        int<32>^0 yolk (instantiated) = ::egg::yolk (1) 
+        int instance pool:
+        1	::egg::yolk
+      }
       }
 
   Instances:
@@ -226,13 +229,13 @@ process instance pool:
 1	::load
 2	::load.c[0]
 3	::load.c[0].egg_array[0]
-4	::load.c[0].egg_array[1]
+4	::golden
 5	::load.c[1]
 6	::load.c[1].egg_array[0]
 7	::load.c[1].egg_array[1]
 int instance pool:
 1	::load.c[0].egg_array[0].yolk
-2	::golden.yolk
+2	::count
 3	::load.c[1].egg_array[0].yolk
 4	::load.c[1].egg_array[1].yolk
 

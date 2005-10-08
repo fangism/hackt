@@ -38,6 +38,7 @@ In namespace "", we have: {
         bool<> d
       )
       In channel definition "mychan", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
         c = bool<> c

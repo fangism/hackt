@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	151
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	135
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
 	16	##ADDR##	proccoll	1	#HEAD#	#TAIL#	37
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -60,24 +60,25 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Instances:
         x = foo<> x with indices: {
           [0..1]
         }
 
-        footprint: {
-          process foo<>^1 x with indices: {
-          }
-            unrolled indices: {
-              0 = ::bar::x[1] (
-                bool^0 a (instantiated) = ::bar::x[0].a 
-                bool^0 b (instantiated) = ::bar::x[0].b 
-              )
-              1 = ::bar::x[0] (
-                bool^0 a (instantiated) = ::bar::x[1].a 
-                bool^0 b (instantiated) = ::bar::x[1].b 
-              )
-            }
+      footprint: {
+        process foo<>^1 x with indices: {
         }
+          unrolled indices: {
+            0 = ::bar::x[1] (
+              bool^0 a (instantiated) = ::bar::x[0].a 
+              bool^0 b (instantiated) = ::bar::x[0].b 
+            )
+            1 = ::bar::x[0] (
+              bool^0 a (instantiated) = ::bar::x[1].a 
+              bool^0 b (instantiated) = ::bar::x[1].b 
+            )
+          }
+      }
       }
 
     foo = process-definition (defined) foo(
@@ -85,12 +86,13 @@ In namespace "", we have: {
         bool<> b
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a
         b = bool<> b
-        footprint: {
-          bool^0 a (instantiated) = ::foo::b 
-          bool^0 b (instantiated) = ::foo::a 
-        }
+      footprint: {
+        bool^0 a (instantiated) = ::foo::b 
+        bool^0 b (instantiated) = ::foo::a 
+      }
       }
 
   Instances:

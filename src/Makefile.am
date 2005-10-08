@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.76 2005/09/14 15:30:24 fang Exp $
+#	$Id: Makefile.am,v 1.77 2005/10/08 01:39:53 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -137,6 +137,7 @@ OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
+	Object/common/alias_string_set.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
@@ -172,6 +173,7 @@ OBJECT_CC_FILES = \
 	Object/def/footprint.cc \
 	Object/def/footprint_manager.cc \
 	Object/lang/PRS.cc \
+	Object/lang/PRS_footprint.cc \
 	Object/lang/CHP.cc
 
 # these source files have no .h file (use other name)
@@ -521,13 +523,15 @@ MAIN_EXEC_CC_FILES = \
 	main/unroll.cc \
 	main/create.cc \
 	main/alloc.cc \
+	main/cflat.cc \
 	main/prsobjdemo.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc
 
 MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
-	main/hackt_fwd.h
+	main/hackt_fwd.h \
+	main/cflat_options.h
 
 COMMON_FILES = \
 	common/ICE.cc \

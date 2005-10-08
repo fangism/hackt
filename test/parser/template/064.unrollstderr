@@ -47,6 +47,7 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         Q = pint<> Q
         R = pint<> R
       }

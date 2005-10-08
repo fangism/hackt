@@ -28,6 +28,7 @@ In namespace "", we have: {
         chan!(bool<>) R
       )
       In definition "empty", we have: {
+      Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
       }

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.3 2005/09/14 15:30:28 fang Exp $
+	$Id: footprint.h,v 1.4 2005/10/08 01:39:56 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -18,6 +18,7 @@
 #include "Object/inst/int_instance.h"
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/port_alias_tracker.h"
+#include "Object/lang/PRS_footprint.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -33,6 +34,7 @@ class scopespace;
 class state_manager;
 class footprint_frame;
 class port_member_context;
+
 using std::string;
 using std::istream;
 using std::ostream;
@@ -41,6 +43,9 @@ using util::memory::count_ptr;
 using util::persistent_object_manager;
 
 //=============================================================================
+/**
+	Meta-type specific base class.  
+ */
 template <class Tag>
 class footprint_base {
 protected:
@@ -60,6 +65,10 @@ protected:
 	__expand_unique_subinstances(const footprint_frame&,
 		state_manager&, const size_t) const;
 
+	good_bool
+	__expand_production_rules(const footprint_frame&, 
+		state_manager&) const;
+
 };	// end class footprint_base
 
 //=============================================================================
@@ -73,11 +82,13 @@ protected:
 
 	Q: how does a footprint track hierarchical connections?
 	A: needs its own set/copy of the instances contained by 
-	the parent definition.  
+	the parent definition.  This is done with instance_collection_map.  
 
 	NOTE: future, when partial specializations are introduced, 
 	may want a back-reference pointer to the referenced 
 	specialization definition.  (FAR far future)
+
+	CONSIDER: adding definition/canonical type back reference?
  */
 class footprint :
 	private	footprint_base<process_tag>, 
@@ -156,9 +167,19 @@ private:
 	instance_collection_map_type		instance_collection_map;
 
 	/**
+		Fast lookup map of ALL aliases in this scope.  
+	 */
+	port_alias_tracker			scope_aliases;
+	/**
 		This keeps track which port members are internally aliased.
 	 */
 	port_alias_tracker			port_aliases;
+
+	/**
+		The set of unrolled production rules, local to this scope.  
+	 */
+	PRS::footprint				prs_footprint;
+
 public:
 	footprint();
 	~footprint();
@@ -189,6 +210,11 @@ public:
 		return port_aliases;
 	}
 
+	const port_alias_tracker&
+	get_scope_alias_tracker(void) const {
+		return scope_aliases;
+	}
+
 	template <class Tag>
 	typename state_instance<Tag>::pool_type&
 	get_pool(void) {
@@ -204,11 +230,23 @@ public:
 	void
 	import_scopespace(const scopespace&);
 
+	void
+	import_hierarchical_scopespace(const scopespace&);
+
+	void
+	clear_instance_collection_map(void);
+
 	good_bool
 	create_dependent_types(void) const;
 
 	void
-	evaluate_port_aliases(const port_formals_manager&);
+	evaluate_scope_aliases(void);
+
+	PRS::footprint&
+	get_prs_footprint(void) { return prs_footprint; }
+
+	const PRS::footprint&
+	get_prs_footprint(void) const { return prs_footprint; }
 
 	good_bool
 	expand_unique_subinstances(state_manager&) const;

@@ -7,11 +7,11 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
 	7	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	167
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
 	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
@@ -142,16 +142,18 @@ In namespace "", we have: {
         foo<pint-inst-ref ::bar::Z> b
       )
       In definition "bar", we have: {
+      Parameters:
         Z = pint<> Z
+      Instances:
         a = foo<pint-inst-ref ::bar::Z> a
         b = foo<pint-inst-ref ::bar::Z> b
-        footprint collection: {
-          <3> {
-            pint^0 Z value: ?
-            process foo<3>^0 a (instantiated) = ::bar::a 
-            process foo<3>^0 b (instantiated) = ::bar::b 
-          }
+      footprint collection: {
+        <3> {
+          pint^0 Z value: ?
+          process foo<3>^0 a (instantiated) = ::bar::a 
+          process foo<3>^0 b (instantiated) = ::bar::b 
         }
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -161,6 +163,7 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
         X = pint<> X
         Y = pint<> Y
       }
@@ -169,13 +172,14 @@ In namespace "", we have: {
         bar<3> y
       )
       In definition "ick", we have: {
+      Instances:
         y = bar<3> y
-        footprint: {
-          process bar<3>^0 y (instantiated) = ::ick::y (
-            process foo<3>^0 a (instantiated) = ::ick::y.a 
-            process foo<3>^0 b (instantiated) = ::ick::y.b 
-          )
-        }
+      footprint: {
+        process bar<3>^0 y (instantiated) = ::ick::y (
+          process foo<3>^0 a (instantiated) = ::ick::y.a 
+          process foo<3>^0 b (instantiated) = ::ick::y.b 
+        )
+      }
       }
 
   Instances:

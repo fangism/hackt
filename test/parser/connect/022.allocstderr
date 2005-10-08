@@ -1,10 +1,10 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	bag[0]	barf<>
-2	(top)	-	2	bag[1]	barf<>
-3	(top)	-	3	bag[2]	barf<>
-4	(top)	-	4	bag[3]	barf<>
-5	(top)	-	5	bag[4]	barf<>
+1	(top)	-	1	sack[4][0]	barf<>
+2	(top)	-	2	sack[4][1]	barf<>
+3	(top)	-	3	sack[4][2]	barf<>
+4	(top)	-	4	sack[4][3]	barf<>
+5	(top)	-	5	sack[4][4]	barf<>
 6	(top)	-	6	sack[0][0]	barf<>
 7	(top)	-	7	sack[0][1]	barf<>
 8	(top)	-	8	sack[0][2]	barf<>

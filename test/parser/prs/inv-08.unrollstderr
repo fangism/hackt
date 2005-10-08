@@ -64,13 +64,15 @@ In namespace "", we have: {
 
       )
       In definition "crazy_inv", we have: {
+      Parameters:
         M = pint<> M
         N = pint<> N
+      Instances:
         a = bool<> a with indices: {
           [0..::crazy_inv::N-1][0..::crazy_inv::M-1]
         }
 
-        prs:
+      prs:
         a[0][0] -> a[0][1]-
         ~a[0][0] -> a[0][1]+
       }

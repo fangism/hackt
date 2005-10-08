@@ -33,11 +33,12 @@ In namespace "", we have: {
       >(
       )
       In definition "foo", we have: {
+      Parameters:
+        bar = pint<> bar
         jinx = pbool<> jinx with indices: {
           [0..::foo::bar-1]
         }
 
-        bar = pint<> bar
       }
 
 }

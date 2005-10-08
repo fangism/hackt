@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	147
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
 	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
@@ -53,20 +53,21 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Instances:
         a = int<32> a
         b = int<32> b with indices: {
           [0..1]
         }
 
-        footprint: {
-          int<32>^0 a (instantiated) = ::bar::a 
-          int<32>^1 b with indices: {
-          }
-            unrolled indices: {
-              0 = ::bar::b[0] 
-              1 = ::bar::b[1] 
-            }
+      footprint: {
+        int<32>^0 a (instantiated) = ::bar::a 
+        int<32>^1 b with indices: {
         }
+          unrolled indices: {
+            0 = ::bar::b[0] 
+            1 = ::bar::b[1] 
+          }
+      }
       }
 
   Instances:

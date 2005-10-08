@@ -47,11 +47,13 @@ In namespace "", we have: {
       >(
       )
       In definition "the_matrix", we have: {
+      Parameters:
         M = pint<> M with indices: {
           [0..::the_matrix::N-1][0..::the_matrix::N-1]
         }
 
         N = pint<> N
+      Instances:
         first = int<pint-inst-ref ::the_matrix::M[0][0]> first
       }
 

@@ -62,12 +62,13 @@ In namespace "", we have: {
         chan!(int<32>) R
       )
       In definition "sum_diff", we have: {
+      Instances:
         L1 = chan?(int<32>) L1
         L2 = chan(int<32>) L2
         R = chan!(int<32>) R
         x = int<32> x
         z = int<32> z
-        chp:
+      chp:
         concurrent: {
           sequential: {
             concurrent: {

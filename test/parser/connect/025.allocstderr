@@ -3,4 +3,4 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	none	bar<>
 	int: 1,1
 [global int entries]
-1	(top)	-	1	none.a	
+1	(top)	-	1	foo	

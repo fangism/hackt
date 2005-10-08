@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.3 2005/09/04 21:14:41 fang Exp $
+	$Id: scopespace.h,v 1.4 2005/10/08 01:39:55 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_SCOPESPACE_H__
@@ -30,6 +30,7 @@ namespace parser {
 
 namespace entity {
 class object;
+struct dump_flags;
 class definition_base;
 class typedef_base;
 class instance_collection_base;
@@ -209,7 +210,7 @@ virtual	string
 	get_qualified_name(void) const = 0;
 
 virtual	ostream&
-	dump_qualified_name(ostream&) const = 0;
+	dump_qualified_name(ostream&, const dump_flags&) const = 0;
 
 virtual never_ptr<const scopespace>
 	get_parent(void) const = 0;
@@ -219,6 +220,12 @@ virtual never_ptr<const scopespace>
 
 	const_map_iterator
 	id_map_end(void) const { return used_id_map.end(); }
+
+protected:
+	ostream&
+	dump_for_definitions(ostream&) const;
+
+public:
 
 virtual	never_ptr<const object>
 	lookup_object_here(const string& id) const;

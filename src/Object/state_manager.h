@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.3 2005/09/14 15:30:27 fang Exp $
+	$Id: state_manager.h,v 1.4 2005/10/08 01:39:54 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -11,13 +11,17 @@
 #include "util/persistent_fwd.h"
 #include "Object/traits/classification_tags.h"
 #include "util/list_vector.h"
+#include "util/boolean_types.h"
 
 namespace ART {
+class cflat_options;
+
 namespace entity {
 class footprint;
 class state_manager;
 using std::istream;
 using std::ostream;
+using util::good_bool;
 using util::persistent_object_manager;
 
 template <class Tag> struct global_entry;
@@ -25,6 +29,7 @@ template <class Tag> struct global_entry;
 //=============================================================================
 /**
 	Global state allocation pool.  
+	Is 1-indexed, because first entry is null in the pool.  
  */
 template <class Tag>
 class global_entry_pool : protected util::list_vector<global_entry<Tag> > {
@@ -56,7 +61,10 @@ public:
 	allocate(const entry_type&);
 
 	ostream&
-	dump(ostream&, const footprint&, const state_manager&) const;
+	dump(ostream&, const footprint&) const;
+
+	ostream&
+	cflat_connect(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -121,6 +129,9 @@ public:
 
 	ostream&
 	dump(ostream&, const footprint&) const;
+
+	good_bool
+	cflat(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

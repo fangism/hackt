@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	171
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	252
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
-	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	211
+	26	##ADDR##	procdefn	0	#HEAD#	#TAIL#	372
 	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
 	28	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
@@ -83,52 +83,54 @@ In namespace "", we have: {
 
       )
       In definition "bar", we have: {
+      Parameters:
         M = pint<> M
         N = pint<> N
+      Instances:
         x = foo<pint-inst-ref ::bar::M, pint-inst-ref ::foo::D+1> x with indices: {
           [0..::bar::N-1]
         }
 
-        footprint collection: {
-          <3, 2> {
-            pint^0 M value: ?
-            pint^0 N value: ?
-            process foo<3, 4>^1 x with indices: {
-            }
-              unrolled indices: {
-                0 = ::bar::x[0] (1) (
-                  bool^1 a with indices: {
-                    [0..::foo::D-1]
-                  }
-                    unrolled indices: {
-                      0 = ::bar::x[0].a[0] (1) 
-                      1 = ::bar::x[0].a[1] (2) 
-                      2 = ::bar::x[0].a[2] (3) 
-                    }
-                )
-                1 = ::bar::x[1] (2) (
-                  bool^1 a with indices: {
-                    [0..::foo::D-1]
-                  }
-                    unrolled indices: {
-                      0 = ::bar::x[1].a[0] (4) 
-                      1 = ::bar::x[1].a[1] (5) 
-                      2 = ::bar::x[1].a[2] (6) 
-                    }
-                )
-              }
-            process instance pool:
-            1	::bar::x[0]
-            2	::bar::x[1]
-            bool instance pool:
-            1	::bar::x[0].a[0]
-            2	::bar::x[0].a[1]
-            3	::bar::x[0].a[2]
-            4	::bar::x[1].a[0]
-            5	::bar::x[1].a[1]
-            6	::bar::x[1].a[2]
+      footprint collection: {
+        <3, 2> {
+          pint^0 M value: ?
+          pint^0 N value: ?
+          process foo<3, 4>^1 x with indices: {
           }
+            unrolled indices: {
+              0 = ::bar::x[0] (1) (
+                bool^1 a with indices: {
+                  [0..::foo::D-1]
+                }
+                  unrolled indices: {
+                    0 = ::bar::x[0].a[0] (1) 
+                    1 = ::bar::x[0].a[1] (2) 
+                    2 = ::bar::x[0].a[2] (3) 
+                  }
+              )
+              1 = ::bar::x[1] (2) (
+                bool^1 a with indices: {
+                  [0..::foo::D-1]
+                }
+                  unrolled indices: {
+                    0 = ::bar::x[1].a[0] (4) 
+                    1 = ::bar::x[1].a[1] (5) 
+                    2 = ::bar::x[1].a[2] (6) 
+                  }
+              )
+            }
+          process instance pool:
+          1	::bar::x[0]
+          2	::bar::x[1]
+          bool instance pool:
+          1	::bar::x[0].a[0]
+          2	::bar::x[0].a[1]
+          3	::bar::x[0].a[2]
+          4	::bar::x[1].a[0]
+          5	::bar::x[1].a[1]
+          6	::bar::x[1].a[2]
         }
+      }
       }
 
     foo = process-definition (defined) foo<
@@ -141,29 +143,31 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Parameters:
         D = pint<> D
         E = pint<> E (default = pint-inst-ref ::foo::D+1)
+      Instances:
         a = bool<> a with indices: {
           [0..::foo::D-1]
         }
 
-        footprint collection: {
-          <3, 4> {
-            pint^0 D value: ?
-            pint^0 E value: ?
-            bool^1 a with indices: {
-            }
-              unrolled indices: {
-                0 = ::foo::a[0] (1) 
-                1 = ::foo::a[1] (2) 
-                2 = ::foo::a[2] (3) 
-              }
-            bool instance pool:
-            1	::foo::a[0]
-            2	::foo::a[1]
-            3	::foo::a[2]
+      footprint collection: {
+        <3, 4> {
+          pint^0 D value: ?
+          pint^0 E value: ?
+          bool^1 a with indices: {
           }
+            unrolled indices: {
+              0 = ::foo::a[0] (1) 
+              1 = ::foo::a[1] (2) 
+              2 = ::foo::a[2] (3) 
+            }
+          bool instance pool:
+          1	::foo::a[0]
+          2	::foo::a[1]
+          3	::foo::a[2]
         }
+      }
       }
 
   Instances:

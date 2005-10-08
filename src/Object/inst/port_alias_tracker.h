@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.3 2005/09/14 15:30:31 fang Exp $
+	$Id: port_alias_tracker.h,v 1.4 2005/10/08 01:39:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -20,6 +20,7 @@
 
 namespace ART {
 namespace entity {
+class footprint;
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -28,6 +29,12 @@ using util::memory::never_ptr;
 
 template <class Tag>
 class instance_alias_info;
+
+template <class Tag>
+class state_instance;
+
+template <class T>
+class instance_pool;
 
 //=============================================================================
 /**
@@ -58,8 +65,17 @@ public:
 	bool
 	is_unique(void) const { return alias_array.size() <= 1; }
 
+	const_iterator
+	begin(void) const { return alias_array.begin(); }
+
+	const_iterator
+	end(void) const { return alias_array.end(); }
+
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
+
+	alias_ptr_type
+	shortest_alias(void) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -73,6 +89,10 @@ public:
 };	// end class alias_reference_set
 
 //=============================================================================
+/**
+	Meta-class specific base class for tracking collections of aliases.  
+	Contains a map from index to instance alias set.  
+ */
 template <class Tag>
 class port_alias_tracker_base {
 protected:
@@ -96,6 +116,10 @@ protected:
 	__replay_aliases(substructure_alias&) const;
 
 	void
+	__shorten_canonical_aliases(
+		instance_pool<state_instance<Tag> >&) const;
+
+	void
 	collect_map(persistent_object_manager&) const;
 
 	void
@@ -108,8 +132,12 @@ protected:
 
 //=============================================================================
 /**
-	Used to count aliases over strucutres whose connections have been
+	Used to count aliases over structres whose connections have been
 	played and unique placeholder ID numbers have been assigned.  
+	Note: this can be reused to for tracking both internal aliases
+	and port aliases.  
+	This is kept to make looking up all aliases in each scope
+	instantaneous, basically a cache of alias results.  
 	Also keep track of instance references?
  */
 class port_alias_tracker :
@@ -151,6 +179,9 @@ public:
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
+
+	void
+	shorten_canonical_aliases(footprint&);
 
 public:
 	void

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.5 2005/09/14 15:30:28 fang Exp $
+ 	$Id: definition.cc,v 1.6 2005/10/08 01:39:55 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -51,6 +51,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/common/namespace.h"
+#include "Object/common/dump_flags.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/type/canonical_generic_chan_type.h"
@@ -262,12 +263,14 @@ definition_base::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-definition_base::dump_qualified_name(ostream& o) const {
+definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
-		parent->dump_qualified_name(o) << scope;
+		parent->dump_qualified_name(o, df) << scope;
 	return o << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -485,8 +488,8 @@ typedef_base::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-typedef_base::dump_qualified_name(ostream& o) const {
-	return definition_base::dump_qualified_name(o);
+typedef_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
+	return definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -693,6 +696,9 @@ user_def_chan::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: dump members alphabetically.
+ */
 ostream&
 user_def_chan::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
@@ -704,28 +710,19 @@ user_def_chan::dump(ostream& o) const {
 	port_formals.dump(o << auto_indent) << endl;
 
 	// now dump rest of contents
-//	list<never_ptr<const ...> > bin;		// later sort
 	o << auto_indent <<
 		"In channel definition \"" << key << "\", we have: {" << endl;
-	{	// begin indent level
-		INDENT_SECTION(o);
-		used_id_map_type::const_iterator
-			i = used_id_map.begin();
-		const used_id_map_type::const_iterator
-			e = used_id_map.end();
-		for ( ; i!=e; i++) {
-			// pair_dump?
-			o << auto_indent << i->first << " = ";
-			// i->second->what(o) << endl;	// 1 level for now
-			i->second->dump(o) << endl;
-		}
+	{
+		scopespace::dump_for_definitions(o);
 		// CHP
 		if (!send_chp.empty()) {
 			o << auto_indent << "send-CHP:" << endl;
+			INDENT_SECTION(o);
 			send_chp.dump(o << auto_indent) << endl;
 		}
 		if (!recv_chp.empty()) {
 			o << auto_indent << "recv-CHP:" << endl;
+			INDENT_SECTION(o);
 			recv_chp.dump(o << auto_indent) << endl;
 		}
 	}	// end indent scope
@@ -748,10 +745,12 @@ user_def_chan::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-user_def_chan::dump_qualified_name(ostream& o) const {
+user_def_chan::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	if (parent)
-		parent->dump_qualified_name(o);
+		parent->dump_qualified_name(o, df);
 	return o << scope << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1197,8 +1196,9 @@ built_in_datatype_def::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-built_in_datatype_def::dump_qualified_name(ostream& o) const {
-	return datatype_definition_base::dump_qualified_name(o);
+built_in_datatype_def::dump_qualified_name(ostream& o,
+		const dump_flags& df) const {
+	return datatype_definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1490,6 +1490,9 @@ enum_datatype_def::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: sort enum members alphabetically?
+ */
 ostream&
 enum_datatype_def::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
@@ -1497,8 +1500,8 @@ enum_datatype_def::dump(ostream& o) const {
 	if (defined) {
 		INDENT_SECTION(o);
 		o << endl << auto_indent << "{ ";
-		used_id_map_type::const_iterator i = used_id_map.begin();
-		const used_id_map_type::const_iterator e = used_id_map.end();
+		used_id_map_type::const_iterator i(used_id_map.begin());
+		const used_id_map_type::const_iterator e(used_id_map.end());
 		for ( ; i!=e; i++) {
 			o << i->first << ", ";
 		}
@@ -1525,10 +1528,12 @@ enum_datatype_def::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-enum_datatype_def::dump_qualified_name(ostream& o) const {
+enum_datatype_def::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	if (parent)
-		parent->dump_qualified_name(o);
+		parent->dump_qualified_name(o, df);
 	return o << scope << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1689,8 +1694,8 @@ enum_datatype_def::write_object(
 	{
 		const size_t s = used_id_map.size();
 		write_value(f, s);
-		used_id_map_type::const_iterator i = used_id_map.begin();
-		const used_id_map_type::const_iterator e = used_id_map.end();
+		used_id_map_type::const_iterator i(used_id_map.begin());
+		const used_id_map_type::const_iterator e(used_id_map.end());
 		for ( ; i!=e; i++) {
 			write_value(f, i->first);
 		}
@@ -1779,6 +1784,9 @@ user_def_datatype::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: dump members alphabetically.
+ */
 ostream&
 user_def_datatype::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
@@ -1790,28 +1798,19 @@ user_def_datatype::dump(ostream& o) const {
 	port_formals.dump(o << auto_indent) << endl;
 
 	// now dump rest of contents
-//	list<never_ptr<const ...> > bin;		// later sort
 	o << auto_indent <<
 		"In datatype definition \"" << key << "\", we have: {" << endl;
-	{	// begin indent level
-		INDENT_SECTION(o);
-		used_id_map_type::const_iterator
-			i = used_id_map.begin();
-		const used_id_map_type::const_iterator
-			e = used_id_map.end();
-		for ( ; i!=e; i++) {
-			// pair_dump?
-			o << auto_indent << i->first << " = ";
-			// i->second->what(o) << endl;	// 1 level for now
-			i->second->dump(o) << endl;
-		}
+	{
+		scopespace::dump_for_definitions(o);
 		// CHP
 		if (!set_chp.empty()) {
 			o << auto_indent << "set-CHP:" << endl;
+			INDENT_SECTION(o);
 			set_chp.dump(o << auto_indent) << endl;
 		}
 		if (!get_chp.empty()) {
 			o << auto_indent << "get-CHP:" << endl;
+			INDENT_SECTION(o);
 			get_chp.dump(o << auto_indent) << endl;
 		}
 	}	// end indent scope
@@ -1834,10 +1833,12 @@ user_def_datatype::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-user_def_datatype::dump_qualified_name(ostream& o) const {
+user_def_datatype::dump_qualified_name(ostream& o, const dump_flags& df) const {
+if (df.show_owner) {
 	if (parent)
-		parent->dump_qualified_name(o);
+		parent->dump_qualified_name(o, df);
 	return o << scope << key;
+}	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2351,12 +2352,11 @@ process_definition::what(ostream& o) const {
 	Spill contents of the used_id_map.
 	\param o the output stream.
 	\return the same output stream.
-	TODO: dump the footprint map.  
+	TODO: sort used_id_map entries alphabetically... at least in dumping
  */
 ostream&
 process_definition::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
-//	STACKTRACE_VERBOSE;
 	definition_base::dump(o);	// dump template signature first
 	// unique ID not working with INDENT_SECTION marco... :(
 	INDENT_SECTION(o);	
@@ -2364,29 +2364,21 @@ process_definition::dump(ostream& o) const {
 	port_formals.dump(o) << endl;
 
 	// now dump rest of contents
-//	list<never_ptr<const ...> > bin;		// later sort
 	o << auto_indent <<
 		"In definition \"" << key << "\", we have: {" << endl;
 	{	// begin indent level
-		INDENT_SECTION(o);
-		// we dump ports even if body is undefined
-		used_id_map_type::const_iterator i(used_id_map.begin());
-		const used_id_map_type::const_iterator e(used_id_map.end());
-		for ( ; i!=e; i++) {
-			// pair_dump?
-			o << auto_indent << i->first << " = ";
-			// i->second->what(o) << endl;	// 1 level for now
-			i->second->dump(o) << endl;
-		}
+		scopespace::dump_for_definitions(o);
 		if (defined) {
 			// PRS
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;
+				INDENT_SECTION(o);
 				prs.dump(o);	// << endl;
 			}
 			// CHP
 			if (!chp.empty()) {
 				o << auto_indent << "chp:" << endl;
+				INDENT_SECTION(o);
 				chp.dump(o << auto_indent) << endl;
 			}
 			if (footprint_map.size()) {
@@ -2411,8 +2403,11 @@ process_definition::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-process_definition::dump_qualified_name(ostream& o) const {
-	return parent->dump_qualified_name(o) << scope << key;
+process_definition::dump_qualified_name(ostream& o,
+		const dump_flags& df) const {
+if (df.show_owner) {
+	return parent->dump_qualified_name(o, df) << scope << key;
+} else	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2756,7 +2751,10 @@ if (defined) {
 			return good_bool(false);
 		}
 		if (sequential_scope::create_unique(c, *f).good) {
-			f->evaluate_port_aliases(port_formals);
+			f->evaluate_scope_aliases();
+			// also resolve copy of production rules
+			prs.unroll(c, f->get_pool<bool_tag>(), 
+				f->get_prs_footprint());
 			f->mark_created();
 		} else {
 			// already have partial error message

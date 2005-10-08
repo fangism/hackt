@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.3 2005/09/04 21:14:42 fang Exp $
+	$Id: definition_base.h,v 1.4 2005/10/08 01:39:56 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -38,6 +38,7 @@ class physical_instance_collection;
 class fundamental_type_reference;
 class template_actuals;
 class const_param_expr_list;
+struct dump_flags;
 using std::string;
 using std::istream;
 using util::bad_bool;
@@ -199,7 +200,7 @@ virtual	string
 	get_qualified_name(void) const;
 
 	ostream&
-	dump_qualified_name(ostream&) const;
+	dump_qualified_name(ostream&, const dump_flags&) const;
 
 /** definition signature comparison, true if equal */
 virtual	good_bool

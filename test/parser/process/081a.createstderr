@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	112
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	212
 	7	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -60,23 +60,24 @@ In namespace "", we have: {
 
       )
       In definition "foo", we have: {
+      Instances:
         a = bool<> a with indices: {
           [0..2]
         }
 
-        footprint: {
-          bool^1 a with indices: {
-          }
-            unrolled indices: {
-              0 = ::foo::a[0] (1) 
-              1 = ::foo::a[1] (2) 
-              2 = ::foo::a[2] (3) 
-            }
-          bool instance pool:
-          1	::foo::a[0]
-          2	::foo::a[1]
-          3	::foo::a[2]
+      footprint: {
+        bool^1 a with indices: {
         }
+          unrolled indices: {
+            0 = ::foo::a[0] (1) 
+            1 = ::foo::a[1] (2) 
+            2 = ::foo::a[2] (3) 
+          }
+        bool instance pool:
+        1	::foo::a[0]
+        2	::foo::a[1]
+        3	::foo::a[2]
+      }
       }
 
   Instances:

@@ -74,12 +74,14 @@ In namespace "", we have: {
         chan!(bool<>) R
       )
       In definition "one_shot", we have: {
+      Parameters:
+        X = pint<> X
+      Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
-        X = pint<> X
         x = int<13> x
         z = int<pint-inst-ref ::one_shot::X> z
-        chp:
+      chp:
         concurrent: {
           sequential: {
             R!(x==z)

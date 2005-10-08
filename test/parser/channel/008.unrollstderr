@@ -29,6 +29,7 @@ In namespace "", we have: {
         myenum<> e
       )
       In channel definition "mychan", we have: {
+      Instances:
         e = myenum<> e
       }
 
