@@ -43,13 +43,13 @@ In namespace "", we have: {
     int32 = datatype-definition-alias: int32
       = int<32>
   Instances:
-    fe = int<32>^0 fe (instantiated) = ::fum (1)
-    fi = int<32>^0 fi (instantiated) = ::fe (1)
-    fo = int<32>^0 fo (instantiated) = ::fi (1)
-    fum = int<32>^0 fum (instantiated) = ::fo (1)
+    fe = int<32>^0 fe (instantiated) = ::fum (1) 
+    fi = int<32>^0 fi (instantiated) = ::fe (1) 
+    fo = int<32>^0 fo (instantiated) = ::fi (1) 
+    fum = int<32>^0 fum (instantiated) = ::fo (1) 
 }
 
 Created state:
 int instance pool:
-1	::fe
+1	::fum
 

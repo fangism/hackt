@@ -362,8 +362,8 @@ In namespace "", we have: {
 Created state:
 process instance pool:
 1	::b
-2	::b.L
-3	::b.R
+2	::L
+3	::R
 bool instance pool:
 1	::L.d[0]
 2	::L.d[1]

@@ -74,7 +74,7 @@ In namespace "", we have: {
         process instance pool:
         1	::bar::x
         bool instance pool:
-        1	::bar::y.a
+        1	::bar::x.a
         process port aliases:
         1: ::bar::x = ::bar::y
         bool port aliases:
@@ -118,5 +118,5 @@ process instance pool:
 1	::poo
 2	::poo.x
 bool instance pool:
-1	::poo.y.a
+1	::poo.x.a
 

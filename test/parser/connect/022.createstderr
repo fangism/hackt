@@ -32,8 +32,8 @@ In namespace "", we have: {
     barf = process-definition (defined) barf(
       )
       In definition "barf", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:
@@ -81,11 +81,11 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::bag[0]
-2	::bag[1]
-3	::bag[2]
-4	::bag[3]
-5	::bag[4]
+1	::sack[4][0]
+2	::sack[4][1]
+3	::sack[4][2]
+4	::sack[4][3]
+5	::sack[4][4]
 6	::sack[0][0]
 7	::sack[0][1]
 8	::sack[0][2]

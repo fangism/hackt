@@ -100,8 +100,8 @@ In namespace "", we have: {
         2	::bar::x.b
         3	::bar::y.a
         4	::bar::y.b
-        5	::bar::b.a
-        6	::bar::b.b
+        5	::bar::a.a
+        6	::bar::a.b
       }
       }
 

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.5.2.1 2005/09/16 07:19:40 fang Exp $
+ 	$Id: instance_collection.cc,v 1.5.2.2 2005/10/08 01:09:53 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -231,6 +231,12 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 	} else {
 		return dump_qualified_name(o, df);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+instance_collection_base::hierarchical_depth(void) const {
+	return super_instance ? super_instance->hierarchical_depth() +1 : 1;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

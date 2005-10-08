@@ -2,6 +2,19 @@
 
 2005-10-07	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-59-cflat-01-11:
+	  Canonical names are now chosen to be the shortest, in terms of 
+		hierarchy depth.  Ties are arbitrarily broken at the moment.  
+		Test cases have been updated with newer canonical names.  
+	  Branch is ready to commit to trunk.  
+
+
+	* ARTXX-00-01-04-main-00-59-cflat-01-10:
+	  Hierarchical dump of instances and definitions is now binned
+		and alphabetized to produce stable dumps, 
+		without depending on hashing.  Tons of test-expects updated.
+
+
 	* ARTXX-00-01-04-main-00-59-cflat-01-09:
 	  Fixed printing of instance_references' dump_briefer
 		to use dump_hierarchical_name, using dump_flags::no_owner,

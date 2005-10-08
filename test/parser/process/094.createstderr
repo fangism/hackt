@@ -95,13 +95,13 @@ In namespace "", we have: {
           bool^0 b (instantiated) = ::bar::z.b (4) 
         )
         process instance pool:
-        1	::bar::x
+        1	::bar::w
         2	::bar::y
         bool instance pool:
         1	::bar::w.a
         2	::bar::w.b
-        3	::bar::z.a
-        4	::bar::z.b
+        3	::bar::y.a
+        4	::bar::y.b
       }
       }
 

@@ -190,9 +190,9 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::n
-2	::m.x
-3	::j.b
+1	::m
+2	::j
+3	::p
 bool instance pool:
-1	::q.a
+1	::x
 

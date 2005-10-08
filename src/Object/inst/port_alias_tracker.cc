@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.3.2.1 2005/09/16 07:19:40 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.3.2.2 2005/10/08 01:09:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -107,6 +107,33 @@ alias_reference_set<Tag>::replay_internal_aliases(substructure_alias& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Edits the canonical back reference to point to the 
+	shallowest instance.  
+ */
+template <class Tag>
+typename alias_reference_set<Tag>::alias_ptr_type
+alias_reference_set<Tag>::shortest_alias(void) const {
+	// typedef	alias_array_type::iterator		iterator;
+	INVARIANT(alias_array.size());
+	const_iterator i(alias_array.begin());
+	const const_iterator e(alias_array.end());
+	// accumulate to find the index of the shallowest alias
+	const_iterator shortest_alias_iter(i);
+	size_t shortest_depth = (*i)->hierarchical_depth();
+	for (i++; i!=e; i++) {
+		size_t depth = (*i)->hierarchical_depth();
+		if (depth < shortest_depth) {
+			shortest_alias_iter = i;
+			shortest_depth = depth;
+		}
+	}
+	// pardon the const_cast :S, we intend to modify, yes
+	// consider making mutable...
+	return *shortest_alias_iter;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
 alias_reference_set<Tag>::collect_transient_info_base(
@@ -207,6 +234,28 @@ port_alias_tracker_base<Tag>::__replay_aliases(substructure_alias& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-sets the back references of the unique aliases to
+	be the 'shortest; for canonicalization.  
+ */
+template <class Tag>
+void
+port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
+		instance_pool<state_instance<Tag> >& p) const {
+	STACKTRACE_VERBOSE;
+	const_iterator i(_ids.begin());
+	const const_iterator e(_ids.end());
+	for ( ; i!=e; i++) {
+		typedef	typename alias_reference_set<Tag>::alias_ptr_type
+						alias_ptr_type;
+		const alias_ptr_type al(i->second.shortest_alias());
+		INVARIANT(i->first);	// non-zero
+		BOUNDS_CHECK(i->first < p.size());
+		p[i->first].set_back_ref(al);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 void
 port_alias_tracker_base<Tag>::collect_map(persistent_object_manager& m) const {
@@ -297,6 +346,26 @@ if (has_internal_aliases) {
 		port_alias_tracker_base<bool_tag>::__replay_aliases(s);
 } else {
 	return good_bool(true);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+port_alias_tracker::shorten_canonical_aliases(footprint& f) {
+	STACKTRACE_VERBOSE;
+if (has_internal_aliases) {
+	port_alias_tracker_base<process_tag>::
+		__shorten_canonical_aliases(f.get_pool<process_tag>());
+	port_alias_tracker_base<channel_tag>::
+		__shorten_canonical_aliases(f.get_pool<channel_tag>());
+	port_alias_tracker_base<datastruct_tag>::
+		__shorten_canonical_aliases(f.get_pool<datastruct_tag>());
+	port_alias_tracker_base<enum_tag>::
+		__shorten_canonical_aliases(f.get_pool<enum_tag>());
+	port_alias_tracker_base<int_tag>::
+		__shorten_canonical_aliases(f.get_pool<int_tag>());
+	port_alias_tracker_base<bool_tag>::
+		__shorten_canonical_aliases(f.get_pool<bool_tag>());
 }
 }
 

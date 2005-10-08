@@ -116,10 +116,10 @@ process instance pool:
 2	::i2
 3	::i3
 bool instance pool:
-1	::i1.a
-2	::i1.b
-3	::i2.a
+1	::x
+2	::y
+3	::p
 4	::i2.b
 5	::i3.a
-6	::i3.b
+6	::q
 

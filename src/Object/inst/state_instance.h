@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.4 2005/09/14 15:30:31 fang Exp $
+	$Id: state_instance.h,v 1.4.2.1 2005/10/08 01:09:53 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -43,10 +43,11 @@ class state_instance {
 	typedef	STATE_INSTANCE_CLASS		this_type;
 	typedef	typename class_traits<Tag>::instance_alias_info_type
 						alias_info_type;
+	typedef	never_ptr<const alias_info_type>	back_ref_type;
 public:
 	typedef	Tag				tag_type;
 private:
-	never_ptr<const alias_info_type>	back_ref;
+	back_ref_type				back_ref;
 public:
 	state_instance();
 
@@ -55,10 +56,11 @@ public:
 
 	~state_instance();
 
-	never_ptr<const alias_info_type>
-	get_back_ref(void) const {
-		return back_ref;
-	}
+	back_ref_type
+	get_back_ref(void) const { return back_ref; }
+
+	void
+	set_back_ref(const back_ref_type b) { back_ref = b; }
 
 	ostream&
 	dump(ostream&) const;

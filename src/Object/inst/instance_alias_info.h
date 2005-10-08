@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.5 2005/09/14 15:30:30 fang Exp $
+	$Id: instance_alias_info.h,v 1.5.2.1 2005/10/08 01:09:52 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -302,6 +302,9 @@ virtual	ostream&
 
 	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
+
+	size_t
+	hierarchical_depth(void) const;
 
 	using substructure_parent_type::dump_ports;
 	using substructure_parent_type::collect_port_aliases;

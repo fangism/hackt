@@ -142,6 +142,6 @@ In namespace "", we have: {
 Created state:
 process instance pool:
 1	::w
-2	::w.a
-3	::w.b
+2	::p
+3	::q
 

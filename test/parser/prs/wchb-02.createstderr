@@ -337,19 +337,19 @@ In namespace "", we have: {
         1	::wchb_e1of2::L.d[0]
         2	::wchb_e1of2::L.d[1]
         3	::wchb_e1of2::L.e
-        4	::wchb_e1of2::R.d[0]
-        5	::wchb_e1of2::R.d[1]
+        4	::wchb_e1of2::r0.b
+        5	::wchb_e1of2::r1.b
         6	::wchb_e1of2::R.e
-        7	::wchb_e1of2::r0.a
-        8	::wchb_e1of2::r1.a
-        9	::wchb_e1of2::re.a
+        7	::wchb_e1of2::_r[0]
+        8	::wchb_e1of2::_r[1]
+        9	::wchb_e1of2::rv
         resolved prs:
-        L.d[0] & R.e -> r0.a-
-        L.d[1] & R.e -> r1.a-
-        ~r0.a | ~r1.a -> re.a+
-        ~L.d[0] & ~R.e -> r0.a+
-        ~L.d[1] & ~R.e -> r1.a+
-        r0.a & r1.a -> re.a-
+        L.d[0] & R.e -> _r[0]-
+        L.d[1] & R.e -> _r[1]-
+        ~_r[0] | ~_r[1] -> rv+
+        ~L.d[0] & ~R.e -> _r[0]+
+        ~L.d[1] & ~R.e -> _r[1]+
+        _r[0] & _r[1] -> rv-
       }
       }
 
@@ -401,8 +401,8 @@ In namespace "", we have: {
 Created state:
 process instance pool:
 1	::b
-2	::b.L
-3	::b.R
+2	::L
+3	::R
 bool instance pool:
 1	::L.d[0]
 2	::L.d[1]

@@ -115,7 +115,7 @@ In namespace "", we have: {
         process instance pool:
         1	::bar::x
         bool instance pool:
-        1	::bar::y.a
+        1	::bar::x.a
         process port aliases:
         1: ::bar::x = ::bar::y
         bool port aliases:
@@ -172,9 +172,9 @@ In namespace "", we have: {
         )
         process instance pool:
         1	::ick::p
-        2	::ick::q.x
+        2	::ick::p.x
         bool instance pool:
-        1	::ick::q.y.a
+        1	::ick::p.x.a
         process port aliases:
         1: ::ick::p = ::ick::q
         2: ::ick::p.x = ::ick::p.y = ::ick::q.x = ::ick::q.y
@@ -212,7 +212,7 @@ Created state:
 process instance pool:
 1	::poo
 2	::poo.p
-3	::poo.q.x
+3	::poo.p.x
 bool instance pool:
-1	::poo.p.y.a
+1	::poo.p.x.a
 

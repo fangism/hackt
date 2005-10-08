@@ -80,8 +80,8 @@ In namespace "", we have: {
         )
         process instance pool:
         1	::foo::a
-        2	::foo::b.m
-        3	::foo::b.n
+        2	::foo::a.m
+        3	::foo::a.n
         process port aliases:
         1: ::foo::a = ::foo::b
         2: ::foo::a.m = ::foo::b.m
@@ -130,6 +130,6 @@ Created state:
 process instance pool:
 1	::poo
 2	::poo.a
-3	::poo.b.m
-4	::poo.b.n
+3	::poo.a.m
+4	::poo.a.n
 

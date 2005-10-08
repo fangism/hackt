@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.5.2.6 2005/10/07 21:21:49 fang Exp $
+ 	$Id: definition.cc,v 1.5.2.7 2005/10/08 01:09:51 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -71,10 +71,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #else
 #define	STACKTRACE_DUMP(x)
 #endif
-
-// replacing old unsorted dump with alphabetized...
-// Goal: 0
-#define	USE_OLD_HASH_DUMP		0
 
 //=============================================================================
 namespace util {
@@ -714,36 +710,19 @@ user_def_chan::dump(ostream& o) const {
 	port_formals.dump(o << auto_indent) << endl;
 
 	// now dump rest of contents
-//	list<never_ptr<const ...> > bin;		// later sort
 	o << auto_indent <<
 		"In channel definition \"" << key << "\", we have: {" << endl;
-	{	// begin indent level
-#if USE_OLD_HASH_DUMP
-		INDENT_SECTION(o);
-		used_id_map_type::const_iterator i(used_id_map.begin());
-		const used_id_map_type::const_iterator e(used_id_map.end());
-		for ( ; i!=e; i++) {
-			// pair_dump?
-			o << auto_indent << i->first << " = ";
-			// i->second->what(o) << endl;	// 1 level for now
-			i->second->dump(o) << endl;
-		}
-#else
+	{
 		scopespace::dump_for_definitions(o);
-#endif
 		// CHP
 		if (!send_chp.empty()) {
 			o << auto_indent << "send-CHP:" << endl;
-#if !USE_OLD_HASH_DUMP
 			INDENT_SECTION(o);
-#endif
 			send_chp.dump(o << auto_indent) << endl;
 		}
 		if (!recv_chp.empty()) {
 			o << auto_indent << "recv-CHP:" << endl;
-#if !USE_OLD_HASH_DUMP
 			INDENT_SECTION(o);
-#endif
 			recv_chp.dump(o << auto_indent) << endl;
 		}
 	}	// end indent scope
@@ -1819,36 +1798,19 @@ user_def_datatype::dump(ostream& o) const {
 	port_formals.dump(o << auto_indent) << endl;
 
 	// now dump rest of contents
-//	list<never_ptr<const ...> > bin;		// later sort
 	o << auto_indent <<
 		"In datatype definition \"" << key << "\", we have: {" << endl;
-	{	// begin indent level
-#if USE_OLD_HASH_DUMP
-		INDENT_SECTION(o);
-		used_id_map_type::const_iterator i(used_id_map.begin());
-		const used_id_map_type::const_iterator e(used_id_map.end());
-		for ( ; i!=e; i++) {
-			// pair_dump?
-			o << auto_indent << i->first << " = ";
-			// i->second->what(o) << endl;	// 1 level for now
-			i->second->dump(o) << endl;
-		}
-#else
+	{
 		scopespace::dump_for_definitions(o);
-#endif
 		// CHP
 		if (!set_chp.empty()) {
 			o << auto_indent << "set-CHP:" << endl;
-#if !USE_OLD_HASH_DUMP
 			INDENT_SECTION(o);
-#endif
 			set_chp.dump(o << auto_indent) << endl;
 		}
 		if (!get_chp.empty()) {
 			o << auto_indent << "get-CHP:" << endl;
-#if !USE_OLD_HASH_DUMP
 			INDENT_SECTION(o);
-#endif
 			get_chp.dump(o << auto_indent) << endl;
 		}
 	}	// end indent scope
@@ -2402,39 +2364,21 @@ process_definition::dump(ostream& o) const {
 	port_formals.dump(o) << endl;
 
 	// now dump rest of contents
-//	list<never_ptr<const ...> > bin;		// later sort
 	o << auto_indent <<
 		"In definition \"" << key << "\", we have: {" << endl;
 	{	// begin indent level
-#if USE_OLD_HASH_DUMP
-		INDENT_SECTION(o);
-		// we dump ports even if body is undefined
-		used_id_map_type::const_iterator i(used_id_map.begin());
-		const used_id_map_type::const_iterator e(used_id_map.end());
-		for ( ; i!=e; i++) {
-			// pair_dump?
-			o << auto_indent << i->first << " = ";
-			// i->second->what(o) << endl;	// 1 level for now
-			i->second->dump(o) << endl;
-		}
-#else
 		scopespace::dump_for_definitions(o);
-#endif
 		if (defined) {
 			// PRS
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;
-#if !USE_OLD_HASH_DUMP
 				INDENT_SECTION(o);
-#endif
 				prs.dump(o);	// << endl;
 			}
 			// CHP
 			if (!chp.empty()) {
 				o << auto_indent << "chp:" << endl;
-#if !USE_OLD_HASH_DUMP
 				INDENT_SECTION(o);
-#endif
 				chp.dump(o << auto_indent) << endl;
 			}
 			if (footprint_map.size()) {

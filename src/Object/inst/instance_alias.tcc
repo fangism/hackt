@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.2 2005/09/14 15:30:30 fang Exp $
+	$Id: instance_alias.tcc,v 1.2.2.1 2005/10/08 01:09:52 fang Exp $
 	TODO: trim includes
  */
 
@@ -862,6 +862,13 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 		this->container->collect_transient_info(m);
 	actuals_parent_type::collect_transient_info_base(m);
 	substructure_parent_type::collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ALIAS_INFO_CLASS::hierarchical_depth(void) const {
+	return this->container->hierarchical_depth();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

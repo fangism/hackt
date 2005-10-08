@@ -1,19 +1,13 @@
 "TODO"
-#	$Id: TODO,v 1.2.2.4 2005/10/07 21:21:45 fang Exp $
+#	$Id: TODO,v 1.2.2.5 2005/10/08 01:09:49 fang Exp $
 
 ===============================================================================
 
 PRS: in cflat
-	2) generate process_entries' unrolled production rules!
-		only needed for simulation, not flattening [PUNT]
-		state information of expressions not needed yet
 	3) test cases instantiating processes with PRS, hierarchically!!!
 
 PRS parser needs to support rule loops...
 	need to extend intermediate form in Object/lang/PRS.  
-
-Enhancement:
-	choose better canonical names, based on shallowest hierarchy...
 
 footprint pointer persistence may be complicated in footprint_frame.
 	(partially done, for top-level state)
@@ -22,6 +16,7 @@ footprint pointer persistence may be complicated in footprint_frame.
 
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
+	can be classified as known bug.  
 
 ===============================================================================
 new class_trait:
@@ -36,7 +31,7 @@ big stuff:
 CFLAT
 
 compare memory usage between using flattened production rule arrays
-vs. arrays of definitions (like logic gates).
+	vs. arrays of definitions (like logic gates).
 
 in general check memory usage of large arrays of things
 	make benchmarks directory.
@@ -59,6 +54,12 @@ stacktrace.h:
 	add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
 ICE.h:
 	add ICE_ASSERT combined INVARIANT with ICE macro
+
+===============================================================================
+Simulation:
+	generate process_entries' unrolled production rules!
+		only needed for simulation, not flattening [PUNT]
+		state information of expressions not needed yet
 
 ===============================================================================
 PRS and CHP

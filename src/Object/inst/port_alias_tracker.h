@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.3.2.2 2005/09/16 07:19:40 fang Exp $
+	$Id: port_alias_tracker.h,v 1.3.2.3 2005/10/08 01:09:53 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -20,6 +20,7 @@
 
 namespace ART {
 namespace entity {
+class footprint;
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -28,6 +29,12 @@ using util::memory::never_ptr;
 
 template <class Tag>
 class instance_alias_info;
+
+template <class Tag>
+class state_instance;
+
+template <class T>
+class instance_pool;
 
 //=============================================================================
 /**
@@ -67,6 +74,9 @@ public:
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
 
+	alias_ptr_type
+	shortest_alias(void) const;
+
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
@@ -104,6 +114,10 @@ protected:
 
 	good_bool
 	__replay_aliases(substructure_alias&) const;
+
+	void
+	__shorten_canonical_aliases(
+		instance_pool<state_instance<Tag> >&) const;
 
 	void
 	collect_map(persistent_object_manager&) const;
@@ -165,6 +179,9 @@ public:
 
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
+
+	void
+	shorten_canonical_aliases(footprint&);
 
 public:
 	void

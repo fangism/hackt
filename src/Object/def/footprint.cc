@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.3.2.5 2005/10/06 04:41:28 fang Exp $
+	$Id: footprint.cc,v 1.3.2.6 2005/10/08 01:09:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -391,12 +391,17 @@ footprint::evaluate_scope_aliases(void) {
 				pic->collect_port_aliases(port_aliases);
 		}
 	}
+	// don't filter for scope, want to keep around unique entries
 	// scope_aliases.filter_uniques();
 #if ENABLE_STACKTRACE
 	scope_aliases.dump(cerr << "footprint::scope_aliases: " << endl) << endl;
 #endif
 	// NOTE: don't filter uniques for scope_aliases, needed for aliases
 	port_aliases.filter_uniques();
+	// TODO: pick better canonical names
+#if 1
+	scope_aliases.shorten_canonical_aliases(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
