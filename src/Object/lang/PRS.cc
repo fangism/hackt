@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3 2005/10/08 01:39:58 fang Exp $
+	$Id: PRS.cc,v 1.3.2.1 2005/10/09 17:30:27 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -20,7 +20,16 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/traits/pint_traits.h"
 #include "Object/expr/bool_expr.h"
+#include "Object/expr/meta_range_expr.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/inst/pint_value_collection.h"
+#include "Object/def/template_formals_manager.h"
+#include "Object/type/template_actuals.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
 
 #include "common/TODO.h"
@@ -39,6 +48,8 @@ SPECIALIZE_UTIL_WHAT(ART::entity::PRS::pull_up, "PRS-up")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::pull_dn, "PRS-dn")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::and_expr, "PRS-and")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::or_expr, "PRS-or")
+SPECIALIZE_UTIL_WHAT(ART::entity::PRS::and_expr_loop, "PRS-and-loop")
+SPECIALIZE_UTIL_WHAT(ART::entity::PRS::or_expr_loop, "PRS-or-loop")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::not_expr, "PRS-not")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::literal, "PRS-var")
 
@@ -50,6 +61,10 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::and_expr, PRS_AND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::or_expr, PRS_OR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::PRS::and_expr_loop, PRS_AND_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::PRS::or_expr_loop, PRS_OR_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::not_expr, PRS_NOT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -534,6 +549,65 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 // class prs_expr method definitions
 
 //=============================================================================
+// class expr_loop_base method definitions
+
+inline
+expr_loop_base::expr_loop_base() : ind_var(), range(), body_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+expr_loop_base::expr_loop_base(const ind_var_ptr_type& i, 
+		const range_ptr_type& r) :
+		ind_var(i), range(r), body_expr() {
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+expr_loop_base::expr_loop_base(const ind_var_ptr_type& i, 
+		const range_ptr_type& r, const prs_expr_ptr_type& e) :
+		ind_var(i), range(r), body_expr(e) {
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	NEVER_NULL(body_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+expr_loop_base::~expr_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_loop_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	NEVER_NULL(body_expr);
+	ind_var->collect_transient_info(m);
+	range->collect_transient_info(m);
+	body_expr->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_loop_base::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, ind_var);
+	m.write_pointer(o, range);
+	m.write_pointer(o, body_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_loop_base::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, ind_var);
+	m.read_pointer(i, range);
+	m.read_pointer(i, body_expr);
+}
+
+//=============================================================================
 // class and_expr method definitions
 
 and_expr::and_expr() : prs_expr(), sequence_type() { }
@@ -583,6 +657,8 @@ and_expr::negate(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modifies itself in-place!
+	NOTE: this is also usable for and_expr_loop, and hence, 
+		need not be virtual.  
  */
 prs_expr_ptr_type
 and_expr::negation_normalize(void) {
@@ -595,7 +671,8 @@ and_expr::negation_normalize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructs expressions bottom-up.  
-	\return index > 0 if successful, else 0.
+	\return index of newly created expression if successful (1-indexed), 
+		else return 0.
  */
 size_t
 and_expr::unroll(const unroll_context& c, const node_pool_type& np, 
@@ -626,10 +703,16 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+and_expr::collect_transient_info_base(persistent_object_manager& m) const {
+	m.collect_pointer_list(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 and_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(*this);
+	collect_transient_info_base(m);
 }
 }
 
@@ -643,6 +726,156 @@ and_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 and_expr::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer_list(i, *this);
+}
+
+//=============================================================================
+// class and_expr_loop method definitions
+
+and_expr_loop::and_expr_loop() : parent_type(), expr_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr_loop::and_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r) :
+		parent_type(), expr_loop_base(i, r) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr_loop::and_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r, const prs_expr_ptr_type& e) :
+		parent_type(), expr_loop_base(i, r, e) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr_loop::~and_expr_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+and_expr_loop::dump(ostream& o, const int) const {
+	// const bool paren = stamp && (stamp != print_stamp);
+	// always parenthesized
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	o << "(&:" << ind_var->get_name() << ':';
+	range->dump(o) << ':';
+	return body_expr->dump(o, print_stamp) << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::check(void) const {
+	body_expr->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: update comments: we are using pointer to same induction var/expr
+	What to do about induction variable and range expression?
+	Need to make private copy of variable (placeholder), and 
+	update references in the dependent experssions.  
+	OR... can we re-use the same variable and range_expr, 
+	knowing that only one expression can be evaluated at a time?
+	If so, then we need to share the count_ptr.  
+ */
+prs_expr_ptr_type
+and_expr_loop::negate(void) const {
+	STACKTRACE("and_expr_loop::negate()");
+	return count_ptr<or_expr_loop>(
+		new or_expr_loop(ind_var, range, body_expr->negate()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifies itself in-place!
+	NOTE: this is also usable for and_expr_loop, and hence, 
+		need not be virtual.  
+ */
+prs_expr_ptr_type
+and_expr_loop::negation_normalize(void) {
+	STACKTRACE("and_expr_loop::negation_normalize()");
+	body_expr->negation_normalize();
+	return prs_expr_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls into compile-time expanded meta expression.  
+	\return index of newly created expression if successful (1-indexed), 
+		else return 0.
+ */
+size_t
+and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	// first, resolve bounds of the loop range, using current context
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr) << endl;
+		return 0;
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	INVARIANT(min <= max);
+	// range gives us upper and lower bound of loop
+	// in a loop:
+	// create context chain of lookup
+	//	using unroll_context's template_formal/actual mechanism.  
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	list<size_t> expr_indices;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
+		// check for errors after loop
+	}
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(
+			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
+	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
+	// find index of first error
+	const size_t err = new_expr.first_error();
+	if (err) {
+		cerr << "Error resolving production rule expression at:"
+			<< endl;
+		return 0;
+	} else {
+		return pfp.current_expr_index();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	expr_loop_base::collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	expr_loop_base::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::load_object(const persistent_object_manager& m, istream& i) {
+	expr_loop_base::load_object_base(m, i);
 }
 
 //=============================================================================
@@ -735,10 +968,16 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+or_expr::collect_transient_info_base(persistent_object_manager& m) const {
+	m.collect_pointer_list(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 or_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(*this);
+	collect_transient_info_base(m);
 }
 }
 
@@ -752,6 +991,156 @@ or_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 or_expr::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer_list(i, *this);
+}
+
+//=============================================================================
+// class or_expr_loop method definitions
+
+or_expr_loop::or_expr_loop() : parent_type(), expr_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+or_expr_loop::or_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r) :
+		parent_type(), expr_loop_base(i, r) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+or_expr_loop::or_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r, const prs_expr_ptr_type& e) :
+		parent_type(), expr_loop_base(i, r, e) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+or_expr_loop::~or_expr_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+or_expr_loop::dump(ostream& o, const int) const {
+	// const bool paren = stamp && (stamp != print_stamp);
+	// always parenthesized
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	o << "(&:" << ind_var->get_name() << ':';
+	range->dump(o) << ':';
+	return body_expr->dump(o, print_stamp) << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::check(void) const {
+	body_expr->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: update comments: we are using pointer to same induction var/expr
+	What to do about induction variable and range expression?
+	Need to make private copy of variable (placeholder), and 
+	update references in the dependent experssions.  
+	OR... can we re-use the same variable and range_expr, 
+	knowing that only one expression can be evaluated at a time?
+	If so, then we need to share the count_ptr.  
+ */
+prs_expr_ptr_type
+or_expr_loop::negate(void) const {
+	STACKTRACE("or_expr_loop::negate()");
+	return count_ptr<and_expr_loop>(
+		new and_expr_loop(ind_var, range, body_expr->negate()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifies itself in-place!
+	NOTE: this is also usable for or_expr_loop, and hence, 
+		need not be virtual.  
+ */
+prs_expr_ptr_type
+or_expr_loop::negation_normalize(void) {
+	STACKTRACE("or_expr_loop::negation_normalize()");
+	body_expr->negation_normalize();
+	return prs_expr_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls into compile-time expanded meta expression.  
+	\return index of newly created expression if successful (1-indexed), 
+		else return 0.
+ */
+size_t
+or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	// first, resolve bounds of the loop range, using current context
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr) << endl;
+		return 0;
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	INVARIANT(min <= max);
+	// range gives us upper and lower bound of loop
+	// in a loop:
+	// create context chain of lookup
+	//	using unroll_context's template_formal/actual mechanism.  
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	list<size_t> expr_indices;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
+		// check for errors after loop
+	}
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(
+			PRS_OR_EXPR_TYPE_ENUM, expr_indices.size()));
+	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
+	// find index of first error
+	const size_t err = new_expr.first_error();
+	if (err) {
+		cerr << "Error resolving production rule expression at:"
+			<< endl;
+		return 0;
+	} else {
+		return pfp.current_expr_index();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	expr_loop_base::collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	expr_loop_base::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::load_object(const persistent_object_manager& m, istream& i) {
+	expr_loop_base::load_object_base(m, i);
 }
 
 //=============================================================================

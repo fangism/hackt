@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.26 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_expr.cc,v 1.26.20.1 2005/10/09 17:30:20 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -50,6 +50,8 @@
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+
+#include "common/ICE.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -914,9 +916,10 @@ prefix_expr::check_nonmeta_expr(context& c) const {
 				return return_type(new bool_negation_expr(be));
 			}
 		default:
-			cerr << "Bad operator char \'" << ch << "\' in "
+			ICE(cerr, 
+				cerr << "Bad operator char \'" << ch << "\' in "
 				"prefix_expr::check_nonmeta_expr()!" << endl;
-			DIE;
+			);
 	}
 	return return_type(NULL);
 }
@@ -934,10 +937,11 @@ prefix_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 	}
 	if (op->text[0] != '~') {
-		cerr << "FATAL: Invalid unary operator: \'" << op->text[0] <<
-			"\' at " << where(*op) <<
+		ICE(cerr, 
+			cerr << "FATAL: Invalid unary operator: \'" <<
+			op->text[0] << "\' at " << where(*op) <<
 			".  Aborting... have a nice day." << endl;
-		DIE;
+		);
 	}
 	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
@@ -1582,6 +1586,9 @@ logical_expr::check_nonmeta_expr(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't forget to check for cases of PRS loop expressions. 
+ */
 prs_expr_return_type
 logical_expr::check_prs_expr(context& c) const {
 	STACKTRACE("parser::PRS::logical_expr::check_prs_expr()");
@@ -1604,11 +1611,11 @@ logical_expr::check_prs_expr(context& c) const {
 	if (op_char == '&') {
 		typedef	entity::PRS::and_expr::iterator		iterator;
 		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
-		count_ptr<entity::PRS::and_expr>
+		const count_ptr<entity::PRS::and_expr>
 			l_and(lo.is_a<entity::PRS::and_expr>());
-		count_ptr<entity::PRS::and_expr>
+		const count_ptr<entity::PRS::and_expr>
 			r_and(ro.is_a<entity::PRS::and_expr>());
-		if (l_and) {
+		if (l_and && !l_and.is_a<entity::PRS::and_expr_loop>()) {
 			if (r_and) {
 				copy(r_and->begin(), r_and->end(), 
 					back_inserter(*l_and));
@@ -1616,11 +1623,11 @@ logical_expr::check_prs_expr(context& c) const {
 				l_and->push_back(ro);
 			}
 			return l_and;
-		} else if (r_and) {
+		} else if (r_and && !r_and.is_a<entity::PRS::and_expr_loop>()) {
 			r_and->push_front(lo);
 			return r_and;
 		} else {
-			count_ptr<entity::PRS::and_expr>
+			const count_ptr<entity::PRS::and_expr>
 				ret(new entity::PRS::and_expr);
 			ret->push_back(lo);
 			ret->push_back(ro);
@@ -1630,11 +1637,11 @@ logical_expr::check_prs_expr(context& c) const {
 	} else if (op_char == '|') {
 		typedef	entity::PRS::or_expr::iterator		iterator;
 		typedef	entity::PRS::or_expr::const_iterator	const_iterator;
-		count_ptr<entity::PRS::or_expr>
+		const count_ptr<entity::PRS::or_expr>
 			l_or(lo.is_a<entity::PRS::or_expr>());
-		count_ptr<entity::PRS::or_expr>
+		const count_ptr<entity::PRS::or_expr>
 			r_or(ro.is_a<entity::PRS::or_expr>());
-		if (l_or) {
+		if (l_or && !l_or.is_a<entity::PRS::or_expr_loop>()) {
 			if (r_or) {
 				copy(r_or->begin(), r_or->end(), 
 					back_inserter(*l_or));
@@ -1642,21 +1649,23 @@ logical_expr::check_prs_expr(context& c) const {
 				l_or->push_back(ro);
 			}
 			return l_or;
-		} else if (r_or) {
+		} else if (r_or && !r_or.is_a<entity::PRS::or_expr_loop>()) {
 			r_or->push_front(lo);
 			return r_or;
 		} else {
-			count_ptr<entity::PRS::or_expr>
+			const count_ptr<entity::PRS::or_expr>
 				ret(new entity::PRS::or_expr);
 			ret->push_back(lo);
 			ret->push_back(ro);
+//			ret->check();	// paranoia
 			return ret;
 		}
 	} else {
-		cerr << "FATAL: Invalid PRS operor: \'" << op_char << "\' at "
-			<< where(*op) << ".  Aborting... have a nice day."
-			<< endl;
-		DIE;
+		ICE(cerr, 
+			cerr << "FATAL: Invalid PRS operor: \'" << op_char <<
+				"\' at " << where(*op) <<
+				".  Aborting... have a nice day." << endl;
+		);
 		return prs_expr_return_type(NULL);
 	}
 }

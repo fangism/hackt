@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.19 2005/07/23 06:51:18 fang Exp $
+	$Id: art_parser_prs.cc,v 1.19.20.1 2005/10/09 17:30:21 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -24,6 +24,8 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/data_expr.h"
 #include "Object/lang/PRS.h"
+
+#include "common/TODO.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -251,7 +253,7 @@ op_loop::rightmost(void) const {
  */
 expr::meta_return_type
 op_loop::check_meta_expr(context& c) const {
-	cerr << "Fang, finish op_loop::check_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
 
@@ -261,8 +263,20 @@ op_loop::check_meta_expr(context& c) const {
  */
 nonmeta_expr_return_type
 op_loop::check_nonmeta_expr(context& c) const {
-	cerr << "Fang, finish op_loop::check_non_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+op_loop::check_prs_expr(context& c) const {
+	// declare induction variable using token_identifier
+	// check for shadowing by looking up
+	// extend/modify the parse context with token_identifier on stack
+	// type-check the range expression
+	// type-check the inside expression with modified context
+	FINISH_ME(Fang);
+	return prs_expr_return_type(NULL);
 }
 
 //=============================================================================

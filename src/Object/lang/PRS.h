@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.3 2005/10/08 01:39:59 fang Exp $
+	$Id: PRS.h,v 1.3.2.1 2005/10/09 17:30:27 fang Exp $
 	TODO: support loop expressions of AND and OR.  
  */
 
@@ -10,11 +10,17 @@
 
 #include "Object/art_object_fwd.h"
 #include "Object/lang/PRS_base.h"
+// #include "Object/expr/pint_range.h"
+// #include "Object/inst/pint_value_collection.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace ART {
 namespace entity {
+class meta_range_expr;
+struct pint_tag;
+template <class> class value_collection;
+
 namespace PRS {
 using std::vector;
 //=============================================================================
@@ -201,6 +207,41 @@ public:
 
 //=============================================================================
 /**
+	Common elements to expression loop.  
+ */
+class expr_loop_base {
+protected:
+	typedef	value_collection<pint_tag>		pint_scalar;
+	typedef	count_ptr<pint_scalar>			ind_var_ptr_type;
+	typedef	count_ptr<const meta_range_expr>	range_ptr_type;
+
+protected:
+	ind_var_ptr_type			ind_var;
+	range_ptr_type				range;
+	prs_expr_ptr_type			body_expr;
+
+	expr_loop_base();
+
+	expr_loop_base(const ind_var_ptr_type&, const range_ptr_type&);
+
+	expr_loop_base(const ind_var_ptr_type&, const range_ptr_type&,
+		const prs_expr_ptr_type&);
+
+	~expr_loop_base();
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+};	// end struct expr_loop_base
+
+//=============================================================================
+/**
 	Logical AND expression.  
  */
 class and_expr : public prs_expr, public prs_expr::expr_sequence_type {
@@ -229,8 +270,53 @@ public:
 
 	PRS_UNROLL_EXPR_PROTO;
 
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+public:
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class and_expr
+
+//-----------------------------------------------------------------------------
+/**
+	Logical AND loop.  
+ */
+class and_expr_loop : public prs_expr, public expr_loop_base {
+	typedef	and_expr_loop			this_type;
+	typedef	prs_expr			parent_type;
+private:
+	enum { print_stamp = PRS_AND_EXPR_TYPE_ENUM };
+public:
+	and_expr_loop();
+
+	and_expr_loop(const ind_var_ptr_type&, const range_ptr_type&);
+
+	and_expr_loop(const ind_var_ptr_type&, const range_ptr_type&, 
+		const prs_expr_ptr_type&);
+
+	~and_expr_loop();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const int) const;
+
+	void
+	check(void) const;
+
+	prs_expr_ptr_type
+	negate(void) const;
+
+	prs_expr_ptr_type
+	negation_normalize(void);
+
+	PRS_UNROLL_EXPR_PROTO;
+
+	PERSISTENT_METHODS_DECLARATIONS
+	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class and_expr
 
 //=============================================================================
@@ -263,8 +349,53 @@ public:
 
 	PRS_UNROLL_EXPR_PROTO;
 
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+public:
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class or_expr
+
+//-----------------------------------------------------------------------------
+/**
+	Logical OR loop.  
+ */
+class or_expr_loop : public prs_expr, public expr_loop_base {
+	typedef	or_expr_loop			this_type;
+	typedef	prs_expr			parent_type;
+private:
+	enum { print_stamp = PRS_OR_EXPR_TYPE_ENUM };
+public:
+	or_expr_loop();
+
+	or_expr_loop(const ind_var_ptr_type&, const range_ptr_type&);
+
+	or_expr_loop(const ind_var_ptr_type&, const range_ptr_type&, 
+		const prs_expr_ptr_type&);
+
+	~or_expr_loop();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const int) const;
+
+	void
+	check(void) const;
+
+	prs_expr_ptr_type
+	negate(void) const;
+
+	prs_expr_ptr_type
+	negation_normalize(void);
+
+	PRS_UNROLL_EXPR_PROTO;
+
+	PERSISTENT_METHODS_DECLARATIONS
+	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class or_expr
 
 //=============================================================================

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-10-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-01:
+	  Initial groundwork for enabling PRS loop expressions.  
+	  TODO: modify parse_context to handle loop scopes.
+
+
 2005-10-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-merged-cflat-01-11:

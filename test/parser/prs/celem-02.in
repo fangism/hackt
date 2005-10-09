@@ -1,0 +1,10 @@
+// "celem-02.in"
+// should pass -- using loop-and expression
+
+defproc celem2inv(bool a[2]; bool _o) {
+prs {
+	(&:i:2:	a[i] )			-> _o-
+	(&:i:2: ~a[i] )			-> _o+
+}
+}
+
