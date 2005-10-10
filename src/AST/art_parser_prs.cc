@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.19.20.1 2005/10/09 17:30:21 fang Exp $
+	$Id: art_parser_prs.cc,v 1.19.20.2 2005/10/10 22:13:43 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -21,9 +21,12 @@
 #include "AST/parse_context.h"
 
 #include "Object/def/process_definition.h"
+#include "Object/expr/pint_const.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/data_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/lang/PRS.h"
+#include "Object/inst/pint_value_collection.h"
 
 #include "common/TODO.h"
 
@@ -48,6 +51,8 @@ namespace PRS {
 #include "util/using_ostream.h"
 using entity::definition_base;
 using entity::process_definition;
+using entity::pint_scalar;
+using entity::meta_range_expr;
 
 //=============================================================================
 // class body_item method definitions
@@ -250,6 +255,7 @@ op_loop::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: FINISH ME
+	Is this even needed outside of the PRS context?
  */
 expr::meta_return_type
 op_loop::check_meta_expr(context& c) const {
@@ -260,6 +266,7 @@ op_loop::check_meta_expr(context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: FINISH ME
+	Is this even needed outside of the PRS context?
  */
 nonmeta_expr_return_type
 op_loop::check_nonmeta_expr(context& c) const {
@@ -275,8 +282,38 @@ op_loop::check_prs_expr(context& c) const {
 	// extend/modify the parse context with token_identifier on stack
 	// type-check the range expression
 	// type-check the inside expression with modified context
-	FINISH_ME(Fang);
-	return prs_expr_return_type(NULL);
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		// bounds->dump(cerr) <<
+		return prs_expr_return_type(NULL);
+	}
+	// convert implicit range to explicit range, if necessary
+	entity::PRS::expr_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// create loop index variable and push onto context stack
+	const count_ptr<pint_scalar>
+		loop_ind(c.push_loop_var(*index));
+	if (!loop_ind) {
+		// then push didn't succeed, no need to pop
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return prs_expr_return_type(NULL);
+	}
+	const prs_expr_return_type body_expr(ex->check_prs_expr(c));
+	if (!body_expr) {
+		cerr << "Error in expr-loop body: at " << where(*ex) << endl;
+		// ex->dump(cerr) <<
+		return prs_expr_return_type(NULL);
+	}
+	// else everything passes
+	c.pop_loop_var();
+	return (op->text[0] == '&')
+		? prs_expr_return_type(new entity::PRS::and_expr_loop(
+			loop_ind, loop_range, body_expr))
+		: prs_expr_return_type(new entity::PRS::or_expr_loop(
+			loop_ind, loop_range, body_expr));
 }
 
 //=============================================================================

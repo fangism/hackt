@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.3.2.1 2005/10/09 17:30:27 fang Exp $
+	$Id: PRS.h,v 1.3.2.2 2005/10/10 22:13:51 fang Exp $
 	TODO: support loop expressions of AND and OR.  
  */
 
@@ -19,7 +19,7 @@ namespace ART {
 namespace entity {
 class meta_range_expr;
 struct pint_tag;
-template <class> class value_collection;
+template <class, size_t> class value_array;
 
 namespace PRS {
 using std::vector;
@@ -59,10 +59,10 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&, const int) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	ostream&
-	dump(ostream& o) const { return dump(o, 0); }
+	dump(ostream& o) const { return dump(o, expr_dump_context()); }
 
 	const literal_base_ptr_type&
 	get_bool_var(void) const { return var; }
@@ -115,7 +115,12 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const rule_dump_context&) const;
+
+	ostream&
+	dump(ostream& o) const {
+		return dump(o, rule_dump_context());
+	}
 
 	void
 	check(void) const;
@@ -157,7 +162,12 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const rule_dump_context&) const;
+
+	ostream&
+	dump(ostream& o) const {
+		return dump(o, rule_dump_context());
+	}
 
 	void
 	check(void) const;
@@ -191,7 +201,12 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const rule_dump_context&) const;
+
+	ostream&
+	dump(ostream& o) const {
+		return dump(o, rule_dump_context());
+	}
 
 	void
 	check(void) const;
@@ -210,8 +225,8 @@ public:
 	Common elements to expression loop.  
  */
 class expr_loop_base {
-protected:
-	typedef	value_collection<pint_tag>		pint_scalar;
+public:
+	typedef	value_array<pint_tag, 0>		pint_scalar;
 	typedef	count_ptr<pint_scalar>			ind_var_ptr_type;
 	typedef	count_ptr<const meta_range_expr>	range_ptr_type;
 
@@ -228,6 +243,13 @@ protected:
 		const prs_expr_ptr_type&);
 
 	~expr_loop_base();
+
+	ostream&
+	dump(ostream&, const expr_dump_context&, const char) const;
+
+	size_t
+	unroll_base(const unroll_context&, const node_pool_type&, 
+		PRS::footprint&, const char) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -257,7 +279,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&, const int) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	void
 	check(void) const;
@@ -302,7 +324,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&, const int) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	void
 	check(void) const;
@@ -336,7 +358,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&, const int) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	void
 	check(void) const;
@@ -381,7 +403,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&, const int) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	void
 	check(void) const;
@@ -419,7 +441,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&, const int) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	void
 	check(void) const;

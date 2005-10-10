@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_expr.h,v 1.3 2005/09/04 21:14:46 fang Exp $
+	$Id: meta_range_expr.h,v 1.3.8.1 2005/10/10 22:13:48 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_RANGE_EXPR_H__
@@ -35,6 +35,7 @@ using util::bad_bool;
  */
 class meta_range_expr : virtual public meta_index_expr, 
 		public nonmeta_range_expr_base {
+	typedef	meta_range_expr		this_type;
 	typedef	meta_index_expr		parent_type;
 	typedef	nonmeta_range_expr_base	nonmeta_parent_type;
 protected:
@@ -105,6 +106,9 @@ virtual	bool
 	bool
 	must_be_equivalent_index(const meta_index_expr& ) const;
 
+	static
+	count_ptr<const this_type>
+	make_explicit_range(const count_ptr<const parent_type>&);
 };	// end class meta_range_expr
 
 //=============================================================================

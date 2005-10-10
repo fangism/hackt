@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_identifier.h,v 1.6 2005/05/22 06:18:30 fang Exp $
+	$Id: art_parser_identifier.h,v 1.6.36.1 2005/10/10 22:13:42 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_IDENTIFIER_H__
@@ -14,7 +14,13 @@ namespace ART {
 using util::sublist;
 using util::memory::excl_ptr;
 
+namespace entity {
+	class instance_collection_base;
+}
+
 namespace parser {
+using entity::instance_collection_base;
+
 //=============================================================================
 typedef	node_list<const token_identifier>	qualified_id_base;
 
@@ -53,21 +59,24 @@ public:
 
 	qualified_id(const qualified_id& i);
 
-virtual	~qualified_id();
+	~qualified_id();
 
-virtual	ostream&
+	ostream&
 	what(ostream& o) const;
 
-virtual	line_position
+	line_position
 	leftmost(void) const;
 
-virtual	line_position
+	line_position
 	rightmost(void) const;
 
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
-virtual	never_ptr<const object>
+	never_ptr<const object>
 	check_build(context& c) const;
+
+	never_ptr<const instance_collection_base>
+	lookup_instance(context& c) const;
 
 using parent_type::begin;
 using parent_type::end;
@@ -97,6 +106,9 @@ using parent_type::pop_front;
 };	// end class qualified_id
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just a slice reference to a qualified id.  
+ */
 class qualified_id_slice {
 protected:
 	typedef	sublist<count_ptr<const token_identifier> >	parent_type;

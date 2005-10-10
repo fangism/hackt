@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.77 2005/10/08 01:39:53 fang Exp $
+#	$Id: Makefile.am,v 1.77.2.1 2005/10/10 22:13:36 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -364,6 +364,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/port_connection.h \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
+	Object/unroll/unroll_context_value_resolver.h \
 	Object/lang/PRS_base.h \
 	Object/lang/CHP_base.h
 

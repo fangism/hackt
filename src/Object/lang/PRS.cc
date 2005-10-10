@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3.2.1 2005/10/09 17:30:27 fang Exp $
+	$Id: PRS.cc,v 1.3.2.2 2005/10/10 22:13:50 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -20,11 +20,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/traits/bool_traits.h"
-#include "Object/traits/pint_traits.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_range.h"
-#include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/template_formals_manager.h"
@@ -100,14 +98,15 @@ struct rule::checker {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct rule::dumper {
-	ostream& os;
-	dumper(ostream& o) : os(o) { }
+	ostream&		os;
+	rule_dump_context	rdc;
+	dumper(ostream& o, const rule_dump_context& c) : os(o), rdc(c) { }
 
 	template <class P>
 	void
 	operator () (const P& r) {
 		NEVER_NULL(r);
-		r->dump(os) << endl;
+		r->dump(os, rdc) << endl;
 	}
 };      // end struct rule::dumper
 
@@ -183,8 +182,8 @@ rule_set::~rule_set() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-rule_set::dump(ostream& o) const {
-	for_each(begin(), end(), rule::dumper(o));
+rule_set::dump(ostream& o, const rule_dump_context& c) const {
+	for_each(begin(), end(), rule::dumper(o, c));
 	return o;
 }
 
@@ -221,6 +220,7 @@ rule_set::expand_complements(void) {
 good_bool
 rule_set::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -272,12 +272,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pull_up::dump(ostream& o) const {
+pull_up::dump(ostream& o, const rule_dump_context& c) const {
 	static const char* const norm_arrow = " -> ";
 	static const char* const comp_arrow = " => ";
 	return output.dump(
-		guard->dump(o << auto_indent) <<
-			((cmpl) ? comp_arrow : norm_arrow)) << "+";
+		guard->dump(o << auto_indent, c) <<
+			((cmpl) ? comp_arrow : norm_arrow), c) << "+";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,6 +316,7 @@ pull_up::expand_complement(void) {
 good_bool
 pull_up::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	size_t guard_expr_index = guard->unroll(c, np, pfp);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling production rule: "
@@ -391,12 +392,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_dn)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pull_dn::dump(ostream& o) const {
+pull_dn::dump(ostream& o, const rule_dump_context& c) const {
 	static const char* norm_arrow = " -> ";
 	static const char* comp_arrow = " => ";
 	return output.dump(
-		guard->dump(o << auto_indent) <<
-			((cmpl) ? comp_arrow : norm_arrow)) << "-";
+		guard->dump(o << auto_indent, c) <<
+			((cmpl) ? comp_arrow : norm_arrow), c) << "-";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -430,6 +431,7 @@ pull_dn::expand_complement(void) {
 good_bool
 pull_dn::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	size_t guard_expr_index = guard->unroll(c, np, pfp);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling production rule: "
@@ -499,7 +501,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pass)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pass::dump(ostream& o) const {
+pass::dump(ostream& o, const rule_dump_context& c) const {
 	return o << "PRS::pass::dump() unimplemented.";
 }
 
@@ -578,6 +580,75 @@ inline
 expr_loop_base::~expr_loop_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	print_stamp parameter is unused, (just passed down), 
+	loop is always parenthesized.  
+ */
+ostream&
+expr_loop_base::dump(ostream& o, const expr_dump_context& c,
+		const char op) const {
+	// const bool paren = stamp && (stamp != print_stamp);
+	// always parenthesized
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	o << '(' << op << ':' << ind_var->get_name() << ':';
+	range->dump(o) << ": ";			// dump_brief?
+	return body_expr->dump(o, c) << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp, const char type_enum) const {
+	// STACKTRACE_VERBOSE;
+	// first, resolve bounds of the loop range, using current context
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr) << endl;
+		return 0;
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	INVARIANT(min <= max);
+	// range gives us upper and lower bound of loop
+	// in a loop:
+	// create context chain of lookup
+	//	using unroll_context's template_formal/actual mechanism.  
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	list<size_t> expr_indices;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
+		// check for errors after loop
+	}
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
+	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
+	// find index of first error
+	const size_t err = new_expr.first_error();
+	if (err) {
+		cerr << "Error resolving production rule expression at:"
+			<< endl;
+		return 0;
+	} else {
+		return pfp.current_expr_index();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 expr_loop_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -623,16 +694,18 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-and_expr::dump(ostream& o, const int stamp) const {
-	const bool paren = stamp && (stamp != print_stamp);
+and_expr::dump(ostream& o, const expr_dump_context& c) const {
+	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
+	expr_dump_context cc(c);
+	cc.expr_stamp = print_stamp;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
-	(*i)->dump(o, print_stamp);
+	(*i)->dump(o, cc);
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << " & ", print_stamp);
+		(*i)->dump(o << " & ", cc);
 	}
 	if (paren) o << ')';
 	return o;
@@ -677,6 +750,7 @@ and_expr::negation_normalize(void) {
 size_t
 and_expr::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
 		prs_expr::unroller(c, np, pfp));
@@ -752,15 +826,14 @@ and_expr_loop::~and_expr_loop() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr_loop)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	print_stamp parameter is unused, loop is always parenthesized.  
+ */
 ostream&
-and_expr_loop::dump(ostream& o, const int) const {
-	// const bool paren = stamp && (stamp != print_stamp);
-	// always parenthesized
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	o << "(&:" << ind_var->get_name() << ':';
-	range->dump(o) << ':';
-	return body_expr->dump(o, print_stamp) << ')';
+and_expr_loop::dump(ostream& o, const expr_dump_context& c) const {
+	expr_dump_context cc(c);
+	cc.expr_stamp = PRS_LITERAL_TYPE_ENUM;
+	return expr_loop_base::dump(o, cc, '&');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -808,6 +881,8 @@ and_expr_loop::negation_normalize(void) {
 size_t
 and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
+#if 0
 	// first, resolve bounds of the loop range, using current context
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
@@ -837,6 +912,9 @@ and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	pint_value_type ind_val = min;
 	list<size_t> expr_indices;
 	for ( ; ind_val <= max; ind_val++) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "ind_val = " << ind_val << endl;
+#endif
 		*ind = ind_val;
 		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
 		// check for errors after loop
@@ -854,6 +932,9 @@ and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	} else {
 		return pfp.current_expr_index();
 	}
+#else
+	return expr_loop_base::unroll_base(c, np, pfp, PRS_AND_EXPR_TYPE_ENUM);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -894,16 +975,18 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-or_expr::dump(ostream& o, const int stamp) const {
-	const bool paren = stamp && (stamp != print_stamp);
+or_expr::dump(ostream& o, const expr_dump_context& c) const {
+	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
+	expr_dump_context cc(c);
+	cc.expr_stamp = print_stamp;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
-	(*i)->dump(o, print_stamp);
+	(*i)->dump(o, cc);
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << " | ", print_stamp);
+		(*i)->dump(o << " | ", cc);
 	}
 	if (paren) o << ')';
 	return o;
@@ -942,6 +1025,7 @@ or_expr::negation_normalize(void) {
 size_t
 or_expr::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
 		prs_expr::unroller(c, np, pfp));
@@ -1018,14 +1102,10 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr_loop)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-or_expr_loop::dump(ostream& o, const int) const {
-	// const bool paren = stamp && (stamp != print_stamp);
-	// always parenthesized
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	o << "(&:" << ind_var->get_name() << ':';
-	range->dump(o) << ':';
-	return body_expr->dump(o, print_stamp) << ')';
+or_expr_loop::dump(ostream& o, const expr_dump_context& c) const {
+	expr_dump_context cc(c);
+	cc.expr_stamp = PRS_LITERAL_TYPE_ENUM;
+	return expr_loop_base::dump(o, cc, '|');
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1073,6 +1153,8 @@ or_expr_loop::negation_normalize(void) {
 size_t
 or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
+#if 0
 	// first, resolve bounds of the loop range, using current context
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
@@ -1119,6 +1201,9 @@ or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	} else {
 		return pfp.current_expr_index();
 	}
+#else
+	return expr_loop_base::unroll_base(c, np, pfp, PRS_OR_EXPR_TYPE_ENUM);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1164,9 +1249,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(not_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-not_expr::dump(ostream& o, const int) const {
+not_expr::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-	return var->dump(o << "~", print_stamp);
+	expr_dump_context cc(c);
+	cc.expr_stamp = print_stamp;
+	return var->dump(o << "~", cc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1211,6 +1298,7 @@ not_expr::negation_normalize(void) {
 size_t
 not_expr::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	const size_t expr_ind = var->unroll(c, np, pfp);
 	if (!expr_ind) {
 		cerr << "Error unrolling production rule expression." << endl;
@@ -1268,9 +1356,10 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 	Later, change prototype to pass in pointer to parent definition.  
  */
 ostream&
-literal::dump(ostream& o, const int) const {
+literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-	return var->dump_briefer(o, never_ptr<const scopespace>());
+	// NEVER_NULL(c.parent_scope);
+	return var->dump_briefer(o, c.parent_scope);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1312,6 +1401,7 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 		PRS::footprint& pfp) const {
 	typedef literal_base_ptr_type::element_type::alias_collection_type
 			bool_instance_alias_collection_type;
+	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
 	if (var->unroll_references(c, bc).bad) {
 		var->dump(cerr << "Error resolving production rule literal: ")

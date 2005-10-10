@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.5 2005/09/14 15:30:34 fang Exp $
+	$Id: unroll_context.cc,v 1.5.6.1 2005/10/10 22:13:52 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -16,7 +16,8 @@
 #include "Object/def/definition_base.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
-#include "Object/inst/param_value_collection.h"
+// #include "Object/inst/param_value_collection.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
@@ -113,6 +114,19 @@ unroll_context::dump(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	20051011: Fixed bug where loop context would fail to 
+		translate instance reference correctly because
+		target_footprint of innermost context was NULL.  
+ */
+const footprint*
+unroll_context::get_target_footprint(void) const {
+	if (!target_footprint && next)
+		return next->get_target_footprint();
+	else	return target_footprint;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return a copy of the context with footprint pointer nullified.  
 	Calledn by member_instance_reference::unroll_reference.
  */
@@ -122,6 +136,38 @@ unroll_context::make_member_context(void) const {
 	unroll_context ret(*this);
 	ret.target_footprint = NULL;
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used only for looking up loop variables.  
+	Must get the scope correct, check the template formals manager, 
+	acting on behalf of the actual value of the loop variable.  
+	\return NULL if not found.
+ */
+count_ptr<const pint_const>
+unroll_context::lookup_loop_var(const pint_scalar& ps) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(template_args.get_strict_args()->size() == 1);
+		// not true if this is called when looking up general variables
+	const never_ptr<const pint_scalar>
+		probe(template_formals->lookup_template_formal(ps.get_name())
+			.is_a<const pint_scalar>());
+	if (probe) {
+		return template_args[0].is_a<const pint_const>();
+	} else if (next) {
+		return next->lookup_loop_var(ps);
+	} else {
+#if 0
+		ICE(cerr, 
+			cerr << "expected to resolve ";
+			ps.dump(cerr) <<
+				" loop variable, but failed!" << endl;
+		)
+#else
+		return count_ptr<const pint_const>(NULL);
+#endif
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -140,13 +186,19 @@ unroll_context::make_member_context(void) const {
 count_ptr<const const_param>
 unroll_context::lookup_actual(const param_value_collection& p) const {
 	typedef	count_ptr<const const_param>	return_type;
-	STACKTRACE("unroll_context::lookup_actual()");
+	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "looking up: " << p.get_name() << endl;
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());
-	INVARIANT(p.is_template_formal());
+	if (!p.is_template_formal()) {
+		// assert: p is a loop induction variable
+		const pint_scalar& ps(IS_A(const pint_scalar&, p));
+		return lookup_loop_var(ps);
+	}
+	// else is a template formal, use unroll context to translate
+
 	// not the position of the template formal in its own list
 	// but in the current context!!!
 	// very awkward...
@@ -216,7 +268,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 		return next->lookup_actual(p);
 	} else {
 	ICE(cerr, 
-		cerr << "expected resolve ";
+		cerr << "expected to resolve ";
 		p.dump(cerr) << " to constant value(s), but failed!" << endl;
 	)
 		return return_type(NULL);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.3 2005/10/08 01:39:59 fang Exp $
+	$Id: PRS_base.h,v 1.3.2.1 2005/10/10 22:13:51 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_BASE_H__
@@ -17,6 +17,7 @@
 namespace ART {
 namespace entity {
 class unroll_context;
+class scopespace;
 struct bool_tag;
 
 template <class>
@@ -33,6 +34,7 @@ using std::list;
 using std::istream;
 using std::ostream;
 using util::good_bool;
+using util::memory::never_ptr;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 using util::memory::sticky_ptr;
@@ -50,6 +52,47 @@ typedef	instance_pool<bool_instance_type>	node_pool_type;
 
 //=============================================================================
 /**
+	Dump modifier for PRS rules.  
+ */
+struct rule_dump_context {
+	never_ptr<const scopespace>		parent_scope;
+
+	rule_dump_context() : parent_scope(NULL) { }
+
+	explicit
+	rule_dump_context(const scopespace& s) : parent_scope(&s) { }
+
+	explicit
+	rule_dump_context(const never_ptr<const scopespace> s) :
+		parent_scope(s) { }
+
+	// default copy-constructor
+
+};	// end struct rule_dump_context
+
+//-----------------------------------------------------------------------------
+/**
+	Helper class for controlling PRS and expression dumps.  
+ */
+struct expr_dump_context : public rule_dump_context {
+	int					expr_stamp;
+
+	expr_dump_context() : rule_dump_context(), expr_stamp(0) { }
+
+	explicit
+	expr_dump_context(const never_ptr<const scopespace> s) :
+		rule_dump_context(s), expr_stamp(0) { }
+
+	// implicit OK
+	expr_dump_context(const rule_dump_context& r) :
+		rule_dump_context(r), expr_stamp(0) { }
+
+	// default copy constructor
+
+};	// end struct expr_dump_context
+
+//=============================================================================
+/**
 	A collection or production rules.  
  */
 class rule_set : public list<sticky_ptr<rule> > {
@@ -63,7 +106,7 @@ public:
 	~rule_set();
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const rule_dump_context& = rule_dump_context()) const;
 
 	void
 	expand_complements(void);
@@ -96,7 +139,7 @@ public:
 virtual	~rule() { }
 
 virtual	ostream&
-	dump(ostream&) const = 0;
+	dump(ostream&, const rule_dump_context&) const = 0;
 
 virtual	excl_ptr<rule>
 	expand_complement(void) = 0;
@@ -132,10 +175,10 @@ public:
 virtual	~prs_expr() { }
 
 virtual	ostream&
-	dump(ostream&, const int) const = 0;
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 	ostream&
-	dump(ostream& o) const { return dump(o, 0); }
+	dump(ostream& o) const { return dump(o, expr_dump_context()); }
 
 virtual	prs_expr_ptr_type
 	negate(void) const = 0;

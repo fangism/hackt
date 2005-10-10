@@ -3,15 +3,16 @@
 	Parameter instance collection classes for ART.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: pbool_value_collection.h,v 1.2 2005/07/23 06:52:39 fang Exp $
+	$Id: pbool_value_collection.h,v 1.2.20.1 2005/10/10 22:13:50 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
 #define	__OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
 
 #include "Object/inst/param_value_collection.h"
-// #include "Object/art_object_expr_param_ref.h"	// for typedef init_arg_type
 #include "Object/inst/value_collection.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/traits/pbool_traits.h"
 
 namespace ART {
 namespace entity {

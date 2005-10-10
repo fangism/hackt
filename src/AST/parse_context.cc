@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.3 2005/09/04 21:14:39 fang Exp $
+ 	$Id: parse_context.cc,v 1.3.8.1 2005/10/10 22:13:43 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -21,6 +21,7 @@
 #include "AST/art_parser_identifier.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/param_expr_list.h"
+#include "Object/expr/pint_const.h"
 #include "Object/def/enum_datatype_def.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
@@ -31,7 +32,8 @@
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/param_value_collection.h"
+// #include "Object/inst/param_value_collection.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/module.h"
 
 #include "util/stacktrace.h"
@@ -51,6 +53,7 @@ using entity::param_value_collection;
 using entity::process_definition;
 using entity::user_def_chan;
 using entity::user_def_datatype;
+using entity::pint_scalar;
 
 //=============================================================================
 // class context method definition
@@ -70,6 +73,9 @@ context::context(module& m) :
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
+#if USE_LOOP_SCOPE
+		loop_var_stack(), 
+#endif
 		global_namespace(m.get_global_namespace()), 
 		master_instance_list(m.instance_management_list), 
 		strict_template_mode(true)
@@ -311,44 +317,6 @@ context::close_enum_definition(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_CONTEXT_TEMPLATE_METHODS
-/**
-	THIS NEEDS SERIOUS RE-WORK.  
-	Registers a process definition's signature.  
-	\param pname the process signature, which contains and identifier, 
-		optional template signature, and port signature.  
-	Details: checks to see if prototype was already declared.  
-	If already declared, then this re-declaration MUST be indentical, 
-	else report error of mismatched re-declaration.  
-	If not already declared, create an entry...
- */
-void
-context::open_process_definition(const token_identifier& pname) {
-	const never_ptr<process_definition>
-		pd(current_namespace->lookup_object_here_with_modify(pname)
-				.is_a<process_definition>());
-	if (pd) {
-		if (pd->is_defined()) {
-			cerr << pname << " is already defined!  attempted "
-				"redefinition at " << where(pname) << endl;
-			THROW_EXIT;
-		}
-		INVARIANT(!current_open_definition);	// sanity check
-		current_open_definition = pd;
-		sequential_scope_stack.push(pd.as_a<sequential_scope>());
-		pd->mark_defined();
-		indent++;
-	} else {
-		// no real reason why this should ever fail...
-		type_error_count++;
-		cerr << where(pname) << endl;
-		THROW_EXIT;			// temporary
-		// return NULL
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just sets current_open_definition to NULL, 
 	and resets the check_against_previous_definition_signature flag.  
@@ -360,45 +328,6 @@ context::close_current_definition(void) {
 	current_open_definition = never_ptr<definition_base>(NULL);
 	indent--;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_CONTEXT_TEMPLATE_METHODS
-/**
-	Closes a process definition in the context.  
-	Just sets current_open_definition to NULL.  
- */
-void
-context::close_process_definition(void) {
-	// sanity check
-	current_open_definition.must_be_a<process_definition>();
-	sequential_scope_stack.pop();
-	close_current_definition();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Closes a user-defined data type definition in the context.  
-	Just sets current_open_definition to NULL.  
- */
-void
-context::close_datatype_definition(void) {
-	// sanity check
-//	current_open_definition.must_be_a<datatype_definition>();
-	current_open_definition.must_be_a<datatype_definition_base>();
-	close_current_definition();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Closes a user-defined channel type definition in the context.  
-	Just sets current_open_definition to NULL.  
- */
-void
-context::close_chantype_definition(void) {
-	current_open_definition.must_be_a<channel_definition_base>();
-	close_current_definition();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -415,47 +344,6 @@ context::get_current_prototype(void) {
  */
 never_ptr<const definition_base>
 context::get_current_prototype(void) const { return current_prototype; }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-UNUSED
-/**
-	\return the current active parameter definition.  
- */
-never_ptr<const built_in_param_def>
-context::get_current_param_definition(void) const {
-	return current_definition_reference.is_a<const built_in_param_def>();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_CONTEXT_TEMPLATE_METHODS
-/**
-	\return the current active datatype definition.  
- */
-never_ptr<const datatype_definition_base>
-context::get_current_datatype_definition(void) const {
-	return current_definition_reference.is_a<const datatype_definition_base>();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return the current active channel definition.  
- */
-never_ptr<const channel_definition_base>
-context::get_current_channel_definition(void) const {
-	return current_definition_reference.is_a<const channel_definition_base>();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return the current active process definition.  
- */
-never_ptr<const process_definition_base>
-context::get_current_process_definition(void) const {
-	return current_definition_reference.is_a<const process_definition_base>();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -512,15 +400,47 @@ context::get_current_fundamental_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Looks up a quallified identifier.  
+	Incidentally, never looks up loop variables this way, 
+		because they cannot be referenced qualified-ly.  
+	Is this comment stale?
 	TO FIX: when checking a prototype, current scope should be 
 	updated to that prototype's definition.  
  */
 never_ptr<const object>
 context::lookup_object(const qualified_id& id) const {
+	typedef	never_ptr<const object>		return_type;
 	// automatically resolve object handles.  
-	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
+	return_type o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
-		o = never_ptr<const object>(&o->self());
+		o = return_type(&o->self());
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up an unqualified identifier.
+	Also checks loop contexts with unualified reference.  
+ */
+never_ptr<const object>
+context::lookup_object(const token_identifier& id) const {
+	typedef	never_ptr<const object>		return_type;
+	STACKTRACE_VERBOSE;
+#if USE_LOOP_SCOPE
+	// aww shit, have to return a never_ptr when lookup count_ptr...
+	// could spell trouble later...
+	typedef	loop_var_stack_type::const_iterator const_iterator;
+	const_iterator i(loop_var_stack.begin());
+	const const_iterator e(loop_var_stack.end());
+	for ( ; i!=e; i++) {
+		if ((*i)->get_name() == id)
+			return return_type(&**i);
+	}
+#endif
+	// automatically resolve object handles.  
+	return_type o(get_current_named_scope()->lookup_object(id));
+	while (o.is_a<const object_handle>())
+		o = return_type(&o->self());
 	return o;
 }
 
@@ -617,9 +537,13 @@ context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	INVARIANT(current_namespace);
+#if 0
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
+#else
+	const never_ptr<const object> o(lookup_object(id));
+#endif
 	return o.is_a<const definition_base>();
 }
 
@@ -633,9 +557,13 @@ context::lookup_definition(const token_identifier& id) const {
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	INVARIANT(current_namespace);
+#if 0
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
+#else
+	const never_ptr<const object> o(lookup_object(id));
+#endif
 	return o.is_a<const definition_base>();
 }
 
@@ -647,9 +575,13 @@ context::lookup_definition(const qualified_id& id) const {
 never_ptr<const instance_collection_base>
 context::lookup_instance(const token_identifier& id) const {
 	INVARIANT(current_namespace);
+#if 0
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
+#else
+	const never_ptr<const object> o(lookup_object(id));
+#endif
 	return o.is_a<const instance_collection_base>();
 }
 
@@ -661,9 +593,13 @@ context::lookup_instance(const token_identifier& id) const {
 never_ptr<const instance_collection_base>
 context::lookup_instance(const qualified_id& id) const {
 	INVARIANT(current_namespace);
+#if 0
 	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
 		o = never_ptr<const object>(&o->self());
+#else
+	const never_ptr<const object> o(lookup_object(id));
+#endif
 	return o.is_a<const instance_collection_base>();
 }
 
@@ -934,6 +870,33 @@ void
 context::commit_definition_arity(void) {
 	INVARIANT(current_prototype);
 	current_prototype->commit_arity();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<pint_scalar>
+context::push_loop_var(const token_identifier& i) {
+	typedef	count_ptr<pint_scalar>	return_type;
+	const never_ptr<const object> probe(lookup_object(i));
+	if (probe) {
+		cerr << "Warning (promoted to error): "
+			"loop variable \"" << i << "\" shadows another "
+			"object by the same name: ";
+		probe->dump(cerr) << endl;
+		return return_type(NULL);
+	}
+	// Technically, variable is not a true member of the scope, 
+	// nevertheless, it needs to associate with some parent scope.  
+	const return_type ret(new pint_scalar(*get_current_named_scope(), i));
+	INVARIANT(ret);
+	loop_var_stack.push_front(ret);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::pop_loop_var(void) {
+	INVARIANT(!loop_var_stack.empty());
+	loop_var_stack.pop_front();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

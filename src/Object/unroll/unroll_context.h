@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.3 2005/09/04 21:15:04 fang Exp $
+	$Id: unroll_context.h,v 1.3.8.1 2005/10/10 22:13:52 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -17,13 +17,18 @@ namespace ART {
 namespace entity {
 // forward declarations
 class const_param;
+class pint_const;
 class footprint;
 class template_actuals;
 class template_formals_manager;
 class param_value_collection;
+struct pint_tag;
+struct pbool_tag;
+template <class, size_t> class value_array;
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+template <class Tag> class unroll_context_value_resolver;
 
 //=============================================================================
 /**
@@ -53,6 +58,8 @@ class unroll_context {
 		then experiment around with const_param_expr_list.  
 	 */
 	typedef	template_actuals			template_args_type;
+	typedef	value_array<pint_tag, 0>		pint_scalar;
+	template <class Tag> friend class unroll_context_value_resolver;
 private:
 	/**
 		Stack-chain continuation to next context in scope.  
@@ -98,8 +105,9 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+	// may bcome obsolete
 	const footprint*
-	get_target_footprint(void) const { return target_footprint; }
+	get_target_footprint(void) const;
 
 	bool
 	in_definition_context(void) const { return target_footprint; }
@@ -115,6 +123,10 @@ public:
 
 	count_ptr<const const_param>
 	lookup_actual(const param_value_collection&) const;
+
+protected:
+	count_ptr<const pint_const>
+	lookup_loop_var(const pint_scalar&) const;
 
 private:
 	static

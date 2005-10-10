@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.5 2005/09/04 21:14:46 fang Exp $
+ 	$Id: meta_range.cc,v 1.5.8.1 2005/10/10 22:13:48 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_CC__
@@ -84,6 +84,32 @@ REQUIRES_STACKTRACE_STATIC_INIT
  */
 typedef discrete_interval_set<pint_value_type>	interval_type;
 
+
+//=============================================================================
+// class meta_range_expr method definitions
+
+/**
+	Converts a single index (implicit range) to an explicit range.
+	If argument is already an explicit range, then return it.  
+ */
+count_ptr<const meta_range_expr>
+meta_range_expr::make_explicit_range(const count_ptr<const parent_type>& i) {
+	NEVER_NULL(i);
+{
+	const count_ptr<const this_type> ret(i.is_a<const this_type>());
+	if (ret) return ret;
+}
+{
+	const count_ptr<const pint_expr> ret(i.is_a<const pint_expr>());
+	NEVER_NULL(ret);
+	if (ret->is_static_constant()) {
+		return count_ptr<const this_type>(
+			new const_range(ret->static_constant_value()));
+	} else {
+		return count_ptr<const this_type>(new pint_range(ret));
+	}
+}
+}
 
 //=============================================================================
 // class pint_range method definitions

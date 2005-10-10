@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.4 2005/10/08 01:39:59 fang Exp $
+ 	$Id: instance_reference.cc,v 1.4.2.1 2005/10/10 22:13:51 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -678,6 +678,7 @@ simple_meta_instance_reference_base::dump_brief(ostream& o) const {
 	\param loc the local scope, used to determine whether or not
 		to print the qualified or abbreviated name.  
 		If null, then always used short name.  
+	TODO: write meta_index_list::dump_context.
  */
 ostream&
 simple_meta_instance_reference_base::dump_briefer(ostream& o, 
@@ -686,6 +687,7 @@ simple_meta_instance_reference_base::dump_briefer(ostream& o,
 		ib(get_inst_base());
 	ib->dump_hierarchical_name(o, dump_flags::no_owner);
 	if (array_indices) {
+		// array_indices->dump(o, loc);		// TODO: me
 		array_indices->dump(o);
 	}
 	return o;

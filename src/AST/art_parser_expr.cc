@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.26.20.1 2005/10/09 17:30:20 fang Exp $
+	$Id: art_parser_expr.cc,v 1.26.20.2 2005/10/10 22:13:42 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -551,6 +551,18 @@ qualified_id::check_build(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Performs unqualified lookup or qualified lookup of identifier.  
+	This is what id_expr::check_build() should call.  
+ */
+never_ptr<const instance_collection_base>
+qualified_id::lookup_instance(context& c) const {
+	if (!absolute && size() == 1)
+		return c.lookup_instance(*parent_type::back());
+	else	return c.lookup_instance(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
 
 // friend operator
@@ -665,8 +677,13 @@ id_expr::is_absolute(void) const {
 inst_ref_expr::meta_return_type
 id_expr::check_meta_reference(context& c) const {
 	STACKTRACE("id_expr::check_meta_reference()");
+#if 0
 	const never_ptr<const object>
 		o(qid->check_build(c));		// will lookup_object
+#else
+	const never_ptr<const instance_collection_base>
+		o(qid->lookup_instance(c));	// will lookup_instance
+#endif
 	if (o) {
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());

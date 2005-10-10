@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: pint_value_collection.h,v 1.2.20.1 2005/10/09 17:30:26 fang Exp $
+	$Id: pint_value_collection.h,v 1.2.20.2 2005/10/10 22:13:50 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PINT_VALUE_COLLECTION_H__
@@ -11,6 +11,8 @@
 
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
+#include "Object/expr/pint_const.h"
+#include "Object/traits/pint_traits.h"
 
 namespace ART {
 namespace entity {

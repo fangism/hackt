@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.5 2005/10/08 01:40:00 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.5.2.1 2005/10/10 22:13:51 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -110,6 +110,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 				*(*f)[_inst.get_name()])
 			: _inst);
 if (inst.get_dimensions()) {
+	STACKTRACE("is array");
 	const_index_list cil;
 	if (ind) {
 		cil = ind->unroll_resolve(c);
@@ -151,6 +152,7 @@ if (inst.get_dimensions()) {
 	// success!
 	return bad_bool(false);
 } else {
+	STACKTRACE("is scalar");
 	// is a scalar instance
 	// size the alias_collection_type appropriately
 	a.resize();		// empty

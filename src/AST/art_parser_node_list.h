@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_node_list.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.9 2005/05/19 18:43:28 fang Exp $
+	$Id: art_parser_node_list.h,v 1.9.36.1 2005/10/10 22:13:43 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_NODE_LIST_H__
@@ -111,6 +111,12 @@ public:
 
 	void
 	pop_front(void) { nodes.pop_front(); }
+
+	const value_type&
+	front(void) const { return nodes.front(); }
+
+	const value_type&
+	back(void) const { return nodes.back(); }
 
 	void
 	wrap(const node_position* o, const node_position* c) {

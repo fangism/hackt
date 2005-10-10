@@ -1,10 +1,13 @@
 // "celem-02.in"
-// should pass -- using loop-and expression
+// copy-modified from "celem-01.in"
+// should pass -- using bool arrays in expression
 
 defproc celem2inv(bool a[2]; bool _o) {
 prs {
-	(&:i:2:	a[i] )			-> _o-
-	(&:i:2: ~a[i] )			-> _o+
+	a[0] & a[1]			-> _o-
+	~a[0] & ~a[1]			-> _o+
 }
 }
+
+celem2inv c;
 

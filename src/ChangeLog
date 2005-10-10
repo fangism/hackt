@@ -1,5 +1,36 @@
 "ChangeLog"
 
+2005-10-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-02:
+	  Significant development of loops in the front-end.  
+	  includes many minor bug fixes (exhibited by testing loops).  
+	  id_expr::check_meta_reference()
+		calls qualified_id::lookup_instance instead of check_build
+		to guarantee proper unqualified lookup to catch loop vars.  
+	  AST::qualified_id methods are all non-virtual (no children).
+	  Finished AST::PRS::op_loop::check_prs_expr().
+	  Added loop_var_stack to parse_context, now used in looking
+		up unqualified identifiers.
+		(TODO: commit USE_LOOP_SCOPE, clean up parse_context.cc)
+	  Now catch errors in PRS::rule_set::unroll().  
+	  Implemented static meta_range_expr::make_explicit_range().
+	  The way to detect a loop variable is by checking that
+		it is not contained by its parent scopespace.  
+	  Improved entity::PRS::*::dump to take dump_context arguments,
+		but expressions don't use context yet to leverage this.  
+		Noted in "Object/ref/instance_reference.cc" dump_briefer.  
+	  Factored out PRS::*loop::* code into expr_loop_base::*
+		(clean up old code)
+	  Hacked in catch for loop variable resolution in
+		simple_meta_value_reference<>::unroll_resolve_value, 
+		using unroll_context_value_resolver policy.  
+	  Implemented unroll_context::lookup_lop_var().
+	  unroll_context::get_target_footprint() now looks up chain
+		of parent contexts.  
+	  TODO: more crazy loop tests, nesting...
+
+
 2005-10-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-01:

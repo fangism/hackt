@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.4 2005/09/04 21:14:55 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.4.8.1 2005/10/10 22:13:52 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -31,7 +31,7 @@
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
 #include "common/ICE.h"
 
@@ -282,17 +282,32 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 	Now checks unroll context to see if the referenced
 	value collection belongs to a complete type (definition) scope.  
 	\return good if resolution succeeds.
+	NOTE: loop induction variables (pint) do not exist in footprint!
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
 	STACKTRACE_VERBOSE;
+#if 0
+	// replaced
 	const footprint* const f(c.get_target_footprint());
 	const value_collection_type&
 		_vals(f ? IS_A(const value_collection_type&, 
 				*(*f)[value_collection_ref->get_name()])
 			: *value_collection_ref);
+#else
+	const pair<bool, const value_collection_type*>
+		_v(unroll_context_value_resolver<Tag>().operator()
+			(c, *value_collection_ref, i));
+	if (_v.first) {
+		// then our work is done, 
+		// i has already been set as a loop variable
+		return good_bool(true);
+	}
+	// stupid gcc-3.3 needs .operator()...
+	const value_collection_type& _vals(*_v.second);
+#endif
 	if (this->array_indices) {
 		const const_index_list
 			indices(this->array_indices->unroll_resolve(c));
@@ -309,11 +324,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			// then we need to get the template actuals
 			return _vals.lookup_value(i, lower, c);
 		} else {
-			cerr << "Unable to unroll-resolve array_indices!" << endl;
+			cerr << "Unable to unroll-resolve array_indices!"
+				<< endl;
 			return good_bool(false);
 		}
 	} else {
 		// assert dynamic cast
+		// what if is pbool_const or pint_const?
 		const value_scalar_type&
 			scalar_inst(IS_A(const value_scalar_type&, _vals));
 		// c.dump(STACKTRACE_INDENT) << endl;
