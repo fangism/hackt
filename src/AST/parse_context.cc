@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.3.8.1 2005/10/10 22:13:43 fang Exp $
+ 	$Id: parse_context.cc,v 1.3.8.2 2005/10/11 02:41:24 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -73,9 +73,7 @@ context::context(module& m) :
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
-#if USE_LOOP_SCOPE
 		loop_var_stack(), 
-#endif
 		global_namespace(m.get_global_namespace()), 
 		master_instance_list(m.instance_management_list), 
 		strict_template_mode(true)
@@ -128,8 +126,8 @@ context::open_namespace(const token_identifier& id) {
 	cerr << "Before add_open_namespace(), " << endl;
 	current_namespace->dump(cerr) << endl;
 #endif
-	never_ptr<name_space> insub;
-	insub = current_namespace->add_open_namespace(id);
+	const never_ptr<name_space>
+		insub(current_namespace->add_open_namespace(id));
 
 #if 0
 	cerr << "After add_open_namespace(), " << endl;
@@ -426,9 +424,9 @@ never_ptr<const object>
 context::lookup_object(const token_identifier& id) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE_VERBOSE;
-#if USE_LOOP_SCOPE
 	// aww shit, have to return a never_ptr when lookup count_ptr...
 	// could spell trouble later...
+	// fortunately, is unly used locally by caller
 	typedef	loop_var_stack_type::const_iterator const_iterator;
 	const_iterator i(loop_var_stack.begin());
 	const const_iterator e(loop_var_stack.end());
@@ -436,7 +434,6 @@ context::lookup_object(const token_identifier& id) const {
 		if ((*i)->get_name() == id)
 			return return_type(&**i);
 	}
-#endif
 	// automatically resolve object handles.  
 	return_type o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
@@ -537,13 +534,7 @@ context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
 	INVARIANT(current_namespace);
-#if 0
-	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
-	while (o.is_a<const object_handle>())
-		o = never_ptr<const object>(&o->self());
-#else
 	const never_ptr<const object> o(lookup_object(id));
-#endif
 	return o.is_a<const definition_base>();
 }
 
@@ -557,13 +548,7 @@ context::lookup_definition(const token_identifier& id) const {
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
 	INVARIANT(current_namespace);
-#if 0
-	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
-	while (o.is_a<const object_handle>())
-		o = never_ptr<const object>(&o->self());
-#else
 	const never_ptr<const object> o(lookup_object(id));
-#endif
 	return o.is_a<const definition_base>();
 }
 
@@ -575,13 +560,7 @@ context::lookup_definition(const qualified_id& id) const {
 never_ptr<const instance_collection_base>
 context::lookup_instance(const token_identifier& id) const {
 	INVARIANT(current_namespace);
-#if 0
-	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
-	while (o.is_a<const object_handle>())
-		o = never_ptr<const object>(&o->self());
-#else
 	const never_ptr<const object> o(lookup_object(id));
-#endif
 	return o.is_a<const instance_collection_base>();
 }
 
@@ -593,13 +572,7 @@ context::lookup_instance(const token_identifier& id) const {
 never_ptr<const instance_collection_base>
 context::lookup_instance(const qualified_id& id) const {
 	INVARIANT(current_namespace);
-#if 0
-	never_ptr<const object> o(get_current_named_scope()->lookup_object(id));
-	while (o.is_a<const object_handle>())
-		o = never_ptr<const object>(&o->self());
-#else
 	const never_ptr<const object> o(lookup_object(id));
-#endif
 	return o.is_a<const instance_collection_base>();
 }
 

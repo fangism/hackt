@@ -2,6 +2,22 @@
 
 2005-10-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-60-PRS-02-03:
+	  Enabled assigning and persistence of definition local 
+		parameter variables.  
+	  Added unroll_context parameter to simple_meta_value_reference<>::
+		assign_value_collection() to handle definition-local 
+		variable assignments, called by expression_assignment<>::unroll.
+	  value_array<>::lookup_value added code to catch cases 
+		where value array is loop variable or
+		definition-local variable.  
+	  Committed USE_LOOP_SCOPE and cleaned up "AST/parse_context.cc"
+	  In unroll_context::lookup_actual, check that argument is
+		loop variable before calling lookup_loop_var.  
+	  TODO: enable create tests in parser/param/.  
+	  See new entries in TODO.txt.
+
+
 	* ARTXX-00-01-04-main-00-60-PRS-02-02:
 	  Significant development of loops in the front-end.  
 	  includes many minor bug fixes (exhibited by testing loops).  

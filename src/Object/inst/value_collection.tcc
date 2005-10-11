@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.3.8.1 2005/10/10 22:13:50 fang Exp $
+ 	$Id: value_collection.tcc,v 1.3.8.2 2005/10/11 02:41:26 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -39,7 +39,8 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
-#include "Object/unroll/unroll_context.h"
+// #include "Object/unroll/unroll_context.h"
+#include "Object/unroll/unroll_context_value_resolver.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -544,6 +545,9 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 
 	TODO: really this should take a const_index_list argument, 
 	to valid dynamic allocation in meta_instance_reference methods.  
+	TODO: re-write lookup mechanism completely
+	TODO: what if owner is top-level? cannot be formal, 
+		but could be loop variable.  Is this OK?
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
@@ -553,6 +557,32 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	INVARIANT(D == i.dimensions());
 	if (this->owner.template is_a<const definition_base>()) {
 		INVARIANT(!c.empty());
+#if 1
+		if (!this->is_template_formal()) {
+			// must be definition local
+			// can't be loop variable b/c would be scalar
+			const pair<bool, const parent_type*>
+				_r(unroll_context_value_resolver<Tag>()
+					.operator()(c, *this, v));
+			INVARIANT(!_r.first);
+			// I hate this ugly code...
+			// the rest is COPIED from the end of this method
+			const this_type&
+				_val_array(IS_A(const this_type&, *_r.second));
+			const key_type index(i);
+			const element_type& pi(_val_array.collection[index]);
+			if (pi.valid) {
+				v = pi.value;
+			} else {
+				cerr << "ERROR: reference to uninitialized " <<
+					class_traits<Tag>::tag_name << ' ' <<
+					this->get_qualified_name() << " at index: " <<
+					i << endl;
+			}
+			return good_bool(pi.valid);
+		}
+		// else is template formal, lookup actual
+#endif
 		const count_ptr<const const_param>
 			ac(c.lookup_actual(*this));
 		NEVER_NULL(ac);
@@ -562,6 +592,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 		v = (*sc)[i];
 		return good_bool(true);
 	}
+	// else is top-level
 	const key_type index(i);
 	const element_type& pi(collection[index]);
 	if (pi.valid) {
@@ -760,6 +791,33 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 		const unroll_context& c) const {
 	if (this->owner.template is_a<const definition_base>()) {
 		INVARIANT(!c.empty());
+#if 1
+		if (!this->is_template_formal() && !this->is_loop_variable()) {
+			// must be definition local
+			// can't be loop variable b/c would be scalar
+			const pair<bool, const parent_type*>
+				_r(unroll_context_value_resolver<Tag>()
+					.operator()(c, *this, v));
+			INVARIANT(!_r.first);
+			// I hate this ugly code...
+			// the rest is COPIED from the end of this method
+			const this_type&
+				_val(IS_A(const this_type&, *_r.second));
+			if (!_val.the_instance.instantiated) {
+				cerr << "ERROR: Reference to uninstantiated " <<
+					class_traits<Tag>::tag_name << ' ' <<
+					this->get_qualified_name() << "!" << endl;
+				return good_bool(false);
+			}
+			if (_val.the_instance.valid) {
+				v = _val.the_instance.value;
+			} else {
+				this->dump(cerr << "ERROR: use of uninitialized ") << endl;
+			}
+			return good_bool(_val.the_instance.valid);
+		}
+		// else is template formal, lookup actual
+#endif
 		const count_ptr<const const_param>
 			ac(c.lookup_actual(*this));
 		NEVER_NULL(ac);
@@ -773,6 +831,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 		// INVARIANT(c.empty());
 		// no need for context in top-level!
 	}
+	// else is top-level
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated " <<
 			class_traits<Tag>::tag_name << ' ' <<

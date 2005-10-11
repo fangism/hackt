@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.26.20.2 2005/10/10 22:13:42 fang Exp $
+	$Id: art_parser_expr.cc,v 1.26.20.3 2005/10/11 02:41:23 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -677,13 +677,9 @@ id_expr::is_absolute(void) const {
 inst_ref_expr::meta_return_type
 id_expr::check_meta_reference(context& c) const {
 	STACKTRACE("id_expr::check_meta_reference()");
-#if 0
-	const never_ptr<const object>
-		o(qid->check_build(c));		// will lookup_object
-#else
+	// lookup_instance will check for unqualified references first
 	const never_ptr<const instance_collection_base>
-		o(qid->lookup_instance(c));	// will lookup_instance
-#endif
+		o(qid->lookup_instance(c));
 	if (o) {
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.3 2005/09/04 21:14:55 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.3.8.1 2005/10/11 02:41:27 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -166,7 +166,8 @@ public:
 #endif
 
 	bad_bool
-	assign_value_collection(const const_collection_type&) const;
+	assign_value_collection(const const_collection_type&, 
+		const unroll_context&) const;
 
 private:
 	excl_ptr<aliases_connection_base>

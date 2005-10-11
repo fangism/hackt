@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.3 2005/09/04 21:15:00 fang Exp $
+	$Id: expression_assignment.h,v 1.3.8.1 2005/10/11 02:41:28 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -105,7 +105,7 @@ private:
 	static
 	good_bool
 	assign_dests(const_dest_iterator, const const_dest_iterator&, 
-		const const_collection_type&);
+		const const_collection_type&, const unroll_context&);
 	
 };	// end class expression_assignment
 

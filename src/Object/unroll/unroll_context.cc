@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.5.6.1 2005/10/10 22:13:52 fang Exp $
+	$Id: unroll_context.cc,v 1.5.6.2 2005/10/11 02:41:28 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -23,6 +23,7 @@
 #include "Object/def/template_formals_manager.h"
 #include "Object/expr/param_expr_list.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
@@ -158,7 +159,7 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 	} else if (next) {
 		return next->lookup_loop_var(ps);
 	} else {
-#if 0
+#if 1
 		ICE(cerr, 
 			cerr << "expected to resolve ";
 			ps.dump(cerr) <<
@@ -193,9 +194,20 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 #endif
 	INVARIANT(!empty());
 	if (!p.is_template_formal()) {
-		// assert: p is a loop induction variable
-		const pint_scalar& ps(IS_A(const pint_scalar&, p));
-		return lookup_loop_var(ps);
+		// could be either loop variable or local variable!
+		const pint_scalar* ps(IS_A(const pint_scalar*, &p));
+		if (ps && ps->is_loop_variable()) {
+			return lookup_loop_var(*ps);
+		} else {
+			// otherwise, we have a private local parameter variable
+			// need to look it up in footprint
+			const footprint* const tfp = get_target_footprint();
+			NEVER_NULL(tfp);
+			const count_ptr<instance_collection_base>
+				ic((*tfp)[p.get_name()]);
+			NEVER_NULL(ic);
+			FINISH_ME_EXIT(Fang);
+		}
 	}
 	// else is a template formal, use unroll context to translate
 

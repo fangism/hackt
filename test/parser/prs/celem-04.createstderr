@@ -1,0 +1,141 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	470
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	38	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	41	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
+	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    celemNinv = process-definition (defined) celemNinv<
+      pint<> N
+      >(
+        bool<> a with indices: {
+          [0..::celemNinv::N-1]
+        }
+
+        bool<> _o
+      )
+      In definition "celemNinv", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
+        _o = bool<> _o
+        a = bool<> a with indices: {
+          [0..::celemNinv::N-1]
+        }
+
+      prs:
+        (&:i:[0..::celemNinv::N-1]: a[::celemNinv::i]) -> _o-
+        (&:i:[0..::celemNinv::N-1]: ~a[::celemNinv::i]) -> _o+
+      footprint collection: {
+        <4> {
+          bool^0 _o (instantiated) = ::celemNinv::_o (5) 
+          pint^0 N value: ?
+          bool^1 a with indices: {
+          }
+            unrolled indices: {
+              0 = ::celemNinv::a[0] (1) 
+              1 = ::celemNinv::a[1] (2) 
+              2 = ::celemNinv::a[2] (3) 
+              3 = ::celemNinv::a[3] (4) 
+            }
+          bool instance pool:
+          1	::celemNinv::a[0]
+          2	::celemNinv::a[1]
+          3	::celemNinv::a[2]
+          4	::celemNinv::a[3]
+          5	::celemNinv::_o
+          resolved prs:
+          a[0] & a[1] & a[2] & a[3] -> _o-
+          ~a[0] & ~a[1] & ~a[2] & ~a[3] -> _o+
+        }
+      }
+      }
+
+  Instances:
+    c = process celemNinv<4>^0 c (instantiated) = ::c (1) (
+      bool^1 a with indices: {
+        [0..::celemNinv::N-1]
+      }
+        unrolled indices: {
+          0 = ::c.a[0] (1) 
+          1 = ::c.a[1] (2) 
+          2 = ::c.a[2] (3) 
+          3 = ::c.a[3] (4) 
+        }
+      bool^0 _o (instantiated) = ::c._o (5) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::c
+bool instance pool:
+1	::c.a[0]
+2	::c.a[1]
+3	::c.a[2]
+4	::c.a[3]
+5	::c._o
+

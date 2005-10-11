@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.8.6.1 2005/10/10 22:13:49 fang Exp $
+	$Id: instance_collection.tcc,v 1.8.6.2 2005/10/11 02:41:25 fang Exp $
 	TODO: trim includes
  */
 
@@ -716,9 +716,6 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 	typedef	typename alias_collection_type::iterator
 						alias_collection_iterator;
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump(cerr) << endl;
-#endif
 	const key_type lower(l);	// this will assert dimension match!
 	const key_type upper(u);	// this will assert dimension match!
 	key_generator_type key_gen(lower, upper);

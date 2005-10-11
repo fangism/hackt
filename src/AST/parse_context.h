@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.3.8.1 2005/10/10 22:13:44 fang Exp $
+	$Id: parse_context.h,v 1.3.8.2 2005/10/11 02:41:24 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -17,8 +17,6 @@
 #include "util/memory/count_ptr.h"
 #include "Object/common/util_types.h"
 #include "util/boolean_types.h"
-
-#define	USE_LOOP_SCOPE					1
 
 namespace ART {
 namespace entity {
@@ -168,12 +166,10 @@ private:
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
 #define	current_sequential_scope		sequential_scope_stack.top()
 
-#if USE_LOOP_SCOPE
 	typedef	value_array<pint_tag, 0>	pint_scalar;
 	typedef	list<count_ptr<const pint_scalar> >
 						loop_var_stack_type;
 	loop_var_stack_type			loop_var_stack;
-#endif
 
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
@@ -377,7 +373,6 @@ public:
 	void
 	commit_definition_arity(void);
 
-#if USE_LOOP_SCOPE
 	// TODO:
 	// use nested struct for automatic construction/destruction matching...
 	count_ptr<pint_scalar>
@@ -385,7 +380,6 @@ public:
 
 	void
 	pop_loop_var(void);
-#endif
 
 // repeat for processes and channels...
 

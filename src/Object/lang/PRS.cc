@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3.2.2 2005/10/10 22:13:50 fang Exp $
+	$Id: PRS.cc,v 1.3.2.3 2005/10/11 02:41:27 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -882,59 +882,7 @@ size_t
 and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	// first, resolve bounds of the loop range, using current context
-	const_range cr;
-	if (!range->unroll_resolve_range(c, cr).good) {
-		cerr << "Error resolving range expression: ";
-		range->dump(cerr) << endl;
-		return 0;
-	}
-	const pint_value_type min = cr.lower();
-	const pint_value_type max = cr.upper();
-	INVARIANT(min <= max);
-	// range gives us upper and lower bound of loop
-	// in a loop:
-	// create context chain of lookup
-	//	using unroll_context's template_formal/actual mechanism.  
-	template_formals_manager tfm;
-	const never_ptr<const pint_scalar> pvc(&*ind_var);
-	tfm.add_strict_template_formal(pvc);
-
-	const count_ptr<pint_const> ind(new pint_const(min));
-	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
-	NEVER_NULL(al);
-	al->push_back(ind);
-	const template_actuals::const_arg_list_ptr_type sl(NULL);
-	const template_actuals ta(al, sl);
-	unroll_context cc(ta, tfm);
-	cc.chain_context(c);
-	pint_value_type ind_val = min;
-	list<size_t> expr_indices;
-	for ( ; ind_val <= max; ind_val++) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "ind_val = " << ind_val << endl;
-#endif
-		*ind = ind_val;
-		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
-		// check for errors after loop
-	}
-	PRS::footprint::expr_node&
-		new_expr(pfp.push_back_expr(
-			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
-	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
-	if (err) {
-		cerr << "Error resolving production rule expression at:"
-			<< endl;
-		return 0;
-	} else {
-		return pfp.current_expr_index();
-	}
-#else
 	return expr_loop_base::unroll_base(c, np, pfp, PRS_AND_EXPR_TYPE_ENUM);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1154,56 +1102,7 @@ size_t
 or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	// first, resolve bounds of the loop range, using current context
-	const_range cr;
-	if (!range->unroll_resolve_range(c, cr).good) {
-		cerr << "Error resolving range expression: ";
-		range->dump(cerr) << endl;
-		return 0;
-	}
-	const pint_value_type min = cr.lower();
-	const pint_value_type max = cr.upper();
-	INVARIANT(min <= max);
-	// range gives us upper and lower bound of loop
-	// in a loop:
-	// create context chain of lookup
-	//	using unroll_context's template_formal/actual mechanism.  
-	template_formals_manager tfm;
-	const never_ptr<const pint_scalar> pvc(&*ind_var);
-	tfm.add_strict_template_formal(pvc);
-
-	const count_ptr<pint_const> ind(new pint_const(min));
-	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
-	NEVER_NULL(al);
-	al->push_back(ind);
-	const template_actuals::const_arg_list_ptr_type sl(NULL);
-	const template_actuals ta(al, sl);
-	unroll_context cc(ta, tfm);
-	cc.chain_context(c);
-	pint_value_type ind_val = min;
-	list<size_t> expr_indices;
-	for ( ; ind_val <= max; ind_val++) {
-		*ind = ind_val;
-		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
-		// check for errors after loop
-	}
-	PRS::footprint::expr_node&
-		new_expr(pfp.push_back_expr(
-			PRS_OR_EXPR_TYPE_ENUM, expr_indices.size()));
-	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
-	if (err) {
-		cerr << "Error resolving production rule expression at:"
-			<< endl;
-		return 0;
-	} else {
-		return pfp.current_expr_index();
-	}
-#else
 	return expr_loop_base::unroll_base(c, np, pfp, PRS_OR_EXPR_TYPE_ENUM);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
