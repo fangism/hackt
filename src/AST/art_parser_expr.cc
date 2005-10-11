@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.26.20.3 2005/10/11 02:41:23 fang Exp $
+	$Id: art_parser_expr.cc,v 1.26.20.4 2005/10/11 23:33:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -219,6 +219,7 @@ inst_ref_expr::check_nonmeta_expr(context& c) const {
  */
 prs_literal_ptr_type
 inst_ref_expr::check_prs_literal(context& c) const {
+	STACKTRACE_VERBOSE;
 	meta_return_type ref(check_meta_reference(c));
 	count_ptr<simple_bool_meta_instance_reference>
 		bool_ref(ref.is_a<simple_bool_meta_instance_reference>());
@@ -676,7 +677,7 @@ id_expr::is_absolute(void) const {
  */
 inst_ref_expr::meta_return_type
 id_expr::check_meta_reference(context& c) const {
-	STACKTRACE("id_expr::check_meta_reference()");
+	STACKTRACE_VERBOSE;
 	// lookup_instance will check for unqualified references first
 	const never_ptr<const instance_collection_base>
 		o(qid->lookup_instance(c));
@@ -716,7 +717,7 @@ id_expr::check_meta_reference(context& c) const {
 inst_ref_expr::nonmeta_return_type
 id_expr::check_nonmeta_reference(context& c) const {
 	typedef inst_ref_expr::nonmeta_return_type	return_type;
-	STACKTRACE("id_expr::check_nonmeta_reference()");
+	STACKTRACE_VERBOSE;
 	const never_ptr<const object>
 		o(qid->check_build(c));		// will lookup_object
 	if (o) {
@@ -994,6 +995,7 @@ member_expr::rightmost(void) const {
  */
 inst_ref_expr::meta_return_type
 member_expr::check_meta_reference(context& c) const {
+	STACKTRACE_VERBOSE;
 	typedef	inst_ref_expr::meta_return_type	return_type;
 	const return_type o(owner->check_meta_reference(c));
 	// useless return value
@@ -1143,6 +1145,7 @@ index_expr::rightmost(void) const {
  */
 range_list::checked_meta_indices_type
 index_expr::intercept_meta_indices_error(context& c) const {
+	STACKTRACE_VERBOSE;
 	const range_list::checked_meta_indices_type
 		checked_indices(ranges->check_meta_indices(c));
 	// should result in a ART::entity::meta_index_list
@@ -1178,6 +1181,7 @@ index_expr::intercept_nonmeta_indices_error(context& c) const {
  */
 inst_ref_expr::meta_return_type
 index_expr::intercept_base_meta_ref_error(context& c) const {
+	STACKTRACE_VERBOSE;
 	// should result in an meta_instance_reference
 	const inst_ref_expr::meta_return_type
 		base_expr(base->check_meta_reference(c));
@@ -1214,6 +1218,7 @@ index_expr::intercept_base_nonmeta_ref_error(context& c) const {
  */
 inst_ref_expr::meta_return_type
 index_expr::check_meta_reference(context& c) const {
+	STACKTRACE_VERBOSE;
 	range_list::checked_meta_indices_type
 		checked_indices(intercept_meta_indices_error(c));
 	const inst_ref_expr::meta_return_type
@@ -1246,6 +1251,7 @@ index_expr::check_meta_reference(context& c) const {
 inst_ref_expr::nonmeta_return_type
 index_expr::check_nonmeta_reference(context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
+	STACKTRACE_VERBOSE;
 	range_list::checked_nonmeta_indices_type
 		checked_indices(intercept_nonmeta_indices_error(c));
 	if (!checked_indices) {

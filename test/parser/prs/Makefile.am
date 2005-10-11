@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.5.2.3 2005/10/11 21:02:57 fang Exp $
+#	$Id: Makefile.am,v 1.5.2.4 2005/10/11 23:33:35 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -10,7 +10,8 @@ ARTC_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
 	nand-01 nand-02 nand-03 nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 \
-	wchb-01 wchb-02 wchb-03 wchb-04
+	wchb-01 wchb-02 wchb-03 wchb-04 \
+	pal-01 pal-02 pal-03
 
 # celem-06 pending parenthesization fix
 
@@ -22,7 +23,8 @@ ARTOBJUNROLL_TEST_SUBJECTS = $(ARTOBJ_TEST_SUBJECTS)
 
 HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 \
-	wchb-01 wchb-02 wchb-03 wchb-04
+	wchb-01 wchb-02 wchb-03 wchb-04 \
+	pal-01 pal-02 pal-03
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 

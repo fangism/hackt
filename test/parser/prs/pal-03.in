@@ -1,0 +1,15 @@
+// "pal-03.in"
+// programmable array logic example? not really...
+// copy-modified from "pal-02.in"
+// should pass, using nested expression loops
+
+template <pint M, N>
+defproc matrix_array(bool in[M][N]; bool _o) {
+prs {
+	(|:i:M:	(&:j:N:	in[i][j] ) )	-> _o-
+	(&:i:M:	(|:j:N:	~in[i][j] ) )	-> _o+
+}
+}
+
+matrix_array<3,4> foo;
+
