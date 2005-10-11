@@ -1,0 +1,63 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	33
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	16	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    bogus = process-definition (defined) bogus<
+      pint<> E
+      >(
+      )
+      In definition "bogus", we have: {
+      Parameters:
+        E = pint<> E
+        M = pint<> M with indices: {
+          [0..::bogus::E-1]
+        }
+
+      footprint collection: {
+        <2> {
+          pint^0 E value: ?
+          pint^1 M with indices: {
+          }
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+            }
+        }
+      }
+      }
+
+  Instances:
+    x = process bogus<2>^0 x (instantiated) = ::x 
+}
+

@@ -1,0 +1,13 @@
+// "046.in" should pass, using template parameters in definitions' parameters
+// copy-modified from "045.in"
+
+template <pint E>
+defproc bogus() {
+pint M[E];
+M[0] = 3;
+M[E-1] = 5;		// E must be >= 2 to not conflict
+pint N[M[0]];		// should be OK
+}
+
+bogus<2> x;
+

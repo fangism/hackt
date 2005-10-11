@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.4.8.2 2005/10/11 02:41:27 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.4.8.3 2005/10/11 21:02:51 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -760,7 +760,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 		}
 	}
 
-	const const_index_list dim(this->resolve_dimensions());
+	const const_index_list dim(this->unroll_resolve_dimensions(c));
 	if (dim.empty()) {
 		cerr << "ERROR: unable to resolve constant dimensions."
 			<< endl;

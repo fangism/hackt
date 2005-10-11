@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-10-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-04:
+	  Enabled bunch of new create/alloc test cases in parser/param.
+	  In simple_meta_value_reference<>::assign_value_collection():
+		one-line bug fix: now call unroll_resolve_dimensions(), duh!
+
+
 2005-10-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-03:

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.3.2.1 2005/10/11 02:41:21 fang Exp $
+#	$Id: TODO,v 1.3.2.2 2005/10/11 21:02:49 fang Exp $
 
 ===============================================================================
 loop development:
@@ -69,6 +69,10 @@ stacktrace.h:
 	add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
 ICE.h:
 	add ICE_ASSERT combined INVARIANT with ICE macro
+
+Error message:
+	assigning already assigned variables could have more precise msg:
+		(see parser/param/048.in case)
 
 ===============================================================================
 Simulation:

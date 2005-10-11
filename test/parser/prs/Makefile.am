@@ -1,9 +1,10 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.5.2.2 2005/10/11 02:41:29 fang Exp $
+#	$Id: Makefile.am,v 1.5.2.3 2005/10/11 21:02:57 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
-ARTC_TEST_FAILURES = inv-01 inv-04 inv-05 inv-10 inv-11
+ARTC_TEST_FAILURES = inv-01 inv-04 inv-05 inv-10 inv-11 \
+	celem-07 celem-08
 
 ARTC_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
