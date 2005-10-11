@@ -1,4 +1,4 @@
-// should fail: can't use a non-scalar (>0-dimension) as an index
+// "023.in" should fail: can't use a non-scalar (>0-dimension) as an index
 
 pint n[0..3];
 

@@ -1,4 +1,4 @@
-// should fail: too many dimensions in index
+// "015.in" should fail: too many dimensions in index
 
 pint M = 2;
 pint foo[M];

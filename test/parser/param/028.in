@@ -1,4 +1,4 @@
-// should pass: index is scalar,
+// "028.in" should pass: index is scalar,
 // but will die unrolling because it is uninitialized
 
 pint n[4];

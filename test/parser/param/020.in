@@ -1,4 +1,5 @@
-// should pass: non overlapping array
+// "020.in" should pass parsing: non overlapping array
+// will fail unrolling
 
 pint M = 2;
 

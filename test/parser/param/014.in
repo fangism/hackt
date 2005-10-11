@@ -1,4 +1,4 @@
-// should pass: properly initialized params
+// "014.in" should pass: properly initialized params
 
 pint M = 2;
 pint foo[M];

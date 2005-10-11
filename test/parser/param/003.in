@@ -1,4 +1,4 @@
-// should pass, assigning parameters to other initialized parameters
+// "003.in" should pass, assigning parameters to other initialized parameters
 
 pint N;
 N = 5;

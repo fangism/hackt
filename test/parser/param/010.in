@@ -1,4 +1,4 @@
-// should fail: type mismatch
+// "010.in" should fail: type mismatch
 
 pbool thirteen = 13;
 

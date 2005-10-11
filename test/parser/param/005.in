@@ -1,4 +1,4 @@
-// should fail, parameter not declared
+// "005.in" should fail, parameter not declared
 
 pint N = M;
 

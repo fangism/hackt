@@ -1,4 +1,4 @@
-// should fail: and can't use 1-D array as an index.
+// "032.in" should fail: and can't use 1-D array as an index.
 
 pint n[4][4];
 

@@ -1,4 +1,4 @@
-// should fail: statically detected overlap
+// "018.in" should fail: statically detected overlap
 
 pint M = 2;
 pint foo[M];

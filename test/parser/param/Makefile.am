@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2005/08/08 16:51:48 fang Exp $
+#	$Id: Makefile.am,v 1.7.16.1 2005/10/11 19:46:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,8 @@ ARTC_TEST_PASSES = \
 	001 002 003 004 008 \
 	014 017 019 \
 	020 021 022 028 \
-	033
+	033 036 037 038 039 \
+	040 041 042
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -25,7 +26,14 @@ ARTOBJ_TEST_SUBJECTS = \
 
 # subset of ARTOBJ_TEST_SUBJECTS
 ARTOBJUNROLL_TEST_SUBJECTS = \
-	$(ARTOBJ_TEST_SUBJECTS)
+	001 002 003 004 008 \
+	014 017 019 \
+	036 037 038 039 \
+	040 041 042
+
+HACKT_CREATE_TEST_SUBJECTS = $(ARTOBJUNROLL_TEST_SUBJECTS)
+
+HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
 include $(top_srcdir)/test/Make.test-tail
 

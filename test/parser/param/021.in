@@ -1,4 +1,4 @@
-// should pass type-checking, but not unrolling
+// "021.in" should pass type-checking, but not unrolling
 
 pint milk[4];
 

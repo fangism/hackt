@@ -1,4 +1,4 @@
-// should fail: reference to n is out of range
+// "025.in" should fail: reference to n is out of range
 // and can't use 1-D array as an index.
 
 pint n[4];

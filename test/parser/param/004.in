@@ -1,4 +1,4 @@
-// should pass both parsing and type-checking
+// "004.in" should pass both parsing and type-checking
 // old version of this is now 013.in
 
 pint N = 2;
