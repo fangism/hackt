@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.5.2.1 2005/10/13 01:27:09 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.5.2.2 2005/10/13 09:18:12 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -15,6 +15,7 @@
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
