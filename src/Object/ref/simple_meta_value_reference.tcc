@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.4.8.4 2005/10/13 01:27:10 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.4.8.5 2005/10/13 18:13:55 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -514,7 +514,7 @@ if (value_collection_ref->is_template_formal()) {
 	// could also be loop variable
 	const value_collection_type& vcref(*value_collection_ref);
 #else
-	value_type cv;
+	value_type cv = 0;
 	const pair<bool, const value_collection_type*>
 		_r(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref, cv));
