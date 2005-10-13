@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.3.2.2 2005/10/11 21:02:49 fang Exp $
+#	$Id: TODO,v 1.3.2.3 2005/10/13 01:26:50 fang Exp $
 
 ===============================================================================
 loop development:
@@ -14,7 +14,7 @@ lookup and value resolution:
 param_expression needs dump context! for automatic parenthesization
 	and omitting redundant parent scopes for local references.  
 
-test cases for create phase with the parser/param directory!!!
+test cases for create/alloc phase of the parser/alloc directory
 
 ===============================================================================
 
@@ -56,13 +56,13 @@ Library stuff:
 util: use new ptrs_functional_proposed.h with const_traits.h
 
 ===============================================================================
+HACKT template stuff:
+	In the case of redeclarations, 
+	how do default parameter values translate from
+	forward declaration to full prototype to definition?
+
+===============================================================================
 enhancements:
-
-consider using instance_collection_placeholders in definitions' scopespace.  
-	(done)
-
-introduce true resolved, canonical type references
-instance collections should use them, not the fundamental derivatives
 
 Library/Utilities:
 stacktrace.h:
@@ -84,6 +84,7 @@ Simulation:
 PRS and CHP
 
 pass-gates:
+	add to parser, and intermediate representation
 
 ===============================================================================
 KNOWN BUGS

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3.2.3 2005/10/11 02:41:27 fang Exp $
+	$Id: PRS.cc,v 1.3.2.4 2005/10/13 01:27:08 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/type/template_actuals.h"
@@ -583,6 +584,7 @@ expr_loop_base::~expr_loop_base() { }
 /**
 	print_stamp parameter is unused, (just passed down), 
 	loop is always parenthesized.  
+	TODO: construct entity::expr_dump_context from PRS::expr_dump_context.
  */
 ostream&
 expr_loop_base::dump(ostream& o, const expr_dump_context& c,
@@ -592,7 +594,12 @@ expr_loop_base::dump(ostream& o, const expr_dump_context& c,
 	NEVER_NULL(ind_var);
 	NEVER_NULL(range);
 	o << '(' << op << ':' << ind_var->get_name() << ':';
+#if USE_EXPR_DUMP_CONTEXT
+	// TODL: adjust me
+	range->dump(o, entity::expr_dump_context(c)) << ": ";
+#else
 	range->dump(o) << ": ";			// dump_brief?
+#endif
 	return body_expr->dump(o, c) << ')';
 }
 
@@ -605,7 +612,11 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";
+#if USE_EXPR_DUMP_CONTEXT
+		range->dump(cerr, entity::expr_dump_context::default_value) << endl;
+#else
 		range->dump(cerr) << endl;
+#endif
 		return 0;
 	}
 	const pint_value_type min = cr.lower();
@@ -1258,7 +1269,11 @@ ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
 	// NEVER_NULL(c.parent_scope);
+#if USE_EXPR_DUMP_CONTEXT
+	return var->dump(o, entity::expr_dump_context(c));
+#else
 	return var->dump_briefer(o, c.parent_scope);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1303,7 +1318,12 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
 	if (var->unroll_references(c, bc).bad) {
+#if USE_EXPR_DUMP_CONTEXT
+		var->dump(cerr << "Error resolving production rule literal: ", 
+			entity::expr_dump_context::default_value)
+#else
 		var->dump(cerr << "Error resolving production rule literal: ")
+#endif
 			<< endl;
 		return 0;
 	}

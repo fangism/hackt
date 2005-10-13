@@ -64,8 +64,8 @@ In namespace "", we have: {
         }
 
       prs:
-        (&:i:[0..1]: a[::celem2inv::i]) -> _o-
-        (&:i:[0..1]: ~a[::celem2inv::i]) -> _o+
+        (&:i:[0..1]: a[i]) -> _o-
+        (&:i:[0..1]: ~a[i]) -> _o+
       footprint: {
         bool^0 _o (instantiated) = ::celem2inv::_o (3) 
         bool^1 a with indices: {

@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-10-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-06:
+	  Introduced expr_dump_context for parameter expressions
+		and instance references, used to control and format
+		expression dumps.  Currently, enabled using the 
+		USE_EXPR_DUMP_CONTEXT development switch.  
+		This resulted in some changes in expected test outputs
+		in the regression suite (for better).  
+		TODO: clean-up commit flag (next).  
+	  TODO: PRS rule loops -- and that will conclude this branch.
+
+
 2005-10-11	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-05:

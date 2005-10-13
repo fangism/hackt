@@ -34,7 +34,7 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        M = pint<> M (init = pint-inst-ref ::bogus::N)
+        M = pint<> M (init = N)
         N = pint<> N (init = 2)
       footprint: {
         pint^0 M value: 2

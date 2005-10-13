@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.4 2005/09/04 21:15:02 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.4.8.1 2005/10/13 01:27:12 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -155,18 +155,30 @@ port_connection::what(ostream& o) const {
 ostream&
 port_connection::dump(ostream& o) const {
 	NEVER_NULL(ported_inst);
+#if USE_EXPR_DUMP_CONTEXT
+	const expr_dump_context& c(expr_dump_context::default_value);
+	ported_inst->dump(o, c) << " (";
+#else
 	ported_inst->dump(o) << " (";
-
+#endif
 	if (!inst_list.empty()) {
 		inst_list_type::const_iterator iter(inst_list.begin());
 		const inst_list_type::const_iterator end(inst_list.end());
 		if (*iter)
+#if USE_EXPR_DUMP_CONTEXT
+			(*iter)->dump(o, c);
+#else
 			(*iter)->dump(o);
+#endif
 		else o << " ";
 		for (iter++ ; iter!=end; iter++) {
 			o << ", ";
 			if (*iter)
+#if USE_EXPR_DUMP_CONTEXT
+				(*iter)->dump(o, c);
+#else
 				(*iter)->dump(o);
+#endif
 		}
 	}
 	return o << ");";
@@ -210,7 +222,12 @@ port_connection::unroll_meta_connect(const unroll_context& c) const {
 			ported_inst->unroll_generic_scalar_reference(c));
 	if (!parent_instance) {
 		cerr << "ERROR: resolving super instance of port connection: ";
+#if USE_EXPR_DUMP_CONTEXT
+		ported_inst->dump(cerr, 
+			expr_dump_context::default_value) << endl;
+#else
 		ported_inst->dump(cerr) << endl;
+#endif
 		return good_bool(false);
 	}
 	// iterators point to meta_instance_reference_base

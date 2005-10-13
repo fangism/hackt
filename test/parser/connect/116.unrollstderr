@@ -92,15 +92,15 @@ In namespace "", we have: {
     bar = process-definition (defined) bar<
       pint<> Z
       >(
-        foo<pint-inst-ref ::bar::Z> a
-        foo<pint-inst-ref ::bar::Z> b
+        foo<::bar::Z> a
+        foo<::bar::Z> b
       )
       In definition "bar", we have: {
       Parameters:
         Z = pint<> Z
       Instances:
-        a = foo<pint-inst-ref ::bar::Z> a
-        b = foo<pint-inst-ref ::bar::Z> b
+        a = foo<::bar::Z> a
+        b = foo<::bar::Z> b
       footprint collection: {
         <3> {
           pint^0 Z value: ?

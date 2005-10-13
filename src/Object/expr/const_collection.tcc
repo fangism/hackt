@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.4 2005/09/04 21:14:44 fang Exp $
+ 	$Id: const_collection.tcc,v 1.4.8.1 2005/10/13 01:27:00 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -133,9 +133,18 @@ CONST_COLLECTION_CLASS::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The expr_dump_context parameter is currrently unused.  
+	Possible uses might include reformatting arrays?
+ */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
-CONST_COLLECTION_CLASS::dump(ostream& o) const {
+#if USE_EXPR_DUMP_CONTEXT
+CONST_COLLECTION_CLASS::dump(ostream& o, const expr_dump_context&) const
+#else
+CONST_COLLECTION_CLASS::dump(ostream& o) const
+#endif
+{
 #if 0
 	return values.dump(o);	// too verbose
 #else
@@ -144,11 +153,13 @@ CONST_COLLECTION_CLASS::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 CONST_COLLECTION_CLASS::dump_brief(ostream& o) const {
 	return dump(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE

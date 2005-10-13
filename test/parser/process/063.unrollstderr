@@ -90,7 +90,7 @@ In namespace "", we have: {
     bar = process-definition-alias: bar<
       pint<> X
       >
-      = foo<pint-inst-ref ::bar::X+1>
+      = foo<::bar::X+1>
   Instances:
     goo = process foo<4>^0 goo (instantiated) = ::poo (
       bool^1 a with indices: {

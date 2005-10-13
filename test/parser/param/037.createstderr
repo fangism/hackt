@@ -46,10 +46,10 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        M = pint<> M (init = pint-inst-ref ::bogus::N)
+        M = pint<> M (init = N)
         N = pint<> N (init = 5)
         a = pbool<> a (init = true)
-        b = pbool<> b (init = pbool-inst-ref ::bogus::a)
+        b = pbool<> b (init = a)
       footprint: {
         pint^0 M value: 5
         pint^0 N value: 5

@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.5 2005/09/04 21:14:46 fang Exp $
+ 	$Id: operators.cc,v 1.5.8.1 2005/10/13 01:27:05 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -31,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/const_range.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -103,17 +104,26 @@ pint_unary_expr::pint_unary_expr(
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_unary_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pint_unary_expr::dump_brief(ostream& o) const {
 	return ex->dump_brief(o << op);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+pint_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
+	// parentheses? check operator precedence
+	return ex->dump(o << op, c);
+}
+#else
 pint_unary_expr::dump(ostream& o) const {
 	// parentheses? check operator precedence
 	return ex->dump(o << op);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list
@@ -293,18 +303,27 @@ pbool_unary_expr::pbool_unary_expr(
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_unary_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pbool_unary_expr::dump_brief(ostream& o) const {
 	// parentheses?
 	return ex->dump_brief(o << op);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+pbool_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
+	// parentheses?
+	return ex->dump(o << op, c);
+}
+#else
 pbool_unary_expr::dump(ostream& o) const {
 	// parentheses?
 	return ex->dump(o << op);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list
@@ -514,15 +533,23 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+}
+#else
 pint_arith_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pint_arith_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list
@@ -590,17 +617,28 @@ pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 pint_arith_expr::resolve_value(value_type& i) const {
+#if USE_EXPR_DUMP_CONTEXT
+	static const expr_dump_context& c(expr_dump_context::default_value);
+#endif
 	arg_type a, b;
 	NEVER_NULL(lx);	NEVER_NULL(rx);
 	const good_bool lret(lx->resolve_value(a));
 	const good_bool rret(rx->resolve_value(b));
 	if (!lret.good) {
 		cerr << "ERROR: resolving left operand of: ";
+#if USE_EXPR_DUMP_CONTEXT
+		dump(cerr, c) << endl;
+#else
 		dump(cerr) << endl;
+#endif
 		return good_bool(false);
 	} else if (!rret.good) {
 		cerr << "ERROR: resolving right operand of: ";
+#if USE_EXPR_DUMP_CONTEXT
+		dump(cerr, c) << endl;
+#else
 		dump(cerr) << endl;
+#endif
 		return good_bool(false);
 	} else {
 		// Oooooh, virtual operator dispatch!
@@ -624,7 +662,11 @@ pint_arith_expr::resolve_dimensions(void) const {
 	\return true if resolved.
  */
 good_bool
-pint_arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
+pint_arith_expr::unroll_resolve_value(const unroll_context& c,
+		value_type& i) const {
+#if USE_EXPR_DUMP_CONTEXT
+	static const expr_dump_context& dc(expr_dump_context::default_value);
+#endif
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	value_type lval, rval;
@@ -632,11 +674,19 @@ pint_arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) co
 	const good_bool rex(rx->unroll_resolve_value(c, rval));
 	if (!lex.good) {
 		cerr << "ERROR: resolving left operand of: ";
+#if USE_EXPR_DUMP_CONTEXT
+		dump(cerr, dc) << endl;
+#else
 		dump(cerr) << endl;
+#endif
 		return good_bool(false);
 	} else if (!rex.good) {
 		cerr << "ERROR: resolving right operand of: ";
+#if USE_EXPR_DUMP_CONTEXT
+		dump(cerr, dc) << endl;
+#else
 		dump(cerr) << endl;
+#endif
 		return good_bool(false);
 	} else {
 		i = (*op)(lval, rval);
@@ -819,16 +869,24 @@ pint_relational_expr::pint_relational_expr(const operand_ptr_type& l,
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pint_relational_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+pint_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+}
+#else
 pint_relational_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1089,16 +1147,24 @@ pbool_logical_expr::pbool_logical_expr(const operand_ptr_type& l,
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pbool_logical_expr::dump_brief(ostream& o) const {
 	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+pbool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+}
+#else
 pbool_logical_expr::dump(ostream& o) const {
 	return rx->dump(lx->dump(o) << reverse_op_map[op]);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_range_list

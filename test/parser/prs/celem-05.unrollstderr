@@ -85,7 +85,7 @@ In namespace "", we have: {
       )
       In definition "celemNinv", we have: {
       Parameters:
-        M = pint<> M (init = pint-inst-ref ::celemNinv::N)
+        M = pint<> M (init = N)
         N = pint<> N
       Instances:
         _o = bool<> _o
@@ -94,8 +94,8 @@ In namespace "", we have: {
         }
 
       prs:
-        (&:i:[0..::celemNinv::M-1]: a[::celemNinv::i]) -> _o-
-        (&:i:[0..::celemNinv::M-1]: ~a[::celemNinv::i]) -> _o+
+        (&:i:[0..M-1]: a[i]) -> _o-
+        (&:i:[0..M-1]: ~a[i]) -> _o+
       footprint collection: {
         <4> {
           bool^0 _o (instantiated) = ::celemNinv::_o 

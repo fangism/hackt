@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.3 2005/09/14 15:30:23 fang Exp $
+	$Id: BUGS,v 1.3.6.1 2005/10/13 01:26:48 fang Exp $
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals
@@ -13,6 +13,15 @@ Hierarchical connections:
 	new method for symmetrically merging rings and the 
 	strict equivalence requirement between aliases (explicit
 	or hierarchical).  
+
+Global references from with definition-scopes:
+	Out-of-scope references are simply not implemented yet, 
+	which means, everyhing should be passed in through
+	public ports or template arguments.  
+	Currently, the compiler bombs because I haven't bothered to
+	trap out-of-scope references yet.  
+	TODO: make it at least catch such references and just error-out.  
+	Example case: param/049
 
 Relaxed actuals:
 	Since strict parameters may not depend on relaxed parameters we 

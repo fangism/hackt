@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.2 2005/07/23 06:52:51 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.2.20.1 2005/10/13 01:27:11 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -93,13 +93,18 @@ public:
 	~simple_nonmeta_value_reference();
 
 	ostream&
-	what(ostream& o) const;
+	what(ostream&) const;
+
+#if USE_EXPR_DUMP_CONTEXT
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+#else
+	ostream&
+	dump_brief(ostream&) const;
 
 	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
+	dump(ostream&) const;
+#endif
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;

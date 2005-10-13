@@ -83,8 +83,8 @@ In namespace "", we have: {
       Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
-        x = int<pint-inst-ref ::one_shot::Y> x
-        z = int<pint-inst-ref ::one_shot::X> z
+        x = int<::one_shot::Y> x
+        z = int<::one_shot::X> z
       chp:
         concurrent: {
           sequential: {

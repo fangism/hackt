@@ -55,14 +55,14 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >(
-        int<pint-inst-ref ::foo::N> a
+        int<::foo::N> a
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        a = int<pint-inst-ref ::foo::N> a
-        b = int<pint-inst-ref ::foo::N> b
+        a = int<::foo::N> a
+        b = int<::foo::N> b
       footprint collection: {
         <8> {
           pint^0 N value: ?

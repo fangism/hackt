@@ -33,17 +33,17 @@ In namespace "", we have: {
       pint<> K
       >
       chan(
-        int<pint-inst-ref ::mychan::J>
+        int<::mychan::J>
       )
       (
-        int<pint-inst-ref ::mychan::K> i
+        int<::mychan::K> i
       )
       In channel definition "mychan", we have: {
       Parameters:
         J = pint<> J
         K = pint<> K
       Instances:
-        i = int<pint-inst-ref ::mychan::K> i
+        i = int<::mychan::K> i
       }
 
 }

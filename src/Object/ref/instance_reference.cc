@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.4.2.1 2005/10/10 22:13:51 fang Exp $
+ 	$Id: instance_reference.cc,v 1.4.2.2 2005/10/13 01:27:09 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -652,6 +652,7 @@ simple_meta_instance_reference_base::implicit_static_constant_indices(void) cons
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 /**
 	Same as dump, but without type information.  
 	This is used primarily for printing value-reference expressions, 
@@ -701,6 +702,33 @@ ostream&
 simple_meta_instance_reference_base::dump(ostream& o) const {
 	return dump_brief(what(o) << " ");
 }
+#else
+/**
+	New dump, uses context options.  
+ */
+ostream&
+simple_meta_instance_reference_base::dump(ostream& o, 
+		const expr_dump_context& c) const {
+	if (c.include_type_info)
+		what(o) << " ";
+	// modify flags for this?
+	// depend on c.enclosing_scope?
+	const never_ptr<const instance_collection_base>
+		ib(get_inst_base());
+	if (c.enclosing_scope) {
+		ib->dump_hierarchical_name(o, dump_flags::no_owner);
+	} else {
+//		o << ib->get_qualified_name();
+		ib->dump_hierarchical_name(o, dump_flags::default_value);
+	}
+	if (array_indices) {
+		expr_dump_context dc(c);
+		dc.include_type_info = false;
+		array_indices->dump(o, dc);
+	}
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -923,8 +951,14 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 
 	const bool ret = ldim.is_size_equivalent(rdim);
 	if (!ret) {
+#if USE_EXPR_DUMP_CONTEXT
+		ldim.dump(cerr << "got: ", 
+			expr_dump_context::default_value) << " and: ";
+		rdim.dump(cerr, expr_dump_context::default_value) << endl;
+#else
 		ldim.dump(cerr << "got: ") << " and: ";
 		rdim.dump(cerr) << endl;
+#endif
 	}
 	return ret;
 }
@@ -1118,6 +1152,29 @@ simple_nonmeta_instance_reference_base::attach_indices(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_EXPR_DUMP_CONTEXT
+/**
+	Improved dump, ues contex flags to modify and format dump.  
+ */
+ostream&
+simple_nonmeta_instance_reference_base::dump(ostream& o, 
+		const expr_dump_context& c) const {
+#if 0
+	if (c.include_type_info)
+		what(o) << " ";
+#endif
+	// modify flags for this?
+	// depend on c.enclosing_scope?
+	const never_ptr<const instance_collection_base>
+		ib(get_inst_base());
+	ib->dump_hierarchical_name(o, dump_flags::no_owner);
+	if (array_indices) {
+		array_indices->dump(o, c);
+	}
+	return o;
+}
+
+#else
 ostream&
 simple_nonmeta_instance_reference_base::dump(ostream& o) const {
 #if 0
@@ -1159,6 +1216,7 @@ simple_nonmeta_instance_reference_base::dump_brief(ostream& o) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

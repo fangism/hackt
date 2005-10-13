@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.4.8.3 2005/10/11 21:02:51 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.4.8.4 2005/10/13 01:27:10 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -31,6 +31,7 @@
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
 #include "common/ICE.h"
@@ -121,18 +122,27 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_VALUE_REFERENCE_CLASS::dump_brief(ostream& o) const {
 	return grandparent_type::dump_brief(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
+		const expr_dump_context& c) const {
+	return grandparent_type::dump(o, c);
+}
+#else
 SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o) const {
 	return grandparent_type::dump(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
@@ -479,7 +489,11 @@ if (value_collection_ref->is_template_formal()) {
 		if (rdim.empty()) {		// error, failed to resolve
 			cerr << "Error: failed to resolve dimensions of "
 				"collection referenced: ";
+#if USE_EXPR_DUMP_CONTEXT
+			this->dump(cerr, expr_dump_context::default_value) << endl;
+#else
 			this->dump(cerr) << endl;
+#endif
 			return return_type(NULL);
 		}
 		return return_type(
@@ -778,8 +792,15 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 		// dimensions must be equal because both src/dest are scalar.
 		cerr << "ERROR: resolved indices are not "
 			"dimension-equivalent!" << endl;
+#if USE_EXPR_DUMP_CONTEXT
+		src_ranges.dump(cerr << "got: ",
+			expr_dump_context::default_value);
+		dim.dump(cerr << " and: ",
+			expr_dump_context::default_value) << endl;
+#else
 		src_ranges.dump(cerr << "got: ");
 		dim.dump(cerr << " and: ") << endl;
+#endif
 		return bad_bool(true);
 	}
 	// else good to continue

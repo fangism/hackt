@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: pint_expr.h,v 1.3.8.1 2005/10/13 01:27:06 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_EXPR_H__
@@ -49,11 +49,16 @@ virtual	~pint_expr() { }
 virtual	ostream&
 	what(ostream& o) const = 0;
 
+#if USE_EXPR_DUMP_CONTEXT
+virtual	ostream&
+	dump(ostream& o, const expr_dump_context&) const = 0;
+#else
 virtual	ostream&
 	dump_brief(ostream& o) const = 0;
 
 virtual	ostream&
 	dump(ostream& o) const = 0;
+#endif
 
 virtual	size_t
 	dimensions(void) const = 0;

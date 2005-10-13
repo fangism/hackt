@@ -46,10 +46,10 @@ In namespace "", we have: {
 
       >
       chan(
-        int<pint-inst-ref ::mychan::J[0]>
+        int<::mychan::J[0]>
       )
       (
-        int<pint-inst-ref ::mychan::J[1]> i
+        int<::mychan::J[1]> i
       )
       In channel definition "mychan", we have: {
       Parameters:
@@ -59,7 +59,7 @@ In namespace "", we have: {
 
         K = pint<> K
       Instances:
-        i = int<pint-inst-ref ::mychan::J[1]> i
+        i = int<::mychan::J[1]> i
       }
 
 }

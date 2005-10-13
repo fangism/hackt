@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_nonmeta_instance_reference_base.h,v 1.2 2005/07/23 06:52:51 fang Exp $
+	$Id: simple_nonmeta_instance_reference_base.h,v 1.2.20.1 2005/10/13 01:27:11 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
@@ -45,6 +45,10 @@ public:
 
 virtual	~simple_nonmeta_instance_reference_base();
 
+#if USE_EXPR_DUMP_CONTEXT
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+#else
 	ostream&
 	dump_briefer(ostream&, const never_ptr<const scopespace>) const;
 
@@ -53,6 +57,7 @@ virtual	~simple_nonmeta_instance_reference_base();
 
 	ostream&
 	dump(ostream&) const;
+#endif
 
 	size_t
 	dimensions(void) const;

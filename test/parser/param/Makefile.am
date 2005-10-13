@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.7.16.2 2005/10/11 21:02:56 fang Exp $
+#	$Id: Makefile.am,v 1.7.16.3 2005/10/13 01:27:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -30,6 +30,9 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 	014 017 019 \
 	036 037 038 039 \
 	040 041 042 043 044 045 046 047
+
+# KNOWN BUG:
+# 049 -- reference to out-of-scope value (global) is yet unsupported.
 
 HACKT_CREATE_TEST_SUBJECTS = $(ARTOBJUNROLL_TEST_SUBJECTS)
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.4 2005/09/04 21:15:00 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.4.8.1 2005/10/13 01:27:12 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -31,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
@@ -137,7 +138,11 @@ instantiation_statement_base::dump(ostream& o) const {
 	// is this ok: reference to automatic object?
 	const const_relaxed_args_type& ra(get_relaxed_actuals());
 	if (ra) {
+#if USE_EXPR_DUMP_CONTEXT
+		ra->dump(o << '<', expr_dump_context::default_value) << '>';
+#else
 		ra->dump(o << '<') << '>';
+#endif
 	}
 	o << " ";
 	never_ptr<const instance_collection_base>
@@ -148,7 +153,11 @@ instantiation_statement_base::dump(ostream& o) const {
 		o << "<unknown>";
 	}
 	if (indices)
+#if USE_EXPR_DUMP_CONTEXT
+		indices->dump(o, expr_dump_context::default_value);
+#else
 		indices->dump(o);
+#endif
 	return o;
 }
 
@@ -189,7 +198,11 @@ if (indices) {
 		cerr << "ERROR: unable to resolve indices of " <<
 			get_inst_base()->get_qualified_name() <<
 			" for instantiation: ";
+#if USE_EXPR_DUMP_CONTEXT
+		indices->dump(cerr, expr_dump_context::default_value) << endl;
+#else
 		indices->dump(cerr) << endl;
+#endif
 	}
 	return ret;
 } else {

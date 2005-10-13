@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.5.2.1 2005/10/10 22:13:51 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.5.2.2 2005/10/13 01:27:10 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -13,6 +13,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "util/what.h"
@@ -77,12 +78,21 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 /**
 	Just wrapped around common base class implmentation.  
  */
+#if USE_EXPR_DUMP_CONTEXT
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+ostream&
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
+		const expr_dump_context& c) const {
+	return simple_meta_instance_reference_base::dump(o, c);
+}
+#else
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o, 
 		const never_ptr<const scopespace> s) const {
 	return simple_meta_instance_reference_base::dump_briefer(o, s);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -231,7 +241,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	if (unroll_err.bad) {
 		cerr << "ERROR unrolling port actual reference "
 			"during port connection: ";
+#if USE_EXPR_DUMP_CONTEXT
+		this->dump(cerr, expr_dump_context::default_value) << endl;
+#else
 		this->dump(cerr) << endl;
+#endif
 		return bad_bool(true);
 	}
 	// alternative, create a local temporary instance reference to coll?

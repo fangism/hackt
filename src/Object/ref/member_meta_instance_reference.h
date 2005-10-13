@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in ART.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.3 2005/10/08 01:40:00 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.3.2.1 2005/10/13 01:27:09 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -72,8 +72,13 @@ public:
 	ostream&
 	what(ostream&) const;
 
+#if USE_EXPR_DUMP_CONTEXT
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+#else
 	ostream&
 	dump_briefer(ostream&, const never_ptr<const scopespace>) const;
+#endif
 
 	// overrides parent's implementation.  
 	bad_bool

@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.4 2005/09/04 21:14:46 fang Exp $
+	$Id: param_expr_list.h,v 1.4.8.1 2005/10/13 01:27:05 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -14,6 +14,7 @@
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace ART {
@@ -23,6 +24,7 @@ class const_param_expr_list;
 class param_value_collection;
 class unroll_context;
 class template_actuals;
+struct expr_dump_context;
 using util::good_bool;
 using util::bad_bool;
 using std::vector;
@@ -50,7 +52,11 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
+#if USE_EXPR_DUMP_CONTEXT
+	dump(ostream& o, const expr_dump_context&) const = 0;
+#else
 	dump(ostream& o) const = 0;
+#endif
 
 virtual	excl_ptr<param_expr_list>
 	make_copy(void) const = 0;

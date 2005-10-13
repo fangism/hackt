@@ -6,7 +6,7 @@
 		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: bool_expr.h,v 1.2 2005/07/20 21:00:38 fang Exp $
+	$Id: bool_expr.h,v 1.2.22.1 2005/10/13 01:27:00 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BOOL_EXPR_H__
@@ -27,8 +27,10 @@ protected:
 public:
 virtual	~bool_expr() { }
 
+#if !USE_EXPR_DUMP_CONTEXT
 virtual	ostream&
 	dump_brief(ostream&) const = 0;
+#endif
 
 };	// end class bool_expr
 

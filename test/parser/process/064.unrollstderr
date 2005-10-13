@@ -69,7 +69,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<pint-inst-ref ::bar::M> x with indices: {
+        foo<::bar::M> x with indices: {
           [0..::bar::N-1]
         }
 
@@ -79,7 +79,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = foo<pint-inst-ref ::bar::M> x with indices: {
+        x = foo<::bar::M> x with indices: {
           [0..::bar::N-1]
         }
 

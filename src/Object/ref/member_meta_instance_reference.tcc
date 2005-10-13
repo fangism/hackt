@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.5 2005/10/08 01:40:00 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.5.2.1 2005/10/13 01:27:09 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -64,6 +64,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 	Dump brief, but dump parent instances too, 
 	just omit the ultimate owner definition.  
  */
+#if USE_EXPR_DUMP_CONTEXT
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+ostream&
+MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
+		const expr_dump_context& c) const {
+	base_inst_ref->dump(o, c);
+	return simple_meta_instance_reference_base::dump(o << '.', c);
+}
+#else
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 MEMBER_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o, 
@@ -71,6 +80,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o,
 	base_inst_ref->dump_briefer(o, s);
 	return simple_meta_instance_reference_base::dump_briefer(o << '.', s);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -98,9 +108,16 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		parent_struct(
 			_parent_inst_ref.unroll_generic_scalar_reference(c));
 	if (!parent_struct) {
+#if USE_EXPR_DUMP_CONTEXT
+		_parent_inst_ref.dump(
+			cerr << "ERROR resolving member reference parent ", 
+			expr_dump_context::default_value)
+			<< endl;
+#else
 		_parent_inst_ref.dump(
 			cerr << "ERROR resolving member reference parent ")
 			<< endl;
+#endif
 		return return_type(NULL);
 	}
 	const count_ptr<instance_collection_base>

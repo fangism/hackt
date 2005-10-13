@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.3 2005/09/04 21:14:59 fang Exp $
+	$Id: template_actuals.cc,v 1.3.8.1 2005/10/13 01:27:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -99,15 +100,25 @@ template_actuals::~template_actuals() {
 	Prints out template arguments, strict and relaxed.  
 	arbitrary: first set of angle brackets is mandatory, even if
 	strict template args are NULL.  
+	TODO: take expr_dump_context argument.  
  */
 ostream&
 template_actuals::dump(ostream& o) const {
 	o << '<';
 	if (strict_template_args)
+#if USE_EXPR_DUMP_CONTEXT
+		strict_template_args->dump(o, expr_dump_context::default_value);
+#else
 		strict_template_args->dump(o);
+#endif
 	o << '>';
 	if (relaxed_template_args)
+#if USE_EXPR_DUMP_CONTEXT
+		relaxed_template_args->dump(o << '<', 
+			expr_dump_context::default_value) << '>';
+#else
 		relaxed_template_args->dump(o << '<') << '>';
+#endif
 	return o;
 }
 
@@ -228,7 +239,12 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 		if (!sr) {
 			cerr << "ERROR in resolving strict template actuals."
 				<< endl;
+#if USE_EXPR_DUMP_CONTEXT
+			strict_template_args->dump(cerr << '\t', 
+				expr_dump_context::error_mode) << endl;
+#else
 			strict_template_args->dump(cerr << '\t') << endl;
+#endif
 			err = true;
 		}
 	}
@@ -237,7 +253,12 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 		if (!rr) {
 			cerr << "ERROR in resolving relaxed template actuals."
 				<< endl;
+#if USE_EXPR_DUMP_CONTEXT
+			relaxed_template_args->dump(cerr << '\t', 
+				expr_dump_context::error_mode) << endl;
+#else
 			relaxed_template_args->dump(cerr << '\t') << endl;
+#endif
 			err = true;
 		}
 	}

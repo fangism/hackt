@@ -3,13 +3,14 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: alias_actuals.cc,v 1.3.8.1 2005/10/13 01:27:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
+#include "Object/expr/expr_dump_context.h"
 #include <iostream>
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -52,7 +53,12 @@ instance_alias_info_actuals::attach_actuals(const alias_actuals_type& a) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 instance_alias_info_actuals::dump_actuals(ostream& o) const {
+#if USE_EXPR_DUMP_CONTEXT
+	return (actuals ? actuals->dump(o << '<',
+		expr_dump_context::default_value) << '>' : o);
+#else
 	return (actuals ? actuals->dump(o << '<') << '>' : o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,8 +104,15 @@ instance_alias_info_actuals::compare_actuals(
 		cerr << "ERROR: attempted to connect instances with "
 			"conflicting relaxed parameters!" << endl;
 		// TODO: report where, more info!
+#if USE_EXPR_DUMP_CONTEXT
+		l->dump(cerr << "\tgot: ", expr_dump_context::default_value)
+			<< endl;
+		r->dump(cerr << "\tand: ", expr_dump_context::default_value)
+			<< endl;
+#else
 		l->dump(cerr << "\tgot: ") << endl;
 		r->dump(cerr << "\tand: ") << endl;
+#endif
 		// for now stop on 1st error
 		return good_bool(false);
 	} else {

@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.3 2005/09/04 21:14:45 fang Exp $
+	$Id: meta_index_list.h,v 1.3.8.1 2005/10/13 01:27:04 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_INDEX_LIST_H__
@@ -11,12 +11,14 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
 class const_index_list;
 class unroll_context;
+struct expr_dump_context;
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -46,7 +48,11 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
+#if USE_EXPR_DUMP_CONTEXT
+	dump(ostream& o, const expr_dump_context&) const = 0;
+#else
 	dump(ostream& o) const = 0;
+#endif
 
 /** NOT THE SAME **/
 virtual	size_t

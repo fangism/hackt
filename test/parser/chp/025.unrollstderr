@@ -80,7 +80,7 @@ In namespace "", we have: {
         L = chan?(bool<>) L
         R = chan!(bool<>) R
         x = int<13> x
-        z = int<pint-inst-ref ::one_shot::X> z
+        z = int<::one_shot::X> z
       chp:
         concurrent: {
           sequential: {

@@ -54,7 +54,7 @@ In namespace "", we have: {
 
         N = pint<> N
       Instances:
-        first = int<pint-inst-ref ::the_matrix::M[0][0]> first
+        first = int<::the_matrix::M[0][0]> first
       }
 
 }

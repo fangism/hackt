@@ -3,7 +3,7 @@
 	Class definitions for integer range expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_range_expr.h,v 1.2 2005/07/20 21:00:43 fang Exp $
+	$Id: int_range_expr.h,v 1.2.22.1 2005/10/13 01:27:03 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_RANGE_EXPR_H__
@@ -40,8 +40,13 @@ public:
 	ostream&
 	what(ostream&) const;
 
+#if USE_EXPR_DUMP_CONTEXT
+	ostream&
+	dump(ostream& o, const expr_dump_context&) const;
+#else
 	ostream&
 	dump(ostream&) const;
+#endif
 
 	size_t
 	dimensions(void) const { return 0; }	// or bomb

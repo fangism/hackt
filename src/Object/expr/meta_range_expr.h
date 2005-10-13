@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_expr.h,v 1.3.8.1 2005/10/10 22:13:48 fang Exp $
+	$Id: meta_range_expr.h,v 1.3.8.2 2005/10/13 01:27:04 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_RANGE_EXPR_H__
@@ -48,7 +48,11 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
+#if USE_EXPR_DUMP_CONTEXT
+	dump(ostream& o, const expr_dump_context&) const = 0;
+#else
 	dump(ostream& o) const = 0;
+#endif
 
 /**
 	A range is always 0-dimensional, which is not the same

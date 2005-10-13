@@ -87,8 +87,8 @@ In namespace "", we have: {
         }
 
       prs:
-        (&:i:[0..::celemNinv::N-1]: a[::celemNinv::i]) -> _o-
-        (&:i:[0..::celemNinv::N-1]: ~a[::celemNinv::i]) -> _o+
+        (&:i:[0..N-1]: a[i]) -> _o-
+        (&:i:[0..N-1]: ~a[i]) -> _o+
       footprint collection: {
         <4> {
           bool^0 _o (instantiated) = ::celemNinv::_o 

@@ -92,16 +92,16 @@ In namespace "", we have: {
       pint<> X
       pint<> Y
       >(
-        foo<pint-inst-ref ::bar::X> a
-        foo<pint-inst-ref ::bar::Y> b
+        foo<::bar::X> a
+        foo<::bar::Y> b
       )
       In definition "bar", we have: {
       Parameters:
         X = pint<> X
         Y = pint<> Y
       Instances:
-        a = foo<pint-inst-ref ::bar::X> a
-        b = foo<pint-inst-ref ::bar::Y> b
+        a = foo<::bar::X> a
+        b = foo<::bar::Y> b
       footprint collection: {
         <2, 3> {
           pint^0 X value: ?

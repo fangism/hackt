@@ -49,7 +49,7 @@ In namespace "", we have: {
       pint<> N
       pint<> K
       >(
-        int<pint-inst-ref ::fangism::K> ick with indices: {
+        int<::fangism::K> ick with indices: {
           [0..::fangism::N-1]
         }
 
@@ -59,7 +59,7 @@ In namespace "", we have: {
         K = pint<> K
         N = pint<> N
       Instances:
-        ick = int<pint-inst-ref ::fangism::K> ick with indices: {
+        ick = int<::fangism::K> ick with indices: {
           [0..::fangism::N-1]
         }
 
@@ -69,10 +69,10 @@ In namespace "", we have: {
     double_int = datatype-definition-alias: double_int<
       pint<> W
       >
-      = int<2*pint-inst-ref ::double_int::W>
+      = int<2*::double_int::W>
     fangism_0 = process-definition-alias: fangism_0<
       pint<> K
       >
-      = fangism<0, pint-inst-ref ::fangism_0::K>
+      = fangism<0, ::fangism_0::K>
 }
 

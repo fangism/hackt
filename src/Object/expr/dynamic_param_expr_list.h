@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.3 2005/09/04 21:14:45 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.3.8.1 2005/10/13 01:27:02 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -49,8 +49,13 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if USE_EXPR_DUMP_CONTEXT
+	ostream&
+	dump(ostream& o, const expr_dump_context&) const;
+#else
 	ostream&
 	dump(ostream& o) const;
+#endif
 
 	excl_ptr<param_expr_list>
 	make_copy(void) const;

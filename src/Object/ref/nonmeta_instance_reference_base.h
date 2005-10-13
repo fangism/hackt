@@ -3,17 +3,19 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: nonmeta_instance_reference_base.h,v 1.2 2005/07/23 06:52:48 fang Exp $
+	$Id: nonmeta_instance_reference_base.h,v 1.2.20.1 2005/10/13 01:27:09 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 #define	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
 #include "util/persistent.h"
+#include "Object/devel_switches.h"
 // includes <iosfwd> already
 
 namespace ART {
 namespace entity {
+struct expr_dump_context;
 using std::istream;
 using std::ostream;
 using util::persistent;
@@ -35,7 +37,11 @@ public:
 virtual	~nonmeta_instance_reference_base() { }
 
 virtual	ostream&
+#if USE_EXPR_DUMP_CONTEXT
+	dump(ostream&, const expr_dump_context&) const = 0;
+#else
 	dump(ostream&) const = 0;
+#endif
 
 virtual	size_t
 	dimensions(void) const = 0;

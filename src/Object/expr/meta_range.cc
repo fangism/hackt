@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.5.8.1 2005/10/10 22:13:48 fang Exp $
+ 	$Id: meta_range.cc,v 1.5.8.2 2005/10/13 01:27:04 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_CC__
@@ -173,10 +173,18 @@ pint_range::dump_brief(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+#if USE_EXPR_DUMP_CONTEXT
+pint_range::dump(ostream& o, const expr_dump_context& c) const {
+	// consider copy-modifying the expr_dump_context to be `brief'
+	return upper->dump(
+		lower->dump(o << '[', c) << "..", c) << ']';
+}
+#else
 pint_range::dump(ostream& o) const {
 	return upper->dump_brief(
 		lower->dump_brief(o << '[') << "..") << ']';
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -414,7 +422,12 @@ const_range::dump_brief(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-const_range::dump(ostream& o) const {
+#if USE_EXPR_DUMP_CONTEXT
+const_range::dump(ostream& o, const expr_dump_context&) const
+#else
+const_range::dump(ostream& o) const
+#endif
+{
 	if (empty())
 		return o << "[]";
 	else

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.3 2005/09/04 21:14:46 fang Exp $
+	$Id: pbool_const.h,v 1.3.8.1 2005/10/13 01:27:06 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_CONST_H__
@@ -45,11 +45,16 @@ public:
 	ostream&
 	what(ostream& o) const;
 
+#if USE_EXPR_DUMP_CONTEXT
+	ostream&
+	dump(ostream& o, const expr_dump_context&) const;
+#else
 	ostream&
 	dump_brief(ostream& o) const;
 
 	ostream&
 	dump(ostream& o) const;
+#endif
 
 	size_t
 	dimensions(void) const { return 0; }

@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.5 2005/09/04 21:14:44 fang Exp $
+ 	$Id: basic_param.cc,v 1.5.8.1 2005/10/13 01:27:00 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/const_collection.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
@@ -98,7 +99,11 @@ param_expr::make_param_expression_assignment(
 	typedef	excl_ptr<param_expression_assignment>	return_type;
 	if (!p->may_be_initialized()) {
 		p->dump(cerr << "ERROR: rhs of expr-assignment is "
-			"not initialized or dependent on formals: ") << endl;
+			"not initialized or dependent on formals: "
+#if USE_EXPR_DUMP_CONTEXT
+			, expr_dump_context::error_mode
+#endif
+			) << endl;
 		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	} else	return p->make_param_expression_assignment_private(p);
@@ -342,14 +347,24 @@ pint_const::~pint_const() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pint_const::dump_brief(ostream& o) const {
 	return dump(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The expr_dump_context parameter is unused.  
+ */
 ostream&
-pint_const::dump(ostream& o) const {
+#if USE_EXPR_DUMP_CONTEXT
+pint_const::dump(ostream& o, const expr_dump_context&) const
+#else
+pint_const::dump(ostream& o) const
+#endif
+{
 	return o << val;
 }
 
@@ -517,14 +532,24 @@ inline
 pbool_const::pbool_const() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_EXPR_DUMP_CONTEXT
 ostream&
 pbool_const::dump_brief(ostream& o) const {
 	return dump(o);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The expr_dump_context parameter is unused.  
+ */
 ostream&
-pbool_const::dump(ostream& o) const {
+#if USE_EXPR_DUMP_CONTEXT
+pbool_const::dump(ostream& o, const expr_dump_context&) const
+#else
+pbool_const::dump(ostream& o) const
+#endif
+{
 	return o << ((val) ? "true" : "false");
 }
 
