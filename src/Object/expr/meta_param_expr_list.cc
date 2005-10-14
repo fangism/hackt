@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.5.8.1 2005/10/13 01:27:04 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.5.8.2 2005/10/14 03:30:16 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -90,18 +90,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-#if USE_EXPR_DUMP_CONTEXT
-const_param_expr_list::dump(ostream& o, const expr_dump_context& c) const
-#else
-const_param_expr_list::dump(ostream& o) const
-#endif
-{
+const_param_expr_list::dump(ostream& o, const expr_dump_context& c) const {
 	if (empty())	return o;
-#if USE_EXPR_DUMP_CONTEXT
 	else		return dump_range(o, c, 0, size());
-#else
-	else		return dump_range(o, 0, size());
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,9 +101,7 @@ const_param_expr_list::dump(ostream& o) const
  */
 ostream&
 const_param_expr_list::dump_range(ostream& o, 
-#if USE_EXPR_DUMP_CONTEXT
 		const expr_dump_context& c, 
-#endif
 		const size_t j, const size_t k) const {
 	INVARIANT(j <= k);
 	INVARIANT(k <= size());
@@ -121,18 +110,10 @@ const_param_expr_list::dump_range(ostream& o,
 	const_iterator i(begin() +j);
 	const const_iterator e(begin() +k);
 	NEVER_NULL(*i);
-#if USE_EXPR_DUMP_CONTEXT
 	(*i)->dump(o, c);
-#else
-	(*i)->dump(o);
-#endif
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-#if USE_EXPR_DUMP_CONTEXT
 		(*i)->dump(o << ", ", c);
-#else
-		(*i)->dump(o << ", ");
-#endif
 	}
 	return o;
 }
@@ -541,12 +522,8 @@ if (a_size != f_size) {
 		if (!pinst->must_type_check_actual_param_expr(*pex).good) {
 			cerr << "ERROR: type/size mismatch between "
 				"template formal and actual." << endl;
-#if USE_EXPR_DUMP_CONTEXT
 			pex->dump(cerr << "\tgot: ", 
 				expr_dump_context::default_value) << endl;
-#else
-			pex->dump(cerr << "\tgot: ") << endl;
-#endif
 			pinst->dump(cerr << "\texpected: ") << endl;
 			return good_bool(false);
 		}
@@ -686,7 +663,6 @@ dynamic_param_expr_list::~dynamic_param_expr_list() {
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_EXPR_DUMP_CONTEXT
 ostream&
 dynamic_param_expr_list::dump(ostream& o, const expr_dump_context& c) const {
 	if (empty()) return o;
@@ -702,23 +678,6 @@ dynamic_param_expr_list::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o;
 }
-#else
-ostream&
-dynamic_param_expr_list::dump(ostream& o) const {
-	if (empty()) return o;
-	// else at least 1 item in list
-	const_iterator i(begin());
-	const const_iterator e(end());
-	if (*i)	(*i)->dump(o);
-	else	o << "(null)";
-	for (i++; i!=e; i++) {
-		o << ", ";
-		if (*i)	(*i)->dump(o);
-		else	o << "(null)";
-	}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
@@ -961,12 +920,8 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 			cerr << "ERROR in expression " <<
 				distance(begin(), i)+1 <<
 				" of param expr list: ";
-#if USE_EXPR_DUMP_CONTEXT
 			ip->dump(cerr, expr_dump_context::error_mode)
 				<< endl;
-#else
-			ip->dump(cerr) << endl;
-#endif
 			cerr << "ERROR in dynamic_param_expr_list::unroll_resolve()" << endl;
 			return return_type(NULL);
 		}

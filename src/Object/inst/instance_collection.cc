@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.6.2.1 2005/10/13 01:27:07 fang Exp $
+ 	$Id: instance_collection.cc,v 1.6.2.2 2005/10/14 03:30:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -159,12 +159,8 @@ instance_collection_base::dump(ostream& o) const {
 				ind((*i)->get_indices());
 			// ind can be NULL?
 			NEVER_NULL(ind);
-#if USE_EXPR_DUMP_CONTEXT
 			ind->dump(o << auto_indent, 
 				expr_dump_context::default_value) << endl;
-#else
-			ind->dump(o << auto_indent) << endl;
-#endif
 		}
 	}	// end indentation scope
 		o << auto_indent << '}' << endl;

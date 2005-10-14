@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.3.8.2 2005/10/13 01:27:12 fang Exp $
+	$Id: expression_assignment.h,v 1.3.8.3 2005/10/14 03:30:25 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -13,7 +13,6 @@
 #include "Object/unroll/param_expression_assignment.h"
 #include "Object/traits/class_traits.h"
 #include "util/memory/list_vector_pool_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 namespace entity {
@@ -86,15 +85,10 @@ public:
 	private:
 		size_t index;
 		ostream& os;
-#if USE_EXPR_DUMP_CONTEXT
 		const expr_dump_context& _context;
-#endif
 	public:
 		explicit
-		dumper(ostream&,
-#if USE_EXPR_DUMP_CONTEXT
-			const expr_dump_context&, 
-#endif
+		dumper(ostream&, const expr_dump_context&, 
 			const size_t i = 0);
 
 		void

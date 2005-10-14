@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.3.8.1 2005/10/13 01:27:00 fang Exp $
+	$Id: const_collection.h,v 1.3.8.2 2005/10/14 03:30:12 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
@@ -18,7 +18,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace ART {
@@ -99,16 +98,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if USE_EXPR_DUMP_CONTEXT
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
-#else
-	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-#endif
 
 	size_t
 	dimensions(void) const;

@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.3.8.1 2005/10/13 01:27:05 fang Exp $
+	$Id: param_expr.h,v 1.3.8.2 2005/10/14 03:30:18 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_H__
@@ -12,7 +12,6 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace ART {
@@ -46,11 +45,7 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-#if USE_EXPR_DUMP_CONTEXT
 	dump(ostream& o, const expr_dump_context&) const = 0;
-#else
-	dump(ostream& o) const = 0;
-#endif
 
 virtual	size_t
 	dimensions(void) const = 0;

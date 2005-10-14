@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.3.6.1 2005/10/13 01:26:59 fang Exp $
+	$Id: footprint_manager.cc,v 1.3.6.2 2005/10/14 03:30:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -57,13 +57,9 @@ if (_arity) {
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++) {
-#if USE_EXPR_DUMP_CONTEXT
 			i->first.dump(o << auto_indent << '<', 
 				expr_dump_context::default_value)
 				<< "> {" << endl;
-#else
-			i->first.dump(o << auto_indent << '<') << "> {" << endl;
-#endif
 			{
 				INDENT_SECTION(o);
 				i->second.dump_with_collections(o);

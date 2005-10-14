@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.3.8.1 2005/10/13 01:27:08 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.3.8.2 2005/10/14 03:30:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -64,17 +64,11 @@ param_value_collection::dump(ostream& o) const {
 	const count_ptr<const param_expr>
 		init_def(default_value());
 	if (init_def) {
-#if USE_EXPR_DUMP_CONTEXT
 		expr_dump_context dc(expr_dump_context::default_value);
 		dc.enclosing_scope = owner;
 		if (is_template_formal())
 			init_def->dump(o << " (default = ", dc) << ")";
 		else	init_def->dump(o << " (init = ", dc) << ")";
-#else
-		if (is_template_formal())
-			init_def->dump(o << " (default = ") << ")";
-		else	init_def->dump(o << " (init = ") << ")";
-#endif
 	}
 	// print out the values of instances that have been unrolled
 	if (is_partially_unrolled()) {

@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.4.6.1 2005/10/13 01:27:07 fang Exp $
+	$Id: alias_actuals.tcc,v 1.4.6.2 2005/10/14 03:30:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -15,7 +15,6 @@
 #include "Object/inst/instance_alias.h"
 #include "Object/type/canonical_type.h"
 #include "util/stacktrace.h"
-#include "Object/devel_switches.h"
 #include "Object/expr/expr_dump_context.h"
 
 namespace ART {
@@ -50,15 +49,10 @@ if (!a) {
 		// instance_alias_info_actuals::compare_and_update_actuals
 		cerr << "ERROR: attempted to connect instances with "
 			"conflicting relaxed parameters!" << endl;
-#if USE_EXPR_DUMP_CONTEXT
 		actuals->dump(cerr << "\tgot: ", 
 			expr_dump_context::default_value) << endl;
 		a->dump(cerr << "\tand: ", 
 			expr_dump_context::default_value) << endl;
-#else
-		actuals->dump(cerr << "\tgot: ") << endl;
-		a->dump(cerr << "\tand: ") << endl;
-#endif
 		alias.dump_hierarchical_name(cerr << "\tfrom: ")
 			<< endl;
 		return good_bool(false);
@@ -99,15 +93,10 @@ if (l.actuals) {
 		// error message copied from above
 			cerr << "ERROR: attempted to connect instances with "
 				"conflicting relaxed parameters!" << endl;
-#if USE_EXPR_DUMP_CONTEXT
 			l.actuals->dump(cerr << "\tgot: ", 
 				expr_dump_context::default_value) << endl;
 			r.actuals->dump(cerr << "\tand: ", 
 				expr_dump_context::default_value) << endl;
-#else
-			l.actuals->dump(cerr << "\tgot: ") << endl;
-			r.actuals->dump(cerr << "\tand: ") << endl;
-#endif
 			l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 			r.dump_hierarchical_name(cerr << "\tand : ") << endl;
 			return good_bool(false);
@@ -169,13 +158,9 @@ instance_alias_info_actuals::complete_type_actuals(
 			cerr << "ERROR: collection type is already complete, "
 				"cannot merge relaxed actuals." << endl;
 			_type.dump(cerr << "\thave: ");
-#if USE_EXPR_DUMP_CONTEXT
 			actuals->dump(cerr << " with <", 
 				expr_dump_context::default_value)
 				<< '>' << endl;
-#else
-			actuals->dump(cerr << " with <") << '>' << endl;
-#endif
 			return canonical_type_type();
 		} else {
 			return _type;

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.4.2.2 2005/10/13 01:27:09 fang Exp $
+ 	$Id: instance_reference.cc,v 1.4.2.3 2005/10/14 03:30:21 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -652,57 +652,6 @@ simple_meta_instance_reference_base::implicit_static_constant_indices(void) cons
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_EXPR_DUMP_CONTEXT
-/**
-	Same as dump, but without type information.  
-	This is used primarily for printing value-reference expressions, 
-	to reduce information clutter.  
-	We dump the full qualified name to disambiguate potentially 
-	conflicting identifiers.  
-	\param o the output stream.
-	\return the output stream.
- */
-ostream&
-simple_meta_instance_reference_base::dump_brief(ostream& o) const {
-	o << get_inst_base()->get_qualified_name();
-	if (array_indices) {
-		array_indices->dump(o);
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Even briefer, without fully-qualified name.  
-	Make it smart, use qualified name if referring outside of
-	a particular definition or scope (another argument).  
-	\param loc the local scope, used to determine whether or not
-		to print the qualified or abbreviated name.  
-		If null, then always used short name.  
-	TODO: write meta_index_list::dump_context.
- */
-ostream&
-simple_meta_instance_reference_base::dump_briefer(ostream& o, 
-		const never_ptr<const scopespace> loc) const {
-	const never_ptr<const instance_collection_base>
-		ib(get_inst_base());
-	ib->dump_hierarchical_name(o, dump_flags::no_owner);
-	if (array_indices) {
-		// array_indices->dump(o, loc);		// TODO: me
-		array_indices->dump(o);
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Same as dump_brief, but with type information.  
- */
-ostream&
-simple_meta_instance_reference_base::dump(ostream& o) const {
-	return dump_brief(what(o) << " ");
-}
-#else
 /**
 	New dump, uses context options.  
  */
@@ -718,7 +667,6 @@ simple_meta_instance_reference_base::dump(ostream& o,
 	if (c.enclosing_scope) {
 		ib->dump_hierarchical_name(o, dump_flags::no_owner);
 	} else {
-//		o << ib->get_qualified_name();
 		ib->dump_hierarchical_name(o, dump_flags::default_value);
 	}
 	if (array_indices) {
@@ -728,7 +676,6 @@ simple_meta_instance_reference_base::dump(ostream& o,
 	}
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -951,14 +898,9 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 
 	const bool ret = ldim.is_size_equivalent(rdim);
 	if (!ret) {
-#if USE_EXPR_DUMP_CONTEXT
 		ldim.dump(cerr << "got: ", 
 			expr_dump_context::default_value) << " and: ";
 		rdim.dump(cerr, expr_dump_context::default_value) << endl;
-#else
-		ldim.dump(cerr << "got: ") << " and: ";
-		rdim.dump(cerr) << endl;
-#endif
 	}
 	return ret;
 }
@@ -1152,7 +1094,6 @@ simple_nonmeta_instance_reference_base::attach_indices(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_EXPR_DUMP_CONTEXT
 /**
 	Improved dump, ues contex flags to modify and format dump.  
  */
@@ -1173,50 +1114,6 @@ simple_nonmeta_instance_reference_base::dump(ostream& o,
 	}
 	return o;
 }
-
-#else
-ostream&
-simple_nonmeta_instance_reference_base::dump(ostream& o) const {
-#if 0
-	// sometimes seeing the type prefix is annoying
-	return dump_brief(what(o) << ' ');
-#else
-	return dump_briefer(o, never_ptr<const scopespace>());
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-simple_nonmeta_instance_reference_base::dump_briefer(ostream& o, 
-		const never_ptr<const scopespace> loc) const {
-	const never_ptr<const instance_collection_base>
-		ib(get_inst_base());
-	ib->dump_hierarchical_name(o, dump_flags::no_owner);
-	if (array_indices) {
-		array_indices->dump(o);
-	}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Same as dump, but without type information.  
-	This is used primarily for printing value-reference expressions, 
-	to reduce information clutter.  
-	We dump the full qualified name to disambiguate potentially 
-	conflicting identifiers.  
-	\param o the output stream.
-	\return the output stream.
- */
-ostream&
-simple_nonmeta_instance_reference_base::dump_brief(ostream& o) const {
-	o << get_inst_base()->get_qualified_name();
-	if (array_indices) {
-		array_indices->dump(o);
-	}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

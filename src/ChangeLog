@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2005-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-07:
+	  Cleaned up and committed USE_EXPR_DUMP_CONTEXT.
+
+
 2005-10-12	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-06:

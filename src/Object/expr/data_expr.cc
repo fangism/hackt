@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.3.20.1 2005/10/13 01:27:01 fang Exp $
+	$Id: data_expr.cc,v 1.3.20.2 2005/10/14 03:30:13 fang Exp $
  */
 
 #include <iostream>
@@ -145,23 +145,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-#if USE_EXPR_DUMP_CONTEXT
 int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
-#else
-int_arith_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_EXPR_DUMP_CONTEXT
-ostream&
-int_arith_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
@@ -320,24 +306,10 @@ int_relational_expr::int_relational_expr(const operand_ptr_type& l,
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_EXPR_DUMP_CONTEXT
 ostream&
-int_relational_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-#if USE_EXPR_DUMP_CONTEXT
 int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
-#else
-int_relational_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -489,24 +461,10 @@ bool_logical_expr::bool_logical_expr(const operand_ptr_type& l,
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(bool_logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_EXPR_DUMP_CONTEXT
 ostream&
-bool_logical_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-#if USE_EXPR_DUMP_CONTEXT
 bool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
-#else
-bool_logical_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
@@ -576,23 +534,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_negation_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-#if USE_EXPR_DUMP_CONTEXT
 int_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return ex->dump(o << '~', c);
 }
-#else
-int_negation_expr::dump(ostream& o) const {
-	return ex->dump(o << '~');
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_EXPR_DUMP_CONTEXT
-ostream&
-int_negation_expr::dump_brief(ostream& o) const {
-	return ex->dump_brief(o << '~');
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
@@ -640,23 +584,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(bool_negation_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-#if USE_EXPR_DUMP_CONTEXT
 bool_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return ex->dump(o << '~', c);
 }
-#else
-bool_negation_expr::dump(ostream& o) const {
-	return ex->dump(o << '~');
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_EXPR_DUMP_CONTEXT
-ostream&
-bool_negation_expr::dump_brief(ostream& o) const {
-	return ex->dump_brief(o << '~');
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
@@ -709,15 +639,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_range_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-#if USE_EXPR_DUMP_CONTEXT
 int_range_expr::dump(ostream& o, const expr_dump_context&) const {
 	return upper->what(lower->what(o << '[') << "..") << ']';
 }
-#else
-int_range_expr::dump(ostream& o) const {
-	return upper->what(lower->what(o << '[') << "..") << ']';
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -779,7 +703,6 @@ nonmeta_index_list::dimensions_collapsed(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_EXPR_DUMP_CONTEXT
 ostream&
 nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
@@ -794,22 +717,6 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o;
 }
-#else
-ostream&
-nonmeta_index_list::dump(ostream& o) const {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		const count_ptr<const int_expr>
-			b(i->is_a<const int_expr>());
-		if (b)
-			b->dump(o << '[') << ']';
-		else    (*i)->dump(o);
-	}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

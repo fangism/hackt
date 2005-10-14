@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.3.8.1 2005/10/13 01:27:05 fang Exp $
+	$Id: meta_range_list.h,v 1.3.8.2 2005/10/14 03:30:17 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_RANGE_LIST_H__
@@ -11,7 +11,6 @@
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace ART {
@@ -44,11 +43,7 @@ virtual	size_t
 	size(void) const = 0;
 
 virtual	ostream&
-#if USE_EXPR_DUMP_CONTEXT
 	dump(ostream& o, const expr_dump_context&) const = 0;
-#else
-	dump(ostream&) const = 0;
-#endif
 
 	size_t
 	dimensions(void) const { return size(); }

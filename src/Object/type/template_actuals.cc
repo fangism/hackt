@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.3.8.1 2005/10/13 01:27:11 fang Exp $
+	$Id: template_actuals.cc,v 1.3.8.2 2005/10/14 03:30:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -106,19 +106,11 @@ ostream&
 template_actuals::dump(ostream& o) const {
 	o << '<';
 	if (strict_template_args)
-#if USE_EXPR_DUMP_CONTEXT
 		strict_template_args->dump(o, expr_dump_context::default_value);
-#else
-		strict_template_args->dump(o);
-#endif
 	o << '>';
 	if (relaxed_template_args)
-#if USE_EXPR_DUMP_CONTEXT
 		relaxed_template_args->dump(o << '<', 
 			expr_dump_context::default_value) << '>';
-#else
-		relaxed_template_args->dump(o << '<') << '>';
-#endif
 	return o;
 }
 
@@ -239,12 +231,8 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 		if (!sr) {
 			cerr << "ERROR in resolving strict template actuals."
 				<< endl;
-#if USE_EXPR_DUMP_CONTEXT
 			strict_template_args->dump(cerr << '\t', 
 				expr_dump_context::error_mode) << endl;
-#else
-			strict_template_args->dump(cerr << '\t') << endl;
-#endif
 			err = true;
 		}
 	}
@@ -253,12 +241,8 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 		if (!rr) {
 			cerr << "ERROR in resolving relaxed template actuals."
 				<< endl;
-#if USE_EXPR_DUMP_CONTEXT
 			relaxed_template_args->dump(cerr << '\t', 
 				expr_dump_context::error_mode) << endl;
-#else
-			relaxed_template_args->dump(cerr << '\t') << endl;
-#endif
 			err = true;
 		}
 	}

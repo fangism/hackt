@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.2.22.1 2005/10/13 01:27:06 fang Exp $
+	$Id: pbool_expr.h,v 1.2.22.2 2005/10/14 03:30:18 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_EXPR_H__
@@ -47,16 +47,8 @@ virtual	~pbool_expr() { }
 virtual	ostream&
 	what(ostream& o) const = 0;
 
-#if USE_EXPR_DUMP_CONTEXT
 virtual	ostream&
 	dump(ostream& o, const expr_dump_context&) const = 0;
-#else
-virtual	ostream&
-	dump_brief(ostream& o) const = 0;
-
-virtual	ostream&
-	dump(ostream& o) const = 0;
-#endif
 
 virtual	size_t
 	dimensions(void) const = 0;

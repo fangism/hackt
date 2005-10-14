@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.5.8.1 2005/10/13 01:27:03 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.5.8.2 2005/10/14 03:30:16 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -155,7 +155,6 @@ const_index_list::~const_index_list() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_index_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_EXPR_DUMP_CONTEXT
 ostream&
 const_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
@@ -172,22 +171,6 @@ const_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o;
 }
-#else
-ostream&
-const_index_list::dump(ostream& o) const {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		const count_ptr<const pint_expr>
-			b(i->is_a<const pint_expr>());
-		if (b)
-			b->dump_brief(o << '[') << ']';
-		else	(*i)->dump(o);
-	}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
@@ -502,7 +485,6 @@ dynamic_meta_index_list::~dynamic_meta_index_list() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_index_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_EXPR_DUMP_CONTEXT
 ostream&
 dynamic_meta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
@@ -518,22 +500,6 @@ dynamic_meta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o;
 }
-#else
-ostream&
-dynamic_meta_index_list::dump(ostream& o) const {
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		NEVER_NULL(*i);
-		const count_ptr<const pint_expr>
-			b(i->is_a<const pint_expr>());
-		if (b)
-			b->dump_brief(o << '[') << ']';
-		else	(*i)->dump(o);
-	}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

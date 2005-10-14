@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.5.8.1 2005/10/13 01:27:04 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.5.8.2 2005/10/14 03:30:17 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -127,7 +127,6 @@ const_range_list::~const_range_list() {
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_EXPR_DUMP_CONTEXT
 ostream&
 const_range_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
@@ -135,15 +134,6 @@ const_range_list::dump(ostream& o, const expr_dump_context& c) const {
 		i->dump(o, c);
 	return o;
 }
-#else
-ostream&
-const_range_list::dump(ostream& o) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++)
-		i->dump(o);
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -556,20 +546,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_range_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-#if USE_EXPR_DUMP_CONTEXT
-dynamic_meta_range_list::dump(ostream& o, const expr_dump_context& c) const
-#else
-dynamic_meta_range_list::dump(ostream& o) const
-#endif
-{
+dynamic_meta_range_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
-#if USE_EXPR_DUMP_CONTEXT
 		(*i)->dump(o, c);
-#else
-		(*i)->dump(o);
-#endif
 	}
 	return o;
 }

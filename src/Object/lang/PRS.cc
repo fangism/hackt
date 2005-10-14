@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3.2.4 2005/10/13 01:27:08 fang Exp $
+	$Id: PRS.cc,v 1.3.2.5 2005/10/14 03:30:21 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -594,12 +594,7 @@ expr_loop_base::dump(ostream& o, const expr_dump_context& c,
 	NEVER_NULL(ind_var);
 	NEVER_NULL(range);
 	o << '(' << op << ':' << ind_var->get_name() << ':';
-#if USE_EXPR_DUMP_CONTEXT
-	// TODL: adjust me
 	range->dump(o, entity::expr_dump_context(c)) << ": ";
-#else
-	range->dump(o) << ": ";			// dump_brief?
-#endif
 	return body_expr->dump(o, c) << ')';
 }
 
@@ -612,11 +607,8 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";
-#if USE_EXPR_DUMP_CONTEXT
-		range->dump(cerr, entity::expr_dump_context::default_value) << endl;
-#else
-		range->dump(cerr) << endl;
-#endif
+		range->dump(cerr, entity::expr_dump_context::default_value)
+			<< endl;
 		return 0;
 	}
 	const pint_value_type min = cr.lower();
@@ -1269,11 +1261,7 @@ ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
 	// NEVER_NULL(c.parent_scope);
-#if USE_EXPR_DUMP_CONTEXT
 	return var->dump(o, entity::expr_dump_context(c));
-#else
-	return var->dump_briefer(o, c.parent_scope);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1318,12 +1306,8 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
 	if (var->unroll_references(c, bc).bad) {
-#if USE_EXPR_DUMP_CONTEXT
 		var->dump(cerr << "Error resolving production rule literal: ", 
 			entity::expr_dump_context::default_value)
-#else
-		var->dump(cerr << "Error resolving production rule literal: ")
-#endif
 			<< endl;
 		return 0;
 	}

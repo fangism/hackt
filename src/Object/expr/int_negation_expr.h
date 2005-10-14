@@ -3,7 +3,7 @@
 	Class definitions for integer negation expression.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_negation_expr.h,v 1.2.22.1 2005/10/13 01:27:03 fang Exp $
+	$Id: int_negation_expr.h,v 1.2.22.2 2005/10/14 03:30:15 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_NEGATION_EXPR_H__
@@ -38,16 +38,8 @@ public:
 	ostream&
 	what(ostream& o) const;
 
-#if USE_EXPR_DUMP_CONTEXT
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
-#else
-	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
-#endif
 
 	size_t
 	dimensions(void) const { return 0; }

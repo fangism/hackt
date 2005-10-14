@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.3.8.2 2005/10/13 01:27:12 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.3.8.3 2005/10/14 03:30:25 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -132,18 +132,10 @@ ostream&
 EXPRESSION_ASSIGNMENT_CLASS::dump(ostream& o) const {
 	NEVER_NULL(this->src);
 	INVARIANT(!dests.empty());
-#if USE_EXPR_DUMP_CONTEXT
 	dumper dumpit(o, expr_dump_context::default_value);
-#else
-	dumper dumpit(o);
-#endif
 	for_each(this->dests.begin(), this->dests.end(), dumpit);
-#if USE_EXPR_DUMP_CONTEXT
 	return this->src->dump(o << " = ", 
 		expr_dump_context::default_value) << ';';
-#else
-	return this->src->dump(o << " = ") << ';';
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,15 +145,9 @@ EXPRESSION_ASSIGNMENT_CLASS::dump(ostream& o) const {
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 EXPRESSION_ASSIGNMENT_CLASS::dumper::dumper(ostream& o,
-#if USE_EXPR_DUMP_CONTEXT
 		const expr_dump_context& c, 
-#endif
 		const size_t i) :
-		index(i), os(o)
-#if USE_EXPR_DUMP_CONTEXT
-		, _context(c)
-#endif
-		{
+		index(i), os(o), _context(c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -174,11 +160,7 @@ EXPRESSION_ASSIGNMENT_CLASS::dumper::operator() (
 		const typename dest_list_type::value_type& i) {
 	NEVER_NULL(i);
 	if (index) os << " = ";
-#if USE_EXPR_DUMP_CONTEXT
 	i->dump(os, _context);
-#else
-	i->dump(os);
-#endif
 	index++;
 }
 
@@ -256,11 +238,9 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 		src_values(this->src->unroll_resolve(c));
 	if (!src_values) {
 		this->src->dump(
-			cerr << "ERROR: failed to resolve source values of "
-#if USE_EXPR_DUMP_CONTEXT
-			, expr_dump_context::error_mode
-#endif
-			) << " in " << class_traits<Tag>::tag_name <<
+			cerr << "ERROR: failed to resolve source values of ",
+			expr_dump_context::error_mode) <<
+			" in " << class_traits<Tag>::tag_name <<
 			" assignment." << endl;
 		return good_bool(false);
 	}

@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.5.2.1 2005/10/13 01:26:59 fang Exp $
+ 	$Id: namespace.cc,v 1.5.2.2 2005/10/14 03:30:11 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -390,12 +390,8 @@ scopespace::add_instance(
 				cerr << "Detected overlap in the "
 					"sparse collection for " <<
 					id << ", precisely: ";
-#if USE_EXPR_DUMP_CONTEXT
 				overlap.dump(cerr,
 					expr_dump_context::default_value);
-#else
-				overlap.dump(cerr);
-#endif
 				cerr << ".  ERROR!  ";
 				return return_type(NULL);
 			}
