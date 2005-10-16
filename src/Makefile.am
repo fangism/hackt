@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.77.2.2 2005/10/13 01:26:49 fang Exp $
+#	$Id: Makefile.am,v 1.77.2.3 2005/10/16 04:54:49 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -289,6 +289,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/nonmeta_index_expr_base.h \
 	Object/expr/nonmeta_index_list.h \
 	Object/expr/nonmeta_range_expr_base.h \
+	Object/expr/operator_info.h \
+	Object/expr/operator_precedence.h \
 	Object/expr/param_expr.h \
 	Object/expr/param_expr_list.h \
 	Object/expr/pbool_const.h \

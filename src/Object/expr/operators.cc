@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.5.8.2 2005/10/14 03:30:18 fang Exp $
+ 	$Id: operators.cc,v 1.5.8.3 2005/10/16 04:54:54 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -32,6 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/operator_precedence.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -107,7 +108,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_unary_expr)
 ostream&
 pint_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 	// parentheses? check operator precedence
-	return ex->dump(o << op, c);
+	const bool p = c.need_parentheses(OP_PREC_UNARY);
+	const expr_dump_context::stamp_modifier m(c, OP_PREC_UNARY);
+	if (p) o << '(';
+	ex->dump(o << op, c);
+	if (p) o << ')';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -290,8 +296,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_unary_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 pbool_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
-	// parentheses?
-	return ex->dump(o << op, c);
+	const bool p = c.need_parentheses(OP_PREC_UNARY);
+	const expr_dump_context::stamp_modifier m(c, OP_PREC_UNARY);
+	if (p) o << '(';
+	ex->dump(o << op, c);
+	if (p) o << ')';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -452,10 +462,10 @@ pint_arith_expr::op_map_size = pint_arith_expr::op_map_init();
 	Static initialization of operator map.  
  */
 void
-pint_arith_expr::op_map_register(const char c, const op_type* o) {
+pint_arith_expr::op_map_register(const char c, const op_type* o, const char p) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
-	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = op_info(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -464,11 +474,11 @@ pint_arith_expr::op_map_register(const char c, const op_type* o) {
  */
 size_t
 pint_arith_expr::op_map_init(void) {
-	op_map_register('+', &adder);
-	op_map_register('-', &subtractor);
-	op_map_register('*', &multiplier);
-	op_map_register('/', &divider);
-	op_map_register('%', &remainder);
+	op_map_register('+', &adder, OP_PREC_PLUS);
+	op_map_register('-', &subtractor, OP_PREC_PLUS);
+	op_map_register('*', &multiplier, OP_PREC_TIMES);
+	op_map_register('/', &divider, OP_PREC_TIMES);
+	op_map_register('%', &remainder, OP_PREC_TIMES);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -501,9 +511,23 @@ pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const char o,
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: have op include precedence information.  
+ */
 ostream&
 pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+#if 1
+	const op_info& oi(reverse_op_map[op]);
+	const bool a = op->is_associative();
+	const bool p = c.need_parentheses(oi.prec, a);
+	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
+	if (p) o << '(';
+	rx->dump(lx->dump(o, c) << oi.op, c);
+	if (p) o << ')';
+	return o;
+#else
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op].op, c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -681,7 +705,7 @@ if (!m.register_transient_object(this,
 void
 pint_arith_expr::write_object(const persistent_object_manager& m,
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);	// writes a character
+	write_value(f, reverse_op_map[op].op);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.3.20.2 2005/10/14 03:30:13 fang Exp $
+	$Id: data_expr.cc,v 1.3.20.3 2005/10/16 04:54:53 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,8 @@
 #include "Object/expr/int_range_expr.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/int_range_list.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/operator_precedence.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
@@ -98,10 +100,10 @@ int_arith_expr::op_map_size = int_arith_expr::op_map_init();
 	Static initialization of operator map.  
  */
 void
-int_arith_expr::op_map_register(const char c, const op_type* o) {
+int_arith_expr::op_map_register(const char c, const op_type* o, const char p) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
-	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = op_info(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,11 +112,11 @@ int_arith_expr::op_map_register(const char c, const op_type* o) {
  */
 size_t
 int_arith_expr::op_map_init(void) {
-	op_map_register('+', &adder);
-	op_map_register('-', &subtractor);
-	op_map_register('*', &multiplier);
-	op_map_register('/', &divider);
-	op_map_register('%', &remainder);
+	op_map_register('+', &adder, OP_PREC_PLUS);
+	op_map_register('-', &subtractor, OP_PREC_PLUS);
+	op_map_register('*', &multiplier, OP_PREC_TIMES);
+	op_map_register('/', &divider, OP_PREC_TIMES);
+	op_map_register('%', &remainder, OP_PREC_TIMES);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -146,7 +148,18 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_arith_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
+#if 1
+	const op_info& oi(reverse_op_map[op]);
+	const bool a = op->is_associative();
+	const bool p = c.need_parentheses(oi.prec, a);
+	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
+	if (p) o << '(';
+	rx->dump(lx->dump(o, c) << oi.op, c);
+	if (p) o << ')';
+	return o;
+#else
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -185,7 +198,7 @@ if (!m.register_transient_object(this,
 void
 int_arith_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);     // writes a character
+	write_value(f, reverse_op_map[op].op);     // writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }

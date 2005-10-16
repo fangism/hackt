@@ -1,7 +1,7 @@
 /**
 	\file "util/operators.h'
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.5 2005/05/10 04:51:28 fang Exp $
+	$Id: operators.h,v 1.5.40.1 2005/10/16 04:54:55 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
@@ -50,6 +50,7 @@ virtual	~binary_arithmetic_operation() { }
 	Standard function interface for operators.  
  */
 virtual	R operator () (const A& a, const A& b) const = 0;
+virtual	bool is_associative(void) const = 0;
 };	// end struct binary_arithmetic_operation
 
 //-----------------------------------------------------------------------------
@@ -122,9 +123,10 @@ virtual	R operator () (const A& a, const S& s) const = 0;
 	Wrapper for std::plus binary functor.
  */
 template <class R = int, class A = int>
-struct plus : binary_arithmetic_operation<R, A> {
+struct plus : public binary_arithmetic_operation<R, A> {
 	R operator () (const A& a, const A& b) const
 		{ return std::plus<A>()(a,b); }
+	bool is_associative(void) const { return true; }
 };	// end struct plus
 
 //-----------------------------------------------------------------------------
@@ -135,6 +137,7 @@ template <class R = int, class A = int>
 struct minus : public binary_arithmetic_operation<R, A> {
 	R operator () (const A& a, const A& b) const
 		{ return std::minus<A>()(a,b); }
+	bool is_associative(void) const { return false; }
 };	// end struct minus
 
 //-----------------------------------------------------------------------------
@@ -145,6 +148,7 @@ template <class R = int, class A = int>
 struct multiplies : public binary_arithmetic_operation<R, A> {
 	R operator () (const A& a, const A& b) const
 		{ return std::multiplies<A>()(a,b); }
+	bool is_associative(void) const { return true; }
 };	// end struct multiplies
 
 //-----------------------------------------------------------------------------
@@ -155,6 +159,7 @@ template <class R = int, class A = int>
 struct divides : public binary_arithmetic_operation<R, A> {
 	R operator () (const A& a, const A& b) const
 		{ return std::divides<A>()(a,b); }
+	bool is_associative(void) const { return false; }
 };	// end struct divides
 
 //-----------------------------------------------------------------------------
@@ -165,6 +170,7 @@ template <class R = int, class A = int>
 struct modulus : public binary_arithmetic_operation<R, A> {
 	R operator () (const A& a, const A& b) const
 		{ return std::modulus<A>()(a,b); }
+	bool is_associative(void) const { return false; }
 };	// end struct modulus
 
 //=============================================================================

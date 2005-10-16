@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-08:
+	  Implemented smart parenthesization for meta and non-meta
+		arithmetic expressions, using operator precedence and
+		associativity.  (Could also apply to relational exprs...)
+	  Added new prs test cases.  
+	  Also added is_associative() to util/operators' 
+		binary_arithmetic_operation.  
+
+
 2005-10-13	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-07:
