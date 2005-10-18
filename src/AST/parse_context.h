@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.3.8.2 2005/10/11 02:41:24 fang Exp $
+	$Id: parse_context.h,v 1.3.8.3 2005/10/18 05:58:56 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -17,6 +17,7 @@
 #include "util/memory/count_ptr.h"
 #include "Object/common/util_types.h"
 #include "util/boolean_types.h"
+#include "util/attributes.h"
 
 namespace ART {
 namespace entity {
@@ -373,6 +374,7 @@ public:
 	void
 	commit_definition_arity(void);
 
+private:
 	// TODO:
 	// use nested struct for automatic construction/destruction matching...
 	count_ptr<pint_scalar>
@@ -380,6 +382,19 @@ public:
 
 	void
 	pop_loop_var(void);
+
+public:
+	/**
+		Automatic loop-variable stack manager.  
+		Pushes onto stack during construction.  
+		Pops off stack at destruction time.  
+	 */
+	struct loop_var_frame {
+		context&			_context;
+		count_ptr<pint_scalar>		var;
+		loop_var_frame(context&, const token_identifier&);
+		~loop_var_frame();
+	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame
 
 // repeat for processes and channels...
 

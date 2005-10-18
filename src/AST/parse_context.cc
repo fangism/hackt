@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.3.8.2 2005/10/11 02:41:24 fang Exp $
+ 	$Id: parse_context.cc,v 1.3.8.3 2005/10/18 05:58:55 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -885,6 +885,20 @@ context::auto_indent(void) const {
 		ret += "| ";
 	ret += "+-";
 	return ret;
+}
+
+//=============================================================================
+// struct context::loop_var_frame method definitions
+
+context::loop_var_frame::loop_var_frame(context& c,
+		const token_identifier& i) :
+		_context(c), var(_context.push_loop_var(i)) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+context::loop_var_frame::~loop_var_frame() {
+	if (var)
+		_context.pop_loop_var();
 }
 
 //=============================================================================

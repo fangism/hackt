@@ -1,5 +1,19 @@
 "ChangeLog"
 
+2005-10-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-09:
+	  Implemented AST::PRS::loop::check_rule() for parsing 
+		production rule loops.  
+	  Implemented type-checking and unrolling, etc. for 
+		entity::PRS::rule_loop.  Passes basic test case in nand-07.
+	  	TODO: crazy nested loop test cases.  
+	  Factored out common loop structures into PRS::meta_loop_base.  
+	  In parse_context, loop variable stack balancing done through
+		scoped object construction and destruction now.  
+	  Fixed util/unique_list.h (never used yet).  
+
+
 2005-10-15	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-08:

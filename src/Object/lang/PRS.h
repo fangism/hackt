@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.3.2.2 2005/10/10 22:13:51 fang Exp $
+	$Id: PRS.h,v 1.3.2.3 2005/10/18 05:58:57 fang Exp $
 	TODO: support loop expressions of AND and OR.  
  */
 
@@ -222,9 +222,9 @@ public:
 
 //=============================================================================
 /**
-	Common elements to expression loop.  
+	Base structure for meta-language loop construct.  
  */
-class expr_loop_base {
+class meta_loop_base {
 public:
 	typedef	value_array<pint_tag, 0>		pint_scalar;
 	typedef	count_ptr<pint_scalar>			ind_var_ptr_type;
@@ -233,8 +233,76 @@ public:
 protected:
 	ind_var_ptr_type			ind_var;
 	range_ptr_type				range;
+
+	meta_loop_base();
+	meta_loop_base(const ind_var_ptr_type&, const range_ptr_type&);
+	~meta_loop_base();
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+};
+
+//=============================================================================
+/**
+	A set of rules to be repeatedly unrolled in a loop.  
+ */
+class rule_loop : public rule, private meta_loop_base {
+	typedef	rule_loop			this_type;
+	typedef	rule_set::value_type		value_type;
+private:
+	rule_set				rules;
+public:
+	rule_loop();
+	rule_loop(const ind_var_ptr_type&, const range_ptr_type&);
+	~rule_loop();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context&) const;
+
+	PRS_UNROLL_RULE_PROTO;
+
+	void
+	check(void) const;
+
+	excl_ptr<rule>
+	expand_complement(void);
+
+	void
+	push_back(excl_ptr<rule>&);
+
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+};	// end class rule_loop
+
+//=============================================================================
+/**
+	Common elements to expression loop.  
+ */
+class expr_loop_base : protected meta_loop_base {
+	typedef	meta_loop_base			parent_type;
+public:
+	typedef	parent_type::pint_scalar	pint_scalar;
+	typedef	parent_type::ind_var_ptr_type	ind_var_ptr_type;
+	typedef	parent_type::range_ptr_type	range_ptr_type;
+protected:
 	prs_expr_ptr_type			body_expr;
 
+protected:
 	expr_loop_base();
 
 	expr_loop_base(const ind_var_ptr_type&, const range_ptr_type&);
