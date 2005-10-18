@@ -1,0 +1,17 @@
+// "loop-03.in"
+// should pass, though example is disgusting
+// copy-modified from "loop-02.in"
+
+template <pint N>
+defproc triangle(bool in[N][N][N]; bool _out) {
+prs {
+	(:i:N:
+		(|:j:i:	(&:k:j:	in[i][j][k] ) )		-> _out-
+		(&:j:i:	(|:k:j:	~in[N-i][N-j][N-k] ) )	-> _out+
+	)
+)
+}
+}
+
+nandN<3>	foo;
+
