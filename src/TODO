@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.3.2.3 2005/10/13 01:26:50 fang Exp $
+#	$Id: TODO,v 1.3.2.4 2005/10/25 19:07:35 fang Exp $
 
 ===============================================================================
 loop development:
@@ -11,18 +11,7 @@ lookup and value resolution:
 		2) is reference to template formal?
 		3) is definition/scope-local variable (need footprint)
 
-param_expression needs dump context! for automatic parenthesization
-	and omitting redundant parent scopes for local references.  
-
-test cases for create/alloc phase of the parser/alloc directory
-
 ===============================================================================
-
-PRS: in cflat
-	3) test cases instantiating processes with PRS, hierarchically!!!
-
-PRS parser needs to support rule loops...
-	need to extend intermediate form in Object/lang/PRS.  
 
 footprint pointer persistence may be complicated in footprint_frame.
 	(partially done, for top-level state)
@@ -40,10 +29,17 @@ new class_trait:
 ===============================================================================
 big stuff:
 
-*** loops and conditionals ***
-*** global and out-of-scope references? ***
+*** flow control: loops and conditionals ***
 
-CFLAT
+*** global and out-of-scope references? ***
+	Or should we restrict to passing everything explicitly?
+	Suggest creating global 'structs' with relevant signals 
+		and passing those.  
+	Rationale: for design automation tools, all signals are treated
+		as ports, be they global or local.
+	Proposal: need way to detect, make implicit global ports?
+
+CFLAT:
 
 compare memory usage between using flattened production rule arrays
 	vs. arrays of definitions (like logic gates).
@@ -93,4 +89,20 @@ test cases:
 parser/connect/120.in, 121.in
 	regarding hierarchical propagation and checking of relaxed actuals
 	(2005-08-18: punting)
+
+===============================================================================
+DEFECT REPORTS:
+to resolve: how to interpret negative indices, 
+	whether or not they should be allowed, 
+	along with empty expression-loops in PRS.  
+	(affects several test cases in parser/prs)
+
+interleaving of instantiations and PRS:
+	prs and instances are maintained in separate structures
+	Semantically, all instances are unrolled first before anything 
+	is done with PRS.  Thus, there may be code that looks wrong 
+	(reference before instantiation) but will not be rejected in the 
+	later compile-phases.  Is this a major issue?
+	Related: flow control containing PRS bodies will need to
+		"duplicate" the flow control stack in PRS for proper replay.  
 

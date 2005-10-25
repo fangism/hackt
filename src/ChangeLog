@@ -9,6 +9,7 @@
 		expression loops, as noted in dox/lang spec.  
 		This needs to be resolved ASAP.  
 	  Added set of test cases catching empty loop bounds.  
+	  This concludes this branch.  
 
 
 2005-10-17	David Fang		<fangism@users.sourceforge.net>
