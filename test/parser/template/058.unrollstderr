@@ -35,9 +35,9 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         W = pint<> W
-        Z = pint<> Z (init = pint-inst-ref ::foo::W)
+        Z = pint<> Z (init = W)
       Instances:
-        my_int = int<pint-inst-ref ::foo::Z> my_int
+        my_int = int<::foo::Z> my_int
       }
 
 }

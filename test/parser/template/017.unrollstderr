@@ -28,14 +28,14 @@ In namespace "", we have: {
     default_width = pint^0 default_width value: ?
   Definitions:
     something_wide = process-definition (defined) something_wide<
-      pint<> W (default = pint-inst-ref ::default_width)
+      pint<> W (default = default_width)
       >(
       )
       In definition "something_wide", we have: {
       Parameters:
-        W = pint<> W (default = pint-inst-ref ::default_width)
+        W = pint<> W (default = default_width)
       Instances:
-        wide_int = int<pint-inst-ref ::something_wide::W> wide_int
+        wide_int = int<::something_wide::W> wide_int
       }
 
 }

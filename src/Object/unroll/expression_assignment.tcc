@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.3 2005/09/04 21:15:00 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.4 2005/10/25 20:51:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -24,6 +24,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/common/multikey_index.h"
+#include "Object/expr/expr_dump_context.h"
 
 #include "util/wtf.h"
 #include "util/what.h"
@@ -131,9 +132,10 @@ ostream&
 EXPRESSION_ASSIGNMENT_CLASS::dump(ostream& o) const {
 	NEVER_NULL(this->src);
 	INVARIANT(!dests.empty());
-	dumper dumpit(o);
+	dumper dumpit(o, expr_dump_context::default_value);
 	for_each(this->dests.begin(), this->dests.end(), dumpit);
-	return this->src->dump(o << " = ") << ';';
+	return this->src->dump(o << " = ", 
+		expr_dump_context::default_value) << ';';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -142,8 +144,10 @@ EXPRESSION_ASSIGNMENT_CLASS::dump(ostream& o) const {
 	\param i the initial index, used to suppress delimiter.  
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
-EXPRESSION_ASSIGNMENT_CLASS::dumper::dumper(ostream& o, const size_t i) :
-		index(i), os(o) {
+EXPRESSION_ASSIGNMENT_CLASS::dumper::dumper(ostream& o,
+		const expr_dump_context& c, 
+		const size_t i) :
+		index(i), os(o), _context(c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -156,7 +160,7 @@ EXPRESSION_ASSIGNMENT_CLASS::dumper::operator() (
 		const typename dest_list_type::value_type& i) {
 	NEVER_NULL(i);
 	if (index) os << " = ";
-	i->dump(os);
+	i->dump(os, _context);
 	index++;
 }
 
@@ -205,9 +209,10 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 good_bool
 EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i, 
-		const const_dest_iterator& e, const const_collection_type& v) {
+		const const_dest_iterator& e, const const_collection_type& v, 
+		const unroll_context& c) {
 	for ( ; i!=e; i++) {
-		if ((*i)->assign_value_collection(v).bad) {
+		if ((*i)->assign_value_collection(v, c).bad) {
 			// just re-using same old lame error message
 			cerr << "ERROR: something went wrong in " <<
 				class_traits<Tag>::tag_name <<
@@ -233,8 +238,9 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 		src_values(this->src->unroll_resolve(c));
 	if (!src_values) {
 		this->src->dump(
-			cerr << "ERROR: failed to resolve source values of ")
-			<< " in " << class_traits<Tag>::tag_name <<
+			cerr << "ERROR: failed to resolve source values of ",
+			expr_dump_context::error_mode) <<
+			" in " << class_traits<Tag>::tag_name <<
 			" assignment." << endl;
 		return good_bool(false);
 	}
@@ -250,11 +256,11 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 		*the_lonesome_value.begin() =
 			scalar_const->static_constant_value();
 		return assign_dests(this->dests.begin(), this->dests.end(),
-			the_lonesome_value);
+			the_lonesome_value, c);
 	} else {
 		NEVER_NULL(bunch_of_consts);
 		return assign_dests(this->dests.begin(), this->dests.end(),
-			*bunch_of_consts);
+			*bunch_of_consts, c);
 	}
 }
 

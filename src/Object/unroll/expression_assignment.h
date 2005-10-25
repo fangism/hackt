@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.3 2005/09/04 21:15:00 fang Exp $
+	$Id: expression_assignment.h,v 1.4 2005/10/25 20:51:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -16,6 +16,7 @@
 
 namespace ART {
 namespace entity {
+struct expr_dump_context;
 using std::list;
 USING_CONSTRUCT
 
@@ -84,9 +85,11 @@ public:
 	private:
 		size_t index;
 		ostream& os;
+		const expr_dump_context& _context;
 	public:
 		explicit
-		dumper(ostream& o, const size_t i = 0);
+		dumper(ostream&, const expr_dump_context&, 
+			const size_t i = 0);
 
 		void
 		operator () (const typename dest_list_type::value_type& i);
@@ -105,7 +108,7 @@ private:
 	static
 	good_bool
 	assign_dests(const_dest_iterator, const const_dest_iterator&, 
-		const const_collection_type&);
+		const const_collection_type&, const unroll_context&);
 	
 };	// end class expression_assignment
 

@@ -1,0 +1,5 @@
+ERROR: assigning index [0] of pint collection ::bogus::M.
+ERROR: something went wrong in pint assignment.
+Instantiated from: bogus<1>
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

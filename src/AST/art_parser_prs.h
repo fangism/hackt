@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.h"
 	PRS-specific syntax tree classes.
-	$Id: art_parser_prs.h,v 1.14 2005/06/19 01:58:31 fang Exp $
+	$Id: art_parser_prs.h,v 1.15 2005/10/25 20:51:47 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_H__
@@ -94,6 +94,7 @@ public:
 	Repetition of production rules in a loop.  
  */
 class loop : public body_item {
+	typedef	DEFAULT_VECTOR(body_item::return_type)	checked_rules_type;
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
 	const excl_ptr<const token_identifier>	index;
@@ -179,10 +180,7 @@ public:
 
 	CHECK_META_EXPR_PROTO;
 	CHECK_NONMETA_EXPR_PROTO;
-
-#if 0
 	CHECK_PRS_EXPR_PROTO;
-#endif
 };	// end class op_loop
 
 //=============================================================================

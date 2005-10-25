@@ -88,7 +88,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<pint-inst-ref ::bar::M, pint-inst-ref ::foo::D+1> x with indices: {
+        foo<::bar::M, ::foo::D+1> x with indices: {
           [0..::bar::N-1]
         }
 
@@ -98,7 +98,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = foo<pint-inst-ref ::bar::M, pint-inst-ref ::foo::D+1> x with indices: {
+        x = foo<::bar::M, ::foo::D+1> x with indices: {
           [0..::bar::N-1]
         }
 
@@ -147,7 +147,7 @@ In namespace "", we have: {
 
     foo = process-definition (defined) foo<
       pint<> D
-      pint<> E (default = pint-inst-ref ::foo::D+1)
+      pint<> E (default = D+1)
       >(
         bool<> a with indices: {
           [0..::foo::D-1]
@@ -157,7 +157,7 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         D = pint<> D
-        E = pint<> E (default = pint-inst-ref ::foo::D+1)
+        E = pint<> E (default = D+1)
       Instances:
         a = bool<> a with indices: {
           [0..::foo::D-1]

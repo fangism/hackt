@@ -1,0 +1,66 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	185
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	15	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	17	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    null = process-definition (defined) null(
+      )
+      In definition "null", we have: {
+      Instances:
+        x = bool<> x
+        y = bool<> y
+      prs:
+        (:i:[0..-1]:
+          ~x -> y+
+          x -> y-
+        )
+      footprint: {
+        bool^0 x (instantiated) = ::null::x (1) 
+        bool^0 y (instantiated) = ::null::y (2) 
+        bool instance pool:
+        1	::null::x
+        2	::null::y
+      }
+      }
+
+  Instances:
+    foo = process null<>^0 foo (instantiated) = ::foo (1) 
+}
+
+Created state:
+process instance pool:
+1	::foo
+

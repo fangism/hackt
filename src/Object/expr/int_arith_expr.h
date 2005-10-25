@@ -3,7 +3,7 @@
 	Class definitions for arithmetic int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_arith_expr.h,v 1.2 2005/07/20 21:00:42 fang Exp $
+	$Id: int_arith_expr.h,v 1.3 2005/10/25 20:51:51 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_ARITH_EXPR_H__
@@ -11,6 +11,7 @@
 
 #include "Object/expr/int_expr.h"
 #include "Object/expr/types.h"
+#include "Object/expr/operator_info.h"
 #include "util/qmap_fwd.h"
 #include "util/operators.h"
 #include "util/memory/count_ptr.h"
@@ -43,12 +44,13 @@ public:
         static const divides<value_type, arg_type>	divider;
         static const modulus<value_type, arg_type>	remainder;
 private:
+	typedef	expr_detail::op_info			op_info;
 	typedef	qmap<char, const op_type*>		op_map_type;
-	typedef	qmap<const op_type*, char>		reverse_op_map_type;
+	typedef	qmap<const op_type*, op_info>		reverse_op_map_type;
 	static const op_map_type			op_map;
 	static const reverse_op_map_type		reverse_op_map;
 	static const size_t				op_map_size;
-	static void op_map_register(const char, const op_type*);
+	static void op_map_register(const char, const op_type*, const char);
 	static size_t op_map_init(void);
 public:
 	typedef	count_ptr<const int_expr>		operand_ptr_type;
@@ -67,10 +69,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
-
-	ostream&
-	dump_brief(ostream&) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	size_t
 	dimensions(void) const { return 0; }

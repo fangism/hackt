@@ -1,4 +1,4 @@
-// should pass type-checking, but not unrolling
+// "022.in" should pass type-checking, but not unrolling
 // has one more indirection that 021.in
 
 pint milk[4];

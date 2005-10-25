@@ -1,0 +1,9 @@
+// "043.in" should pass, using template parameters in definitions' parameters
+
+template <pint E>
+defproc bogus() {
+pint M[E];
+}
+
+bogus<2> x;
+

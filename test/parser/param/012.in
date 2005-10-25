@@ -1,4 +1,4 @@
-// should fail: type mismatch
+// "012.in" should fail: type mismatch
 
 pbool foo = 123;
 

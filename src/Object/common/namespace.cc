@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.5 2005/10/08 01:39:55 fang Exp $
+ 	$Id: namespace.cc,v 1.6 2005/10/25 20:51:48 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -49,6 +49,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/persistent_type_hash.h"
 
@@ -389,7 +390,8 @@ scopespace::add_instance(
 				cerr << "Detected overlap in the "
 					"sparse collection for " <<
 					id << ", precisely: ";
-				overlap.dump(cerr);
+				overlap.dump(cerr,
+					expr_dump_context::default_value);
 				cerr << ".  ERROR!  ";
 				return return_type(NULL);
 			}

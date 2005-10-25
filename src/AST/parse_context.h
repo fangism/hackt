@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.3 2005/09/04 21:14:40 fang Exp $
+	$Id: parse_context.h,v 1.4 2005/10/25 20:51:48 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -17,6 +17,7 @@
 #include "util/memory/count_ptr.h"
 #include "Object/common/util_types.h"
 #include "util/boolean_types.h"
+#include "util/attributes.h"
 
 namespace ART {
 namespace entity {
@@ -37,6 +38,8 @@ namespace entity {
 	class param_expr;
 	class param_expr_list;
 	class param_expression_assignment;
+	struct pint_tag;
+	template <class, size_t> class value_array;
 }	// end namespace entity
 
 namespace parser {
@@ -69,6 +72,8 @@ using entity::param_expr;
 using entity::param_expr_list;
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
+using entity::pint_tag;
+using entity::value_array;
 
 //=============================================================================
 // forward declarations
@@ -162,6 +167,11 @@ private:
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
 #define	current_sequential_scope		sequential_scope_stack.top()
 
+	typedef	value_array<pint_tag, 0>	pint_scalar;
+	typedef	list<count_ptr<const pint_scalar> >
+						loop_var_stack_type;
+	loop_var_stack_type			loop_var_stack;
+
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
 	static const long	type_error_limit = 3;
@@ -230,10 +240,7 @@ public:
 	never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base>& d);
 
-#define	USE_CONTEXT_TEMPLATE_METHODS	1
-
 // void	declare_process(const token_identifier& ps);
-#if USE_CONTEXT_TEMPLATE_METHODS
 	template <class D>
 	void
 	open_definition(const token_identifier& ps);
@@ -241,25 +248,6 @@ public:
 	template <class D>
 	void
 	close_definition(void);
-#else
-	void
-	open_process_definition(const token_identifier& ps);
-
-	void
-	close_process_definition(void);
-
-	void
-	open_datatype_definition(const token_identifier& ds);
-
-	void
-	close_datatype_definition(void);
-
-	void
-	open_chantype_definition(const token_identifier& ds);
-
-	void
-	close_chantype_definition(void);
-#endif
 
 	// different: not sequential scopes
 	void
@@ -267,14 +255,6 @@ public:
 
 	void
 	close_enum_definition(void);
-
-#if 0
-	void
-	open_channel_definition(const token_identifier& ps);
-
-	void
-	close_channel_definition(void);
-#endif
 
 	void
 	declare_datatype(const token_identifier& ds);
@@ -322,26 +302,9 @@ public:
 	never_ptr<const definition_base>
 	get_current_prototype(void) const;
 
-#if USE_CONTEXT_TEMPLATE_METHODS
 	template <class D>
 	never_ptr<const D>
 	get_current_definition(void) const;
-#else
-	never_ptr<const datatype_definition_base>
-	get_current_datatype_definition(void) const;
-
-	never_ptr<const channel_definition_base>
-	get_current_channel_definition(void) const;
-
-	never_ptr<const process_definition_base>
-	get_current_process_definition(void) const;
-
-#endif
-
-#if 0
-	never_ptr<const built_in_param_def>
-	get_current_param_definition(void) const;
-#endif
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {
@@ -361,6 +324,11 @@ public:
 
 	never_ptr<const object>
 	lookup_object(const qualified_id& id) const;
+
+	never_ptr<const object>
+	lookup_object(const token_identifier& id) const;
+
+// TODO: template the lookup methods.  
 
 	never_ptr<const definition_base>
 	lookup_definition(const token_identifier& id) const;
@@ -405,6 +373,28 @@ public:
 
 	void
 	commit_definition_arity(void);
+
+private:
+	// TODO:
+	// use nested struct for automatic construction/destruction matching...
+	count_ptr<pint_scalar>
+	push_loop_var(const token_identifier&);
+
+	void
+	pop_loop_var(void);
+
+public:
+	/**
+		Automatic loop-variable stack manager.  
+		Pushes onto stack during construction.  
+		Pops off stack at destruction time.  
+	 */
+	struct loop_var_frame {
+		context&			_context;
+		count_ptr<pint_scalar>		var;
+		loop_var_frame(context&, const token_identifier&);
+		~loop_var_frame();
+	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame
 
 // repeat for processes and channels...
 

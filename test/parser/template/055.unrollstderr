@@ -49,7 +49,7 @@ In namespace "", we have: {
       Parameters:
         W = pint<> W
       Instances:
-        my_bar = bar<0><pint-inst-ref ::foo::W> my_bar
+        my_bar = bar<0><::foo::W> my_bar
       }
 
 }

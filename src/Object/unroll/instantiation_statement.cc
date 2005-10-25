@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.4 2005/09/04 21:15:00 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.5 2005/10/25 20:51:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -31,6 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
@@ -137,7 +138,7 @@ instantiation_statement_base::dump(ostream& o) const {
 	// is this ok: reference to automatic object?
 	const const_relaxed_args_type& ra(get_relaxed_actuals());
 	if (ra) {
-		ra->dump(o << '<') << '>';
+		ra->dump(o << '<', expr_dump_context::default_value) << '>';
 	}
 	o << " ";
 	never_ptr<const instance_collection_base>
@@ -148,7 +149,7 @@ instantiation_statement_base::dump(ostream& o) const {
 		o << "<unknown>";
 	}
 	if (indices)
-		indices->dump(o);
+		indices->dump(o, expr_dump_context::default_value);
 	return o;
 }
 
@@ -189,7 +190,7 @@ if (indices) {
 		cerr << "ERROR: unable to resolve indices of " <<
 			get_inst_base()->get_qualified_name() <<
 			" for instantiation: ";
-		indices->dump(cerr) << endl;
+		indices->dump(cerr, expr_dump_context::default_value) << endl;
 	}
 	return ret;
 } else {

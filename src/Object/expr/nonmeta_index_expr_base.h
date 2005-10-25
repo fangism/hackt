@@ -6,7 +6,7 @@
 		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: nonmeta_index_expr_base.h,v 1.2 2005/07/20 21:00:46 fang Exp $
+	$Id: nonmeta_index_expr_base.h,v 1.3 2005/10/25 20:51:52 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
@@ -16,6 +16,7 @@
 
 namespace ART {
 namespace entity {
+struct expr_dump_context;
 using std::ostream;
 using util::persistent;
 
@@ -31,7 +32,7 @@ public:
 virtual	~nonmeta_index_expr_base() { }
 
 virtual	ostream&
-	dump(ostream&) const = 0;
+	dump(ostream& o, const expr_dump_context&) const = 0;
 
 };	// end class nonmeta_ndex_expr_base
 

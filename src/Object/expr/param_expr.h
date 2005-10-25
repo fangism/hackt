@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.3 2005/09/04 21:14:46 fang Exp $
+	$Id: param_expr.h,v 1.4 2005/10/25 20:51:53 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_H__
@@ -20,6 +20,7 @@ class param_expression_assignment;
 class const_param;
 class const_range_list;
 class unroll_context;
+struct expr_dump_context;
 using util::persistent;
 using std::ostream;
 using util::memory::count_ptr;
@@ -44,7 +45,7 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const = 0;
+	dump(ostream& o, const expr_dump_context&) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;

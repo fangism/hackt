@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.4 2005/09/04 21:14:45 fang Exp $
+	$Id: const_index_list.h,v 1.5 2005/10/25 20:51:50 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -65,7 +65,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 /** NOT THE SAME **/
 	size_t

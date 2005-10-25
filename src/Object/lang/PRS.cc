@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3 2005/10/08 01:39:58 fang Exp $
+	$Id: PRS.cc,v 1.4 2005/10/25 20:51:56 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -21,6 +21,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_alias_info.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/bool_expr.h"
+#include "Object/expr/meta_range_expr.h"
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/inst/pint_value_collection.h"
+#include "Object/def/template_formals_manager.h"
+#include "Object/type/template_actuals.h"
+#include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
 
 #include "common/TODO.h"
@@ -37,8 +45,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace util {
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::pull_up, "PRS-up")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::pull_dn, "PRS-dn")
+SPECIALIZE_UTIL_WHAT(ART::entity::PRS::rule_loop, "PRS-loop")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::and_expr, "PRS-and")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::or_expr, "PRS-or")
+SPECIALIZE_UTIL_WHAT(ART::entity::PRS::and_expr_loop, "PRS-and-loop")
+SPECIALIZE_UTIL_WHAT(ART::entity::PRS::or_expr_loop, "PRS-or-loop")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::not_expr, "PRS-not")
 SPECIALIZE_UTIL_WHAT(ART::entity::PRS::literal, "PRS-var")
 
@@ -47,9 +58,15 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::pull_dn, PRS_PULLDN_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::and_expr, PRS_AND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::or_expr, PRS_OR_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::PRS::and_expr_loop, PRS_AND_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	ART::entity::PRS::or_expr_loop, PRS_OR_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	ART::entity::PRS::not_expr, PRS_NOT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -85,14 +102,15 @@ struct rule::checker {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 struct rule::dumper {
-	ostream& os;
-	dumper(ostream& o) : os(o) { }
+	ostream&		os;
+	rule_dump_context	rdc;
+	dumper(ostream& o, const rule_dump_context& c) : os(o), rdc(c) { }
 
 	template <class P>
 	void
 	operator () (const P& r) {
 		NEVER_NULL(r);
-		r->dump(os) << endl;
+		r->dump(os, rdc) << endl;
 	}
 };      // end struct rule::dumper
 
@@ -168,8 +186,8 @@ rule_set::~rule_set() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-rule_set::dump(ostream& o) const {
-	for_each(begin(), end(), rule::dumper(o));
+rule_set::dump(ostream& o, const rule_dump_context& c) const {
+	for_each(begin(), end(), rule::dumper(o, c));
 	return o;
 }
 
@@ -206,6 +224,7 @@ rule_set::expand_complements(void) {
 good_bool
 rule_set::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -257,12 +276,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_up)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pull_up::dump(ostream& o) const {
+pull_up::dump(ostream& o, const rule_dump_context& c) const {
 	static const char* const norm_arrow = " -> ";
 	static const char* const comp_arrow = " => ";
 	return output.dump(
-		guard->dump(o << auto_indent) <<
-			((cmpl) ? comp_arrow : norm_arrow)) << "+";
+		guard->dump(o << auto_indent, c) <<
+			((cmpl) ? comp_arrow : norm_arrow), c) << "+";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,6 +320,7 @@ pull_up::expand_complement(void) {
 good_bool
 pull_up::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	size_t guard_expr_index = guard->unroll(c, np, pfp);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling production rule: "
@@ -376,12 +396,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pull_dn)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pull_dn::dump(ostream& o) const {
+pull_dn::dump(ostream& o, const rule_dump_context& c) const {
 	static const char* norm_arrow = " -> ";
 	static const char* comp_arrow = " => ";
 	return output.dump(
-		guard->dump(o << auto_indent) <<
-			((cmpl) ? comp_arrow : norm_arrow)) << "-";
+		guard->dump(o << auto_indent, c) <<
+			((cmpl) ? comp_arrow : norm_arrow), c) << "-";
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -415,6 +435,7 @@ pull_dn::expand_complement(void) {
 good_bool
 pull_dn::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	size_t guard_expr_index = guard->unroll(c, np, pfp);
 	if (!guard_expr_index) {
 		this->dump(cerr << "Error unrolling production rule: "
@@ -484,7 +505,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pass)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pass::dump(ostream& o) const {
+pass::dump(ostream& o, const rule_dump_context& c) const {
 	return o << "PRS::pass::dump() unimplemented.";
 }
 
@@ -534,6 +555,327 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 // class prs_expr method definitions
 
 //=============================================================================
+// class meta_loop_base method definitions
+
+inline
+meta_loop_base::meta_loop_base() : ind_var(), range() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+meta_loop_base::meta_loop_base(const ind_var_ptr_type& i, 
+		const range_ptr_type& r) :
+		ind_var(i), range(r) {
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+meta_loop_base::~meta_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+meta_loop_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	ind_var->collect_transient_info(m);
+	range->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+meta_loop_base::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	m.write_pointer(o, ind_var);
+	m.write_pointer(o, range);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+meta_loop_base::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	m.read_pointer(i, ind_var);
+	m.read_pointer(i, range);
+}
+
+//=============================================================================
+// class rule_loop method definitions
+
+rule_loop::rule_loop() : rule(), meta_loop_base(), rules() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rule_loop::rule_loop(const ind_var_ptr_type& i, 
+		const range_ptr_type& r) :
+		rule(), meta_loop_base(i, r), rules() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rule_loop::~rule_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+rule_loop::dump(ostream& o, const rule_dump_context& c) const {
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	o << auto_indent << '(' << ':' << ind_var->get_name() << ':';
+	range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
+	{
+		INDENT_SECTION(o);
+		rules.dump(o, c);
+	}
+	return o << auto_indent << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_loop::check(void) const {
+	for_each(rules.begin(), rules.end(), rule::checker());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+rule_loop::expand_complement(void) {
+	rules.expand_complements();
+	return excl_ptr<rule>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_loop::push_back(excl_ptr<rule>& r) {
+	NEVER_NULL(r);
+	rules.push_back(value_type());
+	rules.back() = r;
+	MUST_BE_NULL(r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls a set of loop-dependent production rules.  
+ */
+good_bool
+rule_loop::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+#if 0
+	STACKTRACE_VERBOSE;
+	FINISH_ME(Fang);
+	return good_bool(false);
+#else
+	// most of this copied from expr_loop_base::unroll...
+	// STACKTRACE_VERBOSE;
+	// first, resolve bounds of the loop range, using current context
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr, entity::expr_dump_context::default_value)
+			<< endl;
+		return good_bool(false);
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+#if 0
+	INVARIANT(min <= max);
+#else
+	// if range is empty or backwards, then ignore
+	if (min > max) {
+		return good_bool(true);
+	}
+#endif
+	// range gives us upper and lower bound of loop
+	// in a loop:
+	// create context chain of lookup
+	//	using unroll_context's template_formal/actual mechanism.  
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		if (!rules.unroll(cc, np, pfp).good) {
+			cerr << "Error resolving production rule in loop:"
+				<< endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_loop::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	meta_loop_base::collect_transient_info_base(m);
+	rules.collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	meta_loop_base::write_object_base(m, o);
+	rules.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_loop::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	meta_loop_base::load_object_base(m, i);
+	rules.load_object_base(m, i);
+}
+
+//=============================================================================
+// class expr_loop_base method definitions
+
+inline
+expr_loop_base::expr_loop_base() : parent_type(), body_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+expr_loop_base::expr_loop_base(const ind_var_ptr_type& i, 
+		const range_ptr_type& r) :
+		parent_type(i, r), body_expr() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+expr_loop_base::expr_loop_base(const ind_var_ptr_type& i, 
+		const range_ptr_type& r, const prs_expr_ptr_type& e) :
+		parent_type(i, r), body_expr(e) {
+	NEVER_NULL(body_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+inline
+expr_loop_base::~expr_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	print_stamp parameter is unused, (just passed down), 
+	loop is always parenthesized.  
+	TODO: construct entity::expr_dump_context from PRS::expr_dump_context.
+ */
+ostream&
+expr_loop_base::dump(ostream& o, const expr_dump_context& c,
+		const char op) const {
+	// const bool paren = stamp && (stamp != print_stamp);
+	// always parenthesized
+	NEVER_NULL(ind_var);
+	NEVER_NULL(range);
+	o << '(' << op << ':' << ind_var->get_name() << ':';
+	range->dump(o, entity::expr_dump_context(c)) << ": ";
+	return body_expr->dump(o, c) << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: What to do about 0..0 loops?
+	CAST just ignores and skips.  
+	\return 0 upon failure.  
+	TODO: resolve NULL expressions (CAST Defect Report)
+ */
+size_t
+expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp, const char type_enum) const {
+	// STACKTRACE_VERBOSE;
+	// first, resolve bounds of the loop range, using current context
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr, entity::expr_dump_context::default_value)
+			<< endl;
+		return 0;
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+#if 0
+	INVARIANT(min <= max);
+#else
+	if (min > max) {
+		cerr << "Sorry, empty expression loops are not yet supported.  "
+			"Currently waiting for resolution on language "
+			"defect report." << endl;
+		return 0;
+	}
+#endif
+	// range gives us upper and lower bound of loop
+	// in a loop:
+	// create context chain of lookup
+	//	using unroll_context's template_formal/actual mechanism.  
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	list<size_t> expr_indices;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
+		// check for errors after loop
+	}
+	PRS::footprint::expr_node&
+		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
+	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
+	// find index of first error
+	const size_t err = new_expr.first_error();
+	if (err) {
+		cerr << "Error resolving production rule expression at:"
+			<< endl;
+		return 0;
+	} else {
+		return pfp.current_expr_index();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_loop_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	parent_type::collect_transient_info_base(m);
+	NEVER_NULL(body_expr);
+	body_expr->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_loop_base::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	parent_type::write_object_base(m, o);
+	m.write_pointer(o, body_expr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+expr_loop_base::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
+	parent_type::load_object_base(m, i);
+	m.read_pointer(i, body_expr);
+}
+
+//=============================================================================
 // class and_expr method definitions
 
 and_expr::and_expr() : prs_expr(), sequence_type() { }
@@ -549,16 +891,18 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-and_expr::dump(ostream& o, const int stamp) const {
-	const bool paren = stamp && (stamp != print_stamp);
+and_expr::dump(ostream& o, const expr_dump_context& c) const {
+	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
+	expr_dump_context cc(c);
+	cc.expr_stamp = print_stamp;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
-	(*i)->dump(o, print_stamp);
+	(*i)->dump(o, cc);
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << " & ", print_stamp);
+		(*i)->dump(o << " & ", cc);
 	}
 	if (paren) o << ')';
 	return o;
@@ -583,6 +927,8 @@ and_expr::negate(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modifies itself in-place!
+	NOTE: this is also usable for and_expr_loop, and hence, 
+		need not be virtual.  
  */
 prs_expr_ptr_type
 and_expr::negation_normalize(void) {
@@ -595,11 +941,13 @@ and_expr::negation_normalize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Constructs expressions bottom-up.  
-	\return index > 0 if successful, else 0.
+	\return index of newly created expression if successful (1-indexed), 
+		else return 0.
  */
 size_t
 and_expr::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
 		prs_expr::unroller(c, np, pfp));
@@ -626,10 +974,16 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+and_expr::collect_transient_info_base(persistent_object_manager& m) const {
+	m.collect_pointer_list(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 and_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(*this);
+	collect_transient_info_base(m);
 }
 }
 
@@ -643,6 +997,111 @@ and_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 and_expr::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer_list(i, *this);
+}
+
+//=============================================================================
+// class and_expr_loop method definitions
+
+and_expr_loop::and_expr_loop() : parent_type(), expr_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr_loop::and_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r) :
+		parent_type(), expr_loop_base(i, r) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr_loop::and_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r, const prs_expr_ptr_type& e) :
+		parent_type(), expr_loop_base(i, r, e) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+and_expr_loop::~and_expr_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(and_expr_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	print_stamp parameter is unused, loop is always parenthesized.  
+ */
+ostream&
+and_expr_loop::dump(ostream& o, const expr_dump_context& c) const {
+	expr_dump_context cc(c);
+	cc.expr_stamp = PRS_LITERAL_TYPE_ENUM;
+	return expr_loop_base::dump(o, cc, '&');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::check(void) const {
+	body_expr->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: update comments: we are using pointer to same induction var/expr
+	What to do about induction variable and range expression?
+	Need to make private copy of variable (placeholder), and 
+	update references in the dependent experssions.  
+	OR... can we re-use the same variable and range_expr, 
+	knowing that only one expression can be evaluated at a time?
+	If so, then we need to share the count_ptr.  
+ */
+prs_expr_ptr_type
+and_expr_loop::negate(void) const {
+	STACKTRACE("and_expr_loop::negate()");
+	return count_ptr<or_expr_loop>(
+		new or_expr_loop(ind_var, range, body_expr->negate()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifies itself in-place!
+	NOTE: this is also usable for and_expr_loop, and hence, 
+		need not be virtual.  
+ */
+prs_expr_ptr_type
+and_expr_loop::negation_normalize(void) {
+	STACKTRACE("and_expr_loop::negation_normalize()");
+	body_expr->negation_normalize();
+	return prs_expr_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls into compile-time expanded meta expression.  
+	\return index of newly created expression if successful (1-indexed), 
+		else return 0.
+ */
+size_t
+and_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
+	return expr_loop_base::unroll_base(c, np, pfp, PRS_AND_EXPR_TYPE_ENUM);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	expr_loop_base::collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	expr_loop_base::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+and_expr_loop::load_object(const persistent_object_manager& m, istream& i) {
+	expr_loop_base::load_object_base(m, i);
 }
 
 //=============================================================================
@@ -661,16 +1120,18 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-or_expr::dump(ostream& o, const int stamp) const {
-	const bool paren = stamp && (stamp != print_stamp);
+or_expr::dump(ostream& o, const expr_dump_context& c) const {
+	const bool paren = c.expr_stamp && (c.expr_stamp != print_stamp);
+	expr_dump_context cc(c);
+	cc.expr_stamp = print_stamp;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	NEVER_NULL(*i);
 	if (paren) o << '(';
-	(*i)->dump(o, print_stamp);
+	(*i)->dump(o, cc);
 	for (i++; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << " | ", print_stamp);
+		(*i)->dump(o << " | ", cc);
 	}
 	if (paren) o << ')';
 	return o;
@@ -709,6 +1170,7 @@ or_expr::negation_normalize(void) {
 size_t
 or_expr::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	list<size_t> expr_indices;
 	transform(begin(), end(), back_inserter(expr_indices), 
 		prs_expr::unroller(c, np, pfp));
@@ -735,10 +1197,16 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+or_expr::collect_transient_info_base(persistent_object_manager& m) const {
+	m.collect_pointer_list(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 or_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(*this);
+	collect_transient_info_base(m);
 }
 }
 
@@ -752,6 +1220,108 @@ or_expr::write_object(const persistent_object_manager& m, ostream& o) const {
 void
 or_expr::load_object(const persistent_object_manager& m, istream& i) {
 	m.read_pointer_list(i, *this);
+}
+
+//=============================================================================
+// class or_expr_loop method definitions
+
+or_expr_loop::or_expr_loop() : parent_type(), expr_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+or_expr_loop::or_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r) :
+		parent_type(), expr_loop_base(i, r) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+or_expr_loop::or_expr_loop(const ind_var_ptr_type& i,
+		const range_ptr_type& r, const prs_expr_ptr_type& e) :
+		parent_type(), expr_loop_base(i, r, e) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+or_expr_loop::~or_expr_loop() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(or_expr_loop)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+or_expr_loop::dump(ostream& o, const expr_dump_context& c) const {
+	expr_dump_context cc(c);
+	cc.expr_stamp = PRS_LITERAL_TYPE_ENUM;
+	return expr_loop_base::dump(o, cc, '|');
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::check(void) const {
+	body_expr->check();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: update comments: we are using pointer to same induction var/expr
+	What to do about induction variable and range expression?
+	Need to make private copy of variable (placeholder), and 
+	update references in the dependent experssions.  
+	OR... can we re-use the same variable and range_expr, 
+	knowing that only one expression can be evaluated at a time?
+	If so, then we need to share the count_ptr.  
+ */
+prs_expr_ptr_type
+or_expr_loop::negate(void) const {
+	STACKTRACE("or_expr_loop::negate()");
+	return count_ptr<and_expr_loop>(
+		new and_expr_loop(ind_var, range, body_expr->negate()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifies itself in-place!
+	NOTE: this is also usable for or_expr_loop, and hence, 
+		need not be virtual.  
+ */
+prs_expr_ptr_type
+or_expr_loop::negation_normalize(void) {
+	STACKTRACE("or_expr_loop::negation_normalize()");
+	body_expr->negation_normalize();
+	return prs_expr_ptr_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls into compile-time expanded meta expression.  
+	\return index of newly created expression if successful (1-indexed), 
+		else return 0.
+ */
+size_t
+or_expr_loop::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
+	return expr_loop_base::unroll_base(c, np, pfp, PRS_OR_EXPR_TYPE_ENUM);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	expr_loop_base::collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	expr_loop_base::write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+or_expr_loop::load_object(const persistent_object_manager& m, istream& i) {
+	expr_loop_base::load_object_base(m, i);
 }
 
 //=============================================================================
@@ -775,9 +1345,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(not_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-not_expr::dump(ostream& o, const int) const {
+not_expr::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-	return var->dump(o << "~", print_stamp);
+	expr_dump_context cc(c);
+	cc.expr_stamp = print_stamp;
+	return var->dump(o << "~", cc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -822,6 +1394,7 @@ not_expr::negation_normalize(void) {
 size_t
 not_expr::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+	STACKTRACE_VERBOSE;
 	const size_t expr_ind = var->unroll(c, np, pfp);
 	if (!expr_ind) {
 		cerr << "Error unrolling production rule expression." << endl;
@@ -879,9 +1452,10 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 	Later, change prototype to pass in pointer to parent definition.  
  */
 ostream&
-literal::dump(ostream& o, const int) const {
+literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-	return var->dump_briefer(o, never_ptr<const scopespace>());
+	// NEVER_NULL(c.parent_scope);
+	return var->dump(o, entity::expr_dump_context(c));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -923,9 +1497,11 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 		PRS::footprint& pfp) const {
 	typedef literal_base_ptr_type::element_type::alias_collection_type
 			bool_instance_alias_collection_type;
+	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
 	if (var->unroll_references(c, bc).bad) {
-		var->dump(cerr << "Error resolving production rule literal: ")
+		var->dump(cerr << "Error resolving production rule literal: ", 
+			entity::expr_dump_context::default_value)
 			<< endl;
 		return 0;
 	}

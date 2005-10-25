@@ -92,11 +92,11 @@ In namespace "", we have: {
     col = process-definition-alias: col<
       pint<> K (default = 10)
       >
-      = array2d<pint-inst-ref ::col::K, 1>
+      = array2d<::col::K, 1>
     row = process-definition-alias: row<
       pint<> Q
       >
-      = array2d<1, pint-inst-ref ::row::Q>
+      = array2d<1, ::row::Q>
   Instances:
     the_col = process array2d<10, 1>^0 the_col (instantiated) = ::the_col 
     the_matrix = process array2d<3, 3>^0 the_matrix (instantiated) = ::the_matrix 

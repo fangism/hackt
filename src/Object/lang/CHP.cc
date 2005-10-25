@@ -1,12 +1,13 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.2 2005/07/23 06:52:43 fang Exp $
+	$Id: CHP.cc,v 1.3 2005/10/25 20:51:56 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
@@ -228,7 +229,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(guarded_action)
 ostream&
 guarded_action::dump(ostream& o) const {
 	if (guard)
-		guard->dump(o);
+		guard->dump(o, expr_dump_context::default_value);
 	else 	o << "else";
 	o << " -> ";
 	if (stmt)
@@ -376,7 +377,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(assignment)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 assignment::dump(ostream& o) const {
-	return rval->dump(lval->dump(o) << " := ");
+	const expr_dump_context& c(expr_dump_context::default_value);
+	return rval->dump(lval->dump(o, c) << " := ", c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -423,7 +425,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(condition_wait)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 condition_wait::dump(ostream& o) const {
-	return cond->dump(o << '[') << ']';
+	return cond->dump(o << '[', expr_dump_context::default_value) << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -468,13 +470,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_send)
 ostream&
 channel_send::dump(ostream& o) const {
 	typedef	expr_list_type::const_iterator	const_iterator;
-	chan->dump_briefer(o, never_ptr<const scopespace>()) << "!(";
+	const expr_dump_context& c(expr_dump_context::default_value);
+	chan->dump(o, c) << "!(";
 	INVARIANT(!exprs.empty());
 	const_iterator i(exprs.begin());
 	const const_iterator e(exprs.end());
-	(*i)->dump(o);
+	(*i)->dump(o, c);
 	for (i++; i!=e; i++) {
-		(*i)->dump(o << ',');
+		(*i)->dump(o << ',', c);
 	}
 	return o << ')';
 }
@@ -524,13 +527,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_receive)
 ostream&
 channel_receive::dump(ostream& o) const {
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
-	chan->dump_briefer(o, never_ptr<const scopespace>()) << "?(";
+	const expr_dump_context& c(expr_dump_context::default_value);
+	chan->dump(o, c) << "?(";
 	INVARIANT(!insts.empty());
 	const_iterator i(insts.begin());
 	const const_iterator e(insts.end());
-	(*i)->dump(o);
+	(*i)->dump(o, c);
 	for (i++; i!=e; i++) {
-		(*i)->dump(o << ',');
+		(*i)->dump(o << ',', c);
 	}
 	return o << ')';
 }

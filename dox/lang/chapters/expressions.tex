@@ -1,15 +1,33 @@
 % "chapters/expressions.tex"
 
-%	$Id: expressions.tex,v 1.2 2004/12/01 02:50:03 fang Exp $
+%	$Id: expressions.tex,v 1.3 2005/10/25 20:51:45 fang Exp $
 
 \chapter{Expressions}
 \label{sec:expressions}
 
 Expressions live in the realm of parameters and datatypes.  
+Compile-time meta language.  
 
 Boolean.
 
 Integer.
 
-Range.  
+\section{Range expressions}
+\label{sec:expression:range}
+
+Limits: interpretation of negative ranges?
+Are we allowing negative indices?
+
+Implicit ranges.
+
+Explicit ranges.
+Q: does $x<=y$?
+If we allow negative indices then yes, because we need to be able 
+to express empty ranges, when $x>y$.
+
+Compile-time (meta-language) interpretation.  
+
+See chapter on compile-time flow-control (loops and conditionals).  
+
+
 

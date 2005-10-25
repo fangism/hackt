@@ -1,4 +1,4 @@
-// should pass, simple parameter instantiations
+// "001.in" should pass, simple parameter instantiations
 
 pint N;
 pbool b;

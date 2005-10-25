@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.5 2005/10/08 01:40:00 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.6 2005/10/25 20:51:57 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -13,6 +13,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "util/what.h"
@@ -79,9 +80,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o, 
-		const never_ptr<const scopespace> s) const {
-	return simple_meta_instance_reference_base::dump_briefer(o, s);
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
+		const expr_dump_context& c) const {
+	return simple_meta_instance_reference_base::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,6 +111,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 				*(*f)[_inst.get_name()])
 			: _inst);
 if (inst.get_dimensions()) {
+	STACKTRACE("is array");
 	const_index_list cil;
 	if (ind) {
 		cil = ind->unroll_resolve(c);
@@ -151,6 +153,7 @@ if (inst.get_dimensions()) {
 	// success!
 	return bad_bool(false);
 } else {
+	STACKTRACE("is scalar");
 	// is a scalar instance
 	// size the alias_collection_type appropriately
 	a.resize();		// empty
@@ -229,7 +232,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	if (unroll_err.bad) {
 		cerr << "ERROR unrolling port actual reference "
 			"during port connection: ";
-		this->dump(cerr) << endl;
+		this->dump(cerr, expr_dump_context::default_value) << endl;
 		return bad_bool(true);
 	}
 	// alternative, create a local temporary instance reference to coll?

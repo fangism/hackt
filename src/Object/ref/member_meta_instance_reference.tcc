@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.5 2005/10/08 01:40:00 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.6 2005/10/25 20:51:57 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -15,6 +15,7 @@
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
@@ -66,10 +67,10 @@ MEMBER_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-MEMBER_INSTANCE_REFERENCE_CLASS::dump_briefer(ostream& o, 
-		const never_ptr<const scopespace> s) const {
-	base_inst_ref->dump_briefer(o, s);
-	return simple_meta_instance_reference_base::dump_briefer(o << '.', s);
+MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
+		const expr_dump_context& c) const {
+	base_inst_ref->dump(o, c);
+	return simple_meta_instance_reference_base::dump(o << '.', c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -99,8 +100,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 			_parent_inst_ref.unroll_generic_scalar_reference(c));
 	if (!parent_struct) {
 		_parent_inst_ref.dump(
-			cerr << "ERROR resolving member reference parent ")
-			<< endl;
+			cerr << "ERROR resolving member reference parent ", 
+			expr_dump_context::default_value) << endl;
 		return return_type(NULL);
 	}
 	const count_ptr<instance_collection_base>

@@ -42,13 +42,13 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (defined) foo<
       pint<> X
-      pint<> Y (default = pint-inst-ref ::foo::X)
+      pint<> Y (default = X)
       >(
       )
       In definition "foo", we have: {
       Parameters:
         X = pint<> X
-        Y = pint<> Y (default = pint-inst-ref ::foo::X)
+        Y = pint<> Y (default = X)
       footprint collection: {
         <12, 12> {
           pint^0 X value: ?

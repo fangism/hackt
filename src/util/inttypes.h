@@ -1,7 +1,7 @@
 /**
 	\file "util/inttypes.h"
 	Configured wrapper around standard integer type headers.  
-	$Id: inttypes.h,v 1.2 2005/08/08 16:51:14 fang Exp $
+	$Id: inttypes.h,v 1.3 2005/10/25 20:51:59 fang Exp $
  */
 
 #ifndef	__UTIL_INTTYPES_H__
@@ -9,11 +9,11 @@
 
 #include "config.h"
 
-#if HAVE_INTTYPES_H
+#if defined(HAVE_INTTYPES_H) && HAVE_INTTYPES_H
 #include <inttypes.h>	// usually includes <stdint.h>
 #endif
 
-#if HAVE_STDINT_H
+#if defined(HAVE_STDINT_H) && HAVE_STDINT_H
 #include <stdint.h>
 #endif
 

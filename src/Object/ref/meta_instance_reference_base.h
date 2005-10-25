@@ -3,7 +3,7 @@
 	Base class family for instance references in ART.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.3 2005/10/08 01:40:00 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.4 2005/10/25 20:51:57 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -52,10 +52,7 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const = 0;
-
-virtual	ostream&
-	dump_briefer(ostream&, const never_ptr<const scopespace>) const = 0;
+	dump(ostream& o, const expr_dump_context&) const = 0;
 
 virtual	ostream&
 	dump_type_size(ostream& o) const = 0;

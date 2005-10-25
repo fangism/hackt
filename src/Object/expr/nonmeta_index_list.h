@@ -3,7 +3,7 @@
 	Class definitions for nonmeta index lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: nonmeta_index_list.h,v 1.2 2005/07/20 21:00:46 fang Exp $
+	$Id: nonmeta_index_list.h,v 1.3 2005/10/25 20:51:53 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_INDEX_LIST_H__
@@ -16,6 +16,7 @@
 namespace ART {
 namespace entity {
 class nonmeta_index_expr_base;
+struct expr_dump_context;
 using std::vector;
 using std::ostream;
 using util::persistent;
@@ -50,7 +51,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nonmeta_index_list

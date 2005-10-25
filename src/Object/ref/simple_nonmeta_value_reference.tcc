@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.3 2005/08/08 23:08:30 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.4 2005/10/25 20:51:58 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -96,15 +96,9 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump_brief(ostream& o) const {
-	return grandparent_type::dump_brief(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-ostream&
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o) const {
-	return grandparent_type::dump(o);
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
+		const expr_dump_context& c) const {
+	return grandparent_type::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

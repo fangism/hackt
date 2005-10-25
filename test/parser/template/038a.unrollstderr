@@ -1,4 +1,4 @@
 ERROR: cannot unroll incomplete process type ::foo
-Instantiated from: foo<12, pint-inst-ref ::foo::X+1, pint-inst-ref ::foo::Y*2>
+Instantiated from: foo<12, ::foo::X+1, ::foo::Y*2>
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

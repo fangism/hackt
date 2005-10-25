@@ -1,4 +1,4 @@
-// should pass, parameters with assignments to constants
+// "002.in" should pass, parameters with assignments to constants
 
 pint N;
 N = 3;

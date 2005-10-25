@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.3 2005/07/23 06:52:30 fang Exp $
+	$Id: data_expr.cc,v 1.4 2005/10/25 20:51:50 fang Exp $
  */
 
 #include <iostream>
@@ -14,6 +14,8 @@
 #include "Object/expr/int_range_expr.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/int_range_list.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/operator_precedence.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
@@ -98,10 +100,10 @@ int_arith_expr::op_map_size = int_arith_expr::op_map_init();
 	Static initialization of operator map.  
  */
 void
-int_arith_expr::op_map_register(const char c, const op_type* o) {
+int_arith_expr::op_map_register(const char c, const op_type* o, const char p) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
-	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = op_info(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -110,11 +112,11 @@ int_arith_expr::op_map_register(const char c, const op_type* o) {
  */
 size_t
 int_arith_expr::op_map_init(void) {
-	op_map_register('+', &adder);
-	op_map_register('-', &subtractor);
-	op_map_register('*', &multiplier);
-	op_map_register('/', &divider);
-	op_map_register('%', &remainder);
+	op_map_register('+', &adder, OP_PREC_PLUS);
+	op_map_register('-', &subtractor, OP_PREC_PLUS);
+	op_map_register('*', &multiplier, OP_PREC_TIMES);
+	op_map_register('/', &divider, OP_PREC_TIMES);
+	op_map_register('%', &remainder, OP_PREC_TIMES);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -145,14 +147,19 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-int_arith_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-int_arith_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
+int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
+#if 1
+	const op_info& oi(reverse_op_map[op]);
+	const bool a = op->is_associative();
+	const bool p = c.need_parentheses(oi.prec, a);
+	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
+	if (p) o << '(';
+	rx->dump(lx->dump(o, c) << oi.op, c);
+	if (p) o << ')';
+	return o;
+#else
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -191,7 +198,7 @@ if (!m.register_transient_object(this,
 void
 int_arith_expr::write_object(const persistent_object_manager& m, 
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);     // writes a character
+	write_value(f, reverse_op_map[op].op);     // writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -313,14 +320,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-int_relational_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-int_relational_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
+int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -474,14 +475,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(bool_logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-bool_logical_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-bool_logical_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
+bool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -552,14 +547,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_negation_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-int_negation_expr::dump(ostream& o) const {
-	return ex->dump(o << '~');
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-int_negation_expr::dump_brief(ostream& o) const {
-	return ex->dump_brief(o << '~');
+int_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return ex->dump(o << '~', c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -608,14 +597,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(bool_negation_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-bool_negation_expr::dump(ostream& o) const {
-	return ex->dump(o << '~');
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-bool_negation_expr::dump_brief(ostream& o) const {
-	return ex->dump_brief(o << '~');
+bool_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return ex->dump(o << '~', c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -669,7 +652,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_range_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-int_range_expr::dump(ostream& o) const {
+int_range_expr::dump(ostream& o, const expr_dump_context&) const {
 	return upper->what(lower->what(o << '[') << "..") << ']';
 }
 
@@ -734,7 +717,7 @@ nonmeta_index_list::dimensions_collapsed(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-nonmeta_index_list::dump(ostream& o) const {
+nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
@@ -742,13 +725,8 @@ nonmeta_index_list::dump(ostream& o) const {
 		const count_ptr<const int_expr>
 			b(i->is_a<const int_expr>());
 		if (b)
-#if 0
-			// don't have yet
-			b->dump_brief(o << '[') << ']';
-#else
-			b->dump(o << '[') << ']';
-#endif
-		else    (*i)->dump(o);
+			b->dump(o << '[', c) << ']';
+		else    (*i)->dump(o, c);
 	}
 	return o;
 }

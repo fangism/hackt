@@ -3,7 +3,7 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.3 2005/09/04 21:14:45 fang Exp $
+	$Id: meta_index_expr.h,v 1.4 2005/10/25 20:51:52 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_INDEX_EXPR_H__
@@ -42,7 +42,7 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const = 0;
+	dump(ostream& o, const expr_dump_context&) const = 0;
 
 virtual size_t
 	dimensions(void) const = 0;

@@ -68,8 +68,8 @@ In namespace "", we have: {
         }
 
       prs:
-        a[::crazy_inv::I] -> a[::crazy_inv::J]-
-        ~a[::crazy_inv::I] -> a[::crazy_inv::J]+
+        a[I] -> a[J]-
+        ~a[I] -> a[J]+
       }
 
 }

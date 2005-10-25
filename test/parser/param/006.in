@@ -1,4 +1,4 @@
-// should fail, already declared
+// "006.in" should fail, already declared
 
 pint p;
 pint o, beans;

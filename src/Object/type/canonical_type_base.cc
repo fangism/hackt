@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.2 2005/09/04 21:14:58 fang Exp $
+	$Id: canonical_type_base.cc,v 1.3 2005/10/25 20:51:58 fang Exp $
  */
 
 #include <algorithm>
@@ -9,6 +9,7 @@
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "util/memory/count_ptr.tcc"
 
 namespace ART {
@@ -61,12 +62,14 @@ canonical_type_base::dump_template_args(ostream& o,
 	typedef param_list_type::const_iterator         const_iterator;
 	o << '<';
 	if (param_list_ptr) {
-		param_list_ptr->dump_range(o, 0, num_strict);
+		param_list_ptr->dump_range(o, 
+			expr_dump_context::default_value, 0, num_strict);
 	}
 	o << '>';
 	const size_t s = param_list_ptr->size();
 	if (num_strict < s) {
-		param_list_ptr->dump_range(o << '<', num_strict, s) << '>';
+		param_list_ptr->dump_range(o << '<',
+			expr_dump_context::default_value, num_strict, s) << '>';
 	}
 	return o;
 }

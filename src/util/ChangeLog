@@ -1,5 +1,25 @@
 # "src/util/ChangeLog"
 
+2005-10-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-merged-PRS-02-11:
+	  Merged revisions to trunk.  
+
+
+2005-10-16	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-09:
+	  Determining containership in util::unique_list fixed. 
+		It was just plain wrong before.  (Fortunately, never used.)
+
+
+2005-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-08:
+	  Added associativity (is_associative) virtual function to
+		binary arithmetic operators in "util/operators.h".
+
+
 2005-10-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-merged-cflat-01-11:

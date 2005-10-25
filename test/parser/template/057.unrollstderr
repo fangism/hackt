@@ -41,7 +41,7 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         W = pint<> W
-        Z = pint<> Z (init = pint-inst-ref ::foo::W)
+        Z = pint<> Z (init = W)
       Instances:
         my_int = int<32> my_int with indices: {
           [0..::foo::Z-1]

@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: pint_relational_expr.h,v 1.4 2005/10/25 20:51:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -76,10 +76,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	size_t
 	dimensions(void) const { return 0; }

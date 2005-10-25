@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.5 2005/09/04 21:14:46 fang Exp $
+ 	$Id: operators.cc,v 1.6 2005/10/25 20:51:53 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -31,6 +31,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/const_range.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/operator_precedence.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -104,15 +106,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_unary_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pint_unary_expr::dump_brief(ostream& o) const {
-	return ex->dump_brief(o << op);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pint_unary_expr::dump(ostream& o) const {
+pint_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 	// parentheses? check operator precedence
-	return ex->dump(o << op);
+	const bool p = c.need_parentheses(OP_PREC_UNARY);
+	const expr_dump_context::stamp_modifier m(c, OP_PREC_UNARY);
+	if (p) o << '(';
+	ex->dump(o << op, c);
+	if (p) o << ')';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -294,16 +295,13 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_unary_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pbool_unary_expr::dump_brief(ostream& o) const {
-	// parentheses?
-	return ex->dump_brief(o << op);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pbool_unary_expr::dump(ostream& o) const {
-	// parentheses?
-	return ex->dump(o << op);
+pbool_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
+	const bool p = c.need_parentheses(OP_PREC_UNARY);
+	const expr_dump_context::stamp_modifier m(c, OP_PREC_UNARY);
+	if (p) o << '(';
+	ex->dump(o << op, c);
+	if (p) o << ')';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -464,10 +462,10 @@ pint_arith_expr::op_map_size = pint_arith_expr::op_map_init();
 	Static initialization of operator map.  
  */
 void
-pint_arith_expr::op_map_register(const char c, const op_type* o) {
+pint_arith_expr::op_map_register(const char c, const op_type* o, const char p) {
 	NEVER_NULL(o);
 	const_cast<op_map_type&>(op_map)[c] = o;
-	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = c;
+	const_cast<reverse_op_map_type&>(reverse_op_map)[o] = op_info(c, p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -476,11 +474,11 @@ pint_arith_expr::op_map_register(const char c, const op_type* o) {
  */
 size_t
 pint_arith_expr::op_map_init(void) {
-	op_map_register('+', &adder);
-	op_map_register('-', &subtractor);
-	op_map_register('*', &multiplier);
-	op_map_register('/', &divider);
-	op_map_register('%', &remainder);
+	op_map_register('+', &adder, OP_PREC_PLUS);
+	op_map_register('-', &subtractor, OP_PREC_PLUS);
+	op_map_register('*', &multiplier, OP_PREC_TIMES);
+	op_map_register('/', &divider, OP_PREC_TIMES);
+	op_map_register('%', &remainder, OP_PREC_TIMES);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -513,15 +511,23 @@ pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const char o,
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: have op include precedence information.  
+ */
 ostream&
-pint_arith_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pint_arith_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
+pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
+#if 1
+	const op_info& oi(reverse_op_map[op]);
+	const bool a = op->is_associative();
+	const bool p = c.need_parentheses(oi.prec, a);
+	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
+	if (p) o << '(';
+	rx->dump(lx->dump(o, c) << oi.op, c);
+	if (p) o << ')';
+	return o;
+#else
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op].op, c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -590,17 +596,18 @@ pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 pint_arith_expr::resolve_value(value_type& i) const {
+	static const expr_dump_context& c(expr_dump_context::default_value);
 	arg_type a, b;
 	NEVER_NULL(lx);	NEVER_NULL(rx);
 	const good_bool lret(lx->resolve_value(a));
 	const good_bool rret(rx->resolve_value(b));
 	if (!lret.good) {
 		cerr << "ERROR: resolving left operand of: ";
-		dump(cerr) << endl;
+		dump(cerr, c) << endl;
 		return good_bool(false);
 	} else if (!rret.good) {
 		cerr << "ERROR: resolving right operand of: ";
-		dump(cerr) << endl;
+		dump(cerr, c) << endl;
 		return good_bool(false);
 	} else {
 		// Oooooh, virtual operator dispatch!
@@ -624,7 +631,9 @@ pint_arith_expr::resolve_dimensions(void) const {
 	\return true if resolved.
  */
 good_bool
-pint_arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) const {
+pint_arith_expr::unroll_resolve_value(const unroll_context& c,
+		value_type& i) const {
+	static const expr_dump_context& dc(expr_dump_context::default_value);
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	value_type lval, rval;
@@ -632,11 +641,11 @@ pint_arith_expr::unroll_resolve_value(const unroll_context& c, value_type& i) co
 	const good_bool rex(rx->unroll_resolve_value(c, rval));
 	if (!lex.good) {
 		cerr << "ERROR: resolving left operand of: ";
-		dump(cerr) << endl;
+		dump(cerr, dc) << endl;
 		return good_bool(false);
 	} else if (!rex.good) {
 		cerr << "ERROR: resolving right operand of: ";
-		dump(cerr) << endl;
+		dump(cerr, dc) << endl;
 		return good_bool(false);
 	} else {
 		i = (*op)(lval, rval);
@@ -696,7 +705,7 @@ if (!m.register_transient_object(this,
 void
 pint_arith_expr::write_object(const persistent_object_manager& m,
 		ostream& f) const {
-	write_value(f, reverse_op_map[op]);	// writes a character
+	write_value(f, reverse_op_map[op].op);	// writes a character
 	m.write_pointer(f, lx);
 	m.write_pointer(f, rx);
 }
@@ -820,14 +829,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pint_relational_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pint_relational_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
+pint_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1090,14 +1093,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-pbool_logical_expr::dump_brief(ostream& o) const {
-	return rx->dump_brief(lx->dump_brief(o) << reverse_op_map[op]);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-pbool_logical_expr::dump(ostream& o) const {
-	return rx->dump(lx->dump(o) << reverse_op_map[op]);
+pbool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
+	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -6,7 +6,7 @@
 		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.2 2005/07/20 21:00:41 fang Exp $
+	$Id: data_expr.h,v 1.3 2005/10/25 20:51:50 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_DATA_EXPR_H__
@@ -20,6 +20,7 @@
 namespace ART {
 namespace entity {
 class data_type_reference;
+struct expr_dump_context;
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -42,7 +43,7 @@ virtual	ostream&
 	what(ostream&) const = 0;
 
 virtual	ostream&
-	dump(ostream&) const = 0;
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 virtual	size_t
 	dimensions(void) const = 0;

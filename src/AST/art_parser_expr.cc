@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_expr.cc"
 	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.26 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_expr.cc,v 1.27 2005/10/25 20:51:46 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_EXPR_CC__
@@ -50,6 +50,8 @@
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+
+#include "common/ICE.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -217,6 +219,7 @@ inst_ref_expr::check_nonmeta_expr(context& c) const {
  */
 prs_literal_ptr_type
 inst_ref_expr::check_prs_literal(context& c) const {
+	STACKTRACE_VERBOSE;
 	meta_return_type ref(check_meta_reference(c));
 	count_ptr<simple_bool_meta_instance_reference>
 		bool_ref(ref.is_a<simple_bool_meta_instance_reference>());
@@ -549,6 +552,18 @@ qualified_id::check_build(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Performs unqualified lookup or qualified lookup of identifier.  
+	This is what id_expr::check_build() should call.  
+ */
+never_ptr<const instance_collection_base>
+qualified_id::lookup_instance(context& c) const {
+	if (!absolute && size() == 1)
+		return c.lookup_instance(*parent_type::back());
+	else	return c.lookup_instance(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // non-member functions
 
 // friend operator
@@ -662,9 +677,10 @@ id_expr::is_absolute(void) const {
  */
 inst_ref_expr::meta_return_type
 id_expr::check_meta_reference(context& c) const {
-	STACKTRACE("id_expr::check_meta_reference()");
-	const never_ptr<const object>
-		o(qid->check_build(c));		// will lookup_object
+	STACKTRACE_VERBOSE;
+	// lookup_instance will check for unqualified references first
+	const never_ptr<const instance_collection_base>
+		o(qid->lookup_instance(c));
 	if (o) {
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());
@@ -701,7 +717,7 @@ id_expr::check_meta_reference(context& c) const {
 inst_ref_expr::nonmeta_return_type
 id_expr::check_nonmeta_reference(context& c) const {
 	typedef inst_ref_expr::nonmeta_return_type	return_type;
-	STACKTRACE("id_expr::check_nonmeta_reference()");
+	STACKTRACE_VERBOSE;
 	const never_ptr<const object>
 		o(qid->check_build(c));		// will lookup_object
 	if (o) {
@@ -914,9 +930,10 @@ prefix_expr::check_nonmeta_expr(context& c) const {
 				return return_type(new bool_negation_expr(be));
 			}
 		default:
-			cerr << "Bad operator char \'" << ch << "\' in "
+			ICE(cerr, 
+				cerr << "Bad operator char \'" << ch << "\' in "
 				"prefix_expr::check_nonmeta_expr()!" << endl;
-			DIE;
+			);
 	}
 	return return_type(NULL);
 }
@@ -934,10 +951,11 @@ prefix_expr::check_prs_expr(context& c) const {
 		THROW_EXIT;		// for now
 	}
 	if (op->text[0] != '~') {
-		cerr << "FATAL: Invalid unary operator: \'" << op->text[0] <<
-			"\' at " << where(*op) <<
+		ICE(cerr, 
+			cerr << "FATAL: Invalid unary operator: \'" <<
+			op->text[0] << "\' at " << where(*op) <<
 			".  Aborting... have a nice day." << endl;
-		DIE;
+		);
 	}
 	return prs_expr_return_type(new entity::PRS::not_expr(pe));
 }
@@ -977,6 +995,7 @@ member_expr::rightmost(void) const {
  */
 inst_ref_expr::meta_return_type
 member_expr::check_meta_reference(context& c) const {
+	STACKTRACE_VERBOSE;
 	typedef	inst_ref_expr::meta_return_type	return_type;
 	const return_type o(owner->check_meta_reference(c));
 	// useless return value
@@ -1126,6 +1145,7 @@ index_expr::rightmost(void) const {
  */
 range_list::checked_meta_indices_type
 index_expr::intercept_meta_indices_error(context& c) const {
+	STACKTRACE_VERBOSE;
 	const range_list::checked_meta_indices_type
 		checked_indices(ranges->check_meta_indices(c));
 	// should result in a ART::entity::meta_index_list
@@ -1161,6 +1181,7 @@ index_expr::intercept_nonmeta_indices_error(context& c) const {
  */
 inst_ref_expr::meta_return_type
 index_expr::intercept_base_meta_ref_error(context& c) const {
+	STACKTRACE_VERBOSE;
 	// should result in an meta_instance_reference
 	const inst_ref_expr::meta_return_type
 		base_expr(base->check_meta_reference(c));
@@ -1197,6 +1218,7 @@ index_expr::intercept_base_nonmeta_ref_error(context& c) const {
  */
 inst_ref_expr::meta_return_type
 index_expr::check_meta_reference(context& c) const {
+	STACKTRACE_VERBOSE;
 	range_list::checked_meta_indices_type
 		checked_indices(intercept_meta_indices_error(c));
 	const inst_ref_expr::meta_return_type
@@ -1229,6 +1251,7 @@ index_expr::check_meta_reference(context& c) const {
 inst_ref_expr::nonmeta_return_type
 index_expr::check_nonmeta_reference(context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
+	STACKTRACE_VERBOSE;
 	range_list::checked_nonmeta_indices_type
 		checked_indices(intercept_nonmeta_indices_error(c));
 	if (!checked_indices) {
@@ -1582,6 +1605,9 @@ logical_expr::check_nonmeta_expr(context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't forget to check for cases of PRS loop expressions. 
+ */
 prs_expr_return_type
 logical_expr::check_prs_expr(context& c) const {
 	STACKTRACE("parser::PRS::logical_expr::check_prs_expr()");
@@ -1604,11 +1630,11 @@ logical_expr::check_prs_expr(context& c) const {
 	if (op_char == '&') {
 		typedef	entity::PRS::and_expr::iterator		iterator;
 		typedef	entity::PRS::and_expr::const_iterator	const_iterator;
-		count_ptr<entity::PRS::and_expr>
+		const count_ptr<entity::PRS::and_expr>
 			l_and(lo.is_a<entity::PRS::and_expr>());
-		count_ptr<entity::PRS::and_expr>
+		const count_ptr<entity::PRS::and_expr>
 			r_and(ro.is_a<entity::PRS::and_expr>());
-		if (l_and) {
+		if (l_and && !l_and.is_a<entity::PRS::and_expr_loop>()) {
 			if (r_and) {
 				copy(r_and->begin(), r_and->end(), 
 					back_inserter(*l_and));
@@ -1616,11 +1642,11 @@ logical_expr::check_prs_expr(context& c) const {
 				l_and->push_back(ro);
 			}
 			return l_and;
-		} else if (r_and) {
+		} else if (r_and && !r_and.is_a<entity::PRS::and_expr_loop>()) {
 			r_and->push_front(lo);
 			return r_and;
 		} else {
-			count_ptr<entity::PRS::and_expr>
+			const count_ptr<entity::PRS::and_expr>
 				ret(new entity::PRS::and_expr);
 			ret->push_back(lo);
 			ret->push_back(ro);
@@ -1630,11 +1656,11 @@ logical_expr::check_prs_expr(context& c) const {
 	} else if (op_char == '|') {
 		typedef	entity::PRS::or_expr::iterator		iterator;
 		typedef	entity::PRS::or_expr::const_iterator	const_iterator;
-		count_ptr<entity::PRS::or_expr>
+		const count_ptr<entity::PRS::or_expr>
 			l_or(lo.is_a<entity::PRS::or_expr>());
-		count_ptr<entity::PRS::or_expr>
+		const count_ptr<entity::PRS::or_expr>
 			r_or(ro.is_a<entity::PRS::or_expr>());
-		if (l_or) {
+		if (l_or && !l_or.is_a<entity::PRS::or_expr_loop>()) {
 			if (r_or) {
 				copy(r_or->begin(), r_or->end(), 
 					back_inserter(*l_or));
@@ -1642,21 +1668,23 @@ logical_expr::check_prs_expr(context& c) const {
 				l_or->push_back(ro);
 			}
 			return l_or;
-		} else if (r_or) {
+		} else if (r_or && !r_or.is_a<entity::PRS::or_expr_loop>()) {
 			r_or->push_front(lo);
 			return r_or;
 		} else {
-			count_ptr<entity::PRS::or_expr>
+			const count_ptr<entity::PRS::or_expr>
 				ret(new entity::PRS::or_expr);
 			ret->push_back(lo);
 			ret->push_back(ro);
+//			ret->check();	// paranoia
 			return ret;
 		}
 	} else {
-		cerr << "FATAL: Invalid PRS operor: \'" << op_char << "\' at "
-			<< where(*op) << ".  Aborting... have a nice day."
-			<< endl;
-		DIE;
+		ICE(cerr, 
+			cerr << "FATAL: Invalid PRS operor: \'" << op_char <<
+				"\' at " << where(*op) <<
+				".  Aborting... have a nice day." << endl;
+		);
 		return prs_expr_return_type(NULL);
 	}
 }

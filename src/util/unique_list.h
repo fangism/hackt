@@ -3,7 +3,7 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.3 2005/05/10 04:51:30 fang Exp $
+	$Id: unique_list.h,v 1.4 2005/10/25 20:51:59 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
@@ -85,10 +85,9 @@ public:
 	 */
 	void
 	push(const_reference n) {
-		const typename set_type::const_iterator
-			probe = _set.find(n);
+		const typename set_type::const_iterator probe(_set.find(n));
 		// if not found, add
-		if (!*probe) {
+		if (probe == _set.end()) {
 			_set.insert(n);
 			_sequence.push_back(n);
 		}
@@ -108,11 +107,11 @@ public:
 	 */
 	void
 	erase(const_reference n) {
-		const typename set_type::iterator
-			probe = _set.find(n);
-		if (*probe) {
-			const typename sequence_type::iterator l_probe =
-				find(_sequence.begin(), _sequence.end(), n);
+		const typename set_type::iterator probe(_set.find(n));
+		if (probe != _set.end()) {
+			const typename sequence_type::iterator
+				l_probe(find(_sequence.begin(),
+					_sequence.end(), n));
 			assert(l_probe != _sequence.end());
 			_sequence.erase(l_probe);
 			_set.erase(probe);

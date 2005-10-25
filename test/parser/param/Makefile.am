@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2005/08/08 16:51:48 fang Exp $
+#	$Id: Makefile.am,v 1.8 2005/10/25 20:52:22 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,7 +16,8 @@ ARTC_TEST_PASSES = \
 	001 002 003 004 008 \
 	014 017 019 \
 	020 021 022 028 \
-	033
+	033 036 037 038 039 \
+	040 041 042 043 044 045 046 047 048
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -25,7 +26,17 @@ ARTOBJ_TEST_SUBJECTS = \
 
 # subset of ARTOBJ_TEST_SUBJECTS
 ARTOBJUNROLL_TEST_SUBJECTS = \
-	$(ARTOBJ_TEST_SUBJECTS)
+	001 002 003 004 008 \
+	014 017 019 \
+	036 037 038 039 \
+	040 041 042 043 044 045 046 047
+
+# KNOWN BUG:
+# 049 -- reference to out-of-scope value (global) is yet unsupported.
+
+HACKT_CREATE_TEST_SUBJECTS = $(ARTOBJUNROLL_TEST_SUBJECTS)
+
+HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
 include $(top_srcdir)/test/Make.test-tail
 

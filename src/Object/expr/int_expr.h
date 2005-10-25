@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.2 2005/07/20 21:00:42 fang Exp $
+	$Id: int_expr.h,v 1.3 2005/10/25 20:51:51 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_EXPR_H__
@@ -30,10 +30,7 @@ public:
 virtual	~int_expr() { }
 
 virtual	ostream&
-	dump(ostream&) const = 0;
-
-virtual	ostream&
-	dump_brief(ostream&) const = 0;
+	dump(ostream& o, const expr_dump_context&) const = 0;
 
 };	// end class int_expr
 

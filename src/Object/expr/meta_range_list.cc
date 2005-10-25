@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.5 2005/09/04 21:14:46 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.6 2005/10/25 20:51:52 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -128,10 +128,10 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-const_range_list::dump(ostream& o) const {
+const_range_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
 	for ( ; i!=end(); i++)
-		i->dump(o);
+		i->dump(o, c);
 	return o;
 }
 
@@ -546,11 +546,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_meta_range_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-dynamic_meta_range_list::dump(ostream& o) const {
+dynamic_meta_range_list::dump(ostream& o, const expr_dump_context& c) const {
 	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o);
+		(*i)->dump(o, c);
 	}
 	return o;
 }

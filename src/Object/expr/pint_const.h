@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: pint_const.h,v 1.4 2005/10/25 20:51:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_CONST_H__
@@ -50,10 +50,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	size_t
 	dimensions(void) const { return 0; }
@@ -107,6 +104,9 @@ public:
 
 	bool
 	operator == (const const_range& c) const;
+
+	this_type&
+	operator = (const value_type v) { val = v; return *this; }
 
 	bool
 	range_size_equivalent(const const_index& i) const;

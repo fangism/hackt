@@ -1,4 +1,4 @@
-// should fail, use of initialized parameter variable, which is not formal
+// "013.in" should fail, use of initialized parameter variable, not formal
 // this file was copied over from an old version of 004.in, 
 // which was later modified to pass type-checking.  
 

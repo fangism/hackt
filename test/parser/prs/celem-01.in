@@ -1,0 +1,12 @@
+// "celem-01.in"
+// should pass -- basic version
+
+defproc celem2inv(bool a, b, _o) {
+prs {
+	a & b			-> _o-
+	~a & ~b			-> _o+
+}
+}
+
+celem2inv c;
+

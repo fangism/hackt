@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.77 2005/10/08 01:39:53 fang Exp $
+#	$Id: Makefile.am,v 1.78 2005/10/25 20:51:46 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -138,6 +138,7 @@ OBJECT_CC_FILES = \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
 	Object/common/alias_string_set.cc \
+	Object/expr/expr_dump_context.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
@@ -288,6 +289,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/nonmeta_index_expr_base.h \
 	Object/expr/nonmeta_index_list.h \
 	Object/expr/nonmeta_range_expr_base.h \
+	Object/expr/operator_info.h \
+	Object/expr/operator_precedence.h \
 	Object/expr/param_expr.h \
 	Object/expr/param_expr_list.h \
 	Object/expr/pbool_const.h \
@@ -364,6 +367,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/port_connection.h \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
+	Object/unroll/unroll_context_value_resolver.h \
 	Object/lang/PRS_base.h \
 	Object/lang/CHP_base.h
 

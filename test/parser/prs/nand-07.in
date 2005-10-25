@@ -1,0 +1,15 @@
+// "nand-07.in"
+// should pass
+// copy-modified from "nand-04.in"
+
+template <pint N>
+defproc nandN(bool in[N]; bool _out) {
+prs {
+	(&:i:N:	in[i] )		-> _out-
+	// testing rule-loop
+	(:i:N:	~in[i]		-> _out+	)
+}
+}
+
+nandN<4>	foo;
+

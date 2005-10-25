@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.3 2005/10/08 01:39:57 fang Exp $
+	$Id: instance_alias.tcc,v 1.4 2005/10/25 20:51:54 fang Exp $
 	TODO: trim includes
  */
 
@@ -228,14 +228,15 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
-	sup.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ") << endl;
+	sup.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ", 
+		dump_flags::default_value) << endl;
 #endif
 	const instance_collection_base::super_instance_ptr_type
 		thisp(this->container->get_super_instance());
 	if (thisp) {
 #if ENABLE_STACKTRACE
-		thisp->dump_hierarchical_name(STACKTRACE_INDENT << "parent: ")
-			<< endl;
+		thisp->dump_hierarchical_name(STACKTRACE_INDENT << "parent: ", 
+			dump_flags::default_value) << endl;
 #endif
 		// need to lookup parent instance first
 		// p points to a substructured alias
@@ -838,7 +839,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
 	INVARIANT(local_offset < fm.size());
 	fm[local_offset] = pcc.id_map[ind];
 #if ENABLE_STACKTRACE
-	ff.dump(STACKTRACE_STREAM) << endl;
+	ff.dump_frame(STACKTRACE_STREAM) << endl;
 #endif
 	substructure_parent_type::__assign_footprint_frame(
 		ff, pcc.substructure_array[ind]);

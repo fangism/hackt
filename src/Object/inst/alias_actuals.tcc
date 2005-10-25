@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.4 2005/09/14 15:30:29 fang Exp $
+	$Id: alias_actuals.tcc,v 1.5 2005/10/25 20:51:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -15,6 +15,7 @@
 #include "Object/inst/instance_alias.h"
 #include "Object/type/canonical_type.h"
 #include "util/stacktrace.h"
+#include "Object/expr/expr_dump_context.h"
 
 namespace ART {
 namespace entity {
@@ -48,8 +49,10 @@ if (!a) {
 		// instance_alias_info_actuals::compare_and_update_actuals
 		cerr << "ERROR: attempted to connect instances with "
 			"conflicting relaxed parameters!" << endl;
-		actuals->dump(cerr << "\tgot: ") << endl;
-		a->dump(cerr << "\tand: ") << endl;
+		actuals->dump(cerr << "\tgot: ", 
+			expr_dump_context::default_value) << endl;
+		a->dump(cerr << "\tand: ", 
+			expr_dump_context::default_value) << endl;
 		alias.dump_hierarchical_name(cerr << "\tfrom: ")
 			<< endl;
 		return good_bool(false);
@@ -90,8 +93,10 @@ if (l.actuals) {
 		// error message copied from above
 			cerr << "ERROR: attempted to connect instances with "
 				"conflicting relaxed parameters!" << endl;
-			l.actuals->dump(cerr << "\tgot: ") << endl;
-			r.actuals->dump(cerr << "\tand: ") << endl;
+			l.actuals->dump(cerr << "\tgot: ", 
+				expr_dump_context::default_value) << endl;
+			r.actuals->dump(cerr << "\tand: ", 
+				expr_dump_context::default_value) << endl;
 			l.dump_hierarchical_name(cerr << "\tfrom: ") << endl;
 			r.dump_hierarchical_name(cerr << "\tand : ") << endl;
 			return good_bool(false);
@@ -153,7 +158,9 @@ instance_alias_info_actuals::complete_type_actuals(
 			cerr << "ERROR: collection type is already complete, "
 				"cannot merge relaxed actuals." << endl;
 			_type.dump(cerr << "\thave: ");
-			actuals->dump(cerr << " with <") << '>' << endl;
+			actuals->dump(cerr << " with <", 
+				expr_dump_context::default_value)
+				<< '>' << endl;
 			return canonical_type_type();
 		} else {
 			return _type;

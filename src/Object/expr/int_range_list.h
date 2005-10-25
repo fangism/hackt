@@ -3,7 +3,7 @@
 	Class definitions for nonmeta range lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_range_list.h,v 1.2 2005/07/20 21:00:43 fang Exp $
+	$Id: int_range_list.h,v 1.3 2005/10/25 20:51:51 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_RANGE_LIST_H__
@@ -16,6 +16,7 @@
 namespace ART {
 namespace entity {
 class int_range_expr;
+struct expr_dump_context;
 using std::ostream;
 using std::vector;
 using util::persistent;
@@ -45,7 +46,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nonmeta_index_list

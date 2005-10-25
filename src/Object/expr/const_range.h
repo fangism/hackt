@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.3 2005/09/04 21:14:45 fang Exp $
+	$Id: const_range.h,v 1.4 2005/10/25 20:51:50 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_RANGE_H__
@@ -14,6 +14,16 @@
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_index.h"
 #include "util/memory/list_vector_pool_fwd.h"
+
+//=============================================================================
+// switches
+
+/**
+	Since the issue of negative ranges has not yet been resolved, 
+	we leave this as a compile time switch.  
+	(Added 20051021)
+ */
+#define	ALLOW_NEGATIVE_RANGES			1
 
 //=============================================================================
 namespace ART {
@@ -72,22 +82,30 @@ public:
 
 	pint_value_type
 	lower(void) const {
+#if !ALLOW_NEGATIVE_RANGES
 		INVARIANT(!empty());
+#endif
 		return first;
 	}
 
 	pint_value_type
 	upper(void) const {
+#if !ALLOW_NEGATIVE_RANGES
 		INVARIANT(!empty());
+#endif
 		return second;
 	}
 
 	/**
 		\return The size spanned by this range.
+		The size includes the bounds of the range, 
+		so size(N..N) == 1.
 	 */
-	size_t
+	pint_value_type
 	size(void) const {
+#if !ALLOW_NEGATIVE_RANGES
 		INVARIANT(!empty());
+#endif
 		return second -first +1;
 	}
 
@@ -95,7 +113,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	ostream&
 	dump_force(ostream& o) const;
@@ -120,13 +138,17 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const {
+#if !ALLOW_NEGATIVE_RANGES
 		INVARIANT(!empty());
+#endif
 		return false;
 	}
 
 	bool
 	is_template_dependent(void) const {
+#if !ALLOW_NEGATIVE_RANGES
 		INVARIANT(!empty());
+#endif
 		return false;
 	}
 

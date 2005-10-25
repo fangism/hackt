@@ -1,11 +1,13 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.34 2005/07/23 06:51:19 fang Exp $
+	$Id: art_parser_token.cc,v 1.35 2005/10/25 20:51:47 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
 #define	__AST_ART_PARSER_TOKEN_CC__
+
+#define	ENABLE_STACKTRACE		0
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -310,6 +312,8 @@ token_identifier::check_meta_reference(context& c) const {
 	// don't look up, instantiate (checked) in the context's current scope!
 	const never_ptr<const instance_collection_base>
 		inst(c.lookup_instance(*this));
+	// NOTE: lookup up with unqualified identifier will check loop scope
+	//	for loop varables.  
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
 		return inst->make_meta_instance_reference();

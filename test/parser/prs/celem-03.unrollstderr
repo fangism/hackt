@@ -1,0 +1,92 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    celem2inv = process-definition (defined) celem2inv(
+        bool<> a with indices: {
+          [0..1]
+        }
+
+        bool<> _o
+      )
+      In definition "celem2inv", we have: {
+      Instances:
+        _o = bool<> _o
+        a = bool<> a with indices: {
+          [0..1]
+        }
+
+      prs:
+        (&:i:[0..1]: a[i]) -> _o-
+        (&:i:[0..1]: ~a[i]) -> _o+
+      footprint: {
+        bool^0 _o (instantiated) = ::celem2inv::_o 
+        bool^1 a with indices: {
+        }
+          unrolled indices: {
+            0 = ::celem2inv::a[0] 
+            1 = ::celem2inv::a[1] 
+          }
+      }
+      }
+
+  Instances:
+    c = process celem2inv<>^0 c (instantiated) = ::c (
+      bool^1 a with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::c.a[0] 
+          1 = ::c.a[1] 
+        }
+      bool^0 _o (instantiated) = ::c._o 
+    )
+}
+

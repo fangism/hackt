@@ -2,7 +2,7 @@
 	\file "AST/art_parser_range.cc"
 	Class method definitions for ART::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.7 2005/07/23 06:51:19 fang Exp $
+	$Id: art_parser_range.cc,v 1.8 2005/10/25 20:51:47 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_RANGE_CC__
@@ -239,6 +239,7 @@ range_list::~range_list() { }
  */
 good_bool
 range_list::postorder_check_meta(meta_check_type& temp, context& c) const {
+	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	size_t j = 1;
@@ -305,6 +306,7 @@ range_list::checked_meta_indices_type
 range_list::check_meta_indices(context& c) const {
 	typedef	checked_meta_indices_type	return_type;
 	typedef	meta_check_type			check_type;
+	STACKTRACE_VERBOSE;
 	check_type temp;
 #if 0
 	// causes apple-gcc-3.3 ICE :(
@@ -316,14 +318,13 @@ range_list::check_meta_indices(context& c) const {
 		// THROW_EXIT;
 		return return_type(NULL);
 	}
-
 	const count_ptr<dynamic_meta_index_list>
 		dyn_ret(new dynamic_meta_index_list(size()));
 	NEVER_NULL(dyn_ret);
 	bool is_const = true;
 	check_type::const_iterator i(temp.begin());
 	const check_type::const_iterator e(temp.end());
-	for ( ; is_const && i!=e; i++) {
+	for ( ; i!=e; i++) {
 		dyn_ret->push_back(*i);
 		if (!i->is_a<entity::const_index>()) {
 			is_const = false;
@@ -334,7 +335,6 @@ range_list::check_meta_indices(context& c) const {
 			const_ret(new const_index_list(size()));
 		// size is hint for reserving memory
 		NEVER_NULL(const_ret);
-		// const_ret->reserve(size());
 		for (i = temp.begin(); i!=e; i++) {
 			const_ret->push_back(i->is_a<entity::const_index>());
 		}
@@ -342,7 +342,9 @@ range_list::check_meta_indices(context& c) const {
 	}
 	// don't necessarily want to interpret as sparse_range
 	// may want it as an index!
-	else return dyn_ret;
+	else {
+		return dyn_ret;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

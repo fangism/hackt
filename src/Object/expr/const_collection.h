@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.3 2005/09/04 21:14:44 fang Exp $
+	$Id: const_collection.h,v 1.4 2005/10/25 20:51:50 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
@@ -26,6 +26,7 @@ class const_index_list;
 class const_range_list;
 class unroll_context;
 class const_param;
+struct expr_dump_context;
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
@@ -98,10 +99,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	size_t
 	dimensions(void) const;

@@ -23,7 +23,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    M = pint^0 M (init = pint-inst-ref ::N) value: 2
+    M = pint^0 M (init = N) value: 2
     N = pint^0 N (init = 2) value: 2
 }
 

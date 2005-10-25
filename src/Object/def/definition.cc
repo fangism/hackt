@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.6 2005/10/08 01:39:55 fang Exp $
+ 	$Id: definition.cc,v 1.7 2005/10/25 20:51:49 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -2373,7 +2373,8 @@ process_definition::dump(ostream& o) const {
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;
 				INDENT_SECTION(o);
-				prs.dump(o);	// << endl;
+				const PRS::rule_dump_context rdc(*this);
+				prs.dump(o, rdc);	// << endl;
 			}
 			// CHP
 			if (!chp.empty()) {
@@ -2753,8 +2754,11 @@ if (defined) {
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->evaluate_scope_aliases();
 			// also resolve copy of production rules
-			prs.unroll(c, f->get_pool<bool_tag>(), 
-				f->get_prs_footprint());
+			if (!prs.unroll(c, f->get_pool<bool_tag>(), 
+					f->get_prs_footprint()).good) {
+				// already have error message
+				return good_bool(false);
+			}
 			f->mark_created();
 		} else {
 			// already have partial error message

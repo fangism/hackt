@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.4 2005/09/04 21:14:55 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.5 2005/10/25 20:51:57 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -31,7 +31,8 @@
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
-#include "Object/unroll/unroll_context.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
 #include "common/ICE.h"
 
@@ -123,15 +124,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
-SIMPLE_META_VALUE_REFERENCE_CLASS::dump_brief(ostream& o) const {
-	return grandparent_type::dump_brief(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-ostream&
-SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o) const {
-	return grandparent_type::dump(o);
+SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
+		const expr_dump_context& c) const {
+	return grandparent_type::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -282,17 +277,26 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 	Now checks unroll context to see if the referenced
 	value collection belongs to a complete type (definition) scope.  
 	\return good if resolution succeeds.
+	NOTE: loop induction variables (pint) do not exist in footprint!
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		const unroll_context& c, value_type& i) const {
 	STACKTRACE_VERBOSE;
-	const footprint* const f(c.get_target_footprint());
-	const value_collection_type&
-		_vals(f ? IS_A(const value_collection_type&, 
-				*(*f)[value_collection_ref->get_name()])
-			: *value_collection_ref);
+	// using a policy to specialize for lookups covering
+	// local loop variables
+	const pair<bool, const value_collection_type*>
+		_v(unroll_context_value_resolver<Tag>().operator()
+			(c, *value_collection_ref, i));
+	if (_v.first) {
+		// then our work is done, 
+		// i has already been set as a loop variable
+		return good_bool(true);
+	}
+	// stupid gcc-3.3 needs .operator()...
+	const value_collection_type& _vals(*_v.second);
+
 	if (this->array_indices) {
 		const const_index_list
 			indices(this->array_indices->unroll_resolve(c));
@@ -309,11 +313,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			// then we need to get the template actuals
 			return _vals.lookup_value(i, lower, c);
 		} else {
-			cerr << "Unable to unroll-resolve array_indices!" << endl;
+			cerr << "Unable to unroll-resolve array_indices!"
+				<< endl;
 			return good_bool(false);
 		}
 	} else {
 		// assert dynamic cast
+		// what if is pbool_const or pint_const?
 		const value_scalar_type&
 			scalar_inst(IS_A(const value_scalar_type&, _vals));
 		// c.dump(STACKTRACE_INDENT) << endl;
@@ -468,7 +474,8 @@ if (value_collection_ref->is_template_formal()) {
 		if (rdim.empty()) {		// error, failed to resolve
 			cerr << "Error: failed to resolve dimensions of "
 				"collection referenced: ";
-			this->dump(cerr) << endl;
+			this->dump(cerr, expr_dump_context::default_value)
+				<< endl;
 			return return_type(NULL);
 		}
 		return return_type(
@@ -483,7 +490,22 @@ if (value_collection_ref->is_template_formal()) {
 	}
 } else {
 	// non template formal, normal param collection referenced
+	// catches case of loop variable resolution
+#if 0
+	// TODO: NOTE!!! could be definition-scope local variable!
+	// could also be loop variable
 	const value_collection_type& vcref(*value_collection_ref);
+#else
+	value_type cv = 0;
+	const pair<bool, const value_collection_type*>
+		_r(unroll_context_value_resolver<Tag>().operator()
+			(c, *value_collection_ref, cv));
+	if (_r.first) {
+		// then we resolved a loop variable (scalar)
+		return count_ptr<const_expr_type>(new const_expr_type(cv));
+	}
+	const value_collection_type& vcref(*_r.second);
+#endif
 	if (vcref.get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -687,8 +709,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::write_object(
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
-SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& m, 
-		istream& f) {
+SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, value_collection_ref);
 	NEVER_NULL(value_collection_ref);
 	m.load_object_once(
@@ -705,36 +727,40 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& 
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
-		const const_collection_type& values) const {
-	if (value_collection_ref->get_owner()
-		.template is_a<const definition_base>()) {
+		const const_collection_type& values, 
+		const unroll_context& c) const {
+#if 0
+	value_collection_type& _vals(*value_collection_ref);
+	if (_vals.get_owner().template is_a<const definition_base>()) {
 		cerr << "FANG, enable definition-local private "
 			"value reference resolution in "
 			"simple_meta_value_reference::assign_value_collection!"
 			<< endl;
 		return bad_bool(true);
 	}
+#else
+	value_collection_type&
+		_vals(unroll_context_value_resolver<Tag>().operator()
+			(c, *value_collection_ref));
+#endif
 	// else we have top-level value reference
 	// TODO: repeated call to same invariant source value is wasteful...
 	const const_range_list src_ranges(values.static_constant_dimensions());
 	if (src_ranges.empty()) {
 		INVARIANT(!values.dimensions());
 		// is scalar assignment, but may be indexed
-		const never_ptr<value_scalar_type> 
-			scalar_inst(this->value_collection_ref.
-				template is_a<value_scalar_type>());
+		value_scalar_type* const
+			scalar_inst(IS_A(value_scalar_type*, &_vals));
 		if (scalar_inst) {
 			return scalar_inst->assign(*values.begin());
 		}
 	}
 
-	const const_index_list dim(this->resolve_dimensions());
+	const const_index_list dim(this->unroll_resolve_dimensions(c));
 	if (dim.empty()) {
 		cerr << "ERROR: unable to resolve constant dimensions."
 			<< endl;
 		return bad_bool(true);
-		THROW_EXIT;
-		// return true;
 	}
 	// We are assured that the dimensions of the references
 	// are equal, b/c dimensionality is statically checked.  
@@ -748,8 +774,10 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 		// dimensions must be equal because both src/dest are scalar.
 		cerr << "ERROR: resolved indices are not "
 			"dimension-equivalent!" << endl;
-		src_ranges.dump(cerr << "got: ");
-		dim.dump(cerr << " and: ") << endl;
+		src_ranges.dump(cerr << "got: ",
+			expr_dump_context::default_value);
+		dim.dump(cerr << " and: ",
+			expr_dump_context::default_value) << endl;
 		return bad_bool(true);
 	}
 	// else good to continue
@@ -762,12 +790,10 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 		val_iter(values.begin());
 	bad_bool assign_err(false);
 	do {
-		if (this->value_collection_ref->
-				assign(key_gen, *val_iter).bad) {
+		if (_vals.assign(key_gen, *val_iter).bad) {
 			cerr << "ERROR: assigning index " << key_gen << 
 				" of " << class_traits<Tag>::tag_name <<
-				" collection " << this->value_collection_ref
-					->get_qualified_name() <<
+				" collection " << _vals.get_qualified_name() <<
 				"." << endl;
 			assign_err.bad = true;
 		}
@@ -776,7 +802,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 	} while (key_gen != key_gen.get_upper_corner());
 	INVARIANT(val_iter == values.end());	// sanity check
 	return assign_err;
-}
+}	// end method assign_value_collection
 
 //=============================================================================
 }	// end namepace entity

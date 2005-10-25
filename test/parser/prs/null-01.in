@@ -1,0 +1,13 @@
+// "null-01.in"
+// testing null expressions in prs
+
+defproc null() {
+bool z[2];
+bool o;
+prs {
+	(&:i:0: z[i] )		=> o-
+}
+}
+
+null q;
+

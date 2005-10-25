@@ -1,5 +1,141 @@
 "ChangeLog"
 
+2005-10-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-merged-PRS-02-11:
+	  Merged PRS-02 branch.  Main feature: rule and expression loops.  
+
+
+2005-10-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-11:
+	  Portability and VPATH check only.  Ready to merge to trunk.  
+
+
+2005-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-10:
+	  Created switch to allow negative ranges (x,y|x>y) to attempt
+		to support CAST-style backward ranges.  
+		Currently, unresolved how to interpret empty-ranged
+		expression loops, as noted in dox/lang spec.  
+		This needs to be resolved ASAP.  
+	  Added set of test cases catching empty loop bounds.  
+	  This concludes this branch.  
+
+
+2005-10-17	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-09:
+	  Implemented AST::PRS::loop::check_rule() for parsing 
+		production rule loops.  
+	  Implemented type-checking and unrolling, etc. for 
+		entity::PRS::rule_loop.  Passes basic test case in nand-07.
+	  	TODO: crazy nested loop test cases.  
+	  Factored out common loop structures into PRS::meta_loop_base.  
+	  In parse_context, loop variable stack balancing done through
+		scoped object construction and destruction now.  
+	  Fixed util/unique_list.h (never used yet).  
+
+
+2005-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-08:
+	  Implemented smart parenthesization for meta and non-meta
+		arithmetic expressions, using operator precedence and
+		associativity.  (Could also apply to relational exprs...)
+	  Added new prs test cases.  
+	  Also added is_associative() to util/operators' 
+		binary_arithmetic_operation.  
+
+
+2005-10-13	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-07:
+	  Cleaned up and committed USE_EXPR_DUMP_CONTEXT.
+
+
+2005-10-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-06:
+	  Introduced expr_dump_context for parameter expressions
+		and instance references, used to control and format
+		expression dumps.  Currently, enabled using the 
+		USE_EXPR_DUMP_CONTEXT development switch.  
+		This resulted in some changes in expected test outputs
+		in the regression suite (for better).  
+		TODO: clean-up commit flag (next).  
+	  TODO: PRS rule loops -- and that will conclude this branch.
+
+
+2005-10-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-05:
+	  AST::range_list::portorder_check_meta()
+		loop termination condition fixed (independent of is_const).
+	  Nested prs expression loop test cases added to parser/prs.
+
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-04:
+	  Enabled bunch of new create/alloc test cases in parser/param.
+	  In simple_meta_value_reference<>::assign_value_collection():
+		one-line bug fix: now call unroll_resolve_dimensions(), duh!
+
+
+2005-10-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-03:
+	  Enabled assigning and persistence of definition local 
+		parameter variables.  
+	  Added unroll_context parameter to simple_meta_value_reference<>::
+		assign_value_collection() to handle definition-local 
+		variable assignments, called by expression_assignment<>::unroll.
+	  value_array<>::lookup_value added code to catch cases 
+		where value array is loop variable or
+		definition-local variable.  
+	  Committed USE_LOOP_SCOPE and cleaned up "AST/parse_context.cc"
+	  In unroll_context::lookup_actual, check that argument is
+		loop variable before calling lookup_loop_var.  
+	  TODO: enable create tests in parser/param/.  
+	  See new entries in TODO.txt.
+
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-02:
+	  Significant development of loops in the front-end.  
+	  includes many minor bug fixes (exhibited by testing loops).  
+	  id_expr::check_meta_reference()
+		calls qualified_id::lookup_instance instead of check_build
+		to guarantee proper unqualified lookup to catch loop vars.  
+	  AST::qualified_id methods are all non-virtual (no children).
+	  Finished AST::PRS::op_loop::check_prs_expr().
+	  Added loop_var_stack to parse_context, now used in looking
+		up unqualified identifiers.
+		(TODO: commit USE_LOOP_SCOPE, clean up parse_context.cc)
+	  Now catch errors in PRS::rule_set::unroll().  
+	  Implemented static meta_range_expr::make_explicit_range().
+	  The way to detect a loop variable is by checking that
+		it is not contained by its parent scopespace.  
+	  Improved entity::PRS::*::dump to take dump_context arguments,
+		but expressions don't use context yet to leverage this.  
+		Noted in "Object/ref/instance_reference.cc" dump_briefer.  
+	  Factored out PRS::*loop::* code into expr_loop_base::*
+		(clean up old code)
+	  Hacked in catch for loop variable resolution in
+		simple_meta_value_reference<>::unroll_resolve_value, 
+		using unroll_context_value_resolver policy.  
+	  Implemented unroll_context::lookup_lop_var().
+	  unroll_context::get_target_footprint() now looks up chain
+		of parent contexts.  
+	  TODO: more crazy loop tests, nesting...
+
+
+2005-10-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-01:
+	  Initial groundwork for enabling PRS loop expressions.  
+	  TODO: modify parse_context to handle loop scopes.
+
+
 2005-10-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-merged-cflat-01-11:

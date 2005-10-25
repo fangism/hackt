@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.9 2005/10/08 01:39:48 fang Exp $
+#	$Id: configure.ac,v 1.10 2005/10/25 20:51:42 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20051007, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051025, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])

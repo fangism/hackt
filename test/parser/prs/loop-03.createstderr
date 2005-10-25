@@ -1,0 +1,6 @@
+Sorry, empty expression loops are not yet supported.  Currently waiting for resolution on language defect report.
+Error unrolling production rule: 
+	(|:j:[0..::triangle::i-1]: (&:k:[0..::triangle::j-1]: ::triangle::in[::triangle::i][::triangle::j][::triangle::k])) -> ::triangle::_out-
+Error resolving production rule in loop:
+Error during create_unique.
+ERROR in creating.  Aborting.

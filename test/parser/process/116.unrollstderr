@@ -1,6 +1,6 @@
 ERROR: unrolling packed instance aliases in bool_connection:
 	size of reference 2 = [3]
 	size of reference 1 = [2]
-Instantiated from: foo<pint-inst-ref ::Q>
+Instantiated from: foo<::Q>
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

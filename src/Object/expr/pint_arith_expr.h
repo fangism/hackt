@@ -3,13 +3,14 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.3 2005/09/04 21:14:47 fang Exp $
+	$Id: pint_arith_expr.h,v 1.4 2005/10/25 20:51:54 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_ARITH_EXPR_H__
 #define __OBJECT_EXPR_PINT_ARITH_EXPR_H__
 
 #include "Object/expr/pint_expr.h"
+#include "Object/expr/operator_info.h"
 #include "util/memory/count_ptr.h"
 #include "util/qmap.h"
 #include "util/operators.h"
@@ -41,12 +42,13 @@ public:
 
 private:
 	// safe to use naked (never-delete) pointers on static objects
+	typedef	expr_detail::op_info		op_info;
 	typedef	qmap<char, const op_type*>	op_map_type;
-	typedef	qmap<const op_type*, char>	reverse_op_map_type;
+	typedef	qmap<const op_type*, op_info>	reverse_op_map_type;
 	static const op_map_type		op_map;
 	static const reverse_op_map_type	reverse_op_map;
 	static const size_t			op_map_size;
-	static void op_map_register(const char, const op_type* );
+	static void op_map_register(const char, const op_type*, const char);
 	static size_t op_map_init(void);
 protected:
 	operand_ptr_type		lx;
@@ -69,10 +71,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump_brief(ostream& o) const;
-
-	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	size_t
 	dimensions(void) const { return 0; }

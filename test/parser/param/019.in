@@ -1,4 +1,4 @@
-// should pass: non overlapping array
+// "019.in" should pass: non overlapping array
 
 pint M = 2;
 

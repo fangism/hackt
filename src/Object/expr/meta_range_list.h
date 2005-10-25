@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.3 2005/09/04 21:14:46 fang Exp $
+	$Id: meta_range_list.h,v 1.4 2005/10/25 20:51:52 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_RANGE_LIST_H__
@@ -17,6 +17,7 @@ namespace ART {
 namespace entity {
 class const_range_list;
 class unroll_context;
+struct expr_dump_context;
 using std::ostream;
 using util::persistent;
 using util::good_bool;
@@ -42,7 +43,7 @@ virtual	size_t
 	size(void) const = 0;
 
 virtual	ostream&
-	dump(ostream&) const = 0;
+	dump(ostream& o, const expr_dump_context&) const = 0;
 
 	size_t
 	dimensions(void) const { return size(); }

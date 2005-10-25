@@ -58,14 +58,14 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >(
-        int<pint-inst-ref ::foo::N> a
+        int<::foo::N> a
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        a = int<pint-inst-ref ::foo::N> a
-        blah = int<pint-inst-ref ::foo::N> blah with indices: {
+        a = int<::foo::N> a
+        blah = int<::foo::N> blah with indices: {
           [0..2]
         }
 

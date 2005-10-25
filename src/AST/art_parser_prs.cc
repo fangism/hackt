@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.19 2005/07/23 06:51:18 fang Exp $
+	$Id: art_parser_prs.cc,v 1.20 2005/10/25 20:51:47 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -21,9 +21,14 @@
 #include "AST/parse_context.h"
 
 #include "Object/def/process_definition.h"
+#include "Object/expr/pint_const.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/data_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/lang/PRS.h"
+#include "Object/inst/pint_value_collection.h"
+
+#include "common/TODO.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -46,6 +51,8 @@ namespace PRS {
 #include "util/using_ostream.h"
 using entity::definition_base;
 using entity::process_definition;
+using entity::pint_scalar;
+using entity::meta_range_expr;
 
 //=============================================================================
 // class body_item method definitions
@@ -142,10 +149,69 @@ loop::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: have PRS::rule return a entity::PRS::rule.
+ */
 body_item::return_type
 loop::check_rule(context& c) const {
+#if 1
+	// declare induction variable using token_identifier
+	// check for shadowing by looking up
+	// extend/modify the parse context with token_identifier on stack
+	// type-check the range expression
+	// type-check the inside expression with modified context
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		// bounds->dump(cerr) <<
+		return return_type(NULL);
+	}
+	// convert implicit range to explicit range, if necessary
+	entity::PRS::expr_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// create loop index variable and push onto context stack
+	const context::loop_var_frame _lvf(c, *index);
+	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		// then push didn't succeed, no need to pop
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<entity::PRS::rule_loop>
+		ret(new entity::PRS::rule_loop(loop_ind, loop_range));
+	NEVER_NULL(ret);
+
+	// copied from body::check_rule
+	const never_ptr<definition_base> d(c.get_current_open_definition());
+	checked_rules_type checked_rules;
+	rules->check_list(checked_rules, &body_item::check_rule, c);
+	checked_rules_type::const_iterator
+		null_iter(find(checked_rules.begin(), checked_rules.end(), 
+			body_item::return_type()));
+	if (null_iter == checked_rules.end()) {
+		// no errors found, add them too the process definition
+		checked_rules_type::iterator i(checked_rules.begin());
+		const checked_rules_type::iterator e(checked_rules.end());
+		for ( ; i!=e; i++) {
+			excl_ptr<entity::PRS::rule>
+				xfer(i->exclusive_release());
+//			xfer->check();		// paranoia
+			ret->push_back(xfer);
+			MUST_BE_NULL(xfer);
+		}
+		return ret;
+	} else {
+		cerr << "ERROR: at least one error in PRS rule-loop.  "
+			<< where(*rules) << endl;
+		// THROW_EXIT;
+		return body_item::return_type();
+	}
+#else
 	cerr << "Fang, write PRS::loop::check_rule()!" << endl;
 	return body_item::return_type();
+#endif
 }
 
 //=============================================================================
@@ -189,13 +255,13 @@ if (rules) {
 	checked_rules_type checked_rules;
 	rules->check_list(checked_rules, &body_item::check_rule, c);
 	checked_rules_type::const_iterator
-		null_iter = find(checked_rules.begin(), 
-			checked_rules.end(), 
-			body_item::return_type());
+		null_iter(find(checked_rules.begin(), checked_rules.end(), 
+			body_item::return_type()));
 	if (null_iter == checked_rules.end()) {
 		// no errors found, add them too the process definition
-		checked_rules_type::iterator i = checked_rules.begin();
-		for ( ; i!=checked_rules.end(); i++) {
+		checked_rules_type::iterator i(checked_rules.begin());
+		const checked_rules_type::iterator e(checked_rules.end());
+		for ( ; i!=e; i++) {
 			excl_ptr<entity::PRS::rule>
 				xfer(i->exclusive_release());
 //			xfer->check();		// paranoia
@@ -248,21 +314,64 @@ op_loop::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: FINISH ME
+	Is this even needed outside of the PRS context?
  */
 expr::meta_return_type
 op_loop::check_meta_expr(context& c) const {
-	cerr << "Fang, finish op_loop::check_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: FINISH ME
+	Is this even needed outside of the PRS context?
  */
 nonmeta_expr_return_type
 op_loop::check_nonmeta_expr(context& c) const {
-	cerr << "Fang, finish op_loop::check_non_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_expr_return_type
+op_loop::check_prs_expr(context& c) const {
+	// declare induction variable using token_identifier
+	// check for shadowing by looking up
+	// extend/modify the parse context with token_identifier on stack
+	// type-check the range expression
+	// type-check the inside expression with modified context
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		// bounds->dump(cerr) <<
+		return prs_expr_return_type(NULL);
+	}
+	// convert implicit range to explicit range, if necessary
+	entity::PRS::expr_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// create loop index variable and push onto context stack
+	const context::loop_var_frame _lvf(c, *index);
+	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		// then push didn't succeed, no need to pop
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return prs_expr_return_type(NULL);
+	}
+	const prs_expr_return_type body_expr(ex->check_prs_expr(c));
+	if (!body_expr) {
+		cerr << "Error in expr-loop body: at " << where(*ex) << endl;
+		// ex->dump(cerr) <<
+		return prs_expr_return_type(NULL);
+	}
+	// else everything passes
+	return (op->text[0] == '&')
+		? prs_expr_return_type(new entity::PRS::and_expr_loop(
+			loop_ind, loop_range, body_expr))
+		: prs_expr_return_type(new entity::PRS::or_expr_loop(
+			loop_ind, loop_range, body_expr));
 }
 
 //=============================================================================
