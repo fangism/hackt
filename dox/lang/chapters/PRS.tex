@@ -1,6 +1,6 @@
 % "chapters/PRS.tex"
 
-%	$Id: PRS.tex,v 1.2 2005/06/20 19:47:36 fang Exp $
+%	$Id: PRS.tex,v 1.2.30.1 2005/10/25 04:18:56 fang Exp $
 
 \chapter{Production Rule Set (PRS)}
 \label{sec:prs}
@@ -98,6 +98,45 @@ Automatic sizing
 
 Loop syntax, unrolling, etc...
 
+Loops can appear in expressions and in rules in the PRS language.  
+A \tit{rule-loop} can be written as:
+
+\begin{itemize}
+\item \ttt{(:} \tit{loop-var} \ttt{:} \tit{range} \ttt{:}
+	\tit{rules} \ttt{)}
+\end{itemize}
+
+The \tit{loop-var} is declared with a identifier, and may be referenced
+in the body rules.  
+The rule-loop is repeatedly expanded using the values spanned
+by the \tit{range}.  
+(The range may be written implicitly or explicitly.)
+If the range evaluates empty, then the body is skipped during unrolling.  
+Rule-loops may be nested, i.e., they may contain other loops.  
+
+An expression-loop is written as:
+\begin{itemize}
+\item \ttt{(} \tit{op} \ttt{:} \tit{loop-var} \ttt{:} \tit{range} \ttt{:}
+	\tit{PRS-expr} \ttt{)}
+\end{itemize}
+The \tit{loop-var} and \tit{range} have the same meanings as when used
+in rule-loops.  
+\tit{op} may be \prsand\ or \prsor.  
+The body expression is repeatedly expanded with the \tit{op} operator.  
+Expression-loops may be nested, i.e., they may contain other expression-loops.  
+If the range evaluates empty, ...
+\tbf{we need to specify these semantics}!
+
+Interpret the following:
+\begin{itemize}
+\item \ttt{(\prsand:i:0: x[i]) \prsrarrow y-}
+\item \ttt{(\prsor:i:0: x[i]) \prsrarrow y-}
+\item \ttt{z \prsand (\prsand:i:0: x[i]) \prsrarrow y-}
+\item \ttt{z \prsand (\prsor:i:0: x[i]) \prsrarrow y-}
+\item \ttt{z \prsor (\prsand:i:0: x[i]) \prsrarrow y-}
+\item \ttt{z \prsor (\prsor:i:0: x[i]) \prsrarrow y-}
+\end{itemize}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Extensions}
 \label{sec:prs:ext}
@@ -128,8 +167,11 @@ We propose the following syntax for pass-gates:
 
 % In all cases, $node_2$ may be a literal node or its complement, 
 % prefixed with a tilde.
+$node_{1...3}$ are production rule literals.  
 In case 1, when $node_2$ is logic-1, the nodes on either side are connected.
 In case 2, when $node_2$ is logic-0, the other terminals are connected.  
+$node_2$ may be given an optional size to specify the 
+width of the transmission-gate.  
 In all cases, 
 if nodes on opposite sides are both driving in opposite directions, 
 then it is considered a short-circuit (error).  

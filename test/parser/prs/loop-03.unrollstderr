@@ -1,0 +1,211 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	209
+	4	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	30
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	19	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	31	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	37	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	39	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	42	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	46	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	49	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	59	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	61	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	63	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	64	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	68	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	71	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	76	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	24
+	77	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	78	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	81	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	82	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	84	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	85	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	86	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	593
+	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
+	91	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	96	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	597
+	98	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    triangle = process-definition (defined) triangle<
+      pint<> N
+      >(
+        bool<> in with indices: {
+          [0..::triangle::N-1][0..::triangle::N-1][0..::triangle::N-1]
+        }
+
+        bool<> _out
+      )
+      In definition "triangle", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
+        _out = bool<> _out
+        in = bool<> in with indices: {
+          [0..::triangle::N-1][0..::triangle::N-1][0..::triangle::N-1]
+        }
+
+      prs:
+        (:i:[0..N-1]:
+          (|:j:[0..i-1]: (&:k:[0..j-1]: in[i][j][k])) -> _out-
+          (&:j:[0..i-1]: (|:k:[0..j-1]: ~in[N-i][N-j][N-k])) -> _out+
+        )
+      footprint collection: {
+        <3> {
+          bool^3 in with indices: {
+          }
+            unrolled indices: {
+              [0][0][0] = ::triangle::in[0][0][0] 
+              [0][0][1] = ::triangle::in[0][0][1] 
+              [0][0][2] = ::triangle::in[0][0][2] 
+              [0][1][0] = ::triangle::in[0][1][0] 
+              [0][1][1] = ::triangle::in[0][1][1] 
+              [0][1][2] = ::triangle::in[0][1][2] 
+              [0][2][0] = ::triangle::in[0][2][0] 
+              [0][2][1] = ::triangle::in[0][2][1] 
+              [0][2][2] = ::triangle::in[0][2][2] 
+              [1][0][0] = ::triangle::in[1][0][0] 
+              [1][0][1] = ::triangle::in[1][0][1] 
+              [1][0][2] = ::triangle::in[1][0][2] 
+              [1][1][0] = ::triangle::in[1][1][0] 
+              [1][1][1] = ::triangle::in[1][1][1] 
+              [1][1][2] = ::triangle::in[1][1][2] 
+              [1][2][0] = ::triangle::in[1][2][0] 
+              [1][2][1] = ::triangle::in[1][2][1] 
+              [1][2][2] = ::triangle::in[1][2][2] 
+              [2][0][0] = ::triangle::in[2][0][0] 
+              [2][0][1] = ::triangle::in[2][0][1] 
+              [2][0][2] = ::triangle::in[2][0][2] 
+              [2][1][0] = ::triangle::in[2][1][0] 
+              [2][1][1] = ::triangle::in[2][1][1] 
+              [2][1][2] = ::triangle::in[2][1][2] 
+              [2][2][0] = ::triangle::in[2][2][0] 
+              [2][2][1] = ::triangle::in[2][2][1] 
+              [2][2][2] = ::triangle::in[2][2][2] 
+            }
+          pint^0 N value: ?
+          bool^0 _out (instantiated) = ::triangle::_out 
+        }
+      }
+      }
+
+  Instances:
+    foo = process triangle<3>^0 foo (instantiated) = ::foo (
+      bool^3 in with indices: {
+        [0..::triangle::N-1][0..::triangle::N-1][0..::triangle::N-1]
+      }
+        unrolled indices: {
+          [0][0][0] = ::foo.in[0][0][0] 
+          [0][0][1] = ::foo.in[0][0][1] 
+          [0][0][2] = ::foo.in[0][0][2] 
+          [0][1][0] = ::foo.in[0][1][0] 
+          [0][1][1] = ::foo.in[0][1][1] 
+          [0][1][2] = ::foo.in[0][1][2] 
+          [0][2][0] = ::foo.in[0][2][0] 
+          [0][2][1] = ::foo.in[0][2][1] 
+          [0][2][2] = ::foo.in[0][2][2] 
+          [1][0][0] = ::foo.in[1][0][0] 
+          [1][0][1] = ::foo.in[1][0][1] 
+          [1][0][2] = ::foo.in[1][0][2] 
+          [1][1][0] = ::foo.in[1][1][0] 
+          [1][1][1] = ::foo.in[1][1][1] 
+          [1][1][2] = ::foo.in[1][1][2] 
+          [1][2][0] = ::foo.in[1][2][0] 
+          [1][2][1] = ::foo.in[1][2][1] 
+          [1][2][2] = ::foo.in[1][2][2] 
+          [2][0][0] = ::foo.in[2][0][0] 
+          [2][0][1] = ::foo.in[2][0][1] 
+          [2][0][2] = ::foo.in[2][0][2] 
+          [2][1][0] = ::foo.in[2][1][0] 
+          [2][1][1] = ::foo.in[2][1][1] 
+          [2][1][2] = ::foo.in[2][1][2] 
+          [2][2][0] = ::foo.in[2][2][0] 
+          [2][2][1] = ::foo.in[2][2][1] 
+          [2][2][2] = ::foo.in[2][2][2] 
+        }
+      bool^0 _out (instantiated) = ::foo._out 
+    )
+}
+

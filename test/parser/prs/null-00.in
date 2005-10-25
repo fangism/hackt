@@ -1,4 +1,4 @@
-// "loop-00.in"
+// "null-00.in"
 // copy-reduced from "loop-00.in"
 
 defproc null() {

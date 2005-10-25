@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2005-10-24	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-10:
+	  Created switch to allow negative ranges (x,y|x>y) to attempt
+		to support CAST-style backward ranges.  
+		Currently, unresolved how to interpret empty-ranged
+		expression loops, as noted in dox/lang spec.  
+		This needs to be resolved ASAP.  
+	  Added set of test cases catching empty loop bounds.  
+
+
 2005-10-17	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-09:

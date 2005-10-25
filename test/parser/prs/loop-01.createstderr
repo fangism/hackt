@@ -1,0 +1,6 @@
+Sorry, empty expression loops are not yet supported.  Currently waiting for resolution on language defect report.
+Error unrolling production rule: 
+	(&:j:[0..::nandN::i-1]: ~::nandN::in[::nandN::j]) -> ::nandN::_out+
+Error resolving production rule in loop:
+Error during create_unique.
+ERROR in creating.  Aborting.

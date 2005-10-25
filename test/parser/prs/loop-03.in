@@ -9,9 +9,8 @@ prs {
 		(|:j:i:	(&:k:j:	in[i][j][k] ) )		-> _out-
 		(&:j:i:	(|:k:j:	~in[N-i][N-j][N-k] ) )	-> _out+
 	)
-)
 }
 }
 
-nandN<3>	foo;
+triangle<3>	foo;
 

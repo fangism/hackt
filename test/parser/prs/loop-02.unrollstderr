@@ -1,0 +1,146 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	206
+	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	35	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	41	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	44	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	49	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	52	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	59	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	60	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	61	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
+	68	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
+	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	71	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	82
+	77	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    nandN = process-definition (defined) nandN<
+      pint<> N
+      >(
+        bool<> in with indices: {
+          [0..::nandN::N-1]
+        }
+
+        bool<> _out
+      )
+      In definition "nandN", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
+        _out = bool<> _out
+        in = bool<> in with indices: {
+          [0..::nandN::N-1]
+        }
+
+      prs:
+        (:k:[0..1]:
+          (&:i:[0..N-1]: in[(i+k)%N]) -> _out-
+          (:i:[0..N-1]:
+            (&:j:[0..i-1]: ~in[(i+k+1)%N]) -> _out+
+          )
+        )
+      footprint collection: {
+        <4> {
+          bool^1 in with indices: {
+          }
+            unrolled indices: {
+              0 = ::nandN::in[0] 
+              1 = ::nandN::in[1] 
+              2 = ::nandN::in[2] 
+              3 = ::nandN::in[3] 
+            }
+          pint^0 N value: ?
+          bool^0 _out (instantiated) = ::nandN::_out 
+        }
+      }
+      }
+
+  Instances:
+    foo = process nandN<4>^0 foo (instantiated) = ::foo (
+      bool^1 in with indices: {
+        [0..::nandN::N-1]
+      }
+        unrolled indices: {
+          0 = ::foo.in[0] 
+          1 = ::foo.in[1] 
+          2 = ::foo.in[2] 
+          3 = ::foo.in[3] 
+        }
+      bool^0 _out (instantiated) = ::foo._out 
+    )
+}
+

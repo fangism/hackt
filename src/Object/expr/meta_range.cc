@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.5.8.3 2005/10/14 03:30:17 fang Exp $
+ 	$Id: meta_range.cc,v 1.5.8.4 2005/10/25 04:19:00 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_CC__
@@ -338,7 +338,9 @@ const_range::const_range(const interval_type& i) :
 const_range::const_range(const pint_value_type n) :
 		meta_range_expr(), const_index(), 
 		parent_type(0, n-1) {
-	INVARIANT(upper() >= lower());		// else what!?!?
+#if !ALLOW_NEGATIVE_RANGES
+	INVARIANT(!empty());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -349,7 +351,9 @@ const_range::const_range(const pint_value_type n) :
 const_range::const_range(const pint_const& n) :
 		meta_range_expr(), const_index(), 
 		parent_type(0, n.static_constant_value() -1) {
-	INVARIANT(upper() >= lower());		// else what!?!?
+#if !ALLOW_NEGATIVE_RANGES
+	INVARIANT(!empty());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -361,7 +365,9 @@ const_range::const_range(const pint_const& n) :
 const_range::const_range(const pint_value_type l, const pint_value_type u) :
 		meta_range_expr(), const_index(), 
 		parent_type(l, u) {
-	INVARIANT(upper() >= lower());		// else what!?!?
+#if !ALLOW_NEGATIVE_RANGES
+	INVARIANT(!empty());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -416,9 +422,11 @@ const_range::dump_brief(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 const_range::dump(ostream& o, const expr_dump_context&) const {
+#if !ALLOW_NEGATIVE_RANGES
 	if (empty())
 		return o << "[]";
 	else
+#endif
 		return dump_force(o);
 }
 

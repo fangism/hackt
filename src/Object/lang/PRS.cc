@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.3.2.6 2005/10/18 05:58:56 fang Exp $
+	$Id: PRS.cc,v 1.3.2.7 2005/10/25 04:19:01 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -676,7 +676,14 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	}
 	const pint_value_type min = cr.lower();
 	const pint_value_type max = cr.upper();
+#if 0
 	INVARIANT(min <= max);
+#else
+	// if range is empty or backwards, then ignore
+	if (min > max) {
+		return good_bool(true);
+	}
+#endif
 	// range gives us upper and lower bound of loop
 	// in a loop:
 	// create context chain of lookup
@@ -776,6 +783,12 @@ expr_loop_base::dump(ostream& o, const expr_dump_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: What to do about 0..0 loops?
+	CAST just ignores and skips.  
+	\return 0 upon failure.  
+	TODO: resolve NULL expressions (CAST Defect Report)
+ */
 size_t
 expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp, const char type_enum) const {
@@ -790,7 +803,16 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	}
 	const pint_value_type min = cr.lower();
 	const pint_value_type max = cr.upper();
+#if 0
 	INVARIANT(min <= max);
+#else
+	if (min > max) {
+		cerr << "Sorry, empty expression loops are not yet supported.  "
+			"Currently waiting for resolution on language "
+			"defect report." << endl;
+		return 0;
+	}
+#endif
 	// range gives us upper and lower bound of loop
 	// in a loop:
 	// create context chain of lookup

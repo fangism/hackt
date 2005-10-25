@@ -1,0 +1,70 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	181
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    null = process-definition (defined) null(
+      )
+      In definition "null", we have: {
+      Instances:
+        o = bool<> o
+        z = bool<> z with indices: {
+          [0..1]
+        }
+
+      prs:
+        (&:i:[0..-1]: z[i]) -> o-
+        (|:i:[0..-1]: ~z[i]) -> o+
+      footprint: {
+        bool^0 o (instantiated) = ::null::o 
+        bool^1 z with indices: {
+        }
+          unrolled indices: {
+            0 = ::null::z[0] 
+            1 = ::null::z[1] 
+          }
+      }
+      }
+
+  Instances:
+    q = process null<>^0 q (instantiated) = ::q 
+}
+
