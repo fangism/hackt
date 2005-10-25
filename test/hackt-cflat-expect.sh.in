@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.2.2.1 2005/10/25 20:17:45 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.2.2.2 2005/10/25 20:34:43 fang Exp $
 
 # NOTE: tepomrarily just uses stdout dump during execution
 # will updated later...
@@ -36,7 +36,7 @@ case $? in
 esac
 
 # .allocstderr comparison file must exist
-if ! [ -f $srcroot.expect-prs ]
+if ! [ -f $srcroot.expect-prs ] && ! [ -f $bldroot.expect-prs ]
 then
 	@ECHO@ "Missing $srcroot.expect-prs"
 	exit 1
