@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2005-10-25	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-60-PRS-02-11:
+	  Portability and VPATH check only.  Ready to merge to trunk.  
+
+
 2005-10-24	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-PRS-02-10:
