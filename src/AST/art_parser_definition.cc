@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.28 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_definition.cc,v 1.28.22.1 2005/10/26 22:12:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -42,6 +42,9 @@
 #include "util/what.h"		// already included in "art_parser.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
+
+// goal: 1
+#define	USE_CONTEXT_DEFINITION_FRAME		1
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -266,7 +269,7 @@ user_data_type_def::rightmost(void) const {
 never_ptr<const object>
 user_data_type_def::check_build(context& c) const {
 	STACKTRACE("user_data_type_def::check_build()");
-	user_chan_type_signature::return_type
+	const user_chan_type_signature::return_type
 		o(check_signature(c));
 	if (!o) {
 		cerr << "ERROR checking signature for data-type " << *id <<
@@ -275,14 +278,20 @@ user_data_type_def::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	// check if already defined?
+#if USE_CONTEXT_DEFINITION_FRAME
+	const context::definition_frame<user_def_datatype> _cdf(c, *id);
+#else
 	c.open_definition<user_def_datatype>(*id);
+#endif
 	if (!setb->check_datatype_CHP(c, true).good) {
 		THROW_EXIT;
 	}
 	if (!getb->check_datatype_CHP(c, false).good) {
 		THROW_EXIT;
 	}
+#if !USE_CONTEXT_DEFINITION_FRAME
 	c.close_definition<user_def_datatype>();
+#endif
 	return c.top_namespace();
 }
 
@@ -584,14 +593,20 @@ user_chan_type_def::check_build(context& c) const {
 	}
 	// only problem from here is if channel type was already defined.  
 	// in which case, open_channel_definition will THROW_EXIT;
+#if USE_CONTEXT_DEFINITION_FRAME
+	const context::definition_frame<user_def_chan> _cdf(c, *id);
+#else
 	c.open_definition<user_def_chan>(*id);		// will handle errors
+#endif
 	if (!sendb->check_channel_CHP(c, true).good) {
 		THROW_EXIT;
 	}
 	if (!recvb->check_channel_CHP(c, false).good) {
 		THROW_EXIT;
 	}
+#if !USE_CONTEXT_DEFINITION_FRAME
 	c.close_definition<user_def_chan>();
+#endif
 	// nothing better to do
 	return c.top_namespace();
 }
@@ -747,11 +762,17 @@ process_def::check_build(context& c) const {
 
 	// only problem from here is if process was already defined.  
 	// in which case, open_process_definition will THROW_EXIT;
+#if USE_CONTEXT_DEFINITION_FRAME
+	const context::definition_frame<process_definition> _cdf(c, *id);
+#else
 	c.open_definition<process_definition>(*id);	// will handle errors
+#endif
 	body->check_build(c);
 	// useless return value, would've exited upon error already
 
+#if !USE_CONTEXT_DEFINITION_FRAME
 	c.close_definition<process_definition>();
+#endif
 	// nothing better to do
 	return c.top_namespace();
 }

@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2005-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-01:
+	  Branch for flow control in sequential scopes: 
+		loops and conditionals.  
+	  Moved PRS::meta_loop_base class into unroll/meta_loop_base.h, 
+		for re-use with loop-scopes.  
+	  parse_context's current_open definition now managed by
+		parser::context::definition_frame<DefType> template
+		to automatically balance context frame.  
+	  Started parser::loop_instantiation::check_build().
+	  Started entity::loop_scope class method definitions.  
+	  Eliminated parser::context::master_instance_list member,
+		using current_sequential_scope instead (much cleaner!).  
+	  TODO: Balance sequential scope with context member class.
+	  TODO: clean up recent switches.  
+	  NOTE: first test in parser/flow not complete yet, expect 6 failures.  
+
+
 2005-10-25	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-merged-PRS-02-11:

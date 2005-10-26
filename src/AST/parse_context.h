@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.4 2005/10/25 20:51:48 fang Exp $
+	$Id: parse_context.h,v 1.4.2.1 2005/10/26 22:12:34 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -18,6 +18,9 @@
 #include "Object/common/util_types.h"
 #include "util/boolean_types.h"
 #include "util/attributes.h"
+
+// goal: 0
+#define	USE_MASTER_INSTANCE_LIST		0
 
 namespace ART {
 namespace entity {
@@ -187,6 +190,7 @@ public:
 
 
 private:
+#if USE_MASTER_INSTANCE_LIST
 	/**
 		Consider a stack of contexts for instance_management_lists.
 		Push/pop when entering/leaving definition or
@@ -204,6 +208,7 @@ private:
 	// sequential_scope::instance_management_list_type&
 	list<sticky_ptr<const instance_management_base> >&
 						master_instance_list;
+#endif
 
 	/**
 		Stupid implementation of switching between
@@ -240,7 +245,15 @@ public:
 	never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base>& d);
 
-// void	declare_process(const token_identifier& ps);
+	template <class DefType>
+	class definition_frame {
+		context&			_context;
+	public:
+		definition_frame(context&, const token_identifier&);
+		~definition_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+private:
 	template <class D>
 	void
 	open_definition(const token_identifier& ps);
@@ -249,6 +262,7 @@ public:
 	void
 	close_definition(void);
 
+public:
 	// different: not sequential scopes
 	void
 	open_enum_definition(const token_identifier& en);
@@ -259,7 +273,6 @@ public:
 	void
 	declare_datatype(const token_identifier& ds);
 
-// void	declare_enum(const token_identifier& en);
 	good_bool
 	add_enum_member(const token_identifier& em);
 
@@ -276,11 +289,6 @@ public:
 	void
 	add_assignment(excl_ptr<const param_expression_assignment>& a);
 
-/**
-	Need to make distinctions:
-	call this get_current_named_scope.
-	Make another get_current_sequential_scope.
- */
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
 

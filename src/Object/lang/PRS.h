@@ -1,8 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.4 2005/10/25 20:51:56 fang Exp $
-	TODO: support loop expressions of AND and OR.  
+	$Id: PRS.h,v 1.4.2.1 2005/10/26 22:12:35 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
@@ -10,8 +9,7 @@
 
 #include "Object/art_object_fwd.h"
 #include "Object/lang/PRS_base.h"
-// #include "Object/expr/pint_range.h"
-// #include "Object/inst/pint_value_collection.h"
+#include "Object/unroll/meta_loop_base.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 
@@ -221,6 +219,8 @@ public:
 };	// and class pass
 
 //=============================================================================
+#if 0
+// RELOCATED to "Object/unroll/meta_loop_base.h"
 /**
 	Base structure for meta-language loop construct.  
  */
@@ -247,6 +247,7 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 };
+#endif
 
 //=============================================================================
 /**

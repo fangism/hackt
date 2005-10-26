@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.30 2005/07/23 06:51:18 fang Exp $
+	$Id: art_parser_instance.cc,v 1.30.22.1 2005/10/26 22:12:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -26,15 +26,20 @@
 
 #include "Object/common/namespace.h"
 #include "Object/inst/instance_collection_base.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
 #include "Object/expr/param_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/port_connection.h"
+#include "Object/unroll/loop_scope.h"
+
+#include "common/TODO.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -94,6 +99,10 @@ using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;
 using entity::dynamic_param_expr_list;
+using entity::meta_range_expr;
+using entity::meta_loop_base;
+using entity::loop_scope;
+using entity::pint_scalar;
 
 //=============================================================================
 // class instance_management method definitions
@@ -927,8 +936,33 @@ loop_instantiation::rightmost(void) const {
  */
 never_ptr<const object>
 loop_instantiation::check_build(context& c) const {
+#if 0
 	cerr << "Fang, write loop_instantiation::check_build()!" << endl;
 	return never_ptr<const object>(NULL);
+#else
+	typedef	never_ptr<const object>		return_type;
+	const range::meta_return_type r(rng->check_meta_index(c));
+	if (!r) {
+		cerr << "Error in loop range at " << where(*rng) << endl;
+		THROW_EXIT;
+	}
+	const meta_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(r));
+	NEVER_NULL(loop_range);
+{
+	const context::loop_var_frame _lvf(c, *index);
+	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		THROW_EXIT;
+	}
+	excl_ptr<loop_scope> ls(new loop_scope(loop_ind, loop_range));
+	NEVER_NULL(ls);
+	FINISH_ME(Fang);
+	return return_type(NULL);
+}
+#endif
 }
 
 //=============================================================================

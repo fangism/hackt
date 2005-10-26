@@ -2,7 +2,7 @@
 	\file "Object/unroll/loop_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: loop_scope.h,v 1.2 2005/07/23 06:53:01 fang Exp $
+	$Id: loop_scope.h,v 1.2.22.1 2005/10/26 22:12:37 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_LOOP_SCOPE_H__
@@ -10,6 +10,7 @@
 
 #include "Object/unroll/instance_management_base.h"
 #include "Object/unroll/sequential_scope.h"
+#include "Object/unroll/meta_loop_base.h"
 #include "util/memory/excl_ptr.h"
 
 namespace ART {
@@ -19,6 +20,8 @@ using util::memory::never_ptr;
 
 //=============================================================================
 /**
+	NOTE: these comments have not been touched for most of a year...
+	TODO: update comments.  
 	Scope of a loop body.
 	Notes: Instances in loop bodies will register sparse collections
 	in the parent definition scope, but track indices in this scope.
@@ -37,9 +40,14 @@ using util::memory::never_ptr;
 		named_scope, true_scope, psuedo_scope...
  */
 class loop_scope : public instance_management_base, 
-		public sequential_scope {
+		public sequential_scope, 
+		protected meta_loop_base {
+	typedef	loop_scope				this_type;
+	typedef	instance_management_base		interface_type;
+	typedef	sequential_scope			parent_type;
 protected:
 	// inherits a list of sequential instance_management items
+#if 0
 	/**
 		Should have modifiable pointer to parent scope?
 		Parent may be namespace?  NO, because it is a strictly
@@ -47,16 +55,42 @@ protected:
 		Parent may be definition or some other sequential scope.  
 	 */
 	never_ptr<const sequential_scope>		parent;
-	// induction variable 
-	// range expression
+#endif
+	// induction variable (inherited)
+	// range expression (inherited)
 public:
+	loop_scope();
+
+	loop_scope(const ind_var_ptr_type&, const range_ptr_type&);
+#if 0
 	/** what about name of scope? none. */
 	explicit
 	loop_scope(const never_ptr<const sequential_scope> p);
 		// more args...  
+#endif
+
 	~loop_scope();
 
-	// unroll ... may need context of expression values
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&) const;
+
+	good_bool
+	unroll(const unroll_context&) const;
+
+	CREATE_UNIQUE_PROTO;
+
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+
 };      // end class loop_scope  
      
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.20 2005/10/25 20:51:47 fang Exp $
+	$Id: art_parser_prs.cc,v 1.20.2.1 2005/10/26 22:12:34 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_PRS_CC__
@@ -154,7 +154,6 @@ loop::rightmost(void) const {
  */
 body_item::return_type
 loop::check_rule(context& c) const {
-#if 1
 	// declare induction variable using token_identifier
 	// check for shadowing by looking up
 	// extend/modify the parse context with token_identifier on stack
@@ -208,10 +207,6 @@ loop::check_rule(context& c) const {
 		// THROW_EXIT;
 		return body_item::return_type();
 	}
-#else
-	cerr << "Fang, write PRS::loop::check_rule()!" << endl;
-	return body_item::return_type();
-#endif
 }
 
 //=============================================================================
@@ -348,7 +343,7 @@ op_loop::check_prs_expr(context& c) const {
 		return prs_expr_return_type(NULL);
 	}
 	// convert implicit range to explicit range, if necessary
-	entity::PRS::expr_loop_base::range_ptr_type
+	const entity::PRS::expr_loop_base::range_ptr_type
 		loop_range(meta_range_expr::make_explicit_range(rng));
 	NEVER_NULL(loop_range);
 	// create loop index variable and push onto context stack

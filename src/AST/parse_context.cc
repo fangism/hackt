@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.4 2005/10/25 20:51:48 fang Exp $
+ 	$Id: parse_context.cc,v 1.4.2.1 2005/10/26 22:12:34 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -75,7 +75,9 @@ context::context(module& m) :
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
+#if USE_MASTER_INSTANCE_LIST
 		master_instance_list(m.instance_management_list), 
+#endif
 		strict_template_mode(true)
 		{
 
@@ -465,16 +467,19 @@ context::alias_definition(const never_ptr<const definition_base> d,
 void
 context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
-
 	STACKTRACE("context::add_connection()");
-	never_ptr<sequential_scope>
-		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	im_pointer_type imb(c);	// is not const, should be transferrable
+#if USE_MASTER_INSTANCE_LIST
+	const never_ptr<sequential_scope>
+		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	NEVER_NULL(imb);
 	INVARIANT(!c);
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
 	} else {
+#if 0
+		cerr << "context::add_connection(): !seq_scope" << endl;
+#endif
 		// should transfer ownership to the list
 #if 0
 		// not guaranteed to work :(
@@ -487,6 +492,9 @@ context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 #endif
 		INVARIANT(master_instance_list.back());
 	}
+#else
+	current_sequential_scope->append_instance_management(imb);
+#endif
 	INVARIANT(!imb);
 }
 
@@ -501,16 +509,19 @@ context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 void
 context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
-
 	STACKTRACE("context::add_assignment()");
-	never_ptr<sequential_scope>
-		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	im_pointer_type imb(c);
+#if USE_MASTER_INSTANCE_LIST
+	const never_ptr<sequential_scope>
+		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	NEVER_NULL(imb);
 	INVARIANT(!c);
 	if (seq_scope) {
 		seq_scope->append_instance_management(imb);
 	} else {
+#if 0
+		cerr << "context::add_assignment(): !seq_scope" << endl;
+#endif
 		// should transfer ownership to the list
 #if 0
 		// not guaranteed to work :(
@@ -523,6 +534,9 @@ context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 #endif
 		INVARIANT(master_instance_list.back());
 	}
+#else
+	current_sequential_scope->append_instance_management(imb);
+#endif
 	INVARIANT(!imb);
 }
 
@@ -904,10 +918,16 @@ context::loop_var_frame::~loop_var_frame() {
 //=============================================================================
 // explicit template method instantiations
 
+#if 0
 INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(process_definition)
 INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_chan)
 INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_datatype)
 // INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(enum_datatype_def)
+#else
+template class context::definition_frame<process_definition>;
+template class context::definition_frame<user_def_chan>;
+template class context::definition_frame<user_def_datatype>;
+#endif
 
 //=============================================================================
 }	// end namespace entity
