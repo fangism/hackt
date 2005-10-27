@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.4.2.1 2005/10/26 22:12:35 fang Exp $
+	$Id: PRS.h,v 1.4.2.2 2005/10/27 01:30:46 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
@@ -217,37 +217,6 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// and class pass
-
-//=============================================================================
-#if 0
-// RELOCATED to "Object/unroll/meta_loop_base.h"
-/**
-	Base structure for meta-language loop construct.  
- */
-class meta_loop_base {
-public:
-	typedef	value_array<pint_tag, 0>		pint_scalar;
-	typedef	count_ptr<pint_scalar>			ind_var_ptr_type;
-	typedef	count_ptr<const meta_range_expr>	range_ptr_type;
-
-protected:
-	ind_var_ptr_type			ind_var;
-	range_ptr_type				range;
-
-	meta_loop_base();
-	meta_loop_base(const ind_var_ptr_type&, const range_ptr_type&);
-	~meta_loop_base();
-
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-};
-#endif
 
 //=============================================================================
 /**

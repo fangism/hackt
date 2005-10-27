@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_formal.cc"
 	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.26 2005/09/04 21:14:39 fang Exp $
+	$Id: art_parser_formal.cc,v 1.26.10.1 2005/10/27 01:30:44 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FORMAL_CC__
@@ -178,7 +178,7 @@ data_param_decl::check_build(context& c) const {
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
 	// make sure is data-type!
-	c.set_current_fundamental_type(ftr);
+	const context::fundamental_type_frame _ftf(c, ftr);
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
@@ -188,7 +188,6 @@ data_param_decl::check_build(context& c) const {
 		// already have error message
 		THROW_EXIT;
 	}
-	c.reset_current_fundamental_type();
 	return return_type(NULL);
 }
 
@@ -350,7 +349,7 @@ port_formal_decl::check_build(context& c) const {
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
 	// make sure is data-type!
-	c.set_current_fundamental_type(ftr);
+	const context::fundamental_type_frame _ftf(c, ftr);
 	if (ftr) {
 		ids->check_build(c);
 		// always returns NULL
@@ -359,7 +358,6 @@ port_formal_decl::check_build(context& c) const {
 		// already have error message
 		THROW_EXIT;
 	}
-	c.reset_current_fundamental_type();
 	return return_type(NULL);
 }
 
@@ -496,6 +494,7 @@ template_formal_decl::rightmost(void) const {
 	return ids->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Type-checks a list of template formals with the same type.  
 	Adds formal parameters to the context's current_prototype.  
@@ -504,20 +503,9 @@ template_formal_decl::rightmost(void) const {
 never_ptr<const object>
 template_formal_decl::check_build(context& c) const {
 	STACKTRACE("template_formal_decl::check_build()");
-#if 0
-	const never_ptr<const definition_base>
-		def(type->check_definition(c));
-	if (!def) {
-		cerr << "ERROR resolving base definition!  " <<
-			where(*type) << endl;
-		THROW_EXIT;
-	}
-	c.set_current_fundamental_type(def->make_fundamental_type_reference());
-#else
-	c.set_current_fundamental_type(type->check_type(c));
+	const context::fundamental_type_frame _ftf(c, type->check_type(c));
 	const never_ptr<const definition_base>
 		def(c.get_current_fundamental_type()->get_base_def());
-#endif
 		// don't anticipate any problems here...
 		// built-in param types pint and pbool
 		// have no template parameters...
@@ -525,7 +513,6 @@ template_formal_decl::check_build(context& c) const {
 		// then it will already be set by its check_build()
 	ids->check_build(c);	// node_list::check_build: ignore return value
 	// catch return errors?
-	c.reset_current_fundamental_type();
 	return def;
 }
 

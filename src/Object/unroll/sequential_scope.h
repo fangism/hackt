@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.4 2005/09/04 21:15:04 fang Exp $
+	$Id: sequential_scope.h,v 1.4.10.1 2005/10/27 01:30:47 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -41,8 +41,6 @@ class instance_management_base;
 	instance management actions.
  */
 class sequential_scope {
-// allow parser::context to reference instance_management_list directly
-friend class context;
 public:
 	/**
 		By using sticky_ptr, this is not copy-constructible.

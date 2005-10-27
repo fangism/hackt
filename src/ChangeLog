@@ -2,6 +2,12 @@
 
 2005-10-26	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-61-flow-01-02:
+	  More cleaning up, using helper classes to balance parser::context
+		manipulations, classes context::*_frame.  
+	  TODO: finish loop_instantiation::check_build() next.  
+
+
 	* ARTXX-00-01-04-main-00-61-flow-01-01:
 	  Branch for flow control in sequential scopes: 
 		loops and conditionals.  

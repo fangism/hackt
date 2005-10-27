@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.4.2.1 2005/10/26 22:12:35 fang Exp $
+	$Id: PRS.cc,v 1.4.2.2 2005/10/27 01:30:46 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -553,54 +553,6 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 
 //=============================================================================
 // class prs_expr method definitions
-
-//=============================================================================
-#if 0
-// RELOCATED to "Object/unroll/meta_loop_base.cc"
-// class meta_loop_base method definitions
-
-inline
-meta_loop_base::meta_loop_base() : ind_var(), range() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-meta_loop_base::meta_loop_base(const ind_var_ptr_type& i, 
-		const range_ptr_type& r) :
-		ind_var(i), range(r) {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-meta_loop_base::~meta_loop_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-meta_loop_base::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	ind_var->collect_transient_info(m);
-	range->collect_transient_info(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-meta_loop_base::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-	m.write_pointer(o, ind_var);
-	m.write_pointer(o, range);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-meta_loop_base::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-	m.read_pointer(i, ind_var);
-	m.read_pointer(i, range);
-}
-#endif
 
 //=============================================================================
 // class rule_loop method definitions

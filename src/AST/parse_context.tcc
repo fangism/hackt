@@ -3,7 +3,7 @@
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.tcc" in a previous life.
- 	$Id: parse_context.tcc,v 1.2.22.1 2005/10/26 22:12:34 fang Exp $
+ 	$Id: parse_context.tcc,v 1.2.22.2 2005/10/27 01:30:45 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_TCC__
@@ -77,11 +77,6 @@ context::close_definition(void) {
 	sequential_scope_stack.pop();
 	close_current_definition();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#define	INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(T)			\
-template void context::open_definition<T >(const token_identifier&);	\
-template void context::close_definition<T >();
 
 //=============================================================================
 template <class DefType>

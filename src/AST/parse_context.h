@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.4.2.1 2005/10/26 22:12:34 fang Exp $
+	$Id: parse_context.h,v 1.4.2.2 2005/10/27 01:30:45 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -18,9 +18,6 @@
 #include "Object/common/util_types.h"
 #include "util/boolean_types.h"
 #include "util/attributes.h"
-
-// goal: 0
-#define	USE_MASTER_INSTANCE_LIST		0
 
 namespace ART {
 namespace entity {
@@ -190,26 +187,6 @@ public:
 
 
 private:
-#if USE_MASTER_INSTANCE_LIST
-	/**
-		Consider a stack of contexts for instance_management_lists.
-		Push/pop when entering/leaving definition or
-		control scope.  
-		sequential_scope_stack?
-		Namespace change doesn't affect this stack!
-		The globally ordered (master) instance management list
-		should be at the bottom of the stack.  
-		Maintain multiple stacks? or unified stack?
-
-		This corresponds to the module class's 
-		globally ordered instance management list.  
-		This is where all globally ordered actions go.  
-	 */
-	// sequential_scope::instance_management_list_type&
-	list<sticky_ptr<const instance_management_base> >&
-						master_instance_list;
-#endif
-
 	/**
 		Stupid implementation of switching between
 		strict and relaxed template parameters. 
@@ -221,18 +198,37 @@ private:
 	bool					strict_template_mode;
 
 public:
+	explicit
 	context(module& m);
+
+private:
+	// private undefined copy-constructor
+	context(const context&);
+
+public:
 	~context();
 
 // TO DO: sort methods by where they are expected to be invoked
 //	i.e. from the syntax tree check_build, or from the symbol_table objects
 
+	/**
+		Class object for automatically balancing namespace stack.  
+	 */
+	class namespace_frame {
+		context& 		_context;
+	public:
+		namespace_frame(context&, const token_identifier&);
+		~namespace_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+private:
 	void
 	open_namespace(const token_identifier& id);
 
 	void
 	close_namespace(void);
 
+public:
 	void
 	using_namespace(const qualified_id& id);
 
@@ -253,6 +249,13 @@ public:
 		~definition_frame();
 	} __ATTRIBUTE_UNUSED__;
 
+	class enum_definition_frame {
+		context&			_context;
+	public:
+		enum_definition_frame(context&, const token_identifier&);
+		~enum_definition_frame();
+	} __ATTRIBUTE_UNUSED__;
+
 private:
 	template <class D>
 	void
@@ -262,7 +265,6 @@ private:
 	void
 	close_definition(void);
 
-public:
 	// different: not sequential scopes
 	void
 	open_enum_definition(const token_identifier& en);
@@ -270,6 +272,7 @@ public:
 	void
 	close_enum_definition(void);
 
+public:
 	void
 	declare_datatype(const token_identifier& ds);
 
@@ -319,16 +322,29 @@ public:
 		return current_open_definition;
 	}
 
+	/**
+		Manages current type of instantiation on stack.  
+	 */
+	class fundamental_type_frame {
+		context&		_context;
+	public:
+		fundamental_type_frame(context&,
+			const count_ptr<const fundamental_type_reference>&);
+		~fundamental_type_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+private:
 	void
 	set_current_fundamental_type(
 		const count_ptr<const fundamental_type_reference>&);
 
+	void
+	reset_current_fundamental_type(void);
+
+public:
 // never_ptr<const fundamental_type_reference>
 	count_ptr<const fundamental_type_reference>
 	get_current_fundamental_type(void) const;
-
-	void
-	reset_current_fundamental_type(void);
 
 	never_ptr<const object>
 	lookup_object(const qualified_id& id) const;

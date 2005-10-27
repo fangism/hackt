@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.30.22.1 2005/10/26 22:12:33 fang Exp $
+	$Id: art_parser_instance.cc,v 1.30.22.2 2005/10/27 01:30:44 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -625,12 +625,13 @@ instance_declaration::rightmost(void) const {
 	return ids->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 instance_declaration::check_build(context& c) const {
 	STACKTRACE("instance_declaration::check_build()");
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
-	c.set_current_fundamental_type(ftr);
+	const context::fundamental_type_frame _ftf(c, ftr);
 
 	if (ftr) {
 		ids->check_build(c);		// return value?
@@ -639,7 +640,6 @@ instance_declaration::check_build(context& c) const {
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
-	c.reset_current_fundamental_type();	// the type to instantiate
 	return c.top_namespace();
 }
 
