@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.30.22.2 2005/10/27 01:30:44 fang Exp $
+	$Id: art_parser_instance.cc,v 1.30.22.3 2005/10/27 03:26:04 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -936,10 +936,6 @@ loop_instantiation::rightmost(void) const {
  */
 never_ptr<const object>
 loop_instantiation::check_build(context& c) const {
-#if 0
-	cerr << "Fang, write loop_instantiation::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
-#else
 	typedef	never_ptr<const object>		return_type;
 	const range::meta_return_type r(rng->check_meta_index(c));
 	if (!r) {
@@ -959,10 +955,12 @@ loop_instantiation::check_build(context& c) const {
 	}
 	excl_ptr<loop_scope> ls(new loop_scope(loop_ind, loop_range));
 	NEVER_NULL(ls);
-	FINISH_ME(Fang);
-	return return_type(NULL);
+{
+	const context::loop_scope_frame _lsf(c, ls);
+	body->check_build(c);
 }
-#endif
+}
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -993,7 +991,7 @@ guarded_definition_body::rightmost(void) const {
 
 never_ptr<const object>
 guarded_definition_body::check_build(context& c) const {
-	cerr << "Fang, finish guarded_definition_body::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -1038,7 +1036,7 @@ conditional_instantiation::rightmost(void) const {
  */
 never_ptr<const object>
 conditional_instantiation::check_build(context& c) const {
-	cerr << "Fang, write conditional_instantiation::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -1067,7 +1065,7 @@ type_completion_statement::rightmost(void) const {
 
 never_ptr<const object>
 type_completion_statement::check_build(context& c) const {
-	cerr << "FANG, write type_completion_statement::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -1097,7 +1095,7 @@ type_completion_connection_statement::rightmost(void) const {
 
 never_ptr<const object>
 type_completion_connection_statement::check_build(context& c) const {
-	cerr << "FANG, write type_completion_connection_statement::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 

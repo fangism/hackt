@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.4.2.2 2005/10/27 01:30:45 fang Exp $
+	$Id: parse_context.h,v 1.4.2.3 2005/10/27 03:26:05 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -38,6 +38,7 @@ namespace entity {
 	class param_expr;
 	class param_expr_list;
 	class param_expression_assignment;
+	class loop_scope;
 	struct pint_tag;
 	template <class, size_t> class value_array;
 }	// end namespace entity
@@ -74,6 +75,7 @@ using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
 using entity::value_array;
+using entity::loop_scope;
 
 //=============================================================================
 // forward declarations
@@ -412,6 +414,7 @@ public:
 		Automatic loop-variable stack manager.  
 		Pushes onto stack during construction.  
 		Pops off stack at destruction time.  
+		Used for PRS rule-loops and expr-loops.  
 	 */
 	struct loop_var_frame {
 		context&			_context;
@@ -420,7 +423,16 @@ public:
 		~loop_var_frame();
 	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame
 
-// repeat for processes and channels...
+
+	/**
+		Loop scope frame for unroll-related instance management.
+		Used for top-level scopes and definition scopes.  
+	 */
+	struct loop_scope_frame {
+		context&			_context;
+		loop_scope_frame(context&, excl_ptr<loop_scope>&);
+		~loop_scope_frame();
+	} __ATTRIBUTE_UNUSED__;
 
 	string
 	auto_indent(void) const;

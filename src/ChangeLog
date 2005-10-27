@@ -2,6 +2,14 @@
 
 2005-10-26	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-61-flow-01-03:
+	  Finished loop_instantiation::check_build().
+	  Created class context::loop_scope_frame.
+	  entity::param_value_collection::may_be_initialized():
+		add || is_loop_variable, which counts as initialized.
+	  TODO: make flow/000.in test case work.
+
+
 	* ARTXX-00-01-04-main-00-61-flow-01-02:
 	  More cleaning up, using helper classes to balance parser::context
 		manipulations, classes context::*_frame.  

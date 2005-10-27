@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.3 2005/09/04 21:14:52 fang Exp $
+	$Id: param_value_collection.h,v 1.3.10.1 2005/10/27 03:26:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -62,6 +62,9 @@ virtual	ostream&
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+
+virtual	bool
+	is_loop_variable(void) const = 0;
 
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
