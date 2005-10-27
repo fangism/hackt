@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.3 2005/10/25 20:52:00 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.3.2.1 2005/10/27 22:52:54 fang Exp $
 
 # NOTE: tepomrarily just uses stdout dump during execution
 # will updated later...
@@ -56,7 +56,7 @@ then
 	@ECHO@ `pwd`/"$bldroot.prsdiff" >> $logfile
 	exit 1
 @HAVE_PRSIM_TRUE@else
-@HAVE_PRSIM_TRUE@	@PRSIM@ $bldroot.prs < /dev/null > /dev/null
+@HAVE_PRSIM_TRUE@	@PRSIM@ $bldroot.prs < /dev/null > /dev/null 2>&1
 @HAVE_PRSIM_TRUE@	if [ $? -ne 0 ]
 @HAVE_PRSIM_TRUE@	then
 @HAVE_PRSIM_TRUE@		@ECHO@ "Error: @PRSIM@ rejected $bldroot.prs."

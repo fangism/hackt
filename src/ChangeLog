@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-10-27	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-04:
+	  Trivially implemented unroll/create_unique for loop-scopes.
+	  Passes basic test cases so far in parser/flow.  
+	  TODO: crazy test cases, move loops inside definitions...
+
+
 2005-10-26	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-flow-01-03:

@@ -2,7 +2,7 @@
 	\file "Object/unroll/loop_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: loop_scope.h,v 1.2.22.1 2005/10/26 22:12:37 fang Exp $
+	$Id: loop_scope.h,v 1.2.22.2 2005/10/27 22:52:53 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_LOOP_SCOPE_H__
@@ -77,6 +77,15 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+private:
+	/**
+		TODO: re-use loop-expansion code in the form
+		of pointer-member function calls.
+		TODO: bundle arguments into single argument type.  
+	 */
+	good_bool
+	expand(good_bool (parent_type::*)(const unroll_context&) const) const;
+public:
 	good_bool
 	unroll(const unroll_context&) const;
 

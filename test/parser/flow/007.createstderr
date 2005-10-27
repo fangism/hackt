@@ -1,0 +1,71 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	loopscop	0	#HEAD#	#TAIL#	32
+	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	29	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    j = pint^1 j with indices: {
+      [::i..::i]
+    }
+      unrolled index-value pairs: {
+        0 = 1
+        1 = 2
+      }
+  Instances:
+    x = bool^1 x with indices: {
+      [0..0]
+      [::j[::i]..::j[::i]]
+    }
+      unrolled indices: {
+        0 = ::x[0] (1) 
+        1 = ::x[1] (2) 
+        2 = ::x[2] (3) 
+      }
+}
+
+Created state:
+bool instance pool:
+1	::x[0]
+2	::x[1]
+3	::x[2]
+

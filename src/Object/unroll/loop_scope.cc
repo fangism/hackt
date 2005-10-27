@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.2.22.1 2005/10/26 22:12:36 fang Exp $
+ 	$Id: loop_scope.cc,v 1.2.22.2 2005/10/27 22:52:53 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -9,8 +9,10 @@
 
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/def/template_formals_manager.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
-#include "Object/expr/meta_range_expr.h"
+#include "Object/expr/const_range.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/persistent_type_hash.h"
 #include "common/TODO.h"
@@ -67,17 +69,88 @@ loop_scope::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: source copied mostly from PRS::rule_loop::unroll().
+ */
 good_bool
 loop_scope::unroll(const unroll_context& c) const {
-	FINISH_ME(Fang);
-	return good_bool(false);
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr, expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	if (min > max) {
+		// range is either empty or backwards
+		return good_bool(true);
+	}
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		if (!parent_type::unroll(cc).good) {
+			cerr << "Error resolving loop-body:"
+				<< endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Code blatantly copy-modified from above loop_scope::unroll(). 
+	TODO: consider templating code for reusability.  
+ */
 good_bool
 loop_scope::create_unique(const unroll_context& c, footprint& f) const {
-	FINISH_ME(Fang);
-	return good_bool(false);
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr, expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	if (min > max) {
+		// range is either empty or backwards
+		return good_bool(true);
+	}
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		if (!parent_type::create_unique(cc, f).good) {	// 1-line change
+			cerr << "Error resolving loop-body:"
+				<< endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

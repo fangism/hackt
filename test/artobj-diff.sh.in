@@ -3,7 +3,7 @@
 # This file came from "artobj-diff.sh" in revision prehistory.  
 
 # compares textual object dumps
-#	$Id: artobj-diff.sh.in,v 1.2 2005/08/04 23:02:58 fang Exp $
+#	$Id: artobj-diff.sh.in,v 1.2.20.1 2005/10/27 22:52:54 fang Exp $
 
 # $1 is the executable for generating the object file, (probably art++2obj)
 #	and producing a textual dump to stderr.  
@@ -30,13 +30,11 @@ logfile=$6
 
 if ! [ -e $bldroot.test ] ; then exit 1 ; fi
 
-$cmd $srcroot.in 2> /dev/null
+$cmd $srcroot.in $bldroot.artobj > $bldroot.outdump 2>&1
 if [ $? -ne 0 ] ; then exit 1; fi
-$cmd $srcroot.in $bldroot.artobj 2>&1 | @CAT@ > $bldroot.outdump
 
-$dump $bldroot.artobj 2> /dev/null
+$dump $bldroot.artobj > $bldroot.indump 2>&1
 if [ $? -ne 0 ] ; then exit 1; fi
-$dump $bldroot.artobj 2>&1 | @CAT@ > $bldroot.indump
 
 @CAT@ $bldroot.outdump | $filter > $bldroot.outdump.filter
 @CAT@ $bldroot.indump | $filter > $bldroot.indump.filter

@@ -1,0 +1,42 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	71
+	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	11	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
+	13	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Instances:
+    x = bool^1 x with indices: {
+      [::i..::i]
+    }
+      unrolled indices: {
+        0 = ::x[1] 
+        1 = ::x[0] 
+      }
+}
+
