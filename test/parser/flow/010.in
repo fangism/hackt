@@ -1,0 +1,16 @@
+// "010.in"
+// copy-modified from "009.in"
+// shoud pass
+// basic top-level instantiation loop, 3D array (triangular)
+
+pint N = 3;
+
+// using nested loop bounds
+(;i:N:
+(;j:i..N-1:
+(;k:j..N-1:
+bool x[i..i][j..j][k..k];
+)
+)
+)
+

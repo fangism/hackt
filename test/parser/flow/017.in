@@ -1,0 +1,19 @@
+// "017.in"
+// copy-modified from "016.in"
+// should pass
+// diagonal style aliases, ending with GCD unique bools.
+
+pint M = 5;
+pint N = 7;
+
+bool m[M][N];
+
+(;i:M:
+(;j:N:
+	m[i][j] = m[(i+1)%M][(j+1)%N];
+)
+)
+
+// should end up with 1 bands
+
+

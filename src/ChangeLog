@@ -2,6 +2,10 @@
 
 2005-10-27	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-61-flow-01-05:
+	  No code revision: just new batch of test cases.  
+
+
 	* ARTXX-00-01-04-main-00-61-flow-01-04:
 	  Trivially implemented unroll/create_unique for loop-scopes.
 	  Passes basic test cases so far in parser/flow.  

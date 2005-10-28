@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.3.2.1 2005/10/27 22:52:54 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.3.2.2 2005/10/28 03:03:12 fang Exp $
 
 # NOTE: tepomrarily just uses stdout dump during execution
 # will updated later...
@@ -45,9 +45,9 @@ fi
 # some PRS may be empty
 if [ -s $bldroot.prs ]
 then
-	@DIFF@ $srcroot.expect-prs $bldroot.prs > $bldroot.prsdiff
+	@DIFF@ -u $srcroot.expect-prs $bldroot.prs > $bldroot.prsdiff
 else
-	@DIFF@ $bldroot.expect-prs $bldroot.prs > $bldroot.prsdiff
+	@DIFF@ -u $bldroot.expect-prs $bldroot.prs > $bldroot.prsdiff
 fi
 
 if [ -s $bldroot.prsdiff ]
