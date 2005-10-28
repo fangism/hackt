@@ -2,7 +2,7 @@
 	\file "Object/unroll/loop_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the ART++ language.  
-	$Id: loop_scope.h,v 1.2.22.2 2005/10/27 22:52:53 fang Exp $
+	$Id: loop_scope.h,v 1.2.22.3 2005/10/28 07:49:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_LOOP_SCOPE_H__
@@ -11,13 +11,9 @@
 #include "Object/unroll/instance_management_base.h"
 #include "Object/unroll/sequential_scope.h"
 #include "Object/unroll/meta_loop_base.h"
-#include "util/memory/excl_ptr.h"
 
 namespace ART {
 namespace entity {
-class sequential_scope;
-using util::memory::never_ptr;
-
 //=============================================================================
 /**
 	NOTE: these comments have not been touched for most of a year...
@@ -47,27 +43,12 @@ class loop_scope : public instance_management_base,
 	typedef	sequential_scope			parent_type;
 protected:
 	// inherits a list of sequential instance_management items
-#if 0
-	/**
-		Should have modifiable pointer to parent scope?
-		Parent may be namespace?  NO, because it is a strictly
-		sequential item.
-		Parent may be definition or some other sequential scope.  
-	 */
-	never_ptr<const sequential_scope>		parent;
-#endif
 	// induction variable (inherited)
 	// range expression (inherited)
 public:
 	loop_scope();
 
 	loop_scope(const ind_var_ptr_type&, const range_ptr_type&);
-#if 0
-	/** what about name of scope? none. */
-	explicit
-	loop_scope(const never_ptr<const sequential_scope> p);
-		// more args...  
-#endif
 
 	~loop_scope();
 

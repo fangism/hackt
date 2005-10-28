@@ -1,7 +1,6 @@
 /**
-	\file "Object/lang/PRS.cc"
-	Implementation of PRS objects.
-	$Id: meta_loop_base.cc,v 1.1.2.1 2005/10/26 22:12:38 fang Exp $
+	\file "Object/unroll/meta_loop_base.cc"
+	$Id: meta_loop_base.cc,v 1.1.2.2 2005/10/28 07:49:43 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -13,18 +12,15 @@
 #include "Object/expr/meta_range_expr.h"
 #include "Object/inst/pint_value_collection.h"
 
-#include "common/TODO.h"
+// #include "common/TODO.h"
 #include "util/persistent_object_manager.tcc"
-#include "util/IO_utils.h"
+// #include "util/IO_utils.h"
 #include "util/memory/count_ptr.tcc"
-#include "util/stacktrace.h"
+// #include "util/stacktrace.h"
 
 //=============================================================================
 namespace ART {
 namespace entity {
-#include "util/using_ostream.h"
-using util::write_value;
-using util::read_value;
 
 //=============================================================================
 // class meta_loop_base method definitions

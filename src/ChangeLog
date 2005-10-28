@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-06:
+	  Added code for conditional instance management bodies (untested).
+	  Implemented missing pbool_expr::unroll_resolve_value methods, 
+		how was this missing before and unnoticed?
+	  Fixed some minor dump indentation.  
+	  TODO: test cases for conditional scopes, nesting, crazy stuff...
+
+
 2005-10-27	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-flow-01-05:

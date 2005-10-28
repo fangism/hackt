@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.4.2.3 2005/10/27 03:26:05 fang Exp $
+	$Id: parse_context.h,v 1.4.2.4 2005/10/28 07:49:40 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -39,6 +39,7 @@ namespace entity {
 	class param_expr_list;
 	class param_expression_assignment;
 	class loop_scope;
+	class conditional_scope;
 	struct pint_tag;
 	template <class, size_t> class value_array;
 }	// end namespace entity
@@ -76,6 +77,7 @@ using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
 using entity::value_array;
 using entity::loop_scope;
+using entity::conditional_scope;
 
 //=============================================================================
 // forward declarations
@@ -432,6 +434,15 @@ public:
 		context&			_context;
 		loop_scope_frame(context&, excl_ptr<loop_scope>&);
 		~loop_scope_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+	/**
+		Conditional scope frame for unroll-related instance management.
+	 */
+	struct conditional_scope_frame {
+		context&			_context;
+		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
+		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 
 	string

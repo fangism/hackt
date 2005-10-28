@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.4.2.3 2005/10/27 03:26:05 fang Exp $
+ 	$Id: parse_context.cc,v 1.4.2.4 2005/10/28 07:49:40 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -32,8 +32,8 @@
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/loop_scope.h"
+#include "Object/unroll/conditional_scope.h"
 #include "Object/inst/physical_instance_collection.h"
-// #include "Object/inst/param_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/module.h"
 
@@ -928,6 +928,32 @@ context::loop_scope_frame::loop_scope_frame(context& c,
 	Sequential scope stack balancing destructor.  
  */
 context::loop_scope_frame::~loop_scope_frame() {
+	_context.sequential_scope_stack.pop();
+}
+
+//=============================================================================
+// struct context::conditional_scope_frame method definitions
+
+/**
+	Adde the new conditional scope to the current sequential scope, 
+	then pushes it onto the sequential scope stack.  
+ */
+context::conditional_scope_frame::conditional_scope_frame(context& c, 
+		excl_ptr<conditional_scope>& l) : _context(c) {
+	const never_ptr<sequential_scope> lss(l);
+	excl_ptr<const instance_management_base>
+		imb = l.as_a_xfer<const instance_management_base>();
+	_context.current_sequential_scope->append_instance_management(imb);
+	MUST_BE_NULL(l);
+	MUST_BE_NULL(imb);
+	_context.sequential_scope_stack.push(lss);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequential scope stack balancing destructor.  
+ */
+context::conditional_scope_frame::~conditional_scope_frame() {
 	_context.sequential_scope_stack.pop();
 }
 

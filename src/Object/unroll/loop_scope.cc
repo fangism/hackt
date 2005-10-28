@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.2.22.2 2005/10/27 22:52:53 fang Exp $
+ 	$Id: loop_scope.cc,v 1.2.22.3 2005/10/28 07:49:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -59,7 +59,7 @@ ostream&
 loop_scope::dump(ostream& o) const {
 	NEVER_NULL(ind_var);
 	NEVER_NULL(range);
-	o << auto_indent << "(;" << ind_var->get_name() << ':';
+	o << "(;" << ind_var->get_name() << ':';
 	range->dump(o, expr_dump_context::default_value) << ':' << endl;
 	{
 		INDENT_SECTION(o);

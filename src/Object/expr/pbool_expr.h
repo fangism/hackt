@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.3 2005/10/25 20:51:53 fang Exp $
+	$Id: pbool_expr.h,v 1.3.2.1 2005/10/28 07:49:41 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_EXPR_H__
@@ -90,6 +90,9 @@ virtual value_type
 
 virtual	good_bool
 	resolve_value(value_type& i) const = 0;
+
+virtual	good_bool
+	unroll_resolve_value(const unroll_context&, value_type&) const = 0;
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;

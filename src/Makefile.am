@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.78.2.1 2005/10/26 22:12:32 fang Exp $
+#	$Id: Makefile.am,v 1.78.2.2 2005/10/28 07:49:37 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -160,6 +160,7 @@ OBJECT_CC_FILES = \
 	Object/unroll/instantiation_statement.cc \
 	Object/unroll/loop_scope.cc \
 	Object/unroll/meta_instance_reference_connection.cc \
+	Object/unroll/meta_conditional_base.cc \
 	Object/unroll/meta_loop_base.cc \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \

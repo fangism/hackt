@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.5 2005/09/04 21:15:00 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.5.10.1 2005/10/28 07:49:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -29,12 +29,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
+#include "util/indent.h"
 
 
 namespace ART {
 namespace entity {
 using std::mem_fun_ref;
 using util::dereference;
+using util::auto_indent;
 using std::istream;
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
@@ -276,7 +278,7 @@ template <template <class> class P>
 ostream&
 instance_management_base::dumper::operator () (
 		const P<const instance_management_base>& i) const {
-	return i->dump(os) << endl;
+	return i->dump(os << auto_indent) << endl;
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.30.22.3 2005/10/27 03:26:04 fang Exp $
+	$Id: art_parser_instance.cc,v 1.30.22.4 2005/10/28 07:49:39 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -30,7 +30,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
-#include "Object/expr/param_expr.h"
+#include "Object/expr/pbool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -38,6 +38,7 @@
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/loop_scope.h"
+#include "Object/unroll/conditional_scope.h"
 
 #include "common/TODO.h"
 
@@ -102,7 +103,9 @@ using entity::dynamic_param_expr_list;
 using entity::meta_range_expr;
 using entity::meta_loop_base;
 using entity::loop_scope;
+using entity::conditional_scope;
 using entity::pint_scalar;
+using entity::pbool_expr;
 
 //=============================================================================
 // class instance_management method definitions
@@ -989,10 +992,25 @@ guarded_definition_body::rightmost(void) const {
 	return body->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 guarded_definition_body::check_build(context& c) const {
-	FINISH_ME(Fang);
-	return never_ptr<const object>(NULL);
+	typedef	never_ptr<const object>		return_type;
+	const expr::meta_return_type g(guard->check_meta_expr(c));
+	const count_ptr<pbool_expr> guard_expr(g.is_a<pbool_expr>());
+	if (!guard_expr) {
+		cerr << "Error parsing guard expression at " <<
+			where(*guard) << endl;
+		THROW_EXIT;
+	}
+	excl_ptr<conditional_scope>
+		ls(new conditional_scope(guard_expr));
+	NEVER_NULL(ls);
+{
+	const context::conditional_scope_frame _csf(c, ls);
+	body->check_build(c);
+}
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -1036,8 +1054,12 @@ conditional_instantiation::rightmost(void) const {
  */
 never_ptr<const object>
 conditional_instantiation::check_build(context& c) const {
+#if 0
 	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
+#else
+	return gd->check_build(c);
+#endif
 }
 
 //=============================================================================

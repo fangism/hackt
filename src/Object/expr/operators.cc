@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.6 2005/10/25 20:51:53 fang Exp $
+ 	$Id: operators.cc,v 1.6.2.1 2005/10/28 07:49:41 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -362,6 +362,17 @@ pbool_unary_expr::must_be_equivalent(const pbool_expr& b) const {
 const_index_list
 pbool_unary_expr::resolve_dimensions(void) const {
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pbool_unary_expr::unroll_resolve_value(const unroll_context& c, 
+		value_type& i) const {
+	value_type j;
+	NEVER_NULL(ex);
+	const good_bool ret(ex->unroll_resolve_value(c, j));
+	i = !j;		// regardless of ret
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -917,6 +928,30 @@ pint_relational_expr::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pint_relational_expr::unroll_resolve_value(const unroll_context& c,
+		value_type& i) const {
+	static const expr_dump_context& dc(expr_dump_context::default_value);
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	pint_value_type lval, rval;
+	const good_bool lex(lx->unroll_resolve_value(c, lval));
+	const good_bool rex(rx->unroll_resolve_value(c, rval));
+	if (!lex.good) {
+		cerr << "ERROR: resolving left operand of: ";
+		dump(cerr, dc) << endl;
+		return good_bool(false);
+	} else if (!rex.good) {
+		cerr << "ERROR: resolving right operand of: ";
+		dump(cerr, dc) << endl;
+		return good_bool(false);
+	} else {
+		i = (*op)(lval, rval);
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TO DO: switch on relational expression operator.  
  */
@@ -1166,6 +1201,30 @@ pbool_logical_expr::must_be_equivalent(const pbool_expr& b) const {
 const_index_list
 pbool_logical_expr::resolve_dimensions(void) const {
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pbool_logical_expr::unroll_resolve_value(const unroll_context& c,
+		value_type& i) const {
+	static const expr_dump_context& dc(expr_dump_context::default_value);
+	// should return a pint_const
+	// maybe make a pint_const version to avoid casting
+	value_type lval, rval;
+	const good_bool lex(lx->unroll_resolve_value(c, lval));
+	const good_bool rex(rx->unroll_resolve_value(c, rval));
+	if (!lex.good) {
+		cerr << "ERROR: resolving left operand of: ";
+		dump(cerr, dc) << endl;
+		return good_bool(false);
+	} else if (!rex.good) {
+		cerr << "ERROR: resolving right operand of: ";
+		dump(cerr, dc) << endl;
+		return good_bool(false);
+	} else {
+		i = (*op)(lval, rval);
+		return good_bool(true);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
