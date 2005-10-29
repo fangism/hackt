@@ -1,0 +1,13 @@
+// "028.in"
+// copy-modified from "024.in"
+// testing conditional scopes
+// should fail: cannot redeclare differently, even if predicates are exclusive
+
+[ false ->
+bool b;
+]
+
+[ false ->
+int b;
+]
+

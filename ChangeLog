@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2005-10-28	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-07:
+	  Contributed scripts/backup_repository.sh, self-explanatory.  
+
+
 2005-10-25	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-merged-PRS-02-11:

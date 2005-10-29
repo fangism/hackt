@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2005-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-07:
+	  First batch of tests and fixes involving conditional scopes.  
+	  index_collection (inst_stmt pointer collections)
+		have been augmented to include predicate flag, 
+		indicating whether or not statement was inside some conditional
+		scope.  Consequentially, object binary sizes have grown
+		by one byte per instantiation_statement pointer.  
+		Tests have been updated accordingly.  
+	  parser::context now tracks whether or not context is in 
+		conditional scope.  
+	  scopespace::add_instance() when checking for static index overlap,
+		disregard all predicated instantiations for now.  
+
+
 2005-10-28	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-flow-01-06:

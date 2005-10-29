@@ -1,0 +1,11 @@
+// "021.in"
+// testing conditional scopes
+// copy-modified from "020.in"
+
+[ true ->
+pbool b;
+	[ true ->
+		pint i;
+	]
+]
+

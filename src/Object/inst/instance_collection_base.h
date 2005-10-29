@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.5 2005/10/08 01:39:57 fang Exp $
+	$Id: instance_collection_base.h,v 1.5.4.1 2005/10/29 21:43:50 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -17,6 +17,7 @@
 #include "util/boolean_types.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
+#include "Object/common/predicated_inst_stmt_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/persistent.h"		// for persistent object interface
 

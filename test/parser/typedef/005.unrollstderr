@@ -6,19 +6,19 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
-	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
-	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 

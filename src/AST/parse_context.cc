@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.4.2.4 2005/10/28 07:49:40 fang Exp $
+ 	$Id: parse_context.cc,v 1.4.2.5 2005/10/29 21:43:47 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -76,7 +76,8 @@ context::context(module& m) :
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
-		strict_template_mode(true)
+		strict_template_mode(true), 
+		in_conditional_scope(false)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -641,7 +642,8 @@ context::add_instance(const token_identifier& id,
 			current_fundamental_type, dim, a);
 	NEVER_NULL(inst_stmt);
 	const return_type
-		inst_base(current_named_scope->add_instance(inst_stmt, id));
+		inst_base(current_named_scope->add_instance(inst_stmt, id, 
+			in_conditional_scope));
 	// adds non-const back-reference
 
 	if (!inst_base) {
@@ -937,9 +939,11 @@ context::loop_scope_frame::~loop_scope_frame() {
 /**
 	Adde the new conditional scope to the current sequential scope, 
 	then pushes it onto the sequential scope stack.  
+	Also saves status of the in_conditional_scope flag.
  */
 context::conditional_scope_frame::conditional_scope_frame(context& c, 
-		excl_ptr<conditional_scope>& l) : _context(c) {
+		excl_ptr<conditional_scope>& l) :
+		_context(c), parent_cond(c.in_conditional_scope) {
 	const never_ptr<sequential_scope> lss(l);
 	excl_ptr<const instance_management_base>
 		imb = l.as_a_xfer<const instance_management_base>();
@@ -947,14 +951,17 @@ context::conditional_scope_frame::conditional_scope_frame(context& c,
 	MUST_BE_NULL(l);
 	MUST_BE_NULL(imb);
 	_context.sequential_scope_stack.push(lss);
+	_context.in_conditional_scope = true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Sequential scope stack balancing destructor.  
+	Also restores status of the in_conditional_scope flag.
  */
 context::conditional_scope_frame::~conditional_scope_frame() {
 	_context.sequential_scope_stack.pop();
+	_context.in_conditional_scope = parent_cond;
 }
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.5 2005/10/25 20:51:56 fang Exp $
+ 	$Id: instance_reference.cc,v 1.5.2.1 2005/10/29 21:43:50 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -929,21 +929,23 @@ simple_meta_instance_reference_base::must_be_type_equivalent(
 		if there is even a single non-const range_list.  
  */
 excl_ptr<simple_meta_instance_reference_base::mset_base>
-simple_meta_instance_reference_base::unroll_static_instances(const size_t dim) const {
+simple_meta_instance_reference_base::unroll_static_instances(
+		const size_t dim) const {
 	INVARIANT(dim <= get_inst_base()->get_dimensions());
-	instantiation_state iter = inst_state;
+	instantiation_state iter(inst_state);
 	const instantiation_state end(get_inst_base()->collection_state_end());
 	excl_ptr<mset_base>
 		cov(mset_base::make_multidimensional_sparse_set(dim));
 	NEVER_NULL(cov);
 	for ( ; iter!=end; iter++) {
-		if ((*iter)->get_indices().is_a<const dynamic_meta_range_list>())
-		{
+		if (iter->is_conditional() || (*iter)->get_indices()
+				.is_a<const dynamic_meta_range_list>()) {
 			// all we can do conservatively...
 			return excl_ptr<mset_base>(NULL);
 		} else {
-			count_ptr<const const_range_list>
-				crlp((*iter)->get_indices().is_a<const const_range_list>());
+			const count_ptr<const const_range_list>
+				crlp((*iter)->get_indices()
+					.is_a<const const_range_list>());
 			NEVER_NULL(crlp);
 			const_range_list crl(*crlp);	// make deep copy
 			// dimension-trimming

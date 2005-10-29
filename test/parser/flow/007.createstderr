@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	57
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	58
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
+	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	74
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53

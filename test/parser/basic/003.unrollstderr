@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	29
-	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	43
+	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	44
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
@@ -27,7 +27,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        parser = int<32>^0 parser (instantiated) = ::rajit::parser
+        parser = int<32>^0 parser (instantiated) = ::rajit::parser 
     }
 }
 

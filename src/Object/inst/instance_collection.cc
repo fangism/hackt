@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.7 2005/10/25 20:51:55 fang Exp $
+ 	$Id: instance_collection.cc,v 1.7.2.1 2005/10/29 21:43:50 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -70,6 +70,8 @@ using util::indent;
 using util::auto_indent;
 using util::write_string;
 using util::read_string;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class instance_collection_base method definitions
@@ -159,8 +161,13 @@ instance_collection_base::dump(ostream& o) const {
 				ind((*i)->get_indices());
 			// ind can be NULL?
 			NEVER_NULL(ind);
+			// use owner scope as context?
 			ind->dump(o << auto_indent, 
-				expr_dump_context::default_value) << endl;
+				expr_dump_context::default_value);
+			if (i->is_conditional()) {
+				o << " (predicated)";
+			}
+			o << endl;
 		}
 	}	// end indentation scope
 		o << auto_indent << '}' << endl;
@@ -258,7 +265,13 @@ instance_collection_base::get_base_def(void) const {
  */
 count_ptr<const fundamental_type_reference>
 instance_collection_base::get_type_ref(void) const {
+#if 1
+	// HERE
+	// no longer true with conditional declarations!
+	// but first declaration is needed for type, even if it is conditional!
+	// thus we need conditionally predicated index_collections?
 	INVARIANT(!index_collection.empty());
+#endif
 	return (*index_collection.begin())->get_type_ref();
 }
 
@@ -310,7 +323,9 @@ instance_collection_base::detect_static_overlap(
 #endif
 	if (r.is_a<const const_range_list>()) {
 	index_collection_type::const_iterator i(index_collection.begin());
-	for ( ; i!=index_collection.end(); i++) {
+	const index_collection_type::const_iterator e(index_collection.end());
+	for ( ; i!=e; i++) {
+	if (!i->is_conditional()) {
 		// return upon first overlap error
 		// later accumulate all overlaps.  
 		const const_range_list
@@ -319,6 +334,7 @@ instance_collection_base::detect_static_overlap(
 			return ovlp;
 		}
 		// else keep checking...
+	}	// else is predicated, don't bother checking.
 	}
 	// if this point reached, then return false
 	} // else just return false, can't know statically without analysis
@@ -593,16 +609,30 @@ void
 instance_collection_base::write_index_collection_pointers(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("inst_coll_base::write_index_collection_pointers()");
-	m.write_pointer(o, owner);
-	write_string(o, key);
+#if 0
+	// no longer simple pointer list, is now predicated
 	m.write_pointer_list(o, index_collection);
-		// is actually specialized for count_ptr's :)
+#else
+{
+	typedef	index_collection_type::const_iterator	const_iterator;
+	write_value(o, index_collection.size());
+	const_iterator i(index_collection.begin());
+	const const_iterator e(index_collection.end());
+	for ( ; i!=e; i++) {
+		m.write_pointer(o,
+			static_cast<const predicated_inst_stmt_ptr::parent_ptr_type&>(*i));
+		write_value(o, i->is_conditional());
+	}
+}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, owner);
+	write_string(o, key);
 	write_index_collection_pointers(m, o);
 }
 
@@ -617,8 +647,21 @@ void
 instance_collection_base::load_index_collection_pointers(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("inst_coll_base::load_index_collection_pointers()");
+#if 0
+	// no longer simple pointer list, is now predicated
 	m.read_pointer_list(i, index_collection);
-		// is actually specialized for count_ptr's :)
+#else
+	size_t s;
+	read_value(i, s);
+	size_t j=0;
+	for ( ; j<s; j++) {
+		predicated_inst_stmt_ptr::parent_ptr_type p;
+		m.read_pointer(i, p);
+		bool c;
+		read_value(i, c);
+		index_collection.push_back(predicated_inst_stmt_ptr(p, c));
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

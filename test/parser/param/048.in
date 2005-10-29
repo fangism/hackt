@@ -1,6 +1,6 @@
 // "048.in" should pass, using template parameters in definitions' parameters
 // copy-modified from "045.in"
-// expecte to die unrolling
+// expected to die unrolling
 // ENHANCEMENT: error message could be more precise
 //	something like: already assigned value
 

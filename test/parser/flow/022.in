@@ -1,0 +1,13 @@
+// "022.in"
+// copy-modified from "020.in"
+// testing conditional scopes
+// should fail because scalars cannot be redeclared, even conditionally.  
+
+[ false ->
+pbool b;
+]
+
+[ false ->
+pbool b;
+]
+

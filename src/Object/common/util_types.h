@@ -2,7 +2,7 @@
 	\file "Object/common/util_types.h"
 	Collective typedefs for utility types.  
 	This file was "Object/common/util_types.h" in a former life.  
-	$Id: util_types.h,v 1.2 2005/07/23 06:52:24 fang Exp $
+	$Id: util_types.h,v 1.2.22.1 2005/10/29 21:43:48 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_UTIL_TYPES_H__
@@ -46,6 +46,12 @@ namespace entity {
 			index_collection_item_ptr_type;
 
 	/**
+		Helper struct to predicate instantiation statements.  
+		Defined in "Object/common/predicated_inst_stmt_ptr.h".
+	 */
+	class predicated_inst_stmt_ptr;
+
+	/**
 		UPDATE: now contains reference to instantiation_statements, 
 		which *contain* the index/range expressions.  
 
@@ -53,8 +59,10 @@ namespace entity {
 		various program points with this container.
 
 		Eventually work with sub-types only?
+		TODO: subtype into specific instantiation statement types.  
 	 */
-	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
+//	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
+	typedef DEFAULT_DEQUE(predicated_inst_stmt_ptr)
 			index_collection_type;
 
 	/**

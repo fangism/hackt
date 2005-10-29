@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.4.2.4 2005/10/28 07:49:40 fang Exp $
+	$Id: parse_context.h,v 1.4.2.5 2005/10/29 21:43:47 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -200,6 +200,11 @@ private:
 		This flag is read by add_template_formals().  
 	 */
 	bool					strict_template_mode;
+
+	/**
+		Whether or not current scope is in some conditional body.
+	 */
+	bool					in_conditional_scope;
 
 public:
 	explicit
@@ -441,6 +446,7 @@ public:
 	 */
 	struct conditional_scope_frame {
 		context&			_context;
+		const bool			parent_cond;
 		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;

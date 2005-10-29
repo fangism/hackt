@@ -1,0 +1,7 @@
+// "020.in"
+// testing conditional scopes
+
+[ true ->
+pbool b;
+]
+
