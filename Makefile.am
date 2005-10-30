@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.18 2005/09/04 22:13:45 fang Exp $
+#	$Id: Makefile.am,v 1.18.10.1 2005/10/30 21:24:54 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -65,7 +65,7 @@ distcheck.log: force
 	@if [ -f $@ ] ; then $(MV) $@ $@~ ; fi
 	@$(ECHO) "Logging \"make distcheck\" to $@ ..."
 	@$(ECHO) Tests started `$(DATE)` > $@.tmp
-	$(MAKE) distcheck 2>&1 | cat >> $@.tmp
+	-$(MAKE) distcheck >> $@.tmp 2>&1
 	-$(MV) $@.tmp $@
 	$(TAIL) -n 5 $@
 

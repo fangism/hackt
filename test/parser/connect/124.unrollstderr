@@ -1,0 +1,89 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	7	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    array = process-definition (defined) array(
+        bool<> x
+      )
+      In definition "array", we have: {
+      Instances:
+        composite = bool<> composite
+        x = bool<> x
+      footprint: {
+        bool^0 composite (instantiated) = ::array::x 
+        bool^0 x (instantiated) = ::array::composite 
+      }
+      }
+
+    foo = process-definition (defined) foo(
+        array<> q
+      )
+      In definition "foo", we have: {
+      Instances:
+        p = array<> p
+        q = array<> q
+      footprint: {
+        process array<>^0 p (instantiated) = ::foo::q (
+          bool^0 x (instantiated) = ::foo::p.x 
+        )
+        process array<>^0 q (instantiated) = ::foo::p (
+          bool^0 x (instantiated) = ::foo::q.x 
+        )
+      }
+      }
+
+  Instances:
+    x = process foo<>^0 x (instantiated) = ::x (
+      process array<>^0 q (instantiated) = ::x.q (
+        bool^0 x (instantiated) = ::x.q.x 
+      )
+    )
+}
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.3 2005/10/08 01:39:54 fang Exp $
+	$Id: global_entry.tcc,v 1.3.4.1 2005/10/30 21:24:59 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -331,13 +331,19 @@ struct global_entry<Tag>::alias_to_string_transformer :
 /**
 	Accumulates aliases at each level of the instance hierarchy
 	in the alias_string_set for alias generation.  
+	TODO: May need to collect aliases at multiple levels of hierarchy!
  */
 template <class Tag>
 void
 global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 		const footprint& topfp, const state_manager& sm) const {
+	STACKTRACE_VERBOSE;
 	const port_alias_tracker* _alias_tracker;
 	if (parent_tag_value) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "have parent_tag_value = "
+			<< parent_tag_value << endl;
+#endif
 		INVARIANT(parent_tag_value == PROCESS);
 		const global_entry<process_tag>&
 			p_ent(extract_parent_entry<process_tag>(sm, *this));
@@ -346,6 +352,9 @@ global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 		_alias_tracker = &p_ent._frame._footprint
 				->get_scope_alias_tracker();
 	} else {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "have parent_tag_value = 0" << endl;
+#endif
 		_alias_tracker = &topfp.get_scope_alias_tracker();
 	}
 	typedef	typename port_alias_tracker::tracker_map_type<Tag>::type
@@ -354,6 +363,9 @@ global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 						const_map_iterator;
 	const tracker_map_type&	// a map<size_t, alias_reference_set<Tag> >
 		tm(_alias_tracker->template get_id_map<Tag>());
+#if 0
+	_alias_tracker->dump(cerr << "***" << endl) << endl << "***" << endl;
+#endif
 	const const_map_iterator a(tm.find(local_offset));
 	al.push_back();		// empty entry, new list
 	/***
