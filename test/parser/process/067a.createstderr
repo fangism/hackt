@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
@@ -17,7 +17,7 @@ Persistent Object Manager text dump:
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	276
-	16	##ADDR##	proccoll	1	#HEAD#	#TAIL#	37
+	16	##ADDR##	proccoll	1	#HEAD#	#TAIL#	38
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -30,20 +30,20 @@ Persistent Object Manager text dump:
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	107
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	111
+	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	112
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

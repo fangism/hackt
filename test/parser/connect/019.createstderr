@@ -5,18 +5,18 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	proccoll	2	#HEAD#	#TAIL#	262
+	10	##ADDR##	proccoll	2	#HEAD#	#TAIL#	263
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	2	#HEAD#	#TAIL#	262
+	15	##ADDR##	proccoll	2	#HEAD#	#TAIL#	263
 	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28

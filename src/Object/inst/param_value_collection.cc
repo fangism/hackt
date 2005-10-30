@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.4 2005/10/25 20:51:55 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.5 2005/10/30 22:00:21 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -105,7 +105,7 @@ param_value_collection::dump(ostream& o) const {
  */
 bool
 param_value_collection::may_be_initialized(void) const {
-	if (dimensions || is_template_formal())
+	if (dimensions || is_template_formal() || is_loop_variable())
 		return true;
 	else {
 		// is not a template formal, thus we interpret
@@ -132,7 +132,7 @@ bool
 param_value_collection::must_be_initialized(void) const {
 	if (dimensions)
 		return false;
-	else if (is_template_formal())
+	else if (is_template_formal() || is_loop_variable())
 		return true;
 	else {
 		// is not a template formal, thus we interpret

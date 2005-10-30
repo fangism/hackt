@@ -1,0 +1,4 @@
+ERROR: Scalar bool^0 already instantiated!
+Error resolving loop-body:
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

@@ -1,0 +1,2 @@
+ERROR: type of redeclaration of b does not match previous declaration: 
+	was: bool<>, got: int<32> ERROR!  [11:5]

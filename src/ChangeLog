@@ -1,5 +1,96 @@
 "ChangeLog"
 
+2005-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-62-merged-flow-01-08:
+	  Merged -flow-01 branch:
+	  Summary: flow control (loops and conditionals) work in
+		sequentially unrolled scopes.  
+
+
+2005-10-30	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-08:
+	  Added a few lines of (disabled) debug code.
+	  Discovered cflat bug in cases flow/031, connect/122-126.
+		Missing aliases to private subinstances.
+		All other compile phases through alloc are correct, however.  
+	  Bunch of test cases added.  
+	  Closing this branch early to focus on critical cflat bug.  
+		TODO: connect prs tests! to check for correct aliases
+
+
+2005-10-29	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-07:
+	  First batch of tests and fixes involving conditional scopes.  
+	  index_collection (inst_stmt pointer collections)
+		have been augmented to include predicate flag, 
+		indicating whether or not statement was inside some conditional
+		scope.  Consequentially, object binary sizes have grown
+		by one byte per instantiation_statement pointer.  
+		Tests have been updated accordingly.  
+	  parser::context now tracks whether or not context is in 
+		conditional scope.  
+	  scopespace::add_instance() when checking for static index overlap,
+		disregard all predicated instantiations for now.  
+
+
+2005-10-28	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-06:
+	  Added code for conditional instance management bodies (untested).
+	  Implemented missing pbool_expr::unroll_resolve_value methods, 
+		how was this missing before and unnoticed?
+	  Fixed some minor dump indentation.  
+	  TODO: test cases for conditional scopes, nesting, crazy stuff...
+
+
+2005-10-27	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-05:
+	  No code revision: just new batch of test cases.  
+
+
+	* ARTXX-00-01-04-main-00-61-flow-01-04:
+	  Trivially implemented unroll/create_unique for loop-scopes.
+	  Passes basic test cases so far in parser/flow.  
+	  TODO: crazy test cases, move loops inside definitions...
+
+
+2005-10-26	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-03:
+	  Finished loop_instantiation::check_build().
+	  Created class context::loop_scope_frame.
+	  entity::param_value_collection::may_be_initialized():
+		add || is_loop_variable, which counts as initialized.
+	  TODO: make flow/000.in test case work.
+
+
+	* ARTXX-00-01-04-main-00-61-flow-01-02:
+	  More cleaning up, using helper classes to balance parser::context
+		manipulations, classes context::*_frame.  
+	  TODO: finish loop_instantiation::check_build() next.  
+
+
+	* ARTXX-00-01-04-main-00-61-flow-01-01:
+	  Branch for flow control in sequential scopes: 
+		loops and conditionals.  
+	  Moved PRS::meta_loop_base class into unroll/meta_loop_base.h, 
+		for re-use with loop-scopes.  
+	  parse_context's current_open definition now managed by
+		parser::context::definition_frame<DefType> template
+		to automatically balance context frame.  
+	  Started parser::loop_instantiation::check_build().
+	  Started entity::loop_scope class method definitions.  
+	  Eliminated parser::context::master_instance_list member,
+		using current_sequential_scope instead (much cleaner!).  
+	  TODO: Balance sequential scope with context member class.
+	  TODO: clean up recent switches.  
+	  NOTE: first test in parser/flow not complete yet, expect 6 failures.  
+
+
 2005-10-25	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-merged-PRS-02-11:

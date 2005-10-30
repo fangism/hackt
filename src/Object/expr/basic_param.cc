@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.6 2005/10/25 20:51:49 fang Exp $
+ 	$Id: basic_param.cc,v 1.7 2005/10/30 22:00:21 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -442,20 +442,20 @@ pint_const::make_param_expression_assignment_private(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-pint_const::unroll_resolve_value(const unroll_context& c, value_type& i) const {
+pint_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 	i = val;
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_param>
-pint_const::unroll_resolve(const unroll_context& c) const {
+pint_const::unroll_resolve(const unroll_context&) const {
 	return count_ptr<const_param>(new pint_const(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_index>
-pint_const::unroll_resolve_index(const unroll_context& c) const {
+pint_const::unroll_resolve_index(const unroll_context&) const {
 	return count_ptr<const_index>(new pint_const(*this));
 }
 
@@ -466,7 +466,7 @@ pint_const::unroll_resolve_index(const unroll_context& c) const {
  */
 bool
 pint_const::operator < (const const_param& p) const {
-	const pint_const* pp(IS_A(const pint_const*, &p));
+	const pint_const* const pp(IS_A(const pint_const*, &p));
 	if (pp) {
 		return val < pp->val;
 	} else {
@@ -561,6 +561,13 @@ pbool_const::resolve_dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 pbool_const::resolve_value(value_type& i) const {
+	i = val;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+pbool_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 	i = val;
 	return good_bool(true);
 }

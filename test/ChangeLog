@@ -1,5 +1,17 @@
 # "test/ChangeLog"
 
+2005-10-27	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-04:
+	  Finally figured out how to redirect stderr+stdout without going 
+		through cat.  Just append file descriptor combiner at the end.
+		e.g. foo > log 2>&1.
+		Now test scripts don't have to execute same program twice
+		to get exit status and log files separately.  
+		I love Bourne shell (/bin/sh).  
+	  Updated *.sh.in test scripts accordingly.  
+
+
 2005-10-25	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-60-merged-PRS-02-11:

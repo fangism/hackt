@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.4 2005/10/25 20:51:55 fang Exp $
+ 	$Id: value_collection.tcc,v 1.5 2005/10/30 22:00:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -442,6 +442,16 @@ VALUE_ARRAY_TEMPLATE_SIGNATURE
 bool
 VALUE_ARRAY_CLASS::is_partially_unrolled(void) const {
 	return !collection.empty();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Arrays cannot be loop variables.  
+ */
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+bool
+VALUE_ARRAY_CLASS::is_loop_variable(void) const {
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

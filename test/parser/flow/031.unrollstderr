@@ -1,0 +1,325 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	212
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	17	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	31	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	34	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	relatexp	0	#HEAD#	#TAIL#	22
+	38	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	44	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	49	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	52	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	58	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	46
+	64	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	1942
+	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	66	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	67	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	1343
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    prime_array = process-definition (defined) prime_array<
+      pint<> P
+      >(
+        bool<> x with indices: {
+          [0..::prime_array::P+1-1]
+        }
+
+      )
+      In definition "prime_array", we have: {
+      Parameters:
+        P = pint<> P
+      Instances:
+        composite = bool<> composite
+        x = bool<> x with indices: {
+          [0..::prime_array::P+1-1]
+        }
+
+      footprint collection: {
+        <100> {
+          pint^0 P value: ?
+          bool^0 composite (instantiated) = ::prime_array::x[0] 
+          bool^1 x with indices: {
+          }
+            unrolled indices: {
+              0 = ::prime_array::x[1] 
+              1 = ::prime_array::x[4] 
+              2 = ::prime_array::x[2] 
+              3 = ::prime_array::x[3] 
+              4 = ::prime_array::x[6] 
+              5 = ::prime_array::x[5] 
+              6 = ::prime_array::x[8] 
+              7 = ::prime_array::x[7] 
+              8 = ::prime_array::x[10] 
+              9 = ::prime_array::x[15] 
+              10 = ::prime_array::x[12] 
+              11 = ::prime_array::x[11] 
+              12 = ::prime_array::x[14] 
+              13 = ::prime_array::x[13] 
+              14 = ::prime_array::x[16] 
+              15 = ::prime_array::x[21] 
+              16 = ::prime_array::x[18] 
+              17 = ::prime_array::x[17] 
+              18 = ::prime_array::x[20] 
+              19 = ::prime_array::x[19] 
+              20 = ::prime_array::x[22] 
+              21 = ::prime_array::x[27] 
+              22 = ::prime_array::x[24] 
+              23 = ::prime_array::x[23] 
+              24 = ::prime_array::x[26] 
+              25 = ::prime_array::x[35] 
+              26 = ::prime_array::x[28] 
+              27 = ::prime_array::x[33] 
+              28 = ::prime_array::x[30] 
+              29 = ::prime_array::x[29] 
+              30 = ::prime_array::x[32] 
+              31 = ::prime_array::x[31] 
+              32 = ::prime_array::x[34] 
+              33 = ::prime_array::x[39] 
+              34 = ::prime_array::x[36] 
+              35 = ::prime_array::x[55] 
+              36 = ::prime_array::x[38] 
+              37 = ::prime_array::x[37] 
+              38 = ::prime_array::x[40] 
+              39 = ::prime_array::x[45] 
+              40 = ::prime_array::x[42] 
+              41 = ::prime_array::x[41] 
+              42 = ::prime_array::x[44] 
+              43 = ::prime_array::x[43] 
+              44 = ::prime_array::x[46] 
+              45 = ::prime_array::x[51] 
+              46 = ::prime_array::x[48] 
+              47 = ::prime_array::x[47] 
+              48 = ::prime_array::x[50] 
+              49 = ::prime_array::x[77] 
+              50 = ::prime_array::x[52] 
+              51 = ::prime_array::x[57] 
+              52 = ::prime_array::x[54] 
+              53 = ::prime_array::x[53] 
+              54 = ::prime_array::x[56] 
+              55 = ::prime_array::x[65] 
+              56 = ::prime_array::x[58] 
+              57 = ::prime_array::x[63] 
+              58 = ::prime_array::x[60] 
+              59 = ::prime_array::x[59] 
+              60 = ::prime_array::x[62] 
+              61 = ::prime_array::x[61] 
+              62 = ::prime_array::x[64] 
+              63 = ::prime_array::x[69] 
+              64 = ::prime_array::x[66] 
+              65 = ::prime_array::x[85] 
+              66 = ::prime_array::x[68] 
+              67 = ::prime_array::x[67] 
+              68 = ::prime_array::x[70] 
+              69 = ::prime_array::x[75] 
+              70 = ::prime_array::x[72] 
+              71 = ::prime_array::x[71] 
+              72 = ::prime_array::x[74] 
+              73 = ::prime_array::x[73] 
+              74 = ::prime_array::x[76] 
+              75 = ::prime_array::x[81] 
+              76 = ::prime_array::x[78] 
+              77 = ::prime_array::x[91] 
+              78 = ::prime_array::x[80] 
+              79 = ::prime_array::x[79] 
+              80 = ::prime_array::x[82] 
+              81 = ::prime_array::x[87] 
+              82 = ::prime_array::x[84] 
+              83 = ::prime_array::x[83] 
+              84 = ::prime_array::x[86] 
+              85 = ::prime_array::x[49] 
+              86 = ::prime_array::x[88] 
+              87 = ::prime_array::x[93] 
+              88 = ::prime_array::x[90] 
+              89 = ::prime_array::x[89] 
+              90 = ::prime_array::x[92] 
+              91 = ::prime_array::x[95] 
+              92 = ::prime_array::x[94] 
+              93 = ::prime_array::x[25] 
+              94 = ::prime_array::x[96] 
+              95 = ::prime_array::x[99] 
+              96 = ::prime_array::x[98] 
+              97 = ::prime_array::x[97] 
+              98 = ::prime_array::x[9] 
+              99 = ::prime_array::x[100] 
+              100 = ::prime_array::composite 
+            }
+        }
+      }
+      }
+
+  Instances:
+    p = process prime_array<100>^0 p (instantiated) = ::p (
+      bool^1 x with indices: {
+        [0..::prime_array::P+1-1]
+      }
+        unrolled indices: {
+          0 = ::p.x[0] 
+          1 = ::p.x[1] 
+          2 = ::p.x[2] 
+          3 = ::p.x[3] 
+          4 = ::p.x[4] 
+          5 = ::p.x[5] 
+          6 = ::p.x[6] 
+          7 = ::p.x[7] 
+          8 = ::p.x[8] 
+          9 = ::p.x[9] 
+          10 = ::p.x[10] 
+          11 = ::p.x[11] 
+          12 = ::p.x[12] 
+          13 = ::p.x[13] 
+          14 = ::p.x[14] 
+          15 = ::p.x[15] 
+          16 = ::p.x[16] 
+          17 = ::p.x[17] 
+          18 = ::p.x[18] 
+          19 = ::p.x[19] 
+          20 = ::p.x[20] 
+          21 = ::p.x[21] 
+          22 = ::p.x[22] 
+          23 = ::p.x[23] 
+          24 = ::p.x[24] 
+          25 = ::p.x[25] 
+          26 = ::p.x[26] 
+          27 = ::p.x[27] 
+          28 = ::p.x[28] 
+          29 = ::p.x[29] 
+          30 = ::p.x[30] 
+          31 = ::p.x[31] 
+          32 = ::p.x[32] 
+          33 = ::p.x[33] 
+          34 = ::p.x[34] 
+          35 = ::p.x[35] 
+          36 = ::p.x[36] 
+          37 = ::p.x[37] 
+          38 = ::p.x[38] 
+          39 = ::p.x[39] 
+          40 = ::p.x[40] 
+          41 = ::p.x[41] 
+          42 = ::p.x[42] 
+          43 = ::p.x[43] 
+          44 = ::p.x[44] 
+          45 = ::p.x[45] 
+          46 = ::p.x[46] 
+          47 = ::p.x[47] 
+          48 = ::p.x[48] 
+          49 = ::p.x[49] 
+          50 = ::p.x[50] 
+          51 = ::p.x[51] 
+          52 = ::p.x[52] 
+          53 = ::p.x[53] 
+          54 = ::p.x[54] 
+          55 = ::p.x[55] 
+          56 = ::p.x[56] 
+          57 = ::p.x[57] 
+          58 = ::p.x[58] 
+          59 = ::p.x[59] 
+          60 = ::p.x[60] 
+          61 = ::p.x[61] 
+          62 = ::p.x[62] 
+          63 = ::p.x[63] 
+          64 = ::p.x[64] 
+          65 = ::p.x[65] 
+          66 = ::p.x[66] 
+          67 = ::p.x[67] 
+          68 = ::p.x[68] 
+          69 = ::p.x[69] 
+          70 = ::p.x[70] 
+          71 = ::p.x[71] 
+          72 = ::p.x[72] 
+          73 = ::p.x[73] 
+          74 = ::p.x[74] 
+          75 = ::p.x[75] 
+          76 = ::p.x[76] 
+          77 = ::p.x[77] 
+          78 = ::p.x[78] 
+          79 = ::p.x[79] 
+          80 = ::p.x[80] 
+          81 = ::p.x[81] 
+          82 = ::p.x[82] 
+          83 = ::p.x[83] 
+          84 = ::p.x[84] 
+          85 = ::p.x[85] 
+          86 = ::p.x[86] 
+          87 = ::p.x[87] 
+          88 = ::p.x[88] 
+          89 = ::p.x[89] 
+          90 = ::p.x[90] 
+          91 = ::p.x[91] 
+          92 = ::p.x[92] 
+          93 = ::p.x[93] 
+          94 = ::p.x[94] 
+          95 = ::p.x[95] 
+          96 = ::p.x[96] 
+          97 = ::p.x[97] 
+          98 = ::p.x[98] 
+          99 = ::p.x[99] 
+          100 = ::p.x[100] 
+        }
+    )
+}
+

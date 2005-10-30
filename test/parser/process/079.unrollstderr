@@ -5,9 +5,9 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
@@ -21,11 +21,11 @@ Persistent Object Manager text dump:
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
 	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	208
-	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	23	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	proccoll	1	#HEAD#	#TAIL#	37
+	24	##ADDR##	proccoll	1	#HEAD#	#TAIL#	38
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -75,20 +75,20 @@ Persistent Object Manager text dump:
 	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	72	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	84
-	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	84
-	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	85
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	85
+	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
 	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	79	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	83	##ADDR##	proccoll	1	#HEAD#	#TAIL#	88
 	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	87	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	86	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	69
+	87	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	69
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-10-30	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-62-merged-flow-01-08:
+	  Merged flow-01 branch.
+
+
+2005-10-28	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-61-flow-01-07:
+	  Contributed scripts/backup_repository.sh, self-explanatory.  
+
+
 2005-10-25	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-merged-PRS-02-11:

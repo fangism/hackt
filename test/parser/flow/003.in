@@ -1,0 +1,9 @@
+// "003.in"
+// copy-modified from "002.in"
+// basic top-level instantiation loop
+
+(;i:2:
+bool x[i..i];
+x[i] = x[0];
+)
+

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.7 2005/10/25 20:51:49 fang Exp $
+ 	$Id: definition.cc,v 1.8 2005/10/30 22:00:20 fang Exp $
  */
 
 #ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
@@ -366,7 +366,9 @@ definition_base::add_strict_template_formal(
 	// this creates and adds to the definition
 	// and bi-links statement to collection
 	const never_ptr<const param_value_collection>
-		pf(ss->add_instance(i, id).is_a<const param_value_collection>());
+		pf(ss->add_instance(i, id, false)
+			.is_a<const param_value_collection>());
+		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
 
@@ -400,7 +402,9 @@ definition_base::add_relaxed_template_formal(
 	scopespace* ss = IS_A(scopespace*, this);
 	NEVER_NULL(ss);
 	const never_ptr<const param_value_collection>
-		pf(ss->add_instance(i, id).is_a<const param_value_collection>());
+		pf(ss->add_instance(i, id, false)
+			.is_a<const param_value_collection>());
+		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
 	template_formals.add_relaxed_template_formal(pf);
@@ -801,8 +805,9 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	}
 	}
 
-	const return_type pf(add_instance(f, id)
+	const return_type pf(add_instance(f, id, false)
 		.is_a<const physical_instance_collection>());
+		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -1896,8 +1901,9 @@ user_def_datatype::add_port_formal(
 	}
 	}
 
-	const return_type pf(add_instance(f, id)
+	const return_type pf(add_instance(f, id, false)
 		.is_a<const physical_instance_collection>());
+		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 
@@ -2516,8 +2522,9 @@ process_definition::add_port_formal(
 	}
 	}
 
-	const return_type pf(add_instance(f, id)
+	const return_type pf(add_instance(f, id, false)
 		.is_a<const physical_instance_collection>());
+		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
 

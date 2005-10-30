@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	466
+	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	474
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
@@ -59,37 +59,37 @@ In namespace "", we have: {
       [5..5]
     }
       unrolled indices: {
-        0 = ::foo[0]
-        1 = ::foo[1]
-        2 = ::foo[2]
-        3 = ::foo[3]
-        4 = ::foo[4]
-        5 = ::foo[5]
-        6 = ::foo[6]
-        7 = ::foo[7]
-        8 = ::foo[8]
-        9 = ::foo[9]
-        10 = ::foo[10]
-        11 = ::foo[11]
-        12 = ::foo[12]
-        15 = ::foo[15]
-        16 = ::foo[16]
-        17 = ::foo[17]
-        18 = ::foo[18]
-        19 = ::foo[19]
-        20 = ::foo[20]
-        21 = ::foo[21]
-        22 = ::foo[22]
-        23 = ::foo[23]
-        24 = ::foo[24]
-        25 = ::foo[25]
-        26 = ::foo[26]
-        27 = ::foo[27]
-        28 = ::foo[28]
-        29 = ::foo[29]
-        40 = ::foo[40]
-        41 = ::foo[41]
-        42 = ::foo[42]
+        0 = ::foo[0] 
+        1 = ::foo[1] 
+        2 = ::foo[2] 
+        3 = ::foo[3] 
+        4 = ::foo[4] 
+        5 = ::foo[5] 
+        6 = ::foo[6] 
+        7 = ::foo[7] 
+        8 = ::foo[8] 
+        9 = ::foo[9] 
+        10 = ::foo[10] 
+        11 = ::foo[11] 
+        12 = ::foo[12] 
+        15 = ::foo[15] 
+        16 = ::foo[16] 
+        17 = ::foo[17] 
+        18 = ::foo[18] 
+        19 = ::foo[19] 
+        20 = ::foo[20] 
+        21 = ::foo[21] 
+        22 = ::foo[22] 
+        23 = ::foo[23] 
+        24 = ::foo[24] 
+        25 = ::foo[25] 
+        26 = ::foo[26] 
+        27 = ::foo[27] 
+        28 = ::foo[28] 
+        29 = ::foo[29] 
+        40 = ::foo[40] 
+        41 = ::foo[41] 
+        42 = ::foo[42] 
       }
 }
 

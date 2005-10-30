@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.4 2005/10/25 20:51:46 fang Exp $
+#	$Id: TODO,v 1.5 2005/10/30 22:00:17 fang Exp $
 
 ===============================================================================
 loop development:
@@ -81,6 +81,15 @@ PRS and CHP
 
 pass-gates:
 	add to parser, and intermediate representation
+
+===============================================================================
+Expression resolutions:
+	consider writing covariant member functions for
+		many methods that implement a pure virtual base function.  
+	caveat: covariant return types were not properly implemented
+		until g++-3.4.x, therefore we'd have to check for
+		covariant correctness during configure and work-around.
+		Too much effort for now... just screw it.  
 
 ===============================================================================
 KNOWN BUGS

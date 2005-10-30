@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_instance.cc"
 	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.30 2005/07/23 06:51:18 fang Exp $
+	$Id: art_parser_instance.cc,v 1.31 2005/10/30 22:00:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_INSTANCE_CC__
@@ -26,15 +26,21 @@
 
 #include "Object/common/namespace.h"
 #include "Object/inst/instance_collection_base.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
-#include "Object/expr/param_expr.h"
+#include "Object/expr/pbool_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/port_connection.h"
+#include "Object/unroll/loop_scope.h"
+#include "Object/unroll/conditional_scope.h"
+
+#include "common/TODO.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -94,6 +100,12 @@ using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;
 using entity::dynamic_param_expr_list;
+using entity::meta_range_expr;
+using entity::meta_loop_base;
+using entity::loop_scope;
+using entity::conditional_scope;
+using entity::pint_scalar;
+using entity::pbool_expr;
 
 //=============================================================================
 // class instance_management method definitions
@@ -616,12 +628,13 @@ instance_declaration::rightmost(void) const {
 	return ids->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 instance_declaration::check_build(context& c) const {
 	STACKTRACE("instance_declaration::check_build()");
 	const count_ptr<const fundamental_type_reference>
 		ftr(type->check_type(c));
-	c.set_current_fundamental_type(ftr);
+	const context::fundamental_type_frame _ftf(c, ftr);
 
 	if (ftr) {
 		ids->check_build(c);		// return value?
@@ -630,7 +643,6 @@ instance_declaration::check_build(context& c) const {
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
-	c.reset_current_fundamental_type();	// the type to instantiate
 	return c.top_namespace();
 }
 
@@ -927,8 +939,31 @@ loop_instantiation::rightmost(void) const {
  */
 never_ptr<const object>
 loop_instantiation::check_build(context& c) const {
-	cerr << "Fang, write loop_instantiation::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+	typedef	never_ptr<const object>		return_type;
+	const range::meta_return_type r(rng->check_meta_index(c));
+	if (!r) {
+		cerr << "Error in loop range at " << where(*rng) << endl;
+		THROW_EXIT;
+	}
+	const meta_loop_base::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(r));
+	NEVER_NULL(loop_range);
+{
+	const context::loop_var_frame _lvf(c, *index);
+	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		THROW_EXIT;
+	}
+	excl_ptr<loop_scope> ls(new loop_scope(loop_ind, loop_range));
+	NEVER_NULL(ls);
+{
+	const context::loop_scope_frame _lsf(c, ls);
+	body->check_build(c);
+}
+}
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -957,10 +992,25 @@ guarded_definition_body::rightmost(void) const {
 	return body->rightmost();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 guarded_definition_body::check_build(context& c) const {
-	cerr << "Fang, finish guarded_definition_body::check_build()!" << endl;
-	return never_ptr<const object>(NULL);
+	typedef	never_ptr<const object>		return_type;
+	const expr::meta_return_type g(guard->check_meta_expr(c));
+	const count_ptr<pbool_expr> guard_expr(g.is_a<pbool_expr>());
+	if (!guard_expr) {
+		cerr << "Error parsing guard expression at " <<
+			where(*guard) << endl;
+		THROW_EXIT;
+	}
+	excl_ptr<conditional_scope>
+		ls(new conditional_scope(guard_expr));
+	NEVER_NULL(ls);
+{
+	const context::conditional_scope_frame _csf(c, ls);
+	body->check_build(c);
+}
+	return return_type(NULL);
 }
 
 //=============================================================================
@@ -1004,8 +1054,12 @@ conditional_instantiation::rightmost(void) const {
  */
 never_ptr<const object>
 conditional_instantiation::check_build(context& c) const {
-	cerr << "Fang, write conditional_instantiation::check_build()!" << endl;
+#if 0
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
+#else
+	return gd->check_build(c);
+#endif
 }
 
 //=============================================================================
@@ -1033,7 +1087,7 @@ type_completion_statement::rightmost(void) const {
 
 never_ptr<const object>
 type_completion_statement::check_build(context& c) const {
-	cerr << "FANG, write type_completion_statement::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
@@ -1063,7 +1117,7 @@ type_completion_connection_statement::rightmost(void) const {
 
 never_ptr<const object>
 type_completion_connection_statement::check_build(context& c) const {
-	cerr << "FANG, write type_completion_connection_statement::check_build()!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 

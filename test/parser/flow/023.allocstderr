@@ -1,0 +1,5 @@
+globID	super		localID	canonical	footprint-frame
+[global int entries]
+1	(top)	-	1	i	
+[global bool entries]
+1	(top)	-	1	b	

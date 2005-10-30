@@ -1,0 +1,23 @@
+// "018.in"
+// copy-modified from "017.in"
+// should pass
+// checkers style aliases
+
+template <pint M,N>
+defproc checkers(bool m[M][N]) {
+	(;i:M:
+	(;j:N:
+		m[i][j] = m[(i+1)%M][(j+1)%N];		// down-right
+		m[(i+1)%M][j] = m[i][(j+1)%N];		// up-right
+	)
+	)
+}
+
+checkers<3,3>	a;		// should have 1 sub-nodes
+checkers<3,4>	b;		// should have 1 sub-nodes
+checkers<4,3>	c;		// should have 1 sub-nodes
+checkers<4,4>	d;		// should have 2 sub-nodes (red-black)
+
+// total of 5 unique nodes
+
+

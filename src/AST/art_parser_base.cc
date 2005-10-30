@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.cc"
 	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.28 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_base.cc,v 1.29 2005/10/30 22:00:17 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_BASE_CC__
@@ -509,14 +509,12 @@ namespace_body::check_build(context& c) const {
 		// name_space* ns = c.lookup_namespace(name);
 	// if so, open it up, and work with existing namespace
 	// otherwise register a new namespace, add it to context
-	c.open_namespace(*name);
+{
+	const context::namespace_frame _nf(c, *name);
 	// if there was error, would've exited...
-
 	if (body)			// may be NULL, which means empty
 		body->check_build(c);
-
-	c.close_namespace();
-
+}
 	// if no errors, return pointer to the namespace just processed
 	return c.top_namespace();
 }

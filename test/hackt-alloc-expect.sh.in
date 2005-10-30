@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-alloc-expect.sh.in"
-#	$Id: hackt-alloc-expect.sh.in,v 1.2 2005/09/14 15:30:38 fang Exp $
+#	$Id: hackt-alloc-expect.sh.in,v 1.3 2005/10/30 22:00:25 fang Exp $
 
 # NOTE: tepomrarily just uses stdout dump during execution
 # will updated later...
@@ -39,13 +39,11 @@ then
 	exit 1
 fi
 
-# see if it crashes first
-$alloc $bldroot.hacktobjcreate $bldroot.hacktobjalloc 2> $bldroot.allocdump
+$alloc $bldroot.hacktobjcreate $bldroot.hacktobjalloc > $bldroot.allocdump 2>&1
 
-# depending on exit status, take action
 case $? in
-	0) 
-		$dump $bldroot.hacktobjalloc 2>&1 | @CAT@ > $bldroot.allocdump
+	0)
+		$dump $bldroot.hacktobjalloc > $bldroot.allocdump 2>&1
 		break ;;
 	1) break ;;
 	*) exit 1 ;;
@@ -61,8 +59,8 @@ then
 fi
 
 # ignore whitespace differences
-@DIFF@ -buw $srcroot.allocstderr $bldroot.allocdump.filter 2>&1 | \
-	@CAT@ > $bldroot.allocdiff
+@DIFF@ -buw $srcroot.allocstderr $bldroot.allocdump.filter \
+	> $bldroot.allocdiff 2>&1
 
 if [ -s $bldroot.allocdiff ]
 then

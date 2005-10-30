@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
 	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	6	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	44
+	6	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	45
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
@@ -43,7 +43,7 @@ In namespace "", we have: {
               0 definitions
               0 typedefs
               Instances:
-                whazzup = int<32>^0 whazzup (instantiated) = ::yo::yo::yo::whazzup (1)
+                whazzup = int<32>^0 whazzup (instantiated) = ::yo::yo::yo::whazzup (1) 
             }
         }
     }

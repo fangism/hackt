@@ -1,0 +1,13 @@
+// "030.in"
+// testing nesting conditionals and loops
+// should pass
+
+pint M = 2;
+pint N = 3;
+
+(;i:15:
+[ i%M == 0 && i%N == 0 ->
+	bool b[i..i];
+]
+)
+

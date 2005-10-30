@@ -1,0 +1,95 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	179
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    ar = process-definition (defined) ar(
+        bool<> y
+      )
+      In definition "ar", we have: {
+      Instances:
+        y = bool<> y
+        z = bool<> z
+      footprint: {
+        bool^0 y (instantiated) = ::ar::z 
+        bool^0 z (instantiated) = ::ar::y 
+      }
+      }
+
+    array = process-definition (defined) array(
+        bool<> x
+      )
+      In definition "array", we have: {
+      Instances:
+        composite = bool<> composite
+        x = bool<> x
+      footprint: {
+        bool^0 composite (instantiated) = ::array::x 
+        bool^0 x (instantiated) = ::array::composite 
+      }
+      }
+
+  Instances:
+    A = process array<>^0 A (instantiated) = ::A (
+      bool^0 x (instantiated) = ::B.y 
+    )
+    B = process ar<>^0 B (instantiated) = ::B (
+      bool^0 y (instantiated) = ::d 
+    )
+    d = bool^0 d (instantiated) = ::A.x 
+}
+

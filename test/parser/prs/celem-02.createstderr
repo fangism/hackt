@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	332
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
-	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -43,8 +43,8 @@ Persistent Object Manager text dump:
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	40	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	56
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

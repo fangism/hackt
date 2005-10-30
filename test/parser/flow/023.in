@@ -1,0 +1,11 @@
+// "023.in"
+// testing conditional scopes
+// copy-modified from "021.in"
+
+[ true ->
+bool b;
+	[ true ->
+		int i;
+	]
+]
+

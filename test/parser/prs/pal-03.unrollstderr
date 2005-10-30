@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	237
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
-	8	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	30
+	8	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	31
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
@@ -17,14 +17,14 @@ Persistent Object Manager text dump:
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
 	15	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
 	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	37
+	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	24	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
@@ -76,15 +76,15 @@ Persistent Object Manager text dump:
 	72	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	230
 	73	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	75	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	75	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
 	76	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	77	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	81	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	82	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	234
-	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	82	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	235
+	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

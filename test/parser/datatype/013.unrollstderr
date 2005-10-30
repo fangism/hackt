@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
 	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
-	5	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	5	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
 	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
@@ -36,6 +36,6 @@ In namespace "", we have: {
       0 typedefs
     }
   Instances:
-    x = int<32>^0 x (instantiated) = ::x
+    x = int<32>^0 x (instantiated) = ::x 
 }
 

@@ -3,7 +3,7 @@
 	Parameter instance collection classes for ART.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.4 2005/10/25 20:51:55 fang Exp $
+	$Id: value_collection.h,v 1.5 2005/10/30 22:00:22 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -245,6 +245,9 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;
+
+	bool
+	is_loop_variable(void) const;
 
 	ostream&
 	dump_unrolled_values(ostream& o) const;

@@ -4,13 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	705
+	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	706
 	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	149
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	8	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	204
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	205
 	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -32,8 +32,8 @@ In namespace "", we have: {
     barf = process-definition (defined) barf(
       )
       In definition "barf", we have: {
-        footprint: {
-        }
+      footprint: {
+      }
       }
 
   Instances:

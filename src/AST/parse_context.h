@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.4 2005/10/25 20:51:48 fang Exp $
+	$Id: parse_context.h,v 1.5 2005/10/30 22:00:19 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -38,6 +38,8 @@ namespace entity {
 	class param_expr;
 	class param_expr_list;
 	class param_expression_assignment;
+	class loop_scope;
+	class conditional_scope;
 	struct pint_tag;
 	template <class, size_t> class value_array;
 }	// end namespace entity
@@ -74,6 +76,8 @@ using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
 using entity::value_array;
+using entity::loop_scope;
+using entity::conditional_scope;
 
 //=============================================================================
 // forward declarations
@@ -188,24 +192,6 @@ public:
 
 private:
 	/**
-		Consider a stack of contexts for instance_management_lists.
-		Push/pop when entering/leaving definition or
-		control scope.  
-		sequential_scope_stack?
-		Namespace change doesn't affect this stack!
-		The globally ordered (master) instance management list
-		should be at the bottom of the stack.  
-		Maintain multiple stacks? or unified stack?
-
-		This corresponds to the module class's 
-		globally ordered instance management list.  
-		This is where all globally ordered actions go.  
-	 */
-	// sequential_scope::instance_management_list_type&
-	list<sticky_ptr<const instance_management_base> >&
-						master_instance_list;
-
-	/**
 		Stupid implementation of switching between
 		strict and relaxed template parameters. 
 		This flag is manipulated by the methods:
@@ -215,19 +201,43 @@ private:
 	 */
 	bool					strict_template_mode;
 
+	/**
+		Whether or not current scope is in some conditional body.
+	 */
+	bool					in_conditional_scope;
+
 public:
+	explicit
 	context(module& m);
+
+private:
+	// private undefined copy-constructor
+	context(const context&);
+
+public:
 	~context();
 
 // TO DO: sort methods by where they are expected to be invoked
 //	i.e. from the syntax tree check_build, or from the symbol_table objects
 
+	/**
+		Class object for automatically balancing namespace stack.  
+	 */
+	class namespace_frame {
+		context& 		_context;
+	public:
+		namespace_frame(context&, const token_identifier&);
+		~namespace_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+private:
 	void
 	open_namespace(const token_identifier& id);
 
 	void
 	close_namespace(void);
 
+public:
 	void
 	using_namespace(const qualified_id& id);
 
@@ -240,7 +250,22 @@ public:
 	never_ptr<definition_base>
 	add_declaration(excl_ptr<definition_base>& d);
 
-// void	declare_process(const token_identifier& ps);
+	template <class DefType>
+	class definition_frame {
+		context&			_context;
+	public:
+		definition_frame(context&, const token_identifier&);
+		~definition_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+	class enum_definition_frame {
+		context&			_context;
+	public:
+		enum_definition_frame(context&, const token_identifier&);
+		~enum_definition_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+private:
 	template <class D>
 	void
 	open_definition(const token_identifier& ps);
@@ -256,10 +281,10 @@ public:
 	void
 	close_enum_definition(void);
 
+public:
 	void
 	declare_datatype(const token_identifier& ds);
 
-// void	declare_enum(const token_identifier& en);
 	good_bool
 	add_enum_member(const token_identifier& em);
 
@@ -276,11 +301,6 @@ public:
 	void
 	add_assignment(excl_ptr<const param_expression_assignment>& a);
 
-/**
-	Need to make distinctions:
-	call this get_current_named_scope.
-	Make another get_current_sequential_scope.
- */
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
 
@@ -311,16 +331,29 @@ public:
 		return current_open_definition;
 	}
 
+	/**
+		Manages current type of instantiation on stack.  
+	 */
+	class fundamental_type_frame {
+		context&		_context;
+	public:
+		fundamental_type_frame(context&,
+			const count_ptr<const fundamental_type_reference>&);
+		~fundamental_type_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+private:
 	void
 	set_current_fundamental_type(
 		const count_ptr<const fundamental_type_reference>&);
 
+	void
+	reset_current_fundamental_type(void);
+
+public:
 // never_ptr<const fundamental_type_reference>
 	count_ptr<const fundamental_type_reference>
 	get_current_fundamental_type(void) const;
-
-	void
-	reset_current_fundamental_type(void);
 
 	never_ptr<const object>
 	lookup_object(const qualified_id& id) const;
@@ -388,6 +421,7 @@ public:
 		Automatic loop-variable stack manager.  
 		Pushes onto stack during construction.  
 		Pops off stack at destruction time.  
+		Used for PRS rule-loops and expr-loops.  
 	 */
 	struct loop_var_frame {
 		context&			_context;
@@ -396,7 +430,26 @@ public:
 		~loop_var_frame();
 	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame
 
-// repeat for processes and channels...
+
+	/**
+		Loop scope frame for unroll-related instance management.
+		Used for top-level scopes and definition scopes.  
+	 */
+	struct loop_scope_frame {
+		context&			_context;
+		loop_scope_frame(context&, excl_ptr<loop_scope>&);
+		~loop_scope_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+	/**
+		Conditional scope frame for unroll-related instance management.
+	 */
+	struct conditional_scope_frame {
+		context&			_context;
+		const bool			parent_cond;
+		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
+		~conditional_scope_frame();
+	} __ATTRIBUTE_UNUSED__;
 
 	string
 	auto_indent(void) const;

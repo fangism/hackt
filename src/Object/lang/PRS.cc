@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.4 2005/10/25 20:51:56 fang Exp $
+	$Id: PRS.cc,v 1.5 2005/10/30 22:00:22 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -555,51 +555,6 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 // class prs_expr method definitions
 
 //=============================================================================
-// class meta_loop_base method definitions
-
-inline
-meta_loop_base::meta_loop_base() : ind_var(), range() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-meta_loop_base::meta_loop_base(const ind_var_ptr_type& i, 
-		const range_ptr_type& r) :
-		ind_var(i), range(r) {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-meta_loop_base::~meta_loop_base() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-meta_loop_base::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	NEVER_NULL(ind_var);
-	NEVER_NULL(range);
-	ind_var->collect_transient_info(m);
-	range->collect_transient_info(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-meta_loop_base::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
-	m.write_pointer(o, ind_var);
-	m.write_pointer(o, range);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-meta_loop_base::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
-	m.read_pointer(i, ind_var);
-	m.read_pointer(i, range);
-}
-
-//=============================================================================
 // class rule_loop method definitions
 
 rule_loop::rule_loop() : rule(), meta_loop_base(), rules() { }
@@ -621,7 +576,7 @@ ostream&
 rule_loop::dump(ostream& o, const rule_dump_context& c) const {
 	NEVER_NULL(ind_var);
 	NEVER_NULL(range);
-	o << auto_indent << '(' << ':' << ind_var->get_name() << ':';
+	o << auto_indent << "(:" << ind_var->get_name() << ':';
 	range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
 	{
 		INDENT_SECTION(o);
@@ -659,11 +614,6 @@ rule_loop::push_back(excl_ptr<rule>& r) {
 good_bool
 rule_loop::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-#if 0
-	STACKTRACE_VERBOSE;
-	FINISH_ME(Fang);
-	return good_bool(false);
-#else
 	// most of this copied from expr_loop_base::unroll...
 	// STACKTRACE_VERBOSE;
 	// first, resolve bounds of the loop range, using current context
@@ -676,14 +626,10 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	}
 	const pint_value_type min = cr.lower();
 	const pint_value_type max = cr.upper();
-#if 0
-	INVARIANT(min <= max);
-#else
 	// if range is empty or backwards, then ignore
 	if (min > max) {
 		return good_bool(true);
 	}
-#endif
 	// range gives us upper and lower bound of loop
 	// in a loop:
 	// create context chain of lookup
@@ -710,7 +656,6 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 		}
 	}
 	return good_bool(true);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

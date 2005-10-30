@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.4 2005/10/25 20:51:48 fang Exp $
+ 	$Id: parse_context.cc,v 1.5 2005/10/30 22:00:18 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -31,8 +31,9 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/unroll/alias_connection.h"
+#include "Object/unroll/loop_scope.h"
+#include "Object/unroll/conditional_scope.h"
 #include "Object/inst/physical_instance_collection.h"
-// #include "Object/inst/param_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/module.h"
 
@@ -75,8 +76,8 @@ context::context(module& m) :
 		sequential_scope_stack(), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
-		master_instance_list(m.instance_management_list), 
-		strict_template_mode(true)
+		strict_template_mode(true), 
+		in_conditional_scope(false)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -465,28 +466,9 @@ context::alias_definition(const never_ptr<const definition_base> d,
 void
 context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
-
 	STACKTRACE("context::add_connection()");
-	never_ptr<sequential_scope>
-		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	im_pointer_type imb(c);	// is not const, should be transferrable
-	NEVER_NULL(imb);
-	INVARIANT(!c);
-	if (seq_scope) {
-		seq_scope->append_instance_management(imb);
-	} else {
-		// should transfer ownership to the list
-#if 0
-		// not guaranteed to work :(
-		master_instance_list.push_back(imb);
-#else
-		// kludge
-		static im_pointer_type null(NULL);
-		master_instance_list.push_back(null);
-		master_instance_list.back() = imb;
-#endif
-		INVARIANT(master_instance_list.back());
-	}
+	current_sequential_scope->append_instance_management(imb);
 	INVARIANT(!imb);
 }
 
@@ -501,28 +483,9 @@ context::add_connection(excl_ptr<const meta_instance_reference_connection>& c) {
 void
 context::add_assignment(excl_ptr<const param_expression_assignment>& c) {
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
-
 	STACKTRACE("context::add_assignment()");
-	never_ptr<sequential_scope>
-		seq_scope(get_current_named_scope().is_a<sequential_scope>());
 	im_pointer_type imb(c);
-	NEVER_NULL(imb);
-	INVARIANT(!c);
-	if (seq_scope) {
-		seq_scope->append_instance_management(imb);
-	} else {
-		// should transfer ownership to the list
-#if 0
-		// not guaranteed to work :(
-		master_instance_list.push_back(imb);
-#else
-		// kludge
-		static im_pointer_type null(NULL);
-		master_instance_list.push_back(null);
-		master_instance_list.back() = imb;
-#endif
-		INVARIANT(master_instance_list.back());
-	}
+	current_sequential_scope->append_instance_management(imb);
 	INVARIANT(!imb);
 }
 
@@ -679,7 +642,8 @@ context::add_instance(const token_identifier& id,
 			current_fundamental_type, dim, a);
 	NEVER_NULL(inst_stmt);
 	const return_type
-		inst_base(current_named_scope->add_instance(inst_stmt, id));
+		inst_base(current_named_scope->add_instance(inst_stmt, id, 
+			in_conditional_scope));
 	// adds non-const back-reference
 
 	if (!inst_base) {
@@ -888,6 +852,48 @@ context::auto_indent(void) const {
 }
 
 //=============================================================================
+// class context::namespace_frame method definitions
+
+context::namespace_frame::namespace_frame(context& c, 
+		const token_identifier& i) : _context(c) {
+	_context.open_namespace(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+context::namespace_frame::~namespace_frame() {
+	_context.close_namespace();
+}
+
+//=============================================================================
+// class context::fundamental_type_frame method definitions
+
+context::fundamental_type_frame::fundamental_type_frame(context& c, 
+		const count_ptr<const fundamental_type_reference>& t) :
+		_context(c) {
+	_context.set_current_fundamental_type(t);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+context::fundamental_type_frame::~fundamental_type_frame() {
+	// if there was no error
+	if (_context.get_current_fundamental_type())
+		_context.reset_current_fundamental_type();
+}
+
+//=============================================================================
+// class context::enum_definition_frame method definitions
+
+context::enum_definition_frame::enum_definition_frame(context& c,
+		const token_identifier& i) : _context(c) {
+	_context.open_enum_definition(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+context::enum_definition_frame::~enum_definition_frame() {
+	_context.close_enum_definition();
+}
+
+//=============================================================================
 // struct context::loop_var_frame method definitions
 
 context::loop_var_frame::loop_var_frame(context& c,
@@ -902,12 +908,68 @@ context::loop_var_frame::~loop_var_frame() {
 }
 
 //=============================================================================
+// struct context::loop_scope_frame method definitions
+
+/**
+	Adde the new loop scope to the current sequential scope, 
+	then pushes it onto the sequential scope stack.  
+ */
+context::loop_scope_frame::loop_scope_frame(context& c, 
+		excl_ptr<loop_scope>& l) : _context(c) {
+	const never_ptr<sequential_scope> lss(l);
+	excl_ptr<const instance_management_base>
+		imb = l.as_a_xfer<const instance_management_base>();
+	_context.current_sequential_scope->append_instance_management(imb);
+	MUST_BE_NULL(l);
+	MUST_BE_NULL(imb);
+	_context.sequential_scope_stack.push(lss);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequential scope stack balancing destructor.  
+ */
+context::loop_scope_frame::~loop_scope_frame() {
+	_context.sequential_scope_stack.pop();
+}
+
+//=============================================================================
+// struct context::conditional_scope_frame method definitions
+
+/**
+	Adde the new conditional scope to the current sequential scope, 
+	then pushes it onto the sequential scope stack.  
+	Also saves status of the in_conditional_scope flag.
+ */
+context::conditional_scope_frame::conditional_scope_frame(context& c, 
+		excl_ptr<conditional_scope>& l) :
+		_context(c), parent_cond(c.in_conditional_scope) {
+	const never_ptr<sequential_scope> lss(l);
+	excl_ptr<const instance_management_base>
+		imb = l.as_a_xfer<const instance_management_base>();
+	_context.current_sequential_scope->append_instance_management(imb);
+	MUST_BE_NULL(l);
+	MUST_BE_NULL(imb);
+	_context.sequential_scope_stack.push(lss);
+	_context.in_conditional_scope = true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sequential scope stack balancing destructor.  
+	Also restores status of the in_conditional_scope flag.
+ */
+context::conditional_scope_frame::~conditional_scope_frame() {
+	_context.sequential_scope_stack.pop();
+	_context.in_conditional_scope = parent_cond;
+}
+
+//=============================================================================
 // explicit template method instantiations
 
-INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(process_definition)
-INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_chan)
-INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(user_def_datatype)
-// INSTANTIATE_CONTEXT_OPEN_CLOSE_DEFINITION(enum_datatype_def)
+template class context::definition_frame<process_definition>;
+template class context::definition_frame<user_def_chan>;
+template class context::definition_frame<user_def_datatype>;
 
 //=============================================================================
 }	// end namespace entity

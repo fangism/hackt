@@ -2,7 +2,7 @@
 	\file "AST/art_parser_definition.cc"
 	Class method definitions for ART::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.28 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_definition.cc,v 1.29 2005/10/30 22:00:18 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_DEFINITION_CC__
@@ -266,7 +266,7 @@ user_data_type_def::rightmost(void) const {
 never_ptr<const object>
 user_data_type_def::check_build(context& c) const {
 	STACKTRACE("user_data_type_def::check_build()");
-	user_chan_type_signature::return_type
+	const user_chan_type_signature::return_type
 		o(check_signature(c));
 	if (!o) {
 		cerr << "ERROR checking signature for data-type " << *id <<
@@ -275,14 +275,13 @@ user_data_type_def::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	// check if already defined?
-	c.open_definition<user_def_datatype>(*id);
+	const context::definition_frame<user_def_datatype> _cdf(c, *id);
 	if (!setb->check_datatype_CHP(c, true).good) {
 		THROW_EXIT;
 	}
 	if (!getb->check_datatype_CHP(c, false).good) {
 		THROW_EXIT;
 	}
-	c.close_definition<user_def_datatype>();
 	return c.top_namespace();
 }
 
@@ -420,8 +419,7 @@ enum_def::check_build(context& c) const {
 	never_ptr<const object> o(enum_signature::check_build(c));
 	if (!o)	return return_type(NULL);
 	// lookup and open definition
-//	c.open_definition<enum_datatype_def>(*id);	// marks as defined
-	c.open_enum_definition(*id);	// marks as defined
+	const context::enum_definition_frame _edf(c, *id);
 	o = members->check_build(c);	// use current_open_definition
 		// always returns NULL, will exit upon error
 #if 0
@@ -430,8 +428,6 @@ enum_def::check_build(context& c) const {
 		THROW_EXIT;
 	}
 #endif
-//	c.close_definition<enum_datatype_def>();
-	c.close_enum_definition();
 	return return_type(NULL);
 }
 
@@ -450,6 +446,7 @@ user_chan_type_signature::user_chan_type_signature(
 	NEVER_NULL(bct); NEVER_NULL(params);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DESTRUCTOR_INLINE
 user_chan_type_signature::~user_chan_type_signature() { }
 
@@ -463,7 +460,7 @@ user_chan_type_signature::check_signature(context& c) const {
 	STACKTRACE("user_chan_type_signature::check_signature()");
 	excl_ptr<definition_base>
 		cd(new user_def_chan(c.get_current_namespace(), *id));
-	never_ptr<user_def_chan>
+	const never_ptr<user_def_chan>
 		ncd(c.set_current_prototype(cd).is_a<user_def_chan>());
 	NEVER_NULL(ncd);
 	if (temp_spec) {
@@ -584,14 +581,13 @@ user_chan_type_def::check_build(context& c) const {
 	}
 	// only problem from here is if channel type was already defined.  
 	// in which case, open_channel_definition will THROW_EXIT;
-	c.open_definition<user_def_chan>(*id);		// will handle errors
+	const context::definition_frame<user_def_chan> _cdf(c, *id);
 	if (!sendb->check_channel_CHP(c, true).good) {
 		THROW_EXIT;
 	}
 	if (!recvb->check_channel_CHP(c, false).good) {
 		THROW_EXIT;
 	}
-	c.close_definition<user_def_chan>();
 	// nothing better to do
 	return c.top_namespace();
 }
@@ -747,11 +743,10 @@ process_def::check_build(context& c) const {
 
 	// only problem from here is if process was already defined.  
 	// in which case, open_process_definition will THROW_EXIT;
-	c.open_definition<process_definition>(*id);	// will handle errors
+	const context::definition_frame<process_definition> _cdf(c, *id);
 	body->check_build(c);
 	// useless return value, would've exited upon error already
 
-	c.close_definition<process_definition>();
 	// nothing better to do
 	return c.top_namespace();
 }

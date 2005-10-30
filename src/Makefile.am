@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.78 2005/10/25 20:51:46 fang Exp $
+#	$Id: Makefile.am,v 1.79 2005/10/30 22:00:17 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -160,6 +160,8 @@ OBJECT_CC_FILES = \
 	Object/unroll/instantiation_statement.cc \
 	Object/unroll/loop_scope.cc \
 	Object/unroll/meta_instance_reference_connection.cc \
+	Object/unroll/meta_conditional_base.cc \
+	Object/unroll/meta_loop_base.cc \
 	Object/unroll/unroll_context.cc \
 	Object/module.cc \
 	Object/global_entry.cc \
@@ -234,6 +236,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
 	Object/common/scopespace.h \
+	Object/common/predicated_inst_stmt_ptr.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags.h \
 	Object/traits/chan_traits.h \

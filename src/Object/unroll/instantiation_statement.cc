@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.5 2005/10/25 20:51:58 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.6 2005/10/30 22:00:23 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -128,6 +128,9 @@ instantiation_statement_base::~instantiation_statement_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: auto_indent.
+ */
 ostream&
 instantiation_statement_base::dump(ostream& o) const {
 //	STACKTRACE("instantation_statement::dump()");

@@ -1,0 +1,66 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	240
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    N = pint^0 N (init = 3) value: 3
+  Instances:
+    x = bool^3 x with indices: {
+      [::i..::i][::j..::j][::k..::k]
+    }
+      unrolled indices: {
+        [0][0][0] = ::x[0][0][0] 
+        [0][0][1] = ::x[0][0][1] 
+        [0][0][2] = ::x[0][0][2] 
+        [0][1][1] = ::x[0][1][1] 
+        [0][1][2] = ::x[0][1][2] 
+        [0][2][2] = ::x[0][2][2] 
+        [1][1][1] = ::x[1][1][1] 
+        [1][1][2] = ::x[1][1][2] 
+        [1][2][2] = ::x[1][2][2] 
+        [2][2][2] = ::x[2][2][2] 
+      }
+}
+

@@ -1,8 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.4 2005/10/25 20:51:56 fang Exp $
-	TODO: support loop expressions of AND and OR.  
+	$Id: PRS.h,v 1.5 2005/10/30 22:00:22 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
@@ -10,8 +9,7 @@
 
 #include "Object/art_object_fwd.h"
 #include "Object/lang/PRS_base.h"
-// #include "Object/expr/pint_range.h"
-// #include "Object/inst/pint_value_collection.h"
+#include "Object/unroll/meta_loop_base.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 
@@ -219,34 +217,6 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// and class pass
-
-//=============================================================================
-/**
-	Base structure for meta-language loop construct.  
- */
-class meta_loop_base {
-public:
-	typedef	value_array<pint_tag, 0>		pint_scalar;
-	typedef	count_ptr<pint_scalar>			ind_var_ptr_type;
-	typedef	count_ptr<const meta_range_expr>	range_ptr_type;
-
-protected:
-	ind_var_ptr_type			ind_var;
-	range_ptr_type				range;
-
-	meta_loop_base();
-	meta_loop_base(const ind_var_ptr_type&, const range_ptr_type&);
-	~meta_loop_base();
-
-	void
-	collect_transient_info_base(persistent_object_manager&) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-};
 
 //=============================================================================
 /**

@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "artobjunroll-expect.sh.in"
-#	$Id: artobjunroll-expect.sh.in,v 1.3 2005/09/04 21:15:15 fang Exp $
+#	$Id: artobjunroll-expect.sh.in,v 1.4 2005/10/30 22:00:25 fang Exp $
 # This file came from "artobjunroll-expect.sh" in revision prehistory.
 
 # $1 is the executable for the unroller, expecting 2 arguments
@@ -37,15 +37,12 @@ then
 	exit 1
 fi
 
-# see if it crashes first
-$unroll $bldroot.artobj $bldroot.artobjunroll 2> $bldroot.unrolldump
+$unroll $bldroot.artobj $bldroot.artobjunroll > $bldroot.unrolldump 2>&1
 
 # depending on exit status, take action
 case $? in
 	0) 
-		# the run real test, comparing outputs
-		# $unroll $bldroot.artobj $bldroot.artobjunroll
-		$dump $bldroot.artobjunroll 2>&1 | @CAT@ > $bldroot.unrolldump
+		$dump $bldroot.artobjunroll > $bldroot.unrolldump 2>&1
 		break ;;
 	1) break ;;
 	*) exit 1 ;;

@@ -1,0 +1,15 @@
+// "123.in"
+// copy-modified from "122.in"
+// should pass
+
+defproc array(bool x) {
+bool composite;
+x = composite;
+}
+
+defproc foo() {
+array p;
+}
+
+foo x;
+
