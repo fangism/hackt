@@ -2,6 +2,15 @@
 
 2005-10-30	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-62-cflat-02-01:
+	  This branch for fixing a known bug in cflat.  
+		Address test cases connect/122-126.in.  
+	  No code revision with this tag.
+	  Added bunch of alloc and cflat tests in parser/connect dir.  
+
+
+2005-10-30	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-62-merged-flow-01-08:
 	  Merged -flow-01 branch:
 	  Summary: flow control (loops and conditionals) work in

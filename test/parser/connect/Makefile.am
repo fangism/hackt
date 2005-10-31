@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2005/10/30 22:01:16 fang Exp $
+#	$Id: Makefile.am,v 1.13.2.1 2005/10/31 01:34:34 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,10 +16,10 @@ ARTC_TEST_FAILURES = \
 	090
 
 ARTC_TEST_PASSES = \
-	001 006 007 \
+	001 006 006b 007 \
 	010 011 012 013 014 015 017 018 019 \
-	021 022 025 027 \
-	030 031 031a 031b \
+	021 022 025 025b 027 027b \
+	030 030b 031 031a 031b \
 	046 047 049 \
 	051 057 058 \
 	062 063 064 065 067 069 \
@@ -44,10 +44,10 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 
 # adding tests one-by-one, should be subset of ARTOBJUNROLL_TEST_SUBJECTS
 HACKT_CREATE_TEST_SUBJECTS = \
-	001 006 007 \
+	001 006 006b 007 \
 	010 011 012 013 014 015 017 018 019 \
-	021 022 025 027 \
-	030 031a 031b \
+	021 022 025 025b 027 027b \
+	030 030b 031a 031b \
 	046 047 049 \
 	051 057 058 \
 	062 063 064 065 067 069 \
@@ -64,11 +64,16 @@ HACKT_CREATE_TEST_SUBJECTS = \
 # KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)
 
 HACKT_ALLOC_TEST_SUBJECTS = \
-	001 006 007 \
+	001 006 006b 007 \
 	010 011 014 017 018 019 \
-	021 022 025 027 \
-	030 \
+	021 022 025 025b 027 027b \
+	030 030b \
 	046 047 049 \
+	051 057 \
+	062 063 064 069 \
+	078 \
+	083 084 085 \
+	111 112 113 118 119 \
 	122 123 124 125 126
 
 # add 031a,b later... too tired to hand-verify
@@ -78,7 +83,16 @@ HACKT_ALLOC_TEST_SUBJECTS = \
 # the following tests depend channel port subinstances
 # 086 087
 
-HACKT_CFLAT_TEST_SUBJECTS =
+HACKT_CFLAT_TEST_SUBJECTS = \
+	001 006b \
+	025b 027b \
+	030b \
+	046 047 049 \
+	051 057 \
+	062 063 064 069 \
+	078 \
+	083 084 085 \
+	111 112 113 118 119
 
 # KNOWN BUGS cases 122-126 to fix ASAP!
 
