@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.4 2005/10/08 01:39:58 fang Exp $
+	$Id: port_alias_tracker.h,v 1.4.6.1 2005/10/31 04:45:55 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -17,6 +17,11 @@
 #include "util/boolean_types.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
+
+#if USE_ALIAS_STRING_CACHE
+#include "Object/common/alias_string_cache.h"
+#endif
 
 namespace ART {
 namespace entity {
@@ -46,12 +51,28 @@ public:
 	typedef	Tag					tag_type;
 	typedef instance_alias_info<Tag>		alias_type;
 	typedef never_ptr<const alias_type>		alias_ptr_type;
+	/**
+		Blatantly copied from class global_entry<Tag>.
+		TODO: move this to "inst/instance_alias_info.h"
+	 */
+	struct alias_to_string_transformer;
 private:
 	typedef	std::vector<alias_ptr_type>		alias_array_type;
 	typedef	typename alias_array_type::const_iterator
 							const_iterator;
 
 	alias_array_type				alias_array;
+#if USE_ALIAS_STRING_CACHE
+	/**
+		String cache is not kept persistent, it is reconstructed
+		on-demand, for cflat purpose.  
+		All methods that modify the alias array should
+		invalidate this cache.  
+		Declared mutable because it is allowed to be updated
+		during const methods.  
+	 */
+	mutable alias_string_cache			cache;
+#endif
 public:
 	alias_reference_set();
 	~alias_reference_set();
@@ -76,6 +97,14 @@ public:
 
 	alias_ptr_type
 	shortest_alias(void) const;
+
+#if USE_ALIAS_STRING_CACHE
+	void
+	refresh_string_cache(void) const;
+
+	const alias_string_cache&
+	get_string_cache(void) const { return cache; }
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -194,21 +223,6 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 };	// end struct port_alias_tracker
-
-//=============================================================================
-#if 0
-/**
-	This is the information kept persistent.  
- */
-struct port_alias_set {
-};	// end struct port_alias_set
-
-//=============================================================================
-/**
- */
-class port_alias_replayer {
-};	// end struct port_alias_replayer
-#endif
 
 //=============================================================================
 }	// end namespace entity

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.79 2005/10/30 22:00:17 fang Exp $
+#	$Id: Makefile.am,v 1.79.2.1 2005/10/31 04:45:53 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -233,6 +233,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/devel_switches.h \
 	Object/art_object_fwd.h \
 	Object/persistent_type_hash.h \
+	Object/common/alias_string_cache.h \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
 	Object/common/scopespace.h \

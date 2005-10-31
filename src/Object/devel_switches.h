@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.5 2005/10/25 20:51:48 fang Exp $
+	$Id: devel_switches.h,v 1.5.4.1 2005/10/31 04:45:53 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -22,13 +22,22 @@
 #endif
 
 // leave this error enabled for released code
-#if 1
+#if 0
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
 
 //=============================================================================
 // define your module-wide development switches here:
+
+/**
+	Whether or not to use a compute-once-on-demand string cache, 
+	or re-evaluate strings each time during cflat traversal.  
+	Not only is this an optimization, but this will be needed
+	to re-work cflat aliase to fix some bugs.  
+	Goal: 1
+ */
+#define	USE_ALIAS_STRING_CACHE			1
 
 //=============================================================================
 

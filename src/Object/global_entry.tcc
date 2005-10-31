@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.4 2005/10/30 22:00:19 fang Exp $
+	$Id: global_entry.tcc,v 1.4.2.1 2005/10/31 04:45:54 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -308,7 +308,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Could derive from unary_function...
+	Helper functor for translating an alias to a string.  
  */
 template <class Tag>
 struct global_entry<Tag>::alias_to_string_transformer : 
@@ -374,11 +374,19 @@ global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 	***/
 	INVARIANT(a != tm.end());
 	// a->second is an alias_reference_set
+#if USE_ALIAS_STRING_CACHE
+	// temporary
+	a->second.refresh_string_cache();	// faster with subseqent calls
+	copy(a->second.get_string_cache().strings.begin(), 
+		a->second.get_string_cache().strings.end(), 
+		back_inserter(al.back()));
+#else
 	transform(a->second.begin(), a->second.end(),
 		back_inserter(al.back()), 
 		alias_to_string_transformer()
 	);
 		// transform, back_inserter... aliases to strings
+#endif
 }	// end method collect_hierarchical_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

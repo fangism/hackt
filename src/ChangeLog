@@ -2,6 +2,16 @@
 
 2005-10-30	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-62-cflat-02-02:
+	  Introduced alias_string_cache, constructed during cflat
+		once per alias set, per footprint.  Not only is this
+		a minor optimization, but it will be necessary to rework
+		cflat to fix some known bugs, slated for fixing this branch.  
+		Currently enabled by compile switch in Object/devel_switches.h.
+	  Next: using completely different cflat strategy, considering
+		new structure or traversal.  Might need hash_set to uniquify.  
+
+
 	* ARTXX-00-01-04-main-00-62-cflat-02-01:
 	  This branch for fixing a known bug in cflat.  
 		Address test cases connect/122-126.in.  

@@ -1,16 +1,18 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.4 2005/10/08 01:39:57 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.4.6.1 2005/10/31 04:45:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
+#include <functional>
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/common/dump_flags.h"
 
 #include "Object/traits/proc_traits.h"
 #include "Object/traits/chan_traits.h"
@@ -24,6 +26,7 @@
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
+#include "util/sstream.h"
 
 namespace ART {
 namespace entity {
@@ -45,7 +48,11 @@ struct second_is_unique {
 // class alias_reference_set method definitions
 
 template <class Tag>
-alias_reference_set<Tag>::alias_reference_set() : alias_array() {
+alias_reference_set<Tag>::alias_reference_set() : alias_array()
+#if USE_ALIAS_STRING_CACHE
+	, cache()
+#endif
+	{
 	alias_array.reserve(2);
 }
 
@@ -59,9 +66,46 @@ void
 alias_reference_set<Tag>::push_back(const alias_ptr_type a) {
 	NEVER_NULL(a);
 	alias_array.push_back(a);
+#if USE_ALIAS_STRING_CACHE
+	cache.valid = false;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_STRING_CACHE
+template <class Tag>
+struct alias_reference_set<Tag>::alias_to_string_transformer :
+		public std::unary_function<alias_ptr_type, string> {
+	typedef std::unary_function<alias_ptr_type, string>	parent_type;
+	typename parent_type::result_type
+	operator () (const typename parent_type::argument_type a) const {
+		INVARIANT(a);
+		std::ostringstream o;
+		a->dump_hierarchical_name(o, dump_flags::no_owner);
+		return o.str();
+	}
+};      // end struct alias_to_string_transformer
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+alias_reference_set<Tag>::refresh_string_cache(void) const {
+	if (!cache.valid) {
+		cache.strings.resize(alias_array.size());
+		std::transform(alias_array.begin(), alias_array.end(), 
+			cache.strings.begin(), alias_to_string_transformer()
+		);
+		cache.valid = true;
+	}
+	// else is already valid
+}
+
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints all equivalent aliases as determined by this set.  
+ */
 template <class Tag>
 ostream&
 alias_reference_set<Tag>::dump(ostream& o) const {
@@ -441,6 +485,9 @@ INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(datastruct_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
+
+template void alias_reference_set<process_tag>::refresh_string_cache() const;
+template void alias_reference_set<bool_tag>::refresh_string_cache() const;
 
 #undef	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK
 
