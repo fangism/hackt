@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.6 2005/10/08 01:39:54 fang Exp $
+ 	$Id: module.cc,v 1.6.6.1 2005/11/01 04:23:56 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -126,6 +126,10 @@ module::dump(ostream& o) const {
 #endif
 	}
 	if (is_allocated()) {
+#if 0
+		// only for debugging
+		global_state.cache_process_parent_refs();
+#endif
 		o << "Globally allocated state:" << endl;
 		global_state.dump(o, _footprint);
 	}
@@ -225,7 +229,7 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 		// this is needed for evaluating scope_aliases, 
-		// bus cannot be maintained persistently because
+		// but cannot be maintained persistently because
 		// of memory pointer hack (see implementation of 
 		// footprint::import_hierarchical_scopespace.
 		// Plan B: destroy after evaluating aliases!
@@ -247,6 +251,9 @@ module::create_unique(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Allocates unique global entries for instance objects.  
+ */
 good_bool
 module::allocate_unique(void) {
 	if (!create_unique().good)
@@ -260,6 +267,10 @@ module::allocate_unique(void) {
 			return good_bool(false);
 		}
 #if 0
+		// only for debugging
+		global_state.cache_process_parent_refs();
+#endif
+#if 0
 		global_state.dump(cerr, _footprint) << endl;
 #endif
 		allocated = true;
@@ -270,7 +281,7 @@ module::allocate_unique(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 module::cflat(ostream& o, const cflat_options& cf) const {
-if (allocated) {
+if (is_allocated()) {
 	return global_state.cflat(o, _footprint, cf);
 } else {
 	cerr << "ERROR: Module is not globally allocated, "

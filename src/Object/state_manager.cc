@@ -2,13 +2,14 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.5 2005/10/08 01:39:54 fang Exp $
+	$Id: state_manager.cc,v 1.5.6.1 2005/11/01 04:23:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include <iostream>
+#include <functional>
 #include "Object/state_manager.h"
 #include "Object/global_entry.tcc"
 #include "Object/traits/proc_traits.h"
@@ -18,6 +19,7 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
+// #include "util/binders.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
 #include "util/IO_utils.h"
@@ -78,6 +80,15 @@ if (this->size() > 1) {
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+global_entry_pool<Tag>::uncache_process_parent_refs(void) const {
+	for_each(this->begin(), this->end(), 
+		std::mem_fun_ref(&entry_type::uncache_process_parent_refs)
+	);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,7 +164,11 @@ global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m,
 state_manager::state_manager() :
 		process_pool_type(), channel_pool_type(), 
 		struct_pool_type(), enum_pool_type(), 
-		int_pool_type(), bool_pool_type() {
+		int_pool_type(), bool_pool_type()
+#if USE_GLOBAL_ENTRY_PARENT_REFS
+		, parent_ref_cache_valid(false)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -176,6 +191,57 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_GLOBAL_ENTRY_PARENT_REFS
+/**
+	Walks all processes and marks their child references
+	(from their footprint frames) with a back-reference
+	in the parent_ref cache.  
+	(Only modifies mutable data.)
+ */
+void
+state_manager::cache_process_parent_refs(void) const {
+if (!parent_ref_cache_valid) {
+	STACKTRACE_VERBOSE;
+	const global_entry_pool<process_tag>& process_entry_pool(*this);
+
+#if 0
+	for_each(++process_entry_pool.begin(), process_entry_pool.end(), 
+		std::bind2nd_argval(std::mem_fun_ref(
+			&global_entry<process_tag>::cache_process_parent_refs),
+		*this)
+	);
+#else
+	size_t pid = 1;
+	const size_t plim = process_entry_pool.size();
+	for ( ; pid < plim; pid++) {
+		process_entry_pool[pid].cache_process_parent_refs(*this, pid);
+	}
+	parent_ref_cache_valid = true;
+}
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Releases memory for caching parent refs in each entry.  
+ */
+void
+state_manager::uncache_process_parent_refs(void) const {
+if (parent_ref_cache_valid) {
+	// go through all pool entries and clear their parent caches.  
+	global_entry_pool<process_tag>::uncache_process_parent_refs();
+	global_entry_pool<channel_tag>::uncache_process_parent_refs();
+	global_entry_pool<datastruct_tag>::uncache_process_parent_refs();
+	global_entry_pool<enum_tag>::uncache_process_parent_refs();
+	global_entry_pool<int_tag>::uncache_process_parent_refs();
+	global_entry_pool<bool_tag>::uncache_process_parent_refs();
+	parent_ref_cache_valid = false;
+}
+}
+
+#endif	// USE_GLOBAL_ENTRY_PARENT_REFS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prototype cflat -- strictly for backwards compatibility.  
 	Connections should come after production rules.  (CAST tools)
@@ -196,8 +262,18 @@ if (cf.include_prs) {
 			proc_entry_pool[pid], topfp, cf, *this);
 	}
 }
+if (cf.connect_style) {
+	// first, cache process_parent_refs in all global entries
+#if USE_GLOBAL_ENTRY_PARENT_REFS
+	cache_process_parent_refs();
+#endif
 	// dump connections
 	bool_entry_pool.cflat_connect(o, topfp, cf);
+	// NEW IDEA: 
+	// just walk all top-level instances hierarchically
+	// and print aliases to canonical names.  
+	// no need for parent refs!!!
+}
 	// check options for non-bools
 	return good_bool(true);
 }

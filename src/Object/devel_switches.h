@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.5.4.1 2005/10/31 04:45:53 fang Exp $
+	$Id: devel_switches.h,v 1.5.4.2 2005/11/01 04:23:55 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -36,8 +36,17 @@
 	Not only is this an optimization, but this will be needed
 	to re-work cflat aliase to fix some bugs.  
 	Goal: 1
+	Status: stable, ready to commit
  */
 #define	USE_ALIAS_STRING_CACHE			1
+
+/**
+	Whether or not to track parent back references during 
+	unique object allocation phase.  
+	Will be useful for new (correct) cflat algorithm.  
+	Goal: undecided
+ */
+#define USE_GLOBAL_ENTRY_PARENT_REFS            1
 
 //=============================================================================
 

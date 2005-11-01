@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.2 2005/10/08 01:40:02 fang Exp $
+	$Id: cflat_options.h,v 1.2.6.1 2005/11/01 04:23:57 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_OPTIONS_H__
@@ -15,9 +15,10 @@ namespace ART {
 class cflat_options {
 public:
 	typedef	enum {
-		CONNECT_STYLE_CONNECT = 0,
-		CONNECT_STYLE_EQUAL = 1,
-		CONNECT_STYLE_WIRE = 2
+		CONNECT_STYLE_NONE = 0,
+		CONNECT_STYLE_CONNECT = 1,
+		CONNECT_STYLE_EQUAL = 2,
+		CONNECT_STYLE_WIRE = 3
 	}				connect_style_enum;
 	/**
 		-connect style: connect "a" "b"
@@ -74,6 +75,7 @@ public:
 	~cflat_options() { }
 
 };	// end class cflat::options
+// __attribute__(packed) ? (no one cares...)
 
 }	// end namespace ART
 

@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.4.6.1 2005/10/31 04:45:55 fang Exp $
+	$Id: port_alias_tracker.h,v 1.4.6.2 2005/11/01 04:23:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -58,9 +58,10 @@ public:
 	struct alias_to_string_transformer;
 private:
 	typedef	std::vector<alias_ptr_type>		alias_array_type;
+public:
 	typedef	typename alias_array_type::const_iterator
 							const_iterator;
-
+private:
 	alias_array_type				alias_array;
 #if USE_ALIAS_STRING_CACHE
 	/**

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.5 2005/10/30 22:00:17 fang Exp $
+#	$Id: TODO,v 1.5.2.1 2005/11/01 04:23:53 fang Exp $
 
 ===============================================================================
 loop development:
@@ -46,6 +46,12 @@ compare memory usage between using flattened production rule arrays
 
 in general check memory usage of large arrays of things
 	make benchmarks directory.
+
+===============================================================================
+Interactive shell:
+	the hackt shell -- "hatcsh" ?
+	be able to run tool commands, flow control, launch simulations, etc.
+		load/mount object files, run system commands via !
 
 ===============================================================================
 Library stuff:

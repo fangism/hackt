@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2005-10-31	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-62-cflat-02-03:
+	  New idea: instead of computing hierarchical cflat alias, 
+		just traverse the top-level footprint hierarchically to
+		guarantee visiting each bool alias *exactly* once.  DUH!
+		TODO: this, next.
+	  Attempted to create and use global_entry parent back-references, 
+		but failed miserably.  What wasted effort.  
+		Just made a small mess of the code.  
+
+
 2005-10-30	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-62-cflat-02-02:

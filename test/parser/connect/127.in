@@ -1,0 +1,21 @@
+// "127.in"
+// copy-modified from "126.in"
+// should pass
+
+defproc array(bool x) {
+bool composite;
+x = composite;
+}
+
+defproc ar(bool y) {
+bool z;
+y = z;
+}
+
+defproc foo(ar r) {
+array k(r.y);
+}
+
+ar B;
+foo C(B);
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.4 2005/10/08 01:39:54 fang Exp $
+	$Id: state_manager.h,v 1.4.6.1 2005/11/01 04:23:57 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -12,6 +12,7 @@
 #include "Object/traits/classification_tags.h"
 #include "util/list_vector.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace ART {
 class cflat_options;
@@ -53,6 +54,8 @@ private:
 public:
 	using pool_type::size;
 	using pool_type::operator[];
+	using pool_type::begin;
+	using pool_type::end;
 
 	size_t
 	allocate(void);
@@ -60,11 +63,19 @@ public:
 	size_t
 	allocate(const entry_type&);
 
+protected:
 	ostream&
 	dump(ostream&, const footprint&) const;
 
+public:
 	ostream&
 	cflat_connect(ostream&, const footprint&, const cflat_options&) const;
+
+protected:
+#if USE_GLOBAL_ENTRY_PARENT_REFS
+	void
+	uncache_process_parent_refs(void) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -101,6 +112,14 @@ class state_manager :
 	typedef	global_entry_pool<int_tag>		int_pool_type;
 	typedef	global_entry_pool<bool_tag>		bool_pool_type;
 
+#if USE_GLOBAL_ENTRY_PARENT_REFS
+	/**
+		Whether or not the parent_ref cache in all global entry pools
+		has been computed and is valid.  
+	 */
+	mutable bool				parent_ref_cache_valid;
+#endif
+
 public:
 	state_manager();
 	~state_manager();
@@ -129,6 +148,14 @@ public:
 
 	ostream&
 	dump(ostream&, const footprint&) const;
+
+#if USE_GLOBAL_ENTRY_PARENT_REFS
+	void
+	cache_process_parent_refs(void) const;
+
+	void
+	uncache_process_parent_refs(void) const;
+#endif
 
 	good_bool
 	cflat(ostream&, const footprint&, const cflat_options&) const;
