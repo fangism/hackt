@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.4 2005/10/30 22:00:19 fang Exp $
+	$Id: global_entry.tcc,v 1.5 2005/11/02 22:53:43 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -31,7 +31,6 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
-#include "Object/common/alias_string_set.h"
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
@@ -308,86 +307,12 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Could derive from unary_function...
- */
-template <class Tag>
-struct global_entry<Tag>::alias_to_string_transformer : 
-	public std::unary_function<
-		never_ptr<const instance_alias_info<Tag> >,
-		string> {
-	typedef	std::unary_function<
-		never_ptr<const instance_alias_info<Tag> >, string>
-				parent_type;
-	typename parent_type::result_type
-	operator () (const typename parent_type::argument_type a) const {
-		INVARIANT(a);
-		ostringstream o;
-		a->dump_hierarchical_name(o, dump_flags::no_owner);
-		return o.str();
-	}
-};	// end struct alias_to_string_transformer
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Accumulates aliases at each level of the instance hierarchy
-	in the alias_string_set for alias generation.  
-	TODO: May need to collect aliases at multiple levels of hierarchy!
- */
-template <class Tag>
-void
-global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
-		const footprint& topfp, const state_manager& sm) const {
-	STACKTRACE_VERBOSE;
-	const port_alias_tracker* _alias_tracker;
-	if (parent_tag_value) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "have parent_tag_value = "
-			<< parent_tag_value << endl;
-#endif
-		INVARIANT(parent_tag_value == PROCESS);
-		const global_entry<process_tag>&
-			p_ent(extract_parent_entry<process_tag>(sm, *this));
-		// recurse: outermost levels of hierarchy first
-		p_ent.collect_hierarchical_aliases(al, topfp, sm);
-		_alias_tracker = &p_ent._frame._footprint
-				->get_scope_alias_tracker();
-	} else {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "have parent_tag_value = 0" << endl;
-#endif
-		_alias_tracker = &topfp.get_scope_alias_tracker();
-	}
-	typedef	typename port_alias_tracker::tracker_map_type<Tag>::type
-						tracker_map_type;
-	typedef	typename tracker_map_type::const_iterator
-						const_map_iterator;
-	const tracker_map_type&	// a map<size_t, alias_reference_set<Tag> >
-		tm(_alias_tracker->template get_id_map<Tag>());
-#if 0
-	_alias_tracker->dump(cerr << "***" << endl) << endl << "***" << endl;
-#endif
-	const const_map_iterator a(tm.find(local_offset));
-	al.push_back();		// empty entry, new list
-	/***
-		Since we keep track of singletons in the scope_alias_tracker, 
-		all lookups should be valid.  
-	***/
-	INVARIANT(a != tm.end());
-	// a->second is an alias_reference_set
-	transform(a->second.begin(), a->second.end(),
-		back_inserter(al.back()), 
-		alias_to_string_transformer()
-	);
-		// transform, back_inserter... aliases to strings
-}	// end method collect_hierarchical_aliases
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Wrapped call that formats properly.  
+	\param topfp should be the top-level footprint belonging to the module.
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::dump_canonical_name(ostream& o, // const size_t ind,
+global_entry<Tag>::dump_canonical_name(ostream& o,
 		const footprint& topfp, const state_manager& sm) const {
 	return __dump_canonical_name(o, dump_flags::no_owner,
 		topfp, sm);
@@ -420,29 +345,7 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 	}
 	o << local_offset << '\t';
 	dump_canonical_name(o, topfp, sm) << '\t';
-	return parent_type::template dump<Tag>(o, ind, topfp, sm);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Print out all equivalent aliases in the hierarchy.  
-	TODO: cache the results of visiting the hierarchy to avoid
-		repetitious string evaluation.  
-		Perhaps cache in parallel structure in footprint?
-		Shadowing the scope_alias_tracker.  
- */
-template <class Tag>
-ostream&
-global_entry<Tag>::cflat_connect(ostream& o, const cflat_options& cf,
-		const footprint& topfp, const state_manager& sm) const {
-	ostringstream canonical;
-	dump_canonical_name(canonical, topfp, sm);
-	// collect all aliases at all levels of hierarchy...
-	alias_string_set _aliases;
-	collect_hierarchical_aliases(_aliases, topfp, sm);
-	// compact representation for debugging
-	// _aliases.dump(o) << endl;	
-	_aliases.dump_aliases(o, canonical.str(), cf);
+	parent_type::template dump<Tag>(o, ind, topfp, sm);
 	return o;
 }
 

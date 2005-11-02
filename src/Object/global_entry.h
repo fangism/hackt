@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.3 2005/10/08 01:39:53 fang Exp $
+	$Id: global_entry.h,v 1.4 2005/11/02 22:53:43 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -80,7 +80,7 @@ protected:
 	__expand_subinstances(const footprint&, state_manager&,
 		const size_t, const size_t);
 
-};	// end struct footprint_frame_mao
+};	// end struct footprint_frame_map
 
 //=============================================================================
 /**
@@ -110,7 +110,10 @@ struct footprint_frame :
 	typedef	footprint_frame_map<enum_tag>		enum_map_type;
 	typedef	footprint_frame_map<int_tag>		int_map_type;
 	typedef	footprint_frame_map<bool_tag>		bool_map_type;
-	// or use never_ptr<const footprint>
+	/**
+		The footprint definition upon which this frame is based.  
+		(or use never_ptr<const footprint>?)
+	 */
 	const footprint*			_footprint;
 
 	footprint_frame();
@@ -231,6 +234,9 @@ struct global_entry_base<true> {
 };	// end struct global_entry_base
 
 //=============================================================================
+/**
+	Data common to all global entries (uniquely allocated objects).  
+ */
 struct global_entry_common {
 	/**
 		Uses parent_tag_enum.
@@ -255,7 +261,7 @@ struct global_entry_common {
 
 	global_entry_common() : parent_tag_value(0), parent_id(0),
 			local_offset(0) { }
-};
+};	// end struct global_entry_common
 
 //=============================================================================
 /**
@@ -317,19 +323,11 @@ public:
 		const state_manager&) const;
 
 	ostream&
-	cflat_connect(ostream&, const cflat_options&, 
-		const footprint&, const state_manager&) const;
-
-	ostream&
 	dump_canonical_name(ostream&,
 		const footprint&, const state_manager&) const;
 
 	ostream&
 	__dump_canonical_name(ostream&, const dump_flags&,
-		const footprint&, const state_manager&) const;
-
-	void
-	collect_hierarchical_aliases(alias_string_set&, 
 		const footprint&, const state_manager&) const;
 
 	using parent_type::collect_transient_info_base;
@@ -341,9 +339,6 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const size_t, const footprint&, const state_manager&);
-
-private:
-	struct alias_to_string_transformer;
 
 };	// end struct global_entry
 

@@ -2,13 +2,14 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.5 2005/10/08 01:39:54 fang Exp $
+	$Id: state_manager.cc,v 1.6 2005/11/02 22:53:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include <iostream>
+#include <functional>
 #include "Object/state_manager.h"
 #include "Object/global_entry.tcc"
 #include "Object/traits/proc_traits.h"
@@ -56,25 +57,6 @@ if (this->size() > 1) {
 	const const_iterator e(this->end());
 	for ( ; i!=e; i++, j++) {
 		i->dump(o, j, topfp, sm) << endl;
-	}
-}
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Prints all aliases with their canonical names.  
- */
-template <class Tag>
-ostream&
-global_entry_pool<Tag>::cflat_connect(ostream& o,
-		const footprint& topfp, const cflat_options& cf) const {
-if (this->size() > 1) {
-	const state_manager& sm(AS_A(const state_manager&, *this));
-	const_iterator i(++this->begin());
-	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
-		i->cflat_connect(o, cf, topfp, sm);
 	}
 }
 	return o;
@@ -182,9 +164,8 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 	Check of ordering mattes for various tools.
  */
 good_bool
-state_manager::cflat(ostream& o, const footprint& topfp,
+state_manager::cflat_prs(ostream& o, const footprint& topfp,
 		const cflat_options& cf) const {
-	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
 if (cf.include_prs) {
 	// dump prs
 	// for each process entry
@@ -196,9 +177,6 @@ if (cf.include_prs) {
 			proc_entry_pool[pid], topfp, cf, *this);
 	}
 }
-	// dump connections
-	bool_entry_pool.cflat_connect(o, topfp, cf);
-	// check options for non-bools
 	return good_bool(true);
 }
 

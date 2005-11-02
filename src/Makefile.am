@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.79 2005/10/30 22:00:17 fang Exp $
+#	$Id: Makefile.am,v 1.80 2005/11/02 22:53:42 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -137,7 +137,6 @@ OBJECT_CC_FILES = \
 	Object/common/namespace.cc \
 	Object/common/extern_templates.cc \
 	Object/common/dump_flags.cc \
-	Object/common/alias_string_set.cc \
 	Object/expr/expr_dump_context.cc \
 	Object/traits/class_traits.cc \
 	Object/inst/substructure_alias_base.cc \
@@ -205,6 +204,7 @@ OBJECT_TCC_FILES = \
 	Object/inst/int_collection_type_manager.tcc \
 	Object/inst/parameterless_collection_type_manager.tcc \
 	Object/inst/subinstance_manager.tcc \
+	Object/inst/substructure_alias_base.tcc \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \
@@ -233,6 +233,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/devel_switches.h \
 	Object/art_object_fwd.h \
 	Object/persistent_type_hash.h \
+	Object/common/alias_string_cache.h \
+	Object/common/cflat_args.h \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
 	Object/common/scopespace.h \

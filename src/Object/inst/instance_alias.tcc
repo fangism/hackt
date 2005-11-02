@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.4 2005/10/25 20:51:54 fang Exp $
+	$Id: instance_alias.tcc,v 1.5 2005/11/02 22:53:46 fang Exp $
 	TODO: trim includes
  */
 
@@ -31,6 +31,7 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
+#include "Object/inst/substructure_alias_base.tcc"
 #include "Object/inst/instance_pool.tcc"
 #include "Object/inst/internal_aliases_policy.h"
 #include "Object/inst/port_alias_tracker.h"
@@ -50,13 +51,14 @@
 #include "Object/port_context.h"
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
+#include "Object/common/cflat_args.h"
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
 #include "util/ring_node.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
-
+#include "util/sstream.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "util/what.h"
@@ -71,6 +73,7 @@
 namespace ART {
 namespace entity {
 using std::string;
+using std::ostringstream;
 using std::_Select1st;
 #include "util/using_ostream.h"
 using util::multikey_generator;
@@ -794,7 +797,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r,
 	\param sm the global state allocation manager, 
 		used to allocate private subinstances not covered
 		by the port aliases.  
-	\param is the globally assigned id for this particular instance
+	\param ind is the globally assigned id for this particular instance
 		used to identify this as a parent to subinstances.  
 	TODO: after assigning globally assigned ports, 
 	allocate the remaining unassigned internal substructures.  
@@ -821,12 +824,10 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_assign_subinstance_footprint_frame(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Called recusrively.  
-	NOTE: state_manager is thus far unused.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
-		footprint_frame& ff,
+INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 		const port_collection_context& pcc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
 	const size_t local_offset = this->instance_index -1;
@@ -846,19 +847,59 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Rather than take a footprint argument, passed by the collection, 
+	we get the footprint each time because collections with
+	relaxed types may have different types per element.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(
+		const cflat_aliases_arg_type& c) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(this->valid());
+	ostringstream os;
+	dump_hierarchical_name(os, dump_flags::no_owner);
+	const string& local_name(os.str());
+	// construct new prefix from os
+	cflat_aliases_arg_type sc(c);
+	const global_entry_pool<Tag>& gp(c.sm.template get_pool<Tag>());
+if (c.fpf) {
+	sc.prefix += ".";
+	sc.prefix += local_name;
+	// this is not a top-level instance (from recursion)
+	const size_t local_offset = this->instance_index -1;
+	const footprint_frame_map_type&
+		fm(c.fpf->template get_frame_map<Tag>());
+	// footprint_frame yields the global offset
+	const global_entry<Tag>& e(gp[fm[local_offset]]);
+	__cflat_aliases(sc, e);
+} else {
+	// footprint_frame is null, this is a top-level instance
+	sc.prefix = local_name;
+	// the instance_index can be used directly as the offset into
+	// the state_manager's member arrays
+	BOUNDS_CHECK(this->instance_index && this->instance_index < gp.size());
+	const global_entry<Tag>& e(gp[this->instance_index]);
+	// depends on whether or not this has subinstances!
+	__cflat_aliases(sc, e);
+}
+	// recursion or termination
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("instance_alias_info<Tag>::collect_base()");
-	// eventually need to implement this...
-
 	// shouldn't need to re-visit parent pointer, 
 	// UNLESS it is visited from an alias cycle, 
 	// in which case, the parent may not have been visited before...
 
 	// this is allowed to be null ONLY if it belongs to a scalar
 	// in which case it is not yet unrolled.  
+	// recall: null container => uninstantiated (or !valid())
 	if (this->container)
 		this->container->collect_transient_info(m);
 	actuals_parent_type::collect_transient_info_base(m);
@@ -866,6 +907,10 @@ INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Instance depth.  
+	Used for selecting a reasonably short canonical name.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 size_t
 INSTANCE_ALIAS_INFO_CLASS::hierarchical_depth(void) const {

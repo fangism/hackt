@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.4 2005/10/08 01:39:54 fang Exp $
+	$Id: state_manager.h,v 1.5 2005/11/02 22:53:44 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -53,6 +53,8 @@ private:
 public:
 	using pool_type::size;
 	using pool_type::operator[];
+	using pool_type::begin;
+	using pool_type::end;
 
 	size_t
 	allocate(void);
@@ -60,11 +62,9 @@ public:
 	size_t
 	allocate(const entry_type&);
 
+protected:
 	ostream&
 	dump(ostream&, const footprint&) const;
-
-	ostream&
-	cflat_connect(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -131,7 +131,7 @@ public:
 	dump(ostream&, const footprint&) const;
 
 	good_bool
-	cflat(ostream&, const footprint&, const cflat_options&) const;
+	cflat_prs(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

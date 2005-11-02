@@ -3,13 +3,13 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.4 2005/10/25 20:51:59 fang Exp $
+	$Id: unique_list.h,v 1.5 2005/11/02 22:53:49 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
 #define __UTIL_UNIQUE_LIST__
 
-#include <cassert>
+#include "util/macros.h"
 #include "util/STL/list.h"
 #include <set>
 #include <algorithm>		// for find
@@ -18,17 +18,14 @@ namespace util {
 USING_LIST
 using std::find;
 using std::set;
-
+//=============================================================================
 /**
-        Utility class for tracking s to watch.  
         Uses a set to track uniqueness.  
         Consider using extensible vector for speed, instead of list.  
 	Can also use slist for list for forward-only iteration.
 	__gnu_cxx::hash_set provides constant time hashing.  
  */
-template <class T, 
-	template <class> class L = list, 
-	template <class> class S = set >
+template <class T, class List = list<T>, class Set = set<T> >
 class unique_list {
 public:
 	typedef	T				value_type;
@@ -36,8 +33,8 @@ public:
 	typedef	const T&			const_reference;
 //	typedef	T*				pointer;
 	typedef	const T*			const_pointer;
-	typedef S<value_type>			set_type;
-	typedef L<value_type>			sequence_type;
+	typedef Set				set_type;
+	typedef List				sequence_type;
 	typedef typename sequence_type::const_iterator	const_iterator;
 private:
 	set_type				_set;
@@ -66,7 +63,7 @@ public:
 	 */
 	bool
 	empty(void) const {
-		assert(_set.empty() == _sequence.empty());
+		INVARIANT(_set.empty() == _sequence.empty());
 		return _set.empty();
 	}
 
@@ -75,7 +72,7 @@ public:
 	 */
 	size_t
 	size(void) const {
-		assert(_set.size() == _sequence.size());
+		INVARIANT(_set.size() == _sequence.size());
 		return _set.size();
 	}
 
@@ -112,7 +109,7 @@ public:
 			const typename sequence_type::iterator
 				l_probe(find(_sequence.begin(),
 					_sequence.end(), n));
-			assert(l_probe != _sequence.end());
+			INVARIANT(l_probe != _sequence.end());
 			_sequence.erase(l_probe);
 			_set.erase(probe);
 		}
@@ -121,6 +118,7 @@ public:
 
 };      // end class unique_list
 
+//=============================================================================
 }	// end namespace util
 
 #endif	// __UTIL_UNIQUE_LIST__

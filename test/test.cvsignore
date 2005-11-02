@@ -23,6 +23,7 @@ core.*
 *.noindex
 *.prs
 *.prsdiff
+*.sort
 ignore
 Makefile
 Makefile.in

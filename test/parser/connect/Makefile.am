@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2005/10/30 22:01:16 fang Exp $
+#	$Id: Makefile.am,v 1.14 2005/11/02 22:54:05 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -16,10 +16,10 @@ ARTC_TEST_FAILURES = \
 	090
 
 ARTC_TEST_PASSES = \
-	001 006 007 \
+	001 006 006b 007 \
 	010 011 012 013 014 015 017 018 019 \
-	021 022 025 027 \
-	030 031 031a 031b \
+	021 022 025 025b 027 027b \
+	030 030b 031 031a 031b \
 	046 047 049 \
 	051 057 058 \
 	062 063 064 065 067 069 \
@@ -28,7 +28,7 @@ ARTC_TEST_PASSES = \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 103a 104 105 106 107 108 109 \
 	110 111 112 113 114 114a 115 116 117 118 119 \
-	120 121 122 123 124 125 126
+	120 121 122 123 124 125 126 127
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -44,10 +44,10 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 
 # adding tests one-by-one, should be subset of ARTOBJUNROLL_TEST_SUBJECTS
 HACKT_CREATE_TEST_SUBJECTS = \
-	001 006 007 \
+	001 006 006b 007 \
 	010 011 012 013 014 015 017 018 019 \
-	021 022 025 027 \
-	030 031a 031b \
+	021 022 025 025b 027 027b \
+	030 030b 031a 031b \
 	046 047 049 \
 	051 057 058 \
 	062 063 064 065 067 069 \
@@ -56,7 +56,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	092 093 094 095 099 \
 	100 102 103 104 106 107 109 \
 	111 112 113 114 114a 118 119 \
-	122 123 124 125 126
+	122 123 124 125 126 127
 
 # KNOWN BUG: 116 117: doesn't handle creation of bar
 #	because no relaxed actual is passed in as a formal parameter.
@@ -64,12 +64,17 @@ HACKT_CREATE_TEST_SUBJECTS = \
 # KNOWN BUGS: 120 121 (creation phase, expect to fail, but doesn't)
 
 HACKT_ALLOC_TEST_SUBJECTS = \
-	001 006 007 \
+	001 006 006b 007 \
 	010 011 014 017 018 019 \
-	021 022 025 027 \
-	030 \
+	021 022 025 025b 027 027b \
+	030 030b \
 	046 047 049 \
-	122 123 124 125 126
+	051 057 \
+	062 063 064 069 \
+	078 \
+	083 084 085 \
+	111 112 113 118 119 \
+	122 123 124 125 126 127
 
 # add 031a,b later... too tired to hand-verify
 # add most CREATE tests to ALLOC tests later...
@@ -78,9 +83,17 @@ HACKT_ALLOC_TEST_SUBJECTS = \
 # the following tests depend channel port subinstances
 # 086 087
 
-HACKT_CFLAT_TEST_SUBJECTS =
-
-# KNOWN BUGS cases 122-126 to fix ASAP!
+HACKT_CFLAT_TEST_SUBJECTS = \
+	001 006b \
+	025b 027b \
+	030b \
+	046 047 049 \
+	051 057 \
+	062 063 064 069 \
+	078 \
+	083 084 085 \
+	111 112 113 118 119 \
+	122 123 124 125 126 127
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077

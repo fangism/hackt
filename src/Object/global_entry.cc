@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.3 2005/10/08 01:39:53 fang Exp $
+	$Id: global_entry.cc,v 1.4 2005/11/02 22:53:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,7 +24,7 @@ footprint_frame_map<Tag>::footprint_frame_map() : id_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	The magic constructor, initializes this map using theh
+	The magic constructor, initializes this map using the
 	reference footprint's corresponding pool.  
 	\param f the reference footprint. 
  */
@@ -341,6 +341,13 @@ footprint_frame::get_frame_map_test(void) const {
 
 //=============================================================================
 // class global_entry_base method definitions
+
+#if 0
+void
+global_entry_base<true>::cache_process_parent_refs(
+		const state_manager& sm) const {
+}
+#endif
 
 //=============================================================================
 }	// end namespace entity

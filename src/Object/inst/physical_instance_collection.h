@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for ART.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.5 2005/09/14 15:30:31 fang Exp $
+	$Id: physical_instance_collection.h,v 1.6 2005/11/02 22:53:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -11,11 +11,13 @@
 #include "Object/inst/instance_collection_base.h"
 
 namespace ART {
+class cflat_options;
 namespace entity {
 class port_alias_tracker;
 class state_manager;
 class footprint_frame;
 class port_collection_context;
+struct cflat_aliases_arg_type;
 
 //=============================================================================
 // class instance_collection_base defined in "Object/inst/instance_collection_base.h"
@@ -119,6 +121,12 @@ virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 		const port_collection_context&) const
 
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
+
+#define	CFLAT_ALIASES_PROTO						\
+	void								\
+	cflat_aliases(const cflat_aliases_arg_type&) const
+
+virtual	CFLAT_ALIASES_PROTO = 0;
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

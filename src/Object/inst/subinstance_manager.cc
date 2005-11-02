@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.7 2005/09/14 15:30:32 fang Exp $
+	$Id: subinstance_manager.cc,v 1.8 2005/11/02 22:53:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -287,6 +287,20 @@ subinstance_manager::assign_footprint_frame(footprint_frame& ff,
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++, j++) {
 		(*i)->assign_footprint_frame(ff, pmc[j]);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	new footprint?
+ */
+void
+subinstance_manager::cflat_aliases(const cflat_aliases_arg_type& c) const {
+	const_iterator i(subinstance_array.begin());
+	const const_iterator e(subinstance_array.end());
+	for ( ; i!=e; i++) {
+		const count_ptr<physical_instance_collection>& pi(*i);
+		pi->cflat_aliases(c);
 	}
 }
 

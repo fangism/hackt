@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.8 2005/10/08 01:40:04 fang Exp $
+#	$Id: Make.test-tail,v 1.9 2005/11/02 22:53:50 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -95,7 +95,8 @@ subdir.not_a_test:
 	@$(CHMOD) +x $@
 
 CHECK_SUMMARIES = artcdiffs objdiffs unrolldiffs creatediffs allocdiffs \
-	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex
+	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
+	prsdiffs prsdiffs.sort
 # need prs summaries? nah...
 
 artcdiffs: force
@@ -113,6 +114,9 @@ creatediffs: force
 allocdiffs: force
 	-$(CAT) *.allocdiff > $@
 
+prsdiffs: force
+	-$(CAT) *.prsdiff > $@
+
 unrolldiffs.noindex: force
 	-$(CAT) *.unrolldiff.noindex > $@
 
@@ -121,6 +125,9 @@ creatediffs.noindex: force
 
 allocdiffs.noindex: force
 	-$(CAT) *.allocdiff.noindex > $@
+
+prsdiffs.sort: force
+	-$(CAT) *.prsdiff.sort > $@
 
 check-summaries: $(CHECK_SUMMARIES)
 	@ls -l $(CHECK_SUMMARIES)
@@ -141,6 +148,11 @@ TESTS += $(ARTC_TEST_SUBJECTS:=.artctest) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) 
+
+EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
+
+$(EMPTY_CFLAT_PRS):
+	touch $@
 
 # filter-out is GNUMake feature
 #	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
@@ -173,12 +185,15 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdump.filter) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdiff) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff)
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
+	$(EMPTY_CFLAT_PRS)
+
 
 DISTCLEANFILES += local.cvsignore subdir.not_a_test
 
 all-local: .cvsignore subdir.not_a_test \
-	$(ARTC_TEST_PASSES:=.stderr) $(TESTS)
+	$(ARTC_TEST_PASSES:=.stderr) $(TESTS) \
+	$(EMPTY_CFLAT_PRS)
 
 # consider using CLEANFILES
 AUTO_IGNORE += local.cvsignore \
@@ -187,6 +202,7 @@ AUTO_IGNORE += local.cvsignore \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
+	$(EMPTY_CFLAT_PRS) \
 	$(CHECK_SUMMARIES)
 
 # we generate all the local.cvsignore's in the test directories

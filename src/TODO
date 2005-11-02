@@ -1,6 +1,8 @@
 "TODO"
-#	$Id: TODO,v 1.5 2005/10/30 22:00:17 fang Exp $
+#	$Id: TODO,v 1.6 2005/11/02 22:53:43 fang Exp $
 
+===============================================================================
+NOTE: see util/TODO for library-related TODO
 ===============================================================================
 loop development:
 
@@ -21,6 +23,12 @@ footprint pointer persistence may be complicated in footprint_frame.
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 	can be classified as known bug.  
+
+===============================================================================
+HACKT front-end programs:
+	to add:
+	version
+	shell
 
 ===============================================================================
 new class_trait:
@@ -48,8 +56,10 @@ in general check memory usage of large arrays of things
 	make benchmarks directory.
 
 ===============================================================================
-Library stuff:
-util: use new ptrs_functional_proposed.h with const_traits.h
+Interactive shell:
+	the hackt shell -- "hatcsh" ?
+	be able to run tool commands, flow control, launch simulations, etc.
+		load/mount object files, run system commands via !
 
 ===============================================================================
 HACKT template stuff:
@@ -61,8 +71,6 @@ HACKT template stuff:
 enhancements:
 
 Library/Utilities:
-stacktrace.h:
-	add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
 ICE.h:
 	add ICE_ASSERT combined INVARIANT with ICE macro
 
@@ -75,6 +83,11 @@ Simulation:
 	generate process_entries' unrolled production rules!
 		only needed for simulation, not flattening [PUNT]
 		state information of expressions not needed yet
+
+===============================================================================
+parser:
+	file/module inclusion, for now mimic cpp, using 
+		#file and #line directives
 
 ===============================================================================
 PRS and CHP

@@ -1,18 +1,21 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.2 2005/10/08 01:40:02 fang Exp $
+	$Id: cflat.h,v 1.3 2005/11/02 22:53:48 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_H__
 #define	__MAIN_CFLAT_H__
 
+#include <iosfwd>
 #include "main/hackt_fwd.h"
 #include "util/string_fwd.h"
 #include "util/qmap_fwd.h"
 
 namespace ART {
 class cflat_options;
+using std::string;
+using std::ostream;
 //=============================================================================
 /**
 	Instance-less class.  
@@ -42,6 +45,10 @@ public:
 	static
 	int
 	main(const int, char*[], const global_options&);
+
+	static
+	void
+	print_alias(ostream&, const string&, const string&, const options&);
 
 private:
 	static

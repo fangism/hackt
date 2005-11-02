@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.5 2005/09/14 15:30:32 fang Exp $
+	$Id: subinstance_manager.h,v 1.6 2005/11/02 22:53:47 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -12,6 +12,7 @@
 #include "Object/inst/substructure_alias_fwd.h"
 
 namespace ART {
+class cflat_options;
 namespace entity {
 class substructure_manager;
 class footprint;
@@ -24,6 +25,7 @@ class port_member_context;
 class state_manager;
 class footprint_frame;
 template <class> class instance_collection;
+struct cflat_aliases_arg_type;
 using std::ostream;
 using std::istream;
 using std::string;
@@ -45,6 +47,7 @@ using util::persistent_object_manager;
 		the list of names in the port formals list, not their sizes.
 		The types/sizes of the port actual entries will, however, 
 		depend on the template parameters.  
+	TODO: fuse this class into substructure_alias_base<true>.
  */
 class subinstance_manager {
 friend class substructure_manager;
@@ -128,6 +131,9 @@ public:
 	void
 	assign_footprint_frame(footprint_frame&,
 		const port_member_context&) const;
+
+	void
+	cflat_aliases(const cflat_aliases_arg_type&) const;
 
 	// for each entry, re-link
 	void

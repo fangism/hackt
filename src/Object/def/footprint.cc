@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.4 2005/10/08 01:39:56 fang Exp $
+	$Id: footprint.cc,v 1.5 2005/11/02 22:53:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -17,6 +17,8 @@
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "Object/port_context.h"
+#include "Object/common/cflat_args.h"
+#include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/hash_qmap.tcc"
@@ -493,6 +495,38 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 			// else is not port formal, skip
 		}
 		// else is a param_value_collection, skip
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prefixless wrapper.  
+	Called from top-level only.  
+ */
+void
+footprint::cflat_aliases(ostream& o, const state_manager& sm, 
+		const cflat_options& cf) const {
+	cflat_aliases(cflat_aliases_arg_type(o, sm, *this, NULL, cf, string()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints all cflat aliases in the instance hierarchy,
+	starting from the top-level with this.  
+ */
+void
+footprint::cflat_aliases(const cflat_aliases_arg_type& c) const {
+	STACKTRACE_VERBOSE;
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
+	// cerr << instance_collection_map.size() << " collections." << endl;
+	for ( ; i!=e; i++) {
+		const count_ptr<const physical_instance_collection>
+		coll_ptr(i->second.is_a<const physical_instance_collection>());
+		if (coll_ptr) {
+			coll_ptr->cflat_aliases(c);
+		}
+		// skip parameters
 	}
 }
 

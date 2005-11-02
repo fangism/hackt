@@ -1,8 +1,10 @@
 "TODO"
-	$Id: TODO,v 1.9 2005/02/27 22:54:19 fang Exp $
+	$Id: TODO,v 1.10 2005/11/02 22:53:49 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
+
+===============================================================================
 
 ===============================================================================
 
@@ -95,6 +97,9 @@ write a series of tests exhausting ALL combinations of copy, transfer,
 	Use STL containers.
 	Expect invariants everywhere.
 
+util: use new ptrs_functional_proposed.h with const_traits.h
+	status: somewhat tested, ready to use
+
 -------------------------------------------------------------------------------
 
 vectorization:
@@ -117,6 +122,15 @@ algorithms:
 	Implement unrolling algorithms.
 
 -------------------------------------------------------------------------------
+
+integer types:
+	defined one_indexed_size_t and zero_indexed_size_t
+	with automatic implicit conversions between them.  
+	rationale: keep from having to remember or lookup documentation
+		on what the f--- is 1-indexed and 0-indexed.  
+		Self-documenting code!
+
+-------------------------------------------------------------------------------
 numeric:
 	for fun:
 	primality...
@@ -126,7 +140,11 @@ numeric:
 -------------------------------------------------------------------------------
 debug utils:
 	File: stacktrace.h
+		add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
+	status: easy-to-do
 
+===============================================================================
+===============================================================================
 ===============================================================================
 DONE
 	(so we have some sense of accomplishment)
