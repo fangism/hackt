@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.4.6.1 2005/11/01 04:23:57 fang Exp $
+	$Id: state_manager.h,v 1.4.6.2 2005/11/02 06:17:54 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -67,9 +67,11 @@ protected:
 	ostream&
 	dump(ostream&, const footprint&) const;
 
+#if USE_CFLAT_CONNECT
 public:
 	ostream&
 	cflat_connect(ostream&, const footprint&, const cflat_options&) const;
+#endif
 
 protected:
 #if USE_GLOBAL_ENTRY_PARENT_REFS
@@ -158,7 +160,7 @@ public:
 #endif
 
 	good_bool
-	cflat(ostream&, const footprint&, const cflat_options&) const;
+	cflat_prs(ostream&, const footprint&, const cflat_options&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.4 2005/10/08 01:39:56 fang Exp $
+	$Id: footprint.h,v 1.4.6.1 2005/11/02 06:17:59 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -34,6 +34,7 @@ class scopespace;
 class state_manager;
 class footprint_frame;
 class port_member_context;
+struct cflat_aliases_arg_type;
 
 using std::string;
 using std::istream;
@@ -254,6 +255,13 @@ public:
 	void
 	assign_footprint_frame(footprint_frame&, 
 		const port_member_context&) const;
+
+	void
+	cflat_aliases(ostream&, const state_manager&,
+		const cflat_options&) const;
+
+	void
+	cflat_aliases(const cflat_aliases_arg_type&) const;
 
 public:
 // persistent information management

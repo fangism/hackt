@@ -1,5 +1,31 @@
 "ChangeLog"
 
+2005-11-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-62-cflat-02-04:
+	  BUG FIXED: cases connect/122-127.in
+		Completely re-worked cflatting of aliases, with new idea.
+	  Obsolete: Object/common/alias_string_set.{h,cc}
+		no longer used, so we're trimming the fat.  
+	  Deprecated (and switched out) the old cflat_connect methods
+		in global_entry and state_manager.
+		(renamed old cflat to cflat_prs)
+	  New cflat_aliases routines added to footprint and instance 
+		hierarchy.  footprint::cflat_aliases() walks every
+		instance and subinstance in the hierarchy recursively, 
+		using the result of an allocated state_manager to 
+		print aliases to canonical names.  
+	  Added class_trait: print_cflat_leaf, true only for bools, 
+		because cflat tools only deal with bools (nodes).  
+	  As a result of new cflat-aliases, some tests were updated, 
+		some with trivially reorder aliases, a few with
+		added missing aliases from before, oops!
+	  TODO: clean house: delete obsoleted and unused code.  
+		Remove alias_string_set.*.
+		Commit devel_switches.h.  
+		Hand-verify and enable parser/process cflat tests. 
+
+
 2005-10-31	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-62-cflat-02-03:

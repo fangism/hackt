@@ -1,11 +1,13 @@
 /**
 	\file "Object/common/alia_string_set.cc"
-	$Id: alias_string_set.cc,v 1.2 2005/10/08 01:39:54 fang Exp $
+	$Id: alias_string_set.cc,v 1.2.6.1 2005/11/02 06:17:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 
 #include "Object/common/alias_string_set.h"
+
+#if USE_CFLAT_CONNECT
 #include "main/cflat_options.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
@@ -121,4 +123,6 @@ if (ob == oe) {
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// USE_CFLAT_CONNECT
 

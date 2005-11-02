@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.4.2.2 2005/11/01 04:23:56 fang Exp $
+	$Id: global_entry.tcc,v 1.4.2.3 2005/11/02 06:17:53 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -31,7 +31,9 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
+#if USE_CFLAT_CONNECT
 #include "Object/common/alias_string_set.h"
+#endif
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
@@ -322,6 +324,7 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_CFLAT_CONNECT
 /**
 	Helper functor for translating an alias to a string.  
  */
@@ -341,8 +344,10 @@ struct global_entry<Tag>::alias_to_string_transformer :
 		return o.str();
 	}
 };	// end struct alias_to_string_transformer
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_CFLAT_CONNECT
 /**
 	Accumulates aliases at each level of the instance hierarchy
 	in the alias_string_set for alias generation.  
@@ -412,6 +417,7 @@ global_entry<Tag>::collect_hierarchical_aliases(alias_string_set& al,
 		// transform, back_inserter... aliases to strings
 #endif
 }	// end method collect_hierarchical_aliases
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_GLOBAL_ENTRY_PARENT_REFS && 0
@@ -497,10 +503,11 @@ if (parent_tag_value) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wrapped call that formats properly.  
+	\param topfp should be the top-level footprint belonging to the module.
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::dump_canonical_name(ostream& o, // const size_t ind,
+global_entry<Tag>::dump_canonical_name(ostream& o,
 		const footprint& topfp, const state_manager& sm) const {
 	return __dump_canonical_name(o, dump_flags::no_owner,
 		topfp, sm);
@@ -550,6 +557,7 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_CFLAT_CONNECT
 /**
 	Print out all equivalent aliases in the hierarchy.  
 	TODO: cache the results of visiting the hierarchy to avoid
@@ -578,6 +586,7 @@ global_entry<Tag>::cflat_connect(ostream& o, const cflat_options& cf,
 #endif
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>

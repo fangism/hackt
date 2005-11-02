@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.6.6.1 2005/11/01 04:23:56 fang Exp $
+ 	$Id: module.cc,v 1.6.6.2 2005/11/02 06:17:53 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -19,6 +19,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
@@ -281,8 +282,32 @@ module::allocate_unique(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 module::cflat(ostream& o, const cflat_options& cf) const {
+	STACKTRACE_VERBOSE;
 if (is_allocated()) {
-	return global_state.cflat(o, _footprint, cf);
+	if (!global_state.cflat_prs(o, _footprint, cf).good) {
+		cerr << "Unexpected error during cflat." << endl;
+		return good_bool(false);
+	}
+	if (cf.connect_style) {
+		STACKTRACE("cflatting aliases.");
+		// top-level footprint is actually empty
+		// so we need to load it first...
+		// we promise to clean it up after we're done.
+		footprint& _fp(const_cast<footprint&>(_footprint));
+		{
+		namespace_collection_type nsl;
+		collect_namespaces(nsl);
+		namespace_collection_type::const_iterator i(nsl.begin());
+		const namespace_collection_type::const_iterator e(nsl.end());
+		for ( ; i!=e; i++) {
+			_fp.import_hierarchical_scopespace(**i);
+		}
+		}
+		_fp.cflat_aliases(o, global_state, cf);
+		// remember to unload, else there'll be hell to pay!
+		_fp.clear_instance_collection_map();
+	}
+	return good_bool(true);
 } else {
 	cerr << "ERROR: Module is not globally allocated, "
 		"as required by cflat." << endl;

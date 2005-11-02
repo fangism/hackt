@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.9 2005/10/25 20:51:55 fang Exp $
+	$Id: instance_collection.tcc,v 1.9.4.1 2005/11/02 06:18:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -23,6 +23,7 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#include <functional>
 
 // experimental: suppressing automatic template instantiation
 #include "Object/common/extern_templates.h"
@@ -92,6 +93,7 @@ using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
+using std::bind2nd_argval;
 USING_STACKTRACE
 using util::multikey;
 using util::value_writer;
@@ -1067,6 +1069,18 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints hierarchical aliases for cflat. 
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::cflat_aliases(const cflat_aliases_arg_type& c) const {
+	for_each(this->collection.begin(), this->collection.end(),
+		bind2nd_argval(mem_fun_ref(&element_type::cflat_aliases), c)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_transient_info(
@@ -1465,6 +1479,13 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 	STACKTRACE_VERBOSE;
 	INVARIANT(pcc.size() == 1);
 	this->the_instance.assign_footprint_frame(ff, pcc, 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::cflat_aliases(const cflat_aliases_arg_type& c) const {
+	this->the_instance.cflat_aliases(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

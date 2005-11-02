@@ -1,6 +1,8 @@
 "TODO"
-#	$Id: TODO,v 1.5.2.1 2005/11/01 04:23:53 fang Exp $
+#	$Id: TODO,v 1.5.2.2 2005/11/02 06:17:50 fang Exp $
 
+===============================================================================
+NOTE: see util/TODO for library-related TODO
 ===============================================================================
 loop development:
 
@@ -54,10 +56,6 @@ Interactive shell:
 		load/mount object files, run system commands via !
 
 ===============================================================================
-Library stuff:
-util: use new ptrs_functional_proposed.h with const_traits.h
-
-===============================================================================
 HACKT template stuff:
 	In the case of redeclarations, 
 	how do default parameter values translate from
@@ -67,8 +65,6 @@ HACKT template stuff:
 enhancements:
 
 Library/Utilities:
-stacktrace.h:
-	add STACKTRACE_VERY_VERBOSE to include __FILE__ and __LINE__
 ICE.h:
 	add ICE_ASSERT combined INVARIANT with ICE macro
 

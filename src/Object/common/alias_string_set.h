@@ -1,10 +1,20 @@
 /**
 	\file "Object/common/alias_string_set.h"
-	$Id: alias_string_set.h,v 1.2 2005/10/08 01:39:54 fang Exp $
+	$Id: alias_string_set.h,v 1.2.6.1 2005/11/02 06:17:56 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_ALIAS_STRING_SET_H__
 #define	__OBJECT_COMMON_ALIAS_STRING_SET_H__
+
+#include "Object/devel_switches.h"
+/***
+	OBSOLETE.
+	This file was short lived, it is no longer used, after reworking
+	cflat aliases.  
+	Say goodbye to this file.  
+***/
+
+#if USE_CFLAT_CONNECT
 
 #include <iosfwd>
 #include <string>
@@ -54,6 +64,8 @@ private:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace ART
+
+#endif	// USE_CFLAT_CONNECT
 
 #endif	// __OBJECT_COMMON_ALIAS_STRING_SET_H__
 

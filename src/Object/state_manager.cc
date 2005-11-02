@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.5.6.1 2005/11/01 04:23:56 fang Exp $
+	$Id: state_manager.cc,v 1.5.6.2 2005/11/02 06:17:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -64,6 +64,7 @@ if (this->size() > 1) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_CFLAT_CONNECT
 /**
 	Prints all aliases with their canonical names.  
  */
@@ -81,8 +82,10 @@ if (this->size() > 1) {
 }
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_GLOBAL_ENTRY_PARENT_REFS
 template <class Tag>
 void
 global_entry_pool<Tag>::uncache_process_parent_refs(void) const {
@@ -90,6 +93,7 @@ global_entry_pool<Tag>::uncache_process_parent_refs(void) const {
 		std::mem_fun_ref(&entry_type::uncache_process_parent_refs)
 	);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -248,9 +252,9 @@ if (parent_ref_cache_valid) {
 	Check of ordering mattes for various tools.
  */
 good_bool
-state_manager::cflat(ostream& o, const footprint& topfp,
+state_manager::cflat_prs(ostream& o, const footprint& topfp,
 		const cflat_options& cf) const {
-	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
+//	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
 if (cf.include_prs) {
 	// dump prs
 	// for each process entry
@@ -262,19 +266,25 @@ if (cf.include_prs) {
 			proc_entry_pool[pid], topfp, cf, *this);
 	}
 }
+#if USE_CFLAT_CONNECT
 if (cf.connect_style) {
 	// first, cache process_parent_refs in all global entries
 #if USE_GLOBAL_ENTRY_PARENT_REFS
 	cache_process_parent_refs();
 #endif
+#if 0
 	// dump connections
 	bool_entry_pool.cflat_connect(o, topfp, cf);
+#else
 	// NEW IDEA: 
 	// just walk all top-level instances hierarchically
 	// and print aliases to canonical names.  
 	// no need for parent refs!!!
+	// NOTE: this is called by module: footprint::cflat_aliases.
+#endif
 }
 	// check options for non-bools
+#endif
 	return good_bool(true);
 }
 

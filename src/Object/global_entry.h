@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.3.6.1 2005/11/01 04:23:56 fang Exp $
+	$Id: global_entry.h,v 1.3.6.2 2005/11/02 06:17:53 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -86,7 +86,7 @@ protected:
 	__expand_subinstances(const footprint&, state_manager&,
 		const size_t, const size_t);
 
-};	// end struct footprint_frame_mao
+};	// end struct footprint_frame_map
 
 //=============================================================================
 /**
@@ -116,7 +116,10 @@ struct footprint_frame :
 	typedef	footprint_frame_map<enum_tag>		enum_map_type;
 	typedef	footprint_frame_map<int_tag>		int_map_type;
 	typedef	footprint_frame_map<bool_tag>		bool_map_type;
-	// or use never_ptr<const footprint>
+	/**
+		The footprint definition upon which this frame is based.  
+		(or use never_ptr<const footprint>?)
+	 */
 	const footprint*			_footprint;
 
 	footprint_frame();
@@ -371,9 +374,11 @@ public:
 	dump(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
 
+#if USE_CFLAT_CONNECT
 	ostream&
 	cflat_connect(ostream&, const cflat_options&, 
 		const footprint&, const state_manager&) const;
+#endif
 
 	ostream&
 	dump_canonical_name(ostream&,
@@ -390,10 +395,11 @@ public:
 		const footprint&, const state_manager&) const;
 #endif
 
+#if USE_CFLAT_CONNECT
 	void
 	collect_hierarchical_aliases(alias_string_set&, 
 		const footprint&, const state_manager&) const;
-
+#endif
 
 	using parent_type::collect_transient_info_base;
 
@@ -405,8 +411,10 @@ public:
 	load_object_base(const persistent_object_manager&, istream&, 
 		const size_t, const footprint&, const state_manager&);
 
+#if USE_CFLAT_CONNECT
 private:
 	struct alias_to_string_transformer;
+#endif
 
 };	// end struct global_entry
 

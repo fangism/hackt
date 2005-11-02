@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.5.4.2 2005/11/01 04:23:55 fang Exp $
+	$Id: devel_switches.h,v 1.5.4.3 2005/11/02 06:17:53 fang Exp $
  */
 
 #ifndef	__OBJECT_DEVEL_SWITCHES_H__
@@ -43,10 +43,15 @@
 /**
 	Whether or not to track parent back references during 
 	unique object allocation phase.  
-	Will be useful for new (correct) cflat algorithm.  
-	Goal: undecided
+	Goal: 0
  */
-#define USE_GLOBAL_ENTRY_PARENT_REFS            1
+#define USE_GLOBAL_ENTRY_PARENT_REFS            0
+
+/**
+	Obsoleting old cflat method, which was wrong.  
+	Goal: 0
+ */
+#define	USE_CFLAT_CONNECT			0
 
 //=============================================================================
 
