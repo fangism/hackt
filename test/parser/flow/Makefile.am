@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.2 2005/10/30 22:02:02 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.1 2005/11/02 06:18:55 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,21 +24,17 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	000 001 002 003 007 008 009 \
 	010 011 012 013 014 015 016 017 018 019 \
 	020 021 023 024 025 026 \
-	030
+	030 031
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
 HACKT_CFLAT_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_SUBJECTS)
 
-# KNOWN BUG: missing private aliases in cflat (20051030)
-# affects 031.in, pending fix on test cases 122-126 in parser/connect...
-#	only cflat produces wrong output, earlier phases are fine.
-
 EMPTY_CFLAT_PRS_TESTS = \
 	000 001 007 008 009 \
 	010 011 012 \
 	020 021 023 024 025 \
-	030
+	030 031
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
 $(EMPTY_CFLAT_PRS):
