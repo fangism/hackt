@@ -1,0 +1,5 @@
+= "poo.x.a" "poo.a"
+= "poo.x.a" "poo.b"
+= "poo.x.a" "poo.x.b"
+= "poo.x.a" "poo.y.a"
+= "poo.x.a" "poo.y.b"

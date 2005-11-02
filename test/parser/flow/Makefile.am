@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.2.2.1 2005/11/02 06:18:55 fang Exp $
+#	$Id: Makefile.am,v 1.2.2.2 2005/11/02 21:51:26 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -30,20 +30,11 @@ HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
 HACKT_CFLAT_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_SUBJECTS)
 
-EMPTY_CFLAT_PRS_TESTS = \
+EMPTY_CFLAT_PRS_TESTS += \
 	000 001 007 008 009 \
 	010 011 012 \
 	020 021 023 024 025 \
-	030 031
-EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
-
-$(EMPTY_CFLAT_PRS):
-	touch $@
-
-all-local: $(EMPTY_CFLAT_PRS)
-
-AUTO_IGNORE += $(EMPTY_CFLAT_PRS)
-CLEANFILES += $(EMPTY_CFLAT_PRS)
+	030
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS +=

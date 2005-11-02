@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.5.2.2 2005/11/02 06:17:50 fang Exp $
+#	$Id: TODO,v 1.5.2.3 2005/11/02 21:51:19 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -23,6 +23,12 @@ footprint pointer persistence may be complicated in footprint_frame.
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 	can be classified as known bug.  
+
+===============================================================================
+HACKT front-end programs:
+	to add:
+	version
+	shell
 
 ===============================================================================
 new class_trait:
@@ -77,6 +83,11 @@ Simulation:
 	generate process_entries' unrolled production rules!
 		only needed for simulation, not flattening [PUNT]
 		state information of expressions not needed yet
+
+===============================================================================
+parser:
+	file/module inclusion, for now mimic cpp, using 
+		#file and #line directives
 
 ===============================================================================
 PRS and CHP

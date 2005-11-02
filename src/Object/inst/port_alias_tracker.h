@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.4.6.2 2005/11/01 04:23:57 fang Exp $
+	$Id: port_alias_tracker.h,v 1.4.6.3 2005/11/02 21:51:25 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -17,7 +17,14 @@
 #include "util/boolean_types.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
+
+/**
+	This was introduced temporarily on branch, but is currently not used.
+	There may be a time in the future when this will come in handy, 
+	so we keep it around commented out.  
+	Appeared on branch: ARTXX-00-01-04-main-00-62-cflat-02
+ */
+#define	USE_ALIAS_STRING_CACHE			0
 
 #if USE_ALIAS_STRING_CACHE
 #include "Object/common/alias_string_cache.h"
@@ -51,11 +58,13 @@ public:
 	typedef	Tag					tag_type;
 	typedef instance_alias_info<Tag>		alias_type;
 	typedef never_ptr<const alias_type>		alias_ptr_type;
+#if USE_ALIAS_STRING_CACHE
 	/**
 		Blatantly copied from class global_entry<Tag>.
 		TODO: move this to "inst/instance_alias_info.h"
 	 */
 	struct alias_to_string_transformer;
+#endif
 private:
 	typedef	std::vector<alias_ptr_type>		alias_array_type;
 public:

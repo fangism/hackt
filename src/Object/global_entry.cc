@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.3.6.1 2005/11/01 04:23:56 fang Exp $
+	$Id: global_entry.cc,v 1.3.6.2 2005/11/02 21:51:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -50,32 +50,6 @@ footprint_frame_map<Tag>::__init_top_level(void) {
 		id_map[i] = i+1;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-/**
-	Adds process parent back reference to the referenced global_entry.  
- */
-template <class Tag>
-void
-footprint_frame_map<Tag>::__cache_process_parent_refs(
-		const state_manager& sm, const size_t pi) const {
-	typedef	typename state_instance<Tag>::pool_type	pool_type;
-	typedef	footprint_frame_map_type::const_iterator	const_iterator;
-	// placeholder pool in the footprint
-	const global_entry_pool<Tag>& _pool(sm.template get_pool<Tag>());
-	const_iterator i(id_map.begin());
-	const const_iterator e(id_map.end());
-	for ( ; i!=e; i++) {
-		const global_entry<Tag>& g(_pool[*i]);
-		if (!g.process_parent_refs.size() ||
-				g.process_parent_refs.back() != pi) {
-			// avoid duplicates of last entry
-			g.process_parent_refs.push_back(pi);
-		}
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -256,20 +230,6 @@ footprint_frame::init_top_level(void) {
 	footprint_frame_map<int_tag>::__init_top_level();
 	footprint_frame_map<bool_tag>::__init_top_level();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-void
-footprint_frame::cache_process_parent_refs(const state_manager& sm, 
-		const size_t pi) const {
-	footprint_frame_map<process_tag>::__cache_process_parent_refs(sm, pi);
-	footprint_frame_map<channel_tag>::__cache_process_parent_refs(sm, pi);
-	footprint_frame_map<datastruct_tag>::__cache_process_parent_refs(sm, pi);
-	footprint_frame_map<enum_tag>::__cache_process_parent_refs(sm, pi);
-	footprint_frame_map<int_tag>::__cache_process_parent_refs(sm, pi);
-	footprint_frame_map<bool_tag>::__cache_process_parent_refs(sm, pi);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

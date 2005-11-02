@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.5.6.2 2005/11/02 06:17:53 fang Exp $
+	$Id: state_manager.cc,v 1.5.6.3 2005/11/02 21:51:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,7 +19,6 @@
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
-// #include "util/binders.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
 #include "util/IO_utils.h"
@@ -62,38 +61,6 @@ if (this->size() > 1) {
 }
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_CFLAT_CONNECT
-/**
-	Prints all aliases with their canonical names.  
- */
-template <class Tag>
-ostream&
-global_entry_pool<Tag>::cflat_connect(ostream& o,
-		const footprint& topfp, const cflat_options& cf) const {
-if (this->size() > 1) {
-	const state_manager& sm(AS_A(const state_manager&, *this));
-	const_iterator i(++this->begin());
-	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
-		i->cflat_connect(o, cf, topfp, sm);
-	}
-}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-template <class Tag>
-void
-global_entry_pool<Tag>::uncache_process_parent_refs(void) const {
-	for_each(this->begin(), this->end(), 
-		std::mem_fun_ref(&entry_type::uncache_process_parent_refs)
-	);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -168,11 +135,7 @@ global_entry_pool<Tag>::load_object_base(const persistent_object_manager& m,
 state_manager::state_manager() :
 		process_pool_type(), channel_pool_type(), 
 		struct_pool_type(), enum_pool_type(), 
-		int_pool_type(), bool_pool_type()
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-		, parent_ref_cache_valid(false)
-#endif
-		{
+		int_pool_type(), bool_pool_type() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -195,57 +158,6 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-/**
-	Walks all processes and marks their child references
-	(from their footprint frames) with a back-reference
-	in the parent_ref cache.  
-	(Only modifies mutable data.)
- */
-void
-state_manager::cache_process_parent_refs(void) const {
-if (!parent_ref_cache_valid) {
-	STACKTRACE_VERBOSE;
-	const global_entry_pool<process_tag>& process_entry_pool(*this);
-
-#if 0
-	for_each(++process_entry_pool.begin(), process_entry_pool.end(), 
-		std::bind2nd_argval(std::mem_fun_ref(
-			&global_entry<process_tag>::cache_process_parent_refs),
-		*this)
-	);
-#else
-	size_t pid = 1;
-	const size_t plim = process_entry_pool.size();
-	for ( ; pid < plim; pid++) {
-		process_entry_pool[pid].cache_process_parent_refs(*this, pid);
-	}
-	parent_ref_cache_valid = true;
-}
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Releases memory for caching parent refs in each entry.  
- */
-void
-state_manager::uncache_process_parent_refs(void) const {
-if (parent_ref_cache_valid) {
-	// go through all pool entries and clear their parent caches.  
-	global_entry_pool<process_tag>::uncache_process_parent_refs();
-	global_entry_pool<channel_tag>::uncache_process_parent_refs();
-	global_entry_pool<datastruct_tag>::uncache_process_parent_refs();
-	global_entry_pool<enum_tag>::uncache_process_parent_refs();
-	global_entry_pool<int_tag>::uncache_process_parent_refs();
-	global_entry_pool<bool_tag>::uncache_process_parent_refs();
-	parent_ref_cache_valid = false;
-}
-}
-
-#endif	// USE_GLOBAL_ENTRY_PARENT_REFS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prototype cflat -- strictly for backwards compatibility.  
 	Connections should come after production rules.  (CAST tools)
@@ -254,7 +166,6 @@ if (parent_ref_cache_valid) {
 good_bool
 state_manager::cflat_prs(ostream& o, const footprint& topfp,
 		const cflat_options& cf) const {
-//	const global_entry_pool<bool_tag>& bool_entry_pool(*this);
 if (cf.include_prs) {
 	// dump prs
 	// for each process entry
@@ -266,25 +177,6 @@ if (cf.include_prs) {
 			proc_entry_pool[pid], topfp, cf, *this);
 	}
 }
-#if USE_CFLAT_CONNECT
-if (cf.connect_style) {
-	// first, cache process_parent_refs in all global entries
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-	cache_process_parent_refs();
-#endif
-#if 0
-	// dump connections
-	bool_entry_pool.cflat_connect(o, topfp, cf);
-#else
-	// NEW IDEA: 
-	// just walk all top-level instances hierarchically
-	// and print aliases to canonical names.  
-	// no need for parent refs!!!
-	// NOTE: this is called by module: footprint::cflat_aliases.
-#endif
-}
-	// check options for non-bools
-#endif
 	return good_bool(true);
 }
 

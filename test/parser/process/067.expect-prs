@@ -1,0 +1,3 @@
+= "poo.x.a[0]" "poo.x.a[1]"
+= "poo.x.a[0]" "poo.y.a[0]"
+= "poo.x.a[0]" "poo.y.a[1]"

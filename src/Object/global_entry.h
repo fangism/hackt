@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.3.6.2 2005/11/02 06:17:53 fang Exp $
+	$Id: global_entry.h,v 1.3.6.3 2005/11/02 21:51:23 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -13,7 +13,6 @@
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
 #include "util/macros.h"
-#include "Object/devel_switches.h"
 
 namespace ART {
 class cflat_options;
@@ -72,11 +71,6 @@ struct footprint_frame_map {
 protected:
 	void
 	__init_top_level(void);
-
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-	void
-	__cache_process_parent_refs(const state_manager&, const size_t) const;
-#endif
 
 	void
 	__allocate_remaining_sub(const footprint&, state_manager&, 
@@ -147,11 +141,6 @@ struct footprint_frame :
 	ostream&
 	dump_footprint(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
-
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-	void
-	cache_process_parent_refs(const state_manager&, const size_t) const;
-#endif
 
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
@@ -229,21 +218,6 @@ struct global_entry_base<true> {
 	dump(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
 
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-	/**
-		Caches process parent back-references in all public members
-		in the footprint frame.  
-		Only ever instantiated for process_tag. 
-		\param sm the entire state manager (referenced)
-		\param pi the parent process index.
-	 */
-	void
-	cache_process_parent_refs(const state_manager& sm,
-			const size_t pi) const {
-		_frame.cache_process_parent_refs(sm, pi);
-	}
-#endif
-
 	// unused, thus far
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -285,35 +259,9 @@ struct global_entry_common {
 	 */
 	size_t		local_offset;
 
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-	/**
-		List of process parents (IDs) that can claim
-		this entry as a public member alias.  
-		TODO: decide whether or not this is a run-time computed
-			structure only (cache-only, non-persistent), 
-			or actually persistently save/restored to object.  
-		If cached, then may need validity bit?
-	 */
-	typedef	std::vector<size_t>	parent_ref_cache_type;
-	mutable parent_ref_cache_type	process_parent_refs;
-#endif
-
 	global_entry_common() : parent_tag_value(0), parent_id(0),
-			local_offset(0)
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-			, process_parent_refs()
-#endif
-			{ }
-#if USE_GLOBAL_ENTRY_PARENT_REFS
-	/**
-		Should invalidate cache bit (in parent structure)
-		after doing this.  
-		Why uncache? frees up some memory.  
-	 */
-	void
-	uncache_process_parent_refs(void) const { process_parent_refs.clear(); }
-#endif
-};
+			local_offset(0) { }
+};	// end struct global_entry_common
 
 //=============================================================================
 /**
@@ -374,12 +322,6 @@ public:
 	dump(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
 
-#if USE_CFLAT_CONNECT
-	ostream&
-	cflat_connect(ostream&, const cflat_options&, 
-		const footprint&, const state_manager&) const;
-#endif
-
 	ostream&
 	dump_canonical_name(ostream&,
 		const footprint&, const state_manager&) const;
@@ -387,19 +329,6 @@ public:
 	ostream&
 	__dump_canonical_name(ostream&, const dump_flags&,
 		const footprint&, const state_manager&) const;
-
-#if 0
-	// aborted idea
-	void
-	cflat_hierarchical_aliases(ostream&, 
-		const footprint&, const state_manager&) const;
-#endif
-
-#if USE_CFLAT_CONNECT
-	void
-	collect_hierarchical_aliases(alias_string_set&, 
-		const footprint&, const state_manager&) const;
-#endif
 
 	using parent_type::collect_transient_info_base;
 
@@ -410,11 +339,6 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const size_t, const footprint&, const state_manager&);
-
-#if USE_CFLAT_CONNECT
-private:
-	struct alias_to_string_transformer;
-#endif
 
 };	// end struct global_entry
 

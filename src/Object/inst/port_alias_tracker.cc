@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.4.6.1 2005/10/31 04:45:54 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.4.6.2 2005/11/02 21:51:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -486,8 +486,10 @@ INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(enum_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(int_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(bool_tag)
 
+#if USE_ALIAS_STRING_CACHE
 template void alias_reference_set<process_tag>::refresh_string_cache() const;
 template void alias_reference_set<bool_tag>::refresh_string_cache() const;
+#endif
 
 #undef	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK
 

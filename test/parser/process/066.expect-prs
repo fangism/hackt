@@ -1,0 +1,7 @@
+= "poo.p.x.a" "poo.p.x.b"
+= "poo.p.x.a" "poo.p.y.a"
+= "poo.p.x.a" "poo.p.y.b"
+= "poo.p.x.a" "poo.q.x.a"
+= "poo.p.x.a" "poo.q.x.b"
+= "poo.p.x.a" "poo.q.y.a"
+= "poo.p.x.a" "poo.q.y.b"
