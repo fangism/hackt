@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2005-11-01	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-62-cflat-02-04:
+	  Enhanced hackt-cflat-test.sh.in to check and see if 
+		.prs differences are only a result of reordering.  
+
+
 2005-10-27	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-61-flow-01-04:
