@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.3 2005/11/02 22:53:48 fang Exp $
+	$Id: cflat.h,v 1.3.2.1 2005/11/03 07:31:18 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_H__
@@ -28,10 +28,11 @@ public:
 	typedef	cflat_options			options;
 	typedef	void (*options_modifier)(options&);
 private:
+	struct options_modifier_info;
 	/**
 		Use string instead of char* for alphabetization.  
 	 */
-	typedef	util::qmap<std::string, options_modifier>
+	typedef	util::qmap<std::string, options_modifier_info>
 						options_modifier_map_type;
 	static const options_modifier_map_type	options_modifier_map;
 public:
@@ -63,22 +64,25 @@ private:
 	const size_t
 	program_id;
 
-	static const register_options_modifier	_default;
-	static const register_options_modifier	_prsim;
-	static const register_options_modifier	_lvs;
-	static const register_options_modifier	_ergen;
-	static const register_options_modifier	_prlint;
-	static const register_options_modifier	_prs2tau;
-	static const register_options_modifier	_connect;
-	static const register_options_modifier	_wire;
-	static const register_options_modifier	_aspice;
-	static const register_options_modifier	_env;
-	static const register_options_modifier	_check;
-	static const register_options_modifier	_csim;
-	static const register_options_modifier	_LVS;
-	static const register_options_modifier	_Aspice;
-	static const register_options_modifier	_ADspice;
-	static const register_options_modifier	_alint;
+	// no reason why these have to be static members, 
+	// other than convenience
+	// complete presets, from original cflat (CAST)
+	static const register_options_modifier
+		_default, _prsim, _lvs, _ergen, _prlint, _prs2tau,
+		_connect, _wire, _aspice, _env, _check, _csim, _LVS,
+		_Aspice, _ADspice, _alint;
+
+	// individual flag modifiers
+	static const register_options_modifier
+		_connect_none, _no_connect, _connect_equal,
+		_connect_connect, _connect_wire,
+		_include_prs, _exclude_prs, _no_include_prs, _no_exclude_prs,
+		_self_aliases, _no_self_aliases,
+		_quote_names, _no_quote_names,
+		_check_mode, _no_check_mode,
+		_wire_mode, _no_wire_mode,
+		_dsim_prs, _no_dsim_prs;
+
 };	// end class cflat
 
 //=============================================================================

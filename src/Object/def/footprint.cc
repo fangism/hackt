@@ -1,12 +1,14 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.5 2005/11/02 22:53:45 fang Exp $
+	$Id: footprint.cc,v 1.5.2.1 2005/11/03 07:31:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
+#include <algorithm>
+#include <iterator>
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
@@ -18,6 +20,7 @@
 #include "Object/global_entry.h"
 #include "Object/port_context.h"
 #include "Object/common/cflat_args.h"
+#include "Object/common/alias_string_cache.h"
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -33,6 +36,8 @@ namespace entity {
 using util::write_value;
 using util::read_value;
 using util::auto_indent;
+using std::ostream_iterator;
+using std::copy;
 
 //=============================================================================
 // class footprint_base method definitions
@@ -506,7 +511,35 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 void
 footprint::cflat_aliases(ostream& o, const state_manager& sm, 
 		const cflat_options& cf) const {
-	cflat_aliases(cflat_aliases_arg_type(o, sm, *this, NULL, cf, string()));
+	wire_alias_set wires;
+	const global_entry_pool<bool_tag>& gbp(sm.get_pool<bool_tag>());
+	const size_t s = gbp.size();
+	if (cf.wire_mode && !cf.check_prs) {
+		// reserve alias slots for all uniquely allocated bools
+		wires.resize(s);
+	}
+	cflat_aliases(cflat_aliases_arg_type(
+		o, sm, *this, NULL, cf, wires, string()));
+	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
+		// style need not be CONNECT_STYLE_WIRE, just not NONE
+		// aliases were suppressed while accumulating
+		// now print them in wire-accumulated form
+		size_t j = 1;
+		for ( ; j<s; j++) {
+		const alias_string_cache& ac(wires[j]);
+		if (!ac.strings.empty()) {
+			const global_entry<bool_tag>& b(gbp[j]);
+			o << "wire (";
+			// NOTE: thus far, wire-style names are never quoted
+			// currently, this does not respect cf.enquote_names.
+			ostream_iterator<alias_string_cache::value_type>
+				osi(o, ",");
+			copy(ac.strings.begin(), ac.strings.end(), osi);
+			b.dump_canonical_name(o, *this, sm) << ");" << endl;
+		}
+		// else is loner, has no aliases
+		}
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

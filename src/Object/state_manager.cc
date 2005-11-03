@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.6 2005/11/02 22:53:43 fang Exp $
+	$Id: state_manager.cc,v 1.6.2.1 2005/11/03 07:31:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -167,6 +167,7 @@ good_bool
 state_manager::cflat_prs(ostream& o, const footprint& topfp,
 		const cflat_options& cf) const {
 if (cf.include_prs) {
+	if (cf.dsim_prs)	o << "dsim {" << endl;
 	// dump prs
 	// for each process entry
 	size_t pid = 1;		// 0-indexed, but 0th entry is null
@@ -176,6 +177,7 @@ if (cf.include_prs) {
 		production_rule_substructure::cflat_prs(o, 
 			proc_entry_pool[pid], topfp, cf, *this);
 	}
+	if (cf.dsim_prs)	o << "}" << endl;
 }
 	return good_bool(true);
 }

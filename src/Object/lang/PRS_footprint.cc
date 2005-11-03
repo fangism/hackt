@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.2 2005/10/08 01:39:59 fang Exp $
+	$Id: PRS_footprint.cc,v 1.2.8.1 2005/11/03 07:31:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -151,21 +151,25 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 	switch (e.type) {
 		case PRS_LITERAL_TYPE_ENUM:
 			INVARIANT(one == 1);
-			if (cf.enquote_names) o << '\"';
-			sm.get_pool<bool_tag>()[bfm[e[1]-1]]
-				.dump_canonical_name(o, topfp, sm);
-			if (cf.enquote_names) o << '\"';
+			if (!cf.check_prs) {
+				if (cf.enquote_names) o << '\"';
+				sm.get_pool<bool_tag>()[bfm[e[1]-1]]
+					.dump_canonical_name(o, topfp, sm);
+				if (cf.enquote_names) o << '\"';
+			}
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(one == 1);
-			cflat_expr(ep[e[1]-1], o << '~', bfm, topfp, cf, 
+			if (!cf.check_prs)
+				o << '~';
+			cflat_expr(ep[e[1]-1], o, bfm, topfp, cf, 
 				sm, ep, e.type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case PRS_OR_EXPR_TYPE_ENUM: {
 			const bool paren = ps && (e.type != ps);
-			if (paren) o << '(';
+			if (!cf.check_prs && paren) o << '(';
 			if (e.size()) {
 				cflat_expr(ep[e[1]-1], o, bfm, 
 					topfp, cf, sm, ep, e.type);
@@ -175,12 +179,14 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 				int i = 2;
 				const int s = e.size();
 				for ( ; i<=s; i++) {
+					if (!cf.check_prs)
+						o << op;
 					cflat_expr(ep[e[i]-1],
-						o << op, bfm, topfp, cf, 
+						o, bfm, topfp, cf, 
 						sm, ep, e.type);
 				}
 			}
-			if (paren) o << ')';
+			if (!cf.check_prs && paren) o << ')';
 			break;
 		}
 		default:
@@ -206,6 +212,7 @@ footprint::cflat_rule(const rule& r, ostream& o,
 #endif
 	cflat_expr(ep[r.expr_index-1],
 		o, bfm, topfp, cf, sm, ep, PRS_LITERAL_TYPE_ENUM);
+if (!cf.check_prs) {
 	o << " -> ";
 	// r.output_index gives the local unique ID, 
 	// which needs to be translated to global ID.  
@@ -216,6 +223,7 @@ footprint::cflat_rule(const rule& r, ostream& o,
 		.dump_canonical_name(o, topfp, sm);
 	if (cf.enquote_names) o << '\"';
 	o << (r.dir ? '+' : '-');
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -278,7 +286,8 @@ footprint::cflat_prs(ostream& o, const footprint_frame_map<bool_tag>& bfm,
 	const const_rule_iterator e(rule_pool.end());
 	for ( ; i!=e; i++) {
 		cflat_rule(*i, o, bfm, topfp, cf, sm, expr_pool);
-		o << endl;
+		if (!cf.check_prs)
+			o << endl;
 	}
 }
 

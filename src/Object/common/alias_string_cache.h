@@ -1,7 +1,7 @@
 /**
 	\file "Object/common/alias_string_cache.h"
 	Alias string cache structure.  
-	$Id: alias_string_cache.h,v 1.2 2005/11/02 22:53:44 fang Exp $
+	$Id: alias_string_cache.h,v 1.2.2.1 2005/11/03 07:31:16 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_ALIAS_STRING_CACHE_H__
@@ -12,6 +12,7 @@
 
 namespace ART {
 namespace entity {
+using std::vector;
 //=============================================================================
 /**
 	Cache type for maintaining alias strings.  
@@ -21,7 +22,7 @@ namespace entity {
  */ 
 struct alias_string_cache {
 public:
-	typedef std::vector<std::string>        	string_array_type;
+	typedef vector<std::string>        		string_array_type;
 	typedef	string_array_type::const_iterator	const_iterator;
 	typedef	string_array_type::const_reference	const_reference;
 	typedef	string_array_type::value_type		value_type;
@@ -59,6 +60,13 @@ public:
 	}
 
 };      // end class alias_string_cache
+
+//=============================================================================
+/**
+	Used to accumulate all aliases across the hierarchy during cflat.  
+ */
+struct wire_alias_set : public vector<alias_string_cache> {
+};	// end struct wire_alias_set
 
 //=============================================================================
 }	// end namespace entity
