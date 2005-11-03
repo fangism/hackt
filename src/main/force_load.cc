@@ -3,7 +3,7 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.4 2005/10/08 01:40:02 fang Exp $
+	$Id: force_load.cc,v 1.4.8.1 2005/11/03 02:16:36 fang Exp $
  */
 
 #include "main/force_load.h"
@@ -17,6 +17,8 @@
 #include "main/cflat.h"
 #include "main/prsobjdemo.h"
 #include "main/dump_persistent_table.h"
+#include "main/shell.h"
+#include "main/version.h"
 
 namespace ART {
 
@@ -35,6 +37,8 @@ namespace ART {
 	For kicks, try commenting it out, and see the resulting output.  
 	If that's not enough of a shock, compare the size of the 
 	resulting binaries.  
+
+	TODO: use configure to determine whether or not this is necessary.
 ***/
 void
 force_load(void) {
@@ -51,6 +55,8 @@ force_load(void) {
 	const objdump objdumper;
 	const prsobjdemo prsobjdemoer;
 	const dump_persistent_table persistent_dumper;
+	const version versionator;
+	const shell shell_shocker;
 }
 
 }	// end namespace ART

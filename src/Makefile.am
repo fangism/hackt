@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.80 2005/11/02 22:53:42 fang Exp $
+#	$Id: Makefile.am,v 1.80.2.1 2005/11/03 02:16:34 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -60,6 +60,16 @@ BUILT_SOURCES = parser/art++-parse.output.h
 PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
 	dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
+
+cvstag.h: ChangeLog
+	tag=`$(HEAD) -n 10 $? | $(GREP) "^	[*].*:" | \
+		$(HEAD) -n 1 | $(SED) 's/:.*$$//g' | $(CUT) -d\  -f 2` ; \
+	$(ECHO) "#define	CVSTAG		\"$$tag\"" > $@
+
+builddate.h:
+	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" > $@
+
+AUTOHEADERS = cvstag.h builddate.h
 
 # these two targets cause automake to create the corresponding _build
 # subdirectories, that are needed for make distcheck, for check-headers
@@ -535,7 +545,9 @@ MAIN_EXEC_CC_FILES = \
 	main/cflat.cc \
 	main/prsobjdemo.cc \
 	main/dump_persistent_table.cc \
-	main/objdump.cc
+	main/objdump.cc \
+	main/shell.cc \
+	main/version.cc
 
 MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
@@ -566,6 +578,7 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 main/main_funcs.cc: parser/$(ARTXX_PARSE_ROOT)-prefix.h
+main/version.cc: cvstag.h builddate.h
 lexer/$(ARTXX_LEX_ROOT).cc: parser/$(ARTXX_PARSE_ROOT).h
 parser/art++-union.lo: parser/$(ARTXX_PARSE_ROOT).output.h
 parser/art++-union.$(OBJEXT): parser/$(ARTXX_PARSE_ROOT).output.h
@@ -800,8 +813,9 @@ EXTRA_DIST += local.cvsignore \
 
 TESTS = art_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
+CLEANFILES += $(AUTOHEADERS)
 DISTCLEANFILES += art_persistent_table.sh
-AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES)
+AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(AUTOHEADERS)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@

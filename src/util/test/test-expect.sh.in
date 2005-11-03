@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "test-expect.sh.in"
-#	$Id: test-expect.sh.in,v 1.2 2005/08/04 23:02:56 fang Exp $
+#	$Id: test-expect.sh.in,v 1.2.24.1 2005/11/03 02:16:38 fang Exp $
 # This file came from "test-expect.sh" in revision prehistory.  
 
 # $1 is the executable, expecting no input
@@ -13,11 +13,8 @@ srcroot=$2/$1
 bldroot=$1
 morefilter=$srcroot.morefilter.sh
 
-# see if it crashes first
-{ $cmd ; if [ $? -gt 1 ] ; then exit 1 ; fi } 2>&1 | @CAT@ > /dev/null
-
-# the run real test, comparing outputs
-$cmd 2>&1 | @CAT@ > $bldroot.out
+$cmd > $bldroot.out 2>&1
+if [ $? -gt 1 ] ; then exit 1 ; fi
 
 $filter $bldroot.out > $bldroot.out.filter
 

@@ -1,5 +1,16 @@
 "ChangeLog"
 
+# NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
+# This version tag is used in building "main/version.cc".
+
+2005-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-63-cflat-03-01:
+	  Added hackt subprogram 'version'.  
+	  Added placeholder hackt subprogram 'shell'.  
+	  TODO: add more cflat modes, namely lvs, connect, etc...
+
+
 2005-11-02	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-63-merged-cflat-02-05:
