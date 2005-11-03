@@ -1,5 +1,44 @@
 "ChangeLog"
 
+# NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
+# This version tag is used in building "main/version.cc".
+
+2005-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-64-merged-cflat-03-02:
+	  Merged major cflat functionality from -cflat-03 branch.  
+	  A good time to announce a pre-release.  
+
+
+2005-11-03	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-63-cflat-03-02:
+	  Added a TON of cflat modes, having reverse-engineered most
+		cflat formats from the original program.  
+	  Added real command-line parsing to the cflat subprogram:
+		now able to pass in a preset mode and apply any number
+		of individual flag modifiers for customization.  
+	  Implemented wire-mode alias printing in footprint::cflat_aliases
+		and part of substructure_alias_base<false>::__cflat_aliases, 
+		in which all aliases are accumulated in a cache
+		and printed in the end in aggregate form: wire (a,b,c...);
+		Made use of alias_string_cache, which from previous branch.  
+	  Various cflat modes not rigorously tested, and many old CAST
+		features (like attrib, spec,...) not yet supported.  
+		Will update as we learn more from testing.  
+	  Usage for hackt cflat is pretty verbose.  
+	  Ready for production, merge to trunk.  
+	  TODO: documentation: tutorial on hackt::cflat, after merge.
+
+
+2005-11-02	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-63-cflat-03-01:
+	  Added hackt subprogram 'version'.  
+	  Added placeholder hackt subprogram 'shell'.  
+	  TODO: add more cflat modes, namely lvs, connect, etc...
+
+
 2005-11-02	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-63-merged-cflat-02-05:

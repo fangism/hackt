@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.5 2005/11/02 22:53:46 fang Exp $
+	$Id: instance_alias.tcc,v 1.6 2005/11/03 07:52:05 fang Exp $
 	TODO: trim includes
  */
 
@@ -864,26 +864,25 @@ INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(
 	// construct new prefix from os
 	cflat_aliases_arg_type sc(c);
 	const global_entry_pool<Tag>& gp(c.sm.template get_pool<Tag>());
+	size_t gindex;
 if (c.fpf) {
 	sc.prefix += ".";
-	sc.prefix += local_name;
 	// this is not a top-level instance (from recursion)
 	const size_t local_offset = this->instance_index -1;
 	const footprint_frame_map_type&
 		fm(c.fpf->template get_frame_map<Tag>());
 	// footprint_frame yields the global offset
-	const global_entry<Tag>& e(gp[fm[local_offset]]);
-	__cflat_aliases(sc, e);
+	gindex = fm[local_offset];
 } else {
 	// footprint_frame is null, this is a top-level instance
-	sc.prefix = local_name;
 	// the instance_index can be used directly as the offset into
 	// the state_manager's member arrays
 	BOUNDS_CHECK(this->instance_index && this->instance_index < gp.size());
-	const global_entry<Tag>& e(gp[this->instance_index]);
-	// depends on whether or not this has subinstances!
-	__cflat_aliases(sc, e);
+	gindex = this->instance_index;
 }
+	sc.prefix += local_name;
+	const global_entry<Tag>& e(gp[gindex]);
+	__cflat_aliases(sc, e, gindex);
 	// recursion or termination
 }
 

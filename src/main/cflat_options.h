@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.3 2005/11/02 22:53:48 fang Exp $
+	$Id: cflat_options.h,v 1.4 2005/11/03 07:52:06 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_OPTIONS_H__
@@ -48,6 +48,9 @@ public:
 	bool				dump_non_bools;
 
 	typedef	enum {
+		/**
+			Means: print namespaces normally, using :: delimiter.  
+		 */
 		NAMESPACE_POLICY_NONE = 0, 
 		NAMESPACE_POLICY_TRUNCATE = 1, 
 		NAMESPACE_POLICY_MANGLE = 2,
@@ -59,6 +62,25 @@ public:
 	 */
 	unsigned char			namespace_policy;
 
+	/**
+		Check-prs mode: if true, then doesn't print prs.  
+	 */
+	bool				check_prs;
+	/**
+		In wire mode, aliases are accumulated, and printed together.  
+		wire(a, b, c...);
+	 */
+	bool				wire_mode;
+
+	/**
+		csim-style production rules.  
+	 */
+	bool				csim_style_prs;
+	/**
+		Whether or not prs should be wrapped in dsim { }
+	 */
+	bool				dsim_prs;
+
 	// ignore policies...
 	// warning flags...
 	// error flags...
@@ -69,7 +91,9 @@ public:
 	cflat_options() : connect_style(CONNECT_STYLE_EQUAL), 
 		include_prs(true), dump_self_connect(false), 
 		enquote_names(true), dump_non_bools(false), 
-		namespace_policy(NAMESPACE_POLICY_NONE) {
+		namespace_policy(NAMESPACE_POLICY_NONE), 
+		check_prs(false), wire_mode(false), 
+		csim_style_prs(false), dsim_prs(false) {
 	}
 
 	~cflat_options() { }

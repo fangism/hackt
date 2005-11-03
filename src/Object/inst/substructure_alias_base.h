@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.7 2005/11/02 22:53:47 fang Exp $
+	$Id: substructure_alias_base.h,v 1.8 2005/11/03 07:52:05 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -139,7 +139,7 @@ protected:
 	template <class Tag>
 	void
 	__cflat_aliases(cflat_aliases_arg_type&,
-		const global_entry<Tag>&) const;
+		const global_entry<Tag>&, const size_t) const;
 
 protected:
 	// call forwarding
@@ -242,7 +242,7 @@ protected:
 	template <class Tag>
 	void
 	__cflat_aliases(cflat_aliases_arg_type&, 
-		const global_entry<Tag>&) const;
+		const global_entry<Tag>&, const size_t) const;
 
 protected:
 	void

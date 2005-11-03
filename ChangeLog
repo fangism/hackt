@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-11-03	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-64-merged-cflat-03-02:
+	  Merged -cflat-03 branch for added cflat functionality.  
+	  Improved bootstrap script.  
+
+
 2005-11-02	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-63-merged-cflat-02-05:

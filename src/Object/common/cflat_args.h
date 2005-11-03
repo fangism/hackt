@@ -1,7 +1,7 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.2 2005/11/02 22:53:45 fang Exp $
+	$Id: cflat_args.h,v 1.3 2005/11/03 07:52:05 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_CFLAT_ARGS_H__
@@ -18,6 +18,7 @@ using std::ostream;
 class footprint;
 class footprint_frame;
 class state_manager;
+struct wire_alias_set;	// defined in "Object/common/alias_string_cache.h"
 
 //=============================================================================
 /**
@@ -26,6 +27,11 @@ class state_manager;
  */
 struct cflat_aliases_arg_type {
 	ostream&			o;
+	/**
+		The state manager contains the information about the
+		globally allocated unique instances, 
+		including footprint frames.  
+	 */
 	const state_manager&		sm;
 	/**
 		Should be the top-level footprint belonging to the module, 
@@ -35,20 +41,37 @@ struct cflat_aliases_arg_type {
 	/**
 		If this is NULL, then we are at top-level.  
 		Is a never-delete pointer.  
+		The footprint frame maps the local aliases to globally
+		allocated unique instances.  
 	 */
 	const footprint_frame*		fpf;
+	/**
+		cflat mode and style flags.  
+	 */
 	const cflat_options&		cf;
+	/**
+		\pre is already sized properly to accomodate total
+			number of allocated bool nodes.  
+	 */
+	wire_alias_set&			wires;
+	/**
+		Cumulative hierarchical name (top-down).  
+		The prefix grows with each level of instance hierarchy.  
+	 */
 	string				prefix;
 
 	cflat_aliases_arg_type(ostream& _o, const state_manager& _sm, 
 			const footprint& _f, 
 			const footprint_frame* const _fpf, 
 			const cflat_options& _cf,
+			wire_alias_set& _w,
 			const string& _p = string()) :
 			o(_o), sm(_sm), 
 			topfp(_f),
 			fpf(_fpf), 
-			cf(_cf), prefix(_p) {
+			cf(_cf),
+			wires(_w), 
+			prefix(_p) {
 	}
 	// default copy-constructor
 	// default destructor
