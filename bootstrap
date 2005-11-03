@@ -1,15 +1,61 @@
-#! /bin/sh
+#!/bin/sh
+# "bootstrap" 
+# Maintainer script for regenerating Makefiles and configure scripts.
+# (also known as autogen.sh in some conventions)
+#	$Id: bootstrap,v 1.2.36.1 2005/11/03 02:16:27 fang Exp $
+
 # this regenerates some critical files
 # run this after "make maintainer-clean" or "make distclean"
-# beware: this file is NOT included in the distribution!
+
+PROJECT=hackt
+TEST_TYPE=-f
+FILE=INSTALL
 
 # May need this to break chicken-before-the-egg
 touch src/headers_deps.make
 
-aclocal -I config && \
-autoheader && \
-libtoolize -c && \
-automake --add-missing -c --verbose && \
+DIE=0
+
+(autoconf --version) < /dev/null > /dev/null 2>&1 || {
+        echo
+        echo "You must have autoconf installed to compile $PROJECT."
+        echo "Download the appropriate package for your distribution,"
+        echo "or get the source tarball at: "
+	echo "http://ftp.gnu.org/gnu/autoconf/autoconf-2.59.tar.gz"
+        DIE=1
+}
+
+(libtoolize --version) < /dev/null > /dev/null 2>&1 || {
+        echo
+        echo "You must have libtool installed to compile $PROJECT."
+	echo "Get ftp://ftp.gnu.org/gnu/libtool/libtool-1.5.20.tar.gz"
+        echo "(or a newer version if it is available)"
+        DIE=1
+}
+
+(automake --version) < /dev/null > /dev/null 2>&1 || {
+        echo
+        echo "You must have automake installed to compile $PROJECT."
+        echo "Get http://ftp.gnu.org/gnu/automake/automake-1.9.6.tar.gz"
+        echo "(or a newer version if it is available)"
+        DIE=1
+}
+
+if test "$DIE" -eq 1; then
+        exit 1
+fi
+
+test $TEST_TYPE $FILE || {
+        echo "You must run this script in the top-level $PROJECT directory"
+        exit 1
+}
+
+
+libtoolize --copy --force
+aclocal $ACLOCAL_FLAGS -I config
+# optionally feature autoheader
+(autoheader --version)  < /dev/null > /dev/null 2>&1 && autoheader
+automake --copy --add-missing --verbose --gnu $am_opt
 autoconf
 
 # may not want verbose for autoconf, aclocal, and autoheader
