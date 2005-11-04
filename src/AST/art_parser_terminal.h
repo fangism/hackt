@@ -1,14 +1,14 @@
 /**
 	\file "AST/art_parser_terminal.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_terminal.h,v 1.5 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_terminal.h,v 1.5.48.1 2005/11/04 22:23:27 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TERMINAL_H__
 #define __AST_ART_PARSER_TERMINAL_H__
 
 #include <string>
-#include "lexer/art_lex.h"
+#include "lexer/hac_lex.h"
 #include "AST/art_parser_base.h"
 
 //=============================================================================

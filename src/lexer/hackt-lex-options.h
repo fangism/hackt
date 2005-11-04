@@ -1,14 +1,16 @@
 /**
-	\file "lexer/art++-lex-options.h"
+	\file "lexer/hackt-lex-options.h"
 	Preprocessor definitions to give to lexer file to suppress
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: art++-lex-options.h,v 1.2 2005/06/19 01:58:50 fang Exp $
+	$Id: hackt-lex-options.h,v 1.1.2.1 2005/11/04 22:23:28 fang Exp $
+	This file was renamed from the following in prehistory:
+	Id: art++-lex-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
 
-#ifndef	__ARTXX_LEX_OPTIONS_H__
-#define	__ARTXX_LEX_OPTIONS_H__
+#ifndef	__LEXER_HACKT_LEX_OPTIONS_H__
+#define	__LEXER_HACKT_LEX_OPTIONS_H__
 
 // this needs to be consistent with the %option never-interactive
 #ifndef	YY_ALWAYS_INTERACTIVE
@@ -29,5 +31,5 @@
 #endif
 #endif
 
-#endif	// __ARTXX_LEX_OPTIONS_H__
+#endif	// __LEXER_HACKT_LEX_OPTIONS_H__
 

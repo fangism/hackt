@@ -2,7 +2,7 @@
 .libs
 .dirstamp
 ignore
-art++.types
+*.types
 *.output
 *.lo
 *.loT
@@ -10,4 +10,7 @@ art++.types
 *.cc
 *.swp
 *.hchk
-
+*.tab.c
+*.tab.h
+*.ht
+*.cct

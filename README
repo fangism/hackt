@@ -68,10 +68,17 @@ Currently, there are no other known platforms which fail to build and
 run the project, but that means they have yet to be discovered.  
 
 To build the source, one need at least bison-1.35 (that's not asking too much),
-or some POSIX-compliant implementation of yacc.  The configuration uses 
-the YACC variable to set the parser generator.  
+or some POSIX-compliant implementation of yacc.  
+For example, bison-1.28 is known to fail, and is not actively supported(*1).  
+The YACC variable is used to set the parser generator and may be 
+passed to the configure script.  
 lex or flex is required to generate the scanner, and may be set using the
 LEX configure variable.  
+
+(*1)	The output file produced by bison-1.28 does not conform to 
+	standard, it produces name.yy.tab.c instead of y.tab.c, 
+	same with the header file.  The yacc rules from automake/autoconf
+	do not account for this deviation.  
 
 ===============================================================================
 KNOWN ISSUES

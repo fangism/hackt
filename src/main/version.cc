@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: version.cc,v 1.2 2005/11/03 07:52:07 fang Exp $
+	$Id: version.cc,v 1.2.2.1 2005/11/04 22:23:29 fang Exp $
  */
 
 #include <iostream>
@@ -41,6 +41,10 @@ version::version() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main program just prints the version information.  
+	TODO: compiled with... cc:, c++:
+		yacc:
+		lex:
+		do this all in configure script
  */
 int
 version::main(const int argc, char* argv[], const global_options&) {
@@ -71,7 +75,7 @@ version::parse_command_options(const int argc, char* argv[], options& opt) {
 void
 version::usage(void) {
 	cerr << "version: prints HACKT version" << endl;
-	cerr << "usage: version" << endl;
+	cerr << "usage: " << name << endl;
 }
 
 //=============================================================================

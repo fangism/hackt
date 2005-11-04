@@ -1,5 +1,5 @@
 /**
-	\file "parser/art++-parse.yy"
+	\file "parser/hackt-parse.yy"
 	Yacc-generated parser source for the ART++ language.  
 
 	note: this is not the same language as that found in lib/art.cy
@@ -7,15 +7,18 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp $
+	$Id: hackt-parse.yy,v 1.1.2.1 2005/11/04 22:23:30 fang Exp $
+	This file was formerly known as
+	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
+	in a previous life.  
  */
 
 %{
 #include <iostream>
 
 #include "AST/art_parser.h"		// should be first
-#include "parser/art++-parse.output.h"	// auto-generated state strings! :)
-#include "parser/art++-parse-options.h"
+#include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
+#include "parser/hackt-parse-options.h"
 #include "util/using_ostream.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
@@ -148,7 +151,7 @@ extern const char* const yyrule[];
 
 /**
 	NOTE: to use the following union definition, which will be
-	summarized in "art++-parse-prefix.h" (generated), 
+	summarized in "hackt-parse-prefix.h" (generated), 
 	you will need to include "art_parser_fwd.h" first
 	(with using namespace ART::parser;) to provide forward
 	declarations of the union-members' types.  
@@ -337,7 +340,7 @@ extern	int yylex(void);		// ancient compiler rejects
 
 namespace ART {
 namespace lexer {
-extern	int at_eof(void);		// from "art++-lex.ll"
+extern	int at_eof(void);		// from "hackt-lex.ll"
 }
 }
 using ART::lexer::at_eof;

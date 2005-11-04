@@ -1,15 +1,17 @@
 /**
-	\file "art_lex.h"
+	\file "hac_lex.h"
 	Header for a few simple structures, useful to the 
 	language front-end.  
 	Note, this is a C++ source file.  
-	$Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp $
+	$Id: hac_lex.h,v 1.1.2.1 2005/11/04 22:23:28 fang Exp $
+	This file's earlier revision history originates from:
+	Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp
  */
 
-#ifndef	__ART_LEX_H__
-#define	__ART_LEX_H__
+#ifndef	__LEXER_HAC_LEX_H__
+#define	__LEXER_HAC_LEX_H__
 
-#include <assert.h>
+#include <cassert>
 #include <iosfwd>
 
 namespace ART {
@@ -70,5 +72,5 @@ friend ostream& operator << (ostream& o, const line_range& l);
 }	// end namespace lexer
 }	// end namespace ART
 
-#endif	// __ART_LEX_H__
+#endif	// __LEXER_HAC_LEX_H__
 

@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-01:
+	  Parser related activity.  
+	  There has been a request for #include feature, so that will
+		be one goal for this branch.
+	  In this revision:
+		renamed all lexer/parser files art++ -> hackt.
+	  Minor fix in an awk script to remove hard-coded name.  
+
+
 2005-11-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65:

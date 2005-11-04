@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.3 2005/07/23 06:53:06 fang Exp $
+	$Id: main_funcs.cc,v 1.3.28.1 2005/11/04 22:23:29 fang Exp $
  */
 
 #include <iostream>
@@ -25,18 +25,18 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.h"
 
 // forward declarations needed for YSTYPE
-#include "parser/art++-parse-prefix.h"	// for YYSTYPE
+#include "parser/hackt-parse-prefix.h"	// for YYSTYPE
 using util::memory::excl_ptr;
 
 #if	USING_YACC
-extern	YYSTYPE artxx_val;		// root token (was yyval)
+extern	YYSTYPE hackt_val;		// root token (was yyval)
 #elif	USING_BISON
 extern	excl_ptr<ART::parser::root_body>	AST_root;
 #else
 #error	"USING_YACC or USING_BISON?  One must be set by configuration."
 #endif
-extern	FILE*	artxx_in;
-extern	int	artxx_parse(void);
+extern	FILE*	hackt_in;
+extern	int	hackt_parse(void);
 
 #include "util/stacktrace.h"
 
@@ -121,16 +121,16 @@ excl_ptr<root_body>
 parse_to_AST(FILE* f) {
 	typedef	excl_ptr<root_body>		return_type;
 	return_type root;
-	// artxx_in is the global yyin FILE*.  
-	artxx_in = f ? f : stdin;
+	// hackt_in is the global yyin FILE*.  
+	hackt_in = f ? f : stdin;
 	try {
-		artxx_parse();
+		hackt_parse();
 	} catch (...) {
 		return return_type(NULL);
 	}
-	fclose(artxx_in);		// even if stdin?
+	fclose(hackt_in);		// even if stdin?
 #if USING_YACC
-	return return_type(artxx_val._root_body);
+	return return_type(hackt_val._root_body);
 #else
 	return AST_root;
 #endif

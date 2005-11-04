@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "common-union-type.awk"
 # David Fang, 2004
-#	$Id: common-union-type.awk,v 1.3 2005/06/21 21:26:36 fang Exp $
+#	$Id: common-union-type.awk,v 1.3.36.1 2005/11/04 22:23:29 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/yacc-union-type.awk OR parser/bison-union-type.awk
@@ -94,11 +94,8 @@ BEGIN {
 #		but is not always named y.tab.h! add to the "include" variable
 	print "#include <cassert>";
 	print "#include <iostream>";
-	# apologies: this header is hard-coded for this project
-	print "#include \"lexer/art_lex.h\"";
 	print "";
 	print "using std::ostream;";
-	print "using namespace ART::lexer;";
 	print "";
 
 	process_union(yaccfile);

@@ -1,7 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82 2005/11/04 04:50:53 fang Exp $
-
-# TODO: substitute ARTXX -> HACKT
+#	$Id: Makefile.am,v 1.82.2.1 2005/11/04 22:23:26 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -54,7 +52,7 @@ getopt_test_SOURCES = test/getopt_test.cc
 
 # This says, "always build me first."
 # trying NOT to abuse this, writing explicit dependencies below
-BUILT_SOURCES = parser/art++-parse.output.h
+BUILT_SOURCES = parser/hackt-parse.output.h
 
 # phony program to generate _build/*/.deps directories on distcheck
 PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
@@ -85,20 +83,20 @@ util/numeric/dummy.cc:
 util/obsolete/dummy.cc:
 	$(TOUCH) $@
 
-ARTXX_PARSE_ROOT = art++-parse
-ARTXX_LEX_ROOT = art++-lex
+HACKT_PARSE_ROOT = hackt-parse
+HACKT_LEX_ROOT = hackt-lex
 
 # libbogus.la is not actually used, hence the name.
 # force use of lex/yacc suffix rules to generate the .c and .cc files
 # the source files are post-processed via awk (below) into the real sources, 
 # with symbol names with transformed prefixes.  
 libbogus_la_SOURCES = \
-	lexer/art++-lex.ll \
-	parser/art++-parse.yy
+	lexer/hackt-lex.ll \
+	parser/hackt-parse.yy
 
 # automake doesn't like macro in generating .Plo, a bug methinks
-#	lexer/$(ARTXX_LEX_ROOT).ll \
-#	parser/$(ARTXX_PARSE_ROOT).yy
+#	lexer/$(HACKT_LEX_ROOT).ll \
+#	parser/$(HACKT_PARSE_ROOT).yy
 
 AST_CC_FILES = \
 	AST/art_parser_base.cc \
@@ -519,18 +517,18 @@ UTIL_CC_FILES = \
 	util/memory/ref_count_pool.cc
 
 PARSER_H_FILES = \
-	parser/$(ARTXX_PARSE_ROOT)-prefix.h \
-	parser/art++-union.h \
-	parser/$(ARTXX_PARSE_ROOT).output.h \
-	parser/$(ARTXX_PARSE_ROOT)-options.h \
-	lexer/$(ARTXX_LEX_ROOT)-options.h \
-	lexer/art_lex.h
+	parser/$(HACKT_PARSE_ROOT)-prefix.h \
+	parser/hackt-union.h \
+	parser/$(HACKT_PARSE_ROOT).output.h \
+	parser/$(HACKT_PARSE_ROOT)-options.h \
+	lexer/$(HACKT_LEX_ROOT)-options.h \
+	lexer/hac_lex.h
 
 PARSER_CC_FILES = \
-	parser/art++-parse-prefix.cc \
-	parser/art++-union.cc \
-	lexer/art++-lex-prefix.cc \
-	lexer/art_lex.cc
+	parser/hackt-parse-prefix.cc \
+	parser/hackt-union.cc \
+	lexer/hackt-lex-prefix.cc \
+	lexer/hac_lex.cc
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -562,8 +560,8 @@ COMMON_FILES = \
 	common/devel_switches.h
 
 # automake doesn't like macro in generating .Plo, a bug methinks
-#	parser/$(ARTXX_PARSE_ROOT)-prefix.cc
-#	lexer/$(ARTXX_LEX_ROOT)-prefix.cc
+#	parser/$(HACKT_PARSE_ROOT)-prefix.cc
+#	lexer/$(HACKT_LEX_ROOT)-prefix.cc
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libhackt_la_SOURCES = \
@@ -577,18 +575,18 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
-main/main_funcs.cc: parser/$(ARTXX_PARSE_ROOT)-prefix.h
+main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-prefix.h
 main/version.cc: cvstag.h builddate.h
-lexer/$(ARTXX_LEX_ROOT).cc: parser/$(ARTXX_PARSE_ROOT).h
-parser/art++-union.lo: parser/$(ARTXX_PARSE_ROOT).output.h
-parser/art++-union.$(OBJEXT): parser/$(ARTXX_PARSE_ROOT).output.h
+lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
+parser/hackt-union.lo: parser/$(HACKT_PARSE_ROOT).output.h
+parser/hackt-union.$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
-# parser/$(ARTXX_PARSE_ROOT).lo: parser/$(ARTXX_PARSE_ROOT).output.h
-# parser/$(ARTXX_PARSE_ROOT).$(OBJEXT): parser/$(ARTXX_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).lo: parser/$(HACKT_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
 # this creates cyclic dependencies (bad)
-# parser/$(ARTXX_PARSE_ROOT).cc: parser/$(ARTXX_PARSE_ROOT).output.h
+# parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.h
 
 # build up main library from pieces
 # Here, libhackt will include all of libhacktparsers
@@ -619,55 +617,55 @@ ALL_TCC_FILES += \
 # don't actually need -l[f]l
 # libhackt_la_LDADD = @LEXLIB@
 
-ARTXX_YACC_PREFIX = artxx_
+HACKT_YACC_PREFIX = hackt_
 
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
 if HAVE_BISON
-parser/$(ARTXX_PARSE_ROOT)-prefix.cc: parser/$(ARTXX_PARSE_ROOT).cc \
-		parser/$(ARTXX_PARSE_ROOT).output.h
+parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
+		parser/$(HACKT_PARSE_ROOT).output.h
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
-		parser/$(ARTXX_PARSE_ROOT).cc | \
+		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
+		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 else
-parser/$(ARTXX_PARSE_ROOT)-prefix.cc: parser/$(ARTXX_PARSE_ROOT).cc \
-		parser/$(ARTXX_PARSE_ROOT).output.h
+parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
+		parser/$(HACKT_PARSE_ROOT).output.h
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
-		parser/$(ARTXX_PARSE_ROOT).cc | \
+		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
+		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
 
-parser/$(ARTXX_PARSE_ROOT)-prefix.h: parser/$(ARTXX_PARSE_ROOT).h
-	$(ECHO) "#include \"parser/art++-union.h\"" > $@
+parser/$(HACKT_PARSE_ROOT)-prefix.h: parser/$(HACKT_PARSE_ROOT).h
+	$(ECHO) "#include \"parser/hackt-union.h\"" > $@
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) $? >> $@
+		-v PREFIX=$(HACKT_YACC_PREFIX) $? >> $@
 
-lexer/$(ARTXX_LEX_ROOT)-prefix.cc: lexer/$(ARTXX_LEX_ROOT).cc \
-		parser/$(ARTXX_PARSE_ROOT)-prefix.h
+lexer/$(HACKT_LEX_ROOT)-prefix.cc: lexer/$(HACKT_LEX_ROOT).cc \
+		parser/$(HACKT_PARSE_ROOT)-prefix.h
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) \
-			lexer/$(ARTXX_LEX_ROOT).cc > $@
+		-v PREFIX=$(HACKT_YACC_PREFIX) \
+			lexer/$(HACKT_LEX_ROOT).cc > $@
 
 # can't depend on the .output alone, not a known dependence with .y[y]
-ARTXX_PARSE_OUTPUT = parser/$(ARTXX_PARSE_ROOT).output
-$(ARTXX_PARSE_OUTPUT): parser/$(ARTXX_PARSE_ROOT).h
+HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output
+$(HACKT_PARSE_OUTPUT): parser/$(HACKT_PARSE_ROOT).h
 
-$(ARTXX_PARSE_OUTPUT).h: $(ARTXX_PARSE_OUTPUT)
+$(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
 	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
 		-f $(srcdir)/parser/common-output-to-C.awk $? | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(ARTXX_YACC_PREFIX) > $@
+		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 
 # NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
 # gcc -E ignores file that require no preprocessing
 
 CPP_TRADITIONAL = @CPP_TRADITIONAL@
 
-parser/art++.types: parser/$(ARTXX_PARSE_ROOT).yy
+parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
 		$(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
@@ -677,25 +675,26 @@ parser/art++.types: parser/$(ARTXX_PARSE_ROOT).yy
 # "cut" is not a good idea, if # define is separated... :(
 # the last awk pipe eliminate extraneous whitespace not filtered by sed
 GET_START_TOKEN_ENUM = \
-	$(GREP) "define.*MINIMUM_BOGOSITY" parser/$(ARTXX_PARSE_ROOT).h | \
+	$(GREP) "define.*MINIMUM_BOGOSITY" parser/$(HACKT_PARSE_ROOT).h | \
 		$(HEAD) -n1 | $(SED) 's/^.*MINIMUM_BOGOSITY[ \t]*//g' | \
 		$(AWK) '/.*/{printf($$1);}'
 
 
-YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/art++.types \
-		-v include="AST/art_parser.h parser/$(ARTXX_PARSE_ROOT)-prefix.h" \
-		-v namespace=ART::parser \
+YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
+		-v include="AST/art_parser.h parser/$(HACKT_PARSE_ROOT)-prefix.h lexer/hac_lex.h" \
+		-v namespace="ART::parser ART::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
-parser/art++-union.cc: $(ARTXX_PARSE_OUTPUT) parser/art++.types parser/$(ARTXX_PARSE_ROOT)-prefix.h
-	@if ! [ -s parser/art++.types ] ; then \
-		$(ECHO) "parser/art++.types is empty!" ; \
+parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
+		parser/$(HACKT_PARSE_ROOT)-prefix.h
+	@if ! [ -s parser/hackt.types ] ; then \
+		$(ECHO) "parser/hackt.types is empty!" ; \
 		exit 1 ; \
 	fi
 	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
 		-f $(YACC_UNION_SCRIPT) $(YACC_UNION_SCRIPT_ARGS) \
-		$(ARTXX_PARSE_OUTPUT) > $@
+		$(HACKT_PARSE_OUTPUT) > $@
 
 
 # AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
@@ -731,11 +730,11 @@ SAVETEMP = $(CXXCOMPILE) -v -save-temps
 	$(SAVETEMP) -c $< -o $*.o
 
 # doesn't work
-# YACC_PREFIX = -DYACC_PREFIX=artxx_yy
+# YACC_PREFIX = -DYACC_PREFIX=hackt_yy
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
 # *COUGH* *HACK*:
-# NO_FANCY_YYERROR tells lexer/art++-lex.cc to use un-transfomed symbol names
+# NO_FANCY_YYERROR tells lexer/hackt-lex.cc to use un-transfomed symbol names
 libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
 libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 # here we give the exceptional flags to the lexer and parser, 
@@ -840,18 +839,18 @@ art_persistent_table.sh: hackt
 
 # choosing not to distribute lex/yacc-generated sources for now
 CLEANPARSER = \
-	parser/$(ARTXX_PARSE_ROOT).cc \
-	parser/$(ARTXX_PARSE_ROOT).h \
-	parser/$(ARTXX_PARSE_ROOT)-prefix.cc \
-	parser/$(ARTXX_PARSE_ROOT)-prefix.h \
-	parser/$(ARTXX_PARSE_ROOT).output \
-	parser/$(ARTXX_PARSE_ROOT).output.h \
-	parser/art++-union.cc \
-	parser/art++.types
+	parser/$(HACKT_PARSE_ROOT).cc \
+	parser/$(HACKT_PARSE_ROOT).h \
+	parser/$(HACKT_PARSE_ROOT)-prefix.cc \
+	parser/$(HACKT_PARSE_ROOT)-prefix.h \
+	parser/$(HACKT_PARSE_ROOT).output \
+	parser/$(HACKT_PARSE_ROOT).output.h \
+	parser/hackt-union.cc \
+	parser/hackt.types
 
 CLEANLEXER = \
-	lexer/$(ARTXX_LEX_ROOT)-prefix.cc \
-	lexer/$(ARTXX_LEX_ROOT).cc
+	lexer/$(HACKT_LEX_ROOT)-prefix.cc \
+	lexer/$(HACKT_LEX_ROOT).cc
 
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
