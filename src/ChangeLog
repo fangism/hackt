@@ -5,6 +5,13 @@
 
 2005-11-04	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65-parser-03-02:
+	  Added more configuration detection headers for use with 
+		main/version.cc.  Now includes CXX, LEX, YACC versions.  
+	  Next: lexer file stack, possibly include search paths...
+		NOTE: may have to update parser test outputs.  
+
+
 	* ARTXX-00-01-04-main-00-65-parser-03-01:
 	  Parser related activity.  
 	  There has been a request for #include feature, so that will

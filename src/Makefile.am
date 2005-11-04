@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82.2.1 2005/11/04 22:23:26 fang Exp $
+#	$Id: Makefile.am,v 1.82.2.2 2005/11/04 23:30:21 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -47,6 +47,7 @@ noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhackt.la libfangutil.la
+# libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
 
@@ -60,14 +61,42 @@ PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 cvstag.h: ChangeLog
+	@$(ECHO) "#ifndef	CVSTAG" > $@
 	tag=`$(HEAD) -n 10 $? | $(GREP) "^	[*].*:" | \
 		$(HEAD) -n 1 | $(SED) 's/:.*$$//g' | $(CUT) -d\  -f 2` ; \
-	$(ECHO) "#define	CVSTAG		\"$$tag\"" > $@
+		$(ECHO) "#define	CVSTAG		\"$$tag\"" >> $@
+	@$(ECHO) "#endif	// CVSTAG" >> $@
 
-builddate.h:
-	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" > $@
+# can't include libhacktexec.la because of circular dependence
+builddate.h: libhackt.la libfangutil.la
+	@$(ECHO) "#ifndef	BUILDDATE" > $@
+	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
+	@$(ECHO) "#endif	// BUILDDATE" >> $@
 
-AUTOHEADERS = cvstag.h builddate.h
+# most of these should really be generated at configure-time...
+cxx_version.h:
+	@$(ECHO) "#ifndef	CXX_VERSION" > $@
+	$(ECHO) "#define	CXX_VERSION	\""`$(CXX) --version | $(HEAD) -n 1`"\"" >> $@
+	@$(ECHO) "#endif	// CXX_VERSION" >> $@
+
+lexer/lex_version.h: $(top_builddir)/config.status
+	@$(ECHO) "#ifndef	LEX_VERSION" > $@
+	$(ECHO) "#define	LEX_VERSION	\""`$(LEX) --version | $(HEAD) -n 1`"\"" >> $@
+	@$(ECHO) "#endif	// LEX_VERSION" >> $@
+
+# because traditional yacc has no version flag :(
+parser/yacc_version.h: $(top_builddir)/config.status
+	@$(ECHO) "#ifndef	YACC_VERSION" > $@
+if HAVE_BISON
+	$(ECHO) "#define	YACC_VERSION	\""`$(YACC) --version | $(HEAD) -n 1`"\"" >> $@
+else
+	$(ECHO) "#define	YACC_VERSION	\""`which $(YACC) | $(HEAD) -n 1`"\"" >> $@
+endif
+	@$(ECHO) "#endif	// YACC_VERSION" >> $@
+
+
+AUTOHEADERS = cvstag.h builddate.h cxx_version.h \
+	parser/yacc_version.h lexer/lex_version.h
 
 # these two targets cause automake to create the corresponding _build
 # subdirectories, that are needed for make distcheck, for check-headers
@@ -576,7 +605,8 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-prefix.h
-main/version.cc: cvstag.h builddate.h
+main/version.cc: cvstag.h builddate.h cxx_version.h \
+	parser/yacc_version.h lexer/lex_version.h
 lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
 parser/hackt-union.lo: parser/$(HACKT_PARSE_ROOT).output.h
 parser/hackt-union.$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
