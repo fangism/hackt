@@ -2,6 +2,12 @@
 
 2005-11-03	David Fang	<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65:
+	  Renewed BOUNTY.  
+	  Minor non-source fixes in scripts and Makefiles.  
+	  configure.ac check for 'find'.
+
+
 	* ARTXX-00-01-04-main-00-64-merged-cflat-03-02:
 	  Merged -cflat-03 branch for added cflat functionality.  
 	  Improved bootstrap script.  

@@ -2,7 +2,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.10 2005/08/04 23:02:50 fang Exp $
+#	$Id: Make.stddef,v 1.11 2005/11/04 04:50:49 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -23,6 +23,7 @@ DATE = @DATE@
 DIFF = @DIFF@
 # -B: ignore blank line diffs
 ECHO = @ECHO@
+FIND = @FIND@
 GREP = @GREP@
 HEAD = @HEAD@
 SED = sed

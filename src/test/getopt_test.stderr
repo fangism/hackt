@@ -1,15 +1,15 @@
 --------------------------------------------
-entire command: getopt_test
+entire command: ./getopt_test
 aflag = 0, bflag = 0, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test foo
+entire command: ./getopt_test foo
 aflag = 0, bflag = 0, cvalue = (null)
 non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
 --------------------------------------------
-entire command: getopt_test foo bar
+entire command: ./getopt_test foo bar
 aflag = 0, bflag = 0, cvalue = (null)
 non-option argv-elements: foo bar
 Non-option argument foo
@@ -17,79 +17,79 @@ Couldn't open "foo" for reading.
 Non-option argument bar
 Couldn't open "bar" for reading.
 --------------------------------------------
-entire command: getopt_test -a
+entire command: ./getopt_test -a
 aflag = 1, bflag = 0, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -aa
+entire command: ./getopt_test -aa
 aflag = 1, bflag = 0, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -a -a
+entire command: ./getopt_test -a -a
 aflag = 1, bflag = 0, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -b
+entire command: ./getopt_test -b
 aflag = 0, bflag = 1, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -ab
+entire command: ./getopt_test -ab
 aflag = 1, bflag = 1, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -a -b
+entire command: ./getopt_test -a -b
 aflag = 1, bflag = 1, cvalue = (null)
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -c
+entire command: ./getopt_test -c
 Unknown option `-c'.
 --------------------------------------------
-entire command: getopt_test -c foo
+entire command: ./getopt_test -c foo
 aflag = 0, bflag = 0, cvalue = foo
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -cfoo
+entire command: ./getopt_test -cfoo
 aflag = 0, bflag = 0, cvalue = foo
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -ac foo
+entire command: ./getopt_test -ac foo
 aflag = 1, bflag = 0, cvalue = foo
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -acfoo
+entire command: ./getopt_test -acfoo
 aflag = 1, bflag = 0, cvalue = foo
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -cbfoo
+entire command: ./getopt_test -cbfoo
 aflag = 0, bflag = 0, cvalue = bfoo
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -cb foo
+entire command: ./getopt_test -cb foo
 aflag = 0, bflag = 0, cvalue = b
 non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
 --------------------------------------------
-entire command: getopt_test -c -bfoo
+entire command: ./getopt_test -c -bfoo
 aflag = 0, bflag = 0, cvalue = -bfoo
 No standard arguments found, expecting input from stdin:
 --------------------------------------------
-entire command: getopt_test -c -b foo
+entire command: ./getopt_test -c -b foo
 aflag = 0, bflag = 0, cvalue = -b
 non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
 --------------------------------------------
-entire command: getopt_test -bfoo
+entire command: ./getopt_test -bfoo
 Unknown option `-f'.
 --------------------------------------------
-entire command: getopt_test -b foo
+entire command: ./getopt_test -b foo
 aflag = 0, bflag = 1, cvalue = (null)
 non-option argv-elements: foo
 Non-option argument foo
 Couldn't open "foo" for reading.
 --------------------------------------------
-entire command: getopt_test -b foo bar ick
+entire command: ./getopt_test -b foo bar ick
 aflag = 0, bflag = 1, cvalue = (null)
 non-option argv-elements: foo bar ick
 Non-option argument foo
@@ -99,7 +99,7 @@ Couldn't open "bar" for reading.
 Non-option argument ick
 Couldn't open "ick" for reading.
 --------------------------------------------
-entire command: getopt_test -b foo -a bar ick
+entire command: ./getopt_test -b foo -a bar ick
 aflag = 0, bflag = 1, cvalue = (null)
 non-option argv-elements: foo -a bar ick
 Non-option argument foo
@@ -111,7 +111,7 @@ Couldn't open "bar" for reading.
 Non-option argument ick
 Couldn't open "ick" for reading.
 --------------------------------------------
-entire command: getopt_test -b foo -b bar ick
+entire command: ./getopt_test -b foo -b bar ick
 aflag = 0, bflag = 1, cvalue = (null)
 non-option argv-elements: foo -b bar ick
 Non-option argument foo
@@ -123,7 +123,7 @@ Couldn't open "bar" for reading.
 Non-option argument ick
 Couldn't open "ick" for reading.
 --------------------------------------------
-entire command: getopt_test -c foo -b bar ick
+entire command: ./getopt_test -c foo -b bar ick
 aflag = 0, bflag = 1, cvalue = foo
 non-option argv-elements: bar ick
 Non-option argument bar
@@ -131,13 +131,13 @@ Couldn't open "bar" for reading.
 Non-option argument ick
 Couldn't open "ick" for reading.
 --------------------------------------------
-entire command: getopt_test -c foo -c bar ick
+entire command: ./getopt_test -c foo -c bar ick
 aflag = 0, bflag = 0, cvalue = bar
 non-option argv-elements: ick
 Non-option argument ick
 Couldn't open "ick" for reading.
 --------------------------------------------
-entire command: getopt_test -b foo -c bar ick
+entire command: ./getopt_test -b foo -c bar ick
 aflag = 0, bflag = 1, cvalue = (null)
 non-option argv-elements: foo -c bar ick
 Non-option argument foo
@@ -149,11 +149,11 @@ Couldn't open "bar" for reading.
 Non-option argument ick
 Couldn't open "ick" for reading.
 --------------------------------------------
-entire command: getopt_test -x
+entire command: ./getopt_test -x
 Unknown option `-x'.
 --------------------------------------------
-entire command: getopt_test -x foo
+entire command: ./getopt_test -x foo
 Unknown option `-x'.
 --------------------------------------------
-entire command: getopt_test -xy
+entire command: ./getopt_test -xy
 Unknown option `-x'.

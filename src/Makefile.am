@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.81 2005/11/03 07:52:04 fang Exp $
+#	$Id: Makefile.am,v 1.82 2005/11/04 04:50:53 fang Exp $
 
 # TODO: substitute ARTXX -> HACKT
 
@@ -819,7 +819,7 @@ AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(AUTOHEADERS)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "$(srcdir)/$*.sh 2>&1 | cat > $*.output" >> $@
+	@$(ECHO) "$(srcdir)/$*.sh > $*.output 2>&1" >> $@
 	@$(ECHO) "$(DIFF) -u $(srcdir)/$*.stderr $*.output > $*.diff" >> $@
 	@$(ECHO) "if [ -s $*.diff ]" >> $@
 	@$(ECHO) then >> $@
@@ -835,7 +835,7 @@ DISTCLEANFILES += test/getopt_test.test \
 
 art_persistent_table.sh: hackt
 	@$(ECHO) "#!/bin/sh" > $@
-	@$(ECHO) "hackt dump_persistent_table" >> $@
+	@$(ECHO) "./hackt dump_persistent_table" >> $@
 	@$(CHMOD) +x $@
 
 # choosing not to distribute lex/yacc-generated sources for now

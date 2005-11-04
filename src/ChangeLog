@@ -5,6 +5,12 @@
 
 2005-11-03	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65:
+	  No source change, just Makefile adjustment to fix problem where
+		test scripts would depend on . being in user's path.  
+		Thanks to Arvind Kumar for reporting.  
+
+
 	* ARTXX-00-01-04-main-00-64-merged-cflat-03-02:
 	  Merged major cflat functionality from -cflat-03 branch.  
 	  A good time to announce a pre-release.  

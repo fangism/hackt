@@ -1,8 +1,11 @@
 "BOUNTY"
+#	$Id: BOUNTY,v 1.5 2005/11/04 04:50:48 fang Exp $
 
 Bugs wanted: dead or alive.
 
-Effective 2005-07-24 through 2005-09-30, 
+Welcome to Season 2 of HACKT bug-hunting!
+
+Effective 2005-11-03 through 2005-12-31:
 In the quest to produce a more perfect kompiler, I, fangism, have posted
 this bounty notice for discovered bugs.
 
@@ -29,6 +32,9 @@ Known bugs and duplicates:
 Duplicates are bugs that have already been reported and flagged as valid.  
 Trivial test-case variations that produce the same bug do not count.  
 Known bugs and duplicate bug reports count for zero reward units.  
+Duplicates to tell me what's important to fix because several individual
+independently trip the same problem, so do let me know that you've 
+found the same problems.  
 
 Procedure:
 Build-failure reports consist of a description of the platform
@@ -41,8 +47,8 @@ test-case is not required is when the case is already
 in the test suite.  Finally the report should consist of a list of steps
 taken (commands run) to produce the bug.  
 
-The FIRST valid bug one finds is worth two additional standard units, 
-on top of the bug's worth.  
+The FIRST valid bug one finds (per season) is worth two additional 
+standard units, on top of the bug's worth.  
 
 Bug slayers:
 Individuals who FIX bugs shall be rewarded double the value of the 
@@ -60,9 +66,19 @@ bonus reward to be announced at a later date, worth up to $20,
 such as a free dinner.  
 
 ===============================================================================
+Season 2: (now)
+
+Arvind Kumar: 3 units earned for 1 report
+	1 distribution check fail (can't rely on . being in path), 20051103
+	+2 units for first bug report
+
+===============================================================================
+Season 1: 2005-07-24 through 2005-09-30
 Tally:
 
 Chris LaFrieda: 6 units earned for 2 reports
 	1 build-failure reported (x3 = 3 units)
 	1 getopt compatibility issue (1 unit)
+	+2 units for first bug report
 
+===============================================================================

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.6 2005/11/02 22:53:43 fang Exp $
+#	$Id: TODO,v 1.7 2005/11/04 04:50:54 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -25,19 +25,11 @@ creation: reject unique instances that are missing relaxed actuals
 	can be classified as known bug.  
 
 ===============================================================================
-HACKT front-end programs:
-	to add:
-	version
-	shell
-
-===============================================================================
 new class_trait:
 	has_private_internal_structure (process only)
 
 ===============================================================================
 big stuff:
-
-*** flow control: loops and conditionals ***
 
 *** global and out-of-scope references? ***
 	Or should we restrict to passing everything explicitly?
