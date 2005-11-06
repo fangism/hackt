@@ -1,5 +1,8 @@
 #!/usr/bin/awk -f
 # "scripts/tally_tests.awk"
+#	$Id: tally_tests.awk,v 1.1.16.1 2005/11/06 21:54:28 fang Exp $
+# counting failures in test suite, used on resulting "check.log" file
+#	produced by make check.log (in any directory)
 
 BEGIN {
 	fail = 0;
@@ -17,4 +20,6 @@ BEGIN {
 
 END {
 	print "Total of " fail " failures out of " all " tests.";
+	if (fail)
+		exit 1;
 }
