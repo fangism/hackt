@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82.2.2 2005/11/04 23:30:21 fang Exp $
+#	$Id: Makefile.am,v 1.82.2.3 2005/11/06 21:55:00 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -68,7 +68,8 @@ cvstag.h: ChangeLog
 	@$(ECHO) "#endif	// CVSTAG" >> $@
 
 # can't include libhacktexec.la because of circular dependence
-builddate.h: libhackt.la libfangutil.la
+# builddate.h: libhackt.la libfangutil.la
+builddate.h:
 	@$(ECHO) "#ifndef	BUILDDATE" > $@
 	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
 	@$(ECHO) "#endif	// BUILDDATE" >> $@
@@ -97,6 +98,8 @@ endif
 
 AUTOHEADERS = cvstag.h builddate.h cxx_version.h \
 	parser/yacc_version.h lexer/lex_version.h
+
+CONFIGHEADERS = config.h ../config.h
 
 # these two targets cause automake to create the corresponding _build
 # subdirectories, that are needed for make distcheck, for check-headers
@@ -441,6 +444,7 @@ UTIL_TCC_FILES = \
 	util/ring_node.tcc \
 	util/sublist.tcc \
 	util/unique_list.tcc \
+	util/unique_stack.tcc \
 	util/what.tcc
 
 # POLICY: every .tcc MUST have a corresponding .h file, 
@@ -551,12 +555,14 @@ PARSER_H_FILES = \
 	parser/$(HACKT_PARSE_ROOT).output.h \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
+	lexer/file_manager.h \
 	lexer/hac_lex.h
 
 PARSER_CC_FILES = \
 	parser/hackt-parse-prefix.cc \
 	parser/hackt-union.cc \
 	lexer/hackt-lex-prefix.cc \
+	lexer/file_manager.cc \
 	lexer/hac_lex.cc
 
 # libhacktexec sources
@@ -694,6 +700,11 @@ $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 # gcc -E ignores file that require no preprocessing
 
 CPP_TRADITIONAL = @CPP_TRADITIONAL@
+
+# extra deps to make sure parser is regenerated when configure changes
+# in the case when switching between yacc and bison
+parser/$(HACKT_PARSE_ROOT).cc: $(CONFIGHEADERS)
+$(HACKT_PARSE_OUTPUT): $(CONFIGHEADERS)
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \

@@ -1,23 +1,24 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	(null) 
-34	keyword: defproc [3:1..7]
-114	identifier: split_bool_soup [3:9..23]
-185	list<(port-formal-decl)>: (port-formal-decl) ... [3:24..59]
-261	{ [3:61]
-306	list<(def-body-item)>: (instance-decl) ... [4:1..9]
-382	keyword: chp [5:1..3]
-221	{ [5:5]
-278	*[ [6:2]
-318	list<(chp-statement)>: (chp-comm-list) ... [7:3..7]
-321	; [7:8]
-418	[ [8:3]
-317	keyword: else [8:5..8]
-in state 317, possible rules are:
-	chp_wait : '[' . chp_guard_expr ']'  (155)
-	chp_selection : '[' . chp_matched_det_guarded_command_list ']'  (156)
-	chp_selection : '[' . chp_nondet_guarded_command_list ']'  (157)
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defproc [3:1..7]
+#STATE#	identifier: split_bool_soup [3:9..23]
+#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [3:24..59]
+#STATE#	{ [3:61]
+#STATE#	list<(def-body-item)>: (instance-decl) ... [4:1..9]
+#STATE#	keyword: chp [5:1..3]
+#STATE#	{ [5:5]
+#STATE#	*[ [6:2]
+#STATE#	list<(chp-statement)>: (chp-comm-list) ... [7:3..7]
+#STATE#	; [7:8]
+#STATE#	[ [8:3]
+#STATE#	keyword: else [8:5..8]
+in state #STATE#, possible rules are:
+	chp_wait : '[' . chp_guard_expr ']'  (#RULE#)
+	chp_selection : '[' . chp_matched_det_guarded_command_list ']'  (#RULE#)
+	chp_selection : '[' . chp_nondet_guarded_command_list ']'  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
 	'-' (shift)

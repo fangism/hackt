@@ -1,13 +1,14 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	list<(root_item)>: (process-prototype) ... [5:1..13]
-22	(qualified-id) [7:1..3]
-58	list<(expr)>: ... [7:4..5]
-123	< [7:6]
-187	> [7:7]
-in state 187, possible rules are:
-	shift_expr_list_in_angles: '<' . shift_expr_list '>'  (322)
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (process-prototype) ... [5:1..13]
+#STATE#	(qualified-id) [7:1..3]
+#STATE#	list<(expr)>: ... [7:4..5]
+#STATE#	< [7:6]
+#STATE#	> [7:7]
+in state #STATE#, possible rules are:
+	shift_expr_list_in_angles: '<' . shift_expr_list '>'  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
 	'-' (shift)

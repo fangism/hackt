@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-03:
+	  Added more configuration header dependencies in Makefile.am.  
+	  Added initial files for managing file inclusion and path
+		searching for included files.  (not complete yet)
+	  Minor fix in token_quoted_string::what().
+	  lexer/hac_lex.*: removed unused off (offset) field.
+	  Added import "file"; skeletal support to hackt lexer and parser.  
+		Parser error outputs all shifted by one state.  
+		Tests have been updated.  
+	  TODO: open referenced files using include paths.  
+
+
 2005-11-04	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-02:

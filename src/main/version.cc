@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: version.cc,v 1.2.2.2 2005/11/04 23:30:24 fang Exp $
+	$Id: version.cc,v 1.2.2.3 2005/11/06 21:55:04 fang Exp $
  */
 
 #include <iostream>
@@ -44,10 +44,8 @@ version::version() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main program just prints the version information.  
-	TODO: compiled with... cc:, c++:
-		yacc:
-		lex:
-		do this all in configure script
+	TODO: CXXFLAGS
+		configure params, paths, etc...
  */
 int
 version::main(const int argc, char* argv[], const global_options&) {

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_token.cc"
 	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.35 2005/10/25 20:51:47 fang Exp $
+	$Id: art_parser_token.cc,v 1.35.8.1 2005/11/06 21:55:03 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_TOKEN_CC__
@@ -33,6 +33,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 
+#include "common/TODO.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -459,11 +460,18 @@ token_quoted_string::token_quoted_string(const char* s) :
 DESTRUCTOR_INLINE
 token_quoted_string::~token_quoted_string() { }
 
+/**
+	TODO: handle special characters later...
+		how to print escape sequences?
+ */
 ostream&
 token_quoted_string::what(ostream& o) const {
-	// punt: handle special characters later...
-	return static_cast<const token_string*>(this)->what(o << "string: \"") << "\"";
+//	return static_cast<const token_string*>(this)->what(
+//		o << "string: \"") << "\"";
 //	return token_string::what(o << "string: \"") << "\"";
+	o << "string: \"";
+	o << static_cast<const string&>(*this);
+	return o << "\"";
 }
 
 line_position
@@ -481,13 +489,13 @@ token_quoted_string::rightmost(void) const {
  */
 never_ptr<const object>
 token_quoted_string::check_build(context& c) const {
-	cerr << "token_quoted_string::check_build(): FINISH ME!" << endl;
+	FINISH_ME(Fang);
 	return never_ptr<const object>(NULL);
 }
 
 expr::meta_return_type
 token_quoted_string::check_meta_expr(context& c) const {
-	cerr << "token_quoted_string::check_meta_expr(): FINISH ME!" << endl;
+	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
 

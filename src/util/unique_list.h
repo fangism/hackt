@@ -3,7 +3,7 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.5 2005/11/02 22:53:49 fang Exp $
+	$Id: unique_list.h,v 1.5.4.1 2005/11/06 21:55:05 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
@@ -11,13 +11,12 @@
 
 #include "util/macros.h"
 #include "util/STL/list.h"
+// #include <list>
 #include <set>
 #include <algorithm>		// for find
 
 namespace util {
-USING_LIST
 using std::find;
-using std::set;
 //=============================================================================
 /**
         Uses a set to track uniqueness.  
@@ -25,11 +24,11 @@ using std::set;
 	Can also use slist for list for forward-only iteration.
 	__gnu_cxx::hash_set provides constant time hashing.  
  */
-template <class T, class List = list<T>, class Set = set<T> >
+template <class T, class List = std::list<T>, class Set = std::set<T> >
 class unique_list {
 public:
 	typedef	T				value_type;
-//	typedef	T&				reference;
+	typedef	T&				reference;
 	typedef	const T&			const_reference;
 //	typedef	T*				pointer;
 	typedef	const T*			const_pointer;
@@ -76,12 +75,32 @@ public:
 		return _set.size();
 	}
 
+	const_reference
+	back(void) const {
+		return _sequence.back();
+	}
+
+	reference
+	back(void) {
+		return _sequence.back();
+	}
+
+	const_reference
+	front(void) const {
+		return _sequence.front();
+	}
+
+	reference
+	front(void) {
+		return _sequence.front();
+	}
+
 	/**
 		Appends a value to end of list (and set) 
 		if it's not already in list.  
 	 */
 	void
-	push(const_reference n) {
+	push_back(const_reference n) {
 		const typename set_type::const_iterator probe(_set.find(n));
 		// if not found, add
 		if (probe == _set.end()) {
@@ -91,8 +110,53 @@ public:
 		// else ignore
 	}
 
+	void
+	push_front(const_reference n) {
+		const typename set_type::const_iterator probe(_set.find(n));
+		// if not found, add
+		if (probe == _set.end()) {
+			_set.insert(n);
+			_sequence.push_front(n);
+		}
+		// else ignore
+	}
+
+	/// defaults to back operation
+	void
+	push(const reference n) {
+		push_back(n);
+	}
+
+	/**
+		Removes back entry.  
+	 */
+	void
+	pop_back(void) {
+		const typename set_type::iterator
+			probe(_set.find(_sequence.back()));
+		INVARIANT(probe != _set.end());
+		_set.erase(probe);
+		_sequence.pop_back();
+	}
+
+	void
+	pop_front(void) {
+		const typename set_type::iterator
+			probe(_set.find(_sequence.back()));
+		INVARIANT(probe != _set.end());
+		_set.erase(probe);
+		_sequence.pop_front();
+	}
+
+	/// defaults to back operation
+	void
+	pop(void) {
+		pop_back();
+	}
+
 	/**
 		Alias for push().
+		push happens to be back operation.  
 	 */
 	void
 	insert(const_reference n) {

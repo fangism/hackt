@@ -1,19 +1,20 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	list<(root_item)>: (instance-decl) ... [3:1..16]
-22	keyword: namespace [5:1..9]
-9	identifier: more_arrays [5:11..21]
-98	{ [5:23]
-169	(type-ref) [7:1..3]
-38	identifier: fancy_array [7:5..15]
-115	(null) 
-188	[ [7:16]
-124	int: 5 [7:17]
-203	, [7:18]
-in state 203, possible rules are:
-	range : expr . RANGE expr  (334)
-	range : expr .  (335)
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (instance-decl) ... [3:1..16]
+#STATE#	keyword: namespace [5:1..9]
+#STATE#	identifier: more_arrays [5:11..21]
+#STATE#	{ [5:23]
+#STATE#	(type-ref) [7:1..3]
+#STATE#	identifier: fancy_array [7:5..15]
+#STATE#	(null) 
+#STATE#	[ [7:16]
+#STATE#	int: 5 [7:17]
+#STATE#	, [7:18]
+in state #STATE#, possible rules are:
+	range : expr . RANGE expr  (#RULE#)
+	range : expr .  (#RULE#)
 acceptable tokens are: 
 	':' (reduce)
 	']' (reduce)

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.1.2.1 2005/11/04 22:23:28 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.1.2.2 2005/11/06 21:55:03 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -80,13 +80,22 @@ namespace ART {
  */
 namespace lexer {
 
+/**
+	Maximum string length.  Can be extended arbitrarily.  
+ */
 #define	STRING_MAX_LEN		1024
 
 /** line and position tracking data for tokens */
-	token_position current(1, 0, 1, 0);	/* globally accessible */
-static	token_position comment_pos(1, 0, 1, 0);
-static	token_position string_pos(1, 0, 1, 0);
+	token_position current(1, 0, 1);	/* globally accessible */
+static	token_position comment_pos(1, 0, 1);
+static	token_position string_pos(1, 0, 1);
 	/* even though strings may not be multi-line */
+/***
+	Observation: comments will never contain strings to lex, 
+		nor will strings ever lex comments.  
+	Also note that a file cannot be referenced while inside a 
+		comment or string.  
+***/
 
 /* for string matching */
 static	char string_buf[STRING_MAX_LEN];
@@ -177,7 +186,11 @@ MULTILINE_START(token_position& p) {
 static inline void
 MULTILINE_MORE(const token_position& p) {
 	if (p.line == current.line) {
-		current.col = yyleng +p.col +p.off;
+		current.col = yyleng +p.col
+#if USE_TOKEN_POSITION_OFFSET
+			+p.off
+#endif
+		;
 	} else {
 		current.col = yyleng -p.leng;
 	}
@@ -214,22 +227,6 @@ int at_eof(void);
 }	/* end namespace ART */
 
 using namespace ART::lexer;
-
-/***
-using ART::lexer::current;
-using ART::lexer::comment_pos;
-using ART::lexer::string_pos;
-using ART::lexer::string_buf;
-using ART::lexer::string_buf_ptr;
-using ART::lexer::token_feedback;
-using ART::lexer::string_feedback;
-using ART::lexer::comment_feedback;
-using ART::lexer::allow_nested_comments;
-using ART::lexer::comment_level;
-
-using ART::lexer::TOKEN_UPDATE;
-using ART::lexer::NEWLINE_UPDATE;
-***/
 
 %}
 
@@ -297,6 +294,7 @@ OCTAL_ESCAPE	"\\"[0-7]{1,3}
 BAD_ESCAPE	"\\"[0-9]+
 
 /****** keywords ****/
+IMPORT		"import"
 NAMESPACE	"namespace"
 OPEN		"open"
 AS		"as"
@@ -373,6 +371,7 @@ EXPORT		"export"
 
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(); return yytext[0]; }
 
+{IMPORT}	{ KEYWORD_UPDATE(); return IMPORT; }
 {NAMESPACE}	{ KEYWORD_UPDATE(); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(); return OPEN; }
 {AS}		{ KEYWORD_UPDATE(); return AS; }

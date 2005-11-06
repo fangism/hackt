@@ -1,17 +1,18 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	keyword: template [3:1..8]
-12	< [3:10]
-104	paramtype: pint [3:11..14]
-175	list<(template-formal-id)>: (template-formal-id): identifier: milk ... [3:16..19]
-248	, [3:20]
-291	identifier: tea [3:22..24]
-247	keyword: defproc [4:1..7]
-in state 247, possible rules are:
-	template_formal_id_default : ID . optional_dense_range_list '=' shift_expr  (49)
-	template_formal_id_nodefault : ID . optional_dense_range_list  (50)
-	optional_dense_range_list : .  (337)
+#STATE#	(null) 
+#STATE#	keyword: template [3:1..8]
+#STATE#	< [3:10]
+#STATE#	paramtype: pint [3:11..14]
+#STATE#	list<(template-formal-id)>: (template-formal-id): identifier: milk ... [3:16..19]
+#STATE#	, [3:20]
+#STATE#	identifier: tea [3:22..24]
+#STATE#	keyword: defproc [4:1..7]
+in state #STATE#, possible rules are:
+	template_formal_id_default : ID . optional_dense_range_list '=' shift_expr  (#RULE#)
+	template_formal_id_nodefault : ID . optional_dense_range_list  (#RULE#)
+	optional_dense_range_list : .  (#RULE#)
 acceptable tokens are: 
 	',' (reduce)
 	';' (reduce)

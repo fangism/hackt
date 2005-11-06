@@ -1,18 +1,19 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	(null) 
-34	keyword: defchan [3:1..7]
-111	identifier: mychan [3:9..14]
-180	<: [3:16]
-257	(chan-type) [3:19..22]
-41	( [3:23]
-118	datatype: int [3:24..26]
-42	list<(expr)>: int: 16 ... [3:27..30]
-121	[ [3:31]
-in state 121, possible rules are:
-	strict_relaxed_template_arguments : shift_expr_optional_list_in_angles . optional_template_arguments_in_angles  (318)
-	optional_template_arguments_in_angles : .  (321)
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defchan [3:1..7]
+#STATE#	identifier: mychan [3:9..14]
+#STATE#	<: [3:16]
+#STATE#	(chan-type) [3:19..22]
+#STATE#	( [3:23]
+#STATE#	datatype: int [3:24..26]
+#STATE#	list<(expr)>: int: 16 ... [3:27..30]
+#STATE#	[ [3:31]
+in state #STATE#, possible rules are:
+	strict_relaxed_template_arguments : shift_expr_optional_list_in_angles . optional_template_arguments_in_angles  (#RULE#)
+	optional_template_arguments_in_angles : .  (#RULE#)
 acceptable tokens are: 
 	'!' (reduce)
 	'(' (reduce)

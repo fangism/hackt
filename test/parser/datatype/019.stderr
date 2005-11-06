@@ -1,12 +1,13 @@
 parse error: syntax error
 parser stacks:
 state	value
-0	keyword: enum [3:1..4]
-9	identifier: foo [3:6..8]
-87	, [3:9]
-in state 87, possible rules are:
-	declare_enum : ENUM ID . ';'  (68)
-	defenum : ENUM ID . '{' enum_member_list '}'  (69)
+#STATE#	(null) 
+#STATE#	keyword: enum [3:1..4]
+#STATE#	identifier: foo [3:6..8]
+#STATE#	, [3:9]
+in state #STATE#, possible rules are:
+	declare_enum : ENUM ID . ';'  (#RULE#)
+	defenum : ENUM ID . '{' enum_member_list '}'  (#RULE#)
 acceptable tokens are: 
 	';' (shift)
 	'{' (shift)

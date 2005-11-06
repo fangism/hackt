@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy,v 1.1.2.1 2005/11/04 22:23:30 fang Exp $
+	$Id: hackt-parse.yy,v 1.1.2.2 2005/11/06 21:55:04 fang Exp $
 	This file was formerly known as
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
 	in a previous life.  
@@ -16,6 +16,7 @@
 %{
 #include <iostream>
 
+#include "config.h"
 #include "AST/art_parser.h"		// should be first
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
@@ -184,6 +185,7 @@ extern const char* const yyrule[];
 	A just question.  We walk the state stack pointer.  
 	This is done using yacc-union-type.awk.  
 ***/
+/*	void*			_null;		// reserved for NULL */
 	terminal*		_terminal;
 	node_position*		_node_position;
 	keyword_position*	_keyword_position;
@@ -444,6 +446,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_keyword_position>	CHANNEL
 %token	<_keyword_position>	TEMPLATE
 %token	<_keyword_position>	ENUM
+%token	<_keyword_position>	IMPORT
 
 /* linkage modifiers */
 %token	<_token_keyword>	EXTERN STATIC EXPORT
@@ -467,6 +470,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* non-terminals */
 %type	<_root_body>	module
+%type	<_keyword_position>	imports
+%type	<_keyword_position>	imports_optional
+%type	<_keyword_position>	import_item
 %type	<_root_body>	top_root body 
 %type	<_root_item>	body_item
 %type	<_root_item>	namespace_item
@@ -630,13 +636,54 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* top level syntax */
 
 module
-	: top_root
+	: imports_optional top_root
 		{
 #if YYBISON
-			AST_root = util::memory::excl_ptr<root_body>($1);
-#else	// YACC
-			$$ = $1;
+#if defined(USING_BISON) && !USING_BISON
+#error	Inconsistency in configuration: YYBISON && !USING_BISON
 #endif
+			AST_root = util::memory::excl_ptr<root_body>($2);
+#else	// YACC
+#if defined(USING_YACC) && !USING_YACC
+#error	Inconsistency in configuration: !YYBISON && !USING_YACC
+#endif
+			$$ = $2;
+#endif
+		}
+	;
+
+imports_optional
+	: imports
+	| { $$ = NULL; }
+	;
+
+imports
+	: imports import_item
+	| import_item
+	;
+
+import_item
+	: IMPORT STRING ';'
+		{
+			DELETE_TOKEN($1);
+			const excl_ptr<const token_quoted_string> f($2);
+			/** this will result in the token being deleted */
+			DELETE_TOKEN($3);
+			/**
+			Load precompiled header if exists, else inline
+			and parse.  
+			Open file stack...
+			**/
+			if (false) {
+				/**
+					Is this necessary?
+					No tokens on stack while
+					just importing modules...
+				**/
+				yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
+				THROW_EXIT;
+			}
+			$$ = NULL;
 		}
 	;
 
@@ -2379,5 +2426,5 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	
 	// or throw exception
 	THROW_EXIT;
-}
+}	// end yyerror(...)
 
