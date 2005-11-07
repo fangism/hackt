@@ -5,6 +5,12 @@
 
 2005-11-06	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65-parser-03-04:
+	  Configure/Makefile changes only: cxx_version.h, 
+		lexer/lex_version.h, and parser/yacc_version.h are now
+		generated at configure-time.  
+
+
 	* ARTXX-00-01-04-main-00-65-parser-03-03:
 	  Added more configuration header dependencies in Makefile.am.  
 	  Added initial files for managing file inclusion and path

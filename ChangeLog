@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2005-11-06	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-04:
+	  configure now generates
+		src/{cxx_version.h,lexer/lex_version.h,parser/yacc_version.h}
+
+
 2005-11-03	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65:

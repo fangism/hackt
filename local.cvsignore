@@ -9,4 +9,5 @@ hackt-*.*.*
 art++.doxygen.log
 artxx-*.*.*
 *.hchk
+configdate.h
 

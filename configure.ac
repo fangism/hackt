@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.14 2005/11/04 04:50:49 fang Exp $
+#	$Id: configure.ac,v 1.14.2.1 2005/11/07 04:23:17 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -243,7 +243,9 @@ fi
 # NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
 #	just use @VAR_TRUE@ instead of the if ... version in automake
 AC_CHECK_PROG([PRSIM], prsim, prsim)
+AC_CHECK_PROG([CFLAT], cflat, cflat)
 AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
+AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 
 # shamelessly copied autoconf snippet from ngspige's configure.in
 dnl	Option to include GNU readline support in ngspice CLI
@@ -334,6 +336,39 @@ AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 	[chmod +x test/hackt-cflat-expect.sh])
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
+dnl no input file needsd, just referencing arbitrary existing file
+AC_CONFIG_FILES([configdate.h:config/macro-value.h.in],
+	[date=`grep @DATE@ config.status | grep -v grep | sed -e 's/^.*@,//g' -e 's/,;.*//g'`
+	sed 's/MACRO/CONFIGDATE/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"`$date`\"/g" > configdate.h
+	])
+
+AC_CONFIG_FILES([src/cxx_version.h:config/macro-value.h.in],
+	[cxx=`grep @CXX@ config.status | grep -v grep | sed -e 's/^.*@,//g' -e 's/,;.*//g'`
+	sed 's/MACRO/CXX_VERSION/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"`$cxx --version | head -n 1`\"/g" > src/cxx_version.h
+	])
+
+AC_CONFIG_FILES([src/lexer/lex_version.h:config/macro-value.h.in],
+	[lex=`grep @LEX@ config.status | grep -v grep | sed -e 's/^.*@,//g' -e 's/,;.*//g'`
+	sed 's/MACRO/LEX_VERSION/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"`$lex --version | head -n 1`\"/g" > src/lexer/lex_version.h
+	])
+
+dnl traditional yacc has no version flag :(
+AC_CONFIG_FILES([src/parser/yacc_version.h:config/macro-value.h.in],
+	[yacc=`grep @YACC@ config.status | grep -v grep | sed -e 's/^.*@,//g' -e 's/,;.*//g'`
+	version=""
+	if (grep HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		version=`$yacc --version | head -n 1`
+	else
+		version=`which $yacc | head -n 1`
+	fi
+	sed 's/MACRO/YACC_VERSION/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"$version\"/g" > src/parser/yacc_version.h
+	])
+
 
 AC_OUTPUT
 

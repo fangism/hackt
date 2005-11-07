@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.19 2005/10/30 22:00:13 fang Exp $
+#	$Id: Makefile.am,v 1.19.6.1 2005/11/07 04:23:17 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -36,6 +36,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap maintainerclobber \
 	BOUNTY \
 	$(DOXYGEN_CONFIG).in \
+	config/macro-value.h.in \
 	DevelopmentPlan.dot
 
 
