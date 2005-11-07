@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2005-11-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-05:
+	  Moved around AUTO_IGNORE in Make.global so that it always
+		includes CLEANFILES and DISTCLEANILES.  
+		Cleaned up AUTO_IGNORE and EXTRA_DIST variables in Makefile.am.
+	  Added config/config_subst.awk for convenient substitutions
+		using config.status *during* config.status of 
+		configure-generated files.  
+	  configure.ac: now uses generated config_subst.awk.sh to perform
+		substitutions during config.status operations.  
+
+
 2005-11-06	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-04:

@@ -6,28 +6,15 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.7 2005/10/30 22:00:13 fang Exp $
+#	$Id: Make.global,v 1.7.6.1 2005/11/07 08:54:16 fang Exp $
 
-
-# list of files to automatically CVS ignore, accumulated over Makefile
-AUTO_IGNORE += cvsdiffs check.log .cvsignore .gdb_history \
-	Makefile.in Makefile make.log ignore backup temp
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
 	autoreconf
 
 # .cvsignore for this project will always be semi-automatically generated
-.cvsignore: Makefile.am Makefile.in $(top_srcdir)/Make.global
-
-# might as well include this for non-maintainers too
-# again, can't append to file with cat redirection because distclean
-# sets permissions of new files as read-only
-# NOTE: local.cvsignore may be normal or automatically generated
-.cvsignore: local.cvsignore
-	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
-	$(CAT) $< $@.temp > $@
-	-$(RM) $@.temp
+.cvsignore: $(srcdir)/Makefile.am Makefile.in $(top_srcdir)/Make.global
 
 # make cvsignore by default
 all: cvsignore
@@ -56,12 +43,26 @@ clean-cvsignore-recursive:
 		fi ; \
 	done
 
-DISTCLEANFILES += .cvsignore check.log
+DISTCLEANFILES += .cvsignore check.log cvsdiffs
 
 distcleandirs:
 	-$(RM) -r $(DISTCLEANDIRS)
 
 distclean-local: distcleandirs
+
+# list of files to automatically CVS ignore, accumulated over Makefile
+AUTO_IGNORE += .gdb_history \
+	Makefile.in Makefile make.log ignore backup temp \
+	$(CLEANFILES) $(DISTCLEANFILES)
+
+# might as well include this for non-maintainers too
+# again, can't append to file with cat redirection because distclean
+# sets permissions of new files as read-only
+# NOTE: local.cvsignore may be normal or automatically generated
+.cvsignore: local.cvsignore
+	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
+	$(CAT) $< $@.temp > $@
+	-$(RM) $@.temp
 
 # -k option allows continuation past directories with failed tests
 check.log: force
