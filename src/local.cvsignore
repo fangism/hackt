@@ -15,5 +15,4 @@ core.*
 *.hchk
 *.tccchk
 dummy.cc
-cxx_version.h
 

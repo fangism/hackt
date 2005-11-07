@@ -1,7 +1,7 @@
 /**
 	\file "main/version.h"
 	Interface header for version module.  
-	$Id: version.h,v 1.2.2.1 2005/11/04 23:30:24 fang Exp $
+	$Id: version.h,v 1.2.2.2 2005/11/07 08:55:12 fang Exp $
  */
 
 #ifndef	__MAIN_VERSION_H__
@@ -69,7 +69,15 @@ public:
 
 	static
 	ostream&
-	build(ostream&);
+	builddate(ostream&);
+
+	static
+	ostream&
+	buildhost(ostream&);
+
+	static
+	ostream&
+	cxxflags(ostream&);
 
 };	// end class version
 

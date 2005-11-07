@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82.2.4 2005/11/07 04:23:21 fang Exp $
+#	$Id: Makefile.am,v 1.82.2.5 2005/11/07 08:55:03 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -84,11 +84,16 @@ parser/yacc_version.h: $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 
-AUTOHEADERS = cvstag.h builddate.h
+# should include make-generated headers only, no configure-generated headers
+AUTOHEADERS = cvstag.h builddate.h am_cxxflags.h
 # parser/yacc_version.h
 # lexer/lex_version.h
 # cxx_version.h
 
+# these headers are generated at configure time by config.status
+VERSIONHEADERS = buildhost.h cxxflags.h cxx_version.h
+
+# these headers are additional dependencies for configure-dependent parser files
 CONFIGHEADERS = config.h ../config.h
 
 # these two targets cause automake to create the corresponding _build
@@ -467,6 +472,7 @@ UTIL_HEADER_FILES = \
 	util/cppcat.h \
 	util/counter.h \
 	util/dereference.h \
+	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
@@ -531,6 +537,7 @@ UTIL_HEADER_FILES = \
 UTIL_CC_FILES = \
 	util/IO_utils.cc \
 	util/bitset.cc \
+	util/dirent.cc \
 	util/indent.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
@@ -601,8 +608,8 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-prefix.h
-main/version.cc: cvstag.h builddate.h cxx_version.h \
-	parser/yacc_version.h lexer/lex_version.h
+main/version.cc: cvstag.h builddate.h buildhost.h cxx_version.h \
+	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
 lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
 parser/hackt-union.lo: parser/$(HACKT_PARSE_ROOT).output.h
 parser/hackt-union.$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
@@ -752,6 +759,11 @@ PARSER_NOWARN_FLAGS = -Wno-unused -Wno-old-style-cast -Wno-shadow
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
+am_cxxflags.h: $(srcdir)/Makefile.am
+	@$(ECHO) "#ifndef	AM_CXXFLAGS" > $@
+	@$(ECHO) "#define	AM_CXXFLAGS \"$(AM_CXXFLAGS)\"" >> $@
+	@$(ECHO) "#endif	// AM_CXXFLAGS" >> $@
+
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 
@@ -844,8 +856,8 @@ EXTRA_DIST += local.cvsignore \
 TESTS = art_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS)
-DISTCLEANFILES += art_persistent_table.sh
-AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(AUTOHEADERS)
+DISTCLEANFILES += art_persistent_table.sh $(VERSIONHEADERS)
+AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@
@@ -960,6 +972,7 @@ util/obsolete/.cvsignore: .cvsignore
 test/.cvsignore: .cvsignore test/local.cvsignore
 	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
+# files to ignore in subdirectories
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	common/.cvsignore \
 	Object/.cvsignore Object/common/.cvsignore \

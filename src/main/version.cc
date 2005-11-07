@@ -1,9 +1,8 @@
 /**
 	\file "main/version.cc"
-	Converts ART source code to an object file (pre-unrolled).
-	This file was born from "art++2obj.cc" in earlier revision history.
-
-	$Id: version.cc,v 1.2.2.3 2005/11/06 21:55:04 fang Exp $
+	Prints configuration information, everything a maintainer
+	would want to know about another's installation configuration.  
+	$Id: version.cc,v 1.2.2.4 2005/11/07 08:55:12 fang Exp $
  */
 
 #include <iostream>
@@ -11,11 +10,17 @@
 #include "main/version.h"
 #include "main/main_funcs.h"
 #include "config.h"
+
+// various configure-generated and make-generated headers
 #include "cvstag.h"
 #include "builddate.h"
 #include "cxx_version.h"
+#include "cxxflags.h"
+#include "am_cxxflags.h"
 #include "lexer/lex_version.h"
 #include "parser/yacc_version.h"
+#include "buildhost.h"
+
 // #include "util/getopt_portable.h"
 
 namespace ART {
@@ -44,8 +49,9 @@ version::version() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main program just prints the version information.  
-	TODO: CXXFLAGS
-		configure params, paths, etc...
+	TODO: configure params, paths, etc...
+	TODO: if/when we decide to support certain environment variables
+		make sure we can dump all the relevant variables.  
  */
 int
 version::main(const int argc, char* argv[], const global_options&) {
@@ -56,47 +62,70 @@ version::main(const int argc, char* argv[], const global_options&) {
 	ostream& o(cout);
 	package(o) << endl;
 	cvs(o) << endl;
+	buildhost(o) << endl;
 	cxx(o) << endl;
+	cxxflags(o) << endl;
 	lex(o) << endl;
 	yacc(o) << endl;
-	build(o) << endl;
+	builddate(o) << endl;
+
+	// influential environment variables
 	return 0;
 }
 
 //-----------------------------------------------------------------------------
 ostream&
 version::package(ostream& o) {
-	return o << "Version: " << PACKAGE_STRING;
+	return o << "Version: " PACKAGE_STRING;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 version::cvs(ostream& o) {
-	return o << "CVS Tag: " << CVSTAG;
+	return o << "CVS Tag: " CVSTAG;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 version::cxx(ostream& o) {
-	return o << "c++: " << CXX_VERSION;
+	return o << "c++: " CXX_VERSION;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+version::cxxflags(ostream& o) {
+	o << "AM_CXXFLAGS: " AM_CXXFLAGS;
+	return o << endl << "config-CXXFLAGS: " CONFIG_CXXFLAGS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 version::lex(ostream& o) {
-	return o << "lex: " << LEX_VERSION;
+	return o << "lex: " LEX_VERSION;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 version::yacc(ostream& o) {
-	return o << "yacc: " << YACC_VERSION;
+	return o << "yacc: " YACC_VERSION;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-version::build(ostream& o) {
-	return o << "Built: " << BUILDDATE;
+version::builddate(ostream& o) {
+	return o << "build-date: " BUILDDATE;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the host triplet only if it's different from the build triplet.
+ */
+ostream&
+version::buildhost(ostream& o) {
+	o << "build-triplet: " CONFIG_BUILD;
+	if (strcmp(CONFIG_HOST, CONFIG_BUILD))
+		o << endl << "host-triplet: " CONFIG_HOST;
+	return o;
 }
 
 //-----------------------------------------------------------------------------

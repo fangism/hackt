@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.4 2005/11/03 07:52:06 fang Exp $
+	$Id: cflat.cc,v 1.4.2.1 2005/11/07 08:55:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -515,9 +515,9 @@ cflat::parse_command_options(const int argc, char* argv[], options& cf) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat::usage(void) {
-	cerr << "Usage: " << name << " <mode> [options] <hackt-obj-infile>"
+	cerr << "usage: " << name << " <mode> [options] <hackt-obj-infile>"
 		<< endl;
-	cerr << "Options: " << endl;
+	cerr << "options: " << endl;
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"
 		" (repeatable)" << endl;
 	// list modes

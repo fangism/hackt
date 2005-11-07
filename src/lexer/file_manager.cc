@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.1.2.1 2005/11/06 21:55:03 fang Exp $
+	$Id: file_manager.cc,v 1.1.2.2 2005/11/07 08:55:08 fang Exp $
  */
 
 #include "lexer/file_manager.h"
@@ -42,6 +42,15 @@ file_manager::file_manager() : _paths(), _fstack() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 file_manager::~file_manager() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a path to the list of include paths to search.  
+ */
+void
+file_manager::add_path(const string& p) {
+	_paths.push(p);
+}
 
 //=============================================================================
 }	// end namespace lexer

@@ -3,7 +3,7 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.5.4.1 2005/11/06 21:55:05 fang Exp $
+	$Id: unique_list.h,v 1.5.4.2 2005/11/07 08:55:15 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
@@ -123,7 +123,7 @@ public:
 
 	/// defaults to back operation
 	void
-	push(const reference n) {
+	push(const_reference n) {
 		push_back(n);
 	}
 

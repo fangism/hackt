@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.1.2.1 2005/11/06 21:55:03 fang Exp $
+	$Id: file_manager.h,v 1.1.2.2 2005/11/07 08:55:08 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -94,6 +94,10 @@ public:
 
 //=============================================================================
 /**
+	Combined manager to handle include paths and 
+	opened file stack.  
+	Consider adding some sort of vector and reverse_map
+	to pair-up file-index and file-name (full path).  
  */
 class file_manager {
 private:
