@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.1.2.2 2005/11/06 21:55:03 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.1.2.3 2005/11/08 05:09:44 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -61,6 +61,8 @@
 #include "util/macros.h"
 #include "util/using_ostream.h"
 #include "AST/art_parser.h"		/* everything needed for "y.tab.h" */
+#include "lexer/input_manager.h"
+#include "lexer/file_manager.h"
 using namespace ART::parser;
 
 
@@ -73,6 +75,9 @@ using namespace ART::parser;
 
 #include "lexer/hac_lex.h"
 #include "lexer/hackt-lex-options.h"
+
+extern ART::lexer::file_manager
+hackt_parse_file_manager;
 
 namespace ART {
 /**
@@ -615,8 +620,20 @@ EXPORT		"export"
 %%
 /****** user-code ************************************************************/
 
+/**
+	If this is already the outermost file, then return 1, 
+		signaling the end of all input.  
+	\return 0 to continue lexing, after restoring yyin to its 
+		former value.  
+ */
 int yywrap(void) {
-	return 1;
+	const size_t d = hackt_parse_file_manager.file_depth();
+	// cerr << "file-depth remaining = " << d << endl;
+	if (d > 1) {
+		input_manager::leave_file(yyin, hackt_parse_file_manager);
+		return 0;
+	}
+	else	return 1;
 	// or read another input file
 }
 

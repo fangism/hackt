@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-06:
+	  Only partial functionality of including/importing other files.  
+	  Added lexer::yyin_manager helper class for balancing file stack.
+	  Implemented more of lexer::file_manager methods.  
+	  Updated yywrap in lexer/hackt-lex.ll.
+	  Still needs extensive testing (and completion).  
+	  Initial compile options and modifiers to compile module.  
+	  parser/hackt-parse.yy: partial implementation of 
+		opening files, but needs more checking.  
+
+
 2005-11-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-05:

@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.4.2.1 2005/11/07 08:55:11 fang Exp $
+	$Id: cflat.cc,v 1.4.2.2 2005/11/08 05:09:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -59,6 +59,9 @@ cflat::brief_str[] =
 const size_t
 cflat::program_id = register_hackt_program_class<cflat>();
 
+/**
+	Options modifier map must be initialized before any registrations.  
+ */
 const cflat::options_modifier_map_type
 cflat::options_modifier_map;
 
@@ -489,7 +492,7 @@ cflat::parse_command_options(const int argc, char* argv[], options& cf) {
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
 		case 'f': {
-			const options_modifier_info
+			const options_modifier_info&
 				om(options_modifier_map[optarg]);
 			if (!om) {
 				cerr << "Invalid mode: " << optarg << endl;

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.7 2005/11/04 04:50:54 fang Exp $
+#	$Id: TODO,v 1.7.2.1 2005/11/08 05:09:42 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -52,6 +52,10 @@ Interactive shell:
 	the hackt shell -- "hatcsh" ?
 	be able to run tool commands, flow control, launch simulations, etc.
 		load/mount object files, run system commands via !
+
+===============================================================================
+compile (module):
+	-fdump-* flags
 
 ===============================================================================
 HACKT template stuff:

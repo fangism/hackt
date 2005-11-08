@@ -6,7 +6,7 @@
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.4 2005/09/14 15:30:36 fang Exp $
+	$Id: parse_test.cc,v 1.4.14.1 2005/11/08 05:09:45 fang Exp $
  */
 
 #include <iostream>
@@ -49,6 +49,7 @@ parse_test::parse_test() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: also accept same compile flags as compile module.
 	\param argc number of command-line arguments.
 	\param argv the array of string arguments.
 	\param gopt currently unused.

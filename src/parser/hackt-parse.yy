@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy,v 1.1.2.2 2005/11/06 21:55:04 fang Exp $
+	$Id: hackt-parse.yy,v 1.1.2.3 2005/11/08 05:09:45 fang Exp $
 	This file was formerly known as
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
 	in a previous life.  
@@ -21,6 +21,11 @@
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
 #include "util/using_ostream.h"
+#include "lexer/file_manager.h"
+#include "lexer/input_manager.h"	// alias to yyin_manager
+
+#define	ENABLE_STACKTRACE		0
+#include "util/stacktrace.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
 #if defined (__GNUC__) && (3 <= __GNUC__)
@@ -46,6 +51,19 @@ using namespace ART::parser;
  */
 util::memory::excl_ptr<root_body> AST_root;
 #endif	// YYBISON
+
+// may be changed when nesed files are opened
+extern FILE* yyin;
+
+using ART::lexer::file_manager;
+using ART::lexer::input_manager;
+
+/**
+	This is the file stack and include path manager for 
+	the hackt parser.  
+	This is globally visible and accessible (unfortunately).  
+ */
+file_manager hackt_parse_file_manager;
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
@@ -664,27 +682,50 @@ imports
 
 import_item
 	: IMPORT STRING ';'
-		{
+	{
+		/**
+		Load precompiled header if exists, else inline
+		and parse.  
+		Open file stack...
+		The counterpart to this is in yywrap, defined in the lexer.  
+		What if file was already visited?
+		Should ignore without entering file...
+		need to signal to yywrap?
+		**/
+		const bool err =
+		input_manager::enter_file(yyin, hackt_parse_file_manager, 
+			$2->c_str());
+		if (err) {
+			/**
+				Is this necessary?
+				No tokens on stack while
+				just importing modules...
+			**/
+			// yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
+			// THROW_EXIT;
+			// will already free parser stacks
+#if 0
+			string s("Unable to open file: ");
+			s += *$2;
+			// this won't work: yyerror is reserved for
+			// syntax errors, not semantic errors.
+			const char* sc = s.c_str();
+			// need to pass in a simple argument for yyerror hack
+			yyerror(sc);
+#else
+			cerr << "Unable to open file: " << *$2 << endl;
+			// included from...
+			yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
+			THROW_EXIT;
+#endif
+		} else {
 			DELETE_TOKEN($1);
 			const excl_ptr<const token_quoted_string> f($2);
 			/** this will result in the token being deleted */
 			DELETE_TOKEN($3);
-			/**
-			Load precompiled header if exists, else inline
-			and parse.  
-			Open file stack...
-			**/
-			if (false) {
-				/**
-					Is this necessary?
-					No tokens on stack while
-					just importing modules...
-				**/
-				yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
-				THROW_EXIT;
-			}
-			$$ = NULL;
 		}
+		$$ = NULL;
+	}
 	;
 
 top_root
@@ -2252,16 +2293,19 @@ void
 yyfreestacks(const short* _yyss_, const short* _yyssp_, 
 		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
 		const YYSTYPE _yylval_) {
+	STACKTRACE_VERBOSE;
 	const short* s;
 	const YYSTYPE* v;
 	s=_yyss_+1;
 	v=_yyvs_+1;
 	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
 		if (v) {
+			// cerr << "Deleting stack token..." << endl;
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
 	if (!at_eof()) {
+		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, yychar);
 	}
@@ -2317,6 +2361,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 // following prototype MUST appear as is (after "static") for awk hack...
 static
 void yyerror(const char* msg) { 	// ancient compiler rejects
+	STACKTRACE_VERBOSE;
 	const short* s;
 	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc

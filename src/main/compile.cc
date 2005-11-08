@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.6.2.1 2005/11/07 08:55:11 fang Exp $
+	$Id: compile.cc,v 1.6.2.2 2005/11/08 05:09:45 fang Exp $
  */
 
 #include <iostream>
@@ -14,7 +14,12 @@
 #include "main/main_funcs.h"
 #include "lexer/file_manager.h"
 #include "util/getopt_portable.h"
-#include "util/dirent.h"
+#include "util/dirent.h"		// configured wrapper around <dirent.h>
+#include "util/attributes.h"
+#include "util/qmap.tcc"
+
+extern ART::lexer::file_manager
+hackt_parse_file_manager;
 
 namespace ART {
 #include "util/using_ostream.h"
@@ -23,6 +28,7 @@ using entity::module;
 using std::list;
 using std::string;
 using lexer::file_manager;
+using util::good_bool;
 
 //=============================================================================
 /**
@@ -31,12 +37,42 @@ using lexer::file_manager;
 class compile::options {
 public:
 	typedef	list<string>			include_paths_type;
-	bool					dump;
+	bool					dump_module;
+	bool					dump_include_paths;
+	/**
+		Q: should include paths be a part of global options?
+	 */
 	include_paths_type			include_paths;
 
-	options() : dump(false), include_paths() { }
+	options() : dump_module(false),
+		dump_include_paths(false), 
+		include_paths()
+		{ }
 
 };	// end class options
+
+//=============================================================================
+/**
+	Entry for options.  
+ */
+struct compile::options_modifier_info {
+	options_modifier			op;
+	string					brief;
+
+	options_modifier_info() : op(NULL), brief() { }
+
+	options_modifier_info(const options_modifier o, const char* b) :
+		op(o), brief(b) { }
+
+	operator bool () const { return op; }
+
+	good_bool
+	operator () (options& o) const {
+		NEVER_NULL(op);
+		return (*op)(o);
+	}
+
+};	// end struct options_modifier_info
 
 //=============================================================================
 // class compile static initializers
@@ -50,7 +86,52 @@ compile::brief_str[] = "Compiles HACKT source to object file.";
 const size_t
 compile::program_id = register_hackt_program_class<compile>();
 
+/**
+	Options modifier map must be initialized before any registrations.  
+ */
+const compile::options_modifier_map_type
+compile::options_modifier_map;
+
 //=============================================================================
+static const char default_options_brief[] = "Needs description.";
+
+/**
+	Options modification registration interface.  
+ */
+class compile::register_options_modifier {
+public:
+	register_options_modifier(const string& optname, 
+			const options_modifier om, 
+			const char* b = default_options_brief) {
+		options_modifier_map_type&
+			omm(const_cast<options_modifier_map_type&>(
+				options_modifier_map));
+		NEVER_NULL(om);
+		options_modifier_info& i(omm[optname]);
+		INVARIANT(!i);
+		i.op = om;
+		i.brief = b;
+	}
+} __ATTRIBUTE_UNUSED__;	// end class register_options_modifier
+
+//=============================================================================
+// compile::options_modifier declarations and definitions
+
+static
+good_bool
+__compile_dump_include_paths(compile::options& o) {
+	o.dump_include_paths = true;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_dump_include_paths("dump-include-paths",
+	&__compile_dump_include_paths,
+	"dumps paths as they are added to -I include path");
+
+//=============================================================================
+// class compile method definitions
+
 compile::compile() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,8 +153,8 @@ compile::main(const int argc, char* argv[], const global_options&) {
 		to be re-entrant.  
 		Q: Should file_manager be a member of module?
 	***/
-	file_manager fm;
 {
+	file_manager& fm(hackt_parse_file_manager);
 	typedef	options::include_paths_type::const_iterator	const_iterator;
 	const_iterator i(opt.include_paths.begin());
 	const const_iterator e(opt.include_paths.end());
@@ -82,6 +163,13 @@ compile::main(const int argc, char* argv[], const global_options&) {
 		// check if path exists, otherwise, don't bother adding...
 		if (util::dir_exists(s.c_str())) {
 			fm.add_path(s);
+			if (opt.dump_include_paths) {
+				cerr << "Added to search path: " << s << endl;
+			}
+		} else {
+			if (opt.dump_include_paths) {
+				cerr << "Couldn\'t open dir: " << s << endl;
+			}
 		}
 	}
 }
@@ -104,7 +192,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 		// save_module(*mod, argv[1]);
 		save_module_debug(*mod, argv[1]);
 	}
-	if (opt.dump)
+	if (opt.dump_module)
 		mod->dump(cerr);
 
 	return 0;
@@ -119,13 +207,24 @@ compile::main(const int argc, char* argv[], const global_options&) {
  */
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+dhI:";
+	static const char* optstring = "+df:hI:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
 	case 'd':
-		opt.dump = true;
+		opt.dump_module = true;
 		break;
+	case 'f': {
+		const options_modifier_info&
+			om(options_modifier_map[optarg]);
+		if (!om) {
+			cerr << "Invalid option argument: " << optarg << endl;
+			return 1;
+		} else if (!om(opt).good) {
+			return 1;
+		}
+		break;
+	}
 	case 'h':
 		return 1;
 	case 'I':
@@ -146,15 +245,23 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Prints summary of options and arguments.  
+ */
 void
 compile::usage(void) {
 	cerr << "compile: compiles input file to module object file" << endl;
-	cerr << "usage: compile [-dh] <hackt-source-file> [hackt-obj-file]"
+	cerr << "usage: compile [options] <hackt-source-file> [hackt-obj-file]"
 		<< endl;
+	cerr << "options:" << endl;
 	cerr << "\t-d: produces text dump of compiled module" << endl <<
+		"\t-f <opt> : general compile flags (repeatable)" << endl <<
+	/***
+		TODO: list -f options.
+	***/
 		"\t-h: gives this usage messsage" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
-	cerr << "\tIf output target is not given, module will not be saved."
+	cerr << "\tIf no output object file is given, compiled module will not be saved."
 		<< endl;
 }
 

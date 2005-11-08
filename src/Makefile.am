@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82.2.5 2005/11/07 08:55:03 fang Exp $
+#	$Id: Makefile.am,v 1.82.2.6 2005/11/08 05:09:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -553,6 +553,8 @@ PARSER_H_FILES = \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
 	lexer/file_manager.h \
+	lexer/input_manager.h \
+	lexer/yyin_manager.h \
 	lexer/hac_lex.h
 
 PARSER_CC_FILES = \
@@ -560,6 +562,7 @@ PARSER_CC_FILES = \
 	parser/hackt-union.cc \
 	lexer/hackt-lex-prefix.cc \
 	lexer/file_manager.cc \
+	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
 
 # libhacktexec sources
