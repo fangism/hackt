@@ -3,7 +3,7 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.5.4.2 2005/11/07 08:55:15 fang Exp $
+	$Id: unique_list.h,v 1.5.4.3 2005/11/08 08:39:18 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
@@ -98,33 +98,39 @@ public:
 	/**
 		Appends a value to end of list (and set) 
 		if it's not already in list.  
+		\return true if last addition was ignored, already included.  
 	 */
-	void
+	bool
 	push_back(const_reference n) {
 		const typename set_type::const_iterator probe(_set.find(n));
 		// if not found, add
 		if (probe == _set.end()) {
 			_set.insert(n);
 			_sequence.push_back(n);
-		}
+			return false;
+		} else	return true;
 		// else ignore
 	}
 
-	void
+	/**
+		\return true if last addition was ignored, already included.  
+	 */
+	bool
 	push_front(const_reference n) {
 		const typename set_type::const_iterator probe(_set.find(n));
 		// if not found, add
 		if (probe == _set.end()) {
 			_set.insert(n);
 			_sequence.push_front(n);
-		}
+			return false;
+		} else	return true;
 		// else ignore
 	}
 
 	/// defaults to back operation
-	void
+	bool
 	push(const_reference n) {
-		push_back(n);
+		return push_back(n);
 	}
 
 	/**

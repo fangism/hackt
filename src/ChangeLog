@@ -5,6 +5,18 @@
 
 2005-11-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65-parser-03-07:
+	  lexer::file_position_stack and lexer::file_manager now report 
+		whether an included file was ignored because it was already 
+		registered (visited).  yyin_manager and parser use this 
+		information to determine course of action.  
+	  TODO: dump include file stack in the event of an error.  
+		In general, make the error reporting more precise.  
+	  TODO: -M for make dependencies (possibly other suboptions).  
+	  TODO: commit USE_CURRENT_FILE_STACK in AST/art_parser_terminal.h, 
+		and commit CURRENT in lexer/hackt-lex.ll.
+
+
 	* ARTXX-00-01-04-main-00-65-parser-03-06:
 	  Only partial functionality of including/importing other files.  
 	  Added lexer::yyin_manager helper class for balancing file stack.

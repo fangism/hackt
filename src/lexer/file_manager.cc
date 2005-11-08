@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.1.2.3 2005/11/08 05:09:43 fang Exp $
+	$Id: file_manager.cc,v 1.1.2.4 2005/11/08 08:39:16 fang Exp $
  */
 
 // #include <fstream>
@@ -35,12 +35,17 @@ file_position_stack::push(const file_position& fp) {
 /**
 	Pushes file_position onto stack and registers file name with it
 	to the list of files seen.  
+	\return true if file was already included/opened previously.  
  */
-void
+bool
 file_position_stack::push(const file_position& fp, const string& fn) {
 	STACKTRACE_VERBOSE;
-	_files.push(fp);
-	_registry.push(fn);
+	if (_registry.push(fn)) {
+		return true;
+	} else {
+		_files.push(fp);
+		return false;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,7 +107,7 @@ file_manager::add_path(const string& p) {
 		by cpp/gcc, since that's what we're trying to imitate. 
 	\return pointer to opened file if successful, else NULL.  
  */
-file_position*
+file_manager::return_type
 file_manager::open_FILE(const char* fs) {
 	STACKTRACE_VERBOSE;
 {
@@ -130,7 +135,7 @@ file_manager::open_FILE(const char* fs) {
 	}
 }
 	// else not found
-	return NULL;
+	return return_type(NULL, false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -138,16 +143,21 @@ file_manager::open_FILE(const char* fs) {
 	This this variant, the caller has already opened FILE* f.  
 	\param f already opened file pointer.  
 	\param fs may be NULL, representing stdin.
+	\return the file pointer and whether or not file is already opened.  
  */
-file_position*
+file_manager::return_type
 file_manager::open_FILE(const char* fs, FILE* f) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(f);
+	bool inc = false;		// whether or not was already included
 	// don't register stdin with a file name
-	if (fs)	_fstack.push(file_position(f), fs);
-	else	_fstack.push(file_position(f));
+	if (fs) {
+		inc = _fstack.push(file_position(f), fs);
+	} else {
+		_fstack.push(file_position(f));
+	}
 	_names.push_back(fs ? fs : "-stdin-");
-	return &_fstack.top();
+	return return_type(&_fstack.top(), inc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

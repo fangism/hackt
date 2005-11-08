@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.1.2.3 2005/11/08 05:09:44 fang Exp $
+	$Id: file_manager.h,v 1.1.2.4 2005/11/08 08:39:16 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include <string>
 #include <stack>
+#include <utility>			// for std::pair
 #include "util/unique_list.h"
 // #include "util/unique_stack.h"
 #include "lexer/hac_lex.h"
@@ -43,10 +44,10 @@ struct file_position {
 	FILE*				file;
 	token_position			pos;
 
-	file_position() : file(NULL), pos(0, 0, 0) { }
+	file_position() : file(NULL), pos(1, 0, 1) { }
 
 	explicit
-	file_position(FILE* const f) : file(f), pos(0, 0, 0) { }
+	file_position(FILE* const f) : file(f), pos(1, 0, 1) { }
 
 	// default copy-constructor
 	// default destructor
@@ -82,7 +83,7 @@ public:
 	void
 	push(const file_position&);
 
-	void
+	bool
 	push(const file_position&, const string&);
 
 	const file_position&
@@ -135,16 +136,26 @@ private:
 	 */
 	file_names_type			_names;
 public:
+	/**
+		The first field is the resulting file_position at
+		the top of the stack.  
+		The second value indicates whether or not the 
+		last requested opened file was ignored 
+		(because it is already open).  
+	 */
+	typedef	std::pair<file_position*, bool>
+					return_type;
+public:
 	file_manager();
 	~file_manager();
 
 	void
 	add_path(const string&);
 
-	file_position*
+	return_type
 	open_FILE(const char*);
 
-	file_position*
+	return_type
 	open_FILE(const char*, FILE*);
 
 	file_position*
@@ -152,6 +163,15 @@ public:
 
 	const file_position*
 	current_FILE(void) const;
+
+	/**
+		For the lexer to update the current file position.  
+		\pre File stack must not be empty.  
+	 */
+	token_position&
+	current_position(void) {
+		return _fstack.top().pos;
+	}
 
 	/**
 		Subtracting 1 from size because there is always

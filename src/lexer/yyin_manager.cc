@@ -1,6 +1,6 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.1.2.1 2005/11/08 05:09:44 fang Exp $
+	$Id: yyin_manager.cc,v 1.1.2.2 2005/11/08 08:39:17 fang Exp $
  */
 
 
@@ -22,8 +22,8 @@ namespace lexer {
 		in the include paths.  
  */
 yyin_manager::yyin_manager(FILE*& _y, file_manager& fm, const char* fn, 
-		const bool b) : _yyin(_y), _file_manager(fm), _error(false) {
-	_error = enter_file(_y, fm, fn, b);
+		const bool b) : _yyin(_y), _file_manager(fm) {
+	_status = enter_file(_y, fm, fn, b);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -31,11 +31,11 @@ yyin_manager::yyin_manager(FILE*& _y, file_manager& fm, const char* fn,
 	Restore the yyin from previous file.  
  */
 yyin_manager::~yyin_manager() {
-if (_error) {
-	// do nothing, leave _yyin alone.  
-} else {
+if (_status == SUCCESS) {
 	// close the current file and restore the last stream
 	leave_file(_yyin, _file_manager);
+} else {
+	// do nothing, leave _yyin alone.  
 }
 }
 
@@ -43,31 +43,36 @@ if (_error) {
 /**
 	\return true if there is an error.  
  */
-bool
+yyin_manager::status
 yyin_manager::enter_file(FILE*& _yyin, file_manager& _file_manager,
 		const char* fn, const bool b) {
 	STACKTRACE_VERBOSE;
 if (b) {
 	// search paths
 	NEVER_NULL(fn);
-	file_position* fp = _file_manager.open_FILE(fn);
-	if (fp && fp->file) {
-		_yyin = fp->file;
-		return false;
+	const file_manager::return_type fp(_file_manager.open_FILE(fn));
+	if (fp.second) {
+		return IGNORE;
+	} else if (fp.first && fp.first->file) {
+		_yyin = fp.first->file;
+		return SUCCESS;
 	} else {
 		// leave _yyin untouched
-		return true;
+		return ERROR;
 	}
 } else {
 	// don't search include paths, just open the file
 	// we already checked the file
+	// often called for the top-most file
 	FILE* f = (fn ? fopen(fn, "r") : stdin);
 	NEVER_NULL(f);
 	_yyin = f;
-	file_position* fp = _file_manager.open_FILE(fn, f);
-	NEVER_NULL(fp);
-	INVARIANT(f == fp->file);
-	return false;
+	const file_manager::return_type fp(_file_manager.open_FILE(fn, f));
+	NEVER_NULL(fp.first);
+	INVARIANT(!fp.second);
+	// this is the first file, can't already be opened
+	INVARIANT(f == fp.first->file);
+	return SUCCESS;
 }
 }
 

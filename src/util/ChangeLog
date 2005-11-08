@@ -2,6 +2,13 @@
 
 2005-11-07	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65-parser-03-07:
+	  Gave unique_list::push* return value, indictaing whether or
+		not the value pushed already existed in set.  
+
+
+2005-11-07	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-65-parser-03-05:
 	  Added configured util/dirent.h, and wrapper functions direct.cc.
 	  Typo fix in unique_list::push() parameter.

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.7.2.1 2005/11/08 05:09:42 fang Exp $
+#	$Id: TODO,v 1.7.2.2 2005/11/08 08:39:00 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -82,8 +82,15 @@ Simulation:
 
 ===============================================================================
 parser:
+	In progress: -parser-03 branch.
 	file/module inclusion, for now mimic cpp, using 
 		#file and #line directives
+	actually forget preprocessing, just plain implicit #pragma one
+		importing of files is good enough.
+	Later, check for existence of precompiled object and use that.  
+	Also, need to include source information with each module,
+		so later compile phases can report error's w.r.t. source.  
+	Much error handling testing to be done...
 
 ===============================================================================
 PRS and CHP

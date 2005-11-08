@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy,v 1.1.2.3 2005/11/08 05:09:45 fang Exp $
+	$Id: hackt-parse.yy,v 1.1.2.4 2005/11/08 08:39:17 fang Exp $
 	This file was formerly known as
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
 	in a previous life.  
@@ -692,38 +692,36 @@ import_item
 		Should ignore without entering file...
 		need to signal to yywrap?
 		**/
-		const bool err =
+		const input_manager::status err =
 		input_manager::enter_file(yyin, hackt_parse_file_manager, 
 			$2->c_str());
-		if (err) {
+		switch (err) {
+		case input_manager::SUCCESS:
+			// fall-through
+		case input_manager::IGNORE: {
+			DELETE_TOKEN($1);
+			const excl_ptr<const token_quoted_string> f($2);
+			/** this will result in the token being deleted */
+			DELETE_TOKEN($3);
+			break;
+		}
+		case input_manager::ERROR: {
 			/**
 				Is this necessary?
 				No tokens on stack while
 				just importing modules...
 			**/
-			// yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
-			// THROW_EXIT;
-			// will already free parser stacks
-#if 0
-			string s("Unable to open file: ");
-			s += *$2;
-			// this won't work: yyerror is reserved for
+			// don't call yyerror: yyerror is reserved for
 			// syntax errors, not semantic errors.
-			const char* sc = s.c_str();
-			// need to pass in a simple argument for yyerror hack
-			yyerror(sc);
-#else
 			cerr << "Unable to open file: " << *$2 << endl;
 			// included from...
 			yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
 			THROW_EXIT;
-#endif
-		} else {
-			DELETE_TOKEN($1);
-			const excl_ptr<const token_quoted_string> f($2);
-			/** this will result in the token being deleted */
-			DELETE_TOKEN($3);
+			break;
 		}
+		default:
+			abort();
+		}	// end switch
 		$$ = NULL;
 	}
 	;
