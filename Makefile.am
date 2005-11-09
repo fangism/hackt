@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.19.6.2 2005/11/07 08:54:16 fang Exp $
+#	$Id: Makefile.am,v 1.19.6.3 2005/11/09 09:16:52 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -76,7 +76,7 @@ distcheck.log: force
 
 # don't include CVS directories in distribution
 dist-hook:
-	$(RM) -r `find $(distdir) -name CVS`
+	$(RM) -r `$(FIND) $(distdir) -name CVS`
 
 .NOTPARALLEL: commit
 commit: cvsdiffs distcheck
