@@ -3,6 +3,29 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-09:
+	  Fixed previous bug regarding nested file line numbers.  
+	  Fixed bad file name bug by using std::string in file_manager's
+		file name stack.  Never use const char*, 
+		not even for quick and dirty.  
+	  Parser no longer handles file-opening, moved to lexer!
+		Rationale: parser would scan tokens after import
+		statements, but before actually opening file, 
+		so line numbers would be totally off in nested files.  
+		(May still be a way to do it in the parser, 
+		a brief attempt at embedded actions in the grammar failed.)
+	  Lexer is now imbued with ability to change file streams, 
+		imitating parsing of an import directive {IMPORT}.
+		Learned that yywrap is called *before* EOF is reached
+		in string and comment modes/states.  
+	  Extended both yacc- and bison- union-type.awk scripts
+		to handle cases where there is no type associated with
+		a symbol, either because the symbol has no type, 
+		or is a placeholder for an embedded action.  
+
+
 2005-11-08	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-08:

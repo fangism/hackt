@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.1.2.5 2005/11/09 03:27:37 fang Exp $
+	$Id: file_manager.h,v 1.1.2.6 2005/11/09 08:24:00 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -144,7 +144,7 @@ public:
 	to pair-up file-index and file-name (full path).  
  */
 class file_manager {
-	typedef	std::list<const char*>	file_names_type;
+	typedef	std::list<string>	file_names_type;
 private:
 	search_paths			_paths;
 	file_position_stack		_fstack;
@@ -209,6 +209,9 @@ public:
 
 	ostream&
 	dump_file_stack(ostream&) const;
+
+	ostream&
+	dump_file_stack_top(ostream&) const;
 
 	ostream&
 	reset_and_dump_file_stack(ostream&);

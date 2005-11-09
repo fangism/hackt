@@ -1,0 +1,8 @@
+// "import-003.in"
+// should die on bad included file
+
+
+
+
+import "import-001.in";
+

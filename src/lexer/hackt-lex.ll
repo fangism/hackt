@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.1.2.5 2005/11/09 03:27:37 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.1.2.6 2005/11/09 08:24:00 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -77,7 +77,12 @@ using namespace ART::parser;
 #include "lexer/hac_lex.h"
 #include "lexer/hackt-lex-options.h"
 
-extern ART::lexer::file_manager
+/**
+	This is the file stack and include path manager for 
+	the hackt parser.  
+	This is globally visible and accessible (unfortunately).  
+ */
+ART::lexer::file_manager
 hackt_parse_file_manager;
 
 namespace ART {
@@ -270,6 +275,7 @@ ID		{IDHEAD}{IDBODY}*
 BADID		({INT}{ID})|({FLOAT}{ID})
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
+WS		{WHITESPACE}
 
 POSITIONTOKEN	[][(){}<>*%/=:;|!?~&^.,#+-]
 
@@ -310,6 +316,7 @@ CLOSECOMMENT	"*"+"/"
 OPENSTRING	"\""
 MORESTRING	[^\\\"\n]+
 CLOSESTRING	"\""
+FILESTRING	"\"[^\"]+\""
 
 OCTAL_ESCAPE	"\\"[0-7]{1,3}
 BAD_ESCAPE	"\\"[0-9]+
@@ -348,6 +355,8 @@ STATIC		"static"
 EXPORT		"export"
 
 /* consider recording all tokens' (including punctuation) positions? */
+
+IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 
 /****** states ******/
 %s incomment
@@ -392,7 +401,78 @@ EXPORT		"export"
 
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(); return yytext[0]; }
 
-{IMPORT}	{ KEYWORD_UPDATE(); return IMPORT; }
+{IMPORT} {
+/***
+	That's right, manually opening the file in the lexer.  
+	Can't necessarily count on the [LA]LR parser to do this properly.  
+***/
+	/* need some string-hacking to extract file name */
+	TOKEN_UPDATE();
+	const int expect_string = yylex();
+	if (expect_string != STRING) {
+		THROW_EXIT;
+	}
+	/* excl_ptr will delete token */
+	const excl_ptr<const token_quoted_string>
+		fsp(yylval._token_quoted_string);
+	const string& fstr(*fsp);
+	/* claim the semicolon first before opening file */
+	const int expect_semi = yylex();
+	if (expect_semi != ';') {
+		THROW_EXIT;
+	}
+	/* excl_ptr will delete token */
+	const excl_ptr<const node_position>
+		ssp(yylval._node_position);
+	// cerr << fstr << endl;
+	// cerr << "current FILE* (before) = " << yyin << endl;
+	const input_manager::status err =
+		input_manager::enter_file(yyin, hackt_parse_file_manager, 
+			fstr.c_str());	// append &cerr for debugging
+	// cerr << "current FILE* (after) = " << yyin << endl;
+	switch (err) {
+	case input_manager::SUCCESS:
+		// cerr << "opened it." << endl;
+/***
+	From: http://developer.apple.com/documentation/DeveloperTools/flex/flex_9.html
+
+	If the scanner reaches an end-of-file, subsequent calls are undefined 
+	unless either yyin is pointed at a new input file (in which case 
+	scanning continues from that file), or `yyrestart()' is called. 
+	`yyrestart()' takes one argument, a `FILE *' pointer (which can be nil,
+	if you've set up YY_INPUT to scan from a source other than yyin), and 
+	initializes yyin for scanning from that file. Essentially there is no 
+	difference between just assigning yyin to a new input file or using 
+	`yyrestart()' to do so; the latter is available for compatibility with 
+	previous versions of flex, and because it can be used to switch input 
+	files in the middle of scanning. It can also be used to throw away the 
+	current input buffer, by calling it with an argument of yyin; but 
+	better is to use YY_FLUSH_BUFFER (see above). Note that `yyrestart()' 
+	does not reset the start condition to INITIAL (see Start Conditions, 
+	below).
+***/
+		yyrestart(yyin);
+		break;
+	case input_manager::IGNORE: {
+		break;
+	}
+	case input_manager::ERROR: {
+		hackt_parse_file_manager.dump_file_stack(cerr);
+		cerr << "Unable to open file: " << fstr << endl;
+		THROW_EXIT;
+		break;
+	}
+	default:
+		abort();
+	}       // end switch
+
+	yylval._keyword_position = NULL;
+	return IMPORT;
+}
+
+%{
+/* {IMPORT}	{ KEYWORD_UPDATE(); return IMPORT; } */
+%}
 {NAMESPACE}	{ KEYWORD_UPDATE(); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(); return OPEN; }
 {AS}		{ KEYWORD_UPDATE(); return AS; }
@@ -567,8 +647,12 @@ EXPORT		"export"
 	}
 }
 <<EOF>>	{
+	// cerr << "in-comment-EOF!" << endl;
+	// in this case, yywrap() is already called too early, and we don't get
+	// the full file-stack, thus we must push some error handling into
+	// yywrap() and detect the state there.  
 	MULTILINE_MORE(comment_pos);
-	hackt_parse_file_manager.dump_file_stack(cerr);
+	hackt_parse_file_manager.dump_file_stack_top(cerr);
 	cerr << "unterminated comment, starting on line "
 		<< comment_pos.line << ", got <<EOF>>" << endl;
 	THROW_EXIT;
@@ -636,6 +720,8 @@ EXPORT		"export"
 	THROW_EXIT;
 }
 <<EOF>>	{
+	// for same reason as stated above, in EOF in COMMENT
+	// we push some error handling into yywrap().  
 	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "unterminated string, starting on line " << CURRENT.line << 
 		", got <<EOF>>" << endl;
@@ -653,14 +739,23 @@ EXPORT		"export"
 		former value.  
  */
 int yywrap(void) {
+	const bool err = (YYSTATE) != INITIAL;
+	if (err) {
+		// cerr << "yywrap() reached in state " << YYSTATE << 
+		//	", should be " << INITIAL << endl;
+		// then there was an unexpected (premature) EOF error
+		// hackt_parse_file_manager.dump_file_stack_top(cerr);
+		// hackt_parse_file_manager.dump_file_stack(cerr);
+	}
 	const size_t d = hackt_parse_file_manager.file_depth();
 	// cerr << "file-depth remaining = " << d << endl;
 	if (d > 1) {
-		input_manager::leave_file(yyin, hackt_parse_file_manager);
+		input_manager::leave_file(yyin, hackt_parse_file_manager, 
+			err ? &cerr : NULL);
+		// yyrestart(yyin);	// need this?
 		return 0;
 	}
-	else	return 1;
-	// or read another input file
+	else	return 1;		// no more input
 }
 
 namespace ART {

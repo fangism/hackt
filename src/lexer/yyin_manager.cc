@@ -1,9 +1,9 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.1.2.2 2005/11/08 08:39:17 fang Exp $
+	$Id: yyin_manager.cc,v 1.1.2.3 2005/11/09 08:24:00 fang Exp $
  */
 
-
+#include <iostream>
 #include "lexer/yyin_manager.h"
 #include "lexer/file_manager.h"
 
@@ -12,6 +12,7 @@
 
 namespace ART {
 namespace lexer {
+#include "util/using_ostream.h"
 //=============================================================================
 // class yyin_manager method definitions
 
@@ -23,7 +24,7 @@ namespace lexer {
  */
 yyin_manager::yyin_manager(FILE*& _y, file_manager& fm, const char* fn, 
 		const bool b) : _yyin(_y), _file_manager(fm) {
-	_status = enter_file(_y, fm, fn, b);
+	_status = enter_file(_y, fm, fn, NULL, b);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -45,7 +46,7 @@ if (_status == SUCCESS) {
  */
 yyin_manager::status
 yyin_manager::enter_file(FILE*& _yyin, file_manager& _file_manager,
-		const char* fn, const bool b) {
+		const char* fn, ostream* o, const bool b) {
 	STACKTRACE_VERBOSE;
 if (b) {
 	// search paths
@@ -54,6 +55,9 @@ if (b) {
 	if (fp.second) {
 		return IGNORE;
 	} else if (fp.first && fp.first->file) {
+		if (o) {
+			*o << "Open: " << fn << endl;
+		}
 		_yyin = fp.first->file;
 		return SUCCESS;
 	} else {
@@ -68,6 +72,9 @@ if (b) {
 	NEVER_NULL(f);
 	_yyin = f;
 	const file_manager::return_type fp(_file_manager.open_FILE(fn, f));
+	if (o) {
+		*o << "Open: " << (fn ? fn : "-stdin-") << endl;
+	}
 	NEVER_NULL(fp.first);
 	INVARIANT(!fp.second);
 	// this is the first file, can't already be opened
@@ -78,14 +85,20 @@ if (b) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param o (option) output stream, passed in for verbose exiting, 
+		useful for dumping errors.  
 	\return value that yywrap would normally return:
 		1 if last file, else 0 to continue.  
  */
 void
-yyin_manager::leave_file(FILE*& _yyin, file_manager& _file_manager) {
+yyin_manager::leave_file(FILE*& _yyin, file_manager& _file_manager, 
+		ostream* o) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(_yyin);
 	fclose(_yyin);
+	if (o) {
+		_file_manager.dump_file_stack_top(*o);
+	}
 	file_position* fp = _file_manager.close_FILE();
 	NEVER_NULL(fp);
 	_yyin = fp->file;

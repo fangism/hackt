@@ -3,12 +3,13 @@
 	Interface for manipulating the hackt-lexer file stack.  
 	TODO: consider templating taking a globally visible pointer
 		as a bound template argument.  
-	$Id: yyin_manager.h,v 1.1.2.2 2005/11/08 08:39:17 fang Exp $
+	$Id: yyin_manager.h,v 1.1.2.3 2005/11/09 08:24:01 fang Exp $
  */
 
 #ifndef	__LEXER_YYIN_MANAGER_H__
 #define	__LEXER_YYIN_MANAGER_H__
 
+#include <iosfwd>
 #include <cstdio>
 #include "util/attributes.h"
 
@@ -42,11 +43,12 @@ public:
 
 	static
 	status
-	enter_file(FILE*&, file_manager&, const char*, const bool = true);
+	enter_file(FILE*&, file_manager&, const char*, 
+		std::ostream* = NULL, const bool = true);
 
 	static
 	void
-	leave_file(FILE*&, file_manager&);
+	leave_file(FILE*&, file_manager&, std::ostream* = NULL);
 
 } __ATTRIBUTE_UNUSED__;	// end class yyin_manager
 

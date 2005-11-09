@@ -1,3 +1,4 @@
-From: "-stdin-":8:
+From: "comment-000.in":8:
+From: "-stdin-":4:
 unterminated comment, starting on line 4, got <<EOF>>
 Caught exception from lexer, aborting parsing.

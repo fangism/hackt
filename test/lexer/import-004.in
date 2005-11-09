@@ -1,0 +1,4 @@
+// "import-004.in"
+// imports valid empty file
+import "empty.in";
+

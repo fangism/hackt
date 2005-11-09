@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82.2.6 2005/11/08 05:09:41 fang Exp $
+#	$Id: Makefile.am,v 1.82.2.7 2005/11/09 08:23:56 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -68,8 +68,8 @@ cvstag.h: ChangeLog
 	@$(ECHO) "#endif	// CVSTAG" >> $@
 
 # can't include libhacktexec.la because of circular dependence
-# builddate.h: libhackt.la libfangutil.la
-builddate.h:
+# builddate.h:
+builddate.h: libhackt.la libfangutil.la
 	@$(ECHO) "#ifndef	BUILDDATE" > $@
 	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
 	@$(ECHO) "#endif	// BUILDDATE" >> $@

@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy,v 1.1.2.5 2005/11/09 03:27:38 fang Exp $
+	$Id: hackt-parse.yy,v 1.1.2.6 2005/11/09 08:24:01 fang Exp $
 	This file was formerly known as
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
 	in a previous life.  
@@ -22,7 +22,6 @@
 #include "parser/hackt-parse-options.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
-#include "lexer/input_manager.h"	// alias to yyin_manager
 
 #define	ENABLE_STACKTRACE		0
 #include "util/stacktrace.h"
@@ -55,15 +54,9 @@ util::memory::excl_ptr<root_body> AST_root;
 // may be changed when nesed files are opened
 extern FILE* yyin;
 
-using ART::lexer::file_manager;
-using ART::lexer::input_manager;
-
-/**
-	This is the file stack and include path manager for 
-	the hackt parser.  
-	This is globally visible and accessible (unfortunately).  
- */
-file_manager hackt_parse_file_manager;
+// input stream manager, based in "lexer/hackt-lex.ll"
+extern file_manager
+hackt_parse_file_manager;
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
@@ -369,6 +362,8 @@ static void yyerror(const char* msg);	// ancient compiler rejects
 
 /* automatically generated function to resolve parser symbol type
 	on the yy value stack, base on yy state stack transitions
+	TODO: these symbols may have to be renamed
+		to avoid conflicts in multiple parsers.  
  */
 extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
 extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
@@ -680,68 +675,11 @@ imports
 	| import_item
 	;
 
-/**
-	KNOWN BUG: Problem in error reporting:
-	The actions in import_item are NOT taken until all import_items
-	have been parsed correctly, so the line-numbers as reported
-	by lexical/syntactic errors in included files will be off.  :(
-	Would like some way of taking early action because the 
-	entire production rule is complete.
-	The only thing that prevents from doing so is that
-	the output state machine that results (.output) isn't
-	read correctly by the yacc/bison-union-type.awk scripts... yet.  
- */
 import_item
-	: IMPORT STRING ';'
-	{
-		/**
-		Load precompiled header if exists, else inline
-		and parse.  
-		Open file stack...
-		The counterpart to this is in yywrap, defined in the lexer.  
-		What if file was already visited?
-		Should ignore without entering file...
-		need to signal to yywrap?
-		**/
-		const input_manager::status err =
-		input_manager::enter_file(yyin, hackt_parse_file_manager, 
-			$2->c_str());
-		switch (err) {
-		case input_manager::SUCCESS:
-#if 0
-			cerr << "line pos. of new file is: " <<
-				hackt_parse_file_manager.current_position().line
-				<< endl;
-#endif
-			// fall-through
-		case input_manager::IGNORE: {
-			DELETE_TOKEN($1);
-			const excl_ptr<const token_quoted_string> f($2);
-			/** this will result in the token being deleted */
-			DELETE_TOKEN($3);
-			break;
-		}
-		case input_manager::ERROR: {
-			/**
-				Is this necessary?
-				No tokens on stack while
-				just importing modules...
-			**/
-			// don't call yyerror: yyerror is reserved for
-			// syntax errors, not semantic errors.
-			hackt_parse_file_manager.dump_file_stack(cerr);
-			cerr << "Unable to open file: " << *$2 << endl;
-			// included from...
-			yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
-			THROW_EXIT;
-			break;
-		}
-		default:
-			abort();
-		}	// end switch
-		$$ = NULL;
-	}
-	/* ';' { DELETE_TOKEN($3); } */
+	: IMPORT { MUST_BE_NULL($1); $$ = NULL; }
+/***
+	The work for switching input files is actually done in the lexer!
+***/
 	;
 
 top_root

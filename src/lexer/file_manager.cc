@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.1.2.5 2005/11/09 03:27:37 fang Exp $
+	$Id: file_manager.cc,v 1.1.2.6 2005/11/09 08:24:00 fang Exp $
  */
 
 #include <iostream>
@@ -230,6 +230,21 @@ file_manager::dump_file_stack(ostream& o) const {
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps just the inner-most file.  
+ */
+ostream&
+file_manager::dump_file_stack_top(ostream& o) const {
+	// cerr << _fstack.size() << endl;
+	// cerr << _names.size() << endl;
+	INVARIANT(_fstack.size() == _names.size() +1);
+	const file_position_stack::const_iterator pi(--_fstack.end());
+	const file_names_type::const_iterator ni(--_names.end());
+	const token_position& t(pi->pos);
+	o << "From: \"" << *ni << "\":" << t.line << ':' << endl;
+	return o;
+}
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 file_manager::reset_and_dump_file_stack(ostream& o) {
