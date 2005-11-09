@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.1.2.4 2005/11/08 08:39:16 fang Exp $
+	$Id: file_manager.h,v 1.1.2.5 2005/11/09 03:27:37 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -65,6 +65,9 @@ struct file_position {
 	Keep track of token_position?
  */
 class file_position_stack {
+public:
+	typedef	std::list<file_position>	position_stack_type;
+	typedef	position_stack_type::const_iterator	const_iterator;
 private:
 	/**
 		This accumulates a set of all files seen.  
@@ -72,13 +75,24 @@ private:
 		to establish a map between files and indices.  
 	 */
 	unique_list<string>		_registry;
-	std::stack<file_position>	_files;
+	/**
+		Stack of file positions, implemented as a list
+		to be able to walk the stack from front to back.
+		Could use a deque.  
+	 */
+	position_stack_type		_files;
 public:
 	file_position_stack();
 	~file_position_stack();
 
 	size_t
 	size(void) const { return _files.size(); }
+
+	const_iterator
+	begin(void) const { return _files.begin(); }
+
+	const_iterator
+	end(void) const { return _files.end(); }
 
 	void
 	push(const file_position&);
@@ -87,10 +101,10 @@ public:
 	push(const file_position&, const string&);
 
 	const file_position&
-	top(void) const { return _files.top(); }
+	top(void) const { return _files.back(); }
 
 	file_position&
-	top(void) { return _files.top(); }
+	top(void) { return _files.back(); }
 
 	void
 	pop(void);
@@ -116,6 +130,9 @@ public:
 	FILE*
 	close_FILE(void);
 #endif
+
+	void
+	reset(void);
 
 };	// end class file_position_stack
 
@@ -173,6 +190,11 @@ public:
 		return _fstack.top().pos;
 	}
 
+	const token_position&
+	current_position(void) const {
+		return _fstack.top().pos;
+	}
+
 	/**
 		Subtracting 1 from size because there is always
 		at least one entry (from initialization).  
@@ -182,8 +204,14 @@ public:
 		return _fstack.size() -1;
 	}
 
+	void
+	reset(void);
+
 	ostream&
-	dump_error_stack(ostream&);
+	dump_file_stack(ostream&) const;
+
+	ostream&
+	reset_and_dump_file_stack(ostream&);
 
 };	// end class file_manager
 

@@ -1,0 +1,3 @@
+At: "-stdin-":6:
+*/ (close-comment) found outside of <comment> on line 6:13
+Caught exception from lexer, aborting parsing.

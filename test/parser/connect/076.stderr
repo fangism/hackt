@@ -1,3 +1,4 @@
+At: "-stdin-":10:
 parse error: syntax error
 parser stacks:
 state	value

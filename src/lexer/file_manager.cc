@@ -1,9 +1,9 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.1.2.4 2005/11/08 08:39:16 fang Exp $
+	$Id: file_manager.cc,v 1.1.2.5 2005/11/09 03:27:37 fang Exp $
  */
 
-// #include <fstream>
+#include <iostream>
 #include "lexer/file_manager.h"
 #include "util/unique_list.tcc"
 // #include "util/unique_stack.tcc"
@@ -13,14 +13,17 @@
 
 namespace ART {
 namespace lexer {
-// using std::ifstream;
+#include "util/using_ostream.h"
 //=============================================================================
 // class file_position_stack method definitions
 
 file_position_stack::file_position_stack() : _registry(), _files() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-file_position_stack::~file_position_stack() { }
+file_position_stack::~file_position_stack() {
+	STACKTRACE_VERBOSE;
+	reset();
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -28,7 +31,7 @@ file_position_stack::~file_position_stack() { }
  */
 void
 file_position_stack::push(const file_position& fp) {
-	_files.push(fp);
+	_files.push_back(fp);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -43,7 +46,7 @@ file_position_stack::push(const file_position& fp, const string& fn) {
 	if (_registry.push(fn)) {
 		return true;
 	} else {
-		_files.push(fp);
+		_files.push_back(fp);
 		return false;
 	}
 }
@@ -59,7 +62,7 @@ file_position_stack::open_FILE(const string& s) {
 FILE*
 file_position_stack::current_FILE(void) const {
 	STACKTRACE_VERBOSE;
-	return _files.top().file;
+	return _files.back().file;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +76,21 @@ file_position_stack::close_FILE(void) {
 void
 file_position_stack::pop(void) {
 	STACKTRACE_VERBOSE;
-	_files.pop();
+	_files.pop_back();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Clears stack.  
+ */
+void
+file_position_stack::reset(void) {
+	STACKTRACE_VERBOSE;
+	while (!_files.empty()) {
+		FILE* f = _files.back().file;
+		if (f)	fclose(f);
+		_files.pop_back();
+	}
 }
 
 //=============================================================================
@@ -85,8 +102,12 @@ file_manager::file_manager() : _paths(), _fstack() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 file_manager::~file_manager() {
-	INVARIANT(_fstack.size() == 1);
-	INVARIANT(!_fstack.top().file);
+	STACKTRACE_VERBOSE;
+	// reset();
+	const size_t fs = _fstack.size();
+	if (fs) {
+		INVARIANT(!_fstack.top().file);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -129,7 +150,7 @@ file_manager::open_FILE(const char* fs) {
 		const char* dfs = df.c_str();
 		FILE* ret = fopen(dfs, "r");
 		if (ret) {
-			return open_FILE(fs, ret);
+			return open_FILE(dfs, ret);
 		}
 		// else continue searching
 	}
@@ -180,18 +201,42 @@ file_manager::close_FILE(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	\return 0 if there are files remaining on the file stack, 
-		else 1 to signal end of input.  
- */
-int
-file_manager::yywrap(void) const {
+void
+file_manager::reset(void) {
 	STACKTRACE_VERBOSE;
-	// if there's one entry left, it's the null-placeholder entry.
-	return (_fstack.size() == 1 ? 1 : 0);
+	_fstack.reset();
+	_fstack.push(file_position());
+	_paths.clear();
+	_names.clear();
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps the current file and position stack for diagnostics.  
+ */
+ostream&
+file_manager::dump_file_stack(ostream& o) const {
+	// cerr << _fstack.size() << endl;
+	// cerr << _names.size() << endl;
+	INVARIANT(_fstack.size() == _names.size() +1);
+	file_position_stack::const_iterator pi(++_fstack.begin());
+	const file_position_stack::const_iterator pe(_fstack.end());
+	file_names_type::const_iterator ni(_names.begin());
+	// const file_names_type::const_iterator ne(_names.end());
+	for ( ; pi != pe; pi++, ni++) {
+		const token_position& t(pi->pos);
+		o << "At: \"" << *ni << "\":" << t.line << ':' << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+file_manager::reset_and_dump_file_stack(ostream& o) {
+	dump_file_stack(o);
+	reset();
+	return o;
+}
 
 //=============================================================================
 }	// end namespace lexer

@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.4 2005/10/25 20:51:45 fang Exp $
+	$Id: BUGS,v 1.4.8.1 2005/11/09 03:27:35 fang Exp $
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals
@@ -29,4 +29,8 @@ Relaxed actuals:
 	per value.  This will prevent relaxed parameters from leaking
 	to places where their use is forbidden.  
 	(see test cases: template/056,057)
+
+Parser:
+	Error reporting: see "KNOWN BUG" in parser/hackt-parse.yy
+	reported line numbers will be off for nested files.  (20051108)
 

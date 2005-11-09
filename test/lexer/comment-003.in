@@ -1,0 +1,8 @@
+// "comment-003.in"
+// should pass: ok to nest end-line comments
+
+/** begin comment
+stuff // end-line comment
+end comment **/
+
+

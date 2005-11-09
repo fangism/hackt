@@ -1,0 +1,8 @@
+// "comment-001.in"
+// should die, end-comment found outside comment
+
+int foo;
+
+end comment ***/
+
+

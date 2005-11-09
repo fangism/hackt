@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.7.2.2 2005/11/08 08:39:00 fang Exp $
+#	$Id: TODO,v 1.7.2.3 2005/11/09 03:27:36 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -92,11 +92,18 @@ parser:
 		so later compile phases can report error's w.r.t. source.  
 	Much error handling testing to be done...
 
+	missing feature of yacc/bison-union-type.awk:
+		doesn't support goto actions in the middle of grammar yet...
+		will take some time to reverse-reverse-engineer my scripts...
+
 ===============================================================================
 PRS and CHP
 
 pass-gates:
 	add to parser, and intermediate representation
+
+need to handle loops and conditionals *around* prs { ... } bodies
+	need intermediate representation support for conditional PRS (easy)
 
 ===============================================================================
 Expression resolutions:

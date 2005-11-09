@@ -3,7 +3,7 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.5.4.3 2005/11/08 08:39:18 fang Exp $
+	$Id: unique_list.h,v 1.5.4.4 2005/11/09 03:27:38 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
@@ -184,6 +184,12 @@ public:
 			_set.erase(probe);
 		}
 		// else not already in set
+	}
+
+	void
+	clear(void) {
+		_set.clear();
+		_sequence.clear();
 	}
 
 };      // end class unique_list

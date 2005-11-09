@@ -5,6 +5,15 @@
 
 2005-11-08	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65-parser-03-08:
+	  All errors are now reported with the file stack.  
+		All lexer/parser tests updated accordingly (bison/yacc).  
+	  KNOWN BUG with line reporting with nested files, working on it...
+	  Added mechanism for resetting file_manager in the event of
+		a lexer/parser exception for proper cleanup.  
+	  lexer/hackt-lex.ll: added missing quote escape sequences.  
+
+
 	* ARTXX-00-01-04-main-00-65-parser-03-07:
 	  lexer::file_position_stack and lexer::file_manager now report 
 		whether an included file was ignored because it was already 

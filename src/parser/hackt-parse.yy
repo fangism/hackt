@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy,v 1.1.2.4 2005/11/08 08:39:17 fang Exp $
+	$Id: hackt-parse.yy,v 1.1.2.5 2005/11/09 03:27:38 fang Exp $
 	This file was formerly known as
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
 	in a previous life.  
@@ -680,6 +680,17 @@ imports
 	| import_item
 	;
 
+/**
+	KNOWN BUG: Problem in error reporting:
+	The actions in import_item are NOT taken until all import_items
+	have been parsed correctly, so the line-numbers as reported
+	by lexical/syntactic errors in included files will be off.  :(
+	Would like some way of taking early action because the 
+	entire production rule is complete.
+	The only thing that prevents from doing so is that
+	the output state machine that results (.output) isn't
+	read correctly by the yacc/bison-union-type.awk scripts... yet.  
+ */
 import_item
 	: IMPORT STRING ';'
 	{
@@ -697,6 +708,11 @@ import_item
 			$2->c_str());
 		switch (err) {
 		case input_manager::SUCCESS:
+#if 0
+			cerr << "line pos. of new file is: " <<
+				hackt_parse_file_manager.current_position().line
+				<< endl;
+#endif
 			// fall-through
 		case input_manager::IGNORE: {
 			DELETE_TOKEN($1);
@@ -713,6 +729,7 @@ import_item
 			**/
 			// don't call yyerror: yyerror is reserved for
 			// syntax errors, not semantic errors.
+			hackt_parse_file_manager.dump_file_stack(cerr);
 			cerr << "Unable to open file: " << *$2 << endl;
 			// included from...
 			yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
@@ -724,6 +741,7 @@ import_item
 		}	// end switch
 		$$ = NULL;
 	}
+	/* ';' { DELETE_TOKEN($3); } */
 	;
 
 top_root
@@ -2364,6 +2382,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "parse error: " << msg << endl;
 
 /*	Define the following (-D) to disable sophisticated error reporting, 

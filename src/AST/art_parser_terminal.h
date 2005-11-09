@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_terminal.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_terminal.h,v 1.5.48.2 2005/11/08 08:39:16 fang Exp $
+	$Id: art_parser_terminal.h,v 1.5.48.3 2005/11/09 03:27:37 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TERMINAL_H__
@@ -11,30 +11,13 @@
 #include "lexer/hac_lex.h"
 #include "AST/art_parser_base.h"
 
-/**
-	Whether or not current token position is from fixed location
-	or top of a file stack.  
- */
-#define	USE_CURRENT_FILE_STACK				1
-
-#if USE_CURRENT_FILE_STACK
 #include "lexer/file_manager.h"	
 	// ugh, included everywhere, but needed for inlined operation
 extern ART::lexer::file_manager
 hackt_parse_file_manager;
-#endif
 
 //=============================================================================
 namespace ART {
-//=============================================================================
-// global variable
-#if !USE_CURRENT_FILE_STACK
-namespace lexer {
-extern	token_position current;
-}
-using lexer::current;			// current token position
-#endif
-
 using std::string;
 
 namespace parser {
@@ -56,11 +39,7 @@ protected:
 // file name will be kept separate?
 protected:
 ///	base constructor always records the current position of the token
-#if USE_CURRENT_FILE_STACK
 	terminal() : pos(hackt_parse_file_manager.current_position()) { }
-#else
-	terminal() : pos(current) { }
-#endif
 
 public:
 ///	standard virtual destructor

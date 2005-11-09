@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.1.2.4 2005/11/08 08:39:16 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.1.2.5 2005/11/09 03:27:37 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -92,12 +92,7 @@ namespace lexer {
 #define	STRING_MAX_LEN		1024
 
 /** line and position tracking data for tokens */
-#if 0
-	token_position current(1, 0, 1);	/* globally accessible */
-#define	CURRENT		current
-#else
 #define	CURRENT		hackt_parse_file_manager.current_position()
-#endif
 static	token_position comment_pos(1, 0, 1);
 static	token_position string_pos(1, 0, 1);
 	/* even though strings may not be multi-line */
@@ -112,16 +107,50 @@ static	token_position string_pos(1, 0, 1);
 static	char string_buf[STRING_MAX_LEN];
 static	char* string_buf_ptr = NULL;
 
+/**
+	Thie macro is intended for use with ostream& operator << .
+	\param c is a token_position.  
+ */
+#define	LINE_COL(c)	"on line " << c.line << ":" << c.col
+
+int allow_nested_comments = 0;
+static int comment_level = 0;		/* useful for nested comments */
+
+/* debugging switches -- consider making these macro-defined */
+static const int token_feedback = 0;
+static const int string_feedback = 0;
+static const int comment_feedback = 0;		/* reporting of comment state */
+	/*	0 = off, 
+		1 = nested levels only, 
+		2 = null and endline comments, 
+		3 = ignored text feedback details
+	*/
+
+/**
+	Debugging tool.  
+	This will generate excessive feedback for every detailed
+	action of the lexer, even in the middle of tokenizing.  
+ */
+#define	DEFAULT_TOKEN_FEEDBACK						\
+	if (token_feedback) {						\
+		cerr << "token = " << yytext <<				\
+			" " LINE_COL(CURRENT) << endl;			\
+	}
+
 /* macros for tracking single line tokens (no new line) */
 
 static inline void
 TOKEN_UPDATE(void) {
+	DEFAULT_TOKEN_FEEDBACK
 	CURRENT.col += yyleng;
 }
 
 static inline void
 NEWLINE_UPDATE(void) {
 	CURRENT.line++; CURRENT.col = 1;
+#if 0
+	cerr << "Line number advanced to " << CURRENT.line << endl;
+#endif
 }
 
 static inline void
@@ -211,25 +240,6 @@ static inline void
 MULTILINE_NEWLINE(token_position& p) {
 	p.leng = yyleng -1; NEWLINE_UPDATE();
 }
-
-/**
-	Thie macro is intended for use with ostream& operator << .
-	\param c is a token_position.  
- */
-#define	LINE_COL(c)	"on line " << c.line << ":" << c.col
-
-int allow_nested_comments = 0;
-static int comment_level = 0;		/* useful for nested comments */
-
-/* debugging switches */
-int token_feedback = 0;
-int string_feedback = 0;
-int comment_feedback = 0;		/* reporting of comment state */
-	/*	0 = off, 
-		1 = nested levels only, 
-		2 = null and endline comments, 
-		3 = ignored text feedback details
-	*/
 
 /* checking whether or not we are at end of file, defined below */
 int at_eof(void);
@@ -480,6 +490,7 @@ EXPORT		"export"
 }
 
 {CLOSECOMMENT} {
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "*/ (close-comment) found outside of <comment> " <<
 		LINE_COL(CURRENT) << endl;
 	TOKEN_UPDATE();
@@ -487,15 +498,16 @@ EXPORT		"export"
 }
 
 {BADID}	{ 
-	cerr << "bad identifier: \"" << yytext <<"\" " <<
+	hackt_parse_file_manager.dump_file_stack(cerr);
+	cerr << "bad identifier: \"" << yytext << "\" " <<
 		LINE_COL(CURRENT) << endl;
 	TOKEN_UPDATE();
 	yylval._token_identifier = NULL;
-/*	return BAD_TOKEN;	*/
 	THROW_EXIT;
 }
 
 .	{
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	/* for everything else that doesn't match... */
 	cerr << "unexpected character: \'" << yytext << "\' " <<
 		LINE_COL(CURRENT) << endl;
@@ -523,6 +535,7 @@ EXPORT		"export"
 		MULTILINE_MORE(comment_pos);
 		yymore();
 	} else {
+		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "nested comments forbidden, found /* " <<
 			LINE_COL(CURRENT) << endl;
 		THROW_EXIT;
@@ -555,6 +568,7 @@ EXPORT		"export"
 }
 <<EOF>>	{
 	MULTILINE_MORE(comment_pos);
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "unterminated comment, starting on line "
 		<< comment_pos.line << ", got <<EOF>>" << endl;
 	THROW_EXIT;
@@ -563,6 +577,7 @@ EXPORT		"export"
 
 <instring>{
 {NEWLINE}	{
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "unterminated quoted-string on line " << CURRENT.line <<
 		", got \\n" << endl;
 	STRING_UPDATE();
@@ -598,11 +613,14 @@ EXPORT		"export"
 "\\r"	{ *string_buf_ptr++ = '\r';	STRING_UPDATE();	}
 "\\t"	{ *string_buf_ptr++ = '\t';	STRING_UPDATE();	}
 "\\\\"	{ *string_buf_ptr++ = '\\';	STRING_UPDATE();	}
+"\\\'"	{ *string_buf_ptr++ = '\'';	STRING_UPDATE();	}
+"\\\""	{ *string_buf_ptr++ = '\"';	STRING_UPDATE();	}
 
 {OCTAL_ESCAPE}	{
 	unsigned int result;
 	sscanf(yytext +1, "%o", &result);
 	if ( result > 0xff ) {
+		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "bad octal escape sequence " << yytext << " " <<
 			LINE_COL(CURRENT) << endl;
 		THROW_EXIT;
@@ -612,11 +630,13 @@ EXPORT		"export"
 }
 
 {BAD_ESCAPE}	{
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "bad octal escape sequence " << yytext << " " <<
 		LINE_COL(CURRENT) << endl;
 	THROW_EXIT;
 }
 <<EOF>>	{
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "unterminated string, starting on line " << CURRENT.line << 
 		", got <<EOF>>" << endl;
 	THROW_EXIT;

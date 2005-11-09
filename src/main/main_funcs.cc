@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.3.28.2 2005/11/08 05:09:45 fang Exp $
+	$Id: main_funcs.cc,v 1.3.28.3 2005/11/09 03:27:37 fang Exp $
  */
 
 #include <iostream>
@@ -135,15 +135,22 @@ excl_ptr<root_body>
 parse_to_AST(const char* c) {
 	typedef	excl_ptr<root_body>		return_type;
 	STACKTRACE_VERBOSE;
+	// error status
+	bool need_to_clean_up_file_manager = false;
+{
 	// hackt_in is the global yyin FILE*.  
 	const yyin_manager ym(hackt_in, hackt_parse_file_manager, c, false);
-	// hackt_in = f ? f : stdin;
 	try {
 		hackt_parse();
 	} catch (...) {
+		// then it's possible that the file_manager is not balanced.  
+		need_to_clean_up_file_manager = true;
+	}
+}
+	if (need_to_clean_up_file_manager) {
+		hackt_parse_file_manager.reset();
 		return return_type(NULL);
 	}
-	// fclose(hackt_in);		// even if stdin?
 #if USING_YACC
 	return return_type(hackt_val._root_body);
 #else
