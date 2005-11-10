@@ -5,6 +5,18 @@
 
 2005-11-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-66-parser-04-01-merged-main-00-67:
+	  Started this branch before some fixes on the main line.  
+	  This first revision merges the bison-1.35 fixes from -00-67
+		and sprinkles a few comments hither and thither.
+	  The intent of this branch is to make import work
+		(for real this time), at least with bison, 
+		which produces re-entrant parser.  Yacc will take some
+		more hacking...
+
+
+2005-11-10	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-67:
 	  Last revision had inadvertently broken support for bison-1.35, 
 		this revision addresses those problems, and also

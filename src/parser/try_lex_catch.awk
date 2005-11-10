@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "try_lex_catch.awk"
-#	$Id: try_lex_catch.awk,v 1.3 2005/11/10 22:51:24 fang Exp $
+#	$Id: try_lex_catch.awk,v 1.2.50.1 2005/11/10 23:11:54 fang Exp $
 # wraps call to YYLEX in try-catch block for exception handling
 # hint: this filter/patch should be applied BEFORE changing 
 # names to a different prefix other than "yy".

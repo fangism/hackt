@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.16 2005/11/10 22:51:19 fang Exp $
+#	$Id: configure.ac,v 1.15.2.1 2005/11/10 23:11:48 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  

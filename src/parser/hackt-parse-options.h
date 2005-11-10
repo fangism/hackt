@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hackt-parse-options.h,v 1.3 2005/11/10 22:51:23 fang Exp $
+	$Id: hackt-parse-options.h,v 1.2.2.1 2005/11/10 23:11:53 fang Exp $
 	This file was formerly known as:
 	Id: art++-parse-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
