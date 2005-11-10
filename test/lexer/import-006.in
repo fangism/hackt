@@ -1,0 +1,6 @@
+// "import-006.in"
+// self-import should be detected as an error
+
+import "import-006.in";		// error!
+// import "import-006.in";		// ignored
+

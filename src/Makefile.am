@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.82.2.7 2005/11/09 08:23:56 fang Exp $
+#	$Id: Makefile.am,v 1.82.2.8 2005/11/10 00:47:43 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -474,6 +474,7 @@ UTIL_HEADER_FILES = \
 	util/dereference.h \
 	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
+	util/file_status.h \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
@@ -585,7 +586,8 @@ MAIN_EXEC_CC_FILES = \
 MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/hackt.h \
 	main/hackt_fwd.h \
-	main/cflat_options.h
+	main/cflat_options.h \
+	main/compile_options.h
 
 COMMON_FILES = \
 	common/ICE.cc \

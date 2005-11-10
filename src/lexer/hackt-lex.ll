@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.1.2.6 2005/11/09 08:24:00 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.1.2.7 2005/11/10 00:47:44 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -426,12 +426,12 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		ssp(yylval._node_position);
 	// cerr << fstr << endl;
 	// cerr << "current FILE* (before) = " << yyin << endl;
-	const input_manager::status err =
+	const file_status::status err =
 		input_manager::enter_file(yyin, hackt_parse_file_manager, 
 			fstr.c_str());	// append &cerr for debugging
 	// cerr << "current FILE* (after) = " << yyin << endl;
 	switch (err) {
-	case input_manager::SUCCESS:
+	case file_status::NEW_FILE: {
 		// cerr << "opened it." << endl;
 /***
 	From: http://developer.apple.com/documentation/DeveloperTools/flex/flex_9.html
@@ -453,15 +453,19 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 ***/
 		yyrestart(yyin);
 		break;
-	case input_manager::IGNORE: {
-		break;
 	}
-	case input_manager::ERROR: {
+	case file_status::SEEN_FILE:
+		break;
+	case file_status::CYCLE:
+		hackt_parse_file_manager.dump_file_stack(cerr);
+		cerr << "Detected cyclic file dependency: " << fstr << endl;
+		THROW_EXIT;
+		break;
+	case file_status::NOT_FOUND:
 		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "Unable to open file: " << fstr << endl;
 		THROW_EXIT;
 		break;
-	}
 	default:
 		abort();
 	}       // end switch

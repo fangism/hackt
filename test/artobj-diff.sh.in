@@ -3,11 +3,11 @@
 # This file came from "artobj-diff.sh" in revision prehistory.  
 
 # compares textual object dumps
-#	$Id: artobj-diff.sh.in,v 1.3 2005/10/30 22:00:25 fang Exp $
+#	$Id: artobj-diff.sh.in,v 1.3.6.1 2005/11/10 00:47:48 fang Exp $
 
-# $1 is the executable for generating the object file, (probably art++2obj)
+# $1 is the executable for generating the object file, ("hackt compile")
 #	and producing a textual dump to stderr.  
-# $2 is the executable for reading in the object file, (probably artobjdump)
+# $2 is the executable for reading in the object file, ("hackt objdump")
 #	and producing a textual dump to stderr.
 # $3 is the path to the source directory, which is not necessarily ./
 #	especially during a vpath build for distcheck.
@@ -20,8 +20,9 @@
 
 # if the .test file exists, then program didn't crash, we can proceed.
 
-cmd="$1 -d"
+cmd="$1 -d -I $3"
 # -d for dump flag
+# -I srcdir for VPATH builds
 dump=$2
 srcroot=$3/$4
 bldroot=$4

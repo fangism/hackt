@@ -1,0 +1,4 @@
+// "import-012.in"
+// imports valid empty file, duplicate of "import-004.in"
+import "empty.in";
+

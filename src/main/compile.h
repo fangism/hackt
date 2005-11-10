@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.2.24.1 2005/11/08 05:09:45 fang Exp $
+	$Id: compile.h,v 1.2.24.2 2005/11/10 00:47:45 fang Exp $
  */
 
 #ifndef	__MAIN_COMPILE_H__
@@ -13,6 +13,7 @@
 #include "util/string_fwd.h"
 
 namespace ART {
+class compile_options;
 //=============================================================================
 /**
 	Instance-less class for parser/self-test module.  
@@ -21,7 +22,7 @@ namespace ART {
  */
 class compile {
 public:
-	class options;
+	typedef	compile_options			options;
 	typedef	util::good_bool (*options_modifier)(options&);
 private:
 	struct options_modifier_info;
@@ -40,7 +41,7 @@ public:
 	int
 	main(const int, char*[], const global_options&);
 
-private:
+public:
 	static
 	void
 	usage(void);
@@ -49,6 +50,7 @@ private:
 	int
 	parse_command_options(const int, char*[], options&);
 
+private:
 	static
 	const size_t
 	program_id;

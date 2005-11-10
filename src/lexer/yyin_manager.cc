@@ -1,6 +1,6 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.1.2.3 2005/11/09 08:24:00 fang Exp $
+	$Id: yyin_manager.cc,v 1.1.2.4 2005/11/10 00:47:44 fang Exp $
  */
 
 #include <iostream>
@@ -32,7 +32,7 @@ yyin_manager::yyin_manager(FILE*& _y, file_manager& fm, const char* fn,
 	Restore the yyin from previous file.  
  */
 yyin_manager::~yyin_manager() {
-if (_status == SUCCESS) {
+if (_status == file_status::NEW_FILE) {
 	// close the current file and restore the last stream
 	leave_file(_yyin, _file_manager);
 } else {
@@ -42,7 +42,7 @@ if (_status == SUCCESS) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\return true if there is an error.  
+	\return the error status of attempting to open the file.  
  */
 yyin_manager::status
 yyin_manager::enter_file(FILE*& _yyin, file_manager& _file_manager,
@@ -52,18 +52,25 @@ if (b) {
 	// search paths
 	NEVER_NULL(fn);
 	const file_manager::return_type fp(_file_manager.open_FILE(fn));
-	if (fp.second) {
-		return IGNORE;
-	} else if (fp.first && fp.first->file) {
+	switch (fp.second) {
+	case file_status::NEW_FILE:
+		INVARIANT(fp.first && fp.first->file);
 		if (o) {
 			*o << "Open: " << fn << endl;
 		}
 		_yyin = fp.first->file;
-		return SUCCESS;
-	} else {
-		// leave _yyin untouched
-		return ERROR;
+		break;
+	case file_status::SEEN_FILE:
+		// fall-through
+	case file_status::CYCLE:
+		// fall-through
+	case file_status::NOT_FOUND:
+		// ignore and leave _yyin untouched
+		break;
+	default:
+		DIE;
 	}
+	return fp.second;
 } else {
 	// don't search include paths, just open the file
 	// we already checked the file
@@ -76,10 +83,10 @@ if (b) {
 		*o << "Open: " << (fn ? fn : "-stdin-") << endl;
 	}
 	NEVER_NULL(fp.first);
-	INVARIANT(!fp.second);
+	INVARIANT(fp.second == file_status::NEW_FILE);
 	// this is the first file, can't already be opened
 	INVARIANT(f == fp.first->file);
-	return SUCCESS;
+	return fp.second;
 }
 }
 

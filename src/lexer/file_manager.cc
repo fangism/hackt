@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.1.2.6 2005/11/09 08:24:00 fang Exp $
+	$Id: file_manager.cc,v 1.1.2.7 2005/11/10 00:47:44 fang Exp $
  */
 
 #include <iostream>
@@ -122,7 +122,7 @@ file_manager::add_path(const string& p) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param f the name of the included file (relative path).  
+	\param fs the name of the included file (relative path).  
 		This method will always try the local directory first.
 		TODO: some research about the ordering rules used
 		by cpp/gcc, since that's what we're trying to imitate. 
@@ -156,29 +156,39 @@ file_manager::open_FILE(const char* fs) {
 	}
 }
 	// else not found
-	return return_type(NULL, false);
+	return return_type(NULL, file_status::NOT_FOUND);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This this variant, the caller has already opened FILE* f.  
 	\param f already opened file pointer.  
-	\param fs may be NULL, representing stdin.
+	\param fs is a full path to file, including the search path
+		with which it was found.  fs may be NULL, representing stdin.
 	\return the file pointer and whether or not file is already opened.  
  */
 file_manager::return_type
 file_manager::open_FILE(const char* fs, FILE* f) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(f);
-	bool inc = false;		// whether or not was already included
-	// don't register stdin with a file name
-	if (fs) {
-		inc = _fstack.push(file_position(f), fs);
+	// don't register stdin with a file name in the file_position_stack
+	// but is ok to register it with the cycle-detection _names stack.
+	const bool cyc = _names.push_back(fs ? fs : "-stdin-");
+	file_status::status s;		// whether or not was already included
+	if (cyc) {
+		// then must also already have been on _fstack
+		INVARIANT(_fstack.push(file_position(f), fs));
+		s = file_status::CYCLE;
+	} else if (fs) {
+		// check to see whether or not it is new or visited
+		s = _fstack.push(file_position(f), fs) ?
+			file_status::SEEN_FILE : file_status::NEW_FILE;
 	} else {
+		// stdin: can only be opened once, so safe to assert it is new
 		_fstack.push(file_position(f));
+		s = file_status::NEW_FILE;
 	}
-	_names.push_back(fs ? fs : "-stdin-");
-	return return_type(&_fstack.top(), inc);
+	return return_type(&_fstack.top(), s);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

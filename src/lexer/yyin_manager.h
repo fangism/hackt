@@ -3,19 +3,20 @@
 	Interface for manipulating the hackt-lexer file stack.  
 	TODO: consider templating taking a globally visible pointer
 		as a bound template argument.  
-	$Id: yyin_manager.h,v 1.1.2.3 2005/11/09 08:24:01 fang Exp $
+	$Id: yyin_manager.h,v 1.1.2.4 2005/11/10 00:47:45 fang Exp $
  */
 
 #ifndef	__LEXER_YYIN_MANAGER_H__
 #define	__LEXER_YYIN_MANAGER_H__
 
 #include <iosfwd>
-#include <cstdio>
 #include "util/attributes.h"
+#include "util/file_status.h"
 
 namespace ART {
 namespace lexer {
 class file_manager;
+using util::file_status;
 //=============================================================================
 /**
 	Use this instead of manipulating hackt_in directly.  
@@ -24,11 +25,8 @@ class file_manager;
  */
 class yyin_manager {
 public:
-	typedef	enum {
-		SUCCESS = 0,	///< file opened and being parsed
-		IGNORE = 1,	///< file ignored because already included
-		ERROR = 2	///< file failed to open or doesn't exist
-	} status;
+	/// reusing a convenient enumerated type
+	typedef	file_status::status	status;
 private:
 	FILE*&				_yyin;
 	file_manager&			_file_manager;

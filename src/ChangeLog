@@ -5,6 +5,20 @@
 
 2005-11-09	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-65-parser-03-10:
+	  Using consistent file_status enumerations for diagnostics, 
+		added util/file_status.h.
+	  Wrapped parse_test's command-line parsing around the compile
+		module's command-parser.  Now it benefits from all
+		of compile's options and their modifiers, 
+		namely include paths from this branch.  
+	  lexer::file_manager and yyin_manager now detect and reject
+		cyclic file references.  Otherwise precompiled headers
+		will not work with cycles.  Dependency graph may only
+		be directed acylic.  
+	  branch status: nearly complete, possibly ready for merge.
+
+
 	* ARTXX-00-01-04-main-00-65-parser-03-09:
 	  Fixed previous bug regarding nested file line numbers.  
 	  Fixed bad file name bug by using std::string in file_manager's

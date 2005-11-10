@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.14.2.3 2005/11/09 03:27:33 fang Exp $
+#	$Id: configure.ac,v 1.14.2.4 2005/11/10 00:47:40 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -392,9 +392,9 @@ AC_CONFIG_FILES([src/parser/yacc_version.h:config/macro-value.h.in],
 	version="none"
 	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
 	then
-		version=`$yacc --version 2>&1 | head -n 1`
-	else
 		version=`which $yacc | head -n 1`
+	else
+		version=`$yacc --version 2>&1 | head -n 1`
 	fi
 	sed 's/MACRO/YACC_VERSION/g' $srcdir/config/macro-value.h.in | \
 		sed "s|VALUE|\"$version\"|g" > src/parser/yacc_version.h

@@ -2,13 +2,12 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.1.2.6 2005/11/09 08:24:00 fang Exp $
+	$Id: file_manager.h,v 1.1.2.7 2005/11/10 00:47:44 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
 #define	__LEXER_FILE_MANAGER_H__
 
-#include <cstdio>
 #include <iosfwd>
 #include <string>
 #include <stack>
@@ -17,6 +16,7 @@
 // #include "util/unique_stack.h"
 #include "lexer/hac_lex.h"
 #include "util/macros.h"
+#include "util/file_status.h"
 
 namespace ART {
 namespace lexer {
@@ -24,6 +24,8 @@ using std::ostream;
 using std::string;
 using util::unique_list;
 // using util::unique_stack;
+using util::file_status;
+
 //=============================================================================
 /**
 	Manages search path for files (like includes).  
@@ -144,12 +146,20 @@ public:
 	to pair-up file-index and file-name (full path).  
  */
 class file_manager {
-	typedef	std::list<string>	file_names_type;
+	typedef	unique_list<string>	file_names_type;
 private:
 	search_paths			_paths;
+	/**
+		This tracks a stack of opened file positions, 
+		and also keeps a registry of all files ever seen
+		(not just those on stack) for the purpose
+		of implementing implicit #pragma once.  
+	 */
 	file_position_stack		_fstack;
 	/**
 		Use as a stack for diagnostics.  
+		Also maintains uniqueness for detecting cyclic
+		dependencies.  
 	 */
 	file_names_type			_names;
 public:
@@ -160,7 +170,7 @@ public:
 		last requested opened file was ignored 
 		(because it is already open).  
 	 */
-	typedef	std::pair<file_position*, bool>
+	typedef	std::pair<file_position*, file_status::status>
 					return_type;
 public:
 	file_manager();

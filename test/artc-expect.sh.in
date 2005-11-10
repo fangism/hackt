@@ -1,9 +1,9 @@
 #!@SH_PATH@
 # "artc-expect.sh.in"
-#	$Id: artc-expect.sh.in,v 1.3.6.2 2005/11/09 03:27:38 fang Exp $
+#	$Id: artc-expect.sh.in,v 1.3.6.3 2005/11/10 00:47:47 fang Exp $
 # This file came from "artc-expect.sh" in revision pre-history.
 
-# $1 is the executable, expecting input from stdin
+# $1 is the executable, expecting input from stdin ("hackt parse_test")
 # $2 is the path to the source directory, which is not necessarily ./
 #	during distcheck uses _build
 # $3 is the input file name WITHOUT the .in extension
@@ -14,7 +14,8 @@
 
 # if [ $# -lt 6 ] ; then exit 1 ; fi
 
-cmd=$1
+# need to search source directory for VPATH builds
+cmd="$1 -I $2"
 srcroot=$2/$3
 bldroot=$3
 filter="$4"
@@ -29,7 +30,7 @@ logfile=$5
 # intentionally using stdin to avoid file name differences in output diff-ing
 $cmd < $srcroot.in > $bldroot.test 2>&1
 if [ $? -gt 1 ] ; then exit 1 ; fi
-$filter $bldroot.test > $bldroot.test.filter
+@CAT@ $bldroot.test | $filter > $bldroot.test.filter
 if [ -f $srcroot.stderr ] && ! [ -f $bldroot.stderr ] ; then
 	@LN_S@ $srcroot.stderr $bldroot.stderr
 else

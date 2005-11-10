@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2005-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-10:
+	  Added util/file_status.h for consistent use of file return
+		statuses, includes a meaningful enumeration.  
+
+
 2005-11-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-07:

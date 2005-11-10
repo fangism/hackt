@@ -3,7 +3,7 @@
 	Converts ART source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.6.2.2 2005/11/08 05:09:45 fang Exp $
+	$Id: compile.cc,v 1.6.2.3 2005/11/10 00:47:45 fang Exp $
  */
 
 #include <iostream>
@@ -12,6 +12,7 @@
 #include "main/program_registry.h"
 #include "main/compile.h"
 #include "main/main_funcs.h"
+#include "main/compile_options.h"
 #include "lexer/file_manager.h"
 #include "util/getopt_portable.h"
 #include "util/dirent.h"		// configured wrapper around <dirent.h>
@@ -29,27 +30,6 @@ using std::list;
 using std::string;
 using lexer::file_manager;
 using util::good_bool;
-
-//=============================================================================
-/**
-	Options for compile phase.  
- */
-class compile::options {
-public:
-	typedef	list<string>			include_paths_type;
-	bool					dump_module;
-	bool					dump_include_paths;
-	/**
-		Q: should include paths be a part of global options?
-	 */
-	include_paths_type			include_paths;
-
-	options() : dump_module(false),
-		dump_include_paths(false), 
-		include_paths()
-		{ }
-
-};	// end class options
 
 //=============================================================================
 /**
@@ -137,6 +117,7 @@ compile::compile() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The main program for compiling source to object.  
+	TODO: clean up file manager after done?
  */
 int
 compile::main(const int argc, char* argv[], const global_options&) {
@@ -153,26 +134,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
 		to be re-entrant.  
 		Q: Should file_manager be a member of module?
 	***/
-{
-	file_manager& fm(hackt_parse_file_manager);
-	typedef	options::include_paths_type::const_iterator	const_iterator;
-	const_iterator i(opt.include_paths.begin());
-	const const_iterator e(opt.include_paths.end());
-	for ( ; i!=e; i++) {
-		const string& s(*i);
-		// check if path exists, otherwise, don't bother adding...
-		if (util::dir_exists(s.c_str())) {
-			fm.add_path(s);
-			if (opt.dump_include_paths) {
-				cerr << "Added to search path: " << s << endl;
-			}
-		} else {
-			if (opt.dump_include_paths) {
-				cerr << "Couldn\'t open dir: " << s << endl;
-			}
-		}
-	}
-}
+	opt.export_include_paths(hackt_parse_file_manager);
 
 	if (argc -optind > 2 || argc -optind <= 0) {
 		usage();
@@ -263,6 +225,30 @@ compile::usage(void) {
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\tIf no output object file is given, compiled module will not be saved."
 		<< endl;
+}
+
+//=============================================================================
+// class compile_options method definitions
+
+void
+compile_options::export_include_paths(file_manager& fm) const {
+	typedef	include_paths_type::const_iterator	const_iterator;
+	const_iterator i(include_paths.begin());
+	const const_iterator e(include_paths.end());
+	for ( ; i!=e; i++) {
+		const string& s(*i);
+		// check if path exists, otherwise, don't bother adding...
+		if (util::dir_exists(s.c_str())) {
+			fm.add_path(s);
+			if (dump_include_paths) {
+				cerr << "Added to search path: " << s << endl;
+			}
+		} else {
+			if (dump_include_paths) {
+				cerr << "Couldn\'t open dir: " << s << endl;
+			}
+		}
+	}
 }
 
 //=============================================================================

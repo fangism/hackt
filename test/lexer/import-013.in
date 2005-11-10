@@ -1,0 +1,6 @@
+// "import-013.in"
+// testing directed acylic dependencies
+// both files reference "empty.in"
+import "import-012.in";
+import "import-004.in";
+

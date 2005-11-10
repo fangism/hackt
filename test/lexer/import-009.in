@@ -1,0 +1,6 @@
+// "import-009.in"
+// including file that includes non-existent file
+
+import "import-007.in";
+// import "import-007.in";
+
