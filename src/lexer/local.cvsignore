@@ -6,4 +6,4 @@
 *.loT
 *.swp
 *.hchk
-
+lex_version.h

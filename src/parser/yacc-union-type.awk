@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "yacc-union-type.awk"
 # David Fang, 2004
-#	$Id: yacc-union-type.awk,v 1.5 2005/05/04 17:54:14 fang Exp $
+#	$Id: yacc-union-type.awk,v 1.6 2005/11/10 02:13:10 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/common-union-type.awk
@@ -63,8 +63,12 @@ function register_end_symbols() {
 	while (getline && NF == 3 && $2 == "goto") {
 		# collect goto actions
 # struct-style assignment is deprecated, use constructor instead.
+		enum_sym = enum_of[symbol_type[$1]];
+		if (!length(enum_sym)) {
+			enum_sym = "-1";
+		}
 		printf("static const yy_state_map_link yysml_" state_count \
-			"_" sc " = { " $3 ", " enum_of[symbol_type[$1]] ", ");
+			"_" sc " = { " $3 ", " enum_sym ", ");
 		if (sc) printf("&yysml_" state_count "_" sc-1);
 		else	printf("NULL");		# or 0
 		print " }; /* goto */";

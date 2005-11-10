@@ -1,11 +1,13 @@
+At: "-stdin-":3:
 parse error: syntax error
 parser stacks:
 state	value
-0	(null) 
-30	keyword: typedef [3:1..7]
-108	paramtype: pbool [3:9..13]
-in state 108, possible rules are:
-	type_alias: optional_template_specification TYPEDEF . physical_type_ref ID ';'  (24)
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: typedef [3:1..7]
+#STATE#	paramtype: pbool [3:9..13]
+in state #STATE#, possible rules are:
+	type_alias: optional_template_specification TYPEDEF . physical_type_ref ID ';'  (#RULE#)
 acceptable tokens are: 
 	ID (shift)
 	SCOPE (shift)

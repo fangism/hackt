@@ -1,6 +1,6 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.4 2005/10/25 20:51:45 fang Exp $
+	$Id: BUGS,v 1.5 2005/11/10 02:12:59 fang Exp $
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals

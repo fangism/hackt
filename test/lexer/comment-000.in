@@ -1,0 +1,8 @@
+// "comment-000.h"
+// should die, unterminated comment
+
+/***
+where's the end?
+** / ** OMG !!! ////
+
+

@@ -1,9 +1,9 @@
 #!@SH_PATH@
 # "artc-expect.sh.in"
-#	$Id: artc-expect.sh.in,v 1.3 2005/10/30 22:00:25 fang Exp $
+#	$Id: artc-expect.sh.in,v 1.4 2005/11/10 02:13:12 fang Exp $
 # This file came from "artc-expect.sh" in revision pre-history.
 
-# $1 is the executable, expecting input from stdin
+# $1 is the executable, expecting input from stdin ("hackt parse_test")
 # $2 is the path to the source directory, which is not necessarily ./
 #	during distcheck uses _build
 # $3 is the input file name WITHOUT the .in extension
@@ -14,7 +14,8 @@
 
 # if [ $# -lt 6 ] ; then exit 1 ; fi
 
-cmd=$1
+# need to search source directory for VPATH builds
+cmd="$1 -I $2"
 srcroot=$2/$3
 bldroot=$3
 filter="$4"
@@ -26,29 +27,30 @@ logfile=$5
 # echo $filter
 # echo $logfile
 
+# intentionally using stdin to avoid file name differences in output diff-ing
 $cmd < $srcroot.in > $bldroot.test 2>&1
-if [ $? -gt 1 ] ; then exit 1 ; fi > /dev/null
-$filter $bldroot.test > $bldroot.test.filter
-if [ -f $srcroot.stderr ] ; then
-	$filter $srcroot.stderr > $bldroot.stderr.filter
+if [ $? -gt 1 ] ; then exit 1 ; fi
+@CAT@ $bldroot.test | $filter > $bldroot.test.filter
+if [ -f $srcroot.stderr ] && ! [ -f $bldroot.stderr ] ; then
+	@LN_S@ $srcroot.stderr $bldroot.stderr
 else
-	@TOUCH@ $bldroot.stderr.filter
+	@TOUCH@ $bldroot.stderr
 fi
 
-@DIFF@ -bu $bldroot.stderr.filter $bldroot.test.filter 2>&1 | \
-	@CAT@ > $bldroot.diff
+@DIFF@ -bu $bldroot.stderr $bldroot.test.filter > $bldroot.diff 2>&1
 
 # first-try: if different, see if it's because of bison...
 # if so, re-run using bison's expected output
 # otherwise, exit with error
 @HAVE_BISON_TRUE@if [ -s $bldroot.diff ] ; then
-@HAVE_BISON_TRUE@	if [ -f $srcroot.stderr.bison ] ; then
-@HAVE_BISON_TRUE@		$filter $srcroot.stderr.bison > $bldroot.stderr.bison.filter
+@HAVE_BISON_TRUE@	if [ -f $srcroot.stderr.bison ] && \
+@HAVE_BISON_TRUE@			! [ -f $bldroot.stderr.bison ] ; then
+@HAVE_BISON_TRUE@		@LN_S@ $srcroot.stderr.bison $bldroot.stderr.bison
 @HAVE_BISON_TRUE@	else
-@HAVE_BISON_TRUE@		@TOUCH@ $bldroot.stderr.bison.filter
+@HAVE_BISON_TRUE@		@TOUCH@ $bldroot.stderr.bison
 @HAVE_BISON_TRUE@	fi
-@HAVE_BISON_TRUE@	@DIFF@ -bu $bldroot.stderr.bison.filter $bldroot.test.filter \
-@HAVE_BISON_TRUE@		2>&1 | @CAT@ > $bldroot.bison.diff
+@HAVE_BISON_TRUE@	@DIFF@ -bu $bldroot.stderr.bison $bldroot.test.filter \
+@HAVE_BISON_TRUE@		> $bldroot.bison.diff 2>&1
 @HAVE_BISON_TRUE@	if ! [ -s $bldroot.bison.diff ] ; then
 @HAVE_BISON_TRUE@		mv -f $bldroot.bison.diff $bldroot.diff
 @HAVE_BISON_TRUE@	else

@@ -1,0 +1,6 @@
+// "import-008.in"
+// including file that includes itself, should be handled correctly
+
+import "import-006.in";		// error here!
+import "import-006.in";
+

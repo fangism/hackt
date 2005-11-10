@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2005/10/08 01:40:04 fang Exp $
+#	$Id: Makefile.am,v 1.17 2005/11/10 02:13:12 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -37,10 +37,13 @@ EXTRA_DIST += ChangeLog README TODO \
 	POM-header-filter.awk \
 	POM-index-filter.awk \
 	update-artcstderr.sh \
+	update-artcstderr-bison.sh \
 	update-unrollstderr.sh \
 	update-createstderr.sh \
 	update-allocstderr.sh \
 	update-expectprs.sh \
+	vpath_file_filter.awk \
+	hackt-parse-expect-filter.awk \
 	analyze-dump-diff.awk \
 	spacestonewline.awk test.cvsignore
 

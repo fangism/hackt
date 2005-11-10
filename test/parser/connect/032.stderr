@@ -1,16 +1,18 @@
+At: "-stdin-":7:
 parse error: syntax error
 parser stacks:
 state	value
-0	list<(root_item)>: (process-prototype) ... [3:1--5:33]
-22	(type-ref) [7:1..6]
-38	identifier: load [7:8..11]
-115	. [7:12]
-in state 115, possible rules are:
-	instance_id_item : ID . optional_template_arguments_in_angles sparse_range_list  (119)
-	instance_id_item : ID . optional_template_arguments_in_angles  (120)
-	instance_id_item : ID . optional_template_arguments_in_angles connection_actuals_list  (121)
-	instance_id_item : ID . optional_template_arguments_in_angles '=' rvalue_optional_alias_list  (122)
-	optional_template_arguments_in_angles : .  (321)
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (process-prototype) ... [3:1--5:33]
+#STATE#	(type-ref) [7:1..6]
+#STATE#	identifier: load [7:8..11]
+#STATE#	. [7:12]
+in state #STATE#, possible rules are:
+	instance_id_item : ID . optional_template_arguments_in_angles sparse_range_list  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles connection_actuals_list  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles '=' rvalue_optional_alias_list  (#RULE#)
+	optional_template_arguments_in_angles : .  (#RULE#)
 acceptable tokens are: 
 	'(' (reduce)
 	',' (reduce)

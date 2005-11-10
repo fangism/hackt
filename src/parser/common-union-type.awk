@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "common-union-type.awk"
 # David Fang, 2004
-#	$Id: common-union-type.awk,v 1.3 2005/06/21 21:26:36 fang Exp $
+#	$Id: common-union-type.awk,v 1.4 2005/11/10 02:13:08 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/yacc-union-type.awk OR parser/bison-union-type.awk
@@ -94,11 +94,8 @@ BEGIN {
 #		but is not always named y.tab.h! add to the "include" variable
 	print "#include <cassert>";
 	print "#include <iostream>";
-	# apologies: this header is hard-coded for this project
-	print "#include \"lexer/art_lex.h\"";
 	print "";
 	print "using std::ostream;";
-	print "using namespace ART::lexer;";
 	print "";
 
 	process_union(yaccfile);
@@ -348,8 +345,9 @@ if (0) {
 	print "if (iter && iter->state == j) {";
 		print "\t/* then we've found a match, return appropriately wrapped pointer */";
 		print "\tconst int k = iter->type_enum;";
-		print "\tassert(k >= 0);";
-		print "\tassert(k < " member_count ");";
+		print "\tif (k >= 0) {";
+			print "\t\tassert(k < " member_count ");";
+		print "\t} // else k < 0, signaling an error.";
 		print "\treturn k;";
 	print "} else {";
 		print "\treturn -1;\t// error, not found";
@@ -375,7 +373,10 @@ if (0) {
 
 	print "ostream&";
 	print "yy_union_resolve_dump(const YYSTYPE& u, const short i, const short j, ostream& o) {";
-	print "\treturn (*yy_union_what_where[yy_union_resolve_index(i,j)])(u,o);";
+	print "\tconst int k = yy_union_resolve_index(i,j);";
+	print "\tif (k >= 0)";
+		print "\t\treturn (*yy_union_what_where[k])(u,o);";
+	print "\telse\treturn o << \"(unknown)\";";
 	print "}";
 	print "";
 
@@ -387,7 +388,10 @@ if (0) {
 
 	print "void";
 	print "yy_union_resolve_delete(const YYSTYPE& u, const short i, const short j) {";
-	print "\t(*yy_union_delete[yy_union_resolve_index(i,j)])(u);";
+	print "\tconst int k = yy_union_resolve_index(i,j);";
+	print "\tif (k >= 0)";
+		print "\t\t(*yy_union_delete[k])(u);";
+	print "\t// else cannot delete unknown type";
 	print "}";
 	print "";
 

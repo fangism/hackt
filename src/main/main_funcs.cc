@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.3 2005/07/23 06:53:06 fang Exp $
+	$Id: main_funcs.cc,v 1.4 2005/11/10 02:13:06 fang Exp $
  */
 
 #include <iostream>
@@ -25,18 +25,25 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.h"
 
 // forward declarations needed for YSTYPE
-#include "parser/art++-parse-prefix.h"	// for YYSTYPE
+#include "parser/hackt-parse-prefix.h"	// for YYSTYPE
 using util::memory::excl_ptr;
 
 #if	USING_YACC
-extern	YYSTYPE artxx_val;		// root token (was yyval)
+extern	YYSTYPE hackt_val;		// root token (was yyval)
 #elif	USING_BISON
 extern	excl_ptr<ART::parser::root_body>	AST_root;
 #else
 #error	"USING_YACC or USING_BISON?  One must be set by configuration."
 #endif
-extern	FILE*	artxx_in;
-extern	int	artxx_parse(void);
+
+#include "lexer/file_manager.h"
+#include "lexer/yyin_manager.h"
+/**
+	This is the file pointer used by hackt_parse().  
+ */
+extern	FILE*	hackt_in;
+extern	int	hackt_parse(void);
+extern	ART::lexer::file_manager	hackt_parse_file_manager;
 
 #include "util/stacktrace.h"
 
@@ -48,6 +55,7 @@ using std::ios_base;
 using parser::root_body;
 using util::persistent;
 using util::persistent_object_manager;
+using lexer::yyin_manager;
 #include "util/using_ostream.h"
 typedef	parser::context		parse_context;
 
@@ -61,6 +69,7 @@ typedef	parser::context		parse_context;
  */
 FILE*
 open_source_file(const char* fname) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(fname);
 	FILE* ret;
 	// test if source is valid
@@ -79,9 +88,11 @@ open_source_file(const char* fname) {
 //=============================================================================
 /**
 	Makes sure named object file is openable in binary mode.  
+	TODO: check object header to verify hackt format?
  */
 good_bool
 check_object_loadable(const char* fname) {
+	STACKTRACE_VERBOSE;
 	// test if file is valid
 	ifstream f(fname, ios_base::binary);
 	if (!f) {
@@ -96,10 +107,11 @@ check_object_loadable(const char* fname) {
 //=============================================================================
 /**
 	Checks whether or not named file is writeable.  
-	\return 
+	\return good if file is writable.  
  */
 good_bool
 check_file_writeable(const char* fname) {
+	STACKTRACE_VERBOSE;
 	// test if file is valid
 	ofstream outf(fname, ios_base::binary | ios_base::app);
 	if (!outf) {
@@ -115,22 +127,32 @@ check_file_writeable(const char* fname) {
 /**
 	Side-effect: sets the yyin FILE* before parsing, and closes it
 		before returning.  
+	\param c the name associated with this file, may be NULL for stdin.  
+	\return allocated AST.
  */
 static
 excl_ptr<root_body>
-parse_to_AST(FILE* f) {
+parse_to_AST(const char* c) {
 	typedef	excl_ptr<root_body>		return_type;
-	return_type root;
-	// artxx_in is the global yyin FILE*.  
-	artxx_in = f ? f : stdin;
+	STACKTRACE_VERBOSE;
+	// error status
+	bool need_to_clean_up_file_manager = false;
+{
+	// hackt_in is the global yyin FILE*.  
+	const yyin_manager ym(hackt_in, hackt_parse_file_manager, c, false);
 	try {
-		artxx_parse();
+		hackt_parse();
 	} catch (...) {
+		// then it's possible that the file_manager is not balanced.  
+		need_to_clean_up_file_manager = true;
+	}
+}
+	if (need_to_clean_up_file_manager) {
+		hackt_parse_file_manager.reset();
 		return return_type(NULL);
 	}
-	fclose(artxx_in);		// even if stdin?
 #if USING_YACC
-	return return_type(artxx_val._root_body);
+	return return_type(hackt_val._root_body);
 #else
 	return AST_root;
 #endif
@@ -144,6 +166,7 @@ static
 excl_ptr<module>
 check_AST(const root_body& r, const char* name) {
 	typedef	excl_ptr<module>	return_type;
+	STACKTRACE_VERBOSE;
 	return_type mod(new module(name));
 	NEVER_NULL(mod);
 	parse_context pc(*mod);
@@ -167,11 +190,20 @@ check_AST(const root_body& r, const char* name) {
 excl_ptr<module>
 parse_and_check(const char* name) {
 	typedef	excl_ptr<module>	return_type;
+	STACKTRACE_VERBOSE;
 	static const char* dflt = "-stdin-";
-	FILE* f = name ? open_source_file(name) : stdin;
-	if (!f)	return return_type(NULL);
+	// test file existence and readibility first
+	if (name) {
+		FILE* f = open_source_file(name);
+		if (!f)	{
+			// error message?
+			return return_type(NULL);
+		} else {
+			fclose(f);
+		}
+	}
 	// error message would be nice
-	excl_ptr<root_body> AST = parse_to_AST(f);
+	excl_ptr<root_body> AST = parse_to_AST(name);
 	if (!AST) return return_type(NULL);
 	// error message would be nice
 	return check_AST(*AST, name ? name : dflt);
@@ -185,6 +217,7 @@ parse_and_check(const char* name) {
  */
 good_bool
 self_test_module(const module& m) {
+	STACKTRACE_VERBOSE;
 try {
 	const excl_ptr<module> module_copy =
 		persistent_object_manager::self_test_no_file(m)
@@ -204,6 +237,7 @@ try {
  */
 void
 save_module(const module& m, const char* name) {
+	STACKTRACE_VERBOSE;
 	const string fname(name);
 	persistent_object_manager::save_object_to_file(fname, m);
 }
@@ -216,6 +250,7 @@ save_module(const module& m, const char* name) {
  */
 void
 save_module_debug(const module& m, const char* name) {
+	STACKTRACE_VERBOSE;
 	persistent::warn_unimplemented = true;
 	persistent_object_manager::dump_reconstruction_table = true;
 	save_module(m, name);
@@ -227,6 +262,7 @@ save_module_debug(const module& m, const char* name) {
  */
 excl_ptr<module>
 load_module(const char* fname) {
+	STACKTRACE_VERBOSE;
 	return persistent_object_manager::load_object_from_file(fname)
 		.is_a_xfer<module>();
 }
@@ -239,6 +275,7 @@ load_module(const char* fname) {
  */
 excl_ptr<module>
 load_module_debug(const char* fname) {
+	STACKTRACE_VERBOSE;
 	persistent::warn_unimplemented = true;
 	persistent_object_manager::dump_reconstruction_table = true;
 	return load_module(fname);

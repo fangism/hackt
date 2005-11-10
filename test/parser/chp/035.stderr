@@ -1,15 +1,17 @@
+At: "-stdin-":4:
 parse error: syntax error
 parser stacks:
 state	value
-0	(null) 
-34	keyword: defproc [4:1..7]
-114	identifier: sum_diff [4:9..16]
-185	( [4:17]
-260	(chan-type) [4:18..27]
-305	list<(port-formal-id)>: (port-formal-id): identifier: L1 ... [4:29..30]
-380	, [4:31]
-466	keyword: chan [4:33..36]
-in state 466, possible rules are:
-	port_formal_id_list : port_formal_id_list ',' . port_formal_id  (56)
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defproc [4:1..7]
+#STATE#	identifier: sum_diff [4:9..16]
+#STATE#	( [4:17]
+#STATE#	(chan-type) [4:18..27]
+#STATE#	list<(port-formal-id)>: (port-formal-id): identifier: L1 ... [4:29..30]
+#STATE#	, [4:31]
+#STATE#	keyword: chan [4:33..36]
+in state #STATE#, possible rules are:
+	port_formal_id_list : port_formal_id_list ',' . port_formal_id  (#RULE#)
 acceptable tokens are: 
 	ID (shift)

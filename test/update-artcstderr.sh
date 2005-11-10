@@ -1,7 +1,8 @@
 #!/bin/sh
 # "update-artcstderr.sh"
+#	$Id: update-artcstderr.sh,v 1.4 2005/11/10 02:13:13 fang Exp $
 # convenient maintainer script for updating expected outputs
-# doesn't deal with bison stderr files yet
+# use this script for updating yacc test outputs, not bison
 
 # TODO: make update conditional on yacc/bison configuration?
 # too much hassle because not all parse failure outputs are 
@@ -9,7 +10,7 @@
 
 for i in $@
 do
-	cp -f $i.test $i.stderr
+	cp -f $i.test.filter $i.stderr
 	echo "Updated $i.stderr"
 done
 

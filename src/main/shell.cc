@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.2 2005/11/03 07:52:06 fang Exp $
+	$Id: shell.cc,v 1.3 2005/11/10 02:13:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -62,7 +62,7 @@ shell::main(const int argc, char* argv[], const global_options&) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 shell::usage(void) {
-	cerr << "Usage: " << name <<
+	cerr << "usage: " << name <<
 		" (forthcoming...)" << endl;
 }
 

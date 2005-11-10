@@ -1,17 +1,19 @@
+At: "-stdin-":3:
 parse error: syntax error
 parser stacks:
 state	value
-0	(null) 
-30	keyword: defchan [3:1..7]
-111	identifier: mychan [3:9..14]
-178	<: [3:16]
-254	(chan-type) [3:19..22]
-39	( [3:23]
-118	list<(type-ref)>: (type-ref) ... [3:24..27]
-192	identifier: b [3:29]
-in state 192, possible rules are:
-	data_type_ref_list_in_parens: '(' data_type_ref_list . ')'  (67)
-	data_type_ref_list: data_type_ref_list . ',' data_type_ref  (68)
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defchan [3:1..7]
+#STATE#	identifier: mychan [3:9..14]
+#STATE#	<: [3:16]
+#STATE#	(chan-type) [3:19..22]
+#STATE#	( [3:23]
+#STATE#	list<(type-ref)>: (type-ref) ... [3:24..27]
+#STATE#	identifier: b [3:29]
+in state #STATE#, possible rules are:
+	data_type_ref_list_in_parens: '(' data_type_ref_list . ')'  (#RULE#)
+	data_type_ref_list: data_type_ref_list . ',' data_type_ref  (#RULE#)
 acceptable tokens are: 
 	')' (shift)
 	',' (shift)

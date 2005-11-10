@@ -1,16 +1,25 @@
 /**
-	\file "art_lex.h"
+	\file "hac_lex.h"
 	Header for a few simple structures, useful to the 
 	language front-end.  
 	Note, this is a C++ source file.  
-	$Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp $
+	$Id: hac_lex.h,v 1.2 2005/11/10 02:13:03 fang Exp $
+	This file's earlier revision history originates from:
+	Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp
  */
 
-#ifndef	__ART_LEX_H__
-#define	__ART_LEX_H__
+#ifndef	__LEXER_HAC_LEX_H__
+#define	__LEXER_HAC_LEX_H__
 
-#include <assert.h>
+#include <cassert>
 #include <iosfwd>
+
+// switches
+// goal: 1
+#define	USE_TOKEN_POSITION_FILE_NUMBER		0
+
+// goal: 0
+#define	USE_TOKEN_POSITION_OFFSET		0
 
 namespace ART {
 namespace lexer {
@@ -22,15 +31,24 @@ struct token_position {
 	long line;		///< line of start of token
 	long leng;		///< length, applies for single-line tokens
 	long col;		///< column position of start of token
+#if USE_TOKEN_POSITION_OFFSET
 	const long off;		///< offset: where yymore actually starts
+#endif
 
 	/**
 		gcc-3.2 requires explicit constructor for class with
 		non-static const members, gcc-3.3 and up don't require.
 	 */
-	token_position(const long a, const long b,
-		const long c, const long d) :
-		line(a), leng(b), col(c), off(d) {
+	token_position(const long a, const long b, const long c
+#if USE_TOKEN_POSITION_OFFSET
+		, const long d = 0
+#endif
+		) :
+		line(a), leng(b), col(c)
+#if USE_TOKEN_POSITION_OFFSET
+		, off(d)
+#endif
+		{
 	}
 };	// end struct token_position
 
@@ -39,6 +57,9 @@ struct token_position {
 struct line_position {
 	long            line;
 	long            col;
+#if USE_TOKEN_POSITION_FILE_NUMBER
+	long		fn;	///< file number, will correspond to string
+#endif
 
 	line_position() : line(0), col(0) { }
 	line_position(const long l, const long c) : line(l), col(c)
@@ -53,6 +74,7 @@ struct line_position {
 };      // end struct line_position
 
 //=============================================================================
+// a pair of line positions constitutes a range
 struct line_range {
 	line_position   start;
 	line_position   end;
@@ -70,5 +92,5 @@ friend ostream& operator << (ostream& o, const line_range& l);
 }	// end namespace lexer
 }	// end namespace ART
 
-#endif	// __ART_LEX_H__
+#endif	// __LEXER_HAC_LEX_H__
 

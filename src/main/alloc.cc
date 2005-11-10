@@ -2,7 +2,7 @@
 	\file "main/alloc.cc"
 	Allocates global unique state.  
 
-	$Id: alloc.cc,v 1.2 2005/09/14 15:30:35 fang Exp $
+	$Id: alloc.cc,v 1.3 2005/11/10 02:13:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -89,7 +89,7 @@ alloc::main(const int argc, char* argv[], const global_options&) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 alloc::usage(void) {
-	cerr << "Usage: " << name <<
+	cerr << "usage: " << name <<
 		" <hackt-obj-infile> <hackt-obj-outfile>" << endl;
 }
 

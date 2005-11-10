@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "bison-union-type.awk"
 # David Fang, 2004
-#	$Id: bison-union-type.awk,v 1.5 2005/05/04 17:54:14 fang Exp $
+#	$Id: bison-union-type.awk,v 1.6 2005/11/10 02:13:08 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/common-union-type.awk
@@ -68,7 +68,13 @@ function register_end_symbols() {
 			} else {	# is just a goto
 				printf($5);
 			}
-			printf(", " enum_of[symbol_type[$1]] ", ");
+			# work around for goto actions in the middle of a rule
+			enum_sym = enum_of[symbol_type[$1]];
+			if (!length(enum_sym)) {
+				# is blank, b/c no type associated
+				enum_sym = "-1";
+			}
+			printf(", " enum_sym ", ");
 
 			if (sc) printf("&yysml_" state_count "_" sc-1);
 			else	printf("NULL");		# or 0

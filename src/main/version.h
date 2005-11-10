@@ -1,16 +1,18 @@
 /**
 	\file "main/version.h"
 	Interface header for version module.  
-	$Id: version.h,v 1.2 2005/11/03 07:52:07 fang Exp $
+	$Id: version.h,v 1.3 2005/11/10 02:13:07 fang Exp $
  */
 
 #ifndef	__MAIN_VERSION_H__
 #define	__MAIN_VERSION_H__
 
+#include <iosfwd>
 #include "main/hackt_fwd.h"
 
 namespace ART {
-
+using std::ostream;
+//=============================================================================
 /**
 	Instance-less class for parser/self-test module.  
 	Yes, most everything is private, not supposed to use this directly, 
@@ -44,8 +46,42 @@ private:
 	static
 	const size_t
 	program_id;
+public:
+	static
+	ostream&
+	package(ostream&);
+
+	static
+	ostream&
+	cvs(ostream&);
+
+	static
+	ostream&
+	cxx(ostream&);
+
+	static
+	ostream&
+	lex(ostream&);
+
+	static
+	ostream&
+	yacc(ostream&);
+
+	static
+	ostream&
+	builddate(ostream&);
+
+	static
+	ostream&
+	buildhost(ostream&);
+
+	static
+	ostream&
+	cxxflags(ostream&);
+
 };	// end class version
 
+//=============================================================================
 }	// end namespace ART
 
 #endif	// __MAIN_VERSION_H__

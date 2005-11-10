@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.9 2005/11/02 22:53:50 fang Exp $
+#	$Id: Make.test-tail,v 1.10 2005/11/10 02:13:12 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -20,7 +20,10 @@ HACKT_CREATE_TEST_SH = $(top_builddir)/test/hackt-create-expect.sh
 HACKT_ALLOC_TEST_SH = $(top_builddir)/test/hackt-alloc-expect.sh
 HACKT_CFLAT_TEST_SH = $(top_builddir)/test/hackt-cflat-expect.sh
 
-STATE_ENUM_FILTER = $(AWK) -f $(top_srcdir)/test/state_enum_filter.awk
+HACKT_COMPILE_ERROR_FILTER = $(AWK) \
+		-f $(top_srcdir)/test/hackt-parse-expect-filter.awk \
+		-f $(top_srcdir)/test/state_enum_filter.awk \
+		-f $(top_srcdir)/test/vpath_file_filter.awk
 POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
 POM_INDEX_FILTER = $(AWK) -f $(top_srcdir)/test/POM-index-filter.awk
 HEX_ADDRESS_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
@@ -46,7 +49,7 @@ subdir.not_a_test:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(ARTC_TEST_SH) "\"$(ARTC_EXE)\"" $(srcdir) $* \
-		"\"$(STATE_ENUM_FILTER)\"" $(TEST_REPORT) >> $@
+		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
 
 .in.artobjtest:

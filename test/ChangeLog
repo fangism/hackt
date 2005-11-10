@@ -1,5 +1,17 @@
 # "test/ChangeLog"
 
+2005-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-10:
+	  Updated compile test error filter script to handle
+		both state enumerations and vpath differences.  
+		The new hackt-parse-expect-filter.awk depends on the
+		old (library) state_enum_filter.awk and the new
+		vpath_file_filter.awk.
+	  Added -I $(srcdir) to all parse and compile tests which work
+		in vpath builds now.  
+
+
 2005-11-01	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-62-cflat-02-04:

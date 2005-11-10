@@ -4,9 +4,8 @@ core.*
 *.tar.bz2
 flatsrc
 configure_with_ccache.sh
-hackt.doxygen.log
+*.doxygen.log
 hackt-*.*.*
-art++.doxygen.log
 artxx-*.*.*
 *.hchk
 

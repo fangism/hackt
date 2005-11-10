@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.14 2005/11/04 04:50:49 fang Exp $
+#	$Id: configure.ac,v 1.15 2005/11/10 02:12:55 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20051103, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051109, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -98,13 +98,15 @@ LIBTOOL="$LIBTOOL --silent"
 AC_PROG_CXX
 # need to set LANG to C++ to check for C++ headers
 # TODO: should use AC_SAVE_LANG and AC_RESTORE_LANG
-AC_LANG(C++)
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
+AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 # C++ wrappers to standard C headers
 AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
 # checking all possible locations of (some equivalent) header files
@@ -157,6 +159,8 @@ AC_CHECK_SIZEOF(double)
 AC_CHECK_SIZEOF(long double)
 AC_CHECK_SIZEOF(void*)
 AC_CHECK_SIZEOF(size_t)
+
+AC_LANG_RESTORE
 
 # Lex/Yacc support
 AM_PROG_LEX
@@ -243,7 +247,9 @@ fi
 # NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
 #	just use @VAR_TRUE@ instead of the if ... version in automake
 AC_CHECK_PROG([PRSIM], prsim, prsim)
+AC_CHECK_PROG([CFLAT], cflat, cflat)
 AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
+AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 
 # shamelessly copied autoconf snippet from ngspige's configure.in
 dnl	Option to include GNU readline support in ngspice CLI
@@ -286,6 +292,17 @@ else
 		-lncurses )
 fi
 # end shameless copying from ngspice::configure.in
+
+dnl first, create a useful variable substitution script for use in config.status
+AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],
+[dollar=$
+at=@
+cat > config_subst.awk.sh <<EOF
+#!$SHELL
+awk -f $srcdir/config/config_subst.awk $dollar$at
+EOF
+chmod +x config_subst.awk.sh
+])
 
 AC_CONFIG_FILES([
 	Makefile
@@ -334,6 +351,54 @@ AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 	[chmod +x test/hackt-cflat-expect.sh])
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
+
+dnl no input file needsd, just referencing arbitrary existing file
+AC_CONFIG_FILES([configdate.h:config/macro-value.h.in],
+	[date=`./config_subst.awk.sh -v var=DATE config.status`
+	sed 's/MACRO/CONFIGDATE/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"`$date`\"/g" > configdate.h
+	])
+
+AC_CONFIG_FILES([src/buildhost.h:config/macro-value.h.in],
+	[host=`./config_subst.awk.sh -v var=host config.status`
+	build=`./config_subst.awk.sh -v var=build config.status`
+	sed 's/MACRO/CONFIG_HOST/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"$host\"/g" > src/buildhost.h
+	sed 's/MACRO/CONFIG_BUILD/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"$build\"/g" >> src/buildhost.h
+	])
+
+AC_CONFIG_FILES([src/cxx_version.h:config/macro-value.h.in],
+	[cxx=`./config_subst.awk.sh -v var=CXX config.status`
+	sed 's/MACRO/CXX_VERSION/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"`$cxx --version | head -n 1`\"/g" > src/cxx_version.h
+	])
+
+AC_CONFIG_FILES([src/cxxflags.h:config/macro-value.h.in],
+	[cxxflags=`./config_subst.awk.sh -v var=CXXFLAGS config.status`
+	sed 's/MACRO/CONFIG_CXXFLAGS/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"$cxxflags\"/g" > src/cxxflags.h
+	])
+
+AC_CONFIG_FILES([src/lexer/lex_version.h:config/macro-value.h.in],
+	[lex=`./config_subst.awk.sh -v var=LEX config.status`
+	sed 's/MACRO/LEX_VERSION/g' $srcdir/config/macro-value.h.in | \
+		sed "s/VALUE/\"`$lex --version | head -n 1`\"/g" > src/lexer/lex_version.h
+	])
+
+dnl traditional yacc has no version flag :(
+AC_CONFIG_FILES([src/parser/yacc_version.h:config/macro-value.h.in],
+	[yacc=`./config_subst.awk.sh -v var=YACC config.status`
+	version="none"
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		version=`which $yacc | head -n 1`
+	else
+		version=`$yacc --version 2>&1 | head -n 1`
+	fi
+	sed 's/MACRO/YACC_VERSION/g' $srcdir/config/macro-value.h.in | \
+		sed "s|VALUE|\"$version\"|g" > src/parser/yacc_version.h
+	])
 
 AC_OUTPUT
 

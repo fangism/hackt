@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.4 2005/11/03 07:52:06 fang Exp $
+	$Id: cflat.cc,v 1.5 2005/11/10 02:13:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -59,6 +59,9 @@ cflat::brief_str[] =
 const size_t
 cflat::program_id = register_hackt_program_class<cflat>();
 
+/**
+	Options modifier map must be initialized before any registrations.  
+ */
 const cflat::options_modifier_map_type
 cflat::options_modifier_map;
 
@@ -489,7 +492,7 @@ cflat::parse_command_options(const int argc, char* argv[], options& cf) {
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
 		case 'f': {
-			const options_modifier_info
+			const options_modifier_info&
 				om(options_modifier_map[optarg]);
 			if (!om) {
 				cerr << "Invalid mode: " << optarg << endl;
@@ -515,9 +518,9 @@ cflat::parse_command_options(const int argc, char* argv[], options& cf) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat::usage(void) {
-	cerr << "Usage: " << name << " <mode> [options] <hackt-obj-infile>"
+	cerr << "usage: " << name << " <mode> [options] <hackt-obj-infile>"
 		<< endl;
-	cerr << "Options: " << endl;
+	cerr << "options: " << endl;
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"
 		" (repeatable)" << endl;
 	// list modes

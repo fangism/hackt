@@ -1,5 +1,9 @@
 #! /usr/bin/awk -f
+#	$Id: state_enum_filter.awk,v 1.5 2005/11/10 02:13:13 fang Exp $
 # "test/state_enum_filter.awk"
+
+# This script has been converted into a library function, to be called
+# by other awk modules.  It no longer stands alone.  
 
 # Whenever the grammar changes, the enumerations of the parser states
 # will change, which will cause a change in the error reporting
@@ -25,8 +29,7 @@ BEGIN {
 }
 
 # for all lines
-{
-	str = $0;
+function filter_state_enums(str) {
 	# assertion: in all below cases, the regexp [0-9]+ matches only once
 	if (match(str, case1)) {
 		gsub("[0-9]+", rule_str, str);
@@ -57,9 +60,6 @@ BEGIN {
 	# extraneous empty parens in output
 	gsub("[ \\t]*\\(\\).*$", "", str);
 
-	print str;
-}
-
-END {
+	return str;
 }
 

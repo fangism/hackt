@@ -1,10 +1,12 @@
+At: "-stdin-":3:
 parse error: syntax error
 parser stacks:
 state	value
-0	keyword: enum [3:1..4]
-9	keyword: enum [3:6..9]
-in state 9, possible rules are:
-	declare_enum : ENUM . ID ';'  (68)
-	defenum : ENUM . ID '{' enum_member_list '}'  (69)
+#STATE#	(null) 
+#STATE#	keyword: enum [3:1..4]
+#STATE#	keyword: enum [3:6..9]
+in state #STATE#, possible rules are:
+	declare_enum : ENUM . ID ';'  (#RULE#)
+	defenum : ENUM . ID '{' enum_member_list '}'  (#RULE#)
 acceptable tokens are: 
 	ID (shift)

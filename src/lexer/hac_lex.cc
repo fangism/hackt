@@ -1,11 +1,13 @@
 /**
-	\file "art_lex.cc"
+	\file "hac_lex.cc"
 	Utility lexer function definitions.
-	$Id: art_lex.cc,v 1.3 2005/02/27 22:12:00 fang Exp $
+	$Id: hac_lex.cc,v 1.2 2005/11/10 02:13:03 fang Exp $
+	Renamed from:
+	Id: art_lex.cc,v 1.3 2005/02/27 22:12:00 fang Exp
  */
 
 #include <ostream>
-#include "art_lex.h"
+#include "hac_lex.h"
 
 namespace ART {
 namespace lexer {

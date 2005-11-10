@@ -3,6 +3,142 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-66-merged-parser-03-10:
+	  Merged in -parser-03 branch, featuring:
+	  Tons of configuration improvements.
+	  Parser and lexer enhanced with file import capabilities, 
+		which just includes files with an implicit #pragma once.
+	  Visited files are skipped, cyclic dependencies
+		are detected and rejected.  
+	  Parser error reporting now include full file stack.  
+	  Command-line option to add search paths is -I, just like cpp/gcc.  
+	  Includes a few tests of the import feature, but is not considered
+		thoroughly tested.  
+	  parse_test module synchronized with compile module.
+	  Includes minor library improvements.  
+
+
+2005-11-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-10:
+	  Using consistent file_status enumerations for diagnostics, 
+		added util/file_status.h.
+	  Wrapped parse_test's command-line parsing around the compile
+		module's command-parser.  Now it benefits from all
+		of compile's options and their modifiers, 
+		namely include paths from this branch.  
+	  lexer::file_manager and yyin_manager now detect and reject
+		cyclic file references.  Otherwise precompiled headers
+		will not work with cycles.  Dependency graph may only
+		be directed acylic.  
+	  branch status: nearly complete, possibly ready for merge.
+
+
+	* ARTXX-00-01-04-main-00-65-parser-03-09:
+	  Fixed previous bug regarding nested file line numbers.  
+	  Fixed bad file name bug by using std::string in file_manager's
+		file name stack.  Never use const char*, 
+		not even for quick and dirty.  
+	  Parser no longer handles file-opening, moved to lexer!
+		Rationale: parser would scan tokens after import
+		statements, but before actually opening file, 
+		so line numbers would be totally off in nested files.  
+		(May still be a way to do it in the parser, 
+		a brief attempt at embedded actions in the grammar failed.)
+	  Lexer is now imbued with ability to change file streams, 
+		imitating parsing of an import directive {IMPORT}.
+		Learned that yywrap is called *before* EOF is reached
+		in string and comment modes/states.  
+	  Extended both yacc- and bison- union-type.awk scripts
+		to handle cases where there is no type associated with
+		a symbol, either because the symbol has no type, 
+		or is a placeholder for an embedded action.  
+
+
+2005-11-08	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-08:
+	  All errors are now reported with the file stack.  
+		All lexer/parser tests updated accordingly (bison/yacc).  
+	  KNOWN BUG with line reporting with nested files, working on it...
+	  Added mechanism for resetting file_manager in the event of
+		a lexer/parser exception for proper cleanup.  
+	  lexer/hackt-lex.ll: added missing quote escape sequences.  
+
+
+	* ARTXX-00-01-04-main-00-65-parser-03-07:
+	  lexer::file_position_stack and lexer::file_manager now report 
+		whether an included file was ignored because it was already 
+		registered (visited).  yyin_manager and parser use this 
+		information to determine course of action.  
+	  TODO: dump include file stack in the event of an error.  
+		In general, make the error reporting more precise.  
+	  TODO: -M for make dependencies (possibly other suboptions).  
+	  TODO: commit USE_CURRENT_FILE_STACK in AST/art_parser_terminal.h, 
+		and commit CURRENT in lexer/hackt-lex.ll.
+
+
+	* ARTXX-00-01-04-main-00-65-parser-03-06:
+	  Only partial functionality of including/importing other files.  
+	  Added lexer::yyin_manager helper class for balancing file stack.
+	  Implemented more of lexer::file_manager methods.  
+	  Updated yywrap in lexer/hackt-lex.ll.
+	  Still needs extensive testing (and completion).  
+	  Initial compile options and modifiers to compile module.  
+	  parser/hackt-parse.yy: partial implementation of 
+		opening files, but needs more checking.  
+
+
+2005-11-07	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-05:
+	  Makefile.am: clean-up and making some dependencies omre precise.  
+	  main/version.cc: more configuration information added:
+		build/host and various CXXFLAGS used in compilation.  
+	  main/compile.cc: working towards function include path searching, 
+		not there yet...
+
+
+2005-11-06	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-04:
+	  Configure/Makefile changes only: cxx_version.h, 
+		lexer/lex_version.h, and parser/yacc_version.h are now
+		generated at configure-time.  
+
+
+	* ARTXX-00-01-04-main-00-65-parser-03-03:
+	  Added more configuration header dependencies in Makefile.am.  
+	  Added initial files for managing file inclusion and path
+		searching for included files.  (not complete yet)
+	  Minor fix in token_quoted_string::what().
+	  lexer/hac_lex.*: removed unused off (offset) field.
+	  Added import "file"; skeletal support to hackt lexer and parser.  
+		Parser error outputs all shifted by one state.  
+		Tests have been updated.  
+	  TODO: open referenced files using include paths.  
+
+
+2005-11-04	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-65-parser-03-02:
+	  Added more configuration detection headers for use with 
+		main/version.cc.  Now includes CXX, LEX, YACC versions.  
+	  Next: lexer file stack, possibly include search paths...
+		NOTE: may have to update parser test outputs.  
+
+
+	* ARTXX-00-01-04-main-00-65-parser-03-01:
+	  Parser related activity.  
+	  There has been a request for #include feature, so that will
+		be one goal for this branch.
+	  In this revision:
+		renamed all lexer/parser files art++ -> hackt.
+	  Minor fix in an awk script to remove hard-coded name.  
+
+
 2005-11-03	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65:

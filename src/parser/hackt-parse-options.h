@@ -1,14 +1,16 @@
 /**
-	\file "parser/art++-parse-options.h"
+	\file "parser/hackt-parse-options.h"
 	Preprocessor definitions to give to lexer file to suppress
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: art++-parse-options.h,v 1.2 2005/06/19 01:58:50 fang Exp $
+	$Id: hackt-parse-options.h,v 1.2 2005/11/10 02:13:08 fang Exp $
+	This file was formerly known as:
+	Id: art++-parse-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
 
-#ifndef	__ARTXX_PARSE_OPTIONS_H__
-#define	__ARTXX_PARSE_OPTIONS_H__
+#ifndef	__PARSER_HACKT_PARSE_OPTIONS_H__
+#define	__PARSER_HACKT_PARSE_OPTIONS_H__
 
 // this could be configure-dependent!  
 // since alloca is rather efficient, but sometimes not portable
@@ -36,5 +38,5 @@
 #define	YYLTYPE_IS_TRIVIAL		0
 #endif
 
-#endif	// __ARTXX_PARSE_OPTIONS_H__
+#endif	// __PARSER_HACKT_PARSE_OPTIONS_H__
 

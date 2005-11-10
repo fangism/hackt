@@ -1,5 +1,5 @@
 /**
-	\file "parser/art++-parse.yy"
+	\file "parser/hackt-parse.yy"
 	Yacc-generated parser source for the ART++ language.  
 
 	note: this is not the same language as that found in lib/art.cy
@@ -7,16 +7,24 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp $
+	$Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp $
+	This file was formerly known as
+	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
+	in a previous life.  
  */
 
 %{
 #include <iostream>
 
+#include "config.h"
 #include "AST/art_parser.h"		// should be first
-#include "parser/art++-parse.output.h"	// auto-generated state strings! :)
-#include "parser/art++-parse-options.h"
+#include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
+#include "parser/hackt-parse-options.h"
 #include "util/using_ostream.h"
+#include "lexer/file_manager.h"
+
+#define	ENABLE_STACKTRACE		0
+#include "util/stacktrace.h"
 
 /** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
 #if defined (__GNUC__) && (3 <= __GNUC__)
@@ -42,6 +50,13 @@ using namespace ART::parser;
  */
 util::memory::excl_ptr<root_body> AST_root;
 #endif	// YYBISON
+
+// may be changed when nesed files are opened
+extern FILE* yyin;
+
+// input stream manager, based in "lexer/hackt-lex.ll"
+extern file_manager
+hackt_parse_file_manager;
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
@@ -148,7 +163,7 @@ extern const char* const yyrule[];
 
 /**
 	NOTE: to use the following union definition, which will be
-	summarized in "art++-parse-prefix.h" (generated), 
+	summarized in "hackt-parse-prefix.h" (generated), 
 	you will need to include "art_parser_fwd.h" first
 	(with using namespace ART::parser;) to provide forward
 	declarations of the union-members' types.  
@@ -181,6 +196,7 @@ extern const char* const yyrule[];
 	A just question.  We walk the state stack pointer.  
 	This is done using yacc-union-type.awk.  
 ***/
+/*	void*			_null;		// reserved for NULL */
 	terminal*		_terminal;
 	node_position*		_node_position;
 	keyword_position*	_keyword_position;
@@ -337,7 +353,7 @@ extern	int yylex(void);		// ancient compiler rejects
 
 namespace ART {
 namespace lexer {
-extern	int at_eof(void);		// from "art++-lex.ll"
+extern	int at_eof(void);		// from "hackt-lex.ll"
 }
 }
 using ART::lexer::at_eof;
@@ -346,6 +362,8 @@ static void yyerror(const char* msg);	// ancient compiler rejects
 
 /* automatically generated function to resolve parser symbol type
 	on the yy value stack, base on yy state stack transitions
+	TODO: these symbols may have to be renamed
+		to avoid conflicts in multiple parsers.  
  */
 extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
 extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
@@ -441,6 +459,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_keyword_position>	CHANNEL
 %token	<_keyword_position>	TEMPLATE
 %token	<_keyword_position>	ENUM
+%token	<_keyword_position>	IMPORT
 
 /* linkage modifiers */
 %token	<_token_keyword>	EXTERN STATIC EXPORT
@@ -464,6 +483,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* non-terminals */
 %type	<_root_body>	module
+%type	<_keyword_position>	imports
+%type	<_keyword_position>	imports_optional
+%type	<_keyword_position>	import_item
 %type	<_root_body>	top_root body 
 %type	<_root_item>	body_item
 %type	<_root_item>	namespace_item
@@ -627,14 +649,37 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* top level syntax */
 
 module
-	: top_root
+	: imports_optional top_root
 		{
 #if YYBISON
-			AST_root = util::memory::excl_ptr<root_body>($1);
+#if defined(USING_BISON) && !USING_BISON
+#error	Inconsistency in configuration: YYBISON && !USING_BISON
+#endif
+			AST_root = util::memory::excl_ptr<root_body>($2);
 #else	// YACC
-			$$ = $1;
+#if defined(USING_YACC) && !USING_YACC
+#error	Inconsistency in configuration: !YYBISON && !USING_YACC
+#endif
+			$$ = $2;
 #endif
 		}
+	;
+
+imports_optional
+	: imports
+	| { $$ = NULL; }
+	;
+
+imports
+	: imports import_item
+	| import_item
+	;
+
+import_item
+	: IMPORT { MUST_BE_NULL($1); $$ = NULL; }
+/***
+	The work for switching input files is actually done in the lexer!
+***/
 	;
 
 top_root
@@ -2202,16 +2247,19 @@ void
 yyfreestacks(const short* _yyss_, const short* _yyssp_, 
 		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
 		const YYSTYPE _yylval_) {
+	STACKTRACE_VERBOSE;
 	const short* s;
 	const YYSTYPE* v;
 	s=_yyss_+1;
 	v=_yyvs_+1;
 	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
 		if (v) {
+			// cerr << "Deleting stack token..." << endl;
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
 	if (!at_eof()) {
+		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, yychar);
 	}
@@ -2267,10 +2315,12 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 // following prototype MUST appear as is (after "static") for awk hack...
 static
 void yyerror(const char* msg) { 	// ancient compiler rejects
+	STACKTRACE_VERBOSE;
 	const short* s;
 	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
+	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "parse error: " << msg << endl;
 
 /*	Define the following (-D) to disable sophisticated error reporting, 
@@ -2376,5 +2426,5 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	
 	// or throw exception
 	THROW_EXIT;
-}
+}	// end yyerror(...)
 

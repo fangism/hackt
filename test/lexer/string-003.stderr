@@ -1,0 +1,15 @@
+At: "-stdin-":6:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	(array-concatenation) [4:53]
+#STATE#	end-of-file
+in state #STATE#, possible rules are:
+	complex_aggregate_reference : array_concatenation .  (#RULE#)
+	array_concatenation : array_concatenation . '#' complex_expr_term  (#RULE#)
+acceptable tokens are: 
+	'#' (shift)
+	')' (reduce)
+	',' (reduce)
+	'=' (reduce)

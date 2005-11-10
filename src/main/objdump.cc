@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.3 2005/09/14 15:30:36 fang Exp $
+	$Id: objdump.cc,v 1.4 2005/11/10 02:13:06 fang Exp $
  */
 
 #include <iostream>
@@ -57,7 +57,7 @@ objdump::main(int argc, char* argv[], const global_options&) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 objdump::usage(void) {
-	cerr << "Usage: " << name << " <hackt-obj-file>" << endl;
+	cerr << "usage: " << name << " <hackt-obj-file>" << endl;
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_base.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.25 2005/07/23 06:51:17 fang Exp $
+	$Id: art_parser_base.h,v 1.26 2005/11/10 02:13:01 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_BASE_H__
@@ -9,7 +9,7 @@
 
 #include <iosfwd>
 #include "util/macros.h"
-#include "lexer/art_lex.h"	// for token_position, line_position, ...
+#include "lexer/hac_lex.h"	// for token_position, line_position, ...
 #include "util/memory/excl_ptr.h"	// experimental pointer classes
 
 /**

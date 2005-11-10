@@ -1,25 +1,23 @@
 /**
 	\file "AST/art_parser_terminal.h"
 	Base set of classes for the ART parser.  
-	$Id: art_parser_terminal.h,v 1.5 2005/05/10 04:51:09 fang Exp $
+	$Id: art_parser_terminal.h,v 1.6 2005/11/10 02:13:01 fang Exp $
  */
 
 #ifndef __AST_ART_PARSER_TERMINAL_H__
 #define __AST_ART_PARSER_TERMINAL_H__
 
 #include <string>
-#include "lexer/art_lex.h"
+#include "lexer/hac_lex.h"
 #include "AST/art_parser_base.h"
+
+#include "lexer/file_manager.h"	
+	// ugh, included everywhere, but needed for inlined operation
+extern ART::lexer::file_manager
+hackt_parse_file_manager;
 
 //=============================================================================
 namespace ART {
-//=============================================================================
-// global variable
-namespace lexer {
-extern	token_position current;
-}
-
-using lexer::current;			// current token position
 using std::string;
 
 namespace parser {
@@ -41,7 +39,7 @@ protected:
 // file name will be kept separate?
 protected:
 ///	base constructor always records the current position of the token
-	terminal() : pos(current) { }
+	terminal() : pos(hackt_parse_file_manager.current_position()) { }
 
 public:
 ///	standard virtual destructor

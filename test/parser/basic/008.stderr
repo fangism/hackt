@@ -1,18 +1,20 @@
+At: "-stdin-":9:
 parse error: syntax error
 parser stacks:
 state	value
-0	(null) 
-34	keyword: defproc [3:1..7]
-114	identifier: myinverter [3:9..18]
-185	list<(port-formal-decl)>: (port-formal-decl) ... [3:19..34]
-261	{ [3:36]
-306	list<(def-body-item)>: (prs-body) ... [4:1--7:1]
-382	(qualified-id) [8:1..11]
-59	} [9:1]
-in state 59, possible rules are:
-	generic_type_ref : relative_id . strict_relaxed_template_arguments optional_chan_dir  (59)
-	id_expr : relative_id .  (260)
-	strict_relaxed_template_arguments : .  (319)
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defproc [3:1..7]
+#STATE#	identifier: myinverter [3:9..18]
+#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [3:19..34]
+#STATE#	{ [3:36]
+#STATE#	list<(def-body-item)>: (prs-body) ... [4:1--7:1]
+#STATE#	(qualified-id) [8:1..11]
+#STATE#	} [9:1]
+in state #STATE#, possible rules are:
+	generic_type_ref : relative_id . strict_relaxed_template_arguments optional_chan_dir  (#RULE#)
+	id_expr : relative_id .  (#RULE#)
+	strict_relaxed_template_arguments : .  (#RULE#)
 acceptable tokens are: 
 	'!' (reduce)
 	'#' (reduce)

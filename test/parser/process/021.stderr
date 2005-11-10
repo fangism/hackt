@@ -1,16 +1,18 @@
+At: "-stdin-":8:
 parse error: syntax error
 parser stacks:
 state	value
-0	(template-formal-decl-list-pair) [3:10..41]
-34	keyword: defproc [4:1..7]
-112	identifier: barbar [4:9..14]
-181	list<(port-formal-decl)>: ... [4:15..16]
-254	{ [4:18]
-292	end-of-file
-in state 292, possible rules are:
-	defproc : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens '{' . optional_definition_body '}'  (32)
-	optional_template_specification : .  (28)
-	optional_definition_body : .  (94)
+#STATE#	(null) 
+#STATE#	(template-formal-decl-list-pair) [3:10..41]
+#STATE#	keyword: defproc [4:1..7]
+#STATE#	identifier: barbar [4:9..14]
+#STATE#	list<(port-formal-decl)>: ... [4:15..16]
+#STATE#	{ [4:18]
+#STATE#	end-of-file
+in state #STATE#, possible rules are:
+	defproc : optional_template_specification def_or_proc ID optional_port_formal_decl_list_in_parens '{' . optional_definition_body '}'  (#RULE#)
+	optional_template_specification : .  (#RULE#)
+	optional_definition_body : .  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
 	'[' (shift)
