@@ -4,13 +4,15 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hackt-parse-options.h,v 1.2 2005/11/10 02:13:08 fang Exp $
+	$Id: hackt-parse-options.h,v 1.3 2005/11/10 22:51:23 fang Exp $
 	This file was formerly known as:
 	Id: art++-parse-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
 
 #ifndef	__PARSER_HACKT_PARSE_OPTIONS_H__
 #define	__PARSER_HACKT_PARSE_OPTIONS_H__
+
+#include "config.h"
 
 // this could be configure-dependent!  
 // since alloca is rather efficient, but sometimes not portable
@@ -36,6 +38,36 @@
 // introduced and used by bison-2.0
 #ifndef	YYLTYPE_IS_TRIVIAL
 #define	YYLTYPE_IS_TRIVIAL		0
+#endif
+
+// needed by bison-1.35
+// to determine whether or not yylloc is used in the call to yylex
+#ifndef	YYLSP_NEEDED
+#define	YYLSP_NEEDED			0
+#endif
+
+/**
+	Define this to pass in additional parameters.  
+	Coordinate with yylex's YY_DECL in "lex/hackt-lex-options.h"
+ */
+#undef	YYLEX_PARAM
+
+/**
+	yacc hardcodes the call to yylex() without arguments
+	so we have to hack it here.  
+	Coordinate this name with YY_DECL in "lex/hackt-lex-options.h"
+ */
+#if USING_YACC
+#ifdef	yylex
+#undef	yylex
+#endif
+#define	yylex()			__hackt_lex(&yylval)
+#define	hackt_lex()		__hackt_lex(&hackt_lval)
+#endif
+
+#if USING_BISON
+#define	yylex			__hackt_lex
+#define	hackt_lex		__hackt_lex
 #endif
 
 #endif	// __PARSER_HACKT_PARSE_OPTIONS_H__

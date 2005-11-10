@@ -1,7 +1,7 @@
 #! `which awk` -f
 # "bison-output-to-C.awk"
 # by Fang
-#	$Id: bison-output-to-C.awk,v 1.3 2005/05/04 17:54:14 fang Exp $
+#	$Id: bison-output-to-C.awk,v 1.4 2005/11/10 22:51:23 fang Exp $
 
 # takes the y.output file from bison -v and converts it into C strings
 # for use in error reporting
@@ -56,6 +56,14 @@ function transform_rule(str,
 		}
 		}
 		# else ignore other shift and goto lines
+	}
+# some versions of bison (1.35) generate some empty goto states
+# that just trampoline to other states
+# in this case, we emit a bogus string as a placeholder
+# to keep from emitting an empty aggregate initializer.
+	if (!rc) {
+		print "\"(goto ?)\"";
+		rc++;
 	}
 	rule_count[state_count] = rc;
 	print "};";		# end string array

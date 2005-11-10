@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hackt-lex-options.h,v 1.2 2005/11/10 02:13:04 fang Exp $
+	$Id: hackt-lex-options.h,v 1.3 2005/11/10 22:51:22 fang Exp $
 	This file was renamed from the following in prehistory:
 	Id: art++-lex-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
@@ -30,6 +30,16 @@
 #define	YY_MAIN				0
 #endif
 #endif
+
+#ifndef	YY_DECL
+#ifdef	YYLEX_PARAM
+#define	YY_DECL		int	__hackt_lex (YYSTYPE* hackt_lval, YYLEX_PARAM)
+#else
+#define	YY_DECL		int	__hackt_lex (YYSTYPE* hackt_lval)
+#endif
+#endif
+
+// #undef	yylex
 
 #endif	// __LEXER_HACKT_LEX_OPTIONS_H__
 

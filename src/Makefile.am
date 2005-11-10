@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.83 2005/11/10 02:13:00 fang Exp $
+#	$Id: Makefile.am,v 1.84 2005/11/10 22:51:22 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -657,6 +657,13 @@ ALL_TCC_FILES += \
 
 HACKT_YACC_PREFIX = hackt_
 
+# regenerate the parser input file using config.status
+parser/$(HACKT_PARSE_ROOT).yy: parser/$(HACKT_PARSE_ROOT).yy.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+
+# these should be distcleaned
+CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy
+
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
 if HAVE_BISON
@@ -829,6 +836,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/yyerror_bison_hack.awk \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
+	parser/hackt-parse.yy.in \
 	lexer/local.cvsignore \
 	test/local.cvsignore \
 	test/header_test.cc \
@@ -1000,7 +1008,7 @@ clean-cvsignore: clean-cvsignore-subdirs
 clean-cvsignore-subdirs:
 	-$(RM) $(SUBDIR_CVSIGNORE)
 
-DISTCLEANFILES += $(SUBDIR_CVSIGNORE)
+DISTCLEANFILES += $(SUBDIR_CVSIGNORE) $(CONFIG_PARSERS)
 DISTCLEANDIRS += $(DEPDIR)
 
 dist-hook:

@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-67:
+	  Last revision had inadvertently broken support for bison-1.35, 
+		this revision addresses those problems, and also
+		makes the bison-generated parser pure (re-entrant).
+		Re-entrant yacc-parsing will come later...
+	  parser/hackt-parse.yy is now configure-generated from
+		parser/hackt-parser.yy.in because the %pure-parser directive
+		is rejected by traditional yacc.  
+	  We now manually override the yylexx prototype by defining
+		YY_DECL with a YYSTYPE* argument (for &yylval).  
+		The inline utility routines in the lexer (.ll)
+		now take a YYSTYPE& argument.  
+	  Added more preprocessor defines to parser/hackt-parser-options.h
+		and lexer/hackt-lex-options.h.  
+
+
 2005-11-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-66-merged-parser-03-10:

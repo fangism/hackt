@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.2 2005/11/10 02:13:04 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.3 2005/11/10 22:51:22 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -159,56 +159,56 @@ NEWLINE_UPDATE(void) {
 }
 
 static inline void
-KEYWORD_UPDATE(void) {
-	yylval._keyword_position = new keyword_position(yytext, CURRENT);
+KEYWORD_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._keyword_position = new keyword_position(yytext, CURRENT);
 	TOKEN_UPDATE();
 }
 
 static inline void
-LINKAGE_UPDATE(void) {
-	yylval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE();
+LINKAGE_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE();
 }
 
 static inline void
-ELSE_UPDATE(void) {
-	yylval._token_else = new token_else(yytext); TOKEN_UPDATE();
+ELSE_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_else = new token_else(yytext); TOKEN_UPDATE();
 }
 
 static inline void
-BOOL_UPDATE(void) {
-	yylval._token_bool = new token_bool(yytext); TOKEN_UPDATE();
+BOOL_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_bool = new token_bool(yytext); TOKEN_UPDATE();
 }
 
 static inline void
-INT_TYPE_UPDATE(void) {
-	yylval._token_int_type = new token_int_type(yytext); TOKEN_UPDATE();
+INT_TYPE_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_int_type = new token_int_type(yytext); TOKEN_UPDATE();
 }
 
 static inline void
-BOOL_TYPE_UPDATE(void) {
-	yylval._token_bool_type = new token_bool_type(yytext); TOKEN_UPDATE();
+BOOL_TYPE_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_bool_type = new token_bool_type(yytext); TOKEN_UPDATE();
 }
 
 static inline void
-PINT_TYPE_UPDATE(void) {
-	yylval._token_pint_type = new token_pint_type(yytext); TOKEN_UPDATE();
+PINT_TYPE_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_pint_type = new token_pint_type(yytext); TOKEN_UPDATE();
 }
 
 static inline void
-PBOOL_TYPE_UPDATE(void) {
-	yylval._token_pbool_type = new token_pbool_type(yytext); TOKEN_UPDATE();
+PBOOL_TYPE_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._token_pbool_type = new token_pbool_type(yytext); TOKEN_UPDATE();
 }
 
 /***
 static inline void
 MULTICHAR_UPDATE(void) {
-	yylval._token_string = new token_string(yytext); TOKEN_UPDATE();
+	hackt_lval._token_string = new token_string(yytext); TOKEN_UPDATE();
 }
 ***/
 
 static inline void
-NODE_POSITION_UPDATE(void) {
-	yylval._node_position = new node_position(yytext, CURRENT);
+NODE_POSITION_UPDATE(YYSTYPE& hackt_lval) {
+	hackt_lval._node_position = new node_position(yytext, CURRENT);
 	TOKEN_UPDATE();
 }
 
@@ -377,29 +377,29 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 
 <INITIAL>{
 
-{LE}		{ NODE_POSITION_UPDATE(); return LE; }
-{GE}		{ NODE_POSITION_UPDATE(); return GE; }
-{EQUAL}		{ NODE_POSITION_UPDATE(); return EQUAL; }
-{NOTEQUAL}	{ NODE_POSITION_UPDATE(); return NOTEQUAL; }
-{IMPLIES}	{ NODE_POSITION_UPDATE(); return IMPLIES; }
-{RARROW}	{ NODE_POSITION_UPDATE(); return RARROW; }
-{PLUSPLUS}	{ NODE_POSITION_UPDATE(); return PLUSPLUS; }
-{MINUSMINUS}	{ NODE_POSITION_UPDATE(); return MINUSMINUS; }
-{LOGICAL_AND}	{ NODE_POSITION_UPDATE(); return LOGICAL_AND; }
-{LOGICAL_OR}	{ NODE_POSITION_UPDATE(); return LOGICAL_OR; }
-{INSERT}	{ NODE_POSITION_UPDATE(); return INSERT; }
-{EXTRACT}	{ NODE_POSITION_UPDATE(); return EXTRACT; }
-{ASSIGN}	{ NODE_POSITION_UPDATE(); return ASSIGN; }
+{LE}		{ NODE_POSITION_UPDATE(*hackt_lval); return LE; }
+{GE}		{ NODE_POSITION_UPDATE(*hackt_lval); return GE; }
+{EQUAL}		{ NODE_POSITION_UPDATE(*hackt_lval); return EQUAL; }
+{NOTEQUAL}	{ NODE_POSITION_UPDATE(*hackt_lval); return NOTEQUAL; }
+{IMPLIES}	{ NODE_POSITION_UPDATE(*hackt_lval); return IMPLIES; }
+{RARROW}	{ NODE_POSITION_UPDATE(*hackt_lval); return RARROW; }
+{PLUSPLUS}	{ NODE_POSITION_UPDATE(*hackt_lval); return PLUSPLUS; }
+{MINUSMINUS}	{ NODE_POSITION_UPDATE(*hackt_lval); return MINUSMINUS; }
+{LOGICAL_AND}	{ NODE_POSITION_UPDATE(*hackt_lval); return LOGICAL_AND; }
+{LOGICAL_OR}	{ NODE_POSITION_UPDATE(*hackt_lval); return LOGICAL_OR; }
+{INSERT}	{ NODE_POSITION_UPDATE(*hackt_lval); return INSERT; }
+{EXTRACT}	{ NODE_POSITION_UPDATE(*hackt_lval); return EXTRACT; }
+{ASSIGN}	{ NODE_POSITION_UPDATE(*hackt_lval); return ASSIGN; }
 
-{BEGINLOOP}	{ NODE_POSITION_UPDATE(); return BEGINLOOP; }
-{BEGINPROB}	{ NODE_POSITION_UPDATE(); return BEGINPROB; }
-{ENDPROB}	{ NODE_POSITION_UPDATE(); return ENDPROB; }
-{THICKBAR}	{ NODE_POSITION_UPDATE(); return THICKBAR; }
-{SCOPE}		{ NODE_POSITION_UPDATE(); return SCOPE; }
-{RANGE}		{ NODE_POSITION_UPDATE(); return RANGE; }
-{DEFINEOP}	{ NODE_POSITION_UPDATE(); return DEFINEOP; }
+{BEGINLOOP}	{ NODE_POSITION_UPDATE(*hackt_lval); return BEGINLOOP; }
+{BEGINPROB}	{ NODE_POSITION_UPDATE(*hackt_lval); return BEGINPROB; }
+{ENDPROB}	{ NODE_POSITION_UPDATE(*hackt_lval); return ENDPROB; }
+{THICKBAR}	{ NODE_POSITION_UPDATE(*hackt_lval); return THICKBAR; }
+{SCOPE}		{ NODE_POSITION_UPDATE(*hackt_lval); return SCOPE; }
+{RANGE}		{ NODE_POSITION_UPDATE(*hackt_lval); return RANGE; }
+{DEFINEOP}	{ NODE_POSITION_UPDATE(*hackt_lval); return DEFINEOP; }
 
-{POSITIONTOKEN} { NODE_POSITION_UPDATE(); return yytext[0]; }
+{POSITIONTOKEN} { NODE_POSITION_UPDATE(*hackt_lval); return yytext[0]; }
 
 {IMPORT} {
 /***
@@ -408,22 +408,23 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 ***/
 	/* need some string-hacking to extract file name */
 	TOKEN_UPDATE();
-	const int expect_string = yylex();
+	YYSTYPE temp;
+	const int expect_string = __hackt_lex(&temp);
 	if (expect_string != STRING) {
 		THROW_EXIT;
 	}
 	/* excl_ptr will delete token */
 	const excl_ptr<const token_quoted_string>
-		fsp(yylval._token_quoted_string);
+		fsp(temp._token_quoted_string);
 	const string& fstr(*fsp);
 	/* claim the semicolon first before opening file */
-	const int expect_semi = yylex();
+	const int expect_semi = __hackt_lex(&temp);
 	if (expect_semi != ';') {
 		THROW_EXIT;
 	}
 	/* excl_ptr will delete token */
 	const excl_ptr<const node_position>
-		ssp(yylval._node_position);
+		ssp(temp._node_position);
 	// cerr << fstr << endl;
 	// cerr << "current FILE* (before) = " << yyin << endl;
 	const file_status::status err =
@@ -470,43 +471,43 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		abort();
 	}       // end switch
 
-	yylval._keyword_position = NULL;
+	hackt_lval->_keyword_position = NULL;
 	return IMPORT;
 }
 
 %{
 /* {IMPORT}	{ KEYWORD_UPDATE(); return IMPORT; } */
 %}
-{NAMESPACE}	{ KEYWORD_UPDATE(); return NAMESPACE; }
-{OPEN}		{ KEYWORD_UPDATE(); return OPEN; }
-{AS}		{ KEYWORD_UPDATE(); return AS; }
-{TEMPLATE}	{ KEYWORD_UPDATE(); return TEMPLATE; }
-{DEFINE}	{ KEYWORD_UPDATE(); return DEFINE; }
-{DEFCHAN}	{ KEYWORD_UPDATE(); return DEFCHAN; }
-{DEFTYPE}	{ KEYWORD_UPDATE(); return DEFTYPE; }
-{DEFPROC}	{ KEYWORD_UPDATE(); return DEFPROC; }
-{TYPEDEF}	{ KEYWORD_UPDATE(); return TYPEDEF; }
-{CHP}		{ KEYWORD_UPDATE(); return CHP_LANG; }
-{HSE}		{ KEYWORD_UPDATE(); return HSE_LANG; }
-{PRS}		{ KEYWORD_UPDATE(); return PRS_LANG; }
-{SKIP}		{ KEYWORD_UPDATE(); return SKIP; }
-{ELSE}		{ ELSE_UPDATE(); return ELSE; }
-{LOG}		{ KEYWORD_UPDATE(); return LOG; }
-{SEND}		{ KEYWORD_UPDATE(); return SEND; }
-{RECV}		{ KEYWORD_UPDATE(); return RECV; }
-{SET}		{ KEYWORD_UPDATE(); return SET; }
-{GET}		{ KEYWORD_UPDATE(); return GET; }
-{ENUM}		{ KEYWORD_UPDATE(); return ENUM; }
-{CHANNEL}	{ KEYWORD_UPDATE(); return CHANNEL; }
-{INT_TYPE}	{ INT_TYPE_UPDATE(); return INT_TYPE; }
-{BOOL_TYPE}	{ BOOL_TYPE_UPDATE(); return BOOL_TYPE; }
-{PINT_TYPE}	{ PINT_TYPE_UPDATE(); return PINT_TYPE; }
-{PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(); return PBOOL_TYPE; }
-{TRUE}		{ BOOL_UPDATE(); return BOOL_TRUE; }
-{FALSE}		{ BOOL_UPDATE(); return BOOL_FALSE; }
-{EXTERN}	{ LINKAGE_UPDATE(); return EXTERN; }
-{STATIC}	{ LINKAGE_UPDATE(); return STATIC; }
-{EXPORT}	{ LINKAGE_UPDATE(); return EXPORT; }
+{NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval); return NAMESPACE; }
+{OPEN}		{ KEYWORD_UPDATE(*hackt_lval); return OPEN; }
+{AS}		{ KEYWORD_UPDATE(*hackt_lval); return AS; }
+{TEMPLATE}	{ KEYWORD_UPDATE(*hackt_lval); return TEMPLATE; }
+{DEFINE}	{ KEYWORD_UPDATE(*hackt_lval); return DEFINE; }
+{DEFCHAN}	{ KEYWORD_UPDATE(*hackt_lval); return DEFCHAN; }
+{DEFTYPE}	{ KEYWORD_UPDATE(*hackt_lval); return DEFTYPE; }
+{DEFPROC}	{ KEYWORD_UPDATE(*hackt_lval); return DEFPROC; }
+{TYPEDEF}	{ KEYWORD_UPDATE(*hackt_lval); return TYPEDEF; }
+{CHP}		{ KEYWORD_UPDATE(*hackt_lval); return CHP_LANG; }
+{HSE}		{ KEYWORD_UPDATE(*hackt_lval); return HSE_LANG; }
+{PRS}		{ KEYWORD_UPDATE(*hackt_lval); return PRS_LANG; }
+{SKIP}		{ KEYWORD_UPDATE(*hackt_lval); return SKIP; }
+{ELSE}		{ ELSE_UPDATE(*hackt_lval); return ELSE; }
+{LOG}		{ KEYWORD_UPDATE(*hackt_lval); return LOG; }
+{SEND}		{ KEYWORD_UPDATE(*hackt_lval); return SEND; }
+{RECV}		{ KEYWORD_UPDATE(*hackt_lval); return RECV; }
+{SET}		{ KEYWORD_UPDATE(*hackt_lval); return SET; }
+{GET}		{ KEYWORD_UPDATE(*hackt_lval); return GET; }
+{ENUM}		{ KEYWORD_UPDATE(*hackt_lval); return ENUM; }
+{CHANNEL}	{ KEYWORD_UPDATE(*hackt_lval); return CHANNEL; }
+{INT_TYPE}	{ INT_TYPE_UPDATE(*hackt_lval); return INT_TYPE; }
+{BOOL_TYPE}	{ BOOL_TYPE_UPDATE(*hackt_lval); return BOOL_TYPE; }
+{PINT_TYPE}	{ PINT_TYPE_UPDATE(*hackt_lval); return PINT_TYPE; }
+{PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(*hackt_lval); return PBOOL_TYPE; }
+{TRUE}		{ BOOL_UPDATE(*hackt_lval); return BOOL_TRUE; }
+{FALSE}		{ BOOL_UPDATE(*hackt_lval); return BOOL_FALSE; }
+{EXTERN}	{ LINKAGE_UPDATE(*hackt_lval); return EXTERN; }
+{STATIC}	{ LINKAGE_UPDATE(*hackt_lval); return STATIC; }
+{EXPORT}	{ LINKAGE_UPDATE(*hackt_lval); return EXPORT; }
 
 {WHITESPACE}	TOKEN_UPDATE();
 {NEWLINE}	NEWLINE_UPDATE();
@@ -527,7 +528,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	if (token_feedback) {
 		cerr << "float = " << yytext << " " LINE_COL(CURRENT) << endl;
 	}
-	yylval._token_float = new token_float(atof(yytext));
+	hackt_lval->_token_float = new token_float(atof(yytext));
 	TOKEN_UPDATE();
 	return FLOAT;
 }
@@ -536,7 +537,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	if (token_feedback) {
 		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
 	}
-	yylval._token_int = new token_int(atoi(yytext));
+	hackt_lval->_token_int = new token_int(atoi(yytext));
 	TOKEN_UPDATE();
 	return INT;
 }
@@ -546,7 +547,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		cerr << "identifier = \"" << yytext << "\" " << 
 			LINE_COL(CURRENT) << endl;
 	}
-	yylval._token_identifier = new token_identifier(yytext);
+	hackt_lval->_token_identifier = new token_identifier(yytext);
 	TOKEN_UPDATE();
 	return ID;
 }
@@ -586,7 +587,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	cerr << "bad identifier: \"" << yytext << "\" " <<
 		LINE_COL(CURRENT) << endl;
 	TOKEN_UPDATE();
-	yylval._token_identifier = NULL;
+	hackt_lval->_token_identifier = NULL;
 	THROW_EXIT;
 }
 
@@ -690,7 +691,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 	STRING_UPDATE();
 	BEGIN(INITIAL);
-	yylval._token_quoted_string = new token_quoted_string(string_buf);
+	hackt_lval->_token_quoted_string = new token_quoted_string(string_buf);
 	return STRING;
 }
 

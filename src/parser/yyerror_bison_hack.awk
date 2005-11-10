@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "yyerror_bison_hack.awk"
-#	$Id: yyerror_bison_hack.awk,v 1.2 2004/11/02 07:52:08 fang Exp $
+#	$Id: yyerror_bison_hack.awk,v 1.3 2005/11/10 22:51:24 fang Exp $
 
 # Bison is a piece of shit.  
 # It breaks the old yacc interface where symbolic and semantic stacks
@@ -26,8 +26,8 @@ BEGIN {
 	# const - no attempt to modify, just read
 	new_formals = ", const short* yyss, const short* yyssp, " \
 		"const YYSTYPE* yyvs, const YYSTYPE* yyvsp, " \
-		"const YYSTYPE yylval)";
-	new_actuals = ", yyss, yyssp, yyvs, yyvsp, yylval)";
+		"const YYSTYPE yylval, const int yychar)";
+	new_actuals = ", yyss, yyssp, yyvs, yyvsp, yylval, yychar)";
 }
 
 /yyerror[ ]?\(.*\)/ {

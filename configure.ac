@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.15 2005/11/10 02:12:55 fang Exp $
+#	$Id: configure.ac,v 1.16 2005/11/10 22:51:19 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20051109, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051110, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -398,6 +398,16 @@ AC_CONFIG_FILES([src/parser/yacc_version.h:config/macro-value.h.in],
 	fi
 	sed 's/MACRO/YACC_VERSION/g' $srcdir/config/macro-value.h.in | \
 		sed "s|VALUE|\"$version\"|g" > src/parser/yacc_version.h
+	])
+
+AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
+	[if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		sed '/%pure-parser/d' $srcdir/src/parser/hackt-parse.yy.in > \
+			src/parser/hackt-parse.yy
+	else
+		cp $srcdir/src/parser/hackt-parse.yy.in src/parser/hackt-parse.yy
+	fi
 	])
 
 AC_OUTPUT

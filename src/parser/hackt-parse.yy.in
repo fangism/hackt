@@ -1,5 +1,5 @@
 /**
-	\file "parser/hackt-parse.yy"
+	\file "parser/hackt-parse.yy.in"
 	Yacc-generated parser source for the ART++ language.  
 
 	note: this is not the same language as that found in lib/art.cy
@@ -7,10 +7,11 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp $
-	This file was formerly known as
+	$Id: hackt-parse.yy.in,v 1.1 2005/11/10 22:51:24 fang Exp $
+	This file was formerly known as:
+	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
-	in a previous life.  
+	in previous lives.  
  */
 
 %{
@@ -20,6 +21,7 @@
 #include "AST/art_parser.h"		// should be first
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
+#include "lexer/hackt-lex-options.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
 
@@ -349,7 +351,8 @@ extern const char* const yyrule[];
 /* Had to move these declarations AFTER YYSTYPE (above union) was defined
  * for a particular "yyerror_bison_hack.awk" to work.  
  */
-extern	int yylex(void);		// ancient compiler rejects
+// extern	int yylex(void);		// ancient compiler rejects
+extern	YY_DECL;			// something like the above
 
 namespace ART {
 namespace lexer {
@@ -374,7 +377,7 @@ static
 void
 yyfreestacks(const short* yyss, const short* yyssp, 
 		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
-		const YYSTYPE yylval);
+		const YYSTYPE yylval, const int yychar);
 %}
 
 /*
@@ -641,6 +644,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr_list>	complex_aggregate_reference_list
 
 %start	module
+%pure-parser
 %%
 /******************************************************************************
 //	Grammar -- re-written to be LALR(1)
@@ -2246,7 +2250,7 @@ static
 void
 yyfreestacks(const short* _yyss_, const short* _yyssp_, 
 		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
-		const YYSTYPE _yylval_) {
+		const YYSTYPE _yylval_, const int _yychar_) {
 	STACKTRACE_VERBOSE;
 	const short* s;
 	const YYSTYPE* v;
@@ -2261,7 +2265,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 	if (!at_eof()) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
-		yy_union_lookup_delete(_yylval_, yychar);
+		yy_union_lookup_delete(_yylval_, _yychar_);
 	}
 }
 
@@ -2400,7 +2404,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		}
 	}
 
-	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval);
+	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval, yychar);
 
 #endif	// NO_FAKE_PREFIX
 

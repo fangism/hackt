@@ -1,8 +1,17 @@
 "ChangeLog"
 
+2005-11-10	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-67:
+	  Fixed support for bison-1.35 and made bison generated parser pure.
+	  configure.ac: now responsible for generating
+		src/parser/hackt-parse.yy from src/parser/hackt-parse.yy.in
+		at configure time.  
+
+
 2005-11-09	David Fang	<fangism@users.sourceforge.net>
 
-	* ARTXX-00-01-04-main-00-65-merged-parser-03-10:
+	* ARTXX-00-01-04-main-00-66-merged-parser-03-10:
 	  Merged -parser-03 branch which includes tons of configuration
 		and Makefile improvements in configure.ac and Makefile.am
 		along with some useful helper scripts.  
