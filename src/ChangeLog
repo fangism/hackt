@@ -3,6 +3,31 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-66-parser-04-04:
+	  Added more crazy awk scripts and hackery to make the flex-generated
+		scanner re-entrant, which is a lot harder than purifying
+		the yacc-parser!!!
+	  Introduced "lexer/flex_lexer_state.h" containing
+		the struct flex::lexer_state which contains all the stateful
+		information used by the flex-generated scanner (non-C++).  
+	  lexer/purify_flex.awk: strips out all the global state 
+		variable declarations in the lexer, and replaces
+		all of the references to these globals with 
+		state-object member references.  Holy awk, Batman!
+	  parser/purify_flex.awk: plants a declaration of the lexer-state
+		local to yyparse().  
+	  The parser is now responsible for holding the lexer state
+		flex::lexer _lexer_state, and passing it to yylex(...).  
+	  So far, this revision only checked flex against yacc, 
+		next revision will check/hack bisons as well.  
+	  Currently, file importing is disabled, so all 11 import tests
+		in the test/lexer directory fail for this revision.
+		We will fix and finish the file importing mechanism
+		in the next revision(s).  
+
+
 2005-11-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-66-parser-04-03:

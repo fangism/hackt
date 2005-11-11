@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.4.2.1 2005/11/11 02:43:28 fang Exp $
+	$Id: main_funcs.cc,v 1.4.2.2 2005/11/11 08:20:46 fang Exp $
  */
 
 #include <iostream>
@@ -25,7 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.h"
 
 // forward declarations needed for YSTYPE
-#include "parser/hackt-parse-prefix.h"	// for YYSTYPE
+#include "parser/hackt-parse-real.h"	// for YYSTYPE
 using util::memory::excl_ptr;
 
 #include "lexer/file_manager.h"

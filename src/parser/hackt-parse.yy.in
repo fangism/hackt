@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.1.2.3 2005/11/11 02:43:28 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.1.2.4 2005/11/11 08:20:46 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -40,6 +40,8 @@ using namespace ART::parser;
 #define	YYBISON		0
 #endif
 
+#include "lexer/flex_lexer_state.h"
+
 #if YYBISON
 #if defined(USING_BISON) && !USING_BISON
 #error	Inconsistency in configuration: YYBISON && !USING_BISON
@@ -56,6 +58,13 @@ extern FILE* yyin;
 // input stream manager, based in "lexer/hackt-lex.ll"
 extern file_manager
 hackt_parse_file_manager;
+
+/**
+	This is never used, libbogus.  
+ */
+#ifdef	LIBBOGUS
+static flex::lexer_state	_lexer_state;
+#endif
 
 #define	WRAP_LIST(left, list, right)	list->wrap(left, right)
 
@@ -2330,7 +2339,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 /*	Define the following (-D) to disable sophisticated error reporting, 
  *	useful for bogus compilations.
  */
-#if	!defined(NO_FANCY_YYERROR)
+#if	!defined(LIBBOGUS)
 	// we've kept track of the position of every token
 	cerr << "parser stacks:" << endl << "state\tvalue" << endl;
 

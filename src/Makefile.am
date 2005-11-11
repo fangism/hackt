@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.83.2.3 2005/11/11 04:39:55 fang Exp $
+#	$Id: Makefile.am,v 1.83.2.4 2005/11/11 08:20:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -548,7 +548,7 @@ UTIL_CC_FILES = \
 	util/memory/ref_count_pool.cc
 
 PARSER_H_FILES = \
-	parser/$(HACKT_PARSE_ROOT)-prefix.h \
+	parser/$(HACKT_PARSE_ROOT)-real.h \
 	parser/hackt-union.h \
 	parser/$(HACKT_PARSE_ROOT).output.h \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
@@ -559,9 +559,9 @@ PARSER_H_FILES = \
 	lexer/hac_lex.h
 
 PARSER_CC_FILES = \
-	parser/hackt-parse-prefix.cc \
+	parser/hackt-parse-real.cc \
 	parser/hackt-union.cc \
-	lexer/hackt-lex-prefix.cc \
+	lexer/hackt-lex-real.cc \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
@@ -597,8 +597,8 @@ COMMON_FILES = \
 	common/devel_switches.h
 
 # automake doesn't like macro in generating .Plo, a bug methinks
-#	parser/$(HACKT_PARSE_ROOT)-prefix.cc
-#	lexer/$(HACKT_LEX_ROOT)-prefix.cc
+#	parser/$(HACKT_PARSE_ROOT)-real.cc
+#	lexer/$(HACKT_LEX_ROOT)-real.cc
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libhackt_la_SOURCES = \
@@ -612,7 +612,7 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
-main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-prefix.h
+main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-real.h
 main/version.cc: cvstag.h builddate.h buildhost.h cxx_version.h \
 	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
 lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
@@ -667,21 +667,23 @@ CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
 if HAVE_BISON
-parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
+parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).output.h
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(GREP) -v "^YYSTYPE yylval;" | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 else
-parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
+parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).output.h
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED) 's/REFERENCE/\&/g' | \
 	$(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval)/g' | \
@@ -689,13 +691,13 @@ parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
 
-parser/$(HACKT_PARSE_ROOT)-prefix.h: parser/$(HACKT_PARSE_ROOT).h
+parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h
 	$(ECHO) "#include \"parser/hackt-union.h\"" > $@
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) $? >> $@
 
-lexer/$(HACKT_LEX_ROOT)-prefix.cc: lexer/$(HACKT_LEX_ROOT).cc \
-		parser/$(HACKT_PARSE_ROOT)-prefix.h
+lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
+		parser/$(HACKT_PARSE_ROOT)-real.h
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) \
 			lexer/$(HACKT_LEX_ROOT).cc > $@
@@ -737,13 +739,13 @@ GET_START_TOKEN_ENUM = \
 
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
-		-v include="AST/art_parser.h parser/$(HACKT_PARSE_ROOT)-prefix.h lexer/hac_lex.h" \
+		-v include="AST/art_parser.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
 		-v namespace="ART::parser ART::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
 parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
-		parser/$(HACKT_PARSE_ROOT)-prefix.h
+		parser/$(HACKT_PARSE_ROOT)-real.h
 	@if ! [ -s parser/hackt.types ] ; then \
 		$(ECHO) "parser/hackt.types is empty!" ; \
 		exit 1 ; \
@@ -795,8 +797,8 @@ SAVETEMP = $(CXXCOMPILE) -v -save-temps
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
 # *COUGH* *HACK*:
-# NO_FANCY_YYERROR tells lexer/hackt-lex.cc to use un-transfomed symbol names
-libbogus_la_CPPFLAGS = -DNO_FANCY_YYERROR $(AM_CPPFLAGS)
+# LIBBOGUS tells lexer/hackt-lex.cc to use un-transfomed symbol names
+libbogus_la_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS)
 libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
@@ -841,11 +843,14 @@ EXTRA_DIST += local.cvsignore \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
 	parser/yygrowstack_yacc_hack.awk \
+	parser/purify_flex.awk \
 	parser/purify_yacc.awk \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
 	lexer/local.cvsignore \
+	lexer/flex_lexer_state.h \
+	lexer/purify_flex.awk \
 	test/local.cvsignore \
 	test/header_test.cc \
 	test/getopt_test.sh \
@@ -905,15 +910,15 @@ art_persistent_table.sh: hackt
 CLEANPARSER = \
 	parser/$(HACKT_PARSE_ROOT).cc \
 	parser/$(HACKT_PARSE_ROOT).h \
-	parser/$(HACKT_PARSE_ROOT)-prefix.cc \
-	parser/$(HACKT_PARSE_ROOT)-prefix.h \
+	parser/$(HACKT_PARSE_ROOT)-real.cc \
+	parser/$(HACKT_PARSE_ROOT)-real.h \
 	parser/$(HACKT_PARSE_ROOT).output \
 	parser/$(HACKT_PARSE_ROOT).output.h \
 	parser/hackt-union.cc \
 	parser/hackt.types
 
 CLEANLEXER = \
-	lexer/$(HACKT_LEX_ROOT)-prefix.cc \
+	lexer/$(HACKT_LEX_ROOT)-real.cc \
 	lexer/$(HACKT_LEX_ROOT).cc
 
 

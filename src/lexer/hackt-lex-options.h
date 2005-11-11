@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hackt-lex-options.h,v 1.2.2.2 2005/11/11 02:43:27 fang Exp $
+	$Id: hackt-lex-options.h,v 1.2.2.3 2005/11/11 08:20:45 fang Exp $
 	This file was renamed from the following in prehistory:
 	Id: art++-lex-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
@@ -33,6 +33,19 @@
 #endif
 #endif
 
+/**
+	Define this to pass in additional parameters.  
+	Coordinate with yylex's YY_DECL in "lex/hackt-lex-options.h"
+
+	We now provide the lexer's state to the lex routine, 
+	in pursuit of more pure/reentrant scanning.  
+	flex::lexer_state is defined in "lexer/flex_lexer_state.h".
+	The name "foo" must match that used in the
+	"lexer/purify_flex.awk" script and the name used in
+	the "lexer/hackt-lex.ll" lexer specification.  
+ */
+#define	YYLEX_PARAM	flex::lexer_state& foo
+
 #ifndef	YY_DECL
 #ifdef	YYLEX_PARAM
 #define	YY_DECL		int	__hackt_lex (YYSTYPE* hackt_lval, YYLEX_PARAM)
@@ -40,14 +53,6 @@
 #define	YY_DECL		int	__hackt_lex (YYSTYPE* hackt_lval)
 #endif
 #endif
-
-// #undef	yylex
-
-/**
-	Define this to pass in additional parameters.  
-	Coordinate with yylex's YY_DECL in "lex/hackt-lex-options.h"
- */
-#undef	YYLEX_PARAM
 
 /**
 	yacc hardcodes the call to yylex() without arguments
@@ -58,8 +63,8 @@
 #ifdef	yylex
 #undef	yylex
 #endif
-#define	yylex()			__hackt_lex(&yylval)
-#define	hackt_lex()		__hackt_lex(&hackt_lval)
+#define	yylex()			__hackt_lex(&yylval, _lexer_state)
+#define	hackt_lex()		__hackt_lex(&hackt_lval, _lexer_state)
 #endif
 
 #if USING_BISON

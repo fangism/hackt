@@ -1,10 +1,10 @@
 #!/usr/bin/awk -f
 # "purify_yacc.awk"
-#	$Id: purify_yacc.awk,v 1.1.2.1 2005/11/11 04:39:58 fang Exp $
+#	$Id: purify_yacc.awk,v 1.1.2.2 2005/11/11 08:20:47 fang Exp $
 # helper script to transform yacc's generated parser into a pure-parser.
 # one that is re-entrant.  
 
-# We accomplish this by omving global variables to local variables.  
+# We accomplish this by moving global variables to local variables.  
 # the following variables are needed.  
 # int yychar;
 # short *yyssp;
