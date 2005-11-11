@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.83.2.1 2005/11/10 23:11:51 fang Exp $
+#	$Id: Makefile.am,v 1.83.2.2 2005/11/11 02:43:26 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -672,6 +672,7 @@ parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(GREP) -v "^YYSTYPE yylval;" | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 else
@@ -680,6 +681,7 @@ parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval)/g' | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
@@ -871,7 +873,7 @@ TESTS = art_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS)
 DISTCLEANFILES += art_persistent_table.sh $(VERSIONHEADERS)
-AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES)
+AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(CONFIG_PARSERS)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@

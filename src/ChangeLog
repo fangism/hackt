@@ -5,6 +5,17 @@
 
 2005-11-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-66-parser-04-02:
+	  Modified the yyparse prototypes to take the YYSTYPE& yylval
+		as an argument passed by the caller.  
+		Verified against yacc, bison-1.35, bison-2.0.  
+	  Makefile.am: slightly more elaborate procedure to generate
+		.cc parsers.  
+	  Bison-generated parser is now pure and re-entrant, while
+		yacc's still uses global variables...
+	  Next revision will attempt to hack yacc further.  
+
+
 	* ARTXX-00-01-04-main-00-66-parser-04-01-merged-main-00-67:
 	  Started this branch before some fixes on the main line.  
 	  This first revision merges the bison-1.35 fixes from -00-67

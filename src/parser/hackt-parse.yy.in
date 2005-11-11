@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.1.2.2 2005/11/10 23:11:53 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.1.2.3 2005/11/11 02:43:28 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -41,17 +41,14 @@ using namespace ART::parser;
 #endif
 
 #if YYBISON
-#include "util/memory/excl_ptr.h"
-/**
-	Work-around for bison.
-	Bison doesn't give public access to yyval, so we are forced to
-	pass it through a global variable.  
-	Makes one long for yacc, doesn't it?
-	Defined as an excl_ptr, which means exclusive but transferrable
-	ownership.  
- */
-util::memory::excl_ptr<root_body> AST_root;
-#endif	// YYBISON
+#if defined(USING_BISON) && !USING_BISON
+#error	Inconsistency in configuration: YYBISON && !USING_BISON
+#endif
+#else
+#if defined(USING_YACC) && !USING_YACC
+#error	Inconsistency in configuration: !YYBISON && !USING_YACC
+#endif
+#endif
 
 // may be changed when nesed files are opened
 extern FILE* yyin;
@@ -644,7 +641,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr_list>	complex_aggregate_reference_list
 
 %start	module
-%pure-parser
+%pure_parser
 %%
 /******************************************************************************
 //	Grammar -- re-written to be LALR(1)
@@ -655,17 +652,14 @@ yyfreestacks(const short* yyss, const short* yyssp,
 module
 	: imports_optional top_root
 		{
-#if YYBISON
-#if defined(USING_BISON) && !USING_BISON
-#error	Inconsistency in configuration: YYBISON && !USING_BISON
-#endif
-			AST_root = util::memory::excl_ptr<root_body>($2);
-#else	// YACC
-#if defined(USING_YACC) && !USING_YACC
-#error	Inconsistency in configuration: !YYBISON && !USING_YACC
-#endif
+			// AST_root = util::memory::excl_ptr<root_body>($2);
+			// corresponds to yyval[0]
 			$$ = $2;
-#endif
+			// In the name of pure-parsing, 
+			// we've hacked yyparse's prototype to take a
+			// YYSTYPE& yylval as an argument, which must be
+			// passed un by the caller.  
+			yylval._root_body = $2;
 		}
 	;
 

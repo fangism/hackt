@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.4 2005/11/10 02:13:06 fang Exp $
+	$Id: main_funcs.cc,v 1.4.2.1 2005/11/11 02:43:28 fang Exp $
  */
 
 #include <iostream>
@@ -28,21 +28,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "parser/hackt-parse-prefix.h"	// for YYSTYPE
 using util::memory::excl_ptr;
 
-#if	USING_YACC
-extern	YYSTYPE hackt_val;		// root token (was yyval)
-#elif	USING_BISON
-extern	excl_ptr<ART::parser::root_body>	AST_root;
-#else
-#error	"USING_YACC or USING_BISON?  One must be set by configuration."
-#endif
-
 #include "lexer/file_manager.h"
 #include "lexer/yyin_manager.h"
 /**
 	This is the file pointer used by hackt_parse().  
  */
 extern	FILE*	hackt_in;
-extern	int	hackt_parse(void);
+/**
+	This prototype for yyparse is either set by
+	YYPARSE_PARAM for bison, or hacked by scripts for yacc.  
+ */
+extern	int	hackt_parse(void*, YYSTYPE&);
 extern	ART::lexer::file_manager	hackt_parse_file_manager;
 
 #include "util/stacktrace.h"
@@ -135,13 +131,15 @@ excl_ptr<root_body>
 parse_to_AST(const char* c) {
 	typedef	excl_ptr<root_body>		return_type;
 	STACKTRACE_VERBOSE;
+	YYSTYPE hackt_val;		// root token (was yyval)
+	hackt_val._root_body = NULL;
 	// error status
 	bool need_to_clean_up_file_manager = false;
 {
 	// hackt_in is the global yyin FILE*.  
 	const yyin_manager ym(hackt_in, hackt_parse_file_manager, c, false);
 	try {
-		hackt_parse();
+		hackt_parse(NULL, hackt_val);
 	} catch (...) {
 		// then it's possible that the file_manager is not balanced.  
 		need_to_clean_up_file_manager = true;
@@ -151,11 +149,7 @@ parse_to_AST(const char* c) {
 		hackt_parse_file_manager.reset();
 		return return_type(NULL);
 	}
-#if USING_YACC
 	return return_type(hackt_val._root_body);
-#else
-	return AST_root;
-#endif
 }
 
 //=============================================================================

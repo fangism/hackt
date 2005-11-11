@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.15.2.1 2005/11/10 23:11:48 fang Exp $
+#	$Id: configure.ac,v 1.15.2.2 2005/11/11 02:43:23 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -55,6 +55,7 @@ AC_CHECK_PROG([CVS], cvs, cvs)
 AM_CONDITIONAL(HAVE_CVS, test -n "$CVS")
 AC_CHECK_PROG([DATE], date, date)
 AC_CHECK_PROG([DIFF], diff, diff)
+AC_CHECK_PROG([PATCH], patch, patch)
 AC_CHECK_PROG([FIND], find, find)
 AC_CHECK_PROG([GREP], grep, grep)
 AC_CHECK_PROG([ECHO], echo, echo)
@@ -403,7 +404,7 @@ AC_CONFIG_FILES([src/parser/yacc_version.h:config/macro-value.h.in],
 AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
 	[if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
 	then
-		sed '/%pure-parser/d' $srcdir/src/parser/hackt-parse.yy.in > \
+		sed '/%pure.parser/d' $srcdir/src/parser/hackt-parse.yy.in > \
 			src/parser/hackt-parse.yy
 	else
 		cp $srcdir/src/parser/hackt-parse.yy.in src/parser/hackt-parse.yy
