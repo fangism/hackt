@@ -5,6 +5,17 @@
 
 2005-11-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-66-parser-04-03:
+	  New friends added to make yacc-generated parser re-entrant:
+		parser/purify_yacc.awk -- moves globals to local
+		parser/yygrowstack_yacc_hack.awk -- rewrites the 
+			declaration and calls to yygrowstack with
+			additional parameters instead of referencing globals.  
+	  Next: Having lexer call parser for importing.  
+		Anticipate some changes in error output, file stacks
+		will be upside-down.  
+
+
 	* ARTXX-00-01-04-main-00-66-parser-04-02:
 	  Modified the yyparse prototypes to take the YYSTYPE& yylval
 		as an argument passed by the caller.  

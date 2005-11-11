@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.83.2.2 2005/11/11 02:43:26 fang Exp $
+#	$Id: Makefile.am,v 1.83.2.3 2005/11/11 04:39:55 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -681,6 +681,9 @@ parser/$(HACKT_PARSE_ROOT)-prefix.cc: parser/$(HACKT_PARSE_ROOT).cc \
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
+	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
+	$(SED) 's/REFERENCE/\&/g' | \
 	$(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval)/g' | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
@@ -837,6 +840,8 @@ EXTRA_DIST += local.cvsignore \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
+	parser/yygrowstack_yacc_hack.awk \
+	parser/purify_yacc.awk \
 	parser/try_lex_catch.awk \
 	parser/NOTES \
 	parser/hackt-parse.yy.in \
