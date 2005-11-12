@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2005/11/10 02:13:14 fang Exp $
+#	$Id: Makefile.am,v 1.5 2005/11/12 08:45:37 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 

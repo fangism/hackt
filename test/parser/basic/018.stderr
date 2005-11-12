@@ -1,0 +1,38 @@
+At: "-stdin-":12:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(imported-root-list) [6:1]
+#STATE#	list<(root_item)>: (instance-decl) ... [10:1..6]
+#STATE#	(imported-root) [7:1]
+in state #STATE#, possible rules are:
+	top_root : body .  (#RULE#)
+	body : body . body_item  (#RULE#)
+	optional_template_specification : .  (#RULE#)
+acceptable tokens are: 
+	end-of-file (reduce)
+	'(' (shift)
+	'[' (shift)
+	'{' (shift)
+	'}' (reduce)
+	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
+	SCOPE (shift)
+	NAMESPACE (shift)
+	OPEN (shift)
+	DEFINE (reduce)
+	DEFPROC (reduce)
+	DEFCHAN (reduce)
+	DEFTYPE (reduce)
+	TYPEDEF (reduce)
+	CHANNEL (shift)
+	TEMPLATE (shift)
+	ENUM (shift)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)
+	INT_TYPE (shift)
+	BOOL_TYPE (shift)
+	PINT_TYPE (shift)
+	PBOOL_TYPE (shift)

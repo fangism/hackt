@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.5 2005/10/30 22:00:19 fang Exp $
+	$Id: parse_context.h,v 1.6 2005/11/12 08:45:33 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -114,6 +114,7 @@ class token_paramtype;
 class context {
 public:
 	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
+	typedef list<string>			file_name_stack_type;
 private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
@@ -176,6 +177,10 @@ private:
 						loop_var_stack_type;
 	loop_var_stack_type			loop_var_stack;
 
+	/**
+		File name stack for diagnostics.  
+	 */
+	file_name_stack_type			file_name_stack;
 public:
 	/// The number of semantic errors to accumulate before bailing out.  
 	static const long	type_error_limit = 3;
@@ -450,6 +455,15 @@ public:
 		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
+
+	struct file_stack_frame {
+		context&			_context;
+		file_stack_frame(context&, const string&);
+		~file_stack_frame();
+	} __ATTRIBUTE_UNUSED__;
+
+	ostream&
+	dump_file_stack(ostream&) const;
 
 	string
 	auto_indent(void) const;

@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-11-12	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-68-merged-parser-04-06:
+	  Merged -parser-04 branch to make import mechanism work.
+		Featuring completely reentrant lexers and parsers.  
+		Validated against bison-1.35 -2.0, yacc, flex-2.5.4, -2.5.31.
+
+
 2005-11-10	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-67:

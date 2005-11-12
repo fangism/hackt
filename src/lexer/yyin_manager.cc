@@ -1,6 +1,6 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.2 2005/11/10 02:13:05 fang Exp $
+	$Id: yyin_manager.cc,v 1.3 2005/11/12 08:45:34 fang Exp $
  */
 
 #include <iostream>
@@ -22,9 +22,11 @@ namespace lexer {
 		Generally the top-most level need not be searched
 		in the include paths.  
  */
-yyin_manager::yyin_manager(FILE*& _y, file_manager& fm, const char* fn, 
-		const bool b) : _yyin(_y), _file_manager(fm) {
-	_status = enter_file(_y, fm, fn, NULL, b);
+yyin_manager::yyin_manager(file_manager& fm, const char* fn, 
+		const bool b) : _yyin(NULL), _file_manager(fm) {
+	_status = enter_file(_yyin, fm, fn, NULL, b);
+	if (_status == file_status::NEW_FILE)
+		_yyin = fm.current_FILE()->file;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

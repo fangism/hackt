@@ -2,3 +2,5 @@ At: "-stdin-":3:
 At: "import-010.in":3:
 Detected cyclic file dependency: import-010.in
 Caught exception from lexer, aborting parsing.
+From: "import-010.in"
+Caught exception from lexer, aborting parsing.

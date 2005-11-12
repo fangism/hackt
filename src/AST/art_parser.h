@@ -3,7 +3,7 @@
 	Includes all parser-related header files.  
 	Using this without thinking may slow down compilations
 	unnecessarily.  
-	$Id: art_parser.h,v 1.7 2005/05/10 04:51:06 fang Exp $
+	$Id: art_parser.h,v 1.8 2005/11/12 08:45:33 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_H__
@@ -12,6 +12,7 @@
 #include "AST/art_parser_base.h"	// minimal parser interface base classes
 
 #include "AST/art_parser_node_position.h"
+#include "AST/import_root.h"
 #include "AST/art_parser_expr.h"
 #include "AST/art_parser_range_list.h"
 #include "AST/art_parser_token.h"

@@ -3,6 +3,116 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-68-merged-parser-04-06:
+	  Merged -parser-04 branch.
+		Featuring re-entrant lexer and parser, and working imports.  
+		Supports yacc, bison-1.35 -2.0, flex 2.5.4 -2.5.31.
+	  Too tired to summarize the details, read below.
+
+
+2005-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-66-parser-04-06:
+	  Finally wrote the recursive lex/parse file importing in
+		lexer/hackt-lex.ll, which calls hackt_parse.  
+		Has been tested re-entry safe!
+		No memory is leaked to tokens as each level of parsing
+		unwinds during an error!
+	  Added import_root AST object to hold the parse trees of
+		nested visited files, which will be traversed
+		at check_build time.  
+		During error, file name will be printed during stack
+		unwinding.  The stack trace of the inner most file
+		will follow that of the first inclusion from importing.  
+	  Added file_name_stack to parse_context, 
+		later, track file names with this in objects.  
+	  lexer/purify_flex.awk: factored out common substitutions
+		into a few function calls for prototypes and calls, 
+		potentially re-usable for future source stream-hacking.
+	  Checked against yacc, bison-2.0.
+	  Checked against flex-2.5.31! which was rather painful...
+		Had to add another handful of entries to 
+		lexer/purify_flex.awk and members to struct flex::lexer_state.
+	  Branch is near end.  
+
+
+2005-11-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-66-parser-04-05:
+	  So the previous revision's flex hacks were far from complete...
+		This revision brings tons more awk hacks to mangle the
+		flex-generated scanner into a reentrant scanner.  
+		lexer/purify_flex.awk is horrendous-looking now...
+		no time to beautify it.  
+	  yyparse() prototype extended to take a FILE* 'infile' argument, 
+		which is used to construct the lexer state.  
+	  awk scripts now generate more comments in hacked output.  
+	  yyfreestacks() and yyerror() extended with _lexer_state
+		argument for end-of-file diagnostics.  
+	  Also cross checked against bison-2.0 so far.  
+	  TODO: enable recursive parsing/lexing in import.  
+		and re-enable lexer test with importing.  
+
+
+	* ARTXX-00-01-04-main-00-66-parser-04-04:
+	  Added more crazy awk scripts and hackery to make the flex-generated
+		scanner re-entrant, which is a lot harder than purifying
+		the yacc-parser!!!
+	  Introduced "lexer/flex_lexer_state.h" containing
+		the struct flex::lexer_state which contains all the stateful
+		information used by the flex-generated scanner (non-C++).  
+	  lexer/purify_flex.awk: strips out all the global state 
+		variable declarations in the lexer, and replaces
+		all of the references to these globals with 
+		state-object member references.  Holy awk, Batman!
+	  parser/purify_flex.awk: plants a declaration of the lexer-state
+		local to yyparse().  
+	  The parser is now responsible for holding the lexer state
+		flex::lexer _lexer_state, and passing it to yylex(...).  
+	  So far, this revision only checked flex against yacc, 
+		next revision will check/hack bisons as well.  
+	  Currently, file importing is disabled, so all 11 import tests
+		in the test/lexer directory fail for this revision.
+		We will fix and finish the file importing mechanism
+		in the next revision(s).  
+
+
+2005-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-66-parser-04-03:
+	  New friends added to make yacc-generated parser re-entrant:
+		parser/purify_yacc.awk -- moves globals to local
+		parser/yygrowstack_yacc_hack.awk -- rewrites the 
+			declaration and calls to yygrowstack with
+			additional parameters instead of referencing globals.  
+	  Next: Having lexer call parser for importing.  
+		Anticipate some changes in error output, file stacks
+		will be upside-down.  
+
+
+	* ARTXX-00-01-04-main-00-66-parser-04-02:
+	  Modified the yyparse prototypes to take the YYSTYPE& yylval
+		as an argument passed by the caller.  
+		Verified against yacc, bison-1.35, bison-2.0.  
+	  Makefile.am: slightly more elaborate procedure to generate
+		.cc parsers.  
+	  Bison-generated parser is now pure and re-entrant, while
+		yacc's still uses global variables...
+	  Next revision will attempt to hack yacc further.  
+
+
+	* ARTXX-00-01-04-main-00-66-parser-04-01-merged-main-00-67:
+	  Started this branch before some fixes on the main line.  
+	  This first revision merges the bison-1.35 fixes from -00-67
+		and sprinkles a few comments hither and thither.
+	  The intent of this branch is to make import work
+		(for real this time), at least with bison, 
+		which produces re-entrant parser.  Yacc will take some
+		more hacking...
+
+
 2005-11-10	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-67:
@@ -13,7 +123,7 @@
 	  parser/hackt-parse.yy is now configure-generated from
 		parser/hackt-parser.yy.in because the %pure-parser directive
 		is rejected by traditional yacc.  
-	  We now manually override the yylexx prototype by defining
+	  We now manually override the yylex prototype by defining
 		YY_DECL with a YYSTYPE* argument (for &yylval).  
 		The inline utility routines in the lexer (.ll)
 		now take a YYSTYPE& argument.  

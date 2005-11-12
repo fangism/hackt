@@ -1,0 +1,7 @@
+// "016.in"
+// copy-modified from "020.in"
+
+import "001.in";
+
+bool bool;	// intentional error
+

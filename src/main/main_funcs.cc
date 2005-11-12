@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.4 2005/11/10 02:13:06 fang Exp $
+	$Id: main_funcs.cc,v 1.5 2005/11/12 08:45:35 fang Exp $
  */
 
 #include <iostream>
@@ -25,24 +25,23 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.h"
 
 // forward declarations needed for YSTYPE
-#include "parser/hackt-parse-prefix.h"	// for YYSTYPE
+#include "parser/hackt-parse-real.h"	// for YYSTYPE
 using util::memory::excl_ptr;
-
-#if	USING_YACC
-extern	YYSTYPE hackt_val;		// root token (was yyval)
-#elif	USING_BISON
-extern	excl_ptr<ART::parser::root_body>	AST_root;
-#else
-#error	"USING_YACC or USING_BISON?  One must be set by configuration."
-#endif
 
 #include "lexer/file_manager.h"
 #include "lexer/yyin_manager.h"
+#if 0
 /**
 	This is the file pointer used by hackt_parse().  
  */
 extern	FILE*	hackt_in;
-extern	int	hackt_parse(void);
+#endif
+/**
+	This prototype for yyparse is either set by
+	YYPARSE_PARAM for bison, or hacked by scripts for yacc.  
+	Coordinate with "parser/hackt-parse-options.h".
+ */
+extern	int	hackt_parse(void*, YYSTYPE&, FILE*);
 extern	ART::lexer::file_manager	hackt_parse_file_manager;
 
 #include "util/stacktrace.h"
@@ -125,6 +124,26 @@ check_file_writeable(const char* fname) {
 
 //=============================================================================
 /**
+	Parses a file as an independent module, resulting in a root body.
+	No error handling here.  
+	\param yyin is an already opened file.
+	\return NULL on failure.
+ */
+excl_ptr<root_body>
+parse_to_AST(FILE* yyin) {
+	typedef	excl_ptr<root_body>		return_type;
+	YYSTYPE lval;			// root token (was yyval)
+	NEVER_NULL(yyin);
+	try {
+		hackt_parse(NULL, lval, yyin);
+	} catch (...) {
+		return return_type(NULL);
+	}
+	return return_type(lval._root_body);
+}
+
+//=============================================================================
+/**
 	Side-effect: sets the yyin FILE* before parsing, and closes it
 		before returning.  
 	\param c the name associated with this file, may be NULL for stdin.  
@@ -135,27 +154,33 @@ excl_ptr<root_body>
 parse_to_AST(const char* c) {
 	typedef	excl_ptr<root_body>		return_type;
 	STACKTRACE_VERBOSE;
+	YYSTYPE hackt_val;		// root token (was yyval)
+	hackt_val._root_body = NULL;
 	// error status
 	bool need_to_clean_up_file_manager = false;
 {
-	// hackt_in is the global yyin FILE*.  
-	const yyin_manager ym(hackt_in, hackt_parse_file_manager, c, false);
+	// hackt_in WAS the global yyin FILE*.  
+	// now we let the file manager produce a valid FILE*
+	// and pass it to the modified yyparse().  
+	const yyin_manager ym(hackt_parse_file_manager, c, false);
+	FILE* yyin = ym.get_file();
+	if (yyin) {
 	try {
-		hackt_parse();
+		// pass in FILE*
+		hackt_parse(NULL, hackt_val, yyin);
 	} catch (...) {
 		// then it's possible that the file_manager is not balanced.  
 		need_to_clean_up_file_manager = true;
+	}
+	} else {
+		return return_type(NULL);
 	}
 }
 	if (need_to_clean_up_file_manager) {
 		hackt_parse_file_manager.reset();
 		return return_type(NULL);
 	}
-#if USING_YACC
 	return return_type(hackt_val._root_body);
-#else
-	return AST_root;
-#endif
 }
 
 //=============================================================================

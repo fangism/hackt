@@ -1,14 +1,17 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2005/08/08 16:51:26 fang Exp $
+#	$Id: Makefile.am,v 1.10 2005/11/12 08:45:46 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 ARTC_TEST_FAILURES = \
 	004 005 008 009 \
-	010 011 012 013
+	010 011 012 013 017 018 \
+	020 021 023
 
 ARTC_TEST_PASSES = \
-	000 001 002 003 006 007 014
+	000 001 002 003 006 007 \
+	014 015 016 019 \
+	022
 
 ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 
@@ -23,8 +26,14 @@ ARTOBJUNROLL_TEST_SUBJECTS = \
 HACKT_CREATE_TEST_SUBJECTS = \
 	$(ARTOBJUNROLL_TEST_SUBJECTS)
 
+# KNOWN BUG:
+# 019 known allocdump error, namespace dropped
+
 # more output expectation files for when bison is used
-BISON_OUTPUTS += 004 005 008 010
+BISON_OUTPUTS += 004 005 008 010 017 018 \
+	020 021
+
+EXTRA_DIST += TODO
 
 include $(top_srcdir)/test/Make.test-tail
 
