@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.2 2005/11/10 02:13:03 fang Exp $
+	$Id: file_manager.h,v 1.2.2.1 2005/11/12 07:49:01 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -190,6 +190,11 @@ public:
 
 	const file_position*
 	current_FILE(void) const;
+
+	const string&
+	top_FILE_name(void) const {
+		return _names.back();
+	}
 
 	/**
 		For the lexer to update the current file position.  

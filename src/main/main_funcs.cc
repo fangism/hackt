@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.4.2.3 2005/11/12 01:52:44 fang Exp $
+	$Id: main_funcs.cc,v 1.4.2.4 2005/11/12 07:49:02 fang Exp $
  */
 
 #include <iostream>
@@ -124,6 +124,26 @@ check_file_writeable(const char* fname) {
 
 //=============================================================================
 /**
+	Parses a file as an independent module, resulting in a root body.
+	No error handling here.  
+	\param yyin is an already opened file.
+	\return NULL on failure.
+ */
+excl_ptr<root_body>
+parse_to_AST(FILE* yyin) {
+	typedef	excl_ptr<root_body>		return_type;
+	YYSTYPE lval;			// root token (was yyval)
+	NEVER_NULL(yyin);
+	try {
+		hackt_parse(NULL, lval, yyin);
+	} catch (...) {
+		return return_type(NULL);
+	}
+	return return_type(lval._root_body);
+}
+
+//=============================================================================
+/**
 	Side-effect: sets the yyin FILE* before parsing, and closes it
 		before returning.  
 	\param c the name associated with this file, may be NULL for stdin.  
@@ -140,6 +160,8 @@ parse_to_AST(const char* c) {
 	bool need_to_clean_up_file_manager = false;
 {
 	// hackt_in WAS the global yyin FILE*.  
+	// now we let the file manager produce a valid FILE*
+	// and pass it to the modified yyparse().  
 	const yyin_manager ym(hackt_parse_file_manager, c, false);
 	FILE* yyin = ym.get_file();
 	if (yyin) {

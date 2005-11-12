@@ -3,6 +3,32 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-66-parser-04-06:
+	  Finally wrote the recursive lex/parse file importing in
+		lexer/hackt-lex.ll, which calls hackt_parse.  
+		Has been tested re-entry safe!
+		No memory is leaked to tokens as each level of parsing
+		unwinds during an error!
+	  Added import_root AST object to hold the parse trees of
+		nested visited files, which will be traversed
+		at check_build time.  
+		During error, file name will be printed during stack
+		unwinding.  The stack trace of the inner most file
+		will follow that of the first inclusion from importing.  
+	  Added file_name_stack to parse_context, 
+		later, track file names with this in objects.  
+	  lexer/purify_flex.awk: factored out common substitutions
+		into a few function calls for prototypes and calls, 
+		potentially re-usable for future source stream-hacking.
+	  Checked against yacc, bison-2.0.
+	  Checked against flex-2.5.31! which was rather painful...
+		Had to add another handful of entries to 
+		lexer/purify_flex.awk and members to struct flex::lexer_state.
+	  Branch is near end.  
+
+
 2005-11-11	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-66-parser-04-05:

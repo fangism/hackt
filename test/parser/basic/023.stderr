@@ -1,0 +1,2 @@
+int<32> N was originally declared as a single instance, and thus may not be extended or re-declared, ERROR!  [3:5]
+From: "001.in"

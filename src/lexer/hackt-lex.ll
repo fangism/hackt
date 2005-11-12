@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.2.2.3 2005/11/12 01:52:43 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.2.2.4 2005/11/12 07:49:01 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -89,6 +89,11 @@ ART::lexer::file_manager
 hackt_parse_file_manager;
 
 namespace ART {
+
+// defined in "main/main_funcs.cc"
+extern excl_ptr<root_body>
+parse_to_AST(FILE*);
+
 /**
 	Namespace for the lexer variables and functions.  
  */
@@ -479,14 +484,48 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	default:
 		abort();
 	}       // end switch
+#else
+	// TODO: better error reporting and handling, when I have time...
+	// try to open the file, using search paths (true)
+	const input_manager ym(hackt_parse_file_manager, fstr.c_str(), true);
+	// get the full path to the file name
+	const file_status::status stat = ym.get_status();
+	switch(stat) {
+	case file_status::NEW_FILE: {
+		const string& pstr(hackt_parse_file_manager.top_FILE_name());
+		excl_ptr<root_body> _root = ART::parse_to_AST(ym.get_file());
+		if (!_root) {
+			// presumably already have error message from callee
+			cerr << "From: \"" << pstr << '\"' << endl;
+			THROW_EXIT;
+		}
+		// false: this is first time seeing this file
+		hackt_lval->_imported_root =
+			new imported_root(_root, pstr, false);
+		MUST_BE_NULL(_root);	// transferred ownership
+		return IMPORT;
+	}
+	case file_status::SEEN_FILE: {
+		// true: already seen file, this will be a placeholder
+		excl_ptr<root_body> null;
+		hackt_lval->_imported_root =
+			new imported_root(null, string(), true);
+		return IMPORT;
+	}
+	case file_status::CYCLE:
+		hackt_parse_file_manager.dump_file_stack(cerr);
+		cerr << "Detected cyclic file dependency: " << fstr << endl;
+		THROW_EXIT;
+	case file_status::NOT_FOUND:
+		hackt_parse_file_manager.dump_file_stack(cerr);
+		cerr << "Unable to open file: " << fstr << endl;
+		THROW_EXIT;
+	default:
+		abort();
+	}
 #endif
-	hackt_lval->_keyword_position = NULL;
-	return IMPORT;
 }
 
-%{
-/* {IMPORT}	{ KEYWORD_UPDATE(*hackt_lval, foo); return IMPORT; } */
-%}
 {NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return NAMESPACE; }
 {OPEN}		{ KEYWORD_UPDATE(*hackt_lval, foo); return OPEN; }
 {AS}		{ KEYWORD_UPDATE(*hackt_lval, foo); return AS; }

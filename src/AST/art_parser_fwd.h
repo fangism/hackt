@@ -1,7 +1,7 @@
 /**
 	\file "AST/art_parser_fwd.h"
 	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.8 2005/06/19 01:58:30 fang Exp $
+	$Id: art_parser_fwd.h,v 1.8.40.1 2005/11/12 07:48:59 fang Exp $
  */
 
 #ifndef	__AST_ART_PARSER_FWD_H__
@@ -51,6 +51,10 @@ class instance_management;
 // class template_argument_list;
 class concrete_type_ref;
 class generic_type_ref;
+
+// defined in "ART/imported_root.h"
+class imported_root;
+class imported_root_list;
 
 //-----------------------------------------------------------------------------
 // declared in "art_parser_definition.h"

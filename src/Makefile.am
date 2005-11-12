@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.83.2.5 2005/11/12 01:52:40 fang Exp $
+#	$Id: Makefile.am,v 1.83.2.6 2005/11/12 07:48:56 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -137,6 +137,7 @@ AST_CC_FILES = \
 	AST/art_parser_chp.cc \
 	AST/art_parser_hse.cc \
 	AST/art_parser_prs.cc \
+	AST/import_root.cc \
 	AST/parse_context.cc
 
 AST_TCC_FILES = \
@@ -687,7 +688,7 @@ parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED) 's/REFERENCE/\&/g' | \
-	$(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval)/g' | \
+	$(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g' | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
@@ -699,9 +700,11 @@ parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h
 
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
+# need forward declaration for flex 2.5.31
+	$(ECHO) "namespace flex { class lexer_state; }" > $@
 	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | \
 	$(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
-	$(SED) 's/REFERENCE/\&/g' > $@
+	$(SED) 's/REFERENCE/\&/g' >> $@
 # flex scanner purification eliminates need to rename most variables
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
@@ -724,8 +727,9 @@ CPP_TRADITIONAL = @CPP_TRADITIONAL@
 
 # extra deps to make sure parser is regenerated when configure changes
 # in the case when switching between yacc and bison
-parser/$(HACKT_PARSE_ROOT).cc: $(CONFIGHEADERS)
-$(HACKT_PARSE_OUTPUT): $(CONFIGHEADERS)
+lexer/$(HACKT_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
+parser/$(HACKT_PARSE_ROOT).cc: $(CONFIGHEADERS) parser/yacc_version.h
+$(HACKT_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \

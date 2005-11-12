@@ -1,0 +1,16 @@
+At: "-stdin-":6:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(imported-root-list) [6:1]
+#STATE#	datatype: bool [6:1..4]
+#STATE#	datatype: bool [6:6..9]
+in state #STATE#, possible rules are:
+	base_data_type_ref : base_data_type . strict_relaxed_template_arguments  (#RULE#)
+	strict_relaxed_template_arguments : .  (#RULE#)
+acceptable tokens are: 
+	'(' (reduce)
+	')' (reduce)
+	',' (reduce)
+	'<' (shift)
+	ID (reduce)

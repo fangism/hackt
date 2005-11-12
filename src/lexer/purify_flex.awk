@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.1.2.2 2005/11/12 01:52:44 fang Exp $
+#	$Id: purify_flex.awk,v 1.1.2.3 2005/11/12 07:49:01 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -57,6 +57,38 @@ function substitute_members(str) {
 	return str;
 }
 
+
+function replace_proto_params(str, decl) {
+	if (match(str, "PROTO")) {
+		gsub("\\(.*\\)", "((" decl "))", str);
+	} else {
+		gsub("\\(.*\\)", "(" decl ")", str);
+	}
+	return str;
+}
+
+function append_proto_params(str, decl) {
+	if (match(str, "PROTO")) {
+		gsub("\\)\\)", ", " decl "&", str);
+	} else {
+		gsub("\\)", ", " decl "&", str);
+	}
+	return str;
+}
+
+# to work, there must be only one set or parentheses on this line.  
+function replace_call_args(str, arg) {
+	gsub("\\(.*\\)", "(" arg ")", str);
+	return str;
+}
+
+# to work, there must be only one set or parentheses on this line.  
+function append_call_args(str, arg) {
+	gsub("\\)", ", " arg "&", str);
+	return str;
+}
+
+# for all lines...
 {
 	# NOTE: be careful to avoid the member members of yy_buffer_state.
 	# typically, those are found indented, so we only match 
@@ -148,10 +180,31 @@ function substitute_members(str) {
 	} else if (match($0, "^static int [*]yy_start_stack")) {
 		# members["yy_start_stack"] = "";
 		comment_out($0);
+	} else if (match($0, "int yylineno")) {
+		# members[extract_yy_identifier($0)] = "";
+		members["yylineno"] = "";
+		comment_out($0);
+	} else if (match($0, "^static size_t yy_buffer_stack_top")) {
+		# flex 2.5.31
+		members["yy_buffer_stack"] = "";
+		comment_out($0);
+	} else if (match($0, "^static size_t yy_buffer_stack_max")) {
+		# flex 2.5.31
+		members["yy_buffer_stack"] = "";
+		comment_out($0);
+	} else if (match($0, "^static YY_BUFFER_STATE [*] yy_buffer_stack")) {
+		# flex 2.5.31
+		members["yy_buffer_stack"] = "";
+		comment_out($0);
 
 	# bunch of special cases I can't otherwise catch easily :(
 	# exception hack patches go here
 	} else if (match($0, "define YY_CURRENT_BUFFER yy_current_buffer")) {
+		# flex 2.5.4
+		gsub("yy", name ".&", $0);
+		print;
+	} else if (match($0, "define YY_CURRENT_BUFFER.*yy_buffer_stack")) {
+		# flex 2.5.31
 		gsub("yy", name ".&", $0);
 		print;
 	} else if (match($0, "define yymore")) {
@@ -175,7 +228,9 @@ function substitute_members(str) {
 		gsub("yyin", name ".&", $0);
 		gsub("\\)", ", " name "&", $0);
 		print;
-	} else if (match($0, "yy_c_buf_p =.*_p_offset")) {
+	} else if (match($0, "yy_c_buf_p =.*_p_offset") ||
+			# flex-2.5.31 parenthesizes :S
+			match($0, "\\(yy_c_buf_p\\) =.*_p_offset")) {
 		# first instance only on this line
 		sub("yy_c_buf_p", name ".&", $0);
 		print;
@@ -184,170 +239,184 @@ function substitute_members(str) {
 
 	if (match($0, "static int yy_get_next_buffer(.*)")) {
 		# need to rewrite prototype of this function
-		if (match($0, "PROTO")) {
-			gsub("\\(.*\\)", "((" state_decl "))", $0);
-		} else {
-			gsub("\\(.*\\)", "(" state_decl ")", $0);
-		}
+		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yy_get_next_buffer()")) {
 		# rewrite this function call
 		gsub("buffer\\(.*\\)[^)]", "buffer(" name ")", $0);
 	} else if (match($0, "static yy_state_type yy_get_previous_state(.*)")) {
 		# need to rewrite prototype of this function
-		if (match($0, "PROTO")) {
-			gsub("\\(.*\\)", "((" state_decl "))", $0);
-		} else {
-			gsub("\\(.*\\)", "(" state_decl ")", $0);
-		}
+		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yy_get_previous_state()")) {
 		# rewrite this function call
-		gsub("\\(.*\\)", "(" name ")", $0);
+		$0 = replace_call_args($0, name);
 	} else if (match($0, "static yy_state_type yy_try_NUL_trans(.*)")) {
 		# don't worry about KNR prototypes
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_try_NUL_trans(.*)")) {
 		# match function call
 		gsub("\\)", ", " name "&", $0);
 	} else if (match($0, "static void yyunput(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		# $0 = replace_proto_params($0, state_decl);
+		$0 = append_proto_params($0, state_decl);	# 2.5.31
 	} else if (match($0, "yyunput(.*)")) {
 		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "static int yyinput(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\(.*\\)", "((" state_decl "))", $0);
-		} else {
-			gsub("\\)", state_decl "&", $0);
-		}
+		$0 = replace_proto_params($0, state_decl);
+		# $0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yyinput(.*)")) {
-		# match function call
-		gsub("\\)", name "&", $0);
+		$0 = replace_call_args($0, name);
 	} else if (match($0, "void yyrestart(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yyrestart(.*)")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "void yy_switch_to_buffer(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_switch_to_buffer(.*)")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "void yy_load_buffer_state(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\(.*\\)", "((" state_decl "))", $0);
-		} else {
-			gsub("\\(.*\\)", "(" state_decl ")", $0);
-		}
+		$0 = replace_proto_params($0, state_decl);
 	} else if (match($0, "yy_load_buffer_state(.*)")) {
-		# match function call
-		gsub("\\(.*\\)", "(" name ")", $0);
+		$0 = replace_call_args($0, name);
 	} else if (match($0, "YY_BUFFER_STATE yy_create_buffer(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_create_buffer(.*)") && !match($0, "ERROR")) {
 		# careful not to match inside string...
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "void yy_delete_buffer(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_delete_buffer(.*)")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "void yy_init_buffer(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_init_buffer(.*)")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "void yy_flush_buffer(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_flush_buffer(.*)")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "YY_BUFFER_STATE yy_scan_buffer(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_scan_buffer(.*)") && !match($0, "ERROR")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "YY_BUFFER_STATE yy_scan_string(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_scan_string(.*)") && !match($0, "ERROR")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "YY_BUFFER_STATE yy_scan_bytes(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_scan_bytes(.*)") && !match($0, "ERROR")) {
 		# match function call
-		gsub("\\)", ", " name "&", $0);
+		if (match($0, "strlen")) {
+			# beware of embedded strlen in flex 2.5.31
+			regex = "strlen.*\\)[ ]*)";
+			ind = match($0, regex);
+			# print "ind = " ind ", RL = " RLENGTH;
+			swapout = substr($0, ind, RLENGTH -1);
+			# flex 2.5.31 only
+			sub(regex, "XXX )", $0);
+			$0 = append_call_args($0, name);
+			sub("XXX", swapout, $0);
+		} else {
+			$0 = append_call_args($0, name);
+		}
+		# gsub("\\)", ", " name "&", $0);
 	} else if (match($0, "static void yy_push_state(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", ", " state_decl "&", $0);
-		} else {
-			gsub("\\)", ", " state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_push_state(.*)")) {
-		# match function call
-		gsub("\\)", ", " name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "static void yy_pop_state(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", state_decl "&", $0);
-		} else {
-			gsub("\\)", state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_pop_state(.*)")) {
-		# match function call
-		gsub("\\)", name "&", $0);
+		$0 = append_call_args($0, name);
 	} else if (match($0, "static int yy_top_state(.*)")) {
-		if (match($0, "PROTO")) {
-			gsub("\\)\\)", state_decl "&", $0);
-		} else {
-			gsub("\\)", state_decl "&", $0);
-		}
+		$0 = append_proto_params($0, state_decl);
 	} else if (match($0, "yy_top_state(.*)")) {
-		# match function call
-		gsub("\\)", name "&", $0);
+		$0 = append_call_args($0, name);
+	} else if (match($0, "void yyensure_buffer_stack(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyensure_buffer_stack(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "void yypush_buffer_state(.*)")) {
+		# (2.5.31 only)
+		$0 = append_proto_params($0, state_decl);
+	} else if (match($0, "yypush_buffer_state(.*)")) {
+		# (2.5.31 only)
+		$0 = append_call_args($0, name);
+	} else if (match($0, "void yypop_buffer_state(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yypop_buffer_state(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "int yyget_lineno(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyget_lineno(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "int yyget_leng(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyget_leng(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "int yyget_debug(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyget_debug(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "FILE [*]yyget_in(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyget_in(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "FILE [*]yyget_out(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyget_out(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "char [*]yyget_text(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yyget_text(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
+	} else if (match($0, "void yyset_in(.*)")) {
+		# (2.5.31 only)
+		$0 = append_proto_params($0, state_decl);
+	} else if (match($0, "yyset_in(.*)")) {
+		# (2.5.31 only)
+		$0 = append_call_args($0, name);
+	} else if (match($0, "void yyset_out(.*)")) {
+		# (2.5.31 only)
+		$0 = append_proto_params($0, state_decl);
+	} else if (match($0, "yyset_out(.*)")) {
+		# (2.5.31 only)
+		$0 = append_call_args($0, name);
+	} else if (match($0, "void yyset_lineno(.*)")) {
+		# (2.5.31 only)
+		$0 = append_proto_params($0, state_decl);
+	} else if (match($0, "yyset_lineno(.*)")) {
+		# (2.5.31 only)
+		$0 = append_call_args($0, name);
+	} else if (match($0, "void yyset_debug(.*)")) {
+		# (2.5.31 only)
+		$0 = append_proto_params($0, state_decl);
+	} else if (match($0, "yyset_debug(.*)")) {
+		# (2.5.31 only)
+		$0 = append_call_args($0, name);
+	} else if (match($0, "int yylex_destroy(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_proto_params($0, state_decl);
+	} else if (match($0, "yylex_destroy(.*)")) {
+		# (2.5.31 only)
+		$0 = replace_call_args($0, name);
 	}
 	str = $0;
 	# ignore .yy, and ->yy

@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.5 2005/10/30 22:00:18 fang Exp $
+ 	$Id: parse_context.cc,v 1.5.8.1 2005/11/12 07:49:00 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -837,6 +837,17 @@ context::pop_loop_var(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+context::dump_file_stack(ostream& o) const {
+	file_name_stack_type::const_iterator i(file_name_stack.begin());
+	const file_name_stack_type::const_iterator e(file_name_stack.end());
+	for ( ; i!=e; i++) {
+		o << "At: " << *i << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Automatic indentation for nicer debug printing.
 	TODO: phase this out in favor of util::indent.  
@@ -962,6 +973,19 @@ context::conditional_scope_frame::conditional_scope_frame(context& c,
 context::conditional_scope_frame::~conditional_scope_frame() {
 	_context.sequential_scope_stack.pop();
 	_context.in_conditional_scope = parent_cond;
+}
+
+//=============================================================================
+// struct context::file_stack_frame method definitions
+
+context::file_stack_frame::file_stack_frame(
+		context& c, const string& s) : _context(c) {
+	_context.file_name_stack.push_front(s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+context::file_stack_frame::~file_stack_frame() {
+	_context.file_name_stack.pop_front();
 }
 
 //=============================================================================

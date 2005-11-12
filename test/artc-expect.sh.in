@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "artc-expect.sh.in"
-#	$Id: artc-expect.sh.in,v 1.4.2.1 2005/11/12 01:52:46 fang Exp $
+#	$Id: artc-expect.sh.in,v 1.4.2.2 2005/11/12 07:49:02 fang Exp $
 # This file came from "artc-expect.sh" in revision pre-history.
 
 # $1 is the executable, expecting input from stdin ("hackt parse_test")
@@ -37,8 +37,7 @@ elif [ -f $bldroot.stderr ] ; then
 	# this would've been created by the Makefile automatically
 	@DIFF@ -bu $bldroot.stderr $bldroot.test.filter > $bldroot.diff 2>&1
 else
-	@ECHO@ "Missing $srcroot.stderr."
-	exit 1;
+	@ECHO@ "Missing $srcroot.stderr." > $bldroot.diff
 fi
 
 

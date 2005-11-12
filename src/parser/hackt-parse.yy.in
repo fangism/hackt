@@ -2,12 +2,16 @@
 	\file "parser/hackt-parse.yy.in"
 	Yacc-generated parser source for the ART++ language.  
 
-	note: this is not the same language as that found in lib/art.cy
+	ALERT: Make sure you are editing "parser/hackt-parse.yy.in"
+	and NOT the configure-generated "parser/hackt-parse.yy"
+	or else your changes will be clobbered during the next configure!
+
+	NOTE: this is not the same language as that found in lib/art.cy
 	but is very close.  Differences are mostly syntactic and not semantic.  
 
-	note: ancient versions of yacc reject // end-of-line comments
+	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.1.2.5 2005/11/12 01:52:45 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.1.2.6 2005/11/12 07:49:02 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -36,6 +40,9 @@
 using namespace ART::lexer;
 using namespace ART::parser;
 
+/**
+	When using yacc, this would otherwise be undefined.  
+ */
 #ifndef	YYBISON
 #define	YYBISON		0
 #endif
@@ -226,6 +233,8 @@ extern const char* const yyrule[];
 
 	root_body*		_root_body;
 	root_item*		_root_item;
+	imported_root*		_imported_root;
+	imported_root_list*	_imported_root_list;
 	namespace_body*		_namespace_body;
 	using_namespace*	_using_namespace;
 	namespace_id*		_namespace_id;
@@ -469,7 +478,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_keyword_position>	CHANNEL
 %token	<_keyword_position>	TEMPLATE
 %token	<_keyword_position>	ENUM
-%token	<_keyword_position>	IMPORT
+%token	<_imported_root>	IMPORT
 
 /* linkage modifiers */
 %token	<_token_keyword>	EXTERN STATIC EXPORT
@@ -493,9 +502,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 /* non-terminals */
 %type	<_root_body>	module
-%type	<_keyword_position>	imports
-%type	<_keyword_position>	imports_optional
-%type	<_keyword_position>	import_item
+%type	<_imported_root_list>	imports imports_optional
+%type	<_imported_root>	import_item
 %type	<_root_body>	top_root body 
 %type	<_root_item>	body_item
 %type	<_root_item>	namespace_item
@@ -670,21 +678,31 @@ module
 			// YYSTYPE& yylval as an argument, which must be
 			// passed un by the caller.  
 			yylval._root_body = $2;
+			$2->push_front($1);
 		}
 	;
 
 imports_optional
-	: imports
+	: imports { $$ = $1; }
 	| { $$ = NULL; }
 	;
 
 imports
 	: imports import_item
+		{ $$ = $1; $1->push_back($2); }
 	| import_item
+		{ $$ = new imported_root_list($1); }
 	;
 
 import_item
-	: IMPORT { MUST_BE_NULL($1); $$ = NULL; }
+	: IMPORT {
+		if ($1) { $$ = $1; }
+		else {
+			// NULL means there was an error
+			static const char msg[] = "Error opening file.";
+			yyerror(msg);
+		}
+	}
 /***
 	The work for switching input files is actually done in the lexer!
 ***/

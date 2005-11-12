@@ -1,0 +1,41 @@
+At: "-stdin-":4:
+At: "017.in":7:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (instance-decl) ... [5:1..6]
+#STATE#	(imported-root) [6:1]
+in state #STATE#, possible rules are:
+	top_root : body .  (#RULE#)
+	body : body . body_item  (#RULE#)
+	optional_template_specification : .  (#RULE#)
+acceptable tokens are: 
+	end-of-file (reduce)
+	'(' (shift)
+	'[' (shift)
+	'{' (shift)
+	'}' (reduce)
+	ID (shift)
+	FLOAT (shift)
+	INT (shift)
+	STRING (shift)
+	SCOPE (shift)
+	NAMESPACE (shift)
+	OPEN (shift)
+	DEFINE (reduce)
+	DEFPROC (reduce)
+	DEFCHAN (reduce)
+	DEFTYPE (reduce)
+	TYPEDEF (reduce)
+	CHANNEL (shift)
+	TEMPLATE (shift)
+	ENUM (shift)
+	BOOL_TRUE (shift)
+	BOOL_FALSE (shift)
+	INT_TYPE (shift)
+	BOOL_TYPE (shift)
+	PINT_TYPE (shift)
+	PBOOL_TYPE (shift)
+From: "017.in"
+Caught exception from lexer, aborting parsing.
