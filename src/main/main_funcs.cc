@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.4.2.2 2005/11/11 08:20:46 fang Exp $
+	$Id: main_funcs.cc,v 1.4.2.3 2005/11/12 01:52:44 fang Exp $
  */
 
 #include <iostream>
@@ -30,15 +30,18 @@ using util::memory::excl_ptr;
 
 #include "lexer/file_manager.h"
 #include "lexer/yyin_manager.h"
+#if 0
 /**
 	This is the file pointer used by hackt_parse().  
  */
 extern	FILE*	hackt_in;
+#endif
 /**
 	This prototype for yyparse is either set by
 	YYPARSE_PARAM for bison, or hacked by scripts for yacc.  
+	Coordinate with "parser/hackt-parse-options.h".
  */
-extern	int	hackt_parse(void*, YYSTYPE&);
+extern	int	hackt_parse(void*, YYSTYPE&, FILE*);
 extern	ART::lexer::file_manager	hackt_parse_file_manager;
 
 #include "util/stacktrace.h"
@@ -136,13 +139,19 @@ parse_to_AST(const char* c) {
 	// error status
 	bool need_to_clean_up_file_manager = false;
 {
-	// hackt_in is the global yyin FILE*.  
-	const yyin_manager ym(hackt_in, hackt_parse_file_manager, c, false);
+	// hackt_in WAS the global yyin FILE*.  
+	const yyin_manager ym(hackt_parse_file_manager, c, false);
+	FILE* yyin = ym.get_file();
+	if (yyin) {
 	try {
-		hackt_parse(NULL, hackt_val);
+		// pass in FILE*
+		hackt_parse(NULL, hackt_val, yyin);
 	} catch (...) {
 		// then it's possible that the file_manager is not balanced.  
 		need_to_clean_up_file_manager = true;
+	}
+	} else {
+		return return_type(NULL);
 	}
 }
 	if (need_to_clean_up_file_manager) {

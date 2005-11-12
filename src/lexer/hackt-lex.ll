@@ -1,10 +1,11 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.2.2.2 2005/11/11 08:20:45 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.2.2.3 2005/11/12 01:52:43 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
+ *	:set syntax=lex
  */
 
 /***************** FOREWORD ***************************************************
@@ -752,6 +753,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		former value.  
  */
 int yywrap(void) {
+#if 0
 	const bool err = (YYSTATE) != INITIAL;
 	if (err) {
 		// cerr << "yywrap() reached in state " << YYSTATE << 
@@ -769,6 +771,7 @@ int yywrap(void) {
 		return 0;
 	}
 	else
+#endif
 		return 1;		// no more input
 }
 
@@ -781,7 +784,7 @@ namespace lexer {
 	to a statically linked variable, (which makes it invisible 
 	to the outside world).  
  */
-int at_eof(void) {
+int at_eof(const flex::lexer_state& foo) {
 	assert(YY_CURRENT_BUFFER);
 	return YY_CURRENT_BUFFER->yy_n_chars == 0;
 }

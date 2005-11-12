@@ -7,7 +7,7 @@
 
 	note: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.1.2.4 2005/11/11 08:20:46 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.1.2.5 2005/11/12 01:52:45 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -362,7 +362,7 @@ extern	YY_DECL;			// something like the above
 
 namespace ART {
 namespace lexer {
-extern	int at_eof(void);		// from "hackt-lex.ll"
+extern	int at_eof(const flex::lexer_state&);		// from "hackt-lex.ll"
 }
 }
 using ART::lexer::at_eof;
@@ -383,7 +383,8 @@ static
 void
 yyfreestacks(const short* yyss, const short* yyssp, 
 		const YYSTYPE* yyvs, const YYSTYPE* yyvsp, 
-		const YYSTYPE yylval, const int yychar);
+		const YYSTYPE yylval, const int yychar,
+		const flex::lexer_state& _lexer_state);
 %}
 
 /*
@@ -2259,7 +2260,8 @@ static
 void
 yyfreestacks(const short* _yyss_, const short* _yyssp_, 
 		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_, 
-		const YYSTYPE _yylval_, const int _yychar_) {
+		const YYSTYPE _yylval_, const int _yychar_, 
+		const flex::lexer_state& _lexer_state) {
 	STACKTRACE_VERBOSE;
 	const short* s;
 	const YYSTYPE* v;
@@ -2271,7 +2273,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
-	if (!at_eof()) {
+	if (!at_eof(_lexer_state)) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, _yychar_);
@@ -2366,7 +2368,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
 //	NULL check not necessarily valid if last token normally returned NULL
-	if (at_eof()) {
+	if (at_eof(_lexer_state)) {
 		cerr << "\t" << yyname[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
@@ -2413,7 +2415,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		}
 	}
 
-	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval, yychar);
+	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval, yychar, _lexer_state);
 
 #endif	// NO_FAKE_PREFIX
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.83.2.4 2005/11/11 08:20:41 fang Exp $
+#	$Id: Makefile.am,v 1.83.2.5 2005/11/12 01:52:40 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -673,6 +673,7 @@ parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
+	$(SED) 's/REFERENCE/\&/g' | \
 	$(GREP) -v "^YYSTYPE yylval;" | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
@@ -698,9 +699,12 @@ parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h
 
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
-	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(HACKT_YACC_PREFIX) \
-			lexer/$(HACKT_LEX_ROOT).cc > $@
+	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | \
+	$(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
+	$(SED) 's/REFERENCE/\&/g' > $@
+# flex scanner purification eliminates need to rename most variables
+#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 
 # can't depend on the .output alone, not a known dependence with .y[y]
 HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output
@@ -790,7 +794,8 @@ AM_LFLAGS =
 # for occasional debugging
 SAVETEMP = $(CXXCOMPILE) -v -save-temps
 .cc.ii:
-	$(SAVETEMP) -c $< -o $*.o
+	$(SAVETEMP) -c $<
+	@$(ECHO) ".ii is placed in local directory."
 
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy

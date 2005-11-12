@@ -1,15 +1,17 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2005/11/10 02:13:14 fang Exp $
+#	$Id: Makefile.am,v 1.4.2.1 2005/11/12 01:52:46 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 ARTC_TEST_FAILURES = \
 	badid-000 badid-001 \
 	comment-000 comment-001 comment-002 \
-	string-001 string-002 string-003 \
-	import-000 import-001 import-002 import-003 import-005 \
-	import-006 import-007 import-008 import-009 \
-	import-010 import-011
+	string-001 string-002 string-003
+
+# temporary off:
+#	import-000 import-001 import-002 import-003 import-005 \
+#	import-006 import-007 import-008 import-009 \
+#	import-010 import-011
 
 ARTC_TEST_PASSES = \
 	comment-003 comment-004 \

@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_yacc.awk"
-#	$Id: purify_yacc.awk,v 1.1.2.2 2005/11/11 08:20:47 fang Exp $
+#	$Id: purify_yacc.awk,v 1.1.2.3 2005/11/12 01:52:45 fang Exp $
 # helper script to transform yacc's generated parser into a pure-parser.
 # one that is re-entrant.  
 
@@ -17,34 +17,48 @@
 # int yystacksize;
 
 BEGIN {
-	# line count
+	this_script = "\"parser/purify_yacc.awk\"";
 	# associaltive array with (optional) initial values
 	delete declarations;
+}
+
+function comment_out(str) {
+	print "/* " str " */ // removed by " this_script;
 }
 
 {
 	if (match($0, "^int yychar;")) {
 		declarations[$0] = "";
+		comment_out($0);
 	} else if (match($0, "^short [*]yyssp;")) {
 		declarations[$0] = "NULL";
+		comment_out($0);
 	} else if (match($0, "^YYSTYPE [*]yyvsp;")) {
 		declarations[$0] = "NULL";
+		comment_out($0);
 	} else if (match($0, "^YYSTYPE yyval;")) {
 		declarations[$0] = "";
+		comment_out($0);
 	} else if (match($0, "^YYSTYPE yylval;")) {
 		foo = 0;
+		comment_out($0);
 	} else if (match($0, "^short [*]yyss;")) {
 		declarations[$0] = "NULL";
+		comment_out($0);
 	} else if (match($0, "^short [*]yysslim;")) {
 		declarations[$0] = "NULL";
+		comment_out($0);
 	} else if (match($0, "^YYSTYPE [*]yyvs;")) {
 		declarations[$0] = "NULL";
+		comment_out($0);
 	} else if (match($0, "^int yystacksize;")) {
 		declarations[$0] = "1";
+		comment_out($0);
 	} else if (match($0, "^yyparse\\(.*\\)")) {
 		print;
 		getline;	# expecting open brace
 		print;
+		print "/* Injected by " this_script " */";
 		for (d in declarations) {
 			init = declarations[d];
 			if (length(init)) {
@@ -54,6 +68,7 @@ BEGIN {
 				print d;
 			}
 		}
+		print "/* end injection */";
 	} else {
 		print;
 	}

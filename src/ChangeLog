@@ -5,6 +5,22 @@
 
 2005-11-11	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-66-parser-04-05:
+	  So the previous revision's flex hacks were far from complete...
+		This revision brings tons more awk hacks to mangle the
+		flex-generated scanner into a reentrant scanner.  
+		lexer/purify_flex.awk is horrendous-looking now...
+		no time to beautify it.  
+	  yyparse() prototype extended to take a FILE* 'infile' argument, 
+		which is used to construct the lexer state.  
+	  awk scripts now generate more comments in hacked output.  
+	  yyfreestacks() and yyerror() extended with _lexer_state
+		argument for end-of-file diagnostics.  
+	  Also cross checked against bison-2.0 so far.  
+	  TODO: enable recursive parsing/lexing in import.  
+		and re-enable lexer test with importing.  
+
+
 	* ARTXX-00-01-04-main-00-66-parser-04-04:
 	  Added more crazy awk scripts and hackery to make the flex-generated
 		scanner re-entrant, which is a lot harder than purifying
@@ -72,7 +88,7 @@
 	  parser/hackt-parse.yy is now configure-generated from
 		parser/hackt-parser.yy.in because the %pure-parser directive
 		is rejected by traditional yacc.  
-	  We now manually override the yylexx prototype by defining
+	  We now manually override the yylex prototype by defining
 		YY_DECL with a YYSTYPE* argument (for &yylval).  
 		The inline utility routines in the lexer (.ll)
 		now take a YYSTYPE& argument.  

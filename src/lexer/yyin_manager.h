@@ -3,7 +3,7 @@
 	Interface for manipulating the hackt-lexer file stack.  
 	TODO: consider templating taking a globally visible pointer
 		as a bound template argument.  
-	$Id: yyin_manager.h,v 1.2 2005/11/10 02:13:05 fang Exp $
+	$Id: yyin_manager.h,v 1.2.2.1 2005/11/12 01:52:44 fang Exp $
  */
 
 #ifndef	__LEXER_YYIN_MANAGER_H__
@@ -28,16 +28,18 @@ public:
 	/// reusing a convenient enumerated type
 	typedef	file_status::status	status;
 private:
-	FILE*&				_yyin;
+	FILE*				_yyin;
 	file_manager&			_file_manager;
 	status				_status;
 public:
-	yyin_manager(FILE*&, file_manager&, const char*,
-		const bool = true);
+	yyin_manager(file_manager&, const char*, const bool = true);
 	~yyin_manager();
 
 	status
 	get_status(void) const { return _status; }
+
+	FILE*
+	get_file(void) const { return _yyin; }
 
 	static
 	status
