@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.2 2005/11/12 08:45:35 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.3 2005/11/12 22:30:26 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -53,10 +53,19 @@ using namespace ART::parser;
 #if defined(USING_BISON) && !USING_BISON
 #error	Inconsistency in configuration: YYBISON && !USING_BISON
 #endif
-#else
-#if defined(USING_YACC) && !USING_YACC
-#error	Inconsistency in configuration: !YYBISON && !USING_YACC
+
+#elif defined(YYBYACC) && YYBYACC
+
+#if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
+// on many systems, yacc == byacc
+#error	Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
 #endif
+#else	// !YYBISON && !YYBYACC
+
+#if defined(USING_YACC) && !USING_YACC
+#error	Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
+#endif
+
 #endif
 
 // may be changed when nesed files are opened

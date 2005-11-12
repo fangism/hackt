@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_yacc.awk"
-#	$Id: purify_yacc.awk,v 1.2 2005/11/12 08:45:36 fang Exp $
+#	$Id: purify_yacc.awk,v 1.3 2005/11/12 22:30:27 fang Exp $
 # helper script to transform yacc's generated parser into a pure-parser.
 # one that is re-entrant.  
 
@@ -45,11 +45,19 @@ function comment_out(str) {
 	} else if (match($0, "^short [*]yyss;")) {
 		declarations[$0] = "NULL";
 		comment_out($0);
+	} else if (match($0, "^short yyss\\[.*\\];")) {
+		# for byacc
+		declarations[$0] = "";
+		comment_out($0);
 	} else if (match($0, "^short [*]yysslim;")) {
 		declarations[$0] = "NULL";
 		comment_out($0);
 	} else if (match($0, "^YYSTYPE [*]yyvs;")) {
 		declarations[$0] = "NULL";
+		comment_out($0);
+	} else if (match($0, "^YYSTYPE yyvs\\[.*\\];")) {
+		# for byacc
+		declarations[$0] = "";
 		comment_out($0);
 	} else if (match($0, "^int yystacksize;")) {
 		declarations[$0] = "1";

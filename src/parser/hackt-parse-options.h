@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hackt-parse-options.h,v 1.4 2005/11/12 08:45:35 fang Exp $
+	$Id: hackt-parse-options.h,v 1.5 2005/11/12 22:30:26 fang Exp $
 	This file was formerly known as:
 	Id: art++-parse-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
@@ -52,6 +52,10 @@
 
 #if USING_YACC
 // we need more drastic measure to hack the prototype...
+#endif
+
+#if USING_BYACC
+// ?
 #endif
 
 #endif	// __PARSER_HACKT_PARSE_OPTIONS_H__

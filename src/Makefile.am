@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.85 2005/11/12 08:45:32 fang Exp $
+#	$Id: Makefile.am,v 1.86 2005/11/12 22:30:25 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -23,7 +23,12 @@ LEXYACC_PREFIX_SCRIPT = $(srcdir)/parser/lexyacc-prefix.awk
 if HAVE_BISON
 YACC_UNION_SCRIPT = $(srcdir)/parser/bison-union-type.awk
 YACC_OUTPUT_H_SCRIPT = $(srcdir)/parser/bison-output-to-C.awk
-else
+endif
+if HAVE_BYACC
+YACC_UNION_SCRIPT = $(srcdir)/parser/yacc-union-type.awk
+YACC_OUTPUT_H_SCRIPT = $(srcdir)/parser/yacc-output-to-C.awk
+endif
+if HAVE_YACC
 YACC_UNION_SCRIPT = $(srcdir)/parser/yacc-union-type.awk
 YACC_OUTPUT_H_SCRIPT = $(srcdir)/parser/yacc-output-to-C.awk
 endif
@@ -656,39 +661,59 @@ ALL_TCC_FILES += \
 # don't actually need -l[f]l
 # libhackt_la_LDADD = @LEXLIB@
 
+# why, oh why, yy?
 HACKT_YACC_PREFIX = hackt_
 
 # regenerate the parser input file using config.status
 parser/$(HACKT_PARSE_ROOT).yy: parser/$(HACKT_PARSE_ROOT).yy.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
-# these should be distcleaned
+# these should be distcleaned, because they are configure-generated
 CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy
+
+# because I can't figure out how to produce a literal '&' in awk subst regex.  
+SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
+# because yacc has no mechanism for overriding the yyparse prototype
+SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g'
 
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
-if HAVE_BISON
+# important: the LEXYACC_PREFIX_SCRIPT must be applied LAST!
+# the other preceeding scripts shouldn't matter in their order
 parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).output.h
+if HAVE_BISON
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
-	$(SED) 's/REFERENCE/\&/g' | \
+	$(SED_CXX_REFERENCE) | \
 	$(GREP) -v "^YYSTYPE yylval;" | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
-else
-parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
-		parser/$(HACKT_PARSE_ROOT).output.h
+endif
+if HAVE_BYACC
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
 		parser/$(HACKT_PARSE_ROOT).cc | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
-	$(SED) 's/REFERENCE/\&/g' | \
-	$(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g' | \
+	$(SED_CXX_REFERENCE) | \
+	$(SED_YACC_YYPARSE) | \
+	$(AWK) -f $(srcdir)/parser/patch_byacc.awk | \
+	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+endif
+if HAVE_YACC
+	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
+		parser/$(HACKT_PARSE_ROOT).cc | \
+	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
+	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
+	$(SED_CXX_REFERENCE) | \
+	$(SED_YACC_YYPARSE) | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
@@ -698,6 +723,7 @@ parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) $? >> $@
 
+# if HAVE_FLEX ...
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
 # need forward declaration for flex 2.5.31
@@ -805,13 +831,22 @@ SAVETEMP = $(CXXCOMPILE) -v -save-temps
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
+if HAVE_BYACC
+# we don't care about libbogus, whatever it takes to make it compile
+BOGUS_BYACC_CPPFLAGS = -DYYDEBUG=0
+BOGUS_BYACC_CXXFLAGS = -Wno-error
+else
+BOGUS_BYACC_CPPFLAGS =
+BOGUS_BYACC_CXXFLAGS =
+endif
 # *COUGH* *HACK*:
 # LIBBOGUS tells lexer/hackt-lex.cc to use un-transfomed symbol names
-libbogus_la_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS)
-libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
+libbogus_la_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(BOGUS_BYACC_CPPFLAGS)
+libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(BOGUS_BYACC_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
 # traditional C compilers.  (Not the cleanest code ever generated.)
+# libhacktparsers_la_CPPFLAGS = $(AM_CPPFLAGS)
 libhacktparsers_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 
 # artc_CPPFLAGS = $(AM_CPPFLAGS)
@@ -852,6 +887,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
 	parser/yygrowstack_yacc_hack.awk \
+	parser/patch_byacc.awk \
 	parser/purify_flex.awk \
 	parser/purify_yacc.awk \
 	parser/try_lex_catch.awk \

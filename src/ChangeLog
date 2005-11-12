@@ -5,6 +5,15 @@
 
 2005-11-12	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-69:
+	  Improved configuration for byacc support.
+	  This revision has been validated against byaccj-1.1 (Java-extended),
+		bison-1.35, 1.875, 2.0.
+	  Makefile.am: clean-ups and re-casing parser cases.
+	  Added parser/patch_byacc.awk to fix-up the output
+		produced by byacc.  
+
+
 	* ARTXX-00-01-04-main-00-68-merged-parser-04-06:
 	  Merged -parser-04 branch.
 		Featuring re-entrant lexer and parser, and working imports.  

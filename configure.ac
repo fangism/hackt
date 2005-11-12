@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.17 2005/11/12 08:45:25 fang Exp $
+#	$Id: configure.ac,v 1.18 2005/11/12 22:30:22 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -183,16 +183,47 @@ sleep 1; echo " no"
 # some parser builds in sub-directories will compile differently
 # depending on which parser is used.  
 AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
+AM_CONDITIONAL(HAVE_BYACC, echo "$YACC" | grep -q byacc)
+AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
 
-if (echo "$YACC" | grep -q bison)
-then
-	AC_DEFINE(USING_BISON, 1, [Define to 1 if we're using bison.])
-	AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-else
-	AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
-	AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
-fi
-# don't know what to do about byacc yet...
+dnl this must be consistent with the above
+dnl there might be a better way to do this...
+case $YACC in
+	*bison* )
+		dnl echo "GOT bison"
+		AC_DEFINE(USING_BISON, 1, [Define to 1 if we're using bison.])
+		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
+		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
+		dnl Now would be a good place to check for version
+		dnl since bison is known to have significant variations.  
+		;;
+	*byacc* )
+		dnl echo "GOT byacc"
+		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
+		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
+		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
+		;;
+	*yacc* )
+		dnl echo "GOT yacc"
+		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
+		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
+		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
+		;;
+	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
+esac
+
+# unfortunately, lex is often IDENTICAL to flex...
+case $LEX in
+	*flex* )
+		AC_DEFINE(USING_FLEX, 1, [Define to 1 if we're using flex.])
+		AC_DEFINE(USING_LEX, 0, [Define to 1 if we're using lex.])
+		;;
+	*lex* )
+		AC_DEFINE(USING_FLEX, 0, [Define to 1 if we're using lex.])
+		AC_DEFINE(USING_LEX, 1, [Define to 1 if we're using lex.])
+		;;
+	* ) AC_MSG_ERROR([No lexer-generator found.]) ;;
+esac
 
 # AC_PROG_PERL
 AC_CHECK_PROG([PERL], perl, perl)
