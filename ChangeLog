@@ -4,6 +4,7 @@
 
 	* ARTXX-00-01-04-main-00-69:
 	  Configuration support for byacc.  Details in src/ChangeLog.  
+	  Updated exhaustive check script, and verified it.  
 
 
 	* ARTXX-00-01-04-main-00-68-merged-parser-04-06:
