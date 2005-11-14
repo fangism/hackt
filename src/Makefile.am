@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.86 2005/11/12 22:30:25 fang Exp $
+#	$Id: Makefile.am,v 1.87 2005/11/14 02:01:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -618,8 +618,8 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
-main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-real.h
-main/version.cc: cvstag.h builddate.h buildhost.h cxx_version.h \
+$(srcdir)/main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-real.h
+$(srcdir)/main/version.cc: cvstag.h builddate.h buildhost.h cxx_version.h \
 	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
 lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
 parser/hackt-union.lo: parser/$(HACKT_PARSE_ROOT).output.h
@@ -745,6 +745,11 @@ $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 		-f $(srcdir)/parser/common-output-to-C.awk $? | \
 	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+
+# These all depend on parser/$(HACKT_PARSE_ROOT).h, 
+# which is made non-atomically, by automake's yacc rules.
+.NOTPARALLEL: parser/$(HACKT_PARSE_ROOT)-real.h $(HACKT_PARSE_OUTPUT) \
+	lexer/$(HACKT_LEX_ROOT).cc
 
 # NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
 # gcc -E ignores file that require no preprocessing

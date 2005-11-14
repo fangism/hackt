@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.2 2005/11/12 08:45:34 fang Exp $
+#	$Id: purify_flex.awk,v 1.3 2005/11/14 02:01:44 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -422,18 +422,10 @@ function append_call_args(str, arg) {
 	# ignore .yy, and ->yy
 	if (match(str,"[^.>]yy")) {
 	if (!match(str,"PROTO")) {
-		if (!match(str,"define") && !match(str,"ifndef")) {
+		if (!match(str,"define") && !match(str,"ifndef") && \
+				!match(str,"undef")) {
 			str = substitute_members(str);
-			# undo accidents
-			# gsub("[.]" name, ".", str);
-			# gsub("[-][>]" name, "->", str);
 		} 
-		# special case hack
-#		if (match(str, "yy_n_chars")) {
-#		if (match(str, "[=]")) {
-#			sub(" yy_n_chars" , " " name ".yy_n_chars", str);
-#		}
-#		}
 	}
 	}
 	print str;

@@ -12,6 +12,9 @@
 	  Makefile.am: clean-ups and re-casing parser cases.
 	  Added parser/patch_byacc.awk to fix-up the output
 		produced by byacc.  
+	  Makefile.am: corrected additional generated source dependencies.
+		Unparallelized some non-atomic targets.  
+	  lexer/purify_flex.awk: minor fix in member substitution.  
 
 
 	* ARTXX-00-01-04-main-00-68-merged-parser-04-06:
