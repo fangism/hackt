@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.18 2005/11/12 22:30:22 fang Exp $
+#	$Id: configure.ac,v 1.19 2005/11/14 02:13:28 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -107,6 +107,8 @@ AC_ISC_POSIX
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
+AC_CHECK_HEADERS([malloc.h])
+AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 # C++ wrappers to standard C headers
 AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
@@ -132,6 +134,11 @@ AC_CHECK_HEADERS([sstream strstream stringstream])
 # can't include <tr1/boost_shared_ptr.h> directly
 AC_CHECK_HEADERS([tr1/memory])
 AC_CHECK_HEADERS([tr1/tuple tr1/array])
+
+dnl suggestions from autoscan
+AC_FUNC_ALLOCA			dnl wanted by the y.tab.c generated
+AC_FUNC_CLOSEDIR_VOID		dnl wanted by src/util/dirent.cc
+AC_FUNC_STAT			dnl wanted by src/util/file_status.h
 
 # compiler characteristic checks
 AC_HEADER_STDBOOL
