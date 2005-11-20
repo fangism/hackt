@@ -1,4 +1,11 @@
 "test/TODO"
+	$Id: TODO,v 1.3 2005/11/20 09:24:14 fang Exp $
+
+Detected whether or not we are VPATH building, for the cases
+	where we copy or link tests (.stderr) from srcdir to builddir, 
+	we'd prefer to distinguish when we'd need to clean certain files.
+	e.g. if !VPATH, don't remove the stderr files, else remove them
+	upon cleaning!  see why in artc-expect.sh.in.
 
 Detect presence of certain old cast-based tools? like prsim?
 	Would be nice to conditionally run them as regression tests.  

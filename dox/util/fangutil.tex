@@ -1,24 +1,22 @@
 % "fangutil.tex"
 
-%	$Id: fangutil.tex,v 1.1 2005/05/04 19:31:45 fang Exp $
+%	$Id: fangutil.tex,v 1.2 2005/11/20 09:24:12 fang Exp $
 
 \documentclass[12pt]{book}
 
 % for dependency-tracking macros
 \input ../mk/maketexdepend
 
+\usepackage{ifpdf}
 \usepackage{verbatim}
 \usepackage{makeidx}
 
 % COMPILE OPTIONS
-\newif\ifpdf
-\ifx\pdfoutput\undefined
-  \pdffalse
+\ifpdf
+  \relax
 \else
-  \pdfoutput=1
-  \pdftrue
+  \let\pdfoutput=\PDFoutput
 \fi
-
 
 \ifpdf
 \usepackage[

@@ -1,21 +1,20 @@
 % "objfmt.tex"
-%	$Id: objfmt.tex,v 1.4 2005/05/08 20:50:39 fang Exp $
+%	$Id: objfmt.tex,v 1.5 2005/11/20 09:24:10 fang Exp $
 
 \documentclass[12pt]{book}
 
 % for dependency-tracking macros
 \input ../mk/maketexdepend
 
+\usepackage{ifpdf}
 \usepackage{verbatim}
 \usepackage{makeidx}
 
 % COMPILE OPTIONS
-\newif\ifpdf
-\ifx\pdfoutput\undefined
-  \pdffalse
+\ifpdf
+  \relax
 \else
-  \pdfoutput=1
-  \pdftrue
+  \let\pdfoutput=\PDFoutput
 \fi
 
 

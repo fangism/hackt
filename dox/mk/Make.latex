@@ -2,7 +2,7 @@
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.3 2005/07/23 06:51:14 fang Exp $
+#	$Id: Make.latex,v 1.4 2005/11/20 09:24:09 fang Exp $
 
 # dependence generation
 .tex.depend:
@@ -99,8 +99,9 @@ endif
 
 # files that may conflict between latex and pdflatex
 # may add .lof, .lot, for list of ...
-clean-temps:
-	-$(RM) *.aux *.toc *.bbl *.ind *.stamp
+
+clean-temps: clean-bib clean-index clean-aux
+	-$(RM) *.stamp
 
 clean-bib:
 	-$(RM) *.bbl *.blg
@@ -109,7 +110,7 @@ clean-index:
 	-$(RM) *.idx *.ind *.ilg *.out
 
 clean-aux:
-	-$(RM) *.aux *.log *.toc *.stamp
+	-$(RM) *.aux *.log *.toc *.depend
 
 clean-depend:
 	-$(RM) *.depend
@@ -117,5 +118,5 @@ clean-depend:
 clean-docs:
 	-$(RM) *.ps *.dvi *.pdf
 
-clean-local: clean-bib clean-index clean-aux clean-depend clean-docs
+clean-local: clean-docs clean-temps clean-depend
 

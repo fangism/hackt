@@ -1,24 +1,22 @@
 % "artxx.tex"
 
-%	$Id: artxx.tex,v 1.12 2005/06/20 19:47:35 fang Exp $
+%	$Id: artxx.tex,v 1.13 2005/11/20 09:24:09 fang Exp $
 
 \documentclass[12pt]{book}
 
 % for dependency-tracking macros
 \input ../mk/maketexdepend
 
+\usepackage{ifpdf}
 \usepackage{verbatim}
 \usepackage{makeidx}
 
 % COMPILE OPTIONS
-\newif\ifpdf
-\ifx\pdfoutput\undefined
-  \pdffalse
+\ifpdf
+  \relax
 \else
-  \pdfoutput=1
-  \pdftrue
+  \let\pdfoutput=\PDFoutput
 \fi
-
 
 \ifpdf
 \usepackage[
