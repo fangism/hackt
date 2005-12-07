@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.10 2005/11/02 22:53:49 fang Exp $
+	$Id: TODO,v 1.11 2005/12/07 22:36:38 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -39,6 +39,15 @@ persistent_object_manager:
 	upon exception thrown during load_objects, 
 		properly delete all transients and rethrow, 
 		to prevent bogus memory leak on exception. 
+
+	Alternative to deriving everything from class persistent:
+	write a proxy class to manage the object lifetime
+		saving and reconstruction.  
+	virtualize these proxy classes instead of the classes themselves.
+	reduces invasiveness by not requiring direct inheritance
+		from class persistent, but uses template polymorphism
+		to implement a certain interface.  
+		(reference: see how AST::node was removed from hierarchy)
 
 -------------------------------------------------------------------------------
 

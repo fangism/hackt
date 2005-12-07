@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.19 2005/11/14 02:13:28 fang Exp $
+#	$Id: configure.ac,v 1.20 2005/12/07 22:36:36 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -257,6 +257,9 @@ AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )
 
 AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
 AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
+
+AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
+AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )
 
 # some substitution variables for the doxygen configuration
 if test -n "$DOT"

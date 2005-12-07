@@ -1,13 +1,15 @@
 # "DevelopmentPlan.dot"
+#	$Id: DevelopmentPlan.dot,v 1.8 2005/12/07 22:36:36 fang Exp $
 
 digraph G {
 size="7,10";
 
 ARTXX_00_01_04		[shape=box, style=filled, label="ART++ 0.1.4"];
-ARTXX_00_01_04_b	[shape=box, style=filled, fillcolor=green, 
+ARTXX_00_01_04_b	[shape=box, style=filled, 
 				label="ART++ 0.1.4 (b)"];
-ARTXX_00_01_04_c	[shape=box, label="ART++ 0.1.4 (c)"];
-ARTXX_00_01_05		[shape=box, label="HACKT 0.1.5"];
+ARTXX_00_01_04_c	[shape=box, style=filled, label="ART++ 0.1.4 (c)"];
+HACKT_00_01_05		[shape=box, style=filled, fillcolor=green,
+				label="HACKT 0.1.5"];
 
 DOCS_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow, 
 				label="language spec.\ndocumentation"];
@@ -18,29 +20,34 @@ LEX_00_01_04		[shape=ellipse, style=filled,
 TOKENPOOL_00_01_04	[shape=ellipse, style=filled, label="token pooling"];
 NODELIST_00_01_04	[shape=ellipse, style=filled, 
 				label="node-list\ntemplate"];
-PARSER_B_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
+PARSER_B_00_01_04	[shape=ellipse, style=filled,
 				label="parser phase 2"];
-MULTIFILE_00_01_04	[shape=ellipse, label="multi-file input"];
-IMPORT_00_01_05		[shape=ellipse, label="import/exporting"];
-UNIQUE_00_01_04		[shape=ellipse, label="unique instantiation"];
+MULTIFILE_00_01_04	[shape=ellipse, style=filled, label="multi-file input"];
+IMPORT_00_01_05		[shape=ellipse, style=filled, fillcolor=yellow,
+				label="import/exporting"];
+UNIQUE_00_01_04		[shape=ellipse, style=filled, 
+				label="unique instantiation"];
 ALIAS_00_01_04		[shape=ellipse, style=filled, label="alias connection"];
-PORT_00_01_04		[shape=ellipse, label="port connection"];
-MEMBER_00_01_04		[shape=ellipse, label="member reference\nunrolling"];
-TYPEDEF_00_01_04	[shape=ellipse, label="typedef unrolling\nresolution"];
-DEFFAMILY_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow, 
+PORT_00_01_04		[shape=ellipse, style=filled, label="port connection"];
+MEMBER_00_01_04		[shape=ellipse, style=filled, label="member reference\nunrolling"];
+TYPEDEF_00_01_04	[shape=ellipse, style=filled, label="typedef unrolling\nresolution"];
+DEFFAMILY_00_01_04	[shape=ellipse, style=filled, 
 				label="definition families"];
-DEFLAYOUT_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow, 
+DEFLAYOUT_00_01_04	[shape=ellipse, style=filled,
 				label="definition layout"];
 INSTSTMT_00_01_04	[shape=ellipse, style=filled, 
 				label="rework inst. stmt.\ntemplates"];
-TYPEREF_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow,
+TYPEREF_00_01_04	[shape=ellipse, style=filled, 
 				label="rework type\nreference templates"];
-EXTTEMPLATE_00_01_04	[shape=ellipse, label="extended\ntemplate signatures"];
-CONNECTEQ_00_01_04	[shape=ellipse, label="connection\ntype-equivalence"];
-CFLAT_00_01_04		[shape=ellipse, label="CFLAT backward\ncompatbility"];
-PRS_00_01_04		[shape=ellipse, label="PRS type-check"];
+EXTTEMPLATE_00_01_04	[shape=ellipse, style=filled, label="extended\ntemplate signatures"];
+CONNECTEQ_00_01_04	[shape=ellipse, style=filled, 
+				label="connection\ntype-equivalence"];
+CFLAT_00_01_04		[shape=ellipse, style=filled, 
+				label="CFLAT backward\ncompatbility"];
+PRS_00_01_04		[shape=ellipse, style=filled, label="PRS type-check"];
 ERRORTREE_00_01_04	[shape=ellipse, label="error tree\nconstruction"];
-MULTIPARSE_00_01_04	[shape=ellipse, label="multiple\nmodular parsers"];
+MULTIPARSE_00_01_04	[shape=ellipse, style=filled, fillcolor=yellow, 
+				label="multiple\nmodular parsers"];
 
 ARTXX_00_01_04 -> DOCS_00_01_04;
 ARTXX_00_01_04 -> PARSER_00_01_04;
@@ -73,26 +80,29 @@ PARSER_B_00_01_04 -> MULTIFILE_00_01_04;
 MULTIFILE_00_01_04 -> IMPORT_00_01_05;
 UNIQUE_00_01_04 -> PRS_00_01_04;
 
-ARTXX_00_01_04_c -> ARTXX_00_01_05;
+ARTXX_00_01_04_c -> HACKT_00_01_05;
 PRS_00_01_04 -> CFLAT_00_01_04;
 ARTXX_00_01_04_c -> CFLAT_00_01_04;
+MULTIFILE_00_01_04 -> CFLAT_00_01_04;
 CONNECTEQ_00_01_04 -> ARTXX_00_01_04_c;
-DOCS_00_01_04 -> ARTXX_00_01_05;
-ERRORTREE_00_01_04 -> ARTXX_00_01_05;
+DOCS_00_01_04 -> HACKT_00_01_05;
+ERRORTREE_00_01_04 -> HACKT_00_01_05;
 PARSER_B_00_01_04 -> MULTIPARSE_00_01_04;
-MULTIPARSE_00_01_04 -> ARTXX_00_01_05;
+MULTIPARSE_00_01_04 -> HACKT_00_01_05;
+CFLAT_00_01_04 -> HACKT_00_01_05;
 
-CHP_00_01_05		[shape=ellipse, label="CHP type-check"];
+CHP_00_01_05		[shape=ellipse, style=filled, fillcolor=yellow, 
+				label="CHP type-check"];
 CHPSYNTH_00_01_05	[shape=ellipse, label="CHP synthesis"];
 CHPSIM_00_01_05		[shape=ellipse, label="CHP simulation"];
 VTPRSIM_00_01_05	[shape=ellipse, label="VTPRSIM\nsimulation f.w."];
 MIXSIM_00_01_05		[shape=ellipse, label="mixed simulation"];
 
-ARTXX_00_01_05 -> CHP_00_01_05;
+HACKT_00_01_05 -> CHP_00_01_05;
 CHP_00_01_05 -> CHPSYNTH_00_01_05;
 CHP_00_01_05 -> CHPSIM_00_01_05;
 PRS_00_01_04 -> VTPRSIM_00_01_05;
-ARTXX_00_01_05 -> VTPRSIM_00_01_05;
+HACKT_00_01_05 -> VTPRSIM_00_01_05;
 VTPRSIM_00_01_05 -> MIXSIM_00_01_05;
 CHPSIM_00_01_05 -> MIXSIM_00_01_05;
 

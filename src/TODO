@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.9 2005/11/12 08:45:32 fang Exp $
+#	$Id: TODO,v 1.10 2005/12/07 22:36:38 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -46,6 +46,25 @@ compare memory usage between using flattened production rule arrays
 
 in general check memory usage of large arrays of things
 	make benchmarks directory.
+
+===============================================================================
+hackt diff (or objdiff):
+	a program to detail the differences between two object files
+	differences can be structural, 
+	or source-code based (debug line numbers)
+	or phase differences.  
+	missing objects, 
+	unrolling/creating state differences, etc...
+
+	this would be useful in determining whether or not a source
+	file has changed "non-trivially."
+
+	the crude substitute for now would be to look at the 
+	differences in the textual objdump.  
+
+	also consider implementing this as a script in combination
+		with executable.  
+		run unix diff first, etc...
 
 ===============================================================================
 Interactive shell:
