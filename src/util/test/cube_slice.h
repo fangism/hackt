@@ -1,10 +1,10 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.6 2005/09/04 21:15:10 fang Exp $
+	$Id: cube_slice.h,v 1.7 2005/12/08 22:01:14 fang Exp $
  */
 
-#include <assert.h>
+#include "util/macros.h"
 #include <string>
 #include "util/STL/list.tcc"
 #include <iostream>
@@ -100,7 +100,7 @@ public:
 
 	void
 	validate_2d_slice(const list<int>& l, const list<int>& u, 
-		const pair<list<int>, list<int> >& probe) const {
+		const pair<list<int>, list<int> >& UNNAMED(probe)) const {
 		assert(l.size() == 2 && u.size() == 2);
 		// more difficult...
 	}

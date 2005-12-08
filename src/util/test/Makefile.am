@@ -161,6 +161,7 @@ AM_CPPFLAGS = -I$(srcdir)/../..
 # excluding .. from now on
 # AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
+if HAVE_GXX
 # some of these flags are deadly...
 GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused-parameter -Wshadow \
 	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
@@ -171,8 +172,17 @@ WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wsign-promo	# kills some code
 DIALECT_FLAGS = -ansi -pedantic-errors
-MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
-MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
+PIPE_FLAG = -pipe
+else
+GENERAL_WARN_FLAGS =
+WARN_CFLAGS =
+WARN_CXXFLAGS =
+DIALECT_FLAGS =
+PIPE_FLAG =
+endif
+
+MORE_CFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
+MORE_CXXFLAGS = $(PIPE_FLAG)  $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)

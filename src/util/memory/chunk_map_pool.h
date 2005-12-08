@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.6 2005/08/08 16:51:15 fang Exp $
+	$Id: chunk_map_pool.h,v 1.7 2005/12/08 22:01:13 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -131,7 +131,11 @@ template <>
 struct chunk_size_traits<64> {
 //	enum { size = 64 };
 //	typedef	uint64			bit_map_type;
+#if SIZEOF_UINT64_T
 	typedef	uint64			print_type;
+#else
+	// ...
+#endif
 };
 
 //=============================================================================

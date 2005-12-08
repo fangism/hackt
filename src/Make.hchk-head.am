@@ -1,5 +1,5 @@
 # "src/Make.hchk-head.am"
-#	$Id: Make.hchk-head.am,v 1.2 2005/08/04 23:02:53 fang Exp $
+#	$Id: Make.hchk-head.am,v 1.3 2005/12/08 22:01:11 fang Exp $
 # Makefile header for enforcing header checks.
 # Counterpart is "src/Make.hchk-tail.am"
 
@@ -18,7 +18,7 @@
 include $(top_srcdir)/Make.stddef
 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES += .hchk .tccchk
+SUFFIXES += .hchk .hhchk .tccchk
 
 ALL_HEADER_FILES =
 ALL_TCC_FILES =

@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/bigger_ints.h"
 	Synthesized bigger integer types.  
-	$Id: bigger_ints.h,v 1.2 2005/08/08 16:51:15 fang Exp $
+	$Id: bigger_ints.h,v 1.3 2005/12/08 22:01:13 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_BIGGER_INTS_H__
@@ -97,13 +97,13 @@ struct cat_int {
 	}
 
 	this_type
-	operator << (const size_t s) {
+	operator << (const size_t s) const {
 		return this_type(half[0] << s,
 			(half[1] << s) | (half[0] >> (half_size -s)));
 	}
 
 	this_type
-	operator >> (const size_t s) {
+	operator >> (const size_t s) const {
 		return this_type((half[0] >> s) | (half[1] << half_size -s),
 			(half[1] >> s));
 	}
@@ -128,15 +128,27 @@ struct cat_int {
 // extended typedefs
 // caveat: only can do bit manipulation, no arithmetic yet
 
+#if !SIZEOF_UINT64_T
+template <> struct uint_of_size<64> {	typedef	std::bitset<64>	type; };
+#endif
 template <> struct uint_of_size<128> {	typedef	std::bitset<128>	type; };
 template <> struct uint_of_size<256> {	typedef	std::bitset<256>	type; };
 
+#if !SIZEOF_UINT64_T
+typedef	uint_of_size<64>::type	uint64;
+#endif
 typedef	uint_of_size<128>::type	uint128;
 typedef	uint_of_size<256>::type	uint256;
 
+#if !SIZEOF_UINT64_T
+template <> struct half_type<uint64> {		typedef	uint32	type; };
+#endif
 template <> struct half_type<uint128> {		typedef	uint64	type; };
 template <> struct half_type<uint256> {		typedef	uint128	type; };
 
+#if !SIZEOF_UINT64_T
+template <> struct double_type<uint32> {	typedef	uint64	type; };
+#endif
 template <> struct double_type<uint64> {	typedef	uint128	type; };
 template <> struct double_type<uint128> {	typedef	uint256	type; };
 

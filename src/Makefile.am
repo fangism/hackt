@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.87 2005/11/14 02:01:41 fang Exp $
+#	$Id: Makefile.am,v 1.88 2005/12/08 22:01:11 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -785,7 +785,7 @@ YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
 
 parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
 		parser/$(HACKT_PARSE_ROOT)-real.h
-	@if ! [ -s parser/hackt.types ] ; then \
+	@if test ! -s parser/hackt.types ; then \
 		$(ECHO) "parser/hackt.types is empty!" ; \
 		exit 1 ; \
 	fi
@@ -801,6 +801,8 @@ AM_CPPFLAGS = -I$(srcdir)
 # the last -Iparser is for the relative path in the build directory
 
 # extremely anal-retentive
+if HAVE_GXX
+# our good friend, g++
 GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused-parameter \
 	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
 WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
@@ -808,9 +810,23 @@ WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
 WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
 # -Wsign-promo
 DIALECT_FLAGS = -ansi -pedantic-errors
-# -pedantic		# kills some pointer class conversions, fix later...
-MORE_CFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
-MORE_CXXFLAGS = -pipe $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
+PIPE_FLAG = -pipe
+else
+# non-GNU compiler: your guess is as good as mine
+GENERAL_WARN_FLAGS =
+WARN_CFLAGS =
+WARN_CXXFLAGS =
+DIALECT_FLAGS =
+PIPE_FLAG =
+endif
+# TODO: would like to have these flags available
+# at configure time during compile of conftest's.
+# KNOWN ISSUE: for example -ansi -pedantic will disable long long
+# but unless these flags are given at configure time (say, by the user)
+# configure will test things with the wrong flags, producing wrong results. 
+
+MORE_CFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
+MORE_CXXFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 # These flags are used to cancel out previous warning flags, 
 # such exceptions are needed for the automatic lexers and parsers
 PARSER_NOWARN_FLAGS = -Wno-unused -Wno-old-style-cast -Wno-shadow
@@ -1062,7 +1078,7 @@ SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	util/obsolete/.cvsignore \
 	test/.cvsignore
 
-all: cvsignore
+all-local: cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)
 

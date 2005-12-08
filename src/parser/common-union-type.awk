@@ -1,7 +1,7 @@
 #!/usr/bin/awk -f
 # "common-union-type.awk"
 # David Fang, 2004
-#	$Id: common-union-type.awk,v 1.4 2005/11/10 02:13:08 fang Exp $
+#	$Id: common-union-type.awk,v 1.5 2005/12/08 22:01:12 fang Exp $
 
 # CO-DEPENDENT ON:
 # parser/yacc-union-type.awk OR parser/bison-union-type.awk
@@ -73,7 +73,11 @@ BEGIN {
 	# but namespaces need to be opened and declared before used!
 	nns = split(namespace, ns_array);
 	for (i=1; i<= nns; i++) {
-		delete spaces;		# clear first
+		# note: delete <array> is a gawk extension, and not POSIX
+		# delete spaces;		# clear first
+		for (s in spaces) {
+			delete spaces[s];
+		}
 		depth = split(ns_array[i], spaces, "::");
 		# just open and close (nested)
 		for (j=1; j <= depth; j++)
@@ -133,7 +137,7 @@ function process_union(file,
 	# local variables
 	member_type, member_id ) {
 if (!got_union) {
-	do { getline < file; } while(!match($0, "%union.*{"));
+	do { getline < file; } while(!match($0, "%union.*\\{"));
 	# then we know we're in a union
 	while (getline < file) {
 	if (match($0, "[}]"))

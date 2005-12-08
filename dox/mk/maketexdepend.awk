@@ -2,7 +2,7 @@
 
 # "maketexdepend.awk"
 # by Fang <fangism@users.sourceforge.net>
-#	$Id: maketexdepend.awk,v 1.2 2005/06/20 19:47:36 fang Exp $
+#	$Id: maketexdepend.awk,v 1.3 2005/12/08 22:01:07 fang Exp $
 #
 # auto-generate LaTeX dependencies
 # usage: awk -f <this script> [variables] <top-level tex file>
@@ -207,7 +207,9 @@ if (num_deps) {		# > 0
 
 if (!flat_mode) {
 	# print left-hand-side of the dependence rule
-	delete extarray;
+	# NOTE: delete <array> is a gawk extension and not POSIX!
+	# delete extarray;
+	for (e in extarray) delete extarray[e];
 	num_ext = split(extensions, extarray);
 	print "";
 	for (i=1; i<=num_ext; i++) {

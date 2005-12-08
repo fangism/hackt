@@ -6,11 +6,13 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.8 2005/10/08 01:40:03 fang Exp $
+	$Id: macros.h,v 1.9 2005/12/08 22:01:13 fang Exp $
  */
 
 #ifndef	__UTIL_MACROS_H__
 #define	__UTIL_MACROS_H__
+
+#include "config.h"
 
 #ifndef	NULL
 #define	NULL			0
@@ -74,6 +76,17 @@
 	they are distasteful and dangerous (and rarely necessary). 
  */
 #define	TO_A(type, id)		reinterpret_cast<type>(id)
+
+//=============================================================================
+/**
+	A seemingly useless macro, resulting in a blank.  
+	This is used for situations where the compiler
+	(incorrectly) rejects an unused parameter.  
+	This just removes the name of the parameter to
+	suppress the warning.  
+	An old release of gcc-3.3 is known to have this problem.  
+ */
+#define	UNNAMED(x)
 
 //=============================================================================
 // various assertions, debug statements...

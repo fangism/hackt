@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "test-expect.sh.in"
-#	$Id: test-expect.sh.in,v 1.3 2005/11/03 07:52:07 fang Exp $
+#	$Id: test-expect.sh.in,v 1.4 2005/12/08 22:01:14 fang Exp $
 # This file came from "test-expect.sh" in revision prehistory.  
 
 # $1 is the executable, expecting no input
@@ -14,17 +14,17 @@ bldroot=$1
 morefilter=$srcroot.morefilter.sh
 
 $cmd > $bldroot.out 2>&1
-if [ $? -gt 1 ] ; then exit 1 ; fi
+if test $? -gt 1 ; then exit 1 ; fi
 
 $filter $bldroot.out > $bldroot.out.filter
 
 # because some .stderr files are auto-generated, and may be in
 # the build directory, not the source directory
-if [ -f $srcroot.stderr ]
+if test -f $srcroot.stderr
 then
 	expect=$srcroot.stderr
 else
-	if [ -f $1.stderr ]
+	if test -f $1.stderr
 	then
 		expect=$1.stderr
 	else
@@ -38,7 +38,7 @@ $filter $expect > $bldroot.stderr.filter
 # optional filter hook script, to do more than the default filtering
 # requirement of morefilter script: should mv .filter files to .prefilter
 #	and create replacement .filter files from the .prefilter files
-if [ -f $morefilter ]
+if test -f $morefilter
 then
 	mv -f $bldroot.stderr.filter $bldroot.stderr.prefilter
 	mv -f $bldroot.out.filter $bldroot.out.prefilter
@@ -47,7 +47,7 @@ then
 	@DIFF@ -u $bldroot.stderr.prefilter $bldroot.out.prefilter 2>&1 | \
 		@CAT@ > $bldroot.prefilter.diff
 	# what the heck, print a warning message, just FYI
-	if [ -s $bldroot.prefilter.diff ]
+	if test -s $bldroot.prefilter.diff
 	then
 		@ECHO@ "$bldroot.prefilter.diff is actually non-empty.  (OK)"
 	fi
@@ -56,7 +56,7 @@ fi
 @DIFF@ -u $bldroot.stderr.filter $bldroot.out.filter 2>&1 | \
 	@CAT@ > $bldroot.diff
 
-if [ -s $bldroot.diff ]
+if test -s $bldroot.diff
 then
 	@ECHO@ "$bldroot.diff is non-empty!"
 	exit 1

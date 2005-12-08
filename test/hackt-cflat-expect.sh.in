@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.5 2005/11/02 22:53:50 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.6 2005/12/08 22:01:15 fang Exp $
 
 # NOTE: tepomrarily just uses stdout dump during execution
 # will updated later...
@@ -12,7 +12,7 @@
 # $4 is the test report log file, summarizing results
 # other subsequent arguments are ignored
 
-# if [ $# -lt 5 ] ; then exit 1 ; fi
+# if test $# -lt 5 ; then exit 1 ; fi
 
 cflat=$1
 srcroot=$2/$3
@@ -20,7 +20,7 @@ bldroot=$3
 logfile=$4
 
 # a pre-created (already created) object file must already exist
-if ! [ -s $bldroot.hacktobjalloc ]
+if test ! -s $bldroot.hacktobjalloc
 then
 	@ECHO@ "$bldroot.hacktobjalloc doesn't exist or is empty."
 	exit 1
@@ -36,32 +36,32 @@ case $? in
 esac
 
 # .allocstderr comparison file must exist
-if ! [ -f $srcroot.expect-prs ] && ! [ -f $bldroot.expect-prs ]
+if test ! -f $srcroot.expect-prs && test ! -f $bldroot.expect-prs
 then
 	@ECHO@ "Missing $srcroot.expect-prs"
 	exit 1
 fi
 
 # some PRS may be empty
-if [ -s $bldroot.prs ]
+if test -s $bldroot.prs
 then
 	@DIFF@ -u $srcroot.expect-prs $bldroot.prs > $bldroot.prsdiff
 else
 	@DIFF@ -u $bldroot.expect-prs $bldroot.prs > $bldroot.prsdiff
 fi
 
-if [ -s $bldroot.prsdiff ]
+if test -s $bldroot.prsdiff
 then
 	@ECHO@ "$bldroot.prsdiff is non-empty!  See $logfile."
 	@ECHO@ `pwd`/"$bldroot.prsdiff" >> $logfile
 	# additional analysis to see if is just re-ordering difference
-	if [ -s $srcroot.expect-prs ] && [ -s $bldroot.prs ]
+	if test -s $srcroot.expect-prs && test -s $bldroot.prs
 	then
 		@SORT@ $srcroot.expect-prs > $bldroot.expect-prs.sort
 		@SORT@ $bldroot.prs > $bldroot.prs.sort
 		@DIFF@ -u $bldroot.expect-prs.sort $bldroot.prs.sort \
 			> $bldroot.prsdiff.sort
-		if ! [ -s $bldroot.prsdiff.sort ]
+		if test ! -s $bldroot.prsdiff.sort
 		then
 			@ECHO@ "Only re-ordering differencies found.  (OK)"
 		fi
@@ -69,7 +69,7 @@ then
 	exit 1
 @HAVE_PRSIM_TRUE@else
 @HAVE_PRSIM_TRUE@	@PRSIM@ $bldroot.prs < /dev/null > /dev/null 2>&1
-@HAVE_PRSIM_TRUE@	if [ $? -ne 0 ]
+@HAVE_PRSIM_TRUE@	if test $? -ne 0
 @HAVE_PRSIM_TRUE@	then
 @HAVE_PRSIM_TRUE@		@ECHO@ "Error: @PRSIM@ rejected $bldroot.prs."
 @HAVE_PRSIM_TRUE@		exit 1

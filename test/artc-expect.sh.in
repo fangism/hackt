@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "artc-expect.sh.in"
-#	$Id: artc-expect.sh.in,v 1.6 2005/11/12 22:30:27 fang Exp $
+#	$Id: artc-expect.sh.in,v 1.7 2005/12/08 22:01:14 fang Exp $
 # This file came from "artc-expect.sh" in revision pre-history.
 
 # $1 is the executable, expecting input from stdin ("hackt parse_test")
@@ -12,7 +12,7 @@
 # $5 is the test report log file, summarizing results
 # other subsequent arguments are ignored
 
-# if [ $# -lt 6 ] ; then exit 1 ; fi
+# if test $# -lt 6 ; then exit 1 ; fi
 
 # need to search source directory for VPATH builds
 cmd="$1 -I $2"
@@ -29,11 +29,11 @@ logfile=$5
 
 # intentionally using stdin to avoid file name differences in output diff-ing
 $cmd < $srcroot.in > $bldroot.test 2>&1
-if [ $? -gt 1 ] ; then exit 1 ; fi
+if test $? -gt 1 ; then exit 1 ; fi
 @CAT@ $bldroot.test | $filter > $bldroot.test.filter
-if [ -f $srcroot.stderr ] ; then
+if test -f $srcroot.stderr ; then
 	@DIFF@ -bu $srcroot.stderr $bldroot.test.filter > $bldroot.diff 2>&1
-elif [ -f $bldroot.stderr ] ; then
+elif test -f $bldroot.stderr ; then
 	# this would've been created by the Makefile automatically
 	@DIFF@ -bu $bldroot.stderr $bldroot.test.filter > $bldroot.diff 2>&1
 else
@@ -50,11 +50,11 @@ fi
 # NOTE: so far, byacc results in the same state machine as yacc
 # thus the yacc tests are re-usable for byacc, we only need to check for bison.
 
-@HAVE_BISON_TRUE@if [ -s $bldroot.diff ] ; then
-@HAVE_BISON_TRUE@	if [ -f $srcroot.stderr.bison ] ; then
+@HAVE_BISON_TRUE@if test -s $bldroot.diff ; then
+@HAVE_BISON_TRUE@	if test -f $srcroot.stderr.bison ; then
 @HAVE_BISON_TRUE@	@DIFF@ -bu $srcroot.stderr.bison $bldroot.test.filter \
 @HAVE_BISON_TRUE@		> $bldroot.bison.diff 2>&1
-@HAVE_BISON_TRUE@		if ! [ -s $bldroot.bison.diff ] ; then
+@HAVE_BISON_TRUE@		if test ! -s $bldroot.bison.diff ; then
 @HAVE_BISON_TRUE@			mv -f $bldroot.bison.diff $bldroot.diff
 @HAVE_BISON_TRUE@		else
 @HAVE_BISON_TRUE@			@ECHO@ "$bldroot.bison.diff is non-empty!"
@@ -65,7 +65,7 @@ fi
 @HAVE_BISON_TRUE@	fi
 @HAVE_BISON_TRUE@fi
 
-if [ -s $bldroot.diff ] ; then
+if test -s $bldroot.diff ; then
 	@ECHO@ "$bldroot.diff is non-empty!  See $logfile."
 	@ECHO@ `pwd`/"$bldroot.diff" >> $logfile
 	exit 1

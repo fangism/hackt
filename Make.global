@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.9 2005/11/14 02:01:09 fang Exp $
+#	$Id: Make.global,v 1.10 2005/12/08 22:01:05 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -21,9 +21,10 @@ all: cvsignore
 
 # phony recursive target
 cvsignore: .cvsignore force
-	@for d in $(SUBDIRS) ; do \
-		if [ $$d != . ] ; then \
-			if [ -d $$d ] ; then \
+	@subdirs='$(SUBDIRS)'; \
+	for d in $$subdirs ; do \
+		if test $$d != . ; then \
+			if test -d $$d ; then \
 				$(MAKE) -C $$d cvsignore ; \
 			fi ; \
 		fi ; \
@@ -35,9 +36,10 @@ clean-cvsignore: clean-cvsignore-recursive
 # extra prefix ". " needed for shell script interpretation
 # note: cd $$d; make ... will not work!
 clean-cvsignore-recursive:
-	@for d in $(SUBDIRS) ; do \
-		if [ $$d != . ] ; then \
-			if [ -d $$d ] ; then \
+	@subdirs='$(SUBDIRS)'; \
+	for d in $$subdirs ; do \
+		if test $$d != . ; then \
+			if test -d $$d ; then \
 				$(MAKE) -C $$d clean-cvsignore ; \
 			fi ; \
 		fi ; \

@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.23 2005/12/07 22:36:36 fang Exp $
+#	$Id: Makefile.am,v 1.24 2005/12/08 22:01:05 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -67,7 +67,7 @@ endif
 # .PRECIOUS: distcheck.log
 # doesn't work, tries to override previous definition without accumulating
 distcheck.log: force
-	@if [ -f $@ ] ; then $(MV) $@ $@~ ; fi
+	@if test -f $@ ; then $(MV) $@ $@~ ; fi
 	@$(ECHO) "Logging \"make distcheck\" to $@ ..."
 	@$(ECHO) Tests started `$(DATE)` > $@.tmp
 	-$(MAKE) distcheck >> $@.tmp 2>&1

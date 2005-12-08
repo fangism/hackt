@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.3 2005/09/04 21:14:38 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.4 2005/12/08 22:01:11 fang Exp $
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
 
@@ -37,6 +37,21 @@ else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< -c $(EMPTY_SOURCE) -o $@
 endif
 
+.hh.hhchk:
+	@$(ECHO) "Validating $< ... "
+if am__fastdepCXX
+	@depbase=`$(ECHO) $@ | $(SED) 's|[^/]*$$|$(DEPDIR)/&|;s|\.hhchk$$||'`; \
+	if $(CXXCOMPILE) -I$(srcdir) -include $< \
+		$(FAST_MAKEDEP_FLAGS) "$$depbase.Thhd" \
+		-c $(EMPTY_SOURCE) -o $@; \
+	then $(CAT) "$$depbase.Thhd" | $(FILTER_HEADER_DEPS) | \
+		$(PROMOTE_HEADER_DEPS) > "$$depbase.hhchkd"; \
+		$(RM) "$$depbase.Thhd" ; \
+	else $(RM) "$$depbase.Thhd"; exit 1; fi
+else
+	@$(CXXCOMPILE) -I$(srcdir) -include $< -c $(EMPTY_SOURCE) -o $@
+endif
+
 .tcc.tccchk:
 	@$(ECHO) "Validating $< ... "
 if am__fastdepCXX
@@ -52,7 +67,6 @@ else
 	@$(CXXCOMPILE) -I$(srcdir) -include $< -c $(EMPTY_SOURCE) -o $@
 endif
 
-
 EXTRA_DIST += scripts/automake_include.awk \
 	scripts/promote_header_deps.awk
 
@@ -61,8 +75,15 @@ EXTRA_DIST += scripts/automake_include.awk \
 # This means we have to fake an object file in each subdirectory
 # containing headers we want to check for standalone-ness.  
 # Really, they should just be able to link to "test/header_test.cc"
-HEADER_TCC_TESTS = $(ALL_HEADER_FILES:.h=.hchk) $(ALL_TCC_FILES:.tcc=.tccchk)
-HEADER_TCC_DEPBASES = $(ALL_HEADER_FILES:.h=.hchkd) $(ALL_TCC_FILES:.tcc=.tccchkd)
+HEADER_TCC_TESTS = \
+	$(ALL_HEADER_FILES:.h=.hchk) \
+	$(ALL_CXX_HEADER_FILES:.hh=.hhchk) \
+	$(ALL_TCC_FILES:.tcc=.tccchk)
+
+HEADER_TCC_DEPBASES = \
+	$(ALL_HEADER_FILES:.h=.hchkd) \
+	$(ALL_CXX_HEADER_FILES:.hh=.hhchkd) \
+	$(ALL_TCC_FILES:.tcc=.tccchkd)
 
 check-headers: $(HEADER_TCC_TESTS)
 	@$(ECHO) All header tests passed.
@@ -79,7 +100,14 @@ headers_deps.make: Makefile.am
 # really only needed for dynamic dependence-tracking
 include headers_deps.make
 
-all: check-headers
+# may be disabled to speed up building
+if ENABLE_HEADER_VALIDATION
+all-check-headers: check-headers
+else
+all-check-headers:
+endif
+
+all-local: all-check-headers
 
 clean-header-tests:
 	-$(RM) $(HEADER_TCC_TESTS)

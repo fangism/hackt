@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_flex.awk"
-#	$Id: purify_flex.awk,v 1.3 2005/11/14 02:01:44 fang Exp $
+#	$Id: purify_flex.awk,v 1.4 2005/12/08 22:01:12 fang Exp $
 # helper script to transform flex's generated scanner into a pure-scanner.
 # one that is re-entrant.  
 # This script was copy-inspired from "parser/purify_yacc.awk"
@@ -21,7 +21,10 @@ BEGIN {
 		name = "foo";
 	# associative array with reduced member name
 	# name of state struct member should be the same
-	delete members;
+	# NOTE: delete <array> is a gawk extension, and not POSIX
+	# delete members;
+	for (m in members) delete members[m];
+	
 	# dupe = name "\\." name;
 
 	# some names are referenced in macro definitions before their 

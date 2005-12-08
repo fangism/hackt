@@ -1,10 +1,11 @@
 /**
 	\file "friend_function_formal_bug.cc"
 	Example of a major bug in gcc-3.3, and its workaround.  
-	$Id: friend_function_formal_bug.cc,v 1.3 2005/09/04 21:15:11 fang Exp $
+	$Id: friend_function_formal_bug.cc,v 1.4 2005/12/08 22:01:14 fang Exp $
  */
 
 #include <vector>
+#include "util/macros.h"
 
 #if 0
 // forward declarations
@@ -39,8 +40,10 @@ public:
 	}
 
 #if 1
+	// some old gcc-3.3 rejects an unused named parameter with -Wall
+	// even with -Wno-unused-parameter flag ... arg
 	void
-	deallocate(T* p) {
+	deallocate(T* UNNAMED(p)) {
 		// for now do nothing
 	}
 #endif

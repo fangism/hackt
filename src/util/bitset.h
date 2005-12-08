@@ -1,7 +1,7 @@
 /**
 	\file "util/bitset.h"
 	Extended bitset.
-	$Id: bitset.h,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: bitset.h,v 1.3 2005/12/08 22:01:12 fang Exp $
  */
 
 #ifndef	__UTIL_BITSET_H__
@@ -106,11 +106,13 @@ struct print_bits_hex {
 	operator () (std::ostream&, const T&) const;
 };	// end class print_bits_hex
 
+#if SIZEOF_UINT64_T
 template <>
 struct print_bits_hex<uint64> {
 	std::ostream&
 	operator () (std::ostream&, const uint64&) const;
 };	// end class print_bits_hex
+#endif
 
 /**
 	Currently prints binary, not hex...

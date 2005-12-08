@@ -3,7 +3,7 @@
 # This file came from "artobj-diff.sh" in revision prehistory.  
 
 # compares textual object dumps
-#	$Id: artobj-diff.sh.in,v 1.4 2005/11/10 02:13:12 fang Exp $
+#	$Id: artobj-diff.sh.in,v 1.5 2005/12/08 22:01:15 fang Exp $
 
 # $1 is the executable for generating the object file, ("hackt compile")
 #	and producing a textual dump to stderr.  
@@ -29,20 +29,20 @@ bldroot=$4
 filter=$5
 logfile=$6
 
-if ! [ -e $bldroot.test ] ; then exit 1 ; fi
+if test ! -e $bldroot.test ; then exit 1 ; fi
 
 $cmd $srcroot.in $bldroot.artobj > $bldroot.outdump 2>&1
-if [ $? -ne 0 ] ; then exit 1; fi
+if test $? -ne 0 ; then exit 1; fi
 
 $dump $bldroot.artobj > $bldroot.indump 2>&1
-if [ $? -ne 0 ] ; then exit 1; fi
+if test $? -ne 0 ; then exit 1; fi
 
 @CAT@ $bldroot.outdump | $filter > $bldroot.outdump.filter
 @CAT@ $bldroot.indump | $filter > $bldroot.indump.filter
 @DIFF@ -b -u $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | \
 	@CAT@ > $bldroot.objdiff
 
-if [ -s $bldroot.objdiff ] ; then
+if test -s $bldroot.objdiff ; then
 	@ECHO@ "$bldroot.objdiff is non-empty!  See $logfile."
 	@ECHO@ `pwd`/"$bldroot.objdiff" >> $logfile
 	exit 1

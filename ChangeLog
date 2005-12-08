@@ -1,5 +1,23 @@
 "ChangeLog"
 
+2005-12-07	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-70:
+	  Makefile for-loop sh scripts:, using list=$(SUBDIRS); ...
+		for compatibility with bash, which doesn't like empty
+		macro variable expansions in for-syntax.  
+	  configure.ac: checking for [u]int64_t types in <inttypes.h>.
+	  Various other minor configuration tweaks.  
+	  Updated DevelopmentPlan.dot.  
+	  Gone through all shell scripts and fixed use of test [.
+		Correct use of negation is "test ! ...", not "! test ..."
+		Never use [, less compatible.
+	  awk scripts: replaced "delete <array>" for for-loop delete
+		for POSIXLY_CORRECT-ness.  
+	  NEWS: validated on sun-sparc-solaris2.9, gcc-3.3!
+		(Sun UltraSparc IIi, 440 MHz)
+
+
 2005-11-12	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-69:

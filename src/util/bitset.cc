@@ -1,6 +1,6 @@
 /**
 	\file "util/bitset.cc"
-	$Id: bitset.cc,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: bitset.cc,v 1.3 2005/12/08 22:01:12 fang Exp $
  */
 
 #ifndef	__UTIL_BITSET_CC__
@@ -11,12 +11,14 @@
 
 namespace util {
 //=============================================================================
+#if SIZEOF_UINT64_T
 std::ostream&
 print_bits_hex<uint64>::operator () (std::ostream& o, const uint64& t) const {
 	// need another specialization for 64b int
 	return o << reinterpret_cast<void*>(size_t(t)) << ' '
 		<< reinterpret_cast<void*>(size_t(t >> 32));
 }
+#endif
 
 //=============================================================================
 }	// end namespace util

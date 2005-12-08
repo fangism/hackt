@@ -2,12 +2,12 @@
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.4 2005/11/20 09:24:09 fang Exp $
+#	$Id: Make.latex,v 1.5 2005/12/08 22:01:07 fang Exp $
 
 # dependence generation
 .tex.depend:
 	@$(ECHO) "Generating auto-dependencies $@..."
-	@if [ -f $@ ] ; then \
+	@if test -f $@ ; then \
 		$(MAKETEXDEPEND) $< > $@.new ; \
 		if ! $(DIFF) -q $@ $@.new ; then \
 			mv -f $@.new $@ ; \
@@ -23,7 +23,7 @@
 # makeindex
 .idx.ind:
 if HAVE_MAKEINDEX
-	@if [ -f $< ] ; then $(MAKEINDEX) $< ; fi 
+	@if test -f $< ; then $(MAKEINDEX) $< ; fi 
 endif
 	@$(TOUCH) $@
 
@@ -37,7 +37,7 @@ endif
 if HAVE_LATEX
 .tex.dvi:
 	@$(ECHO) "Generating $@..."
-	@if [ -f $*.stamp ] ; then \
+	@if test -f $*.stamp ; then \
 		if $(GREP) -q $(PDFLATEX) $*.stamp ; then \
 			$(MAKE) clean-temps ; fi \
 	fi
@@ -66,7 +66,7 @@ endif
 if HAVE_PDFLATEX
 .tex.pdf:
 	@$(ECHO) "Generating $@..."
-	@if [ -f $*.stamp ] ; then \
+	@if test -f $*.stamp ; then \
 		if $(GREP) -q $(PDFLATEX) $*.stamp ; then \
 			$(ECHO) -n ; else $(MAKE) clean-temps ; fi \
 	fi

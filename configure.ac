@@ -3,17 +3,31 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.20 2005/12/07 22:36:36 fang Exp $
+#	$Id: configure.ac,v 1.21 2005/12/08 22:01:05 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20051112, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051207, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
+
+# don't need this yet
+# AC_CONFIG_SUBDIRS
+
+# Propagate the make warning flags recursively
+AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
+
+# Enable or disable automatic reconfiguring.  
+# AM_MAINTAINER_MODE
+
+# Disabling shared library linking may speed up beta-testing and building.  
+# AC_DISABLE_SHARED
+
+
 
 # ripped from ngspice's configure.in
 # TODO: rip the library and header checks too, to be invoked later
@@ -68,22 +82,17 @@ AC_CHECK_PROG([TAIL], tail, tail)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
 AC_CHECK_PROG([TOUCH], touch, touch)
+AC_CHECK_PROG([SLEEP], sleep, sleep)
+if test ! -n "$SLEEP"
+then
+	AC_MSG_ERROR([How do you expect to work without sleep?])
+fi
+AC_MSG_CHECKING([for *enough* sleep])
+AC_MSG_RESULT([maybe])
 
 # comment out until time for release
 # this causes too many rebuilds during development
 # AC_DEFINE_UNQUOTED(HACKT_BUILD_DATE, "`$DATE`", [Define the build date.])
-
-# don't need this yet
-# AC_CONFIG_SUBDIRS
-
-# Propagate the make warning flags recursively
-AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
-
-# Enable or disable automatic reconfiguring.  
-# AM_MAINTAINER_MODE
-
-# Disabling shared library linking may speed up beta-testing and building.  
-# AC_DISABLE_SHARED
 
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
@@ -96,9 +105,51 @@ AC_SUBST(LIBTOOL_DEPS)
 # appends --silent option to all libtool invocations
 LIBTOOL="$LIBTOOL --silent"
 
+dnl testing the AC_ARG_ENABLE autoconf feature
+AC_MSG_CHECKING([whether divine powers are bestowed upon thee])
+AC_ARG_ENABLE(god_mode,
+	dnl help text
+	AC_HELP_STRING([--enable-god-mode],
+		[Powers fit for only immortals [(default=disabled)]]),
+	dnl if given
+	[if test "$enable_god_mode" = "yes"
+	then	AC_MSG_RESULT([you wish])
+	else	AC_MSG_RESULT([no])
+	fi
+	],
+	dnl if not given
+	[AC_MSG_RESULT([no (default)])]
+)
+
+dnl enlable or disable anal header tests in src/Make.hchk-tail.am
+AC_MSG_CHECKING([whether header validation is desired])
+AC_ARG_ENABLE(header_validation,
+	dnl help text
+	AC_HELP_STRING([--disable-header-validation],
+		[Perform source header validation before compiling.
+		Disable to speed-up release builds [(default=enabled)]]),
+	dnl if given
+	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, 
+		test "$enable_header_validation" = "yes")
+	if test "$enable_header_validation" = "yes"
+	then	AC_MSG_RESULT([yes])
+	else	AC_MSG_RESULT([no])
+	fi
+	],
+	dnl if not given
+	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, test "yes")
+	AC_MSG_RESULT([yes (default)])]
+)
+
 AC_PROG_CXX
 # need to set LANG to C++ to check for C++ headers
 # TODO: should use AC_SAVE_LANG and AC_RESTORE_LANG
+
+# which set of pre-determined compiler flags to apply?
+AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
+# TODO: add other conditionals for other common compilers
+# XLC++, ICC, HPCC, etc...
+
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AM_PROG_CC_C_O
@@ -167,6 +218,8 @@ AC_CHECK_SIZEOF(double)
 AC_CHECK_SIZEOF(long double)
 AC_CHECK_SIZEOF(void*)
 AC_CHECK_SIZEOF(size_t)
+AC_CHECK_SIZEOF(int64_t)
+AC_CHECK_SIZEOF(uint64_t)
 
 AC_LANG_RESTORE
 
@@ -181,9 +234,10 @@ AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
 AC_PROG_LN_S
 
 # not so funny...
-echo -n "checking for fang's sanity"
-sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "."
-sleep 1; echo " no"
+AC_MSG_CHECKING([for fang's sanity])
+# sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "." sleep 1; 
+$SLEEP 3
+AC_MSG_RESULT([no]);
 # not enough sleep
 
 # check whether or not bison is disguising as yacc (with bison -y)
