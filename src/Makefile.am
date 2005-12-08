@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.88 2005/12/08 22:01:11 fang Exp $
+#	$Id: Makefile.am,v 1.89 2005/12/08 23:49:15 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1078,7 +1078,7 @@ SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	util/obsolete/.cvsignore \
 	test/.cvsignore
 
-all-local: cvsignore
+all: cvsignore
 
 cvsignore: $(SUBDIR_CVSIGNORE)
 
