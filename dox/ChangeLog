@@ -1,0 +1,9 @@
+"dox/ChageLog"
+
+2005-12-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71:
+	  Birth of this ChangeLog.
+	  Updated mk/maketexdepend.awk for POSIX correctness
+		in use of regular expressions.  
+

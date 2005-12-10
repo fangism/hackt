@@ -2,7 +2,7 @@
 
 # "maketexdepend.awk"
 # by Fang <fangism@users.sourceforge.net>
-#	$Id: maketexdepend.awk,v 1.3 2005/12/08 22:01:07 fang Exp $
+#	$Id: maketexdepend.awk,v 1.4 2005/12/10 03:56:27 fang Exp $
 #
 # auto-generate LaTeX dependencies
 # usage: awk -f <this script> [variables] <top-level tex file>
@@ -61,12 +61,12 @@ abort = 0;
 
 # allows for user-defined environment wrappers that contain the 
 #	key words "figure" and "table"
-/\\begin{comment}/ {		comment_level++;	}
-/\\end{comment}/ {		comment_level--;	}
-/\\begin{figure\*?}/ {		figure_level++;		}
-/\\end{figure\*?}/ {		figure_level--;		}
-/\\begin{.*table.*\*?}/ {	table_level++;		}
-/\\end{.*table.*\*?}/ {		table_level--;		}
+/\\begin\{comment\}/ {		comment_level++;	}
+/\\end\{comment\}/ {		comment_level--;	}
+/\\begin\{figure\*?\}/ {		figure_level++;		}
+/\\end\{figure\*?\}/ {		figure_level--;		}
+/\\begin\{.*table.*\*?\}/ {	table_level++;		}
+/\\end\{.*table.*\*?\}/ {		table_level--;		}
 
 # assumptions: exactly one \input command without line break
 #	possibly preceeded and nullified by % comment
@@ -97,7 +97,7 @@ if (!is_commented($0)) {
 	abort = 1;
 }}
 
-/\\bibliography{/ {	# need { to ignore bibstyle command
+/\\bibliography\{/ {	# need { to ignore bibstyle command
 if (!is_commented($0)) {
 	dep_files[extract_bib_file($0)] = 1;
 	num_deps++;
@@ -128,7 +128,9 @@ function is_commented(str) {
 }
 
 # assumes is the first token after one with "input"
-function extract_input_file(str) {
+function extract_input_file(str,
+	# local var
+	ret_str) {
 	split(substr(str, index(str, "\\input")), strtok);
 	ret_str = strtok[2];
 	gsub("}","",ret_str);	# remove trailing `}'
@@ -137,24 +139,47 @@ function extract_input_file(str) {
 		# automatic extension of file name completed
 }
 
-function extract_bib_file(str) {
-	ret_str = extract_substr(str, "{", "}");
+function extract_bib_file(str,
+	# local vars
+	ret_str) {
+	# ret_str = extract_substr(str, "{", "}");
+	ret_str = extract_inside_braces(str);
 	return ret_str (match(ret_str,"\\.bib$") ? "" : ".bib");
 }
 
-function extract_ignore_file(str) {
-	return extract_substr(str, "{", "}");
+function extract_ignore_file(str,
+	# local vars
+	ret_str) {
+	# return extract_substr(str, "{", "}");
+	return extract_inside_braces(str);
 }
 
-function extract_substr(str, head_str, tail_str) {
+# NOTE: this only works if the head_str and tail_str contain
+# no escape sequences or regular expressions, 
+# because the length of the string and the 
+# length of the characters would be mismatched.  
+function extract_substr(str, head_str, tail_str,
+	# local variables
+	m_start, m_stop) {
 	m_start = match(str, head_str) +length(head_str);
 	m_stop = match(str, tail_str);
 	return substr(str, m_start, m_stop-m_start);
 }
 
+# This is what we usually want.  
+function extract_inside_braces(str, 
+	# local variables
+	m_start, m_stop) {
+	m_start = match(str, "\\{") +1;
+	m_stop = match(str, "\\}");
+	return substr(str, m_start, m_stop-m_start);
+}
+
 # qsort - sort A[left..right] by quicksort
 # stolen from http://www.netlib.org/research/awkbookcode/qsort.awk
-function qsort(A,left,right,   i,last) {
+function qsort(A,left,right,
+	# local vars
+	i,last) {
 	if (left >= right)	# do nothing if array contains
 		return;		# less than two elements
 	swap(A, left, left + int((right-left+1)*rand()));
