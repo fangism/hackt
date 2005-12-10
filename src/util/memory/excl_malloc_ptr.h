@@ -8,7 +8,7 @@
 		unique_malloc_ptr
 	TODO: define the [] operator conditionally for malloc pointers
 		in the base "excl_ptr.h"
-	$Id: excl_malloc_ptr.h,v 1.1 2005/12/10 03:56:59 fang Exp $
+	$Id: excl_malloc_ptr.h,v 1.2 2005/12/10 07:10:16 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_EXCL_MALLOC_PTR_H__
@@ -23,13 +23,13 @@
 #define	REDEFINE_UTIL_MEMORY_EXCL_PTR_H
 #endif
 
-#ifdef	__cplusplus
 extern "C" {
+extern void	free(void*)
+#ifdef	__THROW
+__THROW
 #endif
-void	free(void*);
-#ifdef	__cplusplus
+;
 }
-#endif
 
 // declare intent to override!
 #define DELETE_POLICY(x)	free(x)

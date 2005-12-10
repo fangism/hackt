@@ -8,7 +8,7 @@
 		in the base "count_ptr.h"
 	TODO: technically, raw_count_ptr can be used for all variants
 		because it never actually deletes its pointer.  
-	$Id: count_malloc_ptr.tcc,v 1.1 2005/12/10 03:56:58 fang Exp $
+	$Id: count_malloc_ptr.tcc,v 1.2 2005/12/10 07:10:16 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_MALLOC_PTR_TCC__
@@ -26,7 +26,11 @@
 #endif
 
 extern "C" {
-void	free(void*);
+extern void	free(void*)
+#ifdef	__THROW
+__THROW
+#endif
+;
 }
 
 // declare intent to override!
