@@ -3,14 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.21 2005/12/08 22:01:05 fang Exp $
+#	$Id: configure.ac,v 1.22 2005/12/10 03:55:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
 # using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20051207, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051209, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -27,7 +27,7 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 # Disabling shared library linking may speed up beta-testing and building.  
 # AC_DISABLE_SHARED
 
-
+AC_CANONICAL_HOST
 
 # ripped from ngspice's configure.in
 # TODO: rip the library and header checks too, to be invoked later
@@ -45,13 +45,15 @@ AC_ARG_WITH(editline,
 		[Enable BSD editline support for CLI.  Default=no.]))
 
 dnl readline and editline cannot both be enabled
-if test "$with_editline" = "yes"; then
-	if test "$with_readline" = "yes"; then
-		AC_MSG_ERROR(Readline and editline cannot both be enabled)
+if test "$with_readline" = "yes"; then
+	AC_MSG_WARN([
+	This project license is not GPL-compatible to qualify for using GNU 
+	readline.  Please consider linking against BSD editline instead.])
+	if test "$with_editline" = "yes"; then
+		AC_MSG_ERROR(Readline and editline cannot both be enabled!)
 	fi
 fi
 
-AC_CANONICAL_HOST
 AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
 
@@ -159,6 +161,7 @@ AC_ISC_POSIX
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
 AC_CHECK_HEADERS([malloc.h])
+AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 # C++ wrappers to standard C headers
@@ -201,11 +204,16 @@ AC_C_VOLATILE
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
+AC_CHECK_FUNCS([strsep strtok])	dnl strsep is missing on Solaris 2.9
+AC_CHECK_FUNCS([fgets])
+AC_CHECK_FUNCS([isspace])
+AC_CHECK_FUNCS([system])
 
 # library functions
 AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
+AC_CHECK_FUNCS([calloc free])
 
 # sizeof checks, useful for checking ILP model
 AC_CHECK_SIZEOF(char)
@@ -337,6 +345,12 @@ then
 else
 	AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
+
+# figure related stuff
+AC_CHECK_PROG([XFIG], xfig, xfig)
+AC_CHECK_PROG([TRANSFIG], transfig, transfig)
+dnl only fig2dev is needed for converting xfigs
+AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
 
 # checking for old CAST tools for regression and backwards compatibility tests
 # no big deal if they don't exist...

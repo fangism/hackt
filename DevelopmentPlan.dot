@@ -1,5 +1,5 @@
 # "DevelopmentPlan.dot"
-#	$Id: DevelopmentPlan.dot,v 1.8 2005/12/07 22:36:36 fang Exp $
+#	$Id: DevelopmentPlan.dot,v 1.9 2005/12/10 03:55:37 fang Exp $
 
 digraph G {
 size="7,10";
@@ -10,6 +10,8 @@ ARTXX_00_01_04_b	[shape=box, style=filled,
 ARTXX_00_01_04_c	[shape=box, style=filled, label="ART++ 0.1.4 (c)"];
 HACKT_00_01_05		[shape=box, style=filled, fillcolor=green,
 				label="HACKT 0.1.5"];
+HACKT_00_01_06		[label="HACKT 0.1.6", shape=box];
+GRADUATION		[label="Ph.D.", shape=octagon];
 
 DOCS_00_01_04		[shape=ellipse, style=filled, fillcolor=yellow, 
 				label="language spec.\ndocumentation"];
@@ -86,6 +88,7 @@ ARTXX_00_01_04_c -> CFLAT_00_01_04;
 MULTIFILE_00_01_04 -> CFLAT_00_01_04;
 CONNECTEQ_00_01_04 -> ARTXX_00_01_04_c;
 DOCS_00_01_04 -> HACKT_00_01_05;
+PARSER_B_00_01_04 -> ERRORTREE_00_01_04;
 ERRORTREE_00_01_04 -> HACKT_00_01_05;
 PARSER_B_00_01_04 -> MULTIPARSE_00_01_04;
 MULTIPARSE_00_01_04 -> HACKT_00_01_05;
@@ -98,13 +101,47 @@ CHPSIM_00_01_05		[shape=ellipse, label="CHP simulation"];
 VTPRSIM_00_01_05	[shape=ellipse, label="VTPRSIM\nsimulation f.w."];
 MIXSIM_00_01_05		[shape=ellipse, label="mixed simulation"];
 
+PRS_ATTR		[label="PRS attributes", shape=ellipse];
+CHP_ST			[label="static token", shape=ellipse];
+CHP_DFA			[label="dataflow analysis", shape=ellipse];
+XLAT_LIB		[label="translation\ntemplate library", shape=ellipse];
+CHP_SDT			[label="syntax-directed\ntranslation PRS", 
+				shape=ellipse];
+SIMPROF			[label="simulation profiling", shape=ellipse];
+CHPXFORM		[label="CHP transformation\nframework",
+				shape=ellipse, peripheries=2];
+PERF_EVAL		[label="design evaluation", shape=ellipse];
+XFORM_XPLORE		[label="transformation\nexploration", shape=ellipse,
+				peripheries=2]
+DSPACE_DB		[label="design-space\ndatabase", shape=ellipse];
+
 HACKT_00_01_05 -> CHP_00_01_05;
 CHP_00_01_05 -> CHPSYNTH_00_01_05;
 CHP_00_01_05 -> CHPSIM_00_01_05;
 PRS_00_01_04 -> VTPRSIM_00_01_05;
 HACKT_00_01_05 -> VTPRSIM_00_01_05;
 VTPRSIM_00_01_05 -> MIXSIM_00_01_05;
+VTPRSIM_00_01_05 -> SIMPROF;
 CHPSIM_00_01_05 -> MIXSIM_00_01_05;
+PRS_ATTR -> VTPRSIM_00_01_05;
+CHPSYNTH_00_01_05 -> CHP_ST;
+CHPSYNTH_00_01_05 -> CHP_DFA;
+CHPSYNTH_00_01_05 -> CHP_SDT;
+CHPSYNTH_00_01_05 -> CHPXFORM;
+SIMPROF -> PERF_EVAL;
+XLAT_LIB -> CHP_SDT;
+CHP_SDT -> PERF_EVAL;
+PERF_EVAL -> XFORM_XPLORE;
+CHP_DFA -> XFORM_XPLORE;
+CHPXFORM -> XFORM_XPLORE;
+MIXSIM_00_01_05 -> HACKT_00_01_06;
+XFORM_XPLORE -> HACKT_00_01_06;
+PERF_EVAL -> DSPACE_DB;
+CHPXFORM -> DSPACE_DB;
+DSPACE_DB -> HACKT_00_01_06;
+XFORM_XPLORE -> GRADUATION;
+DSPACE_DB -> GRADUATION;
+
 
 }
 
