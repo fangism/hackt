@@ -4,13 +4,25 @@
 	type (T) of a count_ptr isn't complete until later -- 
 	compiles should complain about destructor of incomplete type.  
 
-	$Id: count_ptr.tcc,v 1.4 2005/08/08 23:08:33 fang Exp $
+	$Id: count_ptr.tcc,v 1.5 2005/12/10 03:56:59 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
+/**
+	Pre-defining DELETE_POLICY() declares an intent to re-use this
+	file as a template for other pointer types.  
+	This file will always undefine DELETE_POLICY before it
+	returns to its includer -- DELETE_POLICY is only effective
+	for the duration of this file.  
+ */
+#ifndef	DELETE_POLICY
 #define	__UTIL_MEMORY_COUNT_PTR_TCC__
-
 #include "util/memory/count_ptr.h"
+#define	DELETE_POLICY(x)		delete x
+#else
+// else intending to override and redefine, so don't
+// include the base template definition.
+#endif
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
 
@@ -120,7 +132,8 @@ count_ptr<T>::release(void) {
 			STATIC_RC_POOL_REF_INIT;
 			DELETE_SIZE_T(this->ref_count);
 			COUNT_PTR_FAST_INVARIANT(ptr);
-			delete ptr;
+			// delete ptr;
+			DELETE_POLICY(ptr);
 		}
 		ptr = NULL;
 		this->ref_count = NULL;
@@ -160,7 +173,8 @@ count_ptr<T>::reset(T* p, size_t* c) {
 			STATIC_RC_POOL_REF_INIT;
 			DELETE_SIZE_T(this->ref_count);
 			COUNT_PTR_FAST_INVARIANT(ptr);
-			delete ptr;
+			// delete ptr;
+			DELETE_POLICY(ptr);
 		}
 	} else {
 		COUNT_PTR_FAST_INVARIANT(!ptr);
@@ -195,6 +209,8 @@ count_ptr<T>::exclusive_release(void) {
 //=============================================================================
 }	// end namespace memory
 }	// end namespace util
+
+#undef	DELETE_POLICY
 
 #endif	// EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
 #endif	//	__UTIL_MEMORY_COUNT_PTR_TCC__

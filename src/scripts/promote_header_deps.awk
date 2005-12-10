@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 # "promote_header_deps.awk"
+#	$Id: promote_header_deps.awk,v 1.3 2005/12/10 03:56:56 fang Exp $
 
 # Description:
 #	Takes a make-dependence file produced by gcc -MD

@@ -23,7 +23,9 @@ noinst_PROGRAMS = \
 	friend_function_formal_bug \
 	link_test \
 	pointer_classes_test \
+	excl_ptr_variant_test \
 	count_ptr_test \
+	count_ptr_variant_test \
 	sublist_test \
 	deque_iterator_test \
 	hash_qmap_test \
@@ -54,7 +56,8 @@ noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 
 # but is included in distribution, EXTRA_DIST? don't bother cleaning?
 EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
-	link_test.stderr
+	link_test.stderr excl_ptr_variant_test.stderr \
+	count_ptr_variant_test.stderr
 
 AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
@@ -62,6 +65,9 @@ BUILT_SOURCES = stacktrace.cc static_trace.cc thread_lock.cc ref_count_pool.cc \
 	$(EMPTY_STDERR_FILES) $(AUTO_STDERR_FILES)
 
 pointer_classes_test_SOURCES = pointer_classes_test.cc var.h func.h
+excl_ptr_variant_test_SOURCES = excl_ptr_variant_test.cc
+count_ptr_variant_test_SOURCES = count_ptr_variant_test.cc
+count_ptr_variant_test_LDADD = libfangutil.la
 count_ptr_test_SOURCES = count_ptr_test.cc var.h
 count_ptr_test_LDADD = libfangutil.la
 sublist_test_SOURCES = sublist_test.cc
@@ -142,6 +148,12 @@ friend_function_formal_bug.stderr:
 	$(TOUCH) $@
 
 link_test.stderr:
+	$(TOUCH) $@
+
+excl_ptr_variant_test.stderr:
+	$(TOUCH) $@
+
+count_ptr_variant_test.stderr:
 	$(TOUCH) $@
 
 # some tests require more than the default filtering

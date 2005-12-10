@@ -1,5 +1,6 @@
 #!/usr/bin/awk -f
 # "automake_include.awk"
+#	$Id: automake_include.awk,v 1.3 2005/12/10 03:56:56 fang Exp $
 
 # input (stdin): newline-separated list of files to generate 
 #	automake-style include dependencies

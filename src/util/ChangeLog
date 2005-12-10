@@ -1,5 +1,24 @@
 # "src/util/ChangeLog"
 
+2005-12-09	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71:
+	  Library additions:
+		enhanced excl_ptr and count_ptr families of pointer classes
+		to be able to define new classes with different delete
+		policies (e.g. array [], malloc).
+		This is accomplished by making the original header file
+		template-able, via preprocessing magic.  
+		Added a few basic tests for these new pointer classes.  
+	  Added util/readline_wrap.{h,cc}, configured readline header
+		providing a consistent (limited) common interface.  
+		Since read line are malloc-allocated, we use an
+		excl_malloc_ptr to manage the memory for it.  HUGE!
+	  Added libc.h and libc.c as configurable workarounds for systems
+		lacking the essential library functions (in C).  
+	  Corrected configurability of util/STL/hash_map.h.
+
+
 2005-12-07	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-70:

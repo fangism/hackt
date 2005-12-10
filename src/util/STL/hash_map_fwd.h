@@ -2,34 +2,28 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.4 2005/09/04 21:15:09 fang Exp $
+	$Id: hash_map_fwd.h,v 1.5 2005/12/10 03:56:58 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
 #define	__UTIL_STL_HASH_MAP_FWD_H__
 
-// nothing in this file uses config... yet, but when it does:
-// #include "config.h"
-
+#include "config.h"
 #include "util/STL/allocator_fwd.h"
+
 
 #if defined(HASH_MAP_NAMESPACE)
 #error	"HASH_MAP_NAMESPACE is already defined, but I need to set it."
 #endif
 
 // compiler-version dependent location of hash_map
-#ifdef  __GNUC__
-#if	(__GNUC__ >= 3)		// works on Mac OS X gcc-3.3, linux gcc-3.2
+#if	defined(HAVE_EXT_HASH_MAP) && HAVE_EXT_HASH_MAP
 #define	HASH_MAP_NAMESPACE	__gnu_cxx
-
-#else	// (__GNUC__ <= 2)	// works on FreeBSD gcc-2.95.3
+#elif	defined(HAVE_HASH_MAP) && HAVE_HASH_MAP
 #define	HASH_MAP_NAMESPACE	std
-#endif	// gcc version
-
 #else	// __GNUC__
 // your guess is as good as mine
 #error	"If you know where <hash_map> is for your compiler, add it here."
-
 #endif	// __GNUC__
 
 namespace std {

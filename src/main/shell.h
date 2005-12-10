@@ -1,15 +1,17 @@
 /**
 	\file "main/shell.h"
 	Interface header for shell module.  
-	$Id: shell.h,v 1.2 2005/11/03 07:52:06 fang Exp $
+	$Id: shell.h,v 1.3 2005/12/10 03:56:56 fang Exp $
  */
 
 #ifndef	__MAIN_SHELL_H__
 #define	__MAIN_SHELL_H__
 
+#include <iosfwd>
 #include "main/hackt_fwd.h"
 
 namespace ART {
+using std::ostream;
 
 /**
 	Instance-less class.  
@@ -23,6 +25,7 @@ private:
 public:
 	static const char		name[];
 	static const char		brief_str[];
+	static const char		prompt[];
 
 	shell();
 
@@ -35,15 +38,23 @@ private:
 	void
 	usage(void);
 
-#if 0
 	static
 	int
 	parse_command_options(const int, char*[], options&);
-#endif
 
 	static
 	const size_t
 	program_id;
+
+
+	static
+	ostream&
+	banner(ostream&);
+
+	static
+	ostream&
+	farewell(ostream&);
+
 };	// end class shell
 
 }	// end namespace ART

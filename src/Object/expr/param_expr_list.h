@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.5 2005/10/25 20:51:53 fang Exp $
+	$Id: param_expr_list.h,v 1.6 2005/12/10 03:56:55 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -14,6 +14,7 @@
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "util/memory/excl_ptr.h"
 
 //=============================================================================
 namespace ART {

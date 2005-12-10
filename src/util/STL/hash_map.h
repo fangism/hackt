@@ -1,14 +1,13 @@
 /**
 	\file "util/STL/hash_map.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
-	$Id: hash_map.h,v 1.4 2005/09/04 21:15:08 fang Exp $
+	$Id: hash_map.h,v 1.5 2005/12/10 03:56:58 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_H__
 #define	__UTIL_STL_HASH_MAP_H__
 
 #include "util/STL/hash_map_fwd.h"
-#include "config.h"
 
 #if defined(HAVE_EXT_HASH_MAP) && HAVE_EXT_HASH_MAP
 #include <ext/hash_map>

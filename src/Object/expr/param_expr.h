@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.4 2005/10/25 20:51:53 fang Exp $
+	$Id: param_expr.h,v 1.5 2005/12/10 03:56:55 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_H__
@@ -12,6 +12,7 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "util/memory/excl_ptr.h"
 
 //=============================================================================
 namespace ART {

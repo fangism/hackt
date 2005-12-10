@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.3 2005/11/10 02:13:07 fang Exp $
+	$Id: version.cc,v 1.4 2005/12/10 03:56:56 fang Exp $
  */
 
 #include <iostream>
@@ -20,11 +20,13 @@
 #include "lexer/lex_version.h"
 #include "parser/yacc_version.h"
 #include "buildhost.h"
+#include "util/readline_wrap.h"
 
 // #include "util/getopt_portable.h"
 
 namespace ART {
 #include "util/using_ostream.h"
+using util::readline_wrapper;
 
 //=============================================================================
 
@@ -52,6 +54,7 @@ version::version() { }
 	TODO: configure params, paths, etc...
 	TODO: if/when we decide to support certain environment variables
 		make sure we can dump all the relevant variables.  
+	TODO: optional packages, like readline, etc...
  */
 int
 version::main(const int argc, char* argv[], const global_options&) {
@@ -67,8 +70,8 @@ version::main(const int argc, char* argv[], const global_options&) {
 	cxxflags(o) << endl;
 	lex(o) << endl;
 	yacc(o) << endl;
+	readline_wrapper::version_string(o << "readline: ") << endl;
 	builddate(o) << endl;
-
 	// influential environment variables
 	return 0;
 }

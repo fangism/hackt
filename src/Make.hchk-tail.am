@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.5 2005/12/08 23:49:15 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.6 2005/12/10 03:56:51 fang Exp $
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
 
@@ -18,7 +18,11 @@
 FAST_MAKEDEP_FLAGS = -MMD -MT $@ -MF
 PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
 	-v srcdir=$(srcdir)
-FILTER_HEADER_DEPS = $(SED) 's|.*config\.h||g' | $(SED) 's|[^ ]*\.cc||g'
+FILTER_HEADER_DEPS = $(SED) 's|[^ ]*config\.h||g' | $(SED) 's|[^ ]*\.cc||g' | \
+	$(SED) 's| /[^ ]*||g'
+# first filter -- removes any dependencies on config.h for efficiency
+# second filter -- removes any .cc files
+# third filter -- removes header files starting with / in the path name
 # some exceptions to checking
 
 # cray-zee anal-retentive header checking with depdendence-tracking

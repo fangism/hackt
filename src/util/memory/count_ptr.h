@@ -3,15 +3,20 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.7 2005/09/04 21:15:09 fang Exp $
-
-	TODO:
-		* split into .tcc file
-		* pool allocate size_t counts
+	$Id: count_ptr.h,v 1.8 2005/12/10 03:56:58 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
+/**
+	Pre-define to indicate that this header is being used as a template
+	and not the original contents.  
+	DELETE_POLICY is otherwise not used in this file, 
+	but it WILL be undefined at the end, to prevent it from affecting
+	other files, which means you may have to redefine it.  
+ */
+#ifndef	DELETE_POLICY
 #define	__UTIL_MEMORY_COUNT_PTR_H__
+#endif
 
 #include "util/macros.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -20,11 +25,13 @@
 //=============================================================================
 // debugging stuff
 
+#ifndef	REASONABLE_REFERENCE_COUNT
 #if 0
 #define	REASONABLE_REFERENCE_COUNT			\
 	INVARIANT(*ref_count < 10000)
 #else
 #define	REASONABLE_REFERENCE_COUNT
+#endif
 #endif
 
 /**
@@ -145,6 +152,8 @@ struct raw_count_ptr {
 }	// end namespace memory
 }	// end namespace util
 
+#ifndef	HAVE_COUNT_PTR_REF_COUNT_POOL_MACROS
+#define	HAVE_COUNT_PTR_REF_COUNT_POOL_MACROS
 #if USE_REF_COUNT_POOL
 	#include "util/attributes.h"
 	#define STATIC_RC_POOL_REF_INIT					\
@@ -155,12 +164,13 @@ struct raw_count_ptr {
 	#define	DELETE_SIZE_T(x)	rc_pool_ref.deallocate(x)
 	#define	VALIDATE_SIZE_T(x)	COUNT_PTR_INVARIANT(rc_pool_ref.contains(x))
 	#include "util/memory/ref_count_pool.h"
-#else
+#else	// !USE_REF_COUNT_POOL
 	#define STATIC_RC_POOL_REF_INIT		// blank
 	#define	NEW_SIZE_T		new size_t
 	#define	DELETE_SIZE_T(x)	delete x
 	#define	VALIDATE_SIZE_T(x)
-#endif
+#endif	// USE_REF_COUNT_POOL
+#endif	// HAVE_COUNT_PTR_REF_COUNT_POOL_MACROS
 
 namespace util {
 namespace memory {
@@ -396,6 +406,8 @@ SPECIALIZE_ALL_POINTER_TRAITS(count_ptr)
 #endif
 
 //=============================================================================
+
+#undef	DELETE_POLICY
 
 #endif	//	__UTIL_MEMORY_COUNT_PTR_H__
 

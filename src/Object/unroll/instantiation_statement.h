@@ -3,7 +3,7 @@
 	Instance statement classes for ART.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.4 2005/09/04 21:15:00 fang Exp $
+	$Id: instantiation_statement.h,v 1.5 2005/12/10 03:56:56 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -150,8 +150,7 @@ using ART::entity::instantiation_statement;
 using ART::entity::pint_tag;
 using ART::entity::pbool_tag;
 
-template <class>
-class excl_ptr;
+// excl_ptr already forward-declared
 
 /**
 	Declaring, but not defining a specialization to guarantee

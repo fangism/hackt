@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.89 2005/12/08 23:49:15 fang Exp $
+#	$Id: Makefile.am,v 1.90 2005/12/10 03:56:51 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -431,6 +431,8 @@ UTIL_TCC_FILES = \
 	util/memory/destruction_policy.tcc \
 	util/memory/list_vector_pool.tcc \
 	util/memory/count_ptr.tcc \
+	util/memory/count_array_ptr.tcc \
+	util/memory/count_malloc_ptr.tcc \
 	util/multidimensional_qmap.tcc \
 	util/multidimensional_sparse_set.tcc \
 	util/multikey.tcc \
@@ -488,6 +490,7 @@ UTIL_HEADER_FILES = \
 	util/indent.h \
 	util/inttypes.h \
 	util/iterator_more.h \
+	util/libc.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/maplikeset.h \
@@ -498,6 +501,8 @@ UTIL_HEADER_FILES = \
 	util/memory/pointer_traits.h \
 	util/memory/pointer_manipulator.h \
 	util/memory/excl_ptr.h \
+	util/memory/excl_array_ptr.h \
+	util/memory/excl_malloc_ptr.h \
 	util/memory/ref_count_pool.h \
 	util/memory/ref_count_pool_anchor.h \
 	util/memory/thread_lock.h \
@@ -523,6 +528,7 @@ UTIL_HEADER_FILES = \
 	util/persistent.h \
 	util/pthread.h \
 	util/qmap_fwd.h \
+	util/readline_wrap.h \
 	util/reserve.h \
 	util/ring_node_fwd.h \
 	util/size_t.h \
@@ -546,8 +552,10 @@ UTIL_CC_FILES = \
 	util/bitset.cc \
 	util/dirent.cc \
 	util/indent.cc \
+	util/libc.c \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
+	util/readline_wrap.cc \
 	util/stacktrace.cc \
 	util/static_trace.cc \
 	util/memory/thread_lock.cc \
