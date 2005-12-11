@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.cc,v 1.2 2005/09/14 15:30:26 fang Exp $
+	$Id: port_context.cc,v 1.2.18.1 2005/12/11 00:45:14 fang Exp $
  */
 
 #include <iostream>
@@ -8,7 +8,7 @@
 #include "util/macros.h"
 #include "util/indent.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::auto_indent;
@@ -105,5 +105,5 @@ port_collection_context::resize(const size_t s) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

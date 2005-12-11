@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.5 2005/12/10 03:56:55 fang Exp $
+	$Id: param_expr.h,v 1.5.2.1 2005/12/11 00:45:30 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_H__
@@ -15,7 +15,7 @@
 #include "util/memory/excl_ptr.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class param_expression_assignment;
 class const_param;
@@ -106,7 +106,7 @@ virtual	excl_ptr<param_expression_assignment>
 };	// end class param_expr
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PARAM_EXPR_H__

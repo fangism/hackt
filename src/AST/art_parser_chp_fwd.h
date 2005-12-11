@@ -1,15 +1,15 @@
 /**
 	\file "AST/art_parser_chp_fwd.h"
 	Forward declarations for the CHP namespace.  
-	$Id: art_parser_chp_fwd.h,v 1.4 2005/06/19 01:58:29 fang Exp $
+	$Id: art_parser_chp_fwd.h,v 1.4.42.1 2005/12/11 00:45:04 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_CHP_FWD_H__
-#define	__AST_ART_PARSER_CHP_FWD_H__
+#ifndef	__AST_HAC_PARSER_CHP_FWD_H__
+#define	__AST_HAC_PARSER_CHP_FWD_H__
 
 #include "AST/art_parser_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 namespace CHP {
 // the following class are defined in "art_parser_chp.h"
@@ -37,7 +37,7 @@ class bool_assignment;
 
 }	// end namespace CHP
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_CHP_FWD_H__
+#endif	// __AST_HAC_PARSER_CHP_FWD_H__
 

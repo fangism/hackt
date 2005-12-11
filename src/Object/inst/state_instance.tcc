@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.4 2005/09/14 15:30:32 fang Exp $
+	$Id: state_instance.tcc,v 1.4.18.1 2005/12/11 00:45:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
@@ -11,7 +11,7 @@
 #include "Object/inst/state_instance.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -85,7 +85,7 @@ STATE_INSTANCE_CLASS::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_STATE_INSTANCE_TCC__
 

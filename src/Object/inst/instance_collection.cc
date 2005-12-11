@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.8 2005/10/30 22:00:21 fang Exp $
+ 	$Id: instance_collection.cc,v 1.8.10.1 2005/12/11 00:45:35 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -58,7 +58,7 @@
 
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using namespace ADS;		// for composition functors
 using util::dereference;
@@ -194,7 +194,7 @@ string
 instance_collection_base::get_qualified_name(void) const {
 	if (owner)
 		return owner->get_qualified_name() +"::" +key;
-		// "::" should be the same as ART::parser::scope
+		// "::" should be the same as HAC::parser::scope
 	else return key;
 }
 
@@ -830,7 +830,7 @@ datatype_instance_collection::check_established_type(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_COLLECTION_CC__
 

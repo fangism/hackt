@@ -1,10 +1,10 @@
 /**
 	\file "Object/type/data_type_reference.h"
-	Type-reference classes of the ART language.  
+	Type-reference classes of the HAC language.  
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.3 2005/09/04 21:14:59 fang Exp $
+ 	$Id: data_type_reference.h,v 1.3.20.1 2005/12/11 00:45:53 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -14,7 +14,7 @@
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/expr/types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class datatype_definition_base;
 class unroll_context;
@@ -133,7 +133,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
 

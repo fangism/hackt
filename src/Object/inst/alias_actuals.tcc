@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.5 2005/10/25 20:51:54 fang Exp $
+	$Id: alias_actuals.tcc,v 1.5.12.1 2005/12/11 00:45:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -17,7 +17,7 @@
 #include "util/stacktrace.h"
 #include "Object/expr/expr_dump_context.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -303,7 +303,7 @@ instance_alias_info_actuals::restore_canonical_footprint(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_ALIAS_ACTUALS_TCC__
 

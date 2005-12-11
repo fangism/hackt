@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_base.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_base.h,v 1.26 2005/11/10 02:13:01 fang Exp $
+	Base set of classes for the HAC parser.  
+	$Id: art_parser_base.h,v 1.26.4.1 2005/12/11 00:45:03 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_BASE_H__
-#define __AST_ART_PARSER_BASE_H__
+#ifndef __AST_HAC_PARSER_BASE_H__
+#define __AST_HAC_PARSER_BASE_H__
 
 #include <iosfwd>
 #include "util/macros.h"
@@ -24,9 +24,9 @@ T::what(std::ostream& o) const {					\
 
 //=============================================================================
 /**
-	This is the general namespace for all ART-related classes.  
+	This is the general namespace for all HAC-related classes.  
  */
-namespace ART {
+namespace HAC {
 //=============================================================================
 // forward declaration of outside namespace and classes
 namespace entity {
@@ -41,13 +41,13 @@ using lexer::line_position;
 using lexer::line_range;
 
 //=============================================================================
-/// This namespace is reserved for ART's parser-related classes.  
+/// This namespace is reserved for HAC's parser-related classes.  
 /**
 	This contains all of the classes for the abstract syntax tree (AST).  
 	Each class should implement recursive methods of traversal.  
 	The created AST will only reflect a legal instance of the grammar, 
 	therefore, one should use the type-check and build phase to 
-	return a more useful manipulate ART object.  
+	return a more useful manipulate HAC object.  
  */
 namespace parser {
 //=============================================================================
@@ -89,7 +89,7 @@ where(const T& t) {
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_BASE_H__
+#endif	// __AST_HAC_PARSER_BASE_H__
 

@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_instance.cc"
-	Class method definitions for ART::parser for instance-related classes.
-	$Id: art_parser_instance.cc,v 1.31 2005/10/30 22:00:18 fang Exp $
+	Class method definitions for HAC::parser for instance-related classes.
+	$Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_INSTANCE_CC__
-#define	__AST_ART_PARSER_INSTANCE_CC__
+#ifndef	__AST_HAC_PARSER_INSTANCE_CC__
+#define	__AST_HAC_PARSER_INSTANCE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -56,32 +56,32 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::instance_base, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::instance_base, 
 	"(declaration-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::instance_array, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::instance_array, 
 	"(declaration-array)")
-SPECIALIZE_UTIL_WHAT(ART::parser::instance_declaration, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::instance_declaration, 
 	"(instance-decl)")
-SPECIALIZE_UTIL_WHAT(ART::parser::instance_connection, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::instance_connection, 
 	"(actuals-connection)")
-SPECIALIZE_UTIL_WHAT(ART::parser::connection_statement, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::connection_statement, 
 	"(connection-statement)")
-SPECIALIZE_UTIL_WHAT(ART::parser::instance_alias, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::instance_alias, 
 	"(alias-assign)")
-SPECIALIZE_UTIL_WHAT(ART::parser::loop_instantiation, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::loop_instantiation, 
 	"(loop-instance)")
-SPECIALIZE_UTIL_WHAT(ART::parser::guarded_definition_body, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::guarded_definition_body, 
 	"(guarded-def-body)")
-SPECIALIZE_UTIL_WHAT(ART::parser::conditional_instantiation, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::conditional_instantiation, 
 	"(conditional-instance)")
-SPECIALIZE_UTIL_WHAT(ART::parser::type_completion_statement, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_statement, 
 	"(type-completion)")
-SPECIALIZE_UTIL_WHAT(ART::parser::type_completion_connection_statement, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_connection_statement, 
 	"(type-completion-connection)")
 }
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
@@ -1129,10 +1129,10 @@ template class node_list<const guarded_definition_body>;
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_INSTANCE_CC__
+#endif	// __AST_HAC_PARSER_INSTANCE_CC__
 

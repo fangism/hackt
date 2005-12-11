@@ -2,7 +2,7 @@
 	\file "main/dump_persistent_table.cc"
 	Just dumps the registered persistent type table.  
 	This file came from "art_persistent_table.cc".
-	$Id: dump_persistent_table.cc,v 1.2 2005/08/08 16:51:12 fang Exp $
+	$Id: dump_persistent_table.cc,v 1.2.28.1 2005/12/11 00:46:02 fang Exp $
  */
 
 #include <iostream>
@@ -11,11 +11,11 @@
 #include "util/persistent_object_manager.h"
 #include "Object/module.h"
 
-namespace ART {
+namespace HAC {
 
 using std::cerr;
 using util::persistent_object_manager;
-using ART::entity::module;
+using HAC::entity::module;
 
 //=============================================================================
 // class dump_persistent_table static initializers
@@ -43,5 +43,5 @@ dump_persistent_table::main(int argc, char* argv[], const global_options&) {
 }
 //=============================================================================
 
-}	// end namespace ART
+}	// end namespace HAC
 

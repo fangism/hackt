@@ -3,7 +3,7 @@
 	Class definitions for nonmeta index lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: nonmeta_index_list.h,v 1.3 2005/10/25 20:51:53 fang Exp $
+	$Id: nonmeta_index_list.h,v 1.3.12.1 2005/12/11 00:45:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_INDEX_LIST_H__
@@ -13,7 +13,7 @@
 #include "util/persistent.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class nonmeta_index_expr_base;
 struct expr_dump_context;
@@ -58,7 +58,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_NONMETA_INDEX_LIST_H__
 

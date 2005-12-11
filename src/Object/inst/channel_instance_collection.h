@@ -3,7 +3,7 @@
 	Class declarations for channel instance and collections.  
 	This file originated from "Object/art_object_instance_chan.h"
 		in a previous life.  
-	$Id: channel_instance_collection.h,v 1.4 2005/09/04 21:14:48 fang Exp $
+	$Id: channel_instance_collection.h,v 1.4.20.1 2005/12/11 00:45:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
@@ -16,7 +16,7 @@
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/type/canonical_generic_chan_type.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // convenient typedefs
@@ -29,7 +29,7 @@ typedef	instance_array<channel_tag, 4>	channel_array_4D;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
 

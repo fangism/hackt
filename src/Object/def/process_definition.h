@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/process_definition.h"
-	Process-definition-related ART object classes.  
+	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.4 2005/10/08 01:39:56 fang Exp $
+	$Id: process_definition.h,v 1.4.14.1 2005/12/11 00:45:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -16,7 +16,7 @@
 #include "Object/def/footprint_manager.h"
 #include "Object/lang/CHP.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class process_type_reference;
 //=============================================================================
@@ -129,7 +129,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_PROCESS_DEFINITION_H__
 

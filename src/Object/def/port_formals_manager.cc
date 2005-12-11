@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.3 2005/09/04 21:14:43 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.3.20.1 2005/12/11 00:45:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -35,7 +35,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/persistent_object_manager.tcc"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::_Select2nd;
 #include "util/using_ostream.h"
@@ -294,7 +294,7 @@ port_formals_manager::load_object_base(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

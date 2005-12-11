@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/process_definition_alias.h"
-	Process-definition-related ART object classes.  
+	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_alias.h,v 1.3 2005/09/04 21:14:44 fang Exp $
+	$Id: process_definition_alias.h,v 1.3.20.1 2005/12/11 00:45:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_ALIAS_H__
@@ -11,7 +11,7 @@
 #include "Object/def/process_definition_base.h"
 #include "Object/def/typedef_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -71,7 +71,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_PROCESS_DEFINITION_ALIAS_H__
 

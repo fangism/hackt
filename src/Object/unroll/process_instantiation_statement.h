@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_proc.h"
 		in a previous life.  
-	$Id: process_instantiation_statement.h,v 1.2 2005/07/23 06:53:03 fang Exp $
+	$Id: process_instantiation_statement.h,v 1.2.32.1 2005/12/11 00:45:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
@@ -14,14 +14,14 @@
 #include "Object/type/process_type_reference.h"
 #include "Object/unroll/instantiation_statement_type_ref_default.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // just use the default in "Object/art_object_inst_stmt_type_ref_default.h"
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
 

@@ -1,13 +1,13 @@
 /**
 	\file "Object/common/dump_flags.h"
 	Dump attributes class.  
-	$Id: dump_flags.h,v 1.3 2005/10/08 01:39:55 fang Exp $
+	$Id: dump_flags.h,v 1.3.14.1 2005/12/11 00:45:15 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_DUMP_FLAGS_H__
 #define	__OBJECT_COMMON_DUMP_FLAGS_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 /**
@@ -43,7 +43,7 @@ public:
 };	// end class dump_flags
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_DUMP_FLAGS_H__
 

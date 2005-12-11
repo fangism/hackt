@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.4 2005/10/25 20:51:58 fang Exp $
+	$Id: template_actuals.cc,v 1.4.12.1 2005/12/11 00:45:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -34,7 +34,7 @@
 #define	CHECK_ARG_ADDRESSES
 #endif
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::copy;
 using std::back_inserter;
@@ -395,5 +395,5 @@ template_actuals::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: alias_connection.h,v 1.3 2005/09/04 21:15:00 fang Exp $
+	$Id: alias_connection.h,v 1.3.20.1 2005/12/11 00:45:54 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_H__
@@ -15,7 +15,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/multikey_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class simple_meta_instance_reference_base;
 using std::vector;
@@ -95,7 +95,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_ALIAS_CONNECTION_H__
 

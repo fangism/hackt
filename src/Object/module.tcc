@@ -1,16 +1,16 @@
 /**
 	\file "Object/art_object_module.tcc"
 	Template method definitions for the module class.
-	$Id: module.tcc,v 1.3 2005/09/04 21:14:40 fang Exp $
+	$Id: module.tcc,v 1.3.20.1 2005/12/11 00:45:14 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_MODULE_TCC__
-#define	__OBJECT_ART_OBJECT_MODULE_TCC__
+#ifndef	__HAC_OBJECT_MODULE_TCC__
+#define	__HAC_OBJECT_MODULE_TCC__
 
 #include "Object/common/namespace.tcc"
 #include "Object/module.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================/// class module method definitions
 
@@ -33,7 +33,7 @@ module::collect(L& l) const {
 
 //=============================================================================
 }	// end namepace entity
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __OBJECT_ART_OBJECT_MODULE_TCC__
+#endif	// __HAC_OBJECT_MODULE_TCC__
 

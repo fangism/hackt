@@ -1,16 +1,16 @@
 /**
 	\file "AST/art_parser_expr.h"
-	Expression-related parser classes for ART.
-	$Id: art_parser_expr.h,v 1.15 2005/06/19 01:58:29 fang Exp $
+	Expression-related parser classes for HAC.
+	$Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_EXPR_H__
-#define __AST_ART_PARSER_EXPR_H__
+#ifndef __AST_HAC_PARSER_EXPR_H__
+#define __AST_HAC_PARSER_EXPR_H__
 
 #include "AST/art_parser_expr_base.h"
 #include "AST/art_parser_identifier.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 //=============================================================================
 // class expr defined in "art_parser_expr_base.h"
@@ -388,7 +388,7 @@ public:
 //=============================================================================
 
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_EXPR_H__
+#endif	// __AST_HAC_PARSER_EXPR_H__
 

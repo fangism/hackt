@@ -1,18 +1,18 @@
 /**
 	\file "AST/art_parser_type.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_type.h,v 1.10 2005/07/20 20:59:52 fang Exp $
+	Base set of classes for the HAC parser.  
+	$Id: art_parser_type.h,v 1.10.34.1 2005/12/11 00:45:11 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_TYPE_H__
-#define __AST_ART_PARSER_TYPE_H__
+#ifndef __AST_HAC_PARSER_TYPE_H__
+#define __AST_HAC_PARSER_TYPE_H__
 
 #include "AST/art_parser_type_base.h"
 #include "AST/art_parser_node_list.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class builtin_channel_type_reference;
 }
@@ -178,7 +178,7 @@ public:
 //=============================================================================
 
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_TYPE_H__
+#endif	// __AST_HAC_PARSER_TYPE_H__
 

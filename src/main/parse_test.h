@@ -1,7 +1,7 @@
 /**
 	\file "main/parse_test.h"
 	Interface header for parse_test module.  
-	$Id: parse_test.h,v 1.3 2005/11/10 02:13:06 fang Exp $
+	$Id: parse_test.h,v 1.3.4.1 2005/12/11 00:46:04 fang Exp $
  */
 
 #ifndef	__MAIN_PARSE_TEST_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 //=============================================================================
 class compile_options;
 /**
@@ -46,7 +46,7 @@ private:
 };	// end class parse_test
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_PARSE_TEST_H__
 

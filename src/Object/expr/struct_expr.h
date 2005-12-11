@@ -3,9 +3,9 @@
 	Base class for structured data expressions.  
 	NOTE: for revision histry purposes, this file was copied from the
 		last revision of "Object/art_object_data_expr_base.h"
-		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
+		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: struct_expr.h,v 1.2 2005/07/20 21:00:50 fang Exp $
+	$Id: struct_expr.h,v 1.2.34.1 2005/12/11 00:45:32 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_STRUCT_EXPR_H__
@@ -13,7 +13,7 @@
 
 #include "Object/expr/data_expr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -31,7 +31,7 @@ virtual	~struct_expr() { }
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_STRUCT_EXPR_H__
 

@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.2 2005/11/10 02:13:03 fang Exp $
+	$Id: file_manager.cc,v 1.2.4.1 2005/12/11 00:46:00 fang Exp $
  */
 
 #include <iostream>
@@ -11,7 +11,7 @@
 #define	ENABLE_STACKTRACE			0
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -265,5 +265,5 @@ file_manager::reset_and_dump_file_stack(ostream& o) {
 
 //=============================================================================
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 

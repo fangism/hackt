@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.6 2005/10/30 22:00:23 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.6.10.1 2005/12/11 00:45:56 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -32,7 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/indent.h"
 
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::mem_fun_ref;
 using util::dereference;
@@ -283,7 +283,7 @@ instance_management_base::dumper::operator () (
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 // cleaning up macros used for this module
 #undef	ENABLE_STACKTRACE

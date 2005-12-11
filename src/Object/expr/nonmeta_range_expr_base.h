@@ -3,10 +3,10 @@
 	Base classes for data range expressions.  
 	NOTE: for revision histry purposes, this file was copied from the
 		last revision of "Object/art_object_data_expr_base.h"
-		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
+		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: nonmeta_range_expr_base.h,v 1.2 2005/07/20 21:00:47 fang Exp $
+	$Id: nonmeta_range_expr_base.h,v 1.2.34.1 2005/12/11 00:45:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_RANGE_EXPR_BASE_H__
@@ -14,7 +14,7 @@
 
 #include "Object/expr/nonmeta_index_expr_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -33,7 +33,7 @@ virtual	~nonmeta_range_expr_base() { }
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_NONMETA_RANGE_EXPR_BASE_H__
 

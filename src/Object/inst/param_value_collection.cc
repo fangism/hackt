@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.5 2005/10/30 22:00:21 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.5.10.1 2005/12/11 00:45:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -28,7 +28,7 @@
 #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::indent;
@@ -358,7 +358,7 @@ param_value_collection::make_member_meta_instance_reference(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 

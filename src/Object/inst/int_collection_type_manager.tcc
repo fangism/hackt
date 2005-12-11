@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.4 2005/09/04 21:14:50 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.4.20.1 2005/12/11 00:45:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -17,7 +17,7 @@
 #include "Object/expr/pint_const.h"
 #include "util/persistent_object_manager.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
@@ -159,7 +159,7 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_int_width(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 #undef INT_COLLECTION_TYPE_MANAGER_CLASS

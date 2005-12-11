@@ -3,7 +3,7 @@
 	Class definitions for nonmeta range lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_range_list.h,v 1.3 2005/10/25 20:51:51 fang Exp $
+	$Id: int_range_list.h,v 1.3.12.1 2005/12/11 00:45:27 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_RANGE_LIST_H__
@@ -13,7 +13,7 @@
 #include <vector>
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class int_range_expr;
 struct expr_dump_context;
@@ -53,7 +53,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_INT_RANGE_LIST_H__
 

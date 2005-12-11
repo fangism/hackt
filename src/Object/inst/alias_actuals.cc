@@ -3,7 +3,7 @@
 	Method definitions of class instance_alias_info_actuals.
 	This file was originally "Object/art_object_instance_alias_actuals.cc"
 		in a previous life.  
-	$Id: alias_actuals.cc,v 1.4 2005/10/25 20:51:54 fang Exp $
+	$Id: alias_actuals.cc,v 1.4.12.1 2005/12/11 00:45:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,7 +16,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -138,5 +138,5 @@ instance_alias_info_actuals::load_object_base(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

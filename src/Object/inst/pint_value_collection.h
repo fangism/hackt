@@ -1,9 +1,9 @@
 /**
 	\file "Object/inst/pint_value_collection.h"
-	Parameter instance collection classes for ART.  
+	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: pint_value_collection.h,v 1.3 2005/10/25 20:51:55 fang Exp $
+	$Id: pint_value_collection.h,v 1.3.12.1 2005/12/11 00:45:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PINT_VALUE_COLLECTION_H__
@@ -14,7 +14,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/traits/pint_traits.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 struct pint_tag;
 using util::memory::count_ptr;
@@ -93,7 +93,7 @@ typedef	value_array<pint_tag,4>	pint_array_4D;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_PINT_VALUE_COLLECTION_H__
 

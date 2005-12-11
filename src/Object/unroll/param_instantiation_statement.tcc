@@ -3,7 +3,7 @@
 	Template method definitions for param_instantiation_statement.  
 	This file came from "Object/art_object_inst_stmt_param.tcc"
 		in a previous life.  
-	$Id: param_instantiation_statement.tcc,v 1.3 2005/09/04 21:15:04 fang Exp $
+	$Id: param_instantiation_statement.tcc,v 1.3.20.1 2005/12/11 00:45:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
@@ -11,7 +11,7 @@
 
 #include "Object/unroll/param_instantiation_statement.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -58,7 +58,7 @@ PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
 

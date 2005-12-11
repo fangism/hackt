@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.5 2005/10/25 20:51:50 fang Exp $
+ 	$Id: const_collection.tcc,v 1.5.12.1 2005/12/11 00:45:23 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -90,7 +90,7 @@ persistent_object_manager::register_persistent_type<const_collection<Tag> >(\
 
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 #include "util/using_ostream.h"
@@ -457,7 +457,7 @@ CONST_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 #endif	// __OBJECT_EXPR_CONST_COLLECTION_TCC__
 

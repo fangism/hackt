@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.4 2005/10/25 20:51:56 fang Exp $
+	$Id: PRS_base.h,v 1.4.12.1 2005/12/11 00:45:43 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_BASE_H__
@@ -14,7 +14,7 @@
 #include "util/boolean_types.h"
 #include "Object/inst/instance_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 class scopespace;
@@ -207,7 +207,7 @@ protected:
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_PRS_BASE_H__
 

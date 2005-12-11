@@ -1,17 +1,17 @@
 /**
 	\file "AST/art_parser_expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: art_parser_expr_list.h,v 1.8 2005/07/20 20:59:50 fang Exp $
+	$Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_EXPR_LIST_H__
-#define __AST_ART_PARSER_EXPR_LIST_H__
+#ifndef __AST_HAC_PARSER_EXPR_LIST_H__
+#define __AST_HAC_PARSER_EXPR_LIST_H__
 
 #include "AST/art_parser_expr_base.h"
 #include "AST/art_parser_node_list.h"
 #include "util/STL/vector_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class template_actuals;
 }
@@ -155,7 +155,7 @@ public:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_EXPR_LIST_H__
+#endif	// __AST_HAC_PARSER_EXPR_LIST_H__
 

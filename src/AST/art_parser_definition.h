@@ -1,17 +1,17 @@
 /**
 	\file "AST/art_parser_definition.h"
-	Definition-related parser classes for ART.  
-	$Id: art_parser_definition.h,v 1.17 2005/06/22 22:13:32 fang Exp $
+	Definition-related parser classes for HAC.  
+	$Id: art_parser_definition.h,v 1.17.40.1 2005/12/11 00:45:04 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_DEFINITION_H__
-#define __AST_ART_PARSER_DEFINITION_H__
+#ifndef __AST_HAC_PARSER_DEFINITION_H__
+#define __AST_HAC_PARSER_DEFINITION_H__
 
 #include "AST/art_parser_root_item.h"
 #include "AST/art_parser_type.h"
 #include "AST/art_parser_definition_item.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class definition_base;
 	class process_definition;
@@ -450,7 +450,7 @@ public:
 //=============================================================================
 
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_DEFINITION_H__
+#endif	// __AST_HAC_PARSER_DEFINITION_H__
 

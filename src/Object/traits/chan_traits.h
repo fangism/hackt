@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.6 2005/10/08 01:40:00 fang Exp $
+	$Id: chan_traits.h,v 1.6.14.1 2005/12/11 00:45:48 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -11,7 +11,7 @@
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 template <class> class general_collection_type_manager;
 //-----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ struct class_traits<channel_tag> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_CHAN_TRAITS_H__
 

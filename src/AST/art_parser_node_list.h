@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_node_list.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_node_list.h,v 1.10 2005/10/25 20:51:47 fang Exp $
+	Base set of classes for the HAC parser.  
+	$Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_NODE_LIST_H__
-#define __AST_ART_PARSER_NODE_LIST_H__
+#ifndef __AST_HAC_PARSER_NODE_LIST_H__
+#define __AST_HAC_PARSER_NODE_LIST_H__
 
 #include "util/STL/list.h"
 #include "AST/art_parser_fwd.h"
@@ -13,7 +13,7 @@
 #include "util/memory/count_ptr.h"
 // #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 
 USING_LIST
@@ -224,7 +224,7 @@ public:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_NODE_LIST_H__
+#endif	// __AST_HAC_PARSER_NODE_LIST_H__
 

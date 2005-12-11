@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.4 2005/09/04 21:15:03 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.4.20.1 2005/12/11 00:45:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -17,7 +17,7 @@
 #include "Object/type/param_type_reference.h"
 #include "Object/expr/const_param_expr_list.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class footprint;
 //=============================================================================
@@ -233,7 +233,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 

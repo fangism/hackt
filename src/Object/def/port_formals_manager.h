@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.3 2005/09/04 21:14:43 fang Exp $
+	$Id: port_formals_manager.h,v 1.3.20.1 2005/12/11 00:45:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -19,7 +19,7 @@
 #include "util/hash_qmap.h"
 #include "util/memory/excl_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 	class token_identifier;
 }
@@ -125,7 +125,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_PORT_FORMALS_MANAGER_H__
 

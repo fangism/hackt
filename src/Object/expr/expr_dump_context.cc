@@ -1,12 +1,12 @@
 /**
 	\file "Object/expr/exp_dump_context.cc"
-	$Id: expr_dump_context.cc,v 1.2 2005/10/25 20:51:51 fang Exp $
+	$Id: expr_dump_context.cc,v 1.2.12.1 2005/12/11 00:45:25 fang Exp $
  */
 
 #include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS_base.h"	// for PRS::expr_dump_context
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 
@@ -75,5 +75,5 @@ expr_dump_context::stamp_modifier::~stamp_modifier() {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

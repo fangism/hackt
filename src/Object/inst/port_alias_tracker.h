@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.5 2005/11/02 22:53:47 fang Exp $
+	$Id: port_alias_tracker.h,v 1.5.8.1 2005/12/11 00:45:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -22,7 +22,7 @@
 	This was introduced temporarily on branch, but is currently not used.
 	There may be a time in the future when this will come in handy, 
 	so we keep it around commented out.  
-	Appeared on branch: ARTXX-00-01-04-main-00-62-cflat-02
+	Appeared on branch: HACXX-00-01-04-main-00-62-cflat-02
  */
 #define	USE_ALIAS_STRING_CACHE			0
 
@@ -30,7 +30,7 @@
 #include "Object/common/alias_string_cache.h"
 #endif
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class footprint;
 using std::istream;
@@ -236,7 +236,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_PORT_ALIAS_TRACKER_H__
 

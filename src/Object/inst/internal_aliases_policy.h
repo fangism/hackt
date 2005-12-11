@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_aliases_policy.h"
-	$Id: internal_aliases_policy.h,v 1.2 2005/09/04 21:14:51 fang Exp $
+	$Id: internal_aliases_policy.h,v 1.2.20.1 2005/12/11 00:45:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_H__
@@ -9,7 +9,7 @@
 #include "Object/inst/internal_aliases_policy_fwd.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::good_bool;
 
@@ -63,7 +63,7 @@ struct internal_aliases_policy<true> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INTERNAL_ALIASES_POLICY_H__
 

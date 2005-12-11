@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.3 2005/09/04 21:14:50 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.3.20.1 2005/12/11 00:45:37 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -13,7 +13,7 @@
 #include "util/boolean_types.h"
 #include "Object/expr/types.h"		// for pint_value_type
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::istream;
 using std::ostream;
@@ -117,7 +117,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
 

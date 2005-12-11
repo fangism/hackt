@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.3 2005/10/08 01:39:58 fang Exp $
+	$Id: CHP_base.h,v 1.3.14.1 2005/12/11 00:45:42 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_CHP_BASE_H__
@@ -9,7 +9,7 @@
 
 #include "util/persistent.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 /**
 	Namespace for CHP object classes.  
@@ -36,7 +36,7 @@ virtual	ostream&
 //=============================================================================
 }	// end namespace CHP
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_CHP_BASE_H__
 

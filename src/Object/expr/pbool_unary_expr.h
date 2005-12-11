@@ -3,7 +3,7 @@
 	Unary negation of meta boolean.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_unary_expr.h,v 1.4 2005/10/25 20:51:54 fang Exp $
+	$Id: pbool_unary_expr.h,v 1.4.12.1 2005/12/11 00:45:31 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_UNARY_EXPR_H__
@@ -12,7 +12,7 @@
 #include "Object/expr/pbool_expr.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::memory::count_ptr;
 
@@ -96,7 +96,7 @@ public:
 };	// end class pbool_unary_expr
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PBOOL_UNARY_EXPR_H__

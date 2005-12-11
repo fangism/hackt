@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.5 2005/10/30 22:00:22 fang Exp $
+	$Id: PRS.h,v 1.5.10.1 2005/12/11 00:45:43 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
@@ -13,7 +13,7 @@
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class meta_range_expr;
 struct pint_tag;
@@ -499,7 +499,7 @@ public:
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_PRS_H__
 

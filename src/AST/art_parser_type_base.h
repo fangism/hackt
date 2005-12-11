@@ -1,16 +1,16 @@
 /**
 	\file "AST/art_parser_type.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_type_base.h,v 1.6 2005/07/20 20:59:52 fang Exp $
+	Base set of classes for the HAC parser.  
+	$Id: art_parser_type_base.h,v 1.6.34.1 2005/12/11 00:45:12 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_TYPE_BASE_H__
-#define __AST_ART_PARSER_TYPE_BASE_H__
+#ifndef __AST_HAC_PARSER_TYPE_BASE_H__
+#define __AST_HAC_PARSER_TYPE_BASE_H__
 
 #include "AST/art_parser_base.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class definition_base;
 	class fundamental_type_reference;
@@ -73,7 +73,7 @@ virtual return_type
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_TYPE_BASE_H__
+#endif	// __AST_HAC_PARSER_TYPE_BASE_H__
 

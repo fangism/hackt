@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_dump_context.h"
 	Flags and modifiers for manipulating expression dumps.  
-	$Id: expr_dump_context.h,v 1.2 2005/10/25 20:51:51 fang Exp $
+	$Id: expr_dump_context.h,v 1.2.12.1 2005/12/11 00:45:26 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
@@ -10,7 +10,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/attributes.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class scopespace;
 using util::memory::never_ptr;
@@ -98,7 +98,7 @@ struct expr_dump_context {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
 

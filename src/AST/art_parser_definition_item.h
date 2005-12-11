@@ -1,16 +1,16 @@
 /**
 	\file "AST/art_parser_definition_item.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_definition_item.h,v 1.7 2005/05/19 18:43:27 fang Exp $
+	Base set of classes for the HAC parser.  
+	$Id: art_parser_definition_item.h,v 1.7.48.1 2005/12/11 00:45:04 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_DEFINITION_ITEM_H__
-#define __AST_ART_PARSER_DEFINITION_ITEM_H__
+#ifndef __AST_HAC_PARSER_DEFINITION_ITEM_H__
+#define __AST_HAC_PARSER_DEFINITION_ITEM_H__
 
 #include "AST/art_parser_base.h"
 #include "AST/art_parser_node_list.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 //=============================================================================
 /**
@@ -87,7 +87,7 @@ virtual	ROOT_CHECK_PROTO = 0;
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_DEFINITION_ITEM_H__
+#endif	// __AST_HAC_PARSER_DEFINITION_ITEM_H__
 

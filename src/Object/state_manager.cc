@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.7 2005/11/03 07:52:04 fang Exp $
+	$Id: state_manager.cc,v 1.7.6.1 2005/12/11 00:45:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,7 +23,7 @@
 #include "util/list_vector.tcc"
 #include "util/IO_utils.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
@@ -264,5 +264,5 @@ state_manager::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

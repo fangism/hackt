@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.4 2005/10/25 20:51:53 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.4.12.1 2005/12/11 00:45:31 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -14,7 +14,7 @@
 #include "util/qmap.h"
 #include "util/operators.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::string;
 using std::ostream;
@@ -129,7 +129,7 @@ public:
 };	// end class pbool_logical_expr
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__

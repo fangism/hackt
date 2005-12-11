@@ -2,7 +2,7 @@
 	\file "main/alloc.cc"
 	Allocates global unique state.  
 
-	$Id: alloc.cc,v 1.3 2005/11/10 02:13:05 fang Exp $
+	$Id: alloc.cc,v 1.3.4.1 2005/12/11 00:46:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,7 +16,7 @@
 #include "main/main_funcs.h"
 #include "util/persistent_object_manager.h"
 
-namespace ART {
+namespace HAC {
 
 using util::persistent;
 using util::persistent_object_manager;
@@ -94,5 +94,5 @@ alloc::usage(void) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/datatype_definition_base.h"
-	Definition-related ART object classes.  
+	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.3 2005/09/04 21:14:42 fang Exp $
+	$Id: datatype_definition_base.h,v 1.3.20.1 2005/12/11 00:45:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
@@ -11,7 +11,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class data_type_reference;
 //=============================================================================
@@ -75,7 +75,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
 

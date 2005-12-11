@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: nonmeta_instance_reference_base.h,v 1.3 2005/10/25 20:51:57 fang Exp $
+	$Id: nonmeta_instance_reference_base.h,v 1.3.12.1 2005/12/11 00:45:45 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
@@ -11,7 +11,7 @@
 
 #include "util/persistent.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 struct expr_dump_context;
 using std::istream;
@@ -48,7 +48,7 @@ virtual	size_t
 //	is too complicated, not particularly useful.  
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 

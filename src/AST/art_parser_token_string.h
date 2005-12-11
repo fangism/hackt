@@ -1,19 +1,19 @@
 /**
 	\file "AST/art_parser_token_string.h"
-	Base set of classes for the ART parser.  
+	Base set of classes for the HAC parser.  
 	These classes are implemented in "art_parser_token.cc"
-	$Id: art_parser_token_string.h,v 1.7 2005/06/21 21:26:34 fang Exp $
+	$Id: art_parser_token_string.h,v 1.7.40.1 2005/12/11 00:45:11 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_TOKEN_STRING_H__
-#define __AST_ART_PARSER_TOKEN_STRING_H__
+#ifndef __AST_HAC_PARSER_TOKEN_STRING_H__
+#define __AST_HAC_PARSER_TOKEN_STRING_H__
 
 #include "AST/art_parser_terminal.h"
 #include "AST/art_parser_expr_base.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 //=============================================================================
 /**
@@ -96,7 +96,7 @@ virtual ostream&
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_TOKEN_STRING_H__
+#endif	// __AST_HAC_PARSER_TOKEN_STRING_H__
 

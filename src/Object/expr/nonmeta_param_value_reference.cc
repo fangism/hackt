@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.4 2005/08/08 23:08:29 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.4.26.1 2005/12/11 00:45:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -37,21 +37,21 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::simple_pbool_nonmeta_instance_reference,
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pbool_nonmeta_instance_reference,
 		"nonmeta-pbool-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::simple_pint_nonmeta_instance_reference,
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pint_nonmeta_instance_reference,
 		"nonmeta-pint-inst-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::simple_pbool_nonmeta_instance_reference, 
+	HAC::entity::simple_pbool_nonmeta_instance_reference, 
 		SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::simple_pint_nonmeta_instance_reference, 
+	HAC::entity::simple_pint_nonmeta_instance_reference, 
 		SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // specializations
@@ -94,7 +94,7 @@ template class simple_nonmeta_value_reference<pbool_tag>;
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

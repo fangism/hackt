@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.90 2005/12/10 03:56:51 fang Exp $
+#	$Id: Makefile.am,v 1.90.2.1 2005/12/11 00:45:01 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -787,7 +787,7 @@ GET_START_TOKEN_ENUM = \
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
 		-v include="AST/art_parser.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
-		-v namespace="ART::parser ART::lexer" \
+		-v namespace="HAC::parser HAC::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 

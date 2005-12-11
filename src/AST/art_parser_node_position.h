@@ -1,17 +1,17 @@
 /**
 	\file "AST/art_parser_node_position.h"
 	Node whose sole purpose is to record a position of a token.  
-	$Id: art_parser_node_position.h,v 1.6 2005/06/19 01:58:31 fang Exp $
+	$Id: art_parser_node_position.h,v 1.6.42.1 2005/12/11 00:45:09 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_NODE_POSITION_H__
-#define	__AST_ART_PARSER_NODE_POSITION_H__
+#ifndef	__AST_HAC_PARSER_NODE_POSITION_H__
+#define	__AST_HAC_PARSER_NODE_POSITION_H__
 
 #include <cstring>		// for strncpy
 #include "AST/art_parser_base.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 using util::memory::chunk_map_pool;
 using lexer::token_position;
@@ -111,7 +111,7 @@ public:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_NODE_POSITION_H__
+#endif	// __AST_HAC_PARSER_NODE_POSITION_H__
 

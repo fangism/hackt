@@ -1,18 +1,18 @@
 /**
 	\file "AST/art_parser_hse.h"
 	HSE-specific syntax tree classes.
-	$Id: art_parser_hse.h,v 1.12 2005/05/19 18:43:27 fang Exp $
+	$Id: art_parser_hse.h,v 1.12.48.1 2005/12/11 00:45:07 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_HSE_H__
-#define	__AST_ART_PARSER_HSE_H__
+#ifndef	__AST_HAC_PARSER_HSE_H__
+#define	__AST_HAC_PARSER_HSE_H__
 
 #include "AST/art_parser_hse_fwd.h"
 #include "AST/art_parser_definition_item.h"
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_statement.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 //=============================================================================
 /**
@@ -182,7 +182,7 @@ public:
 /// HSE assignment statement is only boolean
 class assignment : public statement, public incdec_stmt {
 private:
-	typedef ART::parser::incdec_stmt	base_assign;
+	typedef HAC::parser::incdec_stmt	base_assign;
 public:
 	explicit
 	assignment(base_assign* a);
@@ -357,7 +357,7 @@ public:
 //=============================================================================
 }	// end namespace HSE
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_HSE_H__
+#endif	// __AST_HAC_PARSER_HSE_H__
 

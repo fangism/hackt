@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.3 2005/09/04 21:14:59 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.3.20.1 2005/12/11 00:45:53 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -16,7 +16,7 @@
 #include "Object/common/util_types.h"
 #include "Object/type/template_actuals.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 class token_identifier;
 }
@@ -194,7 +194,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
 

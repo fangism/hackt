@@ -2,7 +2,7 @@
 	\file "main/prsobjdemo.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: prsobjdemo.cc,v 1.5 2005/11/10 02:13:06 fang Exp $
+	$Id: prsobjdemo.cc,v 1.5.4.1 2005/12/11 00:46:04 fang Exp $
  */
 
 #include <iostream>
@@ -16,7 +16,7 @@
 #include "Object/def/process_definition.h"
 
 // using declarations
-namespace ART {
+namespace HAC {
 #include "util/using_ostream.h"
 using std::list;
 using util::memory::never_ptr;		// never-delete pointer
@@ -93,5 +93,5 @@ prsobjdemo::usage(void) {
 
 //=============================================================================
 
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -3,7 +3,7 @@
 	Class instantiations for const collections.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: param_const_collection.cc,v 1.4 2005/08/08 23:08:29 fang Exp $
+ 	$Id: param_const_collection.cc,v 1.4.26.1 2005/12/11 00:45:30 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
@@ -39,26 +39,26 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_const_collection,
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_const_collection,
 		"pint-const-collection")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const_collection,
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_const_collection,
 		"pbool-const-collection")
 
 // pint_const_collection requires special treatment:
 // it has no empty constructor and requires an int argument
 // this example shows how we can register various bound constructor
 // functors with the persistent_object_manager type registry.  
-using ART::entity::const_collection;
+using HAC::entity::const_collection;
 // macros defined in "expr/const_collection.tcc"
 SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
-	ART::entity::pint_tag, CONST_PINT_COLLECTION_TYPE_KEY)
+	HAC::entity::pint_tag, CONST_PINT_COLLECTION_TYPE_KEY)
 SPECIALIZE_PERSISTENT_TRAITS_CONST_COLLECTION_FULL_DEFINITION(
-	ART::entity::pbool_tag, CONST_PBOOL_COLLECTION_TYPE_KEY)
+	HAC::entity::pbool_tag, CONST_PBOOL_COLLECTION_TYPE_KEY)
 
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // explicit template instantiations
@@ -68,7 +68,7 @@ template class const_collection<pbool_tag>;
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

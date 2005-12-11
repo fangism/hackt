@@ -1,11 +1,11 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.7 2005/10/30 22:00:19 fang Exp $
+	$Id: module.h,v 1.7.10.1 2005/12/11 00:45:14 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_MODULE_H__
-#define	__OBJECT_ART_OBJECT_MODULE_H__
+#ifndef	__HAC_OBJECT_MODULE_H__
+#define	__HAC_OBJECT_MODULE_H__
 
 #include <string>
 #include "Object/common/util_types.h"
@@ -14,7 +14,7 @@
 #include "Object/def/footprint.h"
 #include "Object/state_manager.h"
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 
 namespace entity {
@@ -160,7 +160,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	//	__OBJECT_ART_OBJECT_MODULE_H__
+#endif	//	__HAC_OBJECT_MODULE_H__
 

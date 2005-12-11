@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_chp.h"
 	CHP-specific syntax tree classes.  
-	$Id: art_parser_chp.h,v 1.13 2005/06/22 02:56:33 fang Exp $
+	$Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_CHP_H__
-#define	__AST_ART_PARSER_CHP_H__
+#ifndef	__AST_HAC_PARSER_CHP_H__
+#define	__AST_HAC_PARSER_CHP_H__
 
 #include "AST/art_parser_chp_fwd.h"
 #include "AST/art_parser_token_string.h"
@@ -15,7 +15,7 @@
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	struct channel_tag;
 	template <class> class simple_nonmeta_instance_reference;
@@ -543,6 +543,6 @@ public:
 //=============================================================================
 }	// end namespace CHP
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	//	__AST_ART_PARSER_CHP_H__
+#endif	//	__AST_HAC_PARSER_CHP_H__

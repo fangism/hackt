@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/art_object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.3 2005/09/04 21:14:56 fang Exp $
+	$Id: class_traits.h,v 1.3.20.1 2005/12/11 00:45:49 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -19,7 +19,7 @@ namespace util {
 	class persistent_object_manager;
 }
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::istream;
 using std::ostream;
@@ -221,7 +221,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_CLASS_TRAITS_H__
 

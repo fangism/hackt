@@ -3,10 +3,10 @@
 	Base classes for data expressions.  
 	NOTE: for revision histry purposes, this file was copied from the
 		last revision of "Object/art_object_data_expr_base.h"
-		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
+		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.3 2005/10/25 20:51:50 fang Exp $
+	$Id: data_expr.h,v 1.3.12.1 2005/12/11 00:45:25 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_DATA_EXPR_H__
@@ -17,7 +17,7 @@
 
 #define	USE_DATA_EXPR_EQUIVALENCE	0
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class data_type_reference;
 struct expr_dump_context;
@@ -65,7 +65,7 @@ virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_DATA_EXPR_H__
 

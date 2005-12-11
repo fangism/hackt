@@ -1,17 +1,17 @@
 /**
 	\file "AST/art_parser_token.h"
-	Token-specific parser classes for ART.  
-	$Id: art_parser_token.h,v 1.17 2005/07/20 20:59:52 fang Exp $
+	Token-specific parser classes for HAC.  
+	$Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_TOKEN_H__
-#define __AST_ART_PARSER_TOKEN_H__
+#ifndef __AST_HAC_PARSER_TOKEN_H__
+#define __AST_HAC_PARSER_TOKEN_H__
 
 #include "AST/art_parser_token_string.h"
 #include "AST/art_parser_type_base.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 //=============================================================================
 // forward declarations in this namespace appear in "art_parser_fwd.h"
@@ -313,7 +313,7 @@ public:
 //=============================================================================
 
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_TOKEN_H__
+#endif	// __AST_HAC_PARSER_TOKEN_H__
 

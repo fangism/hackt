@@ -1,7 +1,7 @@
 /**
 	\file "main/version.h"
 	Interface header for version module.  
-	$Id: version.h,v 1.3 2005/11/10 02:13:07 fang Exp $
+	$Id: version.h,v 1.3.4.1 2005/12/11 00:46:05 fang Exp $
  */
 
 #ifndef	__MAIN_VERSION_H__
@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 using std::ostream;
 //=============================================================================
 /**
@@ -82,7 +82,7 @@ public:
 };	// end class version
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_VERSION_H__
 

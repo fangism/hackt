@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_datatype_meta_instance_reference_base.h"
 	Classes for datatype instance references (built-in and user-defined).
 	This file was reincarnated from "Object/art_object_inst_ref_data.h".
-	$Id: simple_datatype_meta_instance_reference_base.h,v 1.2 2005/07/23 06:52:48 fang Exp $
+	$Id: simple_datatype_meta_instance_reference_base.h,v 1.2.32.1 2005/12/11 00:45:45 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
@@ -10,7 +10,7 @@
 
 #include "Object/ref/simple_meta_instance_reference_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -54,7 +54,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 

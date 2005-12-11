@@ -1,11 +1,11 @@
 /**
 	\file "Object/art_object_fwd.h"
-	Forward declarations for all ART::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.18 2005/09/04 21:14:40 fang Exp $
+	Forward declarations for all HAC::entity classes and typedefs.
+	$Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_FWD_H__
-#define	__OBJECT_ART_OBJECT_FWD_H__
+#ifndef	__HAC_OBJECT_FWD_H__
+#define	__HAC_OBJECT_FWD_H__
 
 #include "util/size_t.h"
 #include "Object/traits/classification_tags.h"
@@ -13,7 +13,7 @@
 #include "Object/expr/types.h"
 #include "Object/type/canonical_type_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 // TODO: organize into groups by where full declarations are found
@@ -335,7 +335,7 @@ namespace entity {
 	class unroll_context;
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __OBJECT_ART_OBJECT_FWD_H__
+#endif	// __HAC_OBJECT_FWD_H__
 

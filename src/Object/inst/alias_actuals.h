@@ -3,7 +3,7 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.4 2005/09/14 15:30:29 fang Exp $
+	$Id: alias_actuals.h,v 1.4.18.1 2005/12/11 00:45:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
@@ -17,7 +17,7 @@
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param_expr_list;
 class footprint;
@@ -146,7 +146,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_ALIAS_ACTUALS_H__
 

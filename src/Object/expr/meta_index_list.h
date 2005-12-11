@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.4 2005/10/25 20:51:52 fang Exp $
+	$Id: meta_index_list.h,v 1.4.12.1 2005/12/11 00:45:27 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_META_INDEX_LIST_H__
@@ -13,7 +13,7 @@
 #include "util/memory/pointer_classes_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_index_list;
 class unroll_context;
@@ -98,7 +98,7 @@ virtual	bool
 };	// end class meta_index_list
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_META_INDEX_LIST_H__

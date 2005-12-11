@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.5 2005/09/05 05:04:32 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.5.20.1 2005/12/11 00:45:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -33,27 +33,27 @@
 
 namespace util {
 
-	SPECIALIZE_UTIL_WHAT(ART::entity::enum_instance_collection,
+	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_instance_collection,
 		"enum_instance_collection")
-	SPECIALIZE_UTIL_WHAT(ART::entity::enum_scalar, "enum_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_1D, "enum_array_1D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_2D, "enum_array_2D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_3D, "enum_array_3D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::enum_array_4D, "enum_array_4D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_scalar, "enum_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_array_1D, "enum_array_1D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_array_2D, "enum_array_2D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_array_3D, "enum_array_3D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_array_4D, "enum_array_4D")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_scalar, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::enum_scalar, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_array_1D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::enum_array_1D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_array_2D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::enum_array_2D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_array_3D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::enum_array_3D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_array_4D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::enum_array_4D, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 4)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // explicit class instantiations
@@ -70,7 +70,7 @@ template class instance_array<enum_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
 

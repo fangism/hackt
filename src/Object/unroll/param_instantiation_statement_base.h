@@ -1,9 +1,9 @@
 /**
 	\file "Object/unroll/param_instantiation_statement_base.h"
-	Parameter instance statement classes for ART.  
+	Parameter instance statement classes for HAC.  
 	This file came from "Object/art_object_inst_stmt_param_base.h"
 		in a previous life.  
-	$Id: param_instantiation_statement_base.h,v 1.2 2005/07/23 06:53:03 fang Exp $
+	$Id: param_instantiation_statement_base.h,v 1.2.32.1 2005/12/11 00:45:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_BASE_H__
@@ -11,7 +11,7 @@
 
 #include "Object/unroll/instantiation_statement_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -43,7 +43,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_BASE_H__
 

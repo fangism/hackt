@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.7 2005/10/30 22:00:19 fang Exp $
+ 	$Id: namespace.cc,v 1.7.10.1 2005/12/11 00:45:16 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -62,14 +62,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 //=============================================================================
 namespace util {
 #if 0
-SPECIALIZE_UTIL_WHAT_DEFINITION(ART::entity::name_space, "namespace")
+SPECIALIZE_UTIL_WHAT_DEFINITION(HAC::entity::name_space, "namespace")
 #endif
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::name_space, NAMESPACE_TYPE_KEY, 0)
+	HAC::entity::name_space, NAMESPACE_TYPE_KEY, 0)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 #include "util/using_ostream.h"
@@ -1669,7 +1669,7 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

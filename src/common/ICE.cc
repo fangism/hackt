@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.cc"
 	String and common symbols defined for internal compiler errors.
-	$Id: ICE.cc,v 1.3 2005/09/04 21:15:04 fang Exp $
+	$Id: ICE.cc,v 1.3.20.1 2005/12/11 00:45:59 fang Exp $
  */
 
 #include <ostream>
@@ -9,7 +9,7 @@
 #include "config.h"
 #include "util/attributes.h"
 
-namespace ART {
+namespace HAC {
 using std::ostream;
 using std::endl;
 
@@ -55,5 +55,5 @@ __ICE_macro_test(ostream& o) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

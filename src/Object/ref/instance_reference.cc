@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.6 2005/10/30 22:00:23 fang Exp $
+ 	$Id: instance_reference.cc,v 1.6.10.1 2005/12/11 00:45:44 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -52,41 +52,41 @@
 // specializations
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_meta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_process_meta_instance_reference, 
 		"process-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_meta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_channel_meta_instance_reference, 
 		"channel-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::simple_process_nonmeta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_process_nonmeta_instance_reference, 
 		"process-nonmeta-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::simple_channel_nonmeta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_channel_nonmeta_instance_reference, 
 		"channel-nonmeta-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::process_member_meta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::process_member_meta_instance_reference, 
 		"process-member-inst-ref")
-SPECIALIZE_UTIL_WHAT(ART::entity::channel_member_meta_instance_reference, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::channel_member_meta_instance_reference, 
 		"channel-member-inst-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::simple_process_meta_instance_reference, 
+	HAC::entity::simple_process_meta_instance_reference, 
 		SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::simple_channel_meta_instance_reference, 
+	HAC::entity::simple_channel_meta_instance_reference, 
 		SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::simple_process_nonmeta_instance_reference, 
+	HAC::entity::simple_process_nonmeta_instance_reference, 
 		SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::simple_channel_nonmeta_instance_reference, 
+	HAC::entity::simple_channel_nonmeta_instance_reference, 
 		SIMPLE_CHANNEL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_member_meta_instance_reference, 
+	HAC::entity::process_member_meta_instance_reference, 
 		MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_member_meta_instance_reference, 
+	HAC::entity::channel_member_meta_instance_reference, 
 		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::multidimensional_sparse_set_traits;
@@ -1409,7 +1409,7 @@ template class member_meta_instance_reference<process_tag>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_INSTANCE_REFERENCE_CC__
 

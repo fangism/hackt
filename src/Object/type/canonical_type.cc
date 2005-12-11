@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.3 2005/09/14 15:30:34 fang Exp $
+	$Id: canonical_type.cc,v 1.3.18.1 2005/12/11 00:45:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -19,7 +19,7 @@
 #include "Object/traits/proc_traits.h"
 #include "common/TODO.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // specialized definitions
@@ -157,5 +157,5 @@ template class canonical_type<process_definition>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

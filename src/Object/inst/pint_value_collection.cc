@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.2 2005/07/23 06:52:40 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.2.32.1 2005/12/11 00:45:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -35,39 +35,39 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_scalar, "pint_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_1D, "pint_array<1>")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_2D, "pint_array<2>")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_3D, "pint_array<3>")
-	SPECIALIZE_UTIL_WHAT(ART::entity::pint_array_4D, "pint_array<4>")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::pint_scalar, "pint_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::pint_array_1D, "pint_array<1>")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::pint_array_2D, "pint_array<2>")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::pint_array_3D, "pint_array<3>")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::pint_array_4D, "pint_array<4>")
 
 template <>
-struct persistent_traits<ART::entity::pint_instance_collection> {
+struct persistent_traits<HAC::entity::pint_instance_collection> {
 	static const persistent::hash_key	type_key;
 };
 
 const persistent::hash_key
-persistent_traits<ART::entity::pint_instance_collection>::type_key(
+persistent_traits<HAC::entity::pint_instance_collection>::type_key(
 	PINT_INSTANCE_COLLECTION_TYPE_KEY);
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_scalar, PINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::pint_scalar, PINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_1D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::pint_array_1D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_2D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::pint_array_2D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_3D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::pint_array_3D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_array_4D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::pint_array_4D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
 
 namespace memory {
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_scalar)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_scalar)
 }	// end namespace memory
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE
@@ -117,7 +117,7 @@ template class value_array<pint_tag,4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

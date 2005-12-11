@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.h"
-	$Id: meta_loop_base.h,v 1.2 2005/10/30 22:00:24 fang Exp $
+	$Id: meta_loop_base.h,v 1.2.10.1 2005/12/11 00:45:58 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_LOOP_BASE_H__
@@ -11,7 +11,7 @@
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class meta_range_expr;
 struct pint_tag;
@@ -51,7 +51,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_META_LOOP_BASE_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "main/alloc.h"
 	Interface header for alloc module.  
-	$Id: alloc.h,v 1.2 2005/09/14 15:30:35 fang Exp $
+	$Id: alloc.h,v 1.2.18.1 2005/12/11 00:46:01 fang Exp $
  */
 
 #ifndef	__MAIN_ALLOC_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 
 /**
 	Instance-less class.  
@@ -46,7 +46,7 @@ private:
 	program_id;
 };	// end class alloc
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_ALLOC_H__
 

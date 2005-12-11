@@ -1,13 +1,13 @@
 /**
 	\file "AST/art_parser_delim.h"
-	Forward declarations for classes in ART::parser.
-	$Id: art_parser_delim.h,v 1.2 2005/05/10 04:51:07 fang Exp $
+	Forward declarations for classes in HAC::parser.
+	$Id: art_parser_delim.h,v 1.2.52.1 2005/12/11 00:45:04 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_DELIM_H__
-#define	__AST_ART_PARSER_DELIM_H__
+#ifndef	__AST_HAC_PARSER_DELIM_H__
+#define	__AST_HAC_PARSER_DELIM_H__
 
-namespace ART {
+namespace HAC {
 namespace parser {
 
 //-----------------------------------------------------------------------------
@@ -25,7 +25,7 @@ extern	const char	pound[];        // calling it "hash" would be confusing
 
 //-----------------------------------------------------------------------------
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_DELIM_H__
+#endif	// __AST_HAC_PARSER_DELIM_H__
 

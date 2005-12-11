@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_hse.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: art_parser_hse.cc,v 1.14 2005/05/22 06:18:30 fang Exp $
+	$Id: art_parser_hse.cc,v 1.14.48.1 2005/12/11 00:45:07 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_HSE_CC__
-#define	__AST_ART_PARSER_HSE_CC__
+#ifndef	__AST_HAC_PARSER_HSE_CC__
+#define	__AST_HAC_PARSER_HSE_CC__
 
 #include <iostream>
 
@@ -23,22 +23,22 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::statement, "(hse-statement)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::body, "(hse-body)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::guarded_command, "(hse-guarded-cmd)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::else_clause, "(hse-else-clause)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::skip, "(hse-skip)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::wait, "(hse-wait)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::assignment, "(hse-assignment)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::det_selection, "(hse-det-sel)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::nondet_selection, "(hse-nondet-sel)")
-// SPECIALIZE_UTIL_WHAT(ART::parser::HSE::prob_selection, "(hse-prob-sel)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::loop, "(hse-loop)")
-SPECIALIZE_UTIL_WHAT(ART::parser::HSE::do_until, "(hse-do-until)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::statement, "(hse-statement)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::body, "(hse-body)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::guarded_command, "(hse-guarded-cmd)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::else_clause, "(hse-else-clause)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::skip, "(hse-skip)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::wait, "(hse-wait)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::assignment, "(hse-assignment)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::det_selection, "(hse-det-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::nondet_selection, "(hse-nondet-sel)")
+// SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::prob_selection, "(hse-prob-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::loop, "(hse-loop)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::HSE::do_until, "(hse-do-until)")
 }
 
 
-namespace ART {
+namespace HAC {
 namespace parser {
 namespace HSE {
 #include "util/using_ostream.h"
@@ -194,7 +194,7 @@ wait::check_build(context& c) const {
 // class assignment method definitions
 
 CONSTRUCTOR_INLINE
-assignment::assignment(base_assign* a) : ART::parser::HSE::statement(),
+assignment::assignment(base_assign* a) : HAC::parser::HSE::statement(),
 		// destructive transfer of ownership
 		parser::incdec_stmt(a->release_expr(), a->release_op()) {
 	excl_ptr<base_assign> delete_me(a);
@@ -388,10 +388,10 @@ template class node_list<const guarded_command,colon>;	// HSE::nondet_sel_base
 //=============================================================================
 }	// end namespace HSE
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_HSE_CC__
+#endif	// __AST_HAC_PARSER_HSE_CC__
 

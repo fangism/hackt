@@ -1,12 +1,12 @@
 /**
 	\file "AST/art_parser_definition.cc"
-	Class method definitions for ART::parser definition-related classes.
+	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: art_parser_definition.cc,v 1.29 2005/10/30 22:00:18 fang Exp $
+	$Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_DEFINITION_CC__
-#define	__AST_ART_PARSER_DEFINITION_CC__
+#ifndef	__AST_HAC_PARSER_DEFINITION_CC__
+#define	__AST_HAC_PARSER_DEFINITION_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -52,28 +52,28 @@
 // for specializing util::what
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::user_data_type_prototype,
+SPECIALIZE_UTIL_WHAT(HAC::parser::user_data_type_prototype,
 	"(user-data-type-proto)")
-SPECIALIZE_UTIL_WHAT(ART::parser::user_data_type_def,
+SPECIALIZE_UTIL_WHAT(HAC::parser::user_data_type_def,
 	"(user-data-type-def)")
-SPECIALIZE_UTIL_WHAT(ART::parser::enum_prototype,
+SPECIALIZE_UTIL_WHAT(HAC::parser::enum_prototype,
 	"(enum-declaration)")
-SPECIALIZE_UTIL_WHAT(ART::parser::enum_def,
+SPECIALIZE_UTIL_WHAT(HAC::parser::enum_def,
 	"(enum-definition)")
-SPECIALIZE_UTIL_WHAT(ART::parser::user_chan_type_prototype,
+SPECIALIZE_UTIL_WHAT(HAC::parser::user_chan_type_prototype,
 	"(user-chan-type-proto)")
-SPECIALIZE_UTIL_WHAT(ART::parser::user_chan_type_def,
+SPECIALIZE_UTIL_WHAT(HAC::parser::user_chan_type_def,
 	"(user-chan-type-def)")
-SPECIALIZE_UTIL_WHAT(ART::parser::process_prototype,
+SPECIALIZE_UTIL_WHAT(HAC::parser::process_prototype,
 	"(process-prototype)")
-SPECIALIZE_UTIL_WHAT(ART::parser::process_def,
+SPECIALIZE_UTIL_WHAT(HAC::parser::process_def,
 	"(process-definition)")
-SPECIALIZE_UTIL_WHAT(ART::parser::typedef_alias,
+SPECIALIZE_UTIL_WHAT(HAC::parser::typedef_alias,
 	"(typedef-alias)")
 }
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
@@ -913,10 +913,10 @@ template class node_list<const def_body_item>;
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_DEFINITION_CC__
+#endif	// __AST_HAC_PARSER_DEFINITION_CC__
 

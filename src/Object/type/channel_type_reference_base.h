@@ -1,10 +1,10 @@
 /**
 	\file "Object/type/channel_type_reference_base.h"
-	Type-reference classes of the ART language.  
+	Type-reference classes of the HAC language.  
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.3 2005/09/04 21:14:59 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.3.20.1 2005/12/11 00:45:52 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
@@ -13,7 +13,7 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 class channel_definition_base;
@@ -92,7 +92,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
 

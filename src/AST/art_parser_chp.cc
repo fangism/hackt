@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_chp.cc"
 	Class method definitions for CHP parser classes.
-	$Id: art_parser_chp.cc,v 1.21 2005/09/04 21:14:39 fang Exp $
+	$Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_CHP_CC__
-#define	__AST_ART_PARSER_CHP_CC__
+#ifndef	__AST_HAC_PARSER_CHP_CC__
+#define	__AST_HAC_PARSER_CHP_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -44,26 +44,26 @@
 
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::body, "(chp-body)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::statement, "(chp-statement)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::guarded_command, "(chp-guarded-cmd)")
-// SPECIALIZE_UTIL_WHAT(ART::parser::CHP::else_clause, "(chp-else-clause)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::skip, "(chp-skip)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::wait, "(chp-wait)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::binary_assignment, "(chp-assignment)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::bool_assignment, "(chp-assignment)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::comm_list, "(chp-comm-list)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::send, "(chp-send)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::receive, "(chp-receive)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::det_selection, "(chp-det-sel)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::nondet_selection, "(chp-nondet-sel)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::prob_selection, "(chp-prob-sel)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::loop, "(chp-loop)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::do_until, "(chp-do-until)")
-SPECIALIZE_UTIL_WHAT(ART::parser::CHP::log, "(chp-log)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::body, "(chp-body)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::statement, "(chp-statement)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::guarded_command, "(chp-guarded-cmd)")
+// SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::else_clause, "(chp-else-clause)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::skip, "(chp-skip)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::wait, "(chp-wait)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::binary_assignment, "(chp-assignment)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::bool_assignment, "(chp-assignment)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::comm_list, "(chp-comm-list)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::send, "(chp-send)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::receive, "(chp-receive)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::det_selection, "(chp-det-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::nondet_selection, "(chp-nondet-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::prob_selection, "(chp-prob-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace parser {
 namespace CHP {
 using std::vector;
@@ -1168,10 +1168,10 @@ log::check_action(context& c) const {
 //=============================================================================
 }	// end namespace CHP
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_CHP_CC__
+#endif	// __AST_HAC_PARSER_CHP_CC__
 

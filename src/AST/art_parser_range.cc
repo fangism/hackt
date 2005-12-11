@@ -1,12 +1,12 @@
 /**
 	\file "AST/art_parser_range.cc"
-	Class method definitions for ART::parser, 
+	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: art_parser_range.cc,v 1.8 2005/10/25 20:51:47 fang Exp $
+	$Id: art_parser_range.cc,v 1.8.12.1 2005/12/11 00:45:10 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_RANGE_CC__
-#define	__AST_ART_PARSER_RANGE_CC__
+#ifndef	__AST_HAC_PARSER_RANGE_CC__
+#define	__AST_HAC_PARSER_RANGE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -46,11 +46,11 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::range, "(range)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::range, "(range)")
 }
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 using namespace entity;
 using std::back_inserter;
 
@@ -715,10 +715,10 @@ dense_range_list::check_formal_dense_ranges(context& c) const {
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_RANGE_CC__
+#endif	// __AST_HAC_PARSER_RANGE_CC__
 

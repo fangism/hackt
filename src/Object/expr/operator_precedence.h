@@ -1,13 +1,13 @@
 /**
 	\file "Object/expr/operator_precedence.h"
 	Enumerations for operator precedence.  
-	$Id: operator_precedence.h,v 1.2 2005/10/25 20:51:53 fang Exp $
+	$Id: operator_precedence.h,v 1.2.12.1 2005/12/11 00:45:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATOR_PRECEDENCE_H__
 #define	__OBJECT_EXPR_OPERATOR_PRECEDENCE_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 /**
@@ -30,7 +30,7 @@ typedef	enum {
 }	operator_precedence;
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_OPERATOR_PRECEDENCE_H__
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.7 2005/10/08 01:39:58 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.7.14.1 2005/12/11 00:45:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,7 +13,7 @@
 #include "util/macros.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -165,5 +165,5 @@ substructure_alias::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

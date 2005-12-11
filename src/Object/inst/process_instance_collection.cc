@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.5 2005/09/05 05:04:33 fang Exp $
+	$Id: process_instance_collection.cc,v 1.5.20.1 2005/12/11 00:45:39 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -34,32 +34,32 @@
 
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::process_instance_collection,
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_instance_collection,
 		"process_instance_collection")
-	SPECIALIZE_UTIL_WHAT(ART::entity::process_scalar, "process_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_1D, "process_array_1D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_2D, "process_array_2D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_3D, "process_array_3D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::process_array_4D, "process_array_4D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_scalar, "process_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_1D, "process_array_1D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_2D, "process_array_2D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_3D, "process_array_3D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_4D, "process_array_4D")
 
 #if 0
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)
+	HAC::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)
 #endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_scalar, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::process_scalar, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_array_1D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::process_array_1D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_array_2D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::process_array_2D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_array_3D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::process_array_3D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_array_4D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::process_array_4D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 4)
 
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // explicit template clas instantiations
@@ -76,7 +76,7 @@ template class instance_array<process_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	ENABLE_STACKTRACE
 

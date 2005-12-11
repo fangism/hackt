@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.tcc,v 1.2 2005/07/20 21:00:53 fang Exp $
+	$Id: null_collection_type_manager.tcc,v 1.2.34.1 2005/12/11 00:45:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
@@ -10,7 +10,7 @@
 #include "Object/inst/null_collection_type_manager.h"
 #include <iostream>
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -49,7 +49,7 @@ NULL_COLLECTION_TYPE_MANAGER_CLASS::get_type(void) const {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef NULL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 #undef NULL_COLLECTION_TYPE_MANAGER_CLASS

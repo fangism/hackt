@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_formal.cc"
-	Class method definitions for ART::parser for formal-related classes.
-	$Id: art_parser_formal.cc,v 1.27 2005/10/30 22:00:18 fang Exp $
+	Class method definitions for HAC::parser for formal-related classes.
+	$Id: art_parser_formal.cc,v 1.27.10.1 2005/12/11 00:45:06 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_FORMAL_CC__
-#define	__AST_ART_PARSER_FORMAL_CC__
+#ifndef	__AST_HAC_PARSER_FORMAL_CC__
+#define	__AST_HAC_PARSER_FORMAL_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -46,17 +46,17 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::data_param_id, "(data-param-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::data_param_decl, "(data-param-decl)")
-SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_id, "(port-formal-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::port_formal_decl, "(port-formal-decl)")
-SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_id, "(template-formal-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl, "(template-formal-decl)")
-SPECIALIZE_UTIL_WHAT(ART::parser::template_formal_decl_list_pair, "(template-formal-decl-list-pair)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::data_param_id, "(data-param-id)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::data_param_decl, "(data-param-decl)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::port_formal_id, "(port-formal-id)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::port_formal_decl, "(port-formal-decl)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_id, "(template-formal-id)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_decl, "(template-formal-decl)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_decl_list_pair, "(template-formal-decl-list-pair)")
 }
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
@@ -569,7 +569,7 @@ template_formal_decl_list_pair::rightmost(void) const {
 	Sequentially check each template formal.  
 	Need to distinguish between strict and relaxed parameters for the sake
 	of creating the appropriate fundamental type reference?
-	DEPENDS: on updating ART::entity::type_reference_base.
+	DEPENDS: on updating HAC::entity::type_reference_base.
  */
 never_ptr<const object>
 template_formal_decl_list_pair::check_build(context& c) const {
@@ -597,10 +597,10 @@ template class node_list<const template_formal_decl>;
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_FORMAL_CC__
+#endif	// __AST_HAC_PARSER_FORMAL_CC__
 

@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.6 2005/10/25 20:51:52 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.6.12.1 2005/12/11 00:45:27 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -43,20 +43,20 @@ DEFAULT_STATIC_TRACE_BEGIN
 //=============================================================================
 namespace util {
 
-SPECIALIZE_UTIL_WHAT(ART::entity::const_index_list, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::const_index_list, 
 		"const-index-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_meta_index_list, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::dynamic_meta_index_list, 
 		"dynamic-index-list")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY, 0)
+	HAC::entity::const_index_list, CONST_INDEX_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_meta_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY, 0)
+	HAC::entity::dynamic_meta_index_list, DYNAMIC_INDEX_LIST_TYPE_KEY, 0)
 
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::persistent_traits;
 using util::persistent_object_manager;
@@ -811,7 +811,7 @@ dynamic_meta_index_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

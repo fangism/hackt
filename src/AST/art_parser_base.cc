@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_base.cc"
-	Class method definitions for ART::parser base classes.
-	$Id: art_parser_base.cc,v 1.29 2005/10/30 22:00:17 fang Exp $
+	Class method definitions for HAC::parser base classes.
+	$Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_BASE_CC__
-#define	__AST_ART_PARSER_BASE_CC__
+#ifndef	__AST_HAC_PARSER_BASE_CC__
+#define	__AST_HAC_PARSER_BASE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -51,23 +51,23 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::root_item, "(root_item)")
-SPECIALIZE_UTIL_WHAT(ART::parser::def_body_item, "(def-body-item)")
-SPECIALIZE_UTIL_WHAT(ART::parser::type_id, "(type-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::chan_type, "(chan-type)")
-SPECIALIZE_UTIL_WHAT(ART::parser::incdec_stmt, "(inc/dec-stmt)")
-SPECIALIZE_UTIL_WHAT(ART::parser::assign_stmt, "(assign-stmt)")
-SPECIALIZE_UTIL_WHAT(ART::parser::namespace_body, "namespace-body")
-SPECIALIZE_UTIL_WHAT(ART::parser::namespace_id, "(namespace-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::using_namespace, "(using-namespace)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::root_item, "(root_item)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::def_body_item, "(def-body-item)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::type_id, "(type-id)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::chan_type, "(chan-type)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::incdec_stmt, "(inc/dec-stmt)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::assign_stmt, "(assign-stmt)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::namespace_body, "namespace-body")
+SPECIALIZE_UTIL_WHAT(HAC::parser::namespace_id, "(namespace-id)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::using_namespace, "(using-namespace)")
 
 // purely lazy to update these to be distinct...
-SPECIALIZE_UTIL_WHAT(ART::parser::concrete_type_ref, "(type-ref)")
-SPECIALIZE_UTIL_WHAT(ART::parser::generic_type_ref, "(type-ref)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::concrete_type_ref, "(type-ref)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::generic_type_ref, "(type-ref)")
 }
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 using std::back_inserter;
 using entity::dynamic_param_expr_list;
@@ -838,10 +838,10 @@ template class node_list<const root_item>;
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_BASE_CC__
+#endif	// __AST_HAC_PARSER_BASE_CC__
 

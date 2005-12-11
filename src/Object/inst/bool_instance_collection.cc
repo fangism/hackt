@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.5 2005/09/05 05:04:32 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.5.20.1 2005/12/11 00:45:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -41,36 +41,36 @@ DEFAULT_STATIC_TRACE_BEGIN
 // module-local specializations
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::bool_instance_collection,
+	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_instance_collection,
 		"bool_instance_collection")
-	SPECIALIZE_UTIL_WHAT(ART::entity::bool_scalar, "bool_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_1D, "bool_array_1D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_2D, "bool_array_2D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_3D, "bool_array_3D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::bool_array_4D, "bool_array_4D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_scalar, "bool_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_1D, "bool_array_1D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_2D, "bool_array_2D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_3D, "bool_array_3D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_4D, "bool_array_4D")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_scalar, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::bool_scalar, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_array_1D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::bool_array_1D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_array_2D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::bool_array_2D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_array_3D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::bool_array_3D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_array_4D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::bool_array_4D, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
 
 namespace memory {
 	// can we still lazy destroy with instance aliases?
 	// or will it contain pointers to other things later?  (instances)
 #if 0
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::bool_scalar)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::bool_scalar)
 #endif
 }	// end namespace memory
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 
 //=============================================================================
@@ -96,7 +96,7 @@ template class instance_array<bool_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

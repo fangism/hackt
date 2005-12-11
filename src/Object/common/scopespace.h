@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.5 2005/10/30 22:00:20 fang Exp $
+	$Id: scopespace.h,v 1.5.10.1 2005/12/11 00:45:17 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_SCOPESPACE_H__
@@ -18,7 +18,7 @@
 #include "util/memory/excl_ptr.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 	// note: methods may specify string as formal types, 
 	// but you can still pass token_identifiers and token_strings
@@ -301,7 +301,7 @@ virtual	void
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 //=============================================================================
 #endif	// __OBJECT_COMMON_SCOPESPACE_H__

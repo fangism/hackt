@@ -1,6 +1,6 @@
 /**
 	\file "art_parser_node_position.cc"
-	$Id: art_parser_node_position.cc,v 1.6 2005/05/20 19:28:34 fang Exp $
+	$Id: art_parser_node_position.cc,v 1.6.48.1 2005/12/11 00:45:09 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -12,11 +12,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/what.h"
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::parser::node_position, "node_position")
-	SPECIALIZE_UTIL_WHAT(ART::parser::keyword_position, "keyword_position")
+	SPECIALIZE_UTIL_WHAT(HAC::parser::node_position, "node_position")
+	SPECIALIZE_UTIL_WHAT(HAC::parser::keyword_position, "keyword_position")
 }
 
-namespace ART {
+namespace HAC {
 namespace parser {
 //=============================================================================
 // class node_position method definitions
@@ -73,7 +73,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(keyword_position)
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

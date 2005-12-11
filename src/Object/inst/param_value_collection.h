@@ -1,9 +1,9 @@
 /**
 	\file "Object/inst/param_value_collection.h"
-	Parameter instance collection classes for ART.  
+	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.4 2005/10/30 22:00:22 fang Exp $
+	$Id: param_value_collection.h,v 1.4.10.1 2005/12/11 00:45:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -14,7 +14,7 @@
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param;
 class param_type_reference;
@@ -153,7 +153,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_PARAM_VALUE_COLLECTION_H__
 

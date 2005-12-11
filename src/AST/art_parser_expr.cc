@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_expr.cc"
-	Class method definitions for ART::parser, related to expressions.  
-	$Id: art_parser_expr.cc,v 1.27 2005/10/25 20:51:46 fang Exp $
+	Class method definitions for HAC::parser, related to expressions.  
+	$Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_EXPR_CC__
-#define	__AST_ART_PARSER_EXPR_CC__
+#ifndef	__AST_HAC_PARSER_EXPR_CC__
+#define	__AST_HAC_PARSER_EXPR_CC__
 
 #include <exception>
 #include <iostream>
@@ -70,25 +70,25 @@
 //=============================================================================
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::expr, "(expr)")
-// SPECIALIZE_UTIL_WHAT(ART::parser::expr_list, "(expr-list)")
-SPECIALIZE_UTIL_WHAT(ART::parser::qualified_id, "(qualified-id)")
-SPECIALIZE_UTIL_WHAT(ART::parser::id_expr, "(id-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::prefix_expr, "(prefix-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::member_expr, "(member-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::index_expr, "(index-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::arith_expr, "(arith-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::relational_expr, "(relational-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::logical_expr, "(logical-expr)")
-SPECIALIZE_UTIL_WHAT(ART::parser::array_concatenation, "(array-concatenation)")
-SPECIALIZE_UTIL_WHAT(ART::parser::loop_concatenation, "(loop-concatenation)")
-SPECIALIZE_UTIL_WHAT(ART::parser::array_construction, "(array-construction)")
-SPECIALIZE_UTIL_WHAT(ART::parser::template_argument_list_pair,
+SPECIALIZE_UTIL_WHAT(HAC::parser::expr, "(expr)")
+// SPECIALIZE_UTIL_WHAT(HAC::parser::expr_list, "(expr-list)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::qualified_id, "(qualified-id)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::id_expr, "(id-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::prefix_expr, "(prefix-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::member_expr, "(member-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::index_expr, "(index-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::arith_expr, "(arith-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::relational_expr, "(relational-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::logical_expr, "(logical-expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::array_concatenation, "(array-concatenation)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::loop_concatenation, "(loop-concatenation)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::array_construction, "(array-construction)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::template_argument_list_pair,
 		"(expr-list-pair)")
 }
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 using namespace entity;
 
 namespace parser {
@@ -1148,7 +1148,7 @@ index_expr::intercept_meta_indices_error(context& c) const {
 	STACKTRACE_VERBOSE;
 	const range_list::checked_meta_indices_type
 		checked_indices(ranges->check_meta_indices(c));
-	// should result in a ART::entity::meta_index_list
+	// should result in a HAC::entity::meta_index_list
 	// what happened to object_list::make_index_list() ?
 	if (!checked_indices) {
 		cerr << "ERROR in index list!  " << where(*ranges) << endl;
@@ -1165,7 +1165,7 @@ range_list::checked_nonmeta_indices_type
 index_expr::intercept_nonmeta_indices_error(context& c) const {
 	const range_list::checked_nonmeta_indices_type
 		checked_indices(ranges->check_nonmeta_indices(c));
-	// should result in a ART::entity::meta_index_list
+	// should result in a HAC::entity::meta_index_list
 	// what happened to object_list::make_index_list() ?
 	if (!checked_indices) {
 		cerr << "ERROR in nonmeta index list!  " <<
@@ -1873,10 +1873,10 @@ node_list<const inst_ref_expr>::leftmost(void) const;
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_EXPR_CC__
+#endif	// __AST_HAC_PARSER_EXPR_CC__
 

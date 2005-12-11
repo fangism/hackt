@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_token.cc"
-	Class method definitions for ART::parser, related to terminal tokens.
-	$Id: art_parser_token.cc,v 1.36 2005/11/10 02:13:01 fang Exp $
+	Class method definitions for HAC::parser, related to terminal tokens.
+	$Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_TOKEN_CC__
-#define	__AST_ART_PARSER_TOKEN_CC__
+#ifndef	__AST_HAC_PARSER_TOKEN_CC__
+#define	__AST_HAC_PARSER_TOKEN_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -48,30 +48,30 @@ DEFAULT_STATIC_TRACE_BEGIN
 #if 0
 // not really needed in this module
 namespace util {
-// SPECIALIZE_UTIL_WHAT(ART::parser::token_EOF, "END-OF-FILE")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_char, "char")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_int, "int")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_float, "float")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_string, "token")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_identifier, "identifier")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_keyword, "keyword")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_bool, "bool")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_else, "else")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_quoted_string, "quoted-string")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_datatype, "datatype")
-SPECIALIZE_UTIL_WHAT(ART::parser::token_paramtype, "paramtype")
+// SPECIALIZE_UTIL_WHAT(HAC::parser::token_EOF, "END-OF-FILE")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_char, "char")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_int, "int")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_float, "float")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_string, "token")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_identifier, "identifier")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_keyword, "keyword")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_bool, "bool")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_else, "else")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_quoted_string, "quoted-string")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_datatype, "datatype")
+SPECIALIZE_UTIL_WHAT(HAC::parser::token_paramtype, "paramtype")
 }
 #endif
 
 #if 0
 namespace util {
 namespace memory {
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::parser::token_char)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::parser::token_char)
 }
 }
 #endif
 
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
@@ -628,12 +628,12 @@ token_pint_type::check_type(context&) const {
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __AST_ART_PARSER_TOKEN_CC__
+#endif	// __AST_HAC_PARSER_TOKEN_CC__
 

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.4 2005/11/12 08:45:34 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.4.2.1 2005/12/11 00:46:00 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -64,7 +64,7 @@
 #include "AST/art_parser.h"		/* everything needed for "y.tab.h" */
 #include "lexer/input_manager.h"
 #include "lexer/file_manager.h"
-using namespace ART::parser;
+using namespace HAC::parser;
 
 
 // DIRTY MAKE HACK ALERT
@@ -85,10 +85,10 @@ using flex::lexer_state;
 	the hackt parser.  
 	This is globally visible and accessible (unfortunately).  
  */
-ART::lexer::file_manager
+HAC::lexer::file_manager
 hackt_parse_file_manager;
 
-namespace ART {
+namespace HAC {
 
 // defined in "main/main_funcs.cc"
 extern excl_ptr<root_body>
@@ -258,9 +258,9 @@ MULTILINE_NEWLINE(token_position& p, const lexer_state& foo) {
 int at_eof(void);
 
 }	/* end namespace lexer */
-}	/* end namespace ART */
+}	/* end namespace HAC */
 
-using namespace ART::lexer;
+using namespace HAC::lexer;
 
 %}
 
@@ -493,7 +493,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	switch(stat) {
 	case file_status::NEW_FILE: {
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
-		excl_ptr<root_body> _root = ART::parse_to_AST(ym.get_file());
+		excl_ptr<root_body> _root = HAC::parse_to_AST(ym.get_file());
 		if (!_root) {
 			// presumably already have error message from callee
 			cerr << "From: \"" << pstr << '\"' << endl;
@@ -814,7 +814,7 @@ int yywrap(void) {
 		return 1;		// no more input
 }
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 /**
 	Public function that indicates whether or not the lexer is
@@ -829,5 +829,5 @@ int at_eof(const flex::lexer_state& foo) {
 }
 
 }	/* end namespace lexer */
-}	/* end namespace ART */
+}	/* end namespace HAC */
 

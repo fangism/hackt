@@ -3,7 +3,7 @@
 	Meta parameter operator expressions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.7 2005/10/30 22:00:21 fang Exp $
+ 	$Id: operators.cc,v 1.7.10.1 2005/12/11 00:45:29 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_OPERATORS_CC__
@@ -42,31 +42,31 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_unary_expr,
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_unary_expr,
 		"pint-unary-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_unary_expr,
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_unary_expr,
 		"pbool-unary-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_arith_expr, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_arith_expr, 
 		"arith-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_relational_expr, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_relational_expr, 
 		"relational-expr")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_logical_expr, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_logical_expr, 
 		"logical-expr")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY, 0)
+	HAC::entity::pint_unary_expr, PINT_UNARY_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY, 0)
+	HAC::entity::pbool_unary_expr, PBOOL_UNARY_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_arith_expr, META_ARITH_EXPR_TYPE_KEY, 0)
+	HAC::entity::pint_arith_expr, META_ARITH_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_relational_expr, META_RELATIONAL_EXPR_TYPE_KEY, 0)
+	HAC::entity::pint_relational_expr, META_RELATIONAL_EXPR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_logical_expr, META_LOGICAL_EXPR_TYPE_KEY, 0)
+	HAC::entity::pbool_logical_expr, META_LOGICAL_EXPR_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::persistent_traits;
 using util::persistent_object_manager;
@@ -1311,7 +1311,7 @@ pbool_logical_expr::load_object(const persistent_object_manager& m, istream& f) 
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

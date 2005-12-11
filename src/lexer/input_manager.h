@@ -2,9 +2,9 @@
 // won't rename it.  
 #include "lexer/yyin_manager.h"
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 typedef	yyin_manager		input_manager;
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 

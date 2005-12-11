@@ -1,15 +1,15 @@
 /**
 	\file "AST/art_parser_range.h"
-	Expression-related parser classes for ART.
-	$Id: art_parser_range.h,v 1.6 2005/06/19 01:58:31 fang Exp $
+	Expression-related parser classes for HAC.
+	$Id: art_parser_range.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_RANGE_H__
-#define __AST_ART_PARSER_RANGE_H__
+#ifndef __AST_HAC_PARSER_RANGE_H__
+#define __AST_HAC_PARSER_RANGE_H__
 
 #include "AST/art_parser_expr_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class meta_index_expr;
 	class nonmeta_index_expr_base;
@@ -60,7 +60,7 @@ public:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_RANGE_H__
+#endif	// __AST_HAC_PARSER_RANGE_H__
 

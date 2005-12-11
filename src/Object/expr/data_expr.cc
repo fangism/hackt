@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.4 2005/10/25 20:51:50 fang Exp $
+	$Id: data_expr.cc,v 1.4.12.1 2005/12/11 00:45:25 fang Exp $
  */
 
 #include <iostream>
@@ -29,13 +29,13 @@
 #include "util/IO_utils.h"
 
 namespace util {
-using ART::entity::int_arith_expr;
-using ART::entity::int_relational_expr;
-using ART::entity::bool_logical_expr;
-using ART::entity::int_negation_expr;
-using ART::entity::bool_negation_expr;
-using ART::entity::nonmeta_index_list;
-using ART::entity::int_range_expr;
+using HAC::entity::int_arith_expr;
+using HAC::entity::int_relational_expr;
+using HAC::entity::bool_logical_expr;
+using HAC::entity::int_negation_expr;
+using HAC::entity::bool_negation_expr;
+using HAC::entity::nonmeta_index_list;
+using HAC::entity::int_range_expr;
 
 	SPECIALIZE_UTIL_WHAT(int_arith_expr, "int-arith-expr")
 	SPECIALIZE_UTIL_WHAT(int_relational_expr, "int-relatonal-expr")
@@ -61,7 +61,7 @@ using ART::entity::int_range_expr;
 		int_range_expr, NONMETA_RANGE_TYPE_KEY, 0)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::istream;
 using util::persistent_traits;
@@ -786,5 +786,5 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file used to be "Object/common/object_base.cc"
 		in a previous life.  
- 	$Id: object_base.cc,v 1.2 2005/07/23 06:52:23 fang Exp $
+ 	$Id: object_base.cc,v 1.2.32.1 2005/12/11 00:45:17 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_OBJECT_BASE_CC__
@@ -12,7 +12,7 @@
 #include <iostream>
 #include "Object/common/object_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -50,7 +50,7 @@ object_handle::dump(ostream& o) const {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_OBJECT_BASE_CC__
 

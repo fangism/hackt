@@ -1,8 +1,8 @@
 /**
 	\file "Object/ref/member_meta_instance_reference.h"
-	Base class family for instance references in ART.  
+	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.4 2005/10/25 20:51:57 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.4.12.1 2005/12/11 00:45:44 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -11,7 +11,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/traits/class_traits_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class scopespace;
 class unroll_context;
@@ -94,7 +94,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
 

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pbool.cc"
 		in a previous life.  
- 	$Id: pbool_value_collection.cc,v 1.2 2005/07/23 06:52:39 fang Exp $
+ 	$Id: pbool_value_collection.cc,v 1.2.32.1 2005/12/11 00:45:38 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
@@ -32,7 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // ok to specialize here, ONLY IF nothing else references it externally
 
 namespace util {
-using ART::entity::pbool_instance;
+using HAC::entity::pbool_instance;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -70,36 +70,36 @@ read_value(istream& i, pbool_instance& b) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_scalar, "pbool_scalar")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_1D, "pbool_array<1>")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_2D, "pbool_array<2>")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_3D, "pbool_array<3>")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_array_4D, "pbool_array<4>")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_scalar, "pbool_scalar")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_array_1D, "pbool_array<1>")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_array_2D, "pbool_array<2>")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_array_3D, "pbool_array<3>")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_array_4D, "pbool_array<4>")
 
 template <>
-struct persistent_traits<ART::entity::pbool_instance_collection> {
+struct persistent_traits<HAC::entity::pbool_instance_collection> {
 	static const persistent::hash_key	type_key;
 };
 
 const persistent::hash_key
-persistent_traits<ART::entity::pbool_instance_collection>::type_key(
+persistent_traits<HAC::entity::pbool_instance_collection>::type_key(
 	PBOOL_INSTANCE_COLLECTION_TYPE_KEY);
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_scalar, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::pbool_scalar, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_array_1D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::pbool_array_1D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_array_2D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::pbool_array_2D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_array_3D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::pbool_array_3D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_array_4D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::pbool_array_4D, PBOOL_INSTANCE_COLLECTION_TYPE_KEY, 4)
 
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
@@ -152,7 +152,7 @@ template class value_array<pbool_tag,4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

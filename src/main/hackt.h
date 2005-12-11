@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt.h"
 	Header for the interface to the main program.  
-	$Id: hackt.h,v 1.1 2005/07/25 02:10:08 fang Exp $
+	$Id: hackt.h,v 1.1.32.1 2005/12/11 00:46:03 fang Exp $
  */
 
 #ifndef	__MAIN_HACKT_H__
@@ -15,7 +15,7 @@
 #include "util/qmap.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 using std::string;
 using std::ostream;
 using util::memory::count_ptr;
@@ -64,7 +64,7 @@ private:
 };	// end class hackt
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_HACKT_H__
 

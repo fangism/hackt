@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.4 2005/12/10 03:56:56 fang Exp $
+	$Id: shell.cc,v 1.4.2.1 2005/12/11 00:46:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,7 +17,7 @@
 #include "util/libc.h"
 #include "util/readline_wrap.h"
 
-namespace ART {
+namespace HAC {
 using util::persistent;
 using util::persistent_object_manager;
 using util::readline_wrapper;
@@ -148,5 +148,5 @@ shell::farewell(ostream& o) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

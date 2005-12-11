@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-01:
+	  The purpose of this branch is to rename everything 
+		from ART to HAC, more importantly, to remove all 
+		names and references to "art" or "ART" because of 
+		potential name clashes with other packages.  
+	  This first revision renamed the ART namespace to HAC.  
+	  TODO: AST files, documentation, test files, file extensions.
+
+
 2005-12-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-71:

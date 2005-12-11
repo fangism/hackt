@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/channel_definition_base.h"
-	Channel definition-related ART object classes.  
+	Channel definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h".
-	$Id: channel_definition_base.h,v 1.3 2005/09/04 21:14:41 fang Exp $
+	$Id: channel_definition_base.h,v 1.3.20.1 2005/12/11 00:45:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
@@ -11,7 +11,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class builtin_channel_type_reference;
 class channel_type_reference_base;
@@ -82,7 +82,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
 

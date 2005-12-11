@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.7 2005/11/02 22:53:46 fang Exp $
+	$Id: instance_alias_info.h,v 1.7.8.1 2005/12/11 00:45:35 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -18,7 +18,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 struct dump_flags;
 class footprint;
@@ -393,7 +393,7 @@ operator << (ostream&,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 

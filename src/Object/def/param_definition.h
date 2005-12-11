@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/param_definition.h"
-	Definition-related ART object classes.  
+	Definition-related HAC object classes.  
 	This file used to be "Object/art_object_definition.h".
-	$Id: param_definition.h,v 1.2 2005/07/23 06:52:27 fang Exp $
+	$Id: param_definition.h,v 1.2.32.1 2005/12/11 00:45:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PARAM_DEFINITION_H__
@@ -11,7 +11,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 
-namespace ART {
+namespace HAC {
 //=============================================================================
 // forward declarations from outside namespaces
 namespace parser {
@@ -73,7 +73,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_PARAM_DEFINITION_H__
 

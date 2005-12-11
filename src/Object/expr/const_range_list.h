@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.5 2005/10/25 20:51:50 fang Exp $
+	$Id: const_range_list.h,v 1.5.12.1 2005/12/11 00:45:24 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_RANGE_LIST_H__
@@ -16,7 +16,7 @@
 #include "util/multikey_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_range;
 class const_index_list;
@@ -119,7 +119,7 @@ public:
 };	// end class const_range_list
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_CONST_RANGE_LIST_H__

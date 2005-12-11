@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.3 2005/09/04 21:14:44 fang Exp $
+	$Id: template_formals_manager.cc,v 1.3.20.1 2005/12/11 00:45:22 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -26,7 +26,7 @@
 #include "util/indent.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::indent;
@@ -537,14 +537,14 @@ template_formals_manager::load_object_base(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #if 0
 // doesn't actually save space
 namespace std {
 // explicit template class instantiation
 template class
-vector<ART::entity::template_formals_manager::template_formals_value_type>;
+vector<HAC::entity::template_formals_manager::template_formals_value_type>;
 }	// end namespace std
 #endif
 

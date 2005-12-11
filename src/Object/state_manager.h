@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.5 2005/11/02 22:53:44 fang Exp $
+	$Id: state_manager.h,v 1.5.8.1 2005/12/11 00:45:15 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -13,7 +13,7 @@
 #include "util/list_vector.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 
 namespace entity {
@@ -160,7 +160,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_STATE_MANAGER_H__
 

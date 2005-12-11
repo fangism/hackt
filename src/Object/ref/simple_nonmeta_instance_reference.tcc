@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.2 2005/07/23 06:52:50 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.2.32.1 2005/12/11 00:45:46 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -16,7 +16,7 @@
 // might as well include this, will be needed
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::persistent_traits;
 
@@ -93,7 +93,7 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::load_object(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 

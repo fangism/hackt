@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.6 2005/10/25 20:51:57 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.6.12.1 2005/12/11 00:45:44 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -21,7 +21,7 @@
 #include "util/stacktrace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
@@ -234,7 +234,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::load_object(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
 

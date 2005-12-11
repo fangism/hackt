@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.2 2005/07/23 06:52:58 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.2.32.1 2005/12/11 00:45:55 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -29,21 +29,21 @@
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_expression_assignment, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_expression_assignment, 
 		"pint-expression-assignment")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_expression_assignment, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_expression_assignment, 
 		"pbool-expression-assignment")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_expression_assignment,
+	HAC::entity::pbool_expression_assignment,
 		PBOOL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_expression_assignment,
+	HAC::entity::pint_expression_assignment,
 		PINT_EXPR_ASSIGNMENT_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -125,7 +125,7 @@ template class expression_assignment<pint_tag>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
 

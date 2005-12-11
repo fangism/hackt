@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.tcc"
-	$Id: substructure_alias_base.tcc,v 1.3 2005/11/03 07:52:05 fang Exp $
+	$Id: substructure_alias_base.tcc,v 1.3.6.1 2005/12/11 00:45:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
@@ -18,7 +18,7 @@
 #include "util/sstream.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::ostringstream;
 //=============================================================================
@@ -72,7 +72,7 @@ if (!c.cf.check_prs) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
 

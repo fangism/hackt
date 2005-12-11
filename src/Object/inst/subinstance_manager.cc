@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.8 2005/11/02 22:53:47 fang Exp $
+	$Id: subinstance_manager.cc,v 1.8.8.1 2005/12/11 00:45:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,7 +20,7 @@
 #include "util/indent.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::auto_indent;
@@ -342,5 +342,5 @@ subinstance_manager::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

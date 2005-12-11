@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/channel_definition_alias.h"
-	Definition-related ART object classes.  
+	Definition-related HAC object classes.  
 	This file came from "art_object_definition_chan.h".
-	$Id: channel_definition_alias.h,v 1.3 2005/09/04 21:14:41 fang Exp $
+	$Id: channel_definition_alias.h,v 1.3.20.1 2005/12/11 00:45:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
@@ -11,7 +11,7 @@
 #include "Object/def/channel_definition_base.h"
 #include "Object/def/typedef_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -70,7 +70,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
 

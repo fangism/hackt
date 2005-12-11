@@ -1,15 +1,15 @@
 /**
 	\file "AST/art_parser_fwd.h"
-	Forward declarations for classes in ART::parser.
-	$Id: art_parser_fwd.h,v 1.9 2005/11/12 08:45:33 fang Exp $
+	Forward declarations for classes in HAC::parser.
+	$Id: art_parser_fwd.h,v 1.9.2.1 2005/12/11 00:45:07 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_FWD_H__
-#define	__AST_ART_PARSER_FWD_H__
+#ifndef	__AST_HAC_PARSER_FWD_H__
+#define	__AST_HAC_PARSER_FWD_H__
 
 #include "AST/art_parser_delim.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 
 //-----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ class instance_management;
 class concrete_type_ref;
 class generic_type_ref;
 
-// defined in "ART/imported_root.h"
+// defined in "HAC/imported_root.h"
 class imported_root;
 class imported_root_list;
 
@@ -163,7 +163,7 @@ class context;
 
 //-----------------------------------------------------------------------------
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_FWD_H__
+#endif	// __AST_HAC_PARSER_FWD_H__
 

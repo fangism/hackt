@@ -3,7 +3,7 @@
 	Class declarations for built-in boolean data instances
 	and instance collections.  
 	This file was "Object/art_object_instance_bool.h" in a previous life.  
-	$Id: bool_instance_collection.h,v 1.4 2005/09/04 21:14:48 fang Exp $
+	$Id: bool_instance_collection.h,v 1.4.20.1 2005/12/11 00:45:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_COLLECTION_H__
@@ -16,7 +16,7 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/null_collection_type_manager.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 //=============================================================================
@@ -38,7 +38,7 @@ typedef	instance_array<bool_tag, 4>	bool_array_4D;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_BOOL_INSTANCE_COLLECTION_H__
 

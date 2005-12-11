@@ -2,7 +2,7 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.4 2005/09/04 21:14:56 fang Exp $
+	$Id: pint_traits.h,v 1.4.20.1 2005/12/11 00:45:50 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_PINT_TRAITS_H__
@@ -10,7 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //-----------------------------------------------------------------------------
 template <>
@@ -83,7 +83,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_PINT_TRAITS_H__
 

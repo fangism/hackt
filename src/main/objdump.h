@@ -1,7 +1,7 @@
 /**
 	\file "main/objdump.h"
 	Interface header for the objdump module.  
-	$Id: objdump.h,v 1.2 2005/08/08 16:51:12 fang Exp $
+	$Id: objdump.h,v 1.2.28.1 2005/12/11 00:46:04 fang Exp $
  */
 
 #ifndef	__MAIN_OBJDUMP_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 
 /**
 	Instance-less class.  
@@ -46,7 +46,7 @@ private:
 	program_id;
 };	// end class objdump
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_OBJDUMP_H__
 

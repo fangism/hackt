@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.6 2005/11/03 07:52:05 fang Exp $
+	$Id: footprint.cc,v 1.6.6.1 2005/12/11 00:45:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -30,7 +30,7 @@
 #include "util/indent.h"
 #include "util/wtf.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
@@ -650,5 +650,5 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

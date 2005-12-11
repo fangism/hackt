@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.6 2005/11/02 22:53:47 fang Exp $
+	$Id: subinstance_manager.h,v 1.6.8.1 2005/12/11 00:45:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -11,7 +11,7 @@
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 namespace entity {
 class substructure_manager;
@@ -152,7 +152,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_SUBINSTANCE_MANAGER_H__
 

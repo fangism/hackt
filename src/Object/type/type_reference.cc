@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.4 2005/09/04 21:14:59 fang Exp $
+ 	$Id: type_reference.cc,v 1.4.20.1 2005/12/11 00:45:53 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -74,18 +74,18 @@
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY, 0)
+	HAC::entity::data_type_reference, DATA_TYPE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::builtin_channel_type_reference,
+	HAC::entity::builtin_channel_type_reference,
 		BLTIN_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_type_reference,
+	HAC::entity::channel_type_reference,
 		USER_CHANNEL_TYPE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY, 0)
+	HAC::entity::process_type_reference, PROCESS_TYPE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::ostringstream;
 using std::transform;
@@ -1819,7 +1819,7 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_TYPE_REFERENCE_CC__
 

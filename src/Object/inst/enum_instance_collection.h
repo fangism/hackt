@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_enum.h"
 		in a previous life.  
-	$Id: enum_instance_collection.h,v 1.4 2005/09/04 21:14:49 fang Exp $
+	$Id: enum_instance_collection.h,v 1.4.20.1 2005/12/11 00:45:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
@@ -16,7 +16,7 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // convenient typedefs
@@ -29,7 +29,7 @@ typedef	instance_array<enum_tag, 4>	enum_array_4D;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
 

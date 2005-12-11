@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.3 2005/09/04 21:14:49 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.3.20.1 2005/12/11 00:45:34 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -12,7 +12,7 @@
 #include <iostream>
 #include "util/persistent_object_manager.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -138,7 +138,7 @@ GENERAL_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 #undef GENERAL_COLLECTION_TYPE_MANAGER_CLASS

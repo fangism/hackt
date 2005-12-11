@@ -3,7 +3,7 @@
 	Classes related to constant index expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index.h,v 1.2 2005/07/20 21:00:39 fang Exp $
+	$Id: const_index.h,v 1.2.34.1 2005/12/11 00:45:24 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_INDEX_H__
@@ -12,7 +12,7 @@
 #include "Object/expr/meta_index_expr.h"
 #include "Object/expr/types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_range;
 //=============================================================================
@@ -50,7 +50,7 @@ virtual	bool
 };	// end class const_index
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_CONST_INDEX_H__

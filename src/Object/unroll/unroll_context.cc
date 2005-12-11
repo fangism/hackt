@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.6 2005/10/25 20:51:59 fang Exp $
+	$Id: unroll_context.cc,v 1.6.12.1 2005/12/11 00:45:59 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -27,7 +27,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -311,7 +311,7 @@ unroll_context::chain_context(const this_type& c) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 

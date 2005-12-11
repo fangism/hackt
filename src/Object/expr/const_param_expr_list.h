@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.4 2005/10/25 20:51:50 fang Exp $
+	$Id: const_param_expr_list.h,v 1.4.12.1 2005/12/11 00:45:24 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -13,7 +13,7 @@
 #include "Object/expr/param_expr_list.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param;
 class dynamic_param_expr_list;
@@ -153,7 +153,7 @@ public:
 };	// end class const_param_expr_list
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__

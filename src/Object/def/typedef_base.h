@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/typedef_base.h"
-	Definition-related ART object classes.  
+	Definition-related HAC object classes.  
 	This file originated from "Object/art_object_definition.h",  
-	$Id: typedef_base.h,v 1.3 2005/10/08 01:39:56 fang Exp $
+	$Id: typedef_base.h,v 1.3.14.1 2005/12/11 00:45:22 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_TYPEDEF_BASE_H__
@@ -12,7 +12,7 @@
 #include "Object/common/scopespace.h"
 #include "Object/unroll/sequential_scope.h"
 
-namespace ART {
+namespace HAC {
 //=============================================================================
 // forward declarations from outside namespaces
 namespace parser {
@@ -109,7 +109,7 @@ virtual	void
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_TYPEDEF_BASE_H__
 

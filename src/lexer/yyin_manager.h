@@ -3,7 +3,7 @@
 	Interface for manipulating the hackt-lexer file stack.  
 	TODO: consider templating taking a globally visible pointer
 		as a bound template argument.  
-	$Id: yyin_manager.h,v 1.3 2005/11/12 08:45:34 fang Exp $
+	$Id: yyin_manager.h,v 1.3.2.1 2005/12/11 00:46:01 fang Exp $
  */
 
 #ifndef	__LEXER_YYIN_MANAGER_H__
@@ -13,7 +13,7 @@
 #include "util/attributes.h"
 #include "util/file_status.h"
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 class file_manager;
 using util::file_status;
@@ -54,7 +54,7 @@ public:
 
 //=============================================================================
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __LEXER_YYIN_MANAGER_H__
 

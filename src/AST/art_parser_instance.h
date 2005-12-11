@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_instance.h"
-	Instance-related parser classes for ART.  
-	$Id: art_parser_instance.h,v 1.16 2005/07/20 20:59:51 fang Exp $
+	Instance-related parser classes for HAC.  
+	$Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_INSTANCE_H__
-#define __AST_ART_PARSER_INSTANCE_H__
+#ifndef __AST_HAC_PARSER_INSTANCE_H__
+#define __AST_HAC_PARSER_INSTANCE_H__
 
 #include "AST/art_parser_base.h"
 #include "AST/art_parser_expr_list.h"
@@ -14,7 +14,7 @@
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class param_expression_assignment;
 	class aliases_connection_base;
@@ -470,7 +470,7 @@ public:
 //=============================================================================
 
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_INSTANCE_H__
+#endif	// __AST_HAC_PARSER_INSTANCE_H__
 

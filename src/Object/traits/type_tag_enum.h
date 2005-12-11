@@ -1,13 +1,13 @@
 /**
 	\file "Object/traits/type_tag_enum.h"
 	Global enumerations pertaining to meta types.  
-	$Id: type_tag_enum.h,v 1.2 2005/09/14 15:30:33 fang Exp $
+	$Id: type_tag_enum.h,v 1.2.18.1 2005/12/11 00:45:51 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_TYPE_TAG_ENUM_H__
 #define	__OBJECT_TRAITS_TYPE_TAG_ENUM_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 /**
@@ -23,7 +23,7 @@ typedef	enum {
 }	parent_tag_enum;
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_TYPE_TAG_ENUM_H__
 

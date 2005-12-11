@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_datatype_nonmeta_value_reference.h,v 1.2 2005/07/23 06:52:48 fang Exp $
+	$Id: simple_datatype_nonmeta_value_reference.h,v 1.2.32.1 2005/12/11 00:45:45 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_DATATYPE_NONMETA_VALUE_REFERENCE_H__
@@ -11,7 +11,7 @@
 
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class data_type_reference;
 using util::memory::count_ptr;
@@ -46,7 +46,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_DATATYPE_NONMETA_VALUE_REFERENCE_H__
 

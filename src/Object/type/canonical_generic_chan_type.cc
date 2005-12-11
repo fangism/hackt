@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.2 2005/09/04 21:14:57 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.2.20.1 2005/12/11 00:45:51 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -26,7 +26,7 @@
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
@@ -430,7 +430,7 @@ canonical_generic_chan_type::load_object_base(const persistent_object_manager& m
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
 

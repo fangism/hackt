@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.3 2005/11/12 08:45:34 fang Exp $
+	$Id: file_manager.h,v 1.3.2.1 2005/12/11 00:46:00 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -18,7 +18,7 @@
 #include "util/macros.h"
 #include "util/file_status.h"
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 using std::ostream;
 using std::string;
@@ -235,7 +235,7 @@ public:
 
 //=============================================================================
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __LEXER_FILE_MANAGER_H__
 

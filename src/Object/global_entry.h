@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.4 2005/11/02 22:53:43 fang Exp $
+	$Id: global_entry.h,v 1.4.8.1 2005/12/11 00:45:13 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -14,7 +14,7 @@
 #include "Object/traits/type_tag_enum.h"
 #include "util/macros.h"
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 
 namespace entity {
@@ -356,7 +356,7 @@ extract_parent_formal_instance_alias(const state_manager&,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_GLOBAL_ENTRY_H__
 

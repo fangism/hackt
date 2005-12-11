@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.3 2005/10/25 20:51:49 fang Exp $
+	$Id: bool_logical_expr.h,v 1.3.12.1 2005/12/11 00:45:23 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -16,7 +16,7 @@
 #include "util/operators.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::string;
 using util::qmap;
@@ -84,7 +84,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
 

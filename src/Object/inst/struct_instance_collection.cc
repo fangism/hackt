@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.5 2005/09/05 05:04:33 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.5.20.1 2005/12/11 00:45:40 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -30,28 +30,28 @@
 #include "Object/inst/state_instance.tcc"
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::struct_instance_collection,
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_instance_collection,
 		"struct_instance_collection")
-	SPECIALIZE_UTIL_WHAT(ART::entity::struct_scalar, "struct_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::struct_array_1D, "struct_array_1D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::struct_array_2D, "struct_array_2D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::struct_array_3D, "struct_array_3D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::struct_array_4D, "struct_array_4D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_scalar, "struct_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_1D, "struct_array_1D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_2D, "struct_array_2D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_3D, "struct_array_3D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_4D, "struct_array_4D")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::struct_scalar, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::struct_scalar, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::struct_array_1D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::struct_array_1D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::struct_array_2D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::struct_array_2D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::struct_array_3D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::struct_array_3D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::struct_array_4D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::struct_array_4D, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 4)
 
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // explicit template class instantiations
@@ -68,7 +68,7 @@ template class instance_array<datastruct_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
 

@@ -1,7 +1,7 @@
 /**
 	\file "main/prsobjdemo.h"
 	Interface header for prsobjdemo module.  
-	$Id: prsobjdemo.h,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: prsobjdemo.h,v 1.2.28.1 2005/12/11 00:46:05 fang Exp $
  */
 
 #ifndef	__MAIN_PRSOBJDEMO_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 
 /**
 	Instance-less class.  
@@ -46,7 +46,7 @@ private:
 	program_id;
 };	// end class prsobjdemo
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_PRSOBJDEMO_H__
 

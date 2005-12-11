@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_terminal.h"
-	Base set of classes for the ART parser.  
-	$Id: art_parser_terminal.h,v 1.6 2005/11/10 02:13:01 fang Exp $
+	Base set of classes for the HAC parser.  
+	$Id: art_parser_terminal.h,v 1.6.4.1 2005/12/11 00:45:10 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_TERMINAL_H__
-#define __AST_ART_PARSER_TERMINAL_H__
+#ifndef __AST_HAC_PARSER_TERMINAL_H__
+#define __AST_HAC_PARSER_TERMINAL_H__
 
 #include <string>
 #include "lexer/hac_lex.h"
@@ -13,11 +13,11 @@
 
 #include "lexer/file_manager.h"	
 	// ugh, included everywhere, but needed for inlined operation
-extern ART::lexer::file_manager
+extern HAC::lexer::file_manager
 hackt_parse_file_manager;
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 using std::string;
 
 namespace parser {
@@ -64,7 +64,7 @@ virtual	line_position
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_TERMINAL_H__
+#endif	// __AST_HAC_PARSER_TERMINAL_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.3 2005/10/08 01:39:58 fang Exp $
+	$Id: CHP.tcc,v 1.3.14.1 2005/12/11 00:45:42 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_CHP_TCC__
@@ -18,7 +18,7 @@
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 namespace CHP {
 using std::copy;
@@ -189,7 +189,7 @@ channel_receive::add_references(const L& l) {
 //=============================================================================
 }	// end namespace CHP
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_CHP_TCC__
 

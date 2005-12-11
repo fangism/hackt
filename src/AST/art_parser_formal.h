@@ -1,17 +1,17 @@
 /**
 	\file "AST/art_parser_formal.h"
-	Definition-formal-related parser classes for ART.  
-	$Id: art_parser_formal.h,v 1.14 2005/06/22 22:13:32 fang Exp $
+	Definition-formal-related parser classes for HAC.  
+	$Id: art_parser_formal.h,v 1.14.40.1 2005/12/11 00:45:07 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_FORMAL_H__
-#define __AST_ART_PARSER_FORMAL_H__
+#ifndef __AST_HAC_PARSER_FORMAL_H__
+#define __AST_HAC_PARSER_FORMAL_H__
 
 #include "AST/art_parser_base.h"
 #include "AST/art_parser_node_list.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 using util::good_bool;
 //=============================================================================
@@ -327,7 +327,7 @@ struct template_formal_decl_list_pair {
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_FORMAL_H__
+#endif	// __AST_HAC_PARSER_FORMAL_H__
 

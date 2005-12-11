@@ -2,11 +2,11 @@
 	\file "AST/art_parser_node_list.tcc"
 	Template-only definitions for parser classes and methods.  
 	Rename this to "art_parser_node_list.tcc"!
-	$Id: art_parser_node_list.tcc,v 1.10 2005/07/20 20:59:51 fang Exp $
+	$Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_NODE_LIST_TCC__
-#define	__AST_ART_PARSER_NODE_LIST_TCC__
+#ifndef	__AST_HAC_PARSER_NODE_LIST_TCC__
+#define	__AST_HAC_PARSER_NODE_LIST_TCC__
 
 #include <ostream>
 #include <algorithm>
@@ -55,7 +55,7 @@
 #define	DEBUG_NODE_LIST		0
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 class context;
 using util::what;
@@ -274,8 +274,8 @@ list_checker<R,L,A>::operator () (R& r, const L& l) {
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 
-#endif	// __AST_ART_PARSER_NODE_LIST_TCC__
+#endif	// __AST_HAC_PARSER_NODE_LIST_TCC__
 

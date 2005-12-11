@@ -1,9 +1,9 @@
 /**
 	\file "main/compile.cc"
-	Converts ART source code to an object file (pre-unrolled).
+	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.7 2005/11/10 02:13:06 fang Exp $
+	$Id: compile.cc,v 1.7.4.1 2005/12/11 00:46:02 fang Exp $
  */
 
 #include <iostream>
@@ -19,10 +19,10 @@
 #include "util/attributes.h"
 #include "util/qmap.tcc"
 
-extern ART::lexer::file_manager
+extern HAC::lexer::file_manager
 hackt_parse_file_manager;
 
-namespace ART {
+namespace HAC {
 #include "util/using_ostream.h"
 using util::memory::excl_ptr;
 using entity::module;
@@ -253,5 +253,5 @@ compile_options::export_include_paths(file_manager& fm) const {
 
 //=============================================================================
 
-}	// end namespace ART
+}	// end namespace HAC
 

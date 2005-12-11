@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.3 2005/09/14 15:30:30 fang Exp $
+	$Id: alias_empty.tcc,v 1.3.18.1 2005/12/11 00:45:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -10,7 +10,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/common/dump_flags.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -65,7 +65,7 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_ALIAS_EMPTY_TCC__
 

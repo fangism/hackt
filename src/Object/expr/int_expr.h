@@ -3,9 +3,9 @@
 	Base class for integer data expressions.  
 	NOTE: for revision histry purposes, this file was copied from the
 		last revision of "Object/art_object_data_expr_base.h"
-		on the ARTXX-00-01-04-main-00-48-connect-01 branch, 
+		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.3 2005/10/25 20:51:51 fang Exp $
+	$Id: int_expr.h,v 1.3.12.1 2005/12/11 00:45:26 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_EXPR_H__
@@ -14,7 +14,7 @@
 #include "Object/expr/data_expr.h"
 #include "Object/expr/nonmeta_index_expr_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -36,7 +36,7 @@ virtual	ostream&
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_INT_EXPR_H__
 

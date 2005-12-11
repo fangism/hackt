@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context_value_resolver.h"
 	Specialized operator definitions for value collection
 	resolution.  
-	$Id: unroll_context_value_resolver.h,v 1.2 2005/10/25 20:51:59 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.2.12.1 2005/12/11 00:45:59 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
@@ -18,7 +18,7 @@
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/footprint.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::pair;
 
@@ -121,7 +121,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
 

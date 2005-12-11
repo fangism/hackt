@@ -1,9 +1,9 @@
 /**
 	\file "Object/ref/simple_param_meta_value_reference.h"
-	Base class family for instance references in ART.  
+	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_param_meta_value_reference.h,v 1.2 2005/07/23 06:52:52 fang Exp $
+	$Id: simple_param_meta_value_reference.h,v 1.2.32.1 2005/12/11 00:45:47 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
@@ -12,7 +12,7 @@
 #include "Object/ref/simple_meta_instance_reference_base.h"
 #include "Object/common/util_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class param_value_collection;
 
@@ -74,7 +74,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
 

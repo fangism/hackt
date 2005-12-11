@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.4 2005/10/25 20:51:57 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.4.12.1 2005/12/11 00:45:46 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -14,7 +14,7 @@
 #include "Object/traits/class_traits_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param;
 class const_index_list;
@@ -184,7 +184,7 @@ public:
 };	// end class simple_meta_value_reference
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__

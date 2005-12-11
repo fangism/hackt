@@ -3,7 +3,7 @@
 	Unrolls an object file, saves it to another object file.  
 	This file was reincarnated from "artobjunroll.cc" in a previous life.  
 
-	$Id: unroll.cc,v 1.5 2005/11/10 02:13:07 fang Exp $
+	$Id: unroll.cc,v 1.5.4.1 2005/12/11 00:46:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,7 +17,7 @@
 #include "main/main_funcs.h"
 #include "util/persistent_object_manager.h"
 
-namespace ART {
+namespace HAC {
 
 using util::persistent;
 using util::persistent_object_manager;
@@ -96,5 +96,5 @@ unroll::usage(void) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

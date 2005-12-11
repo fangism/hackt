@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.cc"
 	Implementation of core hackt program registration interface.  
-	$Id: program_registry.cc,v 1.3 2005/09/04 21:15:06 fang Exp $
+	$Id: program_registry.cc,v 1.3.20.1 2005/12/11 00:46:04 fang Exp $
  */
 
 #include <iostream>
@@ -10,7 +10,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/attributes.h"
 
-namespace ART {
+namespace HAC {
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -62,5 +62,5 @@ register_hackt_program(const char* name,
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.6 2005/10/25 20:51:52 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.6.12.1 2005/12/11 00:45:27 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -42,21 +42,21 @@ namespace util {
 // the class template "what" is used directly.  
 // Most of the time, the "what" member function interface is used.  
 
-SPECIALIZE_UTIL_WHAT(ART::entity::const_param_expr_list,
+SPECIALIZE_UTIL_WHAT(HAC::entity::const_param_expr_list,
 		"const-param-expr-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_param_expr_list,
+SPECIALIZE_UTIL_WHAT(HAC::entity::dynamic_param_expr_list,
 		"param-expr-list")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_param_expr_list,
+	HAC::entity::const_param_expr_list,
 		CONST_PARAM_EXPR_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_param_expr_list,
+	HAC::entity::dynamic_param_expr_list,
 		DYNAMIC_PARAM_EXPR_LIST_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::persistent_traits;
@@ -1112,7 +1112,7 @@ dynamic_param_expr_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

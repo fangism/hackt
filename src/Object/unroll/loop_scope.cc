@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.3 2005/10/30 22:00:23 fang Exp $
+ 	$Id: loop_scope.cc,v 1.3.10.1 2005/12/11 00:45:57 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -21,12 +21,12 @@
 #include "util/indent.h"
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::loop_scope, "loop-scope")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::loop_scope, "loop-scope")
 	SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-		ART::entity::loop_scope, LOOP_SCOPE_TYPE_KEY, 0)
+		HAC::entity::loop_scope, LOOP_SCOPE_TYPE_KEY, 0)
 }
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::auto_indent;
@@ -179,7 +179,7 @@ loop_scope::load_object(const persistent_object_manager& m, istream& i) {
 
 //=============================================================================
 } 	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_LOOP_SCOPE_CC__
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.8 2005/11/03 07:52:05 fang Exp $
+	$Id: substructure_alias_base.h,v 1.8.6.1 2005/12/11 00:45:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -12,7 +12,7 @@
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 struct dump_flags;
 class instance_collection_base;
@@ -260,7 +260,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 
 #endif	// __OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__

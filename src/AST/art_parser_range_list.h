@@ -1,18 +1,18 @@
 /**
 	\file "AST/art_parser_range.h"
-	Expression-related parser classes for ART.
-	$Id: art_parser_range_list.h,v 1.6 2005/06/19 01:58:31 fang Exp $
+	Expression-related parser classes for HAC.
+	$Id: art_parser_range_list.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp $
  */
 
-#ifndef __AST_ART_PARSER_RANGE_LIST_H__
-#define __AST_ART_PARSER_RANGE_LIST_H__
+#ifndef __AST_HAC_PARSER_RANGE_LIST_H__
+#define __AST_HAC_PARSER_RANGE_LIST_H__
 
 #include "AST/art_parser_range.h"
 #include "AST/art_parser_node_list.h"
 #include "util/boolean_types.h"
 #include "util/STL/vector_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class meta_index_list;
 	class meta_range_list;
@@ -119,7 +119,7 @@ private:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
-#endif	// __AST_ART_PARSER_RANGE_LIST_H__
+#endif	// __AST_HAC_PARSER_RANGE_LIST_H__
 

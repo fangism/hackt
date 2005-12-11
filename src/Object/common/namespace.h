@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/namespace.h"
 		in its previous life.  
-	$Id: namespace.h,v 1.3 2005/10/08 01:39:55 fang Exp $
+	$Id: namespace.h,v 1.3.14.1 2005/12/11 00:45:17 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_H__
@@ -16,7 +16,7 @@
 #include "util/memory/list_vector_pool_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 USING_CONSTRUCT
 
@@ -224,14 +224,14 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 //=============================================================================
 // specializations in other namespaces
 
 #if 0
 namespace util {
-	SPECIALIZE_UTIL_WHAT_DECLARATION(ART::entity::name_space)
+	SPECIALIZE_UTIL_WHAT_DECLARATION(HAC::entity::name_space)
 }	// end namespace util
 #endif
 

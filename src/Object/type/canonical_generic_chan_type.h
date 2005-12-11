@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.3 2005/09/14 15:30:34 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.3.18.1 2005/12/11 00:45:51 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -12,7 +12,7 @@
 #include "Object/def/channel_definition_base.h"
 #include "util/memory/excl_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 class template_actuals;
@@ -163,7 +163,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 

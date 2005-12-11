@@ -1,11 +1,11 @@
 /**
 	\file "AST/art_parser_prs.cc"
 	PRS-related syntax class method definitions.
-	$Id: art_parser_prs.cc,v 1.21 2005/10/30 22:00:18 fang Exp $
+	$Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp $
  */
 
-#ifndef	__AST_ART_PARSER_PRS_CC__
-#define	__AST_ART_PARSER_PRS_CC__
+#ifndef	__AST_HAC_PARSER_PRS_CC__
+#define	__AST_HAC_PARSER_PRS_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -39,13 +39,13 @@
 
 // for specializing util::what
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::PRS::rule, "(prs-rule)")
-SPECIALIZE_UTIL_WHAT(ART::parser::PRS::loop, "(prs-loop)")
-SPECIALIZE_UTIL_WHAT(ART::parser::PRS::body, "(prs-body)")
-SPECIALIZE_UTIL_WHAT(ART::parser::PRS::op_loop, "(prs-op-loop)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::rule, "(prs-rule)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::loop, "(prs-loop)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::body, "(prs-body)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
 }
 
-namespace ART {
+namespace HAC {
 namespace parser {
 namespace PRS {
 #include "util/using_ostream.h"
@@ -391,10 +391,10 @@ node_list<const body_item>::leftmost(void) const;
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	CONSTRUCTOR_INLINE
 #undef	DESTRUCTOR_INLINE
 
-#endif	// __AST_ART_PARSER_PRS_CC__
+#endif	// __AST_HAC_PARSER_PRS_CC__
 
