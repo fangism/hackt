@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.7.10.1 2005/12/11 00:45:16 fang Exp $
+ 	$Id: namespace.cc,v 1.7.10.2 2005/12/11 04:41:34 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -39,8 +39,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/qmap.tcc"
 #include "util/STL/list.tcc"
 
-#include "AST/art_parser_token_string.h"
-#include "AST/art_parser_identifier.h"
+#include "AST/token_string.h"
+#include "AST/identifier.h"
 
 #include "Object/common/namespace.h"
 #include "Object/def/typedef_base.h"

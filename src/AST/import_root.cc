@@ -1,11 +1,11 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.2.2.1 2005/12/11 00:45:12 fang Exp $
+	$Id: import_root.cc,v 1.2.2.2 2005/12/11 04:41:27 fang Exp $
  */
 
 #include <iostream>
 #include "AST/import_root.h"
-#include "AST/art_parser_node_list.tcc"
+#include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 #include "util/memory/count_ptr.tcc"
 #include "Object/common/namespace.h"

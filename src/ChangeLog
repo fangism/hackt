@@ -5,6 +5,12 @@
 
 2005-12-10	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-71-rename-00-02:
+	  Renamed nearly all AST source and header files without
+		"art_parser" in the file name.  Had to get this over with.  
+	  TODO: documentation, test files, file extensions.
+
+
 	* ARTXX-00-01-04-main-00-71-rename-00-01:
 	  The purpose of this branch is to rename everything 
 		from ART to HAC, more importantly, to remove all 

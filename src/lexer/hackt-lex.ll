@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.4.2.1 2005/12/11 00:46:00 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.4.2.2 2005/12/11 04:41:36 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -61,7 +61,7 @@
 
 #include "util/macros.h"
 #include "util/using_ostream.h"
-#include "AST/art_parser.h"		/* everything needed for "y.tab.h" */
+#include "AST/AST.h"		/* everything needed for "y.tab.h" */
 #include "lexer/input_manager.h"
 #include "lexer/file_manager.h"
 using namespace HAC::parser;

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.90.2.1 2005/12/11 00:45:01 fang Exp $
+#	$Id: Makefile.am,v 1.90.2.2 2005/12/11 04:41:04 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -131,46 +131,45 @@ libbogus_la_SOURCES = \
 #	parser/$(HACKT_PARSE_ROOT).yy
 
 AST_CC_FILES = \
-	AST/art_parser_base.cc \
-	AST/art_parser_node_position.cc \
-	AST/art_parser_expr.cc \
-	AST/art_parser_range.cc \
-	AST/art_parser_token.cc \
-	AST/art_parser_definition.cc \
-	AST/art_parser_instance.cc \
-	AST/art_parser_formal.cc \
-	AST/art_parser_chp.cc \
-	AST/art_parser_hse.cc \
-	AST/art_parser_prs.cc \
+	AST/node_position.cc \
+	AST/expr.cc \
+	AST/range.cc \
+	AST/token.cc \
+	AST/delim.cc \
+	AST/definition.cc \
+	AST/definition_item.cc \
+	AST/instance.cc \
+	AST/formal.cc \
+	AST/CHP.cc \
+	AST/HSE.cc \
+	AST/PRS.cc \
+	AST/type.cc \
+	AST/namespace.cc \
+	AST/statement.cc \
 	AST/import_root.cc \
 	AST/parse_context.cc
 
 AST_TCC_FILES = \
-	AST/art_parser_node_list.tcc \
+	AST/node_list.tcc \
 	AST/parse_context.tcc
 
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	$(AST_TCC_FILES:.tcc=.h) \
-	AST/art_parser_fwd.h \
-	AST/art_parser_chp_fwd.h \
-	AST/art_parser_hse_fwd.h \
-	AST/art_parser_prs_fwd.h \
-	AST/art_parser_delim.h \
-	AST/art_parser.h \
-	AST/art_parser_node_list.h \
-	AST/art_parser_definition_item.h \
-	AST/art_parser_expr_base.h \
-	AST/art_parser_expr_list.h \
-	AST/art_parser_identifier.h \
-	AST/art_parser_range_list.h \
-	AST/art_parser_root.h \
-	AST/art_parser_root_item.h \
-	AST/art_parser_statement.h \
-	AST/art_parser_terminal.h \
-	AST/art_parser_token_char.h \
-	AST/art_parser_token_string.h \
-	AST/art_parser_type.h \
-	AST/art_parser_type_base.h
+	AST/AST_fwd.h \
+	AST/CHP_fwd.h \
+	AST/HSE_fwd.h \
+	AST/PRS_fwd.h \
+	AST/AST.h \
+	AST/common.h \
+	AST/expr_base.h \
+	AST/expr_list.h \
+	AST/identifier.h \
+	AST/range_list.h \
+	AST/root.h \
+	AST/terminal.h \
+	AST/token_char.h \
+	AST/token_string.h \
+	AST/type_base.h
 
 # all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
@@ -786,7 +785,7 @@ GET_START_TOKEN_ENUM = \
 
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
-		-v include="AST/art_parser.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
+		-v include="AST/AST.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
 		-v namespace="HAC::parser HAC::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.

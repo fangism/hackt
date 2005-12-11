@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.3.20.1 2005/12/11 00:45:21 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.3.20.2 2005/12/11 04:41:35 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -21,7 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/hash_specializations.h"		// substitute for the following
 #include "util/hash_qmap.tcc"
-#include "AST/art_parser_token_string.h"	// for token_identifier
+#include "AST/token_string.h"	// for token_identifier
 
 #include "Object/def/port_formals_manager.h"
 #include "Object/persistent_type_hash.h"

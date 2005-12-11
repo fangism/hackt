@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.6.2.1 2005/12/11 00:45:12 fang Exp $
+ 	$Id: parse_context.cc,v 1.6.2.2 2005/12/11 04:41:29 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -17,8 +17,8 @@
 
 #include "AST/parse_context.h"
 #include "AST/parse_context.tcc"
-#include "AST/art_parser_token_string.h"
-#include "AST/art_parser_identifier.h"
+#include "AST/token_string.h"
+#include "AST/identifier.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/pint_const.h"

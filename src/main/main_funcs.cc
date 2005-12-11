@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.5.2.1 2005/12/11 00:46:03 fang Exp $
+	$Id: main_funcs.cc,v 1.5.2.2 2005/12/11 04:41:37 fang Exp $
  */
 
 #include <iostream>
@@ -19,7 +19,7 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "AST/art_parser_root.h"	// for parser::root_body
+#include "AST/root.h"	// for parser::root_body
 #include "AST/parse_context.h"		// for parser::context
 #include "util/getopt_portable.h"
 #include "util/persistent_object_manager.h"

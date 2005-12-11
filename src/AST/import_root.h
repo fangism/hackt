@@ -1,15 +1,18 @@
 /**
 	\file "AST/import_root.h"
-	$Id: import_root.h,v 1.2.2.1 2005/12/11 00:45:12 fang Exp $
+	Placeholder for a imported AST root.  
+	$Id: import_root.h,v 1.2.2.2 2005/12/11 04:41:27 fang Exp $
+	This file used to be the following before it was renamed:
+	Id: import_root.h,v 1.2.2.1 2005/12/11 00:45:12 fang Exp
  */
 
 #ifndef	__AST_IMPORT_ROOT_H__
 #define	__AST_IMPORT_ROOT_H__
 
 #include <string>
-#include "AST/art_parser_node_list.h"
-#include "AST/art_parser_root.h"
-#include "AST/art_parser_terminal.h"
+#include "AST/node_list.h"
+#include "AST/namespace.h"
+#include "AST/terminal.h"
 
 namespace HAC {
 namespace parser {

@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.4.20.1 2005/12/11 00:45:53 fang Exp $
+ 	$Id: type_reference.cc,v 1.4.20.2 2005/12/11 04:41:36 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include "AST/art_parser_token_string.h"	// so token_identifier : string
+#include "AST/token_string.h"	// so token_identifier : string
 #include "Object/def/param_definition.h"
 #include "Object/def/user_def_chan.h"
 #include "Object/def/channel_definition_alias.h"
