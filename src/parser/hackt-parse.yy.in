@@ -1,6 +1,6 @@
 /**
 	\file "parser/hackt-parse.yy.in"
-	Yacc-generated parser source for the ART++ language.  
+	Yacc-generated parser source for the HAC language.  
 
 	ALERT: Make sure you are editing "parser/hackt-parse.yy.in"
 	and NOT the configure-generated "parser/hackt-parse.yy"
@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.3 2005/11/12 22:30:26 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.3.2.1 2005/12/11 00:55:49 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -37,8 +37,8 @@
 #define __attribute__(arglist)		/* empty */
 #endif
 
-using namespace ART::lexer;
-using namespace ART::parser;
+using namespace HAC::lexer;
+using namespace HAC::parser;
 
 /**
 	When using yacc, this would otherwise be undefined.  
@@ -189,7 +189,7 @@ extern const char* const yyrule[];
 	NOTE: to use the following union definition, which will be
 	summarized in "hackt-parse-prefix.h" (generated), 
 	you will need to include "art_parser_fwd.h" first
-	(with using namespace ART::parser;) to provide forward
+	(with using namespace HAC::parser;) to provide forward
 	declarations of the union-members' types.  
  */
 %union {
@@ -248,7 +248,7 @@ extern const char* const yyrule[];
 	using_namespace*	_using_namespace;
 	namespace_id*		_namespace_id;
 	typedef_alias*		_typedef_alias;
-	ART::parser::definition*	_definition;
+	HAC::parser::definition*	_definition;
 	def_body_item*		_def_body_item;
 	language_body*		_language_body;
 	prototype*		_prototype;
@@ -283,7 +283,7 @@ extern const char* const yyrule[];
 	data_param_decl_list*	_data_param_decl_list;
 	instance_management*	_instance_management;
 	instance_base*		_instance_base;
-	ART::parser::instance_array*	_instance_array;
+	HAC::parser::instance_array*	_instance_array;
 	instance_declaration*	_instance_declaration;
 	instance_id_list*	_instance_id_list;
 	definition_body*	_definition_body;
@@ -294,7 +294,7 @@ extern const char* const yyrule[];
 	instance_connection*	_instance_connection;
 	connection_statement*	_connection_statement;
 	statement*		_statement;
-	ART::parser::instance_alias*	_instance_alias;
+	HAC::parser::instance_alias*	_instance_alias;
 	alias_list*		_alias_list;
 
 	expr*			_expr;
@@ -303,7 +303,7 @@ extern const char* const yyrule[];
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
-	ART::parser::index_expr*	_index_expr;
+	HAC::parser::index_expr*	_index_expr;
 	member_expr*		_member_expr;
 /*** not needed
 	prefix_expr*		_prefix_expr;
@@ -378,12 +378,12 @@ extern const char* const yyrule[];
 // extern	int yylex(void);		// ancient compiler rejects
 extern	YY_DECL;			// something like the above
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 extern	int at_eof(const flex::lexer_state&);		// from "hackt-lex.ll"
 }
 }
-using ART::lexer::at_eof;
+using HAC::lexer::at_eof;
 
 static void yyerror(const char* msg);	// ancient compiler rejects
 
@@ -1744,7 +1744,7 @@ hse_assignment
 */
 	: unary_assignment
 		{ $$ = new HSE::assignment(
-			IS_A(ART::parser::incdec_stmt*, $1)); }
+			IS_A(HAC::parser::incdec_stmt*, $1)); }
 	;
 /* will there be a leak if dynamic cast fails? */
 
@@ -2281,7 +2281,7 @@ complex_aggregate_reference_list
 	OBSOLETE COMMENT, after removing mother-node type.  
 	Because the union-pointer resolution can only return
 	one type, the base type, the mother destructor, 
-	ART::parser::node::~node(), must be virtual.  
+	HAC::parser::node::~node(), must be virtual.  
  */
 static
 void
