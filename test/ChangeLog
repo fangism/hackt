@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2005-11-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-03:
+	  In this branch, we will be moving and renaming all test input
+		files from .in to .hac, and removing all traces of 
+		"ART" or "art".
+	  Forgot to rm *.sort in cleaner target.  
+
+
 2005-11-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-10:
