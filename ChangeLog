@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-12-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-03:
+	  Played around with other configure-generating src/header_deps.make
+		but with limited success (failure).  
+	  Updated maintainerclobber script, and moved it to scripts/.
+
+
 2005-12-09	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-71:

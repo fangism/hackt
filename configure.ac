@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.22 2005/12/10 03:55:37 fang Exp $
+#	$Id: configure.ac,v 1.22.2.1 2005/12/11 22:29:12 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -214,6 +214,8 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([calloc free])
+AC_MSG_CHECKING([for free food])
+AC_MSG_RESULT([YES]);
 
 # sizeof checks, useful for checking ILP model
 AC_CHECK_SIZEOF(char)
@@ -519,6 +521,16 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
 		cp $srcdir/src/parser/hackt-parse.yy.in src/parser/hackt-parse.yy
 	fi
 	])
+
+dnl initialize and reset header check dependencies
+dnl also depend on Makefile?
+dnl can't run make until depfiles has run! doh... work on this later...
+dnl
+dnl AC_CONFIG_FILES([src/headers_deps.make],
+dnl 	[out=src/headers_deps.make
+dnl 	(cd src && make echo-header-depbases) | \
+dnl 		awk -f $srcdir/src/scripts/automake_include.awk >> $out
+dnl 	])
 
 AC_OUTPUT
 
