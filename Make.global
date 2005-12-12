@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.10 2005/12/08 22:01:05 fang Exp $
+#	$Id: Make.global,v 1.10.2.1 2005/12/12 06:43:18 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -56,6 +56,19 @@ distclean-local: distcleandirs
 AUTO_IGNORE += .gdb_history \
 	Makefile.in Makefile make.log ignore backup temp \
 	$(CLEANFILES) $(DISTCLEANFILES)
+
+# echo makefile debugging
+echo-extra-dist: force
+	@$(ECHO) $(EXTRA_DIST)
+
+echo-cleanfiles: force
+	@$(ECHO) $(CLEANFILES)
+
+echo-distcleanfiles: force
+	@$(ECHO) $(DISTCLEANFILES)
+
+echo-auto-ignore: force
+	@$(ECHO) $(AUTO_IGNORE)
 
 # might as well include this for non-maintainers too
 # again, can't append to file with cat redirection because distclean
