@@ -1,5 +1,5 @@
 #! /bin/sh
-#	$Id: maintainerclobber,v 1.1.2.1 2005/12/11 22:29:15 fang Exp $
+#	$Id: maintainerclobber,v 1.1.2.2 2005/12/12 19:35:25 fang Exp $
 
 # emulates a "make maintainerclean"
 # run this script from the top_srcdir (root)
@@ -39,7 +39,7 @@ rm -f libtool
 #  what if there are Makefiles we wish to keep? address later...
 rm -f `find . -name Makefile`
 rm -f `find . -name Makefile.in`
-rm -f `find . -name .cvsignore`
+rm -f `find . -name .cvsignore | grep -v config`
 
 # to see what's left:
 ls -R
