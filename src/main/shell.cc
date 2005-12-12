@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.4.2.1 2005/12/11 00:46:05 fang Exp $
+	$Id: shell.cc,v 1.4.2.2 2005/12/12 15:59:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -50,10 +50,12 @@ shell::shell() { }
 /**
 	The main shell interpreter loop.  
 	TODO: be able to source script files, etc...
-	TODO: be able to escape to system commands, using !-prefix, like vi.  
-	TODO: be able to take command-line arguments
 	TODO: be able to set and maintain an include path.  
 	TODO: sing a song.  "Daisy, daisy..."
+	TODO: check for \ line continutation (change prompt)
+	TODO: custom tab-completion
+	TODO: load objects
+	TODO: launch sub-shells
  */
 int
 shell::main(const int argc, char* argv[], const global_options&) {
