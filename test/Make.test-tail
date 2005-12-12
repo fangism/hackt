@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.11.2.1 2005/12/11 22:29:53 fang Exp $
+#	$Id: Make.test-tail,v 1.11.2.2 2005/12/12 02:52:03 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -155,7 +155,7 @@ TESTS += $(ARTC_TEST_SUBJECTS:=.artctest) \
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
 $(EMPTY_CFLAT_PRS):
-	touch $@
+	@for p in $@ ; do touch $$p ; done
 
 # filter-out is GNUMake feature
 #	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
