@@ -1,0 +1,7 @@
+// "022.hac" should fail: connecting non-equivalent channel types
+
+chan(bool) foobar;
+chan(int<11>) barfoo;
+
+foobar = barfoo;
+

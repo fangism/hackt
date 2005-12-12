@@ -1,9 +1,0 @@
-// "011.in" should pass: connecting two equivalent procs, array sizes match
-
-defproc foo() { }
-
-foo bar[3];
-foo blah[3];
-
-blah = bar;
-

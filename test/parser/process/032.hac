@@ -1,0 +1,8 @@
+// "032.hac" should fail: redeclaration doesn't match in template formals
+
+template <pint bar, none, blah>
+defproc foo();
+
+template <pint bar; pbool none; pint blah>	// pbool != pint
+defproc foo();
+

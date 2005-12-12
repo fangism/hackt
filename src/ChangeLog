@@ -5,6 +5,13 @@
 
 2005-12-11	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-71-rename-00-04:
+	  No source revision, only test cases were renamed to .hac.
+		See ../test/ChangeLog.
+
+
+2005-12-11	David Fang		<fangism@users.sourceforge.net>
+
 	* ARTXX-00-01-04-main-00-71-rename-00-03:
 	  Failed attempt to configure-generate headers_deps.make.
 		Kept some notes about it.

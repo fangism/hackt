@@ -1,0 +1,9 @@
+// "056.hac" should pass, will recursively instantiate ports
+// copy-modified from "055.hac"
+
+defproc foo() { }
+
+defproc bar(foo x[2]) { }
+
+bar poo;
+

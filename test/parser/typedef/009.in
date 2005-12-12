@@ -1,7 +1,0 @@
-// "009.in" should fail:
-// aliases the *type* correctly, but then use of it is incorrect
-
-typedef	int<>		int32;
-
-int32<>	fe, fi, fo, fum;
-

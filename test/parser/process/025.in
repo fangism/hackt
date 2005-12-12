@@ -1,7 +1,0 @@
-// "025.in" should fail: redeclaration doesn't match in template formals
-
-defproc foo();
-
-template <pint bar>
-defproc foo();
-

@@ -1,0 +1,14 @@
+// "pal-02.hac"
+// programmable array logic example? not really...
+// copy-modified from "pal-01.hac"
+// should pass, using nested expression loops
+
+defproc matrix_array(bool in[4][4]; bool _o) {
+prs {
+	(|:i:4:	(&:j:4:	in[i][j] ) )	-> _o-
+	(&:i:4:	(|:j:4:	~in[i][j] ) )	-> _o+
+}
+}
+
+matrix_array foo;
+

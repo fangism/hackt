@@ -1,0 +1,10 @@
+// "039.hac" should pass: constant propagation to static array size
+// copy-modified from "008.hac"
+
+defproc bogus () {
+pint foo = 3;
+pint bar[foo];
+}
+
+bogus x;
+

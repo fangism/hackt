@@ -1,0 +1,4 @@
+// "018.hac" should fail: bad enum
+
+enum;
+

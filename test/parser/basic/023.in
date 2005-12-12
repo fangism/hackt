@@ -1,8 +1,0 @@
-// "023.in"
-// should fail, conflicting declarations from different files.
-
-import "022.in";
-import "001.in";		// death
-
-int fail;
-

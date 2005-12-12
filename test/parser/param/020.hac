@@ -1,0 +1,17 @@
+// "020.hac" should pass parsing: non overlapping array
+// will fail unrolling
+
+pint M = 2;
+
+pint foo[2..4];		// entending array ok
+pint foo[M];
+
+foo[0] = 0;		// initialization of arrays ignored
+foo[1] = 2;
+foo[2] = 5;
+foo[2] = 4;		// duplicate not detected until unroll time
+foo[M] = 3;
+foo[3] = foo[M];
+foo[4] = foo[foo[M]];	// should be ok too
+
+

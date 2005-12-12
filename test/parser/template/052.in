@@ -1,7 +1,0 @@
-// "052.in" should fail, port types may not depend on relaxed params
-// copy-modified from "050.in"
-
-template <><pint W>
-defproc foo(int<W> my_int);
-
-

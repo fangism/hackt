@@ -1,5 +1,0 @@
-// "001.in" should pass: array size dependent on formal parameter
-
-template <pint N; pint A[N]>
-defproc array_me();
-

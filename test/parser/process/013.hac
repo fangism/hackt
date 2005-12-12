@@ -1,0 +1,5 @@
+// "013.hac" should die: incomplete template spec
+
+template <pint
+defproc bad_fang
+

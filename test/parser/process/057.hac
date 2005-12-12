@@ -1,0 +1,17 @@
+// "057.hac" should pass, will recursively instantiate ports
+// copy-modified from "056.hac"
+/**
+BUG tracking notes (2005-07-16):
+	1) dies once port "bool a" is added to foo
+	2) dies with port of bar declared as array and 1) holds
+FIXED (2005-07-16): reconstruction ordering in
+	instance_array<>::element_loader::operator ()
+	load_object_base AFTER re-inserting into collection.  
+**/
+
+defproc foo(bool a) { }
+
+defproc bar(foo x[2]) { }
+
+bar poo;
+

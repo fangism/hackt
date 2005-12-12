@@ -1,0 +1,12 @@
+// "040.hac" should pass: properly initialized params
+// copy-modified from "014.hac"
+
+defproc bogus () {
+pint M = 2;
+pint foo[M];
+
+foo[0] = M;
+}
+
+bogus x;
+

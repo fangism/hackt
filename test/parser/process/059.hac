@@ -1,0 +1,8 @@
+// "059.hac" should pass, will recursively instantiate ports
+// copy-modified from "058.hac"
+
+template <pint N>
+defproc foo(bool a[N]) { }
+
+foo<3> poo;
+

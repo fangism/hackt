@@ -1,0 +1,11 @@
+// "024.hac" should pass: forward declaring process, then defining
+// redeclaring prototypes should have no effect
+
+defproc foo();
+defproc foo();
+
+foo bar;
+
+defproc foo() { }
+defproc foo();
+

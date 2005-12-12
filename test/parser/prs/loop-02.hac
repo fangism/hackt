@@ -1,0 +1,19 @@
+// "loop-02.hac"
+// should pass, though example is disgusting
+// copy-modified from "loop-01.hac"
+
+template <pint N>
+defproc nandN(bool in[N]; bool _out) {
+prs {
+(:k:2:		// redundant copies
+	(&:i:N:	in[(i+k)%N] )		-> _out-
+	// testing rule-loop around expr-loop
+	(:i:N:
+		(&:j:i:	~in[(i+k+1)%N] )	-> _out+
+	)
+)
+}
+}
+
+nandN<4>	foo;
+

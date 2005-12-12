@@ -1,0 +1,11 @@
+// "091.hac" should die, using own type inside recursively!
+// copy-modified from "090.hac"
+// KNOWN BUG: currently does not parse
+
+template <pbool B>
+defproc foo(bool a) {
+	foo<~B> huh;
+}
+
+foo poo;
+

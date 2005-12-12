@@ -1,0 +1,16 @@
+// "039.hac" -- should pass
+
+// note: L2 has no direction specified, so may be send or receive, or both!
+defproc sum_diff(chan?(int) L1, L2; chan!(int) R) {
+int x, z, w;
+chan(int) M;
+chp {
+	L1?(x), L2?(z);
+	M!(x-z)
+}
+chp {
+	M?(w);
+	R!(w)
+}
+}
+

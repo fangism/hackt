@@ -1,7 +1,0 @@
-// "033.in" should pass parsing: proper use of scalar index
-// however, unrolling will detect that n[0][0] is uninitialized
-
-pint n[4][4];
-
-pint m[n[0][0]];
-

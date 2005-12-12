@@ -1,0 +1,14 @@
+// "031a.hac" should pass: appropriate use of template type
+
+template <pint N[2]>
+defproc foo();
+
+pint W[2];
+W[0] = 0;
+W[1] = 1;
+
+foo<W> bar;
+
+// for type-checking ok if foo undefined
+// but would die during unroll
+

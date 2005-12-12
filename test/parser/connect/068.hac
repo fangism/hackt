@@ -1,0 +1,13 @@
+// "068.hac" should fail: not instantiated yet
+
+defproc portaproc(bool b, c[4]; int i, j[2]);
+
+bool a;
+bool x[4];
+int q;
+int r[2];
+
+portaproc p[0..0];
+p[0](a, x, q, r);
+p[1]( ,  ,  ,  );	// not instantiated yet
+

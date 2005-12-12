@@ -1,0 +1,8 @@
+// "inv-12.hac" should pass
+
+defproc inv(bool a, b) {
+prs {
+	~a => b+	// generate complement automatically
+}
+}
+

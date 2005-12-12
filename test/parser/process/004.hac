@@ -1,0 +1,3 @@
+// "004.hac" should still die on bad template
+
+defproc foo <pint bar

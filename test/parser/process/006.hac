@@ -1,0 +1,3 @@
+// "006.hac" should die on improper template
+
+defproc barbar<pint milk, tea

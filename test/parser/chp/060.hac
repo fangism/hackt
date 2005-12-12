@@ -1,0 +1,15 @@
+// "060.hac" should pass
+
+defproc foo(chan?(bool) A, B, G; chan!(bool) Z) {
+bool a, b, g;
+chp {
+	*[
+		A?(a), B?(b), G?(g);
+		[a -> Z!(false)
+		: b -> Z!(true)
+		: g -> Z!(a^b)
+		]
+	]
+}
+}
+

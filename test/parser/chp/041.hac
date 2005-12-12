@@ -1,0 +1,11 @@
+// "041.hac" -- multiple concurrent loops, should pass
+
+defproc sink_source(chan?(bool) S; chan!(bool) T) {
+bool b;
+chp {
+	*[ S?(b) ];
+	// should be concurrent -- disregards ';', but it is required
+	*[ T!(false) ]
+}
+}
+

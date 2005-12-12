@@ -1,0 +1,11 @@
+// "023.hac"
+// testing conditional scopes
+// copy-modified from "021.hac"
+
+[ true ->
+bool b;
+	[ true ->
+		int i;
+	]
+]
+

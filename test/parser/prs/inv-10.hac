@@ -1,0 +1,10 @@
+// "inv-10.hac" should parse and fail type-check
+
+template <pint N, I, J>
+defproc crazy_inv(bool a[N]) {
+prs {
+	a[I] -> a[J]-
+	~a[I] -> a[J..J]+	// refers to array[1]! wrong!
+}
+}
+

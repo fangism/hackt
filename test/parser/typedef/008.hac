@@ -1,0 +1,7 @@
+// "008.hac" should fail:
+// aliases the type correctly, but use is wrong b/c is not a template
+
+typedef	int<32>		int32;
+
+int32<32> fe, fi, fo, fum;
+

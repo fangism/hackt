@@ -1,0 +1,13 @@
+// "058.hac" testing nondeterministic guard selection, should pass
+
+defproc split_bool_soup(chan?(bool) A, B, G; chan!(bool) Z) {
+bool g, x;
+chp {
+	*[
+		G?(g);
+		[g -> A?(x) : ~g -> B?(x) ];
+		Z!(x)
+	]
+}
+}
+

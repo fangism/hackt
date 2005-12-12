@@ -1,9 +1,0 @@
-// "inv-07.in" should parse and pass type-check
-
-defproc inv(bool a[1][2]) {
-prs {
-	a[0][0] -> a[0][1]-
-	~a[0][0] -> a[0][1]+
-}
-}
-

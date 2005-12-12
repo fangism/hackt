@@ -1,0 +1,7 @@
+// "021.hac" should pass: instantiating a built-in channel type
+// copy-modified from "020.hac"
+
+enum ick { FEE, FIE, FO, FUM }
+
+chan(ick) foobar;
+

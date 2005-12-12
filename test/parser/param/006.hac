@@ -1,0 +1,6 @@
+// "006.hac" should fail, already declared
+
+pint p;
+pint o, beans;
+pint o;
+

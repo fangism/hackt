@@ -1,8 +1,0 @@
-// "037.in" should pass: matching redeclaration
-
-template <pint bar[5], food[12][12]>
-defproc foo();
-
-template <pint bar[5]; pint food[12][12]>
-defproc foo();
-

@@ -1,0 +1,12 @@
+// "009.hac" should fail: base types are not equivalent
+
+int fe;
+int<> fi;
+bool fo;		// different from the rest
+
+typedef	int<32>		int32;
+
+int32 fum = fe = fi = fo;
+	// this should get caught because base definitions differ
+
+

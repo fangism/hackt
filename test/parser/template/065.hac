@@ -1,0 +1,9 @@
+// "065.hac" should fail -- cannot redeclare a relaxed array as strict
+// copy-modified from "064.hac"
+
+template <pint Q><pint R>
+defproc foo();
+
+foo<5> bar<4>[3];		// relaxed collection
+foo<5><4> bar[7..9];		// strict collection (conflict)
+

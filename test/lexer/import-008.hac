@@ -1,0 +1,6 @@
+// "import-008.hac"
+// including file that includes itself, should be handled correctly
+
+import "import-006.hac";		// error here!
+import "import-006.hac";
+

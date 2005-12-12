@@ -1,0 +1,18 @@
+// "066i.hac" should pass, will recursively instantiate ports
+// copy-reduced from "066d.hac"
+// has internal aliases!
+
+defproc foo(bool a, b) {
+}
+
+defproc bar(foo x, y) {
+	x.a = y.b;
+}
+
+defproc ick(bar q) {
+}
+
+ick poo;
+
+// after hierarchical flattening, there are 3 bools and 4 procs
+

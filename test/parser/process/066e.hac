@@ -1,0 +1,15 @@
+// "066e.hac" should pass, will recursively instantiate ports
+// copy-reduced from "066c.hac"
+// has internal aliases!
+
+defproc foo(bool a, b) {
+	a = b;
+}
+
+defproc bar(foo x) {
+}
+
+bar poo;
+
+// after hierarchical flattening, there is only one of each type
+

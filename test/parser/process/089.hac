@@ -1,0 +1,9 @@
+// "089.hac" should die, using own type inside recursively!
+// MINOR BUG: does fail unrolling, but with an unexpected error message.
+
+defproc foo(bool a) {
+	foo huh;
+}
+
+foo poo;
+

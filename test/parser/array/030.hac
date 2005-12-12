@@ -1,0 +1,5 @@
+// "030.hac" should fail: overlapping multidimensional arrays
+
+int q[4][4][4];
+int q[3..6][3..6][3..6];
+

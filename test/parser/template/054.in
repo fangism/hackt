@@ -1,8 +1,0 @@
-// "054.in" should fail, definition-local types may not depend on relaxed params
-// copy-modified from "052.in"
-
-template <><pint W>
-defproc foo() {
-	int<W> my_int;
-}
-

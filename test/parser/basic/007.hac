@@ -1,0 +1,10 @@
+// "007.hac" this should be a legitimate PRS definition, should pass
+// try using "node" instead of bool in 012.hac
+
+defproc myinverter(bool a; bool b) {
+prs {
+	a		-> b-
+	~a		-> b+
+}
+}
+

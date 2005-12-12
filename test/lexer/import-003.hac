@@ -1,0 +1,8 @@
+// "import-003.hac"
+// should die on bad included file
+
+
+
+
+import "import-001.hac";
+

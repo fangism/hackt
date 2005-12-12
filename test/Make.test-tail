@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.11.2.3 2005/12/12 06:41:57 fang Exp $
+#	$Id: Make.test-tail,v 1.11.2.4 2005/12/12 19:35:51 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -12,7 +12,7 @@ HACKT_CREATE_EXE = $(top_builddir)/src/hackt create
 HACKT_ALLOC_EXE = $(top_builddir)/src/hackt alloc
 HACKT_CFLAT_EXE = $(top_builddir)/src/hackt cflat prsim
 
-# NOTE: these scripts are configure-generated from their .in files.  
+# NOTE: these scripts are configure-generated from their .hac files.  
 ARTC_TEST_SH = $(top_builddir)/test/artc-expect.sh
 ARTOBJ_TEST_SH = $(top_builddir)/test/artobj-diff.sh
 ARTOBJUNROLL_TEST_SH = $(top_builddir)/test/artobjunroll-expect.sh
@@ -34,10 +34,10 @@ ANALYZE_DIFF_AWK = $(AWK) -f $(top_srcdir)/test/analyze-dump-diff.awk
 TEST_REPORT = $(top_builddir)/test/test-report.txt
 
 # These needs to be specified in Makefile.am to take effect
-# SUFFIXES = .in .artctest .artobjtest .artobjunrolltest
+# SUFFIXES = .hac .artctest .artobjtest .artobjunrolltest
 #	.hacktcreatetest .hacktalloctest .hacktcflattest
 
-.in.stderr:
+.hac.stderr:
 	@$(TOUCH) $@
 
 subdir.not_a_test:
@@ -45,14 +45,14 @@ subdir.not_a_test:
 	@$(ECHO) "echo \"In $(subdir):\" >> $(TEST_REPORT)" >> $@
 	@$(CHMOD) +x $@
 
-.in.artctest:
+.hac.artctest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(ARTC_TEST_SH) "\"$(ARTC_EXE)\"" $(srcdir) $* \
 		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
 
-.in.artobjtest:
+.hac.artobjtest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(ARTOBJ_TEST_SH) "\"$(ART2OBJ_EXE)\"" \
@@ -60,7 +60,7 @@ subdir.not_a_test:
 		$* "\"$(ARTOBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
 
-.in.artobjunrolltest:
+.hac.artobjunrolltest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(ARTOBJUNROLL_TEST_SH) "\"$(ARTOBJUNROLL_EXE)\"" \
@@ -70,7 +70,7 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
-.in.hacktcreatetest:
+.hac.hacktcreatetest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
@@ -80,7 +80,7 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
-.in.hacktalloctest:
+.hac.hacktalloctest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_ALLOC_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
@@ -90,7 +90,7 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
-.in.hacktcflattest:
+.hac.hacktcflattest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_EXE)\"" \
@@ -137,7 +137,7 @@ check-summaries: $(CHECK_SUMMARIES)
 
 # must be previously defined to use +=
 # assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
-EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.in) \
+EXTRA_DIST += $(ARTC_TEST_SUBJECTS:=.hac) \
 	$(ARTC_TEST_FAILURES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison) \
 	$(ARTOBJUNROLL_TEST_SUBJECTS:=.unrollstderr) \

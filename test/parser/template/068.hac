@@ -1,0 +1,10 @@
+// "068.hac" should pass, adding sparse instances to strict-typed collection
+// copy-modified from "062.hac"
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5><4> car[0..2];
+foo<5><4> car[3..4];
+
+

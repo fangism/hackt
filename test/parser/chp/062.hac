@@ -1,0 +1,12 @@
+// "062.hac" should fail: no else clause allowed in do-while loop
+
+defproc foo(chan?(bool) A, B, G; chan!(bool) Z) {
+bool a, b, g;
+chp {
+	*[ a -> B?(b)
+	[] ~a & b -> G?(g)
+	[] else -> Z!(false)
+	]
+}
+}
+

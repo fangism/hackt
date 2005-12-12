@@ -1,7 +1,0 @@
-// "022.in" should pass, complete, albeit empty definition
-
-template <pint milk, tea; pbool water[4]>
-defproc barbar(){
-// empty definition
-}
-

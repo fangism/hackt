@@ -1,0 +1,15 @@
+// "106.hac" should pass, connecting equivalent template types
+// copy-modified from "100.hac"
+
+template <pint A>
+defproc foo() { }
+
+defproc bar(foo<1> a; foo<2> b) { }
+
+bar w, z;
+foo<1> a;
+foo<2> b;
+
+w(a, b);
+z(a, b);
+

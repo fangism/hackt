@@ -1,5 +1,0 @@
-// "015.in"
-// should pass, including valid empty file.  
-
-import "000.in";
-

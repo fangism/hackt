@@ -1,0 +1,10 @@
+// "093.hac" should pass connection, one reference is relaxed. 
+// copy-modified from "092.hac"
+
+template <pint A><pint B>
+defproc foo() { }
+
+foo<1> bar, ick<1>, poo<2>;
+
+bar = ick;	// relaxed connecting to specified, OK
+

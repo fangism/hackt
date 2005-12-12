@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2005/11/12 08:45:37 fang Exp $
+#	$Id: Makefile.am,v 1.5.2.1 2005/12/12 19:35:52 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -23,7 +23,7 @@ ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
 # should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
 # ARTOBJUNROLL_TEST_SUBJECTS = $(ARTOBJ_TEST_SUBJECTS)
 
-EXTRA_DIST += empty.in
+EXTRA_DIST += empty.hac
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += string-002 string-003

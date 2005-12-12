@@ -1,0 +1,19 @@
+// "086.hac" should pass, will recursively instantiate ports
+// copy-modified from "085.hac"
+// has internal aliases!
+
+defproc foo(bool a, b) {
+	a = b;
+}
+
+defproc bar(foo x, y) {
+	foo z;
+	x = z;
+	bool q = z.b;
+	y.a = q;
+}
+
+bar poo;
+
+// should end up with only one bool
+

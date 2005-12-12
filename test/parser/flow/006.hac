@@ -1,0 +1,10 @@
+// "006.hac"
+// copy-modified from "005.hac"
+// should fail: re-instantiation in loop
+
+bool x[1];
+(;i:2:
+pint j = i+1;		// should fail: can't instantiate/assign multiple-times
+bool x[j..j];
+)
+

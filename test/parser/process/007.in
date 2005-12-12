@@ -1,7 +1,0 @@
-// "007.in" should die on improper template declaration
-
-defproc barbar<pint milk, tea; pbool water[H,2,O]
-
-/** side note: 
-H and O are expressions, parser will accept, but type-checker will die
-**/

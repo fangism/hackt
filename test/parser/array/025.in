@@ -1,5 +1,0 @@
-// "025.in" should fail: overlapping sparse arrays
-
-int blah[5..10];
-int blah[10..12];
-

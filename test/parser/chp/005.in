@@ -1,8 +1,0 @@
-// "005.in"
-
-defproc one_shot(chan?(bool) L; chan!(bool) R) {
-chp {
-	R!(false)
-}
-}
-

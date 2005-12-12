@@ -1,12 +1,12 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.6 2005/11/02 22:53:50 fang Exp $
+#	$Id: Make.test-head,v 1.6.8.1 2005/12/12 19:35:51 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
-SUFFIXES = .in .artctest .artobjtest .artobjunrolltest \
+SUFFIXES = .hac .artctest .artobjtest .artobjunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest
 
 

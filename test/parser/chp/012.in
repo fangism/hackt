@@ -1,9 +1,0 @@
-// "012.in" -- should fail: bad expression
-
-defproc one_shot(chan?(bool) L; chan!(bool) R) {
-int<32> Z;
-chp {
-	R!(~Z)		// ~ expects a bool
-}
-}
-

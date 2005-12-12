@@ -1,0 +1,11 @@
+// "026.hac" should fail: invalid member
+
+int foo;
+
+defproc bar(int a, b);
+
+bar none;
+
+none.a = foo;
+foo = none.c;		// death!
+

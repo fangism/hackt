@@ -1,9 +1,9 @@
-From: "comment-000.in":8:
+From: "comment-000.hac":8:
 unterminated comment, starting on line 4, got <<EOF>>
 Caught exception from lexer, aborting parsing.
-From: "comment-000.in"
+From: "comment-000.hac"
 Caught exception from lexer, aborting parsing.
-From: "import-001.in"
+From: "import-001.hac"
 Caught exception from lexer, aborting parsing.
-From: "import-003.in"
+From: "import-003.hac"
 Caught exception from lexer, aborting parsing.

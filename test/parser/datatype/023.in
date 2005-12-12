@@ -1,7 +1,0 @@
-// "023.in" should pass, instantiation of an enumeration
-// type need not be complete for declaration
-
-enum foo;
-
-foo bar;		// instantiation
-

@@ -1,4 +1,0 @@
-// "003.in" should fail, need data-type in list
-
-defchan mychan <: chan(pbool) (int i);
-

@@ -1,0 +1,7 @@
+// "000.hac" should fail: bool should not be followed by 'b'
+
+defchan mychan <: chan(bool b) (int i) {
+send {}
+recv {}
+}
+

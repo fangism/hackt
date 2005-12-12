@@ -1,0 +1,8 @@
+// "010.hac" -- should fail type check
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+chp {
+	R!(one_shot)		// doesn't refer to an instance!
+}
+}
+

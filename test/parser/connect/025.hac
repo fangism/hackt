@@ -1,0 +1,11 @@
+// "025.hac" should pass: valid reference to a member
+
+int foo;
+
+defproc bar(int a, b) { }
+
+bar none;
+
+none.a = foo;
+foo = none.b;
+

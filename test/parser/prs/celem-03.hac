@@ -1,0 +1,13 @@
+// "celem-03.hac"
+// copy modified from "celem-02.hac"
+// should pass -- using loop-and expression
+
+defproc celem2inv(bool a[2]; bool _o) {
+prs {
+	(&:i:2:	a[i] )			-> _o-
+	(&:i:2: ~a[i] )			-> _o+
+}
+}
+
+celem2inv c;
+

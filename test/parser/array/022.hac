@@ -1,0 +1,5 @@
+// "022.hac" should fail: overlapping sparse arrays
+
+int blah[0..12];
+int blah[5..10];
+

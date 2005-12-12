@@ -1,0 +1,9 @@
+// "043.hac" -- basic buffer, should pass
+
+defproc buffer(chan?(bool) S; chan!(bool) T) {
+bool b;
+chp {
+	*[ S?(b); T!(b) ]
+}
+}
+

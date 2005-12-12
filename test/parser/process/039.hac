@@ -1,0 +1,8 @@
+// "039.hac" should fail: size mismatch
+
+template <pint bar[3][5][2]>
+defproc foo();
+
+template <pint bar[3][4][2]>
+defproc foo();
+

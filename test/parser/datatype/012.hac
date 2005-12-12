@@ -1,0 +1,6 @@
+// "012.hac" should fail trying to alias namespace to a taken identifier
+
+namespace A { }
+int x;
+open A as x;
+

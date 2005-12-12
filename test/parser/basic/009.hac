@@ -1,0 +1,11 @@
+// "009.hac" this should fail to type check because "b" is not declared
+// 013.hac replaces node with bool
+
+defproc badinverter(node a) {
+int k;
+prs {
+	a		-> b-
+	~a		-> b+
+}
+}
+

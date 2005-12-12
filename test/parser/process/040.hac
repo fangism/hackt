@@ -1,0 +1,8 @@
+// "040.hac" should pass: dynamic size is same
+
+template <pint bar; pbool jinx[bar]>
+defproc foo();
+
+template <pint bar; pbool jinx[bar]>
+defproc foo();
+

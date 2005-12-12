@@ -1,0 +1,13 @@
+// "024.hac"
+// copy-modified from "022.hac"
+// testing conditional scopes
+// should pass: collectives are allowed to be redeclared
+
+[ false ->
+pbool b[1];
+]
+
+[ false ->
+pbool b[1];
+]
+

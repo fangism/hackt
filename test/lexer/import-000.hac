@@ -1,0 +1,5 @@
+// "import-000.hac"
+// should fail, importing a file with errors
+// testing reporting
+
+import "badid-000.hac";

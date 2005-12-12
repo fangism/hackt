@@ -1,0 +1,12 @@
+// "030b.hac" should pass: reference to array member
+// copy-modified from "030.hac" (int -> bool)
+
+bool foo[2];
+
+defproc bar(bool a, b[2]) { }
+
+bar none;
+
+none.a = foo[0];
+foo = none.b;		// array matches
+

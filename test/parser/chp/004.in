@@ -1,8 +1,0 @@
-// "004.in" parse fail
-
-defproc empty(chan?(bool) L; chan!(bool) R) {
-chp {
-	R!false		// wants expression list in parens
-}
-}
-

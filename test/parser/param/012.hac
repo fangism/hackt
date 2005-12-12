@@ -1,0 +1,4 @@
+// "012.hac" should fail: type mismatch
+
+pbool foo = 123;
+

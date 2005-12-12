@@ -1,0 +1,10 @@
+// "038.hac" should pass both parsing and type-checking
+// copy-modified from "004.hac"
+
+defproc bogus() {
+pint N = 2;
+pint M = N;
+}
+
+bogus x;
+

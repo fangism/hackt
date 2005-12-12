@@ -1,0 +1,5 @@
+// "import-001.hac"
+// should die on bad included file
+
+import "comment-000.hac";
+

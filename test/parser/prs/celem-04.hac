@@ -1,0 +1,14 @@
+// "celem-04.hac"
+// copy modified from "celem-03.hac"
+// should pass -- using loop-and expression
+
+template <pint N>
+defproc celemNinv(bool a[N]; bool _o) {
+prs {
+	(&:i:N:	a[i] )			-> _o-
+	(&:i:N: ~a[i] )			-> _o+
+}
+}
+
+celemNinv<4> c;
+

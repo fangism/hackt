@@ -1,5 +1,0 @@
-// "006.in" should fail: extending array with single instance
-
-pint y[2][3];
-pint y;
-

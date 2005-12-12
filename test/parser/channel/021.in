@@ -1,7 +1,0 @@
-// "021.in" should pass: instantiating a built-in channel type
-// copy-modified from "020.in"
-
-enum ick { FEE, FIE, FO, FUM }
-
-chan(ick) foobar;
-

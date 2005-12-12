@@ -1,0 +1,20 @@
+// "014.hac"
+// copy-modified from "013.hac"
+// should pass: connecting in symmetric matrix fashion
+
+
+pint N = 5;
+
+bool x[N][N];
+
+(;i:N:
+(;j:N:
+	x[i][j] = x[j][i]		// diagonal symmetry
+		= x[N-j-1][N-i-1]	// anti-diagonal
+		= x[i][N-j-1]		// horizontal symmetry
+		= x[N-i-1][j];		// vertical symmetry
+)
+)
+
+// should have 6 unique bools
+

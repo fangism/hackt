@@ -1,0 +1,8 @@
+// "023.hac"
+// should fail, conflicting declarations from different files.
+
+import "022.hac";
+import "001.hac";		// death
+
+int fail;
+

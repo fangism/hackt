@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "artc-expect.sh.in"
-#	$Id: artc-expect.sh.in,v 1.7 2005/12/08 22:01:14 fang Exp $
+#	$Id: artc-expect.sh.in,v 1.7.2.1 2005/12/12 19:35:52 fang Exp $
 # This file came from "artc-expect.sh" in revision pre-history.
 
 # $1 is the executable, expecting input from stdin ("hackt parse_test")
@@ -28,7 +28,7 @@ logfile=$5
 # echo $logfile
 
 # intentionally using stdin to avoid file name differences in output diff-ing
-$cmd < $srcroot.in > $bldroot.test 2>&1
+$cmd < $srcroot.hac > $bldroot.test 2>&1
 if test $? -gt 1 ; then exit 1 ; fi
 @CAT@ $bldroot.test | $filter > $bldroot.test.filter
 if test -f $srcroot.stderr ; then

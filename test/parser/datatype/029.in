@@ -1,4 +1,0 @@
-// "029.in" -- should pass, valid datatype prototype
-
-deftype my_data <: int<24> (int<28> x);
-

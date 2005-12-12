@@ -1,0 +1,3 @@
+// "019.hac" should fail: bad enum
+
+enum foo, bar;

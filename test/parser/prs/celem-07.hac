@@ -1,0 +1,15 @@
+// "celem-07.hac"
+// copy modified from "celem-04.hac"
+// should die, shadowing identifier caught as error
+
+template <pint N>
+defproc celemNinv(bool a[N]; bool _o) {
+pbool i;
+prs {
+	(&:i:N:	a[i] )			-> _o-
+	(&:i:N: ~a[i] )			-> _o+
+}
+}
+
+celemNinv<4> c;
+

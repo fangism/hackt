@@ -1,0 +1,10 @@
+// "002.hac"
+// copy-modified from "000.hac"
+// basic top-level instantiation loop
+
+bool y;
+(;i:2:
+bool x[i..i];
+x[i] = y;
+)
+

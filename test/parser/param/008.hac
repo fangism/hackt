@@ -1,0 +1,5 @@
+// "008.hac" should pass: constant propagation to static array size
+
+pint foo = 3;
+pint bar[foo];
+

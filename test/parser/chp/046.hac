@@ -1,0 +1,11 @@
+// "046.hac" -- should fail on bad assignment
+
+defproc buffer(chan?(bool) S; chan!(bool) T) {
+bool b;
+chp {
+	b:=13;	// BAD
+	T!(b);
+	*[ S?(b); T!(b) ]
+}
+}
+

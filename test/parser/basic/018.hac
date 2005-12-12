@@ -1,0 +1,13 @@
+// "018.hac"
+// copy-extended from "016.hac"
+// should this be allowed?
+// if not, how do we keep track whether each file level has seen
+// a non-import?
+// consider making parser re-entrant? (bye-bye yacc...)
+
+import "001.hac";
+
+bool Q;
+
+import "003.hac";
+

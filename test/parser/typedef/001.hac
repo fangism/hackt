@@ -1,0 +1,4 @@
+// "001.hac" should fail: can't typedef params
+
+typedef	pbool	param_bool;
+

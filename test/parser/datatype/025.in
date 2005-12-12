@@ -1,4 +1,0 @@
-// "025.in" should fail: repeated member of enum
-
-enum foo { bar, none, bar }
-

@@ -1,0 +1,10 @@
+// "045.hac" should pass unrolling, but will die during creation
+// copy-modified from "044.hac"
+
+template <pint Q=5><pint R>
+defproc foo();
+
+foo<> bar;
+// will only die at creation time, 
+// when it can't find relaxed actuals to complete
+

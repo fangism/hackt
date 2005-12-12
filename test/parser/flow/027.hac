@@ -1,0 +1,13 @@
+// "027.hac"
+// copy-modified from "025.hac"
+// testing conditional scopes
+// should fail unrolling
+
+[ true ->
+bool b[1];
+]
+
+[ true ->
+bool b[1];
+]
+

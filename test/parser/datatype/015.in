@@ -1,4 +1,0 @@
-// "015.in" testing a bad datatype prototype, should fail (bad grammar)
-
-deftype	my_precious;
-

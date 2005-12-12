@@ -1,0 +1,9 @@
+// "inv-06.hac" should parse and pass type-check
+
+defproc inv(bool a[2]) {
+prs {
+	a[0] -> a[1]-
+	~a[0] -> a[1]+
+}
+}
+

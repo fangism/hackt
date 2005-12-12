@@ -1,5 +1,0 @@
-// "009.in" should fail: NULL range
-
-pint x[0];
-
-

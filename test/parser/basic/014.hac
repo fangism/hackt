@@ -1,0 +1,18 @@
+// "014.hac" this should pass, good array declaration
+// this file was copied from 006.hac with the substitution: int -> bool
+// an example of rejected cast-style arrays is in 010.hac
+
+// eventually type checker will reject this...
+// and it does... so the original 006.hac was copied to 011.hac
+// we've modified the indices so that they are constant integers.  
+
+bool good_array[5];
+
+namespace more_arrays {
+
+bool fancy_array[5][3];
+
+bool fancier_array[4][0..4][1..2];
+
+}
+

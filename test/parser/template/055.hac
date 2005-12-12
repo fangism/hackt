@@ -1,0 +1,12 @@
+// "055.hac" should pass, definition-local types' relaxed actuals
+// may depend on other relaxed params
+// copy-modified from "054.hac"
+
+template <pint A><pint B>
+defproc bar();
+
+template <><pint W>
+defproc foo() {
+	bar<0><W> my_bar;
+}
+

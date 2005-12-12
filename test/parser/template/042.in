@@ -1,6 +1,0 @@
-// "042.in" should fail, no default relaxed parameters
-//	template formals.  
-
-template <pint Q><pint R=5>
-defproc foo();
-

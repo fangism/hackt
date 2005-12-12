@@ -1,0 +1,7 @@
+// "002.hac" should pass
+
+defchan mychan <: chan(bool) (int i) {
+send {}
+recv {}
+}
+

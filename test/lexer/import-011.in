@@ -1,6 +1,0 @@
-// "import-011.in"
-
-import "bogus-file.in";
-
-import "import-011.in";		// error here!
-

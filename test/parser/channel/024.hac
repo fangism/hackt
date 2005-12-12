@@ -1,0 +1,13 @@
+// "024.hac" should fail (unroll time): connecting non-equivalent channel types
+// copy-modified from "023.hac"
+
+pint X[2];
+
+X[0] = 12;
+X[1] = 11;
+
+chan(int<X[0]>) foobar;
+chan(int<X[1]>) barfoo;
+
+foobar = barfoo;
+

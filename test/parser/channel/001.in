@@ -1,4 +1,0 @@
-// "001.in" should pass, just a channel definition prototype
-
-defchan mychan <: chan(bool) (int i);
-

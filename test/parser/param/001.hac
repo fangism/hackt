@@ -1,0 +1,5 @@
+// "001.hac" should pass, simple parameter instantiations
+
+pint N;
+pbool b;
+

@@ -1,0 +1,4 @@
+// "009.hac" should fail: need an int range
+
+int x[true];
+

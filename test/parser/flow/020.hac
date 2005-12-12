@@ -1,0 +1,7 @@
+// "020.hac"
+// testing conditional scopes
+
+[ true ->
+pbool b;
+]
+

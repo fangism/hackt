@@ -1,0 +1,7 @@
+// "004.hac"
+// should fail: re-instantiation in loop
+
+(;i:2:
+bool x;
+)
+

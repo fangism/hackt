@@ -1,5 +1,0 @@
-// "001.in" should pass: simple parameter arrays
-
-pint N;
-pint x[5];
-

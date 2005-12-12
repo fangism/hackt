@@ -1,0 +1,5 @@
+// "015.hac"
+// should pass, including valid empty file.  
+
+import "000.hac";
+

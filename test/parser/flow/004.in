@@ -1,7 +1,0 @@
-// "004.in"
-// should fail: re-instantiation in loop
-
-(;i:2:
-bool x;
-)
-

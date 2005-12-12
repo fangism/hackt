@@ -1,5 +1,0 @@
-// "011.in" should fail: backwards range
-
-pint x[6..5];
-
-

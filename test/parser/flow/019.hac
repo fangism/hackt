@@ -1,0 +1,23 @@
+// "019.hac"
+// copy-modified from "018.hac"
+// should pass
+// checkers style aliases
+
+template <pint M,N>
+defproc checkers(bool m[M][N]) {
+	(;i:M-1:
+	(;j:N-1:
+		m[i][j] = m[i+1][j+1];		// down-right
+		m[i+1][j] = m[i][j+1];		// up-right
+	)
+	)
+}
+
+checkers<3,3>	a;		// should have 2 sub-nodes (red-black)
+checkers<3,4>	b;		// should have 2 sub-nodes
+checkers<4,3>	c;		// should have 2 sub-nodes
+checkers<4,4>	d;		// should have 2 sub-nodes (red-black)
+
+// total of 8 unique nodes
+
+

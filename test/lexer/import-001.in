@@ -1,5 +1,0 @@
-// "import-001.in"
-// should die on bad included file
-
-import "comment-000.in";
-

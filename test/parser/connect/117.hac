@@ -1,0 +1,18 @@
+// "117.hac" -- testing creation connections, involving relaxed params
+// copy-modified from "116.hac"
+// should fail during creation when we discover the error:
+
+template <pint X><pint Y>
+defproc foo() { }
+
+template <pint Z>
+defproc bar(foo<Z> a, b) { }
+
+foo<3> x<2>;
+foo<3> y<5>;
+bar<3> p, q;
+p(x, );
+q(y, );
+p = q;	
+// error: ports are connected to aliases with different relaxed actuals!
+

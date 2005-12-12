@@ -1,4 +1,0 @@
-// "005.in" should pass, chan of structs
-
-defchan mychan <: chan(bool, bool) (int i, j; int<16> k);
-

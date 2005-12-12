@@ -1,0 +1,4 @@
+// "016.hac" should pass, forward declaration of an enumeration
+
+enum foo;
+

@@ -1,4 +1,0 @@
-// "005.in" should fail, parameter not declared
-
-pint N = M;
-

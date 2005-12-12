@@ -1,0 +1,10 @@
+// "089.hac" should pass, connecting equivalent template types
+// copy-modified from "088.hac"
+
+template <pint A>
+defproc foo() { }
+
+foo<1> bar[2], ick, poo[2];
+
+bar[0] = ick = poo[1];
+

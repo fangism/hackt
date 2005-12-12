@@ -1,0 +1,17 @@
+// "085.hac" should pass: valid mixed declaration
+
+defproc portaproc(bool b, c[4]; int i, j[2]) { }
+
+bool a;
+bool x[4];
+int q;
+int r[2];
+
+portaproc
+	p(a, x, q, r),
+	s[1..3][1..3], t[2..4];
+
+s[2][2]( , , , );
+t = s[1];		// ok, 1d array connection, same size
+
+

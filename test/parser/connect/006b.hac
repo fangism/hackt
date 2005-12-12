@@ -1,0 +1,9 @@
+// "006b.hac" should pass: types match
+// copy-modified from "006.hac" (int -> bool)
+
+bool blah;
+bool sneeze = blah;
+bool copier = blah = sneeze;
+
+blah = blah;		// no reason why this should fail
+

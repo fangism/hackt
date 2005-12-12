@@ -1,0 +1,21 @@
+// "119.hac" -- testing creation connections, involving relaxed params
+// copy-extended from "118.hac"
+
+defproc bar(bool a) { }
+defproc foo(bar b) { }
+defproc ick(foo x) { }
+
+bool x;
+bool y;
+bar p, q;
+p(x);
+q(y);
+foo j(q), k(p);
+ick m, n;
+m.x = j;
+n.x = k;
+m = n;
+
+// there should be only 1 unique bool
+// and one of each proces type (3 processes total)
+
