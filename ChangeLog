@@ -6,6 +6,9 @@
 	  Played around with other configure-generating src/header_deps.make
 		but with limited success (failure).  
 	  Updated maintainerclobber script, and moved it to scripts/.
+	  Moved some useful configure-found exec Makefile variables
+		into Make.stddef, and some useful echo- targets
+		into Make.globals.
 
 
 2005-12-09	David Fang	<fangism@users.sourceforge.net>

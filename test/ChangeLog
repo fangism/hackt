@@ -7,6 +7,9 @@
 		files from .in to .hac, and removing all traces of 
 		"ART" or "art".
 	  Forgot to rm *.sort in cleaner target.  
+	  Fixed EMPTY_CFLAT_PRS generation in Make.test-tail, 
+		which wasn't working properly for VPATH builds before.
+		(THough failure was not fatal, and nearly silent.)
 
 
 2005-11-09	David Fang		<fangism@users.sourceforge.net>
