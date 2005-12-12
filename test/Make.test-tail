@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.11.2.2 2005/12/12 02:52:03 fang Exp $
+#	$Id: Make.test-tail,v 1.11.2.3 2005/12/12 06:41:57 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -133,7 +133,7 @@ prsdiffs.sort: force
 	-$(CAT) *.prsdiff.sort > $@
 
 check-summaries: $(CHECK_SUMMARIES)
-	@ls -l $(CHECK_SUMMARIES)
+	-@ls -l $(CHECK_SUMMARIES)
 
 # must be previously defined to use +=
 # assuming ARTOBJ_TEST_SUBJECTS is subset of ARTC_TEST_SUBJECTS
@@ -154,8 +154,25 @@ TESTS += $(ARTC_TEST_SUBJECTS:=.artctest) \
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
-$(EMPTY_CFLAT_PRS):
-	@for p in $@ ; do touch $$p ; done
+clean-empty-cflat-prs:
+	-test -z "$(EMPTY_CFLAT_PRS)" || $(RM) $(EMPTY_CFLAT_PRS)
+
+# need a bogus dependency to make it work...
+$(EMPTY_CFLAT_PRS): Makefile
+	@touch $@
+
+# echo-style Makefile debugging
+echo-tests: force
+	@$(ECHO) $(TESTS)
+
+echo-compile-passes: force
+	@$(ECHO) $(ARTC_TEST_PASSES)
+
+echo-bison-outputs: force
+	@$(ECHO) $(BISON_OUTPUTS)
+
+echo-empty-cflat-prs: force
+	@$(ECHO) $(EMPTY_CFLAT_PRS)
 
 # filter-out is GNUMake feature
 #	$($(filter-out $(ARTC_TEST_PASSES), $(ARTC_TEST_SUBJECTS)):=.stderr)
