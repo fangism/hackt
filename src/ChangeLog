@@ -9,6 +9,10 @@
 	  Failed attempt to configure-generate headers_deps.make.
 		Kept some notes about it.
 	  Updated scripts/automake_include.awk to ignore junk.  
+	  Restored parallel-make, which was broken since main-00-69,
+		by a NOTPARALLEL directive in the Makefile.am.  
+		Fixed by commenting out and rewriting a few dependencies.  
+		We'll see if any builds break in the near future.  
 
 
 2005-12-10	David Fang		<fangism@users.sourceforge.net>

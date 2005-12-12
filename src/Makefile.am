@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.90.2.2 2005/12/11 04:41:04 fang Exp $
+#	$Id: Makefile.am,v 1.90.2.3 2005/12/12 03:38:28 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,6 +46,10 @@ noinst_SCRIPTS = art_persistent_table.sh
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
 	libhacktexec.la
+
+# this name is needed for libtool objects
+LIBHACKTPARSERS_LA = libhacktparsers_la
+LIBBOGUS_LA = libbogus_la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -625,12 +629,15 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
-$(srcdir)/main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-real.h
-$(srcdir)/main/version.cc: cvstag.h builddate.h buildhost.h cxx_version.h \
+main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
+main/version.lo main/version.o: cvstag.h builddate.h buildhost.h cxx_version.h \
 	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
-lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
-parser/hackt-union.lo: parser/$(HACKT_PARSE_ROOT).output.h
-parser/hackt-union.$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
+lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
+	lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.o: \
+	parser/$(HACKT_PARSE_ROOT).h
+parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
+	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
+	parser/$(HACKT_PARSE_ROOT).output.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
@@ -755,13 +762,11 @@ $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
-.NOTPARALLEL: parser/$(HACKT_PARSE_ROOT)-real.h $(HACKT_PARSE_OUTPUT) \
-	lexer/$(HACKT_LEX_ROOT).cc
-
-# NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
-# gcc -E ignores file that require no preprocessing
-
-CPP_TRADITIONAL = @CPP_TRADITIONAL@
+# Using the NOTPARALLEL directive kills parallel-make for this whole Makefile!
+# .NOTPARALLEL: parser/$(HACKT_PARSE_ROOT)-real.h $(HACKT_PARSE_OUTPUT) \
+#	lexer/$(HACKT_LEX_ROOT).cc
+# What we could do is enforce some artificial ordering, making
+# $(HACKT_PARSE_OUTPUT) the canonical target of parser/$(HACKT_PARSE_ROOT).h
 
 # extra deps to make sure parser is regenerated when configure changes
 # in the case when switching between yacc and bison
