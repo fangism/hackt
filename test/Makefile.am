@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.17.4.1 2005/12/12 19:35:51 fang Exp $
+#	$Id: Makefile.am,v 1.17.4.2 2005/12/12 19:57:22 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -28,8 +28,6 @@ POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
 AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
 
 DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
-
-distclean-local: cleaner
 
 EXTRA_DIST += ChangeLog README TODO \
 	Make.test-head Make.test-tail \

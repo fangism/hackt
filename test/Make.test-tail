@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.11.2.4 2005/12/12 19:35:51 fang Exp $
+#	$Id: Make.test-tail,v 1.11.2.5 2005/12/12 19:57:22 fang Exp $
 
 ARTC_EXE = $(top_builddir)/src/hackt parse_test
 ART2OBJ_EXE = $(top_builddir)/src/hackt compile
@@ -254,7 +254,9 @@ clean-local:
 	-$(RM) *.noindex
 
 # really remove these files!
-cleaner: clean cleaner-recursive
+cleaner: clean cleaner-recursive cleaner-local
+
+cleaner-local:
 	-$(RM) *.filter *.diff *.artobj
 	-$(RM) *.artctest *.artobjtest *.artobjunrolltest
 	-$(RM) *.hacktcreatetest *.hacktalloctest
@@ -265,6 +267,8 @@ cleaner: clean cleaner-recursive
 	-$(RM) *.noindex
 	-$(RM) *.sort
 
+distclean-local: cleaner-local
+
 cleaner-recursive:
 	@subdirs='$(SUBDIRS)'; \
 	for d in $$subdirs ; do \
@@ -274,7 +278,9 @@ cleaner-recursive:
 			fi ; \
 		fi ; \
 	done
-	
+
+.PHONY: cleaner cleaner-local cleaner-recursive \
+	clean-tests clean-tests-recursive
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...
