@@ -5,6 +5,12 @@
 
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
+	* ARTXX-00-01-04-main-00-71-rename-00-06:
+	  Documentation update only.  
+	  This branch is now complete save for unintentionally
+		forgotten replacements.  
+
+
 	* ARTXX-00-01-04-main-00-71-rename-00-05:
 	  Moved Object/art_object_fwd.h -> Object/object_fwd.h, 
 		and all references hitherto.  

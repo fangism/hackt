@@ -1,9 +1,9 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2005/07/23 06:51:14 fang Exp $
+#	$Id: Makefile.am,v 1.15.32.1 2005/12/13 03:58:21 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
-PDFS = artxx.pdf
+PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
 
 # all-local: pdf-local ps-local
@@ -14,7 +14,7 @@ ps-local: $(PSS)
 
 # have to add these by hand? :S
 EXTRA_DIST += \
-	artxx.bib artxx.tex \
+	hac.bib hac.tex \
 	chapters/preface.tex \
 	chapters/goals.tex \
 	chapters/intro.tex \
@@ -35,7 +35,7 @@ EXTRA_DIST += \
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
--include artxx.depend
+-include hac.depend
 
 include $(top_srcdir)/dox/Make.dox-tail
 
