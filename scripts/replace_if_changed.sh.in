@@ -1,0 +1,31 @@
+#!@SHELL@
+#	$Id: replace_if_changed.sh.in,v 1.1 2005/12/13 04:32:31 fang Exp $
+# "replace_if_changed.sh[.in]"
+# Convenient script for only updating config output files when they differ 
+# from their old files (if exist), just like autconf does with "config.h".
+# Think of it as a conditional file move.  
+
+# $1 is the new temporary file (will be removed)
+# $2 is the target file (may be updated)
+
+if test $# -ne 2
+then
+	@ECHO@ "Usage: $0 <temp-file> <target-file>"
+	exit 1
+fi
+
+if test -f $2
+then
+	# target already exists, we check for differences first
+	if ( @DIFF@ -q $2 $1 > /dev/null 2>&1 )
+	then
+		@ECHO@ "$2 is unchanged"
+		rm -f $1
+	else
+		mv -f $1 $2
+	fi
+else
+	# just move it over
+	mv -f $1 $2
+fi
+
