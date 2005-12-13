@@ -1,11 +1,13 @@
 /**
-	\file "Object/art_object_fwd.h"
+	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp $
+	$Id: object_fwd.h,v 1.1.2.1 2005/12/13 02:57:55 fang Exp $
+	This file used to be:
+	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
 
-#ifndef	__HAC_OBJECT_FWD_H__
-#define	__HAC_OBJECT_FWD_H__
+#ifndef	__HAC_OBJECT_OBJECT_FWD_H__
+#define	__HAC_OBJECT_OBJECT_FWD_H__
 
 #include "util/size_t.h"
 #include "Object/traits/classification_tags.h"
@@ -58,7 +60,7 @@ namespace entity {
 	class built_in_channel_def;
 	class typedef_base;
 
-	// from "Object/art_object_nonmeta_inst_ref.h"
+	// from "Object/ref/*nonmeta_instance_reference*.h"
 	// note there are generic (non-meta) abstract base classes from which
 	// the meta-versions are derived.
 	class nonmeta_instance_reference_base;
@@ -221,7 +223,7 @@ namespace entity {
 	typedef	expression_assignment<pint_tag>
 		pint_expression_assignment;
 
-	// defined in "art_object_connect.h"
+	// defined in "Object/unroll/*connection*.h"
 	class meta_instance_reference_connection;
 	class port_connection;
 	class aliases_connection_base;
@@ -279,7 +281,7 @@ namespace entity {
 	typedef	simple_nonmeta_value_reference<datastruct_tag>
 		simple_struct_nonmeta_value_reference;
 
-	// from "Object/art_object_data_expr[_base].h"
+	// from "Object/expr/data_expr[_base].h"
 	class data_expr;
 	class bool_expr;
 	class int_expr;
@@ -337,5 +339,5 @@ namespace entity {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_FWD_H__
+#endif	// __HAC_OBJECT_OBJECT_FWD_H__
 

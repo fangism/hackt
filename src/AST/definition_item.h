@@ -1,7 +1,7 @@
 /**
-	\file "AST/art_parser_definition_item.h"
+	\file "AST/definition_item.h"
 	Base set of classes for the HAC parser.  
-	$Id: definition_item.h,v 1.1.2.1 2005/12/11 04:41:25 fang Exp $
+	$Id: definition_item.h,v 1.1.2.2 2005/12/13 02:57:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition_item.h,v 1.7.48.1 2005/12/11 00:45:04 fang Exp
  */

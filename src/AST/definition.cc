@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.1.2.1 2005/12/11 04:41:24 fang Exp $
+	$Id: definition.cc,v 1.1.2.2 2005/12/13 02:57:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -41,7 +41,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/common/namespace.h"
 
-#include "util/what.h"		// already included in "art_parser.tcc"
+#include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 

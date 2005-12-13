@@ -10,9 +10,11 @@
 core.*
 *.core
 *.artobj
+*.haco*
 .gdb_history
 *.swp
 *.hchk
 *.tccchk
 dummy.cc
+stamp-h*
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.1.2.1 2005/12/11 04:41:32 fang Exp $
+	$Id: token.h,v 1.1.2.2 2005/12/13 02:57:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -16,7 +16,7 @@
 namespace HAC {
 namespace parser {
 //=============================================================================
-// forward declarations in this namespace appear in "art_parser_fwd.h"
+// forward declarations in this namespace appear in "AST/AST_fwd.h"
 
 // class terminal is defined in "AST/terminal.h"
 // class token_string is defined in "AST/token_string.h"

@@ -1,14 +1,13 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.4.20.1 2005/12/11 00:45:37 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.4.20.2 2005/12/13 02:57:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 #define	__OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
 
 #include <iostream>
-#include "Object/art_object_fwd.h"
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/traits/int_traits.h"
 #include "Object/type/data_type_reference.h"

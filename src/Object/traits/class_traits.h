@@ -1,16 +1,16 @@
 /**
 	\file "Object/traits/class_traits.h"
 	Traits and policy classes for instances.  
-	This file is included by "Object/art_object_*_traits.h"
+	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.3.20.1 2005/12/11 00:45:49 fang Exp $
+	$Id: class_traits.h,v 1.3.20.2 2005/12/13 02:58:10 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_H__
 #define	__OBJECT_TRAITS_CLASS_TRAITS_H__
 
 #include <iosfwd>
-#include "Object/art_object_fwd.h"
+#include "Object/object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
 #include "util/ring_node_fwd.h"
@@ -159,7 +159,7 @@ struct class_traits {
 //=============================================================================
 // some useful forward declarations, because I can't find a better place...
 
-// defined in "Object/art_object_inst_stmt_type_ref_default.h"
+// defined in "Object/unroll/instantiation_statement_type_ref_default.h"
 template <class>
 class instantiation_statement_type_ref_default;
 

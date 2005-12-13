@@ -1,0 +1,4 @@
+#ifndef	LEX_VERSION
+#define	LEX_VERSION	"@LEX_VERSION@"
+#endif
+

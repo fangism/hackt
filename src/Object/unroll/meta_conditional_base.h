@@ -1,13 +1,12 @@
 /**
 	\file "Object/unroll/meta_conditional_base.h"
-	$Id: meta_conditional_base.h,v 1.2.10.1 2005/12/11 00:45:57 fang Exp $
+	$Id: meta_conditional_base.h,v 1.2.10.2 2005/12/13 02:58:12 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_CONDITIONAL_BASE_H__
 #define	__OBJECT_UNROLL_META_CONDITIONAL_BASE_H__
 
 #include <iosfwd>
-#include "Object/art_object_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
 

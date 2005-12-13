@@ -1,13 +1,13 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.5.10.1 2005/12/11 00:45:43 fang Exp $
+	$Id: PRS.h,v 1.5.10.2 2005/12/13 02:58:08 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
 #define	__OBJECT_LANG_PRS_H__
 
-#include "Object/art_object_fwd.h"
+#include "Object/object_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/unroll/meta_loop_base.h"
 #include <vector>

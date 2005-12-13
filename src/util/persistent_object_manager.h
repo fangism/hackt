@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.20 2005/06/21 21:26:38 fang Exp $
+	$Id: persistent_object_manager.h,v 1.20.40.1 2005/12/13 02:58:19 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -29,7 +29,7 @@ USING_UTIL_MEMORY_POINTER_TRAITS
 
 //=============================================================================
 /**
-	Persistent object manager class for ART objects.  
+	Persistent object manager class for serial objects.  
 	Note that the pointers kept in this structure are just raw pointers, 
 	and are never owned.  This manager is never responsible for 
 	deleting the memory created.  
@@ -326,7 +326,7 @@ private:
 
 public:
 
-	// the following template methods are defined in "art_object_IO.tcc"
+	// the following template methods are defined in the tcc file.
 	/**
 		Doesn't actually write out the pointer, but the index 
 		representing the object represented by the pointer.

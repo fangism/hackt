@@ -3,7 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
-2005-12-11	David Fang		<fangism@users.sourceforge.net>
+2005-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-05:
+	  Moved Object/art_object_fwd.h -> Object/object_fwd.h, 
+		and all references hitherto.  
+	  Miscellaneous comment updates, and file cross-references.  
+
 
 	* ARTXX-00-01-04-main-00-71-rename-00-04:
 	  No source revision, only test cases were renamed to .hac.

@@ -1,0 +1,4 @@
+#ifndef	CXX_VERSION
+#define	CXX_VERSION	"@CXX_VERSION@"
+#endif
+

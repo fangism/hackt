@@ -1,7 +1,7 @@
 /**
-	\file "AST/art_parser_fwd.h"
+	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.1.2.1 2005/12/11 04:41:12 fang Exp $
+	$Id: AST_fwd.h,v 1.1.2.2 2005/12/13 02:57:51 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -158,7 +158,7 @@ typedef	node_position		string_punctuation_type;
 typedef	keyword_position	generic_keyword_type;
 
 //-----------------------------------------------------------------------------
-// declared in "Object/art_context.h"
+// declared in "AST/parse_context.h"
 class context;
 
 //-----------------------------------------------------------------------------

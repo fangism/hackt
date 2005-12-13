@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.90.2.3 2005/12/12 03:38:28 fang Exp $
+#	$Id: Makefile.am,v 1.90.2.4 2005/12/13 02:57:48 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -40,8 +40,7 @@ bin_PROGRAMS = hackt
 
 # dirgen is completely bogus, workaround to corce directory generation
 noinst_PROGRAMS = dirgen getopt_test
-# art_persistent_table
-noinst_SCRIPTS = art_persistent_table.sh
+noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
@@ -275,7 +274,7 @@ OBJECT_TCC_FILES = \
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/devel_switches.h \
-	Object/art_object_fwd.h \
+	Object/object_fwd.h \
 	Object/persistent_type_hash.h \
 	Object/common/alias_string_cache.h \
 	Object/common/cflat_args.h \
@@ -670,8 +669,6 @@ ALL_TCC_FILES += \
 	$(OBJECT_TCC_FILES) \
 	$(AST_TCC_FILES)
 
-# note: Object/art_object_IO.cc only contains explicit template instantiations
-
 # don't actually need -l[f]l
 # libhackt_la_LDADD = @LEXLIB@
 
@@ -882,10 +879,6 @@ libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(BOGUS_BYACC_CXXFL
 # libhacktparsers_la_CPPFLAGS = $(AM_CPPFLAGS)
 libhacktparsers_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 
-# artc_CPPFLAGS = $(AM_CPPFLAGS)
-# art__2obj_CPPFLAGS = $(AM_CPPFLAGS)
-# artobjdump_CPPFLAGS = $(AM_CPPFLAGS)
-
 # is required to be set for Make.hchk-tail.am
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
@@ -957,10 +950,10 @@ EXTRA_DIST += local.cvsignore \
 	TODO \
 	wc-l
 
-TESTS = art_persistent_table.sh test/getopt_test.test
+TESTS = hackt_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS)
-DISTCLEANFILES += art_persistent_table.sh $(VERSIONHEADERS)
+DISTCLEANFILES += hackt_persistent_table.sh $(VERSIONHEADERS)
 AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(CONFIG_PARSERS)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
@@ -979,7 +972,7 @@ DISTCLEANFILES += test/getopt_test.test \
 	test/getopt_test.diff \
 	test/getopt_test.output
 
-art_persistent_table.sh: hackt
+hackt_persistent_table.sh: hackt
 	@$(ECHO) "#!/bin/sh" > $@
 	@$(ECHO) "./hackt dump_persistent_table" >> $@
 	@$(CHMOD) +x $@

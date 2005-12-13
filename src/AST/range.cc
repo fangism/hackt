@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.1.2.1 2005/12/11 04:41:30 fang Exp $
+	$Id: range.cc,v 1.1.2.2 2005/12/13 02:57:52 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.1.2.1 2005/12/11 04:41:30 fang Exp $
+	$Id: range.cc,v 1.1.2.2 2005/12/13 02:57:52 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -138,7 +138,7 @@ range::check_meta_index(context& c) const {
 		// at this point, is ok
 
 		// later: resolve constant if possible...
-		// modularize this into a method in art_object_expr
+		// modularize this into a method in Object/expr/...
 		if (lp->is_static_constant() && up->is_static_constant()) {
 			const int lb = lp->static_constant_value();
 			const int ub = up->static_constant_value();

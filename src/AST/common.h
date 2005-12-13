@@ -1,7 +1,7 @@
 /**
 	\file "AST/common.h"
 	Base set of classes for the HAC parser.  
-	$Id: common.h,v 1.1.2.1 2005/12/11 04:41:24 fang Exp $
+	$Id: common.h,v 1.1.2.2 2005/12/13 02:57:52 fang Exp $
 	This file was called the following prior to renaming:
 	Id: art_parser_base.h,v 1.26.4.1 2005/12/11 00:45:03 fang Exp
  */
@@ -55,7 +55,7 @@ namespace parser {
 //=============================================================================
 // forward declarations
 
-class context;		// defined in "Object/art_context.h"
+class context;		// defined in "AST/parse_context.h"
 
 //=============================================================================
 // The mother `node' class has been deprecated and removed, sorry Mum.  

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.3.14.1 2005/12/11 00:45:42 fang Exp $
+	$Id: CHP.h,v 1.3.14.2 2005/12/13 02:58:08 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_CHP_H__
@@ -10,7 +10,7 @@
 #include <list>
 #include <vector>
 #include "Object/lang/CHP_base.h"
-#include "Object/art_object_fwd.h"
+#include "Object/object_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 

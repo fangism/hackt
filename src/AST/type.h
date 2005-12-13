@@ -1,9 +1,9 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type.h,v 1.1.2.1 2005/12/11 04:41:33 fang Exp $
+	$Id: type.h,v 1.1.2.2 2005/12/13 02:57:53 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: type.h,v 1.1.2.1 2005/12/11 04:41:33 fang Exp $
+	$Id: type.h,v 1.1.2.2 2005/12/13 02:57:53 fang Exp $
  */
 
 #ifndef __HAC_AST_TYPE_H__
@@ -104,7 +104,7 @@ protected:
 	/**
 		Optional template arguments.
 		TODO: Needs to be split into strict and relaxed arguments.  
-		(see "AST/art_parser_expr_list.h":template_argument_list_pair.)
+		(see "AST/expr_list.h":template_argument_list_pair.)
 	 */
 	const excl_ptr<const template_args_type>		temp_spec;
 	/**
