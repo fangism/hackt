@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.24.2.1 2005/12/11 22:29:12 fang Exp $
+#	$Id: Makefile.am,v 1.24.2.2 2005/12/13 02:57:13 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -25,7 +25,7 @@ DISTCLEANFILES += config.in.h~ distcheck.log
 
 DISTCLEANDIRS += autom4te.cache
 
-AUTO_IGNORE += aclocal.m4 libtool stamp-h1 \
+AUTO_IGNORE += aclocal.m4 libtool \
 	config.h.in \
 	configure configure.scan \
 	autoscan.log autom4te.cache \

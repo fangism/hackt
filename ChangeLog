@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2005-12-12	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-05:
+	  configure.ac: simplified header file generation, 
+		but wishing for combined AC_CONFIG_FILES and AC_CONFIG_HEADERS
+		functionality (perform AC_SUBST *and* check for file change).
+	  in test/: major file renaming for test setup.  
+	  in src/: minor comment updating and file-cross-reference renaming.  
+
+
 2005-12-11	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-71-rename-00-03:
