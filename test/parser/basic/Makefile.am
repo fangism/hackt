@@ -1,30 +1,30 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2005/11/12 08:45:46 fang Exp $
+#	$Id: Makefile.am,v 1.10.2.1 2005/12/13 02:58:47 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
-ARTC_TEST_FAILURES = \
+HACKT_PARSE_TEST_FAILURES = \
 	004 005 008 009 \
 	010 011 012 013 017 018 \
 	020 021 023
 
-ARTC_TEST_PASSES = \
+HACKT_PARSE_TEST_PASSES = \
 	000 001 002 003 006 007 \
 	014 015 016 019 \
 	022
 
-ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
 
-# should be the subset of ART_TEST_SUBJECTS that type-checks
-ARTOBJ_TEST_SUBJECTS = \
-	$(ARTC_TEST_PASSES)
+# should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
+HACKT_OBJ_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_PASSES)
 
-# should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
-ARTOBJUNROLL_TEST_SUBJECTS = \
-	$(ARTOBJ_TEST_SUBJECTS)
+# should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
+HACKT_UNROLL_TEST_SUBJECTS = \
+	$(HACKT_OBJ_TEST_SUBJECTS)
 
 HACKT_CREATE_TEST_SUBJECTS = \
-	$(ARTOBJUNROLL_TEST_SUBJECTS)
+	$(HACKT_UNROLL_TEST_SUBJECTS)
 
 # KNOWN BUG:
 # 019 known allocdump error, namespace dropped

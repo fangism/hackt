@@ -1,9 +1,9 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2005/11/02 22:54:20 fang Exp $
+#	$Id: Makefile.am,v 1.12.8.1 2005/12/13 02:58:52 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
-ARTC_TEST_FAILURES = \
+HACKT_PARSE_TEST_FAILURES = \
 	    001 002 003 004 005 006 007 008 009 \
 	010 011 012 013 014 015 016 017 018 019 \
 	021 023 025 026 \
@@ -11,7 +11,7 @@ ARTC_TEST_FAILURES = \
 	041 044 045 046 047 048 \
 	050 052 053
 
-ARTC_TEST_PASSES = \
+HACKT_PARSE_TEST_PASSES = \
 	020 022 024 027 028 029 \
 	030 035 036 037 \
 	040 042 043 049 \
@@ -28,15 +28,15 @@ ARTC_TEST_PASSES = \
 # 107,109: known bugs in progress
 # 089-093: known bugs, haven't decided when to reject
 
-ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
 
-ARTOBJ_TEST_SUBJECTS = \
-	$(ARTC_TEST_PASSES)
+HACKT_OBJ_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_PASSES)
 
-ARTOBJUNROLL_TEST_SUBJECTS = \
-	$(ARTOBJ_TEST_SUBJECTS)
+HACKT_UNROLL_TEST_SUBJECTS = \
+	$(HACKT_OBJ_TEST_SUBJECTS)
 
-# should be a subset of $(ARTOBJUNROLL_TEST_SUBJECTS)
+# should be a subset of $(HACKT_UNROLL_TEST_SUBJECTS)
 # the omitted unroll tests either have no instances, 
 # fail unrolling, or are just uninteresting
 HACKT_CREATE_TEST_SUBJECTS = \

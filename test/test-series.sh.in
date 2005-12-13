@@ -1,37 +1,37 @@
 #!@SH_PATH@
 # "test-series.sh.in"
 # convenience script for running a sequence of tests on one input file.
-#	$Id: test-series.sh.in,v 1.5 2005/12/08 22:01:15 fang Exp $
+#	$Id: test-series.sh.in,v 1.5.2.1 2005/12/13 02:58:43 fang Exp $
 # This file originally came from "test-series.sh" in revision prehistory.  
 
 # usage: pass in the root names of the test cases (without the .in extension)
 
 for t in $@
 do
-	if test ! -f $t.artctest
+	if test ! -f $t.hacktcmpltest
 	then
-		@CALLMAKE@ $t.artctest
+		@CALLMAKE@ $t.hacktcmpltest
 	fi
-	@ECHO@ $t.artctest
-	$t.artctest
+	@ECHO@ $t.hacktcmpltest
+	$t.hacktcmpltest
 	if test ! -s $t.test
 	then
-		if test ! -f $t.artobjtest
+		if test ! -f $t.hacktobjtest
 		then
-			@CALLMAKE@ $t.artobjtest
+			@CALLMAKE@ $t.hacktobjtest
 		fi
-		@ECHO@ $t.artobjtest
-		$t.artobjtest
-		if test -s $t.artobj
+		@ECHO@ $t.hacktobjtest
+		$t.hacktobjtest
+		if test -s $t.haco
 		then
-			if test ! -f $t.artobjunrolltest
+			if test ! -f $t.hacktunrolltest
 			then
-				@CALLMAKE@ $t.artobjunrolltest
+				@CALLMAKE@ $t.hacktunrolltest
 			fi
-			@ECHO@ $t.artobjunrolltest
-			$t.artobjunrolltest
+			@ECHO@ $t.hacktunrolltest
+			$t.hacktunrolltest
 		fi
-		if test -s $t.artobjunroll
+		if test -s $t.haco-u
 		then
 			if test ! -f $t.hacktcreatetest
 			then
@@ -40,7 +40,7 @@ do
 			@ECHO@ $t.hacktcreatetest
 			$t.hacktcreatetest
 		fi
-		if test -s $t.hacktobjcreate
+		if test -s $t.haco-c
 		then
 			if test ! -f $t.hacktalloctest
 			then

@@ -1,10 +1,12 @@
 #!@SH_PATH@
-# "artobjunroll-expect.sh.in"
-#	$Id: artobjunroll-expect.sh.in,v 1.5 2005/12/08 22:01:15 fang Exp $
+# "hackt-unroll-expect.sh.in"
+#	$Id: hackt-unroll-expect.sh.in,v 1.1.2.1 2005/12/13 02:58:42 fang Exp $
+# This file used to be:
+#	Id: artobjunroll-expect.sh.in,v 1.5 2005/12/08 22:01:15 fang Exp
 # This file came from "artobjunroll-expect.sh" in revision prehistory.
 
 # $1 is the executable for the unroller, expecting 2 arguments
-# $2 is the executable for reading in the object file, (probably artobjdump)
+# $2 is the executable for reading in the object file, (probably hackt objdump)
 #	and producing a textual dump to stderr.
 
 # $3 is the path to the source directory, which is not necessarily ./
@@ -31,18 +33,18 @@ analdiff=$7
 indfilter=$8
 
 # an pre-unrolled object file must already exist
-if test ! -s $bldroot.artobj
+if test ! -s $bldroot.haco
 then
-	@ECHO@ "$bldroot.artobj doesn't exist or is empty."
+	@ECHO@ "$bldroot.haco doesn't exist or is empty."
 	exit 1
 fi
 
-$unroll $bldroot.artobj $bldroot.artobjunroll > $bldroot.unrolldump 2>&1
+$unroll $bldroot.haco $bldroot.haco-u > $bldroot.unrolldump 2>&1
 
 # depending on exit status, take action
 case $? in
 	0) 
-		$dump $bldroot.artobjunroll > $bldroot.unrolldump 2>&1
+		$dump $bldroot.haco-u > $bldroot.unrolldump 2>&1
 		break ;;
 	1) break ;;
 	*) exit 1 ;;

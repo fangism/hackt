@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.17.4.2 2005/12/12 19:57:22 fang Exp $
+#	$Id: Makefile.am,v 1.17.4.3 2005/12/13 02:58:41 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -16,9 +16,9 @@ TESTS += clean-test
 
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
-	artc-expect.sh.in \
-	artobj-diff.sh.in \
-	artobjunroll-expect.sh.in \
+	parse-test-expect.sh.in \
+	hackt-obj-diff.sh.in \
+	hackt-unroll-expect.sh.in \
 	hackt-create-expect.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \
@@ -36,8 +36,8 @@ EXTRA_DIST += ChangeLog README TODO \
 	alloc_filter.sed \
 	POM-header-filter.awk \
 	POM-index-filter.awk \
-	update-artcstderr.sh \
-	update-artcstderr-bison.sh \
+	update-compilestderr.sh \
+	update-compilestderr-bison.sh \
 	update-unrollstderr.sh \
 	update-createstderr.sh \
 	update-allocstderr.sh \

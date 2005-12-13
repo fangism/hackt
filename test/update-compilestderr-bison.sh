@@ -1,6 +1,6 @@
 #!/bin/sh
-# "update-artcstderr.sh"
-#	$Id: update-artcstderr-bison.sh,v 1.2 2005/11/10 02:13:13 fang Exp $
+# "update-compilestderr-bison.sh"
+#	$Id: update-compilestderr-bison.sh,v 1.1.2.1 2005/12/13 02:58:44 fang Exp $
 # convenient maintainer script for updating expected outputs
 # use this script when updating bison tests
 

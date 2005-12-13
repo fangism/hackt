@@ -1,6 +1,19 @@
 # "test/ChangeLog"
 
-2005-11-10	David Fang		<fangism@users.sourceforge.net>
+2005-11-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-05:
+	  MAJOR TEST RESTRUCTURING: script names, object file extensions, 
+		and Makefile macro variables have been expunged of
+		"art" and "ART", and replaced with more appropriate names.  
+	  The Object file naming convention we adopt now is:
+		.haco -- just compiled
+		.haco-u -- unrolled
+		.haco-c -- created
+		.haco-a -- allcoated
+
+
+2005-11-11	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-71-rename-00-04:
 	  MAJOR FILE MOVE: All test .in files have been renamed to .hac.

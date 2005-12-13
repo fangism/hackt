@@ -1,16 +1,16 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.6.8.1 2005/12/12 19:35:51 fang Exp $
+#	$Id: Make.test-head,v 1.6.8.2 2005/12/13 02:58:41 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
-SUFFIXES = .hac .artctest .artobjtest .artobjunrolltest \
+SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest
 
 
-# names of test cases (without extension) whose artc error output
+# names of test cases (without extension) whose compile error output
 # differs when using bison vs. yacc (result of different state-machines)
 BISON_OUTPUTS =
 

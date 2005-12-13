@@ -1,9 +1,9 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.5.2.1 2005/12/12 19:35:52 fang Exp $
+#	$Id: Makefile.am,v 1.5.2.2 2005/12/13 02:58:46 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
-ARTC_TEST_FAILURES = \
+HACKT_PARSE_TEST_FAILURES = \
 	badid-000 badid-001 \
 	comment-000 comment-001 comment-002 \
 	string-001 string-002 string-003 \
@@ -11,17 +11,17 @@ ARTC_TEST_FAILURES = \
 	import-006 import-007 import-008 import-009 \
 	import-010 import-011
 
-ARTC_TEST_PASSES = \
+HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 \
 	import-004 import-012 import-013
 
-ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
 
-# should be the subset of ART_TEST_SUBJECTS that type-checks
-# ARTOBJ_TEST_SUBJECTS = $(ARTC_TEST_PASSES)
+# should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
+# HACKT_OBJ_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES)
 
-# should be the subset of ARTOBJ_TEST_SUBJECTS that passes unroll checks
-# ARTOBJUNROLL_TEST_SUBJECTS = $(ARTOBJ_TEST_SUBJECTS)
+# should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
+# HACKT_UNROLL_TEST_SUBJECTS = $(HACKT_OBJ_TEST_SUBJECTS)
 
 EXTRA_DIST += empty.hac
 

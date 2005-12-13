@@ -1,9 +1,11 @@
 #!@SH_PATH@
-# "artobj-diff.sh.in"
-# This file came from "artobj-diff.sh" in revision prehistory.  
+# "hackt-obj-diff.sh.in"
 
 # compares textual object dumps
-#	$Id: artobj-diff.sh.in,v 1.6.2.1 2005/12/12 19:35:52 fang Exp $
+#	$Id: hackt-obj-diff.sh.in,v 1.1.2.1 2005/12/13 02:58:42 fang Exp $
+# This file used to be:
+#	Id: artobj-diff.sh.in,v 1.6.2.1 2005/12/12 19:35:52 fang Exp
+# This file came from "artobj-diff.sh" in revision prehistory.  
 
 # $1 is the executable for generating the object file, ("hackt compile")
 #	and producing a textual dump to stderr.  
@@ -31,10 +33,10 @@ logfile=$6
 
 if test ! -f $bldroot.test ; then exit 1 ; fi
 
-$cmd $srcroot.hac $bldroot.artobj > $bldroot.outdump 2>&1
+$cmd $srcroot.hac $bldroot.haco > $bldroot.outdump 2>&1
 if test $? -ne 0 ; then exit 1; fi
 
-$dump $bldroot.artobj > $bldroot.indump 2>&1
+$dump $bldroot.haco > $bldroot.indump 2>&1
 if test $? -ne 0 ; then exit 1; fi
 
 @CAT@ $bldroot.outdump | $filter > $bldroot.outdump.filter

@@ -1,6 +1,8 @@
 #!@SH_PATH@
-# "artc-expect.sh.in"
-#	$Id: artc-expect.sh.in,v 1.7.2.1 2005/12/12 19:35:52 fang Exp $
+# "parse-test-expect.sh.in"
+#	$Id: parse-test-expect.sh.in,v 1.1.2.1 2005/12/13 02:58:43 fang Exp $
+# This file used to be:
+#	Id: artc-expect.sh.in,v 1.7.2.1 2005/12/12 19:35:52 fang Exp
 # This file came from "artc-expect.sh" in revision pre-history.
 
 # $1 is the executable, expecting input from stdin ("hackt parse_test")
