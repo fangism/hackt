@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2005-12-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-01:
+	  Added "make help" target to all generated Makefiles.  
+		Gives brief description of global and local make targets
+		per directory.  Never be lost again!
+
+
 2005-12-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

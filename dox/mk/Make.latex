@@ -2,7 +2,7 @@
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.5 2005/12/08 22:01:07 fang Exp $
+#	$Id: Make.latex,v 1.5.4.1 2005/12/13 21:38:12 fang Exp $
 
 # dependence generation
 .tex.depend:
@@ -119,4 +119,17 @@ clean-docs:
 	-$(RM) *.ps *.dvi *.pdf
 
 clean-local: clean-docs clean-temps clean-depend
+
+.PHONY: help-latex
+help-latex:
+	@$(ECHO) "LaTeX make targets"
+	@$(ECHO) "    clean-*: (all included in clean target)"
+	@$(ECHO) "	temps: removes all auxiliary files"
+	@$(ECHO) "	bib: removes BibTeX auxiliary files"
+	@$(ECHO) "	index: removes makeindex auxiliary files"
+	@$(ECHO) "	aux: removes LaTeX auxiliary files"
+	@$(ECHO) "	docs: removes output files"
+	@$(ECHO) "	depend: removes .depend dependency files"
+
+help: help-latex
 

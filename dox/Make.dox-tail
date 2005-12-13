@@ -1,6 +1,6 @@
 # "dox/Make.dox-tail"
 # To be included last by Makefiles in subdirectories
-#	$Id: Make.dox-tail,v 1.2 2005/07/23 06:51:13 fang Exp $
+#	$Id: Make.dox-tail,v 1.2.34.1 2005/12/13 21:38:09 fang Exp $
 
 local.cvsignore: $(top_srcdir)/dox/local.cvsignore
 	$(CP) $< $@
@@ -8,6 +8,14 @@ local.cvsignore: $(top_srcdir)/dox/local.cvsignore
 AUTO_IGNORE += local.cvsignore
 DISTCLEANFILES += local.cvsignore
 
+.PHONY: help-dox
+help-dox:
+	@$(ECHO) "Documentation make targets"
+	@$(ECHO) "    pdf: builds PDF documents"
+	@$(ECHO) "    ps: builds PostScript documents"
+
 include $(top_srcdir)/dox/mk/Make.latex
 include $(top_srcdir)/Make.global
+
+help: help-dox
 

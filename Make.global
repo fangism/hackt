@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.11 2005/12/13 04:14:35 fang Exp $
+#	$Id: Make.global,v 1.11.2.1 2005/12/13 21:38:03 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -101,8 +101,31 @@ cvsdiffs:
 	@$(ECHO) "Sorry, no 'cvs' found in path."
 endif
 
+# this shouldn't be parallel...
+.NOTPARALLEL: help
+help: help-global help-local
+
+help-local:
+
+# brief description of targets
+help-global:
+	@$(ECHO) "Global make targets:"
+	@$(ECHO) "    all: builds everything (recursive)"
+	@$(ECHO) "    clean: removes make targets (recursive)"
+	@$(ECHO) "    cvsdiffs: creates difference patch from CVS"
+	@$(ECHO) "    cvsignore: generates .cvsignore (recursive)"
+	@$(ECHO) "    clean-cvsignore: cleans .cvsignore (recursive)"
+	@$(ECHO) "    check: runs tests (recursive)"
+	@$(ECHO) "    check.log: logs make check"
+	@$(ECHO) "    echo-*:"
+	@$(ECHO) "	cleanfiles: list of cleaned files"
+	@$(ECHO) "	distcleanfiles: list of distcleaned files"
+	@$(ECHO) "	extra-dist: list of EXTRA_DIST files"
+	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"
+
 # standard phony target for unconditional targets
 force:
 
-.PHONY: force clean-cvsignore clean-cvsignore-recursive
+.PHONY: force clean-cvsignore clean-cvsignore-recursive \
+	help help-local help-global
 
