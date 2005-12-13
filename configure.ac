@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23 2005/12/13 04:14:36 fang Exp $
+#	$Id: configure.ac,v 1.24 2005/12/13 16:09:39 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -272,14 +272,14 @@ case $YACC in
 		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
 		dnl Now would be a good place to check for version
 		dnl since bison is known to have significant variations.  
-		YACC_VERSION=`$yacc --version 2>&1 | head -n 1`
+		YACC_VERSION=`$YACC --version 2>&1 | head -n 1`
 		;;
 	*byacc* )
 		dnl echo "GOT byacc"
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		YACC_VERSION=`which $yacc | head -n 1`
+		YACC_VERSION=`which $YACC | head -n 1`
 		;;
 	*yacc* )
 		dnl echo "GOT yacc"
@@ -287,7 +287,7 @@ case $YACC in
 		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
 		dnl traditional yacc has no version flag :(
-		YACC_VERSION=`which $yacc | head -n 1`
+		YACC_VERSION=`which $YACC | head -n 1`
 		;;
 	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
 esac
