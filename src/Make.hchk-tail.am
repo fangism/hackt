@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.7 2005/12/13 04:14:44 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.7.2.1 2005/12/13 21:38:30 fang Exp $
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
 
@@ -137,6 +137,21 @@ echo-header-depbases: force
 # cvsignore targets
 AUTO_IGNORE += headers_deps.make
 
+# output becomes mangled...
+# help-local: help-check-headers
+
+help-check-headers:
+	@$(ECHO) "Header-checking targets:"
+	@$(ECHO) "    check-headers: validate all header files in source tree"
+	@$(ECHO) "    clean-header-tests: resets results of header validations"
+	@$(ECHO) "    clean-header-deps: resets dependencies of header validations"
+	@$(ECHO) "    echo-header-depbases: lists header validation outputs"
+
+.PHONY: help-check-headers check-headers clean-header-tests \
+	clean-header-deps echo-header-depbases
+
 # standard targets
 include $(top_srcdir)/Make.global
+
+help: help-check-headers
 

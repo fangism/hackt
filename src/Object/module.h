@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.8 2005/12/13 04:15:16 fang Exp $
+	$Id: module.h,v 1.8.2.1 2005/12/13 21:38:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -32,6 +32,12 @@ using util::persistent_object_manager;
  */
 class module : public persistent, public sequential_scope {
 	typedef	module				this_type;
+	/**
+		Local footprint manager for temporary expansion of the 
+		top-level footprint.
+		Should be given visibility("hidden")
+	 */
+	class top_level_footprint_importer;
 protected:
 	/**
 		Name of the file.
@@ -63,6 +69,9 @@ protected:
 
 private:
 	module();
+
+	// private, empty, undefined copy-constructor
+	module(const module&);
 public:
 	explicit
 	module(const string& s);
@@ -118,13 +127,18 @@ public:
 	good_bool
 	allocate_unique(void);
 
-	/// later add cflat options argument
 	good_bool
 	cflat(ostream&, const cflat_options&) const;
+
+	good_bool
+	cflat(ostream&, const cflat_options&);
 
 private:
 	good_bool
 	create_dependent_types(void);
+
+	good_bool
+	__cflat(ostream&, const cflat_options&) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

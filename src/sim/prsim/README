@@ -1,0 +1,6 @@
+"src/sim/prsim/README"
+
+This module is for a reproduction of the old prsim production rule
+simulator, with minimal new features.  
+
+

@@ -1,8 +1,14 @@
 "TODO"
-#	$Id: TODO,v 1.10 2005/12/07 22:36:38 fang Exp $
+#	$Id: TODO,v 1.10.4.1 2005/12/13 21:38:31 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
+===============================================================================
+Simulation:
+	generate process_entries' unrolled production rules!
+		only needed for simulation, not flattening [PUNT]
+		state information of expressions not needed yet
+
 ===============================================================================
 loop development:
 
@@ -23,10 +29,6 @@ footprint pointer persistence may be complicated in footprint_frame.
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 	can be classified as known bug.  
-
-===============================================================================
-new class_trait:
-	has_private_internal_structure (process only)
 
 ===============================================================================
 big stuff:
@@ -68,7 +70,7 @@ hackt diff (or objdiff):
 
 ===============================================================================
 Interactive shell:
-	the hackt shell -- "hatcsh" ?
+	the hackt shell
 	be able to run tool commands, flow control, launch simulations, etc.
 		load/mount object files, run system commands via !
 
@@ -94,18 +96,7 @@ Error message:
 		(see parser/param/048.in case)
 
 ===============================================================================
-Simulation:
-	generate process_entries' unrolled production rules!
-		only needed for simulation, not flattening [PUNT]
-		state information of expressions not needed yet
-
-===============================================================================
 parser:
-	In progress: -parser-03 branch.
-	file/module inclusion, for now mimic cpp, using 
-		#file and #line directives
-	actually forget preprocessing, just plain implicit #pragma one
-		importing of files is good enough.
 	Later, check for existence of precompiled object and use that.  
 	Also, need to include source information with each module,
 		so later compile phases can report error's w.r.t. source.  

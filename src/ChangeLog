@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-01:
+	  This branch is for the development of the old prsim, 
+		with no new fancy features.  Its purpose is to provide
+		an example of how to use the general simulation framework.  
+	  Updated module class, providing a temporary footprint
+		importer class that undoes import upon destruction.  
+	  Added a few short READMEs.  
+	  Also added help to Makefile.am.  
+	  TODO: interface module to simulation framework for 
+		allocating prs nodes and expressions.  
+	  TODO: define simulation *state* for each simulator (checkpointable).  
+	  TODO: flesh out more details of TODO.
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91 2005/12/13 04:14:44 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.1 2005/12/13 21:38:31 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -933,6 +933,7 @@ EXTRA_DIST += local.cvsignore \
 	util/STL/README \
 	util/obsolete/README \
 	scripts/filter_namespaces.sed \
+	AST/README \
 	Object/README \
 	Object/common/README \
 	Object/def/README \
@@ -948,7 +949,9 @@ EXTRA_DIST += local.cvsignore \
 	NOTES \
 	BUGS \
 	TODO \
-	wc-l
+	wc-l \
+	sim/README \
+	sim/prsim/README
 
 TESTS = hackt_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
@@ -1099,6 +1102,19 @@ dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
 		$(RM) $(distdir)/$$f ; \
 	done
+
+help-local:
+#	-@$(CALLMAKE) help-check-headers 2> /dev/null
+	@$(ECHO) "Local make targets:"
+	@$(ECHO) "    hackt: the main executable"
+	@$(ECHO) "    libhackt.la: core library"
+	@$(ECHO) "    libhacktparsers.la: lexers/parsers library"
+	@$(ECHO) "    libhacktexec.la: subprogram library"
+	@$(ECHO) "    libfangutil.la: common utilities library"
+	@$(ECHO) "    clean-AST: cleans AST subdir's objects"
+	@$(ECHO) "    clean-Object: cleans Object subdir's objects"
+	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
+	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
 
 # standard targets
 include $(srcdir)/Make.hchk-tail.am

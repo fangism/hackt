@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.12 2005/12/13 04:15:50 fang Exp $
+#	$Id: Make.test-tail,v 1.12.2.1 2005/12/13 21:38:36 fang Exp $
 
 PARSE_TEST_EXE = $(top_builddir)/src/hackt parse_test
 HACKT_COMPILE_EXE = $(top_builddir)/src/hackt compile
@@ -284,7 +284,7 @@ cleaner-recursive:
 	done
 
 .PHONY: cleaner cleaner-local cleaner-recursive \
-	clean-tests clean-tests-recursive
+	clean-tests clean-tests-recursive help-test
 
 # some stderr files don't exist, because empty output files are optional
 # this shouldn't really be necessary...
@@ -299,5 +299,17 @@ cleaner-recursive:
 #		fi ; \
 #	done
 
+help-test:
+	@$(ECHO) "Test make targets:"
+	@$(ECHO) "    cleaner: also cleans *.<ext> files (recursive)"
+	@$(ECHO) "    check-summaries: summaries of test difference into patch file"
+	@$(ECHO) "	(produces: $(CHECK_SUMMARIES))"
+	@$(ECHO) "    echo-*:"
+	@$(ECHO) "	tests: lists TESTS"
+	@$(ECHO) "	compile-passes: lists TESTS that pass parsing"
+	@$(ECHO) "	bison-outputs: list TESTS whose output is bison-specific"
+	@$(ECHO) "	empty-cflat-prs: list of tests whose cflat-output is empty"
+
 include $(top_srcdir)/Make.global
+help: help-test
 
