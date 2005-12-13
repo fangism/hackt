@@ -1,0 +1,6 @@
+// "027.hac" should fail: and can't use 1-D array as an index.
+
+pint n[4];
+
+pint m[n[2..2]];
+

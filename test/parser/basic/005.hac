@@ -1,0 +1,4 @@
+// "005.hac" this should die, bad array declaration
+
+int[3] oldstyle_bad;
+

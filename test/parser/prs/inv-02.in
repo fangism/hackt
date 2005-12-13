@@ -1,9 +1,0 @@
-// "inv-02.in" should pass
-
-defproc inv(bool a, b) {
-prs {
-	a -> b-
-	~a -> b+
-}
-}
-

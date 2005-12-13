@@ -1,6 +1,0 @@
-// "002.in" declaration a list of basic types
-
-int a, b, c;
-
-bool x, y, z;
-

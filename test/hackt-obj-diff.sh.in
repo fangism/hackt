@@ -1,0 +1,52 @@
+#!@SH_PATH@
+# "hackt-obj-diff.sh.in"
+
+# compares textual object dumps
+#	$Id: hackt-obj-diff.sh.in,v 1.2 2005/12/13 04:15:52 fang Exp $
+# This file used to be:
+#	Id: artobj-diff.sh.in,v 1.6.2.1 2005/12/12 19:35:52 fang Exp
+# This file came from "artobj-diff.sh" in revision prehistory.  
+
+# $1 is the executable for generating the object file, ("hackt compile")
+#	and producing a textual dump to stderr.  
+# $2 is the executable for reading in the object file, ("hackt objdump")
+#	and producing a textual dump to stderr.
+# $3 is the path to the source directory, which is not necessarily ./
+#	especially during a vpath build for distcheck.
+# $4 is the input file name WITHOUT the .in extension
+#	prerequisite: the input file must pass type-checking
+# $5 is the filter command for ignoring difference in output
+#	(for no filter, pass "cat")
+# $6 is the test report log file, summarizing results
+# additional arguments are ignored.  
+
+# if the .test file exists, then program didn't crash, we can proceed.
+
+cmd="$1 -d -I $3"
+# -d for dump flag
+# -I srcdir for VPATH builds
+dump=$2
+srcroot=$3/$4
+bldroot=$4
+filter=$5
+logfile=$6
+
+if test ! -f $bldroot.test ; then exit 1 ; fi
+
+$cmd $srcroot.hac $bldroot.haco > $bldroot.outdump 2>&1
+if test $? -ne 0 ; then exit 1; fi
+
+$dump $bldroot.haco > $bldroot.indump 2>&1
+if test $? -ne 0 ; then exit 1; fi
+
+@CAT@ $bldroot.outdump | $filter > $bldroot.outdump.filter
+@CAT@ $bldroot.indump | $filter > $bldroot.indump.filter
+@DIFF@ -b -u $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | \
+	@CAT@ > $bldroot.objdiff
+
+if test -s $bldroot.objdiff ; then
+	@ECHO@ "$bldroot.objdiff is non-empty!  See $logfile."
+	@ECHO@ `pwd`/"$bldroot.objdiff" >> $logfile
+	exit 1
+fi
+

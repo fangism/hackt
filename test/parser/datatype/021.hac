@@ -1,0 +1,4 @@
+// "021.hac" should pass: useless enum with one value
+
+enum foo { bar }
+

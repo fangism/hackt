@@ -1,0 +1,7 @@
+// "013.hac" should fail, use of initialized parameter variable, not formal
+// this file was copied over from an old version of 004.hac, 
+// which was later modified to pass type-checking.  
+
+pint N;
+pint M = N;
+

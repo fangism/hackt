@@ -1,8 +1,0 @@
-// "nand-03.in" should pass
-
-defproc nand2(bool a, b, c) {
-prs {
-	~a | ~b	=> c+	// auto-complement
-}
-}
-

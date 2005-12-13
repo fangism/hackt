@@ -1,0 +1,4 @@
+// "014.hac" should still die on incomplete template spec
+
+template <pint bar
+defproc foo

@@ -1,4 +1,0 @@
-// "014.in" should pass, arrays in public ports are permitted
-
-defchan mychan <: chan(int<32>) (int<16> i[2]);
-

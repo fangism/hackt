@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.4 2005/10/25 20:51:50 fang Exp $
+	$Id: const_collection.h,v 1.5 2005/12/13 04:15:22 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
@@ -20,7 +20,7 @@
 // #include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_index_list;
 class const_range_list;
@@ -180,7 +180,7 @@ public:
 };	// end class const_collection
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_CONST_COLLECTION_H__

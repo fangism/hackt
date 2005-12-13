@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.4 2005/11/02 22:53:43 fang Exp $
+	$Id: global_entry.cc,v 1.5 2005/12/13 04:15:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -13,7 +13,7 @@
 #include "util/IO_utils.tcc"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 //=============================================================================
@@ -351,5 +351,5 @@ global_entry_base<true>::cache_process_parent_refs(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

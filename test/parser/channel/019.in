@@ -1,4 +1,0 @@
-// "019.in" should pass: instantiating a built-in channel type
-
-chan(bool) foobar;
-

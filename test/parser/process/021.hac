@@ -1,0 +1,7 @@
+// "021.hac" should die on incomplete defproc
+
+template <pint milk, tea; pbool water[4]>
+defproc barbar() {
+
+// death
+

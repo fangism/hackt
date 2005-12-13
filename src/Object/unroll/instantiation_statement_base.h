@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.4 2005/09/04 21:15:01 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.5 2005/12/13 04:15:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -16,7 +16,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_range_list;
 class param_expr_list;
@@ -128,7 +128,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 

@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.6 2005/10/25 20:51:52 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.7 2005/12/13 04:15:25 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -39,20 +39,20 @@ DEFAULT_STATIC_TRACE_BEGIN
 //=============================================================================
 namespace util {
 
-SPECIALIZE_UTIL_WHAT(ART::entity::const_range_list, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::const_range_list, 
 		"const-range-list")
-SPECIALIZE_UTIL_WHAT(ART::entity::dynamic_meta_range_list, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::dynamic_meta_range_list, 
 		"dynamic_meta_range_list")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY, 0)
+	HAC::entity::const_range_list, CONST_RANGE_LIST_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::dynamic_meta_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY, 0)
+	HAC::entity::dynamic_meta_range_list, DYNAMIC_RANGE_LIST_TYPE_KEY, 0)
 
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::persistent_traits;
 using util::persistent_object_manager;
@@ -761,7 +761,7 @@ dynamic_meta_range_list::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

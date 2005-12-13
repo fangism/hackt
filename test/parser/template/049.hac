@@ -1,0 +1,9 @@
+// "049.hac" should pass
+// copy-modified from "044.hac"
+
+template <pint Q=5><pint R>
+defproc foo() { }
+
+foo<><23> bar;
+foo<12><23> poo;
+

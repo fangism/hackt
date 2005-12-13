@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.6 2005/10/30 22:00:21 fang Exp $
+	$Id: instance_collection_base.h,v 1.7 2005/12/13 04:15:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -24,7 +24,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 struct dump_flags;
@@ -352,7 +352,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.2 2005/07/23 06:52:47 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.3 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -13,7 +13,7 @@
 // might as well include it here
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 
@@ -36,7 +36,7 @@ virtual	~meta_instance_reference() { }
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 

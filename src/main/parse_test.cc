@@ -1,12 +1,12 @@
 /**
 	\file "main/parse_test.cc"
-	Just compiles ART source without writing object out.  
+	Just compiles HAC source without writing object out.  
 	Performs syntactic and semantic checking (with limited
 	static analysis) and performs a pseudo persistent object
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.5 2005/11/10 02:13:06 fang Exp $
+	$Id: parse_test.cc,v 1.6 2005/12/13 04:15:47 fang Exp $
  */
 
 #include <iostream>
@@ -22,10 +22,10 @@
 #include "util/using_ostream.h"
 #include "util/stacktrace.h"
 
-extern ART::lexer::file_manager
+extern HAC::lexer::file_manager
 hackt_parse_file_manager;
 
-namespace ART {
+namespace HAC {
 
 using util::memory::excl_ptr;
 using entity::module;
@@ -104,5 +104,5 @@ parse_test::usage(void) {
 
 //=============================================================================
 
-}	// end namespace ART
+}	// end namespace HAC
 

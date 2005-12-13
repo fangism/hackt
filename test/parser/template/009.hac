@@ -1,0 +1,11 @@
+// "009.hac" should pass: appropriate use of template type
+
+template <pint N>
+defproc foo() { }
+
+pint W = 42;
+
+foo<W> bar;
+
+// for type-checking ok if foo undefined
+

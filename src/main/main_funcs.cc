@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.5 2005/11/12 08:45:35 fang Exp $
+	$Id: main_funcs.cc,v 1.6 2005/12/13 04:15:47 fang Exp $
  */
 
 #include <iostream>
@@ -19,7 +19,7 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "AST/art_parser_root.h"	// for parser::root_body
+#include "AST/root.h"	// for parser::root_body
 #include "AST/parse_context.h"		// for parser::context
 #include "util/getopt_portable.h"
 #include "util/persistent_object_manager.h"
@@ -42,12 +42,12 @@ extern	FILE*	hackt_in;
 	Coordinate with "parser/hackt-parse-options.h".
  */
 extern	int	hackt_parse(void*, YYSTYPE&, FILE*);
-extern	ART::lexer::file_manager	hackt_parse_file_manager;
+extern	HAC::lexer::file_manager	hackt_parse_file_manager;
 
 #include "util/stacktrace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 using std::ifstream;
 using std::ofstream;
 using std::ios_base;
@@ -321,7 +321,7 @@ unknown_option(const int o) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

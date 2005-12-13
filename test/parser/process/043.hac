@@ -1,0 +1,6 @@
+// "043.hac" should pass: ports match
+
+defproc fang(int free, food; bool right; bool now);
+
+defproc fang(int free; int food; bool right, now);
+

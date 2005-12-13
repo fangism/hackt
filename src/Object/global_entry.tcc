@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.5 2005/11/02 22:53:43 fang Exp $
+	$Id: global_entry.tcc,v 1.6 2005/12/13 04:15:16 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -42,7 +42,7 @@
 #include "util/IO_utils.h"
 #include "common/TODO.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using std::ostringstream;
@@ -382,7 +382,7 @@ global_entry<Tag>::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_GLOBAL_ENTRY_TCC__
 

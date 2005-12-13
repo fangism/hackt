@@ -1,7 +1,0 @@
-// "001.in" should pass: simple connection of datatypes
-
-bool fool;
-bool frodo;
-
-frodo = fool;
-

@@ -1,6 +1,6 @@
 At: "-stdin-":4:
-At: "import-007.in":3:
+At: "import-007.hac":3:
 Unable to open file: 404-file-not-found.html
 Caught exception from lexer, aborting parsing.
-From: "import-007.in"
+From: "import-007.hac"
 Caught exception from lexer, aborting parsing.

@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.3 2005/10/25 20:51:58 fang Exp $
+	$Id: canonical_type_base.cc,v 1.4 2005/12/13 04:15:39 fang Exp $
  */
 
 #include <algorithm>
@@ -12,7 +12,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "util/memory/count_ptr.tcc"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // class canonical_type_base method definitions
@@ -110,5 +110,5 @@ canonical_type_base::match_relaxed_actuals(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

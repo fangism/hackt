@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.5 2005/10/30 22:00:22 fang Exp $
+	$Id: PRS.cc,v 1.6 2005/12/13 04:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_CC__
@@ -43,37 +43,37 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::pull_up, "PRS-up")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::pull_dn, "PRS-dn")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::rule_loop, "PRS-loop")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::and_expr, "PRS-and")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::or_expr, "PRS-or")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::and_expr_loop, "PRS-and-loop")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::or_expr_loop, "PRS-or-loop")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::not_expr, "PRS-not")
-SPECIALIZE_UTIL_WHAT(ART::entity::PRS::literal, "PRS-var")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_up, "PRS-up")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_dn, "PRS-dn")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_loop, "PRS-loop")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::and_expr, "PRS-and")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::or_expr, "PRS-or")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::and_expr_loop, "PRS-and-loop")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::or_expr_loop, "PRS-or-loop")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::not_expr, "PRS-not")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::literal, "PRS-var")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::pull_up, PRS_PULLUP_TYPE_KEY, 0)
+	HAC::entity::PRS::pull_up, PRS_PULLUP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::pull_dn, PRS_PULLDN_TYPE_KEY, 0)
+	HAC::entity::PRS::pull_dn, PRS_PULLDN_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
+	HAC::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::and_expr, PRS_AND_TYPE_KEY, 0)
+	HAC::entity::PRS::and_expr, PRS_AND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::or_expr, PRS_OR_TYPE_KEY, 0)
+	HAC::entity::PRS::or_expr, PRS_OR_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::and_expr_loop, PRS_AND_LOOP_TYPE_KEY, 0)
+	HAC::entity::PRS::and_expr_loop, PRS_AND_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::or_expr_loop, PRS_OR_LOOP_TYPE_KEY, 0)
+	HAC::entity::PRS::or_expr_loop, PRS_OR_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::not_expr, PRS_NOT_TYPE_KEY, 0)
+	HAC::entity::PRS::not_expr, PRS_NOT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::PRS::literal, PRS_LITERAL_TYPE_KEY, 0)
+	HAC::entity::PRS::literal, PRS_LITERAL_TYPE_KEY, 0)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 namespace PRS {
 using std::copy;
@@ -1496,7 +1496,7 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.4 2005/10/25 20:51:59 fang Exp $
+	$Id: unroll_context.h,v 1.5 2005/12/13 04:15:44 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -13,7 +13,7 @@
 #include "util/memory/excl_ptr.h"
 #include "Object/type/template_actuals.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 // forward declarations
 class const_param;
@@ -137,7 +137,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_H__
 

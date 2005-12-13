@@ -1,8 +1,0 @@
-// "021.in" should pass, ports dependent on formal parameters
-
-template <pint N>
-defproc foo(int arg[N]);
-
-template <pint N>
-defproc bar(int<N> ick);
-

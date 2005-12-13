@@ -1,0 +1,5 @@
+// "010.hac" should pass: sparse single range
+
+pint x[0..0];
+
+

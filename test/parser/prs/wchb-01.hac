@@ -1,0 +1,27 @@
+// "wchb-01.hac"
+// should pass
+
+defproc e1of2(bool d[2], e) { }
+
+defproc wchb_e1of2(e1of2 L, R) {
+bool _r[2];
+bool rv;
+prs {
+	L.d[0] & R.e		-> _r[0]-
+	L.d[1] & R.e		-> _r[1]-
+	~_r[0]			-> R.d[0]+
+	~_r[1]			-> R.d[1]+
+	~_r[0] | ~_r[1]		-> rv+
+	rv			-> L.e-
+	~L.d[0] & ~R.e		-> _r[0]+
+	~L.d[1] & ~R.e		-> _r[1]+
+	_r[0]			-> R.d[0]-
+	_r[1]			-> R.d[1]-
+	_r[0] & _r[1]		-> rv-
+	~rv			-> L.e+
+}
+}
+
+e1of2 L, R;
+wchb_e1of2 b(L, R);
+

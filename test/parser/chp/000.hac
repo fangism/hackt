@@ -1,0 +1,4 @@
+// "000.hac" should pass, valid prototype with channel ports
+
+defproc empty(chan?(bool) L; chan!(bool) R);
+

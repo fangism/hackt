@@ -1,0 +1,13 @@
+// "inv-01.hac" should fail, rejecting empty prs body
+
+defproc inv(bool a, b) {
+prs {
+	// empty
+}
+
+prs {
+	a -> b-
+	~a -> b+
+}
+}
+

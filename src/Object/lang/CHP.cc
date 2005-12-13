@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.3 2005/10/25 20:51:56 fang Exp $
+	$Id: CHP.cc,v 1.4 2005/12/13 04:15:33 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
@@ -22,54 +22,54 @@
 #include "util/indent.h"
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::action_sequence,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::action_sequence,
 		"CHP-action-sequence")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::concurrent_actions,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::concurrent_actions,
 		"CHP-concurrent-actions")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::guarded_action,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::guarded_action,
 		"CHP-guarded-action")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::deterministic_selection,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::deterministic_selection,
 		"CHP-deterministic-selection")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::nondeterministic_selection,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::nondeterministic_selection,
 		"CHP-nondeterministic-selection")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::assignment,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::assignment,
 		"CHP-assignment")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::condition_wait,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::condition_wait,
 		"CHP-condition-wait")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::channel_send,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::channel_send,
 		"CHP-channel-send")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::channel_receive,
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::channel_receive,
 		"CHP-channel-receive")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::do_forever_loop, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::do_forever_loop, 
 		"CHP-forever-loop")
-SPECIALIZE_UTIL_WHAT(ART::entity::CHP::do_while_loop, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::do_while_loop, 
 		"CHP-do-while")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::action_sequence, CHP_SEQUENCE_TYPE_KEY, 0)
+	HAC::entity::CHP::action_sequence, CHP_SEQUENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::concurrent_actions, CHP_CONCURRENT_TYPE_KEY, 0)
+	HAC::entity::CHP::concurrent_actions, CHP_CONCURRENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::guarded_action, CHP_GUARDED_ACTION_TYPE_KEY, 0)
+	HAC::entity::CHP::guarded_action, CHP_GUARDED_ACTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::deterministic_selection, CHP_DET_TYPE_KEY, 0)
+	HAC::entity::CHP::deterministic_selection, CHP_DET_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::nondeterministic_selection, CHP_NONDET_TYPE_KEY, 0)
+	HAC::entity::CHP::nondeterministic_selection, CHP_NONDET_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::assignment, CHP_ASSIGNMENT_TYPE_KEY, 0)
+	HAC::entity::CHP::assignment, CHP_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::condition_wait, CHP_WAIT_TYPE_KEY, 0)
+	HAC::entity::CHP::condition_wait, CHP_WAIT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::channel_send, CHP_SEND_TYPE_KEY, 0)
+	HAC::entity::CHP::channel_send, CHP_SEND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::channel_receive, CHP_RECEIVE_TYPE_KEY, 0)
+	HAC::entity::CHP::channel_receive, CHP_RECEIVE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::do_forever_loop, CHP_FOREVER_LOOP_TYPE_KEY, 0)
+	HAC::entity::CHP::do_forever_loop, CHP_FOREVER_LOOP_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::CHP::do_while_loop, CHP_DO_WHILE_TYPE_KEY, 0)
+	HAC::entity::CHP::do_while_loop, CHP_DO_WHILE_TYPE_KEY, 0)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 namespace CHP {
 using util::auto_indent;
@@ -667,5 +667,5 @@ do_while_loop::load_object(const persistent_object_manager& m,
 //=============================================================================
 }	// end namespace CHP
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

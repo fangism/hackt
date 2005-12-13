@@ -1,9 +1,9 @@
 /**
 	\file "Object/inst/pbool_value_collection.h"
-	Parameter instance collection classes for ART.  
+	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: pbool_value_collection.h,v 1.3 2005/10/25 20:51:55 fang Exp $
+	$Id: pbool_value_collection.h,v 1.4 2005/12/13 04:15:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
@@ -14,7 +14,7 @@
 #include "Object/expr/pbool_const.h"
 #include "Object/traits/pbool_traits.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 struct pbool_tag;
 using util::memory::count_ptr;
@@ -88,7 +88,7 @@ typedef	value_array<pbool_tag,4>	pbool_array_4D;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
 

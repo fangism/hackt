@@ -1,7 +1,7 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.3 2005/11/03 07:52:05 fang Exp $
+	$Id: cflat_args.h,v 1.4 2005/12/13 04:15:17 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_CFLAT_ARGS_H__
@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include <string>
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 namespace entity {
 using std::string;
@@ -80,7 +80,7 @@ struct cflat_aliases_arg_type {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_CFLAT_ARGS_H__
 

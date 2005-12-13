@@ -1,6 +1,6 @@
 /**
 	\file "Object/common/predicated_inst_stmt_ptr.h"
-	$Id: predicated_inst_stmt_ptr.h,v 1.2 2005/10/30 22:00:19 fang Exp $
+	$Id: predicated_inst_stmt_ptr.h,v 1.3 2005/12/13 04:15:18 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_PREDICATED_INST_STMT_PTR_H__
@@ -8,7 +8,7 @@
 
 #include "util/memory/excl_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class instantiation_statement_base;
 using util::memory::never_ptr;
@@ -36,7 +36,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_PREDICATED_INST_STMT_PTR_H__
 

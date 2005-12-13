@@ -1,4 +1,0 @@
-// "012.in" should fail: type mismatch
-
-pbool foo = 123;
-

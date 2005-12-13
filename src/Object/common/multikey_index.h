@@ -2,7 +2,7 @@
 	\file "Object/common/multikey_index.h"
 	Typedef for index types.  
 	This file was moved from "Object/common/multikey_index.h".
-	$Id: multikey_index.h,v 1.2 2005/07/23 06:52:21 fang Exp $
+	$Id: multikey_index.h,v 1.3 2005/12/13 04:15:18 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_MULTIKEY_INDEX_H__
@@ -11,7 +11,7 @@
 #include "util/multikey_fwd.h"
 #include "Object/expr/types.h"	// for pint/pbool_value_type
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 /**
@@ -36,7 +36,7 @@ typedef	util::multikey_generator_generic<pint_value_type>
 						generic_index_generator_type;
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_MULTIKEY_INDEX_H__
 

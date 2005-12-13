@@ -1,0 +1,6 @@
+// "import-006.hac"
+// self-import should be detected as an error
+
+import "import-006.hac";		// error!
+// import "import-006.hac";		// ignored
+

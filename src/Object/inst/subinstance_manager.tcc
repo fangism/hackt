@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.4 2005/09/04 21:14:53 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.5 2005/12/13 04:15:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -12,7 +12,7 @@
 #include "Object/inst/instance_collection.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -66,7 +66,7 @@ subinstance_manager::unroll_port_instances(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_SUBINTANCE_MANAGER_TCC__
 

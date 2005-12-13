@@ -1,5 +1,5 @@
 #! /usr/bin/awk -f
-#	$Id: state_enum_filter.awk,v 1.5 2005/11/10 02:13:13 fang Exp $
+#	$Id: state_enum_filter.awk,v 1.6 2005/12/13 04:15:52 fang Exp $
 # "test/state_enum_filter.awk"
 
 # This script has been converted into a library function, to be called
@@ -7,11 +7,11 @@
 
 # Whenever the grammar changes, the enumerations of the parser states
 # will change, which will cause a change in the error reporting
-# from the artc compiler.  
+# from the hackt compiler.  
 # This filter script appropriately replaces the state numbers in 
 # appropriate contexts:
 
-# 1) When artc reports possible production rules in the event of a syntax
+# 1) When hackt reports possible production rules in the event of a syntax
 #	error, it also gives the state number in parenthesis at the 
 #	end of each production line.  
 # 2) "In state XXX, possible rules are:"

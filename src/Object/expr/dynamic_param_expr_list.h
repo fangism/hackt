@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.4 2005/10/25 20:51:51 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.5 2005/12/13 04:15:23 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -13,7 +13,7 @@
 #include "Object/expr/param_expr_list.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::vector;
 
@@ -97,7 +97,7 @@ public:
 };	// end class dynamic_param_expr_list
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__

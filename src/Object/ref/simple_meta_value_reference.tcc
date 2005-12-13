@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.5 2005/10/25 20:51:57 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.6 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -47,7 +47,7 @@
 #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 using namespace util::memory;
@@ -806,7 +806,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
 

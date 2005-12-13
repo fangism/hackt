@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: meta_instance_reference_connection.h,v 1.2 2005/07/23 06:53:01 fang Exp $
+	$Id: meta_instance_reference_connection.h,v 1.3 2005/12/13 04:15:43 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_H__
@@ -11,7 +11,7 @@
 #include "Object/unroll/instance_management_base.h"
 #include "util/memory/pointer_classes_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class meta_instance_reference_base;
 using util::memory::count_ptr;
@@ -66,7 +66,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_H__
 

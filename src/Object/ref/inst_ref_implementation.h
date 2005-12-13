@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.4 2005/09/14 15:30:32 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.5 2005/12/13 04:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INST_REF_IMPLEMENTATION__
@@ -21,7 +21,7 @@
 #include "util/boolean_types.h"
 #include "util/wtf.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::bad_bool;
 using util::memory::never_ptr;
@@ -99,7 +99,7 @@ unroll_generic_scalar_reference(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_INST_REF_IMPLEMENTATION__
 

@@ -1,26 +1,26 @@
 # "test/parser/namespace/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2005/08/08 16:51:48 fang Exp $
+#	$Id: Makefile.am,v 1.8 2005/12/13 04:19:33 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
-ARTC_TEST_FAILURES = \
+HACKT_PARSE_TEST_FAILURES = \
 	    006 \
 	011 012 013 \
 	021 023 024 026
 
-# should be the subset of ARTC_TEST_SUBJECTS that type-checks
-ARTC_TEST_PASSES = \
+# should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
+HACKT_PARSE_TEST_PASSES = \
 	    001 002 003 004 005 007 008 009 \
 	010 014 015 016 017 018 019 \
 	020 022 025
 
-ARTC_TEST_SUBJECTS = $(ARTC_TEST_FAILURES) $(ARTC_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
 
-ARTOBJ_TEST_SUBJECTS = \
-	$(ARTC_TEST_PASSES)
+HACKT_OBJ_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_PASSES)
 
-ARTOBJUNROLL_TEST_SUBJECTS = \
-	$(ARTOBJ_TEST_SUBJECTS)
+HACKT_UNROLL_TEST_SUBJECTS = \
+	$(HACKT_OBJ_TEST_SUBJECTS)
 
 # the other tests have no instances and are uninteresting
 HACKT_CREATE_TEST_SUBJECTS = \

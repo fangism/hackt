@@ -1,0 +1,10 @@
+// "017.hac" -- should pass
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+int x;
+bool b[4];
+chp {
+	R!(b[x])
+}
+}
+

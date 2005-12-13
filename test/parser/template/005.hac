@@ -1,0 +1,6 @@
+// "005.hac" should fail: x not found anywhere
+
+template <pint N>
+defproc foo() {
+	int bar[x];
+}

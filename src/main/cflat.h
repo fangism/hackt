@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.4 2005/11/03 07:52:06 fang Exp $
+	$Id: cflat.h,v 1.5 2005/12/13 04:15:46 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_H__
@@ -12,7 +12,7 @@
 #include "util/string_fwd.h"
 #include "util/qmap_fwd.h"
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 using std::string;
 using std::ostream;
@@ -86,7 +86,7 @@ private:
 };	// end class cflat
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_CFLAT_H__
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.5 2005/10/25 20:51:58 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.6 2005/12/13 04:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -32,7 +32,7 @@
 #include "util/reserve.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param_expr_list;
 template <class> class instance_alias_info;
@@ -364,7 +364,7 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
 

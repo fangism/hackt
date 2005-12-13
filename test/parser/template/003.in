@@ -1,7 +1,0 @@
-// "003.in" should die:
-// A has not been formed yet!
-// should die looking up A[N]
-
-template <pint N, A[A[N]]>
-defproc array_me();
-

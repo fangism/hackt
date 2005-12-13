@@ -1,0 +1,5 @@
+// "005.hac" should fail: scalar types don't match
+
+bool the_bool;
+int the_int = the_bool;
+

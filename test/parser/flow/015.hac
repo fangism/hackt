@@ -1,0 +1,18 @@
+// "015.hac"
+// should pass
+// diagonal style aliases
+
+pint N = 6;
+
+bool m[N][N];
+
+(;i:N:
+(;j:N:
+	m[i][j] = m[(i+1)%N][(j+1)%N];
+)
+)
+
+// should end up with 6 diagonals that wrap around
+// should end up with GCD(M,N)
+
+

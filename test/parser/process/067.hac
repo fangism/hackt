@@ -1,0 +1,16 @@
+// "067.hac" should pass, will recursively instantiate ports
+// copy-modified from "055.hac"
+// includes internal aliasing
+
+defproc foo(bool a[2]) {
+	a[0] = a[1];
+}
+
+defproc bar(foo x, y) {
+	x = y;
+}
+
+bar poo;
+
+// after connection flattening, there should be only one of each type
+

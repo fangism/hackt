@@ -1,9 +1,9 @@
 /**
 	\file "Object/ref/nonmeta_instance_reference_subtypes.h"
-	Class family for instance references in ART.  
+	Class family for instance references in HAC.  
 	This file used to be "Object/art_object_nonmeta_inst_ref_subtypes.h"
 		in a previous life.  
-	$Id: nonmeta_instance_reference_subtypes.h,v 1.2 2005/07/23 06:52:48 fang Exp $
+	$Id: nonmeta_instance_reference_subtypes.h,v 1.3 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -11,7 +11,7 @@
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // classes pint_nonmeta_instance_reference and pbool_nonmeta_instance_reference
@@ -118,7 +118,7 @@ virtual	~pbool_instance_reference_base() { }
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 

@@ -1,0 +1,5 @@
+// "012.hac" should fail: NULL range
+
+pint x[4][0][3];
+
+

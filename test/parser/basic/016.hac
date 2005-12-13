@@ -1,0 +1,6 @@
+// "016.hac"
+
+import "001.hac";
+
+bool Q;
+

@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.4 2005/10/25 20:51:58 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.5 2005/12/13 04:15:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -35,7 +35,7 @@
 #include "util/stacktrace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
@@ -317,7 +317,7 @@ EXPRESSION_ASSIGNMENT_CLASS::load_object(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
 

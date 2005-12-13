@@ -1,0 +1,9 @@
+// "005.hac"
+// copy-modified from "004.hac"
+// should fail: re-instantiation in loop
+
+bool x[1];
+(;i:2:
+bool x[i..i];
+)
+

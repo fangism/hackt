@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/built_in_datatype_def.h"
-	Definition-related ART object classes.  
+	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.4 2005/10/08 01:39:55 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.5 2005/12/13 04:15:19 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -11,7 +11,7 @@
 #include "Object/def/datatype_definition_base.h"
 #include "Object/common/scopespace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -86,7 +86,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
 

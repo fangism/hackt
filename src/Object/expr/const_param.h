@@ -3,7 +3,7 @@
 	Classes related to constant parameter expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param.h,v 1.4 2005/10/25 20:51:50 fang Exp $
+	$Id: const_param.h,v 1.5 2005/12/13 04:15:22 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_CONST_PARAM_H__
@@ -11,7 +11,7 @@
 
 #include "Object/expr/param_expr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -91,7 +91,7 @@ virtual	LESS_OPERATOR_PROTO = 0;
 };	// end class const_param
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_CONST_PARAM_H__

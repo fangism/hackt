@@ -1,0 +1,6 @@
+// "import-011.hac"
+
+import "bogus-file.hac";
+
+import "import-011.hac";		// error here!
+

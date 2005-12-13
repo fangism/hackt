@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.4 2005/10/25 20:51:54 fang Exp $
+	$Id: pint_relational_expr.h,v 1.5 2005/12/13 04:15:27 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -15,7 +15,7 @@
 #include "util/qmap.h"
 #include "util/operators.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class pint_expr;
 using std::string;
@@ -132,7 +132,7 @@ public:
 };	// end class pint_relational_expr
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__

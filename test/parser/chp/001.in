@@ -1,4 +1,0 @@
-// "001.in" should fail, channel should not contain channel
-
-defproc empty(chan?(chan(bool)) L; chan!(bool) R);
-

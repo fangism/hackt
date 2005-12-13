@@ -2,7 +2,7 @@
 	\file "Object/common/object_base.h"
 	Base classes for semantic objects.  
 	This file was reincarnated from "Object/common/object_base.h".
-	$Id: object_base.h,v 1.2 2005/07/23 06:52:23 fang Exp $
+	$Id: object_base.h,v 1.3 2005/12/13 04:15:18 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_OBJECT_BASE_H__
@@ -15,7 +15,7 @@
 	// need complete definition (never_ptr members)
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 /**
 	The namespace of objects that will be returned by the type-checker, 
 	and includes the various hierarchical symbol tables in their 
@@ -133,7 +133,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_OBJECT_BASE_H__
 

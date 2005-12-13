@@ -1,8 +1,0 @@
-// "034.in" should fail: redeclaration doesn't match in template formals
-
-template <pint bar[5]>
-defproc foo();
-
-template <pint bar>
-defproc foo();
-

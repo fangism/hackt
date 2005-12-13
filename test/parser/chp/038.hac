@@ -1,0 +1,11 @@
+// "038.hac" -- should fail, width mismatch on channel L1
+
+// note: L2 has no direction specified, so may be send or receive, or both!
+defproc sum_diff(chan?(int<6>, int) L; chan!(int) R) {
+int x, z;
+chp {
+	L?(x, z);	// first arg width mismatch
+	R!(x-z), R!(x+z)
+}
+}
+

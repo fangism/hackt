@@ -1,0 +1,11 @@
+// "006.hac"
+// copy-modified from "005.hac"
+// should pass, resulting in x[0..2]
+
+bool x[1];
+(;i:2:
+pint j[i..i];
+j[i] = i+1;
+bool x[j[i]..j[i]];
+)
+

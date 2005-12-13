@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/user_def_chan.h"
-	Definition-related ART object classes.  
+	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.4 2005/10/08 01:39:57 fang Exp $
+	$Id: user_def_chan.h,v 1.5 2005/12/13 04:15:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_CHAN_H__
@@ -14,7 +14,7 @@
 #include "Object/def/port_formals_manager.h"
 #include "Object/lang/CHP.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class channel_type_reference;
 //=============================================================================
@@ -117,7 +117,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_USER_DEF_CHAN_H__
 

@@ -1,0 +1,7 @@
+// "004.hac" should pass:
+// aliases the type
+
+typedef	int<32>		int32;
+
+int32 fe, fi, fo, fum;
+

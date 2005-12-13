@@ -1,0 +1,9 @@
+// "013.hac" -- !(int) -> bool not yet supported
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+bool Z;
+chp {
+	R!(!Z)		// not yet supported
+}
+}
+

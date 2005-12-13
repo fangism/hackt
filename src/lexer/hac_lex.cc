@@ -1,7 +1,7 @@
 /**
 	\file "hac_lex.cc"
 	Utility lexer function definitions.
-	$Id: hac_lex.cc,v 1.2 2005/11/10 02:13:03 fang Exp $
+	$Id: hac_lex.cc,v 1.3 2005/12/13 04:15:45 fang Exp $
 	Renamed from:
 	Id: art_lex.cc,v 1.3 2005/02/27 22:12:00 fang Exp
  */
@@ -9,7 +9,7 @@
 #include <ostream>
 #include "hac_lex.h"
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 
 // inline
@@ -27,5 +27,5 @@ ostream& operator << (ostream& o, const line_range& l) {
 }
 
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 

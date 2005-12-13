@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.4 2005/10/25 20:51:58 fang Exp $
+	$Id: expression_assignment.h,v 1.5 2005/12/13 04:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -14,7 +14,7 @@
 #include "Object/traits/class_traits.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 struct expr_dump_context;
 using std::list;
@@ -114,7 +114,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
 

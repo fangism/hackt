@@ -2,7 +2,7 @@
 	\file "Object/unroll/aliases_connection_base.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: aliases_connection_base.h,v 1.2 2005/07/23 06:52:56 fang Exp $
+	$Id: aliases_connection_base.h,v 1.3 2005/12/13 04:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIASES_CONNECTION_BASE_H__
@@ -10,7 +10,7 @@
 
 #include "Object/unroll/meta_instance_reference_connection.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -44,7 +44,7 @@ virtual	void
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_ALIASES_CONNECTION_BASE_H__
 

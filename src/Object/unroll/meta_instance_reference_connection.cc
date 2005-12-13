@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.5 2005/10/25 20:51:58 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.6 2005/12/13 04:15:43 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -48,38 +48,38 @@
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::bool_alias_connection, "bool_connection")
-SPECIALIZE_UTIL_WHAT(ART::entity::int_alias_connection, "int_connection")
-SPECIALIZE_UTIL_WHAT(ART::entity::enum_alias_connection, "enum_connection")
-SPECIALIZE_UTIL_WHAT(ART::entity::datastruct_alias_connection, "struct_connection")
-SPECIALIZE_UTIL_WHAT(ART::entity::channel_alias_connection, "channel_connection")
-SPECIALIZE_UTIL_WHAT(ART::entity::process_alias_connection, "process_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::bool_alias_connection, "bool_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::int_alias_connection, "int_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::enum_alias_connection, "enum_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::datastruct_alias_connection, "struct_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::channel_alias_connection, "channel_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::process_alias_connection, "process_connection")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::bool_alias_connection, 
+	HAC::entity::bool_alias_connection, 
 		DBOOL_ALIAS_CONNECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_alias_connection, 
+	HAC::entity::int_alias_connection, 
 		DINT_ALIAS_CONNECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_alias_connection, 
+	HAC::entity::enum_alias_connection, 
 		ENUM_ALIAS_CONNECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datastruct_alias_connection, 
+	HAC::entity::datastruct_alias_connection, 
 		STRUCT_ALIAS_CONNECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_alias_connection, 
+	HAC::entity::channel_alias_connection, 
 		CHANNEL_ALIAS_CONNECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_alias_connection, 
+	HAC::entity::process_alias_connection, 
 		PROCESS_ALIAS_CONNECTION_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::port_connection, PORT_CONNECTION_TYPE_KEY, 0)
+	HAC::entity::port_connection, PORT_CONNECTION_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 USING_IO_UTILS
 using std::vector;
@@ -275,7 +275,7 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 #endif
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 

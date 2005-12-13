@@ -1,6 +1,6 @@
 /**
 	\file "lexer/yyin_manager.cc"
-	$Id: yyin_manager.cc,v 1.3 2005/11/12 08:45:34 fang Exp $
+	$Id: yyin_manager.cc,v 1.4 2005/12/13 04:15:45 fang Exp $
  */
 
 #include <iostream>
@@ -10,7 +10,7 @@
 #define	ENABLE_STACKTRACE			0
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -115,5 +115,5 @@ yyin_manager::leave_file(FILE*& _yyin, file_manager& _file_manager,
 
 //=============================================================================
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 

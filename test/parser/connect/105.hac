@@ -1,0 +1,19 @@
+// "105.hac" should fail, connecting non-equivalent template types
+// copy-modified from "104.hac"
+
+template <pint A>
+defproc foo() { }
+
+defproc bar(foo<1> a; foo<2> b) { }
+
+pint Q[2];
+Q[0] = 2;
+Q[1] = 1;
+
+foo<Q[0]> p, r;
+foo<Q[1]> q;
+
+bar w;
+
+w(p, );	// bad type, mismatch
+

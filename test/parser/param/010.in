@@ -1,4 +1,0 @@
-// "010.in" should fail: type mismatch
-
-pbool thirteen = 13;
-

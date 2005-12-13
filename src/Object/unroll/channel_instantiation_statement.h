@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_chan.h"
 		in a previous life.  
-	$Id: channel_instantiation_statement.h,v 1.2 2005/07/23 06:52:56 fang Exp $
+	$Id: channel_instantiation_statement.h,v 1.3 2005/12/13 04:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_CHANNEL_INSTANTIATION_STATEMENT_CHAN_H__
@@ -15,7 +15,7 @@
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/unroll/instantiation_statement_type_ref_default.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class param_expr_list;
 class const_param_expr_list;
@@ -23,7 +23,7 @@ class const_param_expr_list;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_CHANNEL_INSTANTIATION_STATEMENT_CHAN_H__
 

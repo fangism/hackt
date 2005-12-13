@@ -1,9 +1,9 @@
 /**
 	\file "Object/ref/simple_meta_instance_reference_base.h"
-	Base class family for instance references in ART.  
+	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_meta_instance_reference_base.h,v 1.5 2005/10/25 20:51:57 fang Exp $
+	$Id: simple_meta_instance_reference_base.h,v 1.6 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
@@ -12,7 +12,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/common/util_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class scopespace;
 class meta_index_list;
@@ -175,7 +175,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
 

@@ -1,0 +1,12 @@
+// "082.hac" should pass, will recursively instantiate ports
+// copy-reduced from "081.hac"
+
+defproc foo(bool a, b, c) { }
+
+defproc bar(foo x, y, z) {
+	// internally alias the 4 corners
+	x.a = z.a = x.c = z.c;
+}
+
+bar poo;
+

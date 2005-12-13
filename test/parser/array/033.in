@@ -1,5 +1,0 @@
-// "033.in" should fail: overlapping multidimensional arrays
-
-int q[1..6][2..6][3..6];
-int q[4][4][4];
-

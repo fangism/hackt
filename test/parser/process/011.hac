@@ -1,0 +1,6 @@
+// "011.hac" should die on improper template spec
+
+defproc barbar<pint milk, tea; pbool water[4]>() {
+
+// death
+

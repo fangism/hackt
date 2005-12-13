@@ -1,7 +1,7 @@
 /**
 	\file "main/dump_persistent_table.h"
 	Interface header for dump_persistent_table module.  
-	$Id: dump_persistent_table.h,v 1.2 2005/08/08 16:51:12 fang Exp $
+	$Id: dump_persistent_table.h,v 1.3 2005/12/13 04:15:46 fang Exp $
  */
 
 #ifndef	__MAIN_DUMP_PERSISTENT_TABLE_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 
 /**
 	Instance-less class.  
@@ -48,7 +48,7 @@ private:
 	program_id;
 };	// end class dump_persistent_table
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_DUMP_PERSISTENT_TABLE_H__
 

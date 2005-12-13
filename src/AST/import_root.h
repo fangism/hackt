@@ -1,17 +1,20 @@
 /**
 	\file "AST/import_root.h"
-	$Id: import_root.h,v 1.2 2005/11/12 08:45:33 fang Exp $
+	Placeholder for a imported AST root.  
+	$Id: import_root.h,v 1.3 2005/12/13 04:15:09 fang Exp $
+	This file used to be the following before it was renamed:
+	Id: import_root.h,v 1.2.2.1 2005/12/11 00:45:12 fang Exp
  */
 
 #ifndef	__AST_IMPORT_ROOT_H__
 #define	__AST_IMPORT_ROOT_H__
 
 #include <string>
-#include "AST/art_parser_node_list.h"
-#include "AST/art_parser_root.h"
-#include "AST/art_parser_terminal.h"
+#include "AST/node_list.h"
+#include "AST/namespace.h"
+#include "AST/terminal.h"
 
-namespace ART {
+namespace HAC {
 namespace parser {
 using std::string;
 //=============================================================================
@@ -73,7 +76,7 @@ public:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __AST_IMPORT_ROOT_H__
 

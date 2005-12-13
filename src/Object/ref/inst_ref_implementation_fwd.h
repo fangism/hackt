@@ -1,13 +1,13 @@
 /**
 	\file "Object/ref/inst_ref_implementation_fwd.h"
 	Forward declarations of instance reference implementation policies.  
-	$Id: inst_ref_implementation_fwd.h,v 1.2 2005/07/20 21:00:56 fang Exp $
+	$Id: inst_ref_implementation_fwd.h,v 1.3 2005/12/13 04:15:35 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 #define	__OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 //=============================================================================
@@ -23,7 +23,7 @@ struct simple_meta_instance_reference_implementation<false>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 

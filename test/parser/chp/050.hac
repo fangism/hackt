@@ -1,0 +1,12 @@
+// "050.hac" -- should fail, type mismatch
+
+enum milk { ONE, TWO, THREE }
+enum beer { FOUR, FIVE, SIX }
+
+defproc buffer(chan?(beer) S; chan!(beer) T) {
+milk b;
+chp {
+	*[ S?(b); T!(b) ]
+}
+}
+

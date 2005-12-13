@@ -1,4 +1,0 @@
-// "011.in" should fail: type mismatch
-
-pint N = true;
-

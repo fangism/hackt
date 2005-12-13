@@ -1,7 +1,7 @@
 /**
- *	\file "Object/art_object_type_hash.h"
+ *	\file "Object/persistent_type_hash.h"
  *	This contains hash_key codes for all serializable, 
- *	persistent classes in the ART language.  
+ *	persistent classes in the HAC language.  
  *	This file needs to be kept consistent with the Cyclone implementation
  *	for libart (not libart++).  
  *	There are just string #define's, their order is irrelevant.  
@@ -18,11 +18,11 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.3 2005/10/25 20:51:48 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.4 2005/12/13 04:15:17 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_TYPE_HASH_H__
-#define	__OBJECT_ART_OBJECT_TYPE_HASH_H__
+#ifndef	__HAC_OBJECT_TYPE_HASH_H__
+#define	__HAC_OBJECT_TYPE_HASH_H__
 //=============================================================================
 
 // macro name							hash string
@@ -202,5 +202,5 @@
 	// more class constants here...
 
 //=============================================================================
-#endif	// __OBJECT_ART_OBJECT_TYPE_HASH_H__
+#endif	// __HAC_OBJECT_TYPE_HASH_H__
 

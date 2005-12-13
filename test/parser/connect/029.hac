@@ -1,0 +1,11 @@
+// "029.hac" should fail: types don't match
+
+int foo;
+
+defproc bar(int a; bool b);
+
+bar none;
+
+none.a = foo;
+foo = none.b;
+

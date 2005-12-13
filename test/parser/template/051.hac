@@ -1,0 +1,7 @@
+// "051.hac" should fail -- port sizes cannot depend on relaxed param
+// copy-modified from "050.hac"
+
+template <><pint W>
+defproc foo(int my_int[W]);
+
+

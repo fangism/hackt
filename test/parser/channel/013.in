@@ -1,4 +1,0 @@
-// "013.in" should fail, currently forbid arrays in channel types
-
-defchan mychan <: chan(int<16>[2]) (int<32> i);
-

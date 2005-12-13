@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.6 2005/10/30 22:00:23 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.7 2005/12/13 04:15:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -60,40 +60,40 @@ DEFAULT_STATIC_TRACE_BEGIN
 // Alternatively, explicit specialization here guarantees that the
 // static initialization occurs in the correct order in this module.  
 namespace util {
-using ART::entity::pbool_tag;
-using ART::entity::pint_tag;
+using HAC::entity::pbool_tag;
+using HAC::entity::pint_tag;
 
-SPECIALIZE_UTIL_WHAT(ART::entity::data_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(HAC::entity::data_instantiation_statement,
 	"data_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_instantiation_statement,
 	"pint_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_instantiation_statement,
 	"pbool_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(ART::entity::process_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(HAC::entity::process_instantiation_statement,
 	"process_instantiation_statement")
-SPECIALIZE_UTIL_WHAT(ART::entity::channel_instantiation_statement,
+SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instantiation_statement,
 	"channel_instantiation_statement")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_instantiation_statement, 
+	HAC::entity::pbool_instantiation_statement, 
 		PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_instantiation_statement, 
+	HAC::entity::pint_instantiation_statement, 
 		PINT_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_instantiation_statement, 
+	HAC::entity::process_instantiation_statement, 
 		PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_instantiation_statement, 
+	HAC::entity::channel_instantiation_statement, 
 		CHANNEL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::data_instantiation_statement, 
+	HAC::entity::data_instantiation_statement, 
 		DATA_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 }	// end namespace util
 
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 USING_STACKTRACE
 using util::persistent_traits;
@@ -312,7 +312,7 @@ template class instantiation_statement<process_tag>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

@@ -1,9 +1,0 @@
-// "inv-11.in" stupid, and rejected
-
-defproc inv(bool a, b) {
-prs {
-	~~a -> b-	// not-not!
-	~a -> b+
-}
-}
-

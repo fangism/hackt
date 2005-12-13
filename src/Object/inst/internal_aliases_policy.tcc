@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.2 2005/09/04 21:14:51 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.3 2005/12/13 04:15:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
@@ -14,7 +14,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // class internal_aliases_policy method definitions
@@ -67,7 +67,7 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 
 //=============================================================================
 }	// end namespace enity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
 

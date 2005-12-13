@@ -1,12 +1,12 @@
 /**
 	\file "Object/inst/substructure_alias_fwd.h"
-	$Id: substructure_alias_fwd.h,v 1.2 2005/07/20 21:00:55 fang Exp $
+	$Id: substructure_alias_fwd.h,v 1.3 2005/12/13 04:15:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_FWD_H__
 #define	__OBJECT_INST_SUBSTRUCTURE_ALIAS_FWD_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -24,7 +24,7 @@ typedef	substructure_alias_base<false>		terminal_alias;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 
 #endif	// __OBJECT_INST_SUBSTRUCTURE_ALIAS_FWD_H__

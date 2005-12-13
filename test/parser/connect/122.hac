@@ -1,0 +1,11 @@
+// "122.hac"
+// copy-reduced from "flow/031.hac"
+// should pass
+
+defproc array(bool x) {
+bool composite;
+x = composite;
+}
+
+array p;
+

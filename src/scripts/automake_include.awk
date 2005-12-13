@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "automake_include.awk"
-#	$Id: automake_include.awk,v 1.3 2005/12/10 03:56:56 fang Exp $
+#	$Id: automake_include.awk,v 1.4 2005/12/13 04:15:49 fang Exp $
 
 # input (stdin): newline-separated list of files to generate 
 #	automake-style include dependencies
@@ -15,9 +15,13 @@ BEGIN {
 
 {
 	n = split($0, toks);
-	for (i=1; i<=n; i++)
+	for (i=1; i<=n; i++) {
+	# ignore junk
+	if (match(toks[i], "chkd")) {
 		print include_prefix transform_to_include_dep(toks[i]) \
 			include_suffix;
+	}
+	}
 }
 
 # takes a file name X/Y where X is a path, Y is file names

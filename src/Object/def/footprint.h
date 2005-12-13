@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.5 2005/11/02 22:53:45 fang Exp $
+	$Id: footprint.h,v 1.6 2005/12/13 04:15:20 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -26,7 +26,7 @@
 #include "util/hash_qmap.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class instance_collection_base;
 class port_formals_manager;
@@ -288,7 +288,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_FOOTPRINT_H__
 

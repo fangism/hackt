@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.7 2005/10/30 22:00:21 fang Exp $
+ 	$Id: basic_param.cc,v 1.8 2005/12/13 04:15:21 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
@@ -46,23 +46,23 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_const, "pint-const")
-SPECIALIZE_UTIL_WHAT(ART::entity::pbool_const, "pbool-const")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_const, "pint-const")
+SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_const, "pbool-const")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
+	HAC::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
+	HAC::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
 
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pbool_const)
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::pint_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pbool_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_const)
 }	// end namespace memory
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::write_value;
 using util::read_value;
@@ -624,7 +624,7 @@ pbool_const::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

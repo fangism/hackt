@@ -1,0 +1,4 @@
+// "020.hac" should fail: empty enum definition
+
+enum foo { }
+

@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.h"
 	Header for the interface to the main program.  
-	$Id: program_registry.h,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: program_registry.h,v 1.3 2005/12/13 04:15:48 fang Exp $
  */
 
 #ifndef	__MAIN_PROGRAM_REGISTRY_H__
@@ -14,7 +14,7 @@
 #include "util/qmap.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 using std::string;
 using std::ostream;
 using util::memory::count_ptr;
@@ -140,7 +140,7 @@ register_hackt_program_class(void) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_PROGRAM_REGISTRY_H__
 

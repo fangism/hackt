@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.6 2005/11/12 08:45:33 fang Exp $
+ 	$Id: parse_context.cc,v 1.7 2005/12/13 04:15:11 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -17,8 +17,8 @@
 
 #include "AST/parse_context.h"
 #include "AST/parse_context.tcc"
-#include "AST/art_parser_token_string.h"
-#include "AST/art_parser_identifier.h"
+#include "AST/token_string.h"
+#include "AST/identifier.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/pint_const.h"
@@ -41,7 +41,7 @@
 #include "util/memory/count_ptr.tcc"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 USING_STACKTRACE
@@ -997,7 +997,7 @@ template class context::definition_frame<user_def_datatype>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __AST_PARSE_CONTEXT_CC__
 

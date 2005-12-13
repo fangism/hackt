@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.4 2005/10/30 22:00:21 fang Exp $
+	$Id: pbool_expr.h,v 1.5 2005/12/13 04:15:26 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_EXPR_H__
@@ -15,7 +15,7 @@
 #include "util/boolean_types.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param;
 class const_index_list;
@@ -104,7 +104,7 @@ protected:
 };	// end class pbool_expr
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PBOOL_EXPR_H__

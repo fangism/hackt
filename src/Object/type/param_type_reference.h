@@ -1,10 +1,10 @@
 /**
 	\file "Object/type/param_type_reference.h"
-	Type-reference classes of the ART language.  
+	Type-reference classes of the HAC language.  
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: param_type_reference.h,v 1.3 2005/09/04 21:14:59 fang Exp $
+ 	$Id: param_type_reference.h,v 1.4 2005/12/13 04:15:40 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
@@ -12,7 +12,7 @@
 
 #include "Object/type/fundamental_type_reference.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 class built_in_param_def;
@@ -81,7 +81,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
 

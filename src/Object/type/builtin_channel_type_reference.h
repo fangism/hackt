@@ -1,10 +1,10 @@
 /**
 	\file "Object/type/builtin_channel_type_reference.h"
-	Type-reference classes of the ART language.  
+	Type-reference classes of the HAC language.  
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: builtin_channel_type_reference.h,v 1.3 2005/09/04 21:14:57 fang Exp $
+ 	$Id: builtin_channel_type_reference.h,v 1.4 2005/12/13 04:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_BUILTIN_CHANNEL_TYPE_REFERENCE_H__
@@ -13,7 +13,7 @@
 #include <vector>
 #include "Object/type/channel_type_reference_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class data_type_reference;
 class builtin_channel_type_reference;
@@ -119,7 +119,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_BUILTIN_CHANNEL_TYPE_REFERENCE_H__
 

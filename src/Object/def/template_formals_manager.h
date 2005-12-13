@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.3 2005/09/04 21:14:44 fang Exp $
+	$Id: template_formals_manager.h,v 1.4 2005/12/13 04:15:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -19,7 +19,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 class const_param;
@@ -190,7 +190,7 @@ private:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #if 0
 // doesn't actually save space...
@@ -198,7 +198,7 @@ namespace std {
 // to suppress implicit instantiation of template class
 
 extern template class
-vector<ART::entity::template_formals_manager::template_formals_value_type>;
+vector<HAC::entity::template_formals_manager::template_formals_value_type>;
 }	// end namespace std
 #endif
 

@@ -1,9 +1,9 @@
 /**
 	\file "Object/traits/class_traits_types.cc"
-	Definitions and instantiations for built-ins of the ART language.  
+	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.3 2005/07/23 06:52:52 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.4 2005/12/13 04:15:38 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -39,7 +39,7 @@ REQUIRES_STACKTRACE_STATIC_INIT
 #endif
 
 // global static initializations...
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // needed to ensure that pint_const pool is ready to dish out pints
@@ -191,7 +191,7 @@ int_traits::int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef	DEBUG_TRAITS_CLASS_TRAITS_TYPES
 

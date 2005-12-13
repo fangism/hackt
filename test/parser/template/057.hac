@@ -1,0 +1,11 @@
+// "057.hac" should fail -- internal member sizes cannot depend on relaxed param
+// copy-modified from "053.hac"
+// KNOWN BUG: deferring fixing until later, no time now...
+
+template <><pint W>
+defproc foo() {
+	pint Z = W;	// transfer of relaxed-formal dependence!
+	int my_int[Z];
+}
+
+

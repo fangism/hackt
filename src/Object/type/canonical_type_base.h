@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.h,v 1.2 2005/09/04 21:14:58 fang Exp $
+	$Id: canonical_type_base.h,v 1.3 2005/12/13 04:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
@@ -10,7 +10,7 @@
 #include "util/persistent_fwd.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class template_actuals;
 class const_param_expr_list;
@@ -95,7 +95,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 
 #endif	// __OBJECT_TYPE_CANONICAL_TYPE_BASE_H__

@@ -1,0 +1,10 @@
+// "016.hac" should pass: proper use of pint template formal
+
+pint default_width;
+default_width = 16;
+
+template <pint W = default_width>
+defproc something_wide() {
+	int<W> wide_int;
+}
+

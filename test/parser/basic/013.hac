@@ -1,0 +1,10 @@
+// "013.hac" this should fail to type check because "b" is not declared
+
+defproc badinverter(bool a) {
+int k;
+prs {
+	a		-> b-
+	~a		-> b+
+}
+}
+

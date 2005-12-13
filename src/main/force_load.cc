@@ -3,7 +3,7 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.5 2005/11/03 07:52:06 fang Exp $
+	$Id: force_load.cc,v 1.6 2005/12/13 04:15:46 fang Exp $
  */
 
 #include "main/force_load.h"
@@ -20,11 +20,11 @@
 #include "main/shell.h"
 #include "main/version.h"
 
-namespace ART {
+namespace HAC {
 
 /***
 	Problem: compiler might be so smart that it won't
-	call static initializations of the ART classes, unless
+	call static initializations of the HAC classes, unless
 	they are needed, as can be deduced from the call-graph.  
 
 	Quote from a correspondence:
@@ -59,5 +59,5 @@ force_load(void) {
 	const shell shell_shocker;
 }
 
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -1,0 +1,10 @@
+// "038.hac" testing default arguments that depend on other parameters
+// copy-modified from "030.hac"
+
+template <pint X, Y=X+1, Z=Y*2>
+defproc foo() { }
+
+foo<12,,> q;
+foo<12,34,> p;
+foo<12,34,56> r;
+

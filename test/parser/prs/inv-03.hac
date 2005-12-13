@@ -1,0 +1,11 @@
+// "inv-03.hac" should pass: multiple prs bodies
+
+defproc inv(bool a, b) {
+prs {
+	a -> b-
+}
+prs {
+	~a -> b+
+}
+}
+

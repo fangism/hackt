@@ -1,0 +1,4 @@
+// "import-004.hac"
+// imports valid empty file
+import "empty.hac";
+

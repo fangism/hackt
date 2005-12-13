@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.6 2005/10/08 01:40:01 fang Exp $
+	$Id: struct_traits.h,v 1.7 2005/12/13 04:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -11,7 +11,7 @@
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 template <class> class general_collection_type_manager;
 //-----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ struct class_traits<datastruct_tag> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_STRUCT_TRAITS_H__
 

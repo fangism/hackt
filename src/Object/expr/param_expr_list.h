@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.6 2005/12/10 03:56:55 fang Exp $
+	$Id: param_expr_list.h,v 1.7 2005/12/13 04:15:26 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -17,7 +17,7 @@
 #include "util/memory/excl_ptr.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class param_expr;
 class const_param_expr_list;
@@ -107,7 +107,7 @@ virtual	good_bool
 };	// end class param_expr_list
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PARAM_EXPR_LIST_H__

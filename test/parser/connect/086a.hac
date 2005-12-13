@@ -1,0 +1,10 @@
+// "086a.hac" should fail unrolling incomplete type
+
+defchan fake_chan <: chan(int) (int d; bool e);
+
+defproc chan_proc(fake_chan L, R);
+
+fake_chan X, Y;
+
+chan_proc P(X, Y);
+

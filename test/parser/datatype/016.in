@@ -1,4 +1,0 @@
-// "016.in" should pass, forward declaration of an enumeration
-
-enum foo;
-

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.5 2005/09/05 05:04:32 fang Exp $
+	$Id: int_instance_collection.cc,v 1.6 2005/12/13 04:15:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -42,28 +42,28 @@ DEFAULT_STATIC_TRACE_BEGIN
 // module-local specializations
 
 namespace util {
-	SPECIALIZE_UTIL_WHAT(ART::entity::int_instance_collection,
+	SPECIALIZE_UTIL_WHAT(HAC::entity::int_instance_collection,
 		"int_instance_collection")
-	SPECIALIZE_UTIL_WHAT(ART::entity::int_scalar, "int_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_1D, "int_array_1D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_2D, "int_array_2D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_3D, "int_array_3D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::int_array_4D, "int_array_4D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::int_scalar, "int_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::int_array_1D, "int_array_1D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::int_array_2D, "int_array_2D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::int_array_3D, "int_array_3D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::int_array_4D, "int_array_4D")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_array_1D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::int_array_1D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_array_2D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::int_array_2D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_array_3D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::int_array_3D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::int_array_4D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::int_array_4D, DINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
 }	// end namespace util
 
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // typedef int_instance_alias_base function definitions
@@ -88,7 +88,7 @@ template class instance_array<int_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 

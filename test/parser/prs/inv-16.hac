@@ -1,0 +1,16 @@
+// "inv-16.hac" should pass
+// copy-modified from "inv-14.hac"
+// just instantiating an inverter.  
+
+defproc inv(bool a, b) {
+prs {
+	a -> b-
+	~a -> b+
+}
+}
+
+bool x, y, p, q;
+inv i1(x, y);
+inv i2(p, );
+inv i3(, q);
+

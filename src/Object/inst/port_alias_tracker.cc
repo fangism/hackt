@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.5 2005/11/02 22:53:47 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.6 2005/12/13 04:15:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -28,7 +28,7 @@
 #include "util/stacktrace.h"
 #include "util/sstream.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::read_value;
@@ -495,5 +495,5 @@ template void alias_reference_set<bool_tag>::refresh_string_cache() const;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

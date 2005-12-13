@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.6 2005/11/02 22:53:48 fang Exp $
+	$Id: int_traits.h,v 1.7 2005/12/13 04:15:38 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_INT_TRAITS_H__
@@ -10,7 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 template <class> class int_collection_type_manager;
 //-----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ struct class_traits<int_tag> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_INT_TRAITS_H__
 

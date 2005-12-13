@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.3 2005/10/08 01:39:58 fang Exp $
+	$Id: CHP.h,v 1.4 2005/12/13 04:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_CHP_H__
@@ -10,11 +10,11 @@
 #include <list>
 #include <vector>
 #include "Object/lang/CHP_base.h"
-#include "Object/art_object_fwd.h"
+#include "Object/object_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class simple_datatype_nonmeta_value_reference;
 namespace CHP {
@@ -384,7 +384,7 @@ public:
 //=============================================================================
 }	// end namespace CHP
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_CHP_H__
 

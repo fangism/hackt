@@ -1,0 +1,8 @@
+// "035.hac" should pass: matching redeclaration
+
+template <pint bar[5]>
+defproc foo();
+
+template <pint bar[5]>
+defproc foo();
+

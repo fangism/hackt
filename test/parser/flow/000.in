@@ -1,7 +1,0 @@
-// "000.in"
-// basic top-level instantiation loop
-
-(;i:2:
-bool x[i..i];
-)
-

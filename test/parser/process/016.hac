@@ -1,0 +1,4 @@
+// "016.hac" should die on incomplete template spec
+
+template <pint milk, tea
+defproc barbar

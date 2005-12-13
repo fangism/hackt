@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.11 2005/05/05 03:14:29 fang Exp $
+%	$Id: templates.tex,v 1.12 2005/12/13 04:14:42 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -70,7 +70,7 @@ class foo {
 
 Note that nowhere outside of the definition, 
 can template parameters be referenced (just as in C++).  
-In \artxx, one may declare an instance of a declared but undefined type, 
+In \hac, one may declare an instance of a declared but undefined type, 
 which may not necessarily contain any named parameters.  
 
 \begin{verbatim}
@@ -95,7 +95,7 @@ Again, only the parameter names used in the definition
 may be referenced from within the definition.  
 
 The same rules in this section (ripped off of C++) pertain to
-process, channel, and datatype template definitions in \artxx.
+process, channel, and datatype template definitions in \hac.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -103,7 +103,7 @@ process, channel, and datatype template definitions in \artxx.
 \label{sec:templates:default}
 
 In C++, default values can only appear as a suffix formal parameter list.  
-In \artxx, we allow default values in any position of the formal 
+In \hac, we allow default values in any position of the formal 
 parameter list.  
 However, each defaulting argument position in a type reference
 must be given a placeholder (a blank space between commas), 
@@ -115,7 +115,7 @@ even if it is at the end of the argument list.
 \label{sec:templates:equivalence}
 
 \textbf{NEW:}
-In \artxx, there are two subclasses of template parameters:
+In \hac, there are two subclasses of template parameters:
 \emph{strict parameters} are required to be equivalent for type-matching,
 whereas \emph{relaxed parameters} are ignored when type matching.  
 We refer to the \emph{strict type} of an entity as the 
@@ -349,7 +349,7 @@ The benefit of compile-time binding of definitions is that type-checking
 of template definitions and uses may be done entirely at compile-time
 per translation unit.  
 
-\artxx\ uses the unroll-phase as the point-of-instantiation for all 
+\hac\ uses the unroll-phase as the point-of-instantiation for all 
 instances, when all instances are bound to their proper definitions.  
 The consequence of such a choice is that compile-time type checking
 is \emph{very} limited with respect to template definitions.  

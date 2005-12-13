@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.7 2005/11/02 22:53:43 fang Exp $
+ 	$Id: module.cc,v 1.8 2005/12/13 04:15:16 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -25,10 +25,10 @@
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::module, MODULE_TYPE_KEY, 0)
+	HAC::entity::module, MODULE_TYPE_KEY, 0)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using std::istream;
@@ -360,7 +360,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 // clean up macros used in this module
 #undef	ENABLE_STACKTRACE

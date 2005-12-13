@@ -1,9 +1,9 @@
 /**
 	\file "Object/ref/simple_nonmeta_instnace_reference.h"
-	Class template for nonmeta instance references in ART.  
+	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.2 2005/07/23 06:52:50 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.3 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -14,7 +14,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/packed_array_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 using util::packed_array_generic;
@@ -97,7 +97,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 

@@ -1,14 +1,14 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.2 2005/07/23 06:53:06 fang Exp $
+	$Id: main_funcs.h,v 1.3 2005/12/13 04:15:47 fang Exp $
  */
 
 #include "util/boolean_types.h"
 #include "Object/module.h"
 #include "util/memory/excl_ptr.h"
 
-namespace ART {
+namespace HAC {
 using util::good_bool;
 using util::memory::excl_ptr;
 using entity::module;
@@ -55,5 +55,5 @@ void
 unknown_option(const int);
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

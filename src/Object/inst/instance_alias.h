@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.5 2005/09/14 15:30:30 fang Exp $
+	$Id: instance_alias.h,v 1.6 2005/12/13 04:15:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
@@ -14,7 +14,7 @@
 #include "Object/expr/types.h"		// for pint_value_type
 #include "util/multikey_set.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param_expr_list;
 using std::string;
@@ -217,7 +217,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_ALIAS_H__
 

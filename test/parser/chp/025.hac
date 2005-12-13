@@ -1,0 +1,16 @@
+// "025.hac" -- should pass, until instantiated with X != 13
+
+template <pint X>
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+int<X> z;
+int<13> x;
+chp {
+	R!(x == z);
+	R!(x != z);
+	R!(x <= z);
+	R!(x >= z);
+	R!(x < z);
+	R!(x > z)
+}
+}
+

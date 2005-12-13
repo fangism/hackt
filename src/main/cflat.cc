@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.5 2005/11/10 02:13:05 fang Exp $
+	$Id: cflat.cc,v 1.6 2005/12/13 04:15:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,7 +21,7 @@
 #include "util/qmap.tcc"
 #include "util/getopt_portable.h"
 
-namespace ART {
+namespace HAC {
 using std::string;
 using util::persistent;
 using util::persistent_object_manager;
@@ -570,5 +570,5 @@ if (cf.dump_self_connect || alias != canonical) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

@@ -1,0 +1,11 @@
+// "012.hac" should fail: "node" is not a valid type, until we allow typedefs
+// this should be a legitimate PRS definition, should pass
+// copy-modified from 007.hac
+
+defproc myinverter(node a; node b) {
+prs {
+	a		-> b-
+	~a		-> b+
+}
+}
+

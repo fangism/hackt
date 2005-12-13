@@ -1,0 +1,18 @@
+// "114a.hac" should pass connection, one reference is relaxed. 
+// copy-modified from "114.hac"
+// testing propagation of relaxed actuals in rings.  
+// will die during create on incomplete type
+
+template <pint A><pint B>
+defproc foo();
+
+foo<1> bar, ick<1>, poo, goo, snu<1>, gnu, glu;
+
+bar = ick;	// relaxed connecting to specified, OK
+poo = glu;
+snu = gnu;	// isolated
+glu = ick;
+ick = goo;
+
+// should be two unique instances after creation
+

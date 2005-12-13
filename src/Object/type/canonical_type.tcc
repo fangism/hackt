@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.3 2005/09/14 15:30:34 fang Exp $
+	$Id: canonical_type.tcc,v 1.4 2005/12/13 04:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -21,7 +21,7 @@
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -355,7 +355,7 @@ CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_CANONICAL_TYPE_TCC__
 

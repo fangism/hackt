@@ -1,0 +1,16 @@
+// "062.hac" should pass, ok to put relaxed actuals after identifier
+// will die during creation because of incomplete type (at dar)
+// copy-modified from "061.hac" (just equivalent ranges)
+
+template <pint Q><pint R>
+defproc foo() { }
+
+// this means that relaxed parameters are only tied to these ranges.  
+foo<5> bar<4>[0..2];
+
+// this means the relaxed parameters must apply for the entire array, strictly
+foo<5><4> car[0..2];
+
+// this leaves the relaxed parameters unspecified until later
+foo<5> dar[0..2];
+

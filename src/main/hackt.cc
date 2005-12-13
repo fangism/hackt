@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt.cc"
 	Implementation of core hackt program, contains main().
-	$Id: hackt.cc,v 1.3 2005/08/08 16:51:12 fang Exp $
+	$Id: hackt.cc,v 1.4 2005/12/13 04:15:47 fang Exp $
  */
 
 #include <iostream>
@@ -12,7 +12,7 @@
 #include "util/getopt_portable.h"
 #include "util/qmap.tcc"
 
-namespace ART {
+namespace HAC {
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -116,7 +116,7 @@ hackt::usage(void) {
 	cerr << "Report bugs to: " << bugreport << endl;
 }
 
-}	// end namespace ART
+}	// end namespace HAC
 
 //=============================================================================
 /**
@@ -125,8 +125,8 @@ hackt::usage(void) {
  */
 int
 main(int argc, char* argv[]) {
-	ART::force_load();	// to force compiler to link non-lazily
-	return ART::hackt::main(argc, argv, ART::hackt::options());
+	HAC::force_load();	// to force compiler to link non-lazily
+	return HAC::hackt::main(argc, argv, HAC::hackt::options());
 }	// end main
 
 //=============================================================================

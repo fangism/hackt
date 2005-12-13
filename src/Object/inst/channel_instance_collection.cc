@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.5 2005/09/05 05:04:32 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.6 2005/12/13 04:15:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -30,27 +30,27 @@
 
 namespace util {
 
-	SPECIALIZE_UTIL_WHAT(ART::entity::channel_instance_collection,
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instance_collection,
 		"channel_instance_collection")
-	SPECIALIZE_UTIL_WHAT(ART::entity::channel_scalar, "channel_scalar")
-	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_1D, "channel_array_1D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_2D, "channel_array_2D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_3D, "channel_array_3D")
-	SPECIALIZE_UTIL_WHAT(ART::entity::channel_array_4D, "channel_array_4D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_scalar, "channel_scalar")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_1D, "channel_array_1D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_2D, "channel_array_2D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_3D, "channel_array_3D")
+	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_4D, "channel_array_4D")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
+	HAC::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_array_1D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 1)
+	HAC::entity::channel_array_1D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 1)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_array_2D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 2)
+	HAC::entity::channel_array_2D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 2)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_array_3D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 3)
+	HAC::entity::channel_array_3D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_array_4D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 4)
+	HAC::entity::channel_array_4D, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 4)
 }	// end namespace util
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // explicit template class instantiations
@@ -67,7 +67,7 @@ template class instance_array<channel_tag, 4>;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 

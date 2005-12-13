@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.7 2005/11/02 22:53:46 fang Exp $
+	$Id: instance_collection.h,v 1.8 2005/12/13 04:15:29 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -22,7 +22,7 @@
 #include "util/multikey_set.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 USING_LIST
 using std::istream;
@@ -509,7 +509,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_COLLECTION_H__
 

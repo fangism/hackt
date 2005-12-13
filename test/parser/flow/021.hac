@@ -1,0 +1,11 @@
+// "021.hac"
+// testing conditional scopes
+// copy-modified from "020.hac"
+
+[ true ->
+pbool b;
+	[ true ->
+		pint i;
+	]
+]
+

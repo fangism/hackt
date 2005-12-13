@@ -1,3 +1,0 @@
-// "019.in" should fail: bad enum
-
-enum foo, bar;

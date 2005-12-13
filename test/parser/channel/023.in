@@ -1,7 +1,0 @@
-// "023.in" should fail: connecting non-equivalent channel types
-
-chan(int<12>) foobar;
-chan(int<11>) barfoo;
-
-foobar = barfoo;
-

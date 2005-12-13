@@ -1,9 +1,0 @@
-// "053.in" should fail -- internal member sizes cannot depend on relaxed param
-// copy-modified from "051.in"
-
-template <><pint W>
-defproc foo() {
-	int my_int[W];
-}
-
-

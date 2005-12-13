@@ -1,0 +1,12 @@
+// "025b.hac" should pass: valid reference to a member
+// copy-modified from "025.hac" (int -> bool)
+
+bool foo;
+
+defproc bar(bool a, b) { }
+
+bar none;
+
+none.a = foo;
+foo = none.b;
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.3 2005/09/14 15:30:34 fang Exp $
+	$Id: canonical_type.h,v 1.4 2005/12/13 04:15:39 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -11,7 +11,7 @@
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 class definition_base;
@@ -232,7 +232,7 @@ struct check_footprint_policy<process_definition> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 
 #endif	// __OBJECT_TYPE_CANONICAL_TYPE_H__

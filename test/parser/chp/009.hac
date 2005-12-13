@@ -1,0 +1,9 @@
+// "009.hac" -- should fail type check
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+chan(bool) c;
+chp {
+	R!(c)		// expect data not chan
+}
+}
+

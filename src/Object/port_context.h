@@ -1,6 +1,6 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.h,v 1.2 2005/09/14 15:30:26 fang Exp $
+	$Id: port_context.h,v 1.3 2005/12/13 04:15:17 fang Exp $
  */
 
 #ifndef	__OBJECT_PORT_CONTEXT_H__
@@ -10,7 +10,7 @@
 // #include <valarray>
 #include <vector>
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::ostream;
 struct port_context;
@@ -83,7 +83,7 @@ struct port_collection_context {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_PORT_CONTEXT_H__
 

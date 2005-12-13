@@ -1,0 +1,8 @@
+// "017.hac" should die on incomplete template spec
+// the same example with rejected cast-style array syntax is in 023.hac
+template <pint milk, tea; pbool water[H][2][O]
+defproc barbar
+
+/** side note: 
+H and O are expressions, parser will accept, but type-checker will die
+**/

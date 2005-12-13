@@ -1,9 +1,0 @@
-// "012.in" should pass: equivalent types and sizes
-
-defproc foo() { }
-
-foo bar[0..2];
-foo blah[3];
-
-bar = blah;
-

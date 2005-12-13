@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.6 2005/10/25 20:51:52 fang Exp $
+ 	$Id: meta_range.cc,v 1.7 2005/12/13 04:15:25 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_META_RANGE_CC__
@@ -42,24 +42,24 @@ namespace util {
 // the class template "what" is used directly.  
 // Most of the time, the "what" member function interface is used.  
 
-SPECIALIZE_UTIL_WHAT(ART::entity::pint_range, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::pint_range, 
 		"pint-range")
-SPECIALIZE_UTIL_WHAT(ART::entity::const_range, 
+SPECIALIZE_UTIL_WHAT(HAC::entity::const_range, 
 		"const-range")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY, 0)
+	HAC::entity::pint_range, DYNAMIC_RANGE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::const_range, CONST_RANGE_TYPE_KEY, 0)
+	HAC::entity::const_range, CONST_RANGE_TYPE_KEY, 0)
 
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(ART::entity::const_range)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::const_range)
 }	// end namespace memory
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 using util::discrete_interval_set;
@@ -606,7 +606,7 @@ meta_range_expr::must_be_equivalent_index(const meta_index_expr& i) const {
 
 //=============================================================================
 }	// end namepace entity
-}	// end namepace ART
+}	// end namepace HAC
 
 DEFAULT_STATIC_TRACE_END
 

@@ -1,0 +1,10 @@
+// "075.hac" should pass, will recursively instantiate ports
+// copy-modified from "061.hac"
+
+template <pint M, N>
+defproc bar(int<M> x[N]) {
+	x[0] = x[N-1];		// valid internal connection
+}
+
+bar<3,2> poo;
+

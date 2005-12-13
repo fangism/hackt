@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.6 2005/11/02 22:53:48 fang Exp $
+	$Id: enum_traits.h,v 1.7 2005/12/13 04:15:38 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -10,7 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 template <class> class parameterless_collection_type_manager;
 //-----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ struct class_traits<enum_tag> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_ENUM_TRAITS_H__
 

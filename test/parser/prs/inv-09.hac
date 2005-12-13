@@ -1,0 +1,10 @@
+// "inv-09.hac" should parse and pass type-check
+
+template <pint N, I, J>
+defproc crazy_inv(bool a[N]) {
+prs {
+	a[I] -> a[J]-
+	~a[I] -> a[J]+
+}
+}
+

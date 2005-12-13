@@ -1,12 +1,12 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.4 2005/11/03 07:52:06 fang Exp $
+	$Id: cflat_options.h,v 1.5 2005/12/13 04:15:46 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_OPTIONS_H__
 #define	__MAIN_CFLAT_OPTIONS_H__
 
-namespace ART {
+namespace HAC {
 
 /**
 	Printing and operating options for cflat.
@@ -101,7 +101,7 @@ public:
 };	// end class cflat::options
 // __attribute__(packed) ? (no one cares...)
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_CFLAT_OPTIONS_H__
 

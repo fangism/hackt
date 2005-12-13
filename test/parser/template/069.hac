@@ -1,0 +1,10 @@
+// "069.hac" should fail, incompatible strictness
+// copy-modified from "068.hac"
+
+template <pint Q><pint R>
+defproc foo();
+
+foo<5><4> car[0..2];
+foo<5> car[3..4];
+
+

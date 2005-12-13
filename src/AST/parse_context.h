@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.6 2005/11/12 08:45:33 fang Exp $
+	$Id: parse_context.h,v 1.7 2005/12/13 04:15:11 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -19,7 +19,7 @@
 #include "util/boolean_types.h"
 #include "util/attributes.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	// forward declarations
 	class object;
@@ -481,7 +481,7 @@ private:
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __AST_PARSE_CONTEXT_H__
 

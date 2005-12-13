@@ -1,14 +1,14 @@
 /**
 	\file "Object/expr/types.h"
-	Forward declarations for all ART::entity classes and typedefs.
+	Forward declarations for all HAC::entity classes and typedefs.
 	NOTE: this file was moved from "Object/art_object_expr_types.h"
-	$Id: types.h,v 1.2 2005/07/20 21:00:50 fang Exp $
+	$Id: types.h,v 1.3 2005/12/13 04:15:27 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_TYPES_H__
 #define	__OBJECT_EXPR_TYPES_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	/**
 		The global integer-type for parameter integers.  
@@ -50,7 +50,7 @@ namespace entity {
 #endif
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_TYPES_H__
 

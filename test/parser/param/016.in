@@ -1,7 +1,0 @@
-// "016.in" should fail: statically determined out of range
-
-pint M = 2;
-pint foo[M];
-
-foo[2] = M;
-

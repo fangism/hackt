@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.4 2005/09/04 21:15:02 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.5 2005/12/13 04:15:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -15,7 +15,7 @@
 #include "util/persistent_object_manager.h"
 #include "Object/def/footprint.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class param_expr_list;
 class const_param_expr_list;
@@ -196,7 +196,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 

@@ -1,0 +1,4 @@
+#ifndef	CONFIGDATE
+#define	CONFIGDATE	"@CONFIGDATE@"
+#endif
+

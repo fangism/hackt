@@ -1,19 +1,19 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.5 2005/10/30 22:00:22 fang Exp $
+	$Id: PRS.h,v 1.6 2005/12/13 04:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
 #define	__OBJECT_LANG_PRS_H__
 
-#include "Object/art_object_fwd.h"
+#include "Object/object_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/unroll/meta_loop_base.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class meta_range_expr;
 struct pint_tag;
@@ -499,7 +499,7 @@ public:
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_PRS_H__
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.90 2005/12/10 03:56:51 fang Exp $
+#	$Id: Makefile.am,v 1.91 2005/12/13 04:14:44 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -40,12 +40,15 @@ bin_PROGRAMS = hackt
 
 # dirgen is completely bogus, workaround to corce directory generation
 noinst_PROGRAMS = dirgen getopt_test
-# art_persistent_table
-noinst_SCRIPTS = art_persistent_table.sh
+noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
 	libhacktexec.la
+
+# this name is needed for libtool objects
+LIBHACKTPARSERS_LA = libhacktparsers_la
+LIBBOGUS_LA = libbogus_la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
@@ -131,46 +134,45 @@ libbogus_la_SOURCES = \
 #	parser/$(HACKT_PARSE_ROOT).yy
 
 AST_CC_FILES = \
-	AST/art_parser_base.cc \
-	AST/art_parser_node_position.cc \
-	AST/art_parser_expr.cc \
-	AST/art_parser_range.cc \
-	AST/art_parser_token.cc \
-	AST/art_parser_definition.cc \
-	AST/art_parser_instance.cc \
-	AST/art_parser_formal.cc \
-	AST/art_parser_chp.cc \
-	AST/art_parser_hse.cc \
-	AST/art_parser_prs.cc \
+	AST/node_position.cc \
+	AST/expr.cc \
+	AST/range.cc \
+	AST/token.cc \
+	AST/delim.cc \
+	AST/definition.cc \
+	AST/definition_item.cc \
+	AST/instance.cc \
+	AST/formal.cc \
+	AST/CHP.cc \
+	AST/HSE.cc \
+	AST/PRS.cc \
+	AST/type.cc \
+	AST/namespace.cc \
+	AST/statement.cc \
 	AST/import_root.cc \
 	AST/parse_context.cc
 
 AST_TCC_FILES = \
-	AST/art_parser_node_list.tcc \
+	AST/node_list.tcc \
 	AST/parse_context.tcc
 
 AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	$(AST_TCC_FILES:.tcc=.h) \
-	AST/art_parser_fwd.h \
-	AST/art_parser_chp_fwd.h \
-	AST/art_parser_hse_fwd.h \
-	AST/art_parser_prs_fwd.h \
-	AST/art_parser_delim.h \
-	AST/art_parser.h \
-	AST/art_parser_node_list.h \
-	AST/art_parser_definition_item.h \
-	AST/art_parser_expr_base.h \
-	AST/art_parser_expr_list.h \
-	AST/art_parser_identifier.h \
-	AST/art_parser_range_list.h \
-	AST/art_parser_root.h \
-	AST/art_parser_root_item.h \
-	AST/art_parser_statement.h \
-	AST/art_parser_terminal.h \
-	AST/art_parser_token_char.h \
-	AST/art_parser_token_string.h \
-	AST/art_parser_type.h \
-	AST/art_parser_type_base.h
+	AST/AST_fwd.h \
+	AST/CHP_fwd.h \
+	AST/HSE_fwd.h \
+	AST/PRS_fwd.h \
+	AST/AST.h \
+	AST/common.h \
+	AST/expr_base.h \
+	AST/expr_list.h \
+	AST/identifier.h \
+	AST/range_list.h \
+	AST/root.h \
+	AST/terminal.h \
+	AST/token_char.h \
+	AST/token_string.h \
+	AST/type_base.h
 
 # all of these .cc files have a corresponding .h file
 OBJECT_CC_FILES = \
@@ -272,7 +274,7 @@ OBJECT_TCC_FILES = \
 
 OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/devel_switches.h \
-	Object/art_object_fwd.h \
+	Object/object_fwd.h \
 	Object/persistent_type_hash.h \
 	Object/common/alias_string_cache.h \
 	Object/common/cflat_args.h \
@@ -626,12 +628,15 @@ libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
-$(srcdir)/main/main_funcs.cc: parser/$(HACKT_PARSE_ROOT)-real.h
-$(srcdir)/main/version.cc: cvstag.h builddate.h buildhost.h cxx_version.h \
+main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
+main/version.lo main/version.o: cvstag.h builddate.h buildhost.h cxx_version.h \
 	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
-lexer/$(HACKT_LEX_ROOT).cc: parser/$(HACKT_PARSE_ROOT).h
-parser/hackt-union.lo: parser/$(HACKT_PARSE_ROOT).output.h
-parser/hackt-union.$(OBJEXT): parser/$(HACKT_PARSE_ROOT).output.h
+lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
+	lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.o: \
+	parser/$(HACKT_PARSE_ROOT).h
+parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
+	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
+	parser/$(HACKT_PARSE_ROOT).output.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
@@ -663,8 +668,6 @@ ALL_TCC_FILES += \
 	$(UTIL_TCC_FILES) \
 	$(OBJECT_TCC_FILES) \
 	$(AST_TCC_FILES)
-
-# note: Object/art_object_IO.cc only contains explicit template instantiations
 
 # don't actually need -l[f]l
 # libhackt_la_LDADD = @LEXLIB@
@@ -756,13 +759,11 @@ $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
-.NOTPARALLEL: parser/$(HACKT_PARSE_ROOT)-real.h $(HACKT_PARSE_OUTPUT) \
-	lexer/$(HACKT_LEX_ROOT).cc
-
-# NOTE: CPP here should be cpp, not gcc -E, as set by autoconf
-# gcc -E ignores file that require no preprocessing
-
-CPP_TRADITIONAL = @CPP_TRADITIONAL@
+# Using the NOTPARALLEL directive kills parallel-make for this whole Makefile!
+# .NOTPARALLEL: parser/$(HACKT_PARSE_ROOT)-real.h $(HACKT_PARSE_OUTPUT) \
+#	lexer/$(HACKT_LEX_ROOT).cc
+# What we could do is enforce some artificial ordering, making
+# $(HACKT_PARSE_OUTPUT) the canonical target of parser/$(HACKT_PARSE_ROOT).h
 
 # extra deps to make sure parser is regenerated when configure changes
 # in the case when switching between yacc and bison
@@ -786,8 +787,8 @@ GET_START_TOKEN_ENUM = \
 
 
 YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
-		-v include="AST/art_parser.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
-		-v namespace="ART::parser ART::lexer" \
+		-v include="AST/AST.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
+		-v namespace="HAC::parser HAC::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 # so far, yacc token enums start at 257 consistently, but we take no chances.
 
@@ -878,10 +879,6 @@ libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(BOGUS_BYACC_CXXFL
 # libhacktparsers_la_CPPFLAGS = $(AM_CPPFLAGS)
 libhacktparsers_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 
-# artc_CPPFLAGS = $(AM_CPPFLAGS)
-# art__2obj_CPPFLAGS = $(AM_CPPFLAGS)
-# artobjdump_CPPFLAGS = $(AM_CPPFLAGS)
-
 # is required to be set for Make.hchk-tail.am
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
@@ -953,10 +950,10 @@ EXTRA_DIST += local.cvsignore \
 	TODO \
 	wc-l
 
-TESTS = art_persistent_table.sh test/getopt_test.test
+TESTS = hackt_persistent_table.sh test/getopt_test.test
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS)
-DISTCLEANFILES += art_persistent_table.sh $(VERSIONHEADERS)
+DISTCLEANFILES += hackt_persistent_table.sh $(VERSIONHEADERS)
 AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(CONFIG_PARSERS)
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
@@ -975,7 +972,7 @@ DISTCLEANFILES += test/getopt_test.test \
 	test/getopt_test.diff \
 	test/getopt_test.output
 
-art_persistent_table.sh: hackt
+hackt_persistent_table.sh: hackt
 	@$(ECHO) "#!/bin/sh" > $@
 	@$(ECHO) "./hackt dump_persistent_table" >> $@
 	@$(CHMOD) +x $@

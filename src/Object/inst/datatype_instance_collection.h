@@ -1,8 +1,8 @@
 /**
 	\file "Object/inst/datatype_instance_collection.h"
-	Instance collection classes for ART.  
+	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.4 2005/09/04 21:14:48 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.5 2005/12/13 04:15:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -12,7 +12,7 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/traits/data_traits.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class data_type_reference;
 class footprint;
@@ -93,7 +93,7 @@ protected:	// propagate to children
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 

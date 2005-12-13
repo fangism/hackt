@@ -1,0 +1,9 @@
+// "inv-11.hac" stupid, and rejected
+
+defproc inv(bool a, b) {
+prs {
+	~~a -> b-	// not-not!
+	~a -> b+
+}
+}
+

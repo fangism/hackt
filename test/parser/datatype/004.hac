@@ -1,0 +1,6 @@
+// "004.hac" should fail, on re-declaration of same identifier
+
+int a;
+int b;
+int d, c, b, e;		// die on 'b'
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.4 2005/09/04 21:14:52 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.5 2005/12/13 04:15:31 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -13,7 +13,7 @@
 #include <iostream>
 #include "util/persistent_object_manager.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 
@@ -138,7 +138,7 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #undef PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 #undef PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS

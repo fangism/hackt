@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.2 2005/09/04 21:14:43 fang Exp $
+	$Id: footprint_manager.h,v 1.3 2005/12/13 04:15:20 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -13,7 +13,7 @@
 #include "Object/def/footprint.h"
 #include "util/persistent_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::istream;
 using std::ostream;
@@ -87,7 +87,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_FOOTPRINT_MANAGER_H__
 

@@ -1,8 +1,0 @@
-// "041.in" should fail: template signature is structurally different!
-
-template <pint bar; pbool jinx[bar]>
-defproc foo();
-
-template <pint bar; pbool jinx[bar+1]>
-defproc foo();
-

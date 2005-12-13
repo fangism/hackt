@@ -1,5 +1,39 @@
 "ChangeLog"
 
+2005-12-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-merged-rename-00-06:
+	  Merge to trunk.  
+	  Completed renaming phases: all (most) traces of "art" and "ART"
+		have been removed, and replaced with consistent names.  
+	  Source tree is now purged of ART, blessed with HACKT.  
+	  Entire test suite has been renamed, including intermediate files.
+	  Documentation updated to reflect changes.  
+	  Also includes many configuration improvements.  
+	  Restored parallel-make-ability, previously broken.  
+
+
+2005-12-12	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-05:
+	  configure.ac: simplified header file generation, 
+		but wishing for combined AC_CONFIG_FILES and AC_CONFIG_HEADERS
+		functionality (perform AC_SUBST *and* check for file change).
+	  in test/: major file renaming for test setup.  
+	  in src/: minor comment updating and file-cross-reference renaming.  
+
+
+2005-12-11	David Fang	<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-03:
+	  Played around with other configure-generating src/header_deps.make
+		but with limited success (failure).  
+	  Updated maintainerclobber script, and moved it to scripts/.
+	  Moved some useful configure-found exec Makefile variables
+		into Make.stddef, and some useful echo- targets
+		into Make.globals.
+
+
 2005-12-09	David Fang	<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-71:

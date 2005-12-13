@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.5 2005/10/30 22:00:22 fang Exp $
+ 	$Id: value_collection.tcc,v 1.6 2005/12/13 04:15:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -56,7 +56,7 @@
 #include "util/stacktrace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
@@ -920,7 +920,7 @@ VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) 
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_VALUE_COLLECTION_TCC__
 

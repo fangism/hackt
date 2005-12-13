@@ -1,0 +1,9 @@
+// "013.hac" should pass, because identifiers may overshadow
+
+int x;
+namespace A { }
+
+namespace B {
+	open A as x;
+}
+

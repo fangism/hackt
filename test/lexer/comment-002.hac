@@ -1,0 +1,8 @@
+// "commment-002.hac"
+// should die: nested comments not allowed
+
+/** level 1
+/** level 2
+end level 2 **/
+end level 1 **/
+

@@ -1,0 +1,11 @@
+// "015.hac" should pass: non-overlapping sparse array instantiations
+
+int foo[4];
+int foo[40..42];
+int foo[6..12];
+int foo[15..20];
+int foo[25..29];
+int foo[21..24];
+int foo[4..4];
+int foo[5..5];
+

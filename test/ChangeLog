@@ -1,5 +1,44 @@
 # "test/ChangeLog"
 
+2005-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-merged-rename-00-06:
+	  Trunk merge.  Massive renaming.  
+
+
+2005-12-12	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-05:
+	  MAJOR TEST RESTRUCTURING: script names, object file extensions, 
+		and Makefile macro variables have been expunged of
+		"art" and "ART", and replaced with more appropriate names.  
+	  The Object file naming convention we adopt now is:
+		.haco -- just compiled
+		.haco-u -- unrolled
+		.haco-c -- created
+		.haco-a -- allcoated
+
+
+2005-12-11	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-04:
+	  MAJOR FILE MOVE: All test .in files have been renamed to .hac.
+	  All affected test scripts and test outputs have been updated
+		to reflect this change.  
+
+
+2005-12-10	David Fang		<fangism@users.sourceforge.net>
+
+	* ARTXX-00-01-04-main-00-71-rename-00-03:
+	  In this branch, we will be moving and renaming all test input
+		files from .in to .hac, and removing all traces of 
+		"ART" or "art".
+	  Forgot to rm *.sort in cleaner target.  
+	  Fixed EMPTY_CFLAT_PRS generation in Make.test-tail, 
+		which wasn't working properly for VPATH builds before.
+		(THough failure was not fatal, and nearly silent.)
+
+
 2005-11-09	David Fang		<fangism@users.sourceforge.net>
 
 	* ARTXX-00-01-04-main-00-65-parser-03-10:

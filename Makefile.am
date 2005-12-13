@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.24 2005/12/08 22:01:05 fang Exp $
+#	$Id: Makefile.am,v 1.25 2005/12/13 04:14:36 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -25,7 +25,7 @@ DISTCLEANFILES += config.in.h~ distcheck.log
 
 DISTCLEANDIRS += autom4te.cache
 
-AUTO_IGNORE += aclocal.m4 libtool stamp-h1 \
+AUTO_IGNORE += aclocal.m4 libtool \
 	config.h.in \
 	configure configure.scan \
 	autoscan.log autom4te.cache \
@@ -36,7 +36,7 @@ AUTO_IGNORE += aclocal.m4 libtool stamp-h1 \
 
 # Many of these are already in DIST_COMMON
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \
-	bootstrap maintainerclobber \
+	bootstrap \
 	BOUNTY \
 	$(DOXYGEN_CONFIG).in \
 	config/macro-value.h.in \

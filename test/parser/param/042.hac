@@ -1,0 +1,12 @@
+// "042.hac" should pass: non overlapping array
+// copy-modified from "019.hac"
+
+defproc bogus () {
+pint M = 2;
+
+pint foo[2..4];		// entending array ok
+pint foo[M];
+}
+
+bogus x, y;
+

@@ -1,0 +1,5 @@
+// "043.hac" should pass, valid template signature
+
+template <pint Q=5><pint R>
+defproc foo();
+

@@ -1,0 +1,5 @@
+// "string-001.hac"
+// should die on non-terminated string
+
+"somewhere over the rainbow...
+

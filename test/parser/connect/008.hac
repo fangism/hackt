@@ -1,0 +1,13 @@
+// "008.hac" should fail on bad connection through mismatched typedef
+// used to pass because typedefs' param actuals checking was 
+// deferred until unroll, but now fails.
+
+int fe;
+int<> fi;
+int<16> fo;		// different from the rest
+
+typedef	int<32>		int32;
+
+int32 fum = fe = fi = fo;	// fo mismatches
+
+

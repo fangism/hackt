@@ -1,8 +1,0 @@
-// "060.in" should pass, will recursively instantiate ports
-// copy-modified from "059.in"
-
-template <pint N>
-defproc foo(int<N> a) { }
-
-foo<8> poo;
-

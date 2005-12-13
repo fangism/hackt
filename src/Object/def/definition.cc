@@ -2,11 +2,11 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.8 2005/10/30 22:00:20 fang Exp $
+ 	$Id: definition.cc,v 1.9 2005/12/13 04:15:19 fang Exp $
  */
 
-#ifndef	__OBJECT_ART_OBJECT_DEFINITION_CC__
-#define	__OBJECT_ART_OBJECT_DEFINITION_CC__
+#ifndef	__HAC_OBJECT_DEFINITION_CC__
+#define	__HAC_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
 #define	STACKTRACE_DUMPS		0 && ENABLE_STACKTRACE
@@ -21,8 +21,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iostream>
 #include <functional>
 
-#include "AST/art_parser_delim.h"
-#include "AST/art_parser_token_string.h"
+#include "AST/delim.h"
+#include "AST/token_string.h"
 
 #include "util/STL/list.tcc"
 #include "util/hash_qmap.tcc"
@@ -75,23 +75,23 @@ DEFAULT_STATIC_TRACE_BEGIN
 //=============================================================================
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
+	HAC::entity::user_def_chan, USER_DEF_CHAN_DEFINITION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY, 0)
+	HAC::entity::channel_definition_alias, CHANNEL_TYPEDEF_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY, 0)
+	HAC::entity::enum_datatype_def, ENUM_DEFINITION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY, 0)
+	HAC::entity::user_def_datatype, USER_DEF_DATA_DEFINITION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY, 0)
+	HAC::entity::datatype_definition_alias, DATA_TYPEDEF_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY, 0)
+	HAC::entity::process_definition, PROCESS_DEFINITION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	ART::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY, 0)
+	HAC::entity::process_definition_alias, PROCESS_TYPEDEF_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::_Select2nd;
 #include "util/using_ostream.h"
@@ -3037,9 +3037,9 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_ART_OBJECT_DEFINITION_CC__
+#endif	// __HAC_OBJECT_DEFINITION_CC__
 

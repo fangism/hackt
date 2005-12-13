@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.3 2005/10/25 20:51:57 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.4 2005/12/13 04:15:37 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -18,7 +18,7 @@
 #include "util/memory/count_ptr.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_index_list;
 using std::ostream;
@@ -125,7 +125,7 @@ public:
 };	// end class simple_nonmeta_value_reference
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__

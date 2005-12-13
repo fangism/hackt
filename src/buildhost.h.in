@@ -1,0 +1,8 @@
+#ifndef	CONFIG_HOST
+#define	CONFIG_HOST	"@host@"
+#endif
+
+#ifndef	CONFIG_BUILD
+#define	CONFIG_BUILD	"@build@"
+#endif
+

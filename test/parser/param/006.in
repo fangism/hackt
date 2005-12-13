@@ -1,6 +1,0 @@
-// "006.in" should fail, already declared
-
-pint p;
-pint o, beans;
-pint o;
-

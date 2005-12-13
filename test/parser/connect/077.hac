@@ -1,0 +1,11 @@
+// "077.hac" fail parser: can't instantiate aray and connect ports at same time
+
+defproc portaproc(bool b, c[4]; int i, j[2]);
+
+bool a;
+bool x[4];
+int q;
+int r[2];
+
+portaproc p[1](a, x, q, r);		// bad declaration
+

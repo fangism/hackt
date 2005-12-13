@@ -1,0 +1,4 @@
+// "019.hac" should pass: instantiating a built-in channel type
+
+chan(bool) foobar;
+

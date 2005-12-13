@@ -1,16 +1,16 @@
 /**
 	\file "Object/traits/classification_tags.h"
-	Classification of types in ART.
+	Classification of types in HAC.
 	These type tags may be used for specialization of many
 	features of the language.  
 	This file used to be "Object/art_object_classification_tags.h".
-	$Id: classification_tags.h,v 1.3 2005/09/04 21:14:56 fang Exp $
+	$Id: classification_tags.h,v 1.4 2005/12/13 04:15:38 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
 #define	__OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 
 /***
@@ -129,7 +129,7 @@ struct builtin_channel_tag : public channel_tag {
 };	// end struct builtin_channel_tag
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
 

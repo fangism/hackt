@@ -1,9 +1,9 @@
 /**
 	\file "Object/inst/value_collection.h"
-	Parameter instance collection classes for ART.  
+	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.5 2005/10/30 22:00:22 fang Exp $
+	$Id: value_collection.h,v 1.6 2005/12/13 04:15:33 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -23,7 +23,7 @@
 #include "util/multikey_fwd.h"
 #include "util/multikey_qmap_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 template <class>
 class simple_meta_instance_reference;
@@ -365,7 +365,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_VALUE_COLLECTION_H__
 

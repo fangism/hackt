@@ -1,7 +1,0 @@
-// "011.in" should fail opening identifier that is not a namespace
-
-namespace X { }
-int y;
-
-open X;
-open y;

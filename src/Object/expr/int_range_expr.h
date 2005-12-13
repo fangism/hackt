@@ -3,7 +3,7 @@
 	Class definitions for integer range expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_range_expr.h,v 1.3 2005/10/25 20:51:51 fang Exp $
+	$Id: int_range_expr.h,v 1.4 2005/12/13 04:15:23 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_RANGE_EXPR_H__
@@ -12,7 +12,7 @@
 #include "Object/expr/nonmeta_range_expr_base.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class int_expr;
 using util::memory::count_ptr;
@@ -55,7 +55,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_INT_RANGE_EXPR_H__
 

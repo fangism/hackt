@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.4 2005/10/25 20:51:53 fang Exp $
+	$Id: pbool_const.h,v 1.5 2005/12/13 04:15:26 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PBOOL_CONST_H__
@@ -14,7 +14,7 @@
 #include "util/memory/list_vector_pool_fwd.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_range_list;
 USING_CONSTRUCT
@@ -124,7 +124,7 @@ public:
 };	// end class pbool_const
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PBOOL_CONST_H__

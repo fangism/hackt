@@ -1,11 +1,11 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.2 2005/11/12 08:45:33 fang Exp $
+	$Id: import_root.cc,v 1.3 2005/12/13 04:15:09 fang Exp $
  */
 
 #include <iostream>
 #include "AST/import_root.h"
-#include "AST/art_parser_node_list.tcc"
+#include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 #include "util/memory/count_ptr.tcc"
 #include "Object/common/namespace.h"
@@ -13,11 +13,11 @@
 #include "util/what.h"
 
 namespace util {
-SPECIALIZE_UTIL_WHAT(ART::parser::imported_root, "(imported-root)")
-SPECIALIZE_UTIL_WHAT(ART::parser::imported_root_list, "(imported-root-list)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root, "(imported-root)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root_list, "(imported-root-list)")
 }
 
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 //=============================================================================
@@ -101,5 +101,5 @@ imported_root_list::check_build(context& c) const {
 
 //=============================================================================
 }	// end namespace parser
-}	// end namespace ART
+}	// end namespace HAC
 

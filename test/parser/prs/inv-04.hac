@@ -1,0 +1,9 @@
+// "inv-04.hac" should parse, but fail type-check
+
+defproc inv(bool a; int<1> b) {
+prs {
+	a -> b-
+	~a -> b+
+}
+}
+

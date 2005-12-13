@@ -3,7 +3,7 @@
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.tcc" in a previous life.
- 	$Id: parse_context.tcc,v 1.3 2005/10/30 22:00:19 fang Exp $
+ 	$Id: parse_context.tcc,v 1.4 2005/12/13 04:15:11 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_TCC__
@@ -14,12 +14,12 @@
 #include <iostream>
 
 #include "AST/parse_context.h"
-#include "AST/art_parser_token_string.h"
-#include "AST/art_parser_identifier.h"
+#include "AST/token_string.h"
+#include "AST/identifier.h"
 #include "Object/common/namespace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
 
@@ -93,7 +93,7 @@ context::definition_frame<DefType>::~definition_frame() {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __AST_PARSE_CONTEXT_TCC__
 

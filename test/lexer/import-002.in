@@ -1,5 +1,0 @@
-// "import-002.in"
-// should die on bad included file
-
-import "string-001.in";
-

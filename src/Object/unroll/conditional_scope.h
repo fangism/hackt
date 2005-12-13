@@ -1,8 +1,8 @@
 /**
 	\file "Object/unroll/conditional_scope.h"
 	This file contains class definitions for control-flow scopes
-	of the ART++ language.  
-	$Id: conditional_scope.h,v 1.3 2005/10/30 22:00:23 fang Exp $
+	of the HAC language.  
+	$Id: conditional_scope.h,v 1.4 2005/12/13 04:15:41 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_CONDITIONAL_SCOPE_H__
@@ -12,7 +12,7 @@
 #include "Object/unroll/sequential_scope.h"
 #include "Object/unroll/meta_conditional_base.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -61,7 +61,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	//	__OBJECT_UNROLL_CONDITIONAL_SCOPE_H__
 

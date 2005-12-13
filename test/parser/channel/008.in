@@ -1,6 +1,0 @@
-// "008.in" should pass, enums are valid datatypes.  
-
-enum myenum { ONE, TWO, THREE }
-
-defchan mychan <: chan(bool) (myenum e);
-

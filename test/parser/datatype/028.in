@@ -1,6 +1,0 @@
-// "028.in" should pass, definition of a declared enumeration
-
-enum foo;	// forward declaration
-
-enum foo { bar, one, three}	// definition
-

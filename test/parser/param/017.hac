@@ -1,0 +1,7 @@
+// "017.hac" should pass: non overlapping array
+
+pint M = 2;
+pint foo[M];
+
+pint foo[2..4];		// entending array ok
+

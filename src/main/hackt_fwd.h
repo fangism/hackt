@@ -1,7 +1,7 @@
 /**
 	\file "main/hackt_fwd.h"
 	Forward declarations for hackt program interface.  
-	$Id: hackt_fwd.h,v 1.2 2005/08/08 16:51:12 fang Exp $
+	$Id: hackt_fwd.h,v 1.3 2005/12/13 04:15:47 fang Exp $
  */
 
 #ifndef	__MAIN_HACKT_FWD_H__
@@ -9,7 +9,7 @@
 
 #include "util/size_t.h"
 
-namespace ART {
+namespace HAC {
 
 struct global_options;
 class program_entry;
@@ -24,7 +24,7 @@ typedef int (main_program_type)(const int, char*[],
 
 typedef	main_program_type*	main_program_ptr_type;
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_HACKT_FWD_H__
 

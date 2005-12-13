@@ -1,0 +1,13 @@
+// "inv-14.hac" should pass
+// copy-extended from "inv-02.hac"
+// just instantiating an inverter.  
+
+defproc inv(bool a, b) {
+prs {
+	a -> b-
+	~a -> b+
+}
+}
+
+inv __inv__;
+

@@ -1,6 +1,6 @@
 At: "-stdin-":5:
-At: "badid-000.in":1:
+At: "badid-000.hac":1:
 bad identifier: "1bad_identifier" on line 1:1
 Caught exception from lexer, aborting parsing.
-From: "badid-000.in"
+From: "badid-000.hac"
 Caught exception from lexer, aborting parsing.

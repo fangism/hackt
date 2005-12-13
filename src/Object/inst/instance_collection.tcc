@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.10 2005/11/02 22:53:46 fang Exp $
+	$Id: instance_collection.tcc,v 1.11 2005/12/13 04:15:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -69,7 +69,7 @@
 // module-local specializations
 
 namespace std {
-using ART::entity::instance_alias;
+using HAC::entity::instance_alias;
 
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 struct _Select1st<INSTANCE_ALIAS_CLASS> :
@@ -84,7 +84,7 @@ struct _Select2nd<INSTANCE_ALIAS_CLASS> :
 
 //=============================================================================
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::string;
 using std::_Select1st;
@@ -1525,7 +1525,7 @@ INSTANCE_SCALAR_CLASS::load_object(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_COLLECTION_TCC__
 

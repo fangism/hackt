@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.5 2005/10/30 22:00:25 fang Exp $
+	$Id: sequential_scope.h,v 1.6 2005/12/13 04:15:43 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -17,7 +17,7 @@
 #include "Object/unroll/instance_management_base.h"
 	// for prototype macros
 
-namespace ART {
+namespace HAC {
 namespace parser {
 class context;
 }
@@ -103,7 +103,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
 

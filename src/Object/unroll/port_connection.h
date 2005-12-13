@@ -2,7 +2,7 @@
 	\file "Object/unroll/port_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: port_connection.h,v 1.3 2005/09/04 21:15:04 fang Exp $
+	$Id: port_connection.h,v 1.4 2005/12/13 04:15:43 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_PORT_CONNECTION_H__
@@ -12,7 +12,7 @@
 #include "Object/unroll/meta_instance_reference_connection.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class simple_meta_instance_reference_base;
 using std::vector;
@@ -73,7 +73,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_PORT_CONNECTION_H__
 

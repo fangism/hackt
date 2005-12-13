@@ -1,6 +1,0 @@
-// "024.in" should fail, repeat definition of enum
-
-enum foo { bar }
-
-enum foo { bar }
-

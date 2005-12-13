@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_nonmeta_instance_reference_base.h,v 1.3 2005/10/25 20:51:57 fang Exp $
+	$Id: simple_nonmeta_instance_reference_base.h,v 1.4 2005/12/13 04:15:37 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
@@ -13,7 +13,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class scopespace;
 class nonmeta_index_list;
@@ -73,7 +73,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
 

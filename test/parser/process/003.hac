@@ -1,0 +1,4 @@
+// "003.hac" should die: old-style template declaration
+
+defproc bad_fang <pint
+

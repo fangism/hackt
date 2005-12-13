@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.5 2005/10/08 01:39:58 fang Exp $
+	$Id: state_instance.h,v 1.6 2005/12/13 04:15:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STATE_INSTANCE_H__
@@ -17,7 +17,7 @@ namespace util {
 	class persistent_object_manager;
 }
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param_expr_list;
 using std::istream;
@@ -81,7 +81,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_STATE_INSTANCE_H__
 

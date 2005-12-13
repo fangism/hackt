@@ -1,0 +1,6 @@
+// "006.hac" should pass: appropriate use of template formal int
+
+template <pint N>
+defproc foo() {
+	int bar[N];
+}

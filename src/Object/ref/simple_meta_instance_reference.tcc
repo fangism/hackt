@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.6 2005/10/25 20:51:57 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.7 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -25,7 +25,7 @@
 #include "Object/ref/inst_ref_implementation.h"
 #include "util/stacktrace.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
@@ -389,7 +389,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::load_object(
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
 

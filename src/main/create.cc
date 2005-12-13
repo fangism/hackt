@@ -2,7 +2,7 @@
 	\file "main/create.cc"
 	Unrolls an object file, saves it to another object file.  
 
-	$Id: create.cc,v 1.5 2005/11/10 02:13:06 fang Exp $
+	$Id: create.cc,v 1.6 2005/12/13 04:15:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,7 +16,7 @@
 #include "main/main_funcs.h"
 #include "util/persistent_object_manager.h"
 
-namespace ART {
+namespace HAC {
 
 using util::persistent;
 using util::persistent_object_manager;
@@ -94,5 +94,5 @@ create::usage(void) {
 }
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 

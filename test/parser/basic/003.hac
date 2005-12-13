@@ -1,0 +1,6 @@
+// "003.hac" this should pass
+
+namespace rajit {
+int parser;
+}
+

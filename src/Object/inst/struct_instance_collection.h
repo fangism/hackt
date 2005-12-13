@@ -4,7 +4,7 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_struct.h"
 		in a previous life.  
-	$Id: struct_instance_collection.h,v 1.4 2005/09/04 21:14:53 fang Exp $
+	$Id: struct_instance_collection.h,v 1.5 2005/12/13 04:15:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
@@ -15,7 +15,7 @@
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/instance_alias_info.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 // convenient typedefs
@@ -28,7 +28,7 @@ typedef	instance_array<datastruct_tag, 4>	struct_array_4D;
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
 

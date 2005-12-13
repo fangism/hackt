@@ -3,7 +3,7 @@
 	Class definitions for relational int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_relational_expr.h,v 1.3 2005/10/25 20:51:52 fang Exp $
+	$Id: int_relational_expr.h,v 1.4 2005/12/13 04:15:24 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
@@ -16,7 +16,7 @@
 #include "util/operators.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class int_expr;
 using std::string;
@@ -91,7 +91,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
 

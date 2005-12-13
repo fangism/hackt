@@ -1,0 +1,4 @@
+// "003.hac" should fail, dying on undefined type
+
+undefined_type id;
+

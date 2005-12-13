@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.4 2005/10/08 01:39:56 fang Exp $
+	$Id: definition_base.h,v 1.5 2005/12/13 04:15:20 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -20,7 +20,7 @@
 
 #include "Object/def/template_formals_manager.h"
 
-namespace ART {
+namespace HAC {
 // forward declarations from outside namespaces
 namespace parser {
 	// note: methods may specify string as formal types, 
@@ -269,7 +269,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_DEFINITION_BASE_H__
 

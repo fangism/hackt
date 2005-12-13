@@ -1,5 +1,0 @@
-// "009.in" should fail on re-use of identifier
-
-namespace X { }
-int W, X, Y, Z;		// die on X
-

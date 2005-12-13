@@ -1,0 +1,18 @@
+// "049.hac" should pass, assigning parameters to other initialized parameters
+// copy-modified from "037.hac"
+// testing out-of-scope initial value references
+
+pint five = 5;
+
+defproc bogus() {
+pint N;
+N = five;
+/**
+pint M = N;
+pbool a = true;
+pbool b = a;
+**/
+}
+
+bogus x;
+

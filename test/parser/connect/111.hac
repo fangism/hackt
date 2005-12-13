@@ -1,0 +1,11 @@
+// "111.hac" test of connectivity
+
+defproc wrap(bool a, b) {
+}
+
+wrap j, k;
+j = k;
+j.a = k.b;
+
+// should reduce to one unique bool
+

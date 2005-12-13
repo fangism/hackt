@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.h"
 	Interface header for shell module.  
-	$Id: shell.h,v 1.3 2005/12/10 03:56:56 fang Exp $
+	$Id: shell.h,v 1.4 2005/12/13 04:15:48 fang Exp $
  */
 
 #ifndef	__MAIN_SHELL_H__
@@ -10,7 +10,7 @@
 #include <iosfwd>
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 using std::ostream;
 
 /**
@@ -57,7 +57,7 @@ private:
 
 };	// end class shell
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_SHELL_H__
 

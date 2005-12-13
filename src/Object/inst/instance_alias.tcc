@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.6 2005/11/03 07:52:05 fang Exp $
+	$Id: instance_alias.tcc,v 1.7 2005/12/13 04:15:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -70,7 +70,7 @@
 #include "util/dereference.h"
 
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::string;
 using std::ostringstream;
@@ -1461,7 +1461,7 @@ operator << (ostream& o, const instance_alias<Tag,D>& b) {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_ALIAS_TCC__
 

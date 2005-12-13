@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.2 2005/10/08 01:39:59 fang Exp $
+	$Id: PRS_footprint.h,v 1.3 2005/12/13 04:15:34 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -13,7 +13,7 @@
 #include "util/macros.h"
 #include "util/list_vector.h"
 
-namespace ART {
+namespace HAC {
 struct cflat_options;
 
 namespace entity {
@@ -220,7 +220,7 @@ public:
 //=============================================================================
 }	// end namepace PRS
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_LANG_PRS_FOOTPRINT_H__
 

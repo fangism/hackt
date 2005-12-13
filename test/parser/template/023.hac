@@ -1,0 +1,10 @@
+// "023.hac" should fail: template signatures don't match in redeclaration
+
+template <pint N; pint A[N]>
+defproc foo();
+
+template <pint N; pint A[4]>		// not equivalent
+defproc foo();
+
+
+

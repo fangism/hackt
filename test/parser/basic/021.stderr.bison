@@ -1,5 +1,5 @@
 At: "-stdin-":4:
-At: "017.in":7:
+At: "017.hac":7:
 parse error: syntax error
 parser stacks:
 state	value
@@ -21,5 +21,5 @@ acceptable tokens are:
 	DEFCHAN (shift)
 	DEFTYPE (shift)
 	TYPEDEF (shift)
-From: "017.in"
+From: "017.hac"
 Caught exception from lexer, aborting parsing.

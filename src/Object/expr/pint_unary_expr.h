@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.4 2005/10/25 20:51:54 fang Exp $
+	$Id: pint_unary_expr.h,v 1.5 2005/12/13 04:15:27 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -12,7 +12,7 @@
 #include "Object/expr/pint_expr.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::memory::count_ptr;
 
@@ -97,7 +97,7 @@ public:
 };	// end class pint_unary_expr
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PINT_UNARY_EXPR_H__

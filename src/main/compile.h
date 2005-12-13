@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.3 2005/11/10 02:13:06 fang Exp $
+	$Id: compile.h,v 1.4 2005/12/13 04:15:46 fang Exp $
  */
 
 #ifndef	__MAIN_COMPILE_H__
@@ -12,7 +12,7 @@
 #include "util/qmap_fwd.h"
 #include "util/string_fwd.h"
 
-namespace ART {
+namespace HAC {
 class compile_options;
 //=============================================================================
 /**
@@ -57,7 +57,7 @@ private:
 };	// end class compile
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_COMPILE_H__
 

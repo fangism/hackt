@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.3 2005/09/04 21:14:59 fang Exp $
+	$Id: template_actuals.h,v 1.4 2005/12/13 04:15:40 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -17,7 +17,7 @@ namespace util {
 class persistent_object_manager;
 }
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class unroll_context;
 class param_expr_list;
@@ -158,7 +158,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_TYPE_TEMPLATE_ACTUALS_H__
 

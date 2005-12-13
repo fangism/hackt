@@ -1,7 +1,0 @@
-// "010.in" should pass, enums are valid datatypes.  
-
-enum myenum;
-// need not be defined to be used
-
-defchan mychan <: chan(myenum) (myenum e, f);
-

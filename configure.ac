@@ -3,14 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.22 2005/12/10 03:55:37 fang Exp $
+#	$Id: configure.ac,v 1.23 2005/12/13 04:14:36 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-# using art++ results in art-- :(
-AC_INIT(hackt, 0.1.4-devel-20051209, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20051212, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -143,9 +142,15 @@ AC_ARG_ENABLE(header_validation,
 	AC_MSG_RESULT([yes (default)])]
 )
 
+dnl define WORDS_BIGENDIAN if is big endian
+dnl not actually needed in this project yet
+AC_C_BIGENDIAN
+
 AC_PROG_CXX
 # need to set LANG to C++ to check for C++ headers
 # TODO: should use AC_SAVE_LANG and AC_RESTORE_LANG
+CXX_VERSION=`$CXX --version | head -n 1`
+AC_SUBST(CXX_VERSION)
 
 # which set of pre-determined compiler flags to apply?
 AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
@@ -214,6 +219,8 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([calloc free])
+AC_MSG_CHECKING([for free food])
+AC_MSG_RESULT([YES]);
 
 # sizeof checks, useful for checking ILP model
 AC_CHECK_SIZEOF(char)
@@ -265,21 +272,26 @@ case $YACC in
 		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
 		dnl Now would be a good place to check for version
 		dnl since bison is known to have significant variations.  
+		YACC_VERSION=`$yacc --version 2>&1 | head -n 1`
 		;;
 	*byacc* )
 		dnl echo "GOT byacc"
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
+		YACC_VERSION=`which $yacc | head -n 1`
 		;;
 	*yacc* )
 		dnl echo "GOT yacc"
 		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
 		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
 		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
+		dnl traditional yacc has no version flag :(
+		YACC_VERSION=`which $yacc | head -n 1`
 		;;
 	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
 esac
+AC_SUBST(YACC_VERSION)
 
 # unfortunately, lex is often IDENTICAL to flex...
 case $LEX in
@@ -293,6 +305,8 @@ case $LEX in
 		;;
 	* ) AC_MSG_ERROR([No lexer-generator found.]) ;;
 esac
+LEX_VERSION=`$LEX --version | head -n 1`
+AC_SUBST(LEX_VERSION)
 
 # AC_PROG_PERL
 AC_CHECK_PROG([PERL], perl, perl)
@@ -414,6 +428,9 @@ EOF
 chmod +x config_subst.awk.sh
 ])
 
+CONFIGDATE=`$DATE`
+AC_SUBST(CONFIGDATE)
+
 AC_CONFIG_FILES([
 	Makefile
 	scripts/Makefile
@@ -445,14 +462,16 @@ AC_CONFIG_FILES([
 	dox/tutorial/Makefile
 	hackt.doxygen.config
 ])
+AC_CONFIG_FILES([scripts/replace_if_changed.sh],
+	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/test-expect.sh],
 	[chmod +x src/util/test/test-expect.sh])
-AC_CONFIG_FILES([test/artc-expect.sh],
-	[chmod +x test/artc-expect.sh])
-AC_CONFIG_FILES([test/artobj-diff.sh],
-	[chmod +x test/artobj-diff.sh])
-AC_CONFIG_FILES([test/artobjunroll-expect.sh],
-	[chmod +x test/artobjunroll-expect.sh])
+AC_CONFIG_FILES([test/parse-test-expect.sh],
+	[chmod +x test/parse-test-expect.sh])
+AC_CONFIG_FILES([test/hackt-obj-diff.sh],
+	[chmod +x test/hackt-obj-diff.sh])
+AC_CONFIG_FILES([test/hackt-unroll-expect.sh],
+	[chmod +x test/hackt-unroll-expect.sh])
 AC_CONFIG_FILES([test/hackt-create-expect.sh],
 	[chmod +x test/hackt-create-expect.sh])
 AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
@@ -462,63 +481,43 @@ AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
 
-dnl no input file needsd, just referencing arbitrary existing file
-AC_CONFIG_FILES([configdate.h:config/macro-value.h.in],
-	[date=`./config_subst.awk.sh -v var=DATE config.status`
-	sed 's/MACRO/CONFIGDATE/g' $srcdir/config/macro-value.h.in | \
-		sed "s/VALUE/\"`$date`\"/g" > configdate.h
-	])
+dnl the AC_CONFIG_HEADERS macro does not perform AC_SUBST-itution
+dnl so we have to fall back onto AC_CONFIG_FILES :(
+dnl It wouldve been nice to have difference checking from AC_CONFIG_HEADERS...
+dnl work on this nicety later...
 
-AC_CONFIG_FILES([src/buildhost.h:config/macro-value.h.in],
-	[host=`./config_subst.awk.sh -v var=host config.status`
-	build=`./config_subst.awk.sh -v var=build config.status`
-	sed 's/MACRO/CONFIG_HOST/g' $srcdir/config/macro-value.h.in | \
-		sed "s/VALUE/\"$host\"/g" > src/buildhost.h
-	sed 's/MACRO/CONFIG_BUILD/g' $srcdir/config/macro-value.h.in | \
-		sed "s/VALUE/\"$build\"/g" >> src/buildhost.h
-	])
+dnl no input file needed, just referencing arbitrary existing file
+dnl AC_CONFIG_FILES([configdate.h:config/macro-value.h.in],
+dnl	[out=configdate.h
+dnl	date=`./config_subst.awk.sh -v var=DATE config.status`
+dnl	sed 's/MACRO/CONFIGDATE/g' $srcdir/config/macro-value.h.in | \
+dnl		sed "s/VALUE/\"`$date`\"/g" > $out
+dnl	])
 
-AC_CONFIG_FILES([src/cxx_version.h:config/macro-value.h.in],
-	[cxx=`./config_subst.awk.sh -v var=CXX config.status`
-	sed 's/MACRO/CXX_VERSION/g' $srcdir/config/macro-value.h.in | \
-		sed "s/VALUE/\"`$cxx --version | head -n 1`\"/g" > src/cxx_version.h
-	])
-
-AC_CONFIG_FILES([src/cxxflags.h:config/macro-value.h.in],
-	[cxxflags=`./config_subst.awk.sh -v var=CXXFLAGS config.status`
-	sed 's/MACRO/CONFIG_CXXFLAGS/g' $srcdir/config/macro-value.h.in | \
-		sed "s/VALUE/\"$cxxflags\"/g" > src/cxxflags.h
-	])
-
-AC_CONFIG_FILES([src/lexer/lex_version.h:config/macro-value.h.in],
-	[lex=`./config_subst.awk.sh -v var=LEX config.status`
-	sed 's/MACRO/LEX_VERSION/g' $srcdir/config/macro-value.h.in | \
-		sed "s/VALUE/\"`$lex --version | head -n 1`\"/g" > src/lexer/lex_version.h
-	])
-
-dnl traditional yacc has no version flag :(
-AC_CONFIG_FILES([src/parser/yacc_version.h:config/macro-value.h.in],
-	[yacc=`./config_subst.awk.sh -v var=YACC config.status`
-	version="none"
-	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
-	then
-		version=`which $yacc | head -n 1`
-	else
-		version=`$yacc --version 2>&1 | head -n 1`
-	fi
-	sed 's/MACRO/YACC_VERSION/g' $srcdir/config/macro-value.h.in | \
-		sed "s|VALUE|\"$version\"|g" > src/parser/yacc_version.h
-	])
+AC_CONFIG_FILES([configdate.h src/buildhost.h])
+AC_CONFIG_FILES([src/cxxflags.h src/cxx_version.h])
+AC_CONFIG_FILES([src/lexer/lex_version.h src/parser/yacc_version.h])
 
 AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
-	[if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	[out=src/parser/hackt-parse.yy
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
 	then
-		sed '/%pure.parser/d' $srcdir/src/parser/hackt-parse.yy.in > \
-			src/parser/hackt-parse.yy
+		sed '/%pure.parser/d' $srcdir/$out.in > $out~
 	else
-		cp $srcdir/src/parser/hackt-parse.yy.in src/parser/hackt-parse.yy
+		cp $srcdir/$out.in $out~
 	fi
+	scripts/replace_if_changed.sh $out~ $out
 	])
+
+dnl initialize and reset header check dependencies
+dnl also depend on Makefile?
+dnl can't run make until depfiles has run! doh... work on this later...
+dnl
+dnl AC_CONFIG_FILES([src/headers_deps.make],
+dnl 	[out=src/headers_deps.make
+dnl 	(cd src && make echo-header-depbases) | \
+dnl 		awk -f $srcdir/src/scripts/automake_include.awk >> $out
+dnl 	])
 
 AC_OUTPUT
 

@@ -1,7 +1,0 @@
-// "002.in" should pass
-
-defchan mychan <: chan(bool) (int i) {
-send {}
-recv {}
-}
-

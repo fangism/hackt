@@ -1,0 +1,10 @@
+// "002.hac" should pass:
+// aliases the *definition*
+
+typedef	int		my_int;
+
+my_int fe;
+my_int<> fi;
+my_int<13> fo;
+my_int<128> fum;
+

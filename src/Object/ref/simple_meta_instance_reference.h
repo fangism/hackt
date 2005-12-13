@@ -1,8 +1,8 @@
 /**
 	\file "Object/ref/simple_meta_instance_reference.h"
-	Class family for instance references in ART.  
+	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.4 2005/10/25 20:51:57 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.5 2005/12/13 04:15:36 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -15,7 +15,7 @@
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::packed_array_generic;
 
@@ -128,7 +128,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 

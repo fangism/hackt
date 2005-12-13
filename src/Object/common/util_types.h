@@ -2,7 +2,7 @@
 	\file "Object/common/util_types.h"
 	Collective typedefs for utility types.  
 	This file was "Object/common/util_types.h" in a former life.  
-	$Id: util_types.h,v 1.3 2005/10/30 22:00:20 fang Exp $
+	$Id: util_types.h,v 1.4 2005/12/13 04:15:18 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_UTIL_TYPES_H__
@@ -14,7 +14,7 @@
 #include "util/memory/pointer_classes_fwd.h"
 #include <deque>		// to complete type for deque
 
-namespace ART {
+namespace HAC {
 namespace entity {
 	class name_space;
 	class meta_instance_reference_base;
@@ -75,7 +75,7 @@ namespace entity {
 			instantiation_state;
 
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_UTIL_TYPES_H__
 

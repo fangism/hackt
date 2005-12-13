@@ -1,0 +1,14 @@
+// "null-00.hac"
+// copy-reduced from "loop-00.hac"
+
+defproc null() {
+bool x, y;
+prs {
+(:i:0:
+	x	=> y-
+)
+}
+}
+
+null foo;
+

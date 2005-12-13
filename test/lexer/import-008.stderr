@@ -1,6 +1,6 @@
 At: "-stdin-":4:
-At: "import-006.in":4:
-Detected cyclic file dependency: import-006.in
+At: "import-006.hac":4:
+Detected cyclic file dependency: import-006.hac
 Caught exception from lexer, aborting parsing.
-From: "import-006.in"
+From: "import-006.hac"
 Caught exception from lexer, aborting parsing.

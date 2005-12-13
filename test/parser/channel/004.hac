@@ -1,0 +1,4 @@
+// "004.hac" should fail, channel data types should be anonymous
+
+defchan mychan <: chan(bool b) (int i);
+

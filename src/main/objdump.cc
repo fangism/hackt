@@ -4,7 +4,7 @@
 	Useful for testing object file integrity.  
 	This file came from "artobjdump.cc" in a previous life.  
 
-	$Id: objdump.cc,v 1.4 2005/11/10 02:13:06 fang Exp $
+	$Id: objdump.cc,v 1.5 2005/12/13 04:15:47 fang Exp $
  */
 
 #include <iostream>
@@ -13,7 +13,7 @@
 #include "main/main_funcs.h"
 #include "util/using_ostream.h"
 
-namespace ART {
+namespace HAC {
 //=============================================================================
 class objdump::options {
 };	// end class options
@@ -62,5 +62,5 @@ objdump::usage(void) {
 
 //=============================================================================
 
-}	// end namespace ART
+}	// end namespace HAC
 

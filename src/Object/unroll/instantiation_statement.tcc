@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.5 2005/09/04 21:15:01 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.6 2005/12/13 04:15:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -41,7 +41,7 @@
 #include "util/stacktrace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_param_expr_list;
 USING_STACKTRACE
@@ -425,7 +425,7 @@ INSTANTIATION_STATEMENT_CLASS::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
 

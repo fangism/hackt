@@ -1,4 +1,0 @@
-// "004.in" should fail, channel data types should be anonymous
-
-defchan mychan <: chan(bool b) (int i);
-

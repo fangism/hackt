@@ -1,7 +1,7 @@
 /**
 	\file "Object/common/alias_string_cache.h"
 	Alias string cache structure.  
-	$Id: alias_string_cache.h,v 1.3 2005/11/03 07:52:04 fang Exp $
+	$Id: alias_string_cache.h,v 1.4 2005/12/13 04:15:17 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_ALIAS_STRING_CACHE_H__
@@ -10,7 +10,7 @@
 #include <vector>
 #include <string>
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::vector;
 //=============================================================================
@@ -70,7 +70,7 @@ struct wire_alias_set : public vector<alias_string_cache> {
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_COMMON_ALIAS_STRING_CACHE_H__
 

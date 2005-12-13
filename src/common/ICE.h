@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.h"
 	Macros for internal compiler errors.  
-	$Id: ICE.h,v 1.3 2005/09/04 21:15:05 fang Exp $
+	$Id: ICE.h,v 1.4 2005/12/13 04:15:44 fang Exp $
  */
 
 #ifndef	__COMMON_ICE_H__
@@ -16,13 +16,13 @@
 	\param ostr the output stream, like cerr.
  */
 #define	ICE_GREET(ostr)							\
-	ART::__ICE_where(ostr, __PRETTY_FUNCTION__, __FILE__, __LINE__)
+	HAC::__ICE_where(ostr, __PRETTY_FUNCTION__, __FILE__, __LINE__)
 
 /**
 	Sign off and abort.  
  */
 #define	ICE_EXIT(ostr)							\
-	ART::__ICE_exit(ostr)
+	HAC::__ICE_exit(ostr)
 
 /**
 	Standard internal compiler error macro.  
@@ -41,7 +41,7 @@
 	ostr << ICE_never_call << endl;					\
 	ICE_EXIT(ostr)
 
-namespace ART {
+namespace HAC {
 
 extern
 void
@@ -54,7 +54,7 @@ __ICE_exit(std::ostream&) __ATTRIBUTE_NORETURN__ ;
 extern
 const char ICE_never_call[];
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __COMMON_ICE_H__
 

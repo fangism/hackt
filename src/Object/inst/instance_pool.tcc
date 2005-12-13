@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.4 2005/09/14 15:30:31 fang Exp $
+	$Id: instance_pool.tcc,v 1.5 2005/12/13 04:15:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -17,7 +17,7 @@
 #include "util/IO_utils.h"
 #include "util/indent.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
@@ -216,6 +216,6 @@ instance_pool<T>::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_POOL_TCC__

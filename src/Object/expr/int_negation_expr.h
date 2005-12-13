@@ -3,7 +3,7 @@
 	Class definitions for integer negation expression.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_negation_expr.h,v 1.3 2005/10/25 20:51:51 fang Exp $
+	$Id: int_negation_expr.h,v 1.4 2005/12/13 04:15:23 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_INT_NEGATION_EXPR_H__
@@ -12,7 +12,7 @@
 #include "Object/expr/int_expr.h"
 #include "util/memory/count_ptr.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using util::persistent_object_manager;
 using util::memory::count_ptr;
@@ -55,7 +55,7 @@ public:
 // what about ! int -> bool ?
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_EXPR_INT_NEGATION_EXPR_H__
 

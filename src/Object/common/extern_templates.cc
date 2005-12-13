@@ -4,7 +4,7 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.4 2005/09/05 05:04:30 fang Exp $
+	$Id: extern_templates.cc,v 1.5 2005/12/13 04:15:18 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
@@ -17,8 +17,8 @@
 
 // since namespace doesn't affect instantiation, this is convenient
 namespace util {
-using ART::entity::pint_value_type;
-using ART::entity::pbool_value_type;
+using HAC::entity::pint_value_type;
+using HAC::entity::pbool_value_type;
 using std::list;
 
 // template class multikey_base<pint_value_type>;

@@ -1,0 +1,7 @@
+// "016.hac"
+// copy-modified from "020.hac"
+
+import "001.hac";
+
+bool bool;	// intentional error
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/meta_conditional_base.cc"
 	Base for guarded bodies in meta language.  
-	$Id: meta_conditional_base.cc,v 1.2 2005/10/30 22:00:24 fang Exp $
+	$Id: meta_conditional_base.cc,v 1.3 2005/12/13 04:15:43 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_CONDITIONAL_BASE_CC__
@@ -19,7 +19,7 @@
 // #include "util/stacktrace.h"
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 
 //=============================================================================
@@ -60,7 +60,7 @@ meta_conditional_base::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_UNROLL_META_CONDITIONAL_BASE_CC__
 

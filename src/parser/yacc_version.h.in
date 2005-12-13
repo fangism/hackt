@@ -1,0 +1,4 @@
+#ifndef	YACC_VERSION
+#define	YACC_VERSION	"@YACC_VERSION@"
+#endif
+

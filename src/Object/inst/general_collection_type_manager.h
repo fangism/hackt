@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.3 2005/09/04 21:14:49 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.4 2005/12/13 04:15:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -12,7 +12,7 @@
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 using std::istream;
 using std::ostream;
@@ -103,7 +103,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
 

@@ -1,0 +1,11 @@
+// "044.hac" should pass, using template parameters in definitions' parameters
+// copy-modified from "043.hac"
+
+template <pint E>
+defproc bogus() {
+pint M[E];
+M[0] = 3;
+}
+
+bogus<2> x;
+

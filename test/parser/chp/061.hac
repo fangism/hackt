@@ -1,0 +1,12 @@
+// "061.hac" should pass, valid do-while loop
+
+defproc foo(chan?(bool) A, B, G; chan!(bool) Z) {
+bool a, b, g;
+chp {
+	*[ a -> B?(b)
+	[] ~a & b -> G?(g)
+	[] ~a & ~b & g -> Z!(true); A?(a)
+	]
+}
+}
+

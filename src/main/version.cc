@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.4 2005/12/10 03:56:56 fang Exp $
+	$Id: version.cc,v 1.5 2005/12/13 04:15:48 fang Exp $
  */
 
 #include <iostream>
@@ -24,7 +24,7 @@
 
 // #include "util/getopt_portable.h"
 
-namespace ART {
+namespace HAC {
 #include "util/using_ostream.h"
 using util::readline_wrapper;
 
@@ -154,5 +154,5 @@ version::usage(void) {
 
 //=============================================================================
 
-}	// end namespace ART
+}	// end namespace HAC
 

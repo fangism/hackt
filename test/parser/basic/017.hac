@@ -1,0 +1,8 @@
+// "017.hac"
+// copy-modified from "016.hac", order reversed
+// should fail, no imports allowed after non-imports appear
+
+bool Q;
+
+import "001.hac";
+

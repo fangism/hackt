@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.3 2005/11/03 07:52:05 fang Exp $
+	$Id: PRS_footprint.cc,v 1.4 2005/12/13 04:15:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,7 +24,7 @@
 #include "util/stacktrace.h"
 #include "common/ICE.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 namespace PRS {
 #include "util/using_ostream.h"
@@ -422,5 +422,5 @@ template class util::list_vector<footprint::rule>;
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 

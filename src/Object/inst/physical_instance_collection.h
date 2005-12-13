@@ -1,8 +1,8 @@
 /**
 	\file "Object/inst/physical_instance_collection.h"
-	Instance collection classes for ART.  
+	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.6 2005/11/02 22:53:47 fang Exp $
+	$Id: physical_instance_collection.h,v 1.7 2005/12/13 04:15:32 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -10,7 +10,7 @@
 
 #include "Object/inst/instance_collection_base.h"
 
-namespace ART {
+namespace HAC {
 class cflat_options;
 namespace entity {
 class port_alias_tracker;
@@ -136,7 +136,7 @@ protected:	// propagate to children
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 

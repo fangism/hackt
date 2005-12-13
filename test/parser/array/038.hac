@@ -1,0 +1,12 @@
+// "038.hac" should pass: non-overlapping sparse array instantiations
+// copied from 015.hac, changed int to pint
+
+pint foo[4];
+pint foo[40..42];
+pint foo[6..12];
+pint foo[15..20];
+pint foo[25..29];
+pint foo[21..24];
+pint foo[4..4];
+pint foo[5..5];
+

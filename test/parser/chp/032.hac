@@ -1,0 +1,11 @@
+// "032.hac" -- should pass
+
+defproc adjacent_diff(chan?(int) L; chan!(int) R) {
+int x, z;
+chp {
+	L?(x);
+	L?(z);
+	R!(x - z)
+}
+}
+

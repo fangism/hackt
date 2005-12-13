@@ -1,0 +1,9 @@
+// "102.hac" should pass, types match
+// copy-modified from "101.hac"
+
+template <pint X,Y>
+defproc bar(int<X> a; int<Y> b) { }
+
+bar<2,3> w, z;
+w.a = z.a;
+

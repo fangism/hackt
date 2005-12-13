@@ -1,0 +1,17 @@
+// "celem-06.hac"
+// copy modified from "celem-04.hac"
+// should pass -- using loop-and expression, shuffled with modulo
+
+// CLARIFICATION: expression operations should be automatically parenthesized
+// TODO: implement param_expression dump context
+
+template <pint N>
+defproc celemNinv(bool a[N]; bool _o) {
+prs {
+	(&:i:N:	a[(i+1)%N] )			-> _o-
+	(&:i:N: ~a[(i+1)%N] )			-> _o+
+}
+}
+
+celemNinv<4> c;
+

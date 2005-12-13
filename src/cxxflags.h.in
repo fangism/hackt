@@ -1,0 +1,4 @@
+#ifndef	CONFIG_CXXFLAGS
+#define	CONFIG_CXXFLAGS	"@CXXFLAGS@"
+#endif
+

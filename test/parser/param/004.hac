@@ -1,0 +1,6 @@
+// "004.hac" should pass both parsing and type-checking
+// old version of this is now 013.hac
+
+pint N = 2;
+pint M = N;
+

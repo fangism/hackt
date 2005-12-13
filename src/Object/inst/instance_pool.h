@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.4 2005/09/14 15:30:31 fang Exp $
+	$Id: instance_pool.h,v 1.5 2005/12/13 04:15:30 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_H__
@@ -13,7 +13,7 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class footprint;
 using std::istream;
@@ -79,7 +79,7 @@ public:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_INSTANCE_POOL_H__
 

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.4 2005/10/25 20:51:54 fang Exp $
+	$Id: pint_const.h,v 1.5 2005/12/13 04:15:27 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PINT_CONST_H__
@@ -16,7 +16,7 @@
 // switch over to chunk_map_pool
 
 //=============================================================================
-namespace ART {
+namespace HAC {
 namespace entity {
 class const_range_list;
 USING_CONSTRUCT
@@ -150,7 +150,7 @@ public:
 };	// end class pint_const
 
 //=============================================================================
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_PINT_CONST_H__

@@ -1,7 +1,7 @@
 /**
 	\file "main/create.h"
 	Interface header for create module.  
-	$Id: create.h,v 1.2 2005/08/08 16:51:12 fang Exp $
+	$Id: create.h,v 1.3 2005/12/13 04:15:46 fang Exp $
  */
 
 #ifndef	__MAIN_CREATE_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 
 /**
 	Instance-less class.  
@@ -46,7 +46,7 @@ private:
 	program_id;
 };	// end class create
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_CREATE_H__
 

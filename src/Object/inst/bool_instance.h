@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/bool_instance.h"
 	Boolean state instance.  
-	$Id: bool_instance.h,v 1.2 2005/09/04 21:14:48 fang Exp $
+	$Id: bool_instance.h,v 1.3 2005/12/13 04:15:28 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_BOOL_INSTANCE_H__
@@ -10,7 +10,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/inst/state_instance.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 /**
@@ -43,7 +43,7 @@ class class_traits<bool_tag>::state_instance_base {
 
 //-----------------------------------------------------------------------------
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_INST_BOOL_INSTANCE_H__
 

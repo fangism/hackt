@@ -1,0 +1,10 @@
+// "012a.hac" should pass: all valid uses of a template type with default
+
+template <pint N = 7>
+defproc foo();		// undefined cannot unroll
+
+foo bar;
+foo<> blah;
+foo<6> ick;
+foo<7> poo;
+

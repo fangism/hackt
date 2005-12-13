@@ -3,7 +3,7 @@
 	Header for a few simple structures, useful to the 
 	language front-end.  
 	Note, this is a C++ source file.  
-	$Id: hac_lex.h,v 1.2 2005/11/10 02:13:03 fang Exp $
+	$Id: hac_lex.h,v 1.3 2005/12/13 04:15:45 fang Exp $
 	This file's earlier revision history originates from:
 	Id: art_lex.h,v 1.5 2005/02/27 22:12:00 fang Exp
  */
@@ -21,7 +21,7 @@
 // goal: 0
 #define	USE_TOKEN_POSITION_OFFSET		0
 
-namespace ART {
+namespace HAC {
 namespace lexer {
 using std::ostream;
 
@@ -90,7 +90,7 @@ friend ostream& operator << (ostream& o, const line_range& l);
 //=============================================================================
 
 }	// end namespace lexer
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __LEXER_HAC_LEX_H__
 

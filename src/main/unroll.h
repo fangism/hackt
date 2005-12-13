@@ -1,7 +1,7 @@
 /**
 	\file "main/unroll.h"
 	Interface header for unroll module.  
-	$Id: unroll.h,v 1.2 2005/08/08 16:51:13 fang Exp $
+	$Id: unroll.h,v 1.3 2005/12/13 04:15:48 fang Exp $
  */
 
 #ifndef	__MAIN_UNROLL_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 
-namespace ART {
+namespace HAC {
 
 /**
 	Instance-less class.  
@@ -46,7 +46,7 @@ private:
 	program_id;
 };	// end class unroll
 
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __MAIN_UNROLL_H__
 

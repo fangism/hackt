@@ -1,8 +1,0 @@
-// "017.in"
-// copy-modified from "016.in", order reversed
-// should fail, no imports allowed after non-imports appear
-
-bool Q;
-
-import "001.in";
-

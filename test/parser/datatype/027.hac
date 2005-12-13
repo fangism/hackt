@@ -1,0 +1,6 @@
+// "027.hac" should pass, re-declaration of a defined enumeration
+
+enum foo { bar }
+
+enum foo;	// re-declaration
+

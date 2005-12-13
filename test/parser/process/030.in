@@ -1,9 +1,0 @@
-// "030.in" should pass: redeclaration matches in template formals
-// two equivalent specifications of formal parameter
-
-template <pint bar; pint none; pint blah>
-defproc foo();
-
-template <pint bar, none, blah>
-defproc foo();
-

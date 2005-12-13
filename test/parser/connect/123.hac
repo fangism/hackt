@@ -1,0 +1,15 @@
+// "123.hac"
+// copy-modified from "122.hac"
+// should pass
+
+defproc array(bool x) {
+bool composite;
+x = composite;
+}
+
+defproc foo() {
+array p;
+}
+
+foo x;
+

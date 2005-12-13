@@ -1,0 +1,9 @@
+// "053.hac" should fail -- internal member sizes cannot depend on relaxed param
+// copy-modified from "051.hac"
+
+template <><pint W>
+defproc foo() {
+	int my_int[W];
+}
+
+

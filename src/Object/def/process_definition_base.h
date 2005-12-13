@@ -1,8 +1,8 @@
 /**
 	\file "Object/def/process_definition_base.h"
-	Process-definition-related ART object classes.  
+	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_base.h,v 1.3 2005/09/04 21:14:44 fang Exp $
+	$Id: process_definition_base.h,v 1.4 2005/12/13 04:15:21 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
@@ -11,7 +11,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 class process_type_reference;
 //=============================================================================
@@ -57,7 +57,7 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 #endif	// __OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
 

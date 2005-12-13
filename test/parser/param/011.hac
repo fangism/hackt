@@ -1,0 +1,4 @@
+// "011.hac" should fail: type mismatch
+
+pint N = true;
+

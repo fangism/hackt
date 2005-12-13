@@ -1,13 +1,13 @@
 /**
 	\file "Object/expr/operator_info.h"
 	Some expression specific implementation details.  
-	$Id: operator_info.h,v 1.2 2005/10/25 20:51:53 fang Exp $
+	$Id: operator_info.h,v 1.3 2005/12/13 04:15:26 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_OPERATOR_INFO_H__
 #define __OBJECT_EXPR_OPERATOR_INFO_H__
 
-namespace ART {
+namespace HAC {
 namespace entity {
 /**
 	Namespace for expression-specific implementations.  
@@ -28,7 +28,7 @@ struct op_info {
 
 //=============================================================================
 }	// end namespace expr_detail
-}	// end namespace ART
+}	// end namespace HAC
 }	// end namespace entity
 
 #endif	// __OBJECT_EXPR_OPERATOR_INFO_H__

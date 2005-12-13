@@ -1,0 +1,10 @@
+// "034.hac" -- should pass
+
+defproc sum_diff(chan?(int, int) L; chan!(int, int) R) {
+int x, z;
+chp {
+	L?(x, z);
+	R!(x-z, x+z)
+}
+}
+

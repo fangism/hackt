@@ -1,9 +1,9 @@
 /**
 	\file "Object/unroll/instantiation_statement.h"
-	Instance statement classes for ART.  
+	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.5 2005/12/10 03:56:56 fang Exp $
+	$Id: instantiation_statement.h,v 1.6 2005/12/13 04:15:42 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -14,7 +14,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
-namespace ART {
+namespace HAC {
 namespace entity {
 //=============================================================================
 USING_LIST
@@ -141,14 +141,14 @@ protected:
 
 //=============================================================================
 }	// end namespace entity
-}	// end namespace ART
+}	// end namespace HAC
 
 //=============================================================================
 namespace util {
 namespace memory {
-using ART::entity::instantiation_statement;
-using ART::entity::pint_tag;
-using ART::entity::pbool_tag;
+using HAC::entity::instantiation_statement;
+using HAC::entity::pint_tag;
+using HAC::entity::pbool_tag;
 
 // excl_ptr already forward-declared
 
