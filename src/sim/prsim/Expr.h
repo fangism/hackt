@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.1.2.1 2005/12/14 05:16:52 fang Exp $
+	$Id: Expr.h,v 1.1.2.2 2005/12/14 07:16:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -61,6 +61,10 @@ struct Expr {
 	
 public:
 	Expr();
+
+	explicit
+	Expr(const count_type s);
+
 	~Expr();
 
 };	// end struct Expr
