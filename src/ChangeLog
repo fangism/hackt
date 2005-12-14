@@ -5,6 +5,11 @@
 
 2005-12-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-02:
+	  Drafted sim/prsim/{Node,Expr}.{h,cc} structs based on the old ones.  
+	  Makefile.am: added installcheck-local target.
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-01:
 	  This branch is for the development of the old prsim, 
 		with no new fancy features.  Its purpose is to provide

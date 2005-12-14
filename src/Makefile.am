@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.1 2005/12/13 21:38:31 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.2 2005/12/14 05:16:50 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -44,7 +44,7 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
-	libhacktexec.la
+	libhacktexec.la libhacktsim.la
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -54,7 +54,7 @@ LIBBOGUS_LA = libbogus_la
 # order in parallel builds.  
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la libhackt.la libfangutil.la
+hackt_LDADD = libhacktexec.la libhackt.la libfangutil.la libhacktsim.la
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -530,6 +530,7 @@ UTIL_HEADER_FILES = \
 	util/persistent.h \
 	util/pthread.h \
 	util/qmap_fwd.h \
+	util/readline.h \
 	util/readline_wrap.h \
 	util/reserve.h \
 	util/ring_node_fwd.h \
@@ -538,6 +539,7 @@ UTIL_HEADER_FILES = \
 	util/stacktrace.h \
 	util/static_assert.h \
 	util/static_trace.h \
+	util/string.h \
 	util/string_fwd.h \
 	util/type_traits.h \
 	util/using_istream.h \
@@ -581,6 +583,14 @@ PARSER_CC_FILES = \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
+
+SIM_CC_FILES = \
+	sim/prsim/Node.cc \
+	sim/prsim/Expr.cc
+
+SIM_TCC_FILES =
+
+SIM_H_FILES = $(SIM_CC_FILES:.cc=.h)
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \
@@ -626,6 +636,8 @@ libhackt_la_SOURCES = \
 
 libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
 
+libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
+
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
@@ -661,12 +673,14 @@ ALL_HEADER_FILES += \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
+	$(SIM_H_FILES) \
 	config.h \
 	main/main_funcs.h
 
 ALL_TCC_FILES += \
 	$(UTIL_TCC_FILES) \
 	$(OBJECT_TCC_FILES) \
+	$(SIM_TCC_FILES) \
 	$(AST_TCC_FILES)
 
 # don't actually need -l[f]l
@@ -954,6 +968,26 @@ EXTRA_DIST += local.cvsignore \
 	sim/prsim/README
 
 TESTS = hackt_persistent_table.sh test/getopt_test.test
+
+installcheck-local:
+	@list=$(bin_PROGRAMS) ; \
+	for p in $$list ; do \
+		p1=`echo $$p|$(SED) 's/$(EXEEXT)$$//'`; \
+		if test -f $$p || test -f $$p1 ; then \
+			f=`echo "$$p1" | $(SED) 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+			run=$(DESTDIR)$(bindir)/$$f ; \
+			if test ! -f $$run ; then \
+				$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
+			fi ; \
+			$(ECHO) "======== running: $$run ================" ; \
+			$$run || : ; \
+			$(ECHO) "======== running: $$run version ========" ; \
+			$$run version ; \
+		else : ; \
+		fi; \
+	done
+	@$(ECHO) "======== end of installcheck ========"
+
 # test/getopt_test.test
 CLEANFILES += $(AUTOHEADERS)
 DISTCLEANFILES += hackt_persistent_table.sh $(VERSIONHEADERS)
@@ -1001,7 +1035,9 @@ DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 OBJECT_DIRS = Object Object/common Object/expr Object/def Object/inst \
 	Object/lang Object/ref Object/traits Object/type Object/unroll
 
-CLEANSUBDIRS = lexer parser AST $(OBJECT_DIRS) \
+SIM_DIRS = sim sim/prsim
+
+CLEANSUBDIRS = lexer parser AST $(OBJECT_DIRS) $(SIM_DIRS) \
 	util util/numeric util/memory util/obsolete util/STL
 
 clean-parser:
@@ -1016,14 +1052,22 @@ clean-AST:
 	-$(RM) AST/*.$(OBJEXT)
 	-$(RM) AST/*.lo
 
+# could just rm `find ... `
 clean-Object:
 	for d in $(OBJECT_DIRS) ; do \
 		$(RM) $$d/*.$(OBJEXT) ; \
 		$(RM) $$d/*.lo ; \
 	done
 
+clean-sim:
+	for d in $(SIM_DIRS) ; do \
+		$(RM) $$d/*.$(OBJEXT) ; \
+		$(RM) $$d/*.lo ; \
+	done
+
 # implies CLEANFILES
-clean-local: clean-AST clean-Object clean-lexer clean-parser clean-header-tests
+clean-local: clean-AST clean-Object clean-lexer clean-parser clean-sim \
+		clean-header-tests
 	for d in $(CLEANSUBDIRS); do \
 		$(RM) $$d/*.loT ; \
 	done
@@ -1059,6 +1103,10 @@ AST/.cvsignore: .cvsignore
 	$(CP) $? $@
 main/.cvsignore: .cvsignore
 	$(CP) $? $@
+sim/.cvsignore: .cvsignore
+	$(CP) $? $@
+sim/prsim/.cvsignore: .cvsignore
+	$(CP) $? $@
 util/.cvsignore: .cvsignore
 	$(CP) $? $@
 util/STL/.cvsignore: .cvsignore
@@ -1073,6 +1121,7 @@ test/.cvsignore: .cvsignore test/local.cvsignore
 	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
 # files to ignore in subdirectories
+# can we generate this from suffix appending?
 SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	common/.cvsignore \
 	Object/.cvsignore Object/common/.cvsignore \
@@ -1081,6 +1130,7 @@ SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
 	Object/unroll/.cvsignore \
 	AST/.cvsignore main/.cvsignore \
+	sim/.cvsignore sim/prsim/.cvsignore \
 	util/.cvsignore util/STL/.cvsignore \
 	util/memory/.cvsignore util/numeric/.cvsignore \
 	util/obsolete/.cvsignore \
@@ -1104,7 +1154,7 @@ dist-hook:
 	done
 
 help-local:
-#	-@$(CALLMAKE) help-check-headers 2> /dev/null
+	-@$(CALLMAKE) help-check-headers 2> /dev/null
 	@$(ECHO) "Local make targets:"
 	@$(ECHO) "    hackt: the main executable"
 	@$(ECHO) "    libhackt.la: core library"

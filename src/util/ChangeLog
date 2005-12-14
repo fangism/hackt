@@ -1,5 +1,17 @@
 # "src/util/ChangeLog"
 
+2005-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-02:
+	  Added "util/string.h" to configure-wrap around string.h, strings.h
+		and cstring, and provide some handy inline functions
+		in the util::string namespace.  
+	  util/readline_wrap.cc: configure dependencies on some readline
+		prototypes' (const-incorrect) argument types.  
+	  util/readline.h: configure-wrapped inclusion of the proper
+		readline header.  
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

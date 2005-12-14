@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.1 2005/12/13 21:38:04 fang Exp $
+#	$Id: configure.ac,v 1.23.2.2 2005/12/14 05:16:46 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -147,15 +147,24 @@ dnl not actually needed in this project yet
 AC_C_BIGENDIAN
 
 AC_PROG_CXX
-# need to set LANG to C++ to check for C++ headers
-# TODO: should use AC_SAVE_LANG and AC_RESTORE_LANG
+dnl we need these anal flags for checking for certain charateristics
+dnl TODO: what are the equivalent flags for other compilers?
+ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
+touch conftest.cc
+if $CXX $ANAL_FLAGS -c conftest.cc
+then noop=0
+else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
+fi
+
 CXX_VERSION=`$CXX --version | head -n 1`
 AC_SUBST(CXX_VERSION)
 
-# which set of pre-determined compiler flags to apply?
+dnl need to set LANG to C++ to check for C++ headers
+
+dnl which set of pre-determined compiler flags to apply?
 AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
-# TODO: add other conditionals for other common compilers
-# XLC++, ICC, HPCC, etc...
+dnl TODO: add other conditionals for other common compilers
+dnl XLC++, ICC, HPCC, etc...
 
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
@@ -347,17 +356,13 @@ else
 fi
 
 if test -n "$LATEX"
-then
-	AC_SUBST(HAVE_LATEX, "YES")
-else
-	AC_SUBST(HAVE_LATEX, "NO")
+then AC_SUBST(HAVE_LATEX, "YES")
+else AC_SUBST(HAVE_LATEX, "NO")
 fi
 
 if test -n "$PDFLATEX"
-then
-	AC_SUBST(HAVE_PDFLATEX, "YES")
-else
-	AC_SUBST(HAVE_PDFLATEX, "NO")
+then AC_SUBST(HAVE_PDFLATEX, "YES")
+else AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
 
 # figure related stuff
@@ -415,7 +420,39 @@ else
 		[AC_MSG_ERROR(Couldn't find editline libraries.)],
 		-lncurses )
 fi
-# end shameless copying from ngspice::configure.in
+
+if test "$ac_cv_header_readline_readline_h" = "yes" || \
+	test "$ac_cv_header_editline_readline_h" = "yes"
+then
+AC_MSG_CHECKING([if readline()'s prompt argument is const char*])
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+dnl need to have warnings enabled and turned to errors here
+SAVE_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM([
+#include <cstdio>
+#if defined(HAVE_GNUREADLINE)
+#include <readline/readline.h>
+#elif defined(HAVE_BSDEDITLINE)
+#include <editline/readline.h>
+#endif
+],[[[const char null[] = "foo"; readline(null) ]]]),
+dnl action on success
+[AC_MSG_RESULT([yes])
+AC_DEFINE(READLINE_PROMPT_CONST, 1,
+	[True if readline's argument is const char*])],
+dnl action on failure
+[AC_MSG_RESULT([no (you suck!)])
+AC_DEFINE(READLINE_PROMPT_CONST, 0,
+	[True if readline's argument is const char*])
+])
+dnl restore compile flags
+CXXFLAGS=$SAVE_CXXFLAGS
+AC_LANG_RESTORE
+fi
+
 
 dnl first, create a useful variable substitution script for use in config.status
 AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],

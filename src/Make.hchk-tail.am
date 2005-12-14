@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.7.2.1 2005/12/13 21:38:30 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.7.2.2 2005/12/14 05:16:50 fang Exp $
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
 
@@ -153,5 +153,5 @@ help-check-headers:
 # standard targets
 include $(top_srcdir)/Make.global
 
-help: help-check-headers
+# help: help-check-headers
 

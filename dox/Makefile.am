@@ -1,6 +1,6 @@
 # "dox/Makefile.am"
 # root Makefile for dox directory
-#	$Id: Makefile.am,v 1.5 2005/12/10 03:56:24 fang Exp $
+#	$Id: Makefile.am,v 1.5.4.1 2005/12/14 05:16:48 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -10,6 +10,9 @@ SUBDIRS = mk lang util objfmt man tutorial
 EXTRA_DIST += README ChangeLog local.cvsignore
 
 .NOTPARALLEL: pdf ps
+
+help-local:
+	@$(ECHO) "'make pdf' or 'ps' to build documentation in subdirs."
 
 include $(top_srcdir)/Make.global
 

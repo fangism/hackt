@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.11.2.1 2005/12/13 21:38:03 fang Exp $
+#	$Id: Make.global,v 1.11.2.2 2005/12/14 05:16:46 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -102,8 +102,13 @@ cvsdiffs:
 endif
 
 # this shouldn't be parallel...
-.NOTPARALLEL: help
-help: help-global help-local
+# .NOTPARALLEL: help
+# .NOTPARALLEL unfortunately kills everything...
+# help: help-global help-local
+help: 
+# ignore stderr
+	-@$(CALLMAKE) help-global 2> /dev/null
+	-@$(CALLMAKE) help-local 2> /dev/null
 
 help-local:
 

@@ -2,7 +2,7 @@
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.5.4.1 2005/12/13 21:38:12 fang Exp $
+#	$Id: Make.latex,v 1.5.4.2 2005/12/14 05:16:48 fang Exp $
 
 # dependence generation
 .tex.depend:
@@ -131,5 +131,5 @@ help-latex:
 	@$(ECHO) "	docs: removes output files"
 	@$(ECHO) "	depend: removes .depend dependency files"
 
-help: help-latex
+# help: help-latex
 

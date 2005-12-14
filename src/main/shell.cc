@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.5 2005/12/13 04:15:48 fang Exp $
+	$Id: shell.cc,v 1.5.2.1 2005/12/14 05:16:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,7 +14,7 @@
 #include "main/main_funcs.h"
 #include "util/persistent_object_manager.h"
 #include "util/getopt_portable.h"
-#include "util/libc.h"
+#include "util/string.h"
 #include "util/readline_wrap.h"
 
 namespace HAC {

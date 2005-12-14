@@ -1,27 +1,24 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1 2005/12/10 07:08:29 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.1 2005/12/14 05:16:53 fang Exp $
  */
 
 #include <iostream>
-#include <cstdio>       // for FILE
 #include "util/readline_wrap.h"
-
-#if	defined(HAVE_GNUREADLINE)
-#include <readline/readline.h>
-#include <readline/history.h>
-#elif	defined(HAVE_BSDEDITLINE)
-#include <editline/readline.h>
-#endif	/* HAVE_GNUREADLINE || HAVE_BSDEDITLINE */
+#include "util/readline.h"
+#include "util/string.h"
 
 /**
 	Arbitrarily chosen buffer line size.  
  */
+#ifndef	READLINE_BUFFER_SIZE
 #define	READLINE_BUFFER_SIZE		16384
+#endif
 
 namespace util {
 #include "util/using_ostream.h"
+using namespace strings;		// for some utility functions
 
 //=============================================================================
 // class readline_wrapper method definitions
@@ -49,15 +46,33 @@ readline_wrapper::set_prompt(const string& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: some ancient version of readline haas prototype without
+	'const' in ANY of the arguments (v. 4.1, ca. 2002).  
+	That is utterly unaacceptable.  We provide an internal workaround.  
+	TODO: handle line continuations (ending with '\')
+	TODO: parse semicolons (see sh behavior)
 	\return allocated line.  
  */
 char*
 readline_wrapper::gets(void) {
 	// this will automatically release the last line's memory
 #if	defined(HAVE_GNUREADLINE)  || defined(HAVE_BSDEDITLINE)
-	hold_line = hold_line_type(readline(prompt.c_str()));
+	// NOTE: some ASS version of readline accepts a char* 
+	// for the prompt argument and trips an error here.  
+	hold_line = hold_line_type(readline(
+#if defined(READLINE_PROMPT_CONST) && !READLINE_PROMPT_CONST
+		// your readline line header sucks
+		const_cast<char*>
+#endif
+		(prompt.c_str())));
 	if (hold_line && *hold_line) {
-		add_history(&*hold_line);
+#if !defined(READLINE_PROMPT_CONST) || READLINE_PROMPT_CONST
+		const
+#endif
+			char* cursor = &*hold_line;
+		cursor = eat_whitespace(cursor);
+		// this will internally strcpy the string
+		add_history(cursor);
 	}
 	return (hold_line ? &*hold_line : NULL);
 #else
