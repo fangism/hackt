@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2005-12-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-03:
+	  Created util/memory/index_pool.h which is an adapter to turn
+		any vector-like container into an index-based allocator.  
+	  Wrote util/memory/free_list adapter helper function to
+		use any of several standard containers as free-list, 
+		primarily use for memory-management.  
+
+
 2005-12-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-02:
