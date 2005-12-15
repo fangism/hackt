@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.12.2.2 2005/12/14 05:16:54 fang Exp $
+#	$Id: Make.test-tail,v 1.12.2.3 2005/12/15 04:47:10 fang Exp $
 
 PARSE_TEST_EXE = $(top_builddir)/src/hackt parse_test
 HACKT_COMPILE_EXE = $(top_builddir)/src/hackt compile
@@ -161,7 +161,7 @@ clean-empty-cflat-prs:
 
 # need a bogus dependency to make it work...
 $(EMPTY_CFLAT_PRS): Makefile
-	@touch $@
+	@$(TOUCH) $@
 
 # echo-style Makefile debugging
 echo-tests: force
