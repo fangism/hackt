@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.2 2005/12/14 05:16:46 fang Exp $
+#	$Id: configure.ac,v 1.23.2.3 2005/12/15 04:45:50 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -152,7 +152,7 @@ dnl TODO: what are the equivalent flags for other compilers?
 ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
 touch conftest.cc
 if $CXX $ANAL_FLAGS -c conftest.cc
-then noop=0
+then :
 else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
 fi
 

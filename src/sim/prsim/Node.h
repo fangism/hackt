@@ -1,13 +1,14 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.1 2005/12/14 05:16:52 fang Exp $
+	$Id: Node.h,v 1.1.2.2 2005/12/15 04:46:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
 #define	__HAC_SIM_PRSIM_NODE_H__
 
 #include <valarray>
+#include "sim/common.h"
 
 namespace HAC {
 namespace SIM {
@@ -23,14 +24,10 @@ using std::valarray;
  */
 struct Node {
 	/**
-		We reserve the power to be able to tweak this!
-	 */
-	typedef	size_t			index_type;
-	/**
 		Optional: the globally allocated index.  
 		Might not be needed.
 	 */
-	index_type			index;
+	node_index_type			index;
 
 	/**
 		enum:
@@ -76,16 +73,16 @@ struct Node {
 	/**
 		Index to the pull-up expression.
 	 */
-	index_type			pull_up_index;
+	expr_index_type			pull_up_index;
 	/**
 		Index to the pull-dn expression.
 	 */
-	index_type			pull_dn_index;
+	expr_index_type			pull_dn_index;
 
 	/**
 		List of expression indices to which this node fans out.  
 	 */
-	valarray<index_type>		fanout;
+	valarray<expr_index_type>	fanout;
 
 public:
 	/// these aren't created frequently, inline doesn't matter

@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.8 2005/12/13 04:15:17 fang Exp $
+	$Id: state_manager.cc,v 1.8.2.1 2005/12/15 04:45:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,6 +21,7 @@
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
+#include "util/memory/index_pool.tcc"
 #include "util/IO_utils.h"
 
 namespace HAC {
@@ -60,24 +61,6 @@ if (this->size() > 1) {
 	}
 }
 	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-size_t
-global_entry_pool<Tag>::allocate(void) {
-	const size_t ret = this->size();
-	push_back(entry_type());
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-size_t
-global_entry_pool<Tag>::allocate(const entry_type& t) {
-	const size_t ret = this->size();
-	push_back(t);
-	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

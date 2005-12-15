@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.2 2005/12/14 05:16:50 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.3 2005/12/15 04:45:54 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -38,7 +38,7 @@ endif
 
 bin_PROGRAMS = hackt
 
-# dirgen is completely bogus, workaround to corce directory generation
+# dirgen is completely bogus, workaround to coerce directory generation
 noinst_PROGRAMS = dirgen getopt_test
 noinst_SCRIPTS = hackt_persistent_table.sh
 
@@ -65,8 +65,13 @@ BUILT_SOURCES = parser/hackt-parse.output.h
 
 # phony program to generate _build/*/.deps directories on distcheck
 PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
-	dummy.cc
+	dummy.cc sim/dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
+
+# these two targets cause automake to create the corresponding _build
+# subdirectories, that are needed for make distcheck, for check-headers
+$(PHONYSOURCES):
+	$(TOUCH) $@
 
 cvstag.h: ChangeLog
 	@$(ECHO) "#ifndef	CVSTAG" > $@
@@ -103,20 +108,6 @@ VERSIONHEADERS = buildhost.h cxxflags.h cxx_version.h
 
 # these headers are additional dependencies for configure-dependent parser files
 CONFIGHEADERS = config.h ../config.h
-
-# these two targets cause automake to create the corresponding _build
-# subdirectories, that are needed for make distcheck, for check-headers
-dummy.cc:
-	$(TOUCH) $@
-
-util/STL/dummy.cc:
-	$(TOUCH) $@
-
-util/numeric/dummy.cc:
-	$(TOUCH) $@
-
-util/obsolete/dummy.cc:
-	$(TOUCH) $@
 
 HACKT_PARSE_ROOT = hackt-parse
 HACKT_LEX_ROOT = hackt-lex
@@ -431,6 +422,7 @@ UTIL_TCC_FILES = \
 	util/list_vector.tcc \
 	util/memory/chunk_map_pool.tcc \
 	util/memory/destruction_policy.tcc \
+	util/memory/index_pool.tcc \
 	util/memory/list_vector_pool.tcc \
 	util/memory/count_ptr.tcc \
 	util/memory/count_array_ptr.tcc \
@@ -505,6 +497,7 @@ UTIL_HEADER_FILES = \
 	util/memory/excl_ptr.h \
 	util/memory/excl_array_ptr.h \
 	util/memory/excl_malloc_ptr.h \
+	util/memory/free_list.h \
 	util/memory/ref_count_pool.h \
 	util/memory/ref_count_pool_anchor.h \
 	util/memory/thread_lock.h \
@@ -586,11 +579,15 @@ PARSER_CC_FILES = \
 
 SIM_CC_FILES = \
 	sim/prsim/Node.cc \
-	sim/prsim/Expr.cc
+	sim/prsim/Expr.cc \
+	sim/prsim/Event.cc \
+	sim/prsim/State.cc
 
 SIM_TCC_FILES =
 
-SIM_H_FILES = $(SIM_CC_FILES:.cc=.h)
+SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
+	sim/common.h \
+	sim/time.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

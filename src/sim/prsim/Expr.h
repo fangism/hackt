@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.1.2.2 2005/12/14 07:16:09 fang Exp $
+	$Id: Expr.h,v 1.1.2.3 2005/12/15 04:46:06 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -9,6 +9,7 @@
 
 #include <valarray>
 #include <utility>
+#include "sim/common.h"
 
 namespace HAC {
 namespace SIM {
@@ -21,20 +22,18 @@ using std::pair;
 	Except that this is never used to represent a literal Node.  
  */
 struct Expr {
-	/// we reserve the right to tweak this!
-	typedef	size_t			index_type;
 	typedef	unsigned char		count_type;
 
 	/**
 		The globally assigned ID of this expression node.
 		May not be needed.  
 	 */
-	index_type			index;
+	expr_index_type			index;
 
 	/**
 		Uplink to parent expression.
 	 */
-	index_type			parent;
+	expr_index_type			parent;
 
 
 	/**
@@ -80,7 +79,7 @@ public:
 struct ExprGraphNode {
 	typedef	size_t			index_type;
 	typedef	unsigned char		count_type;
-	typedef	pair<bool, index_type>	child_entry_type;
+	typedef	pair<bool, expr_index_type>	child_entry_type;
 
 	/**
 		The offset position in the parent's subexpression list.

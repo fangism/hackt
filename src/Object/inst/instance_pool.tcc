@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.5 2005/12/13 04:15:30 fang Exp $
+	$Id: instance_pool.tcc,v 1.5.2.1 2005/12/15 04:46:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
@@ -16,6 +16,7 @@
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
+#include "util/memory/index_pool.tcc"
 
 namespace HAC {
 namespace entity {
@@ -75,41 +76,6 @@ instance_pool<T>::~instance_pool() {
 #endif
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Allocates one element.  
-	Allocation is extremely efficient because of the underlying
-	list_vector implementation -- never reallocs and is pool-reserved
-	per chunk.  
-	\return the index of the newly allocated element.  
- */
-template <class T>
-size_t
-instance_pool<T>::allocate(void) {
-//	STACKTRACE_VERBOSE;
-	STACKTRACE("instance_pool::allocate()");
-	const size_t ret = this->size();
-	push_back(T());
-	INVARIANT(this->size());
-	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Allocates one element with an initial value.  
-	Requires that type T is copy-constructible.
- */
-template <class T>
-size_t
-instance_pool<T>::allocate(const T& t) {
-//	STACKTRACE_VERBOSE;
-	STACKTRACE("instance_pool::allocate(const T&)");
-	const size_t ret = this->size();
-	push_back(t);
-	INVARIANT(this->size());
-	return ret;
-}
-
 //-----------------------------------------------------------------------------
 /**
 	Dumps the state of the entire pool of instances.  
@@ -134,25 +100,6 @@ if (this->size() > 1) {
 	// else pool is empty
 	return o;
 }
-
-//-----------------------------------------------------------------------------
-#if 0
-template <class T>
-good_bool
-instance_pool<T>::expand_footprint(footprint& f) const {
-if (this->size() > 1) {
-	const_iterator i(++this->begin());
-	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
-		if (!i->get_back_ref()->
-				allocate_subinstance_footprint(f).good) {
-			return good_bool(false);
-		}
-	}
-}
-	return good_bool(true);
-}
-#endif
 
 //-----------------------------------------------------------------------------
 /**
