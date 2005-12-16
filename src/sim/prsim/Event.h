@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.1.2.1 2005/12/15 04:46:06 fang Exp $
+	$Id: Event.h,v 1.1.2.2 2005/12/16 02:43:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -63,7 +63,7 @@ struct EventPlaceholder {
 	operator < (const EventPlaceholder& r) const {
 		return time < r.time;
 	}
-};	// end
+};	// end struct EventPlaceholder
 
 //=============================================================================
 /**
@@ -109,6 +109,9 @@ public:
 		free_list_release(free_indices, i);
 	}
 
+	void
+	clear(void);
+
 };	// end class EventPool
 
 //=============================================================================
@@ -126,7 +129,35 @@ class EventQueue {
 	 */
 	typedef	priority_queue<EventPlaceholder, vector<EventPlaceholder> >
 						queue_type;
-	queue_type				queue;
+	queue_type				equeue;
+
+public:
+	EventQueue();
+	~EventQueue();
+
+	bool
+	empty(void) const {
+		return equeue.empty();
+	}
+
+	void
+	push(const EventPlaceholder& p) {
+		equeue.push(p);
+	}
+
+	/**
+		\pre queue is not empty.  
+	 */
+	EventPlaceholder
+	pop(void) {
+		const EventPlaceholder ret(equeue.top());
+		equeue.pop();
+		return ret;
+	}
+
+	void
+	clear(void);
+
 };	// end struct EventQueue
 
 //=============================================================================

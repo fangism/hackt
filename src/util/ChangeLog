@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2005-12-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-04:
+	  Added "using clear" to util::memory::index_pool for 
+		en masse deallocation.  
+
+
 2005-12-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-03:

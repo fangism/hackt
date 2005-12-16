@@ -2,7 +2,7 @@
 	\file "util/memory/index_pool.h"
 	An adapter class to turn a vector-like class into 
 	an index-based allocator.  
-	$Id: index_pool.h,v 1.1.2.1 2005/12/15 04:47:01 fang Exp $
+	$Id: index_pool.h,v 1.1.2.2 2005/12/16 02:43:22 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_INDEX_POOL_H__
@@ -52,6 +52,7 @@ public:
 	using array_type::operator[];
 	using array_type::begin;
 	using array_type::end;
+	using array_type::clear;
 
 	size_t
 	allocate(void);

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.10.4.1 2005/12/13 21:38:31 fang Exp $
+#	$Id: TODO,v 1.10.4.2 2005/12/16 02:43:17 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -8,6 +8,11 @@ Simulation:
 	generate process_entries' unrolled production rules!
 		only needed for simulation, not flattening [PUNT]
 		state information of expressions not needed yet
+
+	Write PRS rule and express walkers, and visitor functors!!!
+	Model rule-walker after cflat_prs.
+	In general, write walkers for everything, it's about time...
+	Make walkers 'friendly'...
 
 ===============================================================================
 loop development:

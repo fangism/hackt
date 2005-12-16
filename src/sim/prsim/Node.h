@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.2 2005/12/15 04:46:06 fang Exp $
+	$Id: Node.h,v 1.1.2.3 2005/12/16 02:43:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -21,14 +21,21 @@ using std::valarray;
 	Note: no alias information here, that comes from the module's
 		object hierarchy and unique allocation.  
 	Consider: padding and alignment?
+	TODO: define enum for value?
  */
 struct Node {
+	typedef	enum {
+		LOGIC_LOW = 0,		// 0
+		LOGIC_HIGH = 1,		// 1
+		LOGIC_OTHER = 2		// 2
+	} value_enum;
+#if 0
 	/**
 		Optional: the globally allocated index.  
 		Might not be needed.
 	 */
 	node_index_type			index;
-
+#endif
 	/**
 		enum:
 		0 = 0, 1 = 1, 2 = X, 3 = X
@@ -90,6 +97,9 @@ public:
 
 	/// these aren't destroyed frequently, inline doesn't matter
 	~Node();
+
+	void
+	initialize(void);
 
 };	// end struct node
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.8.2.1 2005/12/13 21:38:34 fang Exp $
+	$Id: module.h,v 1.8.2.2 2005/12/16 02:43:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -112,6 +112,9 @@ public:
 	is_allocated(void) const {
 		return allocated;
 	}
+
+	const state_manager&
+	get_state_manager(void) const { return global_state; }
 
 	/**
 		Note: sequential scope has a const-version of this, 
