@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.4 2005/12/13 04:15:34 fang Exp $
+	$Id: PRS_footprint.cc,v 1.4.2.1 2005/12/23 05:44:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,6 +16,7 @@
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "Object/common/dump_flags.h"
+#include "Object/lang/cflat_visitor.h"
 #include "main/cflat_options.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
@@ -57,8 +58,9 @@ footprint::~footprint() { }
 	Remember, sub-expressions are 1-indexed.  
  */
 ostream&
-footprint::dump_expr(const expr_node& e, ostream& o, const node_pool_type& np, 
-		const expr_pool_type& ep, const char ps) {
+footprint::dump_expr(const expr_node& e, ostream& o, 
+		const node_pool_type& np, const expr_pool_type& ep, 
+		const char ps) {
 #if STACKTRACE_DUMPS
 	STACKTRACE("PRS::footprint::dump_expr()");
 	STACKTRACE_INDENT << " at " << &e << ":" << endl;
@@ -75,7 +77,7 @@ footprint::dump_expr(const expr_node& e, ostream& o, const node_pool_type& np,
 			}
 #endif
 			INVARIANT(one == 1);
-			np[e[1]].get_back_ref()
+			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_owner);
 			break;
@@ -84,7 +86,7 @@ footprint::dump_expr(const expr_node& e, ostream& o, const node_pool_type& np,
 			STACKTRACE_INDENT << "Not ";
 #endif
 			INVARIANT(one == 1);
-			dump_expr(ep[e[1]-1], o << '~', np, ep, e.type);
+			dump_expr(ep[e.only()], o << '~', np, ep, e.type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
@@ -95,14 +97,14 @@ footprint::dump_expr(const expr_node& e, ostream& o, const node_pool_type& np,
 			const bool paren = ps && (e.type != ps);
 			if (paren) o << '(';
 			if (e.size()) {
-				dump_expr(ep[e[1]-1], o, np, ep, e.type);
+				dump_expr(ep[e.only()], o, np, ep, e.type);
 				const char* const op = 
 					(e.type == PRS_AND_EXPR_TYPE_ENUM) ?
 						" & " : " | ";
 				int i = 2;
 				const int s = e.size();
 				for ( ; i<=s; i++) {
-					dump_expr(ep[e[i]-1],
+					dump_expr(ep[e[i]],
 						o << op, np, ep, e.type);
 				}
 			}
@@ -125,7 +127,7 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 #if STACKTRACE_DUMPS
 	STACKTRACE("PRS::footprint::dump_rule()");
 #endif
-	dump_expr(ep[r.expr_index-1],
+	dump_expr(ep[r.expr_index],
 		o, np, ep, PRS_LITERAL_TYPE_ENUM) << " -> ";
 	np[r.output_index].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_owner);
@@ -153,7 +155,7 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 			INVARIANT(one == 1);
 			if (!cf.check_prs) {
 				if (cf.enquote_names) o << '\"';
-				sm.get_pool<bool_tag>()[bfm[e[1]-1]]
+				sm.get_pool<bool_tag>()[bfm[e.only()-1]]
 					.dump_canonical_name(o, topfp, sm);
 				if (cf.enquote_names) o << '\"';
 			}
@@ -162,7 +164,7 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 			INVARIANT(one == 1);
 			if (!cf.check_prs)
 				o << '~';
-			cflat_expr(ep[e[1]-1], o, bfm, topfp, cf, 
+			cflat_expr(ep[e.only()], o, bfm, topfp, cf, 
 				sm, ep, e.type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
@@ -171,7 +173,7 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 			const bool paren = ps && (e.type != ps);
 			if (!cf.check_prs && paren) o << '(';
 			if (e.size()) {
-				cflat_expr(ep[e[1]-1], o, bfm, 
+				cflat_expr(ep[e.only()], o, bfm, 
 					topfp, cf, sm, ep, e.type);
 				const char* const op = 
 					(e.type == PRS_AND_EXPR_TYPE_ENUM) ?
@@ -181,7 +183,7 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 				for ( ; i<=s; i++) {
 					if (!cf.check_prs)
 						o << op;
-					cflat_expr(ep[e[i]-1],
+					cflat_expr(ep[e[i]],
 						o, bfm, topfp, cf, 
 						sm, ep, e.type);
 				}
@@ -210,7 +212,7 @@ footprint::cflat_rule(const rule& r, ostream& o,
 	STACKTRACE("PRS::footprint::cflat_rule()");
 	STACKTRACE_INDENT << " at " << &e << ":" << endl;
 #endif
-	cflat_expr(ep[r.expr_index-1],
+	cflat_expr(ep[r.expr_index],
 		o, bfm, topfp, cf, sm, ep, PRS_LITERAL_TYPE_ENUM);
 if (!cf.check_prs) {
 	o << " -> ";
@@ -222,7 +224,7 @@ if (!cf.check_prs) {
 	sm.get_pool<bool_tag>()[bfm[r.output_index-1]]
 		.dump_canonical_name(o, topfp, sm);
 	if (cf.enquote_names) o << '\"';
-	o << (r.dir ? '+' : '-');
+	o << (r.dir ? '+' : '-') << endl;
 }
 }
 
@@ -286,8 +288,6 @@ footprint::cflat_prs(ostream& o, const footprint_frame_map<bool_tag>& bfm,
 	const const_rule_iterator e(rule_pool.end());
 	for ( ; i!=e; i++) {
 		cflat_rule(*i, o, bfm, topfp, cf, sm, expr_pool);
-		if (!cf.check_prs)
-			o << endl;
 	}
 }
 
@@ -343,15 +343,21 @@ footprint::load_object_base(istream& i) {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::accept(cflat_visitor& v) const {
+	v.visit(*this);
+}
+
 //=============================================================================
-// class footprint::expr_node method defintions
+// class footprint_expr_node method defintions
 
 /**
 	\return the index of the first zero entry, if any, 
 		indicating where an error occurred.  
  */
 size_t
-footprint::expr_node::first_error(void) const {
+footprint_expr_node::first_error(void) const {
 	const size_t s = nodes.size();
 	if (s) {
 		size_t i = 0;
@@ -368,7 +374,7 @@ footprint::expr_node::first_error(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint::expr_node::write_object_base(ostream& o) const {
+footprint_expr_node::write_object_base(ostream& o) const {
 	STACKTRACE_PERSISTENT("expr_node::write_object_base()");
 	write_value(o, type);
 	write_array(o, nodes);
@@ -376,7 +382,7 @@ footprint::expr_node::write_object_base(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint::expr_node::load_object_base(istream& i) {
+footprint_expr_node::load_object_base(istream& i) {
 	STACKTRACE_PERSISTENT("expr_node::load_object_base()");
 	read_value(i, type);
 	read_sequence_prealloc(i, nodes);
@@ -386,11 +392,17 @@ footprint::expr_node::load_object_base(istream& i) {
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_expr_node::accept(cflat_visitor& v) const {
+	v.visit(*this);
+}
+
 //=============================================================================
-// class footprint::rule method defintions
+// class footprint_rule method defintions
 
 void
-footprint::rule::write_object_base(ostream& o) const {
+footprint_rule::write_object_base(ostream& o) const {
 	STACKTRACE_PERSISTENT("rule::write_object_base()");
 	write_value(o, expr_index);
 	write_value(o, output_index);
@@ -399,11 +411,17 @@ footprint::rule::write_object_base(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint::rule::load_object_base(istream& i) {
+footprint_rule::load_object_base(istream& i) {
 	STACKTRACE_PERSISTENT("rule::load_object_base()");
 	read_value(i, expr_index);
 	read_value(i, output_index);
 	read_value(i, dir);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_rule::accept(cflat_visitor& v) const {
+	v.visit(*this);
 }
 
 //=============================================================================
@@ -415,7 +433,11 @@ footprint::rule::load_object_base(istream& i) {
 template class footprint::rule_pool_type;
 template class footprint::expr_pool_type;
 #else
+#if 0
+template class util::offset_array<util::list_vector<footprint::expr_node> >;
+#else
 template class util::list_vector<footprint::expr_node>;
+#endif
 template class util::list_vector<footprint::rule>;
 #endif
 

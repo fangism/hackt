@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2005-12-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-05:
+	  Added visitee class template.  
+	  Added offset_array array wrapper template. 
+
+
 2005-12-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-04:

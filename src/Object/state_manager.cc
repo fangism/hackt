@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.8.2.1 2005/12/15 04:45:58 fang Exp $
+	$Id: state_manager.cc,v 1.8.2.2 2005/12/23 05:44:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -144,7 +144,7 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 /**
 	Prototype cflat -- strictly for backwards compatibility.  
 	Connections should come after production rules.  (CAST tools)
-	Check of ordering mattes for various tools.
+	Check of ordering matters for various tools.
  */
 good_bool
 state_manager::cflat_prs(ostream& o, const footprint& topfp,

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-12-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-05:
+	  Re-organized some Object/lang/PRS* code a little in preparation
+		for adding functionality via a visitor for performing
+		tree traversal operations.  
+	  Moved some utility classes into their own header files.  
+	  Added some utility classes in util library (headers).  
+	  TODO: factor out bunch of arguments into cflat/print context
+		and re-implement cflat with visitor as a demonstration.  
+
+
 2005-12-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-04:
