@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.3.2.1 2005/12/23 05:44:07 fang Exp $
+	$Id: PRS_footprint.h,v 1.3.2.2 2005/12/24 02:33:34 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -12,6 +12,7 @@
 #include "Object/inst/instance_pool_fwd.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
+#include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "util/macros.h"
 #include "util/list_vector.h"
 #include "util/offset_array.h"
@@ -48,7 +49,7 @@ using std::istream;
 	of its "local" fanin and fanout, to avoid recomputing it.  
  */
 class footprint : public cflat_visitee {
-	friend struct cflat_visitor;
+	friend class cflat_visitor;
 public:
 	typedef	footprint_expr_node		expr_node;
 	typedef	footprint_rule			rule;
@@ -60,10 +61,10 @@ private:
 						node_pool_type;
 	typedef	util::list_vector<rule>		rule_pool_type;
 #if 0
-	typedef	util::list_vector<expr_node>	expr_pool_type;
-#else
 	typedef	util::offset_array<util::list_vector<expr_node>, 1>
 						expr_pool_type;
+#else
+	typedef	PRS_footprint_expr_pool_type	expr_pool_type;
 #endif
 
 	rule_pool_type				rule_pool;
@@ -75,6 +76,9 @@ public:
 
 	ostream&
 	dump(ostream&, const entity::footprint&) const;
+
+	const expr_pool_type&
+	get_expr_pool(void) const { return expr_pool; }
 
 private:
 	static
@@ -107,6 +111,8 @@ public:
 
 	rule&
 	push_back_rule(const int, const int, const bool);
+
+	
 
 	size_t
 	current_expr_index(void) const {

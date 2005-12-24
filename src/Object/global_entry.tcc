@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.6 2005/12/13 04:15:16 fang Exp $
+	$Id: global_entry.tcc,v 1.6.2.1 2005/12/24 02:33:33 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -31,7 +31,7 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
-
+#include "Object/lang/cflat_printer.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/def/process_definition.h"
@@ -260,8 +260,13 @@ production_rule_substructure::cflat_prs(ostream& o,
 	// to global
 	const PRS::footprint&
 		pfp(_this._frame._footprint->get_prs_footprint());
+#if 0
 	const footprint_frame_map<bool_tag>& bfm(_this._frame);
 	pfp.cflat_prs(o, bfm, topfp, cf, sm);
+#else
+	PRS::cflat_prs_printer visitor(o, cf, sm, topfp, _this._frame);
+	pfp.accept(visitor);
+#endif
 }
 
 //=============================================================================

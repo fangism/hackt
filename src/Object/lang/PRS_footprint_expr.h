@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_expr.h,v 1.1.2.1 2005/12/23 05:44:07 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.1.2.2 2005/12/24 02:33:34 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -24,8 +24,9 @@ using std::istream;
 	in the process footprint.  
 	Implementation is defined in "Object/lang/PRS_footprint.cc".
  */
-struct footprint_expr_node : public cflat_visitee {
+class footprint_expr_node : public cflat_visitee {
 	typedef	std::valarray<int>	node_array_type;
+private:
 	/**
 		Whether or not this is AND or OR, NOT, literal....  
 		This uses the enumerations according to
@@ -33,7 +34,6 @@ struct footprint_expr_node : public cflat_visitee {
 		in "Object/lang/PRS.h".
 	 */
 	char				type;
-private:
 	/**
 		If it is a literal, then nodes[0] is the bool index.
 		Otherwise, index is used for other expr_nodes.  
@@ -50,6 +50,12 @@ public:
 
 	footprint_expr_node(const char t, const size_t s) :
 		type(t), nodes(s) { }
+
+	char
+	get_type(void) const { return type; }
+
+	void
+	set_type(const char t) { type = t; }
 
 	size_t
 	size(void) const { return nodes.size(); }

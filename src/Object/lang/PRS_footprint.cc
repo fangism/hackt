@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.4.2.1 2005/12/23 05:44:07 fang Exp $
+	$Id: PRS_footprint.cc,v 1.4.2.2 2005/12/24 02:33:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -66,7 +66,8 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 	STACKTRACE_INDENT << " at " << &e << ":" << endl;
 #endif
 	const size_t one = e.size();
-	switch (e.type) {
+	const char type = e.get_type();
+	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
 #if STACKTRACE_DUMPS
 			STACKTRACE_INDENT << "Literal ";
@@ -86,7 +87,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			STACKTRACE_INDENT << "Not ";
 #endif
 			INVARIANT(one == 1);
-			dump_expr(ep[e.only()], o << '~', np, ep, e.type);
+			dump_expr(ep[e.only()], o << '~', np, ep, type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
@@ -94,18 +95,18 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 #if STACKTRACE_DUMPS
 			STACKTRACE_INDENT << "Or/And ";
 #endif
-			const bool paren = ps && (e.type != ps);
+			const bool paren = ps && (type != ps);
 			if (paren) o << '(';
 			if (e.size()) {
-				dump_expr(ep[e.only()], o, np, ep, e.type);
+				dump_expr(ep[e.only()], o, np, ep, type);
 				const char* const op = 
-					(e.type == PRS_AND_EXPR_TYPE_ENUM) ?
+					(type == PRS_AND_EXPR_TYPE_ENUM) ?
 						" & " : " | ";
 				int i = 2;
 				const int s = e.size();
 				for ( ; i<=s; i++) {
 					dump_expr(ep[e[i]],
-						o << op, np, ep, e.type);
+						o << op, np, ep, type);
 				}
 			}
 			if (paren) o << ')';
@@ -114,7 +115,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 		default:
 			ICE(cerr, 
 			cerr << "Invalid PRS expr type enumeration: "
-				<< e.type << endl;
+				<< type << endl;
 			)
 	}
 	return o;
@@ -150,7 +151,8 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 	STACKTRACE_INDENT << " at " << &e << ":" << endl;
 #endif
 	const size_t one = e.size();
-	switch (e.type) {
+	const char type = e.get_type();
+	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
 			INVARIANT(one == 1);
 			if (!cf.check_prs) {
@@ -165,18 +167,18 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 			if (!cf.check_prs)
 				o << '~';
 			cflat_expr(ep[e.only()], o, bfm, topfp, cf, 
-				sm, ep, e.type);
+				sm, ep, type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case PRS_OR_EXPR_TYPE_ENUM: {
-			const bool paren = ps && (e.type != ps);
+			const bool paren = ps && (type != ps);
 			if (!cf.check_prs && paren) o << '(';
 			if (e.size()) {
 				cflat_expr(ep[e.only()], o, bfm, 
-					topfp, cf, sm, ep, e.type);
+					topfp, cf, sm, ep, type);
 				const char* const op = 
-					(e.type == PRS_AND_EXPR_TYPE_ENUM) ?
+					(type == PRS_AND_EXPR_TYPE_ENUM) ?
 						" & " : " | ";
 				int i = 2;
 				const int s = e.size();
@@ -185,7 +187,7 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 						o << op;
 					cflat_expr(ep[e[i]],
 						o, bfm, topfp, cf, 
-						sm, ep, e.type);
+						sm, ep, type);
 				}
 			}
 			if (!cf.check_prs && paren) o << ')';
@@ -194,7 +196,7 @@ footprint::cflat_expr(const expr_node& e, ostream& o,
 		default:
 			ICE(cerr, 
 			cerr << "Invalid PRS expr type enumeration: "
-				<< e.type << endl;
+				<< type << endl;
 			)
 	}
 }
@@ -256,7 +258,7 @@ footprint::expr_node&
 footprint::push_back_expr(const char t, const size_t s) {
 	expr_pool.push_back(expr_node());
 	expr_node& ret(expr_pool.back());
-	ret.type = t;
+	ret.set_type(t);
 	ret.resize(s);
 	return ret;
 }

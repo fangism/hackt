@@ -1,10 +1,12 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.1.2.1 2005/12/23 05:44:09 fang Exp $
+	$Id: cflat_visitor.h,v 1.1.2.2 2005/12/24 02:33:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
 #define	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
+
+#include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -19,8 +21,20 @@ class footprint_rule;
 	Base class from which other functional visitors are derived.  
 	TODO: default visit behavior for non-terminal types.  
  */
-struct cflat_visitor {
+class cflat_visitor {
+protected:
+	/**
+		This needs to be set by the visit to the footprint.  
+		Will initially be NULL, before the PRS footprint is entered. 
+	 */
+	const PRS_footprint_expr_pool_type*		expr_pool;
+
+	/// helper class for maintaining expr_pool
+	class expr_pool_setter;
+public:
+	cflat_visitor() : expr_pool(NULL) { }
 virtual	~cflat_visitor() { }
+
 virtual	void
 	visit(const footprint&);
 virtual	void

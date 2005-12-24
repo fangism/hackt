@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.4 2005/12/23 05:44:03 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.5 2005/12/24 02:33:30 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -209,6 +209,7 @@ OBJECT_CC_FILES = \
 	Object/def/footprint.cc \
 	Object/def/footprint_manager.cc \
 	Object/lang/cflat_visitor.cc \
+	Object/lang/cflat_printer.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
 	Object/lang/CHP.cc
@@ -371,6 +372,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/channel_instance.h \
 	Object/lang/cflat_visitee.h \
 	Object/lang/PRS_footprint_expr.h \
+	Object/lang/PRS_footprint_expr_pool_fwd.h \
 	Object/lang/PRS_footprint_rule.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
