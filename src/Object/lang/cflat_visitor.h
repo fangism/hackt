@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.1.2.2 2005/12/24 02:33:35 fang Exp $
+	$Id: cflat_visitor.h,v 1.1.2.3 2005/12/30 17:41:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -10,6 +10,7 @@
 
 namespace HAC {
 namespace entity {
+class state_manager;
 namespace PRS {
 // forward declarations of all the visitable types in this hierarchy
 class footprint;
@@ -20,6 +21,7 @@ class footprint_rule;
 /**
 	Base class from which other functional visitors are derived.  
 	TODO: default visit behavior for non-terminal types.  
+	No need to include state_manager -- its traversal is fixed.  
  */
 class cflat_visitor {
 protected:
@@ -35,6 +37,10 @@ public:
 	cflat_visitor() : expr_pool(NULL) { }
 virtual	~cflat_visitor() { }
 
+#if 0
+virtual	void
+	visit(const state_manager&);
+#endif
 virtual	void
 	visit(const footprint&);
 virtual	void

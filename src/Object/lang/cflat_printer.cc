@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.1.2.1 2005/12/24 02:33:34 fang Exp $
+	$Id: cflat_printer.cc,v 1.1.2.2 2005/12/30 17:41:24 fang Exp $
  */
 
 #include <iostream>
@@ -46,25 +46,11 @@ public:
 /**
 	Prints out the entire rule.  
 	Adapted from footprint::cflat_rule().  
+	Q1: why is the expression outside of the conditional?
+	Q2: why is the conditional checked here? (more efficient in parent)
  */
 void
 cflat_prs_printer::visit(const footprint_rule& r) {
-#if 0
-	cflat_expr(ep[r.expr_index],
-		o, bfm, topfp, cf, sm, ep, PRS_LITERAL_TYPE_ENUM);
-if (!cfopts.check_prs) {
-	o << " -> ";
-	// r.output_index gives the local unique ID,
-	// which needs to be translated to global ID.
-	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
-	// const size_t j = bfm[r.output_index-1];
-	if (cfopts.enquote_names) o << '\"';
-	sm.get_pool<bool_tag>()[bfm[r.output_index-1]]
-		.dump_canonical_name(o, topfp, sm);
-	if (cfopts.enquote_names) o << '\"';
-	o << (r.dir ? '+' : '-') << endl;
-}
-#else
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
 	(*expr_pool)[r.expr_index].accept(*this);
 if (!cfopts.check_prs) {
@@ -74,12 +60,12 @@ if (!cfopts.check_prs) {
 	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
 	if (cfopts.enquote_names) os << '\"';
-	sm.get_pool<bool_tag>()[fpf.get_frame_map<bool_tag>()[r.output_index-1]]
-		.dump_canonical_name(os, fp, sm);
+	sm->get_pool<bool_tag>()[
+		fpf->get_frame_map<bool_tag>()[r.output_index-1]]
+		.dump_canonical_name(os, *fp, *sm);
 	if (cfopts.enquote_names) os << '\"';
 	os << (r.dir ? '+' : '-') << endl;
 }
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,9 +83,9 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_LITERAL_TYPE_ENUM:
 			INVARIANT(one == 1);
 			if (cfopts.enquote_names) os << '\"';
-			sm.get_pool<bool_tag>()[
-				fpf.get_frame_map<bool_tag>()[e.only()-1]]
-				.dump_canonical_name(os, fp, sm);
+			sm->get_pool<bool_tag>()[
+				fpf->get_frame_map<bool_tag>()[e.only()-1]]
+				.dump_canonical_name(os, *fp, *sm);
 			if (cfopts.enquote_names) os << '\"';
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:

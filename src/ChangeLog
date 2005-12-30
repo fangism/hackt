@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2005-12-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-07:
+	  Deprecated (and commented-out) the old cflat_prs methods
+		and conforming to using a cflat_visitor.  
+	  TODO: do the same with cflat_alias instance hierarchy
+	  TODO: use cflat_visitor to allocate simulation expression structs.  
+
+
 2005-12-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-06:

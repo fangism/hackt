@@ -2,16 +2,18 @@
 	\file "Object/cflat_context.h"
 	Structure containing all the minimal information
 	needed for a cflat traversal over instances.  
-	$Id: cflat_context.h,v 1.1.2.2 2005/12/24 02:33:33 fang Exp $
+	$Id: cflat_context.h,v 1.1.2.3 2005/12/30 17:41:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_CFLAT_CONTEXT_H__
 #define	__HAC_OBJECT_CFLAT_CONTEXT_H__
 
 #include <iosfwd>
+#include "util/macros.h"
 
 namespace HAC {
 namespace entity {
+class module;
 class footprint;
 class footprint_frame;
 class state_manager;
@@ -25,12 +27,29 @@ using std::ostream;
 	to perform a meaninful traversal of the instance hierarchy, 
 	such as for cflatting, or allocating global expressions.  
  */
-struct cflat_context_base {
-	const state_manager&			sm;
-	const footprint&			fp;
+class cflat_context_base {
+protected:
+	const state_manager*			sm;
+	const footprint*			fp;
 
+public:
+	/**
+		Sets the footprint and state_manager pointers of the 
+		cflat_context_base for the duration of the scope.  
+	 */
+	class module_setter {
+		cflat_context_base&		ccb;
+	public:
+		module_setter(cflat_context_base&, const module&);
+		~module_setter();
+	};	// end class module setter
+
+public:
+	cflat_context_base() : sm(NULL), fp(NULL) { }
+	// default destructor
+protected:
 	cflat_context_base(const state_manager& _sm, const footprint& _fp) :
-		sm(_sm), fp(_fp) { }
+		sm(&_sm), fp(&_fp) { }
 
 };	// end struct cflat_context_base
 
@@ -39,16 +58,32 @@ struct cflat_context_base {
 	Add a footprint frame when recursively traversing substructures
 	such as processes.  
  */
-struct cflat_context : public cflat_context_base {
-	const footprint_frame&			fpf;
+class cflat_context : public cflat_context_base {
+protected:
+	const footprint_frame*			fpf;
 
-	cflat_context(const state_manager& _sm, const footprint& _fp, 
-			const footprint_frame& _fpf) :
-		cflat_context_base(_sm, _fp), fpf(_fpf) { }
+public:
+	/**
+		Sets the footprint_frame for the duration of the scope.  
+	 */
+	class footprint_frame_setter {
+		cflat_context&			cc;
+	public:
+		footprint_frame_setter(cflat_context&, const footprint_frame&);
+		~footprint_frame_setter();
+	};	// end class footprint_frame_setter
+
+public:
+	cflat_context() : fpf(NULL) { }
 
 	template <class Tag>
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
+
+protected:
+	cflat_context(const state_manager& _sm, const footprint& _fp, 
+			const footprint_frame& _fpf) :
+		cflat_context_base(_sm, _fp), fpf(&_fpf) { }
 
 };	// end struct cflat_context
 

@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.8.2.2 2005/12/23 05:44:06 fang Exp $
+	$Id: state_manager.cc,v 1.8.2.3 2005/12/30 17:41:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -141,10 +141,12 @@ state_manager::dump(ostream& o, const footprint& topfp) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Prototype cflat -- strictly for backwards compatibility.  
 	Connections should come after production rules.  (CAST tools)
 	Check of ordering matters for various tools.
+	TODO: move cf-conditionals to caller, module.  
  */
 good_bool
 state_manager::cflat_prs(ostream& o, const footprint& topfp,
@@ -163,6 +165,25 @@ if (cf.include_prs) {
 	if (cf.dsim_prs)	o << "}" << endl;
 }
 	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A cflat visitor only visits processes -- nothing else can accept them.
+	Should we generalize this to include nodes as well?
+	We need another visitor hierarchy for named instances 
+	(see cflat_aliases). 
+ */
+void
+state_manager::accept(PRS::cflat_visitor& v) const {
+	size_t pid = 1;		// 0-indexed, but 0th entry is null
+	const global_entry_pool<process_tag>& proc_entry_pool(*this);
+	// Could re-write in terms of begin() and end() iterators.  
+	const size_t plim = proc_entry_pool.size();
+	for ( ; pid < plim; pid++) {
+		production_rule_substructure::accept(proc_entry_pool[pid], v);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.6.2.1 2005/12/15 04:45:58 fang Exp $
+	$Id: state_manager.h,v 1.6.2.2 2005/12/30 17:41:23 fang Exp $
  */
 
 #ifndef	__OBJECT_STATE_MANAGER_H__
@@ -26,6 +26,10 @@ using util::good_bool;
 using util::persistent_object_manager;
 using util::list_vector;
 using util::memory::index_pool;
+
+namespace PRS {
+	class cflat_visitor;
+}
 
 template <class Tag> struct global_entry;
 
@@ -86,6 +90,7 @@ protected:
 	explanation at http://gcc.gnu.org/bugzilla/show_bug.cgi?id=12265
  */
 class state_manager :
+	// public cflat_visitee?
 	protected global_entry_pool<process_tag>, 
 	protected global_entry_pool<channel_tag>, 
 	protected global_entry_pool<datastruct_tag>, 
@@ -129,8 +134,10 @@ public:
 	ostream&
 	dump(ostream&, const footprint&) const;
 
+#if 0
 	good_bool
 	cflat_prs(ostream&, const footprint&, const cflat_options&) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -142,6 +149,10 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&, 
 		const footprint&);
+
+	/// cflat tree walker
+	void
+	accept(PRS::cflat_visitor&) const;
 
 private:
 	explicit

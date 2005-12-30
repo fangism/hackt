@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.8.2.1 2005/12/13 21:38:34 fang Exp $
+ 	$Id: module.cc,v 1.8.2.2 2005/12/30 17:41:23 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -19,6 +19,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/lang/cflat_printer.h"
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -315,10 +316,21 @@ module::allocate_unique(void) {
 good_bool
 module::__cflat(ostream& o, const cflat_options& cf) const {
 	// print the production rules first, using canonical names
+#if 0
 	if (!global_state.cflat_prs(o, _footprint, cf).good) {
 		cerr << "Unexpected error during cflat." << endl;
 		return good_bool(false);
 	}
+#else
+{
+	// our priting visitor functor
+	PRS::cflat_prs_printer cfp(o, cf);
+	const cflat_context::module_setter tmp(cfp, *this);
+	if (cf.dsim_prs)	o << "dsim {" << endl;
+	global_state.accept(cfp);	// print!
+	if (cf.dsim_prs)	o << "}" << endl;
+}
+#endif
 	// print the name aliases in the manner requested in cflat_options
 	if (cf.connect_style) {
 		STACKTRACE("cflatting aliases.");

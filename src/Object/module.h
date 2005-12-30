@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.8.2.2 2005/12/16 02:43:19 fang Exp $
+	$Id: module.h,v 1.8.2.3 2005/12/30 17:41:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -115,6 +115,9 @@ public:
 
 	const state_manager&
 	get_state_manager(void) const { return global_state; }
+
+	const footprint&
+	get_footprint(void) const { return _footprint; }
 
 	/**
 		Note: sequential scope has a const-version of this, 

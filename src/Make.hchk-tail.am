@@ -1,5 +1,5 @@
 # "src/Make.hchk-tail.am"
-#	$Id: Make.hchk-tail.am,v 1.7.2.2 2005/12/14 05:16:50 fang Exp $
+#	$Id: Make.hchk-tail.am,v 1.7.2.3 2005/12/30 17:41:21 fang Exp $
 # Makefile footer for enforcing header checks.  
 # Counterpart is "src/Make.hchk-head.am"
 
@@ -11,6 +11,9 @@
 ###############################################################################
 # EMPTY_SOURCE = $(srcdir)/test/header_test.cc
 
+CPREPROCESS = $(COMPILE) -E
+CXXPREPROCESS = $(CXXCOMPILE) -E
+
 # no need for -MT (if already correct target)
 # no need for -MP for phony targets, awk-script already does it, 
 #	but redundant phony targets are ignored by it anyhow.
@@ -20,10 +23,26 @@ PROMOTE_HEADER_DEPS = $(AWK) -f $(srcdir)/scripts/promote_header_deps.awk \
 	-v srcdir=$(srcdir)
 FILTER_HEADER_DEPS = $(SED) 's|[^ ]*config\.h||g' | $(SED) 's|[^ ]*\.cc||g' | \
 	$(SED) 's| /[^ ]*||g'
+FAKE_DEP_FILTER = $(GREP) "^#" | $(GREP) -v '\"/' | $(GREP) -v '\"<' | \
+	$(GREP) -v pragma | $(AWK) '{print $$3;}' | $(SORT) -u
 # first filter -- removes any dependencies on config.h for efficiency
 # second filter -- removes any .cc files
 # third filter -- removes header files starting with / in the path name
 # some exceptions to checking
+
+# experimental header-deps
+# TODO: reduce to headers that were *directly* included
+.h.hdep:
+	$(CXXPREPROCESS) -I$(srcdir) -include $< $(EMPTY_SOURCE) | \
+		$(FAKE_DEP_FILTER) > $@
+
+.hh.hhdep:
+	$(CXXPREPROCESS) -I$(srcdir) -include $< $(EMPTY_SOURCE) | \
+		$(FAKE_DEP_FILTER) > $@
+
+.tcc.tccdep:
+	$(CXXPREPROCESS) -I$(srcdir) -include $< $(EMPTY_SOURCE) | \
+		$(FAKE_DEP_FILTER) > $@
 
 # cray-zee anal-retentive header checking with depdendence-tracking
 .h.hchk:

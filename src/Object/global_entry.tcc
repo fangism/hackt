@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.6.2.1 2005/12/24 02:33:33 fang Exp $
+	$Id: global_entry.tcc,v 1.6.2.2 2005/12/30 17:41:22 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
@@ -31,7 +31,9 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
-#include "Object/lang/cflat_printer.h"
+#include "Object/cflat_context.h"
+#include "Object/lang/cflat_visitor.h"
+// #include "Object/lang/cflat_printer.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/def/process_definition.h"
@@ -247,6 +249,7 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // class production_rule_substructure method definitions
 
+#if 0
 /**
 	Only ever instantiated for processes.  
 	might need state_manager...
@@ -267,6 +270,24 @@ production_rule_substructure::cflat_prs(ostream& o,
 	PRS::cflat_prs_printer visitor(o, cf, sm, topfp, _this._frame);
 	pfp.accept(visitor);
 #endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic PRS footprint traversal.  
+	Dynamic-cast (cross-cast) is needed because PRS::cflat_visitor
+	is not derived from cflat_context... should it be?
+ */
+template <class Tag>
+void
+production_rule_substructure::accept(const global_entry<Tag>& _this, 
+		PRS::cflat_visitor& v) {
+	const PRS::footprint&
+		pfp(_this._frame._footprint->get_prs_footprint());
+	const cflat_context::footprint_frame_setter
+		tmp(IS_A(cflat_context&, v), _this._frame);
+	pfp.accept(v);
 }
 
 //=============================================================================
