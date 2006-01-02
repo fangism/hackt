@@ -1,18 +1,20 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.3 2005/12/16 02:43:20 fang Exp $
+	$Id: Node.h,v 1.1.2.4 2006/01/02 23:13:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
 #define	__HAC_SIM_PRSIM_NODE_H__
 
+#include <iosfwd>
 #include <valarray>
 #include "sim/common.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::ostream;
 using std::valarray;
 //=============================================================================
 /**
@@ -22,12 +24,15 @@ using std::valarray;
 		object hierarchy and unique allocation.  
 	Consider: padding and alignment?
 	TODO: define enum for value?
+	TODO: instead of declaring bitfield, use integer fields and define
+		mask enums.  
  */
 struct Node {
 	typedef	enum {
-		LOGIC_LOW = 0,		// 0
-		LOGIC_HIGH = 1,		// 1
-		LOGIC_OTHER = 2		// 2
+		LOGIC_LOW = 0x0,		// 0
+		LOGIC_HIGH = 0x1,		// 1
+		LOGIC_VALUE = 0x1,		// value mask
+		LOGIC_OTHER = 0x2		// 2
 	} value_enum;
 #if 0
 	/**
@@ -99,9 +104,18 @@ public:
 	~Node();
 
 	void
+	push_back_fanout(const expr_index_type);
+
+	void
 	initialize(void);
 
-};	// end struct node
+	ostream&
+	dump_struct(ostream&) const;
+
+	ostream&
+	dump_state(ostream&) const;
+
+};	// end struct Node
 
 //=============================================================================
 }	// end namespace PRSIM

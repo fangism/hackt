@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.1.2.2 2005/12/30 17:41:24 fang Exp $
+	$Id: cflat_printer.cc,v 1.1.2.3 2006/01/02 23:13:34 fang Exp $
  */
 
 #include <iostream>
 #include "Object/lang/cflat_printer.h"
-#include "Object/lang/PRS.h"
+#include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/global_entry.h"
@@ -75,13 +75,13 @@ if (!cfopts.check_prs) {
  */
 void
 cflat_prs_printer::visit(const footprint_expr_node& e) {
-	const size_t one = e.size();
+	const size_t sz = e.size();
 	const char type = e.get_type();
 	const char ptype = parent_expr_type;
 	const expr_type_setter tmp(*this, type);
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
-			INVARIANT(one == 1);
+			INVARIANT(sz == 1);
 			if (cfopts.enquote_names) os << '\"';
 			sm->get_pool<bool_tag>()[
 				fpf->get_frame_map<bool_tag>()[e.only()-1]]
@@ -89,7 +89,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			if (cfopts.enquote_names) os << '\"';
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
-			INVARIANT(one == 1);
+			INVARIANT(sz == 1);
 			os << '~';
 			(*expr_pool)[e.only()].accept(*this);
 			break;
@@ -103,9 +103,8 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 				const char* const op =
 					(type == PRS_AND_EXPR_TYPE_ENUM) ?
 						" & " : " | ";
-				int i = 2;
-				const int s = e.size();
-				for ( ; i<=s; i++) {
+				size_t i = 2;
+				for ( ; i<=sz; i++) {
 					os << op;
 					(*expr_pool)[e[i]].accept(*this);
 				}

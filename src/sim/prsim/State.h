@@ -1,12 +1,13 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.1.2.2 2005/12/16 02:43:20 fang Exp $
+	$Id: State.h,v 1.1.2.3 2006/01/02 23:13:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
 #define	__HAC_SIM_PRSIM_STATE_H__
 
+#include <iosfwd>
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
@@ -19,7 +20,9 @@ namespace entity {
 
 namespace SIM {
 namespace PRSIM {
+class ExprAlloc;
 using util::list_vector;
+using std::ostream;
 //=============================================================================
 /**
 	The prsim simulation state.  
@@ -27,6 +30,8 @@ using util::list_vector;
 	This will even be duplicable for scenario testing!
  */
 class State {
+	// too lazy to write public mutator methods for the moment.  
+	friend class ExprAlloc;
 public:
 	typedef	vector<Node>			node_pool_type;
 	typedef	vector<Expr>			expr_pool_type;
@@ -72,7 +77,19 @@ public:
 
 	// restore
 
-};	// end class state
+	// TODO: dump structure and state information, human-readable
+
+	ostream&
+	dump_struct(ostream&) const;
+
+	ostream&
+	dump_state(ostream&) const;
+
+private:
+	void
+	head_sentinel(void);
+
+};	// end class State
 
 //=============================================================================
 }	// end namespace PRSIM

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.6 2005/12/30 17:41:21 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.7 2006/01/02 23:13:28 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -371,6 +371,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/inst/process_instance.h \
 	Object/inst/channel_instance.h \
 	Object/lang/cflat_visitee.h \
+	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \
 	Object/lang/PRS_footprint_rule.h \
@@ -589,6 +590,7 @@ PARSER_CC_FILES = \
 SIM_CC_FILES = \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
+	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event.cc \
 	sim/prsim/State.cc
 

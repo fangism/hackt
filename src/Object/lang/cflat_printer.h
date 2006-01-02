@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.1.2.2 2005/12/30 17:41:24 fang Exp $
+	$Id: cflat_printer.h,v 1.1.2.3 2006/01/02 23:13:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -28,12 +28,6 @@ protected:
 public:
 	cflat_prs_print_context(ostream& _os, const cflat_options& _cfo) :
 			cflat_context(), os(_os), cfopts(_cfo) { }
-protected:
-	cflat_prs_print_context(ostream& _os, const cflat_options& _cfo,
-			const state_manager& _sm, const entity::footprint& _fp,
-			const footprint_frame& _fpf) :
-			cflat_context(_sm, _fp, _fpf), 
-			os(_os), cfopts(_cfo) { }
 
 };	// end struct cflat_prs_print_context
 
@@ -55,14 +49,7 @@ protected:
 public:
 	cflat_prs_printer(ostream& _os, const cflat_options& _cfo) :
 			cflat_prs_print_context(_os, _cfo) { }
-// protected:
-public:
-	// deprecated
-	cflat_prs_printer(ostream& _os, const cflat_options& _cfo,
-			const state_manager& _sm, const entity::footprint& _fp,
-			const footprint_frame& _fpf) :
-			cflat_prs_print_context(_os, _cfo, _sm, _fp, _fpf) { }
-public:
+
 	using cflat_visitor::visit;
 
 	void

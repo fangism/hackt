@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.10.4.2 2005/12/16 02:43:17 fang Exp $
+#	$Id: TODO,v 1.10.4.3 2006/01/02 23:13:29 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -117,6 +117,11 @@ parser:
 	Error reporting:
 		Add error to context, and accumulate in a tree-like fashion.
 		In general should pass error stream objects, etc...
+
+	replace the use of lexyacc_prefix.awk with a generated #define 
+		substitution header.  Include that instead of transforming
+		source file.  This will be needed for multi-parse/multi-lex
+		compilation, and avoiding comflicts in libbogus.  
 
 ===============================================================================
 PRS and CHP

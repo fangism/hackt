@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.6 2005/12/13 04:15:34 fang Exp $
+	$Id: PRS.h,v 1.6.2.1 2006/01/02 23:13:33 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
@@ -9,6 +9,7 @@
 
 #include "Object/object_fwd.h"
 #include "Object/lang/PRS_base.h"
+#include "Object/lang/PRS_enum.h"
 #include "Object/unroll/meta_loop_base.h"
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
@@ -25,13 +26,6 @@ using std::vector;
 // forward declarations
 
 typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
-
-enum {
-	PRS_LITERAL_TYPE_ENUM = 0,
-	PRS_NOT_EXPR_TYPE_ENUM = 1,
-	PRS_AND_EXPR_TYPE_ENUM = 2,
-	PRS_OR_EXPR_TYPE_ENUM = 3
-};
 
 //=============================================================================
 /**

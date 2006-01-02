@@ -2,7 +2,7 @@
 	\file "Object/cflat_context.h"
 	Structure containing all the minimal information
 	needed for a cflat traversal over instances.  
-	$Id: cflat_context.h,v 1.1.2.3 2005/12/30 17:41:22 fang Exp $
+	$Id: cflat_context.h,v 1.1.2.4 2006/01/02 23:13:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_CFLAT_CONTEXT_H__
@@ -47,9 +47,6 @@ public:
 public:
 	cflat_context_base() : sm(NULL), fp(NULL) { }
 	// default destructor
-protected:
-	cflat_context_base(const state_manager& _sm, const footprint& _fp) :
-		sm(&_sm), fp(&_fp) { }
 
 };	// end struct cflat_context_base
 
@@ -79,11 +76,6 @@ public:
 	template <class Tag>
 	const footprint_frame_map<Tag>&
 	get_frame_map(void) const { return fpf; }
-
-protected:
-	cflat_context(const state_manager& _sm, const footprint& _fp, 
-			const footprint_frame& _fpf) :
-		cflat_context_base(_sm, _fp), fpf(&_fpf) { }
 
 };	// end struct cflat_context
 
