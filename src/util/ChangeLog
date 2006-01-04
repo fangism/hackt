@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2005-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-09:
+	  Untested draft of unique_ptr in "util/memory/unique_ptr.h".
+	  Added another class to util/static_trace.{h,cc} for debugging
+		in the middle of a module's static initialization/destruction.  
+
+
 2005-12-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-05:

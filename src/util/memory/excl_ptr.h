@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.8 2005/12/10 03:56:59 fang Exp $
+	$Id: excl_ptr.h,v 1.8.4.1 2006/01/04 08:42:54 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -561,16 +561,6 @@ void
 std::_Construct(sticky_ptr<_T1>*, const sticky_ptr<_T2>& );
 
 };	// end class sticky_ptr
-
-//=============================================================================
-/**
-	No copy of this pointer shall exist anywhere.  
- */
-template <class T>
-class unique_ptr {
-friend class pointer_manipulator;
-	// TODO: finish me!!!
-};	// end class unique_ptr
 
 //=============================================================================
 /**
