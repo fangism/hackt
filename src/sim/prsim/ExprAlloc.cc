@@ -1,7 +1,9 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.cc,v 1.1.2.1 2006/01/02 23:13:35 fang Exp $
+	$Id: ExprAlloc.cc,v 1.1.2.2 2006/01/04 08:42:13 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Expr.h"
@@ -12,11 +14,19 @@
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
 #include "util/offset_array.h"
+#include "util/stacktrace.h"
+
+#if	ENABLE_STACKTRACE
+#include <iostream>
+#endif
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using entity::bool_tag;
+#if	ENABLE_STACKTRACE
+#include "util/using_ostream.h"
+#endif
 //=============================================================================
 // class ExprAlloc method definitions
 
@@ -33,6 +43,7 @@ ExprAlloc::ExprAlloc(State& _s) : state(_s), ret_ex_index(0) {
  */
 void
 ExprAlloc::visit(const footprint_rule& r) {
+	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
@@ -54,19 +65,14 @@ ExprAlloc::visit(const footprint_rule& r) {
 	// ignored: state.expr_graph_node_pool[top_ex_index].offset
 	// not computing node fanin?  this would be the place to do it...
 	// can always compute it (cacheable) offline
-	switch (r.dir) {
-	case '+': 
-		link_node_to_root_expr(output_node, ni, e, g, 
-			top_ex_index, true);	// up
-		break;
-	case '-':
-		link_node_to_root_expr(output_node, ni, e, g, 
-			top_ex_index, false);	// down
-		break;
-	default:
-		THROW_EXIT;
-		break;
-	}
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "expr " << top_ex_index << " pulls node " <<
+		ni << (r.dir ? " up" : " down") << endl;
+#endif
+	link_node_to_root_expr(output_node, ni, e, g, top_ex_index, r.dir);
+#if ENABLE_STACKTRACE
+	state.dump_struct(cerr) << endl;
+#endif
 }	// end method visit(const footprint_rule&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,6 +84,7 @@ ExprAlloc::visit(const footprint_rule& r) {
  */
 void
 ExprAlloc::visit(const footprint_expr_node& e) {
+	STACKTRACE("ExprAlloc::visit(footprint_expr_node&)");
 	const size_t sz = e.size();
 	const char type = e.get_type();
 	// local abbreviations and aliases
@@ -85,45 +92,65 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	State::expr_pool_type& st_expr_pool(state.expr_pool);
 	State::expr_graph_node_pool_type&
 		st_graph_node_pool(state.expr_graph_node_pool);
-	// NOTE: 0-indexed
-	const size_t ex_id = st_expr_pool.size();
+	// NOTE: 1-indexed
 	switch (type) {
 		// enumerations from "Object/lang/PRS_enum.h"
 		case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "literal" << endl;
+#endif
 			// leaf node
 			INVARIANT(sz == 1);
 			const node_index_type ni =
 				fpf->get_frame_map<bool_tag>()[e.only()-1];
 			// NOTE: Expr's parent and ExprGraphNode's offset
 			// fields are not set until returned to caller!
-			st_node_pool[ni].push_back_fanout(ex_id);
+#if 0
+			STACKTRACE_INDENT << "FOO" << endl;
+			st_node_pool[ni].dump_struct(STACKTRACE_INDENT) << endl;
+#endif
+			st_node_pool[ni].push_back_fanout(st_expr_pool.size());
 			st_expr_pool.push_back(Expr(Expr::EXPR_NODE,1));
 			st_graph_node_pool.push_back(ExprGraphNode());
 			st_graph_node_pool.back().push_back_node(ni);
 			// literal graph node has no children
+			ret_ex_index = st_expr_pool.size() -1;
 			break;
 		}
 		case entity::PRS::PRS_NOT_EXPR_TYPE_ENUM: {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "not" << endl;
+#endif
 			INVARIANT(sz == 1);
 			(*expr_pool)[e.only()].accept(*this);
 			const size_t sub_ex_index = ret_ex_index;
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "sub_ex_index = " <<
+				sub_ex_index << endl;
+#endif
 			st_expr_pool.push_back(Expr(Expr::EXPR_NOT,1));
 			st_graph_node_pool.push_back(ExprGraphNode());
 			// now link parent to only-child
-			st_expr_pool[sub_ex_index].parent = ex_id;
+			const expr_index_type last = st_expr_pool.size() -1;
+			st_expr_pool[sub_ex_index].parent = last;
 			ExprGraphNode& child(st_graph_node_pool[sub_ex_index]);
 			child.offset = 0;
-			child.push_back_expr(sub_ex_index);
+			st_graph_node_pool.back().push_back_expr(sub_ex_index);
+			ret_ex_index = st_expr_pool.size() -1;
 			break;
 		}
 		case entity::PRS::PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case entity::PRS::PRS_OR_EXPR_TYPE_ENUM: {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "or/and" << endl;
+#endif
 			INVARIANT(sz);
 			st_expr_pool.push_back(Expr(
 				(type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
 				Expr::EXPR_AND : Expr::EXPR_OR), sz));
 			st_graph_node_pool.push_back(ExprGraphNode());
+			const expr_index_type last = st_expr_pool.size() -1;
 			size_t i = 1;
 			for ( ; i<=sz; i++) {
 				// reminder: e is 1-indexed while 
@@ -131,12 +158,14 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 				(*expr_pool)[e[i]].accept(*this);
 				const size_t sub_ex_index = ret_ex_index;
 				// now link parent to each child
-				st_expr_pool[sub_ex_index].parent = ex_id;
+				st_expr_pool[sub_ex_index].parent = last;
 				ExprGraphNode&
 					child(st_graph_node_pool[sub_ex_index]);
 				child.offset = i-1;
-				child.push_back_expr(sub_ex_index);
+				st_graph_node_pool[last]
+					.push_back_expr(sub_ex_index);
 			}
+			ret_ex_index = last;
 			break;
 		}
 		default:
@@ -144,7 +173,9 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 			break;
 	}	// end switch
 	// 'return' the index of the expr just allocated
-	ret_ex_index = ex_id;
+#if ENABLE_STACKTRACE
+	state.dump_struct(cerr) << endl;
+#endif
 }	// end method visit(const footprint_expr_node&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -158,6 +189,7 @@ void
 ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		Expr& ne, ExprGraphNode& ng, 
 		const expr_index_type top_ex_index, const bool dir) {
+	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
 	// or cheat! short-cut to root during operation.  
@@ -168,6 +200,9 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 	expr_index_type&
 		dir_index(dir ? output.pull_up_index : output.pull_dn_index);
 	if (dir_index) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "pull-up/dn already set" << endl;
+#endif
 		// already set, need OR-combination
 		State::expr_pool_type& st_expr_pool(state.expr_pool);
 		State::expr_graph_node_pool_type&
@@ -177,6 +212,9 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		// see if either previous pull-up expr is OR-type already
 		// may also work with NAND!
 		if (pe.is_or()) {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "prev. root expr is OR" << endl;
+#endif
 			// then simply extend the previous expr's children
 			INVARIANT(dir == pe.type & Expr::EXPR_DIR);
 			pg.push_back_expr(top_ex_index);
@@ -186,12 +224,18 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 			// NOTE: or short-cut to output node?
 			ne.set_parent_expr(dir_index);
 		} else if (ne.is_or()) {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "new expr is OR" << endl;
+#endif
 			ng.push_back_expr(dir_index);
 			++ne.size;
 			dir_index = top_ex_index;
 			ne.pull(ni, dir);
 			pe.set_parent_expr(top_ex_index);
 		} else {
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT << "neither expr is OR" << endl;
+#endif
 			// then need to allocate new root-expression
 			const size_t root_ex_id = st_expr_pool.size();
 			st_expr_pool.push_back(Expr(Expr::EXPR_OR, 2));
@@ -208,6 +252,9 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 			ne.set_parent_expr(root_ex_id);
 		}
 	} else {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "pull-up/dn not yet set" << endl;
+#endif
 		// easy: not already set, just link the new root expr.  
 		dir_index = top_ex_index;
 		ne.pull(ni, dir);

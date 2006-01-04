@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-09:
+	  PRSIM expression allocation partially debugged for a few simple
+		test cases.  Debugging code retained.  
+	  Fixed convenience library link-ordering.
+	  Added prsim module.
+	  SIM::PRSIM::Expr,Node have to use vectors of children/fanout
+		instead of valarray, because valarray's realloc doesn't
+		copy old values.  :(  Consider new library template class?
+	  Added main/options_modifier.{h,tcc} -- reusable simple
+		getopt options registry, inheritable by modules.  
+		(Factored out of cflat module)
+	  Added main/simple_options.{h,tcc} -- simple commonly used
+		options parsing for simple commands.  
+	  TODO: test suite and test cases for expression allocation.  
+
+
 2006-01-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-08:

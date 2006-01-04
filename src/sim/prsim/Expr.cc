@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.1.2.4 2006/01/02 23:13:35 fang Exp $
+	$Id: Expr.cc,v 1.1.2.5 2006/01/04 08:42:13 fang Exp $
  */
 
 #include <iostream>
@@ -61,9 +61,12 @@ Expr::dump_struct(ostream& o) const {
 	case EXPR_NOR: o << "nor("; break;
 	default: THROW_EXIT;
 	}
-	o << size << ')';
+	o << size_t(size) << ')';
 	if (type & EXPR_ROOT) {
-		o << (type & EXPR_DIR) ? " (pull-up: " : " (pull-dn: ";
+		o << ((type & EXPR_DIR) ? " (pull-up: " : " (pull-dn: ");
+		o << parent << ')';
+	} else {
+		o << " (parent: ";
 		o << parent << ')';
 	}
 	return o;
@@ -80,19 +83,27 @@ Expr::dump_state(ostream& o) const {
 
 void
 ExprGraphNode::push_back_expr(const expr_index_type i) {
+#if 0
 	children.resize(children.size()+1);
 	const size_t last = children.size()-1;
 	children[last].first = false;
 	children[last].second = i;
+#else
+	children.push_back(child_entry_type(false, i));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprGraphNode::push_back_node(const node_index_type i) {
+#if 0
 	children.resize(children.size()+1);
 	const size_t last = children.size()-1;
 	children[last].first = true;
 	children[last].second = i;
+#else
+	children.push_back(child_entry_type(true, i));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -107,7 +118,7 @@ ExprGraphNode::dump_struct(ostream& o) const {
 		o << i->second;
 		o << ", ";
 	}
-	return o;
+	return o << "offset: " << size_t(offset);
 }
 
 //=============================================================================

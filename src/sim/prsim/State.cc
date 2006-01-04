@@ -1,18 +1,23 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.1.2.3 2006/01/02 23:13:36 fang Exp $
+	$Id: State.cc,v 1.1.2.4 2006/01/04 08:42:14 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <algorithm>
 #include <functional>
 #include "sim/prsim/State.h"
+#include "sim/prsim/ExprAlloc.h"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
+#include "util/stacktrace.h"
+#include "util/memory/count_ptr.tcc"
 
 namespace HAC {
 namespace entity { }
@@ -29,6 +34,7 @@ using entity::process_tag;
 //=============================================================================
 // class State method definitions
 
+#if 0
 /**
 	TODO: pick reasonable chunk size for expr_pool.  
  */
@@ -37,19 +43,31 @@ State::State() : node_pool(), expr_pool(), expr_graph_node_pool(),
 	expr_graph_node_pool.set_chunk_size(1024);
 	head_sentinel();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Allocates simulation state, given a module.
 	TODO: do this work in module?
 	TODO: add support for top-level PRS (outside of procs)
+	TODO: expression minimization pass
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
  */
+#if 0
+State::State(const count_ptr<const entity::module>& m) : 
+#else
 State::State(const entity::module& m) : 
+#endif
+		mod(m), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue() {
-	const state_manager& sm(m.get_state_manager());
+#if 0
+	NEVER_NULL(m);
+	const state_manager& sm(m->get_state_manager());
+#else
+	const state_manager& sm(mod.get_state_manager());
+#endif
 	const global_entry_pool<bool_tag>&
 		bool_pool(sm.get_pool<bool_tag>());
 	expr_graph_node_pool.set_chunk_size(1024);
@@ -71,10 +89,18 @@ State::State(const entity::module& m) :
 #endif
 	// use a cflat-prs-like pass to construct the expression netlist
 	// got a walker? and prs_expr_visitor?
-	// see ExprAlloc.h
+	// see "ExprAlloc.h"
 
-	// the construct the top-down structure offline.  
-}
+	// NOTE: we're referencing 'this' during construction, however, we 
+	// are done constructing this State's members at this point.  
+	ExprAlloc v(*this);
+
+	sm.accept(v);
+	// TODO: expression tree minimization pass
+	// during minimization, need to create a map from old
+	// to new indices, and keep track of unused indices
+	// for a mark-sweep-compaction into target State
+}	// end State::State(const module&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -136,10 +162,15 @@ ostream&
 State::dump_struct(ostream& o) const {
 {
 	o << "Nodes: " << endl;
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 	const node_index_type nodes = node_pool.size();
 	node_index_type i = 1;
 	for ( ; i<nodes; ++i) {
-		node_pool[i].dump_struct(o << "node[" << i << "]: ") << endl;
+		o << "node[" << i << "]: \"";
+		bp[i].dump_canonical_name(o, topfp, sm);
+		node_pool[i].dump_struct(o << "\" ") << endl;
 	}
 }
 {

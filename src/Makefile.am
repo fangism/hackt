@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.7 2006/01/02 23:13:28 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.8 2006/01/04 08:42:05 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -54,7 +54,7 @@ LIBBOGUS_LA = libbogus_la
 # order in parallel builds.  
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la libhackt.la libfangutil.la libhacktsim.la
+hackt_LDADD = libhacktexec.la libhackt.la libhacktsim.la libfangutil.la
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -502,6 +502,7 @@ UTIL_HEADER_FILES = \
 	util/memory/pointer_classes.h \
 	util/memory/pointer_traits.h \
 	util/memory/pointer_manipulator.h \
+	util/memory/unique_ptr.h \
 	util/memory/excl_ptr.h \
 	util/memory/excl_array_ptr.h \
 	util/memory/excl_malloc_ptr.h \
@@ -612,12 +613,18 @@ MAIN_EXEC_CC_FILES = \
 	main/alloc.cc \
 	main/cflat.cc \
 	main/prsobjdemo.cc \
+	main/prsim.cc \
 	main/dump_persistent_table.cc \
 	main/objdump.cc \
 	main/shell.cc \
 	main/version.cc
 
+MAIN_EXEC_TCC_FILES = \
+	main/options_modifier.tcc \
+	main/simple_options.tcc
+
 MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
+	$(MAIN_EXEC_TCC_FILES:.tcc=.h) \
 	main/hackt.h \
 	main/hackt_fwd.h \
 	main/cflat_options.h \
@@ -642,7 +649,10 @@ libhackt_la_SOURCES = \
 	$(COMMON_FILES) \
 	config.h
 
-libhacktexec_la_SOURCES = $(MAIN_EXEC_CC_FILES) $(MAIN_EXEC_H_FILES)
+libhacktexec_la_SOURCES = \
+	$(MAIN_EXEC_CC_FILES) \
+	$(MAIN_EXEC_H_FILES) \
+	$(MAIN_EXEC_TCC_FILES)
 
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 
@@ -688,6 +698,7 @@ ALL_HEADER_FILES += \
 ALL_TCC_FILES += \
 	$(UTIL_TCC_FILES) \
 	$(OBJECT_TCC_FILES) \
+	$(MAIN_EXEC_TCC_FILES) \
 	$(SIM_TCC_FILES) \
 	$(AST_TCC_FILES)
 

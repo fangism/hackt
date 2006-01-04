@@ -1,14 +1,15 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.1.2.5 2006/01/02 23:13:35 fang Exp $
+	$Id: Expr.h,v 1.1.2.6 2006/01/04 08:42:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
 #define	__HAC_SIM_PRSIM_EXPR_H__
 
 #include <iosfwd>
-#include <valarray>
+// #include <valarray>
+#include <vector>
 #include <utility>
 #include "sim/common.h"
 
@@ -16,7 +17,8 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
-using std::valarray;
+// using std::valarray;
+using std::vector;
 using std::pair;
 //=============================================================================
 /**
@@ -178,9 +180,15 @@ struct ExprGraphNode {
 		(leaf) node.  
 	 */
 	typedef	pair<bool, expr_index_type>	child_entry_type;
+#if 0
 	typedef	valarray<child_entry_type>	children_array_type;
 	typedef	child_entry_type*		iterator;
 	typedef	const child_entry_type*		const_iterator;
+#else
+	typedef	vector<child_entry_type>	children_array_type;
+	typedef	children_array_type::iterator	iterator;
+	typedef	children_array_type::const_iterator	const_iterator;
+#endif
 public:
 	/**
 		The offset position in the parent's subexpression list.
@@ -202,6 +210,9 @@ public:
 	 */
 	children_array_type		children;
 
+public:
+	ExprGraphNode() : offset(0xFF), children() { }
+
 	void
 	push_back_expr(const size_t);
 
@@ -211,11 +222,19 @@ public:
 	ostream&
 	dump_struct(ostream&) const;
 
+#if 0
 	const_iterator
 	begin(void) const { return &children[0]; }
 
 	const_iterator
 	end(void) const { return &children[children.size()]; }
+#else
+	const_iterator
+	begin(void) const { return children.begin(); }
+
+	const_iterator
+	end(void) const { return children.end(); }
+#endif
 
 };	// end struct ExprGraphNode
 

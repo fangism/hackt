@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.1.2.3 2006/01/02 23:13:36 fang Exp $
+	$Id: State.h,v 1.1.2.4 2006/01/04 08:42:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -12,6 +12,7 @@
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
 #include "util/list_vector.h"
+// #include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
@@ -21,8 +22,10 @@ namespace entity {
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
+using entity::module;
 using util::list_vector;
 using std::ostream;
+// using util::memory::count_ptr;
 //=============================================================================
 /**
 	The prsim simulation state.  
@@ -46,6 +49,8 @@ private:
 	 */
 	typedef	list_vector<ExprGraphNode>	expr_graph_node_pool_type;
 private:
+//	count_ptr<const module>			mod;
+	const module&				mod;
 	node_pool_type				node_pool;
 	expr_pool_type				expr_pool;
 	expr_graph_node_pool_type		expr_graph_node_pool;
@@ -57,9 +62,17 @@ private:
 	// channels
 	// mode of operation
 public:
+#if 0
 	State();
+#endif
 
-	State(const entity::module&);
+#if 0
+	explicit
+	State(const count_ptr<const module>&);
+#else
+	explicit
+	State(const module&);
+#endif
 
 	State(const State&);
 

@@ -2,12 +2,14 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.6 2005/12/13 04:15:46 fang Exp $
+	$Id: cflat.cc,v 1.6.2.1 2006/01/04 08:42:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+#define	ENABLE_STATIC_TRACE		0
 
-// #include "util/static_trace.h"
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <string>
@@ -16,10 +18,10 @@
 #include "main/cflat_options.h"
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
+#include "main/options_modifier.tcc"
+#include "main/simple_options.tcc"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
-#include "util/qmap.tcc"
-#include "util/getopt_portable.h"
 
 namespace HAC {
 using std::string;
@@ -28,23 +30,9 @@ using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
 //=============================================================================
-struct cflat::options_modifier_info {
-	options_modifier		op;
-	string				brief;
-
-	options_modifier_info() : op(NULL), brief() { }
-
-	options_modifier_info(const options_modifier o, const char* b) :
-		op(o), brief(b) { }
-
-	operator bool () const { return op; }
-
-	void
-	operator () (cflat_options& cf) const {
-		NEVER_NULL(op);
-		(*op)(cf);
-	}
-};	// end struct options_modifier_info
+// explicit early class instantiation for proper static initializer ordering
+// this guarantees the registry map is initialized before anything is registered
+template class cflat::options_modifier_policy;
 
 //=============================================================================
 // class cflat static initializers
@@ -56,34 +44,28 @@ const char
 cflat::brief_str[] =
 	"Flattens instantiations CAST-style (backward compatibility)";
 
+STATIC_TRACE_HERE("before cflat registry")
+
 const size_t
 cflat::program_id = register_hackt_program_class<cflat>();
 
-/**
-	Options modifier map must be initialized before any registrations.  
- */
-const cflat::options_modifier_map_type
-cflat::options_modifier_map;
-
 //=============================================================================
 static const char default_options_brief[] = "(CAST cflat preset)";
+
 /**
 	CFLAT mode registration mechanism.  
  */
-class cflat::register_options_modifier {
+class cflat::register_options_modifier :
+	public options_modifier_policy::register_options_modifier_base {
+	typedef	options_modifier_policy::register_options_modifier_base
+						base_type;
 public:
 	register_options_modifier(const string& Mode,
-			const cflat::options_modifier COM, 
-			const char* b = default_options_brief) {
-		options_modifier_map_type&
-			omm(const_cast<options_modifier_map_type&>(
-				options_modifier_map));
-		NEVER_NULL(COM);
-		options_modifier_info& i(omm[Mode]);
-		INVARIANT(!i);
-		i.op = COM;
-		i.brief = b;
+			const modifier_type COM, 
+			const char* b = default_options_brief) :
+			base_type(Mode, COM, b) {
 	}
+
 };	// end class register_options_modifier
 
 //=============================================================================
@@ -217,8 +199,12 @@ __cflat_check(cflat::options& cf) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+STATIC_TRACE_HERE("before cflat option modifiers")
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const cflat::register_options_modifier
 	cflat::_prsim("prsim", &__cflat_prsim);
+
+STATIC_TRACE_HERE("after first cflat option modifier")
 
 const cflat::register_options_modifier
 	cflat::_lvs("lvs", &__cflat_lvs);
@@ -487,32 +473,9 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 cflat::parse_command_options(const int argc, char* argv[], options& cf) {
-	static const char* optstring = "+f:";
-	int c;
-	while ((c = getopt(argc, argv, optstring)) != -1) {
-	switch (c) {
-		case 'f': {
-			const options_modifier_info&
-				om(options_modifier_map[optarg]);
-			if (!om) {
-				cerr << "Invalid mode: " << optarg << endl;
-				return 1;
-			} else {
-				om(cf);
-			}
-			break;
-		}
-		case ':':
-			cerr << "Expected but missing option-argument." << endl;
-			return 1;
-		case '?':
-			unknown_option(optopt);
-			return 1;
-		default:
-			abort();
-	}	// end switch
-	}	// end while
-	return 0;
+	// using simple template function
+	return parse_simple_command_options(
+		argc, argv, cf, options_modifier_map);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -527,12 +490,16 @@ cflat::usage(void) {
 	const size_t modes = options_modifier_map.size();
 if (modes) {
 	cerr << "Modes and modifier-flags (" << modes << " total):" << endl;
+#if 0
 	typedef	options_modifier_map_type::const_iterator	const_iterator;
 	const_iterator i(options_modifier_map.begin());
 	const const_iterator e(options_modifier_map.end());
 	for ( ; i!=e; i++) {
 		cerr << '\t' << i->first << " : " << i->second.brief << endl;
 	}
+#else
+	dump_options_briefs(cerr);
+#endif
 }
 	// additional options summary
 }
@@ -571,4 +538,6 @@ if (cf.dump_self_connect || alias != canonical) {
 
 //=============================================================================
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

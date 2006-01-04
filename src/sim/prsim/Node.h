@@ -1,21 +1,23 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.4 2006/01/02 23:13:36 fang Exp $
+	$Id: Node.h,v 1.1.2.5 2006/01/04 08:42:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
 #define	__HAC_SIM_PRSIM_NODE_H__
 
 #include <iosfwd>
-#include <valarray>
+// #include <valarray>
+#include <vector>
 #include "sim/common.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
-using std::valarray;
+using std::vector;
+// using std::valarray;
 //=============================================================================
 /**
 	Node state information structure.  
@@ -28,6 +30,7 @@ using std::valarray;
 		mask enums.  
  */
 struct Node {
+	typedef	std::vector<expr_index_type>	fanout_array_type;
 	typedef	enum {
 		LOGIC_LOW = 0x0,		// 0
 		LOGIC_HIGH = 0x1,		// 1
@@ -94,7 +97,7 @@ struct Node {
 	/**
 		List of expression indices to which this node fans out.  
 	 */
-	valarray<expr_index_type>	fanout;
+	fanout_array_type		fanout;
 
 public:
 	/// these aren't created frequently, inline doesn't matter
