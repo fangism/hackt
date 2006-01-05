@@ -215,7 +215,7 @@ CLEANFILES += \
 
 DISTCLEANFILES += test-expect.sh $(libfangutil_la_SOURCES)
 
-TESTS = $(noinst_PROGRAMS:=.test)
+TESTS += $(noinst_PROGRAMS:=.test)
 
 AUTO_IGNORE += test-expect.sh $(noinst_PROGRAMS) $(noinst_LTLIBRARIES) \
 	$(BUILT_SOURCES) $(PREFILTER_FILES) $(TESTS)

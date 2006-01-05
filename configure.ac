@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.4 2005/12/30 17:41:17 fang Exp $
+#	$Id: configure.ac,v 1.23.2.5 2006/01/05 01:15:20 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -122,7 +122,7 @@ AC_ARG_ENABLE(god_mode,
 	[AC_MSG_RESULT([no (default)])]
 )
 
-dnl enlable or disable anal header tests in src/Make.hchk-tail.am
+dnl enable or disable anal header tests in src/Make.hchk-tail.am
 AC_MSG_CHECKING([whether header validation is desired])
 AC_ARG_ENABLE(header_validation,
 	dnl help text
@@ -141,6 +141,21 @@ AC_ARG_ENABLE(header_validation,
 	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, test "yes")
 	AC_MSG_RESULT([yes (default)])]
 )
+
+dnl enable or disable fun modules
+AC_MSG_CHECKING([how bored we are])
+AC_ARG_ENABLE(fun, 
+	AC_HELP_STRING([--enable-fun],
+		[Miscellanous fun modules. (default=disabled)]),
+	AM_CONDITIONAL(WANT_LIBMISCFUN, test "$enable_fun" = "yes"),
+	AM_CONDITIONAL(WANT_LIBMISCFUN, test ! "yes")
+)
+if test "$enable_fun" = "yes"
+then	AC_MSG_RESULT([quite])
+	AC_DEFINE(WANT_TO_HAVE_FUN, 1, [Conditional inclusion of fun modules.])
+else	AC_MSG_RESULT([not yet])
+	AC_DEFINE(WANT_TO_HAVE_FUN, 0, [Conditional inclusion of fun modules.])
+fi
 
 dnl define WORDS_BIGENDIAN if is big endian
 dnl not actually needed in this project yet

@@ -3,9 +3,10 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.6.2.1 2006/01/04 08:42:09 fang Exp $
+	$Id: force_load.cc,v 1.6.2.2 2006/01/05 01:15:24 fang Exp $
  */
 
+#include "config.h"
 #include "main/force_load.h"
 #include "Object/module.h"
 #include "main/compile.h"
@@ -20,6 +21,10 @@
 #include "main/dump_persistent_table.h"
 #include "main/shell.h"
 #include "main/version.h"
+
+#if	WANT_TO_HAVE_FUN
+#include "misc/sodoku-solver.h"
+#endif
 
 namespace HAC {
 
@@ -59,6 +64,9 @@ force_load(void) {
 	const dump_persistent_table persistent_dumper;
 	const version versionator;
 	const shell shell_shocker;
+#if WANT_TO_HAVE_FUN
+	const sodoku::solver ss;
+#endif
 }
 
 }	// end namespace HAC

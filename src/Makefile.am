@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.8 2006/01/04 08:42:05 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.9 2006/01/05 01:15:23 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -16,6 +16,8 @@ AUTOMAKE_OPTIONS += subdir-objects
 # are managed by this Makefile (flat)
 SUBDIRS = util/test .
 
+# for optional fun features
+include $(srcdir)/misc/Makefile.inc
 
 ###################### Are we using yacc or bison? ############################
 LEXYACC_PREFIX_SCRIPT = $(srcdir)/parser/lexyacc-prefix.awk
@@ -39,12 +41,12 @@ endif
 bin_PROGRAMS = hackt
 
 # dirgen is completely bogus, workaround to coerce directory generation
-noinst_PROGRAMS = dirgen getopt_test
+noinst_PROGRAMS = dirgen getopt_test $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
-noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la libfangutil.la \
-	libhacktexec.la libhacktsim.la
+noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la \
+	libfangutil.la libhacktexec.la libhacktsim.la $(LIBMISCFUN)
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -654,6 +656,11 @@ libhacktexec_la_SOURCES = \
 	$(MAIN_EXEC_H_FILES) \
 	$(MAIN_EXEC_TCC_FILES)
 
+echo-libhacktexec-sources:
+	@$(ECHO) $(libhacktexec_la_SOURCES)
+
+libhacktexec_la_LIBADD = $(LIBMISCFUN)
+
 libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 
 # any other files that depend on automatically generated headers
@@ -692,6 +699,7 @@ ALL_HEADER_FILES += \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
+	$(MISCFUN_H_FILES) \
 	config.h \
 	main/main_funcs.h
 
@@ -987,7 +995,7 @@ EXTRA_DIST += local.cvsignore \
 	sim/README \
 	sim/prsim/README
 
-TESTS = hackt_persistent_table.sh test/getopt_test.test
+TESTS += hackt_persistent_table.sh test/getopt_test.test
 
 installcheck-local:
 	@list=$(bin_PROGRAMS) ; \
@@ -1123,6 +1131,8 @@ AST/.cvsignore: .cvsignore
 	$(CP) $? $@
 main/.cvsignore: .cvsignore
 	$(CP) $? $@
+misc/.cvsignore: .cvsignore
+	$(CP) $? $@
 sim/.cvsignore: .cvsignore
 	$(CP) $? $@
 sim/prsim/.cvsignore: .cvsignore
@@ -1149,7 +1159,7 @@ SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	Object/inst/.cvsignore Object/lang/.cvsignore Object/ref/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
 	Object/unroll/.cvsignore \
-	AST/.cvsignore main/.cvsignore \
+	AST/.cvsignore main/.cvsignore misc/.cvsignore \
 	sim/.cvsignore sim/prsim/.cvsignore \
 	util/.cvsignore util/STL/.cvsignore \
 	util/memory/.cvsignore util/numeric/.cvsignore \
@@ -1164,6 +1174,9 @@ clean-cvsignore: clean-cvsignore-subdirs
 
 clean-cvsignore-subdirs:
 	-$(RM) $(SUBDIR_CVSIGNORE)
+
+clean-libs:
+	-$(RM) $(noinst_LTLIBRARIES)
 
 DISTCLEANFILES += $(SUBDIR_CVSIGNORE) $(CONFIG_PARSERS)
 DISTCLEANDIRS += $(DEPDIR)
@@ -1185,6 +1198,9 @@ help-local:
 	@$(ECHO) "    clean-Object: cleans Object subdir's objects"
 	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
 	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
+	@$(ECHO) "    clean-libs: cleans all libraries and archives"
+	@$(ECHO) "Local echo targets:"
+	@$(ECHO) "    libhacktexec-sources"
 
 # standard targets
 include $(srcdir)/Make.hchk-tail.am

@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.7 2005/12/13 04:15:50 fang Exp $
+#	$Id: Make.test-head,v 1.7.2.1 2006/01/05 01:15:28 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -16,7 +16,4 @@ BISON_OUTPUTS =
 
 # tests expecting empty .prs outputs
 EMPTY_CFLAT_PRS_TESTS =
-
-# accumulate
-TESTS =
 
