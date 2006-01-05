@@ -1,19 +1,36 @@
 /**
 	\file "sodoku.h"
-	$Id: sodoku.h,v 1.1.2.1 2006/01/05 01:15:27 fang Exp $
+	The name of the game is sodoku.
+	Place numbers 1-9 in a 9x9 grid such that:
+	1) each row contains each digit exactly once
+	2) each column contains each digit exactly once
+	3) each 3x3 sub-block contains each digit exactly once
+	$Id: sodoku.h,v 1.1.2.2 2006/01/05 07:10:59 fang Exp $
  */
 
-#ifndef	__SODUKU_H__
-#define	__SODUKU_H__
+#ifndef	__SODOKU_H__
+#define	__SODOKU_H__
 
 #include <iosfwd>
 #include <cassert>
 #include <list>
 #include <vector>
 #include <stack>
-// #include <bitset>
 #include <utility>
 
+#ifndef	DEBUG_SODOKU
+#define	DEBUG_SODOKU		1
+#endif
+
+#if	DEBUG_SODOKU
+#define	SODOKU_ASSERT(x)	assert(x)
+#else
+#define	SODOKU_ASSERT(x)	assert(x)
+#endif
+
+/**
+	Namespace for the sodoku solver data structures. 
+ */
 namespace sodoku {
 using std::pair;
 using std::list;
@@ -38,7 +55,6 @@ class solution;
 class avail_set {
 private:
 	static const ushort		masks[];
-	// static const ushort		ones = 0xFFFF;
 
 	/// 9-bit integer mask representing the state of the set
 	ushort			ints;
@@ -62,7 +78,7 @@ public:
 	/**
 		\param n the initial mask.  
 	 */
-	avail_set() : ints(0x1FF), avail(9), val(0) { }
+	avail_set() : ints(0x1FF), avail(9), val(0xFF) { }
 
 	// default POD copy-constructor and assignment
 
@@ -70,8 +86,8 @@ public:
 
 	bool
 	probe(const uchar pos) const {
-		assert(pos -1 < 9);
-		return ints & masks[pos-1];
+		SODOKU_ASSERT(pos < 9);
+		return ints & masks[pos];
 	}
 
 	/**
@@ -83,48 +99,25 @@ public:
 	 */
 	bool
 	set(const uchar pos) {
-		// assert(!val);
-		assert(pos -1 < 9);
-		// assert(ints & masks[pos-1]);		// not true
-		assert(avail);
-		ushort n = ints & ~masks[pos-1];
+		SODOKU_ASSERT(avail);
+		SODOKU_ASSERT(pos < 9);
+		ushort n = ints & ~masks[pos];
 		if (ints != n)
 			--avail;
 		ints = n;
 		return avail;
 	}
 
-#if 0
-	/**
-		Unclears a bit.  
-		\param pos must be in [1,9]
-		We automatically subtract 1.  
-		\pre bit at the position must be set!
-	 */
-	void
-	unset(const uchar pos) {
-		assert(pos -1 < 9);
-		// assert(val);
-		assert(!(ints & masks[pos-1]));
-		ints |= masks[pos-1];
-		++avail;
-		assert(avail <= 9);
+	bool
+	is_assigned(void) const {
+		return val < 9;
 	}
-#endif
 
 	void
 	assign(const uchar v) {
-		assert(!val);
+		SODOKU_ASSERT(!is_assigned());
 		val = v;
 	}
-
-#if 0
-	void
-	unassign(void) {
-		assert(val);
-		val = 0;
-	}
-#endif
 
 	ushort
 	get_mask(void) const { return ints; }
@@ -134,6 +127,11 @@ public:
 
 	uchar
 	value(void) const { return val; }
+
+	size_t
+	printed_value(void) const {
+		return val+1;
+	}
 
 };	// end class avail_set
 
@@ -145,12 +143,19 @@ public:
 	Each cell is a member of 3 constraints: row, col, block.
  */
 class board {
-public:
+private:
 	class move;
 	class undo_list;
+	struct pivot_finder;
+	struct value_dumper;
+	struct state_dumper;
 private:
-	typedef	stack<avail_set, vector<avail_set> >	cell_type;
-	cell_type			cell[10][10];
+	typedef	stack<avail_set, vector<avail_set> >	cell_type_base;
+	class cell_type : public cell_type_base {
+	public:
+		cell_type();
+	};	// end struct cell_type
+	cell_type			cell[9][9];
 public:
 	board();
 	~board();
@@ -169,6 +174,14 @@ private:
 	// pop
 	void
 	unassign(const uchar, const uchar);
+
+	template <class F>
+	void
+	accept(F&) const;
+
+	template <class F>
+	void
+	accept(F&);
 public:
 	uchar
 	probe(const uchar x, const uchar y) const {
@@ -185,7 +198,7 @@ public:
 	dump_state(ostream&) const;
 
 	// optional: undo_list
-	istream&
+	bool
 	load(istream&);
 
 private:
@@ -196,7 +209,7 @@ private:
 
 //=============================================================================
 class solution {
-	uchar				cell[10][10];
+	uchar				cell[9][9];
 public:
 	solution() { }
 
@@ -212,56 +225,7 @@ public:
 };	// end class solution
 
 //=============================================================================
-class board::undo_list {
-	board&				bd;
-	// maximum number of cells to undo
-	pair<uchar,uchar>		cell[20];
-	//
-	size_t				count;
-
-public:
-	explicit
-	undo_list(board& b) : bd(b), count(0) { }
-
-	~undo_list();
-
-	void
-	push(const uchar x, const uchar y) {
-		assert(count < 20);
-		cell[count].first = x;
-		cell[count].second = y;
-		++count;
-	}
-
-};	// end class board::undo_list
-
-//=============================================================================
-/**
-	Representation of an attempted placement of a number
-	and position.  
- */
-class board::move {
-	board::undo_list		ul;
-	/// true if move was accepted
-	uchar				x, y;
-	uchar				val;
-	bool				accept;
-
-public:
-	/**
-		Don't really need to remember val.  
-	 */
-	move(board&, const uchar, const uchar, const uchar);
-
-	~move();
-
-	bool
-	accepted(void) const { return accept; }
-
-};	// end class board::move
-
-//=============================================================================
 }	// end namespace sodoku
 
-#endif	// __SODUKU_H__
+#endif	// __SODOKU_H__
 

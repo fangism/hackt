@@ -1,6 +1,6 @@
 /**
 	\file "sodoku.cc"
-	$Id: sodoku.cc,v 1.1.2.1 2006/01/05 01:15:27 fang Exp $
+	$Id: sodoku.cc,v 1.1.2.2 2006/01/05 07:10:58 fang Exp $
  */
 
 #include "misc/sodoku.h"
@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <algorithm>
 
+// some handy compile-switches
 #define	DEBUG_LOAD		0
 #define	STEP_SOLVE		0
 #define	DEBUG_SOLVE		0
@@ -27,14 +28,158 @@ avail_set::masks[9] = {
 	0x100
 };
 
+#define	FIRST		0
+#define	THIRD		2
+#define	LAST		8
+
+//=============================================================================
+// internal classes
+
+/**
+	Initialize with one element on stack.  
+ */
+board::cell_type::cell_type() : cell_type_base() {
+	push(avail_set());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Undo moves in a stack-managed tracker.  
+	TODO: give this class hidden visibility.  
+ */
+class board::undo_list {
+	board&                          bd;
+	// maximum number of cells to undo
+	pair<uchar,uchar>               cell[20];
+	//
+	size_t                          count;
+
+public:
+	explicit
+	undo_list(board& b) : bd(b), count(0) { }
+
+	~undo_list();
+
+	void
+	push(const uchar x, const uchar y) {
+		SODOKU_ASSERT(count < 20);
+		cell[count].first = x;
+		cell[count].second = y;
+		++count;
+	}
+
+};      // end class board::undo_list
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Representation of an attempted placement of a number
+	and position.
+	TODO: give this class hidden visibility.  
+ */
+class board::move {
+	board::undo_list                ul;
+	/// true if move was accepted
+	uchar                           x, y;
+	uchar                           val;
+	bool                            accept;
+
+public:
+	/**
+		Don't really need to remember val.
+	 */
+	move(board&, const uchar, const uchar, const uchar);
+
+	~move();
+
+	bool
+	accepted(void) const { return accept; }
+
+};      // end class board::move
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct board::pivot_finder {
+	size_t			best_x;
+	size_t			best_y;
+	uchar			min_avail;
+
+	pivot_finder() : best_x(9), best_y(9), min_avail(9) { }
+
+	/**
+		\param i, j the coordinates of the cell.  
+	 */
+	void
+	operator () (cell_type& c, const size_t i, const size_t j) {
+		const avail_set& scan(c.top());
+		if (!scan.is_assigned()) {
+			const uchar avail = scan.num_avail();
+			SODOKU_ASSERT(avail);
+			if (avail < min_avail) {
+				best_x = i;
+				best_y = j;
+				min_avail = avail;
+			}
+		}
+	}
+
+	bool
+	valid(void) const {
+		return best_x < 9 && best_y < 9;
+	}
+
+};	// end struct board::pivot_finder
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct board::value_dumper {
+	ostream&	o;
+	size_t		count;
+
+	value_dumper(ostream& _o) : o(_o), count(0) { }
+
+	void
+	operator () (const cell_type& cell, const size_t, const size_t) {
+		if (!(count % 9)) o << '\t';
+		++count;
+		const avail_set& c(cell.top());
+		if (c.is_assigned())
+			o << c.printed_value();
+		else o << '-';
+		if (!(count % 9)) o << endl;
+		else o << ' ';
+	}
+};	// end struct value_dumper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+struct board::state_dumper {
+	ostream&	o;
+	size_t		count;
+
+	state_dumper(ostream& _o) : o(_o), count(0) { }
+
+	void
+	operator () (const cell_type& cell, const size_t, const size_t) {
+		o << '\t';
+		const avail_set& c(cell.top());
+		const size_t val = c.printed_value();
+		if (c.is_assigned())
+			o << val;
+		else {
+			o << std::setbase(16);
+			o << '(' << c.get_mask() << ')';
+			o << std::setbase(10);
+		}
+		++count;
+		if (!(count % 9)) o << endl;
+	}
+};	// end struct state_dumper
+
 //=============================================================================
 // class solution method definitions
 
 solution::solution(const board& b) {
-	size_t i = 1;
-	for ( ; i<=9; i++) {
-		size_t j = 1;
-		for ( ; j<=9; j++)
+	size_t i = FIRST;
+	for ( ; i<=LAST; i++) {
+		size_t j = FIRST;
+		for ( ; j<=LAST; j++)
 			cell[i][j] = b.probe(i,j);
 	}
 }
@@ -42,13 +187,13 @@ solution::solution(const board& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 solution::dump(ostream& o) const {
-	size_t i = 1;
-	for ( ; i<=9; i++) {
+	size_t i = FIRST;
+	for ( ; i<=LAST; i++) {
 		o << '\t';
-		size_t j = 1;
-		for ( ; j<=9; j++) {
+		size_t j = FIRST;
+		for ( ; j<=LAST; j++) {
 			const size_t val = cell[i][j];
-			if (val) o << val;
+			if (val < 9) o << val+1;
 			else o << '-';
 			o << ' ';
 		}
@@ -63,21 +208,43 @@ solution::dump(ostream& o) const {
 /**
 	Initially, stack matrix is empty, so we need to 
 	initialize each cell with at least a top element.  
+	Done in each cell's default constructor already.  
  */
-board::board() {
-	// the cell array is already initialized, by default construction
-	// so are the row, col, and block constraint arrays!
-	size_t i = 1;
-	for ( ; i<=9; i++) {
-		size_t j = 1;
-		for ( ; j<=9; j++)
-			cell[i][j].push(avail_set());
-	}
-}
+board::board() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 board::~board() {
 	// just default clear everything
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-modifying visitor acceptor.
+ */
+template <class F>
+void
+board::accept(F& f) const {
+	size_t i = FIRST;
+	for ( ; i<=LAST; i++) {
+		size_t j = FIRST;
+		for ( ; j<=LAST; j++)
+			f(cell[i][j], i, j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Modifying visitor acceptor.
+ */
+template <class F>
+void
+board::accept(F& f) {
+	size_t i = FIRST;
+	for ( ; i<=LAST; i++) {
+		size_t j = FIRST;
+		for ( ; j<=LAST; j++)
+			f(cell[i][j], i, j);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -87,7 +254,7 @@ board::conditional_assign_cell(const uchar x, const uchar y, const uchar v,
 		undo_list& ul) {
 	// if unassigned, then modify its state, else skip
 	cell_type& c(cell[x][y]);
-	if (!c.top().value()) {
+	if (!c.top().is_assigned()) {
 		ul.push(x, y);
 		c.push(c.top());
 		return c.top().set(v);
@@ -100,9 +267,9 @@ board::conditional_assign_cell(const uchar x, const uchar y, const uchar v,
  */
 bool
 board::assign(const uchar x, const uchar y, const uchar v, undo_list& ul) {
-	assert(x-1 < 9);
-	assert(y-1 < 9);
-	assert(v-1 < 9);
+	SODOKU_ASSERT(x < 9);
+	SODOKU_ASSERT(y < 9);
+	SODOKU_ASSERT(v < 9);
 	cell_type& c(cell[x][y]);
 	c.push(c.top());
 	c.top().assign(v);
@@ -111,20 +278,20 @@ board::assign(const uchar x, const uchar y, const uchar v, undo_list& ul) {
 	bool avail = true;
 	// cerr << "updating rows/cols..." << endl;
 {
-	uchar i = 1;
-	for ( ; i<=9; i++) {
+	uchar i = FIRST;
+	for ( ; i<=LAST; i++) {
 		if (i != y)	avail &= conditional_assign_cell(x, i, v, ul);
 		if (i != x)	avail &= conditional_assign_cell(i, y, v, ul);
 	}
 }
 	// cerr << "updating blocks..." << endl;
 {
-	const uchar bx = ((x-1)/3)*3;
-	const uchar by = ((y-1)/3)*3;
-	uchar j = 1;
-	for ( ; j<=3; j++) {
-		uchar k = 1;
-		for ( ; k<=3; k++) {
+	const uchar bx = (x/3)*3;
+	const uchar by = (y/3)*3;
+	uchar j = FIRST;
+	for ( ; j<=THIRD; j++) {
+		uchar k = FIRST;
+		for ( ; k<=THIRD; k++) {
 			const uchar cx = bx+j;
 			const uchar cy = by+k;
 			if (cx != x && cy != y)
@@ -143,16 +310,16 @@ board::assign(const uchar x, const uchar y, const uchar v, undo_list& ul) {
  */
 bool
 board::commit(const uchar x, const uchar y, const uchar v) {
-	assert(x-1 < 9);
-	assert(y-1 < 9);
-	assert(v-1 < 9);
+	SODOKU_ASSERT(x < 9);
+	SODOKU_ASSERT(y < 9);
+	SODOKU_ASSERT(v < 9);
 	cell[x][y].top().assign(v);
 	// tighten constraints on row, col, blocks
 	bool avail = true;
 //	cerr << "updating rows/cols..." << endl;
 {
-	size_t i = 1;
-	for ( ; i<=9; i++) {
+	size_t i = FIRST;
+	for ( ; i<=LAST; i++) {
 		if (i != y) {
 			avail &= cell[x][i].top().set(v);
 			if (!avail)
@@ -169,12 +336,12 @@ board::commit(const uchar x, const uchar y, const uchar v) {
 }
 //	cerr << "updating blocks..." << endl;
 {
-	const uchar bx = ((x-1)/3)*3;
-	const uchar by = ((y-1)/3)*3;
-	uchar j = 1;
-	for ( ; j<=3; j++) {
-		uchar k = 1;
-		for ( ; k<=3; k++) {
+	const uchar bx = (x/3)*3;
+	const uchar by = (y/3)*3;
+	uchar j = FIRST;
+	for ( ; j<=THIRD; j++) {
+		uchar k = FIRST;
+		for ( ; k<=THIRD; k++) {
 			const size_t cx = bx+j;
 			const size_t cy = by+k;
 			if (cx != x && cy != y) {
@@ -195,10 +362,10 @@ board::commit(const uchar x, const uchar y, const uchar v) {
  */
 void
 board::unassign(const uchar x, const uchar y) {
-	assert(x-1 < 9);
-	assert(y-1 < 9);
+	SODOKU_ASSERT(x < 9);
+	SODOKU_ASSERT(y < 9);
 	cell_type& c(cell[x][y]);
-	assert(!c.empty());
+	SODOKU_ASSERT(!c.empty());
 	c.pop();
 }
 
@@ -220,27 +387,8 @@ board::__solve(list<solution>& sols) {
 	// to minimize recursion breadth, we find some pivot cell
 	// with the tightest constraints (fewest possible values).  
 	// later optimization: memoize priority list to minimize re-evaluation
-	size_t best_x = 0, best_y = 0;
-	uchar min_avail = 9;
-{
-	uchar i = 1;
-	for ( ; i<=9; i++) {
-		uchar j = 1;
-		for ( ; j<=9; j++) {
-			const avail_set& scan(cell[i][j].top());
-			const uchar avail = scan.num_avail();
-			const uchar v = scan.value();
-			if (!v) {
-				assert(avail);
-				if (avail < min_avail) {
-					best_x = i;
-					best_y = j;
-					min_avail = avail;
-				}
-			}
-		}
-	}
-}
+	pivot_finder pf;	// visitor functor
+	accept(pf);
 #if STEP_SOLVE
 {
 	char c;
@@ -248,20 +396,20 @@ board::__solve(list<solution>& sols) {
 	std::cin >> c;
 }
 #endif
-if (best_x && best_y) {
+if (pf.valid()) {
 #if DEBUG_SOLVE
-	cerr << "Cell [" << best_x << "][" << best_y << "] has " << 
+	cerr << "Cell [" << pf.best_x << "][" << pf.best_y << "] has " << 
 		size_t(min_avail) << " choices." << endl;
 #endif
 	// cell[best_x][best_y] has the fewest number of available values
-	const avail_set& pivot(cell[best_x][best_y].top());
+	const avail_set& pivot(cell[pf.best_x][pf.best_y].top());
 	// extract list of possible values and recursively try one-by-one
 	ushort mask = pivot.get_mask();
-	assert(mask);
-	uchar val = 1;
+	SODOKU_ASSERT(mask);
+	uchar val = FIRST;
 	for ( ; mask; mask >>= 1, ++val) {
 		if (mask & 0x1) {
-			const move m(*this, best_x, best_y, val);
+			const move m(*this, pf.best_x, pf.best_y, val);
 			if (m.accepted())
 				__solve(sols);	// recursion here
 			// else just undo it upon move destruction
@@ -279,11 +427,19 @@ if (best_x && best_y) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-istream&
+/**
+	\return true if there is an error.
+ */
+bool
 board::load(istream& f) {
 	do {
 		ushort x, y, z;
 		f >> x >> y >> z;
+		--x, --y, --z;		// normalize to 0-8
+		if (x >=9 || y >= 9 || z >= 9) {
+			cerr << "ERROR: all input numbers must be 1-9." << endl;
+			return true;
+		}
 		if (f.good()) {
 #if DEBUG_LOAD
 			cerr << "placing: [" << x << ',' << y << "]="
@@ -293,53 +449,29 @@ board::load(istream& f) {
 			if (!commit(x,y,z)) {
 				cerr << "ERROR: [" << x << ',' << y << "]="
 					<< z << " was rejected!" << endl;
-				throw std::exception();
+				return true;
 			}
 #if DEBUG_LOAD
 			dump_state(cerr) << endl;
 #endif
 		}
 	} while (f.good());
-	return f;
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 board::dump(ostream& o) const {
-	ushort i = 1;
-	for ( ; i<=9; i++) {
-		ushort j = 1;
-		o << '\t';
-		for ( ; j<=9; j++) {
-			const size_t val = cell[i][j].top().value();
-			if (val) o << val;
-			else o << '-';
-			o << ' ';
-		}
-		o << endl;
-	}
+	value_dumper d(o);
+	accept(d);
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 board::dump_state(ostream& o) const {
-	ushort i = 1;
-	for ( ; i<=9; i++) {
-		ushort j = 1;
-		o << '\t';
-		for ( ; j<=9; j++) {
-			const size_t val = cell[i][j].top().value();
-			if (val) o << val;
-			else {
-				o << std::setbase(16);
-				o << '(' << cell[i][j].top().get_mask() << ')';
-				o << std::setbase(10);
-			}
-			o << '\t';
-		}
-		o << endl;
-	}
+	state_dumper d(o);
+	accept(d);
 	return o;
 }
 

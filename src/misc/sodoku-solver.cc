@@ -1,6 +1,6 @@
 /**
 	\file "sodoku-solver.cc"
-	$Id: sodoku-solver.cc,v 1.1.2.1 2006/01/05 01:15:26 fang Exp $
+	$Id: sodoku-solver.cc,v 1.1.2.2 2006/01/05 07:10:58 fang Exp $
  */
 
 #include "misc/sodoku.h"
@@ -63,9 +63,7 @@ solver::main(int argc, char* argv[]) {
 			cerr << "Error opening file: " << argv[1] << endl;
 			return 1;
 		} else {
-			try {
-				b.load(f);
-			} catch (...) {
+			if (b.load(f)) {
 				cerr << "Invalid initial board.  Exiting."
 					<< endl;
 				f.close();

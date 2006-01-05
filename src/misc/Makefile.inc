@@ -11,7 +11,7 @@ LIBMISCFUN += misc/libmiscfun.la
 TESTS += misc/sodoku-test.sh
 endif
 
-misc_libmiscfun_la_CPPFLAGS = -DNO_MAIN
+# misc_libmiscfun_la_CPPFLAGS =
 
 sodoku_solver_LDADD = $(LIBMISCFUN)
 sodoku_solver_SOURCES = \
