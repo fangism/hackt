@@ -1,15 +1,15 @@
 /**
-	\file "sodoku.h"
-	The name of the game is sodoku.
+	\file "sudoku.h"
+	The name of the game is sudoku.
 	Place numbers 1-9 in a 9x9 grid such that:
 	1) each row contains each digit exactly once
 	2) each column contains each digit exactly once
 	3) each 3x3 sub-block contains each digit exactly once
-	$Id: sodoku.h,v 1.1.2.2 2006/01/05 07:10:59 fang Exp $
+	$Id: sudoku.h,v 1.1.2.1 2006/01/06 07:35:32 fang Exp $
  */
 
-#ifndef	__SODOKU_H__
-#define	__SODOKU_H__
+#ifndef	__SUDOKU_H__
+#define	__SUDOKU_H__
 
 #include <iosfwd>
 #include <cassert>
@@ -18,20 +18,20 @@
 #include <stack>
 #include <utility>
 
-#ifndef	DEBUG_SODOKU
-#define	DEBUG_SODOKU		1
+#ifndef	DEBUG_SUDOKU
+#define	DEBUG_SUDOKU		1
 #endif
 
-#if	DEBUG_SODOKU
-#define	SODOKU_ASSERT(x)	assert(x)
+#if	DEBUG_SUDOKU
+#define	SUDOKU_ASSERT(x)	assert(x)
 #else
-#define	SODOKU_ASSERT(x)	assert(x)
+#define	SUDOKU_ASSERT(x)	assert(x)
 #endif
 
 /**
-	Namespace for the sodoku solver data structures. 
+	Namespace for the sudoku solver data structures. 
  */
-namespace sodoku {
+namespace sudoku {
 using std::pair;
 using std::list;
 using std::vector;
@@ -86,7 +86,7 @@ public:
 
 	bool
 	probe(const uchar pos) const {
-		SODOKU_ASSERT(pos < 9);
+		SUDOKU_ASSERT(pos < 9);
 		return ints & masks[pos];
 	}
 
@@ -99,8 +99,8 @@ public:
 	 */
 	bool
 	set(const uchar pos) {
-		SODOKU_ASSERT(avail);
-		SODOKU_ASSERT(pos < 9);
+		SUDOKU_ASSERT(avail);
+		SUDOKU_ASSERT(pos < 9);
 		ushort n = ints & ~masks[pos];
 		if (ints != n)
 			--avail;
@@ -115,7 +115,7 @@ public:
 
 	void
 	assign(const uchar v) {
-		SODOKU_ASSERT(!is_assigned());
+		SUDOKU_ASSERT(!is_assigned());
 		val = v;
 	}
 
@@ -225,7 +225,7 @@ public:
 };	// end class solution
 
 //=============================================================================
-}	// end namespace sodoku
+}	// end namespace sudoku
 
-#endif	// __SODOKU_H__
+#endif	// __SUDOKU_H__
 

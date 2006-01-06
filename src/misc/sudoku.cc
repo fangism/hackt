@@ -1,9 +1,9 @@
 /**
-	\file "sodoku.cc"
-	$Id: sodoku.cc,v 1.1.2.2 2006/01/05 07:10:58 fang Exp $
+	\file "sudoku.cc"
+	$Id: sudoku.cc,v 1.1.2.1 2006/01/06 07:35:31 fang Exp $
  */
 
-#include "misc/sodoku.h"
+#include "misc/sudoku.h"
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
@@ -14,7 +14,7 @@
 #define	DEBUG_SOLVE		0
 #define	REVEAL_SOLUTION		1	// print as they are found
 
-namespace sodoku {
+namespace sudoku {
 using std::ios_base;
 using std::cerr;
 using std::endl;
@@ -62,7 +62,7 @@ public:
 
 	void
 	push(const uchar x, const uchar y) {
-		SODOKU_ASSERT(count < 20);
+		SUDOKU_ASSERT(count < 20);
 		cell[count].first = x;
 		cell[count].second = y;
 		++count;
@@ -112,7 +112,7 @@ struct board::pivot_finder {
 		const avail_set& scan(c.top());
 		if (!scan.is_assigned()) {
 			const uchar avail = scan.num_avail();
-			SODOKU_ASSERT(avail);
+			SUDOKU_ASSERT(avail);
 			if (avail < min_avail) {
 				best_x = i;
 				best_y = j;
@@ -267,9 +267,9 @@ board::conditional_assign_cell(const uchar x, const uchar y, const uchar v,
  */
 bool
 board::assign(const uchar x, const uchar y, const uchar v, undo_list& ul) {
-	SODOKU_ASSERT(x < 9);
-	SODOKU_ASSERT(y < 9);
-	SODOKU_ASSERT(v < 9);
+	SUDOKU_ASSERT(x < 9);
+	SUDOKU_ASSERT(y < 9);
+	SUDOKU_ASSERT(v < 9);
 	cell_type& c(cell[x][y]);
 	c.push(c.top());
 	c.top().assign(v);
@@ -310,9 +310,9 @@ board::assign(const uchar x, const uchar y, const uchar v, undo_list& ul) {
  */
 bool
 board::commit(const uchar x, const uchar y, const uchar v) {
-	SODOKU_ASSERT(x < 9);
-	SODOKU_ASSERT(y < 9);
-	SODOKU_ASSERT(v < 9);
+	SUDOKU_ASSERT(x < 9);
+	SUDOKU_ASSERT(y < 9);
+	SUDOKU_ASSERT(v < 9);
 	cell[x][y].top().assign(v);
 	// tighten constraints on row, col, blocks
 	bool avail = true;
@@ -362,10 +362,10 @@ board::commit(const uchar x, const uchar y, const uchar v) {
  */
 void
 board::unassign(const uchar x, const uchar y) {
-	SODOKU_ASSERT(x < 9);
-	SODOKU_ASSERT(y < 9);
+	SUDOKU_ASSERT(x < 9);
+	SUDOKU_ASSERT(y < 9);
 	cell_type& c(cell[x][y]);
-	SODOKU_ASSERT(!c.empty());
+	SUDOKU_ASSERT(!c.empty());
 	c.pop();
 }
 
@@ -405,7 +405,7 @@ if (pf.valid()) {
 	const avail_set& pivot(cell[pf.best_x][pf.best_y].top());
 	// extract list of possible values and recursively try one-by-one
 	ushort mask = pivot.get_mask();
-	SODOKU_ASSERT(mask);
+	SUDOKU_ASSERT(mask);
 	uchar val = FIRST;
 	for ( ; mask; mask >>= 1, ++val) {
 		if (mask & 0x1) {
@@ -503,5 +503,5 @@ board::move::~move() {
 }
 
 //=============================================================================
-}	// end namespace sodoku
+}	// end namespace sudoku
 

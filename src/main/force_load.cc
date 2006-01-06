@@ -3,7 +3,7 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.6.2.2 2006/01/05 01:15:24 fang Exp $
+	$Id: force_load.cc,v 1.6.2.3 2006/01/06 07:35:25 fang Exp $
  */
 
 #include "config.h"
@@ -23,7 +23,7 @@
 #include "main/version.h"
 
 #if	WANT_TO_HAVE_FUN
-#include "misc/sodoku-solver.h"
+#include "misc/sudoku-solver.h"
 #endif
 
 namespace HAC {
@@ -65,7 +65,7 @@ force_load(void) {
 	const version versionator;
 	const shell shell_shocker;
 #if WANT_TO_HAVE_FUN
-	const sodoku::solver ss;
+	const sudoku::solver ss;
 #endif
 }
 

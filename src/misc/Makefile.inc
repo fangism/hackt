@@ -6,20 +6,20 @@ FUNPROGRAMS =
 LIBMISCFUN =
 
 if WANT_LIBMISCFUN
-FUNPROGRAMS += sodoku-solver
+FUNPROGRAMS += sudoku-solver
 LIBMISCFUN += misc/libmiscfun.la
-TESTS += misc/sodoku-test.sh
+TESTS += misc/sudoku-test.sh
 endif
 
 # misc_libmiscfun_la_CPPFLAGS =
 
-sodoku_solver_LDADD = $(LIBMISCFUN)
-sodoku_solver_SOURCES = \
- 	misc/sodoku-main.cc
+sudoku_solver_LDADD = $(LIBMISCFUN)
+sudoku_solver_SOURCES = \
+ 	misc/sudoku-main.cc
 
 MISCFUN_CC_FILES = \
-	misc/sodoku-solver.cc \
-	misc/sodoku.cc
+	misc/sudoku-solver.cc \
+	misc/sudoku.cc
 
 MISCFUN_H_FILES = $(MISCFUN_CC_FILES:.cc=.h)
 
@@ -29,12 +29,12 @@ misc_libmiscfun_la_SOURCES = \
 
 
 EXTRA_DIST += misc/README \
-	misc/sodoku-sample.txt
+	misc/sudoku-sample.txt
 
-misc/sodoku-test.sh:
+misc/sudoku-test.sh:
 	@$(ECHO) #!$(SHELL) > $@
-	@$(ECHO) sodoku-solver misc/sodoku-sample.txt >> $@
+	@$(ECHO) sudoku-solver misc/sudoku-sample.txt >> $@
 	@$(CHMOD) +x $@
 
-CLEANFILES += misc/sodoku-test.sh
+CLEANFILES += misc/sudoku-test.sh
 

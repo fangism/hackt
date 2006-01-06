@@ -1,14 +1,14 @@
 /**
-	\file "sodoku-solver.h"
-	$Id: sodoku-solver.h,v 1.1.2.1 2006/01/05 01:15:26 fang Exp $
+	\file "sudoku-solver.h"
+	$Id: sudoku-solver.h,v 1.1.2.1 2006/01/06 07:35:31 fang Exp $
  */
 
-#ifndef	__SODOKU_SOLVER_H__
-#define	__SODOKU_SOLVER_H__
+#ifndef	__SUDOKU_SOLVER_H__
+#define	__SUDOKU_SOLVER_H__
 
 #include "main/hackt_fwd.h"
 
-namespace sodoku {
+namespace sudoku {
 
 class solver {
 public:
@@ -42,7 +42,7 @@ private:
 
 };	// end class solver
 
-}	// end namespace sodoku
+}	// end namespace sudoku
 
-#endif	// __SODOKU_SOLVER_H__
+#endif	// __SUDOKU_SOLVER_H__
 

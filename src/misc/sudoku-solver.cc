@@ -1,10 +1,10 @@
 /**
-	\file "sodoku-solver.cc"
-	$Id: sodoku-solver.cc,v 1.1.2.2 2006/01/05 07:10:58 fang Exp $
+	\file "sudoku-solver.cc"
+	$Id: sudoku-solver.cc,v 1.1.2.1 2006/01/06 07:35:31 fang Exp $
  */
 
-#include "misc/sodoku.h"
-#include "misc/sodoku-solver.h"
+#include "misc/sudoku.h"
+#include "misc/sudoku-solver.h"
 #include <iostream>
 #include <fstream>
 #include "main/program_registry.h"
@@ -14,11 +14,11 @@ using std::ifstream;
 using std::endl;
 using std::cerr;
 using std::cout;
-using sodoku::board;
-using sodoku::solution;
+using sudoku::board;
+using sudoku::solution;
 using HAC::global_options;
 
-namespace sodoku {
+namespace sudoku {
 //=============================================================================
 // class solver method definitions
 
@@ -26,18 +26,18 @@ solver::solver() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const char
-solver::name[] = "sodoku";
+solver::name[] = "sudoku";
 
 const char
-solver::brief_str[] = "Solves sodoku puzzles";
+solver::brief_str[] = "Solves sudoku puzzles";
 
 /**
 	NOTE: this is the only symbol referenced outside of the
-	sodoku modules.  
+	sudoku modules.  
 	To make this a standalone program, all you need to do is define
 	main to call solver::main and fake the symbol:
 	HAC::register_hackt_program().
-	See "sodoku-main.cc" for example. 
+	See "sudoku-main.cc" for example. 
  */
 const size_t
 solver::program_id = HAC::register_hackt_program_class<solver>();
@@ -88,7 +88,7 @@ void
 solver::usage(const char* prog) {
 	assert(prog);
 	cerr << prog <<
-	": solves sodoku puzzles by brute force, by David Fang." << endl;
+	": solves sudoku puzzles by brute force, by David Fang." << endl;
 	cerr << "usage: " << prog << " <board file>" << endl;
 	cerr <<
 "\tThe board file is a list of whitespace-delimited integer triplets "
@@ -109,5 +109,5 @@ solver::usage(const char* prog) {
 }
 
 //=============================================================================
-}	// end namespace sodoku
+}	// end namespace sudoku
 
