@@ -3,10 +3,14 @@
 
 # variables conditionally defined and provided in this Makefile
 FUNPROGRAMS =
+FUNLIBS =
 LIBMISCFUN =
+
+# include $(srcdir)/misc/sudoku/Makefile.inc
 
 if WANT_LIBMISCFUN
 FUNPROGRAMS += sudoku-solver
+FUNLIBS += misc/libmiscfun.la $(LIBSUDOKU)
 LIBMISCFUN += misc/libmiscfun.la
 TESTS += misc/sudoku-test.sh
 endif
@@ -37,4 +41,6 @@ misc/sudoku-test.sh:
 	@$(CHMOD) +x $@
 
 CLEANFILES += misc/sudoku-test.sh
+
+ALL_HEADER_FILES += $(MISCFUN_H_FILES)
 

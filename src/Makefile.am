@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.9 2006/01/05 01:15:23 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.10 2006/01/09 21:37:09 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,7 +46,7 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la \
-	libfangutil.la libhacktexec.la libhacktsim.la $(LIBMISCFUN)
+	libfangutil.la libhacktexec.la libhacktsim.la $(FUNLIBS)
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -486,6 +486,7 @@ UTIL_HEADER_FILES = \
 	util/dereference.h \
 	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
+	util/finite_vector.h \
 	util/file_status.h \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
@@ -699,7 +700,6 @@ ALL_HEADER_FILES += \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
-	$(MISCFUN_H_FILES) \
 	config.h \
 	main/main_funcs.h
 

@@ -1,6 +1,6 @@
 /**
 	\file "sudoku.cc"
-	$Id: sudoku.cc,v 1.1.2.1 2006/01/06 07:35:31 fang Exp $
+	$Id: sudoku.cc,v 1.1.2.2 2006/01/09 21:37:12 fang Exp $
  */
 
 #include "misc/sudoku.h"
@@ -263,6 +263,7 @@ board::conditional_assign_cell(const uchar x, const uchar y, const uchar v,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: return early when avail goes false.
 	\return true if assignment was accepted.  
  */
 bool

@@ -5,7 +5,10 @@
 	1) each row contains each digit exactly once
 	2) each column contains each digit exactly once
 	3) each 3x3 sub-block contains each digit exactly once
-	$Id: sudoku.h,v 1.1.2.1 2006/01/06 07:35:32 fang Exp $
+	$Id: sudoku.h,v 1.1.2.2 2006/01/09 21:37:12 fang Exp $
+	TODO: generalize for variations!
+	http://www.maa.org/editorial/mathgames/mathgames_09_05_05.html
+	Implement general constraints!
  */
 
 #ifndef	__SUDOKU_H__
