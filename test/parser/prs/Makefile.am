@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2005/12/13 04:21:17 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.1 2006/01/10 05:37:29 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -45,6 +45,9 @@ HACKT_ALLOC_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	loop-00
 
 HACKT_CFLAT_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_SUBJECTS)
+
+HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
+	celem-01
 
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += null-00 loop-00

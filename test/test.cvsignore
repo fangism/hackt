@@ -20,12 +20,14 @@ core.*
 *.hacktobjcreate
 *.createdump
 *.creatediff
-*.hacketobjalloc
+*.hacktobjalloc
 *.allocdump
 *.allocdiff
 *.noindex
 *.prs
 *.prsdiff
+*.prsimexpr
+*.prsimexprdiff
 *.sort
 ignore
 Makefile

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.1.2.6 2006/01/04 08:42:13 fang Exp $
+	$Id: Expr.h,v 1.1.2.7 2006/01/10 05:37:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -189,6 +189,10 @@ struct ExprGraphNode {
 	typedef	children_array_type::iterator	iterator;
 	typedef	children_array_type::const_iterator	const_iterator;
 #endif
+private:
+	enum {
+		INVALID_OFFSET = 0xFF
+	};
 public:
 	/**
 		The offset position in the parent's subexpression list.
@@ -211,7 +215,7 @@ public:
 	children_array_type		children;
 
 public:
-	ExprGraphNode() : offset(0xFF), children() { }
+	ExprGraphNode() : offset(INVALID_OFFSET), children() { }
 
 	void
 	push_back_expr(const size_t);

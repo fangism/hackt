@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.1.2.5 2006/01/04 08:42:13 fang Exp $
+	$Id: Expr.cc,v 1.1.2.6 2006/01/10 05:37:27 fang Exp $
  */
 
 #include <iostream>
@@ -55,13 +55,13 @@ Expr::dump_struct(ostream& o) const {
 	o << "type: ";
 	unsigned char t = type & EXPR_MASK;
 	switch (t) {
-	case EXPR_OR: o << "or("; break;
-	case EXPR_AND: o << "and("; break;
-	case EXPR_NAND: o << "nand("; break;
-	case EXPR_NOR: o << "nor("; break;
+	case EXPR_OR: o << "or<"; break;
+	case EXPR_AND: o << "and<"; break;
+	case EXPR_NAND: o << "nand<"; break;
+	case EXPR_NOR: o << "nor<"; break;
 	default: THROW_EXIT;
 	}
-	o << size_t(size) << ')';
+	o << size_t(size) << '>';
 	if (type & EXPR_ROOT) {
 		o << ((type & EXPR_DIR) ? " (pull-up: " : " (pull-dn: ");
 		o << parent << ')';
@@ -118,7 +118,11 @@ ExprGraphNode::dump_struct(ostream& o) const {
 		o << i->second;
 		o << ", ";
 	}
-	return o << "offset: " << size_t(offset);
+	o << "offset: ";
+	if (offset == INVALID_OFFSET)
+		o << '-';
+	else	o << size_t(offset);
+	return o;
 }
 
 //=============================================================================

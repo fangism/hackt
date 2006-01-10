@@ -2,38 +2,43 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.12.2.3 2005/12/15 04:47:10 fang Exp $
+#	$Id: Make.test-tail,v 1.12.2.4 2006/01/10 05:37:28 fang Exp $
 
-PARSE_TEST_EXE = $(top_builddir)/src/hackt parse_test
-HACKT_COMPILE_EXE = $(top_builddir)/src/hackt compile
-HACKT_OBJDUMP_EXE = $(top_builddir)/src/hackt objdump
-HACKT_UNROLL_EXE = $(top_builddir)/src/hackt unroll
-HACKT_CREATE_EXE = $(top_builddir)/src/hackt create
-HACKT_ALLOC_EXE = $(top_builddir)/src/hackt alloc
-HACKT_CFLAT_PRSIM_EXE = $(top_builddir)/src/hackt cflat prsim
+HACKT_EXE = $(top_builddir)/src/hackt
+PARSE_TEST_EXE = $(HACKT_EXE) parse_test
+HACKT_COMPILE_EXE = $(HACKT_EXE) compile
+HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
+HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
+HACKT_CREATE_EXE = $(HACKT_EXE) create
+HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
+HACKT_CFLAT_PRSIM_EXE = $(HACKT_EXE) cflat prsim
+HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 # NOTE: these scripts are configure-generated from their .hac files.  
-HACKT_PARSE_TEST_SH = $(top_builddir)/test/parse-test-expect.sh
-HACKT_OBJ_TEST_SH = $(top_builddir)/test/hackt-obj-diff.sh
-HACKT_UNROLL_TEST_SH = $(top_builddir)/test/hackt-unroll-expect.sh
-HACKT_CREATE_TEST_SH = $(top_builddir)/test/hackt-create-expect.sh
-HACKT_ALLOC_TEST_SH = $(top_builddir)/test/hackt-alloc-expect.sh
-HACKT_CFLAT_TEST_SH = $(top_builddir)/test/hackt-cflat-expect.sh
+TEST_SRCDIR = $(top_srcdir)/test
+TEST_BUILDDIR = $(top_builddir)/test
+HACKT_PARSE_TEST_SH = $(TEST_BUILDDIR)/parse-test-expect.sh
+HACKT_OBJ_TEST_SH = $(TEST_BUILDDIR)/hackt-obj-diff.sh
+HACKT_UNROLL_TEST_SH = $(TEST_BUILDDIR)/hackt-unroll-expect.sh
+HACKT_CREATE_TEST_SH = $(TEST_BUILDDIR)/hackt-create-expect.sh
+HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
+HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
+HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
 
 HACKT_COMPILE_ERROR_FILTER = $(AWK) \
-		-f $(top_srcdir)/test/hackt-parse-expect-filter.awk \
-		-f $(top_srcdir)/test/state_enum_filter.awk \
-		-f $(top_srcdir)/test/vpath_file_filter.awk
-POM_HEADER_FILTER = $(AWK) -f $(top_srcdir)/test/POM-header-filter.awk
-POM_INDEX_FILTER = $(AWK) -f $(top_srcdir)/test/POM-index-filter.awk
-HEX_ADDRESS_FILTER = $(SED) -f $(top_srcdir)/test/address_filter.sed
-ALLOC_FILTER = $(SED) -f $(top_srcdir)/test/alloc_filter.sed
+		-f $(TEST_SRCDIR)/test/hackt-parse-expect-filter.awk \
+		-f $(TEST_SRCDIR)/test/state_enum_filter.awk \
+		-f $(TEST_SRCDIR)/test/vpath_file_filter.awk
+POM_HEADER_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-header-filter.awk
+POM_INDEX_FILTER = $(AWK) -f $(TEST_SRCDIR)/POM-index-filter.awk
+HEX_ADDRESS_FILTER = $(SED) -f $(TEST_SRCDIR)/address_filter.sed
+ALLOC_FILTER = $(SED) -f $(TEST_SRCDIR)/alloc_filter.sed
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
-ANALYZE_DIFF_AWK = $(AWK) -f $(top_srcdir)/test/analyze-dump-diff.awk
+ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 
 # TODO: phase out TEST_REPORT, we already have check.log
 # also get rid of subdir.not_a_test
-TEST_REPORT = $(top_builddir)/test/test-report.txt
+TEST_REPORT = $(TEST_BUILDDIR)/test-report.txt
 
 # These needs to be specified in Makefile.am to take effect
 # SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest
@@ -99,6 +104,14 @@ subdir.not_a_test:
 		$(srcdir) $* $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
 
+.hac.hacktprsimexprtest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) $(HACKT_PRSIMEXPR_TEST_SH) "\"$(HACKT_PRSIM_EXE)\"" \
+		$(srcdir) $* $(TEST_REPORT) >> $@
+	@$(CHMOD) +x $@
+
+
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
 	prsdiffs prsdiffs.sort
@@ -145,14 +158,16 @@ EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
 	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrollstderr) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocstderr) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs) 
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.expect-prsimexpr) 
 
 TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
 	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest) \
 	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
-	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) 
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) 
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
@@ -208,7 +223,9 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdiff) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
-	$(EMPTY_CFLAT_PRS)
+	$(EMPTY_CFLAT_PRS) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff)
 
 
 DISTCLEANFILES += local.cvsignore subdir.not_a_test
@@ -225,6 +242,7 @@ AUTO_IGNORE += local.cvsignore \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
 	$(EMPTY_CFLAT_PRS) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
 	$(CHECK_SUMMARIES)
 
 # we generate all the local.cvsignore's in the test directories
@@ -262,12 +280,14 @@ cleaner-local:
 	-$(RM) *.filter *.diff *.sort *.noindex
 	-$(RM) *.hacktcmpltest *.hacktobjtest *.hacktunrolltest
 	-$(RM) *.hacktcreatetest *.hacktalloctest
+	-$(RM) *.hacktprsimexprtest
 	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.haco
 	-$(RM) *.haco-u *.unrolldump *.unrolldiff
 	-$(RM) *.haco-c *.createdump *.creatediff
 	-$(RM) *.haco-a *.allocdump *.allocdiff
 	-$(RM) *.prs *.prsdiff
+	-$(RM) *.prsimexpr *.prsimexprdiff
 # legacy object files
 	-$(RM) *.artobj *.artobjunroll *.hacktobjcreate *.hacktobjalloc
 

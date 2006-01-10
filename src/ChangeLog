@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-11:
+	  Updated output formatting for prsim expression allocation dump.
+	  Added test support for expr-allocation dump comparison.  
+
+
 2006-01-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-10:

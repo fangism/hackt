@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.10 2006/01/09 21:37:09 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.11 2006/01/10 05:37:26 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1199,7 +1199,7 @@ help-local:
 	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
 	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
 	@$(ECHO) "    clean-libs: cleans all libraries and archives"
-	@$(ECHO) "Local echo targets:"
+	@$(ECHO) "Local echo-* targets:"
 	@$(ECHO) "    libhacktexec-sources"
 
 # standard targets

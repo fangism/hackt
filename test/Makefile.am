@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2005/12/13 04:15:50 fang Exp $
+#	$Id: Makefile.am,v 1.18.2.1 2006/01/10 05:37:28 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -22,6 +22,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	hackt-create-expect.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \
+	hackt-prsim-expr-alloc-expect.sh.in \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
