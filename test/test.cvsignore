@@ -27,6 +27,8 @@ core.*
 *.prs
 *.prsdiff
 *.prsimexpr
+*.prsimexpr-dot
+*.prsimexpr-ps
 *.prsimexprdiff
 *.sort
 ignore

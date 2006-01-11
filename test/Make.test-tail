@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.12.2.5 2006/01/10 06:35:05 fang Exp $
+#	$Id: Make.test-tail,v 1.12.2.6 2006/01/11 03:41:16 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -11,7 +11,8 @@ HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
 HACKT_UNROLL_EXE = $(HACKT_EXE) unroll
 HACKT_CREATE_EXE = $(HACKT_EXE) create
 HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
-HACKT_CFLAT_PRSIM_EXE = $(HACKT_EXE) cflat prsim
+HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
+HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
 HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 # NOTE: these scripts are configure-generated from their .hac files.  
@@ -52,6 +53,9 @@ subdir.not_a_test:
 	@$(ECHO) "echo \"In $(subdir):\" >> $(TEST_REPORT)" >> $@
 	@$(CHMOD) +x $@
 
+.hac.haco:
+	$(HACKT_COMPILE_EXE) -I$(srcdir) $< $@
+
 .hac.hacktcmpltest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
@@ -67,6 +71,9 @@ subdir.not_a_test:
 		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
 
+.haco.haco-u:
+	$(HACKT_UNROLL_EXE) $< $@
+
 .hac.hacktunrolltest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
@@ -76,6 +83,9 @@ subdir.not_a_test:
 		"\"$(ANALYZE_DIFF_AWK)\"" \
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
+
+.haco-u.haco-c:
+	$(HACKT_CREATE_EXE) $< $@
 
 .hac.hacktcreatetest:
 	@$(ECHO) "#!$(SHELL)" > $@
@@ -87,6 +97,9 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
+.haco-c.haco-a:
+	$(HACKT_ALLOC_EXE) $< $@
+
 .hac.hacktalloctest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
@@ -97,12 +110,26 @@ subdir.not_a_test:
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
+.haco-a.prs:
+	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
+
 .hac.hacktcflattest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
 		$(srcdir) $* $(TEST_REPORT) >> $@
 	@$(CHMOD) +x $@
+
+.haco-a.prsimexpr:
+	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
+
+.haco-a.prsimexpr-dot:
+	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
+
+if HAVE_DOT
+.prsimexpr-dot.prsimexpr-ps:
+	$(DOT) -Tps $< -o $@
+endif
 
 .hac.hacktprsimexprtest:
 	@$(ECHO) "#!$(SHELL)" > $@
@@ -177,6 +204,19 @@ clean-empty-cflat-prs:
 # need a bogus dependency to make it work...
 $(EMPTY_CFLAT_PRS): Makefile
 	@$(TOUCH) $@
+
+ALL_PRSIMEXPR_DOT = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr-dot) 
+ALL_PRSIMEXPR_PS = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr-ps) 
+
+all-prsimexpr-dot: $(ALL_PRSIMEXPR_DOT)
+
+all-prsimexpr-ps: $(ALL_PRSIMEXPR_PS)
+
+clean-prsimexpr-dot:
+	$(RM) $(ALL_PRSIMEXPR_DOT)
+
+clean-prsimexpr-ps:
+	$(RM) $(ALL_PRSIMEXPR_PS)
 
 # echo-style Makefile debugging
 echo-tests: force
@@ -288,6 +328,7 @@ cleaner-local:
 	-$(RM) *.haco-a *.allocdump *.allocdiff
 	-$(RM) *.prs *.prsdiff
 	-$(RM) *.prsimexpr *.prsimexprdiff
+	-$(RM) *.prsimexpr-dot *.prsimexpr-ps
 # legacy object files
 	-$(RM) *.artobj *.artobjunroll *.hacktobjcreate *.hacktobjalloc
 

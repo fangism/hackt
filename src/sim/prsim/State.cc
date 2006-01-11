@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.1.2.5 2006/01/11 00:07:34 fang Exp $
+	$Id: State.cc,v 1.1.2.6 2006/01/11 03:41:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -9,6 +9,7 @@
 #include <iostream>
 #include <algorithm>
 #include <functional>
+#include <string>
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
 #include "util/list_vector.tcc"
@@ -16,6 +17,7 @@
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
+#include "util/sstream.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 
@@ -24,6 +26,7 @@ namespace entity { }
 
 namespace SIM {
 namespace PRSIM {
+using std::string;
 using std::for_each;
 using std::mem_fun_ref;
 using entity::state_manager;
@@ -287,6 +290,50 @@ State::dump_state(ostream& o) const {
 	return o;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This prints out the netlist of nodes and expressions
+	in dot-form for visualization.  
+ */
+ostream&
+State::dump_struct_dot(ostream& o) const {
+	o << "digraph G {" << endl;
+{
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+	o << "# nodes: " << endl;
+	// box or plaintext
+	o << "node [shape=box, fillcolor=white];" << endl;
+	const node_index_type nodes = node_pool.size();
+	node_index_type i = FIRST_VALID_NODE;
+	for ( ; i<nodes; ++i) {
+		std::ostringstream oss;
+		oss << "NODE_" << i;
+		const string& s(oss.str());
+		o << s;
+		bp[i].dump_canonical_name(o << "\t[label=\"", topfp, sm)
+			<< "\"];" << endl;
+		node_pool[i].dump_fanout_dot(o, s) << endl;
+	}
+}
+{
+	o << "# Expressions: " << endl;
+	const expr_index_type exprs = expr_pool.size();
+	INVARIANT(exprs == expr_graph_node_pool.size());
+	expr_index_type i = FIRST_VALID_EXPR;
+	for ( ; i<exprs; ++i) {
+		o << "EXPR_" << i << "\t[label=\"" << i << "\", shape=";
+		const Expr& e(expr_pool[i]);
+		e.dump_type_dot_shape(o) << "];" << endl;
+		e.dump_parent_dot_edge(o << "EXPR_" << i << " -> ")
+			<< ';'<< endl;
+	}
+}
+	o << "}" << endl;
+	return o;
+}
 
 //=============================================================================
 }	// end namespace PRSIM

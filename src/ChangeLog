@@ -5,6 +5,13 @@
 
 2006-01-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-13:
+	  Added dot visualization mode for prsim, will be useful for debugging
+		and checking optimizations.  Just add -fdump-dot-struct
+		to hackt prsim to produce dot-format (stdout).
+	  Beautiful!
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-12:
 	  More prsim expr-allocation testing:
 		Added structural integrity check (State::check_structure).

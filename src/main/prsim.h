@@ -1,7 +1,7 @@
 /**
 	\file "main/prsim.h"
 	Interface header for prsim module.  
-	$Id: prsim.h,v 1.1.2.2 2006/01/11 00:07:33 fang Exp $
+	$Id: prsim.h,v 1.1.2.3 2006/01/11 03:41:14 fang Exp $
  */
 
 #ifndef	__MAIN_PRSIM_H__
@@ -52,7 +52,8 @@ private:
 	static const register_options_modifier
 		_default, _run, _no_run, 
 		_dump_expr_alloc, _no_dump_expr_alloc,
-		_check_structure, _no_check_structure;
+		_check_structure, _no_check_structure,
+		_dump_dot_struct, _no_dump_dot_struct;
 
 };	// end class prsim
 

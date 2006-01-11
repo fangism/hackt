@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.6 2006/01/11 00:07:34 fang Exp $
+	$Id: Node.h,v 1.1.2.7 2006/01/11 03:41:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 // #include <valarray>
 #include <vector>
+#include "util/string_fwd.h"
 #include "sim/common.h"
 
 namespace HAC {
@@ -98,6 +99,9 @@ struct Node {
 		List of expression indices to which this node fans out.  
 	 */
 	fanout_array_type		fanout;
+public:
+	typedef	fanout_array_type::const_iterator
+					const_fanout_iterator;
 
 public:
 	/// these aren't created frequently, inline doesn't matter
@@ -124,6 +128,9 @@ public:
 
 	void
 	initialize(void);
+
+	ostream&
+	dump_fanout_dot(ostream&, const std::string&) const;
 
 	ostream&
 	dump_struct(ostream&) const;

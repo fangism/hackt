@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.1.2.8 2006/01/11 00:07:34 fang Exp $
+	$Id: Expr.h,v 1.1.2.9 2006/01/11 03:41:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -160,6 +160,12 @@ public:
 
 	ostream&
 	dump_state(ostream&) const;
+
+	ostream&
+	dump_type_dot_shape(ostream&) const;
+
+	ostream&
+	dump_parent_dot_edge(ostream&) const;
 
 private:
 #if 0

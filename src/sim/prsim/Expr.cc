@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.1.2.7 2006/01/11 00:07:34 fang Exp $
+	$Id: Expr.cc,v 1.1.2.8 2006/01/11 03:41:15 fang Exp $
  */
 
 #include <iostream>
@@ -82,6 +82,37 @@ Expr::dump_struct(ostream& o) const {
 ostream&
 Expr::dump_state(ostream& o) const {
 	o << "ctdn: " << countdown << " X: " << unknowns << "(/" << size << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Expr::dump_parent_dot_edge(ostream& o) const {
+	if (is_root()) {
+		o << "NODE_" << parent << "\t[arrowhead=" <<
+#if 1
+			(direction() ? "odot" : "dot")
+#else
+			(direction() ? "normal" : "inv")
+#endif
+			<< ']';
+	} else {
+		o << "EXPR_" << parent;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Expr::dump_type_dot_shape(ostream& o) const {
+	unsigned char t = type & EXPR_MASK;
+	switch (t) {
+	case EXPR_OR: o << "triangle"; break;
+	case EXPR_AND: o << "trapezium"; break;
+	case EXPR_NAND: o << "invtrapezium"; break;
+	case EXPR_NOR: o << "invtriangle"; break;
+	default: THROW_EXIT;
+	}
+	return o;
 }
 
 //=============================================================================

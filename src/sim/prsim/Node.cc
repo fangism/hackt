@@ -1,12 +1,13 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.1.2.6 2006/01/11 00:07:34 fang Exp $
+	$Id: Node.cc,v 1.1.2.7 2006/01/11 03:41:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <string>
 #include <iterator>
 #include <algorithm>
 #include "sim/prsim/Node.h"
@@ -18,6 +19,7 @@ namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
+using std::string;
 
 //=============================================================================
 // class Node method definitions
@@ -84,10 +86,11 @@ Node::dump_struct(ostream& o) const {
 #if 1
 //	o << '<' << fanout.size() << "> ";
 	ostream_iterator<expr_index_type> osi(o, ", ");
-	std::copy(&fanout[0], &fanout[fanout.size()], osi);
+	std::copy(fanout.begin(), fanout.end(), osi);
+	// std::copy(&fanout[0], &fanout[fanout.size()], osi);
 #else
 	size_t i = 0;
-	for ( ; i<fanout.size(); i++)
+	for ( ; i<fanout.size(); ++i)
 		o << fanout[i] << ", ";
 #endif
 	return o;
@@ -103,6 +106,22 @@ Node::dump_state(ostream& o) const {
 	if (value & LOGIC_OTHER)
 		o << 'X';
 	else	o << size_t(value & LOGIC_VALUE);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints a dot-edge from this node to each fanout expression.  
+	\param s is the name of the node corresponding to the tail 
+	of the edge.  
+ */
+ostream&
+Node::dump_fanout_dot(ostream& o, const string& s) const {
+	const_fanout_iterator i(fanout.begin());
+	const const_fanout_iterator e(fanout.end());
+	for ( ; i!=e; ++i) {
+		o << s << " -> EXPR_" << *i << ';' << endl;
+	}
 	return o;
 }
 

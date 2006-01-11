@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.1.2.2 2006/01/11 00:07:33 fang Exp $
+	$Id: prsim.cc,v 1.1.2.3 2006/01/11 03:41:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -43,9 +43,11 @@ public:
 	bool			run;
 	/// check structure
 	bool			check_structure;
+	/// whether or not to produce a dot-format structure dump before running
+	bool			dump_dot_struct;
 
 	prsim_options() : dump_expr_alloc(false), run(true),
-		check_structure(true) { }
+		check_structure(true), dump_dot_struct(false) { }
 };	// end class options
 
 //=============================================================================
@@ -108,8 +110,11 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	if (opt.check_structure)
 		sim_state.check_structure();
 	// optimize expression allocation?
-	if (opt.run) {
 
+	if (opt.dump_dot_struct)
+		sim_state.dump_struct_dot(cout) << endl;
+	if (opt.run) {
+		// TODO: launch command-line interface
 	}
 	// else just exit
 	return 0;
@@ -136,7 +141,7 @@ prsim::usage(void) {
 }
 
 //-----------------------------------------------------------------------------
-static void __prsim_default(prsim_options&) { }
+static void __prsim_default(prsim_options& o) { o = prsim_options(); }
 static void __prsim_run(prsim_options& o) { o.run = true; }
 static void __prsim_no_run(prsim_options& o) { o.run = false; }
 static void __prsim_dump_expr_alloc(prsim_options& o)
@@ -147,6 +152,10 @@ static void __prsim_check_structure(prsim_options& o)
 	{ o.check_structure = true; }
 static void __prsim_no_check_structure(prsim_options& o)
 	{ o.check_structure = false; }
+static void __prsim_dump_dot_struct(prsim_options& o)
+	{ o.dump_dot_struct = true; }
+static void __prsim_no_dump_dot_struct(prsim_options& o)
+	{ o.dump_dot_struct = false; }
 
 const prsim::register_options_modifier
 	prsim::_default("default", &__prsim_default, "default options"), 
@@ -156,12 +165,17 @@ const prsim::register_options_modifier
 		"show result of expression allocation"), 
 	prsim::_no_dump_expr_alloc("no-dump-expr-alloc",
 		&__prsim_no_dump_expr_alloc,
-		"suppress result of expression allocation"),
+		"suppress result of expression allocation (default)"),
 	prsim::_check_structure("check-structure", &__prsim_check_structure,
 		"checks expression/node structure consistency (default)"), 
 	prsim::_no_check_structure("no-check-structure",
 		&__prsim_no_check_structure,
-		"disable structural consistency checks");
+		"disable structural consistency checks"),
+	prsim::_dump_dot_struct("dump-dot-struct", &__prsim_dump_dot_struct,
+		"print dot-formatted graph structure"), 
+	prsim::_no_dump_dot_struct("no-dump-dot-struct",
+		&__prsim_no_dump_dot_struct,
+		"suppress dot-formatted graph structure (default)");
 
 //=============================================================================
 }	// end namespace HAC
