@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-prsim-expr-alloc-expect.sh.in"
-#	$Id: hackt-prsim-expr-alloc-expect.sh.in,v 1.1.2.1 2006/01/10 05:37:29 fang Exp $
+#	$Id: hackt-prsim-expr-alloc-expect.sh.in,v 1.1.2.2 2006/01/11 00:07:35 fang Exp $
 
 # $1 is the executable for the creator (hackt alloc), expecting 2 arguments
 # $2 is the path to the source directory, which is not necessarily ./
@@ -24,7 +24,7 @@ then
 fi
 
 # see if it crashes first
-$prsim -fno-run -fdump-expr-alloc $bldroot.haco-a \
+$prsim -fno-run -fdump-expr-alloc -fcheck-structure $bldroot.haco-a \
 	> $bldroot.prsimexpr 2>&1
 
 # depending on exit status, take action

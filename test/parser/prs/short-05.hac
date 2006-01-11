@@ -1,0 +1,11 @@
+// "short-05.hac"
+// connecting more different gates to the same output
+
+import "logic.hac";
+
+bool z;
+nand<4> _nand(, z);
+nor<4> _nor(, z);
+celem<2> _c(, z);
+
+

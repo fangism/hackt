@@ -1,0 +1,9 @@
+// "short-02.hac"
+// connecting two c-elements to same output
+
+import "celem.hac";
+
+bool z;
+celem<2> a(,z),
+	b(,z);
+

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.1.2.5 2006/01/10 05:37:28 fang Exp $
+	$Id: Node.cc,v 1.1.2.6 2006/01/11 00:07:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -60,6 +60,12 @@ Node::push_back_fanout(const expr_index_type ei) {
 	STACKTRACE_INDENT << "fanout[" << fanout.size() -1
 		<< "]=" << fanout.back() << endl;
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+Node::contains_fanout(const expr_index_type i) const {
+	return (std::find(fanout.begin(), fanout.end(), i) != fanout.end());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

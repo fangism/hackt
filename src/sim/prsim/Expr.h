@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.1.2.7 2006/01/10 05:37:27 fang Exp $
+	$Id: Expr.h,v 1.1.2.8 2006/01/11 00:07:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -12,6 +12,7 @@
 #include <vector>
 #include <utility>
 #include "sim/common.h"
+#include "util/macros.h"
 
 namespace HAC {
 namespace SIM {
@@ -104,6 +105,19 @@ public:
 	void
 	unset_root(void) { type &= ~EXPR_ROOT; }
 
+	bool
+	is_root(void) const { return type & EXPR_ROOT; }
+
+	/**
+		\pre direction is only meaningful if this expression is 
+		a root pull-up or pull-dn.  
+	 */
+	bool
+	direction(void) const {
+		INVARIANT(is_root());
+		return type & EXPR_DIR;
+	}
+
 	void
 	set_parent_expr(const expr_index_type e) {
 		unset_root();
@@ -190,6 +204,7 @@ struct ExprGraphNode {
 	typedef	children_array_type::const_iterator	const_iterator;
 #endif
 private:
+	struct node_membership_checker;
 	enum {
 		INVALID_OFFSET = 0xFF
 	};
@@ -225,6 +240,9 @@ public:
 
 	ostream&
 	dump_struct(ostream&) const;
+
+	bool
+	contains_node_fanin(const node_index_type) const;
 
 #if 0
 	const_iterator

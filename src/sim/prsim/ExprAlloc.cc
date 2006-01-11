@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.cc,v 1.1.2.2 2006/01/04 08:42:13 fang Exp $
+	$Id: ExprAlloc.cc,v 1.1.2.3 2006/01/11 00:07:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,7 +33,7 @@ using entity::bool_tag;
 /**
 	NOTE: 0 is an invalid index to the State's expr_pool.  
  */
-ExprAlloc::ExprAlloc(State& _s) : state(_s), ret_ex_index(0) {
+ExprAlloc::ExprAlloc(State& _s) : state(_s), ret_ex_index(INVALID_EXPR_INDEX) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -197,8 +197,7 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 	// super-expression will be referenced in fanin
 	// for consistent structure...
 	// be careful to keep root expr consistent
-	expr_index_type&
-		dir_index(dir ? output.pull_up_index : output.pull_dn_index);
+	expr_index_type& dir_index(output.get_pull_expr(dir));
 	if (dir_index) {
 #if ENABLE_STACKTRACE
 		STACKTRACE_INDENT << "pull-up/dn already set" << endl;
@@ -216,28 +215,31 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 			STACKTRACE_INDENT << "prev. root expr is OR" << endl;
 #endif
 			// then simply extend the previous expr's children
-			INVARIANT(dir == pe.type & Expr::EXPR_DIR);
+			INVARIANT(dir == pe.direction());
 			pg.push_back_expr(top_ex_index);
-			++pe.size;
 			// pe.parent unchanged (same node)
 			// node's dir_index unchanged
 			// NOTE: or short-cut to output node?
 			ne.set_parent_expr(dir_index);
+			ng.offset = pe.size;
+			++pe.size;
 		} else if (ne.is_or()) {
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT << "new expr is OR" << endl;
 #endif
 			ng.push_back_expr(dir_index);
-			++ne.size;
 			dir_index = top_ex_index;
 			ne.pull(ni, dir);
 			pe.set_parent_expr(top_ex_index);
+			pg.offset = ne.size;
+			++ne.size;
 		} else {
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT << "neither expr is OR" << endl;
 #endif
 			// then need to allocate new root-expression
-			const size_t root_ex_id = st_expr_pool.size();
+			const expr_index_type root_ex_id = st_expr_pool.size();
+			// TODO: check for NAND, which is OR-like
 			st_expr_pool.push_back(Expr(Expr::EXPR_OR, 2));
 			st_graph_node_pool.push_back(ExprGraphNode());
 			Expr& new_ex(st_expr_pool.back());
@@ -250,6 +252,8 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 			ng.offset = 1;
 			pe.set_parent_expr(root_ex_id);
 			ne.set_parent_expr(root_ex_id);
+			// update the pull-up/dn root expression for the node
+			dir_index = root_ex_id;
 		}
 	} else {
 #if ENABLE_STACKTRACE
@@ -259,7 +263,7 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		dir_index = top_ex_index;
 		ne.pull(ni, dir);
 	}
-}
+}	// end ExprAlloc::link_node_to_root_expr(...)
 
 //=============================================================================
 }	// end namespace PRSIM

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.5 2006/01/04 08:42:14 fang Exp $
+	$Id: Node.h,v 1.1.2.6 2006/01/11 00:07:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -108,6 +108,19 @@ public:
 
 	void
 	push_back_fanout(const expr_index_type);
+
+	bool
+	contains_fanout(const expr_index_type) const;
+
+	expr_index_type&
+	get_pull_expr(const bool b) {
+		return b ? pull_up_index : pull_dn_index;
+	}
+
+	const expr_index_type&
+	get_pull_expr(const bool b) const {
+		return b ? pull_up_index : pull_dn_index;
+	}
 
 	void
 	initialize(void);

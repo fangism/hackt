@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.1.2.1 2006/01/04 08:42:10 fang Exp $
+	$Id: prsim.cc,v 1.1.2.2 2006/01/11 00:07:33 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -41,8 +41,11 @@ public:
 	bool			dump_expr_alloc;
 	/// whether or not to run the simulation or just terminate after setup
 	bool			run;
+	/// check structure
+	bool			check_structure;
 
-	prsim_options() : dump_expr_alloc(false), run(true) { }
+	prsim_options() : dump_expr_alloc(false), run(true),
+		check_structure(true) { }
 };	// end class options
 
 //=============================================================================
@@ -102,6 +105,8 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	State sim_state(*the_module);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
+	if (opt.check_structure)
+		sim_state.check_structure();
 	// optimize expression allocation?
 	if (opt.run) {
 
@@ -138,6 +143,10 @@ static void __prsim_dump_expr_alloc(prsim_options& o)
 	{ o.dump_expr_alloc = true; }
 static void __prsim_no_dump_expr_alloc(prsim_options& o)
 	{ o.dump_expr_alloc = false; }
+static void __prsim_check_structure(prsim_options& o)
+	{ o.check_structure = true; }
+static void __prsim_no_check_structure(prsim_options& o)
+	{ o.check_structure = false; }
 
 const prsim::register_options_modifier
 	prsim::_default("default", &__prsim_default, "default options"), 
@@ -147,7 +156,12 @@ const prsim::register_options_modifier
 		"show result of expression allocation"), 
 	prsim::_no_dump_expr_alloc("no-dump-expr-alloc",
 		&__prsim_no_dump_expr_alloc,
-		"suppress result of expression allocation");
+		"suppress result of expression allocation"),
+	prsim::_check_structure("check-structure", &__prsim_check_structure,
+		"checks expression/node structure consistency (default)"), 
+	prsim::_no_check_structure("no-check-structure",
+		&__prsim_no_check_structure,
+		"disable structural consistency checks");
 
 //=============================================================================
 }	// end namespace HAC

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.1.2.4 2006/01/04 08:42:14 fang Exp $
+	$Id: State.cc,v 1.1.2.5 2006/01/11 00:07:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -152,9 +152,103 @@ State::initialize(void) {
  */
 void
 State::head_sentinel(void) {
-	node_pool.resize(1);
-	expr_pool.resize(1);
+	node_pool.resize(FIRST_VALID_NODE);
+	expr_pool.resize(FIRST_VALID_EXPR);
 	expr_graph_node_pool.push_back(ExprGraphNode());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::check_node(const node_index_type i) const {
+	const Node& n(node_pool[i]);
+	// check pull-up/dn if applicable
+	const expr_index_type upi = n.pull_up_index;
+	if (is_valid_expr_index(upi)) {
+		const Expr& e(expr_pool[upi]);
+		assert(e.is_root());
+		assert(e.direction());
+		assert(e.parent == i);
+	}
+	const expr_index_type dni = n.pull_dn_index;
+	if (is_valid_expr_index(dni)) {
+		const Expr& e(expr_pool[dni]);
+		assert(e.is_root());
+		assert(!e.direction());
+		assert(e.parent == i);
+	}
+	// check fanout
+	const size_t fs = n.fanout.size();
+	size_t j = 0;
+	for ( ; j < fs; ++j) {
+		assert(expr_graph_node_pool[n.fanout[j]]
+			.contains_node_fanin(i));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Double-checks parent-child relationships.  
+	\param i index of the expression, must be < expr_pool.size().  
+ */
+void
+State::check_expr(const expr_index_type i) const {
+	const Expr& e(expr_pool[i]);
+	const ExprGraphNode& g(expr_graph_node_pool[i]);
+	// check parent
+	if (e.is_root()) {
+		const Node& n(node_pool[e.parent]);
+		assert(n.get_pull_expr(e.direction()) == i);
+	} else {
+		// const Expr& pe(expr_pool[e.parent]);
+		const ExprGraphNode& pg(expr_graph_node_pool[e.parent]);
+		const ExprGraphNode::child_entry_type&
+			pc(pg.children[g.offset]);
+		assert(!pc.first);	// this is an expression, not node
+		assert(pc.second == i);
+	}
+	// check children
+	assert(e.size == g.children.size());
+	size_t j = 0;
+	for ( ; j<e.size; ++j) {
+		const ExprGraphNode::child_entry_type& c(g.children[j]);
+		if (c.first) {		// points to leaf node
+			assert(node_pool[c.second].contains_fanout(i));
+		} else {		// points to expression
+			assert(expr_pool[c.second].parent == i);
+			assert(expr_graph_node_pool[c.second].offset == j);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Structural assertions.  
+	TODO: run-time flag to enable/disable calls to this.  
+ */
+void
+State::check_structure(void) const {
+	STACKTRACE_VERBOSE;
+{
+	const expr_index_type exprs = expr_pool.size();
+	INVARIANT(exprs == expr_graph_node_pool.size());
+	expr_index_type i = FIRST_VALID_EXPR;
+	for ( ; i<exprs; ++i) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "checking Expr " << i << ":" << endl;
+#endif
+		check_expr(i);
+	}
+}
+{
+	const node_index_type nodes = node_pool.size();
+	node_index_type j = FIRST_VALID_NODE;
+	for ( ; j<nodes; ++j) {
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "checking Node " << j << ":" << endl;
+#endif
+		check_node(j);
+	}
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,7 +260,7 @@ State::dump_struct(ostream& o) const {
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
 	const node_index_type nodes = node_pool.size();
-	node_index_type i = 1;
+	node_index_type i = FIRST_VALID_NODE;
 	for ( ; i<nodes; ++i) {
 		o << "node[" << i << "]: \"";
 		bp[i].dump_canonical_name(o, topfp, sm);
@@ -177,7 +271,7 @@ State::dump_struct(ostream& o) const {
 	o << "Expressions: " << endl;
 	const expr_index_type exprs = expr_pool.size();
 	INVARIANT(exprs == expr_graph_node_pool.size());
-	expr_index_type i = 1;
+	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
 		expr_pool[i].dump_struct(o << "expr[" << i << "]: ") << endl;
 		expr_graph_node_pool[i].dump_struct(o << '\t') << endl;

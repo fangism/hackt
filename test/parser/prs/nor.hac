@@ -1,0 +1,11 @@
+// "nor.hac"
+// commonly included base-file for other test cases
+
+template <pint N>
+defproc nor(bool in[N]; bool out) {
+prs {
+	(|:i:N: in[i])		-> out-
+	(&:i:N: ~in[i])		-> out+
+}
+}
+

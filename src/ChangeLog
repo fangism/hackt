@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-12:
+	  More prsim expr-allocation testing:
+		Added structural integrity check (State::check_structure).
+		Replaced some magic numbers (valid/invalid indices)
+			with meaningful enumerations.  See "sim/common.h".
+	  Fixed parenthesization bug in ExprAlloc::link_node_to_root_expr.  
+	  Added five test cases dumping expression allocation
+		in test/parser/prs.
+	  TODO: dump graphical (dot) representation of expressions.  
+
+
 2006-01-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-11:

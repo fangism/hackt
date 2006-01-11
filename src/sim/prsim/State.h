@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.1.2.4 2006/01/04 08:42:14 fang Exp $
+	$Id: State.h,v 1.1.2.5 2006/01/11 00:07:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -31,6 +31,10 @@ using std::ostream;
 	The prsim simulation state.  
 	This state should be saveable and restorable.  
 	This will even be duplicable for scenario testing!
+	TODO: make a CompactState from this State that uses plain
+		vector instead of list_vectors for constant-time access.  
+		For now, only the expr_graph_node_pool is log(N) access, 
+		but it's not accessed during simulation, so HA!
  */
 class State {
 	// too lazy to write public mutator methods for the moment.  
@@ -42,12 +46,21 @@ private:
 	/**
 		A fast, realloc-free vector-like structure
 		to built-up expressions.  
+		Will have log(N) time access due to internal tree structure.
 	 */
 	typedef	list_vector<Expr>		temp_expr_pool_type;
 	/**
 		The structure for top-down expression topology.  
+		Will have log(N) time access due to internal tree structure.
 	 */
 	typedef	list_vector<ExprGraphNode>	expr_graph_node_pool_type;
+
+	enum {
+		/// index of the first valid node
+		FIRST_VALID_NODE = 1,
+		/// index of the first valid expr/expr_graph_node
+		FIRST_VALID_EXPR = 1
+	};
 private:
 //	count_ptr<const module>			mod;
 	const module&				mod;
@@ -73,9 +86,10 @@ public:
 	explicit
 	State(const module&);
 #endif
-
+private:
 	State(const State&);
 
+public:
 	~State();
 
 	/// initializes the simulator state, all nodes and exprs X
@@ -85,6 +99,16 @@ public:
 	/// wipes the simulation state (like destructor)
 	void
 	reset(void);
+
+	void
+	check_node(const node_index_type) const;
+
+	void
+	check_expr(const expr_index_type) const;
+
+	/// run-time check of invariants in Node/Expr structures.  
+	void
+	check_structure(void) const;
 
 	// save
 
@@ -97,6 +121,10 @@ public:
 
 	ostream&
 	dump_state(ostream&) const;
+
+	/// prints output in DOT form for visualization (options?)
+	ostream&
+	dump_struct_dot(ostream&) const;
 
 private:
 	void
