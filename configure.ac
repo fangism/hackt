@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.7 2006/01/12 06:13:00 fang Exp $
+#	$Id: configure.ac,v 1.23.2.8 2006/01/12 21:31:21 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -194,7 +194,9 @@ AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 # C++ wrappers to standard C headers
-AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
+AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath cctype])
+AC_CHECK_HEADERS([cerrno cfloat climits clocale csignal csetjmp cstdarg ctime])
+AC_CHECK_HEADERS([cwchar cwctype])
 # checking all possible locations of (some equivalent) header files
 # spanning versions gcc-2.95 to 4.x
 # I bet you didn't know some of these locations were ever used!
@@ -230,6 +232,11 @@ AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
 AC_C_VOLATILE
+AC_CHECK_TYPES([struct __sFILE])	dnl BSD, Darwin
+AC_CHECK_TYPES([struct _IO_FILE])	dnl linux
+AC_CHECK_TYPES([__FILE_TAG])		dnl Sun (C++)
+AC_CHECK_TYPES([struct __FILE_TAG])	dnl Sun (C)
+AC_CHECK_TYPES([__FILE])		dnl Sun
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
@@ -238,6 +245,9 @@ AC_CHECK_FUNCS([strdup])
 AC_CHECK_FUNCS([fgets])
 AC_CHECK_FUNCS([isspace])
 AC_CHECK_FUNCS([system])
+AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
+AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
+AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 
 # library functions
 AC_FUNC_ERROR_AT_LINE

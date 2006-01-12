@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-15:
+	  configurability maintainence only.
+	  Added more configuration checks to util library, with help of 
+		autoconf checks.  
+	  Preparing for command-line parser additions, but may require
+		another overhaul of lexer/parser build system.  
+
+
 2006-01-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-14:

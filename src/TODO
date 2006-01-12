@@ -1,13 +1,14 @@
 "TODO"
-#	$Id: TODO,v 1.10.4.4 2006/01/12 06:13:04 fang Exp $
+#	$Id: TODO,v 1.10.4.5 2006/01/12 21:31:26 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
 ===============================================================================
 Simulation:
-	generate process_entries' unrolled production rules!
-		only needed for simulation, not flattening [PUNT]
-		state information of expressions not needed yet
+	interpreter for prsim:
+	* parse instance-reference
+	* pain: lex/yacc scanner expects FILE* input
+		may have to use a temp-file :S
 
 	Write PRS rule and express walkers, and visitor functors!!!
 	Model rule-walker after cflat_prs.

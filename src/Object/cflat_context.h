@@ -2,14 +2,14 @@
 	\file "Object/cflat_context.h"
 	Structure containing all the minimal information
 	needed for a cflat traversal over instances.  
-	$Id: cflat_context.h,v 1.1.2.4 2006/01/02 23:13:32 fang Exp $
+	$Id: cflat_context.h,v 1.1.2.5 2006/01/12 21:31:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_CFLAT_CONTEXT_H__
 #define	__HAC_OBJECT_CFLAT_CONTEXT_H__
 
 #include <iosfwd>
-#include "util/macros.h"
+#include "util/NULL.h"
 
 namespace HAC {
 namespace entity {

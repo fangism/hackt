@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.13 2006/01/12 07:09:56 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.14 2006/01/12 21:31:25 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -487,6 +487,7 @@ UTIL_HEADER_FILES = \
 	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
 	util/finite_vector.h \
+	util/FILE_fwd.h \
 	util/file_status.h \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
@@ -522,6 +523,7 @@ UTIL_HEADER_FILES = \
 	util/multikey_set_fwd.h \
 	util/nested_iterator.h \
 	util/new_functor_fwd.h \
+	util/NULL.h \
 	util/nullary_function_fwd.h \
 	util/nullary_function.h \
 	util/null_construct.h \

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-01-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-15:
+	  Many new configuration checks for libstdc functions were
+		added to configure.ac, and used in "src/util/libc.h".
+
+
 2005-12-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-01:
