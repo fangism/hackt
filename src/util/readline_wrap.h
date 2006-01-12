@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.1.4.1 2006/01/12 06:13:32 fang Exp $
+	$Id: readline_wrap.h,v 1.1.4.2 2006/01/12 06:29:35 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -58,7 +58,7 @@ private:
 	 */
 	string				prompt;
 #if !USE_READLINE
-	typedef	list<string>		history_type;
+	typedef	std::list<string>	history_type;
 	history_type			history;
 #endif
 public:
