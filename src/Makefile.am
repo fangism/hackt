@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.11 2006/01/10 05:37:26 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.12 2006/01/12 06:13:03 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -547,6 +547,7 @@ UTIL_HEADER_FILES = \
 	util/static_trace.h \
 	util/string.h \
 	util/string_fwd.h \
+	util/tokenize_fwd.h \
 	util/type_traits.h \
 	util/using_istream.h \
 	util/using_ostream.h \
@@ -569,6 +570,7 @@ UTIL_CC_FILES = \
 	util/readline_wrap.cc \
 	util/stacktrace.cc \
 	util/static_trace.cc \
+	util/tokenize.cc \
 	util/memory/thread_lock.cc \
 	util/memory/ref_count_pool.cc
 
@@ -596,7 +598,8 @@ SIM_CC_FILES = \
 	sim/prsim/Expr.cc \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event.cc \
-	sim/prsim/State.cc
+	sim/prsim/State.cc \
+	sim/prsim/Command.cc
 
 SIM_TCC_FILES =
 

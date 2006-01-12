@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.1.2.3 2006/01/11 03:41:14 fang Exp $
+	$Id: prsim.cc,v 1.1.2.4 2006/01/12 06:13:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,9 +20,11 @@
 #include "main/simple_options.tcc"
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State.h"
+#include "sim/prsim/Command.h"
 
 namespace HAC {
 using SIM::PRSIM::State;
+using SIM::PRSIM::CommandRegistry;
 using util::persistent;
 using util::persistent_object_manager;
 
@@ -104,6 +106,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 //		the_module->dump(cerr);
 	}
 
+	// the simulator state object, initialized with the module
 	State sim_state(*the_module);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
@@ -114,7 +117,10 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	if (opt.dump_dot_struct)
 		sim_state.dump_struct_dot(cout) << endl;
 	if (opt.run) {
-		// TODO: launch command-line interface
+		sim_state.initialize();
+		// outermost level is interactive
+		const int ret = CommandRegistry::interpret(sim_state, true);
+		if (ret)	return ret;
 	}
 	// else just exit
 	return 0;
@@ -141,6 +147,7 @@ prsim::usage(void) {
 }
 
 //-----------------------------------------------------------------------------
+// prsim_option modifier functions and their flag registrations
 static void __prsim_default(prsim_options& o) { o = prsim_options(); }
 static void __prsim_run(prsim_options& o) { o.run = true; }
 static void __prsim_no_run(prsim_options& o) { o.run = false; }
@@ -158,23 +165,32 @@ static void __prsim_no_dump_dot_struct(prsim_options& o)
 	{ o.dump_dot_struct = false; }
 
 const prsim::register_options_modifier
-	prsim::_default("default", &__prsim_default, "default options"), 
-	prsim::_run("run", &__prsim_run, "enable simulation run (default)"), 
-	prsim::_no_run("no-run", &__prsim_no_run, "disable simulation run"), 
-	prsim::_dump_expr_alloc("dump-expr-alloc", &__prsim_dump_expr_alloc,
+	prsim::_default(
+		"default", &__prsim_default,
+		"default options"), 
+	prsim::_run(
+		"run", &__prsim_run,
+		"enable simulation run (default)"), 
+	prsim::_no_run(
+		"no-run", &__prsim_no_run,
+		"disable simulation run"), 
+	prsim::_dump_expr_alloc(
+		"dump-expr-alloc", &__prsim_dump_expr_alloc,
 		"show result of expression allocation"), 
-	prsim::_no_dump_expr_alloc("no-dump-expr-alloc",
-		&__prsim_no_dump_expr_alloc,
+	prsim::_no_dump_expr_alloc(
+		"no-dump-expr-alloc", &__prsim_no_dump_expr_alloc,
 		"suppress result of expression allocation (default)"),
-	prsim::_check_structure("check-structure", &__prsim_check_structure,
+	prsim::_check_structure(
+		"check-structure", &__prsim_check_structure,
 		"checks expression/node structure consistency (default)"), 
-	prsim::_no_check_structure("no-check-structure",
-		&__prsim_no_check_structure,
+	prsim::_no_check_structure(
+		"no-check-structure", &__prsim_no_check_structure,
 		"disable structural consistency checks"),
-	prsim::_dump_dot_struct("dump-dot-struct", &__prsim_dump_dot_struct,
+	prsim::_dump_dot_struct(
+		"dump-dot-struct", &__prsim_dump_dot_struct,
 		"print dot-formatted graph structure"), 
-	prsim::_no_dump_dot_struct("no-dump-dot-struct",
-		&__prsim_no_dump_dot_struct,
+	prsim::_no_dump_dot_struct(
+		"no-dump-dot-struct", &__prsim_no_dump_dot_struct,
 		"suppress dot-formatted graph structure (default)");
 
 //=============================================================================

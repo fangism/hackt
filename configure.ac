@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.6 2006/01/10 05:37:22 fang Exp $
+#	$Id: configure.ac,v 1.23.2.7 2006/01/12 06:13:00 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -233,7 +233,8 @@ AC_C_VOLATILE
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
-AC_CHECK_FUNCS([strsep strtok])	dnl strsep is missing on Solaris 2.9
+AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
+AC_CHECK_FUNCS([strdup])
 AC_CHECK_FUNCS([fgets])
 AC_CHECK_FUNCS([isspace])
 AC_CHECK_FUNCS([system])

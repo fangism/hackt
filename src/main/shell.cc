@@ -1,7 +1,7 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.5.2.1 2005/12/14 05:16:51 fang Exp $
+	$Id: shell.cc,v 1.5.2.2 2006/01/12 06:13:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,6 +21,7 @@ namespace HAC {
 using util::persistent;
 using util::persistent_object_manager;
 using util::readline_wrapper;
+using util::strings::eat_whitespace;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -79,18 +80,26 @@ shell::main(const int argc, char* argv[], const global_options&) {
 	const char* line;
 	do {
 		line = rl.gets();
+		// this already eats leading whitespace
 	if (line) {
-		// first, eat any leading whitespace
 		const char* cursor = line;
-		while (*cursor && isspace(*cursor)) cursor++;
 		// check for special case: shell escape
 		if (*cursor == '!') {
 			cursor++;
+			eat_whitespace(cursor);
 			const int es = system(cursor);
 			if (es) {
 				cerr << "*** Exit " << es << endl;
 			}
 		} else {
+			// TODO: send to shell command interpreter
+#if 0
+			cerr << "I\'m sorry, I don\'t understand: " <<
+#else
+			cerr << "I\'m sorry, Dave, but I'm afraid I can\'t "
+				"do that: " <<
+#endif
+				cursor << endl;
 		}
 	}
 	} while (line);

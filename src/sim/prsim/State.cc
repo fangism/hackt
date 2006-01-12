@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.1.2.6 2006/01/11 03:41:15 fang Exp $
+	$Id: State.cc,v 1.1.2.7 2006/01/12 06:13:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -141,6 +141,7 @@ State::initialize(void) {
 		mem_fun_ref(&Node::initialize));
 	for_each(expr_pool.begin(), expr_pool.end(), 
 		mem_fun_ref(&Expr::initialize));
+	// the expr_graph_node_pool contains no stateful information.  
 	while (!event_queue.empty()) {
 		const EventPlaceholder next(event_queue.pop());
 		event_pool.deallocate(next.event_index);

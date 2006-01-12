@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.1.2.5 2006/01/11 00:07:34 fang Exp $
+	$Id: State.h,v 1.1.2.6 2006/01/12 06:13:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -109,6 +109,10 @@ public:
 	/// run-time check of invariants in Node/Expr structures.  
 	void
 	check_structure(void) const;
+
+	/// optimizes structure
+	void
+	optimize_structure(void) const;
 
 	// save
 

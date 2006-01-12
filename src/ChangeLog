@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-14:
+	  Added basic command-line interpreter support for prsim, 
+		only basic commands so far, core functionality yet to come.  
+	  New files: sim/prsim/Command.{h,cc}
+	  Also util library additions in this revision.  
+
+
 2006-01-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-13:
