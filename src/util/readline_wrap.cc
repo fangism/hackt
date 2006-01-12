@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.2 2006/01/12 06:13:32 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.3 2006/01/12 07:10:00 fang Exp $
  */
 
 #include <iostream>
@@ -83,9 +83,10 @@ readline_wrapper::gets(void) {
 		RL_CONST_CAST(prompt.c_str())));
 #else
 	cout << prompt;
-	hold_line = hold_line_type(static_cast<char_type*>(
+	get_line_type get_line(static_cast<char_type*>(
 		malloc(sizeof(char_type) *READLINE_BUFFER_SIZE)));
-	fgets(&*hold_line, READLINE_BUFFER_SIZE, stdin);
+	fgets(&*get_line, READLINE_BUFFER_SIZE, stdin);
+	hold_line = get_line;	// transfer ownership
 #endif
 
 	if (hold_line && *hold_line) {

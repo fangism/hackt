@@ -1,6 +1,6 @@
 /**
 	\file "util/tokenize.cc"
-	$Id: tokenize.cc,v 1.1.2.1 2006/01/12 06:13:33 fang Exp $
+	$Id: tokenize.cc,v 1.1.2.2 2006/01/12 07:10:00 fang Exp $
  */
 
 #include "util/tokenize.h"
@@ -28,10 +28,6 @@ using ADS::unary_compose;
  */
 void
 tokenize(const string& s, string_list& l) {
-#if 0
-	const excl_malloc_ptr<char> temp(strdup(s.c_str()));
-	NEVER_NULL(temp);
-#else
 	typedef	string::const_iterator		const_iterator;
 	const_iterator i(s.begin());
 	const const_iterator e(s.end());
@@ -48,7 +44,6 @@ tokenize(const string& s, string_list& l) {
 			i = g;
 		}
 	} while (i != e);
-#endif
 }
 
 //=============================================================================

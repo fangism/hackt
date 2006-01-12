@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.12 2006/01/12 06:13:03 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.13 2006/01/12 07:09:56 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -548,6 +548,7 @@ UTIL_HEADER_FILES = \
 	util/string.h \
 	util/string_fwd.h \
 	util/tokenize_fwd.h \
+	util/tokenize.h \
 	util/type_traits.h \
 	util/using_istream.h \
 	util/using_ostream.h \
