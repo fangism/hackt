@@ -8,11 +8,13 @@
 		unique_malloc_ptr
 	TODO: define the [] operator conditionally for malloc pointers
 		in the base "excl_ptr.h"
-	$Id: excl_malloc_ptr.h,v 1.2 2005/12/10 07:10:16 fang Exp $
+	$Id: excl_malloc_ptr.h,v 1.2.4.1 2006/01/12 06:13:37 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_EXCL_MALLOC_PTR_H__
 #define	__UTIL_MEMORY_EXCL_MALLOC_PTR_H__
+
+#include "util/type_traits.h"	// for remove_const
 
 // Coercively include the template file.
 // If the standard template file was already included, 
@@ -32,7 +34,12 @@ __THROW
 }
 
 // declare intent to override!
+#if 0
+// does not work for pointers-to-const without a cast.
 #define DELETE_POLICY(x)	free(x)
+#else
+#define DELETE_POLICY(x)	free(const_cast<typename remove_const<T>::type*>(x))
+#endif
 
 // and we substitute names here!!!
 #define	excl_ptr		excl_malloc_ptr

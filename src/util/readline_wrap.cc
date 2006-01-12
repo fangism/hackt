@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.1 2005/12/14 05:16:53 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.2 2006/01/12 06:13:32 fang Exp $
  */
 
 #include <iostream>
@@ -46,6 +46,26 @@ readline_wrapper::set_prompt(const string& s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Adds line to history if readline is enabled.  
+	Automatically trims whitespace.  
+	\param hl the current hold line, must be non-NULL
+		and point to a non-NUL character.  
+ */
+readline_wrapper::const_char_type*
+readline_wrapper::__add_history(const_char_type* const hl) const {
+#if USE_READLINE
+	const_char_type* cursor = hl;
+	eat_whitespace(cursor);
+	// this will internally strcpy the string
+	add_history(RL_CONST_CAST(cursor));
+	return cursor;
+#else
+	return hl;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	NOTE: some ancient version of readline haas prototype without
 	'const' in ANY of the arguments (v. 4.1, ca. 2002).  
 	That is utterly unaacceptable.  We provide an internal workaround.  
@@ -53,34 +73,26 @@ readline_wrapper::set_prompt(const string& s) {
 	TODO: parse semicolons (see sh behavior)
 	\return allocated line.  
  */
-char*
+readline_wrapper::const_char_type*
 readline_wrapper::gets(void) {
 	// this will automatically release the last line's memory
-#if	defined(HAVE_GNUREADLINE)  || defined(HAVE_BSDEDITLINE)
+#if USE_READLINE
 	// NOTE: some ASS version of readline accepts a char* 
 	// for the prompt argument and trips an error here.  
 	hold_line = hold_line_type(readline(
-#if defined(READLINE_PROMPT_CONST) && !READLINE_PROMPT_CONST
-		// your readline line header sucks
-		const_cast<char*>
-#endif
-		(prompt.c_str())));
-	if (hold_line && *hold_line) {
-#if !defined(READLINE_PROMPT_CONST) || READLINE_PROMPT_CONST
-		const
-#endif
-			char* cursor = &*hold_line;
-		cursor = eat_whitespace(cursor);
-		// this will internally strcpy the string
-		add_history(cursor);
-	}
-	return (hold_line ? &*hold_line : NULL);
+		RL_CONST_CAST(prompt.c_str())));
 #else
 	cout << prompt;
-	hold_line = hold_line_type(static_cast<char*>(
-		malloc(sizeof(char) *READLINE_BUFFER_SIZE)));
-	return fgets(&*hold_line, READLINE_BUFFER_SIZE, stdin);
+	hold_line = hold_line_type(static_cast<char_type*>(
+		malloc(sizeof(char_type) *READLINE_BUFFER_SIZE)));
+	fgets(&*hold_line, READLINE_BUFFER_SIZE, stdin);
 #endif
+
+	if (hold_line && *hold_line) {
+		return __add_history(&*hold_line);
+	} else {
+		return (hold_line ? &*hold_line : NULL);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

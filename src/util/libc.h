@@ -5,7 +5,9 @@
 	and interfaces to their workarounds belong here.  
 	Not all desired functions wil necessarily have trivial
 	substitution implementations. 
-	$Id: libc.h,v 1.1 2005/12/10 03:56:57 fang Exp $
+	NOTE: that these declarations are not extern "C", 
+	because we will compile libc.c in C++.  
+	$Id: libc.h,v 1.1.4.1 2006/01/12 06:13:32 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -63,13 +65,30 @@
  *	<string.h>
  *===========================================================================*/
 
+/* strdup */
+#if	defined(HAVE_STRDUP) && HAVE_STRDUP
+#else
+// consider templating for other char types
+extern char*	strdup(const char*);
+#endif
+
 /* strsep */
 #if     defined(HAVE_STRSEP) && HAVE_STRSEP
-/* we're good */
-#elif   defined(HAVE_STRTOK) && HAVE_STRTOK
-/* define a wrapper for strsep that calls strtok */
 #else
-#error  "Need a suitable substitute for strsep and strtok!"
+/* define a wrapper for strsep that calls strtok */
+extern char*	strsep(char**, const char*);
+#endif
+
+/* strtok: note this is obsolete, we don't actually want to use it */
+#if   defined(HAVE_STRTOK) && HAVE_STRTOK
+#else
+extern char*	strtok(char*, const char*);
+#endif
+
+/* strtok_r: re-entrant strtok */
+#if   defined(HAVE_STRTOK_R) && HAVE_STRTOK_R
+#else
+extern char*	strtok_r(char*, const char*, char**);
 #endif
 
 /*=============================================================================

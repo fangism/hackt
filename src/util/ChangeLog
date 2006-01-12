@@ -1,5 +1,19 @@
 # "src/util/ChangeLog"
 
+2005-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-14:
+	  util/memory/excl_malloc_ptr.h: const_cast away pointer type
+		as it is passed to free(void*).
+	  util/libc.h: configure-checked some more (unimplemented)
+		standard functions.
+	  util/readline_wrap.{h,cc}: folded whitespace-eating into gets(),
+		factored history-adding into seperate member function.
+	  Added util/tokenize.{h,cc}: default method of tokenizing
+		whitespace-delimiter std::string into list<string>.  
+		TODO (much later): more sophisticated command-line parsing.  
+
+
 2005-01-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-09:
