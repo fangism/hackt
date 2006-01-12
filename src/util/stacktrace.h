@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.12 2005/09/04 21:15:08 fang Exp $
+	$Id: stacktrace.h,v 1.12.22.1 2006/01/12 21:31:50 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -18,7 +18,7 @@
 #endif
 
 
-#if defined(HAVE_CASSERT) && HAVE_CASSERT
+#if defined(__cplusplus) && defined(HAVE_CASSERT) && HAVE_CASSERT
 #include <cassert>
 #else
 #include <assert.h>
@@ -134,7 +134,7 @@
 #if ENABLE_STACKTRACE
 
 #include <iosfwd>
-#include "util/macros.h"
+// #include "util/macros.h"
 #include "util/string_fwd.h"
 
 #include "util/STL/list_fwd.h"

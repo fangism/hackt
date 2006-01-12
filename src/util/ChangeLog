@@ -1,5 +1,18 @@
 # "src/util/ChangeLog"
 
+2005-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-15:
+	  Added "util/NULL.h" finally.
+		No longer need "util/macros.h" for just the NULL definition.  
+	  Added "util/FILE_fwd.h" for configuration-dependent
+		forward declaration of FILE, so you won't have to include
+		<stdio.h> for name-uses of FILE* anymore.  Hallelujah!
+		(Falls back to including stdio if all else fails)
+	  Updated many util library header files to reflect these
+		updates in headers.  
+
+
 2005-01-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-14:

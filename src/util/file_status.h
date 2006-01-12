@@ -1,13 +1,14 @@
 /**
 	\file "util/file_status.h"
 	Convenience structure for determining result of opening a file.
-	$Id: file_status.h,v 1.2 2005/11/10 02:13:11 fang Exp $
+	$Id: file_status.h,v 1.2.6.1 2006/01/12 21:31:49 fang Exp $
  */
 
 #ifndef	__UTIL_FILE_STATUS_H__
 #define	__UTIL_FILE_STATUS_H__
 
-#include <cstdio>
+#include "util/FILE_fwd.h"
+#include "util/NULL.h"
 
 namespace util {
 //=============================================================================

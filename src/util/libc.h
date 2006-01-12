@@ -1,5 +1,9 @@
 /**
 	\file "util/libc.h"
+
+	Include this file where there may be references to missing 
+	libc functions.  
+
 	Configure-checked header for libstdc functions.  
 	Basically all the checks for standard library functions
 	and interfaces to their workarounds belong here.  
@@ -7,13 +11,16 @@
 	substitution implementations. 
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
-	$Id: libc.h,v 1.1.4.1 2006/01/12 06:13:32 fang Exp $
+
+	$Id: libc.h,v 1.1.4.2 2006/01/12 21:31:49 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
 #define	__UTIL_LIBC_H__
 
 #include "config.h"
+#include "util/FILE_fwd.h"
+/* #include "util/size_t.h" */
 
 /* can all these checks be skipped if we have STDC_HEADERS? */
 
@@ -26,6 +33,8 @@
 #else
 #error	"Need a substitute for system!"
 #endif
+
+/*-------------------- memory management functions --------------------------*/
 
 /* malloc */
 #if	defined(HAVE_MALLOC) && HAVE_MALLOC
@@ -51,6 +60,29 @@
 #error	"Need a substitute for free!"
 #endif
 
+/*------------------- environment variable functions ------------------------*/
+
+#if	defined(HAVE_GETENV) && HAVE_GETENV
+#else
+extern char*	getenv(const char*);
+#endif
+
+#if	defined(HAVE_SETENV) && HAVE_SETENV
+#else
+extern int	setenv(const char*, const char*, int);
+#endif
+
+#if	defined(HAVE_PUTENV) && HAVE_PUTENV
+#else
+extern int	putenv(const char*);
+#endif
+
+#if	defined(HAVE_UNSETENV) && HAVE_UNSETENV
+#else
+extern void	unsetenv(const char*);
+#endif
+
+
 /*=============================================================================
  *	<stdio.h>
  *===========================================================================*/
@@ -59,6 +91,42 @@
 #if	defined(HAVE_FGETS) && HAVE_FGETS
 #else
 #error	"Need a substitute for fgets!"
+extern char*	fgets(char*, int, FILE*);
+#endif
+
+#if	defined(HAVE_SETBUF) && HAVE_SETBUF
+#else
+extern void	setbuf(FILE*, char*);
+#endif
+
+#if	defined(HAVE_SETBUFFER) && HAVE_SETBUFFER
+#else
+extern void	setbuffer(FILE*, char*, int);
+#endif
+
+#if	defined(HAVE_SETLINEBUF) && HAVE_SETLINEBUF
+#else
+extern int	setlinebuf(FILE*);
+#endif
+
+#if	defined(HAVE_SETVBUF) && HAVE_SETVBUF
+#else
+extern int	setvbuf(FILE*, char&, int, size_t);
+#endif
+
+#if	defined(HAVE_TMPFILE) && HAVE_TMPFILE
+#else
+extern FILE*	tmpfile(void);
+#endif
+
+#if	defined(HAVE_TMPNAME) && HAVE_TMPNAME
+#else
+extern char*	tmpname(char*);
+#endif
+
+#if	defined(HAVE_TEMPNAME) && HAVE_TEMPNAME
+#else
+extern char*	tempname(const char*, const char*);
 #endif
 
 /*=============================================================================
@@ -68,7 +136,7 @@
 /* strdup */
 #if	defined(HAVE_STRDUP) && HAVE_STRDUP
 #else
-// consider templating for other char types
+/* consider templating for other char types */
 extern char*	strdup(const char*);
 #endif
 
@@ -94,7 +162,9 @@ extern char*	strtok_r(char*, const char*, char**);
 /*=============================================================================
  *	<ctype.h>
  *===========================================================================*/
-#if	defined(HAVE_CTYPE_H)  && HAVE_CTYPE_H
+#if	defined(__cplusplus) && defined(HAVE_CTYPE_H)  && HAVE_CTYPE_H
+#include <cctype>
+#elif	defined(HAVE_CTYPE_H)  && HAVE_CTYPE_H
 #include <ctype.h>
 #endif
 

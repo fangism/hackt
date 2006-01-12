@@ -2,14 +2,13 @@
 	\file "util/readline.h"
 	Header wrapper implementation for readline.  
 	Includes the appropriate header from configuration. 
-	$Id: readline.h,v 1.1.2.2 2006/01/12 06:13:32 fang Exp $
+	$Id: readline.h,v 1.1.2.3 2006/01/12 21:31:50 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_H__
 #define	__UTIL_READLINE_H__
 
-#include "config.h"
-#include <cstdio>       /* for FILE */
+#include "util/FILE_fwd.h"
 
 #if	defined(HAVE_GNUREADLINE)
 #include <readline/readline.h>
@@ -20,7 +19,7 @@
 
 #if	defined(READLINE_PROMPT_CONST) && !READLINE_PROMPT_CONST
 // your readline header sucks
-#define RL_CONST_CAST(x)	const_cast<char_type*>(x)
+#define RL_CONST_CAST(x)	const_cast<char*>(x)
 #else
 #define RL_CONST_CAST(x)	x
 #endif

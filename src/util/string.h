@@ -2,14 +2,14 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.1.2.1 2005/12/14 05:16:54 fang Exp $
+	$Id: string.h,v 1.1.2.2 2006/01/12 21:31:50 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
 #define	__UTIL_STRING_H__
 
 #include "config.h"
-#include "util/macros.h"
+#include "util/NULL.h"
 #include "util/libc.h"
 
 #ifdef	__cplusplus
