@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.4 2005/12/13 04:15:48 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.4.2.1 2006/01/14 04:18:45 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -21,8 +21,14 @@
 %{
 #include <iostream>
 
+#ifdef	LIBBOGUS
+// this dirty hack tells the bogus compilation to skip the renamer
+#define	__LEXYACC_HACKT__PREFIX_H__
+#endif
+
 #include "config.h"
 #include "AST/AST.h"		// should be first
+#include "parser/hackt-prefix.h"
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
 #include "lexer/hackt-lex-options.h"
@@ -2344,14 +2350,26 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 
 #if YYBISON
 // shit... bison-isms: names were changed to protect the innocent
+#if 0
 #define	yyname		yytname
 #define	yysindex	yypact
 #define	yyrindex	yydefact
+#define	YYTABLESIZE	YYLAST
+#endif
 /**
 	#define	YYMAXTOKEN	YYMAXUTOK
 	use MAXIMUM_BOGOSITY instead for bounding yychar
 **/
-#define	YYTABLESIZE	YYLAST
+#define	__symbol_names	yytname
+#define	__shift_table	yypact
+#define	__reduce_table	yydefact
+#define	__YYTABLESIZE	YYLAST
+
+#else	// !YYBISON
+#define	__symbol_names	yyname
+#define	__shift_table	yysindex
+#define	__reduce_table	yyrtable
+#define	__YYTABLESIZE	YYTABLESIZE
 #endif
 
 // following prototype MUST appear as is (after "static") for awk hack...
@@ -2396,7 +2414,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	assert(s > yyssp && v > yyvsp);
 //	NULL check not necessarily valid if last token normally returned NULL
 	if (at_eof(_lexer_state)) {
-		cerr << "\t" << yyname[0];	// "end-of-file"
+		cerr << "\t" << __symbol_names[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last
 //		token type returned.  
@@ -2424,18 +2442,18 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 		int yyn;
 		for ( ; _yychar_ <= MAXIMUM_BOGOSITY; _yychar_++) {
 			// try all terminal tokens
-			if ((yyn = yysindex[*yyssp]) && 
+			if ((yyn = __shift_table[*yyssp]) && 
 					(yyn += _yychar_) >= 0 && 
-					yyn <= YYTABLESIZE && 
+					yyn <= __YYTABLESIZE && 
 					yycheck[yyn] == _yychar_) {
-				cerr << '\t' << yyname[_yychar_]
+				cerr << '\t' << __symbol_names[_yychar_]
 					<< " (shift)" << endl;
 				accept_count++;
-			} else if ((yyn = yyrindex[*yyssp]) && 
+			} else if ((yyn = __reduce_table[*yyssp]) && 
 					(yyn += _yychar_) >= 0 && 
-					yyn <= YYTABLESIZE && 
+					yyn <= __YYTABLESIZE && 
 					yycheck[yyn] == _yychar_) {
-				cerr << '\t' << yyname[_yychar_]
+				cerr << '\t' << __symbol_names[_yychar_]
 					<< " (reduce)" << endl;
 				accept_count++;
 			}

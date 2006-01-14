@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.14 2006/01/12 21:31:25 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.15 2006/01/14 04:18:42 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -16,8 +16,15 @@ AUTOMAKE_OPTIONS += subdir-objects
 # are managed by this Makefile (flat)
 SUBDIRS = util/test .
 
+# cumulative targets
+PHONYSOURCES =
+CLEANSUBDIRS =
+SUBDIR_CVSIGNORE =
+
 # for optional fun features
 include $(srcdir)/misc/Makefile.inc
+# for util subdirectory and library
+include $(srcdir)/util/Makefile.inc
 
 ###################### Are we using yacc or bison? ############################
 LEXYACC_PREFIX_SCRIPT = $(srcdir)/parser/lexyacc-prefix.awk
@@ -46,7 +53,7 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la \
-	libfangutil.la libhacktexec.la libhacktsim.la $(FUNLIBS)
+	$(UTILLIBS) libhacktexec.la libhacktsim.la $(FUNLIBS)
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
@@ -56,7 +63,7 @@ LIBBOGUS_LA = libbogus_la
 # order in parallel builds.  
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la libhackt.la libhacktsim.la libfangutil.la
+hackt_LDADD = libhacktexec.la libhackt.la libhacktsim.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -66,8 +73,7 @@ getopt_test_SOURCES = test/getopt_test.cc
 BUILT_SOURCES = parser/hackt-parse.output.h
 
 # phony program to generate _build/*/.deps directories on distcheck
-PHONYSOURCES = util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
-	dummy.cc sim/dummy.cc
+PHONYSOURCES += dummy.cc sim/dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
@@ -84,7 +90,7 @@ cvstag.h: ChangeLog
 
 # can't include libhacktexec.la because of circular dependence
 # builddate.h:
-builddate.h: libhackt.la libfangutil.la
+builddate.h: libhackt.la $(LIBFANGUTIL)
 	@$(ECHO) "#ifndef	BUILDDATE" > $@
 	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
 	@$(ECHO) "#endif	// BUILDDATE" >> $@
@@ -420,163 +426,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/lang/PRS_base.h \
 	Object/lang/CHP_base.h
 
-# template definition header files
-UTIL_TCC_FILES = \
-	util/STL/list.tcc \
-	util/STL/map.tcc \
-	util/IO_utils.tcc \
-	util/bitset.tcc \
-	util/const_assoc_query.tcc \
-	util/discrete_interval_set.tcc \
-	util/hash_qmap.tcc \
-	util/list_vector.tcc \
-	util/memory/chunk_map_pool.tcc \
-	util/memory/destruction_policy.tcc \
-	util/memory/index_pool.tcc \
-	util/memory/list_vector_pool.tcc \
-	util/memory/count_ptr.tcc \
-	util/memory/count_array_ptr.tcc \
-	util/memory/count_malloc_ptr.tcc \
-	util/multidimensional_qmap.tcc \
-	util/multidimensional_sparse_set.tcc \
-	util/multikey.tcc \
-	util/multikey_assoc.tcc \
-	util/multikey_map.tcc \
-	util/multikey_qmap.tcc \
-	util/multikey_set.tcc \
-	util/new_functor.tcc \
-	util/packed_array.tcc \
-	util/persistent_object_manager.tcc \
-	util/qmap.tcc \
-	util/ring_node.tcc \
-	util/sublist.tcc \
-	util/unique_list.tcc \
-	util/unique_stack.tcc \
-	util/what.tcc
-
-# POLICY: every .tcc MUST have a corresponding .h file, 
-# but the _fwd.h file is optional.  
-UTIL_HEADER_FILES = \
-	$(UTIL_TCC_FILES:.tcc=.h) \
-	util/macros.h \
-	util/STL/allocator_fwd.h \
-	util/STL/construct_fwd.h \
-	util/STL/deque_fwd.h \
-	util/STL/functional_fwd.h \
-	util/STL/hash_map_fwd.h \
-	util/STL/hash_map.h \
-	util/STL/list_fwd.h \
-	util/STL/map_fwd.h \
-	util/STL/namespace.h \
-	util/STL/pair_fwd.h \
-	util/STL/reverse_iterator.h \
-	util/STL/set_fwd.h \
-	util/STL/stack_fwd.h \
-	util/STL/valarray_fwd.h \
-	util/STL/vector_fwd.h \
-	util/IO_utils_fwd.h \
-	util/array_traits.h \
-	util/assoc_traits_fwd.h \
-	util/assoc_traits.h \
-	util/attributes.h \
-	util/boolean_types.h \
-	util/const_traits.h \
-	util/cppcat.h \
-	util/counter.h \
-	util/dereference.h \
-	util/dirent.h \
-	util/discrete_interval_set_fwd.h \
-	util/finite_vector.h \
-	util/FILE_fwd.h \
-	util/file_status.h \
-	util/getopt_portable.h \
-	util/hash_qmap_fwd.h \
-	util/hash_specializations.h \
-	util/ifthenelse.h \
-	util/indent.h \
-	util/inttypes.h \
-	util/iterator_more.h \
-	util/libc.h \
-	util/likely.h \
-	util/list_vector_fwd.h \
-	util/maplikeset.h \
-	util/memory/chunk_map_pool_fwd.h \
-	util/memory/list_vector_pool_fwd.h \
-	util/memory/pointer_classes_fwd.h \
-	util/memory/pointer_classes.h \
-	util/memory/pointer_traits.h \
-	util/memory/pointer_manipulator.h \
-	util/memory/unique_ptr.h \
-	util/memory/excl_ptr.h \
-	util/memory/excl_array_ptr.h \
-	util/memory/excl_malloc_ptr.h \
-	util/memory/free_list.h \
-	util/memory/ref_count_pool.h \
-	util/memory/ref_count_pool_anchor.h \
-	util/memory/thread_lock.h \
-	util/multidimensional_qmap_fwd.h \
-	util/multidimensional_sparse_set_fwd.h \
-	util/multikey_fwd.h \
-	util/multikey_assoc_fwd.h \
-	util/multikey_map_fwd.h \
-	util/multikey_qmap_fwd.h \
-	util/multikey_set_fwd.h \
-	util/nested_iterator.h \
-	util/new_functor_fwd.h \
-	util/NULL.h \
-	util/nullary_function_fwd.h \
-	util/nullary_function.h \
-	util/null_construct.h \
-	util/numeric/bigger_ints.h \
-	util/numeric/integer_traits.h \
-	util/numeric/inttype_traits.h \
-	util/numeric/nibble_tables.h \
-	util/offset_array.h \
-	util/operators.h \
-	util/packed_array_fwd.h \
-	util/persistent_fwd.h \
-	util/persistent.h \
-	util/pthread.h \
-	util/qmap_fwd.h \
-	util/readline.h \
-	util/readline_wrap.h \
-	util/reserve.h \
-	util/ring_node_fwd.h \
-	util/size_t.h \
-	util/sstream.h \
-	util/stacktrace.h \
-	util/static_assert.h \
-	util/static_trace.h \
-	util/string.h \
-	util/string_fwd.h \
-	util/tokenize_fwd.h \
-	util/tokenize.h \
-	util/type_traits.h \
-	util/using_istream.h \
-	util/using_ostream.h \
-	util/visitee.h \
-	util/what_fwd.h \
-	util/wtf.h \
-	util/binders.h \
-	util/compose.h \
-	util/conditional.h \
-	util/ptrs_functional.h
-
-UTIL_CC_FILES = \
-	util/IO_utils.cc \
-	util/bitset.cc \
-	util/dirent.cc \
-	util/indent.cc \
-	util/libc.c \
-	util/persistent.cc \
-	util/persistent_object_manager.cc \
-	util/readline_wrap.cc \
-	util/stacktrace.cc \
-	util/static_trace.cc \
-	util/tokenize.cc \
-	util/memory/thread_lock.cc \
-	util/memory/ref_count_pool.cc
-
 PARSER_H_FILES = \
 	parser/$(HACKT_PARSE_ROOT)-real.h \
 	parser/hackt-union.h \
@@ -698,10 +547,7 @@ libhackt_la_LIBADD = libhacktparsers.la
 libhacktparsers_la_SOURCES = \
 	$(PARSER_CC_FILES) $(PARSER_H_FILES)
 
-libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
-
 ALL_HEADER_FILES += \
-	$(UTIL_HEADER_FILES) \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
@@ -710,7 +556,6 @@ ALL_HEADER_FILES += \
 	main/main_funcs.h
 
 ALL_TCC_FILES += \
-	$(UTIL_TCC_FILES) \
 	$(OBJECT_TCC_FILES) \
 	$(MAIN_EXEC_TCC_FILES) \
 	$(SIM_TCC_FILES) \
@@ -734,6 +579,12 @@ SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
 # because yacc has no mechanism for overriding the yyparse prototype
 SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g'
 
+parser/hackt-prefix.h: util/lang/lexyacc/lexyacc-prefix-generator.awk
+	$(AWK) -f $? -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > $@
+
+ALL_HEADER_FILES += parser/hackt-prefix.h
+CLEANFILES += parser/hackt-prefix.h
+
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
 # important: the LEXYACC_PREFIX_SCRIPT must be applied LAST!
@@ -746,9 +597,9 @@ if HAVE_BISON
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(SED_CXX_REFERENCE) | \
-	$(GREP) -v "^YYSTYPE yylval;" | \
-	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+	$(GREP) -v "^YYSTYPE yylval;" > $@
+#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
 if HAVE_BYACC
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
@@ -759,9 +610,9 @@ if HAVE_BYACC
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED_CXX_REFERENCE) | \
 	$(SED_YACC_YYPARSE) | \
-	$(AWK) -f $(srcdir)/parser/patch_byacc.awk | \
-	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+	$(AWK) -f $(srcdir)/parser/patch_byacc.awk > $@
+#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
 if HAVE_YACC
 	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
@@ -771,15 +622,18 @@ if HAVE_YACC
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
 	$(SED_CXX_REFERENCE) | \
-	$(SED_YACC_YYPARSE) | \
-	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+	$(SED_YACC_YYPARSE) > $@
+#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 endif
 
-parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h
-	$(ECHO) "#include \"parser/hackt-union.h\"" > $@
-	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(HACKT_YACC_PREFIX) $? >> $@
+parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
+		parser/hackt-prefix.h
+	$(ECHO) "#include \"parser/hackt-prefix.h\"" > $@
+	$(ECHO) "#include \"parser/hackt-union.h\"" >> $@
+	$(CAT) parser/$(HACKT_PARSE_ROOT).h >> $@
+#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+#		-v PREFIX=$(HACKT_YACC_PREFIX) $? >> $@
 
 # if HAVE_FLEX ...
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
@@ -800,9 +654,9 @@ $(HACKT_PARSE_OUTPUT): parser/$(HACKT_PARSE_ROOT).h
 $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
 	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
-		-f $(srcdir)/parser/common-output-to-C.awk $? | \
-	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+		-f $(srcdir)/parser/common-output-to-C.awk $? > $@
+#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
+#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
@@ -850,8 +704,6 @@ parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
 		$(HACKT_PARSE_OUTPUT) > $@
 
 
-# AM_CPPFLAGS = -I$(srcdir)/parser -I$(srcdir)/util -I$(srcdir)/AST \
-#	-I$(srcdir)/lexer -I$(srcdir)/Object -Iparser
 AM_CPPFLAGS = -I$(srcdir)
 # will need _build directories for "make distcheck" with auto-generated headers
 # the last -Iparser is for the relative path in the build directory
@@ -940,18 +792,13 @@ common/devel_switches.hchk:
 Object/devel_switches.hchk:
 	@$(TOUCH) $@
 
-util/using_istream.hchk:
-	@$(TOUCH) $@
-
-util/using_ostream.hchk:
-	@$(TOUCH) $@
-
 ../config.hchk:
 	@$(TOUCH) $@
 
 EXTRA_DIST += local.cvsignore \
 	parser/local.cvsignore \
 	parser/lexyacc-prefix.awk \
+	util/lang/lexyacc/lexyacc-prefix-generator.awk \
 	parser/common-output-to-C.awk \
 	parser/yacc-output-to-C.awk \
 	parser/bison-output-to-C.awk \
@@ -974,11 +821,6 @@ EXTRA_DIST += local.cvsignore \
 	test/getopt_test.sh \
 	test/getopt_test.stderr \
 	common/README \
-	util/ChangeLog \
-	util/README \
-	util/TODO \
-	util/STL/README \
-	util/obsolete/README \
 	scripts/filter_namespaces.sed \
 	scripts/deps_to_dot.awk.in \
 	AST/README \
@@ -1071,8 +913,7 @@ OBJECT_DIRS = Object Object/common Object/expr Object/def Object/inst \
 
 SIM_DIRS = sim sim/prsim
 
-CLEANSUBDIRS = lexer parser AST $(OBJECT_DIRS) $(SIM_DIRS) \
-	util util/numeric util/memory util/obsolete util/STL
+CLEANSUBDIRS += lexer parser AST $(OBJECT_DIRS) $(SIM_DIRS)
 
 clean-parser:
 	-$(RM) $(CLEANPARSER)
@@ -1143,22 +984,12 @@ sim/.cvsignore: .cvsignore
 	$(CP) $? $@
 sim/prsim/.cvsignore: .cvsignore
 	$(CP) $? $@
-util/.cvsignore: .cvsignore
-	$(CP) $? $@
-util/STL/.cvsignore: .cvsignore
-	$(CP) $? $@
-util/memory/.cvsignore: .cvsignore
-	$(CP) $? $@
-util/numeric/.cvsignore: .cvsignore
-	$(CP) $? $@
-util/obsolete/.cvsignore: .cvsignore
-	$(CP) $? $@
 test/.cvsignore: .cvsignore test/local.cvsignore
 	@$(CAT) .cvsignore $(srcdir)/test/local.cvsignore > $@
 
 # files to ignore in subdirectories
 # can we generate this from suffix appending?
-SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
+SUBDIR_CVSIGNORE += lexer/.cvsignore parser/.cvsignore \
 	common/.cvsignore \
 	Object/.cvsignore Object/common/.cvsignore \
 	Object/def/.cvsignore Object/expr/.cvsignore \
@@ -1167,9 +998,6 @@ SUBDIR_CVSIGNORE = lexer/.cvsignore parser/.cvsignore \
 	Object/unroll/.cvsignore \
 	AST/.cvsignore main/.cvsignore misc/.cvsignore \
 	sim/.cvsignore sim/prsim/.cvsignore \
-	util/.cvsignore util/STL/.cvsignore \
-	util/memory/.cvsignore util/numeric/.cvsignore \
-	util/obsolete/.cvsignore \
 	test/.cvsignore
 
 all: cvsignore

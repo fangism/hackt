@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.8 2006/01/12 21:31:21 fang Exp $
+#	$Id: configure.ac,v 1.23.2.9 2006/01/14 04:18:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -90,6 +90,8 @@ then
 fi
 AC_MSG_CHECKING([for *enough* sleep])
 AC_MSG_RESULT([maybe])
+AC_CHECK_PROG([INDENT], indent, indent)
+AC_CHECK_PROGS([M4], gm4 m4, m4)
 
 # comment out until time for release
 # this causes too many rebuilds during development
@@ -576,6 +578,16 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
 	scripts/replace_if_changed.sh $out~ $out
 	])
 
+AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy:src/util/lang/CX/cx-parse.yy.in],
+	[out=src/util/lang/CX/cx-parse.yy
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		sed '/%pure.parser/d' $srcdir/$out.in > $out~
+	else
+		cp $srcdir/$out.in $out~
+	fi
+	scripts/replace_if_changed.sh $out~ $out
+	])
 dnl initialize and reset header check dependencies
 dnl also depend on Makefile?
 dnl can't run make until depfiles has run! doh... work on this later...

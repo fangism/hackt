@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16:
+	  Makefile.am reorganization: split-off everything pertaining to
+		the util/ directory into util/Makefile.inc (new).  
+	  lexer/parser-generation: replaced the lexyacc-prefix.awk
+		pipe with a generated #define substitution file
+		parser/hackt-prefix.h, created from 
+		util/lang/lexyacc/lexyacc-prefix-generator.awk.
+		This the first step in simplifying the parser generator
+		and mangler toolchain.  
+
+
 2006-01-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-15:

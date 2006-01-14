@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.1.2.4 2006/01/12 06:13:07 fang Exp $
+	$Id: prsim.cc,v 1.1.2.5 2006/01/14 04:18:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -59,7 +59,7 @@ const char
 prsim::name[] = "prsim";
 
 const char
-prsim::brief_str[] = "A simple production rule simulator, based an on old one.";
+prsim::brief_str[] = "A simple production rule simulator, based on an old one.";
 
 const size_t
 prsim::program_id = register_hackt_program_class<prsim>();

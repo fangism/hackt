@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.5 2005/12/13 04:15:45 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.5.2.1 2006/01/14 04:18:43 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -59,13 +59,18 @@
 #include <iostream>
 #include <cstdlib>
 
+#ifdef	LIBBOGUS
+// HACK: prevent the inclusion of "parser/hackt-prefix.h"
+#define	__LEXYACC_HACKT__PREFIX_H__
+#endif
+
 #include "util/macros.h"
 #include "util/using_ostream.h"
+#include "parser/hackt-prefix.h"
 #include "AST/AST.h"		/* everything needed for "y.tab.h" */
 #include "lexer/input_manager.h"
 #include "lexer/file_manager.h"
 using namespace HAC::parser;
-
 
 // DIRTY MAKE HACK ALERT
 #if	defined(NO_FANCY_YYERROR)
@@ -144,17 +149,19 @@ static const int comment_feedback = 0;		/* reporting of comment state */
 	This will generate excessive feedback for every detailed
 	action of the lexer, even in the middle of tokenizing.  
  */
-#define	DEFAULT_TOKEN_FEEDBACK						\
-	if (token_feedback) {						\
-		cerr << "token = " << yytext <<				\
-			" " LINE_COL(CURRENT) << endl;			\
+static inline void
+DEFAULT_TOKEN_FEEDBACK(const lexer_state& foo) {
+	if (token_feedback) {
+		cerr << "token = " << yytext <<
+			" " LINE_COL(CURRENT) << endl;
 	}
+}
 
 /* macros for tracking single line tokens (no new line) */
 
 static inline void
 TOKEN_UPDATE(const lexer_state& foo) {
-	DEFAULT_TOKEN_FEEDBACK
+	DEFAULT_TOKEN_FEEDBACK(foo);
 	CURRENT.col += yyleng;
 }
 

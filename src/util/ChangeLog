@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2005-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16:
+	  Added util/Makefile.inc: this is where this subdirectory's
+		makefile management should go, it is included by
+		the parent Makefile.am.  
+	  Added util/lang subdirectory for language-specific
+		general tools.  
+
+
 2005-01-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-15:
