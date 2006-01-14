@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.5.2.1 2006/01/04 08:42:09 fang Exp $
+	$Id: cflat.h,v 1.5.2.1.2.1 2006/01/14 20:46:47 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_H__
@@ -23,7 +23,7 @@ using std::ostream;
  */
 class cflat : protected options_modifier_policy<cflat_options> {
 	typedef	options_modifier_policy<cflat_options>
-						options_modifier_policy;
+						options_modifier_policy_type;
 public:
 	/// defined in "main/cflat_options.h"
 	typedef	cflat_options			options;

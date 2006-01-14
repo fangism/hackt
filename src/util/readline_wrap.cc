@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.3 2006/01/12 07:10:00 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.3.2.1 2006/01/14 20:46:55 fang Exp $
  */
 
 #include <iostream>
@@ -71,7 +71,7 @@ readline_wrapper::__add_history(const_char_type* const hl) const {
 	That is utterly unaacceptable.  We provide an internal workaround.  
 	TODO: handle line continuations (ending with '\')
 	TODO: parse semicolons (see sh behavior)
-	\return allocated line.  
+	\return allocated line, or NULL if EOF.  
  */
 readline_wrapper::const_char_type*
 readline_wrapper::gets(void) {
@@ -88,11 +88,22 @@ readline_wrapper::gets(void) {
 	fgets(&*get_line, READLINE_BUFFER_SIZE, stdin);
 	hold_line = get_line;	// transfer ownership
 #endif
-
-	if (hold_line && *hold_line) {
-		return __add_history(&*hold_line);
+	// NOTE: BSD editline does not return NULL on EOF
+	// it returns a string with strlen() == 0
+	// therefore, we need one additional test in the condition:
+	if (hold_line && strlen(&*hold_line)) {
+#if 0
+		// echo debugging
+		cout << "length: " << strlen(&*hold_line) << endl;
+		cout << &*hold_line << endl;
+#endif
+		if (*hold_line) {
+			return __add_history(&*hold_line);
+		} else {
+			return &*hold_line;
+		}
 	} else {
-		return (hold_line ? &*hold_line : NULL);
+		return NULL;
 	}
 }
 

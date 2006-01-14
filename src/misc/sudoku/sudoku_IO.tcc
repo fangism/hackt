@@ -1,6 +1,6 @@
 /**
 	\file "misc/sudoku/sudoku_IO.tcc"
-	$Id: sudoku_IO.tcc,v 1.1.2.1 2006/01/14 06:52:08 fang Exp $
+	$Id: sudoku_IO.tcc,v 1.1.2.2 2006/01/14 20:46:52 fang Exp $
  */
 
 #include <iostream>
@@ -12,13 +12,15 @@
 #include "misc/sudoku/board.h"
 
 namespace sudoku {
+using std::cerr;
+using std::endl;
 //=============================================================================
 /**
 	\return true if there is an error.  
  */
 template <class BoardType>
 bool
-load_linear_board(BoardType& b, istream& i) {
+load_linear_board(BoardType& b, istream& f) {
 	do {
 		ushort x, v;
 		f >> x >> v;
@@ -29,7 +31,7 @@ load_linear_board(BoardType& b, istream& i) {
 		if (f.good()) {
 			if (!b.load_cell(x,v)) {
 				cerr << "ERROR: [" << x << "]="
-					<< y << " was rejected!" << endl;
+					<< v << " was rejected!" << endl;
 				return true;
 			}
 		}

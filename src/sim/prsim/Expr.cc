@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.1.2.8 2006/01/11 03:41:15 fang Exp $
+	$Id: Expr.cc,v 1.1.2.8.2.1 2006/01/14 20:46:54 fang Exp $
  */
 
 #include <iostream>
@@ -82,6 +82,7 @@ Expr::dump_struct(ostream& o) const {
 ostream&
 Expr::dump_state(ostream& o) const {
 	o << "ctdn: " << countdown << " X: " << unknowns << "(/" << size << ')';
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

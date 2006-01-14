@@ -1,7 +1,7 @@
 /**
 	\file "main/options_modifier.tcc"
 	Implementation details of options modifier manager.  
-	$Id: options_modifier.tcc,v 1.1.2.1 2006/01/04 08:42:10 fang Exp $
+	$Id: options_modifier.tcc,v 1.1.2.1.2.1 2006/01/14 20:46:47 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_OPTIONS_MODIFIER_TCC__
@@ -24,13 +24,19 @@ OPTIONS_MODIFIER_POLICY_TEMPLATE_SIGNATURE
 class OPTIONS_MODIFIER_POLICY_CLASS::options_modifier_info {
 	modifier_type				op;
 	string					brief;
-
+public:
 	options_modifier_info() : op(NULL), brief() { }
 
 	options_modifier_info(const modifier_type o, const char* b) :
 		op(o), brief(b) { }
 
+	options_modifier_info(const modifier_type o, const string& b) :
+		op(o), brief(b) { }
+
 	operator bool () const { return op; }
+
+	const string&
+	get_brief(void) const { return brief; }
 
 	void
 	operator () (options_type& c) const {
@@ -57,8 +63,8 @@ public:
 		NEVER_NULL(COM);
 		options_modifier_info& i(omm[Mode]);
 		INVARIANT(!i);
-		i.op = COM;
-		i.brief = b;
+		// i.op = COM; i.brief = b;
+		i = options_modifier_info(COM, b);
 	}
 };      // end class register_options_modifier
 
@@ -90,7 +96,8 @@ OPTIONS_MODIFIER_POLICY_CLASS::dump_options_briefs(ostream& o) {
 	const_iterator i(options_modifier_map.begin());
 	const const_iterator e(options_modifier_map.end());
 	for ( ; i!=e; i++) {
-		cerr << '\t' << i->first << " : " << i->second.brief << endl;
+		cerr << '\t' << i->first << " : " <<
+			i->second.get_brief() << endl;
 	}
 	return o;
 }

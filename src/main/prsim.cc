@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.1.2.5 2006/01/14 04:18:44 fang Exp $
+	$Id: prsim.cc,v 1.1.2.5.2.1 2006/01/14 20:46:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,7 +33,9 @@ using util::persistent_object_manager;
 //=============================================================================
 // explicit instantiation for proper initialization ordering
 // (options modifier registry map initialized before use)
-template class prsim::options_modifier_policy;
+// accepted by g++-3.3, but not 4
+// template class prsim::options_modifier_policy;
+template class options_modifier_policy<prsim_options>;
 
 //=============================================================================
 class prsim_options {
