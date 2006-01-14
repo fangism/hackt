@@ -6,7 +6,7 @@ FUNPROGRAMS =
 FUNLIBS =
 LIBMISCFUN =
 
-# include $(srcdir)/misc/sudoku/Makefile.inc
+include $(srcdir)/misc/sudoku/Makefile.inc
 
 if WANT_LIBMISCFUN
 FUNPROGRAMS += sudoku-solver
@@ -43,4 +43,10 @@ misc/sudoku-test.sh:
 CLEANFILES += misc/sudoku-test.sh
 
 ALL_HEADER_FILES += $(MISCFUN_H_FILES)
+
+SUBDIR_CVSIGNORE += misc/.cvsignore
+
+misc/.cvsignore: .cvsignore
+	$(CP) $? $@
+
 

@@ -1,0 +1,161 @@
+/**
+	\file "parser/instref-parse.yy.in"
+	$Id: instref-parse.yy.in,v 1.1.2.1 2006/01/14 06:52:09 fang Exp $
+ */
+
+%{
+#include <iostream>
+
+#include "config.h"
+#include "AST/AST.h"
+#include "util/using_ostream.h"
+#include "parser/instref-parse-options.h"
+#include "lexer/instref-lex-options.h"
+#include "util/stacktrace.h"
+
+/** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
+#if defined (__GNUC__) && (3 <= __GNUC__)
+#define __attribute__(arglist)			/* empty */
+#endif
+
+#ifndef	YYBISON
+#define	YYBISON		0
+#endif
+
+#include "lexer/flex_lexer_state.h"
+
+// extern FILE* yyin;
+
+#ifdef	LIBBOGUS
+static flex::lexer_state	_lexer_state;
+#endif
+
+
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+
+#define	DELETE_TOKEN(tok)		delete tok
+
+#define APPEND_LIST(list, delim, item)					\
+	DELETE_TOKEN(delim); list->push_back(item)
+
+using namespace HAC::lexer;
+using namespace HAC::parser;
+
+%}
+
+%union {
+	token_int*		_token_int;
+/*	token_bool*		_token_bool; 	*/
+	token_identifier*	_token_identifier;
+	qualified_id*		_qualified_id;
+	id_expr*		_id_expr;
+	HAC::parser::index_expr*	_index_expr;
+	member_expr*		_member_expr;
+	inst_ref_expr*		_inst_ref_expr;
+}
+
+%{
+extern	YY_DECL;
+
+static void yyerror(const char* msg);
+
+// worry about yy_union business later
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp,
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp,
+		const YYSTYPE yylval, const int yychar,
+		const flex::lexer_state& _lexer_state);
+%}
+
+%token	MINIMUM_BOGOSITY
+
+%type	<_node_position>	'[' ']' '.'
+%token	<_node_position>	SCOPE
+%token	<_token_identifier>	ID
+%token	<_token_int>		INT
+
+%token	MAXIMUM_BOGOSITY
+
+%start	instref
+%pure_parser
+
+%%
+
+/* grammar taken from pieces of "parser/hackt-parse.yy.in" */
+
+instref
+	: member_index_expr
+	;
+
+member_index_expr
+	: id_expr
+	| index_expr
+	| member_expr
+	;
+
+index_expr
+	: member_expr index_list
+	| id_expr index_list
+	;
+
+member_expr
+	: index_expr '.' ID
+	| member_expr '.' ID
+	| id_expr '.' ID
+	;
+
+index_list
+	: index_list index
+	| index
+	;
+
+/* only integer constant expressions allowed... for now */
+index
+	: '[' INT ']'
+	;
+
+id_expr
+	: absolute_id
+	| relative_id
+	;
+
+absolute_id
+	: SCOPE relative_id
+	;
+
+relative_id
+	: relative_id SCOPE ID
+	| ID
+	;
+
+
+%%
+
+/* copied from "parser/hackt-parse.yy.in" */
+static
+void
+yyfreestacks(const short* _yyss_, const short* _yyssp_,
+		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_,
+		const YYSTYPE _yylval_, const int _yychar_,
+		const flex::lexer_state& _lexer_state) {
+	STACKTRACE_VERBOSE;
+	const short* s;
+	const YYSTYPE* v;
+	s=_yyss_+1;
+	v=_yyvs_+1;
+	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
+		if (v) {
+			// cerr << "Deleting stack token..." << endl;
+			yy_union_resolve_delete(*v, *(s-1), *s);
+		}
+	}
+	if (!at_eof(_lexer_state)) {
+		// cerr << "Deleting last token..." << endl;
+		// free the last token (if not EOF)
+		yy_union_lookup_delete(_yylval_, _yychar_);
+	}
+}
+
+

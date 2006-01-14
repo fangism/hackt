@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.15 2006/01/14 04:18:42 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.15.2.1 2006/01/14 06:52:00 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -119,6 +119,8 @@ CONFIGHEADERS = config.h ../config.h
 
 HACKT_PARSE_ROOT = hackt-parse
 HACKT_LEX_ROOT = hackt-lex
+INSTREF_PARSE_ROOT = instref-parse
+INSTREF_LEX_ROOT = instref-lex
 
 # libbogus.la is not actually used, hence the name.
 # force use of lex/yacc suffix rules to generate the .c and .cc files
@@ -127,6 +129,7 @@ HACKT_LEX_ROOT = hackt-lex
 libbogus_la_SOURCES = \
 	lexer/hackt-lex.ll \
 	parser/hackt-parse.yy
+#	parser/instref-parse.yy
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
@@ -436,7 +439,10 @@ PARSER_H_FILES = \
 	lexer/input_manager.h \
 	lexer/yyin_manager.h \
 	lexer/hac_lex.h
+#	parser/$(INSTREF_PARSE_ROOT)-real.h
+#	parser/$(INSTREF_PARSE_ROOT).output.h
 
+# can't use $(HACKT_PARSE_ROOT) to substitute :(
 PARSER_CC_FILES = \
 	parser/hackt-parse-real.cc \
 	parser/hackt-union.cc \
@@ -444,6 +450,7 @@ PARSER_CC_FILES = \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
+#	parser/$(INSTREF_PARSE_ROOT)-real.cc
 
 SIM_CC_FILES = \
 	sim/prsim/Node.cc \
@@ -566,24 +573,61 @@ ALL_TCC_FILES += \
 
 # why, oh why, yy?
 HACKT_YACC_PREFIX = hackt_
+INSTREF_YACC_PREFIX = instref_
 
 # regenerate the parser input file using config.status
 parser/$(HACKT_PARSE_ROOT).yy: parser/$(HACKT_PARSE_ROOT).yy.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+parser/$(INSTREF_PARSE_ROOT).yy: parser/$(INSTREF_PARSE_ROOT).yy.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 # these should be distcleaned, because they are configure-generated
-CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy
+CONFIG_PARSERS = parser/$(HACKT_PARSE_ROOT).yy \
+	parser/$(INSTREF_PARSE_ROOT).yy
 
 # because I can't figure out how to produce a literal '&' in awk subst regex.  
 SED_CXX_REFERENCE = $(SED) 's/REFERENCE/\&/g'
 # because yacc has no mechanism for overriding the yyparse prototype
 SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infile)/g'
 
-parser/hackt-prefix.h: util/lang/lexyacc/lexyacc-prefix-generator.awk
+parser/hackt-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
+	$(AWK) -f $? -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > $@
+parser/instref-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
 	$(AWK) -f $? -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > $@
 
-ALL_HEADER_FILES += parser/hackt-prefix.h
-CLEANFILES += parser/hackt-prefix.h
+LEXYACC_PREFIX_H_FILES = parser/hackt-prefix.h parser/instref-prefix.h
+
+ALL_HEADER_FILES += $(LEXYACC_PREFIX_H_FILES)
+CLEANFILES += $(LEXYACC_PREFIX_H_FILES)
+
+PARSER_HACK_PIPE =
+if HAVE_BISON
+PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
+	$(SED_CXX_REFERENCE) | \
+	$(GREP) -v "^YYSTYPE yylval;"
+endif
+if HAVE_BYACC
+PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
+	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
+	$(SED_CXX_REFERENCE) | \
+	$(SED_YACC_YYPARSE) | \
+	$(AWK) -f $(srcdir)/parser/patch_byacc.awk
+endif
+if HAVE_YACC
+PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
+	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
+	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
+	$(SED_CXX_REFERENCE) | \
+	$(SED_YACC_YYPARSE)
+endif
+
 
 # rules for the prefix-transformed versions of generated lexer/parser sources
 # make these conditional on yacc vs. bison
@@ -591,41 +635,14 @@ CLEANFILES += parser/hackt-prefix.h
 # the other preceeding scripts shouldn't matter in their order
 parser/$(HACKT_PARSE_ROOT)-real.cc: parser/$(HACKT_PARSE_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT).output.h
-if HAVE_BISON
-	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
-		parser/$(HACKT_PARSE_ROOT).cc | \
-	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
-	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
-	$(SED_CXX_REFERENCE) | \
-	$(GREP) -v "^YYSTYPE yylval;" > $@
+	$(CAT) parser/$(HACKT_PARSE_ROOT).cc | $(PARSER_HACK_PIPE) > $@
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
-endif
-if HAVE_BYACC
-	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
-		parser/$(HACKT_PARSE_ROOT).cc | \
-	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
-	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
-	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
-	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
-	$(SED_CXX_REFERENCE) | \
-	$(SED_YACC_YYPARSE) | \
-	$(AWK) -f $(srcdir)/parser/patch_byacc.awk > $@
-#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
-endif
-if HAVE_YACC
-	$(AWK) -f $(srcdir)/parser/try_lex_catch.awk \
-		parser/$(HACKT_PARSE_ROOT).cc | \
-	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
-	$(AWK) -f $(srcdir)/parser/purify_yacc.awk | \
-	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
-	$(AWK) -f $(srcdir)/parser/yygrowstack_yacc_hack.awk | \
-	$(SED_CXX_REFERENCE) | \
-	$(SED_YACC_YYPARSE) > $@
-#	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
-#		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
-endif
+
+parser/$(INSTREF_PARSE_ROOT)-real.cc: parser/$(INSTREF_PARSE_ROOT).cc \
+		parser/$(INSTREF_PARSE_ROOT).output.h
+	$(CAT) parser/$(INSTREF_PARSE_ROOT).cc | $(PARSER_HACK_PIPE) > $@
+
 
 parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
 		parser/hackt-prefix.h
@@ -635,14 +652,19 @@ parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) $? >> $@
 
+parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
+		parser/instref-prefix.h
+	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
+#	$(ECHO) "#include \"parser/instref-union.h\"" >> $@
+	$(CAT) parser/$(INSTREF_PARSE_ROOT).h >> $@
+
 # if HAVE_FLEX ...
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
 # need forward declaration for flex 2.5.31
-	$(ECHO) "namespace flex { class lexer_state; }" > $@
 	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | \
 	$(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
-	$(SED) 's/REFERENCE/\&/g' >> $@
+	$(SED) 's/REFERENCE/\&/g' > $@
 # flex scanner purification eliminates need to rename most variables
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
@@ -651,12 +673,21 @@ lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output
 $(HACKT_PARSE_OUTPUT): parser/$(HACKT_PARSE_ROOT).h
 
+PARSE_OUTPUT_TO_HEADER_PIPE = $(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
+	-f $(srcdir)/parser/common-output-to-C.awk
+
 $(HACKT_PARSE_OUTPUT).h: $(HACKT_PARSE_OUTPUT)
 	@if $(GREP) "conflict" $?; then exit 1; fi
-	$(AWK) -f $(YACC_OUTPUT_H_SCRIPT) \
-		-f $(srcdir)/parser/common-output-to-C.awk $? > $@
+	$(CAT) $? | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+
+INSTREF_PARSE_OUTPUT = parser/$(INSTREF_PARSE_ROOT).output
+$(INSTREF_PARSE_OUTPUT): parser/$(INSTREF_PARSE_ROOT).h
+
+$(INSTREF_PARSE_OUTPUT).h: $(INSTREF_PARSE_OUTPUT)
+	@if $(GREP) "conflict" $?; then exit 1; fi
+	$(CAT) $? | $(PARSE_OUTPUT_TO_HEADER_PIPE) > $@
 
 # These all depend on parser/$(HACKT_PARSE_ROOT).h, 
 # which is made non-atomically, by automake's yacc rules.
@@ -672,11 +703,24 @@ lexer/$(HACKT_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
 parser/$(HACKT_PARSE_ROOT).cc: $(CONFIGHEADERS) parser/yacc_version.h
 $(HACKT_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
 
+lexer/$(INSTREF_LEX_ROOT).cc: $(CONFIGHEADERS) lexer/lex_version.h
+parser/$(INSTREF_PARSE_ROOT).cc: $(CONFIGHEADERS) parser/yacc_version.h
+$(INSTREF_PARSE_OUTPUT): $(CONFIGHEADERS) parser/yacc_version.h
+
+# why doesn't this work?
+PARSER_TYPES_PIPE = $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+	$(GREP) -v pragma | $(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+	$(SED) '/^[ \t]*$$/d'
+
 parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
+#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
 	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
 		$(GREP) -v pragma | \
 		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
 		$(SED) '/^[ \t]*$$/d' > $@
+
+parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
+	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
 # "cut" is not a good idea, if # define is separated... :(
@@ -978,8 +1022,6 @@ AST/.cvsignore: .cvsignore
 	$(CP) $? $@
 main/.cvsignore: .cvsignore
 	$(CP) $? $@
-misc/.cvsignore: .cvsignore
-	$(CP) $? $@
 sim/.cvsignore: .cvsignore
 	$(CP) $? $@
 sim/prsim/.cvsignore: .cvsignore
@@ -996,7 +1038,7 @@ SUBDIR_CVSIGNORE += lexer/.cvsignore parser/.cvsignore \
 	Object/inst/.cvsignore Object/lang/.cvsignore Object/ref/.cvsignore \
 	Object/traits/.cvsignore Object/type/.cvsignore \
 	Object/unroll/.cvsignore \
-	AST/.cvsignore main/.cvsignore misc/.cvsignore \
+	AST/.cvsignore main/.cvsignore \
 	sim/.cvsignore sim/prsim/.cvsignore \
 	test/.cvsignore
 
