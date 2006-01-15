@@ -1,14 +1,22 @@
 /**
 	\file "parser/instref-parse.yy.in"
-	$Id: instref-parse.yy.in,v 1.1.2.1 2006/01/14 06:52:09 fang Exp $
+	$Id: instref-parse.yy.in,v 1.1.2.2 2006/01/15 02:42:03 fang Exp $
  */
 
 %{
 #include <iostream>
 
+#if 0
+#ifdef	LIBBOGUS
+#define	__LEXYACC_INSTREF__PREFIX_H__
+#endif
+#endif
+
 #include "config.h"
 #include "AST/AST.h"
+#include "parser/instref-prefix.h"
 #include "util/using_ostream.h"
+#include "parser/instref-union.h"
 #include "parser/instref-parse-options.h"
 #include "lexer/instref-lex-options.h"
 #include "util/stacktrace.h"
@@ -47,6 +55,7 @@ using namespace HAC::parser;
 	token_int*		_token_int;
 /*	token_bool*		_token_bool; 	*/
 	token_identifier*	_token_identifier;
+	node_position*		_node_position;
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 	HAC::parser::index_expr*	_index_expr;
@@ -57,7 +66,18 @@ using namespace HAC::parser;
 %{
 extern	YY_DECL;
 
+namespace HAC {
+namespace lexer {
+extern	int	at_eof(const flex::lexer_state&);	// from "instref-lex.ll"
+}
+}
+
 static void yyerror(const char* msg);
+
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
 
 // worry about yy_union business later
 
@@ -158,4 +178,14 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 	}
 }
 
+static
+void yyerror(const char* msg) {
+	STACKTRACE_VERBOSE;
+	const short* s;
+	const YYSTYPE* v;
+	// msg is going to be "syntax error" from y.tab.cc
+	//	very useless in general
+	// hackt_parse_file_manager.dump_file_stack(cerr);
+	cerr << "parse error: " << msg << endl;
+}
 

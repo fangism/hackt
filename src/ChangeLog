@@ -5,6 +5,22 @@
 
 2006-01-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:
+	  Makefile.am: pulled libhacktparsers.la out from libhackt.la, 
+		now linked in separately, to avoid unnecessary duplication.  
+		Duplicated rules for the instref-parse parser, 
+		using hackt-parse as a template.  
+	  Now compiles the instance-reference parser (instref).
+		Needed work to avoid symbol collisions between 
+		different parsers.
+	  Silly modifications to hackt shell.  
+	  parser/*-parse-options.h:
+		conditionally define YYPARSE_PARAM when NOT in libbogus.
+	  parser/*-union.h:
+		macros to rename the union lookup functions
+		to avoid symbol collisions.  
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-02:
 	  This branch was created in honor of the frequent power outages
 		in our office building.  Committed a bunch of local files.

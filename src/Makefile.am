@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.15.2.1 2006/01/14 06:52:00 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.15.2.2 2006/01/15 02:41:56 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -63,14 +63,16 @@ LIBBOGUS_LA = libbogus_la
 # order in parallel builds.  
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la libhackt.la libhacktsim.la $(LIBFANGUTIL)
+hackt_LDADD = libhacktexec.la libhacktparsers.la libhackt.la \
+	libhacktsim.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
 
 # This says, "always build me first."
 # trying NOT to abuse this, writing explicit dependencies below
-BUILT_SOURCES = parser/hackt-parse.output.h
+BUILT_SOURCES = parser/hackt-parse.output.h \
+	parser/instref-parse.output.h
 
 # phony program to generate _build/*/.deps directories on distcheck
 PHONYSOURCES += dummy.cc sim/dummy.cc
@@ -128,8 +130,8 @@ INSTREF_LEX_ROOT = instref-lex
 # with symbol names with transformed prefixes.  
 libbogus_la_SOURCES = \
 	lexer/hackt-lex.ll \
-	parser/hackt-parse.yy
-#	parser/instref-parse.yy
+	parser/hackt-parse.yy \
+	parser/instref-parse.yy
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	lexer/$(HACKT_LEX_ROOT).ll \
@@ -435,22 +437,26 @@ PARSER_H_FILES = \
 	parser/$(HACKT_PARSE_ROOT).output.h \
 	parser/$(HACKT_PARSE_ROOT)-options.h \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
+	parser/$(INSTREF_PARSE_ROOT)-real.h \
+	parser/instref-union.h \
+	parser/$(INSTREF_PARSE_ROOT).output.h \
+	parser/$(INSTREF_PARSE_ROOT)-options.h \
+	lexer/$(INSTREF_LEX_ROOT)-options.h \
 	lexer/file_manager.h \
 	lexer/input_manager.h \
 	lexer/yyin_manager.h \
 	lexer/hac_lex.h
-#	parser/$(INSTREF_PARSE_ROOT)-real.h
-#	parser/$(INSTREF_PARSE_ROOT).output.h
 
 # can't use $(HACKT_PARSE_ROOT) to substitute :(
 PARSER_CC_FILES = \
 	parser/hackt-parse-real.cc \
 	parser/hackt-union.cc \
 	lexer/hackt-lex-real.cc \
+	parser/instref-parse-real.cc \
+	parser/instref-union.cc \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
-#	parser/$(INSTREF_PARSE_ROOT)-real.cc
 
 SIM_CC_FILES = \
 	sim/prsim/Node.cc \
@@ -537,6 +543,9 @@ lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
 	parser/$(HACKT_PARSE_ROOT).output.h
+parser/$(LIBHACKTPARSERS_LA)-instref-union.lo \
+	parser/$(LIBHACKTPARSERS_LA)-instref-union.o: \
+	parser/$(INSTREF_PARSE_ROOT).output.h
 
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
@@ -545,9 +554,8 @@ parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
 # this creates cyclic dependencies (bad)
 # parser/$(HACKT_PARSE_ROOT).cc: parser/$(HACKT_PARSE_ROOT).output.h
 
-# build up main library from pieces
-# Here, libhackt will include all of libhacktparsers
-libhackt_la_LIBADD = libhacktparsers.la
+# libhackt used to include all of libhacktparsers
+# libhackt_la_LIBADD = libhacktparsers.la
 
 # compile lexer and parser into separate library to for convenient way
 # of giving them exceptional compiler flags, see libhacktparsers_la_CXXFLAGS
@@ -593,7 +601,7 @@ SED_YACC_YYPARSE = $(SED) '/^yyparse()/s/()/(void*, YYSTYPE\& yylval, FILE* infi
 parser/hackt-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
 	$(AWK) -f $? -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > $@
 parser/instref-prefix.h: $(LEXYACC_PREFIX_GENERATOR)
-	$(AWK) -f $? -v PREFIX=$(HACKT_YACC_PREFIX) < /dev/null > $@
+	$(AWK) -f $? -v PREFIX=$(INSTREF_YACC_PREFIX) < /dev/null > $@
 
 LEXYACC_PREFIX_H_FILES = parser/hackt-prefix.h parser/instref-prefix.h
 
@@ -655,7 +663,7 @@ parser/$(HACKT_PARSE_ROOT)-real.h: parser/$(HACKT_PARSE_ROOT).h \
 parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 		parser/instref-prefix.h
 	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
-#	$(ECHO) "#include \"parser/instref-union.h\"" >> $@
+	$(ECHO) "#include \"parser/instref-union.h\"" >> $@
 	$(CAT) parser/$(INSTREF_PARSE_ROOT).h >> $@
 
 # if HAVE_FLEX ...
@@ -720,7 +728,11 @@ parser/hackt.types: parser/$(HACKT_PARSE_ROOT).yy
 		$(SED) '/^[ \t]*$$/d' > $@
 
 parser/instref.types: parser/$(INSTREF_PARSE_ROOT).yy
-	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+#	$(CAT) $? | $(PARSER_TYPES_PIPE) > $@
+	$(CAT) $? | $(GREP) -v "#include" | $(CPP_TRADITIONAL) -P | \
+		$(GREP) -v pragma | \
+		$(SED) -e "/^%start/,$$$$d" -e "/%{/,/%}/d" | \
+		$(SED) '/^[ \t]*$$/d' > $@
 
 # extract num: first matched line, 3rd space-delimited field (#define foo bar)
 # "cut" is not a good idea, if # define is separated... :(
@@ -731,11 +743,15 @@ GET_START_TOKEN_ENUM = \
 		$(AWK) '/.*/{printf($$1);}'
 
 
-YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
+# so far, yacc token enums start at 257 consistently, but we take no chances.
+HACKT_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
 		-v include="AST/AST.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
 		-v namespace="HAC::parser HAC::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
-# so far, yacc token enums start at 257 consistently, but we take no chances.
+INSTREF_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/instref.types \
+		-v include="AST/AST.h parser/$(INSTREF_PARSE_ROOT)-real.h lexer/hac_lex.h" \
+		-v namespace="HAC::parser HAC::lexer" \
+		-v token_enum=`$(GET_START_TOKEN_ENUM)`
 
 parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
 		parser/$(HACKT_PARSE_ROOT)-real.h
@@ -744,7 +760,17 @@ parser/hackt-union.cc: $(HACKT_PARSE_OUTPUT) parser/hackt.types \
 		exit 1 ; \
 	fi
 	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
-		-f $(YACC_UNION_SCRIPT) $(YACC_UNION_SCRIPT_ARGS) \
+		-f $(YACC_UNION_SCRIPT) $(HACKT_YACC_UNION_SCRIPT_ARGS) \
+		$(HACKT_PARSE_OUTPUT) > $@
+
+parser/instref-union.cc: $(INSTREF_PARSE_OUTPUT) parser/instref.types \
+		parser/$(INSTREF_PARSE_ROOT)-real.h
+	@if test ! -s parser/instref.types ; then \
+		$(ECHO) "parser/instref.types is empty!" ; \
+		exit 1 ; \
+	fi
+	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
+		-f $(YACC_UNION_SCRIPT) $(INSTREF_YACC_UNION_SCRIPT_ARGS) \
 		$(HACKT_PARSE_OUTPUT) > $@
 
 
@@ -791,6 +817,7 @@ am_cxxflags.h: $(srcdir)/Makefile.am
 	@$(ECHO) "#define	AM_CXXFLAGS \"$(AM_CXXFLAGS)\"" >> $@
 	@$(ECHO) "#endif	// AM_CXXFLAGS" >> $@
 
+# flags needed to produce .output from yacc/bison
 AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 
@@ -804,18 +831,17 @@ SAVETEMP = $(CXXCOMPILE) -v -save-temps
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy
 # libhackt_la_CPPFLAGS = $(YACC_PREFIX) $(AM_CPPFLAGS)
 
+MORE_BOGUS_CPPFLAGS =
+MORE_BOGUS_CXXFLAGS =
 if HAVE_BYACC
 # we don't care about libbogus, whatever it takes to make it compile
-BOGUS_BYACC_CPPFLAGS = -DYYDEBUG=0
-BOGUS_BYACC_CXXFLAGS = -Wno-error
-else
-BOGUS_BYACC_CPPFLAGS =
-BOGUS_BYACC_CXXFLAGS =
+MORE_BOGUS_CPPFLAGS += -DYYDEBUG=0
+MORE_BOGUS_CXXFLAGS += -Wno-error
 endif
 # *COUGH* *HACK*:
 # LIBBOGUS tells lexer/hackt-lex.cc to use un-transfomed symbol names
-libbogus_la_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(BOGUS_BYACC_CPPFLAGS)
-libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(BOGUS_BYACC_CXXFLAGS)
+libbogus_la_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(MORE_BOGUS_CPPFLAGS)
+libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
 # traditional C compilers.  (Not the cleanest code ever generated.)
@@ -842,10 +868,8 @@ Object/devel_switches.hchk:
 EXTRA_DIST += local.cvsignore \
 	parser/local.cvsignore \
 	parser/lexyacc-prefix.awk \
-	util/lang/lexyacc/lexyacc-prefix-generator.awk \
-	parser/common-output-to-C.awk \
-	parser/yacc-output-to-C.awk \
 	parser/bison-output-to-C.awk \
+	parser/common-output-to-C.awk \
 	parser/common-union-type.awk \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
@@ -943,7 +967,15 @@ CLEANPARSER = \
 	parser/$(HACKT_PARSE_ROOT).output \
 	parser/$(HACKT_PARSE_ROOT).output.h \
 	parser/hackt-union.cc \
-	parser/hackt.types
+	parser/hackt.types \
+	parser/$(INSTREF_PARSE_ROOT).cc \
+	parser/$(INSTREF_PARSE_ROOT).h \
+	parser/$(INSTREF_PARSE_ROOT)-real.cc \
+	parser/$(INSTREF_PARSE_ROOT)-real.h \
+	parser/$(INSTREF_PARSE_ROOT).output \
+	parser/$(INSTREF_PARSE_ROOT).output.h \
+	parser/instref-union.cc \
+	parser/instref.types
 
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \
