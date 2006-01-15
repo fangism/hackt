@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-04:
+	  util/readline_wrap.cc: added gets() method with custom prompt arg.
+
+
 2005-01-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:

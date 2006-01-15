@@ -1,16 +1,14 @@
 /**
 	\file "parser/instref-parse.yy.in"
-	$Id: instref-parse.yy.in,v 1.1.2.2 2006/01/15 02:42:03 fang Exp $
+	Quick little parser for parsing instance-references.  
+	This will be used in prsim and other simulators, for example.  
+	The grammar in here is an extremely small snippet
+	of the hackt language grammar.  
+	$Id: instref-parse.yy.in,v 1.1.2.3 2006/01/15 22:02:49 fang Exp $
  */
 
 %{
 #include <iostream>
-
-#if 0
-#ifdef	LIBBOGUS
-#define	__LEXYACC_INSTREF__PREFIX_H__
-#endif
-#endif
 
 #include "config.h"
 #include "AST/AST.h"
@@ -53,10 +51,15 @@ using namespace HAC::parser;
 
 %union {
 	token_int*		_token_int;
-/*	token_bool*		_token_bool; 	*/
+/*	token_bool*		_token_bool; 		*/
 	token_identifier*	_token_identifier;
 	node_position*		_node_position;
 	qualified_id*		_qualified_id;
+	expr*			_expr;
+	expr_list*		_expr_list;
+	range*			_range;
+	range_list*		_range_list;
+	dense_range_list*	_dense_range_list;
 	id_expr*		_id_expr;
 	HAC::parser::index_expr*	_index_expr;
 	member_expr*		_member_expr;
@@ -68,6 +71,7 @@ extern	YY_DECL;
 
 namespace HAC {
 namespace lexer {
+// TODO: rename this yy_at_eof, to avoid conflict with hackt-lex!
 extern	int	at_eof(const flex::lexer_state&);	// from "instref-lex.ll"
 }
 }
@@ -96,6 +100,16 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_identifier>	ID
 %token	<_token_int>		INT
 
+%type	<_inst_ref_expr>	instref member_index_expr
+%type	<_index_expr>		index_expr
+%type	<_member_expr>		member_expr
+%type	<_range_list>		index_list
+/* %type	<_expr_list>		index_list	*/
+%type	<_range>		index
+/* %type	<_expr>			index		*/
+%type	<_id_expr>		id_expr
+%type	<_qualified_id>		absolute_id relative_id
+
 %token	MAXIMUM_BOGOSITY
 
 %start	instref
@@ -107,47 +121,76 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 instref
 	: member_index_expr
+			{ $$ = $1; }
 	;
 
 member_index_expr
-	: id_expr
-	| index_expr
-	| member_expr
+	: id_expr	{ $$ = $1; }
+	| index_expr	{ $$ = $1; }
+	| member_expr	{ $$ = $1; }
 	;
 
 index_expr
 	: member_expr index_list
+		{ $$ = new index_expr($1, $2); }
 	| id_expr index_list
+		{ $$ = new index_expr($1, $2); }
 	;
 
 member_expr
 	: index_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	| member_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	| id_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	;
 
 index_list
 	: index_list index
+		{ $$ = $1; $1->push_back($2); }
 	| index
+		{ $$ = new range_list($1); }
+	/*	{ $$ = new expr_list($1); }	*/
 	;
 
 /* only integer constant expressions allowed... for now */
+/* here we only allow single-valued indices, and no ranges */
+/* multi-reference support can be added later when needed */
+/* IDEA: for i in <inst_ref_collection> ; do ... ; done */
 index
 	: '[' INT ']'
+		{ DELETE_TOKEN($1); $$ = new range($2); DELETE_TOKEN($3); }
 	;
+
+/**
+// later: expression evaluation using constant symbols available in the module!
+// can just use the context of the invoking module!  MUAHAHAAA!
+expr
+	: ...
+	;
+
+// paste expression grammar here:
+// should probably 
+
+**/
 
 id_expr
 	: absolute_id
+		{ $$ = new id_expr($1); }
 	| relative_id
+		{ $$ = new id_expr($1); }
 	;
 
 absolute_id
 	: SCOPE relative_id
+		{ $$ = $2->force_absolute($1); }
 	;
 
 relative_id
 	: relative_id SCOPE ID
-	| ID
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| ID	{ $$ = new qualified_id($1); }
 	;
 
 

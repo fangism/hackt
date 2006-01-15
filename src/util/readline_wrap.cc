@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.3.2.2 2006/01/15 02:42:29 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.3.2.3 2006/01/15 22:02:51 fang Exp $
  */
 
 #include <iostream>
@@ -66,6 +66,15 @@ readline_wrapper::__add_history(const_char_type* const hl) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Same as gets() but using the previously set prompt.  
+ */
+readline_wrapper::const_char_type*
+readline_wrapper::gets(void) {
+	return this->gets(prompt);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	NOTE: some ancient version of readline haas prototype without
 	'const' in ANY of the arguments (v. 4.1, ca. 2002).  
 	That is utterly unaacceptable.  We provide an internal workaround.  
@@ -74,15 +83,17 @@ readline_wrapper::__add_history(const_char_type* const hl) const {
 	\return allocated line, or NULL if EOF.  
  */
 readline_wrapper::const_char_type*
-readline_wrapper::gets(void) {
+readline_wrapper::gets(const string& _prompt) {
 	// this will automatically release the last line's memory
 #if USE_READLINE
-	// NOTE: some ASS version of readline accepts a char* 
-	// for the prompt argument and trips an error here.  
+	// (also covers editline)
+	// NOTE: some ASS-version of readline accepts a char* 
+	// for the prompt argument and trips an error here, 
+	// hence the const_cast
 	hold_line = hold_line_type(readline(
-		RL_CONST_CAST(prompt.c_str())));
+		RL_CONST_CAST(_prompt.c_str())));
 #else
-	cout << prompt;
+	cout << _prompt;
 	get_line_type get_line(static_cast<char_type*>(
 		malloc(sizeof(char_type) *READLINE_BUFFER_SIZE)));
 	fgets(&*get_line, READLINE_BUFFER_SIZE, stdin);
