@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.1.2.1 2006/01/14 06:52:10 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.1.2.2 2006/01/15 02:42:29 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS =
@@ -74,6 +74,7 @@ UTIL_HEADER_FILES = \
 	util/const_traits.h \
 	util/cppcat.h \
 	util/counter.h \
+	util/ctype.h \
 	util/dereference.h \
 	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
@@ -140,6 +141,7 @@ UTIL_HEADER_FILES = \
 	util/static_trace.h \
 	util/string.h \
 	util/string_fwd.h \
+	util/template.h \
 	util/tokenize_fwd.h \
 	util/tokenize.h \
 	util/type_traits.h \

@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.1.4.2 2006/01/12 21:31:49 fang Exp $
+	$Id: libc.h,v 1.1.4.2.2.1 2006/01/15 02:42:29 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -162,17 +162,7 @@ extern char*	strtok_r(char*, const char*, char**);
 /*=============================================================================
  *	<ctype.h>
  *===========================================================================*/
-#if	defined(__cplusplus) && defined(HAVE_CTYPE_H)  && HAVE_CTYPE_H
-#include <cctype>
-#elif	defined(HAVE_CTYPE_H)  && HAVE_CTYPE_H
-#include <ctype.h>
-#endif
-
-/* isspace */
-#if	defined(HAVE_ISSPACE) && HAVE_ISSPACE
-#else
-#error	"Need a substitute for isspace!"
-#endif
+#include "util/ctype.h"
 
 /*=============================================================================
  *	<unistd.h>

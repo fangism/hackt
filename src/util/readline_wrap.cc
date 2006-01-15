@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.3.2.1 2006/01/14 20:46:55 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.3.2.2 2006/01/15 02:42:29 fang Exp $
  */
 
 #include <iostream>
@@ -90,19 +90,30 @@ readline_wrapper::gets(void) {
 #endif
 	// NOTE: BSD editline does not return NULL on EOF
 	// it returns a string with strlen() == 0
-	// therefore, we need one additional test in the condition:
-	if (hold_line && strlen(&*hold_line)) {
+	// therefore, we need one additional test in the condition check.  
+	// NOTE: GNU readline returns a string of length 0 on an empty line
+	// which should NOT be mistaken for EOF
 #if 0
-		// echo debugging
+	// echo debugging
+	if (hold_line) {
 		cout << "length: " << strlen(&*hold_line) << endl;
 		cout << &*hold_line << endl;
+	} else {
+		cout << "NULL hold_line." << endl;
+	}
 #endif
+	if (hold_line
+#if defined(HAVE_BSDEDITLINE)
+		&& strlen(&*hold_line)
+#endif
+	) {
 		if (*hold_line) {
 			return __add_history(&*hold_line);
 		} else {
 			return &*hold_line;
 		}
 	} else {
+		// EOF
 		return NULL;
 	}
 }
