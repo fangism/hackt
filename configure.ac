@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.9.2.1 2006/01/14 06:51:56 fang Exp $
+#	$Id: configure.ac,v 1.23.2.9.2.2 2006/01/15 02:41:32 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -144,6 +144,20 @@ AC_ARG_ENABLE(header_validation,
 	AC_MSG_RESULT([yes (default)])]
 )
 
+dnl whether or not to build universal binary
+AC_MSG_CHECKING([whether universal binaries are requested])
+AC_ARG_ENABLE(fat_binary,
+	AC_HELP_STRING([--enable-fat-binary],
+		[Compile programs for multiple architectures.]),
+	[AC_MSG_RESULT([yes, but...])
+	dnl AC_CHECK_PROG(lipo)
+	dnl check whether or not compiler support multiple -arch flags
+	AC_MSG_NOTICE([Support for this is forthcoming for Darwin.])
+	dnl if enabled, then disable dynamic dependence-tracking
+	],
+	[AC_MSG_RESULT([no])]
+)
+
 dnl enable or disable fun modules
 AC_MSG_CHECKING([how bored we are])
 AC_ARG_ENABLE(fun, 
@@ -245,7 +259,11 @@ AC_CHECK_FUNCS([getopt])
 AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
 AC_CHECK_FUNCS([strdup])
 AC_CHECK_FUNCS([fgets])
-AC_CHECK_FUNCS([isspace])
+dnl <ctype.h>
+AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
+AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
+AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
+
 AC_CHECK_FUNCS([system])
 AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
 AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
