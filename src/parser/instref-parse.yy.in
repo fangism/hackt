@@ -1,0 +1,234 @@
+/**
+	\file "parser/instref-parse.yy.in"
+	Quick little parser for parsing instance-references.  
+	This will be used in prsim and other simulators, for example.  
+	The grammar in here is an extremely small snippet
+	of the hackt language grammar.  
+	$Id: instref-parse.yy.in,v 1.1.4.2 2006/01/15 22:25:39 fang Exp $
+ */
+
+%{
+#include <iostream>
+
+#include "config.h"
+#include "AST/AST.h"
+#include "parser/instref-prefix.h"
+#include "util/using_ostream.h"
+#include "parser/instref-union.h"
+#include "parser/instref-parse-options.h"
+#include "lexer/instref-lex-options.h"
+#include "util/stacktrace.h"
+
+/** work-around for bison-1.875 and gcc-3.x, until bison is fixed **/
+#if defined (__GNUC__) && (3 <= __GNUC__)
+#define __attribute__(arglist)			/* empty */
+#endif
+
+#ifndef	YYBISON
+#define	YYBISON		0
+#endif
+
+#include "lexer/flex_lexer_state.h"
+
+// extern FILE* yyin;
+
+#ifdef	LIBBOGUS
+static flex::lexer_state	_lexer_state;
+#endif
+
+
+#define	WRAP_LIST(left, list, right)	list->wrap(left, right)
+
+#define	DELETE_TOKEN(tok)		delete tok
+
+#define APPEND_LIST(list, delim, item)					\
+	DELETE_TOKEN(delim); list->push_back(item)
+
+using namespace HAC::lexer;
+using namespace HAC::parser;
+
+%}
+
+%union {
+	token_int*		_token_int;
+/*	token_bool*		_token_bool; 		*/
+	token_identifier*	_token_identifier;
+	node_position*		_node_position;
+	qualified_id*		_qualified_id;
+	expr*			_expr;
+	expr_list*		_expr_list;
+	range*			_range;
+	range_list*		_range_list;
+	dense_range_list*	_dense_range_list;
+	id_expr*		_id_expr;
+	HAC::parser::index_expr*	_index_expr;
+	member_expr*		_member_expr;
+	inst_ref_expr*		_inst_ref_expr;
+}
+
+%{
+extern	YY_DECL;
+
+namespace HAC {
+namespace lexer {
+// TODO: rename this yy_at_eof, to avoid conflict with hackt-lex!
+extern	int	at_eof(const flex::lexer_state&);	// from "instref-lex.ll"
+}
+}
+
+static void yyerror(const char* msg);
+
+extern	ostream& yy_union_resolve_dump(const YYSTYPE&, const short, const short, ostream&);
+extern	void yy_union_resolve_delete(const YYSTYPE&, const short, const short);
+extern	ostream& yy_union_lookup_dump(const YYSTYPE&, const int, ostream&);
+extern	void yy_union_lookup_delete(const YYSTYPE&, const int);
+
+// worry about yy_union business later
+
+static
+void
+yyfreestacks(const short* yyss, const short* yyssp,
+		const YYSTYPE* yyvs, const YYSTYPE* yyvsp,
+		const YYSTYPE yylval, const int yychar,
+		const flex::lexer_state& _lexer_state);
+%}
+
+%token	MINIMUM_BOGOSITY
+
+%type	<_node_position>	'[' ']' '.'
+%token	<_node_position>	SCOPE
+%token	<_token_identifier>	ID
+%token	<_token_int>		INT
+
+%type	<_inst_ref_expr>	instref member_index_expr
+%type	<_index_expr>		index_expr
+%type	<_member_expr>		member_expr
+%type	<_range_list>		index_list
+/* %type	<_expr_list>		index_list	*/
+%type	<_range>		index
+/* %type	<_expr>			index		*/
+%type	<_id_expr>		id_expr
+%type	<_qualified_id>		absolute_id relative_id
+
+%token	MAXIMUM_BOGOSITY
+
+%start	instref
+%pure_parser
+
+%%
+
+/* grammar taken from pieces of "parser/hackt-parse.yy.in" */
+
+instref
+	: member_index_expr
+			{ $$ = $1; }
+	;
+
+member_index_expr
+	: id_expr	{ $$ = $1; }
+	| index_expr	{ $$ = $1; }
+	| member_expr	{ $$ = $1; }
+	;
+
+index_expr
+	: member_expr index_list
+		{ $$ = new index_expr($1, $2); }
+	| id_expr index_list
+		{ $$ = new index_expr($1, $2); }
+	;
+
+member_expr
+	: index_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
+	| member_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
+	| id_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
+	;
+
+index_list
+	: index_list index
+		{ $$ = $1; $1->push_back($2); }
+	| index
+		{ $$ = new range_list($1); }
+	/*	{ $$ = new expr_list($1); }	*/
+	;
+
+/* only integer constant expressions allowed... for now */
+/* here we only allow single-valued indices, and no ranges */
+/* multi-reference support can be added later when needed */
+/* IDEA: for i in <inst_ref_collection> ; do ... ; done */
+index
+	: '[' INT ']'
+		{ DELETE_TOKEN($1); $$ = new range($2); DELETE_TOKEN($3); }
+	;
+
+/**
+// later: expression evaluation using constant symbols available in the module!
+// can just use the context of the invoking module!  MUAHAHAAA!
+expr
+	: ...
+	;
+
+// paste expression grammar here:
+// should probably 
+
+**/
+
+id_expr
+	: absolute_id
+		{ $$ = new id_expr($1); }
+	| relative_id
+		{ $$ = new id_expr($1); }
+	;
+
+absolute_id
+	: SCOPE relative_id
+		{ $$ = $2->force_absolute($1); }
+	;
+
+relative_id
+	: relative_id SCOPE ID
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| ID	{ $$ = new qualified_id($1); }
+	;
+
+
+%%
+
+/* copied from "parser/hackt-parse.yy.in" */
+static
+void
+yyfreestacks(const short* _yyss_, const short* _yyssp_,
+		const YYSTYPE* _yyvs_, const YYSTYPE* _yyvsp_,
+		const YYSTYPE _yylval_, const int _yychar_,
+		const flex::lexer_state& _lexer_state) {
+	STACKTRACE_VERBOSE;
+	const short* s;
+	const YYSTYPE* v;
+	s=_yyss_+1;
+	v=_yyvs_+1;
+	for ( ; s <= _yyssp_ && v <= _yyvsp_; s++, v++) {
+		if (v) {
+			// cerr << "Deleting stack token..." << endl;
+			yy_union_resolve_delete(*v, *(s-1), *s);
+		}
+	}
+	if (!at_eof(_lexer_state)) {
+		// cerr << "Deleting last token..." << endl;
+		// free the last token (if not EOF)
+		yy_union_lookup_delete(_yylval_, _yychar_);
+	}
+}
+
+static
+void yyerror(const char* msg) {
+	STACKTRACE_VERBOSE;
+	const short* s;
+	const YYSTYPE* v;
+	// msg is going to be "syntax error" from y.tab.cc
+	//	very useless in general
+	// hackt_parse_file_manager.dump_file_stack(cerr);
+	cerr << "parse error: " << msg << endl;
+}
+

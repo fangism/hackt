@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2006-01-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
+	  Branch merge.  
+
+
+2006-01-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:
+	  More libc function config tests, pertaining to <ctype.h>.
+	  Contemplating support for fat binaries in the future.  
+
+
 2006-01-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-15:

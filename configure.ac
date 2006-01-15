@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.9 2006/01/14 04:18:37 fang Exp $
+#	$Id: configure.ac,v 1.23.2.10 2006/01/15 22:25:25 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20051212, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060115, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -144,6 +144,20 @@ AC_ARG_ENABLE(header_validation,
 	AC_MSG_RESULT([yes (default)])]
 )
 
+dnl whether or not to build universal binary
+AC_MSG_CHECKING([whether universal binaries are requested])
+AC_ARG_ENABLE(fat_binary,
+	AC_HELP_STRING([--enable-fat-binary],
+		[Compile programs for multiple architectures.]),
+	[AC_MSG_RESULT([yes, but...])
+	dnl AC_CHECK_PROG(lipo)
+	dnl check whether or not compiler support multiple -arch flags
+	AC_MSG_NOTICE([Support for this is forthcoming for Darwin.])
+	dnl if enabled, then disable dynamic dependence-tracking
+	],
+	[AC_MSG_RESULT([no])]
+)
+
 dnl enable or disable fun modules
 AC_MSG_CHECKING([how bored we are])
 AC_ARG_ENABLE(fun, 
@@ -245,7 +259,11 @@ AC_CHECK_FUNCS([getopt])
 AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
 AC_CHECK_FUNCS([strdup])
 AC_CHECK_FUNCS([fgets])
-AC_CHECK_FUNCS([isspace])
+dnl <ctype.h>
+AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
+AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
+AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
+
 AC_CHECK_FUNCS([system])
 AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
 AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
@@ -569,6 +587,17 @@ AC_CONFIG_FILES([src/lexer/lex_version.h src/parser/yacc_version.h])
 
 AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
 	[out=src/parser/hackt-parse.yy
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		sed '/%pure.parser/d' $srcdir/$out.in > $out~
+	else
+		cp $srcdir/$out.in $out~
+	fi
+	scripts/replace_if_changed.sh $out~ $out
+	])
+
+AC_CONFIG_FILES([src/parser/instref-parse.yy:src/parser/instref-parse.yy.in],
+	[out=src/parser/instref-parse.yy
 	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
 	then
 		sed '/%pure.parser/d' $srcdir/$out.in > $out~

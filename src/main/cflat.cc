@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.6.2.1 2006/01/04 08:42:09 fang Exp $
+	$Id: cflat.cc,v 1.6.2.2 2006/01/15 22:25:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -32,7 +32,11 @@ using util::persistent_object_manager;
 //=============================================================================
 // explicit early class instantiation for proper static initializer ordering
 // this guarantees the registry map is initialized before anything is registered
-template class cflat::options_modifier_policy;
+
+// preferred by g++-3.3, but rejected by g++-4
+// template class cflat::options_modifier_policy_type;
+// accepted by both :S (hate having to copy exact name...)
+template class options_modifier_policy<cflat_options>;
 
 //=============================================================================
 // class cflat static initializers
@@ -56,8 +60,8 @@ static const char default_options_brief[] = "(CAST cflat preset)";
 	CFLAT mode registration mechanism.  
  */
 class cflat::register_options_modifier :
-	public options_modifier_policy::register_options_modifier_base {
-	typedef	options_modifier_policy::register_options_modifier_base
+	public options_modifier_policy_type::register_options_modifier_base {
+	typedef	options_modifier_policy_type::register_options_modifier_base
 						base_type;
 public:
 	register_options_modifier(const string& Mode,

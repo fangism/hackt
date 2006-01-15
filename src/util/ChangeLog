@@ -1,5 +1,28 @@
 # "src/util/ChangeLog"
 
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
+	  Branch merge.
+
+
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-04:
+	  util/readline_wrap.cc: added gets() method with custom prompt arg.
+
+
+2005-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:
+	  Moved <ctype> -related configure stuff to "util/ctype.h"
+		and added a handful of conditional library checks.  
+	  util/readline_wrap.cc: corrected EOF behavior for
+		the case of the BSD editline library.  
+	  Added util/template.h (empty) for compiler characteristic
+		checks related to templates in C++.  
+
+
 2005-01-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-16:

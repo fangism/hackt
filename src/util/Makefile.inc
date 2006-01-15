@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.1 2006/01/14 04:18:46 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.2 2006/01/15 22:25:41 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS =
@@ -74,6 +74,7 @@ UTIL_HEADER_FILES = \
 	util/const_traits.h \
 	util/cppcat.h \
 	util/counter.h \
+	util/ctype.h \
 	util/dereference.h \
 	util/dirent.h \
 	util/discrete_interval_set_fwd.h \
@@ -140,6 +141,7 @@ UTIL_HEADER_FILES = \
 	util/static_trace.h \
 	util/string.h \
 	util/string_fwd.h \
+	util/template.h \
 	util/tokenize_fwd.h \
 	util/tokenize.h \
 	util/type_traits.h \
@@ -180,13 +182,15 @@ util/using_istream.hchk:
 util/using_ostream.hchk:
 	@$(TOUCH) $@
 
+LEXYACC_PREFIX_GENERATOR = util/lang/lexyacc/lexyacc-prefix-generator.awk
+
 EXTRA_DIST += \
 	util/ChangeLog \
 	util/README \
 	util/TODO \
 	util/STL/README \
 	util/lang/README \
-	util/lang/lexyacc/lexyacc-prefix-generator.awk \
+	$(LEXYACC_PREFIX_GENERATOR) \
 	util/obsolete/README
 
 UTIL_DIRS = util util/numeric util/memory util/obsolete util/STL

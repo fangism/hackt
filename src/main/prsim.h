@@ -1,7 +1,7 @@
 /**
 	\file "main/prsim.h"
 	Interface header for prsim module.  
-	$Id: prsim.h,v 1.1.2.3 2006/01/11 03:41:14 fang Exp $
+	$Id: prsim.h,v 1.1.2.4 2006/01/15 22:25:32 fang Exp $
  */
 
 #ifndef	__MAIN_PRSIM_H__
@@ -21,10 +21,10 @@ class prsim_options;
 class prsim : protected options_modifier_policy<prsim_options> {
 private:
 	typedef	options_modifier_policy<prsim_options>
-					options_modifier_policy;
+					options_modifier_policy_type;
 public:
 	typedef	prsim_options		options;
-	typedef	options_modifier_policy::register_options_modifier_base
+	typedef	options_modifier_policy_type::register_options_modifier_base
 					register_options_modifier;
 public:
 	static const char		name[];

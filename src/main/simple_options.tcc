@@ -1,14 +1,19 @@
 /**
 	\file "main/simple_options.tcc"
-	$Id: simple_options.tcc,v 1.1.2.1 2006/01/04 08:42:11 fang Exp $
+	$Id: simple_options.tcc,v 1.1.2.2 2006/01/15 22:25:32 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_SIMPLE_OPTIONS_TCC__
 #define	__HAC_MAIN_SIMPLE_OPTIONS_TCC__
 
+#include <iostream>
+#include "main/simple_options.h"
+#include "util/macros.h"
 #include "util/getopt_portable.h"
+#include "main/main_funcs.h"		// for unknown_option
 
 namespace HAC {
+#include "util/using_ostream.h"
 //=============================================================================
 template <class Opt, class ModMap>
 int
@@ -36,7 +41,7 @@ parse_simple_command_options(const int argc, char* argv[], Opt& cf,
 			unknown_option(optopt);
 			return 1;
 		default:
-			abort();
+			THROW_EXIT;
 	}       // end switch
 	}       // end while
 	return 0;

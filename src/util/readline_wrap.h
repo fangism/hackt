@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.1.4.3 2006/01/12 07:10:00 fang Exp $
+	$Id: readline_wrap.h,v 1.1.4.4 2006/01/15 22:25:41 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -83,6 +83,13 @@ public:
 	 */
 	const_char_type*
 	gets(void);
+
+	/**
+		Same as gets, but uses a custom prompt instead
+		of the set one.  
+	 */
+	const_char_type*
+	gets(const string&);
 
 	static
 	ostream&

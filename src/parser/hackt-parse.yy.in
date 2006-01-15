@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.4.2.1 2006/01/14 04:18:45 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.4.2.2 2006/01/15 22:25:38 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -21,16 +21,12 @@
 %{
 #include <iostream>
 
-#ifdef	LIBBOGUS
-// this dirty hack tells the bogus compilation to skip the renamer
-#define	__LEXYACC_HACKT__PREFIX_H__
-#endif
-
 #include "config.h"
 #include "AST/AST.h"		// should be first
 #include "parser/hackt-prefix.h"
 #include "parser/hackt-parse.output.h"	// auto-generated state strings! :)
 #include "parser/hackt-parse-options.h"
+#include "parser/hackt-union.h"
 #include "lexer/hackt-lex-options.h"
 #include "util/using_ostream.h"
 #include "lexer/file_manager.h"
