@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.17 2006/01/16 06:58:54 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.18 2006/01/16 22:27:58 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -48,7 +48,7 @@ endif
 bin_PROGRAMS = hackt
 
 # dirgen is completely bogus, workaround to coerce directory generation
-noinst_PROGRAMS = dirgen getopt_test $(FUNPROGRAMS)
+noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries

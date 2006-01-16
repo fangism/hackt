@@ -1,10 +1,13 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.2 2006/01/15 22:25:41 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.3 2006/01/16 22:27:59 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
-UTILPROGRAMS =
+UTILPROGRAMS = util/progs/readline_toy
 LIBFANGUTIL = libfangutil.la
 UTILLIBS = $(LIBFANGUTIL)
+
+util-programs: $(UTILPROGRAMS)
+util-libs: $(UTILLIBS)
 
 # SUBDIRS += util/test
 
@@ -172,6 +175,9 @@ UTIL_CC_FILES = \
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 
+util_progs_readline_toy_SOURCES = util/progs/readline_toy.cc
+util_progs_readline_toy_LDADD = $(LIBFANGUTIL)
+
 ALL_HEADER_FILES += $(UTIL_HEADER_FILES)
 
 ALL_TCC_FILES += $(UTIL_TCC_FILES)
@@ -189,11 +195,13 @@ EXTRA_DIST += \
 	util/README \
 	util/TODO \
 	util/STL/README \
+	util/progs/README \
 	util/lang/README \
 	$(LEXYACC_PREFIX_GENERATOR) \
 	util/obsolete/README
 
-UTIL_DIRS = util util/numeric util/memory util/obsolete util/STL
+UTIL_DIRS = util util/numeric util/memory util/obsolete util/STL \
+	util/lang util/lang/lexyacc util/lang/CX util/progs
 
 CLEANSUBDIRS += $(UTIL_DIRS)
 
@@ -201,9 +209,17 @@ util/.cvsignore: .cvsignore
 	$(CP) $? $@
 util/STL/.cvsignore: util/.cvsignore
 	$(CP) $? $@
+util/lang/.cvsignore: util/.cvsignore
+	$(CP) $? $@
+util/lang/lexyacc/.cvsignore: util/.cvsignore
+	$(CP) $? $@
+util/lang/CX/.cvsignore: util/.cvsignore
+	$(CP) $? $@
 util/memory/.cvsignore: util/.cvsignore
 	$(CP) $? $@
 util/numeric/.cvsignore: util/.cvsignore
+	$(CP) $? $@
+util/progs/.cvsignore: util/.cvsignore
 	$(CP) $? $@
 util/obsolete/.cvsignore: util/.cvsignore
 	$(CP) $? $@
@@ -215,6 +231,9 @@ util/lang/CX/cx-parse.yy: util/lang/CX/cx-parse.yy.in
 # can we generate this from suffix appending?
 SUBDIR_CVSIGNORE += \
 	util/.cvsignore util/STL/.cvsignore \
+	util/lang/.cvsignore util/lang/lexyacc/.cvsignore \
+	util/lang/CX/.cvsignore \
 	util/memory/.cvsignore util/numeric/.cvsignore \
+	util/progs/.cvsignore \
 	util/obsolete/.cvsignore
 

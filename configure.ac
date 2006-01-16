@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.10 2006/01/15 22:25:25 fang Exp $
+#	$Id: configure.ac,v 1.23.2.11 2006/01/16 22:27:54 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -258,7 +258,9 @@ AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
 AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
 AC_CHECK_FUNCS([strdup])
+dnl <stdio.h>
 AC_CHECK_FUNCS([fgets])
+AC_CHECK_FUNCS([ferror feof clearerr])
 dnl <ctype.h>
 AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
 AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
@@ -444,7 +446,7 @@ else
 		AC_MSG_ERROR(Found neither ncurses or termcap))
 	AC_CHECK_LIB(readline, readline,
 		[LIBS="$LIBS -lreadline"],
-		[AC_MSG_ERROR(Couldn't find readline libraries.)])
+		[AC_MSG_ERROR(Couldn't find readline libraries.  Try passing extra LDFLAGS.)])
 fi
 
 dnl	Option to include BSD editline support in ngspice CLI
@@ -463,12 +465,13 @@ else
 		AC_MSG_ERROR(Found neither ncurses or termcap))
 	AC_CHECK_LIB(edit, readline,
 		[LIBS="$LIBS -ledit"],
-		[AC_MSG_ERROR(Couldn't find editline libraries.)],
+		[AC_MSG_ERROR(Couldn't find editline libraries.  Try passing extra LDFLAGS.)],
 		-lncurses )
 fi
 
-if test "$ac_cv_header_readline_readline_h" = "yes" || \
-	test "$ac_cv_header_editline_readline_h" = "yes"
+dnl if test "$ac_cv_header_readline_readline_h" = "yes" || \
+dnl	test "$ac_cv_header_editline_readline_h" = "yes"
+if test "$with_readline" = "yes" || test "$with_editline" = "yes"
 then
 AC_MSG_CHECKING([if readline()'s prompt argument is const char*])
 AC_LANG_SAVE

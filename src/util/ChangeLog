@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2005-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-19:
+	  Fixed stupid typo in util/readline_wrap.h" in conditionally
+		defining USE_READLINE... arg!
+	  Added small readline_toy program in util/progs for 
+		interpreter debugging, no need to compile rest of project.  
+	  Added more stdio function checks in "util/libc.h"
+
+
 2005-01-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-18:

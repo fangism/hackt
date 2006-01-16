@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.1.4.4 2006/01/15 22:25:41 fang Exp $
+	$Id: readline_wrap.h,v 1.1.4.5 2006/01/16 22:28:00 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -14,16 +14,16 @@
 #include <string>
 #include "util/memory/excl_malloc_ptr.h"
 
-#if	!defined(HAVE_GNUREADLINE) && !defined(HAVE_BSDEITLINE)
+#if	defined(HAVE_GNUREADLINE) || defined(HAVE_BSDEDITLINE)
 /**
 	If defined, then neither readline nor editline are enabled.  
 	Fallback onto simpler functions with the same interface.  
 	The purpose is to do all the configure-dependent work in this
 	class to provide a consistent interface to the developer.  
  */
-#define	USE_READLINE		0
-#else
 #define	USE_READLINE		1
+#else
+#define	USE_READLINE		0
 #endif
 
 #if !USE_READLINE
@@ -36,6 +36,14 @@ using std::ostream;
 using memory::excl_malloc_ptr;
 //=============================================================================
 /**
+	This readline wrapper class provide a consistent programming interface
+	where the user need not worry about readline/editline configuration
+	because it is all isolated in the implementation of this class.
+	Configure-once-and-use-forever.  
+
+	We restrict the use of this to stdin/cin only because readline
+	capabilities are not used for non-interactive input.  
+
 	Rather than use global variables, we try to maintain
 	readline state information in this class. 
 	Also for memory protection.  
@@ -62,6 +70,12 @@ private:
 	typedef	std::list<string>	history_type;
 	history_type			history;
 #endif
+	/**
+		control whether or not blank (whitespace-only) lines 
+		are returned.
+		Default: true -- skip blank lines.  
+	 */
+	bool				_skip_blank_lines;
 public:
 	readline_wrapper();
 

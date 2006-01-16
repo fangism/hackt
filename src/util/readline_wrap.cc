@@ -1,16 +1,22 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.4 2006/01/15 22:25:41 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.5 2006/01/16 22:28:00 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
+#define	DEBUG_GETS			0 && ENABLE_STACKTRACE
 
 #include <iostream>
 #include "util/readline_wrap.h"
 #include "util/readline.h"
 #include "util/string.h"
+#include "util/stacktrace.h"
+
 
 /**
 	Arbitrarily chosen buffer line size.  
+	What's a good way of automating this?
  */
 #ifndef	READLINE_BUFFER_SIZE
 #define	READLINE_BUFFER_SIZE		16384
@@ -25,11 +31,13 @@ using namespace strings;		// for some utility functions
 
 // TODO: do we need to initialize and free?
 
-readline_wrapper::readline_wrapper() : hold_line(NULL), prompt() { }
+readline_wrapper::readline_wrapper() : hold_line(NULL), prompt(),
+		_skip_blank_lines(true) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 readline_wrapper::readline_wrapper(const string& s) :
-		hold_line(NULL), prompt(s) {
+		hold_line(NULL), prompt(s),
+		_skip_blank_lines(true) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -47,7 +55,7 @@ readline_wrapper::set_prompt(const string& s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Adds line to history if readline is enabled.  
-	Automatically trims whitespace.  
+	Recommendation: trim whitespace before passing the string pointer.  
 	\param hl the current hold line, must be non-NULL
 		and point to a non-NUL character.  
  */
@@ -55,11 +63,10 @@ readline_wrapper::const_char_type*
 readline_wrapper::__add_history(const_char_type* const hl) const {
 #if USE_READLINE
 	const_char_type* cursor = hl;
-	eat_whitespace(cursor);
-	// this will internally strcpy the string
 	add_history(RL_CONST_CAST(cursor));
 	return cursor;
 #else
+	history.push_back(hl);
 	return hl;
 #endif
 }
@@ -85,6 +92,13 @@ readline_wrapper::gets(void) {
 readline_wrapper::const_char_type*
 readline_wrapper::gets(const string& _prompt) {
 	// this will automatically release the last line's memory
+	STACKTRACE_VERBOSE;
+	// NOTE: NULL does not count as blank, and should be returned as such
+	// BSD editline behavior is different
+	// check with fgets as well
+	bool is_blank;
+	const char* cursor;
+do {
 #if USE_READLINE
 	// (also covers editline)
 	// NOTE: some ASS-version of readline accepts a char* 
@@ -104,7 +118,7 @@ readline_wrapper::gets(const string& _prompt) {
 	// therefore, we need one additional test in the condition check.  
 	// NOTE: GNU readline returns a string of length 0 on an empty line
 	// which should NOT be mistaken for EOF
-#if 0
+#if DEBUG_GETS
 	// echo debugging
 	if (hold_line) {
 		cout << "length: " << strlen(&*hold_line) << endl;
@@ -113,21 +127,30 @@ readline_wrapper::gets(const string& _prompt) {
 		cout << "NULL hold_line." << endl;
 	}
 #endif
-	if (hold_line
-#if defined(HAVE_BSDEDITLINE)
-		&& strlen(&*hold_line)
+	if (hold_line && !feof(stdin)) {
+		cursor = &*hold_line;
+		eat_whitespace(cursor);
+#if DEBUG_GETS
+		cout << "remaining length: " << strlen(cursor) << endl;
+		cout << "remaining line:" << endl;
+		cout << cursor << endl;
 #endif
-	) {
-		if (*hold_line) {
-			return __add_history(&*hold_line);
-		} else {
-			return &*hold_line;
-		}
+		// may have to eat newline
+		is_blank = (!strlen(cursor) || (*cursor == '\n'));
 	} else {
-		// EOF
-		return NULL;
+		cursor = NULL;
+		is_blank = false;
 	}
-}
+	// stop as soon as
+	// 1) we have EOF (null cursor)
+	// 2) or we have a non-blank-line
+	// 3) or we're also accepting blank lines
+} while (cursor && _skip_blank_lines && is_blank);
+	if (cursor) {
+		return __add_history(cursor);
+	}
+	return cursor;
+}	// end readline_wrapper::gets()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

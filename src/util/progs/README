@@ -1,0 +1,5 @@
+"src/util/progs/README"
+
+This directory is for diagnostic programs involving the util library.
+A developer might conceivably want to run these to verify behavior.  
+
