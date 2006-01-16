@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.1.2.2 2006/01/15 22:25:40 fang Exp $
+	$Id: Command.h,v 1.1.2.3 2006/01/16 06:58:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -38,6 +38,20 @@ public:
 	typedef	void (usage_type) (ostream&);
 	typedef	usage_type*		usage_ptr_type;
 	typedef	CommandCategory*	category_ptr_type;
+	/**
+		A few reserved exit codes for main functions.  
+		TODO: validate the range of these values w.r.t. 
+			return type size or standard enums.
+	 */
+	enum Status {
+		FATAL = -4,	///< terminate immediately
+		BADFILE = -3,	///< source file not found
+		SYNTAX = -2,	///< bad syntax
+		UNKNOWN = -1,	///< unknown command
+		NORMAL = 0,	///< command executed fine
+		BADARG = 1,	///< other error with input
+		END = 0xFF	///< normal exit, such as EOF
+	};
 private:
 	/// name of the command, the key used
 	string				_name;
@@ -144,6 +158,14 @@ public:
 
 	static
 	int
+	source(State&, const string&);
+
+	static
+	bool
+	continue_interpreter(const int _status, const bool);
+
+	static
+	int
 	execute(State&, const string_list&);
 
 	static
@@ -154,6 +176,9 @@ public:
 	bool
 	help_category(ostream&, const string&);
 
+private:
+	class interactive_mode;
+
 };	// end class CommandRegistry
 
 //=============================================================================
@@ -163,8 +188,8 @@ public:
 class CommandCategory {
 private:
 	typedef	qmap<string, Command>		command_map_type;
-	typedef	Command::main_ptr_type	main_ptr_type;
-	typedef	Command::usage_ptr_type	usage_ptr_type;
+	typedef	Command::main_ptr_type		main_ptr_type;
+	typedef	Command::usage_ptr_type		usage_ptr_type;
 	typedef	command_map_type::const_iterator	const_iterator;
 private:
 	string					_name;

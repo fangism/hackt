@@ -4,34 +4,23 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-lex-options.h,v 1.1.4.2 2006/01/15 22:25:31 fang Exp $
+	$Id: instref-lex-options.h,v 1.1.4.3 2006/01/16 06:58:56 fang Exp $
  */
 
 #ifndef	__LEXER_INSTREF_LEX_OPTIONS_H__
 #define	__LEXER_INSTREF_LEX_OPTIONS_H__
 
 #include "config.h"
+#include "parser/instref-prefix.h"
 
 // this needs to be consistent with the %option never-interactive
 #ifndef	YY_ALWAYS_INTERACTIVE
 #define	YY_ALWAYS_INTERACTIVE		0
 #endif
 
-#if 0
-// this is covered by %option nostack
-#ifndef	YY_STACK_USED
-#define	YY_STACK_USED			0
-#endif
-#endif
-
-#if 0
-// this is covered by %option nomain
-#ifndef	YY_MAIN
-#define	YY_MAIN				0
-#endif
-#endif
-
 /**
+	NOTE: the instref lexer need-not be pure/re-entrant
+
 	Define this to pass in additional parameters.  
 	Coordinate with yylex's YY_DECL in "lex/instref-lex-options.h"
 
@@ -42,16 +31,34 @@
 	"lexer/purify_flex.awk" script and the name used in
 	the "lexer/instref-lex.ll" lexer specification.  
  */
+#ifndef	LIBBOGUS
 #define	YYLEX_PARAM	flex::lexer_state& foo
+#endif
+
+/**
+	*GAG*
+ */
+#ifdef	YYLEX_PARAM
+#define	__YYLEX_PARAM		, YYLEX_PARAM
+#define	__YYLEX_PARAM_VOID	YYLEX_PARAM
+#define	__YYLEX_ARG		, foo
+#define	__YYLEX_ARG_VOID	foo
+#else
+#define	__YYLEX_PARAM
+#define	__YYLEX_PARAM_VOID	void
+#define	__YYLEX_ARG
+#define	__YYLEX_ARG_VOID
+#endif
 
 #ifndef	YY_DECL
 #ifdef	YYLEX_PARAM
-#define	YY_DECL		int __instref_lex (YYSTYPE* instref_lval, YYLEX_PARAM)
+#define	YY_DECL		int __instref_lex (YYSTYPE* yylval, YYLEX_PARAM)
 #else
-#define	YY_DECL		int __instref_lex (YYSTYPE* instref_lval)
+#define	YY_DECL		int __instref_lex (YYSTYPE* yylval)
 #endif
 #endif
 
+#if 0
 /**
 	yacc hardcodes the call to yylex() without arguments
 	so we have to hack it here.  
@@ -60,9 +67,12 @@
 #ifdef	yylex
 #undef	yylex
 #endif
+#endif
+
+#ifndef	LIBBOGUS
+// else don't bother
 
 #if USING_YACC || USING_BYACC
-#define	yylex()			__instref_lex(&yylval, _lexer_state)
 #define	instref_lex()		__instref_lex(&instref_lval, _lexer_state)
 #endif	// USING_YACC || USING_BYACC
 
@@ -70,14 +80,18 @@
 #ifdef	YYLEX_PARAM
 // YYLEX_PARAM is a declarator, so we have to manually pass
 // in the correct argument name.
-#define	yylex(x,y)		__instref_lex(x, _lexer_state)
-#define	instref_lex(x,y)		__instref_lex(x, _lexer_state)
+// #define	yylex(x, y)		__instref_lex(x, _lexer_state)
+#define	instref_lex(x, y)	__instref_lex(x, _lexer_state)
 #else
-#define	yylex			__instref_lex
+// #define	yylex			__instref_lex
 #define	instref_lex		__instref_lex
 #endif
 #endif	// USING_BISON
 
+#else	// defined(LIBBOGUS)
+#define	instref_lex		__instref_lex
+
+#endif	// LIBBOGUS
 
 #endif	// __LEXER_INSTREF_LEX_OPTIONS_H__
 

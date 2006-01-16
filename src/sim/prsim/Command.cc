@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.2 2006/01/15 22:25:40 fang Exp $
+	$Id: Command.cc,v 1.1.2.3 2006/01/16 06:58:57 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -16,20 +16,24 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "sim/prsim/Command.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <algorithm>
 #include <iterator>
 #include "sim/prsim/State.h"
+#include "sim/prsim/Reference.h"
 #include "util/qmap.tcc"
 #include "util/readline_wrap.h"
 #include "util/libc.h"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/tokenize.h"
+#include "util/attributes.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.h"
+using std::ifstream;
 using std::copy;
 using std::ostream_iterator;
 using util::readline_wrapper;
@@ -56,7 +60,7 @@ Command::main(State& s, const string_list& args) const {
 		return (*_main)(s, args);
 	} else {
 		cerr << "command is undefined." << endl;
-		return -1;
+		return Command::UNKNOWN;
 	}
 }
 
@@ -75,12 +79,14 @@ Command::usage(ostream& o) const {
 
 /**
 	Global static initialization of the command-map.
+	This MUST be initialized before any commands are registered.
  */
 CommandRegistry::command_map_type
 CommandRegistry::command_map;
 
 /**
 	Global static initialization of the category-map.
+	This MUST be initialized before any categories are registered.  
  */
 CommandRegistry::category_map_type
 CommandRegistry::category_map;
@@ -157,7 +163,35 @@ CommandRegistry::list_commands(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+CommandRegistry::continue_interpreter(const int _status, const bool ia) {
+	return (_status != Command::END) && (!_status || ia);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// don't delete this yet...
+class CommandRegistry::interactive_mode {
+private:
+	bool			save_int_mode;
+public:
+	/// save away current interactive mode
+	explicit
+	interactive_mode(const bool m) : save_int_mode(interactive) {
+		interactive = m;
+	}
+
+	/// restore former interactive mode
+	~interactive_mode() {
+		interactive = save_int_mode;
+	}
+
+} __ATTRIBUTE_UNUSED__ ;	// end class interactive_mode
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Reads commands from stdin/cin.
 	Input terminate on end-of-file.  
 	Non-interactive errors should result in termination.  
 	TODO: error handling? convention?
@@ -175,7 +209,7 @@ CommandRegistry::interpret(State& s, const bool interactive) {
 	readline_wrapper rl(prompt);
 	// do NOT delete this line, it is already managed.
 	const char* line = NULL;
-	int status = 0;
+	int status = Command::NORMAL;
 	size_t lineno = 1;
 	do {
 		line = rl.gets();	// already eaten leading whitespace
@@ -185,7 +219,7 @@ CommandRegistry::interpret(State& s, const bool interactive) {
 		status = execute(s, toks);
 		++lineno;
 	}
-	} while (line && (!status || interactive));
+	} while (line && continue_interpreter(status, interactive));
 	// end-line for neatness
 	if (!line)	cout << endl;
 	// not sure if the following is good idea
@@ -194,7 +228,42 @@ CommandRegistry::interpret(State& s, const bool interactive) {
 		cerr << "Error detected at line " << lineno <<
 			", aborting commands." << endl;
 		return status;
-	} else	return 0;
+	} else	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param f the file name.  
+	\return status of the interpreter.
+	TODO: manage the interactive bit with an object/class, 
+		for prope stack restoration with exception safety.  
+	TODO: keep track of already opened files to prevent 
+		cyclic sourcing...
+ */
+int
+CommandRegistry::source(State& st, const string& f) {
+	ifstream i(f.c_str());
+if (i) {
+	int status = Command::NORMAL;
+	// const interactive_mode tmp(false);
+	string line;
+	do {
+		std::getline(i, line);
+	if (i) {
+#if 0
+		// echo-debugging
+		cout << "echo: " << line << endl;
+#endif
+		string_list toks;
+		tokenize(line, toks);
+		status = execute(st, toks);
+	}	// end if
+	} while (i && continue_interpreter(status, false));
+	return status;
+} else {
+	cerr << "Error opening file: " << f << endl;
+	return Command::BADFILE;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -300,10 +369,16 @@ CommandCategory::list(ostream& o) const {
 // local static CommandCategories
 // feel free to add categories here
 
-static CommandCategory builtin("builtin", "built-in commands");
-static CommandCategory general("general", "general commands");
-static CommandCategory simulation("simulation", "simulation commands");
-static CommandCategory channel("channel", "channel commands");
+static CommandCategory
+	aliases("aliases", "user-defined alias commands"),
+	builtin("builtin", "built-in commands"),
+	general("general", "general commands"),
+	simulation("simulation", "simulation commands"),
+	channel("channel", "channel commands"),
+	info("info", "information about simulated circuit"),
+	view("view", "instance to watch"),
+	modes("modes", "timing model, error handling");
+
 
 //=============================================================================
 // local Command classes
@@ -344,7 +419,7 @@ Echo::main(State&, const string_list& args) {
 	ostream_iterator<string> osi(cout, " ");
 	copy(++args.begin(), args.end(), osi);
 	cout << endl;
-	return 0;
+	return Command::NORMAL;
 }
 
 void
@@ -377,7 +452,7 @@ Help::main(State&, const string_list& args) {
 		CommandRegistry::list_categories(cout);
 		usage(cout);
 	}
-	return 0;
+	return Command::NORMAL;
 }
 
 void
@@ -390,20 +465,18 @@ Help::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_COMMAND_CLASS(CommentPound, "#", builtin, "comment")
+DECLARE_COMMAND_CLASS(CommentComment, "comment", builtin, "comment")
 
 int
-CommentPound::main(State&, const string_list&) { return 0; }
+CommentPound::main(State&, const string_list&) { return Command::NORMAL; }
 
 void
 CommentPound::usage(ostream& o) {
 	o << "# or \'comment\' ignores the whole line." << endl;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(CommentComment, "comment", builtin, "comment")
-
 int
-CommentComment::main(State&, const string_list&) { return 0; }
+CommentComment::main(State&, const string_list&) { return Command::NORMAL; }
 
 void
 CommentComment::usage(ostream& o) { CommentPound::usage(o); }
@@ -414,6 +487,7 @@ DECLARE_COMMAND_CLASS(All, "all", builtin, "show all commands")
 int
 All::main(State&, const string_list&) {
 	cout << "usage: help all" << endl;
+	return Command::NORMAL;
 }
 
 void
@@ -421,6 +495,171 @@ All::usage(ostream& o) {
 	CommandRegistry::list_commands(o);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_COMMAND_CLASS(Exit, "exit", builtin, "exits simulator")
+DECLARE_COMMAND_CLASS(Quit, "quit", builtin, "exits simulator")
+
+int
+Exit::main(State&, const string_list&) {
+	return Command::END;
+}
+
+void
+Exit::usage(ostream& o) {
+	o << "exit: " << brief << endl;
+}
+
+int
+Quit::main(State& s, const string_list& a) {
+	return Exit::main(s, a);
+}
+
+void
+Quit::usage(ostream& o) {
+	Exit::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_COMMAND_CLASS(Source, "source", simulation,
+	"execute commands from script file(s)")
+
+/**
+	TODO: additional flags to determine error handling, verbosity...
+	Include paths for source files?
+ */
+int
+Source::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	string_list::const_iterator i(++a.begin());
+	const string_list::const_iterator e(a.end());
+	int status = Command::NORMAL;
+	for ( ; i!=e && !status; ++i) {
+		// termination will depend on error handling
+		status = CommandRegistry::source(s, *i);
+	}
+	if (status) {
+		cerr << "Error encountered during source." << endl;
+	}
+	return status;
+}
+}
+
+void
+Source::usage(ostream& o) {
+	o << "source <file(s)>: " << brief << endl;
+	o << "sourcing terminates upon first error encountered." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_COMMAND_CLASS(Initialize, "initialize", simulation,
+	"resets simulator state and event queue")
+
+int
+Initialize::main(State& s, const string_list&) {
+	s.initialize();
+}
+
+void
+Initialize::usage(ostream& o) {
+	o << "initialize: " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Cycle, "cycle", simulation,
+// 	"run until event queue empty")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Step, "step", simulation, "step through event")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Queue, "queue", simulation, "show event queue")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Set, "set", simulation, "set node immediately")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Setr, "setr", simulation, "set node after random delay")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
+//	"set node with random delay after event")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Breakpt, "breakpt", simulation,
+//	"set breakpoint on node/vector")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(NoBreakpt, "nobreakpt", simulation,
+//	"remove breakpoint on node/vector")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(NoBreakptAll, "nobreakptall", simulation,
+//	"remove all breakpoints")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_COMMAND_CLASS(Get, "get", info, "print value of node/vector")
+
+/**
+	TODO: if instance referenced is an aggregate, 
+		then print the values of all constituents.
+ */
+int
+Get::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	// TODO: parse the reference string
+	const node_index_type ni = parse_node_to_index(objname);
+	if (ni) {
+		cerr << "Fang, finish me!" << endl;
+		return Command::BADARG;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Get::usage(ostream& o) {
+	o << "get <node>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Fanin, "fanin", info, 
+//	"print rules that influence a node")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Fanout, "fanout", info, 
+//	"print rules that influence a node")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// will category conflict with command?
+// DECLARE_COMMAND_CLASS(Info, "info", info, 
+//	"print information about a node/vector")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Assert, "assert", info, 
+//	"error if node is NOT expected value")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(AssertN, "assertn", info, 
+//	"error if node IS expected value")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(Confirm, "confirm", info, 
+//	"confirm assertions verbosely")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// DECLARE_COMMAND_CLASS(NoConfirm, "noconfirm", info, 
+//	"confirm assertions silently")
+
+#undef	DECLARE_COMMAND_CLASS
 //=============================================================================
 }	// end namespace PRSIM
 }	// end namespace SIM

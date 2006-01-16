@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.1.4.2 2006/01/15 22:25:39 fang Exp $
+	$Id: instref-parse.yy.in,v 1.1.4.3 2006/01/16 06:58:57 fang Exp $
  */
 
 %{
@@ -67,6 +67,7 @@ using namespace HAC::parser;
 }
 
 %{
+// extern	int	yylex(YYSTYPE*);
 extern	YY_DECL;
 
 namespace HAC {

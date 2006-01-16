@@ -2,6 +2,13 @@
 
 2005-01-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-18:
+	  Re-instated some name substitutions in the lexyacc-prefix-generator.
+		Needed to disambiguate some flex symbols.  
+
+
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
 	  Branch merge.
 

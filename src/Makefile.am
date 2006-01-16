@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.16 2006/01/15 22:25:29 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.17 2006/01/16 06:58:54 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -52,19 +52,21 @@ noinst_PROGRAMS = dirgen getopt_test $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
-noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libbogus.la \
-	$(UTILLIBS) libhacktexec.la libhacktsim.la $(FUNLIBS)
+noinst_LTLIBRARIES = libhackt.la libhacktparsers.la \
+	$(UTILLIBS) libhacktexec.la libhacktsim.la $(FUNLIBS) \
+	libbogus.la libbogus2.la
 
 # this name is needed for libtool objects
 LIBHACKTPARSERS_LA = libhacktparsers_la
 LIBBOGUS_LA = libbogus_la
+LIBBOGUS2_LA = libbogus2_la
 
 # need to list auto-generated header first to guarantee correct build
 # order in parallel builds.  
 
 hackt_SOURCES = main/hackt.cc
-hackt_LDADD = libhacktexec.la libhacktparsers.la libhackt.la \
-	libhacktsim.la $(LIBFANGUTIL)
+hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
+	libhackt.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -130,7 +132,10 @@ INSTREF_LEX_ROOT = instref-lex
 # with symbol names with transformed prefixes.  
 libbogus_la_SOURCES = \
 	lexer/hackt-lex.ll \
-	parser/hackt-parse.yy \
+	parser/hackt-parse.yy
+
+libbogus2_la_SOURCES = \
+	lexer/instref-lex.ll \
 	parser/instref-parse.yy
 
 # automake doesn't like macro in generating .Plo, a bug methinks
@@ -454,9 +459,11 @@ PARSER_CC_FILES = \
 	lexer/hackt-lex-real.cc \
 	parser/instref-parse-real.cc \
 	parser/instref-union.cc \
+	lexer/instref-lex-real.cc \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
 	lexer/hac_lex.cc
+
 
 SIM_CC_FILES = \
 	sim/prsim/Node.cc \
@@ -464,7 +471,8 @@ SIM_CC_FILES = \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event.cc \
 	sim/prsim/State.cc \
-	sim/prsim/Command.cc
+	sim/prsim/Command.cc \
+	sim/prsim/Reference.cc
 
 SIM_TCC_FILES =
 
@@ -534,6 +542,7 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
+# unfornately, it doesn't detect these dependenvies until AFTER first compile
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 main/version.lo main/version.o: cvstag.h builddate.h buildhost.h cxx_version.h \
 	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
@@ -543,6 +552,9 @@ lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 parser/$(LIBHACKTPARSERS_LA)-hackt-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-hackt-union.o: \
 	parser/$(HACKT_PARSE_ROOT).output.h
+lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.lo \
+	lexer/$(LIBHACKTPARSERS_LA)-$(INSTREF_LEX_ROOT)-real.o: \
+	parser/$(INSTREF_PARSE_ROOT).h
 parser/$(LIBHACKTPARSERS_LA)-instref-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-instref-union.o: \
 	parser/$(INSTREF_PARSE_ROOT).output.h
@@ -666,16 +678,26 @@ parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 	$(ECHO) "#include \"parser/instref-union.h\"" >> $@
 	$(CAT) parser/$(INSTREF_PARSE_ROOT).h >> $@
 
+
+PURIFY_LEXER_PIPE = $(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
+	$(SED) 's/REFERENCE/\&/g'
+
+# need to include prefix header because the lexer-generated code
+# doesn't include it early enough from the .ll source :(
 # if HAVE_FLEX ...
 lexer/$(HACKT_LEX_ROOT)-real.cc: lexer/$(HACKT_LEX_ROOT).cc \
 		parser/$(HACKT_PARSE_ROOT)-real.h
 # need forward declaration for flex 2.5.31
-	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | \
-	$(AWK) -f $(srcdir)/lexer/purify_flex.awk | \
-	$(SED) 's/REFERENCE/\&/g' > $@
+	$(ECHO) "#include \"parser/hackt-prefix.h\"" > $@
+	$(CAT) lexer/$(HACKT_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 # flex scanner purification eliminates need to rename most variables
 #	$(AWK) -f $(LEXYACC_PREFIX_SCRIPT) \
 #		-v PREFIX=$(HACKT_YACC_PREFIX) > $@
+
+lexer/$(INSTREF_LEX_ROOT)-real.cc: lexer/$(INSTREF_LEX_ROOT).cc \
+		parser/$(INSTREF_PARSE_ROOT)-real.h
+	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
+	$(CAT) lexer/$(INSTREF_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
 
 # can't depend on the .output alone, not a known dependence with .y[y]
 HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output
@@ -838,10 +860,21 @@ if HAVE_BYACC
 MORE_BOGUS_CPPFLAGS += -DYYDEBUG=0
 MORE_BOGUS_CXXFLAGS += -Wno-error
 endif
+BOGUS_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(MORE_BOGUS_CPPFLAGS)
+BOGUS_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
 # *COUGH* *HACK*:
 # LIBBOGUS tells lexer/hackt-lex.cc to use un-transfomed symbol names
-libbogus_la_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(MORE_BOGUS_CPPFLAGS)
-libbogus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
+
+# the -include is necessary because flex doesn't respectfully
+# include user header files early enough to rename declarations ^@#!%&!@^&%
+# really, this isn't necessary since we've prevented yy-name conflicts
+# by compiling each lexer/parser pair into a separate bogus convenience library
+libbogus_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
+	-include $(srcdir)/parser/hackt-prefix.h
+libbogus_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
+libbogus2_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
+	-include $(srcdir)/parser/instref-prefix.h
+libbogus2_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 
 # traditional C compilers.  (Not the cleanest code ever generated.)
@@ -979,7 +1012,9 @@ CLEANPARSER = \
 
 CLEANLEXER = \
 	lexer/$(HACKT_LEX_ROOT)-real.cc \
-	lexer/$(HACKT_LEX_ROOT).cc
+	lexer/$(HACKT_LEX_ROOT).cc \
+	lexer/$(INSTREF_LEX_ROOT)-real.cc \
+	lexer/$(INSTREF_LEX_ROOT).cc
 
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)

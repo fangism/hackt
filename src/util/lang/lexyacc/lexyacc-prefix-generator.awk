@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: lexyacc-prefix-generator.awk,v 1.1.2.1 2006/01/14 04:18:47 fang Exp $
+#	$Id: lexyacc-prefix-generator.awk,v 1.1.2.2 2006/01/16 06:58:59 fang Exp $
 # "lexyacc-prefix-generator.awk"
 #
 # generates a header suitable for preprocessing and performing
@@ -55,10 +55,10 @@ BEGIN {
 	roots["s"];
 	roots["v"];
 
-	roots["yys"];
+	roots["_yys"];
 	roots["state"];
 	roots["tmp"];
-#	roots["_yyv"];
+	roots["_yyv"];
 	roots["val"];
 	roots["lloc"];
 	roots["reds"];
@@ -82,7 +82,7 @@ BEGIN {
 
 # more symbols from [f]lex generated lexer code
 #	roots["_start"];		# macro to static int
-#	roots["restart"];		# void yyrestart(FILE*) (bison)
+	roots["restart"];		# void yyrestart(FILE*) (bison)
 	roots["in"];			# FILE*
 	roots["out"];			# FILE*
 	roots["lineno"];		# int
@@ -91,16 +91,16 @@ BEGIN {
 	roots["text"];			# char*
 #	roots["_size_t"];		# fixed
 #	roots["_buffer_state"];		# struct, fixed
-#	roots["_current_buffer"];	# static
+	roots["_current_buffer"];	# static
 	roots["_switch_to_buffer"];	# public
-#	roots["_create_buffer"];	# public (bison)
+	roots["_create_buffer"];	# public (bison)
 	roots["_delete_buffer"];	# public
-#	roots["_init_buffer"];		# public (bison)
-#	roots["_flush_buffer"];		# public (bison)
-#	roots["_load_buffer_state"];	# public (bison)
+	roots["_init_buffer"];		# public (bison)
+	roots["_flush_buffer"];		# public (bison)
+	roots["_load_buffer_state"];	# public (bison)
 	roots["_scan_buffer"];		# public
-#	roots["_scan_string"];		# public (bison)
-#	roots["_scan_bytes"];		# public (bison)
+	roots["_scan_string"];		# public (bison)
+	roots["_scan_bytes"];		# public (bison)
 #	roots["_flex_alloc"];		# static
 #	roots["_flex_realloc"];		# static
 #	roots["_flex_free"];		# static

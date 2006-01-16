@@ -5,6 +5,24 @@
 
 2006-01-15	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-18:
+	  Added bunch more core commands to prsim, and placeholders for more.
+	  Tore my own hair out trying to get multiple-lexers to compile
+		and link into libbogus without symbol collision but gave up.  
+		Issue: flex-generated source doesn't include user header
+		files early enough to be able to #define-rename all 
+		relevant yy-symbols.  (generated parsers were OK)
+	  Consequence: each lexer-parser pair is now compiled into
+		its own convenience library.  
+	  NOTE: lexer/instref-lex-options.h looks much different
+		from its original hackt counterpart...
+	  TODO: much later, resolve this lexer/parser fiasco
+		once-and-for-all with REAL tools.  
+	  Hacked by good enough for now, not going to waste more time.
+
+
+2006-01-15	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
 	  Branch merge.
 	  Summary: instref parser added, parser-generation updates
