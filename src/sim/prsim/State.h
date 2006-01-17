@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.1.2.6 2006/01/12 06:13:09 fang Exp $
+	$Id: State.h,v 1.1.2.7 2006/01/17 20:55:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -91,6 +91,9 @@ private:
 
 public:
 	~State();
+
+	const module&
+	get_module(void) const { return mod; }
 
 	/// initializes the simulator state, all nodes and exprs X
 	void

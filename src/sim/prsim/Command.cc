@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.3 2006/01/16 06:58:57 fang Exp $
+	$Id: Command.cc,v 1.1.2.4 2006/01/17 20:55:26 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -614,7 +614,7 @@ if (a.size() != 2) {
 } else {
 	const string& objname(a.back());
 	// TODO: parse the reference string
-	const node_index_type ni = parse_node_to_index(objname);
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		cerr << "Fang, finish me!" << endl;
 		return Command::BADARG;

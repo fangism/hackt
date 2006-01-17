@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2005-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-23:
+	  Added (not used yet) deallocation policy classes to util/memory.
+	  It's about time we do this because of the need to handle 
+		other types of deallocation-like activity using 
+		pointer-classes.  
+	  Forthcoming in next revision.  
+
+
 2005-01-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-19:

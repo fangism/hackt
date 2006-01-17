@@ -2,7 +2,7 @@
 	\file "sim/prsim/Reference.h"
 	Interface to refrence-parsing.
 	Consider making this a general function in main/main_funcs.
-	$Id: Reference.h,v 1.1.2.1 2006/01/16 06:58:58 fang Exp $
+	$Id: Reference.h,v 1.1.2.2 2006/01/17 20:55:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_REFERENCE_H__
@@ -12,12 +12,15 @@
 #include "util/string_fwd.h"
 
 namespace HAC {
+namespace entity {
+class module;
+}
 namespace SIM {
 namespace PRSIM {
 
 extern
 node_index_type
-parse_node_to_index(const std::string&);
+parse_node_to_index(const std::string&, const entity::module&);
 
 
 }	// end namespace PRSIM

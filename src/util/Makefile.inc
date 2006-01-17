@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.4 2006/01/17 04:41:08 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.5 2006/01/17 20:55:27 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -96,6 +96,8 @@ UTIL_HEADER_FILES = \
 	util/likely.h \
 	util/list_vector_fwd.h \
 	util/maplikeset.h \
+	util/memory/deallocation_policy_fwd.h \
+	util/memory/deallocation_policy.h \
 	util/memory/chunk_map_pool_fwd.h \
 	util/memory/list_vector_pool_fwd.h \
 	util/memory/pointer_classes_fwd.h \

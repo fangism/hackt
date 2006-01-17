@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.1.4.5 2006/01/17 02:26:14 fang Exp $
+	$Id: libc.h,v 1.1.4.6 2006/01/17 20:55:27 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -87,11 +87,24 @@ extern void	unsetenv(const char*);
  *	<stdio.h>
  *===========================================================================*/
 
-/* fgets */
 #if	defined(HAVE_FGETS) && HAVE_FGETS
 #else
-#error	"Need a substitute for fgets!"
 extern char*	fgets(char*, int, FILE*);
+#endif
+
+#if	defined(HAVE_FPUTS) && HAVE_FPUTS
+#else
+extern int	fputs(const char*, FILE*);
+#endif
+
+#if	defined(HAVE_FGETC) && HAVE_FGETC
+#else
+extern int	fgetc(FILE*);
+#endif
+
+#if	defined(HAVE_FPUTC) && HAVE_FPUTC
+#else
+extern int	fputc(const int, FILE*);
 #endif
 
 #if	defined(HAVE_SETBUF) && HAVE_SETBUF
