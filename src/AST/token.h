@@ -1,7 +1,7 @@
 /**
-	\file "AST/
+	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.2 2005/12/13 04:15:13 fang Exp $
+	$Id: token.h,v 1.2.2.1 2006/01/17 03:07:01 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */

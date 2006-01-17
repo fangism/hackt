@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: PRS.cc,v 1.2.2.1 2006/01/17 03:06:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -314,7 +314,7 @@ op_loop::rightmost(void) const {
 	Is this even needed outside of the PRS context?
  */
 expr::meta_return_type
-op_loop::check_meta_expr(context& c) const {
+op_loop::check_meta_expr(const context& c) const {
 	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
@@ -325,7 +325,7 @@ op_loop::check_meta_expr(context& c) const {
 	Is this even needed outside of the PRS context?
  */
 nonmeta_expr_return_type
-op_loop::check_nonmeta_expr(context& c) const {
+op_loop::check_nonmeta_expr(const context& c) const {
 	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
 }

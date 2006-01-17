@@ -5,6 +5,16 @@
 
 2006-01-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-21:
+	  Most of AST/exprs' type-checking member functions have been updated
+		to take a *const* parse_context& argument instead of
+		a non-const reference.  This move helps guarantee that 
+		when we check an instance reference from another module
+		using the context, that we don't modify the module.
+		To make it easy to identify this patch, these
+		trivial modifications are the only ones in this revision.  
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-20:
 	  Instance-reference parser working, after a Makefile.am fix
 		and renaming old lexers' at_eof() to PREFIX_at_eof().  

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: expr_list.h,v 1.2.2.1 2006/01/17 03:06:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -65,14 +65,15 @@ virtual	~expr_list();
 
 	void
 	postorder_check_meta_generic(checked_meta_generic_type&, 
-		context&) const;
+		const context&) const;
 
 	void
-	postorder_check_meta_exprs(checked_meta_exprs_type&, context&) const;
+	postorder_check_meta_exprs(checked_meta_exprs_type&,
+		const context&) const;
 
 	void
 	postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type&, 
-		context&) const;
+		const context&) const;
 
 	static
 	void
@@ -112,11 +113,11 @@ public:
 	// generic refs (UNUSED)
 	void
 	postorder_check_nonmeta_refs(checked_nonmeta_refs_type&, 
-		context&) const;
+		const context&) const;
 
 	void
 	postorder_check_nonmeta_data_refs(checked_nonmeta_data_refs_type&, 
-		context&) const;
+		const context&) const;
 
 //	check_meta_references...
 //	check_nonmeta_references...
@@ -151,7 +152,7 @@ public:
 	rightmost(void) const;
 
 	return_type
-	check_template_args(context& c) const;
+	check_template_args(const context& c) const;
 
 };	// end class template_argument_list_pair
 

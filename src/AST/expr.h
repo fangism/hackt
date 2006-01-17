@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: expr.h,v 1.2.2.1 2006/01/17 03:06:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -185,16 +185,16 @@ public:
 
 private:
 	range_list_meta_return_type
-	intercept_meta_indices_error(context& c) const;
+	intercept_meta_indices_error(const context& c) const;
 
 	inst_ref_expr::meta_return_type
-	intercept_base_meta_ref_error(context& c) const;
+	intercept_base_meta_ref_error(const context& c) const;
 
 	range_list_nonmeta_return_type
-	intercept_nonmeta_indices_error(context& c) const;
+	intercept_nonmeta_indices_error(const context& c) const;
 
 	inst_ref_expr::nonmeta_return_type
-	intercept_base_nonmeta_ref_error(context& c) const;
+	intercept_base_nonmeta_ref_error(const context& c) const;
 };	// end class index_expr
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.2 2005/12/13 04:15:07 fang Exp $
+	$Id: expr.cc,v 1.2.2.1 2006/01/17 03:06:51 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -124,7 +124,7 @@ expr::~expr() { }
 	\return pair of typed pointers.  
  */
 expr::generic_meta_return_type
-expr::check_meta_generic(context& c) const {
+expr::check_meta_generic(const context& c) const {
 	STACKTRACE("expr::check_meta_generic()");
 	const expr::meta_return_type ret(check_meta_expr(c));
 	return generic_meta_return_type(ret,
@@ -136,7 +136,7 @@ expr::check_meta_generic(context& c) const {
 	Default behavior for non-overridden check_nonmeta_expr.
  */
 nonmeta_expr_return_type
-expr::check_nonmeta_expr(context& c) const {
+expr::check_nonmeta_expr(const context& c) const {
 	const expr::meta_return_type ret(check_meta_expr(c));
 	// check for ret && !cast?  diagnostic error message would be nice?
 	return ret.is_a<nonmeta_expr_return_type::element_type>();
@@ -162,7 +162,7 @@ expr::check_prs_expr(context& c) const {
 	\return pair of typed pointers.  
  */
 expr::generic_meta_return_type
-inst_ref_expr::check_meta_generic(context& c) const {
+inst_ref_expr::check_meta_generic(const context& c) const {
 	STACKTRACE("inst_ref_expr::check_meta_generic()");
 	const meta_return_type ret(check_meta_reference(c));
 	return generic_meta_return_type(
@@ -174,7 +174,7 @@ inst_ref_expr::check_meta_generic(context& c) const {
 	This should really not be called...
  */
 expr::meta_return_type
-inst_ref_expr::check_meta_expr(context& c) const {
+inst_ref_expr::check_meta_expr(const context& c) const {
 	STACKTRACE("inst_ref_expr::check_meta_expr() (should not be called)");
 #if 0
 	return check_meta_reference(c).is_a<expr::meta_return_type::element_type>();
@@ -196,7 +196,7 @@ inst_ref_expr::check_meta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-inst_ref_expr::check_nonmeta_expr(context& c) const {
+inst_ref_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;
 	typedef	expr::nonmeta_return_type::element_type	data_type;
 	const nonmeta_return_type inst_ref(check_nonmeta_reference(c));
@@ -220,7 +220,7 @@ inst_ref_expr::check_nonmeta_expr(context& c) const {
 	that a bool is referenced, appropriate for PRS.  
  */
 prs_literal_ptr_type
-inst_ref_expr::check_prs_literal(context& c) const {
+inst_ref_expr::check_prs_literal(const context& c) const {
 	STACKTRACE_VERBOSE;
 	meta_return_type ref(check_meta_reference(c));
 	count_ptr<simple_bool_meta_instance_reference>
@@ -257,7 +257,7 @@ inst_ref_expr::check_prs_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 inst_ref_expr::nonmeta_data_return_type
-inst_ref_expr::check_nonmeta_data_reference(context& c) const {
+inst_ref_expr::check_nonmeta_data_reference(const context& c) const {
 	typedef	nonmeta_data_return_type::element_type	ref_type;
 	const nonmeta_return_type
 		inst_ref(check_nonmeta_reference(c));
@@ -290,7 +290,7 @@ expr_list::~expr_list() { }
  */
 void
 expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
-		context& c) const {
+		const context& c) const {
 	STACKTRACE("expr_list::postorder_check_meta_generic()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -313,7 +313,7 @@ expr_list::postorder_check_meta_generic(checked_meta_generic_type& temp,
  */
 void
 expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
-		context& c) const {
+		const context& c) const {
 	STACKTRACE("expr_list::postorder_check_meta_exprs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -334,7 +334,7 @@ expr_list::postorder_check_meta_exprs(checked_meta_exprs_type& temp,
  */
 void
 expr_list::postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type& temp,
-		context& c) const {
+		const context& c) const {
 	STACKTRACE("expr_list::postorder_check_nonmeta_exprs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -376,7 +376,7 @@ inst_ref_expr_list::~inst_ref_expr_list() { }
 
 void
 inst_ref_expr_list::postorder_check_nonmeta_data_refs(
-		checked_nonmeta_data_refs_type& temp, context& c) const {
+		checked_nonmeta_data_refs_type& temp, const context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_nonmeta_data_refs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -429,7 +429,7 @@ template_argument_list_pair::rightmost(void) const {
 	TODO: sugar: check for const_param expressions to make const list?
  */
 template_argument_list_pair::return_type
-template_argument_list_pair::check_template_args(context& c) const {
+template_argument_list_pair::check_template_args(const context& c) const {
 	const count_ptr<dynamic_param_expr_list>
 		strict(strict_args ?
 			new dynamic_param_expr_list(strict_args->size()) :
@@ -549,7 +549,7 @@ qualified_id::copy_beheaded(void) const {
 			might be collective, in the case of an array
  */
 never_ptr<const object>
-qualified_id::check_build(context& c) const {
+qualified_id::check_build(const context& c) const {
 	return c.lookup_object(*this);
 }
 
@@ -559,7 +559,7 @@ qualified_id::check_build(context& c) const {
 	This is what id_expr::check_build() should call.  
  */
 never_ptr<const instance_collection_base>
-qualified_id::lookup_instance(context& c) const {
+qualified_id::lookup_instance(const context& c) const {
 	if (!absolute && size() == 1)
 		return c.lookup_instance(*parent_type::back());
 	else	return c.lookup_instance(*this);
@@ -678,7 +678,7 @@ id_expr::is_absolute(void) const {
 		else NULL.
  */
 inst_ref_expr::meta_return_type
-id_expr::check_meta_reference(context& c) const {
+id_expr::check_meta_reference(const context& c) const {
 	STACKTRACE_VERBOSE;
 	// lookup_instance will check for unqualified references first
 	const never_ptr<const instance_collection_base>
@@ -717,7 +717,7 @@ id_expr::check_meta_reference(context& c) const {
 		else NULL.
  */
 inst_ref_expr::nonmeta_return_type
-id_expr::check_nonmeta_reference(context& c) const {
+id_expr::check_nonmeta_reference(const context& c) const {
 	typedef inst_ref_expr::nonmeta_return_type	return_type;
 	STACKTRACE_VERBOSE;
 	const never_ptr<const object>
@@ -798,7 +798,7 @@ prefix_expr::rightmost(void) const {
 	\return pointer to type-checked expression if successfull, else null.  
  */
 expr::meta_return_type
-prefix_expr::check_meta_expr(context& c) const {
+prefix_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type		return_type;
 	const return_type pe(e->check_meta_expr(c));
 	if (!pe) {
@@ -873,7 +873,7 @@ prefix_expr::check_meta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-prefix_expr::check_nonmeta_expr(context& c) const {
+prefix_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type		return_type;
 	const return_type pe(e->check_nonmeta_expr(c));
 	if (!pe) {
@@ -996,7 +996,7 @@ member_expr::rightmost(void) const {
 	member of an instance.
  */
 inst_ref_expr::meta_return_type
-member_expr::check_meta_reference(context& c) const {
+member_expr::check_meta_reference(const context& c) const {
 	STACKTRACE_VERBOSE;
 	typedef	inst_ref_expr::meta_return_type	return_type;
 	const return_type o(owner->check_meta_reference(c));
@@ -1063,7 +1063,7 @@ member_expr::check_meta_reference(context& c) const {
 	member of an instance.
  */
 inst_ref_expr::nonmeta_return_type
-member_expr::check_nonmeta_reference(context& c) const {
+member_expr::check_nonmeta_reference(const context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
 #if 0
 	const return_type o(owner->check_nonmeta_reference(c));
@@ -1146,7 +1146,7 @@ index_expr::rightmost(void) const {
 	For convenience, intercept type-checked indices first, exit on error.
  */
 range_list::checked_meta_indices_type
-index_expr::intercept_meta_indices_error(context& c) const {
+index_expr::intercept_meta_indices_error(const context& c) const {
 	STACKTRACE_VERBOSE;
 	const range_list::checked_meta_indices_type
 		checked_indices(ranges->check_meta_indices(c));
@@ -1164,7 +1164,7 @@ index_expr::intercept_meta_indices_error(context& c) const {
 	For convenience, intercept type-checked indices first, exit on error.
  */
 range_list::checked_nonmeta_indices_type
-index_expr::intercept_nonmeta_indices_error(context& c) const {
+index_expr::intercept_nonmeta_indices_error(const context& c) const {
 	const range_list::checked_nonmeta_indices_type
 		checked_indices(ranges->check_nonmeta_indices(c));
 	// should result in a HAC::entity::meta_index_list
@@ -1182,7 +1182,7 @@ index_expr::intercept_nonmeta_indices_error(context& c) const {
 	For convenience, exit upon error.  
  */
 inst_ref_expr::meta_return_type
-index_expr::intercept_base_meta_ref_error(context& c) const {
+index_expr::intercept_base_meta_ref_error(const context& c) const {
 	STACKTRACE_VERBOSE;
 	// should result in an meta_instance_reference
 	const inst_ref_expr::meta_return_type
@@ -1200,7 +1200,7 @@ index_expr::intercept_base_meta_ref_error(context& c) const {
 	For convenience, exit upon error.  
  */
 inst_ref_expr::nonmeta_return_type
-index_expr::intercept_base_nonmeta_ref_error(context& c) const {
+index_expr::intercept_base_nonmeta_ref_error(const context& c) const {
 	// should result in an meta_instance_reference
 	const inst_ref_expr::nonmeta_return_type
 		base_expr(base->check_nonmeta_reference(c));
@@ -1219,7 +1219,7 @@ index_expr::intercept_base_nonmeta_ref_error(context& c) const {
 	\return pointer to meta_instance_reference_base.  
  */
 inst_ref_expr::meta_return_type
-index_expr::check_meta_reference(context& c) const {
+index_expr::check_meta_reference(const context& c) const {
 	STACKTRACE_VERBOSE;
 	range_list::checked_meta_indices_type
 		checked_indices(intercept_meta_indices_error(c));
@@ -1251,7 +1251,7 @@ index_expr::check_meta_reference(context& c) const {
 	\return pointer to meta_instance_reference_base.  
  */
 inst_ref_expr::nonmeta_return_type
-index_expr::check_nonmeta_reference(context& c) const {
+index_expr::check_nonmeta_reference(const context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
 	STACKTRACE_VERBOSE;
 	range_list::checked_nonmeta_indices_type
@@ -1321,7 +1321,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
-arith_expr::check_meta_expr(context& c) const {
+arith_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type	return_type;
 	const return_type lo(l->check_meta_expr(c));
 	const return_type ro(r->check_meta_expr(c));
@@ -1384,7 +1384,7 @@ arith_expr::check_meta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-arith_expr::check_nonmeta_expr(context& c) const {
+arith_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;
 	const return_type lo(l->check_nonmeta_expr(c));
 	const return_type ro(r->check_nonmeta_expr(c));
@@ -1434,7 +1434,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
-relational_expr::check_meta_expr(context& c) const {
+relational_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type	return_type;
 	const return_type lo(l->check_meta_expr(c));
 	const return_type ro(r->check_meta_expr(c));
@@ -1477,7 +1477,7 @@ relational_expr::check_meta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-relational_expr::check_nonmeta_expr(context& c) const {
+relational_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;
 	const return_type lo(l->check_nonmeta_expr(c));
 	const return_type ro(r->check_nonmeta_expr(c));
@@ -1528,7 +1528,7 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(logical_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
-logical_expr::check_meta_expr(context& c) const {
+logical_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type	return_type;
 	const return_type lo(l->check_meta_expr(c));
 	const return_type ro(r->check_meta_expr(c));
@@ -1571,7 +1571,7 @@ logical_expr::check_meta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-logical_expr::check_nonmeta_expr(context& c) const {
+logical_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;
 	const return_type lo(l->check_nonmeta_expr(c));
 	const return_type ro(r->check_nonmeta_expr(c));
@@ -1720,7 +1720,7 @@ array_concatenation::rightmost(void) const {
 	just do the check_build of the lone object.  
  */
 expr::meta_return_type
-array_concatenation::check_meta_expr(context& c) const {
+array_concatenation::check_meta_expr(const context& c) const {
 	if (size() == 1) {
 		const const_iterator only(begin());
 		return (*only)->check_meta_expr(c);
@@ -1733,7 +1733,7 @@ array_concatenation::check_meta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-array_concatenation::check_nonmeta_expr(context& c) const {
+array_concatenation::check_nonmeta_expr(const context& c) const {
 	if (size() == 1) {
 		const const_iterator only(begin());
 		return (*only)->check_nonmeta_expr(c);
@@ -1746,7 +1746,7 @@ array_concatenation::check_nonmeta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::generic_meta_return_type
-array_concatenation::check_meta_generic(context& c) const {
+array_concatenation::check_meta_generic(const context& c) const {
 	STACKTRACE("array_concatenation::check_meta_generic()");
 	if (size() == 1) {
 		const const_iterator only(begin());
@@ -1790,14 +1790,14 @@ loop_concatenation::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
-loop_concatenation::check_meta_expr(context& c) const {
+loop_concatenation::check_meta_expr(const context& c) const {
 	cerr << "Fang, finish loop_concatenation::check_meta_expr()!" << endl;
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-loop_concatenation::check_nonmeta_expr(context& c) const {
+loop_concatenation::check_nonmeta_expr(const context& c) const {
 	cerr << "Fang, finish loop_concatenation::check_nonmeta_expr()!"
 		<< endl;
 	return nonmeta_expr_return_type(NULL);
@@ -1805,7 +1805,7 @@ loop_concatenation::check_nonmeta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::generic_meta_return_type
-loop_concatenation::check_meta_generic(context& c) const {
+loop_concatenation::check_meta_generic(const context& c) const {
 	cerr << "Fang, finish loop_concatenation::check_meta_generic()!" << endl;
 	return expr::generic_meta_return_type();
 }
@@ -1838,14 +1838,14 @@ array_construction::rightmost(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
-array_construction::check_meta_expr(context& c) const {
+array_construction::check_meta_expr(const context& c) const {
 	cerr << "Fang, finish array_construction::check_meta_expr()!" << endl;
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
-array_construction::check_nonmeta_expr(context& c) const {
+array_construction::check_nonmeta_expr(const context& c) const {
 	cerr << "Fang, finish array_construction::check_nonmeta_expr()!"
 		<< endl;
 	return nonmeta_expr_return_type(NULL);
@@ -1853,7 +1853,7 @@ array_construction::check_nonmeta_expr(context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::generic_meta_return_type
-array_construction::check_meta_generic(context& c) const {
+array_construction::check_meta_generic(const context& c) const {
 	cerr << "Fang, finish array_construction::check_meta_generic()!" << endl;
 	return expr::generic_meta_return_type();
 }

@@ -1,7 +1,7 @@
 /**
 	\file "AST/identifier.h"
 	Base set of classes for the HAC parser.  
-	$Id: identifier.h,v 1.2 2005/12/13 04:15:09 fang Exp $
+	$Id: identifier.h,v 1.2.2.1 2006/01/17 03:06:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_identifier.h,v 1.7.12.1 2005/12/11 00:45:07 fang Exp
  */
@@ -75,10 +75,10 @@ public:
 // should return a type object, with which one may pointer compare
 //	with typedefs, follow to canonical
 	never_ptr<const object>
-	check_build(context& c) const;
+	check_build(const context& c) const;
 
 	never_ptr<const instance_collection_base>
-	lookup_instance(context& c) const;
+	lookup_instance(const context& c) const;
 
 using parent_type::begin;
 using parent_type::end;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: expr_base.h,v 1.2.2.1 2006/01/17 03:06:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -93,13 +93,13 @@ virtual line_position
  */
 #define	CHECK_META_EXPR_PROTO						\
 	expr::meta_return_type						\
-	check_meta_expr(context& c) const
+	check_meta_expr(const context& c) const
 
 virtual CHECK_META_EXPR_PROTO = 0;
 
 #define	CHECK_NONMETA_EXPR_PROTO					\
 	nonmeta_expr_return_type					\
-	check_nonmeta_expr(context& c) const
+	check_nonmeta_expr(const context& c) const
 
 virtual	CHECK_NONMETA_EXPR_PROTO;
 
@@ -115,7 +115,7 @@ public:
 
 #define	CHECK_GENERIC_PROTO						\
 	generic_meta_return_type					\
-	check_meta_generic(context& c) const
+	check_meta_generic(const context& c) const
 /**
 	Needed by alias_list's check routine.
 	The caller of this will need to #include <utility>.
@@ -150,13 +150,13 @@ virtual ~inst_ref_expr() { }
 
 #define CHECK_META_REFERENCE_PROTO					\
 	inst_ref_expr::meta_return_type					\
-	check_meta_reference(context&) const
+	check_meta_reference(const context&) const
 
 virtual CHECK_META_REFERENCE_PROTO = 0;
 
 #define CHECK_NONMETA_REFERENCE_PROTO					\
 	inst_ref_expr::nonmeta_return_type				\
-	check_nonmeta_reference(context&) const
+	check_nonmeta_reference(const context&) const
 
 virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 
@@ -165,13 +165,13 @@ virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 	CHECK_NONMETA_EXPR_PROTO;
 
 	nonmeta_data_return_type
-	check_nonmeta_data_reference(context&) const;
+	check_nonmeta_data_reference(const context&) const;
 
 	// NOTE: this is non-virtual
 	CHECK_GENERIC_PROTO;
 
 	prs_literal_ptr_type
-	check_prs_literal(context&) const;
+	check_prs_literal(const context&) const;
 
 	CHECK_PRS_EXPR_PROTO;
 	
