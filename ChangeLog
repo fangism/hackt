@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-01-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-22:
+	  Most compiler warning flags are now checked during configure
+		and passed to automake's AM_CFLAGS and AM_CXXFLAGS.
+
+
 2006-01-15	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:

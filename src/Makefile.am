@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.19 2006/01/17 02:26:11 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.20 2006/01/17 04:41:07 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -804,20 +804,19 @@ AM_CPPFLAGS = -I$(srcdir)
 # extremely anal-retentive
 if HAVE_GXX
 # our good friend, g++
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wshadow -Wno-unused-parameter \
-	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
-WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
-	-Wbad-function-cast -Wnested-externs
-WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
+GENERAL_WARN_FLAGS = @FANG_WARN_FLAGS@
+WARN_CFLAGS = @FANG_WARN_CFLAGS@
+WARN_CXXFLAGS = @FANG_WARN_CXXFLAGS@
 # -Wsign-promo
-DIALECT_FLAGS = -ansi -pedantic-errors
+DIALECT_FLAGS = @FANG_DIALECT_FLAGS@
 PIPE_FLAG = -pipe
 else
 # non-GNU compiler: your guess is as good as mine
-GENERAL_WARN_FLAGS =
-WARN_CFLAGS =
-WARN_CXXFLAGS =
-DIALECT_FLAGS =
+# pass in whatever happened to succeed from configure tests
+GENERAL_WARN_FLAGS = @FANG_WARN_FLAGS@
+WARN_CFLAGS = @FANG_WARN_CFLAGS@
+WARN_CXXFLAGS = @FANG_WARN_CXXFLAGS@
+DIALECT_FLAGS = @FANG_DIALECT_FLAGS@
 PIPE_FLAG =
 endif
 # TODO: would like to have these flags available
@@ -830,7 +829,12 @@ MORE_CFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
 MORE_CXXFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 # These flags are used to cancel out previous warning flags, 
 # such exceptions are needed for the automatic lexers and parsers
+if HAVE_GXX
 PARSER_NOWARN_FLAGS = -Wno-unused -Wno-old-style-cast -Wno-shadow
+else
+# -w inhibits all warning messages, at least for gcc
+PARSER_NOWARN_FLAGS = -w
+endif
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)

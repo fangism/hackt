@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.12 2006/01/17 02:26:08 fang Exp $
+#	$Id: configure.ac,v 1.23.2.13 2006/01/17 04:41:01 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -181,11 +181,87 @@ AC_PROG_CXX
 dnl we need these anal flags for checking for certain charateristics
 dnl TODO: what are the equivalent flags for other compilers?
 ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
-touch conftest.cc
+cat > conftest.c <<CEOF
+extern int main(int, char**);
+CEOF
+cp conftest.c conftest.cc
+if $CC $ANAL_FLAGS -c conftest.c
+then :
+else AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS])
+fi
 if $CXX $ANAL_FLAGS -c conftest.cc
 then :
 else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
 fi
+
+dnl test what flags to set in AM_CFLAGS and AM_CXXFLAGS
+TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
+TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
+TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
+TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
+TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
+TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
+TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+FANG_WARN_FLAGS=""
+FANG_WARN_CFLAGS=""
+FANG_WARN_CXXFLAGS=""
+FANG_DIALECT_FLAGS=""
+for f in $TRY_WARN_FLAGS
+do
+	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
+	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
+	then
+		AC_MSG_RESULT([yes])
+		FANG_WARN_FLAGS="$FANG_WARN_FLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
+	fi
+done
+for f in $TRY_DIALECT_FLAGS
+do
+	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
+	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
+	then
+		AC_MSG_RESULT([yes])
+		FANG_DIALECT_FLAGS="$FANG_DIALECT_FLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
+	fi
+done
+for f in $TRY_WARN_CFLAGS
+do
+	AC_MSG_CHECKING([whether C compiler accepts flag $f])
+	if $CC $f -c conftest.c
+	then
+		AC_MSG_RESULT([yes])
+		FANG_WARN_CFLAGS="$FANG_WARN_CFLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C compiler doesn't like flag: $f])
+	fi
+done
+for f in $TRY_WARN_CXXFLAGS
+do
+	AC_MSG_CHECKING([whether C++ compiler accepts flag $f])
+	if $CXX $f -c conftest.cc
+	then
+		AC_MSG_RESULT([yes])
+		FANG_WARN_CXXFLAGS="$FANG_WARN_CXXFLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C++ compiler doesn't like flag: $f])
+	fi
+done
+dnl AC_MSG_NOTICE([general warning flags: $FANG_WARN_FLAGS])
+dnl AC_MSG_NOTICE([general C warning flags: $FANG_WARN_CFLAGS])
+dnl AC_MSG_NOTICE([general C++ warning flags: $FANG_WARN_CXXFLAGS])
+dnl AC_MSG_NOTICE([general C/C++ dialect flags: $FANG_DIALECT_FLAGS])
+AC_SUBST(FANG_WARN_FLAGS)
+AC_SUBST(FANG_WARN_CFLAGS)
+AC_SUBST(FANG_WARN_CXXFLAGS)
+AC_SUBST(FANG_DIALECT_FLAGS)
 
 CXX_VERSION=`$CXX --version | head -n 1`
 AC_SUBST(CXX_VERSION)

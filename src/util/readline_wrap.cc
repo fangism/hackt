@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.1.4.5 2006/01/16 22:28:00 fang Exp $
+	$Id: readline_wrap.cc,v 1.1.4.6 2006/01/17 04:41:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -60,13 +60,13 @@ readline_wrapper::set_prompt(const string& s) {
 		and point to a non-NUL character.  
  */
 readline_wrapper::const_char_type*
-readline_wrapper::__add_history(const_char_type* const hl) const {
+readline_wrapper::__add_history(const_char_type* const hl) {
 #if USE_READLINE
 	const_char_type* cursor = hl;
 	add_history(RL_CONST_CAST(cursor));
 	return cursor;
 #else
-	history.push_back(hl);
+	history.push_back(string(hl));
 	return hl;
 #endif
 }

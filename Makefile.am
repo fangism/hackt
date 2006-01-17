@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.25.2.1 2005/12/13 21:38:03 fang Exp $
+#	$Id: Makefile.am,v 1.25.2.2 2006/01/17 04:41:01 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -41,6 +41,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	$(DOXYGEN_CONFIG).in \
 	config/macro-value.h.in \
 	config/config_subst.awk \
+	config/ylwrap \
 	DevelopmentPlan.dot
 
 

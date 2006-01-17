@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.3 2006/01/16 22:27:59 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.4 2006/01/17 04:41:08 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -12,7 +12,8 @@ util-libs: $(UTILLIBS)
 # SUBDIRS += util/test
 
 # phony program to generate _build/.../.deps directories on distcheck
-PHONYSOURCES += util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc
+PHONYSOURCES += util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
+	util/lang/lexyacc/dummy.cc
 
 # template definition header files
 UTIL_TCC_FILES = \

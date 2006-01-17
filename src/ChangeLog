@@ -5,6 +5,12 @@
 
 2006-01-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-22:
+	  Maintainence revision only, been lacking some distcheck 
+		discipline as of last few revisions.  Now distcheck clean.  
+	  This revision also features configure-checked compiler flags.
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-21:
 	  Most of AST/exprs' type-checking member functions have been updated
 		to take a *const* parse_context& argument instead of
