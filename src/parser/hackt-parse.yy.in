@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.4.2.2 2006/01/15 22:25:38 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.4.2.3 2006/01/17 02:26:13 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -382,10 +382,10 @@ extern	YY_DECL;			// something like the above
 
 namespace HAC {
 namespace lexer {
-extern	int at_eof(const flex::lexer_state&);		// from "hackt-lex.ll"
+extern	int hackt_at_eof(const flex::lexer_state&);	// from "hackt-lex.ll"
 }
 }
-using HAC::lexer::at_eof;
+using HAC::lexer::hackt_at_eof;
 
 static void yyerror(const char* msg);	// ancient compiler rejects
 
@@ -2302,7 +2302,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
-	if (!at_eof(_lexer_state)) {
+	if (!hackt_at_eof(_lexer_state)) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, _yychar_);
@@ -2346,12 +2346,6 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 
 #if YYBISON
 // shit... bison-isms: names were changed to protect the innocent
-#if 0
-#define	yyname		yytname
-#define	yysindex	yypact
-#define	yyrindex	yydefact
-#define	YYTABLESIZE	YYLAST
-#endif
 /**
 	#define	YYMAXTOKEN	YYMAXUTOK
 	use MAXIMUM_BOGOSITY instead for bounding yychar
@@ -2409,7 +2403,7 @@ void yyerror(const char* msg) { 	// ancient compiler rejects
 	// sanity check
 	assert(s > yyssp && v > yyvsp);
 //	NULL check not necessarily valid if last token normally returned NULL
-	if (at_eof(_lexer_state)) {
+	if (hackt_at_eof(_lexer_state)) {
 		cerr << "\t" << __symbol_names[0];	// "end-of-file"
 	} else {
 //		The last token from the lexer, yychar, tells us the last

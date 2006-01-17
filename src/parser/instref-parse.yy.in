@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.1.4.3 2006/01/16 06:58:57 fang Exp $
+	$Id: instref-parse.yy.in,v 1.1.4.4 2006/01/17 02:26:13 fang Exp $
  */
 
 %{
@@ -16,6 +16,7 @@
 #include "util/using_ostream.h"
 #include "parser/instref-union.h"
 #include "parser/instref-parse-options.h"
+#include "parser/instref-parse.output.h"
 #include "lexer/instref-lex-options.h"
 #include "util/stacktrace.h"
 
@@ -73,7 +74,7 @@ extern	YY_DECL;
 namespace HAC {
 namespace lexer {
 // TODO: rename this yy_at_eof, to avoid conflict with hackt-lex!
-extern	int	at_eof(const flex::lexer_state&);	// from "instref-lex.ll"
+extern	int instref_at_eof(const flex::lexer_state&);	// from "instref-lex.ll"
 }
 }
 
@@ -122,7 +123,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 
 instref
 	: member_index_expr
-			{ $$ = $1; }
+			// for pure-parsing, we pass in the return YYSTYPE&
+			// as yylval.  This MUST be set when returning from
+			// yyparse (except when exception thrown).
+			{ $$ = $1; yylval._inst_ref_expr = $1; }
 	;
 
 member_index_expr
@@ -215,12 +219,24 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 			yy_union_resolve_delete(*v, *(s-1), *s);
 		}
 	}
-	if (!at_eof(_lexer_state)) {
+	if (!instref_at_eof(_lexer_state)) {
 		// cerr << "Deleting last token..." << endl;
 		// free the last token (if not EOF)
 		yy_union_lookup_delete(_yylval_, _yychar_);
 	}
 }
+
+#if YYBISON
+#define __symbol_names  yytname
+#define __shift_table   yypact
+#define __reduce_table  yydefact
+#define __YYTABLESIZE   YYLAST
+#else   // !YYBISON
+#define __symbol_names  yyname
+#define __shift_table   yysindex
+#define __reduce_table  yyrtable
+#define __YYTABLESIZE   YYTABLESIZE
+#endif
 
 static
 void yyerror(const char* msg) {
@@ -231,5 +247,84 @@ void yyerror(const char* msg) {
 	//	very useless in general
 	// hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "parse error: " << msg << endl;
+
+	// copied from "parser/hackt-parse.yy.in"
+#if     !defined(LIBBOGUS)
+	// we've kept track of the position of every token
+	cerr << "parser stacks:" << endl << "state\tvalue" << endl;
+	
+	/* bug fix: bad memory address with first *(s-1) if v is not
+	 * guaranteed to be NULL, which it isn't!
+	 * Thus we start with yyss+1, yyvs+1 for first valid stack entry.
+	 */
+	assert(!*yyss);         /* should be zero */
+	cerr << *yyss;
+	s=yyss+1;
+	v=yyvs+1;
+	for ( ; s <= yyssp && v <= yyvsp; s++, v++) {
+		// how do we know which union member?
+		// need to look at the state stack, and the transition
+		// from the previous state
+		/* assert(v); can have NULL on stack? yes. */
+		if (v) {
+			yy_union_resolve_dump(*v, *(s-1), *s, cerr << '\t');
+		} else {
+			cerr << "\t(null) ";
+		}
+		cerr << endl << *s;
+	}
+	// sanity check
+	assert(s > yyssp && v > yyvsp);
+//      NULL check not necessarily valid if last token normally returned NULL
+	if (instref_at_eof(_lexer_state)) {
+		cerr << "\t" << __symbol_names[0];      // "end-of-file"
+	} else {
+//              The last token from the lexer, yychar, tells us the last
+//              token type returned.  
+//              can't use: yy_union_resolve_dump(yylval, *(s-1), *s, ...);
+		yy_union_lookup_dump(yylval, yychar, cerr << '\t');
+	}
+	cerr << endl;
+
+	// take current state off of top of stack and 
+	// print out possible points in productions
+	cerr << "in state " << *yyssp << ", possible rules are:" << endl;
+	{       int i;
+		assert(*yyssp < yynss);
+		for (i=0; i < yysss[*yyssp].n; i++) {
+			cerr << yysss[*yyssp].rule[i] << endl;
+		}
+	}
+
+	// list possible expected tokens based on state table
+	// code ripped off from YYDEBUG parts of y.tab.c
+	cerr << "acceptable tokens are: " << endl;
+	int accept_count = 0;
+	{
+		int _yychar_ = 0;
+		int yyn;
+		for ( ; _yychar_ <= MAXIMUM_BOGOSITY; _yychar_++) {
+			// try all terminal tokens
+			if ((yyn = __shift_table[*yyssp]) &&
+					(yyn += _yychar_) >= 0 &&
+					yyn <= __YYTABLESIZE &&
+					yycheck[yyn] == _yychar_) {
+				cerr << '\t' << __symbol_names[_yychar_]
+					<< " (shift)" << endl;
+				accept_count++;
+			} else if ((yyn = __reduce_table[*yyssp]) &&
+					(yyn += _yychar_) >= 0 &&
+					yyn <= __YYTABLESIZE &&
+					yycheck[yyn] == _yychar_) {
+				cerr << '\t' << __symbol_names[_yychar_]
+					<< " (reduce)" << endl;
+				accept_count++;
+			}
+		}
+	}
+
+	yyfreestacks(yyss, yyssp, yyvs, yyvsp, yylval, yychar, _lexer_state);
+#endif
+	THROW_EXIT;
 }
 

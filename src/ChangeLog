@@ -5,6 +5,18 @@
 
 2006-01-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-20:
+	  Instance-reference parser working, after a Makefile.am fix
+		and renaming old lexers' at_eof() to PREFIX_at_eof().  
+	  instref_parse: remembered to set reference argument yylval
+		before returning an accepted input.  
+	  Instated yyerror magic for instref_parse.
+		Really need to factor out this boilerplate code in future.
+	  TODO: sim/prsim/Reference.cc needs to call AST function
+		but after constructing a proper lookup context, 
+		from the host module.  
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-19:
 	  util library readline fix  and configuration enhancements only.  
 

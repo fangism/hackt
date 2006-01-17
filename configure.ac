@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.23.2.11 2006/01/16 22:27:54 fang Exp $
+#	$Id: configure.ac,v 1.23.2.12 2006/01/17 02:26:08 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -259,16 +259,17 @@ AC_CHECK_FUNCS([getopt])
 AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
 AC_CHECK_FUNCS([strdup])
 dnl <stdio.h>
-AC_CHECK_FUNCS([fgets])
+AC_CHECK_FUNCS([fgets fputs fopen fclose fflush])
 AC_CHECK_FUNCS([ferror feof clearerr])
+AC_CHECK_FUNCS([fseek ftell rewind fgetpos fsetpos])
+AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
+AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
 dnl <ctype.h>
 AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
 AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
 AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
 
 AC_CHECK_FUNCS([system])
-AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
-AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
 AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 
 # library functions

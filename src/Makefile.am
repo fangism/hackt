@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.18 2006/01/16 22:27:58 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.19 2006/01/17 02:26:11 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -770,6 +770,7 @@ HACKT_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/hackt.types \
 		-v include="AST/AST.h parser/$(HACKT_PARSE_ROOT)-real.h lexer/hac_lex.h" \
 		-v namespace="HAC::parser HAC::lexer" \
 		-v token_enum=`$(GET_START_TOKEN_ENUM)`
+
 INSTREF_YACC_UNION_SCRIPT_ARGS = -v yaccfile=parser/instref.types \
 		-v include="AST/AST.h parser/$(INSTREF_PARSE_ROOT)-real.h lexer/hac_lex.h" \
 		-v namespace="HAC::parser HAC::lexer" \
@@ -793,7 +794,7 @@ parser/instref-union.cc: $(INSTREF_PARSE_OUTPUT) parser/instref.types \
 	fi
 	$(AWK) -f $(srcdir)/parser/common-union-type.awk \
 		-f $(YACC_UNION_SCRIPT) $(INSTREF_YACC_UNION_SCRIPT_ARGS) \
-		$(HACKT_PARSE_OUTPUT) > $@
+		$(INSTREF_PARSE_OUTPUT) > $@
 
 
 AM_CPPFLAGS = -I$(srcdir)

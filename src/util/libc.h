@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.1.4.4 2006/01/16 22:27:59 fang Exp $
+	$Id: libc.h,v 1.1.4.5 2006/01/17 02:26:14 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -143,6 +143,34 @@ extern int	ferror(const FILE*);
 #else
 extern void	clearerr(FILE*);
 #endif
+
+#if	defined(HAVE_FSEEK) && HAVE_FSEEK
+#else
+extern int	fseek(FILE*, const long, const int);
+#endif
+
+#if	defined(HAVE_FTELL) && HAVE_FTELL
+#else
+extern long	ftell(const FILE*);
+#endif
+
+#if	defined(HAVE_REWIND) && HAVE_REWIND
+#else
+extern void	rewind(FILE*);
+#endif
+
+/* may need <sys/types.h> */
+#if	defined(HAVE_FSETPOS) && HAVE_FSETPOS
+#else
+extern int	fsetpos(FILE*, fpos_t*);
+#endif
+
+#if	defined(HAVE_FGETPOS) && HAVE_FGETPOS
+#else
+extern int	fgetpos(FILE*, const fpos_t*);
+#endif
+
+
 
 /*=============================================================================
  *	<string.h>

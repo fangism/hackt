@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.1.2.1 2006/01/16 06:58:58 fang Exp $
+	$Id: Reference.cc,v 1.1.2.2 2006/01/17 02:26:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,7 +12,8 @@
 #include "parser/instref-parse-real.h"	// for YYSTYPE
 #include "AST/expr.h"
 #include "util/stacktrace.h"
-#include "util/libc.h"			// for tmpfile
+#include "util/libc.h"			// for tmpfile, rewind,...
+#include "util/memory/excl_ptr.h"
 
 extern	int instref_parse(void*, YYSTYPE&, FILE*);
 
@@ -20,6 +21,8 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::string;
+using HAC::parser::inst_ref_expr;
+using util::memory::excl_ptr;
 #include "util/using_ostream.h"
 //=============================================================================
 
@@ -30,6 +33,7 @@ using std::string;
  */
 node_index_type
 parse_node_to_index(const string& n) {
+	STACKTRACE_VERBOSE;
 	FILE* temp = tmpfile();
 	if (!temp) {
 		// Woe is me!
@@ -42,7 +46,9 @@ parse_node_to_index(const string& n) {
 		fclose(temp);
 		THROW_EXIT;
 	} else {
+		typedef	excl_ptr<inst_ref_expr>		lval_ptr_type;
 		fflush(temp);		// flush it out, necessary?
+		rewind(temp);		// same as fseek(temp, 0, SEEK_SET);
 		YYSTYPE lval;
 		try {
 			instref_parse(NULL, lval, temp);
@@ -50,6 +56,7 @@ parse_node_to_index(const string& n) {
 			cerr << "Error parsing instance name: " << n << endl;
 			return INVALID_NODE_INDEX;
 		}
+		const lval_ptr_type tree(lval._inst_ref_expr);
 		cerr << "parsed node name successfully... "
 			"Fang finish the lookup!" << endl;
 		return INVALID_NODE_INDEX;

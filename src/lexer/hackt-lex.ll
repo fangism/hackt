@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.5.2.1 2006/01/14 04:18:43 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.5.2.2 2006/01/17 02:26:12 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -262,7 +262,7 @@ MULTILINE_NEWLINE(token_position& p, const lexer_state& foo) {
 }
 
 /* checking whether or not we are at end of file, defined below */
-int at_eof(void);
+int hackt_at_eof(void);
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -830,7 +830,7 @@ namespace lexer {
 	to a statically linked variable, (which makes it invisible 
 	to the outside world).  
  */
-int at_eof(const flex::lexer_state& foo) {
+int hackt_at_eof(const flex::lexer_state& foo) {
 	assert(YY_CURRENT_BUFFER);
 	return YY_CURRENT_BUFFER->yy_n_chars == 0;
 }

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/instref-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.1.2.1 2006/01/16 06:58:57 fang Exp $
+ *	$Id: instref-lex.ll,v 1.1.2.2 2006/01/17 02:26:13 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -94,7 +94,7 @@ NODE_POSITION_UPDATE(YYSTYPE& lval __YYLEX_PARAM) {
 }
 
 /* checking whether or not we are at end of file, defined below */
-int at_eof(void);
+int instref_at_eof(void);
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -210,7 +210,7 @@ namespace lexer {
 	to a statically linked variable, (which makes it invisible 
 	to the outside world).  
  */
-int at_eof(__YYLEX_PARAM_VOID) {
+int instref_at_eof(AT_EOF_PARAM) {
 	assert(YY_CURRENT_BUFFER);
 	return YY_CURRENT_BUFFER->yy_n_chars == 0;
 }
