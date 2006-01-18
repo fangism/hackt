@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.6 2005/09/04 21:15:12 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.6.22.1 2006/01/18 06:25:16 fang Exp $
  */
 
 #include <iostream>
@@ -10,10 +10,10 @@
 #include "util/multidimensional_sparse_set.tcc"
 #include "util/memory/excl_ptr.h"
 
-#include "util/STL/list.tcc"
-USING_LIST
+#include <list>
 #include "util/using_ostream.h"
 
+using std::list;
 using std::pair;
 using namespace util::memory;
 using util::multidimensional_sparse_set;

@@ -12,13 +12,14 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.1.4.6 2006/01/17 20:55:27 fang Exp $
+	$Id: libc.h,v 1.1.4.7 2006/01/18 06:25:05 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
 #define	__UTIL_LIBC_H__
 
 #include "config.h"
+#include "util/c_decl.h"
 #include "util/FILE_fwd.h"
 /* #include "util/size_t.h" */
 
@@ -27,7 +28,7 @@
 /*=============================================================================
  *	<stdlib.h>
  *===========================================================================*/
-
+BEGIN_C_DECLS
 /* system */
 #if	defined(HAVE_SYSTEM) && HAVE_SYSTEM
 #else
@@ -81,12 +82,12 @@ extern int	putenv(const char*);
 #else
 extern void	unsetenv(const char*);
 #endif
-
+END_C_DECLS
 
 /*=============================================================================
  *	<stdio.h>
  *===========================================================================*/
-
+BEGIN_C_DECLS
 #if	defined(HAVE_FGETS) && HAVE_FGETS
 #else
 extern char*	fgets(char*, int, FILE*);
@@ -183,12 +184,12 @@ extern int	fsetpos(FILE*, fpos_t*);
 extern int	fgetpos(FILE*, const fpos_t*);
 #endif
 
-
+END_C_DECLS
 
 /*=============================================================================
  *	<string.h>
  *===========================================================================*/
-
+BEGIN_C_DECLS
 /* strdup */
 #if	defined(HAVE_STRDUP) && HAVE_STRDUP
 #else
@@ -214,6 +215,7 @@ extern char*	strtok(char*, const char*);
 #else
 extern char*	strtok_r(char*, const char*, char**);
 #endif
+END_C_DECLS
 
 /*=============================================================================
  *	<ctype.h>
@@ -227,22 +229,25 @@ extern char*	strtok_r(char*, const char*, char**);
 #include <unistd.h>
 #endif
 
+BEGIN_C_DECLS
 /* getopt */
 #if	defined(HAVE_GETOPT) && HAVE_GETOPT
 #else
 #error	"Need a substitute for getopt!"
 #endif
+END_C_DECLS
 
 /*=============================================================================
  *	<math.h>
  *	This might go in something like "libm.h".
  *===========================================================================*/
-
+BEGIN_C_DECLS
 /* sqrt */
 #if 	defined(HAVE_SQRT) && HAVE_SQRT
 #else
 #error	"Need a substitute for sqrt!"
 #endif
+END_C_DECLS
 
 /*===========================================================================*/
 #endif	/* __UTIL_LIBC_H__ */

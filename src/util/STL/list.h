@@ -1,13 +1,17 @@
 /**
 	\file "util/STL/list.h"
+	NOTE: this file is now obsolete.  It need not be distributed any longer
+	and may be removed from the repository.  
 	Class declaration for std::list wrapper.
-	$Id: list.h,v 1.3 2005/05/23 01:02:37 fang Exp $
+	$Id: list.h,v 1.3.50.1 2006/01/18 06:25:10 fang Exp $
  */
 
 #ifndef	__UTIL_STL_LIST_H__
 #define	__UTIL_STL_LIST_H__
 
 #include "util/STL/list_fwd.h"
+
+#error	"This file is obsolete, just include <list> instead."
 
 #if !USE_STD_LIST
 #include <list>

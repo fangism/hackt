@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_map_fwd.h"
 	Forward declarations for multidimensional map.  
-	$Id: multikey_map_fwd.h,v 1.8 2005/05/22 06:24:21 fang Exp $
+	$Id: multikey_map_fwd.h,v 1.8.50.1 2006/01/18 06:25:07 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_FWD_H__
@@ -18,7 +18,7 @@ template <size_t D, class K, class T, template <class, class> class M>
 //=============================================================================
 
 template <size_t D, class K, class T, 
-	template <class, class> class M = MAP_NAMESPACE::map >
+	template <class, class> class M = std::map >
 	class multikey_map;
 
 //=============================================================================

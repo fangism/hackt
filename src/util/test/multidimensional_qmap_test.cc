@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap_test.cc"
  	Test for multidimensional, queryable map.
-	$Id: multidimensional_qmap_test.cc,v 1.6 2005/09/04 21:15:12 fang Exp $
+	$Id: multidimensional_qmap_test.cc,v 1.6.22.1 2006/01/18 06:25:16 fang Exp $
  */
 
 #include <iostream>
@@ -9,8 +9,8 @@
 #include "util/sstream.h"
 using std::ostringstream;
 
-#include "util/STL/list.tcc"
-USING_LIST
+#include <list>
+using std::list;
 using std::string;
 
 #include "util/using_ostream.h"

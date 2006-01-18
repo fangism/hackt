@@ -2,7 +2,7 @@
 	\file "util/multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.16 2005/05/10 04:51:27 fang Exp $
+	$Id: multikey_map.h,v 1.16.54.1 2006/01/18 06:25:06 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
@@ -21,7 +21,7 @@ namespace util {
 using std::ostream;
 using std::istream;
 using std::pair;
-USING_LIST
+using std::list;
 using util::multikey;
 
 //=============================================================================
@@ -106,14 +106,16 @@ public:
 	/**
 		Check length of list?
 	 */
+	template <class Alloc>
 	T&
-	operator [] (const list<K>& k);
+	operator [] (const list<K,Alloc>& k);
 
 	/**
 		Check length of list?
 	 */
+	template <class Alloc>
 	T
-	operator [] (const list<K>& k) const;
+	operator [] (const list<K,Alloc>& k) const;
 
 public:
 	ostream&

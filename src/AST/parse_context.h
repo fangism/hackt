@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.7 2005/12/13 04:15:11 fang Exp $
+	$Id: parse_context.h,v 1.7.2.1 2006/01/18 06:24:50 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -11,8 +11,9 @@
 
 #include "util/string_fwd.h"
 #include <stack>
+#include <list>
 
-#include "util/STL/list.h"
+#include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/common/util_types.h"
@@ -50,7 +51,7 @@ namespace parser {
 using std::ostream;
 using std::stack;
 using std::string;
-USING_LIST
+using std::list;
 using util::good_bool;
 using util::bad_bool;
 using util::memory::count_ptr;

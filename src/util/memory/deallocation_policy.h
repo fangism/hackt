@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/deallocation_policy.h"
 	Definition of frequently used deallocation policies.  
-	$Id: deallocation_policy.h,v 1.1.2.1 2006/01/17 20:55:28 fang Exp $
+	$Id: deallocation_policy.h,v 1.1.2.2 2006/01/18 06:25:13 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
@@ -9,8 +9,12 @@
 
 #include "util/memory/deallocation_policy_fwd.h"
 #include "util/FILE_fwd.h"
-extern	void free(void*);
+#include "util/free.h"
+#include "util/type_traits.h"
+
+BEGIN_C_DECLS
 extern	int fclose(FILE*);
+END_C_DECLS
 
 namespace util {
 namespace memory {
@@ -45,51 +49,27 @@ custom_functor_tag_t(F f) {
 
 //-----------------------------------------------------------------------------
 /**
-	Deallocate something allocated by new, single object allocation.
-	This is the default assumed by all pointer classes.  
-	\sa delete_array_tag.  
- */
-struct delete_tag {
-	template <class T>
-	inline
-	void
-	operator () (T* t) const {
-		delete t;
-	}
-};	// end struct delete_tag
-
-//-----------------------------------------------------------------------------
-/**
-	Deallocate something allocated by new [], object array allocations.
-	\sa delete_tag.
- */
-struct delete_array_tag {
-	template <class T>
-	inline
-	void
-	operator () (T* t) const {
-		delete [] t;
-	}
-};	// end struct delete_array_tag
-
-//-----------------------------------------------------------------------------
-/**
 	Deallocate something allocated by malloc.
 	For the record, this is equivalent to:
 	custom_functor_tag<>
  */
 struct free_tag {
+	/**
+		Since free() takes a void*, we need to cast-away
+		any constness in type T.  
+	 */
 	template <class T>
 	inline
 	void
 	operator () (T* t) const {
-		free(t);
+		free(const_cast<typename remove_const<T>::type*>(t));
 	}
 };	// end struct free_tag
 
 //-----------------------------------------------------------------------------
 /**
 	Close a stream opened by fopen().
+	A FILE pointer class should really never use const FILE*.  
  */
 struct fclose_tag {
 	inline
@@ -117,6 +97,7 @@ struct iostream_tag {
 /**
 	Roll your own deallocation policy.
 	Works well with allocator-based methods.  
+	TODO: helper function to deduce template argument.
  */
 template <class T, void (*f)(T*)>
 struct custom_ptr_fun_tag {
@@ -131,6 +112,7 @@ struct custom_ptr_fun_tag {
 /**
 	Roll your own deallocation policy.
 	Works well with allocator-based methods.  
+	TODO: helper function to deduce template argument.
  */
 template <class T, void (f)(T*)>
 struct custom_fun_ref_tag {

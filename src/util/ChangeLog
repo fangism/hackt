@@ -2,6 +2,34 @@
 
 2005-01-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-24:
+	  MAJOR round of clean-up.
+	  pointer_classes: owning, sharing and deleting pointer classes
+		now use a deallocation_policy template argument, 
+		that defaults to delete_tag (single-alloc deletion).
+		Variants are defined in terms of the other 
+		deallocation_policy tags.
+		This results in FAR cleaner code in "excl_*_ptr.h"
+		eliminating the old preprocessor name hacks. 
+		The non-default variants however are defined as 
+		nested typedefs, such as excl_malloc_ptr<T>::type.  
+		These may be less convenient, however, the non-default
+		uses are discouraged in-place of more conventional methods, 
+		such as using a vector instead of managing new [].  
+		Essentially the non-default uses should be infrequent.  
+	  util/STL/{list,map}.{h,tcc} are now obsolete, just use <list>
+		and <map>.  For now they remain in the repository but
+		are not distributed.  Attempts to include them will #error.  
+	  util/STL/*_fwd.h: all define a default_* struct with a
+		::type member typedefed to the default arguments.
+		e.g. template <class T> std::default_vector {
+			typedef	vector<T, allocator<T> >	type;
+		};
+		Now you can use non-macro'd forward declarations when 
+		the definition for a type is not required.  
+	  util/stacktrace.h: deleted USING_STACKTRACE macro.
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-23:
 	  Added (not used yet) deallocation policy classes to util/memory.
 	  It's about time we do this because of the need to handle 

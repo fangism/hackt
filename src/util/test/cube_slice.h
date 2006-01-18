@@ -1,12 +1,12 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.7 2005/12/08 22:01:14 fang Exp $
+	$Id: cube_slice.h,v 1.7.4.1 2006/01/18 06:25:15 fang Exp $
  */
 
 #include "util/macros.h"
 #include <string>
-#include "util/STL/list.tcc"
+#include <list>
 #include <iostream>
 #include <algorithm>
 #include <numeric>
@@ -14,7 +14,7 @@
 #include "util/multikey_qmap.tcc"
 
 namespace testing {
-USING_LIST
+using std::list;
 using std::string;
 #include "util/using_ostream.h"
 using std::pair;

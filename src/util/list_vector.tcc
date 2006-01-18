@@ -2,7 +2,7 @@
 	\file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.12 2005/09/05 05:04:51 fang Exp $
+	$Id: list_vector.tcc,v 1.12.22.1 2006/01/18 06:25:05 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -13,7 +13,7 @@
 // to suppress definition entirely
 #ifndef	EXTERN_TEMPLATE_UTIL_LIST_VECTOR
 
-#include "util/STL/list.tcc"			// is just <list>
+#include <list>
 #include <iostream>
 #include <numeric>
 

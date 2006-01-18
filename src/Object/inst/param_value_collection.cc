@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.6 2005/12/13 04:15:31 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.6.2.1 2006/01/18 06:24:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -34,7 +34,6 @@ namespace entity {
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
-USING_STACKTRACE
 
 //=============================================================================
 // class param_value_collection method definitions

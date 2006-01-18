@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.5 2005/12/13 04:15:37 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.5.2.1 2006/01/18 06:24:58 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -40,7 +40,6 @@ namespace entity {
 //=============================================================================
 using namespace util::memory;
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using util::persistent_traits;
 
 //=============================================================================

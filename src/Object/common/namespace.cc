@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.8 2005/12/13 04:15:18 fang Exp $
+ 	$Id: namespace.cc,v 1.8.2.1 2006/01/18 06:24:51 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <numeric>
 #include <string>
+#include <list>
 
 #include "util/ptrs_functional.h"
 // #include "util/ptrs_functional_proposed.h"	// experimental, now works
@@ -37,7 +38,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/hash_specializations.h"		// substitute for the following
 #include "util/hash_qmap.tcc"
 #include "util/qmap.tcc"
-#include "util/STL/list.tcc"
 
 #include "AST/token_string.h"
 #include "AST/identifier.h"
@@ -82,7 +82,6 @@ USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
-USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::write_string;

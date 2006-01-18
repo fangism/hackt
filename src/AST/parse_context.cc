@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.7 2005/12/13 04:15:11 fang Exp $
+ 	$Id: parse_context.cc,v 1.7.2.1 2006/01/18 06:24:49 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -44,7 +44,6 @@
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using entity::object_handle;
 using entity::enum_datatype_def;
 using entity::instantiation_statement_base;

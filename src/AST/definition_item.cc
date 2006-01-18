@@ -1,7 +1,7 @@
 /**
 	\file "AST/namespace.cc"
 	Class method definitions for namespace and other root item classes.
-	$Id: definition_item.cc,v 1.2 2005/12/13 04:15:06 fang Exp $
+	$Id: definition_item.cc,v 1.2.2.1 2006/01/18 06:24:48 fang Exp $
  */
 
 #ifndef	__HAC_AST_DEFINITION_ITEM_CC__
@@ -38,7 +38,6 @@ namespace parser {
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 
 //=============================================================================
 // class def_body_item method definitions

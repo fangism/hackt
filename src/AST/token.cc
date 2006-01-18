@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.2.2.1 2006/01/17 03:07:01 fang Exp $
+	$Id: token.cc,v 1.2.2.2 2006/01/18 06:24:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -76,7 +76,6 @@ namespace memory {
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using entity::pint_const;
 using entity::pbool_const;
 

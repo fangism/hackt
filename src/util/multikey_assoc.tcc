@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.6 2005/07/20 21:01:01 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.6.36.1 2006/01/18 06:25:06 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -26,7 +26,7 @@ using std::pair;
 using std::_Select1st;
 using std::_Select2nd;
 using std::numeric_limits;
-USING_LIST
+using std::list;
 #if DEBUG_SLICE
 using std::ostream_iterator;
 #endif

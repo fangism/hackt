@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.8.2.2 2005/12/30 17:41:23 fang Exp $
+ 	$Id: module.cc,v 1.8.2.3 2006/01/18 06:24:51 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -37,7 +37,6 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
-USING_STACKTRACE
 using util::persistent_traits;
 
 //=============================================================================

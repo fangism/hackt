@@ -1,7 +1,7 @@
 /**
 	\file "util/qmap.tcc"
 	Template class method definitions for queryable map.  
-	$Id: qmap.tcc,v 1.5 2005/06/21 21:26:38 fang Exp $
+	$Id: qmap.tcc,v 1.5.42.1 2006/01/18 06:25:08 fang Exp $
  */
 
 #ifndef	__UTIL_QMAP_TCC__
@@ -16,7 +16,6 @@
 // don't bother...
 #endif
 
-#include "util/STL/map.tcc"
 #include "util/const_assoc_query.tcc"
 
 namespace util {

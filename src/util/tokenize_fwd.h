@@ -1,6 +1,6 @@
 /**
 	\file "util/tokenize_fwd.h"
-	$Id: tokenize_fwd.h,v 1.1.2.1 2006/01/12 06:13:34 fang Exp $
+	$Id: tokenize_fwd.h,v 1.1.2.2 2006/01/18 06:25:10 fang Exp $
  */
 
 #ifndef	__UTIL_TOKENIZE_FWD_H__
@@ -11,7 +11,7 @@
 
 namespace util {
 
-typedef	std::list<std::string>		string_list;
+typedef	std::default_list<std::string>::type		string_list;
 
 }	// end namespace util
 

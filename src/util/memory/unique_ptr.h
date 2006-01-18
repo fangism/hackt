@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: unique_ptr.h,v 1.1.2.1 2006/01/04 08:42:55 fang Exp $
+	$Id: unique_ptr.h,v 1.1.2.2 2006/01/18 06:25:15 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -27,19 +27,12 @@
 // lock pointers? non-transferrable exclusive pointers.  
 
 #ifndef	__UTIL_MEMORY_UNIQUE_PTR_H__
-/**
-	Pre-defining the DELETE_POLICY() macro declared the intent
-	to re-use this file as a template for other pointer types.  
-	This file will always undefine DELETE_POLICY when this file is done,
-	i.e. DELETE_POLICY only lives for the duration of this file.  
- */
-#ifndef	DELETE_POLICY
 #define	__UTIL_MEMORY_UNIQUE_PTR_H__
-#endif
 
 #include "util/macros.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/pointer_manipulator.h"
+#include "util/memory/deallocation_policy_fwd.h"
 #include "util/STL/construct_fwd.h"
 
 //=============================================================================
@@ -60,22 +53,12 @@
 	#define	UNIQUE_PTR_NEVER_NULL(x)
 #endif
 
-/**
-	Overrideable delete policy, 
-	so this file can serve as a template for 
-	excl_malloc_ptr, and excl_array_ptr.  
-	This is undefined at the end-of-file.  
- */
-#ifndef	DELETE_POLICY
-#define	DELETE_POLICY(x)			delete x
-#endif
-
 #ifndef	UNIQUE_PTR_TEMPLATE_SIGNATURE
-#define	UNIQUE_PTR_TEMPLATE_SIGNATURE		template <class T>
+#define	UNIQUE_PTR_TEMPLATE_SIGNATURE	template <class T, class Dealloc>
 #endif
 
 #ifndef	UNIQUE_PTR_TEMPLATE_CLASS
-#define	UNIQUE_PTR_TEMPLATE_CLASS			unique_ptr<T>
+#define	UNIQUE_PTR_TEMPLATE_CLASS	unique_ptr<T, Dealloc>
 #endif
 
 //=============================================================================
@@ -109,13 +92,13 @@ namespace memory {
 	\param TP the pointer to the element type, usually T*.
 		This may be overridden to do some crazy things.  
  */
-// UNIQUE_PTR_TEMPLATE_SIGNATURE
-template <class T>
+UNIQUE_PTR_TEMPLATE_SIGNATURE
 class unique_ptr {
 friend class pointer_manipulator;
-
+	typedef	unique_ptr<T,Dealloc>	this_type;
 public:
 	typedef	T			element_type;
+	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;
 	typedef	T*			pointer;
 	typedef	exclusive_owner_pointer_tag	pointer_category;
@@ -165,7 +148,7 @@ public:
 			INVARIANT(this->ptr != p);
 			// violation of exclusion!
 			// delete this->ptr;
-			DELETE_POLICY(this->ptr);
+			deallocation_policy()(this->ptr);
 		}
 		this->ptr = p;
 	}
@@ -194,18 +177,19 @@ public:
 	To make non-transferrable, declare as const unique_ptr<>.  
 	This is not redundant, need this.  
  */
-	unique_ptr(unique_ptr<T>& e) throw() : ptr(e.release()) { }
+	unique_ptr(this_type& e) throw() : ptr(e.release()) { }
 
 /**
 	For safe up-cast, pointer constructor.  
  */
 	template <class S>
-	unique_ptr(unique_ptr<S>& e) throw() : ptr(e.release()) { }
+	unique_ptr(unique_ptr<S, deallocation_policy>& e) throw() :
+		ptr(e.release()) { }
 
 private:
 	// intentionally inaccessible undefined copy-constructor
 	explicit
-	unique_ptr(const unique_ptr<T>& e);
+	unique_ptr(const this_type& e);
 
 public:
 /**
@@ -242,8 +226,8 @@ public:
 		return *this;
 	}
 **/
-	unique_ptr<T>&
-	operator = (unique_ptr<T>& e) throw() {
+	this_type&
+	operator = (this_type& e) throw() {
 		reset(e.release());
 		return *this;
 	}
@@ -252,8 +236,8 @@ public:
 		Acceptable transfer for safe-casts.  
 	 */
 	template <class S>
-	unique_ptr<T>&
-	operator = (unique_ptr<S>& e) throw() {
+	this_type&
+	operator = (unique_ptr<S, deallocation_policy>& e) throw() {
 		reset(e.release());
 		return *this;
 	}
@@ -261,8 +245,8 @@ public:
 
 	// destructive transfer to up-cast
 	template <class S>
-	operator unique_ptr<S> () throw() {
-		return unique_ptr<S>(this->release());
+	operator unique_ptr<S, deallocation_policy> () throw() {
+		return unique_ptr<S, deallocation_policy>(this->release());
 	}
 
 
@@ -305,7 +289,6 @@ SPECIALIZE_ALL_POINTER_TRAITS(unique_ptr)
 
 //=============================================================================
 
-#undef	DELETE_POLICY
 #undef	UNIQUE_PTR_TEMPLATE_SIGNATURE
 #undef	UNIQUE_PTR_TEMPLATE_CLASS
 

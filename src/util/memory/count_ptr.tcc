@@ -4,25 +4,13 @@
 	type (T) of a count_ptr isn't complete until later -- 
 	compiles should complain about destructor of incomplete type.  
 
-	$Id: count_ptr.tcc,v 1.5 2005/12/10 03:56:59 fang Exp $
+	$Id: count_ptr.tcc,v 1.5.4.1 2006/01/18 06:25:13 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_TCC__
-/**
-	Pre-defining DELETE_POLICY() declares an intent to re-use this
-	file as a template for other pointer types.  
-	This file will always undefine DELETE_POLICY before it
-	returns to its includer -- DELETE_POLICY is only effective
-	for the duration of this file.  
- */
-#ifndef	DELETE_POLICY
 #define	__UTIL_MEMORY_COUNT_PTR_TCC__
 #include "util/memory/count_ptr.h"
-#define	DELETE_POLICY(x)		delete x
-#else
-// else intending to override and redefine, so don't
-// include the base template definition.
-#endif
+#include "util/memory/deallocation_policy_fwd.h"
 
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
 
@@ -41,9 +29,9 @@
 namespace util {
 namespace memory {
 //=============================================================================
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 // inline
-count_ptr<T>::count_ptr(T* p) : ptr(p) {
+COUNT_PTR_CLASS::count_ptr(T* p) : ptr(p) {
 	if (ptr) {
 		STATIC_RC_POOL_REF_INIT;
 		ref_count = NEW_SIZE_T;
@@ -68,9 +56,9 @@ count_ptr<T>::count_ptr(T* p) : ptr(p) {
 
 	If p is NULL, then count pointer is dropped.  
  */
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 // inline
-count_ptr<T>::count_ptr(T* p, size_t* c) : ptr(p), ref_count(p ? c : NULL) {
+COUNT_PTR_CLASS::count_ptr(T* p, size_t* c) : ptr(p), ref_count(p ? c : NULL) {
 	if (p) {
 		STATIC_RC_POOL_REF_INIT;
 		COUNT_PTR_FAST_INVARIANT(c);	// counter must be valid
@@ -83,9 +71,9 @@ count_ptr<T>::count_ptr(T* p, size_t* c) : ptr(p), ref_count(p ? c : NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 // inline
-count_ptr<T>::count_ptr(const raw_count_ptr<T>& r) :
+COUNT_PTR_CLASS::count_ptr(const raw_count_ptr<T,Dealloc>& r) :
 		ptr(r.ptr), ref_count(r.ref_count) {
 	if (this->ref_count) {
 		STATIC_RC_POOL_REF_INIT;
@@ -99,10 +87,10 @@ count_ptr<T>::count_ptr(const raw_count_ptr<T>& r) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 template <class S>
 // inline
-count_ptr<T>::count_ptr(const raw_count_ptr<S>& r) :
+COUNT_PTR_CLASS::count_ptr(const raw_count_ptr<S,Dealloc>& r) :
 		ptr(r.ptr), ref_count(r.ref_count) {
 	if (this->ref_count) {
 		STATIC_RC_POOL_REF_INIT;
@@ -119,10 +107,10 @@ count_ptr<T>::count_ptr(const raw_count_ptr<S>& r) :
 /**
 	Overkill safety checks.  
  */
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 // inline
-typename count_ptr<T>::pointer
-count_ptr<T>::release(void) {
+typename COUNT_PTR_CLASS::pointer
+COUNT_PTR_CLASS::release(void) {
 	T* ret = ptr;
 	if(this->ref_count) {
 		COUNT_PTR_FAST_INVARIANT(*this->ref_count);
@@ -133,7 +121,7 @@ count_ptr<T>::release(void) {
 			DELETE_SIZE_T(this->ref_count);
 			COUNT_PTR_FAST_INVARIANT(ptr);
 			// delete ptr;
-			DELETE_POLICY(ptr);
+			deallocation_policy()(ptr);
 		}
 		ptr = NULL;
 		this->ref_count = NULL;
@@ -154,10 +142,10 @@ count_ptr<T>::release(void) {
 	\param c the corresponding reference count if p is valid, 
 		else is ignored.  
  */
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 // inline
 void
-count_ptr<T>::reset(T* p, size_t* c) {
+COUNT_PTR_CLASS::reset(T* p, size_t* c) {
 	if (ptr == p) {
 		// true whether or not ptr == NULL
 		COUNT_PTR_FAST_INVARIANT(this->ref_count == c);
@@ -174,7 +162,7 @@ count_ptr<T>::reset(T* p, size_t* c) {
 			DELETE_SIZE_T(this->ref_count);
 			COUNT_PTR_FAST_INVARIANT(ptr);
 			// delete ptr;
-			DELETE_POLICY(ptr);
+			deallocation_policy()(ptr);
 		}
 	} else {
 		COUNT_PTR_FAST_INVARIANT(!ptr);
@@ -192,9 +180,9 @@ count_ptr<T>::reset(T* p, size_t* c) {
 	Returns a naked pointer only if this is the final reference
 	to the object, otherwise returns NULL.  
  */
-template <class T>
-typename count_ptr<T>::pointer
-count_ptr<T>::exclusive_release(void) {
+COUNT_PTR_TEMPLATE_SIGNATURE
+typename COUNT_PTR_CLASS::pointer
+COUNT_PTR_CLASS::exclusive_release(void) {
 	if (this->owned()) {
 		STATIC_RC_POOL_REF_INIT;
 		T* ret = ptr;
@@ -209,8 +197,6 @@ count_ptr<T>::exclusive_release(void) {
 //=============================================================================
 }	// end namespace memory
 }	// end namespace util
-
-#undef	DELETE_POLICY
 
 #endif	// EXTERN_TEMPLATE_UTIL_MEMORY_COUNT_PTR
 #endif	//	__UTIL_MEMORY_COUNT_PTR_TCC__

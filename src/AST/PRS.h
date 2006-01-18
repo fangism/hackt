@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: PRS.h,v 1.2.2.1 2006/01/18 06:24:48 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -28,6 +28,7 @@ namespace parser {
  */
 namespace PRS {
 using util::memory::count_ptr;
+using std::default_vector;
 
 //=============================================================================
 // local forward declarations
@@ -96,7 +97,8 @@ public:
 	Repetition of production rules in a loop.  
  */
 class loop : public body_item {
-	typedef	DEFAULT_VECTOR(body_item::return_type)	checked_rules_type;
+	typedef	default_vector<body_item::return_type>::type
+				checked_rules_type;
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
 	const excl_ptr<const token_identifier>	index;
@@ -127,7 +129,8 @@ public:
 	Collection of production rules.  
  */
 class body : public language_body {
-	typedef	DEFAULT_VECTOR(body_item::return_type)	checked_rules_type;
+	typedef	default_vector<body_item::return_type>::type
+				checked_rules_type;
 protected:
 	const excl_ptr<const rule_list>		rules;
 public:

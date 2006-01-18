@@ -2,7 +2,7 @@
 	\file "util/memory/pointer_traits.h"
 	Pointer traits and concepts for pointer classes.  
 
-	$Id: pointer_traits.h,v 1.8 2005/05/22 06:24:22 fang Exp $
+	$Id: pointer_traits.h,v 1.8.50.1 2006/01/18 06:25:14 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_TRAITS_H__
@@ -107,6 +107,27 @@ struct indirections<T*> {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Handy macro for declaring trait partial specializations, 
+	expects ptr_type with 1 template argument.
+ */
+#define	SPECIALIZE_POINTER_TRAIT(trait, member, ptr_type)		\
+template <class T>							\
+struct trait<ptr_type<T> > {						\
+	typedef	typename ptr_type<T>::member	type;			\
+};
+
+/**
+	Handy macro for declaring trait partial specializations, 
+	expects ptr_type with 2 template arguments.
+ */
+#define	SPECIALIZE_POINTER_TRAIT_2(trait, member, ptr_type)		\
+template <class T, class D>						\
+struct trait<ptr_type<T, D> > {						\
+	typedef	typename ptr_type<T, D>::member	type;			\
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	The type pointed to.
  */
 template <class T>
@@ -118,10 +139,10 @@ struct pointee<T*> {
 };
 
 #define	SPECIALIZE_POINTEE_TYPE_AS_ELEMENT_TYPE(ptr_type)		\
-template <class T>							\
-struct pointee<ptr_type<T> > {						\
-	typedef	typename ptr_type<T>::element_type	type;		\
-};
+	SPECIALIZE_POINTER_TRAIT(pointee, element_type, ptr_type)
+
+#define	SPECIALIZE_POINTEE_TYPE_AS_ELEMENT_TYPE_2(ptr_type)		\
+	SPECIALIZE_POINTER_TRAIT_2(pointee, element_type, ptr_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -141,10 +162,10 @@ struct internal_reference<void*> {
 };
 
 #define	SPECIALIZE_INTERNAL_REFERENCE_TYPE(ptr_type)			\
-template <class T>							\
-struct internal_reference<ptr_type<T> > {				\
-	typedef	typename ptr_type<T>::reference	type;			\
-};
+	SPECIALIZE_POINTER_TRAIT(internal_reference, reference, ptr_type)
+
+#define	SPECIALIZE_INTERNAL_REFERENCE_TYPE_2(ptr_type)			\
+	SPECIALIZE_POINTER_TRAIT_2(internal_reference, reference, ptr_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -160,10 +181,10 @@ struct internal_pointer<T*> {
 };
 
 #define	SPECIALIZE_INTERNAL_POINTER_TYPE(ptr_type)			\
-template <class T>							\
-struct internal_pointer<ptr_type<T> > {					\
-	typedef	typename ptr_type<T>::pointer		type;		\
-};
+	SPECIALIZE_POINTER_TRAIT(internal_pointer, pointer, ptr_type)
+
+#define	SPECIALIZE_INTERNAL_POINTER_TYPE_2(ptr_type)			\
+	SPECIALIZE_POINTER_TRAIT_2(internal_pointer, pointer, ptr_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -180,10 +201,10 @@ struct pointer_category<T*> {
 };
 
 #define	SPECIALIZE_POINTER_CATEGORY_TYPE(ptr_type)			\
-template <class T>							\
-struct pointer_category<ptr_type<T> > {					\
-	typedef	typename ptr_type<T>::pointer_category	type;		\
-};
+	SPECIALIZE_POINTER_TRAIT(pointer_category, pointer_category, ptr_type)
+
+#define	SPECIALIZE_POINTER_CATEGORY_TYPE_2(ptr_type)			\
+	SPECIALIZE_POINTER_TRAIT_2(pointer_category, pointer_category, ptr_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -193,10 +214,10 @@ template <class T>
 struct nontransfer_cast;
 
 #define	SPECIALIZE_NONTRANSFER_CAST_TYPE(ptr_type)			\
-template <class T>							\
-struct nontransfer_cast<ptr_type<T> > {					\
-	typedef	typename ptr_type<T>::nontransfer_cast_type	type;	\
-};
+	SPECIALIZE_POINTER_TRAIT(nontransfer_cast, nontransfer_cast_type, ptr_type)
+
+#define	SPECIALIZE_NONTRANSFER_CAST_TYPE_2(ptr_type)			\
+	SPECIALIZE_POINTER_TRAIT_2(nontransfer_cast, nontransfer_cast_type, ptr_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -206,10 +227,10 @@ template <class T>
 struct transfer_cast;
 
 #define	SPECIALIZE_TRANSFER_CAST_TYPE(ptr_type)				\
-template <class T>							\
-struct transfer_cast<ptr_type<T> > {					\
-	typedef	typename ptr_type<T>::transfer_cast_type	type;	\
-};
+	SPECIALIZE_POINTER_TRAIT(transfer_cast, transfer_cast_type, ptr_type)
+
+#define	SPECIALIZE_TRANSFER_CAST_TYPE_2(ptr_type)				\
+	SPECIALIZE_POINTER_TRAIT_2(transfer_cast, transfer_cast_type, ptr_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -223,6 +244,14 @@ struct transfer_cast<ptr_type<T> > {					\
 	SPECIALIZE_POINTER_CATEGORY_TYPE(ptr_type)			\
 	SPECIALIZE_NONTRANSFER_CAST_TYPE(ptr_type)			\
 	SPECIALIZE_TRANSFER_CAST_TYPE(ptr_type)
+
+#define	SPECIALIZE_ALL_POINTER_TRAITS_2(ptr_type)			\
+	SPECIALIZE_POINTEE_TYPE_AS_ELEMENT_TYPE_2(ptr_type)		\
+	SPECIALIZE_INTERNAL_REFERENCE_TYPE_2(ptr_type)			\
+	SPECIALIZE_INTERNAL_POINTER_TYPE_2(ptr_type)			\
+	SPECIALIZE_POINTER_CATEGORY_TYPE_2(ptr_type)			\
+	SPECIALIZE_NONTRANSFER_CAST_TYPE_2(ptr_type)			\
+	SPECIALIZE_TRANSFER_CAST_TYPE_2(ptr_type)
 
 //-----------------------------------------------------------------------------
 

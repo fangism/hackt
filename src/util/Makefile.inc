@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.5 2006/01/17 20:55:27 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.6 2006/01/18 06:25:04 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -17,8 +17,6 @@ PHONYSOURCES += util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
 
 # template definition header files
 UTIL_TCC_FILES = \
-	util/STL/list.tcc \
-	util/STL/map.tcc \
 	util/IO_utils.tcc \
 	util/bitset.tcc \
 	util/const_assoc_query.tcc \
@@ -53,7 +51,6 @@ UTIL_TCC_FILES = \
 # but the _fwd.h file is optional.  
 UTIL_HEADER_FILES = \
 	$(UTIL_TCC_FILES:.tcc=.h) \
-	util/macros.h \
 	util/STL/allocator_fwd.h \
 	util/STL/construct_fwd.h \
 	util/STL/deque_fwd.h \
@@ -75,6 +72,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_traits.h \
 	util/attributes.h \
 	util/boolean_types.h \
+	util/c_decl.h \
 	util/const_traits.h \
 	util/cppcat.h \
 	util/counter.h \
@@ -85,6 +83,7 @@ UTIL_HEADER_FILES = \
 	util/finite_vector.h \
 	util/FILE_fwd.h \
 	util/file_status.h \
+	util/free.h \
 	util/getopt_portable.h \
 	util/hash_qmap_fwd.h \
 	util/hash_specializations.h \
@@ -95,6 +94,7 @@ UTIL_HEADER_FILES = \
 	util/libc.h \
 	util/likely.h \
 	util/list_vector_fwd.h \
+	util/macros.h \
 	util/maplikeset.h \
 	util/memory/deallocation_policy_fwd.h \
 	util/memory/deallocation_policy.h \

@@ -2,14 +2,13 @@
 	\file "Object/common/object_base.h"
 	Base classes for semantic objects.  
 	This file was reincarnated from "Object/common/object_base.h".
-	$Id: object_base.h,v 1.3 2005/12/13 04:15:18 fang Exp $
+	$Id: object_base.h,v 1.3.2.1 2006/01/18 06:24:52 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_OBJECT_BASE_H__
 #define	__OBJECT_COMMON_OBJECT_BASE_H__
 
 #include <iosfwd>
-#include "util/STL/list.h"
 #include "util/macros.h"
 #include "util/memory/excl_ptr.h"
 	// need complete definition (never_ptr members)
@@ -23,7 +22,6 @@ namespace HAC {
  */
 namespace entity {
 //=============================================================================
-USING_LIST
 using std::ostream;
 using util::memory::never_ptr;
 

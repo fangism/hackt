@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.25 2005/10/08 01:40:03 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.25.16.1 2006/01/18 06:25:07 fang Exp $
  */
 
 // flags and switches
@@ -118,7 +118,6 @@ using std::stringstream;
 using std::stringbuf;
 using std::streamsize;
 using std::ostringstream;
-USING_STACKTRACE
 
 //=============================================================================
 /**

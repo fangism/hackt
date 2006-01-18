@@ -1,7 +1,7 @@
 /**
 	'static_count_ptr_test.cc"
 	Testing "unsafe" uses of count_ptr.  
-	$Id: static_count_ptr_test.cc,v 1.4 2005/09/04 21:15:14 fang Exp $
+	$Id: static_count_ptr_test.cc,v 1.4.22.1 2006/01/18 06:25:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
@@ -18,7 +18,6 @@ STATIC_TRACE_BEGIN("static_count_ptr_test::main")
 #include "util/using_ostream.h"
 #include "util/attributes.h"
 
-USING_STACKTRACE
 using namespace util::memory;
 
 typedef	count_ptr<named_thing>	ref_type;

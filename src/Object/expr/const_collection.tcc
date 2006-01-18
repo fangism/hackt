@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.6 2005/12/13 04:15:22 fang Exp $
+ 	$Id: const_collection.tcc,v 1.6.2.1 2006/01/18 06:24:53 fang Exp $
  */
 
 #ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -95,7 +95,6 @@ namespace entity {
 //=============================================================================
 #include "util/using_ostream.h"
 using namespace util::memory;
-USING_STACKTRACE
 using util::persistent_traits;
 
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE && ENABLE_STACKTRACE

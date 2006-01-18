@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.7 2005/12/13 04:15:35 fang Exp $
+ 	$Id: instance_reference.cc,v 1.7.2.1 2006/01/18 06:24:57 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -11,8 +11,8 @@
 #define	ENABLE_STACKTRACE			0
 
 #include <iostream>
+#include <list>
 
-#include "util/STL/list.tcc"
 #include "util/multidimensional_sparse_set.tcc"
 
 #include "Object/type/fundamental_type_reference.h"

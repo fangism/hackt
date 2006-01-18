@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.12.22.1 2006/01/12 21:31:50 fang Exp $
+	$Id: stacktrace.h,v 1.12.22.2 2006/01/18 06:25:09 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -30,7 +30,6 @@
 #include "util/cppcat.h"		// for the UNIQUIFY macros
 #include "util/attributes.h"
 
-#define	USING_STACKTRACE	using util::stacktrace;
 /**
 	The macro that keeps track of scope and call stacks.  
 	\param str the string to be printed.  
@@ -72,7 +71,6 @@
 
 #else	// ENABLE_STACKTRACE --------------------------------------------------
 
-#define	USING_STACKTRACE
 #define	STACKTRACE(str)
 #define	STACKTRACE_BRIEF
 #define	STACKTRACE_VERBOSE
@@ -147,7 +145,7 @@
 
 
 namespace util {
-USING_LIST
+using std::list;
 using std::string;
 using memory::count_ptr;
 
@@ -163,11 +161,11 @@ using memory::count_ptr;
 class stacktrace {
 public:
 	/// the type of stack used to hold feedback text
-	typedef std::list<string>	stack_text_type;
+	typedef std::default_list<string>::type	stack_text_type;
 	/// the type of stack used to track on/off mode
-	typedef DEFAULT_STACK(int)	stack_echo_type;
+	typedef std::default_stack<int>::type	stack_echo_type;
 	/// the type of stack used to track stream redirections
-	typedef DEFAULT_STACK(std::ostream*)	stack_streams_type;
+	typedef std::default_stack<std::ostream*>::type	stack_streams_type;
 
 public:
 	class manager;

@@ -1,11 +1,12 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.1.2.3 2005/12/30 17:41:24 fang Exp $
+	$Id: cflat_visitor.h,v 1.1.2.4 2006/01/18 06:24:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
 #define	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
 
+#include "util/NULL.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 
 namespace HAC {

@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.11 2005/10/08 01:40:03 fang Exp $
+	$Id: list_vector.h,v 1.11.16.1 2006/01/18 06:25:05 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -15,14 +15,15 @@
 
 #include "util/macros.h"
 #include "util/list_vector_fwd.h"
-#include "util/STL/list.h"
+#include <list>
+#include <vector>
 #include "util/qmap.h"
 #include "util/nested_iterator.h"
 
 #define	LIST_VECTOR_CLASS	list_vector<T,ValAlloc,VecAlloc>
 
 namespace util {
-USING_LIST
+using std::list;
 using std::vector;
 using std::ostream;
 using util::qmap;
@@ -57,7 +58,7 @@ using util::qmap;
 		of the vector chunks (not the values), consider using
 		list_vector_pool<vector<T,ValAlloc> >.
  */
-template <class T, class ValAlloc, class VecAlloc>
+LIST_VECTOR_TEMPLATE_SIGNATURE
 class list_vector {
 	typedef	LIST_VECTOR_CLASS		this_type;
 public:

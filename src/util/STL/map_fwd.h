@@ -2,7 +2,7 @@
 	\file "util/qmap_fwd.h"
 	Forward declarations for std::map wrapper.  
 	Full description in "STL/map.h".
-	$Id: map_fwd.h,v 1.2 2005/05/10 04:51:32 fang Exp $
+	$Id: map_fwd.h,v 1.2.54.1 2006/01/18 06:25:11 fang Exp $
  */
 
 #ifndef	__UTIL_STL_MAP_FWD_H__
@@ -12,16 +12,31 @@
 #define	USE_STD_MAP	1
 #endif
 
+#include "util/STL/allocator_fwd.h"		// for std::allocator
+#include "util/STL/pair_fwd.h"			// for std::pair
+#include "util/STL/functional_fwd.h"		// for std::less
+
 #if USE_STD_MAP
+#if 0
 	#include <map>
 	#define	MAP_NAMESPACE	std
+#else
+namespace std {
+template <class K, class T, typename C, typename A>
+class map;
+
+template <class K, class T>
+struct default_map {
+	typedef	map<K, T, std::less<K>, std::allocator<std::pair<const K, T> > >
+					type;
+};
+
+}	// end namespace STL
+#endif
 #else	// USE_STD_MAP
 	#include "util/STL/namespace.h"
 	#define	MAP_NAMESPACE	util::STL
 
-#include "util/STL/allocator_fwd.h"		// for std::allocator
-#include "util/STL/pair_fwd.h"			// for std::pair
-#include "util/STL/functional_fwd.h"		// for std::less
 
 #define	STL_MAP_TEMPLATE_SIGNATURE					\
 template <class K, class T, typename C, typename A>

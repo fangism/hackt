@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.7 2005/12/13 04:15:29 fang Exp $
+	$Id: instance_alias.tcc,v 1.7.2.1 2006/01/18 06:24:54 fang Exp $
 	TODO: trim includes
  */
 
@@ -80,7 +80,6 @@ using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
-USING_STACKTRACE
 using util::multikey;
 using util::value_writer;
 using util::value_reader;

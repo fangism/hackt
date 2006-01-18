@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.9 2005/12/13 04:15:19 fang Exp $
+ 	$Id: definition.cc,v 1.9.2.1 2006/01/18 06:24:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -20,11 +20,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <exception>
 #include <iostream>
 #include <functional>
+#include <list>
 
 #include "AST/delim.h"
 #include "AST/token_string.h"
 
-#include "util/STL/list.tcc"
 #include "util/hash_qmap.tcc"
 #include "util/hash_specializations.h"		// substitute for the following
 
@@ -98,7 +98,6 @@ using std::_Select2nd;
 using parser::scope;
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 using namespace ADS;
 using util::write_value;
 using util::read_value;

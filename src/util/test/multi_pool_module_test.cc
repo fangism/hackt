@@ -2,7 +2,7 @@
 	\file "multi_pool_module_test.cc"
 	Testing robust static initialization of separate memory pools.
 	This is just a dummy file to provide a main symbol.
-	$Id: multi_pool_module_test.cc,v 1.4 2005/09/04 21:15:12 fang Exp $
+	$Id: multi_pool_module_test.cc,v 1.4.22.1 2006/01/18 06:25:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
@@ -19,8 +19,6 @@
 #include "util/static_trace.h"
 
 STATIC_TRACE_BEGIN("test-main")
-
-USING_STACKTRACE
 
 // not required because we have no static globals
 // REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(twiddle_dum)

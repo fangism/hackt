@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.2 2005/12/13 04:15:10 fang Exp $
+	$Id: node_list.tcc,v 1.2.2.1 2006/01/18 06:24:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -15,7 +15,6 @@
 
 #include "AST/node_list.h"
 #include "AST/node_position.h"
-#include "util/STL/list.tcc"
 #include "util/what.tcc"
 #include "util/stacktrace.h"
 #include "util/type_traits.h"
@@ -56,7 +55,6 @@ namespace HAC {
 namespace parser {
 class context;
 using util::what;
-USING_STACKTRACE
 using std::transform;
 using std::bind2nd;
 using std::bind2nd_argval;

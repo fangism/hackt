@@ -3,13 +3,14 @@
 	Configure-dependent ctype.h standard header.  
 	We uncomment each definition as it is used.  
 	Recommended: Include this instead of <cctype> or <ctype.h> directly.
-	$Id: ctype.h,v 1.1.4.2 2006/01/15 22:25:41 fang Exp $
+	$Id: ctype.h,v 1.1.4.3 2006/01/18 06:25:04 fang Exp $
  */
 
 #ifndef	__UTIL_CTYPE_H__
 #define	__UTIL_CTYPE_H__
 
 #include "config.h"
+#include "util/c_decl.h"
 
 #if	defined(__cplusplus) && defined(HAVE_CTYPE_H)  && HAVE_CTYPE_H
 #include <cctype>
@@ -17,6 +18,7 @@
 #include <ctype.h>
 #endif
 
+BEGIN_C_DECLS
 /* isspace */
 #if	defined(HAVE_ISSPACE) && HAVE_ISSPACE
 #else
@@ -142,6 +144,7 @@
 #endif
 
 /* I think that just about covers it */
+END_C_DECLS
 
 #endif	/* __UTIL_CTYPE_H__ */
 

@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.4 2005/12/13 04:15:38 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.4.2.1 2006/01/18 06:24:59 fang Exp $
  */
 
 #ifndef	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -34,7 +34,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 	#define	ENABLE_STACKTRACE			1
 	#include "util/stacktrace.h"
 
-USING_STACKTRACE
 REQUIRES_STACKTRACE_STATIC_INIT
 #endif
 

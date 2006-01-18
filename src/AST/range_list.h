@@ -1,9 +1,9 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range_list.h,v 1.2.2.1 2006/01/17 03:07:00 fang Exp $
+	$Id: range_list.h,v 1.2.2.2 2006/01/18 06:24:50 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range_list.h,v 1.2.2.1 2006/01/17 03:07:00 fang Exp $
+	$Id: range_list.h,v 1.2.2.2 2006/01/18 06:24:50 fang Exp $
  */
 
 #ifndef __HAC_AST_RANGE_LIST_H__
@@ -23,6 +23,7 @@ namespace entity {
 }	// end namespace entity
 namespace parser {
 using util::good_bool;
+using std::default_vector;
 
 //=============================================================================
 /// base class for range_list
@@ -65,8 +66,9 @@ public:
 	check_nonmeta_ranges(const context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(range::meta_return_type)	meta_check_type;
-	typedef	DEFAULT_VECTOR(range::nonmeta_return_type)
+	typedef	default_vector<range::meta_return_type>::type
+							meta_check_type;
+	typedef	default_vector<range::nonmeta_return_type>::type
 							nonmeta_check_type;
 
 	/**
@@ -108,9 +110,10 @@ public:
 	check_formal_dense_ranges(const context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(expr::meta_return_type)	meta_check_type;
-	typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
-							nonmeta_check_type;
+	typedef	default_vector<expr::meta_return_type>::type
+						meta_check_type;
+	typedef	default_vector<expr::nonmeta_return_type>::type
+						nonmeta_check_type;
 	
 	/**
 		Intermediate check.  

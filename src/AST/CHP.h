@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.2 2005/12/13 04:14:46 fang Exp $
+	$Id: CHP.h,v 1.2.2.1 2006/01/18 06:24:48 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -35,6 +35,7 @@ namespace parser {
  */
 namespace CHP {
 using util::good_bool;
+using std::default_vector;
 
 //=============================================================================
 /// for now, just a carbon copy of expr class type, type-check later
@@ -336,7 +337,7 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 private:
-	typedef	DEFAULT_VECTOR(communication::return_type)
+	typedef	default_vector<communication::return_type>::type
 						checked_actions_type;
 };	// end class comm_list
 
@@ -389,7 +390,7 @@ class selection : public statement, public selection_list_base {
 	typedef	selection_list_base			list_type;
 // is this class even necessary?
 public:
-	typedef	DEFAULT_VECTOR(guarded_command::return_type)
+	typedef	default_vector<guarded_command::return_type>::type
 							checked_gcs_type;
 public:
 	selection();
@@ -486,7 +487,7 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 private:
-	typedef	DEFAULT_VECTOR(statement::return_type)
+	typedef	default_vector<statement::return_type>::type
 						checked_actions_type;
 };	// end class loop
 

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.9 2005/12/13 04:15:29 fang Exp $
+ 	$Id: instance_collection.cc,v 1.9.2.1 2006/01/18 06:24:54 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -46,7 +46,6 @@
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/common/dump_flags.h"
 
-#include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/compose.h"
@@ -65,7 +64,6 @@ using util::dereference;
 #include "util/using_ostream.h"
 using std::mem_fun_ref;
 using std::bind2nd_argval_void;
-USING_STACKTRACE
 using util::indent;
 using util::auto_indent;
 using util::write_string;

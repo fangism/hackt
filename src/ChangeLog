@@ -5,6 +5,12 @@
 
 2006-01-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-24:
+	  No signficant source changes other than accommodating
+		util library cleanups.
+	  See util/ChangeLog for details.
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-23:
 	  Wrote most of sim/prsim/Reference.cc, including parsing
 		and type-checking, just need the final lookup...

@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.1.2.2 2006/01/12 21:31:50 fang Exp $
+	$Id: string.h,v 1.1.2.3 2006/01/18 06:25:09 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -24,6 +24,11 @@
 	#include <strings.h>
 	#endif
 #endif
+
+BEGIN_C_DECLS
+// C-stuff here
+
+END_C_DECLS
 
 #ifdef	__cplusplus
 namespace util {

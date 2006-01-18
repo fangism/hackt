@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.4 2005/12/13 04:15:21 fang Exp $
+	$Id: template_formals_manager.cc,v 1.4.2.1 2006/01/18 06:24:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,7 +31,6 @@ namespace entity {
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::write_string;

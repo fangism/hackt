@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.2.2.1 2006/01/17 03:06:56 fang Exp $
+	$Id: expr_list.h,v 1.2.2.2 2006/01/18 06:24:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -19,6 +19,7 @@ class template_actuals;
 }
 namespace parser {
 using std::vector;
+using std::default_vector;
 //=============================================================================
 /**
 	List of expressions.  
@@ -44,13 +45,13 @@ protected:
 	typedef	expr_list_base			parent_type;
 public:
 	typedef	parent_type::const_iterator	const_iterator;
-	typedef	DEFAULT_VECTOR(expr::generic_meta_return_type)
+	typedef	default_vector<expr::generic_meta_return_type>::type
 						checked_meta_generic_type;
-	typedef	DEFAULT_VECTOR(expr::meta_return_type)
+	typedef	default_vector<expr::meta_return_type>::type
 						checked_meta_exprs_type;
-	typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
+	typedef	default_vector<expr::nonmeta_return_type>::type
 						checked_nonmeta_exprs_type;
-	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+	typedef	default_vector<inst_ref_meta_return_type>::type
 						checked_meta_refs_type;
 public:
 	expr_list();
@@ -95,11 +96,11 @@ class inst_ref_expr_list : public inst_ref_expr_list_base {
 protected:
 	typedef	inst_ref_expr_list_base		parent_type;
 public:
-	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+	typedef	default_vector<inst_ref_meta_return_type>::type
 						checked_meta_refs_type;
-	typedef	DEFAULT_VECTOR(inst_ref_nonmeta_return_type)
+	typedef	default_vector<inst_ref_nonmeta_return_type>::type
 						checked_nonmeta_refs_type;
-	typedef	DEFAULT_VECTOR(data_ref_nonmeta_return_type)
+	typedef	default_vector<data_ref_nonmeta_return_type>::type
 						checked_nonmeta_data_refs_type;
 public:
 	explicit

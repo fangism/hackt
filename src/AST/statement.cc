@@ -1,7 +1,7 @@
 /**
 	\file "AST/statement.cc"
 	Class method definitions for statement classes.
-	$Id: statement.cc,v 1.2 2005/12/13 04:15:12 fang Exp $
+	$Id: statement.cc,v 1.2.2.1 2006/01/18 06:24:50 fang Exp $
  */
 
 #ifndef	__HAC_AST_STATEMENT_CC__
@@ -45,7 +45,6 @@ namespace parser {
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 
 //=============================================================================
 // class statement method definitions

@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.6 2005/12/13 04:15:43 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.6.2.1 2006/01/18 06:25:03 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 #include "Object/unroll/alias_connection.tcc"
 #include "Object/unroll/data_alias_connection_base.h"
@@ -36,7 +37,6 @@
 #include "Object/traits/struct_traits.h"
 
 #include "util/what.tcc"
-#include "util/STL/list.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
@@ -88,7 +88,6 @@ using util::persistent_traits;
 using std::mem_fun_ref;
 using util::dereference;
 USING_UTIL_COMPOSE
-USING_STACKTRACE
 
 //=============================================================================
 // class meta_instance_reference_connection method definitions

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.6 2005/12/13 04:15:33 fang Exp $
+ 	$Id: value_collection.tcc,v 1.6.2.1 2006/01/18 06:24:56 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -45,7 +45,6 @@
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
-#include "util/STL/list.tcc"
 #include "util/multikey_qmap.tcc"		// include "qmap.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/compose.h"
@@ -64,7 +63,6 @@ using util::dereference;
 using std::mem_fun_ref;
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;

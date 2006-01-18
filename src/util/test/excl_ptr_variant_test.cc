@@ -1,6 +1,6 @@
 /**
 	\file "excl_ptr_variant_test.cc"
-	$Id: excl_ptr_variant_test.cc,v 1.1 2005/12/10 03:57:00 fang Exp $
+	$Id: excl_ptr_variant_test.cc,v 1.1.4.1 2006/01/18 06:25:16 fang Exp $
  */
 // #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_array_ptr.h"
@@ -23,17 +23,17 @@ main(int, char*[]) {
 	const excl_ptr<int> i(new int);
 
 	// this will be deleted [] upon destruction
-	const excl_array_ptr<int> ii(new int[100]);
+	const excl_array_ptr<int>::type ii(new int[100]);
 
 	// this will be freed upon destruction
-	const excl_malloc_ptr<int>
+	const excl_malloc_ptr<int>::type
 		im(static_cast<int*>(malloc(sizeof(int)*256)));
 }
 {
-	excl_malloc_ptr<int>
+	excl_malloc_ptr<int>::type
 		im(static_cast<int*>(malloc(sizeof(int)*256)));
 	// will steal ownership
-	excl_malloc_ptr<int>
+	excl_malloc_ptr<int>::type
 		jm = im;
 	INVARIANT(jm);
 	MUST_BE_NULL(im);
