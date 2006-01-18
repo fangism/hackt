@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/deallocation_policy.h"
 	Definition of frequently used deallocation policies.  
-	$Id: deallocation_policy.h,v 1.1.2.2 2006/01/18 06:25:13 fang Exp $
+	$Id: deallocation_policy.h,v 1.1.2.3 2006/01/18 07:01:06 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_DEALLOCATION_POLICY_H__
@@ -103,7 +103,7 @@ template <class T, void (*f)(T*)>
 struct custom_ptr_fun_tag {
 	inline
 	void
-	operator () (T*) {
+	operator () (T* t) {
 		(*f)(t);
 	}
 };	// end class custom_ptr_fun_tag
@@ -118,7 +118,7 @@ template <class T, void (f)(T*)>
 struct custom_fun_ref_tag {
 	inline
 	void
-	operator () (T*) {
+	operator () (T* t) {
 		f(t);
 	}
 };	// end class custom_fun_ref_tag
