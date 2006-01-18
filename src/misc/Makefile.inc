@@ -37,7 +37,7 @@ EXTRA_DIST += misc/README \
 
 misc/sudoku-test.sh:
 	@$(ECHO) #!$(SHELL) > $@
-	@$(ECHO) sudoku-solver misc/sudoku-sample.txt >> $@
+	@$(ECHO) sudoku-solver $(srcdir)/misc/sudoku-sample.txt >> $@
 	@$(CHMOD) +x $@
 
 CLEANFILES += misc/sudoku-test.sh
