@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-01-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-25:
+	  Configurability and portability update only, 
+		after a major libary clean-up from -prsim-00-24.
+
+
 2006-01-16	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-22:

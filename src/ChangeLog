@@ -3,11 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-25:
+	  Minor patches to make sure package distchecks and everything builds 
+		on the other tested platforms
+		(actively using ppc-apple-darwin): i386-freebsd-g++-3.4.0, 
+		and i686-linux-gnu-g++-3.4.3.
+
+
 2006-01-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-24:
 	  No signficant source changes other than accommodating
-		util library cleanups.
+		MAJOR util library cleanups.
 	  See util/ChangeLog for details.
 
 
