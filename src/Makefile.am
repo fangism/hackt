@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.20 2006/01/17 04:41:07 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.21 2006/01/18 09:18:16 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -559,6 +559,18 @@ parser/$(LIBHACKTPARSERS_LA)-instref-union.lo \
 	parser/$(LIBHACKTPARSERS_LA)-instref-union.o: \
 	parser/$(INSTREF_PARSE_ROOT).output.h
 
+# even more extra dependencies for bogus libraries
+lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).lo \
+	lexer/$(LIBBOGUS_LA)-$(HACKT_LEX_ROOT).o \
+	parser/$(LIBBOGUS_LA)-$(HACKT_PARSE_ROOT).lo \
+	parser/$(LIBBOGUS_LA)-$(HACKT_PARSE_ROOT).o: \
+	parser/hackt-prefix.h
+lexer/$(LIBBOGUS2_LA)-$(INSTREF_LEX_ROOT).lo \
+	lexer/$(LIBBOGUS2_LA)-$(INSTREF_LEX_ROOT).o \
+	parser/$(LIBBOGUS2_LA)-$(INSTREF_PARSE_ROOT).lo \
+	parser/$(LIBBOGUS2_LA)-$(INSTREF_PARSE_ROOT).o: \
+	parser/instref-prefix.h
+
 # the following targets need to be prefixed with the library name, libbogus, 
 # but automake complains that it overrides the automatic definition...
 # parser/$(HACKT_PARSE_ROOT).lo: parser/$(HACKT_PARSE_ROOT).output.h
@@ -875,10 +887,10 @@ BOGUS_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
 # really, this isn't necessary since we've prevented yy-name conflicts
 # by compiling each lexer/parser pair into a separate bogus convenience library
 libbogus_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
-	-include $(srcdir)/parser/hackt-prefix.h
+	-include parser/hackt-prefix.h
 libbogus_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 libbogus2_la_CPPFLAGS = $(BOGUS_CPPFLAGS) \
-	-include $(srcdir)/parser/instref-prefix.h
+	-include parser/instref-prefix.h
 libbogus2_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 # here we give the exceptional flags to the lexer and parser, 
 # which are generated automatically by yacc/bison/[f]lex for 

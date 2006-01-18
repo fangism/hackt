@@ -1,10 +1,12 @@
 /**
 	\file "misc/sudoku/inttypes.h"
-	$Id: inttypes.h,v 1.1.4.2 2006/01/15 22:25:35 fang Exp $
+	$Id: inttypes.h,v 1.1.4.3 2006/01/18 09:18:20 fang Exp $
  */
 
 #ifndef	__SUDOKU_INTTYPES_H__
 #define	__SUDOKU_INTTYPES_H__
+
+#include "util/size_t.h"
 
 namespace sudoku {
 

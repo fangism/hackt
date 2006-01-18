@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.4 2006/01/17 20:55:26 fang Exp $
+	$Id: Command.cc,v 1.1.2.5 2006/01/18 09:18:21 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -560,6 +560,7 @@ DECLARE_COMMAND_CLASS(Initialize, "initialize", simulation,
 int
 Initialize::main(State& s, const string_list&) {
 	s.initialize();
+	return Command::NORMAL;
 }
 
 void
