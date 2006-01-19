@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2006-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-27:
+	  Long time no write!
+	  Added sections discussing template parameter lookup
+		in the templates chapter.  Argument for excluding
+		template formal parameters from member lookups.
+	  This is all relevant to the current development of 
+		member lookups w.r.t. typedefs.  
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

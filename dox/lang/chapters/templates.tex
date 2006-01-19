@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.12 2005/12/13 04:14:42 fang Exp $
+%	$Id: templates.tex,v 1.12.2.1 2006/01/19 07:42:03 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -412,6 +412,82 @@ of specializations...
 \textbf{BOTTOM LINE:}
 Type-references to template definitions MUST have a consistent
 view of definitions at instantiation (unroll) time.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Issues}
+\label{sec:templates:issues}
+
+As useful as templates may seem, they can't be thrown together without
+expecting some complications in the language.  
+We use this section to slap down issues that may arise.  
+Once these issues are resolved, the text for their resolutions
+belong to some sort of ``rationale'' document, possibly
+in footnotes or appendices in this language specification.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Template Parameter References}
+\label{sec:templates:issues:param_ref}
+
+Given a templated definition, such as
+
+\begin{verbatim}
+template <pint N> defproc foo(...) { ... }
+\end{verbatim}
+
+should the parameter \ttt{foo::N} be accessible to the programmer
+as an rvalue?
+If not, then should we allow references to internal member values
+(that may be copies of actual parameters)?
+
+\begin{verbatim}
+template <pint N> defproc foo(...) { pint _N = N; }
+pint M = foo<3>::_N;
+\end{verbatim}
+
+Should all internal meta-values be publicly accessible as rvalues?
+Allowing access to such variables is the root of the template
+metaprogramming paradigm in C++.  
+
+Forbidding direct references to the template parameters may 
+inconvenience a programmer by having to explicitly copy-propagate
+all parameters that she wishes to export.  
+It also avoids any issues that arise with \emph{forward declarations}
+and \emph{typedefs templates}.  
+
+Consider the template signature equivalence examples from
+Section~\ref{sec:templates:equivalence}.  
+Among a set of equivalent forward declarations, which set
+would be used for lookup?  The first? or last?  
+The best answer might be `none': parameters may only be referenced
+if the complete definition is available.  
+
+(Looking forward to the chapter on typedefs...)
+Now consider the following typedef declaration, continuing from
+our previous example:
+
+\begin{verbatim}
+template <pint N> typedef foo<N+1> goo;
+pint P = goo<3>::N;
+\end{verbatim}
+
+\ttt{goo} has its own parameter N that `shadows' the base definition's
+parameter of the same name.  
+(Whatif \ttt{goo}'s parameter was renamed to not collide?
+Then \ttt{goo<3>::N} would clearly have to refer to \ttt{foo}'s N.)  
+Either way this is disambiguated, the meaning would not necessarily be 
+intuitive.  
+We should simply forbid direct references to template parameters.  
+
+\textbf{Proposal:} I am in favor of (what I just said above)
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Specializations}
+\label{sec:templates:issues:specialization}
+
+Should we allow specializations (in the C++ sense)?
+
+Introduces a whole set of issues with binding of dependent names
+vs. non-dependent names.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future}
