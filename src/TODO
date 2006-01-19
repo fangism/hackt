@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.10.4.7 2006/01/19 00:16:06 fang Exp $
+#	$Id: TODO,v 1.10.4.8 2006/01/19 07:42:35 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -43,6 +43,27 @@ footprint pointer persistence may be complicated in footprint_frame.
 creation: reject unique instances that are missing relaxed actuals
 	(that should have them), only after complete hierarchical merge.
 	can be classified as known bug.  
+
+===============================================================================
+Lookup semantics: (clarifications)
+	Inspired by new documentation
+	lookup-member:
+		always excludes the template parameters.  
+		One may, however, create a value copy (alias)
+			member that is equivalent to a parameter.
+			*that* member should be globally visible.  
+			(Enter template meta programming.)
+		Although within a definition references to template
+			parameters should be legal.  
+
+	Distinction between x.y, x::y
+		x.y requires x to be an instance whose type has a scope.
+		x::y requires x to be a namespace or definition with scope
+		(we already accomplish this, look at the test cases'
+			create dumps to see where this distinction is clear.)
+
+	lookups rooted at typedefs:
+		Always use the canonical type's members.  
 
 ===============================================================================
 big stuff:

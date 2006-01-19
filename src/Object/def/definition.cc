@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.9.2.2 2006/01/19 00:16:12 fang Exp $
+ 	$Id: definition.cc,v 1.9.2.3 2006/01/19 07:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -185,10 +185,38 @@ definition_base::lookup_template_formal_position(const string& id) const {
 /**
 	Searches template formals set *ONLY* for a matching object.  
 	Subclasses should override this to search their respective scopes.  
+	TODO: in the fah fah future, (template-)dependent names' lookups
+		will have to be deferred until instantiation time.  
+		But what do we return in that case?
+		Some placeholder to allow for instantiation-time
+		name-lookup during unrolling and beyond.  
+	TODO: how should typedefs handle lookups?
+		Should template parameters be referenceable/lookup-able?
+		What if the same ID is used in template parameters
+		of typedefs and their base definitions?
+		How should template parameter members be handled w.r.t.
+		typedefs?
+	Proposal: when looking up template parameter (if we allow), 
+		only the outermost template parameters are visible, 
+		while ALL the base type's parameters are masked out.  
+		All other non-parameter member lookups will, of course, 
+		go directly to the canonical base definition.  
+		What do we do when we don't know what we're looking up?
+		Silly: Always know what you're trying to lookup!
+		Consequence: a lookup function for each type:
+			definition, namespace, instance, value
+	See documentation on template parameter references at the end
+		of the templates chapter of the languages spec.  
+		(added 20060118)
  */
 never_ptr<const object>
-definition_base::lookup_object_here(const string& id) const {
+definition_base::lookup_member(const string& id) const {
+#if 1
+	// try this to see what breaks: so far, nothing!
+	return never_ptr<const object>(NULL);
+#else
 	return lookup_template_formal(id);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -223,9 +251,6 @@ definition_base::get_port_formals_manager(void) const {
  */
 never_ptr<const instance_collection_base>
 definition_base::lookup_port_formal(const string& id) const {
-#if 0
-	return never_ptr<const instance_collection_base>(NULL);
-#else
 	const never_ptr<const port_formals_manager>
 		pfm(get_port_formals_manager());
 	if (pfm) {
@@ -233,7 +258,6 @@ definition_base::lookup_port_formal(const string& id) const {
 	} else {
 		return never_ptr<const instance_collection_base>(NULL);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,18 +271,13 @@ size_t
 definition_base::lookup_port_formal_position(
 		const instance_collection_base& i) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	return 0;
-#else
 	const never_ptr<const port_formals_manager>
 		pfm(get_port_formals_manager());
 	if (pfm) {
 		return pfm->lookup_port_formal_position(i.get_name());
 	} else {
-		// TODO: enumerate as port_formal_manager::INVALID_POSITION;
-		return 0;
+		return port_formals_manager::INVALID_POSITION;
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -377,7 +396,7 @@ definition_base::add_strict_template_formal(
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
-		probe(lookup_object_here(id));
+		probe(lookup_member(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
@@ -424,7 +443,7 @@ definition_base::add_relaxed_template_formal(
 	typedef	never_ptr<const instance_collection_base>	return_type;
 	{
 	const never_ptr<const object>
-		probe(lookup_object_here(id));
+		probe(lookup_member(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
@@ -802,8 +821,8 @@ user_def_chan::commit_arity(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
-user_def_chan::lookup_object_here(const string& id) const {
-	return scopespace::lookup_object_here(id);
+user_def_chan::lookup_member(const string& id) const {
+	return scopespace::lookup_member(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -829,7 +848,7 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
-		probe(lookup_object_here(id));
+		probe(lookup_member(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
@@ -850,33 +869,10 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Override's definition_base's port formal lookup.  
-	\return pointer to port's instantiation if found, else NULL.  
- */
-never_ptr<const instance_collection_base>
-user_def_chan::lookup_port_formal(const string& id) const {
-	return port_formals.lookup_port_formal(id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-/**
-	\return 1-indexed position of port-formal, else 0 if not found.  
- */
-size_t
-user_def_chan::lookup_port_formal_position(
-		const instance_collection_base& i) const {
-	STACKTRACE_VERBOSE;
-	return port_formals.lookup_port_formal_position(i.get_name());
-}
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 never_ptr<const port_formals_manager>
 user_def_chan::get_port_formals_manager(void) const {
 	return never_ptr<const port_formals_manager>(&port_formals);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /**
@@ -1317,7 +1313,7 @@ built_in_datatype_def::add_template_formal(
 	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
 	const never_ptr<const object>
-		probe(datatype_definition_base::lookup_object_here(
+		probe(datatype_definition_base::lookup_member(
 			pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
@@ -1665,7 +1661,7 @@ enum_datatype_def::require_signature_match(
 bool
 enum_datatype_def::add_member(const token_identifier& em) {
 	const never_ptr<const object>
-		probe(scopespace::lookup_object_here(em));
+		probe(scopespace::lookup_member(em));
 	if (probe) {
 		const never_ptr<const enum_member>
 			probe_em(probe.is_a<const enum_member>());
@@ -1911,8 +1907,8 @@ user_def_datatype::resolve_canonical_datatype_definition(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
-user_def_datatype::lookup_object_here(const string& id) const {
-	return scopespace::lookup_object_here(id);
+user_def_datatype::lookup_member(const string& id) const {
+	return scopespace::lookup_member(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1939,7 +1935,7 @@ user_def_datatype::add_port_formal(
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
-		probe(lookup_object_here(id));
+		probe(lookup_member(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return return_type(NULL);
@@ -1960,33 +1956,10 @@ user_def_datatype::add_port_formal(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Override's definition_base's port formal lookup.  
-	\return pointer to port's instantiation if found, else NULL.  
- */
-never_ptr<const instance_collection_base>
-user_def_datatype::lookup_port_formal(const string& id) const {
-	return port_formals.lookup_port_formal(id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-/**
-	\return 1-indexed position of port-formal, else 0 if not found.  
- */
-size_t
-user_def_datatype::lookup_port_formal_position(
-		const instance_collection_base& i) const {
-	STACKTRACE_VERBOSE;
-	return port_formals.lookup_port_formal_position(i.get_name());
-}
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const port_formals_manager>
 user_def_datatype::get_port_formals_manager(void) const {
 	return never_ptr<const port_formals_manager>(&port_formals);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 definition_base::type_ref_ptr_type
@@ -2490,38 +2463,15 @@ process_definition::commit_arity(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
-process_definition::lookup_object_here(const string& s) const {
-	return scopespace::lookup_object_here(s);
+process_definition::lookup_member(const string& s) const {
+	return scopespace::lookup_member(s);
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Override's definition_base's port formal lookup.  
-	\return pointer to port's instantiation if found, else NULL.  
- */
-never_ptr<const instance_collection_base>
-process_definition::lookup_port_formal(const string& id) const {
-	return port_formals.lookup_port_formal(id);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-/**
-	\return 1-indexed position of port-formal, else 0 if not found.  
- */
-size_t
-process_definition::lookup_port_formal_position(
-		const instance_collection_base& i) const {
-	STACKTRACE_VERBOSE;
-	return port_formals.lookup_port_formal_position(i.get_name());
-}
-#else
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const port_formals_manager>
 process_definition::get_port_formals_manager(void) const {
 	return never_ptr<const port_formals_manager>(&port_formals);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2582,7 +2532,7 @@ process_definition::add_port_formal(
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>
-	probe(lookup_object_here(id));
+	probe(lookup_member(id));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
 		return return_type(NULL);

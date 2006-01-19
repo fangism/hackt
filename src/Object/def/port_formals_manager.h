@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.4 2005/12/13 04:15:20 fang Exp $
+	$Id: port_formals_manager.h,v 1.4.2.1 2006/01/19 07:42:41 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -69,6 +69,13 @@ public:
 	typedef	port_formals_list_type::const_iterator
 						const_list_iterator;
 	// List of language bodies, separate or merged?
+
+	enum {
+		/**
+			Because we disdain magic numbers...
+		 */
+		INVALID_POSITION = 0
+	};
 
 protected:
 	port_formals_list_type			port_formals_list;

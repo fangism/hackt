@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.7.2.2 2006/01/19 00:16:11 fang Exp $
+ 	$Id: parse_context.cc,v 1.7.2.3 2006/01/19 07:42:38 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -288,7 +288,7 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 void
 context::open_enum_definition(const token_identifier& ename) {
 	const never_ptr<enum_datatype_def>
-		ed(current_namespace->lookup_object_here_with_modify(ename)
+		ed(current_namespace->lookup_member_with_modify(ename)
 				.is_a<enum_datatype_def>());
 	if (ed) {
 		if (ed->is_defined()) {

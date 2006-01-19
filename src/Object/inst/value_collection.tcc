@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.6.2.1 2006/01/18 06:24:56 fang Exp $
+ 	$Id: value_collection.tcc,v 1.6.2.2 2006/01/19 07:42:41 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -734,7 +734,7 @@ VALUE_SCALAR_TEMPLATE_SIGNATURE
 bool
 VALUE_SCALAR_CLASS::is_loop_variable(void) const {
 	INVARIANT(this->owner);
-	return !this->owner->lookup_object_here(this->key);
+	return !this->owner->lookup_member(this->key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

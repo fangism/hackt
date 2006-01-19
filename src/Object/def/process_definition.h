@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.5.2.1 2006/01/19 00:16:13 fang Exp $
+	$Id: process_definition.h,v 1.5.2.2 2006/01/19 07:42:41 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -74,21 +74,12 @@ public:
 	void
 	commit_arity(void);
 
-#if 0
-	/** overrides definition_base's */
-	never_ptr<const instance_collection_base>
-	lookup_port_formal(const string& id) const;
-
-	size_t
-	lookup_port_formal_position(const instance_collection_base&) const;
-#else
 	// override
 	never_ptr<const port_formals_manager>
 	get_port_formals_manager(void) const;
-#endif
 
 	never_ptr<const object>
-	lookup_object_here(const string& id) const;
+	lookup_member(const string& id) const;
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 

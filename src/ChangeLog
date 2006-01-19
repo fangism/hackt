@@ -5,6 +5,22 @@
 
 2006-01-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-27:
+	  Documentation, clarification, and renaming, clean-up, 
+		and planning revision only.  
+	  Cleaned up #if 0 code from previous revision.  
+	  Wrote issues section in template chapter of language spec.  
+		Discusses a proposal for how member lookup should work
+		w.r.t. template parameters.  
+	  renamed member functions "lookup_object_here" to "lookup_member",
+		to make it clear what we're intending to do.  
+	  TODO: rewrite definition hierarchy's lookup_member function:
+		defer real work to scopespace's lookup_member
+		by virtualizing a new get_scopespace() mem-fun.
+		Typedefs will implement this by forwarding to canonical defs.  
+		Remember to omit template_formals.  
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-26:
 	  Can now "get node" in prsim.  
 	  parser::context: added is_publicly_viewable to enable looking

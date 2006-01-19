@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.5.2.1 2006/01/19 00:16:13 fang Exp $
+	$Id: user_def_datatype.h,v 1.5.2.2 2006/01/19 07:42:41 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -58,7 +58,7 @@ public:
 	resolve_canonical_datatype_definition(void) const;
 
 	never_ptr<const object>
-	lookup_object_here(const string& id) const;
+	lookup_member(const string& id) const;
 
 	ostream&
 	what(ostream& o) const;
@@ -81,16 +81,8 @@ public:
 	CHP::action_sequence&
 	get_get_body(void) { return get_chp; }
 
-#if 0
-	never_ptr<const instance_collection_base>
-	lookup_port_formal(const string&) const;
-
-	size_t
-	lookup_port_formal_position(const instance_collection_base&) const;
-#else
 	never_ptr<const port_formals_manager>
 	get_port_formals_manager(void) const;
-#endif
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const
