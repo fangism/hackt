@@ -1,0 +1,15 @@
+// "015.hac"
+// should pass: testing general member lookup though typedef
+
+defproc baz(bool x, y, z) { }
+
+// NOTE: this typedef is an alias-style (using) typedef
+// and will not be retained when the compiled object is written out
+typedef	baz	zab;
+
+baz	P;
+zab	Q;
+
+P.z = Q.y;
+
+

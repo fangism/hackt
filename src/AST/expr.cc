@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.2.2.1 2006/01/17 03:06:51 fang Exp $
+	$Id: expr.cc,v 1.2.2.2 2006/01/19 00:16:10 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -54,6 +54,7 @@
 #include "Object/traits/int_traits.h"
 
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -1027,8 +1028,25 @@ member_expr::check_meta_reference(const context& c) const {
 	// current_definition_reference, don't lookup anywhere else!
 
 	// don't use context's general lookup
-	const never_ptr<const instance_collection_base>
-		member_inst(base_def->lookup_port_formal(*member));
+	never_ptr<const instance_collection_base> member_inst;
+	// NOTE: what about typedefs?  they should lookup using
+	// canonical definitions' scopespaces... is this happening?
+if (c.is_publicly_viewable()) {
+#if 0
+	member_inst = base_def->lookup_instance_member(*member);
+	if (!member_inst) {
+		base_def->what(cerr << "ERROR: ") << " " <<
+			base_def->get_qualified_name() << 
+			" has no member named \"" << *member <<
+			"\" at " << where(*member) << endl;
+		return meta_return_type(NULL);
+	}
+#else
+	FINISH_ME(Fang);
+	return meta_return_type(NULL);
+#endif
+} else {
+	member_inst = base_def->lookup_port_formal(*member);
 	// LATER: check and make sure definition is signed, 
 	//	after we introduce forward template declarations
 	if (!member_inst) {
@@ -1038,19 +1056,10 @@ member_expr::check_meta_reference(const context& c) const {
 			"\" at " << where(*member) << endl;
 		THROW_EXIT;
 	}
-
+}
+	// build a member reference from parent and child
 	const meta_return_type
 	ret_inst_ref(member_inst->make_member_meta_instance_reference(inst_ref));
-
-	// old comments:
-	// what should this return?  the same thing it expects:
-	// a reference to an instance of some type.  
-	// Problem: instances aren't concrete until they are unrolled.
-	// What is available in type-check phase?
-	// Maybe we don't care about the instances themselves, 
-	// rather the *type* returned.  
-	// after all this is type-checking, not range checking.  
-
 	return ret_inst_ref;
 }
 

@@ -1,0 +1,111 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	4	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	336
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	25	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	34	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  2 typedefs
+  Definitions:
+    array2d = process-definition (defined) array2d<
+      pint<> N
+      pint<> M
+      >(
+      )
+      In definition "array2d", we have: {
+      Parameters:
+        M = pint<> M
+        N = pint<> N
+      footprint collection: {
+        <1, 12> {
+          pint^0 M value: ?
+          pint^0 N value: ?
+        }
+        <3, 3> {
+          pint^0 M value: ?
+          pint^0 N value: ?
+        }
+        <10, 1> {
+          pint^0 M value: ?
+          pint^0 N value: ?
+        }
+      }
+      }
+
+  Typedefs:
+    col = process-definition-alias: col<
+      pint<> K (default = 10)
+      >
+      = array2d<::col::K, 1>
+    row = process-definition-alias: row<
+      pint<> Q
+      >
+      = array2d<1, ::row::Q>
+  Instances:
+    the_col = process array2d<10, 1>^0 the_col (instantiated) = ::the_col (3) 
+    the_matrix = process array2d<3, 3>^0 the_matrix (instantiated) = ::the_matrix (1) 
+    the_row = process array2d<1, 12>^0 the_row (instantiated) = ::the_row (2) 
+}
+
+Created state:
+process instance pool:
+1	::the_matrix
+2	::the_row
+3	::the_col
+

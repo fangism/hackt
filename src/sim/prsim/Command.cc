@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.1.2.5 2006/01/18 09:18:21 fang Exp $
+	$Id: Command.cc,v 1.1.2.6 2006/01/19 00:16:15 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -606,6 +606,9 @@ DECLARE_COMMAND_CLASS(Get, "get", info, "print value of node/vector")
 /**
 	TODO: if instance referenced is an aggregate, 
 		then print the values of all constituents.
+		Reserve that for the getall command.
+	Status: done.
+	TODO: allow access to private members in Reference.cc.  
  */
 int
 Get::main(State& s, const string_list& a) {
@@ -614,11 +617,14 @@ if (a.size() != 2) {
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
-	// TODO: parse the reference string
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		cerr << "Fang, finish me!" << endl;
-		return Command::BADARG;
+		// we have ni = the canonically allocated index of the bool node
+		// just look it up in the node_pool
+		// const state_manager& sm(s.get_module().get_state_manager());
+		const State::node_type& n(s.get_node(ni));
+		n.dump_value(cout << objname << " : ") << endl;
+		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
 		return Command::BADARG;

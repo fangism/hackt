@@ -1,0 +1,17 @@
+// "018.hac"
+// copy-modified from "017.in"
+// should pass
+
+template <pint N>
+defproc baz(bool x, y, z[N]) { }
+
+template <pint Z>
+typedef	baz<Z>	zab;
+
+baz<4>	P;
+zab<3>	Q;
+
+// template typedef correctly forwards member lookup
+P.x = Q.y;
+
+

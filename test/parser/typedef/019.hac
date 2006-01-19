@@ -1,0 +1,16 @@
+// "019.hac"
+// copy-modified from "018.in"
+// should pass compiling, but fail unrolling
+
+template <pint N>
+defproc baz(bool x, y, z[N]) { }
+
+template <pint Z>
+typedef	baz<Z>	zab;
+
+baz<4>	P;
+zab<3>	Q;
+
+P.z[3] = Q.z[3];	// Q.z[3] doesn't exist
+
+

@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.5 2005/12/13 04:15:20 fang Exp $
+	$Id: definition_base.h,v 1.5.2.1 2006/01/19 00:16:13 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -19,6 +19,8 @@
 #include "util/memory/count_ptr.h"
 
 #include "Object/def/template_formals_manager.h"
+
+// #define	PURE_VIRTUAL_DEFINITION_MEMBER_LOOKUP		1
 
 namespace HAC {
 // forward declarations from outside namespaces
@@ -38,6 +40,7 @@ class physical_instance_collection;
 class fundamental_type_reference;
 class template_actuals;
 class const_param_expr_list;
+class port_formals_manager;
 struct dump_flags;
 using std::string;
 using std::istream;
@@ -134,11 +137,25 @@ virtual	void
 	lookup_template_formal_position(const string& id) const;
 
 /** should be pure virtual, but let's default to NULL */
+#if 0
 virtual	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
 
 virtual	size_t
 	lookup_port_formal_position(const instance_collection_base&) const;
+#else
+	// default NULL
+	// TODO: future use policy-based structure to rewrite definition classes
+virtual	never_ptr<const port_formals_manager>
+	get_port_formals_manager(void) const;
+
+	// non-virtual
+	never_ptr<const instance_collection_base>
+	lookup_port_formal(const string& id) const;
+
+	size_t
+	lookup_port_formal_position(const instance_collection_base&) const;
+#endif
 
 virtual	never_ptr<const object>
 	lookup_object_here(const string& id) const;

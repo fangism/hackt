@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.1.2.7 2006/01/12 06:13:09 fang Exp $
+	$Id: State.cc,v 1.1.2.8 2006/01/19 00:16:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -138,9 +138,9 @@ State::reset(void) {
 void
 State::initialize(void) {
 	for_each(node_pool.begin(), node_pool.end(), 
-		mem_fun_ref(&Node::initialize));
+		mem_fun_ref(&node_type::initialize));
 	for_each(expr_pool.begin(), expr_pool.end(), 
-		mem_fun_ref(&Expr::initialize));
+		mem_fun_ref(&expr_type::initialize));
 	// the expr_graph_node_pool contains no stateful information.  
 	while (!event_queue.empty()) {
 		const EventPlaceholder next(event_queue.pop());
@@ -158,24 +158,43 @@ void
 State::head_sentinel(void) {
 	node_pool.resize(FIRST_VALID_NODE);
 	expr_pool.resize(FIRST_VALID_EXPR);
-	expr_graph_node_pool.push_back(ExprGraphNode());
+	expr_graph_node_pool.push_back(graph_node_type());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Node accessor.
+ */
+const State::node_type&
+State::get_node(const node_index_type i) const {
+	INVARIANT(i);
+	INVARIANT(i < node_pool.size());
+	return node_pool[i];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+State::node_type&
+State::get_node(const node_index_type i) {
+	INVARIANT(i);
+	INVARIANT(i < node_pool.size());
+	return node_pool[i];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::check_node(const node_index_type i) const {
-	const Node& n(node_pool[i]);
+	const node_type& n(node_pool[i]);
 	// check pull-up/dn if applicable
 	const expr_index_type upi = n.pull_up_index;
 	if (is_valid_expr_index(upi)) {
-		const Expr& e(expr_pool[upi]);
+		const expr_type& e(expr_pool[upi]);
 		assert(e.is_root());
 		assert(e.direction());
 		assert(e.parent == i);
 	}
 	const expr_index_type dni = n.pull_dn_index;
 	if (is_valid_expr_index(dni)) {
-		const Expr& e(expr_pool[dni]);
+		const expr_type& e(expr_pool[dni]);
 		assert(e.is_root());
 		assert(!e.direction());
 		assert(e.parent == i);
@@ -196,16 +215,16 @@ State::check_node(const node_index_type i) const {
  */
 void
 State::check_expr(const expr_index_type i) const {
-	const Expr& e(expr_pool[i]);
-	const ExprGraphNode& g(expr_graph_node_pool[i]);
+	const expr_type& e(expr_pool[i]);
+	const graph_node_type& g(expr_graph_node_pool[i]);
 	// check parent
 	if (e.is_root()) {
-		const Node& n(node_pool[e.parent]);
+		const node_type& n(node_pool[e.parent]);
 		assert(n.get_pull_expr(e.direction()) == i);
 	} else {
 		// const Expr& pe(expr_pool[e.parent]);
-		const ExprGraphNode& pg(expr_graph_node_pool[e.parent]);
-		const ExprGraphNode::child_entry_type&
+		const graph_node_type& pg(expr_graph_node_pool[e.parent]);
+		const graph_node_type::child_entry_type&
 			pc(pg.children[g.offset]);
 		assert(!pc.first);	// this is an expression, not node
 		assert(pc.second == i);
@@ -214,7 +233,7 @@ State::check_expr(const expr_index_type i) const {
 	assert(e.size == g.children.size());
 	size_t j = 0;
 	for ( ; j<e.size; ++j) {
-		const ExprGraphNode::child_entry_type& c(g.children[j]);
+		const graph_node_type::child_entry_type& c(g.children[j]);
 		if (c.first) {		// points to leaf node
 			assert(node_pool[c.second].contains_fanout(i));
 		} else {		// points to expression
@@ -326,7 +345,7 @@ State::dump_struct_dot(ostream& o) const {
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
 		o << "EXPR_" << i << "\t[label=\"" << i << "\", shape=";
-		const Expr& e(expr_pool[i]);
+		const expr_type& e(expr_pool[i]);
 		e.dump_type_dot_shape(o) << "];" << endl;
 		e.dump_parent_dot_edge(o << "EXPR_" << i << " -> ")
 			<< ';'<< endl;

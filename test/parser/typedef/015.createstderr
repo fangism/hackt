@@ -1,0 +1,91 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	29	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    baz = process-definition (defined) baz(
+        bool<> x
+        bool<> y
+        bool<> z
+      )
+      In definition "baz", we have: {
+      Instances:
+        x = bool<> x
+        y = bool<> y
+        z = bool<> z
+      footprint: {
+        bool^0 x (instantiated) = ::baz::x (1) 
+        bool^0 y (instantiated) = ::baz::y (2) 
+        bool^0 z (instantiated) = ::baz::z (3) 
+        bool instance pool:
+        1	::baz::x
+        2	::baz::y
+        3	::baz::z
+      }
+      }
+
+  Instances:
+    P = process baz<>^0 P (instantiated) = ::P (1) (
+      bool^0 x (instantiated) = ::P.x (1) 
+      bool^0 y (instantiated) = ::P.y (2) 
+      bool^0 z (instantiated) = ::Q.y (3) 
+    )
+    Q = process baz<>^0 Q (instantiated) = ::Q (2) (
+      bool^0 x (instantiated) = ::Q.x (4) 
+      bool^0 y (instantiated) = ::P.z (3) 
+      bool^0 z (instantiated) = ::Q.z (5) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::P
+2	::Q
+bool instance pool:
+1	::P.x
+2	::P.y
+3	::P.z
+4	::Q.x
+5	::Q.z
+

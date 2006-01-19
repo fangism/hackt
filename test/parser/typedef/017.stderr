@@ -1,0 +1,3 @@
+ERROR: failed to make process_type_reference because template argument types do not match.
+ERROR making complete type reference.  [9:9..13]
+ERROR resolving concrete type reference in typedef!  [9:9..13]

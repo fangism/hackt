@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "art_object_definition_chan.h".
-	$Id: channel_definition_alias.h,v 1.4 2005/12/13 04:15:19 fang Exp $
+	$Id: channel_definition_alias.h,v 1.4.2.1 2006/01/19 00:16:12 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
@@ -47,6 +47,13 @@ public:
 
 	never_ptr<const fundamental_type_reference>
 	get_base_type_ref(void) const;
+
+	/**
+		Since user-def channels have port managers, we must resolve
+		through the canonical definition.
+	 */
+	never_ptr<const port_formals_manager>
+	get_port_formals_manager(void) const;
 
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);

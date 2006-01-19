@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.8 2005/12/13 04:15:29 fang Exp $
+	$Id: instance_alias_info.h,v 1.8.2.1 2006/01/19 00:16:14 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -25,6 +25,7 @@ class footprint;
 class port_collection_context;
 class port_member_context;
 class instance_alias_info_actuals;
+struct cflat_args_base;
 struct cflat_aliases_arg_type;
 using std::ostream;
 using std::istream;
@@ -304,6 +305,7 @@ virtual	ostream&
 	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
+	// top-down traversal of name hierarchy
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
 

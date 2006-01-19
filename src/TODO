@@ -1,14 +1,10 @@
 "TODO"
-#	$Id: TODO,v 1.10.4.6 2006/01/17 20:55:25 fang Exp $
+#	$Id: TODO,v 1.10.4.7 2006/01/19 00:16:06 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
 ===============================================================================
 Simulation:
-	interpreter for prsim:
-	* parse instance-reference
-	* pain: lex/yacc scanner expects FILE* input
-		may have to use a temp-file :S
 
 	Write PRS rule and express walkers, and visitor functors!!!
 	Model rule-walker after cflat_prs.
@@ -66,6 +62,21 @@ compare memory usage between using flattened production rule arrays
 
 in general check memory usage of large arrays of things
 	make benchmarks directory.
+
+===============================================================================
+CODE HYGIENE:
+	(added 20060118)
+	definition classes and type-reference classes need to be
+		re-implemented using class_traits.
+	The current state is a pain in the a** to maintain.  
+	sketch of definition traits:
+		has_port_formals (port_formals_parent_type) (boolean)
+		has_own_scopespace (scopespace_parent_type)
+		typedef_alias_type
+		is_built_in
+		is_templateable
+	type-reference traits: (don't expect to be many)
+		base_definition_type
 
 ===============================================================================
 hackt diff (or objdiff):
@@ -172,8 +183,12 @@ Expression resolutions:
 ===============================================================================
 KNOWN BUGS
 
+canonical name in alloc dump is missing parent namespace completely
+	e.g.: parser/typedef/005.hac, probably in namespace/00{3,4,5}.hac too
+	to fix: fix dump options in dump_canonical/hierarchical_name.
+
 test cases:
-parser/connect/120.in, 121.in
+parser/connect/120.hac, 121.hac
 	regarding hierarchical propagation and checking of relaxed actuals
 	(2005-08-18: punting)
 

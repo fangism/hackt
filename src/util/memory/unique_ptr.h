@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: unique_ptr.h,v 1.1.2.2 2006/01/18 06:25:15 fang Exp $
+	$Id: unique_ptr.h,v 1.1.2.3 2006/01/19 00:16:17 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -97,6 +97,7 @@ class unique_ptr {
 friend class pointer_manipulator;
 	typedef	unique_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
 	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;

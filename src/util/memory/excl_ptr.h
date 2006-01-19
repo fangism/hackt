@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.8.4.2 2006/01/18 06:25:14 fang Exp $
+	$Id: excl_ptr.h,v 1.8.4.3 2006/01/19 00:16:17 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -112,6 +112,7 @@ template <class> friend class never_ptr;
 template <class, class> friend class some_ptr;
 	typedef	excl_ptr<T, Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
 	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;
@@ -430,8 +431,9 @@ friend class pointer_manipulator;
 template <class, class> friend class excl_ptr;
 template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
-
+	typedef	sticky_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
 	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;
@@ -564,6 +566,7 @@ template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
 	typedef	never_ptr<T>		this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
@@ -781,6 +784,7 @@ template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
 	typedef	some_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
 	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;

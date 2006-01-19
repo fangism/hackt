@@ -1,7 +1,7 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.4 2005/12/13 04:15:17 fang Exp $
+	$Id: cflat_args.h,v 1.4.2.1 2006/01/19 00:16:11 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_CFLAT_ARGS_H__
@@ -22,11 +22,11 @@ struct wire_alias_set;	// defined in "Object/common/alias_string_cache.h"
 
 //=============================================================================
 /**
-	Argument type for cflat_aliases methods, merely for convenience.  
-	Reference members never change.  
+	The base structure for traversals of the name object (alias)
+	hierarchy.  
+	Walkers should be based on this...
  */
-struct cflat_aliases_arg_type {
-	ostream&			o;
+struct cflat_args_base {
 	/**
 		The state manager contains the information about the
 		globally allocated unique instances, 
@@ -45,6 +45,22 @@ struct cflat_aliases_arg_type {
 		allocated unique instances.  
 	 */
 	const footprint_frame*		fpf;
+public:
+	cflat_args_base(const state_manager& _sm, 
+			const footprint& _f,
+			const footprint_frame* const _fpf) : 
+			sm(_sm), topfp(_f), fpf(_fpf) { }
+
+
+};	// end struct cflat_args_base
+
+//=============================================================================
+/**
+	Argument type for cflat_aliases methods, merely for convenience.  
+	Reference members never change.  
+ */
+struct cflat_aliases_arg_type : public cflat_args_base {
+	ostream&			o;
 	/**
 		cflat mode and style flags.  
 	 */
@@ -59,16 +75,15 @@ struct cflat_aliases_arg_type {
 		The prefix grows with each level of instance hierarchy.  
 	 */
 	string				prefix;
-
+public:
 	cflat_aliases_arg_type(ostream& _o, const state_manager& _sm, 
 			const footprint& _f, 
 			const footprint_frame* const _fpf, 
 			const cflat_options& _cf,
 			wire_alias_set& _w,
 			const string& _p = string()) :
-			o(_o), sm(_sm), 
-			topfp(_f),
-			fpf(_fpf), 
+			cflat_args_base(_sm, _f, _fpf), 
+			o(_o),
 			cf(_cf),
 			wires(_w), 
 			prefix(_p) {

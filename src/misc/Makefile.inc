@@ -17,7 +17,7 @@ endif
 
 # misc_libmiscfun_la_CPPFLAGS =
 
-sudoku_solver_LDADD = $(LIBMISCFUN)
+sudoku_solver_LDADD = misc/libmiscfun.la
 sudoku_solver_SOURCES = \
  	misc/sudoku-main.cc
 

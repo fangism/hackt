@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.1.2.3 2006/01/17 20:55:26 fang Exp $
+	$Id: Reference.cc,v 1.1.2.4 2006/01/19 00:16:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,6 +23,7 @@
 #include "util/stacktrace.h"
 #include "util/libc.h"			// for tmpfile, rewind,...
 #include "util/memory/excl_ptr.h"
+#include "util/memory/deallocation_policy.h"
 #include "util/packed_array.h"		// for alias_collection_type
 #include "util/ring_node.h"
 #include "util/wtf.h"
@@ -41,6 +42,7 @@ using std::string;
 using parser::inst_ref_expr;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
+using util::memory::FILE_tag;
 #include "util/using_ostream.h"
 //=============================================================================
 
@@ -56,7 +58,8 @@ using util::memory::never_ptr;
 node_index_type
 parse_node_to_index(const string& n, const module& m) {
 	STACKTRACE_VERBOSE;
-	FILE* temp = tmpfile();
+	typedef	excl_ptr<FILE, FILE_tag>	FILE_ptr;
+	const FILE_ptr temp(tmpfile());	// will automatically close on return
 	if (!temp) {
 		// Woe is me!
 		cerr << "Failed to create temporary file-buffer!" << endl;
@@ -64,27 +67,27 @@ parse_node_to_index(const string& n, const module& m) {
 	}
 	// TODO: look into setting the file buffer (setvbuf, setlinebuf...)
 	// fputs returns 0 on success, anything else on error
-	if (fputs(n.c_str(), temp)) {
+	if (fputs(n.c_str(), &*temp)) {
 		cerr << "Error writing string to temporary file." << endl;
-		fclose(temp);
 		THROW_EXIT;
 	} else {
 		typedef	excl_ptr<inst_ref_expr>		lval_ptr_type;
 		// need newline or some whitespace to prevent
 		// lexer from premature EOF-ing.
-		fputc('\n', temp);
+		fputc('\n', &*temp);
 		// the flush doesn't seem necessary from experiments
 		// hopefully this will save from frequent writes to the FS
-		// fflush(temp);
-		rewind(temp);		// same as fseek(temp, 0, SEEK_SET);
+		// fflush(&*temp);
+		rewind(&*temp);		// same as fseek(temp, 0, SEEK_SET);
 		YYSTYPE lval;
 		try {
-			instref_parse(NULL, lval, temp);
+			instref_parse(NULL, lval, &*temp);
 		} catch (...) {
 			cerr << "Error parsing instance name: " << n << endl;
 			return INVALID_NODE_INDEX;
 		}
-		cerr << "parsed node name successfully... " << endl;
+		// cerr << "parsed node name successfully... " << endl;
+		// here is our mini-parse-tree:
 		const lval_ptr_type ref_tree(lval._inst_ref_expr);
 	/***
 		NOTE: parse::context can only accept a modifiable module&
@@ -105,8 +108,10 @@ parse_node_to_index(const string& n, const module& m) {
 		in indices, this will automatically support 
 		meta-expression evaluation using the values present in
 		the module.  Yeah, baby.  
+		Passing "true" as the 2nd arg says we want all names 
+		publicly visible, see AST::parser::context::view_all_publicly.
 	***/
-		const context c(const_cast<module&>(m));
+		const context c(m, true);
 		checked_ref_type r;
 		try {
 			// NOTE: this checks for PUBLIC members only
@@ -123,7 +128,7 @@ parse_node_to_index(const string& n, const module& m) {
 			cerr << "Some other error type-checking..." << endl;
 			return INVALID_NODE_INDEX;
 		}
-		cerr << "Woo-hoo! we found it!" << endl;
+		// cerr << "Woo-hoo! we found it!" << endl;
 		typedef	simple_bool_meta_instance_reference
 					bool_ref_type;
 		const count_ptr<const bool_ref_type>
@@ -163,11 +168,15 @@ parse_node_to_index(const string& n, const module& m) {
 		// query the state_manager?
 		// see how instance_alias_info::cflat_aliases is implemented
 		// using a cflat_aliases_arg_type visitor.
-		a.dump_hierarchical_name(cerr << "Sooo close... ") << endl;
-		cerr << "Fang finish the lookup!" << endl;
-		return INVALID_NODE_INDEX;
+		const node_index_type ret = a.instance_index;
+#if 0
+		a.dump_hierarchical_name(cerr << "Hi, my name is ") << endl;
+		cerr << "ID = " << ret << endl;
+#endif
+		INVARIANT(ret);
+		// cerr << "Fang finish the lookup!" << endl;
+		return ret;
 	}
-	fclose(temp);
 }
 
 //=============================================================================

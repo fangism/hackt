@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_alias.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_alias.h,v 1.4 2005/12/13 04:15:21 fang Exp $
+	$Id: process_definition_alias.h,v 1.4.2.1 2006/01/19 00:16:13 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_ALIAS_H__
@@ -50,6 +50,9 @@ public:
 
 	never_ptr<const fundamental_type_reference>
 	get_base_type_ref(void) const;
+
+	never_ptr<const port_formals_manager>
+	get_port_formals_manager(void) const;
 
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);

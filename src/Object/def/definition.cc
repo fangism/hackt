@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.9.2.1 2006/01/18 06:24:52 fang Exp $
+ 	$Id: definition.cc,v 1.9.2.2 2006/01/19 00:16:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -207,12 +207,33 @@ definition_base::check_null_template_argument(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Overrideable default.  
+	Every definition type with a port_formals_manager should override.
+	TODO: use class_traits to override (pure virtual) automatically.
+ */
+never_ptr<const port_formals_manager>
+definition_base::get_port_formals_manager(void) const {
+	return never_ptr<const port_formals_manager>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	A default lookup that always returns NULL.  
 	Overridden in process_definition.  
  */
 never_ptr<const instance_collection_base>
 definition_base::lookup_port_formal(const string& id) const {
+#if 0
 	return never_ptr<const instance_collection_base>(NULL);
+#else
+	const never_ptr<const port_formals_manager>
+		pfm(get_port_formals_manager());
+	if (pfm) {
+		return pfm->lookup_port_formal(id);
+	} else {
+		return never_ptr<const instance_collection_base>(NULL);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -224,9 +245,20 @@ definition_base::lookup_port_formal(const string& id) const {
  */
 size_t
 definition_base::lookup_port_formal_position(
-		const instance_collection_base&) const {
+		const instance_collection_base& i) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	return 0;
+#else
+	const never_ptr<const port_formals_manager>
+		pfm(get_port_formals_manager());
+	if (pfm) {
+		return pfm->lookup_port_formal_position(i.get_name());
+	} else {
+		// TODO: enumerate as port_formal_manager::INVALID_POSITION;
+		return 0;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -818,6 +850,7 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Override's definition_base's port formal lookup.  
 	\return pointer to port's instantiation if found, else NULL.  
@@ -837,6 +870,13 @@ user_def_chan::lookup_port_formal_position(
 	STACKTRACE_VERBOSE;
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+never_ptr<const port_formals_manager>
+user_def_chan::get_port_formals_manager(void) const {
+	return never_ptr<const port_formals_manager>(&port_formals);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 /**
@@ -1006,6 +1046,12 @@ channel_definition_alias::get_parent(void) const {
 never_ptr<const fundamental_type_reference>
 channel_definition_alias::get_base_type_ref(void) const {
 	return base;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const port_formals_manager>
+channel_definition_alias::get_port_formals_manager(void) const {
+	return base->get_base_chan_def()->get_port_formals_manager();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1914,6 +1960,7 @@ user_def_datatype::add_port_formal(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Override's definition_base's port formal lookup.  
 	\return pointer to port's instantiation if found, else NULL.  
@@ -1933,6 +1980,13 @@ user_def_datatype::lookup_port_formal_position(
 	STACKTRACE_VERBOSE;
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const port_formals_manager>
+user_def_datatype::get_port_formals_manager(void) const {
+	return never_ptr<const port_formals_manager>(&port_formals);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 definition_base::type_ref_ptr_type
@@ -2116,6 +2170,12 @@ datatype_definition_alias::get_key(void) const {
 never_ptr<const scopespace>
 datatype_definition_alias::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const port_formals_manager>
+datatype_definition_alias::get_port_formals_manager(void) const {
+	return base->get_base_datatype_def()->get_port_formals_manager();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2435,6 +2495,7 @@ process_definition::lookup_object_here(const string& s) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Override's definition_base's port formal lookup.  
 	\return pointer to port's instantiation if found, else NULL.  
@@ -2454,6 +2515,13 @@ process_definition::lookup_port_formal_position(
 	STACKTRACE_VERBOSE;
 	return port_formals.lookup_port_formal_position(i.get_name());
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const port_formals_manager>
+process_definition::get_port_formals_manager(void) const {
+	return never_ptr<const port_formals_manager>(&port_formals);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2910,6 +2978,12 @@ process_definition_alias::get_parent(void) const {
 never_ptr<const fundamental_type_reference>
 process_definition_alias::get_base_type_ref(void) const {
 	return base;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const port_formals_manager>
+process_definition_alias::get_port_formals_manager(void) const {
+	return base->get_base_proc_def()->get_port_formals_manager();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

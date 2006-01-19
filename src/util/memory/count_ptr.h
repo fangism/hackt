@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.8.4.1 2006/01/18 06:25:13 fang Exp $
+	$Id: count_ptr.h,v 1.8.4.2 2006/01/19 00:16:16 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
@@ -181,6 +181,7 @@ friend class pointer_manipulator;
 template <class, class> friend class count_ptr;
 	typedef	count_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef T			element_type;
 	typedef	Dealloc			deallocation_policy;
 	typedef T&			reference;

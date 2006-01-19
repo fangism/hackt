@@ -1,0 +1,18 @@
+// "017.hac"
+// copy-modified from "016.in"
+// should fail
+
+defproc baz(bool x, y, z) { }
+
+// baz<> is an invalid type-reference
+template <pint Z>		// omitting this should have same error
+typedef	baz<>	zab;
+
+/**
+baz	P;
+zab	Q;
+
+P.z = Q.y;
+**/
+
+

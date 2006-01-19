@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.1.2.7 2006/01/11 03:41:15 fang Exp $
+	$Id: Node.h,v 1.1.2.8 2006/01/19 00:16:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -131,6 +131,9 @@ public:
 
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;
+
+	ostream&
+	dump_value(ostream&) const;
 
 	ostream&
 	dump_struct(ostream&) const;

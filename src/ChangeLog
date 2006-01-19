@@ -5,6 +5,28 @@
 
 2006-01-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-26:
+	  Can now "get node" in prsim.  
+	  parser::context: added is_publicly_viewable to enable looking
+		up of private members, useful for tools that are
+		read-only w.r.t. precompiled module.  
+		Also added a ctor with const module&, no more need to 
+			const_cast<> for read-only modules.  
+	  Refactored definition_base::lookup_port_formal_*(...):
+		just use one virtual function to get a port_formal_manager*
+		if definition-type has one, else default to NULL.
+		Results in less repetitive code (do this more often).  
+	  This also fixed a bug where template typedefs wouldn't forward
+		lookups to their canonical definition scopes.
+		Added new test-cases in parser/typedef/.  (018 demos this)
+	  Used excl_ptr<FILE, FILE_tag> for the first time in prsim/Reference.cc
+	  TODO: known deficiency only looking up public ports
+		in prsim:get, will be quick to fix.  
+	  TODO: implement definition_base::lookup_instance_member.
+	  TODO: clean up little #if 0 mess in Object/def/definition*.{h,cc}.
+	  Updated TODO list file.  
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-25:
 	  Minor patches to make sure package distchecks and everything builds 
 		on the other tested platforms

@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.7.2.1 2006/01/18 06:24:50 fang Exp $
+	$Id: parse_context.h,v 1.7.2.2 2006/01/19 00:16:11 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -212,9 +212,20 @@ private:
 	 */
 	bool					in_conditional_scope;
 
+	/**
+		This turns off accessibility checks in all contexts, 
+		which is useful for other tools that need to read 
+		the pre-compiled objects.  
+		Default: false, enforcing port visibility only.  
+	 */
+	bool					view_all_publicly;
+
 public:
 	explicit
 	context(module& m);
+
+	explicit
+	context(const module& m, const bool _public);
 
 private:
 	// private undefined copy-constructor
@@ -474,6 +485,9 @@ public:
 
 	void
 	relaxed_template_parameters(void) { strict_template_mode = false; }
+
+	bool
+	is_publicly_viewable(void) const { return view_all_publicly; }
 
 private:
 	void

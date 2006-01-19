@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.1.2.7 2006/01/11 03:41:15 fang Exp $
+	$Id: Node.cc,v 1.1.2.8 2006/01/19 00:16:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -101,12 +101,21 @@ Node::dump_struct(ostream& o) const {
 	Dumps stateful information about the Node only.  
  */
 ostream&
+Node::dump_value(ostream& o) const {
+	return  (value & LOGIC_OTHER) ?
+		// or do you prefer 'U'?
+		o << 'X' :
+		o << size_t(value & LOGIC_VALUE);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps stateful information about the Node only.  
+ */
+ostream&
 Node::dump_state(ostream& o) const {
 	o << "val = ";
-	if (value & LOGIC_OTHER)
-		o << 'X';
-	else	o << size_t(value & LOGIC_VALUE);
-	return o;
+	return dump_value(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

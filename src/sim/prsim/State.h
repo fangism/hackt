@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.1.2.7 2006/01/17 20:55:27 fang Exp $
+	$Id: State.h,v 1.1.2.8 2006/01/19 00:16:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -40,7 +40,15 @@ class State {
 	// too lazy to write public mutator methods for the moment.  
 	friend class ExprAlloc;
 public:
-	typedef	vector<Node>			node_pool_type;
+	// these typedefs will make it convenient to template this
+	// class in the future...
+	typedef	Node				node_type;
+	typedef	Expr				expr_type;
+	typedef	ExprGraphNode			graph_node_type;
+	typedef	EventPool			event_pool_type;
+	typedef	EventQueue			event_queue_type;
+
+	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<Expr>			expr_pool_type;
 private:
 	/**
@@ -48,12 +56,12 @@ private:
 		to built-up expressions.  
 		Will have log(N) time access due to internal tree structure.
 	 */
-	typedef	list_vector<Expr>		temp_expr_pool_type;
+	typedef	list_vector<expr_type>		temp_expr_pool_type;
 	/**
 		The structure for top-down expression topology.  
 		Will have log(N) time access due to internal tree structure.
 	 */
-	typedef	list_vector<ExprGraphNode>	expr_graph_node_pool_type;
+	typedef	list_vector<graph_node_type>	expr_graph_node_pool_type;
 
 	enum {
 		/// index of the first valid node
@@ -67,18 +75,14 @@ private:
 	node_pool_type				node_pool;
 	expr_pool_type				expr_pool;
 	expr_graph_node_pool_type		expr_graph_node_pool;
-	EventPool				event_pool;
-	EventQueue				event_queue;
+	event_pool_type				event_pool;
+	event_queue_type			event_queue;
 	// current time, etc...
 	// watched nodes
 	// vectors
 	// channels
 	// mode of operation
 public:
-#if 0
-	State();
-#endif
-
 #if 0
 	explicit
 	State(const count_ptr<const module>&);
@@ -87,6 +91,7 @@ public:
 	State(const module&);
 #endif
 private:
+	// inaccessible undefined copy-constructor ... for now
 	State(const State&);
 
 public:
@@ -105,6 +110,12 @@ public:
 
 	void
 	check_node(const node_index_type) const;
+
+	const node_type&
+	get_node(const node_index_type) const;
+
+	node_type&
+	get_node(const node_index_type);
 
 	void
 	check_expr(const expr_index_type) const;
