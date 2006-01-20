@@ -1,6 +1,6 @@
 % "chapters/PRS.tex"
 
-%	$Id: PRS.tex,v 1.4 2005/12/13 04:14:41 fang Exp $
+%	$Id: PRS.tex,v 1.4.6.1 2006/01/20 07:53:56 fang Exp $
 
 \chapter{Production Rule Set (PRS)}
 \label{sec:prs}
@@ -74,6 +74,25 @@ Attributes from super-cells or sub-cells?
 \subsection{Rule attributes}
 \label{sec:prs:attrib:rule}
 
+We propose the following syntax for per-rule attributes:
+\begin{itemize}
+\item	\tit{rule-attrib-list} : \ttt{[} \tit{rule-attrib} \ttt{;} ... \ttt{]}
+\item	\tit{rule-attrib} : \tit{identifier} \ttt{=} \tit{expr-list}
+\end{itemize}
+
+\tit{Rule-attribs} are generalized as key-value(s) pairs, which permits
+the programmer to add arbitrary attributes to the language without
+adding more keywords to the language.  
+\tit{Rule-attrib-list}s are just semicolon-delimited lists of one or more
+rule-attributes.  
+In the case of repeated attributes, the latter pair will override the former.  
+Rule-attribute-lists are optional prefixes to PRS-rules.  
+
+For now, the purpose of these attributes is to emit
+attribute lines suitable for consumption by another text-based tool, 
+such as old versions of \ttt{prsim}.  
+
+Q:
 What happens when we OR-combine rules with different attributes?
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
@@ -142,6 +161,44 @@ Interpret the following:
 \label{sec:prs:ext}
 
 This section describes some of the recent extensions to the PRS language.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Macros}
+\label{sec:prs:macros}
+
+As an alternative to a PRS-rule, one may write a macro to represent
+some custom topology of a netlist or as shorthand for an expansion.  
+
+We propose the following syntax for macros:
+
+\begin{itemize}
+\item \tit{PRS-macro} : \tit{identifier} \ttt{(} \tit{PRS-literal-list} \ttt{)}
+\end{itemize}
+
+We do not hard-code any built-in macros into the language with keywords, 
+rather we allow the programmer to define the meaning of each macro.  
+The number of arguments for a macro may also be variable.  
+The macro mechanism can potentially be used to attach attributes
+to nodes and other subnets.  
+As the list of macros grows, they should be documented here.  
+
+Examples of macros one may wish to define:
+\begin{itemize}
+\item passn
+\item passp
+\item pass
+\item assert
+\item stat
+\item comb-fb
+\item exclhi
+\item excllo
+\item bdd-order
+\item cross-coupled-inverters
+\end{itemize}
+
+The remaining sections discuss other extensions that have been proposed
+at other times.  
+See which ones could be folded into a general macro!
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Pass-gates}

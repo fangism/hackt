@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  chapters/PRS.tex: proposed attribute and macro extensions
+		to the PRS language.  
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:
