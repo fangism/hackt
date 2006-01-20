@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: PRS.h,v 1.2.6.1 2006/01/20 01:13:23 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -23,6 +23,7 @@ namespace PRS {
 }
 }
 namespace parser {
+class inst_ref_expr_list;
 /**
 	This is the namespace for the PRS sub-language.  
  */
@@ -69,12 +70,14 @@ virtual	PRS_ITEM_CHECK_PROTO = 0;
  */
 class rule : public body_item {
 protected:
+	const excl_ptr<const attribute_list>		attribs;
 	const excl_ptr<const expr>		guard;
 	const excl_ptr<const char_punctuation_type>	arrow;
 	const excl_ptr<const inst_ref_expr>		r;
 	const excl_ptr<const char_punctuation_type>	dir;
 public:
-	rule(const expr* g, const char_punctuation_type* a,
+	rule(const attribute_list*, const expr* g, 
+		const char_punctuation_type* a,
 		const inst_ref_expr* rhs, const char_punctuation_type* d);
 
 	~rule();
@@ -121,6 +124,31 @@ public:
 
 	PRS_ITEM_CHECK_PROTO;
 };	// end class loop
+
+//=============================================================================
+/**
+	temporary hacks:
+	PRS-macros look like function calls.  
+	The programmer can design these to do whatever.  
+ */
+class macro : public body_item {
+	const excl_ptr<const token_identifier>		name;
+	const excl_ptr<const inst_ref_expr_list>	args;
+public:
+	macro(const token_identifier*, const inst_ref_expr_list*);
+	~macro();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	PRS_ITEM_CHECK_PROTO;
+};	// end class macro
 
 //=============================================================================
 /**
@@ -184,6 +212,29 @@ public:
 	CHECK_NONMETA_EXPR_PROTO;
 	CHECK_PRS_EXPR_PROTO;
 };	// end class op_loop
+
+//=============================================================================
+/**
+	Production rule attributes.
+ */
+class attribute {
+	const excl_ptr<const token_identifier>		key;
+	const excl_ptr<const expr_list>			values;
+public:
+	attribute(const token_identifier*, const expr_list*);
+	~attribute();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	// check?
+};	// end class attribute
 
 //=============================================================================
 }	// end namespace PRS

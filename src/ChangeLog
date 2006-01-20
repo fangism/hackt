@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03:
+	  Spawned this concurrent branch for Clint, who's requested some
+		extensions to the PRS language.  
+	  AST/PRS.{h,cc}: added macro and attribute classes.  
+		Check methods are not written yet.  
+		Added optional attribute_list to PRS::rule.  
+		Added macro class as an alternative PRS::body_item.
+	  Grammar updated to add macros and attributes to PRS.
+		macro : ID '(' inst-refs... ')'
+		attribute : ID '=' expr_list
+		attribute_list : '[' attribute ';' ... ']'
+	  prs_expr : are now limited to relative (local) instance references
+		only, so no ::-prefixed absolute_id's.  
+	  TODO: write some check functionality.  
+
+	PASTE -prsim-00 branch LOG BELOW HERE ON MERGE
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

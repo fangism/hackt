@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: PRS.cc,v 1.2.6.1 2006/01/20 01:13:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -15,6 +15,7 @@
 
 #include "AST/PRS.h"
 #include "AST/expr.h"		// for id_expr
+#include "AST/expr_list.h"	// for attributes
 #include "AST/range.h"
 #include "AST/token.h"
 #include "AST/token_char.h"
@@ -66,10 +67,14 @@ body_item::~body_item() { }
 //=============================================================================
 // class rule method definitions
 
+/**
+	\param atts the attribute list is optional.  
+ */
 CONSTRUCTOR_INLINE
-rule::rule(const expr* g, const char_punctuation_type* a,
+rule::rule(const attribute_list* atts, const expr* g, 
+		const char_punctuation_type* a,
 		const inst_ref_expr* rhs, const char_punctuation_type* d) :
-		body_item(), guard(g), arrow(a),
+		body_item(), attribs(atts), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
 }
@@ -82,7 +87,10 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(rule)
 
 line_position
 rule::leftmost(void) const {
-	return guard->leftmost();
+	// TODO: update me
+	if (attribs)
+		return attribs->leftmost();
+	else	return guard->leftmost();
 }
 
 line_position
@@ -95,10 +103,14 @@ rule::rightmost(void) const {
 	Type-checks and constructs a production rule.  
 	\return a newly constructed, type-checked production rule, 
 		to be added to a definition.  
+	TODO: check attributes!
  */
 body_item::return_type
 rule::check_rule(context& c) const {
 	STACKTRACE("parser::PRS::rule::check_rule()");
+	if (attribs) {
+		FINISH_ME(Fang);
+	}
 	prs_expr_return_type g(guard->check_prs_expr(c));
 	if (!g) {
 		cerr << "ERROR in production rule guard at " <<
@@ -372,6 +384,60 @@ op_loop::check_prs_expr(context& c) const {
 }
 
 //=============================================================================
+// class macro method definitions
+
+macro::macro(const token_identifier* i, const inst_ref_expr_list* r) :
+		name(i), args(r) {
+	NEVER_NULL(name); NEVER_NULL(args);
+}
+
+macro::~macro() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(macro)
+
+line_position
+macro::leftmost(void) const {
+	return name->leftmost();
+}
+
+line_position
+macro::rightmost(void) const {
+	return args->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+body_item::return_type
+macro::check_rule(context& c) const {
+	FINISH_ME(Fang);
+	return return_type(NULL);
+}
+
+//=============================================================================
+// class attribute method definitions
+
+attribute::attribute(const token_identifier* i, const expr_list* e)
+		: key(i), values(e) {
+	NEVER_NULL(key); NEVER_NULL(values);
+}
+
+attribute::~attribute() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(attribute)
+
+line_position
+attribute::leftmost(void) const {
+	return key->leftmost();
+}
+
+line_position
+attribute::rightmost(void) const {
+	return values->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// check???
+
+//=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
 // template class node_list<const body_item>;		// PRS::rule_list
@@ -388,6 +454,23 @@ node_list<const body_item>::what(ostream&) const;
 template
 line_position
 node_list<const body_item>::leftmost(void) const;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+template
+node_list<const attribute>::node_list(const PRS::attribute*);
+
+template
+ostream&
+node_list<const attribute>::what(ostream&) const;
+
+template
+line_position
+node_list<const attribute>::leftmost(void) const;
+
+template
+line_position
+node_list<const attribute>::rightmost(void) const;
 #endif
 
 //=============================================================================
