@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.2.6.1 2006/01/20 01:13:23 fang Exp $
+	$Id: PRS.cc,v 1.2.6.2 2006/01/20 07:54:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -12,6 +12,7 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <iterator>
 
 #include "AST/PRS.h"
 #include "AST/expr.h"		// for id_expr
@@ -26,6 +27,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/param_expr.h"
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/lang/PRS.h"
@@ -51,6 +53,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
 namespace HAC {
 namespace parser {
 namespace PRS {
+using std::back_inserter;
 #include "util/using_ostream.h"
 using entity::definition_base;
 using entity::process_definition;
@@ -87,7 +90,6 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(rule)
 
 line_position
 rule::leftmost(void) const {
-	// TODO: update me
 	if (attribs)
 		return attribs->leftmost();
 	else	return guard->leftmost();
@@ -103,14 +105,11 @@ rule::rightmost(void) const {
 	Type-checks and constructs a production rule.  
 	\return a newly constructed, type-checked production rule, 
 		to be added to a definition.  
-	TODO: check attributes!
+	TODO: better error handling, instead of throwing exception...
  */
 body_item::return_type
 rule::check_rule(context& c) const {
 	STACKTRACE("parser::PRS::rule::check_rule()");
-	if (attribs) {
-		FINISH_ME(Fang);
-	}
 	prs_expr_return_type g(guard->check_prs_expr(c));
 	if (!g) {
 		cerr << "ERROR in production rule guard at " <<
@@ -124,13 +123,24 @@ rule::check_rule(context& c) const {
 			where(*r) << "." << endl;
 		THROW_EXIT;
 	}
-	// temporary support for normal arrow only!
 	const bool arrow_type = (arrow->text[0] == '=');
-	return body_item::return_type((dir->text[0] == '+') ?
-		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_up(g, *o, arrow_type)) :
-		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_dn(g, *o, arrow_type)));
+	const count_ptr<entity::PRS::pull_base>
+		ret((dir->text[0] == '+') ?
+			AS_A(entity::PRS::pull_base*,
+				new entity::PRS::pull_up(g, *o, arrow_type)) :
+			AS_A(entity::PRS::pull_base*,
+				new entity::PRS::pull_dn(g, *o, arrow_type)));
+	NEVER_NULL(ret);
+	if (attribs) {
+		entity::PRS::attribute_list_type&
+			atts(ret->get_attribute_list());
+		attribs->check_list(atts, &attribute::check, c);
+		if (find(atts.begin(), atts.end(), false) != atts.end()) {
+			cerr << "ERROR in attributes list before rule." << endl;
+			THROW_EXIT;
+		}
+	}
+	return ret;
 }
 
 //=============================================================================
@@ -408,8 +418,25 @@ macro::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 body_item::return_type
 macro::check_rule(context& c) const {
-	FINISH_ME(Fang);
-	return return_type(NULL);
+	typedef	inst_ref_expr_list::checked_bool_refs_type
+							checked_bools_type;
+	typedef checked_bools_type::const_iterator	const_iterator;
+	typedef checked_bools_type::value_type		value_type;
+	checked_bools_type temp;
+	INVARIANT(args->size());
+	args->postorder_check_bool_refs(temp, c);
+	const const_iterator i(temp.begin());
+	const const_iterator e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking macro arguments in " << where(*args)
+			<< endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(*ret));
+	return ret;
 }
 
 //=============================================================================
@@ -435,7 +462,26 @@ attribute::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// check???
+attribute::return_type
+attribute::check(context& c) const {
+	typedef	expr_list::checked_meta_exprs_type vals_type;
+	typedef	vals_type::const_iterator	const_iterator;
+	typedef	vals_type::value_type		val_type;
+	vals_type vals;
+	values->postorder_check_meta_exprs(vals, c);
+	const const_iterator i(vals.begin());
+	const const_iterator e(vals.end());
+	if (find(i, e, val_type(NULL)) != e) {
+		// one of the param expressions failed checking
+		// blank will signal error
+		cerr << "Error in checking attribute value expressions in "
+			<< where(*values) << endl;
+		return return_type();
+	}
+	return_type ret(*key);
+	copy(i, e, back_inserter(ret));
+	return ret;
+}
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
@@ -456,6 +502,7 @@ line_position
 node_list<const body_item>::leftmost(void) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// template class node_list<const attribute>;
 
 template
 node_list<const attribute>::node_list(const PRS::attribute*);

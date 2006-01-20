@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.2.6.1 2006/01/20 01:13:23 fang Exp $
+	$Id: PRS.h,v 1.2.6.2 2006/01/20 07:54:23 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -18,8 +18,10 @@
 
 namespace HAC {
 namespace entity {
+// be careful of namespaces...
 namespace PRS {
 	class rule;
+	class attribute;
 }
 }
 namespace parser {
@@ -221,6 +223,8 @@ class attribute {
 	const excl_ptr<const token_identifier>		key;
 	const excl_ptr<const expr_list>			values;
 public:
+	typedef	entity::PRS::attribute			return_type;
+public:
 	attribute(const token_identifier*, const expr_list*);
 	~attribute();
 
@@ -233,7 +237,9 @@ public:
 	line_position
 	rightmost(void) const;
 
-	// check?
+	// TODO: param can be const& after branch merge...
+	return_type
+	check(context&) const;
 };	// end class attribute
 
 //=============================================================================

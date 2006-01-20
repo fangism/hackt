@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.2 2005/12/13 04:15:07 fang Exp $
+	$Id: expr.cc,v 1.2.6.1 2006/01/20 07:54:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -374,6 +374,39 @@ inst_ref_expr_list::inst_ref_expr_list(const inst_ref_expr* e) :
 
 inst_ref_expr_list::~inst_ref_expr_list() { }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A more specialized version of check_meta_refs that requires
+	each resolved instance reference to refer to a scalar bool.
+	Suitable for PRS literal list checking. 
+	Consider using a transform algo with functor...
+ */
+void
+inst_ref_expr_list::postorder_check_bool_refs(
+		checked_bool_refs_type& temp, context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_bool_refs()");
+	INVARIANT(temp.empty());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_prs_literal(c));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+inst_ref_expr_list::postorder_check_meta_refs(
+		checked_meta_refs_type& temp, context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_meta_refs()");
+	INVARIANT(temp.empty());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_meta_reference(c));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 		checked_nonmeta_data_refs_type& temp, context& c) const {

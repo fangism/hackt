@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: expr_list.h,v 1.2.6.1 2006/01/20 07:54:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -94,6 +94,8 @@ class inst_ref_expr_list : public inst_ref_expr_list_base {
 protected:
 	typedef	inst_ref_expr_list_base		parent_type;
 public:
+	typedef	DEFAULT_VECTOR(prs_literal_ptr_type)
+						checked_bool_refs_type;
 	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
 						checked_meta_refs_type;
 	typedef	DEFAULT_VECTOR(inst_ref_nonmeta_return_type)
@@ -110,6 +112,16 @@ public:
 	using parent_type::rightmost;
 
 	// generic refs (UNUSED)
+//	check_meta_references...
+	void
+	postorder_check_bool_refs(checked_bool_refs_type&, 
+		context&) const;
+
+	void
+	postorder_check_meta_refs(checked_meta_refs_type&, 
+		context&) const;
+
+//	check_nonmeta_references...
 	void
 	postorder_check_nonmeta_refs(checked_nonmeta_refs_type&, 
 		context&) const;
@@ -117,9 +129,6 @@ public:
 	void
 	postorder_check_nonmeta_data_refs(checked_nonmeta_data_refs_type&, 
 		context&) const;
-
-//	check_meta_references...
-//	check_nonmeta_references...
 
 };	// end class inst_ref_expr_list
 

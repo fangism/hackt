@@ -5,7 +5,19 @@
 
 2006-01-19	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-72-PRS-03:
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  Factored out repetitive code in lang/PRS::pull_* into common base
+		class (pull_base) for maintainability.  
+	  Added object structure for attributes in pull-up/dn production rules.
+		This resulted in larger rule binary objects (4+ B).
+		Tests cases' outputs have been updated accordingly.  
+	  Implemented most of type-checking of macros and attributes
+		expressions and instance-references.  
+		Had to add some new check functions to a few AST classes.  
+	  Some minor enhancements to util library (util/ChangeLog).
+
+
+	* HACKT-00-01-04-main-00-72-PRS-03-01:
 	  Spawned this concurrent branch for Clint, who's requested some
 		extensions to the PRS language.  
 	  AST/PRS.{h,cc}: added macro and attribute classes.  

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.21 2005/09/04 21:15:07 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.21.26.1 2006/01/20 07:54:26 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -32,6 +32,7 @@
 #include "util/IO_utils.tcc"
 #include "util/what.tcc"
 #include "util/attributes.h"
+#include "util/reserve.h"
 
 #if ENABLE_STACKTRACE
 #include "util/sstream.h"
@@ -371,9 +372,11 @@ persistent_object_manager::read_pointer_list(istream& f, L& l) const {
 	STACKTRACE_PERSISTENT("pom::read_pointer_list()");
 	size_type s = 0;
 	read_value(f, s);
+	// magic! reserves memory in advance if is vector! ("util/reserve.h")
+	util::reserve(l, s);
 	size_type i = 0;
 	for ( ; i<s; i++) {
-		// this should work for sticky pointer!
+		// this should work for sticky pointer! through std::_Construct
 		l.push_back(pointer_type());
 		read_pointer(f, l.back());		// in-place
 	}

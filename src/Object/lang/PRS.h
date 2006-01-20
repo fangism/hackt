@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.6 2005/12/13 04:15:34 fang Exp $
+	$Id: PRS.h,v 1.6.4.1 2006/01/20 07:54:24 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_H__
@@ -10,17 +10,22 @@
 #include "Object/object_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/unroll/meta_loop_base.h"
+#include <string>
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace entity {
 class meta_range_expr;
+class param_expr;
+class param_expr_list;
+class dynamic_param_expr_list;
 struct pint_tag;
 template <class, size_t> class value_array;
 
 namespace PRS {
 using std::vector;
+using std::string;
 //=============================================================================
 // forward declarations
 
@@ -87,10 +92,57 @@ public:
 
 //=============================================================================
 /**
-	Pull-up production rule.  
+	Consideration: for efficient copy-constructing, 
+	use a count_ptr<vector<...> > instead of a vector.  
+	String are already efficiently copied internally.  
  */
-class pull_up : public rule {
-	typedef	pull_up			this_type;
+class attribute {
+public:
+	typedef	dynamic_param_expr_list		values_type;
+	typedef	count_ptr<const param_expr>	value_type;
+	typedef	const value_type&		const_reference;
+private:
+	string					key;
+	count_ptr<values_type>			values;
+public:
+	attribute();
+
+	explicit
+	attribute(const string&);
+
+	~attribute();
+
+	operator bool () const;
+
+	// arg is equiv to const_reference
+	void
+	push_back(const count_ptr<const param_expr>&);
+
+	ostream&
+	dump(ostream&, const rule_dump_context& c) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+
+#if 0
+	// functors
+	struct collector;
+	struct writer;
+	struct loader;
+#endif
+};	// end class attribute
+
+//-----------------------------------------------------------------------------
+typedef	vector<attribute>		attribute_list_type;
+
+//=============================================================================
+class pull_base : public rule {
 protected:
 	/**
 		Guard expression.  
@@ -104,6 +156,57 @@ protected:
 		Whether or not complement is implicit.
 	 */
 	bool				cmpl;
+	/**
+		Attribute list.  
+		Want to make this a pointer for efficient duplication?
+	 */
+	attribute_list_type		attributes;
+
+	pull_base();
+	pull_base(const prs_expr_ptr_type&, const literal&, const bool);
+
+public:
+	// because we go through an intermediate count_ptr, dtor needs to 
+	// be public, thus need to be virtual to be safe, ah well...
+virtual	~pull_base();
+
+protected:
+	ostream&
+	dump_base(ostream&, const rule_dump_context&, const char) const;
+
+	good_bool
+	unroll_base(const unroll_context&, const node_pool_type&, 
+		PRS::footprint&, const bool) const;
+
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
+
+public:
+
+	// for convenience
+	attribute_list_type&
+	get_attribute_list(void) { return attributes; }
+
+	const attribute_list_type&
+	get_attribute_list(void) const { return attributes; }
+
+	void
+	check(void) const;
+
+};	// end class pull_base
+
+//=============================================================================
+/**
+	Pull-up production rule.  
+ */
+class pull_up : public pull_base {
+	typedef	pull_up			this_type;
 public:
 	pull_up();
 	pull_up(const prs_expr_ptr_type&, const literal&, const bool);
@@ -120,9 +223,6 @@ public:
 		return dump(o, rule_dump_context());
 	}
 
-	void
-	check(void) const;
-
 	excl_ptr<rule>
 	expand_complement(void);
 
@@ -136,21 +236,8 @@ public:
 /**
 	Pull-down production rule.  
  */
-class pull_dn : public rule {
+class pull_dn : public pull_base {
 	typedef	pull_dn			this_type;
-protected:
-	/**
-		Guard expression.  
-	 */
-	prs_expr_ptr_type		guard;
-	/**
-		Output node.  
-	 */
-	literal				output;
-	/**
-		Whether or not complement is implicit.
-	 */
-	bool				cmpl;
 public:
 	pull_dn();
 	pull_dn(const prs_expr_ptr_type&, const literal&, const bool);
@@ -166,9 +253,6 @@ public:
 	dump(ostream& o) const {
 		return dump(o, rule_dump_context());
 	}
-
-	void
-	check(void) const;
 
 	excl_ptr<rule>
 	expand_complement(void);
@@ -495,6 +579,54 @@ public:
 	PERSISTENT_METHODS_DECLARATIONS
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class not_expr
+
+//=============================================================================
+/**
+	A user-defined expansion which could result in a rule
+	or some other construct, annotation, attribute, ...
+	(not to be confused with AST::parser::PRS::macro)
+ */
+class macro : public rule {
+	typedef	macro				this_type;
+public:
+	typedef	vector<count_ptr<literal> >	nodes_type;
+	typedef	nodes_type::const_reference	const_reference;
+	/**
+		Consider using a count_ptr instead and manage some sort
+		of replication check, since most of these are
+		expected to be some defined identifier.  
+	 */
+private:
+	string					name;
+	nodes_type				nodes;
+public:
+	macro();
+
+	explicit
+	macro(const string&);
+
+	~macro();
+
+	void
+	push_back(const_reference);
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context&) const;
+
+	excl_ptr<rule>
+	expand_complement(void);
+
+	PRS_UNROLL_RULE_PROTO;
+
+	void
+	check(void) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
+	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class macro
 
 //=============================================================================
 }	// end namespace PRS

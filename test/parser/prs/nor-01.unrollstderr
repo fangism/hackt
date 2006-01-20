@@ -13,14 +13,14 @@ Persistent Object Manager text dump:
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	13	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	19	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
@@ -37,14 +37,14 @@ Persistent Object Manager text dump:
 	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	43	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	44	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
@@ -58,7 +58,7 @@ Persistent Object Manager text dump:
 	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	57	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	57	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
@@ -67,7 +67,7 @@ Persistent Object Manager text dump:
 	63	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	66	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	67	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)

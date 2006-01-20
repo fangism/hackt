@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91 2005/12/13 04:14:44 fang Exp $
+#	$Id: Makefile.am,v 1.91.4.1 2006/01/20 07:54:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -444,6 +444,7 @@ UTIL_TCC_FILES = \
 	util/multikey_set.tcc \
 	util/new_functor.tcc \
 	util/packed_array.tcc \
+	util/persistent_functor.tcc \
 	util/persistent_object_manager.tcc \
 	util/qmap.tcc \
 	util/ring_node.tcc \

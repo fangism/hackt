@@ -1,5 +1,25 @@
 # "src/util/ChangeLog"
 
+2006-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  Added some handy persistent template functions in
+		"util/persistent_functor.{h,tcc}", some in the style
+		of util/IO_utils {read,write}_sequence_* functions.  
+		These versions also propagate a persistent_object_manager
+		reference (bound to functor), and cell the canonical 
+		persistence member functions: collect_transient_info, 
+		write_object, load_object.  
+	  Minor enhancement to persistent_object_manager::read_pointer_list<>
+		by using smart call to util::reserve().  
+	  In util/IO_utils: read_sequence_realloc, for safety, inserted
+		a call to the dtor of the argument valarray prior to 
+		placement construction.  
+
+
+	PASTE ChangeLog of -prsim-00 branch BELOW HERE
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:
