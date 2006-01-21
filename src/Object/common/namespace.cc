@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.8.2.2 2006/01/19 07:42:39 fang Exp $
+ 	$Id: namespace.cc,v 1.8.2.3 2006/01/21 10:09:15 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -109,6 +109,7 @@ scopespace::~scopespace() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generic object lookup for unqualified identifier.  
+	This is overrideable.  
 	Doesn't care what sub-type the object actually is.  
 	This variation only searches the current namespace, and 
 	never searches the parents' scopes.  
@@ -120,6 +121,15 @@ scopespace::~scopespace() {
  */
 never_ptr<const object>
 scopespace::lookup_member(const string& id) const {
+	return static_cast<const used_id_map_type&>(used_id_map)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-overrideable lookup_member.  
+ */
+never_ptr<const object>
+scopespace::__lookup_member(const string& id) const {
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
 }
 

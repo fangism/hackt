@@ -2,7 +2,7 @@
 	\file "Object/def/typedef_base.h"
 	Definition-related HAC object classes.  
 	This file originated from "Object/art_object_definition.h",  
-	$Id: typedef_base.h,v 1.4 2005/12/13 04:15:21 fang Exp $
+	$Id: typedef_base.h,v 1.4.2.1 2006/01/21 10:09:19 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_TYPEDEF_BASE_H__
@@ -65,6 +65,9 @@ virtual	~typedef_base();
 
 virtual	const string&
 	get_key(void) const = 0;
+
+virtual	never_ptr<const scopespace>
+	get_scopespace(void) const = 0;
 
 	string
 	get_qualified_name(void) const;

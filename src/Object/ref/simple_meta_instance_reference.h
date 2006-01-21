@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.5 2005/12/13 04:15:36 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.5.2.1 2006/01/21 10:09:22 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -57,6 +57,10 @@ public:
 	/// the type of alias element contained by instance collections
 	typedef	typename class_traits<Tag>::instance_alias_base_type
 						instance_alias_base_type;
+	typedef	never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	typedef	never_ptr<const instance_alias_base_type>
+					const_instance_alias_base_ptr_type;
 	/// the type of connections formed by the alias type
 	typedef	typename class_traits<Tag>::alias_connection_type
 						alias_connection_type;
@@ -101,16 +105,32 @@ public:
 virtual	bad_bool
 	unroll_references(const unroll_context&, alias_collection_type&) const;
 
-virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
+virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
+
+virtual	instance_alias_base_ptr_type
+	unroll_generic_scalar_reference(const unroll_context&) const;
 
 	// see comment on why this need not be virtual!
 	CONNECT_PORT_PROTO;
+
+virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
+
+virtual	size_t
+	lookup_globally_allocated_index(const state_manager&) const;
 
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
 
 protected:
+	// helper function, also used by member
+	static
+	instance_alias_base_ptr_type
+	__unroll_generic_scalar_reference(
+		const instance_collection_generic_type&, 
+		const never_ptr<const index_list_type>,
+		const unroll_context&);
+
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;
 
@@ -124,7 +144,7 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	VIRTUAL_PERSISTENT_METHODS_DECLARATIONS
 
-};	// end class meta_instance_reference
+};	// end class simple_meta_instance_reference
 
 //=============================================================================
 }	// end namespace entity

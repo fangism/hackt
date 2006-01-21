@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.5.2.2 2006/01/19 07:42:41 fang Exp $
+	$Id: process_definition.h,v 1.5.2.3 2006/01/21 10:09:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -67,6 +67,9 @@ public:
 
 	never_ptr<const scopespace>
 	get_parent(void) const;
+
+	never_ptr<const scopespace>
+	get_scopespace(void) const;
 
 	const port_formals_manager&
 	get_port_formals(void) const { return port_formals; }

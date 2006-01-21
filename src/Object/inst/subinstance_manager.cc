@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.9 2005/12/13 04:15:32 fang Exp $
+	$Id: subinstance_manager.cc,v 1.9.2.1 2006/01/21 10:09:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -79,6 +79,9 @@ subinstance_manager::reserve(const size_t s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: This cannot be used to create an instance reference to 
+		private members because this only looks up public ports.  
+	TODO: write a version to make arbitrary member references.  
 	\param i reference to formal instance, to be translated to an
 		actual (unrolled) instance reference.  
 	TODO: invariant check for matching definitions and types.  
@@ -90,6 +93,35 @@ subinstance_manager::lookup_port_instance(
 	if (index > subinstance_array.size()) {
 	ICE(cerr, 
 		cerr << "got port index of " << index
+			<< " when limit is " << subinstance_array.size()
+			<< endl;
+		i.dump(cerr << "\twhile looking up: ") << endl;
+//		cerr << "Here\'s the complete dump of this subinstance set: "
+//			"at " << this << endl;
+//		dump(cerr) << endl;
+	)
+	}
+	INVARIANT(index);
+	INVARIANT(index <= subinstance_array.size());
+	return subinstance_array[index-1];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is used to lookup any instance member, public or private.
+	Q: are private instances allocated space in the subinstance array?
+	NOTE: this code is a dead-end, do NOT call this.  
+	Reason: cannot lookup the subinstance index of a private instance
+		using the unroll/create information.  Such information
+		is only available after global allocation.  
+ */
+subinstance_manager::value_type
+subinstance_manager::lookup_member_instance(
+		const instance_collection_type& i) const {
+	const size_t index = i.is_member_instance();
+	if (index > subinstance_array.size()) {
+	ICE(cerr, 
+		cerr << "got member index of " << index
 			<< " when limit is " << subinstance_array.size()
 			<< endl;
 		i.dump(cerr << "\twhile looking up: ") << endl;

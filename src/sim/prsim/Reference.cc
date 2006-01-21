@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.1.2.4 2006/01/19 00:16:16 fang Exp $
+	$Id: Reference.cc,v 1.1.2.5 2006/01/21 10:09:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,7 +12,7 @@
 #include "parser/instref-parse-real.h"	// for YYSTYPE
 #include "AST/expr.h"
 #include "AST/parse_context.h"
-// #include "Object/module.h"
+#include "Object/module.h"
 #include "Object/object_fwd.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/bool_traits.h"
@@ -34,6 +34,7 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using parser::context;
+using entity::state_manager;
 using entity::unroll_context;
 using entity::module;
 using entity::simple_bool_meta_instance_reference;
@@ -142,10 +143,15 @@ parse_node_to_index(const string& n, const module& m) {
 			return INVALID_NODE_INDEX;
 		}
 		// reminder: this is a packed_array_generic
+#if 0
+		// this code is only effective for reference through
+		// public port members only because it only uses information
+		// available from the unroll/create phases, which excludes
+		// global allocation information.
 		typedef	bool_ref_type::alias_collection_type
 				alias_collection_type;
 		alias_collection_type jar;	// a container of bools
-		const unroll_context uc;
+		const unroll_context uc(true);	// true enables private members
 		if (b->unroll_references(uc, jar).bad) {
 			cerr << "Error unrolling bool reference." << endl;
 			return INVALID_NODE_INDEX;
@@ -174,7 +180,16 @@ parse_node_to_index(const string& n, const module& m) {
 		cerr << "ID = " << ret << endl;
 #endif
 		INVARIANT(ret);
-		// cerr << "Fang finish the lookup!" << endl;
+#else
+		// this code uses the allocation information from the 
+		// alloc phase to find the canonical ID number.  
+		const state_manager& sm(m.get_state_manager());
+		const node_index_type ret =
+			b->lookup_globally_allocated_index(sm);
+#if 1
+		cerr << "index = " << ret << endl;
+#endif
+#endif
 		return ret;
 	}
 }

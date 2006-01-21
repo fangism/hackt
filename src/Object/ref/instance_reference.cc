@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.7.2.1 2006/01/18 06:24:57 fang Exp $
+ 	$Id: instance_reference.cc,v 1.7.2.2 2006/01/21 10:09:21 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -12,8 +12,6 @@
 
 #include <iostream>
 #include <list>
-
-#include "util/multidimensional_sparse_set.tcc"
 
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type.h"
@@ -47,6 +45,7 @@
 #include "Object/type/canonical_generic_chan_type.h"
 
 #include "util/persistent_object_manager.tcc"
+#include "util/multidimensional_sparse_set.tcc"
 
 //=============================================================================
 // specializations
@@ -1339,6 +1338,16 @@ simple_param_meta_value_reference::is_unconditional(void) const {
 		// also need to check assignment stack...
 		return true;
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Should never be called (pure virtual).  
+ */
+const footprint_frame*
+simple_param_meta_value_reference::lookup_footprint_frame(
+		const state_manager&) const {
+	return NULL;
 }
 
 //=============================================================================

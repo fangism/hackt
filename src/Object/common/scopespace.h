@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.6.2.1 2006/01/19 07:42:39 fang Exp $
+	$Id: scopespace.h,v 1.6.2.2 2006/01/21 10:09:16 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_SCOPESPACE_H__
@@ -226,6 +226,9 @@ protected:
 	dump_for_definitions(ostream&) const;
 
 public:
+
+	never_ptr<const object>
+	__lookup_member(const string& id) const;
 
 virtual	never_ptr<const object>
 	lookup_member(const string& id) const;

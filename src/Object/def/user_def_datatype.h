@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.5.2.2 2006/01/19 07:42:41 fang Exp $
+	$Id: user_def_datatype.h,v 1.5.2.3 2006/01/21 10:09:19 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -53,6 +53,9 @@ public:
 
 	never_ptr<const scopespace>
 	get_parent(void) const;
+
+	never_ptr<const scopespace>
+	get_scopespace(void) const;
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;

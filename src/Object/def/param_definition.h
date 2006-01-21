@@ -2,7 +2,7 @@
 	\file "Object/def/param_definition.h"
 	Definition-related HAC object classes.  
 	This file used to be "Object/art_object_definition.h".
-	$Id: param_definition.h,v 1.3 2005/12/13 04:15:20 fang Exp $
+	$Id: param_definition.h,v 1.3.2.1 2006/01/21 10:09:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PARAM_DEFINITION_H__
@@ -58,6 +58,9 @@ public:
 
 	never_ptr<const scopespace>
 	get_parent(void) const;
+
+	never_ptr<const scopespace>
+	get_scopespace(void) const;
 
 	/** can't alias built-in param types, would be confusing */
 	excl_ptr<definition_base>

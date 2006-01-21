@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.5 2005/12/13 04:15:36 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.5.2.1 2006/01/21 10:09:23 fang Exp $
  */
 
 #ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -170,7 +170,7 @@ private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
 
-	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
+	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 	CONNECT_PORT_PROTO;
 protected:

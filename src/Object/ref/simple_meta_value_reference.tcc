@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.6.2.1 2006/01/18 06:24:58 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.6.2.2 2006/01/21 10:09:23 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -643,7 +643,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
-SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& ) const {
 	ICE_NEVER_CALL(cerr);
 	return never_ptr<substructure_alias>(NULL);

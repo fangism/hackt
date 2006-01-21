@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.6.2.1 2006/01/18 06:25:03 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.6.2.2 2006/01/21 10:09:24 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -206,7 +206,7 @@ port_connection::unroll_meta_connect(const unroll_context& c) const {
 	NEVER_NULL(ported_inst);
 	const never_ptr<substructure_alias>
 		parent_instance(
-			ported_inst->unroll_generic_scalar_reference(c));
+			ported_inst->unroll_scalar_substructure_reference(c));
 	if (!parent_instance) {
 		cerr << "ERROR: resolving super instance of port connection: ";
 		ported_inst->dump(cerr, 

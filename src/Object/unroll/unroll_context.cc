@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.7 2005/12/13 04:15:44 fang Exp $
+	$Id: unroll_context.cc,v 1.7.2.1 2006/01/21 10:09:24 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -35,7 +35,8 @@ namespace entity {
 
 unroll_context::unroll_context() :
 		next(), template_args(), template_formals(),
-		target_footprint(NULL)
+		target_footprint(NULL), 
+		lookup_private_members(false)
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -53,7 +54,8 @@ unroll_context::unroll_context(const template_actuals& a,
 		next(),
 		template_args(a),
 		template_formals(&f), 
-		target_footprint(NULL) {
+		target_footprint(NULL),
+		lookup_private_members(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,7 +67,8 @@ unroll_context::unroll_context(const template_actuals& a,
 		next(), 
 		template_args(a), 
 		template_formals(&f), 
-		target_footprint(fp) {
+		target_footprint(fp),
+		lookup_private_members(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -79,7 +82,22 @@ unroll_context::unroll_context(const template_actuals& a,
 		next(&c),
 		template_args(a),
 		template_formals(&f), 
-		target_footprint(NULL) {
+		target_footprint(NULL),
+		lookup_private_members(c.lookup_private_members) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This constructor allows lookups of private members.
+	\param p flag whether or not private lookups are enabled.  
+	\pre object hierarchy should be fully 'created' before passing true.  
+ */
+unroll_context::unroll_context(const bool p) :
+		next(),
+		template_args(),
+		template_formals(), 
+		target_footprint(NULL),
+		lookup_private_members(p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

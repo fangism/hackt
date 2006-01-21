@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.2.2.2 2006/01/19 00:16:10 fang Exp $
+	$Id: expr.cc,v 1.2.2.3 2006/01/21 10:09:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1032,19 +1032,21 @@ member_expr::check_meta_reference(const context& c) const {
 	// NOTE: what about typedefs?  they should lookup using
 	// canonical definitions' scopespaces... is this happening?
 if (c.is_publicly_viewable()) {
-#if 0
-	member_inst = base_def->lookup_instance_member(*member);
+	// FINISH_ME(Fang);
+	const never_ptr<const object>
+		probe(base_def->lookup_nonparameter_member(*member));
+	member_inst = probe.is_a<const instance_collection_base>();
 	if (!member_inst) {
 		base_def->what(cerr << "ERROR: ") << " " <<
 			base_def->get_qualified_name() << 
-			" has no member named \"" << *member <<
+			" has no subinstance member named \"" << *member <<
 			"\" at " << where(*member) << endl;
+		if (probe) {
+			cerr << '(' << *member << " is a ";
+			probe->what(cerr) << ')' << endl;
+		}
 		return meta_return_type(NULL);
 	}
-#else
-	FINISH_ME(Fang);
-	return meta_return_type(NULL);
-#endif
 } else {
 	member_inst = base_def->lookup_port_formal(*member);
 	// LATER: check and make sure definition is signed, 

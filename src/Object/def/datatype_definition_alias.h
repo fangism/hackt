@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.4.2.1 2006/01/19 00:16:12 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.4.2.2 2006/01/21 10:09:17 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
@@ -46,6 +46,9 @@ public:
 
 	never_ptr<const fundamental_type_reference>
 	get_base_type_ref(void) const;
+
+	never_ptr<const scopespace>
+	get_scopespace(void) const;
 
 	/**
 		Since user-def-data-types have port managers, we must resolve

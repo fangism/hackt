@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.9.2.1 2006/01/18 06:24:54 fang Exp $
+ 	$Id: instance_collection.cc,v 1.9.2.2 2006/01/21 10:09:19 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -30,6 +30,7 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "common/TODO.h"
+#include "common/ICE.h"
 
 // the following are required by use of canonical_type<>
 // see also the temporary hack in datatype_instance_collection
@@ -426,6 +427,33 @@ instance_collection_base::is_port_formal(void) const {
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	return def ? def->lookup_port_formal_position(*this) : 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return offset into definition's subinstance array that contains
+		the member.  
+	NOTE: this is called by subinstance_manager::lookup_member_instance,
+		which attempts to lookup a subinstance-index for a 
+		private member.  Private members, however, are not
+		pre-allocated during the create phase, which makes
+		this inappropriate for any use.  
+		This is a dead-end, do not call this.  
+		rewrite elsewhere (20060120).
+ */
+size_t
+instance_collection_base::is_member_instance(void) const {
+#if 0
+	const never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
+	return def ? def->lookup_member_position(*this) : 0;
+#endif
+	ICE(cerr, 
+		cerr << "This code is never supposed to be called, "
+			"refer to source code around here for the reason."
+			<< endl;
+	)
+	return 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

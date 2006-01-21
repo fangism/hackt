@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.5.2.1 2006/01/17 20:55:26 fang Exp $
+	$Id: unroll_context.h,v 1.5.2.2 2006/01/21 10:09:24 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -81,9 +81,22 @@ private:
 		to definition-footprint's actual instance-collection.  
 	 */
 	footprint*					target_footprint;
+	/**
+		Whether or not lookup should also include private 
+		members.  If false, just looks up public ports.
+		This should only be enabled on fully constructed 
+		and allocated object hierarchies, such as looking
+		up in complied objects.  
+		Default false.  
+	 */
+	bool					lookup_private_members;
 public:
 	// parameterless types and entity::module need this
 	unroll_context();
+
+	/// For allowing lookups to private members
+	explicit
+	unroll_context(const bool);
 
 	explicit
 	unroll_context(footprint* const);
@@ -101,6 +114,9 @@ public:
 
 	bool
 	empty(void) const;
+
+	bool
+	include_private(void) const { return lookup_private_members; }
 
 	ostream&
 	dump(ostream&) const;

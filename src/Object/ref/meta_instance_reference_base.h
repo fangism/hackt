@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.5 2005/12/13 04:15:35 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.5.2.1 2006/01/21 10:09:22 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -18,6 +18,8 @@
 namespace HAC {
 namespace entity {
 class scopespace;
+struct footprint_frame;
+class state_manager;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
@@ -107,12 +109,13 @@ virtual	bool
 /**
 	The implementation of this will be policy-determined, 
 	by substructure_alias_base<bool>.  
+	\return a pointer to an alias with substructure.  
  */
-#define	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO				\
+#define	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO			\
 	never_ptr<substructure_alias>					\
-	unroll_generic_scalar_reference(const unroll_context&) const
+	unroll_scalar_substructure_reference(const unroll_context&) const
 
-virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO = 0;
+virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 #define	CONNECT_PORT_PROTO						\
 	bad_bool							\
@@ -120,6 +123,12 @@ virtual	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO = 0;
 		const unroll_context&) const
 
 virtual	CONNECT_PORT_PROTO = 0;
+
+#define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
+	const footprint_frame*						\
+	lookup_footprint_frame(const state_manager&) const
+
+virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 
 private:
 virtual	excl_ptr<aliases_connection_base>

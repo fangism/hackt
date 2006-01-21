@@ -3,6 +3,40 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-28:
+	  Currently, prsim instance member lookup is in transition.
+	  AST::id_expr::check_meta_reference() calls 
+		the base-definition's lookup_nonparameter_member()
+		to lookup private subinstances of any type.  
+	  entity::definitions: added get_scopespace(), 
+		all typedefs forward the request to the scopespace to 
+		the canonical type's definition, 
+		implemented lookup_nonparameter_member(). 
+	  Added scopespace::__lookup_member(): non-virtual lookup of id_map.
+	  Tons of restructuring in {simple,member}_meta_instance_reference
+		and simple_meta_instance_reference_implementation<> policy:
+		factored out common code, added new useful method functions
+		for performing lookups of globally allocated information.  
+		Renamed old unroll_generic_scalar_reference to
+			unroll_scalar_substructure_reference, and
+			redefined unroll_generic_scalar_reference
+			to return a pointer to the alias' base type.  
+	  instance_alias_info<Tag>: instance_index member pushed to
+		substructure_parent_type.
+	  sim/prsim/Reference.cc: Switched to new incomplete code
+		over old incorrect code (that's progress).  
+	  TODO: finish writing member_meta_instance_reference::
+		lookup_globally_allocated_index, using type footprint.  
+	  TODO: clean up Object/ref/*.{h,tcc} files, after we re-wrote
+		a bunch of stuff and left obsolete code commented out.  
+	  TODO: clean up instance_index switches in instance_alias_info...
+	  TODO: no longer need unroll_context::lookup_private_members, 
+		revert those revisions.  
+	  TODO: merge in -PRS-03 sibling branch, then merge to trunk.  
+
+
 2006-01-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-27:

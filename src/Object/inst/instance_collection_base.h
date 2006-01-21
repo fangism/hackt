@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.7.2.1 2006/01/18 06:24:56 fang Exp $
+	$Id: instance_collection_base.h,v 1.7.2.2 2006/01/21 10:09:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -300,6 +300,9 @@ public:
 
 	size_t
 	is_port_formal(void) const;
+
+	size_t
+	is_member_instance(void) const;
 
 	bool
 	is_local_to_definition(void) const;

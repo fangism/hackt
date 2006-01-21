@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.5.2.2 2006/01/19 07:42:40 fang Exp $
+	$Id: definition_base.h,v 1.5.2.3 2006/01/21 10:09:18 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
@@ -141,12 +141,18 @@ virtual	void
 virtual	never_ptr<const port_formals_manager>
 	get_port_formals_manager(void) const;
 
+virtual	never_ptr<const scopespace>
+	get_scopespace(void) const = 0;
+
 	// non-virtual
 	never_ptr<const instance_collection_base>
 	lookup_port_formal(const string& id) const;
 
 	size_t
 	lookup_port_formal_position(const instance_collection_base&) const;
+
+	never_ptr<const object>
+	lookup_nonparameter_member(const string& id) const;
 
 virtual	never_ptr<const object>
 	lookup_member(const string& id) const;

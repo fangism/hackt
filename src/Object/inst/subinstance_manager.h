@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.7 2005/12/13 04:15:33 fang Exp $
+	$Id: subinstance_manager.h,v 1.7.2.1 2006/01/21 10:09:20 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -93,6 +93,9 @@ public:
 	// TODO: assertion check that arg is a port member of this type?
 	value_type
 	lookup_port_instance(const instance_collection_type&) const;
+
+	value_type
+	lookup_member_instance(const instance_collection_type&) const;
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>

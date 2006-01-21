@@ -1,0 +1,16 @@
+// "020.hac"
+// copy-modified from "019.in"
+// should pass
+
+template <pint N>
+defproc baz(bool x, y, z[N]) { }
+
+template <pint N>	// note: using same id
+typedef	baz<N>	zab;
+
+baz<4>	P;
+zab<3>	Q;
+
+P.z[3] = Q.z[2];
+
+

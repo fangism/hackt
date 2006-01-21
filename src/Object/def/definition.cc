@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.9.2.3 2006/01/19 07:42:40 fang Exp $
+ 	$Id: definition.cc,v 1.9.2.4 2006/01/21 10:09:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -221,6 +221,26 @@ definition_base::lookup_member(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is needed to skip over parameter members.
+	We only return non-parameter members.  
+	Q: would lookup_member have the same effect as 
+		getting the scopespace and __lookup_member?
+ */
+never_ptr<const object>
+definition_base::lookup_nonparameter_member(const string& id) const {
+	typedef	never_ptr<const object>	return_type;
+	const never_ptr<const scopespace> s(get_scopespace());
+	if (s) {
+		const return_type ret(s->__lookup_member(id));
+		if (ret && !lookup_template_formal(id)) {
+			return ret;
+		} 
+	}
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Used for checking when a type should have null template arguments.  
 	Really just a special case of general template argument checking.  
 	\return true if this definition is not templated, 
@@ -232,6 +252,27 @@ definition_base::check_null_template_argument(void) const {
 	STACKTRACE("definition_base::check_null_template_argument()");
 	return template_formals.check_null_template_argument();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	Overrideable default.  
+ */
+never_ptr<const scopespace>
+defintion_base::get_scopespace(void) const {
+	return never_ptr<const scopespace>(NULL);
+}
+#else
+/***
+	We're going to treat all member-of-scopespace lookups 
+	the same.
+	Let get_scopespace be pure-virtual.  
+	Right now, definitions are derived from scopespace, which means
+	that a dynamic_cast will achieve the same thing, 
+	however, in the future, we will move away from this
+	and use a policy-based containership.  (20060119)
+***/
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -814,6 +855,12 @@ user_def_chan::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+user_def_chan::get_scopespace(void) const {
+	return never_ptr<const scopespace>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 user_def_chan::commit_arity(void) {
 	// nothing until a footoprint_manager is added
@@ -1039,6 +1086,12 @@ channel_definition_alias::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+channel_definition_alias::get_scopespace(void) const {
+	return base->get_base_chan_def()->get_scopespace();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const fundamental_type_reference>
 channel_definition_alias::get_base_type_ref(void) const {
 	return base;
@@ -1254,6 +1307,12 @@ built_in_datatype_def::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+built_in_datatype_def::get_scopespace(void) const {
+	return never_ptr<const scopespace>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const datatype_definition_base>
 built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
 	return never_ptr<const datatype_definition_base>(this);
@@ -1459,6 +1518,12 @@ built_in_param_def::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+built_in_param_def::get_scopespace(void) const {
+	return never_ptr<const scopespace>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Cannot alias built-in parameter types!
 	Why? Because I said so.  
@@ -1586,6 +1651,15 @@ if (df.show_owner) {
 never_ptr<const scopespace>
 enum_datatype_def::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is there really anything in this scopespace?
+ */
+never_ptr<const scopespace>
+enum_datatype_def::get_scopespace(void) const {
+	return never_ptr<const scopespace>(this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1894,6 +1968,12 @@ user_def_datatype::get_parent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+user_def_datatype::get_scopespace(void) const {
+	return never_ptr<const scopespace>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 user_def_datatype::commit_arity(void) {
 	// nothing, until a footprint_manager is added
@@ -2143,6 +2223,12 @@ datatype_definition_alias::get_key(void) const {
 never_ptr<const scopespace>
 datatype_definition_alias::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+datatype_definition_alias::get_scopespace(void) const {
+	return base->get_base_datatype_def()->get_scopespace();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2453,6 +2539,12 @@ if (df.show_owner) {
 never_ptr<const scopespace>
 process_definition::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+process_definition::get_scopespace(void) const {
+	return never_ptr<const scopespace>(this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2922,6 +3014,12 @@ process_definition_alias::get_key(void) const {
 never_ptr<const scopespace>
 process_definition_alias::get_parent(void) const {
 	return parent;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+process_definition_alias::get_scopespace(void) const {
+	return base->get_base_proc_def()->get_scopespace();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

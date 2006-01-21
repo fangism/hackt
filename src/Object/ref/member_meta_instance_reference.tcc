@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.7 2005/12/13 04:15:35 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.7.2.1 2006/01/21 10:09:22 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -17,8 +17,10 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/global_entry.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
+#include "common/ICE.h"
 
 //=============================================================================
 namespace HAC {
@@ -76,6 +78,9 @@ MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Resolves the parent (super) instance first.  
+	NOTE: this should NOT be used to lookup private members
+		because they are not allocated util the alloc phase.  
+		This is still unroll/create time.  
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_collection_generic_type>
@@ -97,19 +102,27 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	}
 	const never_ptr<substructure_alias>
 		parent_struct(
-			_parent_inst_ref.unroll_generic_scalar_reference(c));
+			_parent_inst_ref.unroll_scalar_substructure_reference(c));
 	if (!parent_struct) {
 		_parent_inst_ref.dump(
 			cerr << "ERROR resolving member reference parent ", 
 			expr_dump_context::default_value) << endl;
 		return return_type(NULL);
 	}
+	// assert dynamic cast
+	const physical_instance_collection&
+		phys_inst(IS_A(const physical_instance_collection&, 
+			*this->get_inst_base()));
+	// safety catch:
+	if (c.include_private()) {
+		// parent_struct->lookup_member_instance(phys_inst);
+		ICE(cerr, cerr << "Not supposed to attempt to lookup "
+			"private instance members with this." << endl;
+		)
+	}
 	const count_ptr<instance_collection_base>
-		resolved_instance(parent_struct->lookup_port_instance(
-			// assert dynamic cast
-			IS_A(const physical_instance_collection&, 
-				*this->get_inst_base())
-		));
+		resolved_instance(
+			parent_struct->lookup_port_instance(phys_inst));
 	if (!resolved_instance) {
 		cerr << "ERROR resolving port instance." << endl;
 		return return_type(NULL);
@@ -121,6 +134,75 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	INVARIANT(inst_base);
 	return inst_base;
 }	// end method resolve_parent_member_helper
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recurse through parent instances first.  
+	This can be used to lookup private members.  
+	TODO: re-use most of resolve_parent_member_helper, 
+		up until the lookup part?
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
+		const state_manager& sm) const {
+	STACKTRACE_VERBOSE;
+	const base_inst_type& _parent_inst_ref(
+		IS_A(const simple_meta_instance_reference_base&, 
+			*this->base_inst_ref));
+	if (_parent_inst_ref.dimensions()) {
+		// error message copied from above
+		cerr << "ERROR: parent instance reference of a "
+			"member reference must be scalar." << endl <<
+			"However, non-scalar member-parent references "
+			"may be introduced in the future, bug Fang about it."
+			<< endl;
+		return 0;
+	}
+	const footprint_frame* fpf =
+		_parent_inst_ref.lookup_footprint_frame(sm);
+	if (!fpf) {
+		// TODO: better error message
+		cerr << "Failure resolving parent instance reference" << endl;
+		return 0;
+	}
+	// now need to compute the offset into the corresponding 
+	// footprint_frame_map
+	// we look for the local alias to get the local offset!
+	const unroll_context uc;	// until we pass a global context
+	const instance_alias_base_ptr_type
+		local_alias(
+#if 0
+			// WRONG
+			// can't access private member
+			__unroll_generic_scalar_reference(
+			*this->inst_collection_ref, this->array_indices, uc)
+#else
+#if 1
+			// WRONG
+			// should be same effect
+			parent_type::unroll_generic_scalar_reference(uc)
+#else
+			// the above are both wrong...
+			// lookup of global index should never call unroll_*
+			// need to lookup *footprint* with footprint_frame
+			// can get footprint from global_entry's parent
+			// or from parent_instance's type.  
+			// TODO: Finish me, NOW!
+#endif
+#endif
+			);
+	if (!local_alias) {
+		// TODO: better error message
+		cerr << "Error resolving member instance alias." << endl;
+		return 0;
+	}
+	const size_t ind = local_alias->instance_index;
+	INVARIANT(ind);
+	const footprint_frame_map_type& ffm(fpf->template get_frame_map<Tag>());
+	// this lookup returns a globally allocated index
+	return ffm[ind -1];	// 0-indexed offset
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -150,12 +232,33 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+		const unroll_context& c) const {
+	// copy-modified from unroll_scalar_substructure_reference, below
+	typedef	simple_meta_instance_reference_implementation<
+			class_traits<Tag>::has_substructure>
+				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
+	const count_ptr<instance_collection_generic_type>
+		inst_base(resolve_parent_member_helper(c));
+	if (!inst_base) {
+		// already have error message
+		return instance_alias_base_ptr_type(NULL);
+	}
+	const unroll_context cc(c.make_member_context());
+	return __unroll_generic_scalar_reference(
+			*inst_base, this->array_indices, cc);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return a hierarchical instance alias.  
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
-MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
@@ -173,8 +276,31 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	// only the ultimate parent of the reference should use the footprint
 	// copy the unroll_context *except* for the footprint pointer
 	return substructure_implementation_policy::
+#if 0
 		template unroll_generic_scalar_reference<Tag>(
 			*inst_base, this->array_indices, cc);
+#else
+		template unroll_generic_scalar_substructure_reference<Tag>(
+			*inst_base, this->array_indices, cc);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Using this instance-reference's globally allocated index, 
+	just indexes into state_manager's global pool
+	to find the footprint_frame.
+ */
+MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+const footprint_frame*
+MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
+		const state_manager& sm) const {
+	typedef	simple_meta_instance_reference_implementation<
+			class_traits<Tag>::has_substructure>
+				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
+	return substructure_implementation_policy::
+		template member_lookup_footprint_frame<Tag>(*this, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

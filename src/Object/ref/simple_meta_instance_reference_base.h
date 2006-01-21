@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_meta_instance_reference_base.h,v 1.6 2005/12/13 04:15:36 fang Exp $
+	$Id: simple_meta_instance_reference_base.h,v 1.6.2.1 2006/01/21 10:09:23 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
@@ -17,6 +17,8 @@ namespace entity {
 class scopespace;
 class meta_index_list;
 class const_index_list;
+struct footprint_frame;
+class state_manager;
 using util::good_bool;
 using util::memory::excl_ptr;
 using util::persistent_object_manager;
@@ -52,6 +54,9 @@ private:
 
 	template <size_t>
 	class mset;
+
+	template <bool>
+	struct has_substructure { };
 public:
 	typedef	meta_index_list			index_list_type;
 protected:
@@ -148,6 +153,8 @@ virtual never_ptr<const instance_collection_base>
 	bool
 	must_be_type_equivalent(const meta_instance_reference_base& i) const;
 
+virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
+
 private:
 	// compute static index coverage
 	excl_ptr<mset_base>
@@ -172,6 +179,25 @@ private:
 	void
 	load_instance_collection_state(istream& f);
 };	// end class simple_meta_instance_reference_base
+
+//=============================================================================
+#if 0
+/**
+	Argument type for looking up hierarchical names'
+	globally allocated indices.  
+ */
+struct global_alloc_index_lookup_arg {
+	const state_manager&			sm;
+	// return information
+
+	/// the footprint_frame of the parent, returned by the callee
+	const footprint_frame*			fpf;
+
+	explicit
+	global_alloc_index_lookup_arg(const state_manager& _sm) : sm(_sm) { }
+
+};	// end struct global_alloc_index_lookup_arg
+#endif
 
 //=============================================================================
 }	// end namespace entity
