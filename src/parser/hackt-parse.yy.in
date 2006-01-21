@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.4.2.3 2006/01/17 02:26:13 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.4.2.4 2006/01/21 21:56:22 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2358,7 +2358,7 @@ yyfreestacks(const short* _yyss_, const short* _yyssp_,
 #else	// !YYBISON
 #define	__symbol_names	yyname
 #define	__shift_table	yysindex
-#define	__reduce_table	yyrtable
+#define	__reduce_table	yyrindex
 #define	__YYTABLESIZE	YYTABLESIZE
 #endif
 

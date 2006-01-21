@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.5.2.2 2006/01/17 02:26:12 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.5.2.3 2006/01/21 21:56:22 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -56,6 +56,8 @@
 %{
 /* scanner-specific header */
 
+#define	ENABLE_STACKTRACE		0
+
 #include <iostream>
 #include <cstdlib>
 
@@ -83,6 +85,7 @@ using namespace HAC::parser;
 #include "lexer/hac_lex.h"
 #include "lexer/hackt-lex-options.h"
 #include "lexer/flex_lexer_state.h"
+#include "util/stacktrace.h"
 using flex::lexer_state;
 
 /**
@@ -499,6 +502,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	const file_status::status stat = ym.get_status();
 	switch(stat) {
 	case file_status::NEW_FILE: {
+		STACKTRACE("import new file");
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		excl_ptr<root_body> _root = HAC::parse_to_AST(ym.get_file());
 		if (!_root) {
@@ -513,20 +517,25 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		return IMPORT;
 	}
 	case file_status::SEEN_FILE: {
+		STACKTRACE("old file");
 		// true: already seen file, this will be a placeholder
 		excl_ptr<root_body> null;
 		hackt_lval->_imported_root =
 			new imported_root(null, string(), true);
 		return IMPORT;
 	}
-	case file_status::CYCLE:
+	case file_status::CYCLE: {
+		STACKTRACE("cyclic file!");
 		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "Detected cyclic file dependency: " << fstr << endl;
 		THROW_EXIT;
-	case file_status::NOT_FOUND:
+	}
+	case file_status::NOT_FOUND: {
+		STACKTRACE("file not found");
 		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "Unable to open file: " << fstr << endl;
 		THROW_EXIT;
+	}
 	default:
 		abort();
 	}

@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.4.2.1 2006/01/18 06:25:03 fang Exp $
+	$Id: file_manager.h,v 1.4.2.2 2006/01/21 21:56:21 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -46,15 +46,28 @@ typedef	unique_list<string>		search_paths;
 struct file_position {
 	FILE*				file;
 	token_position			pos;
+	/**
+		store the (full-path) name of the file here 
+		redundantly for convenience
+	 */
+	string				name;
 
-	file_position() : file(NULL), pos(1, 0, 1) { }
+	file_position() : file(NULL), pos(1, 0, 1), name() { }
 
+#if 0
+	/**
+		For anonymous file streams like stdin.
+	 */
 	explicit
-	file_position(FILE* const f) : file(f), pos(1, 0, 1) { }
+	file_position(FILE* const f) : file(f), pos(1, 0, 1), name() { }
+#endif
+
+	file_position(FILE* const f, const string& n) :
+		file(f), pos(1, 0, 1), name(n) { }
 
 	// default copy-constructor
 	// default destructor
-	// default assignment
+	// default assignment -- should not be assignable...
 
 };	// end struct file_position
 
@@ -97,11 +110,13 @@ public:
 	const_iterator
 	end(void) const { return _files.end(); }
 
-	void
+	bool
 	push(const file_position&);
 
+#if 0
 	bool
 	push(const file_position&, const string&);
+#endif
 
 	const file_position&
 	top(void) const { return _files.back(); }

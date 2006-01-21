@@ -1,0 +1,18 @@
+/**
+	"import-014-b.hac"
+	contributed by: Clint Kelly
+	reduced by: David Fang
+*/
+
+import "import-014-a.hac";
+
+defproc srambit (pbit pb; ch1of2 b, w)
+{
+	prs {
+		w & b.t -> pb.t+				
+		w & b.t -> pb.f-				
+		w & b.f -> pb.f+				
+		w & b.f -> pb.t-				
+	}
+}
+

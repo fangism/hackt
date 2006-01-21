@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.91.2.21 2006/01/18 09:18:16 fang Exp $
+#	$Id: Makefile.am,v 1.91.2.22 2006/01/21 21:56:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1033,6 +1033,7 @@ CLEANLEXER = \
 	lexer/$(INSTREF_LEX_ROOT)-real.cc \
 	lexer/$(INSTREF_LEX_ROOT).cc
 
+libs: $(LTLIBRARIES)
 
 DISTCLEANFILES += $(CLEANPARSER) $(CLEANLEXER)
 
@@ -1150,6 +1151,7 @@ help-local:
 	-@$(CALLMAKE) help-check-headers 2> /dev/null
 	@$(ECHO) "Local make targets:"
 	@$(ECHO) "    hackt: the main executable"
+	@$(ECHO) "    libs: all (libtool) libraries"
 	@$(ECHO) "    libhackt.la: core library"
 	@$(ECHO) "    libhacktparsers.la: lexers/parsers library"
 	@$(ECHO) "    libhacktexec.la: subprogram library"

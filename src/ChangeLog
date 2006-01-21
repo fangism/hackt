@@ -5,6 +5,20 @@
 
 2006-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-29:
+	  Quick emergency bug-fix (reported by Clint Kelly):
+		Lexer was dying on assertion failure with w.r.t.
+		registry sizes and stack sizes.  (They need not be correlated.)
+		file_position struct was given a string name (path to file)
+		field for convenience.  Much cleaner now.  
+	  Some minor POSIX-related fixes, and yacc-related (libbogus) fixes.  
+	  TODO: line numbers reported are incorrect, fix using new
+		test case example.  
+	  TODO: back to TODO list from -prsim-00-28.  
+
+
+2006-01-21	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-72-prsim-00-28:
 	  Currently, prsim instance member lookup is in transition.
 	  AST::id_expr::check_meta_reference() calls 

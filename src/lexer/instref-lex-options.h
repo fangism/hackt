@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-lex-options.h,v 1.1.4.4 2006/01/17 02:26:13 fang Exp $
+	$Id: instref-lex-options.h,v 1.1.4.5 2006/01/21 21:56:22 fang Exp $
  */
 
 #ifndef	__LEXER_INSTREF_LEX_OPTIONS_H__
@@ -91,7 +91,7 @@
 #endif	// USING_BISON
 
 #else	// defined(LIBBOGUS)
-#define	instref_lex		__instref_lex
+#define	instref_lex()		__instref_lex(&yylval)
 
 #endif	// LIBBOGUS
 

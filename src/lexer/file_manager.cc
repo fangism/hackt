@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.3 2005/12/13 04:15:44 fang Exp $
+	$Id: file_manager.cc,v 1.3.2.1 2006/01/21 21:56:21 fang Exp $
  */
 
 #include <iostream>
@@ -28,13 +28,30 @@ file_position_stack::~file_position_stack() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Anonymous file_position.  
+	\return true if file was already included/opened previously.  
  */
-void
+bool
 file_position_stack::push(const file_position& fp) {
+#if 0
 	_files.push_back(fp);
+#else
+	if (fp.name.length()) {
+		if (_registry.push(fp.name)) {
+			return true;
+		} else {
+			_files.push_back(fp);
+			return false;
+		}
+	} else {
+		// file is anonymous (like stdin)
+		_files.push_back(fp);
+		return false;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Pushes file_position onto stack and registers file name with it
 	to the list of files seen.  
@@ -50,6 +67,7 @@ file_position_stack::push(const file_position& fp, const string& fn) {
 		return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -170,22 +188,24 @@ file_manager::open_FILE(const char* fs) {
 file_manager::return_type
 file_manager::open_FILE(const char* fs, FILE* f) {
 	STACKTRACE_VERBOSE;
+	static const char _stdin_[] = "-stdin-";
 	INVARIANT(f);
 	// don't register stdin with a file name in the file_position_stack
 	// but is ok to register it with the cycle-detection _names stack.
-	const bool cyc = _names.push_back(fs ? fs : "-stdin-");
+	const bool cyc = _names.push_back(fs ? fs : _stdin_);
 	file_status::status s;		// whether or not was already included
 	if (cyc) {
 		// then must also already have been on _fstack
-		INVARIANT(_fstack.push(file_position(f), fs));
+		const bool seen = _fstack.push(file_position(f, fs));
+		INVARIANT(seen);
 		s = file_status::CYCLE;
 	} else if (fs) {
 		// check to see whether or not it is new or visited
-		s = _fstack.push(file_position(f), fs) ?
+		s = _fstack.push(file_position(f, fs)) ?
 			file_status::SEEN_FILE : file_status::NEW_FILE;
 	} else {
 		// stdin: can only be opened once, so safe to assert it is new
-		_fstack.push(file_position(f));
+		_fstack.push(file_position(f, _stdin_));
 		s = file_status::NEW_FILE;
 	}
 	return return_type(&_fstack.top(), s);
@@ -215,7 +235,7 @@ void
 file_manager::reset(void) {
 	STACKTRACE_VERBOSE;
 	_fstack.reset();
-	_fstack.push(file_position());
+	_fstack.push(file_position());	// NULL file
 	_paths.clear();
 	_names.clear();
 }
@@ -226,16 +246,19 @@ file_manager::reset(void) {
  */
 ostream&
 file_manager::dump_file_stack(ostream& o) const {
-	// cerr << _fstack.size() << endl;
-	// cerr << _names.size() << endl;
-	INVARIANT(_fstack.size() == _names.size() +1);
+	STACKTRACE_VERBOSE;
+#if 0
+	cerr << _fstack.size() << endl;
+	cerr << _names.size() << endl;
+	// INVARIANT(_fstack.size() == _names.size() +1);	// not true
+#endif
 	file_position_stack::const_iterator pi(++_fstack.begin());
 	const file_position_stack::const_iterator pe(_fstack.end());
-	file_names_type::const_iterator ni(_names.begin());
+	// file_names_type::const_iterator ni(_names.begin());
 	// const file_names_type::const_iterator ne(_names.end());
-	for ( ; pi != pe; pi++, ni++) {
+	for ( ; pi != pe; pi++) {
 		const token_position& t(pi->pos);
-		o << "At: \"" << *ni << "\":" << t.line << ':' << endl;
+		o << "At: \"" << pi->name << "\":" << t.line << ':' << endl;
 	}
 	return o;
 }
@@ -246,13 +269,15 @@ file_manager::dump_file_stack(ostream& o) const {
  */
 ostream&
 file_manager::dump_file_stack_top(ostream& o) const {
-	// cerr << _fstack.size() << endl;
-	// cerr << _names.size() << endl;
-	INVARIANT(_fstack.size() == _names.size() +1);
+#if 0
+	cerr << _fstack.size() << endl;
+	cerr << _names.size() << endl;
+	// INVARIANT(_fstack.size() == _names.size() +1);	// not true
+#endif
 	const file_position_stack::const_iterator pi(--_fstack.end());
-	const file_names_type::const_iterator ni(--_names.end());
+	// const file_names_type::const_iterator ni(--_names.end());
 	const token_position& t(pi->pos);
-	o << "From: \"" << *ni << "\":" << t.line << ':' << endl;
+	o << "From: \"" << pi->name << "\":" << t.line << ':' << endl;
 	return o;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
