@@ -1,5 +1,5 @@
 #!/bin/sh
-#	$Id: backup_repository.sh,v 1.2 2005/10/30 22:00:16 fang Exp $
+#	$Id: backup_repository.sh,v 1.3 2006/01/22 18:55:56 fang Exp $
 # Script is only useful to maintainer with local access to CVS repository.
 
 # current directory
@@ -18,7 +18,7 @@ root=/ufs/repository/VLSI/tools
 ymdt=`date -u "+%Y%m%d-%H%M%S"`
 
 # lcal file name
-lfn=$base-$ymdt.bz2
+lfn=$base-$ymdt.tar.bz2
 
 # full path to tar ball
 bz=$pwd/$lfn
