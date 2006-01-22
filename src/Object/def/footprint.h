@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.6 2005/12/13 04:15:20 fang Exp $
+	$Id: footprint.h,v 1.6.2.1 2006/01/22 03:58:10 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_FOOTPRINT_H__
@@ -98,13 +98,14 @@ class footprint :
 	private	footprint_base<enum_tag>, 
 	private	footprint_base<int_tag>, 
 	private	footprint_base<bool_tag> {
-private:
+public:
 	/**
 		This must remain an instance_collection_base because
 		this manages parameter values as well as physical instances.  
 	 */
 	typedef	count_ptr<instance_collection_base>
 					instance_collection_ptr_type;
+private:
 	/**
 		The type of map used to maintain local copy of instances.  
 		Instances contained herein will have no parent scopespace?

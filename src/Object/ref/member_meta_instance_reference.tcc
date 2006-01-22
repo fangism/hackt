@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.7.2.2 2006/01/22 02:36:58 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.7.2.3 2006/01/22 03:58:11 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -113,13 +113,6 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	const physical_instance_collection&
 		phys_inst(IS_A(const physical_instance_collection&, 
 			*this->get_inst_base()));
-	// safety catch:
-	if (c.include_private()) {
-		// parent_struct->lookup_member_instance(phys_inst);
-		ICE(cerr, cerr << "Not supposed to attempt to lookup "
-			"private instance members with this." << endl;
-		)
-	}
 	const count_ptr<instance_collection_base>
 		resolved_instance(
 			parent_struct->lookup_port_instance(phys_inst));
@@ -159,39 +152,36 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 			<< endl;
 		return 0;
 	}
-	const footprint_frame* fpf =
+	const footprint_frame* const fpf =
 		_parent_inst_ref.lookup_footprint_frame(sm);
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
 		return 0;
 	}
+	const footprint* const fp = fpf->_footprint;
+	NEVER_NULL(fp);
+	const string& member_name(this->get_inst_base()->get_name());
+	const footprint::instance_collection_ptr_type fi((*fp)[member_name]);
+	if (!fi) {
+		cerr << "No instance member named \'" <<  member_name <<
+			"\' found." << endl;
+		return 0;
+	}
+	// if found, we assert-cast its type: same as what we used to lookup
+	const instance_collection_generic_type&
+		pi(IS_A(const instance_collection_generic_type&, *fi));
+	// if not, we have a serious inconsistency (throw bad_cast)
+	// now we can get the local frame offset from an index
+	// lookup with this collection.  
+
 	// now need to compute the offset into the corresponding 
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
 	const unroll_context uc;	// until we pass a global context
 	const instance_alias_base_ptr_type
-		local_alias(
-#if 0
-			// WRONG
-			// can't access private member
-			__unroll_generic_scalar_reference(
-			*this->inst_collection_ref, this->array_indices, uc)
-#else
-#if 1
-			// WRONG
-			// should be same effect
-			parent_type::unroll_generic_scalar_reference(uc)
-#else
-			// the above are both wrong...
-			// lookup of global index should never call unroll_*
-			// need to lookup *footprint* with footprint_frame
-			// can get footprint from global_entry's parent
-			// or from parent_instance's type.  
-			// TODO: Finish me, NOW!
-#endif
-#endif
-			);
+		local_alias(__unroll_generic_scalar_reference(
+			pi, this->array_indices, uc));
 	if (!local_alias) {
 		// TODO: better error message
 		cerr << "Error resolving member instance alias." << endl;

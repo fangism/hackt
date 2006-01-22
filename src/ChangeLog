@@ -5,6 +5,16 @@
 
 2006-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-32:
+	  Finished and (basic) tested member_meta_instance_reference::
+		lookup_globally_allocated_index().  Was easy, the footprint*
+		was available from the footprint frame!
+	  Reverted -00-28's revisions to unroll_context (cleaned).
+	  TODO: write some prsim script tests...
+	  Status: need to merge in sibling branch -PRS-03 revisions, 
+		this branch now in semi-stable state to do so.  
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-31:
 	  Clean-up only, from -00-28 revisions on.
 
