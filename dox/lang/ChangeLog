@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2006-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-33-merged-PRS-03-02:
+	  Branch merge.  
+
+
+2006-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  chapters/PRS.tex: proposed attribute and macro extensions
+		to the PRS language.  
+
+
 2006-01-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-27:

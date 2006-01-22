@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	16	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	18	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	25	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12

@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.12 2005/10/08 01:40:03 fang Exp $
+	$Id: IO_utils.tcc,v 1.12.16.1 2006/01/22 05:12:50 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -183,7 +183,13 @@ read_sequence_in_place(istream& f, S& l) {
 	Uses placement construction to pre-allocate a structure
 	with enough entries first, rather than calling resize().  
 	This is particularly useful and specialized for valarray.  
+	(In fact MUST be valarray because of the assumptions about
+	the pointer to value_type being equivalent to the iterator type.)
 	This complements write_sequence.  
+	\pre sequence l has not already been initialized!
+		This is potentially dangerous if attempting to
+		overwrite a sequence without calling it's dtor first.  
+		To be safe, we destroy first.  
  */
 template <class S>
 void
@@ -194,6 +200,7 @@ read_sequence_prealloc(istream& f, S& l) {
 	size_t size;
 	read_value(f, size);
 	INVARIANT(!l.size());
+	l.~sequence_type();
 	// placement construction is safe if this has not been initialized
 	new (&l) sequence_type(size);
 	size_t j = 0;

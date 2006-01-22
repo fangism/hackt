@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.1.2.6 2006/01/18 06:25:04 fang Exp $
+#	$Id: Makefile.inc,v 1.1.2.7 2006/01/22 05:12:50 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -40,6 +40,7 @@ UTIL_TCC_FILES = \
 	util/new_functor.tcc \
 	util/packed_array.tcc \
 	util/persistent_object_manager.tcc \
+	util/persistent_functor.tcc \
 	util/qmap.tcc \
 	util/ring_node.tcc \
 	util/sublist.tcc \

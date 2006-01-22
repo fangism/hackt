@@ -5,6 +5,29 @@
 
 2006-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-33-merged-PRS-03-02:
+	  Merged in sibling branch: -PRS-03-02.
+		This early merge was deemed necessary because many essential
+		fixes and improvements were only on the prsim branch.
+		Most importantly the rewrite of cflat visitation
+		is needed to support PRS.  
+	  TODO: support Clint's requests for PRS extensions.  
+	  Status: prsim incomplete:
+		expression allocation complete, but not optimized.
+		a good start of the command-line interface.
+		PRS extensions:
+			Initial syntax and object support for macros
+				and attributes only.
+			need to support primary tool mode, 
+			possibly added to cflat_options.  
+			Add macro support in the cflat_visitor hierarchy.
+	  PRS activity is planned for after the merge to main trunk, 
+		then splitting off to -PRS-04.
+
+
+
+2006-01-21	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-72-prsim-00-32:
 	  Finished and (basic) tested member_meta_instance_reference::
 		lookup_globally_allocated_index().  Was easy, the footprint*
@@ -69,6 +92,36 @@
 	  TODO: no longer need unroll_context::lookup_private_members, 
 		revert those revisions.  
 	  TODO: merge in -PRS-03 sibling branch, then merge to trunk.  
+
+
+2006-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  Factored out repetitive code in lang/PRS::pull_* into common base
+		class (pull_base) for maintainability.  
+	  Added object structure for attributes in pull-up/dn production rules.
+		This resulted in larger rule binary objects (4+ B).
+		Tests cases' outputs have been updated accordingly.  
+	  Implemented most of type-checking of macros and attributes
+		expressions and instance-references.  
+		Had to add some new check functions to a few AST classes.  
+	  Some minor enhancements to util library (util/ChangeLog).
+
+
+	* HACKT-00-01-04-main-00-72-PRS-03-01:
+	  Spawned this concurrent branch for Clint, who's requested some
+		extensions to the PRS language.  
+	  AST/PRS.{h,cc}: added macro and attribute classes.  
+		Check methods are not written yet.  
+		Added optional attribute_list to PRS::rule.  
+		Added macro class as an alternative PRS::body_item.
+	  Grammar updated to add macros and attributes to PRS.
+		macro : ID '(' inst-refs... ')'
+		attribute : ID '=' expr_list
+		attribute_list : '[' attribute ';' ... ']'
+	  prs_expr : are now limited to relative (local) instance references
+		only, so no ::-prefixed absolute_id's.  
+	  TODO: write some check functionality.  
 
 
 2006-01-18	David Fang		<fangism@users.sourceforge.net>

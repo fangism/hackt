@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.4.2.4 2006/01/21 21:56:22 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.4.2.5 2006/01/22 05:12:49 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -370,6 +370,9 @@ extern const char* const yyrule[];
 	PRS::rule_list*		_prs_rule_list;
 	PRS::rule*		_prs_rule;
 	PRS::loop*		_prs_loop;
+	PRS::macro*		_prs_macro;
+	PRS::attribute*		_prs_attribute;
+	PRS::attribute_list*	_prs_attribute_list;
 }
 
 %{
@@ -620,7 +623,11 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_prs_rule_list>	prs_body
 %type	<_prs_body_item>	prs_body_item
 %type	<_prs_rule>	single_prs
+%type	<_prs_attribute>	prs_rule_attribute
+%type	<_prs_attribute_list>	prs_rule_attribute_list
+%type	<_prs_attribute_list>	prs_rule_attribute_list_in_brackets
 %type	<_prs_loop>	prs_loop
+%type	<_prs_macro>	prs_macro
 %type	<_expr>	prs_expr prs_paren_expr prs_unary_expr
 %type	<_expr> prs_not prs_and prs_or
 %type	<_expr> prs_and_loop prs_or_loop
@@ -635,6 +642,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
 %type	<_expr_list>	shift_expr_list shift_expr_list_in_angles
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
+%type	<_inst_ref_expr>	relative_member_index_expr
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
 %type	<_member_expr>	member_expr
@@ -1766,6 +1774,15 @@ prs_body
 prs_body_item
 	: single_prs { $$ = $1; }
 	| prs_loop { $$ = $1; }
+	| prs_macro { $$ = $1; }
+	;
+
+/* looks like a function call */
+/* macros arguments are restricted to instance references for now */
+/* the argument list must also be non-empty */
+prs_macro
+	: ID member_index_expr_list_in_parens
+		{ $$ = new PRS::macro($1, $2); }
 	;
 
 prs_loop
@@ -1776,8 +1793,40 @@ prs_loop
 
 single_prs
 	/* note: type-check prs_expr as boolean return type */
-	: prs_expr prs_arrow member_index_expr dir
-		{ $$ = new PRS::rule($1, $2, $3, $4); }
+	/* conflict: expr can end ID, and prs_expr can start ID, S/R on :: */
+	: prs_rule_attribute_list_in_brackets
+		prs_expr prs_arrow member_index_expr dir
+		{ $$ = new PRS::rule($1, $2, $3, $4, $5); }
+	| prs_expr prs_arrow member_index_expr dir
+		{ $$ = new PRS::rule(NULL, $1, $2, $3, $4); }
+	;
+
+/**
+// using this construct instead of inlined (as above)
+// results in a conflict on '(' and ID
+prs_rule_attribute_list_in_brackets_opt
+	: prs_rule_attribute_list_in_brackets
+	| 
+	;
+**/
+
+prs_rule_attribute_list_in_brackets
+	: '[' prs_rule_attribute_list ']'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+prs_rule_attribute_list
+	: prs_rule_attribute_list ';' prs_rule_attribute
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+		/* or toss the semicolon? doesn't matter */
+	| prs_rule_attribute
+		{ $$ = new PRS::attribute_list($1); }
+	;
+
+/* key-value pair */
+prs_rule_attribute
+	: ID '=' expr_list
+		{ $$ = new PRS::attribute($1, $3); DELETE_TOKEN($2); }
 	;
 
 prs_arrow
@@ -1805,7 +1854,7 @@ prs_paren_expr
 	;
 
 prs_unary_expr
-	: member_index_expr { $$ = $1; }
+	: relative_member_index_expr { $$ = $1; }
 	| prs_paren_expr { $$ = $1; }
 	| prs_and_loop { $$ = $1; }
 	| prs_or_loop { $$ = $1; }
@@ -1923,6 +1972,14 @@ member_index_expr
 	| member_expr { $$ = $1; }
 	/*			or id_expr? */
 	/* no function calls in expressions... yet */
+	;
+
+/* same as member_index_expr, but disallowing absolute_id's, 
+	thus restricting to local lookups, useful for grammar diambiguation */
+relative_member_index_expr
+	: relative_id { $$ = new id_expr($1); }
+	| index_expr { $$ = $1; }
+	| member_expr { $$ = $1; }
 	;
 
 /** This removes S/R conflict between (a[i])[j] and (a[i][j]) */

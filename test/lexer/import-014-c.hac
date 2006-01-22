@@ -3,7 +3,7 @@
 // reduced by: David Fang
 // purpose: testing bug fix in lexer's import mechanism
 //	used to assert-fail during file-stack dump
-
+// P.S: point of failure had to be changed because we added macro support
 import "import-014-a.hac";
 import "import-014-b.hac";
 
@@ -14,7 +14,8 @@ defproc problem (e1of2 Din; e1of2 Dout; pbit pb)
 
 	// DEATH HERE on macro-like construct in prs
 	prs {
-		foo(_p, Din.e, Dout.e)
+		foo+
+		// foo(_p, Din.e, Dout.e)
 	}
 }
 

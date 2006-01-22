@@ -14,6 +14,7 @@ state	value
 in state #STATE#, possible rules are:
 	language_body: PRS_LANG '{' . prs_body '}'  (#RULE#)
 acceptable tokens are: 
+	'[' (shift)
 	'(' (shift)
 	'~' (shift)
 	ID (shift)

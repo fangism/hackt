@@ -11,11 +11,11 @@ Persistent Object Manager text dump:
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
 	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
@@ -39,14 +39,14 @@ Persistent Object Manager text dump:
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	39	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	44	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	45	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
@@ -73,14 +73,14 @@ Persistent Object Manager text dump:
 	69	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	71	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	72	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	72	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	73	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	74	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	75	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	76	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	77	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	79	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	79	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	80	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	81	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	82	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12

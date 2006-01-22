@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS_fwd.h"
 	Forward declarations for the PRS namespace.  
-	$Id: PRS_fwd.h,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: PRS_fwd.h,v 1.2.2.1 2006/01/22 05:12:46 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs_fwd.h,v 1.2.52.1 2005/12/11 00:45:09 fang Exp
  */
@@ -21,6 +21,9 @@ class body_item;
 class rule;
 typedef	node_list<const body_item>	rule_list;
 class loop;
+class macro;
+class attribute;
+typedef	node_list<const attribute>	attribute_list;
 
 }	// end namespace PRS
 }	// end namespace parser
