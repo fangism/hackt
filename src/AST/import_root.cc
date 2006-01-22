@@ -1,21 +1,18 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.3.2.1 2006/01/22 00:39:58 fang Exp $
+	$Id: import_root.cc,v 1.3.2.2 2006/01/22 02:36:57 fang Exp $
  */
 
 #include <iostream>
 #include "AST/import_root.h"
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
+#include "AST/token.h"
+#include "AST/token_string.h"
 #include "util/memory/count_ptr.tcc"
 #include "Object/common/namespace.h"
 #include "common/TODO.h"
 #include "util/what.h"
-
-#if NONTERMINAL_IMPORT
-#include "AST/token.h"
-#include "AST/token_string.h"
-#endif
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root, "(imported-root)")
@@ -28,7 +25,6 @@ namespace parser {
 //=============================================================================
 // class imported_root method definitions
 
-#if NONTERMINAL_IMPORT
 imported_root::imported_root(excl_ptr<root_body>& r,
 		excl_ptr<const keyword_position>& k,
 		excl_ptr<const token_quoted_string>& f, 
@@ -40,12 +36,6 @@ imported_root::imported_root(excl_ptr<root_body>& r,
 	NEVER_NULL(import);
 	NEVER_NULL(rel_file);
 }
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-imported_root::imported_root(excl_ptr<root_body>& r, const string& n,
-		const bool s) :
-		root(r), name(n), seen(s) { }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 imported_root::~imported_root() { }
@@ -61,7 +51,6 @@ imported_root::string_compare(const char*) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if NONTERMINAL_IMPORT
 line_position
 imported_root::leftmost(void) const {
 	return import->leftmost();
@@ -72,7 +61,6 @@ line_position
 imported_root::rightmost(void) const {
 	return rel_file->rightmost();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

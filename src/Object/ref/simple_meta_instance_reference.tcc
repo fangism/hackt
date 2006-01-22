@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.7.2.1 2006/01/21 10:09:23 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.7.2.2 2006/01/22 02:36:58 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -98,11 +98,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
-#if 0
-	return substructure_implementation_policy::
-		template lookup_globally_allocated_index<Tag>(
-			*this->inst_collection_ref, this->array_indices, sm);
-#else
 	const unroll_context uc;
 	const instance_alias_base_ptr_type
 		alias(__unroll_generic_scalar_reference(
@@ -114,7 +109,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	const size_t ret = alias->instance_index;
 	INVARIANT(ret);
 	return ret;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -135,26 +129,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
-#if 1
 	return substructure_implementation_policy::
 		template lookup_footprint_frame<Tag>(
 			*this->inst_collection_ref, this->array_indices, sm);
-#else
-#if 0
-	// HERE restrict to substructure
-	const unroll_context c;	// or pass in
-	const never_ptr<const substructure_alias>
-		_alias(substructure_implementation_policy::
-		template unroll_generic_scalar_substructure_reference<Tag>(
-			*this, c));
-	if (!_alias) {
-		// TODO: better error message
-		cerr << "Error resolving instance reference." << endl;
-		return NULL;
-	}
-	return &sm.template get_pool<Tag>()[_alias->instance_index]._frame;
-#endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -295,39 +272,9 @@ typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
-	return substructure_implementation_policy::
-		template unroll_generic_scalar_reference<Tag>(
-			*this->inst_collection_ref, this->array_indices, c);
-#else
-#if 0
-	typedef typename 	return_type;
-	STACKTRACE_VERBOSE;
-	alias_collection_type aliases;
-	const bad_bool
-		bad(inst_ref_type::unroll_references_helper(
-			c, *this->inst_collection_ref,
-			this->array_indices, aliases));
-	if (bad.bad) {
-		return return_type(NULL);
-	} else if (aliases.dimensions()) {
-		cerr << "ERROR: got a " << aliases.dimensions() <<
-			"-dimension collection where a scalar was required."
-			<< endl;
-		return return_type(NULL);
-	} else {
-		// util::wtf_is(aliases.front());
-		return aliases.front();
-	}
-#else
 	return __unroll_generic_scalar_reference(
 			*this->inst_collection_ref,
 			this->array_indices, c);
-#endif
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -345,13 +292,8 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
-#if 0
-		template unroll_generic_scalar_reference<Tag>(
-			*this->inst_collection_ref, this->array_indices, c);
-#else
 		template unroll_generic_scalar_substructure_reference<Tag>(
 			*this, c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

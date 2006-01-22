@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.8.2.2 2006/01/21 10:09:19 fang Exp $
+	$Id: instance_alias_info.h,v 1.8.2.3 2006/01/22 02:36:57 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -115,15 +115,7 @@ public:
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
 public:
-#if !INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
-	/**
-		Index into the global pool to access
-		the state referenced by this alias.  
-		0 means unassigned.  
-		This is set during the create-unique phase.  
-	 */
-	size_t					instance_index;
-#endif
+	// size_t instance_index; // was moved to substructure_base class
 	/**
 		Back-reference to the mother container.
 		Consider using this to determine "instantiated" state.  
@@ -134,20 +126,13 @@ public:
 
 protected:
 	// constructors only intended for children classes
-	instance_alias_info() :
-#if !INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
-		instance_index(0),
-#endif
-		container(NULL) { }
+	instance_alias_info() : container(NULL) { }
 
 	/**
 		Plain constructor initializing with container back-ptr.
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
-#if !INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
-		instance_index(0),
-#endif
 		container(m) {
 	}
 

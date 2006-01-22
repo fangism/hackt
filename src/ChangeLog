@@ -5,6 +5,10 @@
 
 2006-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-31:
+	  Clean-up only, from -00-28 revisions on.
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-30:
 	  Another minor lexer fix: regarding line-numbers of import
 		directives in the parse-tree.  A few test-cases updated.  

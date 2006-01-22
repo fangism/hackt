@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.9.2.1 2006/01/21 10:09:21 fang Exp $
+	$Id: substructure_alias_base.h,v 1.9.2.2 2006/01/22 02:36:58 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,8 +11,6 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
-
-#define	INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE		1
 
 namespace HAC {
 namespace entity {
@@ -48,15 +46,11 @@ protected:
 	 */
 	subinstance_manager			subinstances;
 public:
-#if INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
 	size_t					instance_index;
-#endif
 virtual	~substructure_alias_base() { }
 
 protected:
-#if INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
 	substructure_alias_base() : instance_index(0) { }
-#endif
 
 	/**
 		Visits children of the subinstance manager and 
@@ -175,14 +169,10 @@ class substructure_alias_base<false> {
 	typedef	substructure_alias_base<false>		this_type;
 protected:
 	// has no sub-instances
-#if INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
 public:
 	size_t					instance_index;
-#endif
 protected:
-#if INSTANCE_INDEX_IN_SUBSTRUCTURE_BASE
 	substructure_alias_base() : instance_index(0) { }
-#endif
 	/**
 		No-op.
 	 */

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.5.2.4 2006/01/22 00:39:58 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.5.2.5 2006/01/22 02:36:59 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -439,14 +439,10 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	Can't necessarily count on the [LA]LR parser to do this properly.  
 ***/
 	/* need some string-hacking to extract file name */
-#if NONTERMINAL_IMPORT
 	KEYWORD_UPDATE(*hackt_lval, foo);
 	excl_ptr<const keyword_position>
 		kw_import(hackt_lval->_keyword_position);
 	NEVER_NULL(kw_import);
-#else
-	TOKEN_UPDATE(foo);
-#endif
 	// meh, just re-use the passed in lval, rather than local temporary
 	YYSTYPE& temp(*hackt_lval);
 	/* OK to reuse this lexer state in recursive lex */
@@ -510,15 +506,10 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		// false: this is first time seeing this file
 		// NOTE: creating the imported root here will use
 		// the wrong token_position because file stack already-adjusted
-#if NONTERMINAL_IMPORT
 		hackt_lval->_imported_root =
 			new imported_root(_root, kw_import, fsp, pstr, false);
 		MUST_BE_NULL(kw_import);
 		MUST_BE_NULL(fsp);
-#else
-		hackt_lval->_imported_root =
-			new imported_root(_root, pstr, false);
-#endif
 		MUST_BE_NULL(_root);	// transferred ownership
 		return IMPORT;
 	}
@@ -526,15 +517,10 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		STACKTRACE("old file");
 		// true: already seen file, this will be a placeholder
 		excl_ptr<root_body> null;
-#if NONTERMINAL_IMPORT
 		hackt_lval->_imported_root =
 			new imported_root(null, kw_import, fsp, string(), true);
 		MUST_BE_NULL(kw_import);
 		MUST_BE_NULL(fsp);
-#else
-		hackt_lval->_imported_root =
-			new imported_root(null, string(), true);
-#endif
 		return IMPORT;
 	}
 	case file_status::CYCLE: {
